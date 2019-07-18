@@ -2,154 +2,284 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41CDC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08102C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2273217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F1D204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:27:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abwLc42W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387675AbfGRG0V (ORCPT
+        id S2388695AbfGRG12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:26:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16952 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726498AbfGRG0V (ORCPT
+        Thu, 18 Jul 2019 02:27:28 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:38107 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfGRG12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:26:21 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I6MVx1151536
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 02:26:19 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tthfkd1q3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 02:26:19 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 18 Jul 2019 07:26:17 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 07:26:13 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I6QCkb43516064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 06:26:12 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20EC7AE045;
-        Thu, 18 Jul 2019 06:26:12 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3192AAE053;
-        Thu, 18 Jul 2019 06:26:11 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.168])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Jul 2019 06:26:11 +0000 (GMT)
-Date:   Thu, 18 Jul 2019 09:26:09 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in
- ZONE_MOVABLE
-References: <20190718024133.3873-1-leonardo@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718024133.3873-1-leonardo@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19071806-0016-0000-0000-00000293E773
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071806-0017-0000-0000-000032F1C1E3
-Message-Id: <20190718062608.GA20726@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180072
+        Thu, 18 Jul 2019 02:27:28 -0400
+Received: by mail-pg1-f181.google.com with SMTP id f5so3551081pgu.5;
+        Wed, 17 Jul 2019 23:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fv1F1u+9An7zr0O1ROG6I6eeHptRElpdTjY+XJ3dwig=;
+        b=abwLc42WD5E5/IpSi4oKnlvsdQOQ/WY9MOZdqbd4f+0TCmAYLG6DTnO43H3Ft1vX1p
+         tOXSeGn8SaYXvPoRz0BfqtgoVaJ93PJVSPFyj0oSjBCU9d+2efhZcBR2dRe+zmiwQf1H
+         Dg87uT+S3ycbSdPXzzGcE4hZNnS2cdec7z9MBeax+Xue44xiy8M66CB5JQxrNYzDiqVC
+         ZuRK7HBd/UhPkrUPZZYCKeQg4DB4VPaA568T0Hyrdvn3D8WIkRhZPMlap/XP0Pzdpg4+
+         4ksC6KqMrj5L86U09Zb79PpXv2KP6zz9F6fyaK696+VJnDsT2bNuhfamFYsFrnfywaWg
+         C1Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fv1F1u+9An7zr0O1ROG6I6eeHptRElpdTjY+XJ3dwig=;
+        b=tzTNiuYJ9+c4gouSLktYFVwEBqTQ8B6Q8Rnr/1K07jFxBGY+0iyGwN59U5uIofrk7Y
+         bXDf+Ivy/HOGqY29nhONN6ZIufIsZW95TY2qg37VOY7BXkrvA7Fj4WgmfwWBj5NjpYCO
+         gYn9hghXFZNUMEsS99VjYfP7QAqtu2jppHnWqs5F/HORmTBXzgwcT8rA8OaHqaInLeOV
+         KiOzNsKowGdZzqKfEUHci1/wD1/dk2LRs2ZiTF6U+S3FjgICi/onjIK7WImMjgdVK+mz
+         jJ2xtbAJk2Jz+wCbBN0YM+SSmBFl1+5Y8cxvUlxgmj9lf2DzgyKBb8TeiO8TMSfaoHjw
+         oGRQ==
+X-Gm-Message-State: APjAAAWHAZMd/sckQyY7trqt+ftSfmrapmBmcaFQZCVViBNrFXQMj/6Y
+        LGDf2thMQQcWtm84mmOfVc3LBlHf
+X-Google-Smtp-Source: APXvYqyZt6zk/Rn5ClbAaMJWMl3y2wFlMGI/BiFN8QGaRTMdstla+IZ4W0oOBRTkI8v/cQyZ8dr6xg==
+X-Received: by 2002:a63:7b18:: with SMTP id w24mr45615139pgc.328.1563431247085;
+        Wed, 17 Jul 2019 23:27:27 -0700 (PDT)
+Received: from s15.smythies.com (mail.smythies.com. [173.180.45.4])
+        by smtp.gmail.com with ESMTPSA id u97sm23736305pjb.26.2019.07.17.23.27.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Jul 2019 23:27:26 -0700 (PDT)
+From:   Doug Smythies <doug.smythies@gmail.com>
+X-Google-Original-From: Doug Smythies <dsmythies@telus.net>
+To:     viresh.kumar@linaro.org, rjw@rjwysocki.net, joel@joelfernandes.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dsmythies@telus.net
+Subject: [PATCH] Revert "cpufreq: schedutil: Don't set next_freq to UINT_MAX"
+Date:   Wed, 17 Jul 2019 23:26:40 -0700
+Message-Id: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 11:41:34PM -0300, Leonardo Bras wrote:
-> Adds an option on kernel config to make hot-added memory online in
-> ZONE_MOVABLE by default.
-> 
-> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
-> allowing to choose which zone it will be auto-onlined
+This reverts commit ecd2884291261e3fddbc7651ee11a20d596bb514.
+
+The commit caused a regression whereby reducing the maximum
+CPU clock frequency is ineffective while busy, and the CPU
+clock remains unchanged. Once the system has experienced
+some idle time, the new limit is implemented.
+A consequence is that any thermal throttling monitoring
+and control based on max freq limits fail to respond
+in a timely manor, if at all, to a thermal temperature
+trip on a busy system.
+
+Please review the original e-mail threads, as this
+attempt at a revertion would then re-open some of
+those questions. One possible alterative to this
+revertion would be to revert B7EAF1AAB9F8:
+
+  Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  Date:   Wed Mar 22 00:08:50 2017 +0100
+
+      cpufreq: schedutil: Avoid reducing frequency of busy CPUs prematurely
+
+References:
+
+https://marc.info/?t=152576189300002&r=1&w=2
+https://marc.info/?t=152586219000002&r=1&w=2
+https://marc.info/?t=152607169800004&r=1&w=2
+
+https://marc.info/?t=149013813900002&r=1&w=2
+---
+Test Data:
+
+Typical commands:
+watch -n 5 cat /sys/devices/system/cpu/intel_pstate/max_perf_pct
+watch -n 5 cat /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+sudo turbostat --quiet --Summary --show Busy%,Bzy_MHz,PkgTmp,PkgWatt,IRQ --interval 5
+watch -n 5 cat /sys/devices/system/cpu/cpufreq/policy*/scaling_cur_freq
+
+Driver: intel_cpufreq ; Governor: Schedutil
+Kernel 5.2:
+
+Test 1: No thermal throttling involved:
+- load the system (some sort of CPU stress test).
+- adjust downwards the maximum clock frequency
+  echo 60 | sudo tee /sys/devices/system/cpu/intel_pstate/max_perf_pct
+- observe the Bzy_MHz does not change on the turbostat output.
+- reduce the system load, such that there is some idle time.
+- observe the Bzy_MHz now does change.
+- increase the load again.
+- observe the CPU frequency is now pinned to the new limit.
+
+Test 2: Use thermald to try Thermal throttling:
+- By default thermald will use pstate control first.
+  On my system a lower thermal trip point it used,
+  because it doesn't get hot enough.
+- enable and start thermald
+- load the system (some sort of CPU stress test)
+- Once the thermal trip point is reached, observe thermald
+  adjusting the max_perf_pct but nothing happens in response.
+- Once the lowest limit of max_perf_pct is reached, observe
+  thermald fall through to intel-powerclamp, and kidle inject
+  starts to be used. Therefore the "busy" condition (see the code)
+  is not longer met, and the CPU frequency suddenly goes to minimum.
+
+Test 3: Limit thermald to using max_perf_pct only:
+- Adjust the cpu cooling device order to just include the one
+  option, thereby excluding help from the fall through partner
+  experienced in test 2.
+- Observations here tracked test 2 until the lower limit
+  of max_perf_pct is reached. The CPUs remain at maximum
+  frequency until the load is removed. Processor
+  temperature continues to climb.
+
+Driver: intel_cpufreq ; Governor: Schedutil
+Kernel 5.2 + this revert patch:
+
+Test 1: No thermal throttling involved:
+- load the system (some sort of CPU stress test)
+- adjust downwards the maximum clock frequency
+  echo 60 | sudo tee /sys/devices/system/cpu/intel_pstate/max_perf_pct
+- observe the Bzy_MHz changes on the turbostat output.
+
+Test 2: Use thermald to try Thermal throttling:
+- By default thermald will use pstate control first.
+- enable and start thermald
+- load the system (some sort of CPU stress test)
+- Once the thermal trip point is reached, observe thermald
+  adjusting the max_perf_pct and observe the actual frequency
+  adjust in response.
+
+Test 3: Limit thermald to using max_perf_pct only:
+- Adjust the cpu cooling device order to just include the one
+  option, adjusting max_perf_pct.
+- Observations here tracked test 2. (test 2 never fell
+  through to intel_powerclamp and kidle inject.
+
+Driver: acpi-cpufreq ; Governor: Schedutil
+Kernel 5.2:
+
+Test 1: No thermal throttling involved:
+- load the system (some sort of CPU stress test)
+- adjust downwards the maximum clock frequency
+  for file in /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq; do echo "2200000" > $file; done
+- observe the Bzy_MHz does not change on the turbostat output.
+- reduce the system load, such that there is some idle time.
+- observe the Bzy_MHz now does change.
+- increase the load again.
+- observe the CPU frequency is now pinned to the new limit.
+
+Test 2: Use thermald to try Thermal throttling:
+- By default thermald will use intel_powerclamp control first.
+- enable and start thermald
+- load the system (some sort of CPU stress test)
+- Once the thermal trip point is reached, observe thermald
+  adjusting the kidle_inj amounts.
+- If the maximum kidle_inj is not enough, then oberve thermald
+  start to limit scaling_max_freq, however the actual frequency
+  response is immediate. Why? Because of the kidle inject, the
+  system is not longer fully "busy", and so that condition is not met.
+
+Test 3: Limit thermald to using scaling_max_freq only:
+- Adjust the cpu cooling device order to just include the one
+  option, thereby excluding help from previous partner
+  experienced in test 2.
+- load the system (some sort of CPU stress test)
+- Once the thermal trip point is reached, observe thermald
+  reducing scaling_max_freq.
+- observe the Bzy_MHz does not change on the turbostat output.
+- Eventually, for all CPUs, scaling_max_freq is set to the minimum.
+- Processor temperature continues to climb.
+- The CPUs remain at maximum frequency until the load is removed.
+
+Driver: acpi-cpufreq ; Governor: Schedutil
+Kernel 5.2 + this revert patch:
+
+Test 1: No thermal throttling involved:
+- load the system (some sort of CPU stress test)
+- adjust downwards the maximum clock frequency
+  for file in /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq; do echo "2200000" > $file; done
+- observe the Bzy_MHz changes on the turbostat output.
+
+Test 2: Use thermald to try Thermal throttling:
+- By default thermald will use intel_powerclamp control first.
+- enable and start thermald
+- This test already passes using kernel 5.2, and
+  proper operation was observed with this revert.
+
+Test 3: Limit thermald to using scaling_max_freq only:
+- Adjust the cpu cooling device order to just include the one
+  option, thereby excluding help from previous partner
+  experienced in test 2.
+- load the system (some sort of CPU stress test)
+- Once the thermal trip point is reached, observe thermald
+  reducing scaling_max_freq.
+- observe the Bzy_MHz now does change on the turbostat output
+  and the processor package temperature is now controlled.
+---
+ kernel/sched/cpufreq_schedutil.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 962cf34..ea4e04b 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -89,8 +89,15 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+ 	    !cpufreq_this_cpu_can_update(sg_policy->policy))
+ 		return false;
  
-Please add more elaborate description of the problem you are solving and
-the solution outline.
-
-
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->  drivers/base/memory.c |  3 +++
->  mm/Kconfig            | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index f180427e48f4..378b585785c1 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
->  	mem->state = state;
->  	start_pfn = section_nr_to_pfn(mem->start_section_nr);
->  	mem->phys_device = arch_get_memory_phys_device(start_pfn);
-> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
-> +	mem->online_type = MMOP_ONLINE_MOVABLE;
-> +#endif
-
-Does it has to be a compile time option?
-Seems like this can be changed at run time or at least at boot.
-  
->  	ret = register_memory(mem);
->  
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f0c76ba47695..74e793720f43 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
->  	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
->  	depends on MIGRATION
->  
-> +config MEMORY_HOTPLUG_MOVABLE
-> +	bool "Enhance the likelihood of hot-remove"
-> +	depends on MEMORY_HOTREMOVE
-> +	help
-> +	  This option sets the hot-added memory zone to MOVABLE which
-> +	  drastically reduces the chance of a hot-remove to fail due to
-> +	  unmovable memory segments. Kernel memory can't be allocated in
-> +	  this zone.
-> +
-> +	  Say Y here if you want to have better chance to hot-remove memory
-> +	  that have been previously hot-added.
-> +	  Say N here if you want to make all hot-added memory available to
-> +	  kernel space.
-> +
->  # Heavily threaded applications may benefit from splitting the mm-wide
->  # page_table_lock, so that faults on different parts of the user address
->  # space can be handled with less contention: split it at this NR_CPUS.
-> -- 
-> 2.20.1
-> 
-
+-	if (unlikely(sg_policy->need_freq_update))
++	if (unlikely(sg_policy->need_freq_update)) {
++		sg_policy->need_freq_update = false;
++		/*
++		 * This happens when limits change, so forget the previous
++		 * next_freq value and force an update.
++		 */
++		sg_policy->next_freq = UINT_MAX;
+ 		return true;
++	}
+ 
+ 	delta_ns = time - sg_policy->last_freq_update_time;
+ 
+@@ -168,10 +175,8 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+ 
+ 	freq = map_util_freq(util, freq, max);
+ 
+-	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
++	if (freq == sg_policy->cached_raw_freq && sg_policy->next_freq != UINT_MAX)
+ 		return sg_policy->next_freq;
+-
+-	sg_policy->need_freq_update = false;
+ 	sg_policy->cached_raw_freq = freq;
+ 	return cpufreq_driver_resolve_freq(policy, freq);
+ }
+@@ -457,7 +462,8 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 	 * Do not reduce the frequency if the CPU has not been idle
+ 	 * recently, as the reduction is likely to be premature then.
+ 	 */
+-	if (busy && next_f < sg_policy->next_freq) {
++	if (busy && next_f < sg_policy->next_freq &&
++	    sg_policy->next_freq != UINT_MAX) {
+ 		next_f = sg_policy->next_freq;
+ 
+ 		/* Reset cached freq as next_freq has changed */
+@@ -819,7 +825,7 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 
+ 	sg_policy->freq_update_delay_ns	= sg_policy->tunables->rate_limit_us * NSEC_PER_USEC;
+ 	sg_policy->last_freq_update_time	= 0;
+-	sg_policy->next_freq			= 0;
++	sg_policy->next_freq			= UINT_MAX;
+ 	sg_policy->work_in_progress		= false;
+ 	sg_policy->need_freq_update		= false;
+ 	sg_policy->cached_raw_freq		= 0;
 -- 
-Sincerely yours,
-Mike.
+2.7.4
 
