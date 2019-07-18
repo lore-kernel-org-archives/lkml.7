@@ -2,86 +2,56 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D62C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4D3C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F69221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AwJGFVo7"
+	by mail.kernel.org (Postfix) with ESMTP id 67CAD2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbfGRQgc (ORCPT
+        id S1732774AbfGRQhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:36:32 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:53356 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfGRQgc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:36:32 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x6IGZOWl002955;
-        Fri, 19 Jul 2019 01:35:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6IGZOWl002955
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563467725;
-        bh=qK9D5U+XFfqL5PNQLZVCavZVXOZYKbNuMcBF5YYDexc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AwJGFVo7gC9IRoHpzS9XdsWJxZf5fekGyj87nCAQUjlC6xMkr8sLpNuB7Y32wyS4T
-         IFoKLw0LA22VWi10KmUS9iORar5oEEXPVBQM+4GkY3yAaLi1mPfadOPiStKG0XpiWg
-         r/NB7XOxa2rVsJq4EWMndJHHYvHJjwZaGe2BuNYAD9tNLOOuL4FXPGYgN3975Kovv3
-         FQih3cQX5oApRAHBZ9yi1HmgxrU4Vbrv2Srzshf5GtixkM7TD6xEp000kN94vKGQRJ
-         vXkAyF35eXFIdG7gAEt3Kc3WodbSngjgSBjWCWamRAoLiEteQmUFNhS15lzLdYkXHT
-         VoO1dEc3V9XxA==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     patches@arm.linux.org.uk
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: visit mach-* and plat-* directories when cleaning
-Date:   Fri, 19 Jul 2019 01:35:23 +0900
-Message-Id: <20190718163523.18842-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 18 Jul 2019 12:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbfGRQhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:37:45 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33BB217F4;
+        Thu, 18 Jul 2019 16:37:44 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 12:37:43 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, mingo@redhat.com
+Subject: Re: [PATCH] tracing: Fix user stack trace "??" output
+Message-ID: <20190718123743.3aa5d697@gandalf.local.home>
+In-Reply-To: <1789efd4-1108-64e8-a6aa-39ca5d5595dc@etsukata.com>
+References: <20190630085438.25545-1-devel@etsukata.com>
+        <1789efd4-1108-64e8-a6aa-39ca5d5595dc@etsukata.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When you run "make clean" for arm, it never visits mach-* or plat-*
-directories because machine-y and plat-y are just empty.
+On Thu, 18 Jul 2019 10:23:19 +0900
+Eiichi Tsukata <devel@etsukata.com> wrote:
 
-When cleaning, all machine, plat directories are accumulated to
-machine-, plat-, respectively. So, let's pass them to core- to
-clean up those directories.
+> Hello Steven
+> 
+> Would you review the patch?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Thanks for reminding me. Looks good, I'll apply it now and start
+testing it.
 
-KernelVersion: v5.3-rc1
-
- arch/arm/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 792f7fa16a24..c3eb0d9a2fdd 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -286,6 +286,10 @@ core-y				+= arch/arm/net/
- core-y				+= arch/arm/crypto/
- core-y				+= $(machdirs) $(platdirs)
- 
-+# For cleaning
-+core-				+= $(patsubst %,arch/arm/mach-%/, $(machine-))
-+core-				+= $(patsubst %,arch/arm/plat-%/, $(plat-))
-+
- drivers-$(CONFIG_OPROFILE)      += arch/arm/oprofile/
- 
- libs-y				:= arch/arm/lib/ $(libs-y)
--- 
-2.17.1
+-- Steve
 
