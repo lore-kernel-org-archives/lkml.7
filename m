@@ -2,168 +2,160 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCACC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA22CC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EECA208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1F3208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MsCyNc81"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J9Qur1k8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391280AbfGRVZC (ORCPT
+        id S2391249AbfGRV2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:25:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33730 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGRVZC (ORCPT
+        Thu, 18 Jul 2019 17:28:52 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41305 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfGRV2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:25:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so30239832wru.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:25:00 -0700 (PDT)
+        Thu, 18 Jul 2019 17:28:51 -0400
+Received: by mail-vs1-f67.google.com with SMTP id 2so20151371vso.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:28:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fE3j1M48YetGYsmwun7MuCaX2WiWt2pV6+i9IwrmXBQ=;
-        b=MsCyNc81dVMUW7L4PkKgUMpEODm8R/N2VxLIJoj3QA5Uzt7SdUpc3IUaygZheC7BTP
-         gb/d8ol90QGVKJoKw2NKGSxJH0nMDDJUjBXdmqaH+m43x43Snn4ZzNGO5cPfFSpjKfy+
-         3fBSWWuDNygK9I3gso9DDbQRfI9S3O8m3AUNs=
+        bh=IyK1/KrXVcCjWB4+QnzI7G/fiGV+kyeRskwzWya7BVY=;
+        b=J9Qur1k8uNZ28gr48EMeSZ5ZTadMyC+P0cOv8o6AarTthN35uwczlGRmvY8UZsH9at
+         CtA9IoRohHkMgwB2ebkWUm7Nx+LFI4mYGXIkaRub7bqQKmxvFwPByme+wpvPG/Hr6rsz
+         u/OWhQbIFBZ1PO2pfsVrrKzY4ev5fGAtvetHGXN3Cuta0dNkxiwqEr4V5/+Ce22z0bnO
+         TRoTnfPnz0wCmcTiy9LhuQwbUwEZZI4u2q44Ekr5D7Wjnnz393BabKupdNWUO8keo5TF
+         +EUpE6Romg+Pmp6jS2Q5FJGUR4FyQYcmq8xMpG2kVmn2APPnTZmHQx4DDwepa15Vkv5a
+         7mhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fE3j1M48YetGYsmwun7MuCaX2WiWt2pV6+i9IwrmXBQ=;
-        b=X1pKmU3cH/FmuBgPRPXRqy+M1NnzoObYS/jyUzAM7h+vksSkzNx0t5R6EljRZG7ILA
-         DRnfZxNgl8bQYs3jLgCLVmlL0AeRfmlcjgzsgfqQFhKY0v3zg4oVQ5pJtkxYHM0ueUVy
-         vuci24gPSy89fazb9b62tEawDEQf3Ckh2cSNcJzBNEjE9mKSDTPXI/V33i5rYmajCpbQ
-         1D/wvKIcYVKe6ALfqS5UPIGrH1GFD8s35JPF60yDgPACxOgl3d1Q0IWrfTcKcV+ax4oF
-         2f1w/1Wekrmfhpw3qNGwmpjMgv1sNkIxL925u+YqpQpwwm7qyF9Xgr7o4cZDQybSLx+C
-         b3Mg==
-X-Gm-Message-State: APjAAAXr8Gsl9jamQ+bkhw5leBFlbNQHDFUg7vOkI4KGhqD3Rw7A9PFw
-        Wep7vOJgUvedBsH5IEhcx9laL72ZcTT5Ah5yq8ICGw==
-X-Google-Smtp-Source: APXvYqxUtlLnEY0IJUuKJ9otuknVQwWWrY+C3ugexaAka+HKnnm59voz4bDMgxFTsE8EPefj542ZAn6ubeRBZwjh9NU=
-X-Received: by 2002:adf:e4c6:: with SMTP id v6mr49218665wrm.315.1563485100052;
- Thu, 18 Jul 2019 14:25:00 -0700 (PDT)
+        bh=IyK1/KrXVcCjWB4+QnzI7G/fiGV+kyeRskwzWya7BVY=;
+        b=cdjyG1p2ZBp8KSdGoa77ieer2Jgt62KIRzbUPVWV1VQCCTESJ5YUOP1iss6AJ2/8iW
+         Wm9Qyvve7epAPB7j3uFg+ecluGzx1xPMQ66txhsiCNsUfqXm3k04O4xs3SWylc3reQvb
+         o+o6Vn8F4XcvjeoBgnhyU98pjgTLtEnuuPVLeQEbuX5Ojdt7KLKKH4Zj4SgdCmsPyzlg
+         J2QNGZhKnPoeQBjpjJuPLvZBCZQjvKNj7Hl/HqfKo4ATV4GBO6AOfyqeS9qYH0RY5WCe
+         620BbtuGss4hwiRjNLn8K/LYsbnVsH4nXsjIhIPf9+8Mr1gjyxQTXdC34L0XLk0widQu
+         7yoQ==
+X-Gm-Message-State: APjAAAVvTuD+uzEFzSblEpm8tyEN+tk8BuFcChiS1bhvVpqc5y6Pjcrj
+        7RJIDo828Cs6FcNJLp9bCjJJayv5RtPEuZlvFT/o
+X-Google-Smtp-Source: APXvYqzExSySUxynZMmwMGCuSd9ZHoeZd8IEzBzfN0Xzew4NVEGhby0MPyLAOWrGO4tC+scR8VOj/sF/JVKFOUiEUKk=
+X-Received: by 2002:a67:d39e:: with SMTP id b30mr30406445vsj.212.1563485330475;
+ Thu, 18 Jul 2019 14:28:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708154730.16643-1-sudeep.holla@arm.com> <20190708154730.16643-6-sudeep.holla@arm.com>
-In-Reply-To: <20190708154730.16643-6-sudeep.holla@arm.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 18 Jul 2019 17:24:48 -0400
-Message-ID: <CA+-6iNzgXj5iF5k73s6x0Ot4Wcx7UrkQpStUOyNFmBfyTJMKDw@mail.gmail.com>
-Subject: Re: [PATCH 05/11] firmware: arm_scmi: Add receive buffer support for notifications
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+References: <1562959401-19815-1-git-send-email-cai@lca.pw> <20190712.154606.493382088615011132.davem@davemloft.net>
+ <EFD25845-097A-46B1-9C1A-02458883E4DA@lca.pw> <20190712.175038.755685144649934618.davem@davemloft.net>
+ <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw> <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
+ <CAGG=3QWkgm+YhC=TWEWwt585Lbm8ZPG-uFre-kBRv+roPzZFbA@mail.gmail.com> <CAKwvOd=B=Lj-hTtbe88bo89wLxJrDAsm3fJisSMD=hKkRHf6zw@mail.gmail.com>
+In-Reply-To: <CAKwvOd=B=Lj-hTtbe88bo89wLxJrDAsm3fJisSMD=hKkRHf6zw@mail.gmail.com>
+From:   Bill Wendling <morbo@google.com>
+Date:   Thu, 18 Jul 2019 14:28:39 -0700
+Message-ID: <CAGG=3QXGqOkfTXC6LRqALJkWaX1L_nnYs3+1xXeojqKF3kftbw@mail.gmail.com>
+Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Qian Cai <cai@lca.pw>, James Y Knight <jyknight@google.com>,
+        David Miller <davem@davemloft.net>, sathya.perla@broadcom.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, netdev@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+Possibly. I'd need to ask him. :-)
 
-Would it make sense to save commits that support notifications for
-when you actually support them (correct me if I wrong, but this
-commit-set does not implement notifications.
-
-Jim
-
-On Mon, Jul 8, 2019 at 11:47 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Thu, Jul 18, 2019 at 2:22 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> With all the plumbing in place, let's just add the separate dedicated
-> receive buffers to handle notifications that can arrive asynchronously
-> from the platform firmware to OS.
+> On Thu, Jul 18, 2019 at 2:18 PM Bill Wendling <morbo@google.com> wrote:
+> >
+> > Top-of-tree clang says that it's const:
+> >
+> > $ gcc a.c -O2 && ./a.out
+> > a is a const.
+> >
+> > $ clang a.c -O2 && ./a.out
+> > a is a const.
 >
-> Also add check to see if the platform supports any receive channels
-> before allocating the receive buffers.
+> Right, so I know you (Bill) did a lot of work to refactor
+> __builtin_constant_p handling in Clang and LLVM in the
+> pre-llvm-9-release timeframe.  I suspect Qian might not be using
+> clang-9 built from source (as clang-8 is the current release) and thus
+> observing differences.
 >
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/firmware/arm_scmi/driver.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
+> >
+> > On Thu, Jul 18, 2019 at 2:10 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >>
+> >> On Thu, Jul 18, 2019 at 2:01 PM Qian Cai <cai@lca.pw> wrote:
+> >> >
+> >> >
+> >> >
+> >> > > On Jul 12, 2019, at 8:50 PM, David Miller <davem@davemloft.net> wrote:
+> >> > >
+> >> > > From: Qian Cai <cai@lca.pw>
+> >> > > Date: Fri, 12 Jul 2019 20:27:09 -0400
+> >> > >
+> >> > >> Actually, GCC would consider it a const with -O2 optimized level because it found that it was never modified and it does not understand it is a module parameter. Considering the following code.
+> >> > >>
+> >> > >> # cat const.c
+> >> > >> #include <stdio.h>
+> >> > >>
+> >> > >> static int a = 1;
+> >> > >>
+> >> > >> int main(void)
+> >> > >> {
+> >> > >>      if (__builtin_constant_p(a))
+> >> > >>              printf("a is a const.\n");
+> >> > >>
+> >> > >>      return 0;
+> >> > >> }
+> >> > >>
+> >> > >> # gcc -O2 const.c -o const
+> >> > >
+> >> > > That's not a complete test case, and with a proper test case that
+> >> > > shows the externalization of the address of &a done by the module
+> >> > > parameter macros, gcc should not make this optimization or we should
+> >> > > define the module parameter macros in a way that makes this properly
+> >> > > clear to the compiler.
+> >> > >
+> >> > > It makes no sense to hack around this locally in drivers and other
+> >> > > modules.
+> >> >
+> >> > If you see the warning in the original patch,
+> >> >
+> >> > https://lore.kernel.org/netdev/1562959401-19815-1-git-send-email-cai@lca.pw/
+> >> >
+> >> > GCC definitely optimize rx_frag_size  to be a constant while I just confirmed clang
+> >> > -O2 does not. The problem is that I have no clue about how to let GCC not to
+> >> > optimize a module parameter.
+> >> >
+> >> > Though, I have added a few people who might know more of compilers than myself.
+> >>
+> >> + Bill and James, who probably knows more than they'd like to about
+> >> __builtin_constant_p and more than other LLVM folks at this point.
+> >>
+> >> --
+> >> Thanks,
+> >> ~Nick Desaulniers
 >
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 1a7ffd3f8534..eb5a2f271806 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -112,6 +112,7 @@ struct scmi_chan_info {
->   * @version: SCMI revision information containing protocol version,
->   *     implementation version and (sub-)vendor identification.
->   * @tx_minfo: Universal Transmit Message management info
-> + * @rx_minfo: Universal Receive Message management info
->   * @tx_idr: IDR object to map protocol id to Tx channel info pointer
->   * @rx_idr: IDR object to map protocol id to Rx channel info pointer
->   * @protocols_imp: List of protocols implemented, currently maximum of
-> @@ -125,6 +126,7 @@ struct scmi_info {
->         struct scmi_revision_info version;
->         struct scmi_handle handle;
->         struct scmi_xfers_info tx_minfo;
-> +       struct scmi_xfers_info rx_minfo;
->         struct idr tx_idr;
->         struct idr rx_idr;
->         u8 *protocols_imp;
-> @@ -615,13 +617,13 @@ int scmi_handle_put(const struct scmi_handle *handle)
->         return 0;
->  }
 >
-> -static int scmi_xfer_info_init(struct scmi_info *sinfo)
-> +static int __scmi_xfer_info_init(struct scmi_info *sinfo, bool tx)
->  {
->         int i;
->         struct scmi_xfer *xfer;
->         struct device *dev = sinfo->dev;
->         const struct scmi_desc *desc = sinfo->desc;
-> -       struct scmi_xfers_info *info = &sinfo->tx_minfo;
-> +       struct scmi_xfers_info *info = tx ? &sinfo->tx_minfo : &sinfo->rx_minfo;
 >
->         /* Pre-allocated messages, no more than what hdr.seq can support */
->         if (WARN_ON(desc->max_msg >= MSG_TOKEN_MAX)) {
-> @@ -656,6 +658,16 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
->         return 0;
->  }
->
-> +static int scmi_xfer_info_init(struct scmi_info *sinfo)
-> +{
-> +       int ret = __scmi_xfer_info_init(sinfo, true);
-> +
-> +       if (!ret && idr_find(&sinfo->rx_idr, SCMI_PROTOCOL_BASE))
-> +               ret = __scmi_xfer_info_init(sinfo, false);
-> +
-> +       return ret;
-> +}
-> +
->  static int scmi_mailbox_check(struct device_node *np, int idx)
->  {
->         return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells",
-> @@ -792,10 +804,6 @@ static int scmi_probe(struct platform_device *pdev)
->         info->desc = desc;
->         INIT_LIST_HEAD(&info->node);
->
-> -       ret = scmi_xfer_info_init(info);
-> -       if (ret)
-> -               return ret;
-> -
->         platform_set_drvdata(pdev, info);
->         idr_init(&info->tx_idr);
->         idr_init(&info->rx_idr);
-> @@ -808,6 +816,10 @@ static int scmi_probe(struct platform_device *pdev)
->         if (ret)
->                 return ret;
->
-> +       ret = scmi_xfer_info_init(info);
-> +       if (ret)
-> +               return ret;
-> +
->         ret = scmi_base_protocol_init(handle);
->         if (ret) {
->                 dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
 > --
-> 2.17.1
->
+> Thanks,
+> ~Nick Desaulniers
