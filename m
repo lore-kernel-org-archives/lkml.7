@@ -2,260 +2,64 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB8C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB62C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF4A21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA00D21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390990AbfGROqb (ORCPT
+        id S2391015AbfGROqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:46:31 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49466 "EHLO inva020.nxp.com"
+        Thu, 18 Jul 2019 10:46:52 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:51956 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfGROpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:45:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 987571A02BB;
-        Thu, 18 Jul 2019 16:45:38 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B8B81A0006;
-        Thu, 18 Jul 2019 16:45:38 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3CED1205C7;
-        Thu, 18 Jul 2019 16:45:38 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
+        id S1726513AbfGROqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:46:52 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ho7gJ-00008U-20; Thu, 18 Jul 2019 22:46:51 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ho7gF-0006Hk-Mi; Thu, 18 Jul 2019 22:46:47 +0800
+Date:   Thu, 18 Jul 2019 22:46:47 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 05/14] crypto: caam - check authsize
-Date:   Thu, 18 Jul 2019 17:45:15 +0300
-Message-Id: <1563461124-24641-6-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH] crypto: gcm - restrict assoclen for rfc4543
+Message-ID: <20190718144647.bbsd65qabqpafehe@gondor.apana.org.au>
+References: <1563460984-24593-1-git-send-email-iuliana.prodan@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563460984-24593-1-git-send-email-iuliana.prodan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check authsize to solve the extra tests that expect -EINVAL to be
-returned when the authentication tag size is not valid.
+On Thu, Jul 18, 2019 at 05:43:04PM +0300, Iuliana Prodan wrote:
+> Based on seqiv, IPsec ESP and rfc4543/rfc4106 the assoclen can be 16 or
+> 20 bytes.
+> 
+> >From esp4/esp6, assoclen is sizeof IP Header. This includes spi, seq_no
+> and extended seq_no, that is 8 or 12 bytes.
+> In seqiv, to asscolen is added the IV size (8 bytes).
+> Therefore, the assoclen, for rfc4543, should be restricted to 16 or 20
+> bytes, as for rfc4106.
+> 
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-Validated authsize for GCM, RFC4106 and RFC4543.
+Why does this matter? Is it for the fuzz test?
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- drivers/crypto/caam/caamalg.c     | 13 +++++++++++++
- drivers/crypto/caam/caamalg_qi.c  | 14 ++++++++++++++
- drivers/crypto/caam/caamalg_qi2.c | 14 ++++++++++++++
- drivers/crypto/caam/common_if.c   | 40 +++++++++++++++++++++++++++++++++++++++
- drivers/crypto/caam/common_if.h   |  4 ++++
- 5 files changed, 85 insertions(+)
-
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 6ac59b1..6682e67 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -377,6 +377,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
- static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_gcm_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	gcm_set_sh_desc(authenc);
-@@ -440,6 +445,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
- 			       unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_rfc4106_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	rfc4106_set_sh_desc(authenc);
-@@ -504,6 +514,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
- 
-+	if (authsize != 16)
-+		return -EINVAL;
-+
- 	ctx->authsize = authsize;
- 	rfc4543_set_sh_desc(authenc);
- 
-diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index 46097e3..5f9b14a 100644
---- a/drivers/crypto/caam/caamalg_qi.c
-+++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -18,6 +18,7 @@
- #include "qi.h"
- #include "jr.h"
- #include "caamalg_desc.h"
-+#include "common_if.h"
- 
- /*
-  * crypto alg
-@@ -371,6 +372,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
- static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_gcm_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	gcm_set_sh_desc(authenc);
-@@ -472,6 +478,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
- 			       unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_rfc4106_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	rfc4106_set_sh_desc(authenc);
-@@ -581,6 +592,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
- 
-+	if (authsize != 16)
-+		return -EINVAL;
-+
- 	ctx->authsize = authsize;
- 	rfc4543_set_sh_desc(authenc);
- 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index da4abf1..0b4de21 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -10,6 +10,7 @@
- #include "dpseci_cmd.h"
- #include "desc_constr.h"
- #include "error.h"
-+#include "common_if.h"
- #include "sg_sw_sec4.h"
- #include "sg_sw_qm2.h"
- #include "key_gen.h"
-@@ -719,6 +720,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
- static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_gcm_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	gcm_set_sh_desc(authenc);
-@@ -811,6 +817,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
- 			       unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_rfc4106_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	rfc4106_set_sh_desc(authenc);
-@@ -913,6 +924,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
- 
-+	if (authsize != 16)
-+		return -EINVAL;
-+
- 	ctx->authsize = authsize;
- 	rfc4543_set_sh_desc(authenc);
- 
-diff --git a/drivers/crypto/caam/common_if.c b/drivers/crypto/caam/common_if.c
-index 859d4b4..fcf47e6 100644
---- a/drivers/crypto/caam/common_if.c
-+++ b/drivers/crypto/caam/common_if.c
-@@ -26,6 +26,46 @@ int check_aes_keylen(unsigned int keylen)
- }
- EXPORT_SYMBOL(check_aes_keylen);
- 
-+/*
-+ * validate authentication tag for GCM
-+ */
-+int check_gcm_authsize(unsigned int authsize)
-+{
-+	switch (authsize) {
-+	case 4:
-+	case 8:
-+	case 12:
-+	case 13:
-+	case 14:
-+	case 15:
-+	case 16:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(check_gcm_authsize);
-+
-+/*
-+ * validate authentication tag for RFC4106
-+ */
-+int check_rfc4106_authsize(unsigned int authsize)
-+{
-+	switch (authsize) {
-+	case 8:
-+	case 12:
-+	case 16:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(check_rfc4106_authsize);
-+
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("FSL CAAM drivers common location");
- MODULE_AUTHOR("NXP Semiconductors");
-diff --git a/drivers/crypto/caam/common_if.h b/drivers/crypto/caam/common_if.h
-index 6964ba3..b17386a 100644
---- a/drivers/crypto/caam/common_if.h
-+++ b/drivers/crypto/caam/common_if.h
-@@ -10,4 +10,8 @@
- 
- int check_aes_keylen(unsigned int keylen);
- 
-+int check_gcm_authsize(unsigned int authsize);
-+
-+int check_rfc4106_authsize(unsigned int authsize);
-+
- #endif /* CAAM_COMMON_LOCATION_H */
+Cheers,
 -- 
-2.1.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
