@@ -2,150 +2,125 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78EAC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0933AC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCEE21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYALgA1z"
+	by mail.kernel.org (Postfix) with ESMTP id D7C1F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfGRGJq (ORCPT
+        id S1726599AbfGRGMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:09:46 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45836 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfGRGJq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:09:46 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m206so20564072oib.12;
-        Wed, 17 Jul 2019 23:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ouBAKzVQ2WnfW41jjUNSqg5dQI8v8T4WQ5DV145fghA=;
-        b=KYALgA1zFr7+r2vv2kmMdJwu9oy2XZhF9xHQjP98tFxHQQ7HXzCHMG5m5ixgSd8LDc
-         fddBGeSxpAMW+hidhCOKC+GtN6O588kGXCS+iBwPmEoNAGY5erVhW8ZT21IxljAAVOw3
-         tMn7b+6PuzoH6XC9WD7n236tfPgtBJg9qaUlvuKPxJLLnpGFEvThx1bHbE89PUbYEp8X
-         d3aiBkt7saW0T4DEB/iNPYBXUdtabWxWpePCAR/4EJkNiV9qXxYtc7axwnYJUJMAn0MQ
-         byg4LilWV6cj5lCZ2LQ4m5pflznGzLywe+GIfk2A7N+1M5qeekVmbV4mTvQIECWrs4Ls
-         Rd9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ouBAKzVQ2WnfW41jjUNSqg5dQI8v8T4WQ5DV145fghA=;
-        b=ES/p0SNMEHhdIF8mqcifihJUsR8uY5GMAsyTKnejuvsHotnw5xgZxqqeyvzuT5KUoc
-         018+eGRJDO4AWmMIAIAVK6K/rH7MQfm73KcLGsHJye5LA3crh0jEHAr/WZ59+XinMrbs
-         VUe2BUgZpJPIPK1dNrsAiudQZ+s4hlawPaFZndIe/5hyjko6VZ29QMZbOUuwJ57zHz6o
-         yCJEKaV3ZjUx7updFnQOUOkRrg6E3snJHIh2Ww5KjyB0wdkOBt9nBhCj23Z3MKUgHXlC
-         v2raRsYz7yNeupeRrqLFSTyGZYDleSU76yT0s1IgUuWAQ05V8tF70jBpev6YB7paRMtN
-         R9mQ==
-X-Gm-Message-State: APjAAAWDb3kHs+R13sWZvvk6jREDAhGRAvFllC9C/UsAjgTl9LrV0Wt3
-        8TpPZ6+5JJMv0NM3mZm9/UTZ+w/aEYpbX/D2BbaRPKvS
-X-Google-Smtp-Source: APXvYqwWqXZX2mRFaLJVkAtMNUeKBnbzZCyEkuKXbjVpO1sE7LhI8bZMHh6S8diabmTFcV/v2sZseKp/Jj3uH28NE+o=
-X-Received: by 2002:a05:6808:3:: with SMTP id u3mr20158410oic.141.1563430185092;
- Wed, 17 Jul 2019 23:09:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 18 Jul 2019 14:09:36 +0800
-Message-ID: <CANRm+Cxhtp=taa6b0oP2fRcM5fqbUJRMan4AyQ--Y-SXX+Frog@mail.gmail.com>
-Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>
+        Thu, 18 Jul 2019 02:12:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47014 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725959AbfGRGMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 02:12:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DC940AFEC;
+        Thu, 18 Jul 2019 06:12:35 +0000 (UTC)
+Message-ID: <1563430353.3077.1.camel@suse.de>
+Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in
+ ZONE_MOVABLE
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Date:   Thu, 18 Jul 2019 08:12:33 +0200
+In-Reply-To: <20190718024133.3873-1-leonardo@linux.ibm.com>
+References: <20190718024133.3873-1-leonardo@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.26.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc arm guy's latest email
-On Fri, 12 Jul 2019 at 15:15, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during vcpu w=
-akeup
-> and interrupt delivery), except the lock holder, we want to also boost vC=
-PUs
-> that are delivering interrupts. Actually most smp_call_function_many call=
-s are
-> synchronous ipi calls, the ipi target vCPUs are also good yield candidate=
-s.
-> This patch sets preempted flag during wakeup and interrupt delivery time.
->
-> Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
-> ebizzy -M
->
->             vanilla     boosting    improved
-> 1VM          23000       21232        -9%
-> 2VM           2800        8000       180%
-> 3VM           1800        3100        72%
->
-> Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs,
-> one running ebizzy -M, the other running 'stress --cpu 2':
->
-> w/ boosting + w/o pv sched yield(vanilla)
->
->             vanilla     boosting   improved
->               1570         4000       55%
->
-> w/ boosting + w/ pv sched yield(vanilla)
->
->             vanilla     boosting   improved
->               1844         5157       79%
->
-> w/o boosting, perf top in VM:
->
->  72.33%  [kernel]       [k] smp_call_function_many
->   4.22%  [kernel]       [k] call_function_i
->   3.71%  [kernel]       [k] async_page_fault
->
-> w/ boosting, perf top in VM:
->
->  38.43%  [kernel]       [k] smp_call_function_many
->   6.31%  [kernel]       [k] async_page_fault
->   6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
->   4.88%  [kernel]       [k] call_function_interrupt
->
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+On Wed, 2019-07-17 at 23:41 -0300, Leonardo Bras wrote:
+> Adds an option on kernel config to make hot-added memory online in
+> ZONE_MOVABLE by default.
+> 
+> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y
+> by
+> allowing to choose which zone it will be auto-onlined
+
+We do already have "movable_node" boot option, which exactly has that
+effect.
+Any hotplugged range will be placed in ZONE_MOVABLE.
+
+Why do we need yet another option to achieve the same? Was not that
+enough for your case?
+
+> 
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
 > ---
->  virt/kvm/kvm_main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index b4ab59d..2c46705 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
->         int me;
->         int cpu =3D vcpu->cpu;
->
-> -       if (kvm_vcpu_wake_up(vcpu))
-> +       if (kvm_vcpu_wake_up(vcpu)) {
-> +               vcpu->preempted =3D true;
->                 return;
-> +       }
->
->         me =3D get_cpu();
->         if (cpu !=3D me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
-> --
-> 2.7.4
->
+>  drivers/base/memory.c |  3 +++
+>  mm/Kconfig            | 14 ++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index f180427e48f4..378b585785c1 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block
+> **memory,
+>  	mem->state = state;
+>  	start_pfn = section_nr_to_pfn(mem->start_section_nr);
+>  	mem->phys_device = arch_get_memory_phys_device(start_pfn);
+> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
+> +	mem->online_type = MMOP_ONLINE_MOVABLE;
+> +#endif
+>  
+>  	ret = register_memory(mem);
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index f0c76ba47695..74e793720f43 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
+>  	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
+>  	depends on MIGRATION
+>  
+> +config MEMORY_HOTPLUG_MOVABLE
+> +	bool "Enhance the likelihood of hot-remove"
+> +	depends on MEMORY_HOTREMOVE
+> +	help
+> +	  This option sets the hot-added memory zone to MOVABLE
+> which
+> +	  drastically reduces the chance of a hot-remove to fail due
+> to
+> +	  unmovable memory segments. Kernel memory can't be
+> allocated in
+> +	  this zone.
+> +
+> +	  Say Y here if you want to have better chance to hot-remove 
+> memory
+> +	  that have been previously hot-added.
+> +	  Say N here if you want to make all hot-added memory
+> available to
+> +	  kernel space.
+> +
+>  # Heavily threaded applications may benefit from splitting the mm-
+> wide
+>  # page_table_lock, so that faults on different parts of the user
+> address
+>  # space can be handled with less contention: split it at this
+> NR_CPUS.
+-- 
+Oscar Salvador
+SUSE L3
