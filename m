@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F190C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C08C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533F920818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8B120818
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419362;
-	bh=IXdrguba2x89Ibwk5MXsNlyLhOHFtf+qLV0b8OVS7nM=;
+	s=default; t=1563419366;
+	bh=vz917OUL0hDd8WSGqcb8O1NaNqgvA/64a88o3nUp1AQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a38ZFc0Cu1ZrVHp50HaNi2EiewXSZJX7/nLoOposFIY2ApQxyR9cgQG8VkgKdAQP9
-	 9eFrJNtBLXGyM+PJ9Cy2Gltl9BvAOcNjIjjkf+FR2C+l+UDtLd8/OaJ8r+Fa1NVcM2
-	 1Am+TXydRJV1AiOEaDyOuYYcnhbIVAHur3uE9zDk=
+	b=AWGdViZSJC77QUAwqnKTtG9kIecYXnHm4zyb0hWj33mAQVIUT9e3Dwd5tD11RZnKa
+	 RUm79beArl2JZHsjbHREJo3zoIKuCV1qJkUvzOkXM6Q6AWJgsByjcCSo9iHmFTdd+c
+	 pzy5b6aRn3+PP4aL1VPQq6M1QXr89S+If/HFno/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390122AbfGRDJV (ORCPT
+        id S2390977AbfGRDJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41684 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403765AbfGRDJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:09:15 -0400
+        id S2390371AbfGRDJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:09:20 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 234D521841;
-        Thu, 18 Jul 2019 03:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBEF020818;
+        Thu, 18 Jul 2019 03:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419354;
-        bh=IXdrguba2x89Ibwk5MXsNlyLhOHFtf+qLV0b8OVS7nM=;
+        s=default; t=1563419359;
+        bh=vz917OUL0hDd8WSGqcb8O1NaNqgvA/64a88o3nUp1AQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkDqrmyjetuN2Ww4Sp7/rnY+rZwrZgeQ76RJGUDDbAkvUbp2c9bxu/s1ttWnvOh14
-         y97HIYgpBQlGVLmwG9T/k5WLd/OsFzvpaGS0rPnFYC1Gzntjy+y1wh2G6OicrB3TSc
-         styVn5ZqO5yYGg/eMQkzDELVvcWGjMOxjUN1DAIM=
+        b=P0OElJCB1rPgDr4jU3k4IQ83fGfLxNkqf3QMDmvF9Yd6JNERCxRcfnuu4Un4q53YQ
+         xO/cP/OmYe/IiwmVZ8CxxmKMoad5qh7Zj8XlFu3EZVNpTiwmRneb0nWofoFEK2S7li
+         EKz6wGhD7EaQkQyE32BMt+bZsvUw1flsRaDA6R/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
-        Yibo Zhao <yiboz@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Reinhard Speyerer <rspmn@arcor.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/80] mac80211: only warn once on chanctx_conf being NULL
-Date:   Thu, 18 Jul 2019 12:01:19 +0900
-Message-Id: <20190718030100.913786090@linuxfoundation.org>
+Subject: [PATCH 4.14 30/80] qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
+Date:   Thu, 18 Jul 2019 12:01:21 +0900
+Message-Id: <20190718030101.043700384@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -61,46 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 563572340173865a9a356e6bb02579e6998a876d ]
+[ Upstream commit a8fdde1cb830e560208af42b6c10750137f53eb3 ]
 
-In multiple SSID cases, it takes time to prepare every AP interface
-to be ready in initializing phase. If a sta already knows everything it
-needs to join one of the APs and sends authentication to the AP which
-is not fully prepared at this point of time, AP's channel context
-could be NULL. As a result, warning message occurs.
+Switch qmimux_unregister_device() and qmi_wwan_disconnect() to
+use unregister_netdevice_queue() and unregister_netdevice_many()
+instead of unregister_netdevice(). This avoids RCU stalls which
+have been observed on device disconnect in certain setups otherwise.
 
-Even worse, if the AP is under attack via tools such as MDK3 and massive
-authentication requests are received in a very short time, console will
-be hung due to kernel warning messages.
-
-WARN_ON_ONCE() could be a better way for indicating warning messages
-without duplicate messages to flood the console.
-
-Johannes: We still need to address the underlying problem, but we
-          don't really have a good handle on it yet. Suppress the
-          worst side-effects for now.
-
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Yibo Zhao <yiboz@codeaurora.org>
-[johannes: add note, change subject]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
+Cc: Daniele Palmas <dnlplm@gmail.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/ieee80211_i.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index a133acb43eb1..0e209a88d88a 100644
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -1405,7 +1405,7 @@ ieee80211_get_sband(struct ieee80211_sub_if_data *sdata)
- 	rcu_read_lock();
- 	chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 75fe5c5abec4..76c4afac71f7 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -247,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
+ 	return err;
+ }
  
--	if (WARN_ON(!chanctx_conf)) {
-+	if (WARN_ON_ONCE(!chanctx_conf)) {
+-static void qmimux_unregister_device(struct net_device *dev)
++static void qmimux_unregister_device(struct net_device *dev,
++				     struct list_head *head)
+ {
+ 	struct qmimux_priv *priv = netdev_priv(dev);
+ 	struct net_device *real_dev = priv->real_dev;
+ 
+ 	netdev_upper_dev_unlink(real_dev, dev);
+-	unregister_netdevice(dev);
++	unregister_netdevice_queue(dev, head);
+ 
+ 	/* Get rid of the reference to real_dev */
+ 	dev_put(real_dev);
+@@ -424,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+-	qmimux_unregister_device(del_dev);
++	qmimux_unregister_device(del_dev, NULL);
+ 
+ 	if (!qmimux_has_slaves(dev))
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+@@ -1423,6 +1424,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 	struct qmi_wwan_state *info;
+ 	struct list_head *iter;
+ 	struct net_device *ldev;
++	LIST_HEAD(list);
+ 
+ 	/* called twice if separate control and data intf */
+ 	if (!dev)
+@@ -1435,8 +1437,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 		}
+ 		rcu_read_lock();
+ 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
+-			qmimux_unregister_device(ldev);
++			qmimux_unregister_device(ldev, &list);
  		rcu_read_unlock();
- 		return NULL;
++		unregister_netdevice_many(&list);
+ 		rtnl_unlock();
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
  	}
 -- 
 2.20.1
