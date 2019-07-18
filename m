@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA5C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC2C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D067821783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C3421783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420162;
-	bh=ZIV++hQkTHoi/VL1oj9sR02db5mmE3gnYXLemXpyZeI=;
+	s=default; t=1563420166;
+	bh=6gd90O/y2lDsWKKRond7nl5/KG/B8OEOYSQUr9f0rWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGpbLqnK7lDxwnMb5EvC6RYAecNHi5gTbqKUk5tIt8keF59XQ+rFQOGQx2fduJhcJ
-	 EXfeolpXNmu97a64sQRiSvjjwGK3CrNyO1xZqs1Y0L/FmiM2GBLdQRTIM33CcYov/A
-	 bp1m0879375Gb9U5C/eAdmcLSlMAYYz00gXG9pbE=
+	b=FJW350MUBJVl5r4DV5K8qHwlTxulkjxE0exka5HnLqVxoeOpGzfBxYFP0+8mTuBR+
+	 ft1VAO2OvPzyP4/HRvqyacoVoFZnePUZuEuLZ3cpPQshMWPZy/KRAeyySLaKR1x/uJ
+	 lLwmaLvjBdyi/ylkxX41ZZONJq7b6ToyShVxZkYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389881AbfGRDIg (ORCPT
+        id S2391214AbfGRDWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:22:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390769AbfGRDId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:33 -0400
+        id S2390786AbfGRDIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:35 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2E73205F4;
-        Thu, 18 Jul 2019 03:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB20020818;
+        Thu, 18 Jul 2019 03:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419312;
-        bh=ZIV++hQkTHoi/VL1oj9sR02db5mmE3gnYXLemXpyZeI=;
+        s=default; t=1563419314;
+        bh=6gd90O/y2lDsWKKRond7nl5/KG/B8OEOYSQUr9f0rWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeHF8IlwWtSTHMb9smYHyY4AK+rbCuPw09tDflq7ffoAomA+cdfEKeB85EG+Wyj4d
-         +IhfsWDc1umLSXK3OS8opOGEoji9PDpGwJ99mrPR+DfQgUJY6f4DrJOTuuBOz+eb42
-         +yIPPdv75w0Yy5t8hNssNMOGKdm3BrSgOA5d+8mQ=
+        b=Kjkmsiwc6UIg7oClhH98sV5MwOfVmsxjIq1dgeyFM6b0CygcQuAHRpgiGp8M6kTA6
+         23TCwEmxPp1vLiPl4Sznhz337jrjMHurisZGCwTv0C82573NiYL58SX8tPAwmF10Cd
+         oUVOjNd5Hyvp0EVaPs/lpAQjdvPLnpHh68osgeAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Melissa Wen <melissa.srw@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Thomas Pedersen <thomas@eero.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/80] staging:iio:ad7150: fix threshold mode config bit
-Date:   Thu, 18 Jul 2019 12:01:01 +0900
-Message-Id: <20190718030059.652676212@linuxfoundation.org>
+Subject: [PATCH 4.14 11/80] mac80211: mesh: fix RCU warning
+Date:   Thu, 18 Jul 2019 12:01:02 +0900
+Message-Id: <20190718030059.729049916@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,76 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df4d737ee4d7205aaa6275158aeebff87fd14488 ]
+[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
 
-According to the AD7150 configuration register description, bit 7 assumes
-value 1 when the threshold mode is fixed and 0 when it is adaptive,
-however, the operation that identifies this mode was considering the
-opposite values.
+ifmsh->csa is an RCU-protected pointer. The writer context
+in ieee80211_mesh_finish_csa() is already mutually
+exclusive with wdev->sdata.mtx, but the RCU checker did
+not know this. Use rcu_dereference_protected() to avoid a
+warning.
 
-This patch renames the boolean variable to describe it correctly and
-properly replaces it in the places where it is used.
+fixes the following warning:
 
-Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+[   12.519089] =============================
+[   12.520042] WARNING: suspicious RCU usage
+[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
+[   12.521409] -----------------------------
+[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
+[   12.522928] other info that might help us debug this:
+[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
+[   12.524855] 5 locks held by kworker/u8:2/152:
+[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
+[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
+[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
+
+Signed-off-by: Thomas Pedersen <thomas@eero.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ net/mac80211/mesh.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index a6f249e9c1e1..4d218d554878 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -6,6 +6,7 @@
-  * Licensed under the GPL-2 or later.
-  */
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index 96e57d7c2872..aca054539f4a 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1209,7 +1209,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
+ 	ifmsh->chsw_ttl = 0;
  
-+#include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -129,7 +130,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- {
- 	int ret;
- 	u8 threshtype;
--	bool adaptive;
-+	bool thrfixed;
- 	struct ad7150_chip_info *chip = iio_priv(indio_dev);
+ 	/* Remove the CSA and MCSP elements from the beacon */
+-	tmp_csa_settings = rcu_dereference(ifmsh->csa);
++	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
++					    lockdep_is_held(&sdata->wdev.mtx));
+ 	RCU_INIT_POINTER(ifmsh->csa, NULL);
+ 	if (tmp_csa_settings)
+ 		kfree_rcu(tmp_csa_settings, rcu_head);
+@@ -1231,6 +1232,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
+ 	struct mesh_csa_settings *tmp_csa_settings;
+ 	int ret = 0;
  
- 	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
-@@ -137,21 +138,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	threshtype = (ret >> 5) & 0x03;
--	adaptive = !!(ret & 0x80);
++	lockdep_assert_held(&sdata->wdev.mtx);
 +
-+	/*check if threshold mode is fixed or adaptive*/
-+	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
- 
- 	switch (type) {
- 	case IIO_EV_TYPE_MAG_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x1);
--		return adaptive && (threshtype == 0x0);
-+			return !thrfixed && (threshtype == 0x1);
-+		return !thrfixed && (threshtype == 0x0);
- 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x3);
--		return adaptive && (threshtype == 0x2);
-+			return !thrfixed && (threshtype == 0x3);
-+		return !thrfixed && (threshtype == 0x2);
- 	case IIO_EV_TYPE_THRESH:
- 		if (dir == IIO_EV_DIR_RISING)
--			return !adaptive && (threshtype == 0x1);
--		return !adaptive && (threshtype == 0x0);
-+			return thrfixed && (threshtype == 0x1);
-+		return thrfixed && (threshtype == 0x0);
- 	default:
- 		break;
- 	}
+ 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
+ 				   GFP_ATOMIC);
+ 	if (!tmp_csa_settings)
 -- 
 2.20.1
 
