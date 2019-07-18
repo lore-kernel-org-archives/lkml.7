@@ -2,150 +2,116 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1948C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22011C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B732173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39AA217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389399AbfGRIQC (ORCPT
+        id S1728127AbfGRIRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:16:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24422 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbfGRIQB (ORCPT
+        Thu, 18 Jul 2019 04:17:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43616 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfGRIRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:16:01 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I8BO7Q130511
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:16:00 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttn1rr5pj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:15:59 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 18 Jul 2019 09:15:57 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 09:15:54 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I8FsdF45547574
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 08:15:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDB9E52077;
-        Thu, 18 Jul 2019 08:15:53 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.96.236])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id AEBCD52074;
-        Thu, 18 Jul 2019 08:15:53 +0000 (GMT)
-Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
- <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
+        Thu, 18 Jul 2019 04:17:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so27595182wru.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:17:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Gxcnav4cxj9NSWzD1Jo7B/97fmLNhoQUXArg3gxl5H8=;
+        b=XuTwyj57aTCaU6cyJZhbiuYI5t/6Olkt1dmOmmtKit/YRAN1qhsjHF/igqCYsTcMRH
+         QxXf/tFpSiSOejc7RiaA7YtH0YZnT0QV+lbMjReBWBNGuaF9rvgqqq5m+hM1tI935Hs+
+         E7de6uZrtdecJG6izXlRfFpf1E8pY/rdPuuOky5b9iSEq2gIFPG4wDUZyNjO5GYY+0Pm
+         O3sTdH2uvVmvsSF+EwD/CUKjs33eCMryjPTdUvVj3HeXQsDtfBA174b0feGQKxv+gu+e
+         t53C43SQgM2YhbLETnYGcFPIO4H9Ms8PKE5NEUUrHiFEBS3vNv52xqI+lcOdVJUY0TLf
+         27jQ==
+X-Gm-Message-State: APjAAAW7tUaL/UpiZc+UkwBnKJT/LpAHyr8xV/g/7tudNbP3LAK3EVjy
+        FBT4ER1AGT7JHfr7J4T7NYwLWwH3n3rAKQ==
+X-Google-Smtp-Source: APXvYqzGFipt/JGSI4UDF+hfMuTUCQUMCUT8bsb/SNwDx6YIzS8VdHrXOL4zKiO14pX+q9h3fbDbpg==
+X-Received: by 2002:adf:cd84:: with SMTP id q4mr40390898wrj.232.1563437867685;
+        Thu, 18 Jul 2019 01:17:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
+        by smtp.gmail.com with ESMTPSA id k17sm28255950wrq.83.2019.07.18.01.17.46
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 01:17:47 -0700 (PDT)
+Subject: Re: [PATCH v2 03/22] x86/kvm: Replace vmx_vmenter()'s call to
+ kvm_spurious_fault() with UD2
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <cover.1563413318.git.jpoimboe@redhat.com>
+ <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Thu, 18 Jul 2019 10:15:53 +0200
+Message-ID: <2a0e0d3f-f8a1-afce-810a-bc9697e54ed1@redhat.com>
+Date:   Thu, 18 Jul 2019 10:17:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com>
+In-Reply-To: <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071808-0016-0000-0000-00000293F1DF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071808-0017-0000-0000-000032F1CCCD
-Message-Id: <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=771 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180094
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 18.07.19 09:59, Paolo Bonzini wrote:
-> On 12/07/19 09:15, Wanpeng Li wrote:
->> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->> index b4ab59d..2c46705 100644
->> --- a/virt/kvm/kvm_main.c
->> +++ b/virt/kvm/kvm_main.c
->> @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
->>  	int me;
->>  	int cpu = vcpu->cpu;
->>  
->> -	if (kvm_vcpu_wake_up(vcpu))
->> +	if (kvm_vcpu_wake_up(vcpu)) {
->> +		vcpu->preempted = true;
->>  		return;
->> +	}
->>  
->>  	me = get_cpu();
->>  	if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
->>
+On 18/07/19 03:36, Josh Poimboeuf wrote:
+> Objtool reports the following:
 > 
-> Who is resetting vcpu->preempted to false in this case?  This also
-> applies to s390 in fact.
+>   arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
+> 
+> But frame pointers are necessarily broken anyway, because
+> __vmx_vcpu_run() clobbers RBP with the guest's value before calling
+> vmx_vmenter().  So calling without a frame pointer doesn't make things
+> any worse.
+> 
+> Make objtool happy by changing the call to a UD2.
+> 
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+> v2: ud2 instead of kvm_spurious_fault() [Paolo]
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmenter.S | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+> index d4cb1945b2e3..4010d519eb8c 100644
+> --- a/arch/x86/kvm/vmx/vmenter.S
+> +++ b/arch/x86/kvm/vmx/vmenter.S
+> @@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
+>  	ret
+>  
+>  3:	cmpb $0, kvm_rebooting
+> -	jne 4f
+> -	call kvm_spurious_fault
+> -4:	ret
+> +	je 4f
+> +	ret
+> +4:	ud2
+>  
+>  	.pushsection .fixup, "ax"
+>  5:	jmp 3b
+> 
 
-Isnt that done by the sched_in handler?
-
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
