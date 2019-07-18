@@ -2,54 +2,55 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D55C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EB0C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5718A2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A012077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419973;
-	bh=So2IzkUzWuSWIEvrnZ2Sd5ac5Zv8IyALlkmo6shTAX0=;
+	s=default; t=1563419980;
+	bh=yJogoXBpcjBa6AO5CZZqhpVywHbgffy+wvzCLukLJwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYCMr9ON2m/OWham15uWjCXExjPgNnAOejJ8XBhdZkkzL/uC+eW0TdPvyCzjMa140
-	 yc/icBohkvoHlea6lvsOnJ9Hfv5tOgyh0hLTgH+CiteELzNFkWWtmFbA1RYjmZUsNN
-	 AQjy9M51uVph4pwwE/c8v8ZlSPUGkW6YnJmKgd5g=
+	b=MjRZ47tawv9QhvoV7gFqkgrfkBQadubFai6ihD7u0whZCfW6O8XMlEpw7K6JojfER
+	 sGqlpCOKL7Uiord0O6SdFDDS5CEG84etuibRLXCgWuMR/RsQB8Cj5NGdgGwVvNVl6s
+	 iZSQ6AnAfoAxaB/l+qzt7IH76rinizX42d1qQbsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403896AbfGRDL7 (ORCPT
+        id S2391948AbfGRDTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391457AbfGRDLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:41 -0400
+        id S2390928AbfGRDLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:55 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73F4E2053B;
-        Thu, 18 Jul 2019 03:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3C3205F4;
+        Thu, 18 Jul 2019 03:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419499;
-        bh=So2IzkUzWuSWIEvrnZ2Sd5ac5Zv8IyALlkmo6shTAX0=;
+        s=default; t=1563419514;
+        bh=yJogoXBpcjBa6AO5CZZqhpVywHbgffy+wvzCLukLJwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAegneOQKEZGYiqqNGXxz7twwBLvWZMo7WUL94zlNJvfLqvuYVyLwPbJ8XWfa78OJ
-         VNbK1iHTAQG6qFRuolLsCcvacbaNanZGsDqMFDINrx5fx6puSKVpZqJXUggEwcghHy
-         sLVzfu0iONe5BSa3C+zG68Gr7ATqYnuFju1vvAJQ=
+        b=Bw4DJjeDQkiZVTBtdVQEM1nLgnWnyvT+2OLHUE7BADsyyptmNdBCOC3Y1mZwgmc5h
+         Hr3cuuj6IPT5VGH6pIhswXgdolyEYM6H6WcDrQENhT4INuHfKySN6pGuRXYTunxnBe
+         rSUNxnkgVa4NYdGdpId8ZUWx6FWbjxvsqiD6gFRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haren Myneni <haren@us.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 78/80] crypto/NX: Set receive window credits to max number of CRBs in RxFIFO
-Date:   Thu, 18 Jul 2019 12:02:09 +0900
-Message-Id: <20190718030105.614570703@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 12/54] Input: imx_keypad - make sure keyboard can always wake up system
+Date:   Thu, 18 Jul 2019 12:01:42 +0900
+Message-Id: <20190718030050.159776202@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
-References: <20190718030058.615992480@linuxfoundation.org>
+In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
+References: <20190718030048.392549994@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,49 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haren Myneni <haren@linux.vnet.ibm.com>
+[ Upstream commit ce9a53eb3dbca89e7ad86673d94ab886e9bea704 ]
 
-commit e52d484d9869eb291140545746ccbe5ffc7c9306 upstream.
+There are several scenarios that keyboard can NOT wake up system
+from suspend, e.g., if a keyboard is depressed between system
+device suspend phase and device noirq suspend phase, the keyboard
+ISR will be called and both keyboard depress and release interrupts
+will be disabled, then keyboard will no longer be able to wake up
+system. Another scenario would be, if a keyboard is kept depressed,
+and then system goes into suspend, the expected behavior would be
+when keyboard is released, system will be waked up, but current
+implementation can NOT achieve that, because both depress and release
+interrupts are disabled in ISR, and the event check is still in
+progress.
 
-System gets checkstop if RxFIFO overruns with more requests than the
-maximum possible number of CRBs in FIFO at the same time. The max number
-of requests per window is controlled by window credits. So find max
-CRBs from FIFO size and set it to receive window credits.
+To fix these issues, need to make sure keyboard's depress or release
+interrupt is enabled after noirq device suspend phase, this patch
+moves the suspend/resume callback to noirq suspend/resume phase, and
+enable the corresponding interrupt according to current keyboard status.
 
-Fixes: b0d6c9bab5e4 ("crypto/nx: Add P9 NX support for 842 compression engine")
-CC: stable@vger.kernel.org # v4.14+
-Signed-off-by:Haren Myneni <haren@us.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/nx/nx-842-powernv.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/nx/nx-842-powernv.c
-+++ b/drivers/crypto/nx/nx-842-powernv.c
-@@ -34,8 +34,6 @@ MODULE_ALIAS_CRYPTO("842-nx");
- #define WORKMEM_ALIGN	(CRB_ALIGN)
- #define CSB_WAIT_MAX	(5000) /* ms */
- #define VAS_RETRIES	(10)
--/* # of requests allowed per RxFIFO at a time. 0 for unlimited */
--#define MAX_CREDITS_PER_RXFIFO	(1024)
+diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
+index 2165f3dd328b..842c0235471d 100644
+--- a/drivers/input/keyboard/imx_keypad.c
++++ b/drivers/input/keyboard/imx_keypad.c
+@@ -530,11 +530,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
+ 	return 0;
+ }
  
- struct nx842_workmem {
- 	/* Below fields must be properly aligned */
-@@ -801,7 +799,11 @@ static int __init vas_cfg_coproc_info(st
- 	rxattr.lnotify_lpid = lpid;
- 	rxattr.lnotify_pid = pid;
- 	rxattr.lnotify_tid = tid;
--	rxattr.wcreds_max = MAX_CREDITS_PER_RXFIFO;
-+	/*
-+	 * Maximum RX window credits can not be more than #CRBs in
-+	 * RxFIFO. Otherwise, can get checkstop if RxFIFO overruns.
-+	 */
-+	rxattr.wcreds_max = fifo_size / CRB_SIZE;
+-static int __maybe_unused imx_kbd_suspend(struct device *dev)
++static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+ 	struct input_dev *input_dev = kbd->input_dev;
++	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
  
- 	/*
- 	 * Open a VAS receice window which is used to configure RxFIFO
+ 	/* imx kbd can wake up system even clock is disabled */
+ 	mutex_lock(&input_dev->mutex);
+@@ -544,13 +545,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
+-	if (device_may_wakeup(&pdev->dev))
++	if (device_may_wakeup(&pdev->dev)) {
++		if (reg_val & KBD_STAT_KPKD)
++			reg_val |= KBD_STAT_KRIE;
++		if (reg_val & KBD_STAT_KPKR)
++			reg_val |= KBD_STAT_KDIE;
++		writew(reg_val, kbd->mmio_base + KPSR);
++
+ 		enable_irq_wake(kbd->irq);
++	}
+ 
+ 	return 0;
+ }
+ 
+-static int __maybe_unused imx_kbd_resume(struct device *dev)
++static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+@@ -574,7 +582,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
+ 	return ret;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
++static const struct dev_pm_ops imx_kbd_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
++};
+ 
+ static struct platform_driver imx_keypad_driver = {
+ 	.driver		= {
+-- 
+2.20.1
+
 
 
