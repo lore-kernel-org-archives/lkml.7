@@ -2,126 +2,196 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E1C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A52C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43BF2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFD42173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9BvDgFL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttbeDTZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfGRLEK (ORCPT
+        id S1726482AbfGRLEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:04:10 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34083 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbfGRLEK (ORCPT
+        Thu, 18 Jul 2019 07:04:41 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46282 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbfGRLEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:04:10 -0400
-Received: by mail-yw1-f67.google.com with SMTP id q128so12052351ywc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:04:09 -0700 (PDT)
+        Thu, 18 Jul 2019 07:04:40 -0400
+Received: by mail-vs1-f68.google.com with SMTP id r3so18774423vsr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DBv28uUWucv+cpCMKBZBbJSYqn9qCk7kmVDxU47irTg=;
-        b=O9BvDgFLqQrmpCO2W4J+8cB8nWua67KNs9q4UuWvJpvBRikX2pS5wMqFn0URKq7xfK
-         p4AaAUyBAx5as42WMu1ZghUuulE7KzBVPB2p92ezKKp/mqZg4p7JI/GswsTtGE78k8Y+
-         S4i9GJYIovxggHejdcivgBTeoxawA578//2AIxA8c1hmOiKUSWONWke3CBiO9XQ5dSu5
-         YfY48Js6zuY0Lb3gTB9WCo03kjw4n0oFUVOWrEnRt6Ha56SydXoLgseH8KMxztnyeIRy
-         aY/VekKkoGKSDKqVbUcF8D9dFAsdBpJ3faC2OqCuCCO5F0h5Rlp8M8AtgF6NyDfVoJkR
-         V5lA==
+        bh=b0wwbY2e6RbRH4G1F2pGlnS3oUwQ5tYaheKqHK1+rAU=;
+        b=ttbeDTZWonMsXhhF6MKJjUbS9xB63ArZlyQGS0QGDUinoAJno6rTVe45koBlUp/Qjh
+         NQVkV3+Uhr8LVEmlJkoTd3j1VUjoTle0yuSKtRst+PQkt/gZVYtUy6lqHTEGXjhT/c+g
+         IQGDz/tqooHxFmm+bsy+QWxFnl/gJ3yFFGgnAhEwcoQT9j9yKAE847bZbd1nj2DTVUjQ
+         4Eym5SbEmuUMvs4Bez2aMkN9joceM718Uj77COGoAbpsJLZM8viL9KtrIwGx7UFskjyi
+         pLZSUBIJjDLvyPPpTNjVox8LYn55p7hVHfYjzWOLJ8OD+D/+a5uRfl9hwqYR1RVKk0l5
+         gVAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DBv28uUWucv+cpCMKBZBbJSYqn9qCk7kmVDxU47irTg=;
-        b=GErRxmTFfpDuNhor3Iw8M93Ub2YBfyp6TeBodlWjvfcfnmM3MhcqBK3dj1Lfo5n7PJ
-         eXsZkHtXeqfBE8jI4xefMqeE+BZGjIFv7n3Zvg71KkZv74kYLFCylrZlKEAP1pd+666P
-         ATL3TyUHL8vU8vzWPQimKzz957BlqjviwF/I6n7g5VI3UwDpPKIHwLV/iGTl/H1Oajns
-         PagLRfPYTnw44ezhIZmeGU5/ejuKhyEb4n+NbN3Fqh++1/CuAjZg7eqEpCo5hAmsvEhb
-         9TRw3IloFvLGzPUTRe2824m2YcTU1c9ZOsSCHc9CkPmNomj7l7je1i3SVmukVviOBdmB
-         ksmg==
-X-Gm-Message-State: APjAAAWbZiQH0CbJRwDSwnVQGTqAqnkhJn+kvUriVtQuS0I0lJkx9sl5
-        mejPWXSSzeMJenHOJkj0x8Kc0umo769o1jdoLzw=
-X-Google-Smtp-Source: APXvYqwge0gF0bznG0LzkU5wpelqXk/tFMth5F1vNFfhFaa+11MqZoL76FLHrceaADhbfItshbotoC/hXM9Q8soDlPw=
-X-Received: by 2002:a0d:c943:: with SMTP id l64mr27778395ywd.320.1563447848948;
- Thu, 18 Jul 2019 04:04:08 -0700 (PDT)
+        bh=b0wwbY2e6RbRH4G1F2pGlnS3oUwQ5tYaheKqHK1+rAU=;
+        b=h55uXY2AFAZHaCMuoxLEmJtOhYGmXxPbSySqr5YTSYp51fRzIIgCGr2O/mQamaM8tQ
+         MfSfPqfiKBgw2trGvPZdaaQAliZYaTesS5pH4u0A55NL4Yhu2VfoVwmWpZH3D3N5RE4d
+         bQ+1OkZwG8infCwMabBFI7we7ECkYs1qeqILfq1FycWx7XPNyUnoQdk9qc7qmlMuelW3
+         84lEukyenWkHgA5BQr3zIAc43KDXxKzmKEq59VzHsOmfutw/ZOqzZSxdFdVGpARIE+DO
+         VawhUCP3ChKIXuzhZcTHNeMOWlxQc3jXN2ahKIOukh2epl1/OEoPyvmZ1vksv9G96JXF
+         1TxQ==
+X-Gm-Message-State: APjAAAWkrF9KmbinfHbiLrHszGfc/N5dyE0NWY3dxcjGYYTMzCsaMzTh
+        siXnCAvvDXDaBxYxHJbQsvZ+ZSDwRdfb26wspGT57g==
+X-Google-Smtp-Source: APXvYqySoFX2rcy6+ZHMwG7nItFm59GgexC/++PhaOS4J9XEwThQRKUsU9BuTaLZC+JTYiMmN5ylobCku0JfERVc6Vg=
+X-Received: by 2002:a67:ee16:: with SMTP id f22mr28613664vsp.191.1563447879628;
+ Thu, 18 Jul 2019 04:04:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190717074124.GA21617@amd>
-In-Reply-To: <20190717074124.GA21617@amd>
-From:   Balbir Singh <bsingharora@gmail.com>
-Date:   Thu, 18 Jul 2019 21:03:57 +1000
-Message-ID: <CAKTCnzkzvPgMK8i-cTuWFLRPPg4=DTkVQmS238VTgYJaUy=iVA@mail.gmail.com>
-Subject: Re: HMM_MIRROR has less than useful help text
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Evgeny Baskakov <ebaskakov@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Mark Hairgrove <mhairgrove@nvidia.com>,
-        Sherry Cheung <SCheung@nvidia.com>,
-        Subhash Gutti <sgutti@nvidia.com>,
-        Aneesh Kumar KV <aneesh.kumar@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Nellans <dnellans@nvidia.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Ross Zwisler <ross.zwisler@linux.intel.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Bob Liu <liubo95@huawei.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>
+References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-10-ulf.hansson@linaro.org>
+ <20190716150533.GD7250@e107155-lin>
+In-Reply-To: <20190716150533.GD7250@e107155-lin>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 18 Jul 2019 13:04:03 +0200
+Message-ID: <CAPDyKFqaE2L419siFY=LGDsotAnpBt+H_vpmG62AqQw8UQJZJA@mail.gmail.com>
+Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM domains
+ using genpd
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lina Iyer <lina.iyer@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 5:41 PM Pavel Machek <pavel@ucw.cz> wrote:
+On Tue, 16 Jul 2019 at 17:05, Sudeep Holla <sudeep.holla@arm.com> wrote:
 >
-> Hi!
+> On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
+> > When the hierarchical CPU topology layout is used in DT, we need to setup
+> > the corresponding PM domain data structures, as to allow a CPU and a group
+> > of CPUs to be power managed accordingly. Let's enable this by deploying
+> > support through the genpd interface.
+> >
+> > Additionally, when the OS initiated mode is supported by the PSCI FW, let's
+> > also parse the domain idle states DT bindings as to make genpd responsible
+> > for the state selection, when the states are compatible with
+> > "domain-idle-state". Otherwise, when only Platform Coordinated mode is
+> > supported, we rely solely on the state selection to be managed through the
+> > regular cpuidle framework.
+> >
+> > If the initialization of the PM domain data structures succeeds and the OS
+> > initiated mode is supported, we try to switch to it. In case it fails,
+> > let's fall back into a degraded mode, rather than bailing out and returning
+> > an error code.
+> >
+> > Due to that the OS initiated mode may become enabled, we need to adjust to
+> > maintain backwards compatibility for a kernel started through a kexec call.
+> > Do this by explicitly switch to Platform Coordinated mode during boot.
+> >
+> > Finally, the actual initialization of the PM domain data structures, is
+> > done via calling the new shared function, psci_dt_init_pm_domains().
+> > However, this is implemented by subsequent changes.
+> >
+> > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >
+> > Changes:
+> >       - Simplify code setting domain_state at power off.
+> >       - Use the genpd ->free_state() callback to manage freeing of states.
+> >       - Fixup a bogus while loop.
+> >
+> > ---
+> >  drivers/firmware/psci/Makefile         |   2 +-
+> >  drivers/firmware/psci/psci.c           |   7 +-
+> >  drivers/firmware/psci/psci.h           |   5 +
+> >  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
+> >  4 files changed, 280 insertions(+), 2 deletions(-)
+> >  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
+> >
 >
-> Commit c0b124054f9e42eb6da545a10fe9122a7d7c3f72 has very nice commit
-> message, explaining what HMM_MIRROR is and when it is
-> needed. Unfortunately, it did not make it into Kconfig help:
+> [...]
 >
-> CONFIG_HMM_MIRROR:
+> >  #endif /* __PSCI_H */
+> > diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
+> > new file mode 100644
+> > index 000000000000..3c6ca846caf4
+> > --- /dev/null
+> > +++ b/drivers/firmware/psci/psci_pm_domain.c
+> > @@ -0,0 +1,268 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * PM domains for CPUs via genpd - managed by PSCI.
+> > + *
+> > + * Copyright (C) 2019 Linaro Ltd.
+> > + * Author: Ulf Hansson <ulf.hansson@linaro.org>
+> > + *
+> > + */
+> > +
 >
-> Select HMM_MIRROR if you want to mirror range of the CPU page table of
-> a
-> process into a device page table. Here, mirror means "keep
-> synchronized".
-> Prerequisites: the device must provide the ability to write-protect
-> its
-> page tables (at PAGE_SIZE granularity), and must be able to recover
-> from
-> the resulting potential page faults.
+> [...]
 >
-> Could that be fixed?
+> > +static int psci_pd_power_off(struct generic_pm_domain *pd)
+> > +{
+> > +     struct genpd_power_state *state = &pd->states[pd->state_idx];
+> > +     u32 *pd_state;
+> > +
+> > +     /* If we have failed to enable OSI mode, then abort power off. */
+> > +     if (psci_has_osi_support() && !osi_mode_enabled)
+> > +             return -EBUSY;
+> > +
+> > +     if (!state->data)
+> > +             return 0;
+> > +
+> > +     /* When OSI mode is enabled, set the corresponding domain state. */
+> > +     pd_state = state->data;
+> > +     psci_set_domain_state(*pd_state);
 >
-> This is key information for me:
->
-> # This is a heterogeneous memory management (HMM) process address space
-> # mirroring.
-> # This is useful for NVidia GPU >= Pascal, Mellanox IB >= mlx5 and more
-> # hardware in the future.
->
+> I trying to understand how would this scale to level 2(cluster of
+> clusters or for simply system). The current code for psci_set_domain_state
+> just stores the value @pd_state into per-cpu domain_state. E.g.: Now if
+> the system level pd is getting called after cluster PD, it will set the
+> domain state to system level PD state. It won't work with original
+> format and it may work with extended format if it's carefully crafted.
+> In short, the point is just over-writing domain_state is asking for
+> troubles IMO.
 
-That seems like a reasonable request
+Thanks for spotting this!
 
-Balbir
+While walking upwards in the PM domain topology, I thought I was ORing
+the domain states, but clearly the code isn't doing that.
 
-> Thanks,
->                                                                 Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+In principle we need to do the below instead.
+
+pd_state = state->data;
+composite_pd_state = *pd_state | psci_get_domain_state();
+psci_set_domain_state(composite_pd_state);
+
+Kind regards
+Uffe
