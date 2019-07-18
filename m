@@ -2,122 +2,130 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F52C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71450C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE16E208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkiXMmVN"
+	by mail.kernel.org (Postfix) with ESMTP id 4F477208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbfGRQfC (ORCPT
+        id S1731930AbfGRQgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:35:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38796 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfGRQfB (ORCPT
+        Thu, 18 Jul 2019 12:36:05 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36432 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbfGRQgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:35:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f5so4308692pgu.5;
-        Thu, 18 Jul 2019 09:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Lt60PMLaU+8wzROOy95zC3m71GZZRlpEmV8HCiHmNcc=;
-        b=pkiXMmVNN1eRxc4wIKruOzUVS8t6JWGwLJF2tr93Etri93LWBBBEw6VNHF0aLScgJA
-         u9tHotpsEsU/CJsEhM01jIrDI5GhQxguJQAdneVaGBAnWjH4Fn+TmbTk9WfouTUiHfM5
-         kCpwm2Zwc/XgWkhWeF87BVf7g3sq4aL5tArpL0dAyjLfGwN0CETONNSb42JgzQ91T00A
-         PKb2lhpZyGu/vl+BXgvoWTklG9It1tZlmpt/MrTzzo5cIMZ5lUVsz/K6O9OHEtPyeJt/
-         ihJDRmbzdwefIUaDxmQoUGm0olLhGigTlW/uCVF2Wuv7VufLWopLaKnZTYjx0rjuvk6+
-         hfrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Lt60PMLaU+8wzROOy95zC3m71GZZRlpEmV8HCiHmNcc=;
-        b=bedzs6MNZlUqonBa4XGNoG2gkmn9OIBJxaz/fGkDOsoJeOc2UroEcC8cAtvI6cBi3x
-         bzUzSJ0RxhPjUz9LIltn0IFQKcg8alFryrm3dbB2gQa0FDEonHFhpDs3m3bmge06hlyI
-         4y7K1uDgf0DBjv6qNdIvty7ek+Kg38FzgUBCVWSuSyHQV18IeqyN6eeKbzZqidkcfBZM
-         DaoYqGPRxWaOYgHIeBpQM/ukfqyEJh7wSuDHt9rKYW2O6i1llJJ5fdCqCtutEMegVJhU
-         Ft85eLLRXJ8gsoJFpDNwslhG6wj+TFR5NRSacqe1+YJ6F6f8/0+NEaGT4FtXDFjnmqkG
-         OYgw==
-X-Gm-Message-State: APjAAAUUC0zOAELO/ltJNl5aMCmIpOloo4fVdQZUbkojSRtdg2eLSIIU
-        Ccht3VcuZaLam0j40WptSNAr5b63
-X-Google-Smtp-Source: APXvYqzllWPyaN8qN7BWj2JhBlgqc3l8QiT+iW6NoqEbeSjh4/SEyN/WHuQvNwkWKqmsVbHNS3n29w==
-X-Received: by 2002:a17:90a:cf8f:: with SMTP id i15mr2242020pju.110.1563467700928;
-        Thu, 18 Jul 2019 09:35:00 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f64sm30543640pfa.115.2019.07.18.09.34.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 09:34:59 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 09:34:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mark Balantzyan <mbalant3@gmail.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Andrianov <andrianov@ispras.ru>
-Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
- concerning ali_timeout_bits variable.  variable.
-Message-ID: <20190718163458.GA18125@roeck-us.net>
-References: <20190718155238.3066-1-mbalant3@gmail.com>
+        Thu, 18 Jul 2019 12:36:04 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 262EE8029D; Thu, 18 Jul 2019 18:35:51 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 18:36:01 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Balbir Singh <bsingharora@gmail.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Evgeny Baskakov <ebaskakov@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Mark Hairgrove <mhairgrove@nvidia.com>,
+        Sherry Cheung <SCheung@nvidia.com>,
+        Subhash Gutti <sgutti@nvidia.com>,
+        Aneesh Kumar KV <aneesh.kumar@linux.vnet.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        David Nellans <dnellans@nvidia.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Ross Zwisler <ross.zwisler@linux.intel.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Bob Liu <liubo95@huawei.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: HMM_MIRROR has less than useful help text
+Message-ID: <20190718163601.GA21502@amd>
+References: <20190717074124.GA21617@amd>
+ <CAKTCnzkzvPgMK8i-cTuWFLRPPg4=DTkVQmS238VTgYJaUy=iVA@mail.gmail.com>
+ <CAPcyv4i3vzuWfKQXF-GWKpCXACjE6HTeczPRoHUp+tOBMEAP-Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
 Content-Disposition: inline
-In-Reply-To: <20190718155238.3066-1-mbalant3@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAPcyv4i3vzuWfKQXF-GWKpCXACjE6HTeczPRoHUp+tOBMEAP-Q@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:52:38AM -0700, Mark Balantzyan wrote:
-> ---
 
-Subject and description are all messed up.
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  drivers/watchdog/alim1535_wdt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/alim1535_wdt.c b/drivers/watchdog/alim1535_wdt.c
-> index 60f0c2eb..4ba2b860 100644
-> --- a/drivers/watchdog/alim1535_wdt.c
-> +++ b/drivers/watchdog/alim1535_wdt.c
-> @@ -107,6 +107,7 @@ static void ali_keepalive(void)
->  
->  static int ali_settimer(int t)
->  {
-> +    spin_lock(&ali_lock);
->      if (t < 0)
->          return -EINVAL;
->      else if (t < 60)
-> @@ -117,7 +118,7 @@ static int ali_settimer(int t)
->          ali_timeout_bits = (t / 300)|(1 << 6)|(1 << 7);
->      else
->          return -EINVAL;
+On Thu 2019-07-18 07:25:42, Dan Williams wrote:
+> On Thu, Jul 18, 2019 at 4:04 AM Balbir Singh <bsingharora@gmail.com> wrot=
+e:
+> >
+> > On Wed, Jul 17, 2019 at 5:41 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > Hi!
+> > >
+> > > Commit c0b124054f9e42eb6da545a10fe9122a7d7c3f72 has very nice commit
+> > > message, explaining what HMM_MIRROR is and when it is
+> > > needed. Unfortunately, it did not make it into Kconfig help:
+> > >
+> > > CONFIG_HMM_MIRROR:
+> > >
+> > > Select HMM_MIRROR if you want to mirror range of the CPU page table of
+> > > a
+> > > process into a device page table. Here, mirror means "keep
+> > > synchronized".
+> > > Prerequisites: the device must provide the ability to write-protect
+> > > its
+> > > page tables (at PAGE_SIZE granularity), and must be able to recover
+> > > from
+> > > the resulting potential page faults.
+> > >
+> > > Could that be fixed?
+> > >
+> > > This is key information for me:
+> > >
+> > > # This is a heterogeneous memory management (HMM) process address spa=
+ce
+> > > # mirroring.
+> > > # This is useful for NVidia GPU >=3D Pascal, Mellanox IB >=3D mlx5 an=
+d more
+> > > # hardware in the future.
+> > >
+> >
+> > That seems like a reasonable request
+>=20
+> Hi Pavel, care to send a patch?
 
-This return and the return above will exit the function with the
-spinlock still active, which will guarantee a hangup if/when the
-function is re-entered.
+I hoped patch author would fix up their code. I'm not HMM expert, he
+should be...
 
-> -
-> +    spin_unlock(&ali_lock);
->      timeout = t;
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-timeout is still unprotected and may have no relation to the
-stored value of ali_timeout_bits.
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Overall your patch would introduce much more severe problems
-than the problem it tries to fix, and it doesn't even completely
-fix that problem either.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-I would suggest to leave the driver alone, unless you have the hardware
-to test your changes. And, if you do, it would be much more valuable
-to convert the driver to use the watchdog subsystem.
+iEYEARECAAYFAl0wn/EACgkQMOfwapXb+vLB6ACeLmMyj948TuYUlFIoTfib+UuC
+2KwAn3SFfrNn/UFu/9H/1W7LWAGPUp1U
+=54UH
+-----END PGP SIGNATURE-----
 
-Thanks,
-Guenter
+--vkogqOf2sHV7VnPd--
