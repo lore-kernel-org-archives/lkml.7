@@ -2,92 +2,177 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA47C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA61C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5B12173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EC22173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:31:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wPOnKLug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfGRI2x (ORCPT
+        id S1727588AbfGRIa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:28:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:55548 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfGRI2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:28:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3805F28;
-        Thu, 18 Jul 2019 01:28:52 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 147763F71F;
-        Thu, 18 Jul 2019 01:28:49 -0700 (PDT)
-Subject: Re: [PATCHv8 2/5] arm64: dts: qcom: msm8998: Add Coresight support
-To:     saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
-        mathieu.poirier@linaro.org, leo.yan@linaro.org,
-        alexander.shishkin@linux.intel.com, mike.leach@linaro.org,
-        robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, david.brown@linaro.org,
-        mark.rutland@arm.com
-Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
-        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        marc.w.gonzalez@free.fr
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <e510df23f741205fac9030f2c95d06d607549caa.1562940244.git.saiprakash.ranjan@codeaurora.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <3b192063-f31f-b861-d913-61d737cecc57@arm.com>
-Date:   Thu, 18 Jul 2019 09:28:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 18 Jul 2019 04:30:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42624 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfGRIa7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:30:59 -0400
+Received: by mail-lf1-f66.google.com with SMTP id s19so18560635lfb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=J5aa8e3384tNR0ek0YeLuPV1EaI/aSRXIrr9YhtkCxY=;
+        b=wPOnKLugFPVGfuWHSTREC0xYuOzkIyzMgszm6xTuIO0tAhxGi3uo8o8lA7KFYA7KZY
+         DQtK3Was3TBNh2aD4gGFAdN63bLLlKi9wYJ863WnNN7KEr4kpR6WW5/oIcXulbixHSMR
+         zboREA6o5FCPwDOk2uyxyEoGIYCWLIHCDqnOKCwZ30JueiIVZfYbGaEU+RQfJ3JYjQ5H
+         mlaCKKmXlwJ3yknviw27OXzsau7PlGlVD6RpHlqeuncUxShwoZmDFNxkwLI4wYoMXmzB
+         UX1INuhjo7DL3lCSs9IepIz0ti35rqm625q52L2SXYjr3heEcMKnq5cEuEM6xDydyADQ
+         iAxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=J5aa8e3384tNR0ek0YeLuPV1EaI/aSRXIrr9YhtkCxY=;
+        b=M9vCFYOJu0dPQ12ONGsNw5vi/7i1rKKb+GQNiSb/ZL/YgH1EqMdsKYMNUG4p3wQqMQ
+         PuebNhRHC6asJW6CNcbU8qwLCEEdFVUi5FEhsutgCT3VHnwrQSL1InDBHpHZYyLIRETp
+         e+hLQd5LjR+9cnQNkT7xOLK7/uep4rconM7MxA/YOX/nWW6UsX57qoKW+LYltyAbjnQ5
+         rUSQEAdiVeZyIgGjYMHoGFCPevi/pAs0uSPUJwzS/K3qN5SWMHp4kF9v0Gwu+FaUBFKK
+         r7ZPfHXGtzUelpNgfGgY936o7gNZ3LCTtuMO3GmTGI/28J7b7C48mTAXSU2LwBJYClKc
+         I0FQ==
+X-Gm-Message-State: APjAAAVoj9VkfumTnfWWBJKNKpz6nrf14JjALSShm+KsPRl8ILcJ5o84
+        B48X6M3KhNTsoC0R9w4eyggVTMIlFJ/RzJ6Gm8p6JtxxT8U=
+X-Google-Smtp-Source: APXvYqzJh0bC8WKR0g/rTExNwC0rD/6THHHnA1RoZujx16QeZzf98rB/fUVwN+9tXXo17Wc8BGs/MkTfy3ldTMS1mAU=
+X-Received: by 2002:a19:5218:: with SMTP id m24mr3015628lfb.164.1563438656845;
+ Thu, 18 Jul 2019 01:30:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e510df23f741205fac9030f2c95d06d607549caa.1562940244.git.saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190718030048.392549994@linuxfoundation.org>
+In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 18 Jul 2019 14:00:45 +0530
+Message-ID: <CA+G9fYtNHw-xQu5_R8Kp1yPT5s0xD5NKYJ4x4XP9q9q04tvdvA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/54] 4.9.186-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+On Thu, 18 Jul 2019 at 08:42, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.186 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.186-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
-> Enable coresight support by adding device nodes for the
-> available source, sinks and channel blocks on MSM8998.
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->   arch/arm64/boot/dts/qcom/msm8998.dtsi | 435 ++++++++++++++++++++++++++
->   1 file changed, 435 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index c13ed7aeb1e0..ad9cb5e8675d 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -822,6 +822,441 @@
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.186-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 0bfad9234a3a02e29c02d95e2c48f4f3aa86df8f
+git describe: v4.9.185-55-g0bfad9234a3a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.185-55-g0bfad9234a3a
 
 
-		etr@6048000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0x06048000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +			arm,scatter-gather;
+No regressions (compared to build v4.9.185)
 
-Please could you confirm that you have tested the scatter-gather mode with ETR ? 
-Either via perf/sysfs. Please could you share your results ? Unless verified
-this is going to be fatal for the system.
+No fixes (compared to build v4.9.185)
 
-Similarly for other platforms.
+Ran 23690 total tests in the following environments and test suites.
 
-Kind regards
-Suzuki
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
+--=20
+Linaro LKFT
+https://lkft.linaro.org
