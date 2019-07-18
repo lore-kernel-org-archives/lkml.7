@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4683FC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6DC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C96520818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090612053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419570;
-	bh=rh0MXVpiEG2SFFNmVPGJNl4H6kPo4Q7Jv5PZP0tkUGk=;
+	s=default; t=1563419575;
+	bh=X2/lEcq6scKsMBWfNNSoFC09TD54ijIEPNUAJEBlZag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EhsJqHbCZZW2pfShjb4P7wtTaJ0TMV4JNPFruX9fOKKgELNpOc72C2v4yDzgiYJt/
-	 SJBUikd/57JYDuUWJasqudKESaOtqtqgdGBJF+mXXzmcN+8vjPGIH283KegYMubyAz
-	 9a5kdrY8OZDLzkDCL4Zmy73BhQo/XSZ6m2D6BR0M=
+	b=auu+R7QmeVpnaHtcuMbmjjhusM4qOSPO/8hPthyQDHeyNALuK77iEqJBzHOl4rXhN
+	 cRFfAL/AgMqY6cr63HRkLMBDVyA+SXr9qwi856cplpdocTweDArTnORmb3ht3yYSvS
+	 FoHbnZbu7XA1QBg8pJy885S2zh7g6e/dVyvbAZQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391521AbfGRDMs (ORCPT
+        id S2391540AbfGRDMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47408 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391508AbfGRDMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:12:46 -0400
+        id S2391510AbfGRDMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:12:48 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FD732053B;
-        Thu, 18 Jul 2019 03:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62102053B;
+        Thu, 18 Jul 2019 03:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419564;
-        bh=rh0MXVpiEG2SFFNmVPGJNl4H6kPo4Q7Jv5PZP0tkUGk=;
+        s=default; t=1563419567;
+        bh=X2/lEcq6scKsMBWfNNSoFC09TD54ijIEPNUAJEBlZag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mKOZyEDUCrRx0jElsHf02Tuhgo5uVJ2tOXp/1Lr12w2/TUQnKbOX2whR+wYfCpUXt
-         jh6jCvmeMUP6wejn0G38JuyptD2q00EcEgDq/BUdPoPFqG4GcNqSfnAHKpNbpvJlAO
-         ZIPG7Mhb+Ubgb6jVkgXoF1p7O6TzPgNrV4K6I23U=
+        b=F9ys7Ce8BnLV5XSkaK85VByHkaftHWfRowuOzBXVj1vqC6t1v7uJ3lRIvpOn9T5cw
+         3cjm7GadFTbTIZ2zT/mFvB2eFVxmuvuIBcfIGw/dvSq84aFYvS+IcF33nM2kCVxYUR
+         oaqN9HhOUH/fNbfFJ6rp6xprH6fiyAAJTTwjP/Jc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 28/54] mwifiex: Dont abort on small, spec-compliant vendor IEs
-Date:   Thu, 18 Jul 2019 12:01:58 +0900
-Message-Id: <20190718030051.597747984@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andreas Fritiofson <andreas.fritiofson@unjo.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 29/54] USB: serial: ftdi_sio: add ID for isodebug v1
+Date:   Thu, 18 Jul 2019 12:01:59 +0900
+Message-Id: <20190718030051.678921806@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -60,139 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Andreas Fritiofson <andreas.fritiofson@unjo.com>
 
-commit 63d7ef36103d26f20325a921ecc96a3288560146 upstream.
+commit f8377eff548170e8ea8022c067a1fbdf9e1c46a8 upstream.
 
-Per the 802.11 specification, vendor IEs are (at minimum) only required
-to contain an OUI. A type field is also included in ieee80211.h (struct
-ieee80211_vendor_ie) but doesn't appear in the specification. The
-remaining fields (subtype, version) are a convention used in WMM
-headers.
+This adds the vid:pid of the isodebug v1 isolated JTAG/SWD+UART. Only the
+second channel is available for use as a serial port.
 
-Thus, we should not reject vendor-specific IEs that have only the
-minimum length (3 bytes) -- we should skip over them (since we only want
-to match longer IEs, that match either WMM or WPA formats). We can
-reject elements that don't have the minimum-required 3 byte OUI.
-
-While we're at it, move the non-standard subtype and version fields into
-the WMM structs, to avoid this confusion in the future about generic
-"vendor header" attributes.
-
-Fixes: 685c9b7750bf ("mwifiex: Abort at too short BSS descriptor element")
-Cc: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/fw.h        |   12 +++++++++---
- drivers/net/wireless/marvell/mwifiex/scan.c      |   18 +++++++++++-------
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |    4 ++--
- drivers/net/wireless/marvell/mwifiex/wmm.c       |    2 +-
- 4 files changed, 23 insertions(+), 13 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     |    1 +
+ drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
+ 2 files changed, 7 insertions(+)
 
---- a/drivers/net/wireless/marvell/mwifiex/fw.h
-+++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-@@ -1719,9 +1719,10 @@ struct mwifiex_ie_types_wmm_queue_status
- struct ieee_types_vendor_header {
- 	u8 element_id;
- 	u8 len;
--	u8 oui[4];	/* 0~2: oui, 3: oui_type */
--	u8 oui_subtype;
--	u8 version;
-+	struct {
-+		u8 oui[3];
-+		u8 oui_type;
-+	} __packed oui;
- } __packed;
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1024,6 +1024,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
+ 	/* EZPrototypes devices */
+ 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
++	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
+ 	{ }					/* Terminating entry */
+ };
  
- struct ieee_types_wmm_parameter {
-@@ -1735,6 +1736,9 @@ struct ieee_types_wmm_parameter {
- 	 *   Version     [1]
- 	 */
- 	struct ieee_types_vendor_header vend_hdr;
-+	u8 oui_subtype;
-+	u8 version;
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1542,3 +1542,9 @@
+ #define CHETCO_SEASMART_DISPLAY_PID	0xA5AD /* SeaSmart NMEA2000 Display */
+ #define CHETCO_SEASMART_LITE_PID	0xA5AE /* SeaSmart Lite USB Adapter */
+ #define CHETCO_SEASMART_ANALOG_PID	0xA5AF /* SeaSmart Analog Adapter */
 +
- 	u8 qos_info_bitmap;
- 	u8 reserved;
- 	struct ieee_types_wmm_ac_parameters ac_params[IEEE80211_NUM_ACS];
-@@ -1752,6 +1756,8 @@ struct ieee_types_wmm_info {
- 	 *   Version     [1]
- 	 */
- 	struct ieee_types_vendor_header vend_hdr;
-+	u8 oui_subtype;
-+	u8 version;
- 
- 	u8 qos_info_bitmap;
- } __packed;
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1349,21 +1349,25 @@ int mwifiex_update_bss_desc_with_ie(stru
- 			break;
- 
- 		case WLAN_EID_VENDOR_SPECIFIC:
--			if (element_len + 2 < sizeof(vendor_ie->vend_hdr))
--				return -EINVAL;
--
- 			vendor_ie = (struct ieee_types_vendor_specific *)
- 					current_ptr;
- 
--			if (!memcmp
--			    (vendor_ie->vend_hdr.oui, wpa_oui,
--			     sizeof(wpa_oui))) {
-+			/* 802.11 requires at least 3-byte OUI. */
-+			if (element_len < sizeof(vendor_ie->vend_hdr.oui.oui))
-+				return -EINVAL;
-+
-+			/* Not long enough for a match? Skip it. */
-+			if (element_len < sizeof(wpa_oui))
-+				break;
-+
-+			if (!memcmp(&vendor_ie->vend_hdr.oui, wpa_oui,
-+				    sizeof(wpa_oui))) {
- 				bss_entry->bcn_wpa_ie =
- 					(struct ieee_types_vendor_specific *)
- 					current_ptr;
- 				bss_entry->wpa_offset = (u16)
- 					(current_ptr - bss_entry->beacon_buf);
--			} else if (!memcmp(vendor_ie->vend_hdr.oui, wmm_oui,
-+			} else if (!memcmp(&vendor_ie->vend_hdr.oui, wmm_oui,
- 				    sizeof(wmm_oui))) {
- 				if (total_ie_len ==
- 				    sizeof(struct ieee_types_wmm_parameter) ||
---- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -1374,7 +1374,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex
- 			/* Test to see if it is a WPA IE, if not, then it is a
- 			 * gen IE
- 			 */
--			if (!memcmp(pvendor_ie->oui, wpa_oui,
-+			if (!memcmp(&pvendor_ie->oui, wpa_oui,
- 				    sizeof(wpa_oui))) {
- 				find_wpa_ie = 1;
- 				break;
-@@ -1383,7 +1383,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex
- 			/* Test to see if it is a WPS IE, if so, enable
- 			 * wps session flag
- 			 */
--			if (!memcmp(pvendor_ie->oui, wps_oui,
-+			if (!memcmp(&pvendor_ie->oui, wps_oui,
- 				    sizeof(wps_oui))) {
- 				priv->wps.session_enable = true;
- 				mwifiex_dbg(priv->adapter, MSG,
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -240,7 +240,7 @@ mwifiex_wmm_setup_queue_priorities(struc
- 	mwifiex_dbg(priv->adapter, INFO,
- 		    "info: WMM Parameter IE: version=%d,\t"
- 		    "qos_info Parameter Set Count=%d, Reserved=%#x\n",
--		    wmm_ie->vend_hdr.version, wmm_ie->qos_info_bitmap &
-+		    wmm_ie->version, wmm_ie->qos_info_bitmap &
- 		    IEEE80211_WMM_IE_AP_QOSINFO_PARAM_SET_CNT_MASK,
- 		    wmm_ie->reserved);
- 
++/*
++ * Unjo AB
++ */
++#define UNJO_VID			0x22B7
++#define UNJO_ISODEBUG_V1_PID		0x150D
 
 
