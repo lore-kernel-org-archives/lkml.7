@@ -2,162 +2,216 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ADCC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB54C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62F3204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF6221783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:20:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TZjOKys0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390251AbfGRMSO (ORCPT
+        id S2390181AbfGRMUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:18:14 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:37630 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390216AbfGRMSI (ORCPT
+        Thu, 18 Jul 2019 08:20:00 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35965 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRMT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:18:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id v3so30735129ios.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:18:08 -0700 (PDT)
+        Thu, 18 Jul 2019 08:19:59 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k21so30050462edq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CCVHqVtcDr9kxRQz1YfpzaVckBtPbq59VjeQ1p3zOVc=;
+        b=TZjOKys03SMFxMLBoi3A5eP5IIETYuLZHVfNo9Sr5/oPvhYZ0sb9eu01Cww8CLUsEd
+         WPZF0Q9MGYDAvp2lkAO7a9++fepsHkgI/ajVgs70C0p5gEz5P7HanQfcIB6qVyuNqz9z
+         iJo5Z2/SVIU8BaIXJRS/33G0P3lByvJnZg1uWKv6z7eFCAEI6bXWkrmS0YjHAq6oDLCP
+         2E0AzCzK8vwAv6Y6HWbul7rfc//Qds6XVQOCwcWwrAQj7cQHoK0qXszAT1ErTmeHBDCo
+         C+vJpLIuTeehs4DMEMSuV/71VgxMyynAKxeEUBkszIZI3fPE53lLKtfq+U319K1kPf9I
+         JPbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=puUKYuR94Cgk2/T1XPn1EMT/4tNJCdW6qsdq1yUHLPk=;
-        b=aRjBW4PgmeEqSgKW8doIoPSW5E4ffxsmC2hr6WT2M9dHfJYaU+SgNhN6cIgHbpCcrb
-         MxrBtRxCdYnMh+5k4cQclF7S1HI4c5NNZfJVVdUsap1x7DdpIy91AfdbLMzo4d+Y4AWp
-         x3+OmZta1pRDcVSou2caZaQuH5qm8QPrJhX2twTNmN/qUpNEP1Lt1h4XgYhGhV9uyvDJ
-         FsfvvTUXqPD9/m9Bq/+82QqJlhyw3h6DIJ6knxzX/Ju+dsD8Tf4GjMp+zxYGgCezcteK
-         bjVWGQNShhhZadNLWHbuZUWrvCxW/5XFA9D08Cm8B2Ga3EpLJipCD1mwC2UgDZy6wCw9
-         UyBQ==
-X-Gm-Message-State: APjAAAV5VeEcCCyLnwcB0UXn7jFHyk4rRjyG/dTHUPMLy6Aahspn6gfS
-        Lbz1rZe5aAzPfJfXnSJ9eqUZsEZm1mW85WdthKCJh7VozPSo
-X-Google-Smtp-Source: APXvYqzpb126gAYM0q5d9sGeWgsi5RdaaYOBkwEpvaRLsmmbpPAguaHkeevyjBhoItW0sHseKgNBYlm+R6hNeULNAhYL6s/4crNy
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CCVHqVtcDr9kxRQz1YfpzaVckBtPbq59VjeQ1p3zOVc=;
+        b=ZuccUs2/4/55F03om9QpOo8gpyB+VxfaZBx6b9rwWxavBnarhj6ZXhqZQOCglpO8GS
+         3aKgRok856Z8kCbwj1shbHKC73KOeFHK2790zsbWFJbT5mugOTRXhIZqWjUX5chIX22T
+         1Qu6xcCjeoiTE0qDoyvdyibxeIGYBfiCRJK83ZJesbVPpckAKQ1UPFLw47OB1MMAiZQ5
+         46XwcmtoUrJytxoHbgi++HZKm9NIiWngymz1mZPyOAQh8qwrmw1lwIJNXP7TMNAnIeMc
+         Fs7j50g6O5yCluKmGND5HqMPzx8PUBdjYBII0brXiSe/y0JtlS4FO+IPK/n9MLPAU5q6
+         XEKA==
+X-Gm-Message-State: APjAAAWOPDyv6lMWLkesrOYC7WYBxwQQWnVkmmeT7v0CofsAIOtFLx6e
+        m8R5YDwXVCV/NoSAAW8de+sOUVuSYNvj+UKOzYk=
+X-Google-Smtp-Source: APXvYqzcA8/9pmEX4K9HZSZ6a8HBFZKEBUeGXpnUZGdqw3SL92Bxma0PiWv2EMFLoPf3cMiLE1hgkjSOYVvuQa/1ork=
+X-Received: by 2002:a17:906:5409:: with SMTP id q9mr36460845ejo.209.1563452397474;
+ Thu, 18 Jul 2019 05:19:57 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8a06:: with SMTP id w6mr24846003iod.267.1563452287622;
- Thu, 18 Jul 2019 05:18:07 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 05:18:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003a2aeb058df39a3c@google.com>
-Subject: general protection fault in kstrtouint (2)
-From:   syzbot <syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, gregkh@linuxfoundation.org,
-        kstewart@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, miklos@szeredi.hu,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190718024133.3873-1-leonardo@linux.ibm.com>
+In-Reply-To: <20190718024133.3873-1-leonardo@linux.ibm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 18 Jul 2019 08:19:46 -0400
+Message-ID: <CA+CK2bBu7DnG73SaBDwf9cBceNvKnZDEqA-gBJmKC9K_rqgO+A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in ZONE_MOVABLE
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jul 17, 2019 at 10:42 PM Leonardo Bras <leonardo@linux.ibm.com> wrote:
+>
+> Adds an option on kernel config to make hot-added memory online in
+> ZONE_MOVABLE by default.
+>
+> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
+> allowing to choose which zone it will be auto-onlined
 
-syzbot found the following crash on:
+This is a desired feature. From reading the code it looks to me that
+auto-selection of online method type should be done in
+memory_subsys_online().
 
-HEAD commit:    e40115c0 Add linux-next specific files for 20190717
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d51b70600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-dashboard link: https://syzkaller.appspot.com/bug?extid=398343b7c1b1b989228d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164e7434600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1399554c600000
+When it is called from device online, mem->online_type should be -1:
 
-The bug was bisected to:
+if (mem->online_type < 0)
+     mem->online_type = MMOP_ONLINE_KEEP;
 
-commit 71cbb7570a9a0b830125163c20125a8b5e65ac45
-Author: David Howells <dhowells@redhat.com>
-Date:   Mon Mar 25 16:38:31 2019 +0000
+Change it to:
+if (mem->online_type < 0)
+     mem->online_type = MMOP_DEFAULT_ONLINE_TYPE;
 
-     vfs: Move the subtype parameter into fuse
+And in "linux/memory_hotplug.h"
+#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
+#define MMOP_DEFAULT_ONLINE_TYPE MMOP_ONLINE_MOVABLE
+#else
+#define MMOP_DEFAULT_ONLINE_TYPE MMOP_ONLINE_KEEP
+#endif
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14323078600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16323078600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12323078600000
+Could be expanded to support MMOP_ONLINE_KERNEL as well.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com
-Fixes: 71cbb7570a9a ("vfs: Move the subtype parameter into fuse")
+Pasha
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9017 Comm: syz-executor410 Not tainted 5.2.0-next-20190717 #40
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:kstrtoull lib/kstrtox.c:123 [inline]
-RIP: 0010:kstrtouint+0x85/0x1a0 lib/kstrtox.c:222
-Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6c 35  
-35 fe 4c 89 e2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 4c  
-89 e2 83 e2 07 38 d0 7f 08 84 c0 0f 85 db 00 00 00
-RSP: 0018:ffff8880997a79e0 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880997a7b38 RCX: ffffffff81c482dc
-RDX: 0000000000000000 RSI: ffffffff833d4f84 RDI: 0000000000000000
-RBP: ffff8880997a7a70 R08: ffff8880a17ce100 R09: ffffed1015d06c84
-R10: ffffed1015d06c83 R11: ffff8880ae83641b R12: 0000000000000000
-R13: 1ffff110132f4f3d R14: ffff8880997a7a48 R15: 0000000000000000
-FS:  0000555556585880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000455340 CR3: 0000000095a49000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  fs_parse+0xde1/0x1080 fs/fs_parser.c:209
-  fuse_parse_param+0xac/0x750 fs/fuse/inode.c:491
-  vfs_parse_fs_param+0x2ca/0x540 fs/fs_context.c:145
-  vfs_parse_fs_string+0x105/0x170 fs/fs_context.c:188
-  generic_parse_monolithic+0x181/0x200 fs/fs_context.c:228
-  parse_monolithic_mount_data+0x69/0x90 fs/fs_context.c:708
-  do_new_mount fs/namespace.c:2779 [inline]
-  do_mount+0x1369/0x1c30 fs/namespace.c:3103
-  ksys_mount+0xdb/0x150 fs/namespace.c:3312
-  __do_sys_mount fs/namespace.c:3326 [inline]
-  __se_sys_mount fs/namespace.c:3323 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3323
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440299
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff19b997e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fff19b997f0 RCX: 0000000000440299
-RDX: 0000000020000080 RSI: 00000000200000c0 RDI: 0000000000000000
-RBP: 00000000006cb018 R08: 00000000200002c0 R09: 65732f636f72702f
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401b80
-R13: 0000000000401c10 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 8c219e63b0160ea4 ]---
-RIP: 0010:kstrtoull lib/kstrtox.c:123 [inline]
-RIP: 0010:kstrtouint+0x85/0x1a0 lib/kstrtox.c:222
-Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6c 35  
-35 fe 4c 89 e2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 4c  
-89 e2 83 e2 07 38 d0 7f 08 84 c0 0f 85 db 00 00 00
-RSP: 0018:ffff8880997a79e0 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880997a7b38 RCX: ffffffff81c482dc
-RDX: 0000000000000000 RSI: ffffffff833d4f84 RDI: 0000000000000000
-RBP: ffff8880997a7a70 R08: ffff8880a17ce100 R09: ffffed1015d06c84
-R10: ffffed1015d06c83 R11: ffff8880ae83641b R12: 0000000000000000
-R13: 1ffff110132f4f3d R14: ffff8880997a7a48 R15: 0000000000000000
-FS:  0000555556585880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000455340 CR3: 0000000095a49000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  drivers/base/memory.c |  3 +++
+>  mm/Kconfig            | 14 ++++++++++++++
+>  2 files changed, 17 insertions(+)
+>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index f180427e48f4..378b585785c1 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
+>         mem->state = state;
+>         start_pfn = section_nr_to_pfn(mem->start_section_nr);
+>         mem->phys_device = arch_get_memory_phys_device(start_pfn);
+> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
+> +       mem->online_type = MMOP_ONLINE_MOVABLE;
+> +#endif
+>
+>         ret = register_memory(mem);
+>
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index f0c76ba47695..74e793720f43 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
+>         depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
+>         depends on MIGRATION
+>
+> +config MEMORY_HOTPLUG_MOVABLE
+> +       bool "Enhance the likelihood of hot-remove"
+> +       depends on MEMORY_HOTREMOVE
+> +       help
+> +         This option sets the hot-added memory zone to MOVABLE which
+> +         drastically reduces the chance of a hot-remove to fail due to
+> +         unmovable memory segments. Kernel memory can't be allocated in
+> +         this zone.
+> +
+> +         Say Y here if you want to have better chance to hot-remove memory
+> +         that have been previously hot-added.
+> +         Say N here if you want to make all hot-added memory available to
+> +         kernel space.
+> +
+>  # Heavily threaded applications may benefit from splitting the mm-wide
+>  # page_table_lock, so that faults on different parts of the user address
+>  # space can be handled with less contention: split it at this NR_CPUS.
+> --
+> 2.20.1
+>
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+On Wed, Jul 17, 2019 at 10:42 PM Leonardo Bras <leonardo@linux.ibm.com> wrote:
+>
+> Adds an option on kernel config to make hot-added memory online in
+> ZONE_MOVABLE by default.
+>
+> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
+> allowing to choose which zone it will be auto-onlined
+>
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  drivers/base/memory.c |  3 +++
+>  mm/Kconfig            | 14 ++++++++++++++
+>  2 files changed, 17 insertions(+)
+>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index f180427e48f4..378b585785c1 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
+>         mem->state = state;
+>         start_pfn = section_nr_to_pfn(mem->start_section_nr);
+>         mem->phys_device = arch_get_memory_phys_device(start_pfn);
+> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
+> +       mem->online_type = MMOP_ONLINE_MOVABLE;
+> +#endif
+>
+>         ret = register_memory(mem);
+>
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index f0c76ba47695..74e793720f43 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
+>         depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
+>         depends on MIGRATION
+>
+> +config MEMORY_HOTPLUG_MOVABLE
+> +       bool "Enhance the likelihood of hot-remove"
+> +       depends on MEMORY_HOTREMOVE
+> +       help
+> +         This option sets the hot-added memory zone to MOVABLE which
+> +         drastically reduces the chance of a hot-remove to fail due to
+> +         unmovable memory segments. Kernel memory can't be allocated in
+> +         this zone.
+> +
+> +         Say Y here if you want to have better chance to hot-remove memory
+> +         that have been previously hot-added.
+> +         Say N here if you want to make all hot-added memory available to
+> +         kernel space.
+> +
+>  # Heavily threaded applications may benefit from splitting the mm-wide
+>  # page_table_lock, so that faults on different parts of the user address
+>  # space can be handled with less contention: split it at this NR_CPUS.
+> --
+> 2.20.1
+>
