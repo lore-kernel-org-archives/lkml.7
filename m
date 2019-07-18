@@ -2,347 +2,146 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3160C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E16AC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CFA2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6032D21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jbz+vvja"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pWK3hlhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfGRWWs (ORCPT
+        id S2391523AbfGRW0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 18:22:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39241 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfGRWWr (ORCPT
+        Thu, 18 Jul 2019 18:26:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35823 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfGRW0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 18:22:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so9253264pfn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:22:47 -0700 (PDT)
+        Thu, 18 Jul 2019 18:26:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u14so13260350pfn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xwyiau4V8w99W5xHu9SsJUhCjY9V9LV/JZ3qo3BCV2s=;
-        b=jbz+vvjamYf8AAfftjmdkObsPUqCeraOxsaqU0R50jWm/21+J0RuMp8IcJPoGn/7w4
-         pzrdl6iqD6Ysi+fXwdIYnJfhXXiebqEFVt8cCjm5mXyPilkTbNonmA2vhPYLvwgE/tPs
-         E1PLm0zdULVLdHraTs4n3WBnsBtag49TYliws=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HMjENTT88YFzIjLrd/J4kKvhXkDZWLblcqa2AQPC8TY=;
+        b=pWK3hlhXRtv0mo8nqgZ6lytPhrOHYexo2EBBi1gmBvadJwnJ9p0lNZH/xA5dEuYCyo
+         fLLmFI92XQW6ZlkZYgpfGui84FYTSGPfcqwcnOId4DRDholhG8uggKc5zu55gMR8vhoi
+         Dkpd1UY2eZ2HxeXVq8xrfmnRup4VD7hTqCwIgh+/2bQqSlVA6T6khx3POndCeyL4gL/8
+         PjcoW6e+BhoWIzfBVDMmqbcJYh6iNNz5ce7pPS8/YGvgveZKPX21C9FgFllrm4EYxQAn
+         L/9SEkH2zDOCqgkJe/Bh1iII/yfZ5xL5aBxXXFPzd6KYbAe/oIn3n3wzIrL/1OJJF9dg
+         jwdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xwyiau4V8w99W5xHu9SsJUhCjY9V9LV/JZ3qo3BCV2s=;
-        b=AfseQDTZ1CnDb3UhMrT9RkJUiGNTHwFWtVqRqQYjfAHe9n94IciGdKYqCqPT4SRvcX
-         Mb3ARDPWZhN6MEMWnzRYi7/buSx/4m9ezNMu7c0l/XvtW21UNy8I4V3qedHbM57kZ9Q5
-         1IR3GXeRoWjkwQ/EAUddOfQq0UKy0yCapZs2X1nyrHmK6d1DINL1deAtArFedWVIJknu
-         g80RRSb6c8joqdd99sA3MQJHwoylu05NuH5/vHNOQVY3mkH+ir8NdSc8IjWV41oT+gkZ
-         cpY87VDDFhfdmIcrbWBkq0i4C+Vuy4184mLeFIMoc1eFyt/JoapagGrvNurPVZxw+nHS
-         0G4Q==
-X-Gm-Message-State: APjAAAVX/rkJrIYm6M1jMv+UmzmA4YsFdjMFfDn2PRJq1sFdimKAGON+
-        pKKSW8wEUqBxZyHjXO0xjzIDJA==
-X-Google-Smtp-Source: APXvYqyGC0oKQeeAJ0L1tVN3ikYjCRMk/d2YMrkI8QapYlGo6KSYjRFsq5ML2ZBGCw38qpA0kW2KNQ==
-X-Received: by 2002:a17:90a:3aed:: with SMTP id b100mr54227398pjc.63.1563488566691;
-        Thu, 18 Jul 2019 15:22:46 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id t29sm35515797pfq.156.2019.07.18.15.22.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 15:22:45 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Guenter Roeck <groeck@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: cros_ec: Remove replacing error code with -EIO
-Date:   Thu, 18 Jul 2019 15:22:37 -0700
-Message-Id: <20190718222238.60087-1-gwendal@chromium.org>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HMjENTT88YFzIjLrd/J4kKvhXkDZWLblcqa2AQPC8TY=;
+        b=F8PSO7Y1pHXrIsnsMPofQIC3Acu2sCo9hqaeZNdQ0VHPtUdPOH/YnLeQlbhq6GthPf
+         JFVxESbTACzAQrP7//OpHliUckr7XGM074k6bzhfGTOXjWWjlYWIKvylGKJMjyJBo8KS
+         aeO44AdaDdF87hWOwFpH/LkfAen54XewVlrZM1/xlP7McGOsq8vk5atigoHUwwzyiMrH
+         JnLDyMUvAm426yioX3vfwMledOMK++pByAhnMZxebWC9Bpp+4WJaL+VBX5pDKz9IKOBk
+         m8o4rQOSF5ZnNk81Tc02O2d43Ck3nGgpy+/0CtzBPEQ9Ez1UKjKzsVPMHTp4gMGxPP1A
+         0I8Q==
+X-Gm-Message-State: APjAAAU/T5DFFBsGvecgsSbOnZ+3OGxu3/SgJGdIwD9eyyS9w8PUgyDX
+        LLjCR5eHwQMuyh+HeI4wgkz0dbCweQuwRxQ0K0ARGw==
+X-Google-Smtp-Source: APXvYqy25+0MYvF04Ir0OHL5Txgsnp7ZxD6pE/9GMRWJ0QwWvWulc567ZDU5MyEjxq3SOxNceXKGXGfdoUCZ91C3yt4=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr54078589pjs.73.1563488801525;
+ Thu, 18 Jul 2019 15:26:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1563150885.git.jpoimboe@redhat.com> <20190715193834.5tvzukcwq735ufgb@treble>
+ <CAKwvOdnXt=_NVjK7+RjuxeyESytO6ra769i4qjSwt1Gd1G22dA@mail.gmail.com> <20190716231718.flutou25wemgsfju@treble>
+In-Reply-To: <20190716231718.flutou25wemgsfju@treble>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jul 2019 15:26:30 -0700
+Message-ID: <CAKwvOdn8_NENF8_cxizrD-PYN_t11px+51WKtkAUa2Q-vH68yw@mail.gmail.com>
+Subject: Re: [PATCH 00/22] x86, objtool: several fixes/improvements
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to an API misread, error code can be different for -EIO when reading
-a sysfs entry. Return the error reported by the cros_ec stack.
+On Tue, Jul 16, 2019 at 4:17 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Mon, Jul 15, 2019 at 02:45:39PM -0700, Nick Desaulniers wrote:
+> > For a defconfig, that's the only issue I see.
+> > (Note that I just landed https://reviews.llvm.org/rL366130 for fixing
+> > up bugs from loop unrolling loops containing asm goto with Clang, so
+> > anyone else testing w/ clang will see fewer objtool warnings with that
+> > patch applied.  A follow up is being worked on in
+> > https://reviews.llvm.org/D64101).
+> >
+> > For allmodconfig:
+> > arch/x86/ia32/ia32_signal.o: warning: objtool:
+> > ia32_setup_rt_frame()+0x247: call to memset() with UACCESS enabled
+> > mm/kasan/common.o: warning: objtool: kasan_report()+0x52: call to
+> > __stack_chk_fail() with UACCESS enabled
+> > arch/x86/kernel/signal.o: warning: objtool:
+> > x32_setup_rt_frame()+0x255: call to memset() with UACCESS enabled
+> > arch/x86/kernel/signal.o: warning: objtool: __setup_rt_frame()+0x254:
+> > call to memset() with UACCESS enabled
+> > drivers/ata/sata_dwc_460ex.o: warning: objtool:
+> > sata_dwc_bmdma_start_by_tag()+0x3a0: can't find switch jump table
+> > lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x88:
+> > call to memset() with UACCESS enabled
+> > lib/ubsan.o: warning: objtool: ubsan_type_mismatch_common()+0x610:
+> > call to __stack_chk_fail() with UACCESS enabled
+> > lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x88:
+> > call to memset() with UACCESS enabled
+> > drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:
+> > .altinstr_replacement+0x56: redundant UACCESS disable
+> >
+> > Without your series, I see them anyways, so I don't consider them
+> > regressions added by this series.  Let's follow up on these maybe in a
+> > new thread?  (Shall I send you these object files?)
+>
+> Yes, maybe open a new thread and be sure to copy PeterZ.  He loves those
+> warnings ;-)  Object files are definitely needed.
+>
+> > So for the series:
+> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> Thanks!
+>
+> >
+> > > >
+> > > >    I haven't dug into it yet.
+> > > >
+> > > > 2) There's also an issue in clang where a large switch table had a bunch
+> > > >    of unused (bad) entries.  It's not a code correctness issue, but
+> > > >    hopefully it can get fixed in clang anyway.  See patch 20/22 for more
+> > > >    details.
+> >
+> > Thanks for the report, let's follow up on steps for me to reproduce.
+>
+> Just to clarify, there are two clang issues.  Both of them were reported
+> originally by Arnd, IIRC.
+>
+> 1) The one described above and in patch 20, where the switch table is
+>    mostly unused entries.  Not a real bug, but it's a bit sloppy and
+>    wasteful, and objtool doesn't know how to interpret it.
 
-Check the proper error message (protocol error, not supported) is
-reported when there is an error returned by the EC stack.
+Thanks for the concise reports.  Will follow up on these in:
+https://github.com/ClangBuiltLinux/linux/issues/611
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
----
+>
+> 2) The bug with the noreturn call site having a different stack size
+>    depending on which code path was taken.
 
- .../cros_ec_sensors/cros_ec_sensors_core.c    | 44 +++++++++++--------
- drivers/iio/light/cros_ec_light_prox.c        | 36 +++++++--------
- drivers/iio/pressure/cros_ec_baro.c           | 17 ++++---
- 3 files changed, 51 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index 130362ca421b..ed29ac22dff8 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -33,6 +33,7 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- 	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
- 	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
- 	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-+	int ret;
- 
- 	platform_set_drvdata(pdev, indio_dev);
- 
-@@ -60,9 +61,10 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- 
- 		state->param.cmd = MOTIONSENSE_CMD_INFO;
- 		state->param.info.sensor_num = sensor_platform->sensor_num;
--		if (cros_ec_motion_send_host_cmd(state, 0)) {
-+		ret = cros_ec_motion_send_host_cmd(state, 0);
-+		if (ret) {
- 			dev_warn(dev, "Can not access sensor info\n");
--			return -EIO;
-+			return ret;
- 		}
- 		state->type = state->resp->info.type;
- 		state->loc = state->resp->info.location;
-@@ -86,7 +88,7 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
- 
- 	ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
- 	if (ret < 0)
--		return -EIO;
-+		return ret;
- 
- 	if (ret &&
- 	    state->resp != (struct ec_response_motion_sense *)state->msg->data)
-@@ -396,7 +398,7 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
- 			  struct iio_chan_spec const *chan,
- 			  int *val, int *val2, long mask)
- {
--	int ret = IIO_VAL_INT;
-+	int ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
-@@ -404,22 +406,27 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
- 		st->param.ec_rate.data =
- 			EC_MOTION_SENSE_NO_VALUE;
- 
--		if (cros_ec_motion_send_host_cmd(st, 0))
--			ret = -EIO;
--		else
--			*val = st->resp->ec_rate.ret;
-+		ret = cros_ec_motion_send_host_cmd(st, 0);
-+		if (ret)
-+			break;
-+
-+		*val = st->resp->ec_rate.ret;
-+		ret = IIO_VAL_INT;
- 		break;
- 	case IIO_CHAN_INFO_FREQUENCY:
- 		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
- 		st->param.sensor_odr.data =
- 			EC_MOTION_SENSE_NO_VALUE;
- 
--		if (cros_ec_motion_send_host_cmd(st, 0))
--			ret = -EIO;
--		else
--			*val = st->resp->sensor_odr.ret;
-+		ret = cros_ec_motion_send_host_cmd(st, 0);
-+		if (ret)
-+			break;
-+
-+		*val = st->resp->sensor_odr.ret;
-+		ret = IIO_VAL_INT;
- 		break;
- 	default:
-+		ret = -EINVAL;
- 		break;
- 	}
- 
-@@ -431,7 +438,7 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
- 			       struct iio_chan_spec const *chan,
- 			       int val, int val2, long mask)
- {
--	int ret = 0;
-+	int ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_FREQUENCY:
-@@ -441,17 +448,16 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
- 		/* Always roundup, so caller gets at least what it asks for. */
- 		st->param.sensor_odr.roundup = 1;
- 
--		if (cros_ec_motion_send_host_cmd(st, 0))
--			ret = -EIO;
-+		ret = cros_ec_motion_send_host_cmd(st, 0);
- 		break;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
- 		st->param.ec_rate.data = val;
- 
--		if (cros_ec_motion_send_host_cmd(st, 0))
--			ret = -EIO;
--		else
--			st->curr_sampl_freq = val;
-+		ret = cros_ec_motion_send_host_cmd(st, 0);
-+		if (ret)
-+			break;
-+		st->curr_sampl_freq = val;
- 		break;
- 	default:
- 		ret = -EINVAL;
-diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
-index 308ee6ff2e22..943fa305af91 100644
---- a/drivers/iio/light/cros_ec_light_prox.c
-+++ b/drivers/iio/light/cros_ec_light_prox.c
-@@ -42,7 +42,7 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
- 	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
- 	u16 data = 0;
- 	s64 val64;
--	int ret = IIO_VAL_INT;
-+	int ret;
- 	int idx = chan->scan_index;
- 
- 	mutex_lock(&st->core.cmd_lock);
-@@ -50,23 +50,22 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		if (chan->type == IIO_PROXIMITY) {
--			if (cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
--						     (s16 *)&data) < 0) {
--				ret = -EIO;
-+			ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-+						     (s16 *)&data);
-+			if (ret)
- 				break;
--			}
- 			*val = data;
-+			ret = IIO_VAL_INT;
- 		} else {
- 			ret = -EINVAL;
- 		}
- 		break;
- 	case IIO_CHAN_INFO_PROCESSED:
- 		if (chan->type == IIO_LIGHT) {
--			if (cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
--						     (s16 *)&data) < 0) {
--				ret = -EIO;
-+			ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-+						     (s16 *)&data);
-+			if (ret)
- 				break;
--			}
- 			/*
- 			 * The data coming from the light sensor is
- 			 * pre-processed and represents the ambient light
-@@ -82,15 +81,15 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
- 		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_OFFSET;
- 		st->core.param.sensor_offset.flags = 0;
- 
--		if (cros_ec_motion_send_host_cmd(&st->core, 0)) {
--			ret = -EIO;
-+		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-+		if (ret)
- 			break;
--		}
- 
- 		/* Save values */
- 		st->core.calib[0] = st->core.resp->sensor_offset.offset[0];
- 
- 		*val = st->core.calib[idx];
-+		ret = IIO_VAL_INT;
- 		break;
- 	case IIO_CHAN_INFO_CALIBSCALE:
- 		/*
-@@ -101,10 +100,9 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
- 		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
- 		st->core.param.sensor_range.data = EC_MOTION_SENSE_NO_VALUE;
- 
--		if (cros_ec_motion_send_host_cmd(&st->core, 0)) {
--			ret = -EIO;
-+		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-+		if (ret)
- 			break;
--		}
- 
- 		val64 = st->core.resp->sensor_range.ret;
- 		*val = val64 >> 16;
-@@ -127,7 +125,7 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
- 			       int val, int val2, long mask)
- {
- 	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
--	int ret = 0;
-+	int ret;
- 	int idx = chan->scan_index;
- 
- 	mutex_lock(&st->core.cmd_lock);
-@@ -141,14 +139,12 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
- 		st->core.param.sensor_offset.offset[0] = st->core.calib[0];
- 		st->core.param.sensor_offset.temp =
- 					EC_MOTION_SENSE_INVALID_CALIB_TEMP;
--		if (cros_ec_motion_send_host_cmd(&st->core, 0))
--			ret = -EIO;
-+		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
- 		break;
- 	case IIO_CHAN_INFO_CALIBSCALE:
- 		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
- 		st->core.param.sensor_range.data = (val << 16) | (val2 / 100);
--		if (cros_ec_motion_send_host_cmd(&st->core, 0))
--			ret = -EIO;
-+		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
- 		break;
- 	default:
- 		ret = cros_ec_sensors_core_write(&st->core, chan, val, val2,
-diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
-index 034ce98d6e97..a648582b14a7 100644
---- a/drivers/iio/pressure/cros_ec_baro.c
-+++ b/drivers/iio/pressure/cros_ec_baro.c
-@@ -39,26 +39,29 @@ static int cros_ec_baro_read(struct iio_dev *indio_dev,
- {
- 	struct cros_ec_baro_state *st = iio_priv(indio_dev);
- 	u16 data = 0;
--	int ret = IIO_VAL_INT;
-+	int ret;
- 	int idx = chan->scan_index;
- 
- 	mutex_lock(&st->core.cmd_lock);
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		if (cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
--					     (s16 *)&data) < 0)
--			ret = -EIO;
-+		ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-+					     (s16 *)&data);
-+		if (ret)
-+			break;
-+
- 		*val = data;
-+		ret = IIO_VAL_INT;
- 		break;
- 	case IIO_CHAN_INFO_SCALE:
- 		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
- 		st->core.param.sensor_range.data = EC_MOTION_SENSE_NO_VALUE;
- 
--		if (cros_ec_motion_send_host_cmd(&st->core, 0)) {
--			ret = -EIO;
-+		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-+		if (ret)
- 			break;
--		}
-+
- 		*val = st->core.resp->sensor_range.ret;
- 
- 		/* scale * in_pressure_raw --> kPa */
+and:
+https://github.com/ClangBuiltLinux/linux/issues/612
 -- 
-2.22.0.657.g960e92d24f-goog
-
+Thanks,
+~Nick Desaulniers
