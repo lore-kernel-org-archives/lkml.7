@@ -2,106 +2,89 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8E5C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7DBC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACD92173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B182173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389350AbfGRIgb (ORCPT
+        id S2389449AbfGRIhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:36:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44520 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbfGRIgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:36:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1A70CAE12;
-        Thu, 18 Jul 2019 08:36:30 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 10:36:29 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        John Ogness <john.ogness@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
- only when safe
-Message-ID: <20190718083629.nso3vwbvmankqgks@pathway.suse.cz>
-References: <20190716072805.22445-1-pmladek@suse.com>
- <20190716072805.22445-2-pmladek@suse.com>
- <20190717095615.GD3664@jagdpanzerIV>
+        Thu, 18 Jul 2019 04:37:00 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45902 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfGRIhA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:37:00 -0400
+Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 15f044a4fc8d1e2f; Thu, 18 Jul 2019 10:36:57 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] thermal: intel: int340x_thermal: Remove unnecessary acpi_has_method() uses
+Date:   Thu, 18 Jul 2019 10:36:57 +0200
+Message-ID: <1780280.CEgozTfreW@kreacher>
+In-Reply-To: <20190717192639.90092-1-skunberg.kelsey@gmail.com>
+References: <20190717192639.90092-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717095615.GD3664@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-07-17 18:56:15, Sergey Senozhatsky wrote:
-> On (07/16/19 09:28), Petr Mladek wrote:
-> > Kernel tries hard to store and show printk messages when panicking. Even
-> > logbuf_lock gets re-initialized when only one CPU is running after
-> > smp_send_stop().
-> > 
-> > Unfortunately, smp_send_stop() might fail on architectures that do not
-> > use NMI as a fallback. Then printk log buffer might stay locked and
-> > a deadlock is almost inevitable.
+On Wednesday, July 17, 2019 9:26:39 PM CEST Kelsey Skunberg wrote:
+> acpi_evaluate_object() will already return in error if the method does not
+> exist. Checking if the method is absent before the acpi_evaluate_object()
+> call is not needed. Remove acpi_has_method() calls to avoid additional
+> work.
 > 
-> I'd say that deadlock is still almost inevitable.
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+
+LGTM:
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
-> panic-CPU syncs with the printing-CPU before it attempts to SMP_STOP.
-> If there is an active printing-CPU, which is looping in console_unlock(),
-> taking logbuf_lock in order to msg_print_text() and stuff, then panic-CPU
-> will spin on console_owner waiting for that printing-CPU to handover
-> printing duties.
+> diff --git a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> index 9716bc3abaf9..7130e90773ed 100644
+> --- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> +++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> @@ -77,9 +77,6 @@ int acpi_parse_trt(acpi_handle handle, int *trt_count, struct trt **trtp,
+>  	struct acpi_buffer element = { 0, NULL };
+>  	struct acpi_buffer trt_format = { sizeof("RRNNNNNN"), "RRNNNNNN" };
+>  
+> -	if (!acpi_has_method(handle, "_TRT"))
+> -		return -ENODEV;
+> -
+>  	status = acpi_evaluate_object(handle, "_TRT", NULL, &buffer);
+>  	if (ACPI_FAILURE(status))
+>  		return -ENODEV;
+> @@ -158,9 +155,6 @@ int acpi_parse_art(acpi_handle handle, int *art_count, struct art **artp,
+>  	struct acpi_buffer art_format =	{
+>  		sizeof("RRNNNNNNNNNNN"), "RRNNNNNNNNNNN" };
+>  
+> -	if (!acpi_has_method(handle, "_ART"))
+> -		return -ENODEV;
+> -
+>  	status = acpi_evaluate_object(handle, "_ART", NULL, &buffer);
+>  	if (ACPI_FAILURE(status))
+>  		return -ENODEV;
 > 
-> 	pr_emerg("Kernel panic - not syncing");
-> 	smp_send_stop();
-
-Good point. I forgot the handover logic. Well, it is enabled only
-around call_console_drivers(). Therefore it is not under
-lockbuf_lock.
-
-I had in mind some infinite loop or deadlock in vprintk_store().
-There was at least one long time ago (warning triggered
-by leap second).
 
 
-> If printing-CPU goes nuts under logbuf_lock, has corrupted IDT or anything
-> else, then we will not progress with panic(). panic-CPU will deadlock. If
-> not on
-> 	pr_emerg("Kernel panic - not syncing")
-> 
-> then on another pr_emerg(), right before the NMI-fallback.
-
-Nested printk() should not be problem thanks to printk_safe.
-
-Also printk_safe_flush_on_panic() is safe because it checks whether
-the lock is available.
-
-The problem is kmsg_dump() and console_unlock() called from
-console_unblank() and console_flush_on_panic(). They do not
-check whether the lock is available.
 
 
-This patch does not help in all possible scenarios. But I still
-believe that it will help in some.
-
-Well, I am primary interested into the 2nd patch. It fixes
-a real life bug report.
-
-Best Regards,
-Petr
