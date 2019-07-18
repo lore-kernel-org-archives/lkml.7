@@ -2,259 +2,123 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77F0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18DDC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A24A20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6E920693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ugx20yte"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Q6QQutm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389808AbfGRJpk (ORCPT
+        id S2389859AbfGRJpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:45:40 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:48530 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfGRJpj (ORCPT
+        Thu, 18 Jul 2019 05:45:55 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:26400 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfGRJpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:45:39 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190718094537epoutp0325fa53f8ca90d0a0158aae7cfe764240~ydz-2krC91399113991epoutp03l
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:45:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190718094537epoutp0325fa53f8ca90d0a0158aae7cfe764240~ydz-2krC91399113991epoutp03l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563443137;
-        bh=IUzvKwiihCCaFbylXw8HFyTv0vnTNdT51WeEMszXPSE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Ugx20yte6JtYUGLCxDMrTFOij3pujkW/1Pc2lVP3skqrbbc4KTeinhgSsh6yVbOrr
-         T+YpPKQH2kWQF0Dj6Nqd15AYpOiODCYKxyhdBPT2ixh/qVq5XnRc5IVIf8gtsHCPkr
-         FjRVgK+zNiOVxR4fYSGBDOidzrMAeRsOVkc9xN9I=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190718094536epcas1p27d8cfb2336fd295199f678ee09f03edb~ydz-jbd721698816988epcas1p2d;
-        Thu, 18 Jul 2019 09:45:36 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 45q8Q61ffFzMqYkY; Thu, 18 Jul
-        2019 09:45:34 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        11.88.04085.EBF303D5; Thu, 18 Jul 2019 18:45:34 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190718094533epcas1p45c6a0eb2630f8e002f47005cc7e3d2c5~ydz8cklBE2108621086epcas1p49;
-        Thu, 18 Jul 2019 09:45:33 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190718094533epsmtrp1fd51ee266c5a3392f477652fc8ca0588~ydz8arDzk1411314113epsmtrp1X;
-        Thu, 18 Jul 2019 09:45:33 +0000 (GMT)
-X-AuditID: b6c32a39-d03ff70000000ff5-da-5d303fbe62a0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        94.2C.03638.DBF303D5; Thu, 18 Jul 2019 18:45:33 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190718094533epsmtip19d0271ae4d8ce3ef31a341598b702929~ydz8RqNZX1887418874epsmtip1p;
-        Thu, 18 Jul 2019 09:45:33 +0000 (GMT)
-Subject: Re: [PATCH v4 18/24] PM / devfreq: tegra30: Optimize CPUFreq
- notifier
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <ce18694a-4281-a245-7bdf-299fedc3c724@samsung.com>
-Date:   Thu, 18 Jul 2019 18:48:42 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Thu, 18 Jul 2019 05:45:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563443154; x=1594979154;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=u1OZ0RKFDA8KTxhSUk4edGI+HfrldPAbhHw2+/kPPjo=;
+  b=Q6QQutm6/Vex5FifA6XSDS6jl5fu+KZSbkSNSmro8XNE0KeF1Zr6a60E
+   y+DcsqIt+lmKA8Homgv7YpscgSHEdHOeA80oDONo9qGOa86mbqFsyYHu7
+   k9MIS+7x3VFSPDClNygPIHwVq9ZA8TiyFgMVjRii7xyi7BB9AeVQKoABm
+   M=;
+X-IronPort-AV: E=Sophos;i="5.64,276,1559520000"; 
+   d="scan'208";a="411235357"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 18 Jul 2019 09:45:53 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 6014C1419F0;
+        Thu, 18 Jul 2019 09:45:50 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 18 Jul 2019 09:45:49 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.162.67) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 18 Jul 2019 09:45:43 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v2 0/8] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date:   Thu, 18 Jul 2019 12:45:23 +0300
+Message-ID: <20190718094531.21423-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-19-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTURzHO9u8m9HyNrN+LjJ3w0JB3XXOrpE9yGJQhGHBKmxd3PGBe7W7
-        hdU/mlFqLyUiWr6wLFNiJlo6Mksts7euF5olGFESRllRWdLd7iL/+5zf7/s73/M958jECjeh
-        lOVaHNhuYU0UMVNytTs6LvbGKnWG+l3HLKbx8yhiDrpqJczDAx+ljNdTQTATx3oQU/LVRTBD
-        hfUE89NTJWGOXx4gVgfr2obPI127a1iqO1Y0TuiOtzQg3URzRFrQ9rwVOZg1YnsktmRajbmW
-        7BRqQ7phrUGbpKZj6WRmGRVpYc04hUrdmBa7PtfEH4iK3MOanHwpjeU4Kn7lCrvV6cCROVbO
-        kUJhm9FkS7bFcayZc1qy4zKt5uW0Wp2g5YW78nJ+TRlsdVH5T71vRAVoYmEpCpYBmQgd76tF
-        PlaQbQhO/U4tRTN5/oLguadOLCy+IxjoLUP/JgrvXyCERgeC1sHRwOITgr7aUr8qlEyD4qEH
-        El9jLjmFoORnEeFriMlt0N3e6DckyBjofP/SXw8hVfDsx6h/WE6uhAtN9/wsIaPAe/Ox1Mdh
-        pB7u9VRJBM0c6Dvz1s/BZBKcrhgQCfvPh8G31QFeBEWtZ/0ZgJwkoPraYCBDKrzu/RPgUBjr
-        bZEKrIQPJw4FeD9c6ushhOFiBC2dT4KEhgY6607yDjLeIRrcnnihrIL2yUokGM+G8W9Hg3wS
-        IOVQfEghSBaDd2RYJHA4nDtcQpQhyjUtjmtaBNe0CK7/ZjVI0oDmYRtnzsYcbdNOf+1m5P+s
-        Mclt6M6jjV2IlCFqlvwlFZ+hCGL3cHvNXQhkYmqufOgDX5Ib2b37sN1qsDtNmOtCWv62y8XK
-        sEwr//UtDgOtTdBoNEwinaSlaWq+vOp3dIaCzGYdOA9jG7b/mxPJgpUFqL16uHvptcYXesZq
-        bPg8EuL8c7oA93eXdW4dI2+1ORdMjm7ismYY1qn6r/bPiBgrnxA36bJCQyovPq25ibz0zkT9
-        yK07+SpP7YvNV/K33NYkPMpyV+6Qhp+Jbb6b525p1R9It+lOKo5UJRmfXV9Sv3vh0OtF+8ZN
-        WD61RlOoJF5REi6HpWPEdo79C6j+tpvCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnO5ee4NYg3ldCharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZv/7FFyxVrbhy+T5TA+Nn2S5GTg4JAROJxtPL
-        2EBsIYHdjBKvn9ZCxCUlpl08ytzFyAFkC0scPlzcxcgFVPKWUeLsprvMIDXCAn4SvadvMYMk
-        RASamCQ29V5gB0kwC0RK9MzdwgbRsYVR4vapNrAONgEtif0vboBt4xdQlLj64zEjiM0rYCex
-        bMMpMJtFQFXi8oHzYINEBSIkJl3byQJRIyhxcuYTMJtTwExi+pxLTBDL1CX+zLvEDGGLS9x6
-        Mh8qLi/RvHU28wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1
-        kvNzNzGCI0xLawfjiRPxhxgFOBiVeHhvKOnHCrEmlhVX5h5ilOBgVhLhvf0SKMSbklhZlVqU
-        H19UmpNafIhRmoNFSZxXPv9YpJBAemJJanZqakFqEUyWiYNTqoEx+dTeF//2iFcwfw3/d95F
-        cbOJr3sB9xnmzl8qpwUf8pR0W+v9UO17OY/5178f0//n1jrb+Rd69F7b9dOK69ri4g0XbsT4
-        lOyZe15i9W/lf6UFVcc0F368cUllr5Rh5bZ7p/Xm+6wo/JS6Zk3xndm/bql+suNacSNMo+HD
-        QaPY5TlKtvG8nqszlFiKMxINtZiLihMBMdrP66wCAAA=
-X-CMS-MailID: 20190718094533epcas1p45c6a0eb2630f8e002f47005cc7e3d2c5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223618epcas4p48e1e2ae7af04775ac50c68b7636f1a56
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223618epcas4p48e1e2ae7af04775ac50c68b7636f1a56@epcas4p4.samsung.com>
-        <20190707223303.6755-19-digetx@gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.67]
+X-ClientProxiedBy: EX13P01UWA004.ant.amazon.com (10.43.160.127) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> When CPU's memory activity is low or memory activity is high such that
-> CPU's frequency contribution to the boosting is not taken into account,
-> then there is no need to schedule devfreq's update. This eliminates
-> unnecessary CPU activity during of idling caused by the scheduled work.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 73 +++++++++++++++++++++++++++----
->  1 file changed, 64 insertions(+), 9 deletions(-)
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-Patch4 add the 'cpufreq notifier' and this patch optimize the cpufreq notifier.
-I think t hat you can combine two patches.
+Regarding the 2nd DWC patch (PCI flags support), do you think this should
+be done in the context of a host-bridge driver at all (as opposed to PCI
+system-wide code)?
 
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 43c9c5fbfe91..8d6bf6e9f1ae 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -216,10 +216,10 @@ static inline unsigned long do_percent(unsigned long val, unsigned int pct)
->  	return val * pct / 100;
->  }
->  
-> -static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra)
-> +static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
-> +					    unsigned int cpu_freq)
->  {
->  	const struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
-> -	unsigned int cpu_freq = cpufreq_get(0);
->  	unsigned int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(actmon_emc_ratios); i++, ratio++) {
-> @@ -239,15 +239,15 @@ tegra_actmon_account_cpu_freq(struct tegra_devfreq *tegra,
->  			      struct tegra_devfreq_device *dev,
->  			      unsigned long target_freq)
->  {
-> -	unsigned long static_cpu_emc_freq;
-> +	unsigned long cpu_emc_freq = 0;
->  
-> -	if (dev->config->avg_dependency_threshold &&
-> -	    dev->config->avg_dependency_threshold < dev->avg_freq) {
-> -		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra);
-> -		target_freq = max(target_freq, static_cpu_emc_freq);
-> -	}
-> +	if (!dev->config->avg_dependency_threshold)
-> +		return target_freq;
->  
-> -	return target_freq;
-> +	if (dev->avg_freq > dev->config->avg_dependency_threshold)
-> +		cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpufreq_get(0));
-> +
-> +	return max(target_freq, cpu_emc_freq);
->  }
->  
->  static unsigned long tegra_actmon_lower_freq(struct tegra_devfreq *tegra,
-> @@ -531,16 +531,71 @@ static void tegra_actmon_delayed_update(struct work_struct *work)
->  	mutex_unlock(&tegra->devfreq->lock);
->  }
->  
-> +static unsigned long
-> +tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
-> +				  unsigned int cpu_freq)
-> +{
-> +	unsigned long freq, static_cpu_emc_freq;
-> +
-> +	/* check whether CPU's freq is taken into account at all */
-> +	if (tegra->devices[MCCPU].avg_freq <=
-> +	    tegra->devices[MCCPU].config->avg_dependency_threshold)
-> +		return 0;
-> +
-> +	static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
-> +
-> +	/* compare static CPU-EMC freq with MCALL */
-> +	freq = tegra->devices[MCALL].avg_freq +
-> +	       tegra->devices[MCALL].boost_freq;
-> +
-> +	freq = tegra_actmon_upper_freq(tegra, freq);
-> +
-> +	if (freq == tegra->max_freq || freq >= static_cpu_emc_freq)
-> +		return 0;
-> +
-> +	/* compare static CPU-EMC freq with MCCPU */
-> +	freq = tegra->devices[MCCPU].avg_freq +
-> +	       tegra->devices[MCCPU].boost_freq;
-> +
-> +	freq = tegra_actmon_upper_freq(tegra, freq);
-> +
-> +	if (freq == tegra->max_freq || freq >= static_cpu_emc_freq)
-> +		return 0;
-> +
-> +	return static_cpu_emc_freq;
-> +}
-> +
->  static int tegra_actmon_cpu_notify_cb(struct notifier_block *nb,
->  				      unsigned long action, void *ptr)
->  {
-> +	struct cpufreq_freqs *freqs = ptr;
->  	struct tegra_devfreq *tegra;
-> +	unsigned long old, new;
->  
->  	if (action != CPUFREQ_POSTCHANGE)
->  		return NOTIFY_OK;
->  
->  	tegra = container_of(nb, struct tegra_devfreq, cpu_rate_change_nb);
->  
-> +	/*
-> +	 * Quickly check whether CPU frequency should be taken into account
-> +	 * at all, without blocking CPUFreq's core.
-> +	 */
-> +	if (mutex_trylock(&tegra->devfreq->lock)) {
-> +		old = tegra_actmon_cpufreq_contribution(tegra, freqs->old);
-> +		new = tegra_actmon_cpufreq_contribution(tegra, freqs->new);
-> +		mutex_unlock(&tegra->devfreq->lock);
-> +
-> +		/*
-> +		 * If CPU's frequency shouldn't be taken into account at
-> +		 * the moment, then there is no need to update the devfreq's
-> +		 * state because ISR will re-check CPU's frequency on the
-> +		 * next interrupt.
-> +		 */
-> +		if (old == new)
-> +			return NOTIFY_OK;
-> +	}
-> +
->  	/*
->  	 * CPUFreq driver should support CPUFREQ_ASYNC_NOTIFICATION in order
->  	 * to allow asynchronous notifications. This means we can't block
-> 
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
 
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (7):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: al: Add support for DW based driver type
+  PCI: dw: Add validation that PCIe core is set to correct mode
+  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  45 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 373 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  31 +-
+ drivers/pci/quirks.c                          |  34 ++
+ drivers/pci/vpd.c                             |  16 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 519 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.17.1
+
