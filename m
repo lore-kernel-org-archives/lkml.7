@@ -2,182 +2,122 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD0CC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08647C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B01F2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYOJGcNF"
+	by mail.kernel.org (Postfix) with ESMTP id D86422083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390962AbfGRSMQ (ORCPT
+        id S2390821AbfGRSQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:12:16 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40250 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbfGRSMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:12:15 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m8so28244695lji.7;
-        Thu, 18 Jul 2019 11:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dAl3eDfisZ18QLZIHY2seQs2RuMzg+EqdXaDuRAy/dM=;
-        b=rYOJGcNFE0NWbDYygP+1RRqBUa8FHCapYn1UswpF+6WRNigTw6GRVlMnNmVuwYYw+y
-         RudusUAwVPQLDzOik2MgR30sOY88dYJQ9tixZUtI2AM5BXvV29PdjPzR90SKvWSKTKg1
-         yMZBwBQ/qRSyrxgxIk5HJe9oMqO8mxxXRH7wCfuv9SZOrbDdh9mX9U509gixv1xcQOWF
-         y66cgkD5KWT3+MPYF2gAIwsePsOGQmT2WClNlUWb+44s3JYnu65sVxPZu6e4VVVBCSVq
-         YPGDiAPSO27/67G+z/hnIKfrZQu/00bQkdQ1qC44xaUjHq5SUV55u1OU6DD1liZU2N6p
-         h4BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dAl3eDfisZ18QLZIHY2seQs2RuMzg+EqdXaDuRAy/dM=;
-        b=nsbQfWc+zxO9GxpWJVXdqsUw+kD1y5EpO0lmqQLE9Bw2zKQ7f/0gfEgkV9Ecvc5pLP
-         51YdnAa74Jds/GATQeYBIOZPcIpHJm6SClhePEL6QFkRI10qO9fSRbYcLgMMrOz/Y0qP
-         vwD3TMtU5yhB0I/MAJMQsb0i+vMCh41YvocnmDDyNzcmWR43jZ/FtJ+u3y19iFopdD6f
-         VkkQbXoOKvYduFF0RbRwjPEI5H8Ui8Yj+uFB06VafPMgu7YCFB/sjbEZQMAEL45AmkcE
-         0o1ngAWZ8wF66tNRQKKW6TM8qgqaraVDDVNWf+5MRd8aW0u10rGgzaZr2bJUp7/4krZT
-         4AbQ==
-X-Gm-Message-State: APjAAAXc6CD04MElPAS5zoNZw2R2b1t2dV2dHPzbHkZgM7djB7JUcMOO
-        0rUGCsqruWjs1ueWibZSu6AbbLwp
-X-Google-Smtp-Source: APXvYqz9Iac/ot87wpXEaVHzdMAxsWhf7X2fpSbr4iqyWUepWopA5br3uptabxJ6aGX7JKHbb+MeYQ==
-X-Received: by 2002:a2e:9003:: with SMTP id h3mr23771082ljg.194.1563473532618;
-        Thu, 18 Jul 2019 11:12:12 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id z12sm4112997lfg.67.2019.07.18.11.12.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 11:12:11 -0700 (PDT)
-Subject: Re: [PATCH v1] soc/tegra: pmc: Query PCLK clock rate at probe time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190707230843.11224-1-digetx@gmail.com>
- <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <040ce6d7-5c97-6112-4b9e-a320d12fcdca@gmail.com>
-Date:   Thu, 18 Jul 2019 21:12:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 18 Jul 2019 14:16:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:41525 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbfGRSQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:16:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 11:16:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,279,1559545200"; 
+   d="scan'208";a="367438718"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Jul 2019 11:16:24 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 18 Jul 2019 11:16:24 -0700
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.252]) by
+ FMSMSX154.amr.corp.intel.com ([169.254.6.214]) with mapi id 14.03.0439.000;
+ Thu, 18 Jul 2019 11:16:24 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 3/7] libnvdimm/region: Register badblocks before
+ namespaces
+Thread-Topic: [PATCH v2 3/7] libnvdimm/region: Register badblocks before
+ namespaces
+Thread-Index: AQHVPQc/XREfWGrWN0m6ePEPd1eCmKbRJRmA
+Date:   Thu, 18 Jul 2019 18:16:23 +0000
+Message-ID: <60f1c499243c2e46fcc5aecc0922a0a5b730b16a.camel@intel.com>
+References: <156341206785.292348.1660822720191643298.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <156341208365.292348.1547528796026249120.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <156341208365.292348.1547528796026249120.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.185]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5BA1DF32AB703E448A19BBC12618BA43@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.07.2019 12:45, Jon Hunter пишет:
-> 
-> On 08/07/2019 00:08, Dmitry Osipenko wrote:
->> The PCLK clock is running off SCLK, which is a critical clock that is
->> very unlikely to randomly change its rate. It's also a bit clumsy (and
->> apparently incorrect) to query the clock's rate with interrupts being
->> disabled because clk_get_rate() takes a mutex and that's the case during
->> suspend/cpuidle entering. Lastly, it's better to always fully reprogram
->> PMC state because it's not obvious whether it could be changed after SC7.
-> 
-> I agree with the first part, but I would drop the last sentence because
-> I see no evidence of this. Maybe Peter can confirm.
-
-Okay.
-
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/soc/tegra/pmc.c | 26 +++++++++++---------------
->>  1 file changed, 11 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->> index 9f9c1c677cf4..532e0ada012b 100644
->> --- a/drivers/soc/tegra/pmc.c
->> +++ b/drivers/soc/tegra/pmc.c
->> @@ -1433,6 +1433,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
->>  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
->>  {
->>  	unsigned long long rate = 0;
->> +	u64 ticks;
->>  	u32 value;
->>  
->>  	switch (mode) {
->> @@ -1441,7 +1442,7 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
->>  		break;
->>  
->>  	case TEGRA_SUSPEND_LP2:
->> -		rate = clk_get_rate(pmc->clk);
->> +		rate = pmc->rate;
-> 
-> There is another call to clk_get_rate() that could be removed as well.
-
-Indeed!
-
->>  		break;
->>  
->>  	default:
->> @@ -1451,26 +1452,20 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
->>  	if (WARN_ON_ONCE(rate == 0))
->>  		rate = 100000000;
->>  
->> -	if (rate != pmc->rate) {
->> -		u64 ticks;
->> -
->> -		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
->> -		do_div(ticks, USEC_PER_SEC);
->> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
->> -
->> -		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
->> -		do_div(ticks, USEC_PER_SEC);
->> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
->> +	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
->> +	do_div(ticks, USEC_PER_SEC);
->> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
-> 
-> You could go a step further and update the cpu_good_time/cpu_off_time to
-> be ticks and calculated once during probe and recalculated if
-> tegra_pmc_set_suspend_mode is called. I am not sure why we really need
-> to pass mode to tegra_pmc_enter_suspend_mode() seeing as the mode is
-> stored in the pmc struct.
-
-The mode will differ depending on the idling mode. The system suspend
-could be LP1, while CPUIDLE is LP2. Hence the mode need to be
-reconfigured dynamically and thus the ticks.
-
->>  
->> -		wmb();
->> -
->> -		pmc->rate = rate;
->> -	}
->> +	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
->> +	do_div(ticks, USEC_PER_SEC);
->> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
->>  
->>  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
->>  	value |= PMC_CNTRL_CPU_PWRREQ_OE;
->>  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->> +
->> +	wmb();
->>  }
->>  #endif
->>  
->> @@ -2082,6 +2077,7 @@ static int tegra_pmc_probe(struct platform_device *pdev)
->>  		pmc->clk = NULL;
->>  	}
->>  
->> +	pmc->rate = clk_get_rate(pmc->clk);
-> 
-> You should check the value returned is not 0 here.
-
-Good point!
+DQpPbiBXZWQsIDIwMTktMDctMTcgYXQgMTg6MDggLTA3MDAsIERhbiBXaWxsaWFtcyB3cm90ZToN
+Cj4gTmFtZXNwYWNlIGFjdGl2YXRpb24gZXhwZWN0cyB0byBiZSBhYmxlIHRvIHJlZmVyZW5jZSBy
+ZWdpb24gYmFkYmxvY2tzLg0KPiBUaGUgZm9sbG93aW5nIHdhcm5pbmcgc29tZXRpbWVzIHRyaWdn
+ZXJzIHdoZW4gYXN5bmNocm9ub3VzIG5hbWVzcGFjZQ0KPiBhY3RpdmF0aW9uIHJhY2VzIGluIGZy
+b250IG9mIHRoZSBjb21wbGV0aW9uIG9mIG5hbWVzcGFjZSBwcm9iaW5nLiBNb3ZlDQo+IGFsbCBw
+b3NzaWJsZSBuYW1lc3BhY2UgcHJvYmluZyBhZnRlciByZWdpb24gYmFkYmxvY2tzIGluaXRpYWxp
+emF0aW9uLg0KPiANCj4gT3RoZXJ3aXNlLCBsb2NrZGVwIHNvbWV0aW1lcyBjYXRjaGVzIHRoZSB1
+bmluaXRpYWxpemVkIHN0YXRlIG9mIHRoZQ0KPiBiYWRibG9ja3Mgc2VxbG9jayB3aXRoIHN0YWNr
+IHRyYWNlIHNpZ25hdHVyZXMgbGlrZToNCj4gDQo+ICAgICBJTkZPOiB0cnlpbmcgdG8gcmVnaXN0
+ZXIgbm9uLXN0YXRpYyBrZXkuDQo+ICAgICBwbWVtMjogZGV0ZWN0ZWQgY2FwYWNpdHkgY2hhbmdl
+IGZyb20gMCB0byAxMzYzNjUyMTE2NDgNCj4gICAgIHRoZSBjb2RlIGlzIGZpbmUgYnV0IG5lZWRz
+IGxvY2tkZXAgYW5ub3RhdGlvbi4NCj4gICAgIHR1cm5pbmcgb2ZmIHRoZSBsb2NraW5nIGNvcnJl
+Y3RuZXNzIHZhbGlkYXRvci4NCj4gICAgIENQVTogOSBQSUQ6IDM1OCBDb21tOiBrd29ya2VyL3U4
+MDo1IFRhaW50ZWQ6DQo+IEcgICAgICAgICAgIE9FICAgICA1LjIuMC1yYzQrICMzMzgyDQo+ICAg
+ICBIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwg
+QklPUyAwLjAuMA0KPiAwMi8wNi8yMDE1DQo+ICAgICBXb3JrcXVldWU6IGV2ZW50c191bmJvdW5k
+IGFzeW5jX3J1bl9lbnRyeV9mbg0KPiAgICAgQ2FsbCBUcmFjZToNCj4gICAgICBkdW1wX3N0YWNr
+KzB4ODUvMHhjMA0KPiAgICAgcG1lbTEuMTI6IGRldGVjdGVkIGNhcGFjaXR5IGNoYW5nZSBmcm9t
+IDAgdG8gODU4OTkzNDU5Mg0KPiAgICAgIHJlZ2lzdGVyX2xvY2tfY2xhc3MrMHg1NmEvMHg1NzAN
+Cj4gICAgICA/IGNoZWNrX29iamVjdCsweDE0MC8weDI3MA0KPiAgICAgIF9fbG9ja19hY3F1aXJl
+KzB4ODAvMHgxNzEwDQo+ICAgICAgPyBfX211dGV4X2xvY2srMHgzOWQvMHg5MTANCj4gICAgICBs
+b2NrX2FjcXVpcmUrMHg5ZS8weDE4MA0KPiAgICAgID8gbmRfcGZuX3ZhbGlkYXRlKzB4MjhmLzB4
+NDQwIFtsaWJudmRpbW1dDQo+ICAgICAgYmFkYmxvY2tzX2NoZWNrKzB4OTMvMHgxZjANCj4gICAg
+ICA/IG5kX3Bmbl92YWxpZGF0ZSsweDI4Zi8weDQ0MCBbbGlibnZkaW1tXQ0KPiAgICAgIG5kX3Bm
+bl92YWxpZGF0ZSsweDI4Zi8weDQ0MCBbbGlibnZkaW1tXQ0KPiAgICAgID8gbG9ja2RlcF9oYXJk
+aXJxc19vbisweGYwLzB4MTgwDQo+ICAgICAgbmRfZGF4X3Byb2JlKzB4OWEvMHgxMjAgW2xpYm52
+ZGltbV0NCj4gICAgICBuZF9wbWVtX3Byb2JlKzB4NmQvMHgxODAgW25kX3BtZW1dDQo+ICAgICAg
+bnZkaW1tX2J1c19wcm9iZSsweDkwLzB4MmMwIFtsaWJudmRpbW1dDQo+IA0KPiBGaXhlczogNDhh
+ZjJmN2U1MmY0ICgibGlibnZkaW1tLCBwZm46IGR1cmluZyBpbml0LCBjbGVhciBlcnJvcnMuLi4i
+KQ0KPiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+DQo+IENjOiBWaXNoYWwgVmVybWEgPHZp
+c2hhbC5sLnZlcm1hQGludGVsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxk
+YW4uai53aWxsaWFtc0BpbnRlbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9udmRpbW0vcmVnaW9u
+LmMgfCAgIDIyICsrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBp
+bnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCg0KVGhpcyBsb29rcyBnb29kIHRvIG1lLA0K
+UmV2aWV3ZWQtYnk6IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0KDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9udmRpbW0vcmVnaW9uLmMgYi9kcml2ZXJzL252ZGlt
+bS9yZWdpb24uYw0KPiBpbmRleCBlZjQ2Y2MzYTcxYWUuLjQ4OGM0N2FjNGM0YSAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9udmRpbW0vcmVnaW9uLmMNCj4gKysrIGIvZHJpdmVycy9udmRpbW0vcmVn
+aW9uLmMNCj4gQEAgLTM0LDE3ICszNCw2IEBAIHN0YXRpYyBpbnQgbmRfcmVnaW9uX3Byb2JlKHN0
+cnVjdCBkZXZpY2UgKmRldikNCj4gIAlpZiAocmMpDQo+ICAJCXJldHVybiByYzsNCj4gIA0KPiAt
+CXJjID0gbmRfcmVnaW9uX3JlZ2lzdGVyX25hbWVzcGFjZXMobmRfcmVnaW9uLCAmZXJyKTsNCj4g
+LQlpZiAocmMgPCAwKQ0KPiAtCQlyZXR1cm4gcmM7DQo+IC0NCj4gLQluZHJkID0gZGV2X2dldF9k
+cnZkYXRhKGRldik7DQo+IC0JbmRyZC0+bnNfYWN0aXZlID0gcmM7DQo+IC0JbmRyZC0+bnNfY291
+bnQgPSByYyArIGVycjsNCj4gLQ0KPiAtCWlmIChyYyAmJiBlcnIgJiYgcmMgPT0gZXJyKQ0KPiAt
+CQlyZXR1cm4gLUVOT0RFVjsNCj4gLQ0KPiAgCWlmIChpc19uZF9wbWVtKCZuZF9yZWdpb24tPmRl
+dikpIHsNCj4gIAkJc3RydWN0IHJlc291cmNlIG5kcl9yZXM7DQo+ICANCj4gQEAgLTYwLDYgKzQ5
+LDE3IEBAIHN0YXRpYyBpbnQgbmRfcmVnaW9uX3Byb2JlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4g
+IAkJbnZkaW1tX2JhZGJsb2Nrc19wb3B1bGF0ZShuZF9yZWdpb24sICZuZF9yZWdpb24tPmJiLA0K
+PiAmbmRyX3Jlcyk7DQo+ICAJfQ0KPiAgDQo+ICsJcmMgPSBuZF9yZWdpb25fcmVnaXN0ZXJfbmFt
+ZXNwYWNlcyhuZF9yZWdpb24sICZlcnIpOw0KPiArCWlmIChyYyA8IDApDQo+ICsJCXJldHVybiBy
+YzsNCj4gKw0KPiArCW5kcmQgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gKwluZHJkLT5uc19h
+Y3RpdmUgPSByYzsNCj4gKwluZHJkLT5uc19jb3VudCA9IHJjICsgZXJyOw0KPiArDQo+ICsJaWYg
+KHJjICYmIGVyciAmJiByYyA9PSBlcnIpDQo+ICsJCXJldHVybiAtRU5PREVWOw0KPiArDQo+ICAJ
+bmRfcmVnaW9uLT5idHRfc2VlZCA9IG5kX2J0dF9jcmVhdGUobmRfcmVnaW9uKTsNCj4gIAluZF9y
+ZWdpb24tPnBmbl9zZWVkID0gbmRfcGZuX2NyZWF0ZShuZF9yZWdpb24pOw0KPiAgCW5kX3JlZ2lv
+bi0+ZGF4X3NlZWQgPSBuZF9kYXhfY3JlYXRlKG5kX3JlZ2lvbik7DQo+IA0KDQo=
