@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA5EC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD93C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E871E217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D562184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="cQ50t0e/"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="wxHn5m/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfGRCJQ (ORCPT
+        id S2389166AbfGRCJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 22:09:16 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33164 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbfGRCJQ (ORCPT
+        Wed, 17 Jul 2019 22:09:22 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33819 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732871AbfGRCJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 22:09:16 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so27264961otl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 19:09:15 -0700 (PDT)
+        Wed, 17 Jul 2019 22:09:21 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l12so20243808oil.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 19:09:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JBv93M51Cm27uWFOlZ79cXm5tHYDJ8Ehc/VJnl7Bsac=;
-        b=cQ50t0e/TYXv0f06gbL54Fp3Yrwg7bN8IkwK1+AnRAadEqm80rjzsuoKYNznG+tFEV
-         lGh+daxpY4K8TeweA5JwO46a9l7Is2O+mKX7Sq5XQrkIimbUHVCFTLOeTaXe7/eBPY4r
-         TQTAlSAmPhrkOUmlj7HQikodai2rpveJejNlWXcExthtUBOjtttnqiMwcVX0y7uJY2Wp
-         8qx/syN6qXlxVfgr9w2ICvgORYcJmpuioHefo7erPDhr43tNevUjv4rWpDd0jQILpcLY
-         z2lgLhavqUCKfmhC+3CeRBgCK9HNkHZpe2fQC0tjO48F9nvvnXdBe8hnidI/TDKktU5+
-         Y/mg==
+        bh=C0K2Z781kWZftcdr+fy0S02sOXmXEkTKag2oui4WKC4=;
+        b=wxHn5m/l4pEwrhbdmndVI58aqGgHTl7X9zIo8VK/6zhtqtPZLS1Po7I+kd5XcRE57f
+         hBc7QhAMpL5Gbn8XxhvbBmLxbO8wnjB6/DOJwZ7VRy05zVI1JLxfNEFJ/10OdPurUDP+
+         RvFgE99hdRrmJ6sNEILwemVw+9y9h+hBySGPYPAZpXRNjG4lf9ZczzkB29DrOb6+gHQG
+         ew4WEnAvBNEUUm4ph2P9M00b37J9Fb1CLRMzO+6M8IImBOKRp5Z+iN0PJhjSubkumcUt
+         EV6pQxYDFscoQzE+dknk4WFWPOO25/785aeXbjLeoMwyyl9wv4XZ183Uc57G/ExZ4BF4
+         Poow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JBv93M51Cm27uWFOlZ79cXm5tHYDJ8Ehc/VJnl7Bsac=;
-        b=m1RUNn6aCTxmtCL7bGq66v4FfByZgMC9TVjHK+zFhhTqQjSWox0RIoff5T9Z9UlWo/
-         4SPC/580CFukP7hoWTdx0dGFyIM9goUjJUImj2cqV20NbP/cWeg/Tbkr/WI0IgueJsmr
-         zFnXrnl+wzaFWoddmK9SSQCerxVugnaU2XI6vvbN1uiG5ZS9Hty1lXBrqZBharuIpcCf
-         dmg74cHlNTFzVIwMYIRkG26coJGhyyAEl30QhBtjkQIGz6Wq61sxKfhbMOvDKQrVQVDe
-         5ArsWyOeLsWlk4B2MpuVLsyY6OUFxQAIUiFCdDUYr0LHiyF6TLf1Cqoir8uMLZ8dkig6
-         WEKQ==
-X-Gm-Message-State: APjAAAVKyJRC7G2yVXPF5hIJqeQMiK4ZKr+rgUHfZp5n+NhUDc1W72ld
-        U6hWnD5TFYXGWYn6cRU46LTxE1dSVmdKzA==
-X-Google-Smtp-Source: APXvYqwkduwNJYTtmbkWXsTJ92I8TPBt+8gY4M4U0jN8M8NZ5AO00WG6WLuOSXVQScDR/ok61UQnvw==
-X-Received: by 2002:a9d:6c46:: with SMTP id g6mr30566080otq.104.1563415755427;
-        Wed, 17 Jul 2019 19:09:15 -0700 (PDT)
+        bh=C0K2Z781kWZftcdr+fy0S02sOXmXEkTKag2oui4WKC4=;
+        b=j4rwCRB0iJ1CrNgTgknRVzxeKgWphBGZvpOxCbP0PuV17DfokjHZGnbKrIVskaw96l
+         sh5gAwWE79VYeGJTytSuwCDFhZ0nE6P1PGU50E4TdehqtkhOmWPM4gvISgaC91+1fCFk
+         Z4ewmc69PyctES9ApcSg3u2zi6itMgSo1DKmU4Zjr7uzA0F2gDGYYVm7T7f/8OxYB/9D
+         wH5sWkChBT3ekrxcz5xBfeaZlLY8juMYOhJBX1iicpLMP8nBQFXqXyBuxhxy6vRn55sx
+         RIO0YxvjU2+waRiHuddVo/JFm8gb9cZwufIruwtoIwM+7vdXBnypRdsaW7yRvIz/S6Pf
+         uHXg==
+X-Gm-Message-State: APjAAAXR2AL2Q9wJzZtzX6BjMlX7HNNWrPyn2vuSQRsPSDBjx/9UgDxf
+        aXkPAF95beWQEHpy0orl1w4=
+X-Google-Smtp-Source: APXvYqwk4sfq9cv64SvpwitEFlWzkERSLEQAHK/Lk/JYvwKQhDepMQB6gk83IzfFklxrnxFp5EBXYg==
+X-Received: by 2002:aca:55c2:: with SMTP id j185mr23543959oib.100.1563415760966;
+        Wed, 17 Jul 2019 19:09:20 -0700 (PDT)
 Received: from linux.fredlawl.com ([2600:1700:18a0:11d0:18af:e893:6cb0:139a])
-        by smtp.gmail.com with ESMTPSA id v203sm10184523oie.5.2019.07.17.19.09.14
+        by smtp.gmail.com with ESMTPSA id a21sm8639497otr.4.2019.07.17.19.09.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 19:09:14 -0700 (PDT)
+        Wed, 17 Jul 2019 19:09:20 -0700 (PDT)
 From:   Frederick Lawler <fred@fredlawl.com>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     Frederick Lawler <fred@fredlawl.com>, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org, bhelgaas@google.com
-Subject: [PATCH] scsi: csiostor: Prefer pcie_capability_read_word()
-Date:   Wed, 17 Jul 2019 21:07:43 -0500
-Message-Id: <20190718020745.8867-8-fred@fredlawl.com>
+Subject: [PATCH] scsi: esas2r: Prefer pcie_capability_read_word()
+Date:   Wed, 17 Jul 2019 21:07:44 -0500
+Message-Id: <20190718020745.8867-9-fred@fredlawl.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190718020745.8867-1-fred@fredlawl.com>
 References: <20190718020745.8867-1-fred@fredlawl.com>
@@ -80,42 +80,78 @@ pcie_capability_read_word() and pcie_capability_write_word().
 
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 ---
- drivers/scsi/csiostor/csio_wr.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/scsi/esas2r/esas2r_init.c  | 13 ++++---------
+ drivers/scsi/esas2r/esas2r_ioctl.c | 14 +++++---------
+ 2 files changed, 9 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_wr.c b/drivers/scsi/csiostor/csio_wr.c
-index 03bd896cdbb9..0ca695110f54 100644
---- a/drivers/scsi/csiostor/csio_wr.c
-+++ b/drivers/scsi/csiostor/csio_wr.c
-@@ -1316,7 +1316,6 @@ csio_wr_fixup_host_params(struct csio_hw *hw)
- 	u32 fl_align = clsz < 32 ? 32 : clsz;
- 	u32 pack_align;
- 	u32 ingpad, ingpack;
--	int pcie_cap;
+diff --git a/drivers/scsi/esas2r/esas2r_init.c b/drivers/scsi/esas2r/esas2r_init.c
+index 950cd92df2ff..eb7d139ffc00 100644
+--- a/drivers/scsi/esas2r/esas2r_init.c
++++ b/drivers/scsi/esas2r/esas2r_init.c
+@@ -762,14 +762,10 @@ u32 esas2r_get_uncached_size(struct esas2r_adapter *a)
  
- 	csio_wr_reg32(hw, HOSTPAGESIZEPF0_V(s_hps) | HOSTPAGESIZEPF1_V(s_hps) |
- 		      HOSTPAGESIZEPF2_V(s_hps) | HOSTPAGESIZEPF3_V(s_hps) |
-@@ -1347,8 +1346,7 @@ csio_wr_fixup_host_params(struct csio_hw *hw)
- 	 * multiple of the Maximum Payload Size.
- 	 */
- 	pack_align = fl_align;
--	pcie_cap = pci_find_capability(hw->pdev, PCI_CAP_ID_EXP);
--	if (pcie_cap) {
-+	if (pci_is_pcie(hw->pdev)) {
- 		u32 mps, mps_log;
- 		u16 devctl;
+ static void esas2r_init_pci_cfg_space(struct esas2r_adapter *a)
+ {
+-	int pcie_cap_reg;
+-
+-	pcie_cap_reg = pci_find_capability(a->pcid, PCI_CAP_ID_EXP);
+-	if (pcie_cap_reg) {
++	if (pci_is_pcie(a->pcid)) {
+ 		u16 devcontrol;
  
-@@ -1356,9 +1354,7 @@ csio_wr_fixup_host_params(struct csio_hw *hw)
- 		 * [bits 7:5] encodes sizes as powers of 2 starting at
- 		 * 128 bytes.
- 		 */
--		pci_read_config_word(hw->pdev,
--				     pcie_cap + PCI_EXP_DEVCTL,
--				     &devctl);
-+		pcie_capability_read_word(hw->pdev, PCI_EXP_DEVCTL, &devctl);
- 		mps_log = ((devctl & PCI_EXP_DEVCTL_PAYLOAD) >> 5) + 7;
- 		mps = 1 << mps_log;
- 		if (mps > pack_align)
+-		pci_read_config_word(a->pcid, pcie_cap_reg + PCI_EXP_DEVCTL,
+-				     &devcontrol);
++		pcie_capability_read_word(a->pcid, PCI_EXP_DEVCTL, &devcontrol);
+ 
+ 		if ((devcontrol & PCI_EXP_DEVCTL_READRQ) >
+ 		     PCI_EXP_DEVCTL_READRQ_512B) {
+@@ -778,9 +774,8 @@ static void esas2r_init_pci_cfg_space(struct esas2r_adapter *a)
+ 
+ 			devcontrol &= ~PCI_EXP_DEVCTL_READRQ;
+ 			devcontrol |= PCI_EXP_DEVCTL_READRQ_512B;
+-			pci_write_config_word(a->pcid,
+-					      pcie_cap_reg + PCI_EXP_DEVCTL,
+-					      devcontrol);
++			pcie_capability_write_word(a->pcid, PCI_EXP_DEVCTL,
++						   devcontrol);
+ 		}
+ 	}
+ }
+diff --git a/drivers/scsi/esas2r/esas2r_ioctl.c b/drivers/scsi/esas2r/esas2r_ioctl.c
+index 3d130523c288..442c5e70a7b4 100644
+--- a/drivers/scsi/esas2r/esas2r_ioctl.c
++++ b/drivers/scsi/esas2r/esas2r_ioctl.c
+@@ -757,7 +757,6 @@ static int hba_ioctl_callback(struct esas2r_adapter *a,
+ 
+ 		struct atto_hba_get_adapter_info *gai =
+ 			&hi->data.get_adap_info;
+-		int pcie_cap_reg;
+ 
+ 		if (hi->flags & HBAF_TUNNEL) {
+ 			hi->status = ATTO_STS_UNSUPPORTED;
+@@ -784,17 +783,14 @@ static int hba_ioctl_callback(struct esas2r_adapter *a,
+ 		gai->pci.dev_num = PCI_SLOT(a->pcid->devfn);
+ 		gai->pci.func_num = PCI_FUNC(a->pcid->devfn);
+ 
+-		pcie_cap_reg = pci_find_capability(a->pcid, PCI_CAP_ID_EXP);
+-		if (pcie_cap_reg) {
++		if (pci_is_pcie(a->pcid)) {
+ 			u16 stat;
+ 			u32 caps;
+ 
+-			pci_read_config_word(a->pcid,
+-					     pcie_cap_reg + PCI_EXP_LNKSTA,
+-					     &stat);
+-			pci_read_config_dword(a->pcid,
+-					      pcie_cap_reg + PCI_EXP_LNKCAP,
+-					      &caps);
++			pcie_capability_read_word(a->pcid, PCI_EXP_LNKSTA,
++						  &stat);
++			pcie_capability_read_dword(a->pcid, PCI_EXP_LNKCAP,
++						   &caps);
+ 
+ 			gai->pci.link_speed_curr =
+ 				(u8)(stat & PCI_EXP_LNKSTA_CLS);
 -- 
 2.17.1
 
