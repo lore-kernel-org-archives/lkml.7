@@ -2,91 +2,120 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD86C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C798C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138BE21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nn2uvpW2"
+	by mail.kernel.org (Postfix) with ESMTP id 1A13F21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390508AbfGRQlZ (ORCPT
+        id S2389858AbfGRQl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:41:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37785 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389858AbfGRQlZ (ORCPT
+        Thu, 18 Jul 2019 12:41:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51724 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726040AbfGRQl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:41:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so12883112pfa.4;
-        Thu, 18 Jul 2019 09:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6rXfAOSyMwNydp+7fmtGTEr8JM70VS1PI32cRhPTo2c=;
-        b=Nn2uvpW25U33GY3F7gF4xsSBi/LCRa96KOW4alT4IeiDuZDJOuOvQp/chZwhmPwhCY
-         XrVmyAGC/rkyXbpLWxooQrHdOA7n+UHwGGCeCSdUwUsZl2mzQ7KcdN/n0SfDrKiKlaXM
-         4D2dcW11mg5cwSm23/B5QDL7t2fnsbc67TOV5eM5PIcPEhZ+XZUGMl0J/XT6Hac9DaXR
-         yZ60uH8W4oRybCQ9TIkeLetVZqE5tXqMIjNU8VwegHg8Uqq42mO3BRNz14CM5nXytN+V
-         ZVbubU3cMDpWPThDt3Qa7W3ihsR9ByaLKDRuFz1HEJaOFHSgPQWK3GtvBgjj7Q4aDrZS
-         Ln4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6rXfAOSyMwNydp+7fmtGTEr8JM70VS1PI32cRhPTo2c=;
-        b=LIrioA03Qip7GHwLCCyCusDgrwrCiHnDQj+3LU3ZAG0dnL6ENvJF8qRcSBmJORIArq
-         A3+OgFcIWJKL6EJYtQW4Qkn0OtsnbE9dDCICpWfwl5DWzXlA8/kE8dUCizZ+m8t1nbXt
-         LIjAGyezbN7Wcx2XpGV2+C22XTpf8KU6MMMlLxxbc0BrfFxw49wBfx6BakXPUEVnuxOg
-         TZN/7qSDGibGHCAo2mJg9t/6pdgEk4wURWMNL8tr4YpOGi/ji3bC7BCBiuKOSVibYo04
-         Hr+fitjiZafKrqM7evaHGWHNjqjnMNcxQsz8Y7eCxWXSbUDECLslrkJ11L9bPe0uFJVL
-         Df+Q==
-X-Gm-Message-State: APjAAAUEJBaVGuJKhjc1XqOkiUqYiQDyVD/GTvA1zfysE4nii4ZqiFwz
-        mOLXCri+5tHuwV7IEgPhulI=
-X-Google-Smtp-Source: APXvYqwKz2mpCqXvBYtJLAKEvoXIkVXorTIADsH/2NMAdWM6vDdkXoBav4Yde8I7/FZed4NJVJyYOw==
-X-Received: by 2002:a63:2606:: with SMTP id m6mr48408098pgm.436.1563468084713;
-        Thu, 18 Jul 2019 09:41:24 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id f15sm28866625pje.17.2019.07.18.09.41.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 09:41:23 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 09:41:21 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Thu, 18 Jul 2019 12:41:57 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IGas38068926
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:41:56 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tttqt4urf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:41:56 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 18 Jul 2019 17:41:55 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 17:41:50 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IGfmwM34341242
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 16:41:49 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B510CC6057;
+        Thu, 18 Jul 2019 16:41:48 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8093CC6095;
+        Thu, 18 Jul 2019 16:41:44 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.186.82])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 18 Jul 2019 16:41:44 +0000 (GMT)
+References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-7-bauerman@linux.ibm.com> <20190718084456.GE24562@lst.de>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Christopher S . Hall" <christopher.s.hall@intel.com>
-Subject: Re: [RFC PATCH 4/5] PTP: Add flag for non-periodic output
-Message-ID: <20190718164121.GB1533@localhost>
-References: <20190716072038.8408-1-felipe.balbi@linux.intel.com>
- <20190716072038.8408-5-felipe.balbi@linux.intel.com>
- <20190716163927.GA2125@localhost>
- <87k1ch2m1i.fsf@linux.intel.com>
- <20190717173645.GD1464@localhost>
- <87ftn3iuqp.fsf@linux.intel.com>
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH v3 6/6] s390/mm: Remove sev_active() function
+In-reply-to: <20190718084456.GE24562@lst.de>
+Date:   Thu, 18 Jul 2019 13:41:25 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftn3iuqp.fsf@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19071816-0016-0000-0000-000009D1B85B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011452; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01234001; UDB=6.00650264; IPR=6.01015328;
+ MB=3.00027782; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 16:41:55
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071816-0017-0000-0000-00004412E0B8
+Message-Id: <87d0i747nu.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=989 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:59:10AM +0300, Felipe Balbi wrote:
-> no problem, anything in particular in mind? Just create new versions of
-> all the IOCTLs so we can actually use the reserved fields in the future?
 
-Yes, please!
+Christoph Hellwig <hch@lst.de> writes:
 
-Thanks,
-Richard
+>> -/* are we a protected virtualization guest? */
+>> -bool sev_active(void)
+>> -{
+>> -	return is_prot_virt_guest();
+>> -}
+>> -
+>>  bool force_dma_unencrypted(struct device *dev)
+>>  {
+>> -	return sev_active();
+>> +	return is_prot_virt_guest();
+>>  }
+>
+> Do we want to keep the comment for force_dma_unencrypted?
+>
+> Otherwise looks good:
+>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+Thank you for your review on al these patches.
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
