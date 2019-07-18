@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D27EC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82E3C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F272173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC6821848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419082;
-	bh=26eAjIac7+2nGolq1DK+LxeeY4nVbF8uw7n8iF6+A6g=;
+	s=default; t=1563419085;
+	bh=8qK39oZ1HwAVbPc5r9k4uxw2bpeMX8lNuXgpCkS2DGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FXaQu9YdCxrAtmPibBtc7TgDJ45W5rp6K5s5c1TkK5HWne8OFbbZ9S1ACIv+TUfqV
-	 R6/wQfgSRcHkbEPx+MkiBmyal1ErTe8jZ3nVN3KlHU87Zz+NkAYqExQMRONxytEyu4
-	 6UhUmTgXLZ3stbESJmRvCAKctbfJGIBYw0vxwdJQ=
+	b=di2mCGnxnUjSDjda7BKlR0BDm4+LZwDhb4cif/qXtWSPmmnvTbl5zNz3I6zqzjtLs
+	 S+fKc2VEFX6pEo60/U1yfK/aF7AFWWDEJ4hEblTzIpSxFRnF/0BLhqmGU4FlFvUe47
+	 Ji7joXubciAl0c1AZCA0hGrXmOCNQiGsIgGKp9z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389768AbfGRDEl (ORCPT
+        id S2389779AbfGRDEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35592 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbfGRDEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:04:40 -0400
+        id S2389055AbfGRDEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:04:42 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABA342173B;
-        Thu, 18 Jul 2019 03:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CB542173B;
+        Thu, 18 Jul 2019 03:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419079;
-        bh=26eAjIac7+2nGolq1DK+LxeeY4nVbF8uw7n8iF6+A6g=;
+        s=default; t=1563419081;
+        bh=8qK39oZ1HwAVbPc5r9k4uxw2bpeMX8lNuXgpCkS2DGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IO/k+MM0JVpIJbWA5lxjs/NRexzkjuXWWObsKBml59a6NK/jxdzuvwe5AWBClgSpJ
-         f6cnM0I9k4PbqtOWuupGH0rGMIvZHEbJS/pvVTXBWi86mwd2qjPQGHiWNqx0c6ae9X
-         XRTAVXJL9tUycWHjrHCIQsA+DugI59xKRY9TfnJ0=
+        b=jAOTPFwBtQs1GuKHQeYLWFgEy4gwKvEZ6zi/IsfqYWL0myRyvsbUS/frRjAhazpjB
+         v1Ij6hJIodppclji91xJjQLP0h0z8Hp2af3epiT/IYGPJdMczkUzi7sBf1/KXO82dL
+         8HBFG8LTtt7mkgvOZCpUHZlXLI1Tvxfu1fQtKXKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 08/54] ARM: dts: meson8b: fix the operating voltage of the Mali GPU
-Date:   Thu, 18 Jul 2019 12:01:03 +0900
-Message-Id: <20190718030053.997389489@linuxfoundation.org>
+Subject: [PATCH 5.1 09/54] irqchip/irq-csky-mpintc: Support auto irq deliver to all cpus
+Date:   Thu, 18 Jul 2019 12:01:04 +0900
+Message-Id: <20190718030054.082427622@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -61,72 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26d65140e92a626e39c73c9abf769fd174bf5076 ]
+[ Upstream commit db56c5128e6625cb16efc4910b60627e46f608e3 ]
 
-Amlogic's vendor kernel defines an OPP for the GPU on Meson8b boards
-with a voltage of 1.15V. It turns out that the vendor kernel relies on
-the bootloader to set up the voltage. The bootloader however sets a
-fixed voltage of 1.10V.
+The csky,mpintc could deliver a external irq to one cpu or all cpus, but
+it couldn't deliver a external irq to a group of cpus with cpu_mask. So
+we only use auto deliver mode when affinity mask_val is equal to
+cpu_present_mask.
 
-Amlogic's patched u-boot sources (uboot-2015-01-15-23a3562521) confirm
-this:
-$ grep -oiE "VDD(EE|AO)_VOLTAGE[ ]+[0-9]+" board/amlogic/configs/m8b_*
-  board/amlogic/configs/m8b_m100_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m101_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m102_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m200_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
-  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
-  board/amlogic/configs/m8b_m202_v1.h:VDDEE_VOLTAGE            1100
+There is no limitation for only two cpus in SMP system.
 
-Another hint at this is the VDDEE voltage on the EC-100 and Odroid-C1
-boards. The VDDEE regulator supplies the Mali GPU. It's basically a copy
-of the VCCK (CPU supply) which means it's limited to 0.86V to 1.14V.
-
-Update the operating voltage of the Mali GPU on Meson8b to 1.10V so it
-matches with what the vendor u-boot sets.
-
-Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-csky-mpintc.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index fe84a8c3ce81..6b80aff32fc2 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -163,23 +163,23 @@
+diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
+index c67c961ab6cc..a4c1aacba1ff 100644
+--- a/drivers/irqchip/irq-csky-mpintc.c
++++ b/drivers/irqchip/irq-csky-mpintc.c
+@@ -89,8 +89,19 @@ static int csky_irq_set_affinity(struct irq_data *d,
+ 	if (cpu >= nr_cpu_ids)
+ 		return -EINVAL;
  
- 		opp-255000000 {
- 			opp-hz = /bits/ 64 <255000000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-364300000 {
- 			opp-hz = /bits/ 64 <364300000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-425000000 {
- 			opp-hz = /bits/ 64 <425000000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-510000000 {
- 			opp-hz = /bits/ 64 <510000000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-637500000 {
- 			opp-hz = /bits/ 64 <637500000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 			turbo-mode;
- 		};
- 	};
+-	/* Enable interrupt destination */
+-	cpu |= BIT(31);
++	/*
++	 * The csky,mpintc could support auto irq deliver, but it only
++	 * could deliver external irq to one cpu or all cpus. So it
++	 * doesn't support deliver external irq to a group of cpus
++	 * with cpu_mask.
++	 * SO we only use auto deliver mode when affinity mask_val is
++	 * equal to cpu_present_mask.
++	 *
++	 */
++	if (cpumask_equal(mask_val, cpu_present_mask))
++		cpu = 0;
++	else
++		cpu |= BIT(31);
+ 
+ 	writel_relaxed(cpu, INTCG_base + INTCG_CIDSTR + offset);
+ 
 -- 
 2.20.1
 
