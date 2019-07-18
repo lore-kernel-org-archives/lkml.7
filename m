@@ -2,101 +2,103 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472A3C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D95CC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176A220873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:53:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nW6kgwO+"
+	by mail.kernel.org (Postfix) with ESMTP id 0B01F208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391543AbfGRTxE (ORCPT
+        id S2391417AbfGRT7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:53:04 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43058 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfGRTxE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:53:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w79so22503475oif.10;
-        Thu, 18 Jul 2019 12:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/BAco0qTgyfJ8ndZzbhvqz94T+T1pPPU3Fqjw/cFLps=;
-        b=nW6kgwO+5AOfTm3FSkl7N9sJcwHTCEUPlrvRBDc5G3FKn1LbLB2gxabP98tb6/y72o
-         dtc0GCjblMnHKYEAf8ATrDoknCDAQ9NTFUnMXCNe5aqGRp/US3zz2Bnz9pPUYdSCPXig
-         LrZ01aFRxs50n5MBeBhgBWPGMWGabpgUHzczWiVP5FtC4Ryx8Fq+z7y9KYdeFM7e7zH+
-         tnLDTGFsYh1DJmccfxnLSdb6awxms4+S77W0IbzAZObFxNP9z8HtJMuCQwL3V5B//XYm
-         jWmyKBUof/ICQZF4UTWwVEAp/UYVsvoVUzicuq3nP1Ghl4NjQCIfR7blvqnoaubm1fcI
-         MjNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/BAco0qTgyfJ8ndZzbhvqz94T+T1pPPU3Fqjw/cFLps=;
-        b=oVGj7S5ThggeeQruWBNUdewcTu9a1MIXc3uQ/96THhZiAlsfVZJ1d7S80WIQs5k0tT
-         2yAWEVEnmR/GRFkZ3NloE9b+3Efn8ga6xB46wdvKeQYzyHdg463fb1TTW74bD4Bbz60k
-         21ixuBx+hzzAZUefuI01j5mQYhk7g8G/Cl8trFAxeJKIRpRIilbItAZ6Ubq5a22V1Vt8
-         1kLdaTa6yKagOPQLEjHF24bdbsJ1oXWbQj0CqtcHpvPhDdCL+7BZDUeBbMmGUNKvi2P+
-         Zj+TxnCih4neIJR52TJ/a7l0QN3dK9Nid+IGgEvqYze9FgjHo+ukefYnPkx0KSppeJmx
-         pciQ==
-X-Gm-Message-State: APjAAAU0TdGrC9wFo9i8LmZzCMYjfyxX8TXIn/Z057SlShzTh6njzdxh
-        twMtThvrAZTDbmFm0+fgYw6uwrYW0GLYfLOGTRs=
-X-Google-Smtp-Source: APXvYqwTBPzyPhPjB0VaBnbsiYOrGI3rkLFZrwgDaKK3LTDTHNYYlEPvOYwHkit/SyzUnkQw3nflcqZiU86SaVW9do4=
-X-Received: by 2002:aca:75c2:: with SMTP id q185mr25667268oic.103.1563479583204;
- Thu, 18 Jul 2019 12:53:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190718143428.2392-1-TheSven73@gmail.com> <1563468471.2676.36.camel@pengutronix.de>
- <CAOMZO5A_BuWMr1n_fFv4veyaXdcfjxO+9nFAgGfCrmAhNmzV5g@mail.gmail.com>
- <CAGngYiULAjXwwxmUyHxEXhv1WzSeE_wE3idOLSnD5eEaZg3xDw@mail.gmail.com> <20190718194131.GK25635@lunn.ch>
-In-Reply-To: <20190718194131.GK25635@lunn.ch>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 18 Jul 2019 15:52:52 -0400
-Message-ID: <CAGngYiWESbg6uq4pdtb5--YSzatwAwXiGnRjiAfAQj8nRYPMqw@mail.gmail.com>
-Subject: Re: [PATCH] net: fec: generate warning when using deprecated phy reset
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jul 2019 15:59:18 -0400
+Received: from gate.crashing.org ([63.228.1.57]:52801 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727780AbfGRT7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 15:59:17 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6IJwpXD009323;
+        Thu, 18 Jul 2019 14:58:52 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6IJwou7009319;
+        Thu, 18 Jul 2019 14:58:50 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Thu, 18 Jul 2019 14:58:50 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2 03/13] powerpc/prom_init: Add the ESM call to prom_init
+Message-ID: <20190718195850.GU20882@gate.crashing.org>
+References: <20190713060023.8479-1-bauerman@linux.ibm.com> <20190713060023.8479-4-bauerman@linux.ibm.com> <70f8097f-7222-fe18-78b4-9372c21bfc9d@ozlabs.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70f8097f-7222-fe18-78b4-9372c21bfc9d@ozlabs.ru>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+(Sorry to hijack your reply).
 
-On Thu, Jul 18, 2019 at 3:41 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> Hi Sven
->
-> One option would be to submit a patch or a patchset changing all
-> existing device tree files to make use of the core method. Anybody
-> cut/pasting will then automatically use the correct core way of doing
-> it.
->
-> There is also a move towards using YAML to verify the correctness of
-> DT files. It should be possible to mark the old property as
-> deprecated, so there will be a build time warning, not a boot time
-> warning.
->
+On Thu, Jul 18, 2019 at 06:11:48PM +1000, Alexey Kardashevskiy wrote:
+> On 13/07/2019 16:00, Thiago Jung Bauermann wrote:
+> >From: Ram Pai <linuxram@us.ibm.com>
+> >+static int enter_secure_mode(unsigned long kbase, unsigned long fdt)
+> >+{
+> >+	register uint64_t func asm("r3") = UV_ESM;
+> >+	register uint64_t arg1 asm("r4") = (uint64_t)kbase;
+> >+	register uint64_t arg2 asm("r5") = (uint64_t)fdt;
+> 
+> What does UV do with kbase and fdt precisely? Few words in the commit 
+> log will do.
+> 
+> >+
+> >+	asm volatile("sc 2\n"
+> >+		     : "=r"(func)
+> >+		     : "0"(func), "r"(arg1), "r"(arg2)
+> >+		     :);
+> >+
+> >+	return (int)func;
+> 
+> And why "func"? Is it "function"? Weird name. Thanks,
 
-Thanks for the helpful suggestions, that makes sense.
+Maybe the three vars should just be called "r3", "r4", and "r5" --
+r3 is used as return value as well, so "func" isn't a great name for it.
 
-What I keep forgetting in my little arm-imx6 world, is that devicetrees
-aren't in-kernel apis, but that they have out-of-kernel
-dependencies. It makes more sense to to see them as userspace
-apis, albeit directed at firmware/bootloaders, right?
+Some other comments about this inline asm:
 
-So if bootloaders were as varied/uncontrollable as userspace,
-then deprecated properties would have to be supported forever...
+The "\n" makes the generated asm look funny and has no other function.
+Instead of using backreferences you can use a "+" constraint, "inout".
+Empty clobber list is strange.
+Casts to the return type, like most other casts, are an invitation to
+bugs and not actually useful.
+
+So this can be written
+
+static int enter_secure_mode(unsigned long kbase, unsigned long fdt)
+{
+	register uint64_t r3 asm("r3") = UV_ESM;
+	register uint64_t r4 asm("r4") = kbase;
+	register uint64_t r4 asm("r5") = fdt;
+
+	asm volatile("sc 2" : "+r"(r3) : "r"(r4), "r"(r5));
+
+	return r3;
+}
+
+(and it probably should use u64 instead of both uint64_t and unsigned long?)
+
+
+Segher
