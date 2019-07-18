@@ -2,87 +2,71 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76B6C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E70EC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA5120873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="eWao9mqt"
+	by mail.kernel.org (Postfix) with ESMTP id 4A56620873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfGRX0u (ORCPT
+        id S1726188AbfGRX1U convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 19:26:50 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33706 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfGRX0u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 19:26:50 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r6so21940989qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 16:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TED1YMmih5CMaQpPogtNSe98eoJfXq3PHOIoVZoVmXs=;
-        b=eWao9mqtXSE9FIpvXcxEjX2v53F6fcDEZeDqxHDrpIeaRS5OKgD4U/69LRSNZavmD7
-         rYeX8gV/Hh3ZXxyRPUBw7KyXz8txocn8hhhDI7pU9igo+83feIiGMF56X7JKVhEj0J9W
-         t6SB4Cy35v7f1/5I9equwIeHf+7qmPUlEx+mIYXjOnjMdiGPdMcbqQmoHJtY7GU2SWqB
-         g30Rk2Bkpmn/YEbtqxobLlyI8MWPxYvRFQiMSN4rT3cCJgCNwC0oz1fVtmQbSZv5AWvh
-         HPMpy7q/q3HRkE2pxwIYMXjUVL8WM+m+UfKTQs0in8APrDxMNsW9pBas0Lwipp4Q1MLk
-         PmDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TED1YMmih5CMaQpPogtNSe98eoJfXq3PHOIoVZoVmXs=;
-        b=LGEk5jKkbsjd9zIibE9ydOf02FqfD5Fl3IMPrLrwBwmCENP6pvRFQgY/YyHSU6L0Tr
-         WWyjIpXv7uGPR2IA72u+jxpA3LQUj9DRbF1VVxsXQ4rNbhDHoX38IICYNLNfLWGLhwEY
-         s0tjLiIEvcqVc+49Ics1EPSdUJTKo2LdXfuFRVZ+RF7dMariz0x7qpKudkMTgTYDF6JO
-         gx9oSJv1djJxgW0gwXUJ8Il2e9Rw10jox8HOyGGyZANZGp8oDHNfm0AYKiyH88x2ZLEz
-         6fRmbsHygG6/1hljxrAPpLIOtLBXVZ/YgC0n2PhGuscf2QoOmv2JDoINb82SEj4Y6r7c
-         Sh+w==
-X-Gm-Message-State: APjAAAU8UxyEoIysMDPZodXykG7aWnP5JnK1TAWkVoWKZIZ8pSRo6uBy
-        j0jCety1DUReNanxEN/CjRYL+A==
-X-Google-Smtp-Source: APXvYqyJVK7Uhlc9y7Ytvg/jKRAuZxqH/0++WZuRk63Rtwo9DtHqJwFSYpumxqGYcgetLL78Fx2oCg==
-X-Received: by 2002:a37:aa0d:: with SMTP id t13mr34659564qke.167.1563492409444;
-        Thu, 18 Jul 2019 16:26:49 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i23sm12971496qtm.17.2019.07.18.16.26.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 16:26:48 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
-Date:   Thu, 18 Jul 2019 19:26:47 -0400
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        James Y Knight <jyknight@google.com>,
-        David Miller <davem@davemloft.net>, sathya.perla@broadcom.com,
-        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        somnath.kotur@broadcom.com, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, netdev@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
-References: <1562959401-19815-1-git-send-email-cai@lca.pw>
- <20190712.154606.493382088615011132.davem@davemloft.net>
- <EFD25845-097A-46B1-9C1A-02458883E4DA@lca.pw>
- <20190712.175038.755685144649934618.davem@davemloft.net>
- <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw>
- <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
- <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
-To:     Bill Wendling <morbo@google.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 18 Jul 2019 19:27:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24676 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbfGRX1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 19:27:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 16:27:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,279,1559545200"; 
+   d="scan'208";a="251970992"
+Received: from schen9-mobl.jf.intel.com ([10.24.10.117])
+  by orsmga001.jf.intel.com with ESMTP; 18 Jul 2019 16:27:19 -0700
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
+ <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+ <20190531210816.GA24027@sinkpad> <20190606152637.GA5703@sinkpad>
+ <20190612163345.GB26997@sinkpad>
+ <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
+ <20190613032246.GA17752@sinkpad>
+ <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+ <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Message-ID: <5f869512-3336-d9f0-6fff-e1150673a924@linux.intel.com>
+Date:   Thu, 18 Jul 2019 16:27:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190718100714.GA469@aaronlu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -90,87 +74,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Jul 18, 2019, at 5:21 PM, Bill Wendling <morbo@google.com> wrote:
->=20
-> [My previous response was marked as spam...]
->=20
-> Top-of-tree clang says that it's const:
->=20
-> $ gcc a.c -O2 && ./a.out
-> a is a const.
->=20
-> $ clang a.c -O2 && ./a.out
-> a is a const.
+On 7/18/19 3:07 AM, Aaron Lu wrote:
+> On Wed, Jun 19, 2019 at 02:33:02PM -0400, Julien Desfossez wrote:
+
+> 
+> With the below patch on top of v3 that makes use of util_avg to decide
+> which task win, I can do all 8 steps and the final scores of the 2
+> workloads are: 1796191 and 2199586. The score number are not close,
+> suggesting some unfairness, but I can finish the test now...
+
+Aaron,
+
+Do you still see high variance in terms of workload throughput that
+was a problem with the previous version?
+
+>
+>  
+>  }
+> +
+> +bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
+> +{
+> +	struct sched_entity *sea = &a->se;
+> +	struct sched_entity *seb = &b->se;
+> +	bool samecore = task_cpu(a) == task_cpu(b);
 
 
-I used clang-7.0.1. So, this is getting worse where both GCC and clang =
-will start to suffer the
-same problem.
+Probably "samecpu" instead of "samecore" will be more accurate.
+I think task_cpu(a) and task_cpu(b)
+can be different, but still belong to the same cpu core.
 
->=20
->=20
-> On Thu, Jul 18, 2019 at 2:10 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
->>=20
->> On Thu, Jul 18, 2019 at 2:01 PM Qian Cai <cai@lca.pw> wrote:
->>>=20
->>>=20
->>>=20
->>>> On Jul 12, 2019, at 8:50 PM, David Miller <davem@davemloft.net> =
-wrote:
->>>>=20
->>>> From: Qian Cai <cai@lca.pw>
->>>> Date: Fri, 12 Jul 2019 20:27:09 -0400
->>>>=20
->>>>> Actually, GCC would consider it a const with -O2 optimized level =
-because it found that it was never modified and it does not understand =
-it is a module parameter. Considering the following code.
->>>>>=20
->>>>> # cat const.c
->>>>> #include <stdio.h>
->>>>>=20
->>>>> static int a =3D 1;
->>>>>=20
->>>>> int main(void)
->>>>> {
->>>>>     if (__builtin_constant_p(a))
->>>>>             printf("a is a const.\n");
->>>>>=20
->>>>>     return 0;
->>>>> }
->>>>>=20
->>>>> # gcc -O2 const.c -o const
->>>>=20
->>>> That's not a complete test case, and with a proper test case that
->>>> shows the externalization of the address of &a done by the module
->>>> parameter macros, gcc should not make this optimization or we =
-should
->>>> define the module parameter macros in a way that makes this =
-properly
->>>> clear to the compiler.
->>>>=20
->>>> It makes no sense to hack around this locally in drivers and other
->>>> modules.
->>>=20
->>> If you see the warning in the original patch,
->>>=20
->>> =
-https://lore.kernel.org/netdev/1562959401-19815-1-git-send-email-cai@lca.p=
-w/
->>>=20
->>> GCC definitely optimize rx_frag_size  to be a constant while I just =
-confirmed clang
->>> -O2 does not. The problem is that I have no clue about how to let =
-GCC not to
->>> optimize a module parameter.
->>>=20
->>> Though, I have added a few people who might know more of compilers =
-than myself.
->>=20
->> + Bill and James, who probably knows more than they'd like to about
->> __builtin_constant_p and more than other LLVM folks at this point.
->>=20
->> --
->> Thanks,
->> ~Nick Desaulniers
+> +	struct task_struct *p;
+> +	s64 delta;
+> +
+> +	if (samecore) {
+> +		/* vruntime is per cfs_rq */
+> +		while (!is_same_group(sea, seb)) {
+> +			int sea_depth = sea->depth;
+> +			int seb_depth = seb->depth;
+> +
+> +			if (sea_depth >= seb_depth)
+
+Should this be strictly ">" instead of ">=" ?
+
+> +				sea = parent_entity(sea);
+> +			if (sea_depth <= seb_depth)
+
+Should use "<" ?
+
+> +				seb = parent_entity(seb);
+> +		}
+> +
+> +		delta = (s64)(sea->vruntime - seb->vruntime);
+> +	}
+> +
+
+Thanks.
+
+Tim
 
