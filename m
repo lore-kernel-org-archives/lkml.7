@@ -2,50 +2,54 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D092C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F82C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D912053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF372173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419879;
-	bh=kgk7Ue5rId7m2dMEUgqDOMrpm8zUbKkpT7Tr2gHcUq0=;
+	s=default; t=1563419882;
+	bh=rGTmn1Do0fdE2xwr//1vrCgSU5zRYdNtOrcaVxu+SRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rjj6wB96cSD4genk7ACFlHqQCRiiBdP+5PnOATwuoke/yVbZGPMNoN2oURXALu7G
-	 iyUN5ekYAE/5biTGizqzJuSBAiHwZ3Z3h5D4TmSo/z7OZjrVbYe7oa4oAUfg25v72E
-	 Nko6V8NgSw6xjzmiXbNywhlOob+ZCG1XcEFSUo3E=
+	b=cfCywaXkpnOR8ImykS3LlVNT6JdVFZ93E/kGFBbTHe5QrRo0COGHqkKiBbWQf/kzU
+	 Q5p467yc3YwPSw7kglbQEOz5NuHpEvABMGR2zivti6KSCvSIqV0rOG9Zo0BBPVlv2N
+	 STwDcFEe2HBdQNqfC2gQDqG15Yxyukrnhv+hu7QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391711AbfGRDON (ORCPT
+        id S2391978AbfGRDSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391671AbfGRDOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:08 -0400
+        id S2391703AbfGRDON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:13 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B6F42173E;
-        Thu, 18 Jul 2019 03:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 947ED2077C;
+        Thu, 18 Jul 2019 03:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419647;
-        bh=kgk7Ue5rId7m2dMEUgqDOMrpm8zUbKkpT7Tr2gHcUq0=;
+        s=default; t=1563419652;
+        bh=rGTmn1Do0fdE2xwr//1vrCgSU5zRYdNtOrcaVxu+SRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FCaCvmASMsUGfjBT/+U4MgB0+LGoYUQcQh2lg87rbAOC3qbFXf741PfqOFWil9nQB
-         OQ3ReCJwYYYE1ESJkJoMV4dKlIGXmnRA/nXw/Ph5AGX00vqyuGT6omZPNfXGMIEEbH
-         zvZHE+OcTdHKZk6mdEOxMccDrn1+8jX0iUYWomLo=
+        b=b203mmT2+Pi9hqi9pO25N8HnLOv2YgzJ+SZ4H/GFTyBzd2PtAnlldTkT4ZnjxinNQ
+         +eF3Zfj5FCU1AR8vR8QJ4vDn2+aIKXbTQBCg74rw5qRSu7NK0dbzK23MWrNPcM6iqd
+         MqAHmE/lQzqTm/wtVGSjtWu0sebiqz2xlS1Ex/lo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 36/54] staging: comedi: amplc_pci230: fix null pointer deref on interrupt
-Date:   Thu, 18 Jul 2019 12:02:06 +0900
-Message-Id: <20190718030052.261257680@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [PATCH 4.9 39/54] MIPS: Remove superfluous check for __linux__
+Date:   Thu, 18 Jul 2019 12:02:09 +0900
+Message-Id: <20190718030052.500312977@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -58,45 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Sean Young <sean@mess.org>
 
-commit 7379e6baeddf580d01feca650ec1ad508b6ea8ee upstream.
+commit 1287533d3d95d5ad8b02773733044500b1be06bc upstream.
 
-The interrupt handler `pci230_interrupt()` causes a null pointer
-dereference for a PCI260 card.  There is no analog output subdevice for
-a PCI260.  The `dev->write_subdev` subdevice pointer and therefore the
-`s_ao` subdevice pointer variable will be `NULL` for a PCI260.  The
-following call near the end of the interrupt handler results in the null
-pointer dereference for a PCI260:
+When building BPF code using "clang -target bpf -c", clang does not
+define __linux__.
 
-	comedi_handle_events(dev, s_ao);
+To build BPF IR decoders the include linux/lirc.h is needed which
+includes linux/types.h. Currently this workaround is needed:
 
-Fix it by only calling the above function if `s_ao` is valid.
+https://git.linuxtv.org/v4l-utils.git/commit/?id=dd3ff81f58c4e1e6f33765dc61ad33c48ae6bb07
 
-Note that the other uses of `s_ao` in the calls
-`pci230_handle_ao_nofifo(dev, s_ao);` and `pci230_handle_ao_fifo(dev,
-s_ao);` will never be reached for a PCI260, so they are safe.
+This check might otherwise be useful to stop users from using a non-linux
+compiler, but if you're doing that you are going to have a lot more
+trouble anyway.
 
-Fixes: 39064f23284c ("staging: comedi: amplc_pci230: use comedi_handle_events()")
-Cc: <stable@vger.kernel.org> # v3.19+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/21149/
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/amplc_pci230.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/include/uapi/asm/sgidefs.h |    8 --------
+ 1 file changed, 8 deletions(-)
 
---- a/drivers/staging/comedi/drivers/amplc_pci230.c
-+++ b/drivers/staging/comedi/drivers/amplc_pci230.c
-@@ -2337,7 +2337,8 @@ static irqreturn_t pci230_interrupt(int
- 	devpriv->intr_running = false;
- 	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
+--- a/arch/mips/include/uapi/asm/sgidefs.h
++++ b/arch/mips/include/uapi/asm/sgidefs.h
+@@ -11,14 +11,6 @@
+ #define __ASM_SGIDEFS_H
  
--	comedi_handle_events(dev, s_ao);
-+	if (s_ao)
-+		comedi_handle_events(dev, s_ao);
- 	comedi_handle_events(dev, s_ai);
- 
- 	return IRQ_HANDLED;
+ /*
+- * Using a Linux compiler for building Linux seems logic but not to
+- * everybody.
+- */
+-#ifndef __linux__
+-#error Use a Linux compiler or give up.
+-#endif
+-
+-/*
+  * Definitions for the ISA levels
+  *
+  * With the introduction of MIPS32 / MIPS64 instruction sets definitions
 
 
