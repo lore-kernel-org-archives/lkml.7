@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D050C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0761BC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C53204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DCF21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419249;
-	bh=X0M2v2sf0ofblhQb50767Ec2ORYCSlxb5bG2R5CIYzA=;
+	s=default; t=1563419253;
+	bh=+aLMt1fy/uI6haRV10yA2RxZH9dLBlZq0WeY9Fm1h5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+AyXf1rbfazLoDnqHR8cZ4j14nvtwKDCdarMA7w+CNEPP/uP+rh2LJnry6uyGxvf
-	 eIRqfcfHC70kjqu7eg3ztKLQSaHBsKP7NhiYGZPt43Tzb/L3APd6y1TjwMr2VmBCU3
-	 eANsyw96o6V2fizRKqne81zL2rCIuWLVS3LSTv5Y=
+	b=fI+06oKkh/D4frDre/XLuvjPNBmFe8epMPJ0hxe0jx1mRqFaz4uLv/urBZMKZf7Pd
+	 KafFE5WO5KkoeWK4Mr61P7QSgSr48m0Be4pMI1u7exZyo3ngLYuvTmVhNVSZsU4fSr
+	 vDfCCZUAIYA2+FrNHRmCirEph7v7KhL1SLD61hpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390447AbfGRDH2 (ORCPT
+        id S2390475AbfGRDHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38960 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390423AbfGRDHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:23 -0400
+        id S2390444AbfGRDH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:29 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90881205F4;
-        Thu, 18 Jul 2019 03:07:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331CC205F4;
+        Thu, 18 Jul 2019 03:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419242;
-        bh=X0M2v2sf0ofblhQb50767Ec2ORYCSlxb5bG2R5CIYzA=;
+        s=default; t=1563419248;
+        bh=+aLMt1fy/uI6haRV10yA2RxZH9dLBlZq0WeY9Fm1h5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XR5lSUzOHlxL53PMGBdVs+ymWvjuOmjJjjdY+T3GpMhvdL5X9eb5Tj0E61inNEgrS
-         3nCsf/db+qSTDtsP1tjZj2z4kRVOlbGNN+JHQmGZZE4aXnTRX/15FsnkhKPILz7bGP
-         kFNDP7+SF7Sv9/4HSE3F7F8C18JfPl78k+11S2RQ=
+        b=rFajYKcpBXgImxldw7VLLOEs+tJOiNKnwec7XVR0LQA44w6qPF8p8dwtS1LiGJk46
+         yym7W5dfQYGloo9h07fzFufF3RnpHTa2BNWHKbiq/b7IrjLsH2wknoh1qsFBgHl1ZU
+         2Km3JFIRkcKcaxkXl+bls47DZx23dXfErIJ5GbOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, kernel-janitors@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/47] ARM: dts: gemini Fix up DNS-313 compatible string
-Date:   Thu, 18 Jul 2019 12:01:25 +0900
-Message-Id: <20190718030049.557496896@linuxfoundation.org>
+Subject: [PATCH 4.19 14/47] x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
+Date:   Thu, 18 Jul 2019 12:01:28 +0900
+Message-Id: <20190718030049.850839591@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -59,30 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 36558020128b1a48b7bddd5792ee70e3f64b04b0 ]
+[ Upstream commit ea136a112d89bade596314a1ae49f748902f4727 ]
 
-It's a simple typo in the DNS file, which was pretty serious.
-No scripts were working properly. Fix it up.
+The left shift of unsigned int cpu_khz will overflow for large values of
+cpu_khz, so cast it to a long long before shifting it to avoid overvlow.
+For example, this can happen when cpu_khz is 4194305, i.e. ~4.2 GHz.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: kernel-janitors@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190619181446.13635-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/gemini-dlink-dns-313.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/gemini-dlink-dns-313.dts b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
-index d1329322b968..361dccd6c7ee 100644
---- a/arch/arm/boot/dts/gemini-dlink-dns-313.dts
-+++ b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
-@@ -11,7 +11,7 @@
- 
- / {
- 	model = "D-Link DNS-313 1-Bay Network Storage Enclosure";
--	compatible = "dlink,dir-313", "cortina,gemini";
-+	compatible = "dlink,dns-313", "cortina,gemini";
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 84132eddb5a8..2646234380cc 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1452,7 +1452,8 @@ static void apic_pending_intr_clear(void)
+ 		if (queued) {
+ 			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
+ 				ntsc = rdtsc();
+-				max_loops = (cpu_khz << 10) - (ntsc - tsc);
++				max_loops = (long long)cpu_khz << 10;
++				max_loops -= ntsc - tsc;
+ 			} else {
+ 				max_loops--;
+ 			}
 -- 
 2.20.1
 
