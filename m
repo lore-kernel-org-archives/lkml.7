@@ -6,67 +6,71 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D158BC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C9AC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40ED208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693A221841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389616AbfGRIoS (ORCPT
+        id S2389620AbfGRIov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:44:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:57873 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfGRIoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:44:18 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D492968B05; Thu, 18 Jul 2019 10:44:16 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 10:44:16 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 18 Jul 2019 04:44:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47118 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726482AbfGRIov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:44:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B8B67AD22;
+        Thu, 18 Jul 2019 08:44:49 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 10:44:45 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 5/6] fs/core/vmcore: Move sev_active() reference to
- x86 arch code
-Message-ID: <20190718084416.GD24562@lst.de>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-6-bauerman@linux.ibm.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] x86/mm: Sync also unmappings in vmalloc_sync_one()
+Message-ID: <20190718084445.GE13091@suse.de>
+References: <20190717071439.14261-1-joro@8bytes.org>
+ <20190717071439.14261-3-joro@8bytes.org>
+ <28a4c10f-f895-e8ff-d07b-9e4c35aa6342@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190718032858.28744-6-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <28a4c10f-f895-e8ff-d07b-9e4c35aa6342@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:28:57AM -0300, Thiago Jung Bauermann wrote:
-> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
-> appear in generic kernel code because it forces non-x86 architectures to
-> define the sev_active() function, which doesn't make a lot of sense.
-> 
-> To solve this problem, add an x86 elfcorehdr_read() function to override
-> the generic weak implementation. To do that, it's necessary to make
-> read_from_oldmem() public so that it can be used outside of vmcore.c.
-> 
-> Also, remove the export for sev_active() since it's only used in files that
-> won't be built as modules.
+Hi Dave,
 
-I have to say I find the __weak overrides of the vmcore files very
-confusing and which we'd have a better scheme there.  But as this fits
-into that scheme and allows to remove the AMD SME vs SEV knowledge from
-the core I'm fine with it.
+On Wed, Jul 17, 2019 at 02:06:01PM -0700, Dave Hansen wrote:
+> On 7/17/19 12:14 AM, Joerg Roedel wrote:
+> > -	if (!pmd_present(*pmd))
+> > +	if (pmd_present(*pmd) ^ pmd_present(*pmd_k))
+> >  		set_pmd(pmd, *pmd_k);
+> 
+> Wouldn't:
+> 
+> 	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+> 		set_pmd(pmd, *pmd_k);
+> 
+> be a bit more intuitive?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Yes, right. That is much better, I changed it in the patch.
+
+> But, either way, these look fine.  For the series:
+> 
+> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+
+Thanks!
+
+
+	Joerg
