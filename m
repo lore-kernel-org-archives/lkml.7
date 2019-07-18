@@ -2,52 +2,54 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0102C76199
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808E4C76197
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7FB2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF892077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420015;
-	bh=yoCpDKEXgc/jPOEZGenf4VgfdDgWReN7+VHm3FbOkeQ=;
+	s=default; t=1563420017;
+	bh=ktO7hA2V2D/efF9ziFKYPw519gW3TXtB5RseJH0Pieo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PRc0Y4d+Dq1Q8HddQCgNK4GkFSrjFOPIbXNUuCgEomNUz3FaIGSw9C8GW2n5X95qz
-	 SP/F+rYsMLzrR2BQtwVkmwJz71GHI5WNSErz6WXrwM0LpFQos8ZN0lpDy2A/o4zB6q
-	 wpGdutRRKhD4GpE2HyqFwATwuU+U7va29Xdwp6u4=
+	b=M+Ab6IGf/XF4A4H1t5wsjEKbQxIj0faNqUCe2XDDQqaCCfTFbs3hoHx6zUF+8G2ZE
+	 MqlXURDhz1HJ6nqjKIT5KBc7u7tfHo6M2DY4Pyulu/BZh6U97LZ7iQzhtujXgmRcgW
+	 unFgzovabSFw0j+dJDfcV9JmB4fSJDBHwYAkumQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391443AbfGRDLg (ORCPT
+        id S2391689AbfGRDUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44866 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391274AbfGRDLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:19 -0400
+        id S2390632AbfGRDLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:30 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E64D205F4;
-        Thu, 18 Jul 2019 03:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD8C20818;
+        Thu, 18 Jul 2019 03:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419477;
-        bh=yoCpDKEXgc/jPOEZGenf4VgfdDgWReN7+VHm3FbOkeQ=;
+        s=default; t=1563419489;
+        bh=ktO7hA2V2D/efF9ziFKYPw519gW3TXtB5RseJH0Pieo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0RRx5Ix4oXXlsNjkRSqVBFTA89LyDYmi311ubLMYgI3FnupecowwKtbxL7RV4z7w
-         V+N8r9ABJvw+ACACMCTpIOX72gVL3egJ1a3oo5/LunlB6vczyieFIAb2zR2jwkiBbJ
-         87tlRXhKocPB81Fc1kmjLnvhs9DeFwk3Z4VXDWis=
+        b=GY9A3+c9UnsQaj77wj1EyPxHnWfC4lxazj1Zwgk8xYXBSw+HD0bAer4tS2cWxOINm
+         TQHk+QKPUEQyUw7uwkIMyThNwhFKL5j34C7yW0G8wfP4fnbbj8ftnnsP1Xitib7nTC
+         EtWBT4iIVCF5F6khOl2xbTM56YXGqlvTmA3P5DRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 59/80] carl9170: fix misuse of device driver API
-Date:   Thu, 18 Jul 2019 12:01:50 +0900
-Message-Id: <20190718030103.086921187@linuxfoundation.org>
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 62/80] clk: ti: clkctrl: Fix returning uninitialized data
+Date:   Thu, 18 Jul 2019 12:01:53 +0900
+Message-Id: <20190718030103.297617998@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,148 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+[ Upstream commit 41b3588dba6ef4b7995735a97e47ff0aeea6c276 ]
 
-commit feb09b2933275a70917a869989ea2823e7356be8 upstream.
+If we do a clk_get() for a clock that does not exists, we have
+_ti_omap4_clkctrl_xlate() return uninitialized data if no match
+is found. This can be seen in some cases with SLAB_DEBUG enabled:
 
-This patch follows Alan Stern's recent patch:
-"p54: Fix race between disconnect and firmware loading"
+Unable to handle kernel paging request at virtual address 5a5a5a5a
+...
+clk_hw_create_clk.part.33
+sysc_notifier_call
+notifier_call_chain
+blocking_notifier_call_chain
+device_add
 
-that overhauled carl9170 buggy firmware loading and driver
-unbinding procedures.
+Let's fix this by setting a found flag only when we find a match.
 
-Since the carl9170 code was adapted from p54 it uses the
-same functions and is likely to have the same problem, but
-it's just that the syzbot hasn't reproduce them (yet).
-
-a summary from the changes (copied from the p54 patch):
- * Call usb_driver_release_interface() rather than
-   device_release_driver().
-
- * Lock udev (the interface's parent) before unbinding the
-   driver instead of locking udev->parent.
-
- * During the firmware loading process, take a reference
-   to the USB interface instead of the USB device.
-
- * Don't take an unnecessary reference to the device during
-   probe (and then don't drop it during disconnect).
-
-and
-
- * Make sure to prevent use-after-free bugs by explicitly
-   setting the driver context to NULL after signaling the
-   completion.
-
-Cc: <stable@vger.kernel.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/carl9170/usb.c |   39 +++++++++++++-------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+ drivers/clk/ti/clkctrl.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ath/carl9170/usb.c
-+++ b/drivers/net/wireless/ath/carl9170/usb.c
-@@ -128,6 +128,8 @@ static const struct usb_device_id carl91
- };
- MODULE_DEVICE_TABLE(usb, carl9170_usb_ids);
- 
-+static struct usb_driver carl9170_driver;
-+
- static void carl9170_usb_submit_data_urb(struct ar9170 *ar)
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 82e4d5cccf84..2df8564f08a0 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -215,6 +215,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
  {
- 	struct urb *urb;
-@@ -966,32 +968,28 @@ err_out:
+ 	struct omap_clkctrl_provider *provider = data;
+ 	struct omap_clkctrl_clk *entry;
++	bool found = false;
  
- static void carl9170_usb_firmware_failed(struct ar9170 *ar)
- {
--	struct device *parent = ar->udev->dev.parent;
--	struct usb_device *udev;
--
--	/*
--	 * Store a copy of the usb_device pointer locally.
--	 * This is because device_release_driver initiates
--	 * carl9170_usb_disconnect, which in turn frees our
--	 * driver context (ar).
-+	/* Store a copies of the usb_interface and usb_device pointer locally.
-+	 * This is because release_driver initiates carl9170_usb_disconnect,
-+	 * which in turn frees our driver context (ar).
- 	 */
--	udev = ar->udev;
-+	struct usb_interface *intf = ar->intf;
-+	struct usb_device *udev = ar->udev;
+ 	if (clkspec->args_count != 2)
+ 		return ERR_PTR(-EINVAL);
+@@ -224,11 +225,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
  
- 	complete(&ar->fw_load_wait);
-+	/* at this point 'ar' could be already freed. Don't use it anymore */
-+	ar = NULL;
- 
- 	/* unbind anything failed */
--	if (parent)
--		device_lock(parent);
--
--	device_release_driver(&udev->dev);
--	if (parent)
--		device_unlock(parent);
-+	usb_lock_device(udev);
-+	usb_driver_release_interface(&carl9170_driver, intf);
-+	usb_unlock_device(udev);
- 
--	usb_put_dev(udev);
-+	usb_put_intf(intf);
- }
- 
- static void carl9170_usb_firmware_finish(struct ar9170 *ar)
- {
-+	struct usb_interface *intf = ar->intf;
- 	int err;
- 
- 	err = carl9170_parse_firmware(ar);
-@@ -1009,7 +1007,7 @@ static void carl9170_usb_firmware_finish
- 		goto err_unrx;
- 
- 	complete(&ar->fw_load_wait);
--	usb_put_dev(ar->udev);
-+	usb_put_intf(intf);
- 	return;
- 
- err_unrx:
-@@ -1052,7 +1050,6 @@ static int carl9170_usb_probe(struct usb
- 		return PTR_ERR(ar);
- 
- 	udev = interface_to_usbdev(intf);
--	usb_get_dev(udev);
- 	ar->udev = udev;
- 	ar->intf = intf;
- 	ar->features = id->driver_info;
-@@ -1094,15 +1091,14 @@ static int carl9170_usb_probe(struct usb
- 	atomic_set(&ar->rx_anch_urbs, 0);
- 	atomic_set(&ar->rx_pool_urbs, 0);
- 
--	usb_get_dev(ar->udev);
-+	usb_get_intf(intf);
- 
- 	carl9170_set_state(ar, CARL9170_STOPPED);
- 
- 	err = request_firmware_nowait(THIS_MODULE, 1, CARL9170FW_NAME,
- 		&ar->udev->dev, GFP_KERNEL, ar, carl9170_usb_firmware_step2);
- 	if (err) {
--		usb_put_dev(udev);
--		usb_put_dev(udev);
-+		usb_put_intf(intf);
- 		carl9170_free(ar);
+ 	list_for_each_entry(entry, &provider->clocks, node) {
+ 		if (entry->reg_offset == clkspec->args[0] &&
+-		    entry->bit_offset == clkspec->args[1])
++		    entry->bit_offset == clkspec->args[1]) {
++			found = true;
+ 			break;
++		}
  	}
- 	return err;
-@@ -1131,7 +1127,6 @@ static void carl9170_usb_disconnect(stru
  
- 	carl9170_release_firmware(ar);
- 	carl9170_free(ar);
--	usb_put_dev(udev);
- }
+-	if (!entry)
++	if (!found)
+ 		return ERR_PTR(-EINVAL);
  
- #ifdef CONFIG_PM
+ 	return entry->clk;
+-- 
+2.20.1
+
 
 
