@@ -2,223 +2,106 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E2BC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8E5C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137F42173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACD92173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389221AbfGRIfq (ORCPT
+        id S2389350AbfGRIgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:35:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56048 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfGRIfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:35:45 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DC06159465;
-        Thu, 18 Jul 2019 08:35:44 +0000 (UTC)
-Received: from [10.36.116.38] (ovpn-116-38.ams2.redhat.com [10.36.116.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 83BB260C44;
-        Thu, 18 Jul 2019 08:35:39 +0000 (UTC)
-Subject: Re: [PATCH v4 21/22] iommu/vt-d: Support flushing more translation
- cache types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1560087862-57608-22-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <9d678164-219c-80f9-c1be-121c097c691a@redhat.com>
-Date:   Thu, 18 Jul 2019 10:35:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 18 Jul 2019 04:36:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44520 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726386AbfGRIgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:36:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1A70CAE12;
+        Thu, 18 Jul 2019 08:36:30 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 10:36:29 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
+ only when safe
+Message-ID: <20190718083629.nso3vwbvmankqgks@pathway.suse.cz>
+References: <20190716072805.22445-1-pmladek@suse.com>
+ <20190716072805.22445-2-pmladek@suse.com>
+ <20190717095615.GD3664@jagdpanzerIV>
 MIME-Version: 1.0
-In-Reply-To: <1560087862-57608-22-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 18 Jul 2019 08:35:45 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717095615.GD3664@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 6/9/19 3:44 PM, Jacob Pan wrote:
-> When Shared Virtual Memory is exposed to a guest via vIOMMU, scalable
-> IOTLB invalidation may be passed down from outside IOMMU subsystems.
-> This patch adds invalidation functions that can be used for additional
-> translation cache types.
+On Wed 2019-07-17 18:56:15, Sergey Senozhatsky wrote:
+> On (07/16/19 09:28), Petr Mladek wrote:
+> > Kernel tries hard to store and show printk messages when panicking. Even
+> > logbuf_lock gets re-initialized when only one CPU is running after
+> > smp_send_stop().
+> > 
+> > Unfortunately, smp_send_stop() might fail on architectures that do not
+> > use NMI as a fallback. Then printk log buffer might stay locked and
+> > a deadlock is almost inevitable.
 > 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/dmar.c        | 50 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/intel-iommu.h | 21 +++++++++++++++----
->  2 files changed, 67 insertions(+), 4 deletions(-)
+> I'd say that deadlock is still almost inevitable.
 > 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 6d969a1..0cda6fb 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -1357,6 +1357,21 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->  	qi_submit_sync(&desc, iommu);
->  }
->  
-> +/* PASID-based IOTLB Invalidate */
-> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr, u32 pasid,
-> +		unsigned int size_order, u64 granu, int ih)
-> +{
-> +	struct qi_desc desc;
-nit: you could also init to {};
-> +
-> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
-> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
-> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(ih) |
-> +		QI_EIOTLB_AM(size_order);
-> +	desc.qw2 = 0;
-> +	desc.qw3 = 0;
-> +	qi_submit_sync(&desc, iommu);
-> +}
-> +
->  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  			u16 qdep, u64 addr, unsigned mask)
->  {
-> @@ -1380,6 +1395,41 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  	qi_submit_sync(&desc, iommu);
->  }
->  
-> +/* PASID-based device IOTLB Invalidate */
-> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-> +		u32 pasid,  u16 qdep, u64 addr, unsigned size, u64 granu)
-s/size/size_order
-> +{
-> +	struct qi_desc desc;
-> +
-> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
-> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
-> +		QI_DEV_IOTLB_PFSID(pfsid);
-maybe add a comment to remind MIP hint is sent to 0 as of now.
-> +	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
-> +
-> +	/* If S bit is 0, we only flush a single page. If S bit is set,
-> +	 * The least significant zero bit indicates the size. VT-d spec
-> +	 * 6.5.2.6
-> +	 */
-> +	if (!size)
-> +		desc.qw0 |= QI_DEV_EIOTLB_ADDR(addr) & ~QI_DEV_EIOTLB_SIZE;
-this is qw1.
-> +	else {
-> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size);
-don't you miss a "- 1 " here?
-> +
-> +		desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr & ~mask) | QI_DEV_EIOTLB_SIZE;
-desc.qw1 |= addr & ~mask | QI_DEV_EIOTLB_SIZE;
-ie. I don't think QI_DEV_EIOTLB_ADDR is useful here?
-
-
-So won't the following lines do the job?
-
-unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size) -1;
-desc.qw1 |= addr & ~mask;
-if (size)
-    desc.qw1 |= QI_DEV_EIOTLB_SIZE
-> +	}
-> +	qi_submit_sync(&desc, iommu);
-> +}
-> +
-> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid)
-> +{
-> +	struct qi_desc desc;
-> +
-> +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) | QI_PC_GRAN(granu) | QI_PC_PASID(pasid);
-nit: reorder the fields according to the spec, easier to check if any is
-missing.
-> +	desc.qw1 = 0;
-> +	desc.qw2 = 0;
-> +	desc.qw3 = 0;
-> +	qi_submit_sync(&desc, iommu);
-> +}
->  /*
->   * Disable Queued Invalidation interface.
->   */
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 94d3a9a..1cdb35b 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -339,7 +339,7 @@ enum {
->  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >> (DMA_TLB_FLUSH_GRANU_OFFSET-4))
->  #define QI_IOTLB_ADDR(addr)	(((u64)addr) & VTD_PAGE_MASK)
->  #define QI_IOTLB_IH(ih)		(((u64)ih) << 6)
-> -#define QI_IOTLB_AM(am)		(((u8)am))
-> +#define QI_IOTLB_AM(am)		(((u8)am) & 0x3f)
->  
->  #define QI_CC_FM(fm)		(((u64)fm) << 48)
->  #define QI_CC_SID(sid)		(((u64)sid) << 32)
-> @@ -357,17 +357,22 @@ enum {
->  #define QI_PC_DID(did)		(((u64)did) << 16)
->  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
->  
-> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
-> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
-> +/* PASID cache invalidation granu */
-> +#define QI_PC_ALL_PASIDS	0
-> +#define QI_PC_PASID_SEL		1
->  
->  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
->  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
->  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
-> -#define QI_EIOTLB_AM(am)	(((u64)am))
-> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
->  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
->  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
->  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
->  
-> +/* QI Dev-IOTLB inv granu */
-> +#define QI_DEV_IOTLB_GRAN_ALL		1
-> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
-> +
->  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
->  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
->  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
-> @@ -658,8 +663,16 @@ extern void qi_flush_context(struct intel_iommu *iommu, u16 did, u16 sid,
->  			     u8 fm, u64 type);
->  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->  			  unsigned int size_order, u64 type);
-> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr,
-> +			u32 pasid, unsigned int size_order, u64 type, int ih);
->  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->  			u16 qdep, u64 addr, unsigned mask);
-> +
-> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-> +			u32 pasid, u16 qdep, u64 addr, unsigned size, u64 granu);
-s/size/size_order
-> +
-> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid);
-> +
->  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
->  
->  extern int dmar_ir_support(void);
+> panic-CPU syncs with the printing-CPU before it attempts to SMP_STOP.
+> If there is an active printing-CPU, which is looping in console_unlock(),
+> taking logbuf_lock in order to msg_print_text() and stuff, then panic-CPU
+> will spin on console_owner waiting for that printing-CPU to handover
+> printing duties.
 > 
+> 	pr_emerg("Kernel panic - not syncing");
+> 	smp_send_stop();
 
-Thanks
+Good point. I forgot the handover logic. Well, it is enabled only
+around call_console_drivers(). Therefore it is not under
+lockbuf_lock.
 
-Eric
+I had in mind some infinite loop or deadlock in vprintk_store().
+There was at least one long time ago (warning triggered
+by leap second).
+
+
+> If printing-CPU goes nuts under logbuf_lock, has corrupted IDT or anything
+> else, then we will not progress with panic(). panic-CPU will deadlock. If
+> not on
+> 	pr_emerg("Kernel panic - not syncing")
+> 
+> then on another pr_emerg(), right before the NMI-fallback.
+
+Nested printk() should not be problem thanks to printk_safe.
+
+Also printk_safe_flush_on_panic() is safe because it checks whether
+the lock is available.
+
+The problem is kmsg_dump() and console_unlock() called from
+console_unblank() and console_flush_on_panic(). They do not
+check whether the lock is available.
+
+
+This patch does not help in all possible scenarios. But I still
+believe that it will help in some.
+
+Well, I am primary interested into the 2nd patch. It fixes
+a real life bug report.
+
+Best Regards,
+Petr
