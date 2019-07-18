@@ -2,100 +2,79 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D37C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43E4C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513152173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9oXHnjN"
+	by mail.kernel.org (Postfix) with ESMTP id AF827217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563416552;
+	bh=6xadr3+yYCHxuYD3vVy1jNPvzGd3qcrQCliP6VNRTK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lRz6ngJYUfoH2ZcPiGq66EPrPVL7imkrSSJtEr283y6EqmnP3rvYX8fokBAL5FRh4
+	 2+7aDo2Lxwx5V4jWiogYCaftTw3W3Lkq8xSMahBrJiQdFeSOP2wp0dDKVTp3vE0g1d
+	 8bA+jSw45JVzPXPoHMENaqBURE7dJjRik+4x2oYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733158AbfGRCVS (ORCPT
+        id S2387422AbfGRCWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 22:21:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40590 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfGRCVR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 22:21:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so12988539pla.7;
-        Wed, 17 Jul 2019 19:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=p+LjhuKBh7nce7Y+lpAKDWjlvBnJG3DCGoCsO8czRPA=;
-        b=V9oXHnjNRMBPoc/XZ7mKAQDwsYqQUg+QzF44fwuMzKNaE/56hg24mSLhmd664iXS9I
-         neugAspe7T7CagYX5h6Ixx3fe1uNSe3YrHuB0qX3WFpMsFA2UISxh6CAP9x8dvMXDojZ
-         t0oSgQByNbYb75yFM3KQX8k14t4whJDqU345lKoxnTVLWFOWBjKkCGSndn0xClnFq6aL
-         jitefDyI/BkvVvS/W/2S1BJI/JIvov1c+1HpIIx0wwlqqe1HkREbWDVBmlCFswOqhAG4
-         bsSAYAit3ogE8QbRKSx1J9K+jIC7elr4KpX9LEw7nWrd1WHl1FmuXAGyBj2YH+WUvKD/
-         aQfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=p+LjhuKBh7nce7Y+lpAKDWjlvBnJG3DCGoCsO8czRPA=;
-        b=UzXmQJxIlroKhhHlznebwDWbPR1HdowpNL59hilcXcF8DUJqysDo4A6iuNyXkolwiL
-         zL6R1IjDqDyz6JTp+CaDyYaLxOR5tyaTXaQzz2eNMI1sFtE4N7VbjR2CdjlfRFvcFAYf
-         +KuMkX/rRgNEVNuxZaGOaZajx0wzmmNm0UUlZgvk1z6eVJYBW+mYBs4C+Neia6lehb9R
-         ow6Vkcjqkj+k8T3u0oN1W2eJu43b5i1webd992efWl2EIu3O09ANouRRpaP/qtqwQW7+
-         Xru8EzK5Z00DDkjrPdng2H2D8OsQ88tfw+cDQxQZ1/ETdPPSdo8jnWS0cB9SQThRqQoz
-         Z6Sw==
-X-Gm-Message-State: APjAAAXagb5GxGU33KsVUxz34K88wVFXTtdH/BTxPS7pw7R3TLmTRDJ2
-        UjyOfN6e4XWdb1xnFw/nV+8=
-X-Google-Smtp-Source: APXvYqzhp9UNPhJLbPgEiS9emIzKfx6Lb59KI+5aqhHAwWjsr4RjI3qsDA6KHINu5FC8UZj2ZDrZUw==
-X-Received: by 2002:a17:902:59c3:: with SMTP id d3mr45913396plj.22.1563416476874;
-        Wed, 17 Jul 2019 19:21:16 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id q69sm39143218pjb.0.2019.07.17.19.21.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 19:21:16 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 07:51:10 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: dsa: sja1105: Release lock in error case
-Message-ID: <20190718022110.GA19222@hari-Inspiron-1545>
+        Wed, 17 Jul 2019 22:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727653AbfGRCWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 22:22:31 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B325120651;
+        Thu, 18 Jul 2019 02:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563416550;
+        bh=6xadr3+yYCHxuYD3vVy1jNPvzGd3qcrQCliP6VNRTK0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Yw39AtK0bsV5kB18dDwUFPaL8O8F0DGzBCSE29YuJl1S9zPxQNW/UzmYXCyAQcOEA
+         YP/aM2VM5RHHCfdq03ZBilsy4I5NwtHHwCXEcXABoNBLHYabmr+9CBtXHlhZjNiZGc
+         GXwp3WALUFv99ZFjFB07VhIjKmZ2NJWBpW96308o=
+Date:   Wed, 17 Jul 2019 22:22:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Maya Nakamura <m.maya.nakamura@gmail.com>
+Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Subject: Re: [PATCH v4 3/5] hv: vmbus: Replace page definition with Hyper-V
+ specific one
+Message-ID: <20190718022228.GF3079@sasha-vm>
+References: <cover.1562916939.git.m.maya.nakamura@gmail.com>
+ <0d9e80ecabcc950dc279fdd2e39bea4060123ba4.1562916939.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <0d9e80ecabcc950dc279fdd2e39bea4060123ba4.1562916939.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds release of unlock in fail case.
+On Fri, Jul 12, 2019 at 08:25:18AM +0000, Maya Nakamura wrote:
+>Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
+>not be 4096 on all architectures and Hyper-V always runs with a page
+>size of 4096.
+>
+>Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+>Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Issue identified by coccicheck
+Thomas, if you're taking this series, could you grab this patch as well
+please (dependencies)?
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- net/dsa/tag_sja1105.c | 1 +
- 1 file changed, 1 insertion(+)
+	Acked-by: Sasha Levin <sashal@kernel.org>
 
-diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
-index 1d96c9d..26363d7 100644
---- a/net/dsa/tag_sja1105.c
-+++ b/net/dsa/tag_sja1105.c
-@@ -216,6 +216,7 @@ static struct sk_buff
- 		if (!skb) {
- 			dev_err_ratelimited(dp->ds->dev,
- 					    "Failed to copy stampable skb\n");
-+			spin_unlock(&sp->data->meta_lock);
- 			return NULL;
- 		}
- 		sja1105_transfer_meta(skb, meta);
--- 
-2.7.4
-
+--
+Thanks,
+Sasha
