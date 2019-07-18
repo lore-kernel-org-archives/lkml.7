@@ -2,59 +2,52 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA47C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F543C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719232184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B272204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419109;
-	bh=SZLtCnvDrzAG+3SlFn47Lfe9Tc9P9rbtJ9EMIqcWHuU=;
+	s=default; t=1563419113;
+	bh=fqgnhXlZWvwpVYR9LVed7+3xHcorhXb1GK1XtkUk98w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apnyRM/HUwcH2MziScTkmNEpHnwWSSh+VGzZn3HHrO0nmA07k1FD3Wv3a/PcUn4N9
-	 Zm3UHW5lbUvBmPKwsBwhOGBi/YTwTczdSn386enwg+LdIaRGfZm7Ukm7DXYW+Xmey0
-	 WSJBkoQkO9WWAGM3pxeWOFt2O5bOCc69q94uxNEA=
+	b=HGg3feK2viId6HTVapUq043YJC2JQisoX4lwl5cTA9APFrPd3fIBRhYcnqJzIT6qL
+	 +ai8wc/qkgM5y8R/0oVbcBioDELOqMjrP0ljuAFBKa6AmXFPe51lcYS/ieSnmk1Tz7
+	 bvWfUOWjPpfq+VMyeR/mQZRTdIMTAegmnwPxuh0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389880AbfGRDFI (ORCPT
+        id S2389883AbfGRDFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36086 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389853AbfGRDFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:05:06 -0400
+        id S1732249AbfGRDFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:05:09 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17352173B;
-        Thu, 18 Jul 2019 03:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D717021848;
+        Thu, 18 Jul 2019 03:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419105;
-        bh=SZLtCnvDrzAG+3SlFn47Lfe9Tc9P9rbtJ9EMIqcWHuU=;
+        s=default; t=1563419109;
+        bh=fqgnhXlZWvwpVYR9LVed7+3xHcorhXb1GK1XtkUk98w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCuQ/bb5ovyAfRxTDz3V5AZVN1UIlNhbH8uK18l0/hlFSGVop3+85xr1ZwWvxGKDX
-         iIjJPl1VaQSaTd6HChMa0eJetbVDEVT9SSlO9aqbyIud1R0LN9faZomam+945pdXn1
-         HQcBXGOSj94XzMpb6u7bZlzmNYXegUZi2ZQG4Vfw=
+        b=i7yH7OG0DTwoi+/bxngoVHz5V4rYVd10fkv06NKzSvLnIX8/TRCMChhRDFhtSlu/m
+         7aGg0SGS1jbjpNLbBkXKtQglYwWCP0F4WryI6Qok+wbxBPXEwywIQe9LrXhXciz+Ba
+         Tt2MkCl2MVSvfPNo2qxFZEVf2LLfS9Lqe3fqK3AE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Potapenko <glider@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 31/54] x86/boot/64: Add missing fixup_pointer() for next_early_pgt access
-Date:   Thu, 18 Jul 2019 12:01:26 +0900
-Message-Id: <20190718030055.748720665@linuxfoundation.org>
+        stable@vger.kernel.org, Oleksandr Natalenko <oleksandr@redhat.com>,
+        Sebastian Parschauer <s.parschauer@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 32/54] HID: chicony: add another quirk for PixArt mouse
+Date:   Thu, 18 Jul 2019 12:01:27 +0900
+Message-Id: <20190718030055.842427058@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -67,45 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c1887159eb48ba40e775584cfb2a443962cf1a05 ]
+[ Upstream commit dcf768b0ac868630e7bdb6f2f1c9fe72788012fa ]
 
-__startup_64() uses fixup_pointer() to access global variables in a
-position-independent fashion. Access to next_early_pgt was wrapped into the
-helper, but one instance in the 5-level paging branch was missed.
+I've spotted another Chicony PixArt mouse in the wild, which requires
+HID_QUIRK_ALWAYS_POLL quirk, otherwise it disconnects each minute.
 
-GCC generates a R_X86_64_PC32 PC-relative relocation for the access which
-doesn't trigger the issue, but Clang emmits a R_X86_64_32S which leads to
-an invalid memory access and system reboot.
+USB ID of this device is 0x04f2:0x0939.
 
-Fixes: 187e91fe5e91 ("x86/boot/64/clang: Use fixup_pointer() to access 'next_early_pgt'")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexander Potapenko <glider@google.com>
-Link: https://lkml.kernel.org/r/20190620112422.29264-1-kirill.shutemov@linux.intel.com
+We've introduced quirks like this for other models before, so lets add
+this mouse too.
+
+Link: https://github.com/sriemer/fix-linux-mouse#usb-mouse-disconnectsreconnects-every-minute-on-linux
+Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Acked-by: Sebastian Parschauer <s.parschauer@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head64.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 7df5bce4e1be..29ffa495bd1c 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -184,7 +184,8 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	pgtable_flags = _KERNPG_TABLE_NOENC + sme_get_me_mask();
- 
- 	if (la57) {
--		p4d = fixup_pointer(early_dynamic_pgts[next_early_pgt++], physaddr);
-+		p4d = fixup_pointer(early_dynamic_pgts[(*next_pgt_ptr)++],
-+				    physaddr);
- 
- 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
- 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 6537086fb145..f10f5cce7aa9 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -272,6 +272,7 @@
+ #define USB_DEVICE_ID_CHICONY_MULTI_TOUCH	0xb19d
+ #define USB_DEVICE_ID_CHICONY_WIRELESS	0x0618
+ #define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE	0x1053
++#define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2	0x0939
+ #define USB_DEVICE_ID_CHICONY_WIRELESS2	0x1123
+ #define USB_DEVICE_ID_ASUS_AK1D		0x1125
+ #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 189bf68eb35c..74c0ad21b267 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -45,6 +45,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ATEN, USB_DEVICE_ID_ATEN_UC100KM), HID_QUIRK_NOGET },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_TOUCH), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_WIRELESS), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHIC, USB_DEVICE_ID_CHIC_GAMEPAD), HID_QUIRK_BADPAD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CH, USB_DEVICE_ID_CH_3AXIS_5BUTTON_STICK), HID_QUIRK_NOGET },
 -- 
 2.20.1
 
