@@ -2,52 +2,55 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12ADC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8231DC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50DE2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547F4205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420262;
-	bh=QtimvkZcCF2B8Rx5GfTjmAeAjMRsTeY95kFIvOrOTNg=;
+	s=default; t=1563420277;
+	bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LfNtGucNU2QUH3r5mFEX+YhnhZUW8Yj8SjkbyH5Vjk5SZ+jj9eQGLxj/O4qSFFqLD
-	 874MflodJ10BzGHzw0m1yPJJlUzUIlKZkopATzByUz1YVIl9ysCt27Ik+tsRwNTHwv
-	 J32CmPBdWHpERwysGvzFTf3zcZyovONHzBEHCO04=
+	b=OLpYePZsgyIJN+NzTFIddIYMwG1XFLWL+Tdx/2yXIVFRMGl2HdoYh+/YutfLcTpP5
+	 srRJ97LncmqD3u+SrMdlEbOOwz5CEy46/K8kYRgYX+JbMuNBws2HDnAHwZIDFjBsPR
+	 Ajbi3EAfG4im+wmfxjdUqSoxwVU6NH02f+fnxwng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390439AbfGRDYV (ORCPT
+        id S2390793AbfGRDYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38788 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:24:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390392AbfGRDHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:16 -0400
+        id S2389193AbfGRDGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:40 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B761421848;
-        Thu, 18 Jul 2019 03:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396C3204EC;
+        Thu, 18 Jul 2019 03:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419236;
-        bh=QtimvkZcCF2B8Rx5GfTjmAeAjMRsTeY95kFIvOrOTNg=;
+        s=default; t=1563419198;
+        bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mGNBRhp6co+KmDEASUdWyl/ffHP/u+y+WOUwGnexespovKgQbEKOArA/wcxn6TEF
-         +Uax0FbfxtUbMfDZYgUT/gtOQrghsBctycQd7q0xrw1WbxJBxY/liGtDPQeLTthlAK
-         dEKL/sdW/DHwNSsPIait6feXaDGWWECGqzdxax64=
+        b=DULQb40Wa5sSt4PLsVnNQUfpDkne3gWjCgcet6WMaUANYrQmmEmGf2W4dgdYsOIOM
+         hBbDrf0pXrgK0zYR4fdi700NrIyD5j/OXw2n4IwjcW+xg+1UIiFlgOXjsX8Gg2cLX5
+         ZMSM1VEtvsPS+9E8y7ELITFK/NUkY3IXYV+xegS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksandr Natalenko <oleksandr@redhat.com>,
-        Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/47] HID: chicony: add another quirk for PixArt mouse
-Date:   Thu, 18 Jul 2019 12:01:38 +0900
-Message-Id: <20190718030050.756536799@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 04/47] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
+Date:   Thu, 18 Jul 2019 12:01:18 +0900
+Message-Id: <20190718030047.398047851@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -60,52 +63,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dcf768b0ac868630e7bdb6f2f1c9fe72788012fa ]
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-I've spotted another Chicony PixArt mouse in the wild, which requires
-HID_QUIRK_ALWAYS_POLL quirk, otherwise it disconnects each minute.
+commit c32cc30c0544f13982ee0185d55f4910319b1a79 upstream.
 
-USB ID of this device is 0x04f2:0x0939.
+cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
+which is not exported to user-space.
 
-We've introduced quirks like this for other models before, so lets add
-this mouse too.
+UAPI headers must use the ones prefixed with double-underscore.
 
-Link: https://github.com/sriemer/fix-linux-mouse#usb-mouse-disconnectsreconnects-every-minute-on-linux
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Acked-by: Sebastian Parschauer <s.parschauer@gmx.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Detected by compile-testing exported headers:
+
+  include/linux/nilfs2_ondisk.h: In function `nilfs_checkpoint_set_snapshot':
+  include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function `cpu_to_le32' [-Werror=implicit-function-declaration]
+    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                   ^
+  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
+   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+   ^~~~~~~~~~~~~~~~~~~~
+  include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function `le32_to_cpu' [-Werror=implicit-function-declaration]
+    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                               ^
+  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
+   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+   ^~~~~~~~~~~~~~~~~~~~
+  include/linux/nilfs2_ondisk.h: In function `nilfs_segment_usage_set_clean':
+  include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function `cpu_to_le64' [-Werror=implicit-function-declaration]
+    su->su_lastmod = cpu_to_le64(0);
+                     ^~~~~~~~~~~
+
+Link: http://lkml.kernel.org/r/20190605053006.14332-1-yamada.masahiro@socionext.com
+Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to uapi separately")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: <stable@vger.kernel.org>	[4.9+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ include/uapi/linux/nilfs2_ondisk.h |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 92452992b368..97b4ecab7c12 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -265,6 +265,7 @@
- #define USB_DEVICE_ID_CHICONY_MULTI_TOUCH	0xb19d
- #define USB_DEVICE_ID_CHICONY_WIRELESS	0x0618
- #define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE	0x1053
-+#define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2	0x0939
- #define USB_DEVICE_ID_CHICONY_WIRELESS2	0x1123
- #define USB_DEVICE_ID_ASUS_AK1D		0x1125
- #define USB_DEVICE_ID_CHICONY_ACER_SWITCH12	0x1421
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 5892f1bd037e..91e86af44a04 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -45,6 +45,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ATEN, USB_DEVICE_ID_ATEN_UC100KM), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_TOUCH), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_WIRELESS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHIC, USB_DEVICE_ID_CHIC_GAMEPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CH, USB_DEVICE_ID_CH_3AXIS_5BUTTON_STICK), HID_QUIRK_NOGET },
--- 
-2.20.1
-
+--- a/include/uapi/linux/nilfs2_ondisk.h
++++ b/include/uapi/linux/nilfs2_ondisk.h
+@@ -29,7 +29,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/magic.h>
+-
++#include <asm/byteorder.h>
+ 
+ #define NILFS_INODE_BMAP_SIZE	7
+ 
+@@ -533,19 +533,19 @@ enum {
+ static inline void							\
+ nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
+-				   (1UL << NILFS_CHECKPOINT_##flag));	\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
++				     (1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline void							\
+ nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
+ 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline int							\
+ nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
+ {									\
+-	return !!(le32_to_cpu(cp->cp_flags) &				\
++	return !!(__le32_to_cpu(cp->cp_flags) &				\
+ 		  (1UL << NILFS_CHECKPOINT_##flag));			\
+ }
+ 
+@@ -595,20 +595,20 @@ enum {
+ static inline void							\
+ nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
+ {									\
+-	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
++	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
+ 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
+ }									\
+ static inline void							\
+ nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
+ {									\
+ 	su->su_flags =							\
+-		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
++		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
+ 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
+ }									\
+ static inline int							\
+ nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
+ {									\
+-	return !!(le32_to_cpu(su->su_flags) &				\
++	return !!(__le32_to_cpu(su->su_flags) &				\
+ 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
+ }
+ 
+@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
+ static inline void
+ nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
+ {
+-	su->su_lastmod = cpu_to_le64(0);
+-	su->su_nblocks = cpu_to_le32(0);
+-	su->su_flags = cpu_to_le32(0);
++	su->su_lastmod = __cpu_to_le64(0);
++	su->su_nblocks = __cpu_to_le32(0);
++	su->su_flags = __cpu_to_le32(0);
+ }
+ 
+ static inline int
+ nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
+ {
+-	return !le32_to_cpu(su->su_flags);
++	return !__le32_to_cpu(su->su_flags);
+ }
+ 
+ /**
 
 
