@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1176C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FC5C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A8F21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA0B21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419407;
-	bh=MnwD2o27r5Ho25FnF02W9yANjrO6XG2iEuzJZiL3/lw=;
+	s=default; t=1563419410;
+	bh=Ulc6IGMJovVWgezLWzctt5c4gvetb3xmZ8ycD3SVkZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V11BL4yIED5JPIdFf1bbfQXrffPaWC3XXExnjRLgH7P9RIPC14r37lX0Mrhi49fK2
-	 jyZ+NSC/iqUADySujzFoFx2INwcfevP3JxX4zrw4s5JzA2bVjd7UZSwY3YAbqsDFyI
-	 +5lLUuhybuUTOLE2lGoyxTCSs9UlCGMNOJX7ZYtg=
+	b=HZDrGo6LCEVqbvE1Rf71UmtiaiQmTDgWU3LD5Q4FgioRI0qN+/yMi/8GulXaNJuOK
+	 mXrLeomGPgq0JGdfbzb6eEY69GF4YQS8cOOtiBo6yCeg3KiH6Cf4XNdWvSMF+m4c1U
+	 /fdCmQNJ9XsgC4bjoOdYJEJAD3Xq9lKL+BbsCgRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391112AbfGRDKG (ORCPT
+        id S2390589AbfGRDKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43064 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391095AbfGRDKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:04 -0400
+        id S2391101AbfGRDKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:10:05 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C358F21841;
-        Thu, 18 Jul 2019 03:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905FA21841;
+        Thu, 18 Jul 2019 03:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419403;
-        bh=MnwD2o27r5Ho25FnF02W9yANjrO6XG2iEuzJZiL3/lw=;
+        s=default; t=1563419404;
+        bh=Ulc6IGMJovVWgezLWzctt5c4gvetb3xmZ8ycD3SVkZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZbOrE1SXxL6MoRREAwwQ5Re1q/+6Z48AxTOGx68BJDwzCXKhnF1fVTZYdrUU0tIS
-         Qu5TxPM8zignP0PoaslLxOfyGKYz+tklBhZUJBdxssykZt2oUwhpyskO9OO8pu0HXc
-         w4LoBPXDn/RyIHTxY9Asmtcn66JPr5wqf/LLqwnk=
+        b=vwDMmQm3V5v4K2nD7To2UDHUUF8GFjVYro2bbh7tqoiItrXEKIhMuK+YAhslSYgPg
+         ZYMQoLmy5DZEhvG4wPgvMDNTcXzfZSJlaRLaBD14NTxdOU0/7z7d8qskaqVCqYx2wi
+         +2AAmvkEoKzfNrKp7Fwu29GonutpIWPyKWTOaf0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 51/80] USB: serial: option: add support for GosunCn ME3630 RNDIS mode
-Date:   Thu, 18 Jul 2019 12:01:42 +0900
-Message-Id: <20190718030102.567876706@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Barta <o.barta89@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 52/80] Revert "serial: 8250: Dont service RX FIFO if interrupts are disabled"
+Date:   Thu, 18 Jul 2019 12:01:43 +0900
+Message-Id: <20190718030102.627376265@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,43 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+From: Oliver Barta <o.barta89@gmail.com>
 
-commit aed2a26283528fb69c38e414f649411aa48fb391 upstream.
+commit 3f2640ed7be838c3f05c0d2b0f7c7508e7431e48 upstream.
 
-Added USB IDs for GosunCn ME3630 cellular module in RNDIS mode.
+This reverts commit 2e9fe539108320820016f78ca7704a7342788380.
 
-T:  Bus=03 Lev=01 Prnt=01 Port=01 Cnt=03 Dev#= 18 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=19d2 ProdID=0601 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=b950269c
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+Reading LSR unconditionally but processing the error flags only if
+UART_IIR_RDI bit was set before in IIR may lead to a loss of transmission
+error information on UARTs where the transmission error flags are cleared
+by a read of LSR. Information are lost in case an error is detected right
+before the read of LSR while processing e.g. an UART_IIR_THRI interrupt.
 
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
+Signed-off-by: Oliver Barta <o.barta89@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 2e9fe5391083 ("serial: 8250: Don't service RX FIFO if interrupts are disabled")
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/8250/8250_port.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1346,6 +1346,7 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0414, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0417, 0xff, 0xff, 0xff) },
-+	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0601, 0xff) },	/* GosunCn ZTE WeLink ME3630 (RNDIS mode) */
- 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0602, 0xff) },	/* GosunCn ZTE WeLink ME3630 (MBIM mode) */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1008, 0xff, 0xff, 0xff),
- 	  .driver_info = RSVD(4) },
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1873,8 +1873,7 @@ int serial8250_handle_irq(struct uart_po
+ 
+ 	status = serial_port_in(port, UART_LSR);
+ 
+-	if (status & (UART_LSR_DR | UART_LSR_BI) &&
+-	    iir & UART_IIR_RDI) {
++	if (status & (UART_LSR_DR | UART_LSR_BI)) {
+ 		if (!up->dma || handle_rx_dma(up, iir))
+ 			status = serial8250_rx_chars(up, status);
+ 	}
 
 
