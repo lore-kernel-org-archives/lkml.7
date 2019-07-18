@@ -2,52 +2,55 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF68C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4EDC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355C8205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E934205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419440;
-	bh=ly62QCqzHy8b9qjSMa/DCfvrqlOs+AW3g4Ujo+qJVQM=;
+	s=default; t=1563419443;
+	bh=LVlEiPFeJbtO6VnpMvXNyX31kTw7u6VPkc/1xh/HUIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zv1A+eLh7+fnSS7NfZp/wWz8vVl8bEs8q+V1jsEmj9PWHSv61PIsaov/weA47EXSa
-	 4Hs28VFa+zLx28BmbVfYe0cmOyoCjepQeEsCfEr/gHGYqjspITjbJ3oMmacLrTQA14
-	 Xr4avyY3k+g0O2WF3dmzSwqSHhxJm7RZQ6/Vukss=
+	b=BZmUw+uE7S9TxEpTU7PkFtGZQHaXPbrdX4+m5FWNLk6IiW0SfKOhZHUEiNNu9gcVK
+	 wX5ymePq97TVEX/4lXc9ayKeitodRdmWj/IbbAWx0dOSWVIEnJNBIFkAzv644U+0EV
+	 VQ9hQGCY+5hEtCnuk+KZauLZRKGCVnkT0IIryS2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390083AbfGRDKi (ORCPT
+        id S2390811AbfGRDKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43704 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391176AbfGRDK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:27 -0400
+        id S2391207AbfGRDKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:10:38 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8F5920818;
-        Thu, 18 Jul 2019 03:10:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E59B620818;
+        Thu, 18 Jul 2019 03:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419426;
-        bh=ly62QCqzHy8b9qjSMa/DCfvrqlOs+AW3g4Ujo+qJVQM=;
+        s=default; t=1563419437;
+        bh=LVlEiPFeJbtO6VnpMvXNyX31kTw7u6VPkc/1xh/HUIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O6Fpe1rCx+jlfxFSBWxKozjWRTDa7HbB3M7MYDeLAf3wXcNYsJmiwic86+8vsFtPb
-         Yb2PzNpvLsp19qfedR68mc8FNH6ZvcGNZykIBk8+cXB/sJYV8izF/h51FSBbczdYHf
-         ydB6BNB3Trv5ylJHjtal6+f5+4PCGxfNwHyMpUs8=
+        b=mdHuGQdFV2jkOzTFIKyGdpg5HtBY67knUKNZ63xuFmSrPeIPEqj2g45ufdsy+zOtd
+         lIQcwZM5y0tCTdMv3OfTVuX0ZSOn7kXBJC/Hjo7JpUbW8ZbU+ENjhLz9rWHpGbLho2
+         bfcf4ZuYCAA81Ex03dIgoNm8RYL3XgOGVEUFDrIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.14 44/80] x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
-Date:   Thu, 18 Jul 2019 12:01:35 +0900
-Message-Id: <20190718030102.046131823@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 65/80] ARM: omap2: remove incorrect __init annotation
+Date:   Thu, 18 Jul 2019 12:01:56 +0900
+Message-Id: <20190718030103.506780811@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,54 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
 
-commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
+omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
+we get a warning with clang-8:
 
-The index to access the threads ptrace_bps is controlled by userspace via
-syscall: sys_ptrace(), hence leading to a potential exploitation of the
-Spectre variant 1 vulnerability.
+WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
+The function omap3xxx_prm_late_init() references
+the function __init omap3xxx_prm_enable_io_wakeup().
+This is often because omap3xxx_prm_late_init lacks a __init
+annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
 
-The index can be controlled from:
-    ptrace -> arch_ptrace -> ptrace_get_debugreg.
+When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
+inlined, so we never noticed in the past.
 
-Fix this by sanitizing the user supplied index before using it access
-thread->ptrace_bps.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/mach-omap2/prm3xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -24,6 +24,7 @@
- #include <linux/rcupdate.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-+#include <linux/nospec.h>
- 
- #include <linux/uaccess.h>
- #include <asm/pgtable.h>
-@@ -651,9 +652,11 @@ static unsigned long ptrace_get_debugreg
+diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
+index a2dd13217c89..2819c43fe754 100644
+--- a/arch/arm/mach-omap2/prm3xxx.c
++++ b/arch/arm/mach-omap2/prm3xxx.c
+@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
+  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
+  * No return value.
+  */
+-static void __init omap3xxx_prm_enable_io_wakeup(void)
++static void omap3xxx_prm_enable_io_wakeup(void)
  {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
-+	int index = n;
- 
- 	if (n < HBP_NUM) {
--		struct perf_event *bp = thread->ptrace_bps[n];
-+		struct perf_event *bp = thread->ptrace_bps[index];
-+		index = array_index_nospec(index, HBP_NUM);
- 
- 		if (bp)
- 			val = bp->hw.info.address;
+ 	if (prm_features & PRM_HAS_IO_WAKEUP)
+ 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
+-- 
+2.20.1
+
 
 
