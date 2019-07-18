@@ -2,52 +2,52 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8D4C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA5C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8758321783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D067821783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420151;
-	bh=1M5uP+m8cuTDZeta1c/3TZC1egzglcR2qlnV2iaMkKY=;
+	s=default; t=1563420162;
+	bh=ZIV++hQkTHoi/VL1oj9sR02db5mmE3gnYXLemXpyZeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h/WjRSKq/sRe+Cs2nT7uFFsM1VQAvudU1oT2r6kXtXcPB0afhPsMZb0bZrer8M/f4
-	 FdGU6PyraAHirmCYg2hckMuXVWSa4F9wrGAjRkQi2qLx7mj9LAXOKaKiAiKe5s+GDz
-	 swf0B1QWZvSwMpE/o/L48B1tsgikhTTyZaR6CcB4=
+	b=jGpbLqnK7lDxwnMb5EvC6RYAecNHi5gTbqKUk5tIt8keF59XQ+rFQOGQx2fduJhcJ
+	 EXfeolpXNmu97a64sQRiSvjjwGK3CrNyO1xZqs1Y0L/FmiM2GBLdQRTIM33CcYov/A
+	 bp1m0879375Gb9U5C/eAdmcLSlMAYYz00gXG9pbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391193AbfGRDW3 (ORCPT
+        id S2389881AbfGRDIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:22:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41006 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389965AbfGRDIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:49 -0400
+        id S2390769AbfGRDId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:33 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8539E2173E;
-        Thu, 18 Jul 2019 03:08:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E73205F4;
+        Thu, 18 Jul 2019 03:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419328;
-        bh=1M5uP+m8cuTDZeta1c/3TZC1egzglcR2qlnV2iaMkKY=;
+        s=default; t=1563419312;
+        bh=ZIV++hQkTHoi/VL1oj9sR02db5mmE3gnYXLemXpyZeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywItR+a3s6EMUQdv/2OncAqMhXRnKIqLs7kNwxq/xRNO6yqUuMZJ9mEvbaCAVClXu
-         bNby+PyaK8epSdLUwnPVul51oX36zNDRsdwSSarcUhUWM9kubeKae4c8vkHEDkwXLu
-         VshP8eHRulxIUFQTxi4QPBDwBkl0YpMxkoI6F1K8=
+        b=CeHF8IlwWtSTHMb9smYHyY4AK+rbCuPw09tDflq7ffoAomA+cdfEKeB85EG+Wyj4d
+         +IhfsWDc1umLSXK3OS8opOGEoji9PDpGwJ99mrPR+DfQgUJY6f4DrJOTuuBOz+eb42
+         +yIPPdv75w0Yy5t8hNssNMOGKdm3BrSgOA5d+8mQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cole Rogers <colerogers@disroot.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 03/80] Input: synaptics - enable SMBUS on T480 thinkpad trackpad
-Date:   Thu, 18 Jul 2019 12:00:54 +0900
-Message-Id: <20190718030059.064016486@linuxfoundation.org>
+        stable@vger.kernel.org, Melissa Wen <melissa.srw@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 10/80] staging:iio:ad7150: fix threshold mode config bit
+Date:   Thu, 18 Jul 2019 12:01:01 +0900
+Message-Id: <20190718030059.652676212@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,36 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cole Rogers <colerogers@disroot.org>
+[ Upstream commit df4d737ee4d7205aaa6275158aeebff87fd14488 ]
 
-commit abbe3acd7d72ab4633ade6bd24e8306b67e0add3 upstream.
+According to the AD7150 configuration register description, bit 7 assumes
+value 1 when the threshold mode is fixed and 0 when it is adaptive,
+however, the operation that identifies this mode was considering the
+opposite values.
 
-Thinkpad t480 laptops had some touchpad features disabled, resulting in the
-loss of pinch to activities in GNOME, on wayland, and other touch gestures
-being slower. This patch adds the touchpad of the t480 to the smbus_pnp_ids
-whitelist to enable the extra features. In my testing this does not break
-suspend (on fedora, with wayland, and GNOME, using the rc-6 kernel), while
-also fixing the feature on a T480.
+This patch renames the boolean variable to describe it correctly and
+properly replaces it in the places where it is used.
 
-Signed-off-by: Cole Rogers <colerogers@disroot.org>
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -176,6 +176,7 @@ static const char * const smbus_pnp_ids[
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
- 	"LEN0092", /* X1 Carbon 6 */
-+	"LEN0093", /* T480 */
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
- 	"LEN200f", /* T450s */
+diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+index a6f249e9c1e1..4d218d554878 100644
+--- a/drivers/staging/iio/cdc/ad7150.c
++++ b/drivers/staging/iio/cdc/ad7150.c
+@@ -6,6 +6,7 @@
+  * Licensed under the GPL-2 or later.
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/interrupt.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+@@ -129,7 +130,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+ {
+ 	int ret;
+ 	u8 threshtype;
+-	bool adaptive;
++	bool thrfixed;
+ 	struct ad7150_chip_info *chip = iio_priv(indio_dev);
+ 
+ 	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
+@@ -137,21 +138,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+ 		return ret;
+ 
+ 	threshtype = (ret >> 5) & 0x03;
+-	adaptive = !!(ret & 0x80);
++
++	/*check if threshold mode is fixed or adaptive*/
++	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
+ 
+ 	switch (type) {
+ 	case IIO_EV_TYPE_MAG_ADAPTIVE:
+ 		if (dir == IIO_EV_DIR_RISING)
+-			return adaptive && (threshtype == 0x1);
+-		return adaptive && (threshtype == 0x0);
++			return !thrfixed && (threshtype == 0x1);
++		return !thrfixed && (threshtype == 0x0);
+ 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
+ 		if (dir == IIO_EV_DIR_RISING)
+-			return adaptive && (threshtype == 0x3);
+-		return adaptive && (threshtype == 0x2);
++			return !thrfixed && (threshtype == 0x3);
++		return !thrfixed && (threshtype == 0x2);
+ 	case IIO_EV_TYPE_THRESH:
+ 		if (dir == IIO_EV_DIR_RISING)
+-			return !adaptive && (threshtype == 0x1);
+-		return !adaptive && (threshtype == 0x0);
++			return thrfixed && (threshtype == 0x1);
++		return thrfixed && (threshtype == 0x0);
+ 	default:
+ 		break;
+ 	}
+-- 
+2.20.1
+
 
 
