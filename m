@@ -2,215 +2,180 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDFCC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E4DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60C220880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFzMEu/d"
+	by mail.kernel.org (Postfix) with ESMTP id EA4B720880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389147AbfGRHJR (ORCPT
+        id S1727847AbfGRHL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 03:09:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37171 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfGRHJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:09:17 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f17so24439041wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MzKYoDyENKk1kK8hXpAc/Oh1w/qduBUwZjhGJuRTr8k=;
-        b=XFzMEu/dSHBe9G9sOdqdO7rfr0t+ODPMIMqH6RAux+r8HHINLaQ7moogZvUJL4DkR2
-         DJIpqTcjgVn1i+hr1PQmO2YcCp02v2TCwbzv0Q1mPPhagBOu7qg7R+DnLFiBGtfQCJBz
-         NEvkBKYarLjuOvs52zG/eQ1rbs0anPrsLvrheNpGF4n/ANrhUOW6aD86mSBd72bHpte6
-         6EvfeF9RuaGA3+gouoGhzPIJRS9FljqBOfXYdLnbOSiWIGmbyy3Rw0wDQChjFF9yFzzr
-         c2IK6pr2VbAikR44ALmWSXiBAbjw7+2IDlAX6rIpOo4QSww99OfFlvQ6ddTHIco9Duuo
-         cFzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MzKYoDyENKk1kK8hXpAc/Oh1w/qduBUwZjhGJuRTr8k=;
-        b=jZ982Ng3msYq0R004l4K0zpfgoEjSZy/90tjNczjfaxtkMkzukFzmQzNHcXMM52lC2
-         dUUInZdVIcl6mZGPsiIrUEsg9eEgPJRgBPzHmIl8+tcsiaygOWQbHhmhYQwgq4v9GG6l
-         BUGyjytGQLlDEoT2cBaRTxdSYl9nxge6ZGGJkB5yeLk87jpg5YPU+oMXuZxXSOqg/KIN
-         iITUbBprUR4nomGjLcn+aXqmlPY3aNVIySTiA0ONbCjyJnjkKwMa3x9iEwsuVq16tedD
-         mjql/xMW3OXg3t0UPsEoeuGtTBbHa6tEPif7zoIkHTRf95Azlkm00jlZBFjthursyaf2
-         S9Iw==
-X-Gm-Message-State: APjAAAXCtppfelOVAlg3OzzYrTBh/sFTNHX8oxY6j4fNs9aTjWVXQTWP
-        7r0pfXoKkKLjAPZy76MVa3LPfQ==
-X-Google-Smtp-Source: APXvYqyM6o6bSbcQ9narWyKZyim8pbSFjPVrrmBypQxTV7ODpMggFbNfD0eiMbPCpPVWjQ5I7Y3UFw==
-X-Received: by 2002:a1c:c545:: with SMTP id v66mr41543708wmf.51.1563433748588;
-        Thu, 18 Jul 2019 00:09:08 -0700 (PDT)
-Received: from localhost.localdomain (146-241-85-178.dyn.eolo.it. [146.241.85.178])
-        by smtp.gmail.com with ESMTPSA id a64sm26629527wmf.1.2019.07.18.00.09.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 00:09:07 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        bottura.nicola95@gmail.com, srivatsa@csail.mit.edu,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT V3 1/1] block, bfq: check also in-flight I/O in dispatch plugging
-Date:   Thu, 18 Jul 2019 09:08:52 +0200
-Message-Id: <20190718070852.34568-2-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190718070852.34568-1-paolo.valente@linaro.org>
-References: <20190718070852.34568-1-paolo.valente@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 18 Jul 2019 03:11:28 -0400
+Received: from gate.crashing.org ([63.228.1.57]:58911 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbfGRHL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 03:11:27 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6I7B3j6009151;
+        Thu, 18 Jul 2019 02:11:03 -0500
+Message-ID: <ee80e26d2eda385a709d749e5f0ec9e42b442090.camel@kernel.crashing.org>
+Subject: [PATCH] nvme-pci: Support shared tags across queues for Apple 2018
+ controllers
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Paul Pawlowski <paul@mrarm.io>,
+        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Date:   Thu, 18 Jul 2019 17:11:02 +1000
+In-Reply-To: <2cc90b8cfa935e345ec2b185b087f1859a040176.camel@kernel.crashing.org>
+References: <20190717004527.30363-1-benh@kernel.crashing.org>
+         <20190717004527.30363-2-benh@kernel.crashing.org>
+         <20190717115145.GB10495@minwoo-desktop>
+         <2cc90b8cfa935e345ec2b185b087f1859a040176.camel@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consider a sync bfq_queue Q that remains empty while in service, and
-suppose that, when this happens, there is a fair amount of already
-in-flight I/O not belonging to Q. In such a situation, I/O dispatching
-may need to be plugged (until new I/O arrives for Q), for the
-following reason.
+Another issue with the Apple T2 based 2018 controllers seem to be
+that they blow up (and shut the machine down) if there's a tag
+collision between the IO queue and the Admin queue.
 
-The drive may decide to serve in-flight non-Q's I/O requests before
-Q's ones, thereby delaying the arrival of new I/O requests for Q
-(recall that Q is sync). If I/O-dispatching is not plugged, then,
-while Q remains empty, a basically uncontrolled amount of I/O from
-other queues may be dispatched too, possibly causing the service of
-Q's I/O to be delayed even longer in the drive. This problem gets more
-and more serious as the speed and the queue depth of the drive grow,
-because, as these two quantities grow, the probability to find no
-queue busy but many requests in flight grows too.
+This adds a quirk that offsets all the tags in the IO queue by 32
+to avoid those collisions. It also limits the number of IO queues
+to 1 since the code wouldn't otherwise make sense (the device
+supports only one queue anyway but better safe than sorry).
 
-If Q has the same weight and priority as the other queues, then the
-above delay is unlikely to cause any issue, because all queues tend to
-undergo the same treatment. So, since not plugging I/O dispatching is
-convenient for throughput, it is better not to plug. Things change in
-case Q has a higher weight or priority than some other queue, because
-Q's service guarantees may simply be violated. For this reason,
-commit 1de0c4cd9ea6 ("block, bfq: reduce idling only in symmetric
-scenarios") does plug I/O in such an asymmetric scenario. Plugging
-minimizes the delay induced by already in-flight I/O, and enables Q to
-recover the bandwidth it may lose because of this delay.
+The bug is typically triggered by tag collisions between SMART
+commands from smartd and IO commands, often at boot time.
 
-Yet the above commit does not cover the case of weight-raised queues,
-for efficiency concerns. For weight-raised queues, I/O-dispatch
-plugging is activated simply if not all bfq_queues are
-weight-raised. But this check does not handle the case of in-flight
-requests, because a bfq_queue may become non busy *before* all its
-in-flight requests are completed.
-
-This commit performs I/O-dispatch plugging for weight-raised queues if
-there are some in-flight requests.
-
-As a practical example of the resulting recover of control, under
-write load on a Samsung SSD 970 PRO, gnome-terminal starts in 1.5
-seconds after this fix, against 15 seconds before the fix (as a
-reference, gnome-terminal takes about 35 seconds to start with any of
-the other I/O schedulers).
-
-Fixes: commit 1de0c4cd9ea6 ("block, bfq: reduce idling only in symmetric scenarios")
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- block/bfq-iosched.c | 67 +++++++++++++++++++++++++++++----------------
- 1 file changed, 43 insertions(+), 24 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 72860325245a..586fcfe227ea 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -3354,38 +3354,57 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
-  * there is no active group, then the primary expectation for
-  * this device is probably a high throughput.
-  *
-- * We are now left only with explaining the additional
-- * compound condition that is checked below for deciding
-- * whether the scenario is asymmetric. To explain this
-- * compound condition, we need to add that the function
-+ * We are now left only with explaining the two sub-conditions in the
-+ * additional compound condition that is checked below for deciding
-+ * whether the scenario is asymmetric. To explain the first
-+ * sub-condition, we need to add that the function
-  * bfq_asymmetric_scenario checks the weights of only
-- * non-weight-raised queues, for efficiency reasons (see
-- * comments on bfq_weights_tree_add()). Then the fact that
-- * bfqq is weight-raised is checked explicitly here. More
-- * precisely, the compound condition below takes into account
-- * also the fact that, even if bfqq is being weight-raised,
-- * the scenario is still symmetric if all queues with requests
-- * waiting for completion happen to be
-- * weight-raised. Actually, we should be even more precise
-- * here, and differentiate between interactive weight raising
-- * and soft real-time weight raising.
-+ * non-weight-raised queues, for efficiency reasons (see comments on
-+ * bfq_weights_tree_add()). Then the fact that bfqq is weight-raised
-+ * is checked explicitly here. More precisely, the compound condition
-+ * below takes into account also the fact that, even if bfqq is being
-+ * weight-raised, the scenario is still symmetric if all queues with
-+ * requests waiting for completion happen to be
-+ * weight-raised. Actually, we should be even more precise here, and
-+ * differentiate between interactive weight raising and soft real-time
-+ * weight raising.
-+ *
-+ * The second sub-condition checked in the compound condition is
-+ * whether there is a fair amount of already in-flight I/O not
-+ * belonging to bfqq. If so, I/O dispatching is to be plugged, for the
-+ * following reason. The drive may decide to serve in-flight
-+ * non-bfqq's I/O requests before bfqq's ones, thereby delaying the
-+ * arrival of new I/O requests for bfqq (recall that bfqq is sync). If
-+ * I/O-dispatching is not plugged, then, while bfqq remains empty, a
-+ * basically uncontrolled amount of I/O from other queues may be
-+ * dispatched too, possibly causing the service of bfqq's I/O to be
-+ * delayed even longer in the drive. This problem gets more and more
-+ * serious as the speed and the queue depth of the drive grow,
-+ * because, as these two quantities grow, the probability to find no
-+ * queue busy but many requests in flight grows too. By contrast,
-+ * plugging I/O dispatching minimizes the delay induced by already
-+ * in-flight I/O, and enables bfqq to recover the bandwidth it may
-+ * lose because of this delay.
-  *
-  * As a side note, it is worth considering that the above
-- * device-idling countermeasures may however fail in the
-- * following unlucky scenario: if idling is (correctly)
-- * disabled in a time period during which all symmetry
-- * sub-conditions hold, and hence the device is allowed to
-- * enqueue many requests, but at some later point in time some
-- * sub-condition stops to hold, then it may become impossible
-- * to let requests be served in the desired order until all
-- * the requests already queued in the device have been served.
-+ * device-idling countermeasures may however fail in the following
-+ * unlucky scenario: if I/O-dispatch plugging is (correctly) disabled
-+ * in a time period during which all symmetry sub-conditions hold, and
-+ * therefore the device is allowed to enqueue many requests, but at
-+ * some later point in time some sub-condition stops to hold, then it
-+ * may become impossible to make requests be served in the desired
-+ * order until all the requests already queued in the device have been
-+ * served. The last sub-condition commented above somewhat mitigates
-+ * this problem for weight-raised queues.
-  */
- static bool idling_needed_for_service_guarantees(struct bfq_data *bfqd,
- 						 struct bfq_queue *bfqq)
- {
- 	return (bfqq->wr_coeff > 1 &&
--		bfqd->wr_busy_queues <
--		bfq_tot_busy_queues(bfqd)) ||
-+		(bfqd->wr_busy_queues <
-+		 bfq_tot_busy_queues(bfqd) ||
-+		 bfqd->rq_in_driver >=
-+		 bfqq->dispatched + 4)) ||
- 		bfq_asymmetric_scenario(bfqd, bfqq);
- }
+Note: This is the smallest way I found of doing this that keeps
+the impact self contained to pci.c. Feel free to suggest alternatives.
+
+ drivers/nvme/host/nvme.h |  5 +++++
+ drivers/nvme/host/pci.c  | 26 ++++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 564b967058f4..eeb99e485898 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -102,6 +102,11 @@ enum nvme_quirks {
+ 	 * Use non-standard 128 bytes SQEs.
+ 	 */
+ 	NVME_QUIRK_128_BYTES_SQES		= (1 << 11),
++
++	/*
++	 * Prevent tag overlap between queues
++	 */
++	NVME_QUIRK_SHARED_TAGS			= (1 << 12),
+ };
  
--- 
-2.20.1
+ /*
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index e399e59863c7..1055f19e57a4 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -194,6 +194,7 @@ struct nvme_queue {
+ 	u16 cq_head;
+ 	u16 last_cq_head;
+ 	u16 qid;
++	u16 tag_offset;
+ 	u8 cq_phase;
+ 	u8 sqes;
+ 	unsigned long flags;
+@@ -506,6 +507,7 @@ static void nvme_submit_cmd(struct nvme_queue *nvmeq, struct nvme_command *cmd,
+ 			    bool write_sq)
+ {
+ 	spin_lock(&nvmeq->sq_lock);
++	cmd->common.command_id += nvmeq->tag_offset;
+ 	memcpy(nvmeq->sq_cmds + (nvmeq->sq_tail << nvmeq->sqes),
+ 	       cmd, sizeof(*cmd));
+ 	if (++nvmeq->sq_tail == nvmeq->q_depth)
+@@ -967,9 +969,10 @@ static inline void nvme_ring_cq_doorbell(struct nvme_queue *nvmeq)
+ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ {
+ 	volatile struct nvme_completion *cqe = &nvmeq->cqes[idx];
++	u16 ctag = cqe->command_id - nvmeq->tag_offset;
+ 	struct request *req;
+ 
+-	if (unlikely(cqe->command_id >= nvmeq->q_depth)) {
++	if (unlikely(ctag >= nvmeq->q_depth)) {
+ 		dev_warn(nvmeq->dev->ctrl.device,
+ 			"invalid id %d completed on queue %d\n",
+ 			cqe->command_id, le16_to_cpu(cqe->sq_id));
+@@ -982,14 +985,13 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ 	 * aborts.  We don't even bother to allocate a struct request
+ 	 * for them but rather special case them here.
+ 	 */
+-	if (unlikely(nvmeq->qid == 0 &&
+-			cqe->command_id >= NVME_AQ_BLK_MQ_DEPTH)) {
++	if (unlikely(nvmeq->qid == 0 && ctag >= NVME_AQ_BLK_MQ_DEPTH)) {
+ 		nvme_complete_async_event(&nvmeq->dev->ctrl,
+ 				cqe->status, &cqe->result);
+ 		return;
+ 	}
+ 
+-	req = blk_mq_tag_to_rq(*nvmeq->tags, cqe->command_id);
++	req = blk_mq_tag_to_rq(*nvmeq->tags, ctag);
+ 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
+ 	nvme_end_request(req, cqe->status, cqe->result);
+ }
+@@ -1020,7 +1022,10 @@ static inline int nvme_process_cq(struct nvme_queue *nvmeq, u16 *start,
+ 
+ 	*start = nvmeq->cq_head;
+ 	while (nvme_cqe_pending(nvmeq)) {
+-		if (tag == -1U || nvmeq->cqes[nvmeq->cq_head].command_id == tag)
++		u16 ctag = nvmeq->cqes[nvmeq->cq_head].command_id;
++
++		ctag -= nvmeq->tag_offset;
++		if (tag == -1U || ctag == tag)
+ 			found++;
+ 		nvme_update_cq_head(nvmeq);
+ 	}
+@@ -1499,6 +1504,10 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 	nvmeq->qid = qid;
+ 	dev->ctrl.queue_count++;
+ 
++	if (qid && (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS))
++		nvmeq->tag_offset = NVME_AQ_DEPTH;
++	else
++		nvmeq->tag_offset = 0;
+ 	return 0;
+ 
+  free_cqdma:
+@@ -2110,6 +2119,10 @@ static int nvme_setup_io_queues(struct nvme_dev *dev)
+ 	unsigned long size;
+ 
+ 	nr_io_queues = max_io_queues();
++
++	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
++		nr_io_queues = 1;
++
+ 	result = nvme_set_queue_count(&dev->ctrl, &nr_io_queues);
+ 	if (result < 0)
+ 		return result;
+@@ -2957,7 +2970,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
+ 		.driver_data = NVME_QUIRK_SINGLE_VECTOR |
+-				NVME_QUIRK_128_BYTES_SQES },
++				NVME_QUIRK_128_BYTES_SQES |
++				NVME_QUIRK_SHARED_TAGS },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, nvme_id_table);
+
 
