@@ -2,103 +2,118 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8AEC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A67C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3320208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63782184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391337AbfGRUq5 (ORCPT
+        id S2390987AbfGRUtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:46:57 -0400
-Received: from gate.crashing.org ([63.228.1.57]:34474 "EHLO gate.crashing.org"
+        Thu, 18 Jul 2019 16:49:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51386 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGRUq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:46:57 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6IKkXQ7011057;
-        Thu, 18 Jul 2019 15:46:33 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6IKkVH0011056;
-        Thu, 18 Jul 2019 15:46:31 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Thu, 18 Jul 2019 15:46:31 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-Message-ID: <20190718204631.GV20882@gate.crashing.org>
-References: <20190713131642.GU14074@gate.crashing.org> <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com> <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au> <20190715072959.GB20882@gate.crashing.org> <87pnma89ak.fsf@concordia.ellerman.id.au> <20190717143811.GL20882@gate.crashing.org> <CAK7LNATesRrJFGZQOkTY+PL7FNyub5FJ0N6NF4s6icdXdPNr+Q@mail.gmail.com> <20190717164628.GN20882@gate.crashing.org> <CAK7LNAR7jkq1fAi_=xgsANCkgP2AAej9Yv7RZB3B_cpD7C_71Q@mail.gmail.com>
-Mime-Version: 1.0
+        id S1726040AbfGRUtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 16:49:13 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 40A2230B8E03;
+        Thu, 18 Jul 2019 20:49:12 +0000 (UTC)
+Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D4D7F19D7A;
+        Thu, 18 Jul 2019 20:48:57 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 16:48:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+Message-ID: <20190718164656-mutt-send-email-mst@kernel.org>
+References: <20190716115535-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ud47-cWu9VnAAD_Q2Fjia5gaWCz_L9HUF6PBhbugv6tCQ@mail.gmail.com>
+ <20190716125845-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfgPdU1H5ZZ7GL7E=_oZNTzTwZN60Q-+2keBxDgQYODfg@mail.gmail.com>
+ <20190717055804-mutt-send-email-mst@kernel.org>
+ <CAKgT0Uf4iJxEx+3q_Vo9L1QPuv9PhZUv1=M9UCsn6_qs7rG4aw@mail.gmail.com>
+ <20190718003211-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
+ <20190718162040-mutt-send-email-mst@kernel.org>
+ <CAKgT0UcKTzSYZnYsMQoG6pXhpDS7uLbDd31dqfojCSXQWSsX_A@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAR7jkq1fAi_=xgsANCkgP2AAej9Yv7RZB3B_cpD7C_71Q@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <CAKgT0UcKTzSYZnYsMQoG6pXhpDS7uLbDd31dqfojCSXQWSsX_A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 18 Jul 2019 20:49:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-On Thu, Jul 18, 2019 at 11:19:58AM +0900, Masahiro Yamada wrote:
-> On Thu, Jul 18, 2019 at 1:46 AM Segher Boessenkool
-> <segher@kernel.crashing.org> wrote:
-> Kbuild always uses thin archives as far as vmlinux is concerned.
+On Thu, Jul 18, 2019 at 01:34:03PM -0700, Alexander Duyck wrote:
+> On Thu, Jul 18, 2019 at 1:24 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Thu, Jul 18, 2019 at 08:34:37AM -0700, Alexander Duyck wrote:
+> > > > > > For example we allocate pages until shrinker kicks in.
+> > > > > > Fair enough but in fact many it would be better to
+> > > > > > do the reverse: trigger shrinker and then send as many
+> > > > > > free pages as we can to host.
+> > > > >
+> > > > > I'm not sure I understand this last part.
+> > > >
+> > > > Oh basically what I am saying is this: one of the reasons to use page
+> > > > hinting is when host is short on memory.  In that case, why don't we use
+> > > > shrinker to ask kernel drivers to free up memory? Any memory freed could
+> > > > then be reported to host.
+> > >
+> > > Didn't the balloon driver already have a feature like that where it
+> > > could start shrinking memory if the host was under memory pressure? If
+> > > so how would adding another one add much value.
+> >
+> > Well fundamentally the basic balloon inflate kind of does this, yes :)
+> >
+> > The difference with what I am suggesting is that balloon inflate tries
+> > to aggressively achieve a specific goal of freed memory. We could have a
+> > weaker "free as much as you can" that is still stronger than free page
+> > hint which as you point out below does not try to free at all, just
+> > hints what is already free.
 > 
-> But, there are some other call-sites.
-> 
-> masahiro@pug:~/ref/linux$ git grep  '$(AR)' -- :^Documentation :^tools
-> arch/powerpc/boot/Makefile:    BOOTAR := $(AR)
-> arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBC_A) $(notdir $@) > $@
-> arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBGCC_A) $(notdir $@) > $@
-> lib/raid6/test/Makefile:         $(AR) cq $@ $^
-> scripts/Kbuild.include:ar-option = $(call try-run, $(AR) rc$(1)
-> "$$TMP",$(1),$(2))
-> scripts/Makefile.build:      cmd_ar_builtin = rm -f $@; $(AR)
-> rcSTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
-> scripts/Makefile.lib:      cmd_ar = rm -f $@; $(AR)
-> rcsTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
-> 
-> Probably, you are interested in arch/powerpc/boot/Makefile.
+> Yes, but why wait until the host is low on memory?
 
-That one seems fine actually.  The raid6 one I don't know.
+It can come about for a variety of reasons, such as
+other VMs being aggressive, or ours aggressively caching
+stuff in memory.
 
+> With my
+> implementation we can perform the hints in the background for a low
+> cost already. So why should we wait to free up memory when we could do
+> it immediately. Why let things get to the state where the host is
+> under memory pressure when the guests can be proactively freeing up
+> the pages and improving performance as a result be reducing swap
+> usage?
 
-My original commit message was
+You are talking about sending free memory to host.
+Fair enough but if you have drivers that aggressively
+allocate memory then there won't be that much free guest
+memory without invoking a shrinker.
 
-    Without this, some versions of GNU ar fail to create
-    an archive index if the object files it is packing
-    together are of a different object format than ar's
-    default format (for example, binutils compiled to
-    default to 64-bit, with 32-bit objects).
-
-but I cannot reproduce the problem anymore.  Shortly after my patch the
-thin archive code happened to binutils, and that overhauled some other
-things, which might have fixed it already?
-
-> > Yes, I know.  This isn't about built-in.[oa], it is about *other*
-> > archives we at least *used to* create.  If we *know* we do not anymore,
-> > then this workaround can of course be removed (and good riddance).
-> 
-> If it is not about built-in.[oa],
-> which archive are you talking about?
-> 
-> Can you pin-point the one?
-
-No, not anymore.  Lost in the mists of time, I guess?  I think we'll
-just have to file it as "it seems to work fine now".
-
-Thank you (and everyone else) for the time looking at this!
-
-
-Segher
+-- 
+MST
