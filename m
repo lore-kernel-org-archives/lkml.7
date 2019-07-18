@@ -2,54 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BDC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3B1C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C329A2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F2020818
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420310;
-	bh=ll71j7Z6eqb6ZtBhw+Rmj5cmjVRWfbFb2Cv8/1M6umE=;
+	s=default; t=1563420315;
+	bh=EjQiwJFzN6vC59pTA0kUIUoNEPvkuQCYIO3Sbda2fAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUKafpKbw8VSDg5eOfMe7FNiAUmbZwCOFkidEovdpXCMAWD2+YWR1BqcIGP73HlOM
-	 pzyVLHMv4yGPP9tt04KQX7s/cSZ+uqyz81H8UrZRbaOcqA51ch5pBuPKLwdFo61JBY
-	 sJHkhTDhSO9quDn8NCbTMpBXBLPNqtkKX+3G9xwQ=
+	b=tbXyk04rj6v27fXusmjRVPc0GA/fDCQkYcRk3yEusIhSm5duAt1FPwPRSGZb3Q39I
+	 z5fUtouRUIzcKbK9FVhbsqpoy9QOTFRI9Krl7sD/TKSZyrQySqW6i/gmNrqdaWBHM6
+	 68IRUQqT8GbhSlp6Bcg5RYa3E9/kZBzyw/Tu/dEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbfGRDF4 (ORCPT
+        id S2391065AbfGRDZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:25:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390076AbfGRDFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:05:51 -0400
+        id S2390089AbfGRDFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:05:55 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E97A204EC;
-        Thu, 18 Jul 2019 03:05:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8019D21848;
+        Thu, 18 Jul 2019 03:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419150;
-        bh=ll71j7Z6eqb6ZtBhw+Rmj5cmjVRWfbFb2Cv8/1M6umE=;
+        s=default; t=1563419154;
+        bh=EjQiwJFzN6vC59pTA0kUIUoNEPvkuQCYIO3Sbda2fAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHa9+uWhWCWI37ZVO+FYLDdp6uNGD9GC6iE9pQXPskQKiKRkyiSrwARmHsyEqtOd0
-         VXjfXz76e6B8/kryTQzndRX3C3E53rNDsGREslc7FqsUFIYUjoh+K3Hd0K1kcf3Gew
-         gQTLadjWfIE1VKk3jpFC2dZfdcubsFX39yF649Xk=
+        b=hqFBIpmyZ/iU6BMTbUWbpQrhJGGfIwH2MJIsIB+gZgfuHNiyDaVpKKLgcuViFofEj
+         fXF2hCuIfRop93oPOu/8Iv3NY2vDbdRz54z1B8AKyI1p/4mKcbai49Pcj9LXhQClvM
+         rPJWMQnzSd5ncU+YloCeOVlYvzJ+jy9YghFkbDJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, kernel-janitors@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 20/54] x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
-Date:   Thu, 18 Jul 2019 12:01:15 +0900
-Message-Id: <20190718030054.951661808@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.1 50/54] s390/qdio: dont touch the dsci in tiqdio_add_input_queues()
+Date:   Thu, 18 Jul 2019 12:01:45 +0900
+Message-Id: <20190718030057.070484504@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -62,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea136a112d89bade596314a1ae49f748902f4727 ]
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-The left shift of unsigned int cpu_khz will overflow for large values of
-cpu_khz, so cast it to a long long before shifting it to avoid overvlow.
-For example, this can happen when cpu_khz is 4194305, i.e. ~4.2 GHz.
+commit ac6639cd3db607d386616487902b4cc1850a7be5 upstream.
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: kernel-janitors@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190619181446.13635-1-colin.king@canonical.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Current code sets the dsci to 0x00000080. Which doesn't make any sense,
+as the indicator area is located in the _left-most_ byte.
+
+Worse: if the dsci is the _shared_ indicator, this potentially clears
+the indication of activity for a _different_ device.
+tiqdio_thinint_handler() will then have no reason to call that device's
+IRQ handler, and the device ends up stalling.
+
+Fixes: d0c9d4a89fff ("[S390] qdio: set correct bit in dsci")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/apic/apic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/s390/cio/qdio_thinint.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index b7bcdd781651..ec6225cb94f9 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1458,7 +1458,8 @@ static void apic_pending_intr_clear(void)
- 		if (queued) {
- 			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
- 				ntsc = rdtsc();
--				max_loops = (cpu_khz << 10) - (ntsc - tsc);
-+				max_loops = (long long)cpu_khz << 10;
-+				max_loops -= ntsc - tsc;
- 			} else {
- 				max_loops--;
- 			}
--- 
-2.20.1
-
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -79,7 +79,6 @@ void tiqdio_add_input_queues(struct qdio
+ 	mutex_lock(&tiq_list_lock);
+ 	list_add_rcu(&irq_ptr->input_qs[0]->entry, &tiq_list);
+ 	mutex_unlock(&tiq_list_lock);
+-	xchg(irq_ptr->dsci, 1 << 7);
+ }
+ 
+ void tiqdio_remove_input_queues(struct qdio_irq *irq_ptr)
 
 
