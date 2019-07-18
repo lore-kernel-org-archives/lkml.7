@@ -2,139 +2,127 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E4EC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7052C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB4321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="Cb1k3R1E"
+	by mail.kernel.org (Postfix) with ESMTP id 9821521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390162AbfGRL62 (ORCPT
+        id S2389951AbfGRMEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:58:28 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:59910 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGRL61 (ORCPT
+        Thu, 18 Jul 2019 08:04:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59520 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726608AbfGRMEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:58:27 -0400
-Date:   Thu, 18 Jul 2019 04:58:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 4891B640133
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1563451107;
-        bh=ik0okPy9JA/b0aUoSm3HKYQLFraB8wAkbCLvHmB/+30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Cb1k3R1EGs763vCFTXUSVAvExrN7vDSZsoB1uBp2szmudiRlNULCeDaXYWf3t3naz
-         gzk6+xx0o2eg1yBr1s091UhCYP+xNaisNFakufwO5Votp/j88L4QUdZZonBTqNS7LU
-         QWQlE+mNW+pIzwwTpIAKUD7VcTs2St32qgIZl8YWLU4bEF/lIrbSwqXr4vzWekgi4o
-         cN67ny9hApTpSsJWJOdGM25baJUWFKmiMEEKxNTJWi64J+ypqL/iSrFv9YRJiGSvaJ
-         DGCE081FQ3KEShy9Mjlq23Q1eZ0AUMGjDsPwuGcrv1DKTEmb+fr/3Rmr1D7GSq2T+2
-         EX1ykPKjjsqYg==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH] Input: applespi: Fix build error without CONFIG_PCI
-Message-ID: <20190718115827.GB2872@innovation.ch>
-References: <20190718020654.39860-1-yuehaibing@huawei.com>
- <CAK8P3a2H0o+_3Y_J3r=D5_hGCArTYeHPfPPjY3dJ+ArmqYrOfQ@mail.gmail.com>
+        Thu, 18 Jul 2019 08:04:07 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IC3r23067938
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:04:05 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttqxq17c4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:03:59 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <jremus@linux.ibm.com>;
+        Thu, 18 Jul 2019 13:02:28 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 13:02:24 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IC2Ahe29557076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 12:02:10 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D05D65206C;
+        Thu, 18 Jul 2019 12:02:23 +0000 (GMT)
+Received: from [9.152.224.207] (unknown [9.152.224.207])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7030552077;
+        Thu, 18 Jul 2019 12:02:23 +0000 (GMT)
+Subject: Re: [PATCH] vt: Grab console_lock around con_is_bound in show_bind
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Martin Hostettler <textshell@uchuujin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
+From:   Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+Date:   Thu, 18 Jul 2019 14:02:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a2H0o+_3Y_J3r=D5_hGCArTYeHPfPPjY3dJ+ArmqYrOfQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19071812-0012-0000-0000-000003340C87
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071812-0013-0000-0000-0000216D8E5C
+Message-Id: <d242e41d-04cf-ba0e-2d81-9ed1a9c52195@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-  Hi Arnd,
-
-On Thu, Jul 18, 2019 at 09:15:59AM +0200, Arnd Bergmann wrote:
-> On Thu, Jul 18, 2019 at 4:07 AM YueHaibing <yuehaibing@huawei.com> wrote:
-> >
-> > If CONFIG_KEYBOARD_APPLESPI is set to y, but
-> > CONFIG_PCI is not set, building will fails:
-> >
-> > drivers/spi/spi-pxa2xx-pci.c: In function pxa2xx_spi_pci_probe:
-> > drivers/spi/spi-pxa2xx-pci.c:208:8: error: implicit declaration of function pcim_enable_device;
-> >  did you mean pci_enable_device? [-Werror=implicit-function-declaration]
-> >   ret = pcim_enable_device(dev);
-> >         ^~~~~~~~~~~~~~~~~~
-> >         pci_enable_device
-> > drivers/spi/spi-pxa2xx-pci.c:239:8: error: implicit declaration of function pci_alloc_irq_vectors;
-> >  did you mean pci_alloc_consistent? [-Werror=implicit-function-declaration]
-> >   ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_ALL_TYPES);
-> >         ^~~~~~~~~~~~~~~~~~~~~
-> >
-> > Make CONFIG_KEYBOARD_APPLESPI depends on CONFIG_PCI
-> > to fix this.
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: b426ac045209 ("Input: add Apple SPI keyboard and trackpad driver")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Am 18.07.2019 um 10:09 schrieb Daniel Vetter:
+> Not really harmful not to, but also not harm in grabbing the lock. And
+> this shuts up a new WARNING I introduced in commit ddde3c18b700 ("vt:
+> More locking checks").
 > 
-> I found the same build bug, plus another issue:
-> 
->     arch/arm/Kconfig:1942:error: recursive dependency detected!
->     arch/arm/Kconfig:1942:  symbol XIP_KERNEL depends on KASAN
->     lib/Kconfig.kasan:15:   symbol KASAN depends on SYSFS
->     fs/sysfs/Kconfig:2:     symbol SYSFS is selected by CONFIGFS_FS
->     fs/configfs/Kconfig:2:  symbol CONFIGFS_FS is selected by USB_LIBCOMPOSITE
->     drivers/usb/gadget/Kconfig:145: symbol USB_LIBCOMPOSITE is
-> selected by USB_ZERO
->     drivers/usb/gadget/legacy/Kconfig:17:   symbol USB_ZERO is part of
-> choice <choice>
->     drivers/usb/gadget/Kconfig:486: choice <choice> contains symbol USB_G_WEBCAM
->     drivers/usb/gadget/legacy/Kconfig:479:  symbol USB_G_WEBCAM is
-> part of choice VIDEO_V4L2
->     drivers/media/v4l2-core/Kconfig:7:      symbol VIDEO_V4L2 depends on I2C
->     drivers/i2c/Kconfig:8:  symbol I2C is selected by FB_DDC
->     drivers/video/fbdev/Kconfig:63: symbol FB_DDC depends on FB
->     drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
->     drivers/gpu/drm/Kconfig:75:     symbol DRM_KMS_FB_HELPER depends
-> on DRM_KMS_HELPER
->     drivers/gpu/drm/Kconfig:69:     symbol DRM_KMS_HELPER is selected
-> by DRM_ARMADA
->     drivers/gpu/drm/armada/Kconfig:2:       symbol DRM_ARMADA depends
-> on HAVE_CLK
->     arch/Kconfig:314:       symbol HAVE_CLK is selected by CLKDEV_LOOKUP
->     drivers/clk/Kconfig:3:  symbol CLKDEV_LOOKUP is selected by COMMON_CLK
->     drivers/clk/Kconfig:10: symbol COMMON_CLK is selected by MFD_INTEL_LPSS
->     drivers/mfd/Kconfig:600:        symbol MFD_INTEL_LPSS is selected
-> by MFD_INTEL_LPSS_PCI
->     drivers/mfd/Kconfig:614:        symbol MFD_INTEL_LPSS_PCI is
-> implied by KEYBOARD_APPLESPI
->     drivers/input/keyboard/Kconfig:74:      symbol KEYBOARD_APPLESPI
-> depends on EFI
->     arch/arm/Kconfig:2031:  symbol EFI depends on XIP_KERNEL
-> 
-> Your patch correctly solves the spi_pxa2xx issue, but I'd prefer to instead
-> drop the three 'imply' statements altogether, they seem to do more harm
-> than good.
-> 
-> (the circular dependency I saw might only happen when applying the
-> arm32 KASAN patches, but I expect to see them merged for linux-5.4)
+> Reported-by: Jens Remus <jremus@linux.ibm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+> Cc: Martin Hostettler <textshell@uchuujin.de>
+> Cc: Adam Borowski <kilobyte@angband.pl>
+> Cc: Mikulas Patocka <mpatocka@redhat.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>   drivers/tty/vt/vt.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
 
-Isn't there more generally a problem here that this is selecting
-MFD_INTEL_LPSS_PCI even though that depends on X86? I.e. are both ARM
-and X86 selected at the same time? (sorry if I'm being na�ve, but I
-assumed only one arch can be selected at a time)
+Thank you for the quick fix! Looks fine to me. Did test with cat as well 
+as our dump2tar utility. The warning is gone.
 
+Tested-by: Jens Remus <jremus@linux.ibm.com>
 
-  Cheers,
+Regards,
+Jens Remus
+-- 
+Linux on Z and z/VSE Development & Service (D3229)
+IBM Systems & Technology Group, Pure Systems & Modular Software Development
 
-  Ronald
+IBM Data Privacy Statement: https://www.ibm.com/privacy/us/en/
+
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
 
