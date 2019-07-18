@@ -2,137 +2,138 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF6DC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E11CC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06ECE217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563460316;
-	bh=n0QuHuPmfGNDd/UjBj7iq8FnefrdHa1lz8nf16gnbDo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VbNIPeqLOTk7TMs/tynvYdzAgQzIguIlAVt5n15wPuhPMYkkmNGu397Q54cqDePrL
-	 Ayvtz2CMxhgTUinZspdVTNy1M6v9oSHawJtPMYdVTsjk5ZPdzl5zOmPdURz1xNw0BP
-	 vP8mG7wrj5HHQ57+p4ovJcYKP7eZ2XPZqfKzi4aQ=
+	by mail.kernel.org (Postfix) with ESMTP id 31EF3217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:32:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m1EyMKc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390887AbfGRObz (ORCPT
+        id S2390906AbfGROcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390758AbfGRObh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:31:37 -0400
-Received: from devnote2 (ae027047.dynamic.ppp.asahi-net.or.jp [14.3.27.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D48217F4;
-        Thu, 18 Jul 2019 14:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563460296;
-        bh=n0QuHuPmfGNDd/UjBj7iq8FnefrdHa1lz8nf16gnbDo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SAx8gDCjJJ1wdu+rR633sjpFn5TnWHaw0ry7jDsMkQ0OJxT3DG0n4HrAafwjAmlSv
-         c874iRbW+O2MqL45QNl0N8V73NSlzxPS3wZtU+mLqoFvncxRhIigcgHEv16ZuA03Ug
-         OlOMEGUQ5iEUFMYfXhfniBGHtbYlo1bWZjLa1SCk=
-Date:   Thu, 18 Jul 2019 23:31:33 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Thu, 18 Jul 2019 10:32:01 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52679 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390686AbfGRObg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:31:36 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190718143135euoutp0269e2e65f840ed0b6db196dec4ce62031~yhtr_vwd_3113231132euoutp02O
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:31:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190718143135euoutp0269e2e65f840ed0b6db196dec4ce62031~yhtr_vwd_3113231132euoutp02O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563460295;
+        bh=wvynLiZIr1HVasfz8zDvk2ugRm4KsiSN6x+CwOH7f9c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m1EyMKc/X+ol59z2a4U3y1h0WzLJWSlBjv+mpuefZuwk07XobUA5ZZXgn8/E0RvQE
+         CBNxr2Ia+prImvg9hXjGsW8blinOWyiimY7QETtNWW3lkppDlYlq7Lewc1ltwf+G+9
+         krHq+JPkFGdSCQpHPNR/g0vckjvAhJd3K2H5ztUM=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190718143135eucas1p131fb59e1ffdd05c9b0dc7b1073d0f6f3~yhtrR0ofR0450704507eucas1p1m;
+        Thu, 18 Jul 2019 14:31:35 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id FA.20.04325.6C2803D5; Thu, 18
+        Jul 2019 15:31:34 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190718143134eucas1p2aed09e2171d0d2d6b916dddac3637017~yhtqjr9S01435514355eucas1p2a;
+        Thu, 18 Jul 2019 14:31:34 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190718143134eusmtrp295d8365d05498c53e3713631e6668799~yhtqVniQZ0339203392eusmtrp2H;
+        Thu, 18 Jul 2019 14:31:34 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-d9-5d3082c63f2b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 00.B6.04140.5C2803D5; Thu, 18
+        Jul 2019 15:31:33 +0100 (BST)
+Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190718143133eusmtip1278f034bc990c68ea6b254847fe0bcfc~yhtpvl7YE1530515305eusmtip1Q;
+        Thu, 18 Jul 2019 14:31:33 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     krzk@kernel.org
+Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>
-Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
- exception
-Message-Id: <20190718233133.146065f668da6297e57e52ef@kernel.org>
-In-Reply-To: <20190718092022.GA3625@blommer>
-References: <156342860634.8565.14804606041960884732.stgit@devnote2>
-        <156342863822.8565.7624877983728871995.stgit@devnote2>
-        <20190718062215.GG14271@linux.ibm.com>
-        <20190718092022.GA3625@blommer>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v2 6/9] ARM: EXYNOS: Enable exynos-asv driver for
+ ARCH_EXYNOS
+Date:   Thu, 18 Jul 2019 16:30:41 +0200
+Message-Id: <20190718143044.25066-7-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190718143044.25066-1-s.nawrocki@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsWy7djPc7rHmgxiDQ726VlsnLGe1WL+kXOs
+        Fv2PXzNbnD+/gd1i0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdYtPULu0Xr3iPsFofftLNa
+        bH5wjM2B12PTqk42j81L6j36tqxi9Pi8SS6AJYrLJiU1J7MstUjfLoEr48H7NUwFX1kq7j39
+        yNzA2M3SxcjJISFgIvHw3VK2LkYuDiGBFYwSF39+ZoVwvjBKHFnewwjhfGaUaOs+AteyYNU2
+        dojEckaJje/ns8G1PPp+hxmkik3AUKL3aB8jiC0iICxxb+lysA5mgXtMEqefnmUCSQgL+Et0
+        HbwANJaDg0VAVWJXSxhImFfAWuLZyw1Q2+QlVm84ADaTU8BG4vDdp2AnSQhMZpd4/R3kDA4g
+        x0Vi0hNRiHphiVfHt7BD2DIS/3fOZ4Kob2aU6Nl9mx3CmcAocf/4AkaIKmuJw8cvsoIMYhbQ
+        lFi/Sx9ipqPExz/WECafxI23giDFzEDmpG3TmSHCvBIdbUIQM1Qkfq+azgRhS0l0P/kPdb2H
+        xJ7dLdAQ7WeUODVzBvsERvlZCLsWMDKuYhRPLS3OTU8tNs5LLdcrTswtLs1L10vOz93ECEwq
+        p/8d/7qDcd+fpEOMAhyMSjy8AbkGsUKsiWXFlbmHGCU4mJVEeG+/1I8V4k1JrKxKLcqPLyrN
+        SS0+xCjNwaIkzlvN8CBaSCA9sSQ1OzW1ILUIJsvEwSnVwGh5UWhSozLPhrl1W/ev6hWpy456
+        m34u8XWbT4vVznQzc29rp4rfHjtn6qZOfSXTlz33tPyUeHHN32L7+QJneDPti5yxOPS5avCV
+        YrVr1/SLbj+e8UxWSzX6Vpyv1u3yH432Ld4tW2f0HlvMHhbcsOFr7plEs2gmJi3LnIAeE+3q
+        tD33kvinKbEUZyQaajEXFScCAGThMngmAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsVy+t/xu7pHmwxiDQ7utLHYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26xaOsXdovWvUfYLQ6/aWe1
+        2PzgGJsDr8emVZ1sHpuX1Hv0bVnF6PF5k1wAS5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJ
+        pZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexoP3a5gKvrJU3Hv6kbmBsZuli5GTQ0LARGLBqm3s
+        ILaQwFJGiUdzgroYOYDiUhLzW5QgSoQl/lzrYuti5AIq+cQosXDJK0aQBJuAoUTv0T4wWwSo
+        6N7S5ewgRcwCr5gkbs/7zwSSEBbwlZjw8Rc7yFAWAVWJXS1hIGFeAWuJZy83QN0gL7F6wwFm
+        EJtTwEbi8N2njBD3WEvMfnmNcQIj3wJGhlWMIqmlxbnpucVGesWJucWleel6yfm5mxiBAb7t
+        2M8tOxi73gUfYhTgYFTi4Q3INYgVYk0sK67MPcQowcGsJMJ7+6V+rBBvSmJlVWpRfnxRaU5q
+        8SFGU6CbJjJLiSbnA6MvryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMH
+        p1QDo3xVe8SvVX4++TZTgna912+6XnK4MPyklKmMYcXZyC3fkvcq5eyd23Mg4PP84/c2mX6b
+        oyE/ddXfvwsnqlSlxidd2zfV5BCr6e+nqgUsmR/vx08qvWhwY7Kv/gROG+6WILuJVhvTG2PD
+        a+6tVgzd85AlyyEgJI792bWQub/mLQo/ntXx6Ei0nhJLcUaioRZzUXEiAMKpY9CGAgAA
+X-CMS-MailID: 20190718143134eucas1p2aed09e2171d0d2d6b916dddac3637017
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190718143134eucas1p2aed09e2171d0d2d6b916dddac3637017
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190718143134eucas1p2aed09e2171d0d2d6b916dddac3637017
+References: <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <CGME20190718143134eucas1p2aed09e2171d0d2d6b916dddac3637017@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 10:20:23 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
+Enable exynos-asv driver for Exynos 32-bit SoCs.
 
-> On Wed, Jul 17, 2019 at 11:22:15PM -0700, Paul E. McKenney wrote:
-> > On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
-> > > Remove rcu_read_lock()/rcu_read_unlock() from debug exception
-> > > handlers since the software breakpoint can be hit on idle task.
-> 
-> Why precisely do we need to elide these? Are we seeing warnings today?
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+Changes since v1 (RFC):
+ - none
+---
+ arch/arm/mach-exynos/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, unfortunately, or fortunately. Naresh reported that warns when
-ftracetest ran. I confirmed that happens if I probe on default_idle_call too.
-
-/sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events 
-/sys/kernel/debug/tracing # echo 1 > events/kprobes/enable 
-/sys/kernel/debug/tracing # [  135.122237] 
-[  135.125035] =============================
-[  135.125310] WARNING: suspicious RCU usage
-[  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
-[  135.125904] -----------------------------
-[  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
-[  135.126839] 
-[  135.126839] other info that might help us debug this:
-[  135.126839] 
-[  135.127410] 
-[  135.127410] RCU used illegally from idle CPU!
-[  135.127410] rcu_scheduler_active = 2, debug_locks = 1
-[  135.128114] RCU used illegally from extended quiescent state!
-[  135.128555] 1 lock held by swapper/0/0:
-[  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
-[  135.130499] 
-[  135.130499] stack backtrace:
-[  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
-[  135.131841] Hardware name: linux,dummy-virt (DT)
-[  135.132224] Call trace:
-[  135.132491]  dump_backtrace+0x0/0x140
-[  135.132806]  show_stack+0x24/0x30
-[  135.133133]  dump_stack+0xc4/0x10c
-[  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-[  135.134171]  call_break_hook+0x170/0x178
-[  135.134486]  brk_handler+0x28/0x68
-[  135.134792]  do_debug_exception+0x90/0x150
-[  135.135051]  el1_dbg+0x18/0x8c
-[  135.135260]  default_idle_call+0x0/0x44
-[  135.135516]  cpu_startup_entry+0x2c/0x30
-[  135.135815]  rest_init+0x1b0/0x280
-[  135.136044]  arch_call_rest_init+0x14/0x1c
-[  135.136305]  start_kernel+0x4d4/0x500
-[  135.136597] 
-
-
-> 
-> > The exception entry and exit use irq_enter() and irq_exit(), in this
-> > case, correct?  Otherwise RCU will be ignoring this CPU.
-> 
-> This is missing today, which sounds like the underlying bug.
-
-Agreed. I'm not so familier with how debug exception is handled on arm64,
-would it be a kind of NMI or IRQ?
-
-Anyway, it seems that normal irqs are also not calling irq_enter/exit
-except for arch/arm64/kernel/smp.c. We need to fix that too for avoiding
-unexpected RCU issues.
-
-Thank you,
-
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 6fc4af312361..c6ed153c3151 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -13,6 +13,7 @@ menuconfig ARCH_EXYNOS
+ 	select ARM_AMBA
+ 	select ARM_GIC
+ 	select COMMON_CLK_SAMSUNG
++	select EXYNOS_ASV
+ 	select EXYNOS_CHIPID
+ 	select EXYNOS_THERMAL
+ 	select EXYNOS_PMU
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
