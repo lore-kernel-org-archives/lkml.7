@@ -2,170 +2,138 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE4EC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B57C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412592173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A151F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qEGeAxPX"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZmXdXszl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390015AbfGRJsG (ORCPT
+        id S2390029AbfGRJsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:48:06 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:26298 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389773AbfGRJsF (ORCPT
+        Thu, 18 Jul 2019 05:48:11 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:37394 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfGRJsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:48:05 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190718094803epoutp01c67a57593685df6d7e338cc586cbf987~yd2IKAGcc2909829098epoutp01L
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:48:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190718094803epoutp01c67a57593685df6d7e338cc586cbf987~yd2IKAGcc2909829098epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563443283;
-        bh=EnL2xp05mWqLeGDMN6DJMsvJ0i6MvNbScjk8J1uUFsU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qEGeAxPX2yWSIHKi6M/thI+UNGe+hPvbo5zBgaqb8nSZaBV3l9un2Il3fPP2E5Z6d
-         MQ76hz4w47VGTXAUQh31+9XNVbOi5k8HDctW1alrnDWodXEvqYxZ07qxVTJr9QufwP
-         eRUVtXD2MMoWoRM5baOsi2AYCvgb1reOiTHth3bs=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190718094802epcas1p2d8bf23068535be8c33835f37139f2bd7~yd2HknHGw2089520895epcas1p2Z;
-        Thu, 18 Jul 2019 09:48:02 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 45q8Sw5q2rzMqYkZ; Thu, 18 Jul
-        2019 09:48:00 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        65.76.04075.940403D5; Thu, 18 Jul 2019 18:47:53 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190718094752epcas1p4660cd9d3968a1755369c6ad049eedbb9~yd1_Jxqwa2804528045epcas1p4C;
-        Thu, 18 Jul 2019 09:47:52 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190718094752epsmtrp1e11ba8d2cd74d9bfb934003ed8662826~yd1_JADS81806718067epsmtrp1C;
-        Thu, 18 Jul 2019 09:47:52 +0000 (GMT)
-X-AuditID: b6c32a36-b49ff70000000feb-94-5d3040496893
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.4D.03706.840403D5; Thu, 18 Jul 2019 18:47:52 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190718094752epsmtip1c604dc5d6ad1521a6a85093ce7212561~yd197g1V61985719857epsmtip1z;
-        Thu, 18 Jul 2019 09:47:52 +0000 (GMT)
-Subject: Re: [PATCH v4 19/24] PM / devfreq: tegra30: Optimize upper
- consecutive watermark selection
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <17fabbaf-ceca-7551-0a58-9c8a0e7027ed@samsung.com>
-Date:   Thu, 18 Jul 2019 18:51:02 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Thu, 18 Jul 2019 05:48:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563443290; x=1594979290;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=sWKyFvHBIDxbEG0LkDFJzh7iNZ7ckThMxb355rVm1NU=;
+  b=ZmXdXszlJm0rcCjOrB+Gv5yBLDiBJMY9YXcmBhCtBHHBZ7vV4P22g+mo
+   evSUY2SPYYSt2U2L8glHWL3ksq2RiA9dSK2BvLkKVzA2ni2qVtRjKND1n
+   J7n/VT/1eUq638YwRzQ1yvuaHQ0Bx74UpNs39MV8lxI/pjYHBsQb+/Mdr
+   k=;
+X-IronPort-AV: E=Sophos;i="5.64,276,1559520000"; 
+   d="scan'208";a="405475072"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 18 Jul 2019 09:47:49 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id BF02EA01A8;
+        Thu, 18 Jul 2019 09:47:48 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 18 Jul 2019 09:47:48 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.161.219) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 18 Jul 2019 09:47:42 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v2 7/8] PCI: dw: Add validation that PCIe core is set to correct mode
+Date:   Thu, 18 Jul 2019 12:47:17 +0300
+Message-ID: <20190718094718.25083-3-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190718094531.21423-1-jonnyc@amazon.com>
+References: <20190718094531.21423-1-jonnyc@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-20-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTNo9PpEitDUbj2Q2GMJDQCHbB1MEIwoKnKBy4xLiE4oRNAuqVT
-        iNsHWIIULUuIC6OgQYkK7hYDGEURY2qCCogiBDFqVEAximtAtO1g5O/ce8595573nlSkvIKr
-        pDlmO2szM0YSl2PX70ZGRa1O0qRrqqckdOPn14gu4uswunPfBwnd03ocp8ddHYh2fuVxeqDw
-        LE7/aq3F6LIL3XiSTN88eBrpW/hBid7lGMP1Ze4GpB+/Oj9NvDV3eTbLGFhbGGvOtBhyzFkJ
-        5NoNGckZWp2GiqLi6aVkmJkxsQlkSmpa1Koco3chMiyfMeZ5W2kMx5Exicttljw7G5Zt4ewJ
-        JGs1GK3x1miOMXF55qzoTItpGaXRxGq9wu252YdHXZj11qyd56sOiAuQU16KZFIglkChx4GV
-        IrlUSTQjqOh+Ml18QVDk2Y+E4juCrt+3sX8jjja3WCBuIqh0vRMJxScEHw41BfhUwQQLQyPX
-        JT5iDjGFwPnLgfsIEbEF7rY0+kU4oYa2933+fiARDr0/XyMfVhCJ8OLikB9jxCLoL5/y6+cS
-        m+FBRy0maILAU/3Gj2WEDvhTjZhwfij0vzkRIOAF4Gg65t8OiD84FJa9ms6QAkf2eXABB8PI
-        fbdEwCoYLi+exnvgnKcDF4ZLELjbHosFIg7a6qu8DlKvQyRcao0R2uHQMlGDBOPZMPbtoNgn
-        AUIBJcVKQbIQel4OBgh4Hpza78QrEMnPiMPPiMDPiMD/NzuJsAYUwlo5UxbLUdbYme99Ffm/
-        q1rXjOoeprYjQorIWYo+MiZdKWbyuV2mdgRSETlHMTDsbSkMzK7drM2SYcszslw70npvu1Kk
-        mptp8X5+sz2D0sbGxcXRSyidlqLIUEXtZGS6kshi7Gwuy1pZ27+5AKlMVYDWP2Mkf8a+9nd/
-        /LEsdhO/vqC6pb4hf+9JjexZxI0fBaOB6gkid42nY+VzdXpI8Pneus6INS7M2XD57YOFj75N
-        1ZQEhZuureubcCdHr46v6NLJS39Xl68oM5Xb78REji6uGwgyr7t3ZqN8T/HTVkMaOS+BSQrZ
-        0dOkqppsij+7bfIoiXHZDKUW2TjmL2hMIqPEAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSnK6Hg0GswcypeharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZ0173shTs46lYM7mbtYGxk6uLkZNDQsBEonn/
-        FtYuRi4OIYHdjBKPDl1lgUhISky7eJS5i5EDyBaWOHy4GKLmLaPE3M4rrCA1wgKpEvdfbWMH
-        SYgINDFJbOq9wA6SYBaIlOiZu4UNomMLo8SEt8uYQRJsAloS+1/cYAOx+QUUJa7+eMwIYvMK
-        2EncW3cfzGYRUJW41f+PCcQWFYiQmHRtJwtEjaDEyZlPwGxOATOJWYtXs0AsU5f4M+8SM4Qt
-        LnHryXwmCFteonnrbOYJjMKzkLTPQtIyC0nLLCQtCxhZVjFKphYU56bnFhsWGOallusVJ+YW
-        l+al6yXn525iBEeZluYOxstL4g8xCnAwKvHw3lDSjxViTSwrrsw9xCjBwawkwnv7JVCINyWx
-        siq1KD++qDQntfgQozQHi5I479O8Y5FCAumJJanZqakFqUUwWSYOTqkGRq5HVnNu2j+0zdTK
-        8eLYc3d/zqwZxi8/u0TGWb06nmivOMtvU0XGZa3CWIMJx/Z9MXkwZ/tGTRvn925q9b9yVl13
-        UOavCOaYIvbylFxDPPvR2JnXEs9sdlDVkinKUd272ybq076otvLZee9fXpj0OKs+ewvrjg8K
-        P+ubZglcVcupPMV+IurYGSWW4oxEQy3mouJEAPqLqtauAgAA
-X-CMS-MailID: 20190718094752epcas1p4660cd9d3968a1755369c6ad049eedbb9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223622epcas4p48ec0d7e6fa26bc2397fa4351c0bd0c2d
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223622epcas4p48ec0d7e6fa26bc2397fa4351c0bd0c2d@epcas4p4.samsung.com>
-        <20190707223303.6755-20-digetx@gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.219]
+X-ClientProxiedBy: EX13D19UWC001.ant.amazon.com (10.43.162.64) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> The memory activity counter may get a bit higher than a watermark which
-> is selected based on OPP that corresponds to a highest EMC rate, in this
-> case watermark is lower than the actual memory activity is and thus
-> results in unwanted "upper" interrupts.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+Some PCIe controllers can be set to either Host or EP according to some
+early boot FW. To make sure there is no discrepancy (e.g. FW configured
+the port to EP mode while the DT specifies it as a host bridge or vice
+versa), a check has been added for each mode.
 
-It seems that you can combine patch19 with patch20.
+Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
+ drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 8d6bf6e9f1ae..c3cf87231d25 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -363,7 +363,18 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
->  	tegra_actmon_get_lower_upper(tegra, dev, freq - 1, &lower, &upper);
->  
->  	delta = do_percent(upper - lower, dev->config->boost_up_threshold);
-> -	device_writel(dev, lower + delta, ACTMON_DEV_UPPER_WMARK);
-> +
-> +	/*
-> +	 * The memory events count could go a bit higher than the maximum
-> +	 * defined by the OPPs, hence make the upper watermark infinitely
-> +	 * high to avoid unnecessary upper interrupts in that case.
-> +	 */
-> +	if (freq == tegra->max_freq)
-> +		upper = ULONG_MAX;
-> +	else
-> +		upper = lower + delta;
-> +
-> +	device_writel(dev, upper, ACTMON_DEV_UPPER_WMARK);
->  
->  	/*
->  	 * Meanwhile the lower mark is based on the average value
-> 
-
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 2bf5a35c0570..00e59a134b93 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	int ret;
+ 	u32 reg;
+ 	void *addr;
++	u8 hdr_type;
+ 	unsigned int nbars;
+ 	unsigned int offset;
+ 	struct pci_epc *epc;
+@@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		return -EINVAL;
+ 	}
+ 
++	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
++	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
++		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
++			hdr_type);
++		return -EIO;
++	}
++
+ 	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Unable to read *num-ib-windows* property\n");
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index f93252d0da5b..d2ca748e4c85 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	struct pci_bus *child;
+ 	struct pci_host_bridge *bridge;
+ 	struct resource *cfg_res;
++	u8 hdr_type;
+ 	int ret;
+ 
+ 	raw_spin_lock_init(&pci->pp.lock);
+@@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		}
+ 	}
+ 
++	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
++	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
++		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
++			hdr_type);
++		return -EIO;
++	}
++
+ 	pp->mem_base = pp->mem->start;
+ 
+ 	if (!pp->va_cfg0_base) {
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.17.1
+
