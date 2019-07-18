@@ -2,132 +2,109 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CB9C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3BFC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A136221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QxdJ/w2p"
+	by mail.kernel.org (Postfix) with ESMTP id B613421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563454216;
+	bh=y7rgzQpDdIRlSy73vLU8vfCyWdqRCX6IVZMwX+buRH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MkYfzFSvkCbDYlGNsjyTL8qb0prd6u0l15Jy2EEJ7u0MYW8hvPq9OLL2VR/D8Z4c0
+	 bdAzZoFlUG/8zH9MHGvJFbQFhe8nUb/sErui1BhiefkSmliHkTXXjzM4fGdvA2Q++Q
+	 KjpVGtXpV89kk7K10hpKSrP2HZBypaL493YtG9Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390042AbfGRMtG (ORCPT
+        id S2390282AbfGRMuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:49:06 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52983 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727730AbfGRMtG (ORCPT
+        Thu, 18 Jul 2019 08:50:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54764 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbfGRMuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:49:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so25466870wms.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AWWuA/JtQHEoXMKz+XE4VOt7xAtoTKB5e9hojkHO6LI=;
-        b=QxdJ/w2pcS5etMpYFrkbCU3kTpMD2xOsMbc/inBrOnvQ4wZ6IFI1V11ePOF5YUuwgW
-         ilIk7JFacuYmv2DT47pxaYmrnBK1OLf17OEPhbOnd3aUkIwlt+ghtoo1S28rwT9/SOPt
-         l6WzoMUl7MHq0o2scyM2bYcl0ltdPLMGeImAdhyPmEOBNAtwdOSrycyQT/Ehq9IMPPcO
-         GseRtwNwyi1cqKW1t5uyED1Bdjzd8r/LWENnle5fjnyLodIBjTq7AziXYWqSY8GuyUed
-         QUDKArW/Do6s5tXL22QClyTw5oAX9yfOVCNrktiqT4hl5eUGc64Uq4Pi5aEvk8M93HOa
-         RFdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AWWuA/JtQHEoXMKz+XE4VOt7xAtoTKB5e9hojkHO6LI=;
-        b=WAhqPqfumWWvWLglpfrtbsu7G3sD4JXY19WM5ah+GRX+JlT2AG3ARnSPzfeVbp5RFM
-         VEtm9KU8Igg8qk7i6kdnjybJbl6DLs3/8vHiRM5W8FhmQwLQMkOkGKr3uDc1AS8zz/KR
-         MqaqsDLPFfRD/Y14itRDFzL4LAiG8hRKmRzmsg6GMKa50ar6OqqWdJCVUu9fiSt+DgTr
-         Hhn88ZkKwk3Hucc9l5Qw0C3TEihhNjdTyScHb7WrfKZeRFDmYYfU/jxhGjxMic+imaz2
-         YbBhhYmn3dUsPSyOZSxEa9TQHTvnjJ5T53y8mFCK5+dJIAH9pcgi4jwiMdFzGTQ2IwKt
-         itFw==
-X-Gm-Message-State: APjAAAVsi8LG2Yw5X51ZuNRuWizM6fzZZeKf9ilyTGTZ5HuvvTjX3tUe
-        rTVySg6B8/4rBPQ6RNl3sc57cRLCc4SnHMD86To3
-X-Google-Smtp-Source: APXvYqy6CDJOP3TkhKIRwK/Jy2ldyzs9AHrBBFwOO86437RdJVO4H7Wh9eWo6BybO5H9SQagTXh6cIAk34GC+ElLzQ0=
-X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr39537254wmf.60.1563454144157;
- Thu, 18 Jul 2019 05:49:04 -0700 (PDT)
+        Thu, 18 Jul 2019 08:50:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cEKz6vzhG50bLPrFj2nQ+q2iCqfHJ5p08/faFuU/tmo=; b=GkRibwu+YUKwTy3cvBnatmb2D
+        FD10UfEpSVZg4jJPngQlitY7aA/iWbv18ZQaXaLcxpyYbpNkX66qWKc6LjwyN9nenTpPt1VSAbPp5
+        3qdSEVW2GJBLOTnS+rrdpMgZ5BFMCxHAyzCvnzvSZY/2GQQiNPjsoE1+J3mp/bZN76DRg=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1ho5rN-000564-HM; Thu, 18 Jul 2019 12:50:09 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id A5E4C2742A55; Thu, 18 Jul 2019 13:50:08 +0100 (BST)
+Date:   Thu, 18 Jul 2019 13:50:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH 1/4][V2] drivers: spi: core: Add optional delay between
+ cs_change transfers
+Message-ID: <20190718125008.GD5761@sirena.org.uk>
+References: <20190717115109.15168-1-alexandru.ardelean@analog.com>
+ <20190717115109.15168-2-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-References: <20190718020745.8867-1-fred@fredlawl.com> <20190718020745.8867-6-fred@fredlawl.com>
-In-Reply-To: <20190718020745.8867-6-fred@fredlawl.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Thu, 18 Jul 2019 07:48:51 -0500
-Message-ID: <CAErSpo5TZC3iM09SB1td+F7b-+aiu9EHwPYa1ayiU-i1tseV5w@mail.gmail.com>
-Subject: Re: [PATCH] mtip32xx: Prefer pcie_capability_read_word()
-To:     Frederick Lawler <fred@fredlawl.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
+Content-Disposition: inline
+In-Reply-To: <20190717115109.15168-2-alexandru.ardelean@analog.com>
+X-Cookie: Oh, wow!  Look at the moon!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 9:09 PM Frederick Lawler <fred@fredlawl.com> wrote:
->
-> Commit 8c0d3a02c130 ("PCI: Add accessors for PCI Express Capability")
-> added accessors for the PCI Express Capability so that drivers didn't
-> need to be aware of differences between v1 and v2 of the PCI
-> Express Capability.
->
-> Replace pci_read_config_word() and pci_write_config_word() calls with
-> pcie_capability_read_word() and pcie_capability_write_word().
->
-> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
-> ---
->  drivers/block/mtip32xx/mtip32xx.c | 28 ++++++++++++----------------
->  1 file changed, 12 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
-> index f0105d118056..b7b26e33248b 100644
-> --- a/drivers/block/mtip32xx/mtip32xx.c
-> +++ b/drivers/block/mtip32xx/mtip32xx.c
-> @@ -3952,22 +3952,18 @@ static void mtip_disable_link_opts(struct driver_data *dd, struct pci_dev *pdev)
->         int pos;
->         unsigned short pcie_dev_ctrl;
->
-> -       pos = pci_find_capability(pdev, PCI_CAP_ID_EXP);
-> -       if (pos) {
-> -               pci_read_config_word(pdev,
-> -                       pos + PCI_EXP_DEVCTL,
-> -                       &pcie_dev_ctrl);
-> -               if (pcie_dev_ctrl & (1 << 11) ||
-> -                   pcie_dev_ctrl & (1 << 4)) {
-> -                       dev_info(&dd->pdev->dev,
-> -                               "Disabling ERO/No-Snoop on bridge device %04x:%04x\n",
-> -                                       pdev->vendor, pdev->device);
-> -                       pcie_dev_ctrl &= ~(PCI_EXP_DEVCTL_NOSNOOP_EN |
-> -                                               PCI_EXP_DEVCTL_RELAX_EN);
-> -                       pci_write_config_word(pdev,
-> -                               pos + PCI_EXP_DEVCTL,
-> -                               pcie_dev_ctrl);
-> -               }
-> +       if (!pci_is_pcie(pdev))
-> +               return;
-> +
-> +       pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &pcie_dev_ctrl);
-> +       if (pcie_dev_ctrl & (1 << 11) ||
-> +           pcie_dev_ctrl & (1 << 4)) {
 
-Hmm, sort of sloppy that  d1e714db8129 ("mtip32xx: Fix ERO and NoSnoop
-values in PCIe upstream on AMD systems") used
-PCI_EXP_DEVCTL_NOSNOOP_EN and PCI_EXP_DEVCTL_RELAX_EN below, but not
-here.  Could be fixed with a separate follow-on patch.
+--3Gf/FFewwPeBMqCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +               dev_info(&dd->pdev->dev,
-> +                        "Disabling ERO/No-Snoop on bridge device %04x:%04x\n",
-> +                        pdev->vendor, pdev->device);
-> +               pcie_dev_ctrl &= ~(PCI_EXP_DEVCTL_NOSNOOP_EN |
-> +                                       PCI_EXP_DEVCTL_RELAX_EN);
-> +               pcie_capability_write_word(pdev, PCI_EXP_DEVCTL, pcie_dev_ctrl);
->         }
->  }
->
-> --
-> 2.17.1
->
+On Wed, Jul 17, 2019 at 02:51:06PM +0300, Alexandru Ardelean wrote:
+> Some devices like the ADIS16460 IMU require a stall period between
+> transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> default value of 10us is not enough. This change makes the delay
+> configurable for when the next CS change goes active.
+
+To repeat my previous feedback:
+
+| This looks like cs_change_delay.
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+Please don't ignore review comments, people are generally making them
+for a reason and are likely to have the same concerns if issues remain
+unaddressed.  Having to repeat the same comments can get repetitive and
+make people question the value of time spent reviewing.  If you disagree
+with the review comments that's fine but you need to reply and discuss
+your concerns so that the reviewer can understand your decisions.
+
+--3Gf/FFewwPeBMqCJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0wav8ACgkQJNaLcl1U
+h9APhQf/QOouOeq0OOWIhFy4+/g0D4HdPXY0lzPOPRqIa3No7BWtewQIntQ7uARy
+/6nZrCA4lT9IuLtQY9TtxBtY3GyY1hLyWXnibxUsD0vZqS7cBjvVdYYv9/FTdDEK
+VquUng/K54Vp6Ku0GCfh9EXhEs05w/L4B1cWa1r7FD6gbF5llweQ6A/JP68B2Jzl
+mAj3fEjb7brceyU08UiJsfDCIehvVc3vpu5wCyFFj0FzGhJ+IfJdAmFn7C6EmotF
+CM8deV1NaeQB0iUkCSVgTj+pBG4UZ0hj0CGju8xXxE6/f/+1BgBp6EpNZj1Tptzg
+XIBZ7Xf1k9oTXGZ+05q/wXtv2P9N+w==
+=liAJ
+-----END PGP SIGNATURE-----
+
+--3Gf/FFewwPeBMqCJ--
