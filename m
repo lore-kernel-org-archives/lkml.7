@@ -2,158 +2,110 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C54C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37340C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF41D20651
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081F320651
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T/qauvZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389595AbfGRDfL convert rfc822-to-8bit (ORCPT
+        id S2389791AbfGRDfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 17 Jul 2019 23:35:12 -0400
+Received: from mail-eopbgr140075.outbound.protection.outlook.com ([40.107.14.75]:15744
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389169AbfGRDfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jul 2019 23:35:11 -0400
-Received: from mx1.mail.vl.ru ([80.92.161.250]:52290 "EHLO mx1.mail.vl.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388047AbfGRDfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:35:11 -0400
-X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jul 2019 23:35:09 EDT
-Received: from localhost (unknown [127.0.0.1])
-        by mx1.mail.vl.ru (Postfix) with ESMTP id 6ED581843D44;
-        Thu, 18 Jul 2019 03:26:12 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at mail.vl.ru
-Received: from mx1.mail.vl.ru ([127.0.0.1])
-        by localhost (smtp1.srv.loc [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dtt9_TASIEfE; Thu, 18 Jul 2019 13:26:11 +1000 (+10)
-Received: from [10.125.1.12] (unknown [109.126.62.18])
-        (Authenticated sender: turchanov@vl.ru)
-        by mx1.mail.vl.ru (Postfix) with ESMTPSA id 5E7E21843D42;
-        Thu, 18 Jul 2019 13:26:11 +1000 (+10)
-From:   Sergei Turchanov <turchanov@farpost.com>
-Subject: [BUG] lseek on /proc/meminfo is broken in 4.19.59
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Organization: FarPost
-Message-ID: <37ba3ed7-9805-6e2b-6c67-73d31958aa05@farpost.com>
-Date:   Thu, 18 Jul 2019 13:26:11 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CkgR9iqEAW5NpcG4smqRCOL5BGzDp+3mVN24eiRV0pG9cT3GBgHqGXN1tO7VIP7ur/kcGGbsWZTgufO3SNP6GKA0Pscw+g5/B9slyAiQXrP551l8+bFaJOlqQBUZO7yYhBqc0PLKHljh5/MFoDZDbsG8OPyajmnNuL7zNX8m4x6A9cVi/xUFoGOr0RmK73k4O0wAk5UhzX7YTgVfzISy8NZngeUDslq7SWxOB1BnSgOmmOQJsR6YPdnaCd69J625j18FiJRyygUvDweARuXMr3ZksSfbkhpEWaOUtPDtedrannFjTgVEcQamu5h6N87vJ9CEFxYVBshhLpZlhJjyRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LHZHlNb4ImKb33zjo9erH3xdC8nL8I4j0EVNsMzrglE=;
+ b=SMMybDDO+kqw4gMlP37uW3ZdVshrybGY510jIwvZKefRVMRWrsVaUnRhoDmANfKqwsfmj10TeQ1ztz1FYP4p00C7doUmuTzpOpWDFR8k6rcG4mAamcSK/7yjl2D9m1JHrX7N3KmeH8ZnduRslqRDUP8wlrgqK+4u8yFgPE7ofoVgDv1hLUmMPRB7ghqhI236/QxpRBmu2RwcCO/uUJP3Hz13ZcI8uWgkyxCOxeZUYLs2xcxunOzxxMRBpaDP78opUglQ2rzZ61Vwx7X9sJctD28dEKPHFZ90UJpYFcWsn+3KJnkaObwWmZKDJzYMZvi1Fs0FSgTBdIHoI/cliIQvNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LHZHlNb4ImKb33zjo9erH3xdC8nL8I4j0EVNsMzrglE=;
+ b=T/qauvZiIDJ/xCAe2p9HzGFLcKjPzS/FVwmbe80POj3tw2pCm3HeBHS1khDlO8wUhUdqrEibnfhwl8sqCMixCV6FDSn+7jEs2EesVKJXiqyL7qwTiHFicH/e3d+w6BATljRWNvZYqBCEQSuVnsk5oivOcJfhOfo6OZmmRo0u4UQ=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB5857.eurprd04.prod.outlook.com (20.178.118.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Thu, 18 Jul 2019 03:35:08 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
+ 03:35:08 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Topic: [PATCH] pwm: mxs: use devm_platform_ioremap_resource() to
+ simplify code
+Thread-Index: AQHVPQnp5eWkyfCnPUOOHDKzmqO/vKbPuWDQ
+Date:   Thu, 18 Jul 2019 03:35:08 +0000
+Message-ID: <AM0PR04MB42116F0753C9C6A619A2D8EC80C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190718013205.24919-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190718013205.24919-1-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dd5b1787-6ca4-4a5d-1d48-08d70b30ee7e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5857;
+x-ms-traffictypediagnostic: AM0PR04MB5857:
+x-microsoft-antispam-prvs: <AM0PR04MB585769C41BAB2C773EC3C74280C80@AM0PR04MB5857.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:446;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(189003)(199004)(2501003)(66946007)(76116006)(66476007)(478600001)(66446008)(64756008)(305945005)(55016002)(11346002)(14454004)(9686003)(52536014)(25786009)(6506007)(186003)(74316002)(71190400001)(229853002)(558084003)(26005)(71200400001)(102836004)(6246003)(5660300002)(53936002)(4326008)(110136005)(316002)(7736002)(68736007)(2201001)(256004)(86362001)(99286004)(476003)(7696005)(44832011)(486006)(76176011)(446003)(81156014)(8676002)(81166006)(6116002)(3846002)(8936002)(33656002)(6436002)(2906002)(66066001)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5857;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: A84BvW8Xdot4HuHsS2AfsGmAph2GlEqD9F1wQJzvoPDat2gSOTqqyk46GcliZo5/4mp7PGyTimyooiyDa6bNr6P+Vj3dXkclgtpUm7A4EJfLf1avQlbx6IdVuP8CcRZcsZ6llf74W0IAjAphwI3iJgFc5BRjURMTyx8KmamPO9vWVxPuQA3CJTUSU1kpnz6TdIdyrS2JVBochlmlrzODfQd7cYmEu/5N5waQEiwCoXCunQzrgPvr5CrVLtKD6qOegzLDWk7F9mLlkwGDCrEZehtEUakwmwGAgJcfZcpgBbtbObwrPmaWcbOtZOe1yPcxAU3RQdy/a/DWP+lC02RUgNA1jjut8+QuCPvqLQd+q1J0SZNetWUpXKv+bA2kgXGoIF47ioEbn6TTAGAtI56Qik87ewNawMY8467EVTm6c9s=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd5b1787-6ca4-4a5d-1d48-08d70b30ee7e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 03:35:08.2713
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5857
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-Seeking (to an offset within file size) in /proc/meminfo is broken in 
-4.19.59. It does seek to a desired position, but reading from that 
-position returns the remainder of file and then a whole copy of file. 
-This doesn't happen with /proc/vmstat or /proc/self/maps for example.
-
-Seeking did work correctly in kernel 4.14.47. So it seems something 
-broke in the way.
-
-Background: this kind of access pattern (seeking to /proc/meminfo) is 
-used by libvirt-lxc fuse driver for virtualized view of /proc/meminfo.
-
-$ ./test /proc/meminfo 0        # Works as expected
-
-MemTotal:       394907728 kB
-MemFree:        173738328 kB
-...
-DirectMap2M:    13062144 kB
-DirectMap1G:    390070272 kB
-
------------------------------------------------------------------------
-
-$ ./test 1024                   # returns a copy of file after the remainder
-
-Will seek to 1024
-
-
-Data read at offset 1024
-gePages:         0 kB
-ShmemHugePages:        0 kB
-ShmemPmdMapped:        0 kB
-HugePages_Total:       0
-HugePages_Free:        0
-HugePages_Rsvd:        0
-HugePages_Surp:        0
-Hugepagesize:       2048 kB
-Hugetlb:               0 kB
-DirectMap4k:      245204 kB
-DirectMap2M:    13062144 kB
-DirectMap1G:    390070272 kB
-MemTotal:       394907728 kB
-MemFree:        173738328 kB
-MemAvailable:   379989680 kB
-Buffers:          355812 kB
-Cached:         207216224 kB
-...
-DirectMap2M:    13062144 kB
-DirectMap1G:    390070272 kB
-
-As you see, after "DirectMap1G:" line, a whole copy of /proc/meminfo 
-returned by "read".
-
-Test program:
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#define SIZE 1024
-char buf[SIZE + 1];
-
-int main(int argc, char *argv[]) {
-     int     fd;
-     ssize_t rd;
-     off_t   ofs = 0;
-
-     if (argc < 2) {
-         printf("Usage: test <file> [<offset>]\n");
-         exit(1);
-     }
-
-     if (-1 == (fd = open(argv[1], O_RDONLY))) {
-         perror("open failed");
-         exit(1);
-     }
-
-     if (argc > 2) {
-         ofs = atol(argv[2]);
-     }
-     printf("Will seek to %ld\n", ofs);
-
-     if (-1 == (lseek(fd, ofs, SEEK_SET))) {
-         perror("lseek failed");
-         exit(1);
-     }
-
-     for (;; ofs += rd) {
-         printf("\n\nData read at offset %ld\n", ofs);
-         if (-1 == (rd = read(fd, buf, SIZE))) {
-             perror("read failed");
-             exit(1);
-         }
-         buf[rd] = '\0';
-         printf(buf);
-         if (rd < SIZE) {
-             break;
-         }
-     }
-
-     return 0;
-}
-
-
+PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
+OiBUaHVyc2RheSwgSnVseSAxOCwgMjAxOSA5OjMyIEFNDQo+IA0KPiBVc2UgdGhlIG5ldyBoZWxw
+ZXIgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkgd2hpY2ggd3JhcHMgdGhlDQo+IHBs
+YXRmb3JtX2dldF9yZXNvdXJjZSgpIGFuZCBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKSB0b2dldGhl
+ciwgdG8gc2ltcGxpZnkNCj4gdGhlIGNvZGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBI
+dWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8
+YWlzaGVuZy5kb25nQG54cC5jb20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg==
