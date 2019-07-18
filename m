@@ -2,149 +2,109 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E387FC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E0C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D6E21783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="W8sPtuhs"
+	by mail.kernel.org (Postfix) with ESMTP id 481DE21783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390601AbfGROQy (ORCPT
+        id S2390641AbfGRORD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:16:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36403 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390457AbfGROQy (ORCPT
+        Thu, 18 Jul 2019 10:17:03 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:59357 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390605AbfGRORC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:16:54 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r6so29183558oti.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=RwpnZ/oYArVLKO1FOa0zkV+rIVwJ+6+HIwfsxFdupWs=;
-        b=W8sPtuhs0XYA3yVl25QJblCCOLf59FqZ8LL+DoHIc0yvkazbLQZCN3mIP185ktOrtw
-         RrZvReTlY2b2kXUGci9xvRh2Sw8VSICp7oKsf2MsCvQ46r47Wd9eyksSn2VoUw1wkqea
-         VQG6gNCEh15o0VRH9XrQmpdItVep31fMjxygzk0q14RO8+z4SktKfgNofQlV6VwTVgK4
-         5BSaBazfdkk3uZj+LirLot8dfN71GXNgsVgiwvwwvbc8NeMmo1eeP9Rp0u0RrSMqxfQI
-         Ce/qPBM9C2bAK7YJ9UZqHSH6VO8AC5PS+AJUBR3LV8Y76Pxv6o89epff2ihtDTv5HWFd
-         Ywow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=RwpnZ/oYArVLKO1FOa0zkV+rIVwJ+6+HIwfsxFdupWs=;
-        b=KVsKNiz/XaZYqRtseHDPk2GjoIJniwq0l7ocx+Bty5nq24GlLj7o5CL8gPaLdQwOY3
-         2eHAx4V1FZXknS05hRSSTqtyLFzRlyt0EcDGpnHSNOA6TIF2mJLQ2j7Jvr+XitSET+6i
-         5A1oO7k2yp6MSR+XGCgoFRlA2kUbkprf2fj+Ao9km2rQU/j2/BPFOirbbngE1l1jpJWs
-         BvP+bPETVrQFVGXmScdF/o5RbFvCaUwpNxtYRW2E49zBip7raf+Pp1EQ22sLwUJoOlxY
-         sMbeDwGgUvtSGSCVYhCsY24XVd50vre1HZFbko/CveBEo8150ncGfFQNNqe3dU2Ugg3L
-         rwTA==
-X-Gm-Message-State: APjAAAW9uU2JQd1eeghpmDgj45oi4F6ricKH1qA3rg1Dsz/4byUz41Q+
-        f0usOVlpQwsQlWmJzl2obpqcVKB5bICrJUQhuYTdow==
-X-Google-Smtp-Source: APXvYqyoP5GJxKjG9yqXUy0a6+m6CJdrkTAwTJlxCLi1DF02tSRMO8QPtauzgaksegMMK6qPttHmI7N0dt209RrVo3c=
-X-Received: by 2002:a9d:470d:: with SMTP id a13mr33844897otf.126.1563459412721;
- Thu, 18 Jul 2019 07:16:52 -0700 (PDT)
+        Thu, 18 Jul 2019 10:17:02 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MdNHa-1iNS2127Qe-00ZLMK; Thu, 18 Jul 2019 16:16:53 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Johan Korsnes <johan.korsnes@gmail.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Gabriel Francisco Mandaji <gfmandaji@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] media: vivid: work around high stack usage with clang
+Date:   Thu, 18 Jul 2019 16:16:43 +0200
+Message-Id: <20190718141652.3323402-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 18 Jul 2019 07:16:41 -0700
-Message-ID: <CAPcyv4ji_0CqmeO2hh1ERvUnVJZkFcuj+=QQ3mrSx13y3uSHoQ@mail.gmail.com>
-Subject: [GIT PULL] libnvdimm for 5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pankaj Gupta <pagupta@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:pQKRRjSAwPvJe/DxyiorcFmR6g4THfSDWMYc4p1kZ8aLckuM0qr
+ xiClQ7AIVuxhBy+lGsPSBjcs77ak3SReRcHc5Am7mqZgcmrz9f4AoLd3JloLdNFEQglNegX
+ 6jdTth3eX4T4XaZYZZVQjYzBNeckqyHawmVjOWSrwzLGx4S2Tp/SgN1edqnon9OwZxy0rr+
+ ftQgSnAn9XDmMOCvB2ebA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8NGldS+p5eQ=:By0jRMiqfFn2SYMphKkJGN
+ i3yDPSR68JLDHktBXZ/qviTIEXWjHGJIdnA1VW72vr/hIz3WOnGbh7uZdJqfKdg5W5XuegFHI
+ CjIkleZu201NWQ+tOktdMjcBbsF8z7rAOJvJd0rM7BXwi3fayjvf8l7SVubOp3GgyiqE9akGY
+ KwzerfPyAtao1W+byoBidehfl987Lw4pHrMLUv7d5lru4Qg5Rxwcs0EM1yaUUMp52PI0R9oEg
+ L+WvO2ty8u789v/03RE9d/S1OgvvOIGsj8dun2hMJ04PHuPnbj5+h6uKlhohhxfffam01eYT8
+ 9kKMawa1wwQ28ZB0wQtX1QaakIsJ+xDEL63P54/GxBsGNrVINo8NT/2gc0MpkproSgjZ6SCWS
+ h5lJOb5BVBClB3WcPG5+8U2SM3oV8m/oZJSIZ3ewHFCPImc5ulF1iJP6a2xGssg2yzPbP25+a
+ d/S7rlHcj+CxpFnLBqMKthxqafWyqaud59fXGcSTybzxX+Fc38wWBiYu0rjynB1/6wUEUok9d
+ QBdwA7Pl6CjsbMpH8SarPDXByn6sQs7cSZt2u3bpIGfsOOm2KC/kwn2EDjDhY9KgStKqyX/sM
+ Fae6snP4LKzacTQ6bqMOe/8a1LfqWfS/5eH+ijSfqkslnL7hpZ0nHeZFdA/Pa1Glrb7NM+xjr
+ nIdJuXqpjFhUmg3rj+0cf8okhl6YlHouWlE/0mBoF4mQ1GXOO69SEcd5TJGhIJ91ltRZvYb9q
+ Xc7tFuIOp6ppiw+kpl1+2E7ACbzQatv09fxO6A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, please pull from:
+Building a KASAN-enabled kernel with clang ends up in a case where too
+much is inlined into vivid_thread_vid_cap() and the stack usage grows
+a lot, possibly when the register allocation fails to produce efficient
+code and spills a lot of temporaries to the stack. This uses more
+than twice the amount of stack than the sum of the individual functions
+when they are not inlined:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-for-5.3
+drivers/media/platform/vivid/vivid-kthread-cap.c:766:12: error: stack frame size of 2208 bytes in function 'vivid_thread_vid_cap' [-Werror,-Wframe-larger-than=]
 
-...to receive primarily just the virtio_pmem driver for v5.3-rc1. The
-lateness is attributed to me being out last week, and a last minute
-regression hunt in a pending fix / rework of libnvdimm locking. Those
-fixes can wait to post-rc1.
+Marking two of the key functions in here as 'noinline_for_stack' avoids
+the pathological case in clang without any apparent downside for gcc.
 
-These commits have been in multiple -next releases, and uncovered a
-late sparse fixup that is appended. The touches to ext4 and xfs have
-received acks. Ted's ack is here [1], it arrived after I cut the
-branch. Mike reviewed the device-mapper touches.
-
-[1]: https://lore.kernel.org/lkml/20190707163415.GA19775@mit.edu/
-
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+Not sure how much effort we want to put into fixing clang to not
+get into this case. I could open an llvm bug report if something
+thinks this has a chance of getting fixed there.
+---
+ drivers/media/platform/vivid/vivid-kthread-cap.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
+diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
+index 6cf495a7d5cc..4f94897e6303 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-cap.c
++++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
+@@ -232,8 +232,8 @@ static void *plane_vaddr(struct tpg_data *tpg, struct vivid_buffer *buf,
+ 	return vbuf;
+ }
+ 
+-static int vivid_copy_buffer(struct vivid_dev *dev, unsigned p, u8 *vcapbuf,
+-		struct vivid_buffer *vid_cap_buf)
++static noinline_for_stack int vivid_copy_buffer(struct vivid_dev *dev, unsigned p,
++		u8 *vcapbuf, struct vivid_buffer *vid_cap_buf)
+ {
+ 	bool blank = dev->must_blank[vid_cap_buf->vb.vb2_buf.index];
+ 	struct tpg_data *tpg = &dev->tpg;
+@@ -670,7 +670,8 @@ static void vivid_cap_update_frame_period(struct vivid_dev *dev)
+ 	dev->cap_frame_period = f_period;
+ }
+ 
+-static void vivid_thread_vid_cap_tick(struct vivid_dev *dev, int dropped_bufs)
++static noinline_for_stack void vivid_thread_vid_cap_tick(struct vivid_dev *dev,
++							 int dropped_bufs)
+ {
+ 	struct vivid_buffer *vid_cap_buf = NULL;
+ 	struct vivid_buffer *vbi_cap_buf = NULL;
+-- 
+2.20.0
 
-  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-for-5.3
-
-for you to fetch changes up to 8c2e408e73f735d2e6e8b43f9b038c9abb082939:
-
-  virtio_pmem: fix sparse warning (2019-07-16 19:44:26 -0700)
-
-----------------------------------------------------------------
-- virtio_pmem: The new virtio_pmem facility introduces a paravirtualized
-  persistent memory device that allows a guest VM to use DAX mechanisms to
-  access a host-file with host-page-cache. It arranges for MAP_SYNC to
-  be disabled and instead triggers a host fsync() when a 'write-cache
-  flush' command is sent to the virtual disk device.
-
-- Miscellaneous small fixups.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      libnvdimm, namespace: Drop uuid_t implementation detail
-
-Pankaj Gupta (8):
-      libnvdimm: nd_region flush callback support
-      virtio-pmem: Add virtio pmem driver
-      libnvdimm: add dax_dev sync flag
-      dm: enable synchronous dax
-      dax: check synchronous mapping is supported
-      ext4: disable map_sync for async flush
-      xfs: disable map_sync for async flush
-      virtio_pmem: fix sparse warning
-
- drivers/acpi/nfit/core.c         |   4 +-
- drivers/dax/bus.c                |   2 +-
- drivers/dax/super.c              |  19 +++++-
- drivers/md/dm-table.c            |  24 ++++++--
- drivers/md/dm.c                  |   5 +-
- drivers/md/dm.h                  |   5 +-
- drivers/nvdimm/Makefile          |   1 +
- drivers/nvdimm/claim.c           |   6 +-
- drivers/nvdimm/namespace_devs.c  |   8 +--
- drivers/nvdimm/nd.h              |   1 +
- drivers/nvdimm/nd_virtio.c       | 125 +++++++++++++++++++++++++++++++++++++++
- drivers/nvdimm/pmem.c            |  18 ++++--
- drivers/nvdimm/region_devs.c     |  33 ++++++++++-
- drivers/nvdimm/virtio_pmem.c     | 122 ++++++++++++++++++++++++++++++++++++++
- drivers/nvdimm/virtio_pmem.h     |  55 +++++++++++++++++
- drivers/s390/block/dcssblk.c     |   2 +-
- drivers/virtio/Kconfig           |  11 ++++
- fs/ext4/file.c                   |  10 ++--
- fs/xfs/xfs_file.c                |   9 ++-
- include/linux/dax.h              |  41 ++++++++++++-
- include/linux/libnvdimm.h        |  10 +++-
- include/uapi/linux/virtio_ids.h  |   1 +
- include/uapi/linux/virtio_pmem.h |  34 +++++++++++
- 23 files changed, 508 insertions(+), 38 deletions(-)
- create mode 100644 drivers/nvdimm/nd_virtio.c
- create mode 100644 drivers/nvdimm/virtio_pmem.c
- create mode 100644 drivers/nvdimm/virtio_pmem.h
- create mode 100644 include/uapi/linux/virtio_pmem.h
