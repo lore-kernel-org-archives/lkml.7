@@ -2,134 +2,100 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0105FC76191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01BCC76196
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FF821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwRuicFm"
+	by mail.kernel.org (Postfix) with ESMTP id D414B21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390090AbfGRLSp (ORCPT
+        id S1727910AbfGRLSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 18 Jul 2019 07:18:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52872 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727813AbfGRLSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jul 2019 07:18:45 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35654 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfGRLSp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:18:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j19so28606793otq.2;
-        Thu, 18 Jul 2019 04:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aj2rqABk0xuHkR9UGCVKlVt81H3iXGb+Hp1fclBgK0k=;
-        b=LwRuicFm6ghp8965yMx2N/Mf3pRxn2pcfB3y8A89qv2GrqgGFDc3FzbUFxhsr6IMX0
-         h3Yvbay4jN1p7vNT44yr19HuGyAG5ALGS/Nnnsq2Pk2y46XkQadATq08L5fyQ9e4p8jg
-         6cNhivL9NpsV/BU6SHykSy+eYJVR3bc2b9cBaclf9AdfiUzm+m9bPm4yRyDr1LglKnjQ
-         3Ua1mlQ9ULtAKnwgNEvDQnh4bBpM1DsTQpR9OfrErolad5fHlaD0li+GPow8BTSoJTAU
-         pE/kbJPZE57qZvK3hM+ulLCuSk+NYluQuxzsgfjaCQtFRFTYu/3c5XntoG583fI1w7Xb
-         ubZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aj2rqABk0xuHkR9UGCVKlVt81H3iXGb+Hp1fclBgK0k=;
-        b=iqmOZigrIzAZ6Xf7r9EPFYYHF1rdoonsz9ugh0pk4YfjUIGsHmPZI+u7y0KMG+Dv+5
-         lmnVwRuCAU/aRYwZqgiDPTKZaCJCNnClzEwPXKA2rl0rpfxrPSoJVEDWZ8va3UR24IfM
-         3OnSD3K2TeB9NnF+gmI/jIjgdxq26jg7597XbDD0JzF4S27MZ5o+7RiPPCsJ7L0rgL1t
-         qZq5OIkaKFVN+ghPB+oMdo4tTQUglCgyhsqffed3f1uRil2HYW0F2ZQPMpyThBSPU0Nn
-         +8U4fJWFCCkMlBfcUKU3v3kqmnVoEC0lLQ1oGsNsEQfu8tY5RgfO4u/mrVflVgEi/IUw
-         YSnQ==
-X-Gm-Message-State: APjAAAVY4cCqemOTgcNhwOk/WvpLSiP/aEPYZow9PZRGm5iVXyOV2DTr
-        7SsR5sOQwERqsyTMCHycwQM4DfQqJ7xDray/xDY=
-X-Google-Smtp-Source: APXvYqwW+8Qp0sCOChKDlD2SYquMDCfHQEumwfAoGI0H3Qi7XJFTlYr0GE2VfUmfFnWm9gyjhcWDuPddC6FEvq5vh94=
-X-Received: by 2002:a05:6830:1697:: with SMTP id k23mr3310130otr.16.1563448724309;
- Thu, 18 Jul 2019 04:18:44 -0700 (PDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A89C5AF8A;
+        Thu, 18 Jul 2019 11:18:44 +0000 (UTC)
+Message-ID: <13dd1a4f33fcf814545f0d93f18429e853de9eaf.camel@suse.de>
+Subject: Re: [RFC 3/4] dma-direct: add dma_direct_min_mask
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, phil@raspberrypi.org, stefan.wahren@i2se.com,
+        f.fainelli@gmail.com, mbrugger@suse.com,
+        Jisheng.Zhang@synaptics.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 18 Jul 2019 13:18:42 +0200
+In-Reply-To: <20190718091526.GA25321@lst.de>
+References: <20190717153135.15507-1-nsaenzjulienne@suse.de>
+         <20190717153135.15507-4-nsaenzjulienne@suse.de>
+         <20190718091526.GA25321@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-u4X6VmDDAIHDooroH1Nl"
+User-Agent: Evolution 3.32.3 
 MIME-Version: 1.0
-References: <20190717201925.fur57qfs2x3ha6aq@debian> <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
- <CADVatmO_m-NYotb9Htd7gS0d2-o0DeEWeDJ1uYKE+oj_HjoN0Q@mail.gmail.com>
- <alpine.DEB.2.21.1907172345360.1778@nanos.tec.linutronix.de> <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
-In-Reply-To: <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Thu, 18 Jul 2019 12:18:07 +0100
-Message-ID: <CADVatmN6xNO1iMQ4ihsT5OqV2cuj2ajq+v00NrtUyOHkiKPo-Q@mail.gmail.com>
-Subject: Re: regression with napi/softirq ?
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
 
-On Thu, Jul 18, 2019 at 7:58 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 7/17/19 11:52 PM, Thomas Gleixner wrote:
-> > Sudip,
-> >
-> > On Wed, 17 Jul 2019, Sudip Mukherjee wrote:
-> >> On Wed, Jul 17, 2019 at 9:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>> You can hack ksoftirq_running() to return always false to avoid this, but
-> >>> that might cause application starvation and a huge packet buffer backlog
-> >>> when the amount of incoming packets makes the CPU do nothing else than
-> >>> softirq processing.
-> >>
-> >> I tried that now, it is better but still not as good as v3.8
-> >> Now I am getting 375.9usec as the maximum time between raising the softirq
-> >> and it starting to execute and packet drops still there.
-> >>
-> >> And just a thought, do you think there should be a CONFIG_ option for
-> >> this feature of ksoftirqd_running() so that it can be disabled if needed
-> >> by users like us?
-> >
-> > If at all then a sysctl to allow runtime control.
-> >
+--=-u4X6VmDDAIHDooroH1Nl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-<snip>
+On Thu, 2019-07-18 at 11:15 +0200, Christoph Hellwig wrote:
+> On Wed, Jul 17, 2019 at 05:31:34PM +0200, Nicolas Saenz Julienne wrote:
+> > Historically devices with ZONE_DMA32 have been assumed to be able to
+> > address at least the lower 4GB of ram for DMA. This is still the defual=
+t
+> > behavior yet the Raspberry Pi 4 is limited to the first GB of memory.
+> > This has been observed to trigger failures in dma_direct_supported() as
+> > the 'min_mask' isn't properly set.
+> >=20
+> > We create 'dma_direct_min_mask' in order for the arch init code to be
+> > able to fine-tune dma direct's 'min_dma' mask.
+>=20
+> Normally we use ZONE_DMA for that case.
 
->
-> ksoftirqd might be spuriously scheduled from tx path, when
-> __qdisc_run() also reacts to need_resched().
->
-> By raising NET_TX while we are processing NET_RX (say we send a TCP ACK packet
-> in response to incoming packet), we force __do_softirq() to perform
-> another loop, but before doing an other round, it will also check need_resched()
-> and eventually call wakeup_softirqd()
->
-> I wonder if following patch makes any difference.
->
-> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-> index 11c03cf4aa74b44663c74e0e3284140b0c75d9c4..ab736e974396394ae6ba409868aaea56a50ad57b 100644
-> --- a/net/sched/sch_generic.c
-> +++ b/net/sched/sch_generic.c
-> @@ -377,6 +377,8 @@ void __qdisc_run(struct Qdisc *q)
->         int packets;
->
->         while (qdisc_restart(q, &packets)) {
-> +               if (qdisc_is_empty(q))
-> +                       break;
+Fair enough, I didn't think of that possibility.
 
-unfortunately its v4.14.55 and qdisc_is_empty() is not yet introduced.
-And I can not backport 28cff537ef2e ("net: sched: add empty status
-flag for NOLOCK qdisc")
-also as TCQ_F_NOLOCK is there. :(
+So would the arm64 maintainers be happy with something like this:
+
+- ZONE_DMA: Follows standard definition, 16MB in size. ARCH_ZONE_DMA_BITS i=
+s
+	    left as is.
+- ZONE_DMA32: Will honor the most constraining 'dma-ranges'. Which so far f=
+or
+	      most devices is 4G, except for RPi4.
+- ZONE_NORMAL: The rest of the memory.
 
 
--- 
-Regards
-Sudip
+--=-u4X6VmDDAIHDooroH1Nl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl0wVZIACgkQlfZmHno8
+x/5UBwgAnIorcvhqJGeCU5fyBsfWXYHjNwasQPCU1TRsSi98KiAGitUFSad2SNFL
+nQ+EYRvqt0z/niIozLsQpVl1Yt7ccXZDHImuEEb4DEEFiTm+AYIV5jwyiRo9owAc
+8IAb+IYT6JZ9F9PRfZoALsi4dpG7t3o/YLPAg0Faphlvb5xj9Bv1yD0bXaHAldzY
+Yp7rtu3knI8rhmOpnzH6HCU5PvC51EbcN7UE8Mc2hWiC7iBfQDGgyd3kor71xku9
+6nV+594cncBJlkVwiQ8cwOTqGJ5AeygYXy1wGEsLnk8Xyd+vK3e6tVMMJW/F0nuw
+8u0mlFrs+jSLsnFe6WhaGTgsPSZ7Ow==
+=DM0Q
+-----END PGP SIGNATURE-----
+
+--=-u4X6VmDDAIHDooroH1Nl--
+
