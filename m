@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3CFC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C592FC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0A620818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F21321850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419487;
-	bh=Ynu8yvodwMQx0uHwqI/HZYYLMvXKfqE7ZdfD2W0l3r0=;
+	s=default; t=1563419491;
+	bh=GHt8LwMbS7G867sthSZrkRERqZKFD1mhXFEBXgBAL2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrteNJGTytrCFxWJNNuyxF+LCbxH70jrh3riXsZwtKSHB15eitYGHZF8UjdsesBWk
-	 4GQ7zGmeU10cquYMBIvzMsnHxfxm2pHIWg0O2HtAouIArm7thI/tojxnCkS4J4Woo7
-	 QoTz13YuJ+2LiHNR1FyT4Fxr9n0RuWA8kMJfxGNA=
+	b=Um+DnGAaE7r577YhP/0zazhRBPdD2TNuGyi+eCZcvl3OjVBRJnpTpStglZOMNqnoz
+	 9w4cRm1/cPEwXX5+Gqgd7y15EnOmiNdgeLnL/djM2C0eAcjQk/oFMEO1WEvoCEkvmv
+	 epqQo2MjMEbcdtoEMZEClQ/ndRzdCLpN4YwgXsho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391291AbfGRDLU (ORCPT
+        id S2390106AbfGRDLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391260AbfGRDLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:14 -0400
+        id S2389655AbfGRDLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:17 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55E012053B;
-        Thu, 18 Jul 2019 03:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2512053B;
+        Thu, 18 Jul 2019 03:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419473;
-        bh=Ynu8yvodwMQx0uHwqI/HZYYLMvXKfqE7ZdfD2W0l3r0=;
+        s=default; t=1563419476;
+        bh=GHt8LwMbS7G867sthSZrkRERqZKFD1mhXFEBXgBAL2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3t0zhezrlKSPaZzGfLyHUvG3qZdr0Ph0BQXxMGZPD/4qAjDIFgnNdmRhTYlrFQcB
-         0EFCFCZbB/nIdjzU+XhQ3YIXn3jnhBGnR44XuWi4XorPsTSpgAmdT7g9J6SUhFQz8U
-         PCSij2JKLvHnzhAL8srrOPaUeYR5QbRLYBmOmLh0=
+        b=UY0XwdRgZ/Lk0PiTN+xvaCO6T0Ggw6nUdZRr5aIu31NUvkNTKgkalpY879vipbPy/
+         XU2lnFB3RbyhijLgphiLJfefcGj85QNPv2XKqoPSMm6h2HE4uiePol+LyGeZq827Ec
+         P+uror5DU+XTh3MM8q21w+tETxRWJPPyOMT0vdps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 4.14 75/80] s390: fix stfle zero padding
-Date:   Thu, 18 Jul 2019 12:02:06 +0900
-Message-Id: <20190718030105.337133111@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH 4.14 58/80] binder: fix memory leak in error path
+Date:   Thu, 18 Jul 2019 12:01:49 +0900
+Message-Id: <20190718030103.019747614@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -59,83 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Todd Kjos <tkjos@android.com>
 
-commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
+commit 1909a671dbc3606685b1daf8b22a16f65ea7edda upstream.
 
-The stfle inline assembly returns the number of double words written
-(condition code 0) or the double words it would have written
-(condition code 3), if the memory array it got as parameter would have
-been large enough.
+syzkallar found a 32-byte memory leak in a rarely executed error
+case. The transaction complete work item was not freed if put_user()
+failed when writing the BR_TRANSACTION_COMPLETE to the user command
+buffer. Fixed by freeing it before put_user() is called.
 
-The current stfle implementation assumes that the array is always
-large enough and clears those parts of the array that have not been
-written to with a subsequent memset call.
-
-If however the array is not large enough memset will get a negative
-length parameter, which means that memset clears memory until it gets
-an exception and the kernel crashes.
-
-To fix this simply limit the maximum length. Move also the inline
-assembly to an extra function to avoid clobbering of register 0, which
-might happen because of the added min_t invocation together with code
-instrumentation.
-
-The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
-facility list handling") but was rather harmless, since it would only
-write to a rather large array. It became a potential problem with
-commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
-then it writes to an array with only four double words, while some
-machines already deliver three double words. As soon as machines have
-a facility bit within the fifth double a crash on IPL would happen.
-
-Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
-Cc: <stable@vger.kernel.org> # v2.6.37+
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/android/binder.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/s390/include/asm/facility.h
-+++ b/arch/s390/include/asm/facility.h
-@@ -59,6 +59,18 @@ static inline int test_facility(unsigned
- 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
- }
- 
-+static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
-+{
-+	register unsigned long reg0 asm("0") = size - 1;
-+
-+	asm volatile(
-+		".insn s,0xb2b00000,0(%1)" /* stfle */
-+		: "+d" (reg0)
-+		: "a" (stfle_fac_list)
-+		: "memory", "cc");
-+	return reg0;
-+}
-+
- /**
-  * stfle - Store facility list extended
-  * @stfle_fac_list: array where facility list can be stored
-@@ -76,13 +88,8 @@ static inline void stfle(u64 *stfle_fac_
- 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
- 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
- 		/* More facility bits available with stfle */
--		register unsigned long reg0 asm("0") = size - 1;
--
--		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
--			     : "+d" (reg0)
--			     : "a" (stfle_fac_list)
--			     : "memory", "cc");
--		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
-+		nr = __stfle_asm(stfle_fac_list, size);
-+		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
- 	}
- 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
- 	preempt_enable();
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -3876,6 +3876,8 @@ retry:
+ 		case BINDER_WORK_TRANSACTION_COMPLETE: {
+ 			binder_inner_proc_unlock(proc);
+ 			cmd = BR_TRANSACTION_COMPLETE;
++			kfree(w);
++			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
+ 			if (put_user(cmd, (uint32_t __user *)ptr))
+ 				return -EFAULT;
+ 			ptr += sizeof(uint32_t);
+@@ -3884,8 +3886,6 @@ retry:
+ 			binder_debug(BINDER_DEBUG_TRANSACTION_COMPLETE,
+ 				     "%d:%d BR_TRANSACTION_COMPLETE\n",
+ 				     proc->pid, thread->pid);
+-			kfree(w);
+-			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
+ 		} break;
+ 		case BINDER_WORK_NODE: {
+ 			struct binder_node *node = container_of(w, struct binder_node, work);
 
 
