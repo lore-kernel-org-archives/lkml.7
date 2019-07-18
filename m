@@ -2,123 +2,216 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2D1C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14DDC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776E62083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D78B2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391006AbfGRSSN (ORCPT
+        id S2391047AbfGRSSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:18:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51394 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728183AbfGRSSK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:18:10 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6II3ELD038870
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:18:09 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttvv3aubk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:18:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <anju@linux.vnet.ibm.com>;
-        Thu, 18 Jul 2019 19:18:07 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 19:18:03 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6III2V451904670
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 18:18:02 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63DA54C040;
-        Thu, 18 Jul 2019 18:18:02 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBFA74C04A;
-        Thu, 18 Jul 2019 18:17:59 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.42.37])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 18:17:59 +0000 (GMT)
-From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
-To:     mpe@ellerman.id.au, acme@kernel.org, jolsa@redhat.com
-Cc:     namhyung@kernel.org, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        anju@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com
-Subject: [PATCH v2 3/3] tools/perf: Set 'trace_cycles' as defaultevent for perf kvm record in powerpc
-Date:   Thu, 18 Jul 2019 23:47:49 +0530
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190718181749.30612-1-anju@linux.vnet.ibm.com>
-References: <20190718181749.30612-1-anju@linux.vnet.ibm.com>
+        Thu, 18 Jul 2019 14:18:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:33370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390994AbfGRSSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:18:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0221728;
+        Thu, 18 Jul 2019 11:18:13 -0700 (PDT)
+Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DE2C3F71A;
+        Thu, 18 Jul 2019 11:18:10 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>, Michal Koutny <mkoutny@suse.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH v12 0/6] Add utilization clamping support (CGroups API)
+Date:   Thu, 18 Jul 2019 19:17:42 +0100
+Message-Id: <20190718181748.28446-1-patrick.bellasi@arm.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071818-0028-0000-0000-00000385C660
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071818-0029-0000-0000-00002445F13E
-Message-Id: <20190718181749.30612-3-anju@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use 'trace_imc/trace_cycles' as the default event for 'perf kvm record'
-in powerpc.
+Hi all, this is a respin of:
 
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
----
- tools/perf/arch/powerpc/util/kvm-stat.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+  https://lore.kernel.org/lkml/20190708084357.12944-1-patrick.bellasi@arm.com/
 
-diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
-index c55e7405940e..0a06626fb18a 100644
---- a/tools/perf/arch/powerpc/util/kvm-stat.c
-+++ b/tools/perf/arch/powerpc/util/kvm-stat.c
-@@ -177,8 +177,9 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
- /*
-  * Incase of powerpc architecture, pmu registers are programmable
-  * by guest kernel. So monitoring guest via host may not provide
-- * valid samples. It is better to fail the "perf kvm record"
-- * with default "cycles" event to monitor guest in powerpc.
-+ * valid samples with default 'cycles' event. It is better to use
-+ * 'trace_imc/trace_cycles' event for guest profiling, since it
-+ * can track the guest instruction pointer in the trace-record.
-  *
-  * Function to parse the arguments and return appropriate values.
-  */
-@@ -202,8 +203,14 @@ int kvm_add_default_arch_event(int *argc, const char **argv)
- 
- 	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
- 	if (!event) {
--		free(tmp);
--		return -EINVAL;
-+		if (pmu_have_event("trace_imc", "trace_cycles")) {
-+			argv[j++] = strdup("-e");
-+			argv[j++] = strdup("trace_imc/trace_cycles/");
-+			*argc += 2;
-+		} else {
-+			free(tmp);
-+			return -EINVAL;
-+		}
- 	}
- 
- 	free(tmp);
+which addresses all the comments collected so far:
+
+- track requested cgroup's percentage to mask conversion rounding to userspace
+- use a dedicated variable for parent restrictions
+- make more explicit in the documentation that the requested "protection" is
+  always capped by the requested "limit"
+- use the newly added uclamp_mutex to serialize the sysfs write callback
+- add missing RCU read locks across cpu_util_update_eff() call from
+  uclamp_update_root_tg()
+- remove not required and confusing sentence from the above changelog
+- add a new patch to always use enum uclamp_id for clamp_id values
+- fix percentage's decimals format string
+
+as well as adds some small modifications:
+
+- introduce UCLAMP_PERCENT_{SHIFT,SCALE} to avoid hardcoded constants
+- s/uclamp_scale_from_percent()/capacity_from_percent()/
+- move range check from cpu_uclamp_{min,max}_write() to capacity_from_percent()
+
+The series is based on top of today's Linus master branch (wip for 5.3-rc1):
+
+  commit 22051d9c4a57 ("Merge tag 'platform-drivers-x86-v5.3-2' of git://git.infradead.org/linux-platform-drivers-x86")
+
+Thanks Quentin, Michal and Tejun for your review comments!
+
+This has been the first code review targeting specifically the cgroups bits and
+the series is now hopefully in a better shape.
+
+Looking forward for any additional comments! ;)
+
+Cheers,
+Patrick
+
+Series Organization
+===================
+
+The full tree is available here:
+
+   git://linux-arm.org/linux-pb.git   lkml/utilclamp_v12
+   http://www.linux-arm.org/git?p=linux-pb.git;a=shortlog;h=refs/heads/lkml/utilclamp_v12
+
+
+Newcomer's Short Abstract
+=========================
+
+The Linux scheduler tracks a "utilization" signal for each scheduling entity
+(SE), e.g. tasks, to know how much CPU time they use. This signal allows the
+scheduler to know how "big" a task is and, in principle, it can support
+advanced task placement strategies by selecting the best CPU to run a task.
+Some of these strategies are represented by the Energy Aware Scheduler [1].
+
+When the schedutil cpufreq governor is in use, the utilization signal allows
+the Linux scheduler to also drive frequency selection. The CPU utilization
+signal, which represents the aggregated utilization of tasks scheduled on that
+CPU, is used to select the frequency which best fits the workload generated by
+the tasks.
+
+The current translation of utilization values into a frequency selection is
+simple: we go to max for RT tasks or to the minimum frequency which can
+accommodate the utilization of DL+FAIR tasks.
+However, utilization values by themselves cannot convey the desired
+power/performance behaviors of each task as intended by user-space.
+As such they are not ideally suited for task placement decisions.
+
+Task placement and frequency selection policies in the kernel can be improved
+by taking into consideration hints coming from authorized user-space elements,
+like for example the Android middleware or more generally any "System
+Management Software" (SMS) framework.
+
+Utilization clamping is a mechanism which allows to "clamp" (i.e. filter) the
+utilization generated by RT and FAIR tasks within a range defined by user-space.
+The clamped utilization value can then be used, for example, to enforce a
+minimum and/or maximum frequency depending on which tasks are active on a CPU.
+
+The main use-cases for utilization clamping are:
+
+ - boosting: better interactive response for small tasks which
+   are affecting the user experience.
+
+   Consider for example the case of a small control thread for an external
+   accelerator (e.g. GPU, DSP, other devices). Here, from the task utilization
+   the scheduler does not have a complete view of what the task's requirements
+   are and, if it's a small utilization task, it keeps selecting a more energy
+   efficient CPU, with smaller capacity and lower frequency, thus negatively
+   impacting the overall time required to complete task activations.
+
+ - capping: increase energy efficiency for background tasks not affecting the
+   user experience.
+
+   Since running on a lower capacity CPU at a lower frequency is more energy
+   efficient, when the completion time is not a main goal, then capping the
+   utilization considered for certain (maybe big) tasks can have positive
+   effects, both on energy consumption and thermal headroom.
+   This feature allows also to make RT tasks more energy friendly on mobile
+   systems where running them on high capacity CPUs and at the maximum
+   frequency is not required.
+
+From these two use-cases, it's worth noticing that frequency selection
+biasing, introduced by patches 9 and 10 of this series, is just one possible
+usage of utilization clamping. Another compelling extension of utilization
+clamping is in helping the scheduler in making tasks placement decisions.
+
+Utilization is (also) a task specific property the scheduler uses to know
+how much CPU bandwidth a task requires, at least as long as there is idle time.
+Thus, the utilization clamp values, defined either per-task or per-task_group,
+can represent tasks to the scheduler as being bigger (or smaller) than what
+they actually are.
+
+Utilization clamping thus enables interesting additional optimizations, for
+example on asymmetric capacity systems like Arm big.LITTLE and DynamIQ CPUs,
+where:
+
+ - boosting: try to run small/foreground tasks on higher-capacity CPUs to
+   complete them faster despite being less energy efficient.
+
+ - capping: try to run big/background tasks on low-capacity CPUs to save power
+   and thermal headroom for more important tasks
+
+This series does not present this additional usage of utilization clamping but
+it's an integral part of the EAS feature set, where [2] is one of its main
+components.
+
+Android kernels use SchedTune, a solution similar to utilization clamping, to
+bias both 'frequency selection' and 'task placement'. This series provides the
+foundation to add similar features to mainline while focusing, for the
+time being, just on schedutil integration.
+
+
+References
+==========
+
+[1] Energy Aware Scheduling
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/scheduler/sched-energy.txt?h=v5.1
+
+[2] Expressing per-task/per-cgroup performance hints
+    Linux Plumbers Conference 2018
+    https://linuxplumbersconf.org/event/2/contributions/128/
+
+
+Patrick Bellasi (6):
+  sched/core: uclamp: Extend CPU's cgroup controller
+  sched/core: uclamp: Propagate parent clamps
+  sched/core: uclamp: Propagate system defaults to root group
+  sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+  sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+  sched/core: uclamp: always use enum uclamp_id for clamp_id values
+
+ Documentation/admin-guide/cgroup-v2.rst |  34 +++
+ init/Kconfig                            |  22 ++
+ kernel/sched/core.c                     | 382 ++++++++++++++++++++++--
+ kernel/sched/sched.h                    |  12 +-
+ 4 files changed, 430 insertions(+), 20 deletions(-)
+
 -- 
-2.20.1
+2.22.0
 
