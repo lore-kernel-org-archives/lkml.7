@@ -7,85 +7,84 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E5DC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F82C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B541A217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9E820873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aDk3QWJc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rqBRRSXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390552AbfGRO1z (ORCPT
+        id S2390615AbfGRO2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:27:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42330 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRO1z (ORCPT
+        Thu, 18 Jul 2019 10:28:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47056 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRO2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:27:55 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEO9kS038738;
-        Thu, 18 Jul 2019 14:27:38 GMT
+        Thu, 18 Jul 2019 10:28:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IENx2Y044084;
+        Thu, 18 Jul 2019 14:27:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2018-07-02;
- bh=vhx0d9t56CEmR2/7oRomW1whOTJLUCdhb/u4q8az6RQ=;
- b=aDk3QWJcQe87LWj/Um5HM6XFKoz88VXLgQC3djynvqh3hgjgiEgG0ave5LgbIgPTcy1E
- qFTrmZ8+CW/TGRmXBPdlwIMsRCDIT7kjh2mnVkjrJQk+qgiB9Y4Te1v2afp6gODIHy38
- BmRuxS6mLeo4/gwOg8GxPmSpYcIMziPavDFR+N5awVWdf4mkgVZuiUpgTv9bCq21iyJX
- RJwDepv54+skBUTzB1E/df8PNKkE26Sp3Hr6OIqN1UYCZ2tRoKWrAR0BTVPJsh/NXhbO
- gamfxoH+wOYnZDgHwOM8EM+Hpz42/hN/u5BVdB/a0Na2+9bdk3cXyKJLLqI0UsHEdWj+ vg== 
+ bh=J9r9JlAuxE2aGKKJvVgk3Ep1Ee4jBkvxOBZiuSQLEgw=;
+ b=rqBRRSXbS0tG1LrKio7DzJPy/LyEfaplc/ky1grlZEUhSaEYkIHbfVC2e6AilMFy7K4H
+ DiOhnnKdvUHXgpjmB2yK9pHJJhxaw4q7ArWho7WHqzREa7hB6G9X9jBMTO1UIAEw15CF
+ fyAOf9p/H9jQJhaUNsfVzdcL/mP/fNSX9z/Wgc4vivGnthkeb8D0lfqlPEC92bIXEbdh
+ d7GZ4CTsG1WrbdI+MAtNYh0qZc600PTRsXOAVi6Va8QWyNEJDYG/VwuYEvSJ+XI2O4Jd
+ mUkgGDcWjkN0m1wXgEXmW2s9AouGGIuRTXHKmXCivyI2gLQrW81RHWNBTgGmVRIzokH4 WQ== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tq6qu1crb-1
+        by userp2120.oracle.com with ESMTP id 2tq7xr96vf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 14:27:38 +0000
+        Thu, 18 Jul 2019 14:27:35 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEMoDJ041553;
-        Thu, 18 Jul 2019 14:27:37 GMT
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEMo2N041534;
+        Thu, 18 Jul 2019 14:25:34 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2ttc8fm7sq-1
+        by aserp3030.oracle.com with ESMTP id 2ttc8fm6na-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 14:27:37 +0000
+        Thu, 18 Jul 2019 14:25:33 +0000
 Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6IERZSo021719;
-        Thu, 18 Jul 2019 14:27:35 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6IEPQMX020269;
+        Thu, 18 Jul 2019 14:25:26 GMT
+Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 18 Jul 2019 14:27:35 +0000
-Date:   Thu, 18 Jul 2019 10:27:30 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>
-Subject: Re: [PATCH] padata: Replace delayed timer with immediate workqueue
- in padata_reorder
-Message-ID: <20190718142730.uhdkwx5onigdpxno@ca-dmjordan1.us.oracle.com>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
- <20190716163253.24377-1-daniel.m.jordan@oracle.com>
- <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
- <20190717183227.b3hqphukkndqumhw@ca-dmjordan1.us.oracle.com>
- <20190718033131.4m4ypbq7tiucqcsl@gondor.apana.org.au>
+        with ESMTP ; Thu, 18 Jul 2019 14:25:26 +0000
+Date:   Thu, 18 Jul 2019 07:25:25 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
+Message-ID: <20190718142525.GE7116@magnolia>
+References: <20190718125509.775525-1-arnd@arndb.de>
+ <20190718125703.GA28332@lst.de>
+ <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
+ <20190718130835.GA28520@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190718033131.4m4ypbq7tiucqcsl@gondor.apana.org.au>
-User-Agent: NeoMutt/20180323-268-5a959c
+In-Reply-To: <20190718130835.GA28520@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=454
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1907180150
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=506 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1907180150
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,22 +92,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:31:31AM +0800, Herbert Xu wrote:
-> On Wed, Jul 17, 2019 at 02:32:27PM -0400, Daniel Jordan wrote:
-> >
-> > We'll crash when cpumask_next_wrap returns nr_cpumask_bits and later try to get
-> > the corresponding per-cpu queue.
+On Thu, Jul 18, 2019 at 03:08:35PM +0200, Christoph Hellwig wrote:
+> On Thu, Jul 18, 2019 at 03:03:15PM +0200, Arnd Bergmann wrote:
+> > The inclusion comes from the recently added header check in commit
+> > c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
+> > 
+> > This just tries to include every header by itself to see if there are build
+> > failures from missing indirect includes. We probably don't want to
+> > add an exception for iomap.h there.
 > 
-> The whole point of cpumask_next_wrap is to wrap around to the
-> beginning when it hits nr_cpumask_bits.  So it cannot return
-> nr_cpumask_bits.
+> I very much disagree with that check.  We don't need to make every
+> header compilable with a setup where it should not be included.
 
-That's what I expected when I first saw it too, but nr_cpumask_bits is returned
-to signal the end of the iteration.  The patch always passes 0 for the 'start'
-argument, so when cpumask_next_wrap is called with the last cpu in the mask,
-the end-of-iteration case is triggered.  To reassure you and myself :) I ran it
-and got the expected crash.
+Seconded, unless there's some scenario where someone needs iomap when
+CONFIG_BLOCK=n (???)
 
-Passing pd->cpu for the start argument instead avoids that problem, but the
-one-cpu-in-mask case still needs handling because cpumask_next_wrap always
-signals end of iteration for that, hence the cpumask_weight check.
+--D
+
+> That being said if you feel this is worth fixing I'd rather define
+> SECTOR_SIZE/SECTOR_SHIFT unconditionally.
