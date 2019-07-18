@@ -2,75 +2,121 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464F9C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEA5C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D96E2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9708D21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563419994;
+	bh=FpBXdlrPW47mu1UUu4BGvsMp2qt8ULV43I4S1cVe9Ro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0lQdynUgv8rEgHJn0/insU7XzzDiQ+NKNa7YRMNoOy6hLiYhOxz7c+pVEFj8MG36U
+	 qFz+V8IteFQGabpmj4lTL0AgfX8lwwzcpyXHIRV4aSy8ejj9LNyybcv4/mtW7BcJg7
+	 Jr0NtBOMQ+QDXseEanX02bIdUpWnG8MeRYbuxmBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403825AbfGRDTr (ORCPT
+        id S2389133AbfGRDLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:19:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:36347 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391350AbfGRDTp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:19:45 -0400
-X-UUID: ac384d41e70c43c7a6dc458b2e91b1de-20190718
-X-UUID: ac384d41e70c43c7a6dc458b2e91b1de-20190718
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 884264207; Thu, 18 Jul 2019 11:19:41 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 18 Jul 2019 11:19:40 +0800
-Received: from [10.17.3.153] (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 18 Jul 2019 11:19:39 +0800
-Message-ID: <1563419979.20220.12.camel@mhfsdcap03>
-Subject: Re: [PATCH 0/5]Add support for mt2701 JPEG ENC support
-From:   mtk12025 <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, <srv_heupstream@mediatek.com>
-Date:   Thu, 18 Jul 2019 11:19:39 +0800
-In-Reply-To: <79316488-30fd-7ff3-7598-d29f85f663ab@xs4all.nl>
-References: <20190709032103.10291-1-xia.jiang@mediatek.com>
-         <79316488-30fd-7ff3-7598-d29f85f663ab@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Jul 2019 23:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389647AbfGRDLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:34 -0400
+Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E339A20818;
+        Thu, 18 Jul 2019 03:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563419493;
+        bh=FpBXdlrPW47mu1UUu4BGvsMp2qt8ULV43I4S1cVe9Ro=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y3k5rBbsb5joMfOrNRVJZyciJhIicP4pJDAs638CCCMXdAEdyfYym6SH42REgsDB0
+         AhYQgw17/f7djpDRsPdfKuuik1fH7GnakEebytHJG0scfSeN/c9t3hZdcIY6UJ+anr
+         S0XbQHSZP1Zb1jLmAKNo+LlGaggLnMDopge+cpRs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>,
+        Young Xiao <92siuyang@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 64/80] perf/core: Fix perf_sample_regs_user() mm check
+Date:   Thu, 18 Jul 2019 12:01:55 +0900
+Message-Id: <20190718030103.438396447@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
+References: <20190718030058.615992480@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Hans,
-Thank you for your reply.
+[ Upstream commit 085ebfe937d7a7a5df1729f35a12d6d655fea68c ]
 
-PATCH v2 has used the latest v4l2-compliance version for test.
+perf_sample_regs_user() uses 'current->mm' to test for the presence of
+userspace, but this is insufficient, consider use_mm().
 
-PATCH v2 has fixed the compliance test fail, and the driver checked the
-buffer size in queue_setup function.
+A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
+PF_KTHREAD after it sets the new ->mm but before it drops to userspace
+for the first time.
 
-I am sorry for existence of change-id caused by my mistake in the new
-patch.
+Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
 
-Best Regards,
-Xia Jiang
+Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Reported-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 580616e6fcee..3d4eb6f840eb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5630,7 +5630,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (current->mm) {
++	} else if (!(current->flags & PF_KTHREAD)) {
+ 		perf_get_regs_user(regs_user, regs, regs_user_copy);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+-- 
+2.20.1
+
 
 
