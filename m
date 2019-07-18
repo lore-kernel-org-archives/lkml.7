@@ -2,106 +2,182 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F90C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C65C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBEC21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEFF21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OO57QEKH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NQoTRVZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391028AbfGRUgi (ORCPT
+        id S2391238AbfGRUgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:36:38 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34202 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGRUgi (ORCPT
+        Thu, 18 Jul 2019 16:36:42 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8461 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRUgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:36:38 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so30513499otk.1;
-        Thu, 18 Jul 2019 13:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OY9UR9zkTdLDOjE/tTwcXypGYfY2Y7i9s+/aTr0TUyU=;
-        b=OO57QEKH+VuW/gw4VaXDrWVYTt9xqAKiPtCaTBXdRJcPaJAItekcL3v+21IRE7zBeT
-         gI2hZi2c9yLrPwur48hfzlVsXXbkVGYiZlqXV8abSHX7uT+FfkM52leqES/Zu4Q/9cSs
-         Ebv1mFqaKN2H78kfpNWLmWU+SAg++muUOvKmuJf5n9/bBTyHvvNIEnX45yatqcAkgjZt
-         ZRMmzV6zVv4V1TlHXx4pEqQe1wwfYj+nVE0zm9SjyHy4wi3vp8NnJlIcwm3jUFHLCvZ3
-         k9rXldwWbtSsYLqO/Sy+Ix1W647U+Fc8em6KNz4axIBvL96Q3KgIdgn6n5E2py9k3eDv
-         Kzmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OY9UR9zkTdLDOjE/tTwcXypGYfY2Y7i9s+/aTr0TUyU=;
-        b=RcwpcN3YxuqiAn+zprkxt3RcvIjpKi6cgt0Dl0dOvsFGXxH0Q1ncBItLYvcO2bQCht
-         4swOL1olW6fZ7L0ECJ2a1CLeSeRrS7qY8tU9UNv9+guA2dp1L+E6zzEeNwh6nCblpesi
-         b7ytg9S7Yr36eTNityq/adXcmvAHLVtyjXv0Bdr5xCO4tEZDfjUx+ONab6s+0+7L8w3l
-         XYbSJ3rR9TkMPwoQMnONGvn4YlhDPDIZZ6Ls9dfBUP84NOfqNzDBDd9Geye+kuRiAClu
-         BSalTZoH019G7XIMR7BqGa41ycWVD4IMhLrt8/Bl2Nc+hDE/1P91a5eZqp66bK9IPx3i
-         owCA==
-X-Gm-Message-State: APjAAAUkq5aP6CxHbzK0uG7zMdrNANoLxiMfPrA4SB+h8jE83uk/ABjy
-        /r0f9Cnpk1coF0Gl4pvRLiLelB4IVOg=
-X-Google-Smtp-Source: APXvYqwsOyICYj+jizrXxiNM7ZP395rkZVEKBWwwSNIYXHh5krxURjXLJqDgEHpZ1vqdmgShwCR/Nw==
-X-Received: by 2002:a9d:5c0d:: with SMTP id o13mr17379827otk.310.1563482197096;
-        Thu, 18 Jul 2019 13:36:37 -0700 (PDT)
-Received: from rYz3n ([2600:1700:210:3790::38])
-        by smtp.gmail.com with ESMTPSA id m7sm10035563otm.5.2019.07.18.13.36.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 13:36:36 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 15:36:36 -0500
-From:   Jiunn Chang <c0d1n61at3@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/54] 5.1.19-stable review
-Message-ID: <20190718203635.hzue3utbi2tydrnv@rYz3n>
-References: <20190718030053.287374640@linuxfoundation.org>
+        Thu, 18 Jul 2019 16:36:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d30d8550001>; Thu, 18 Jul 2019 13:36:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 18 Jul 2019 13:36:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 13:36:36 -0700
+Received: from [10.110.103.56] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
+ 2019 20:36:36 +0000
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+CC:     <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
+ <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
+ <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
+ <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+ <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
+ <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
+ <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
+ <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
+ <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
+ <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
+ <20190718194222.GH12715@pdeschrijver-desktop.Nvidia.com>
+ <056496ed-9abf-6907-c61c-a99ccf23b834@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
+Date:   Thu, 18 Jul 2019 13:36:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <056496ed-9abf-6907-c61c-a99ccf23b834@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563482197; bh=xTPNq2STiYkOd4YTPo3WdGjZBYbjhLu65ivHUkqxgXY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=NQoTRVZrZMUXvnkqRkaxN9jCcjj0y067n9BR9/NLbYlry2ZOqP8BO4MBYXLfqUqQ2
+         j5A6JCDaC5DkvYicj+NCue6lkHfQ+G2UhndsaLJ57pz1D+y+OqKa5bmwI/a/PBuSTj
+         AiInOdJwXMCpYKVRoAsHLJfo1DEXhgvui2glpsfOLEA7AN536TcHbgWB6fMaIUax4n
+         euWERkAOBx8CDkVDFhccnoSRQcTbKiNcFDUORyOV6fknnbTen6Fljy5+pyhpR+XJ+N
+         GtynmZ0hrJxc96Isyl01jOdoUv70rf2KKwYu4eGL8MIv1641iWjx20KTSPCw6heGY0
+         0jtmhRcJGh0IA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:00:55PM +0900, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.19 release.
-> There are 54 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.19-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
 
-Hello,
+On 7/18/19 1:26 PM, Dmitry Osipenko wrote:
+> 18.07.2019 22:42, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On Thu, Jul 18, 2019 at 02:44:56AM +0300, Dmitry Osipenko wrote:
+>>>> dependencies I am referring are dfll_ref, dfll_soc, and DVFS periphera=
+l
+>>>> clocks which need to be restored prior to DFLL reinit.
+>>> Okay, but that shouldn't be a problem if clock dependencies are set up
+>>> properly.
+>>>
+>>>>>> reverse list order during restore might not work as all other clocks=
+ are
+>>>>>> in proper order no with any ref clocks for plls getting restored pri=
+or
+>>>>>> to their clients
+>>>>> Why? The ref clocks should be registered first and be the roots for P=
+LLs
+>>>>> and the rest. If it's not currently the case, then this need to be
+>>>>> fixed. You need to ensure that each clock is modeled properly. If som=
+e
+>>>>> child clock really depends on multiple parents, then the parents need=
+ to
+>>>>> in the correct order or CCF need to be taught about such
+>>>>> multi-dependencies.
+>>>>>
+>>>>> If some required feature is missed, then you have to implement it
+>>>>> properly and for all, that's how things are done in upstream. Sometim=
+es
+>>>>> it's quite a lot of extra work that everyone are benefiting from in
+>>>>> the end.
+>>>>>
+>>>>> [snip]
+>>>> Yes, we should register ref/parents before their clients.
+>>>>
+>>>> cclk_g clk is registered last after all pll and peripheral clocks are
+>>>> registers during clock init.
+>>>>
+>>>> dfllCPU_out clk is registered later during dfll-fcpu driver probe and
+>>>> gets added to the clock list.
+>>>>
+>>>> Probably the issue seems to be not linking dfll_ref and dfll_soc
+>>>> dependencies for dfllCPU_out thru clock list.
+>>>>
+>>>> clk-dfll driver during dfll_init_clks gets ref_clk and soc_clk referen=
+ce
+>>>> thru DT.
+>> The dfll does not have any parents. It has some clocks which are needed
+>> for the logic part of the dfll to function, but there's no parent clock
+>> as such unlike for peripheral clocks or PLLs where the parent is at
+>> least used as a reference. The I2C controller of the DFLL shares the
+>> lines with a normal I2C controller using some arbitration logic. That
+>> logic only works if the clock for the normal I2C controller is enabled.
+>> So you need probably 3 clocks enabled to initialize the dfll in that
+>> case. I don't think it makes sense to add complicated logic to the clock
+>> core to deal with this rather strange case. To me it makes more sense to
+>> use pmops and open code the sequence there.
+> It looks to me that dfllCPU is a PLL and dfll_ref is its reference
+> parent, while dfll_soc clocks the logic that dynamically reconfigures
+> dfllCPU in background. I see that PLLP is defined as a parent for
+> dfll_ref and dfll_soc in the code. Hence seems dfll_ref should be set as
+> a parent for dfllCPU, no?
 
-Compiled and booted.  No regressions on x86_64.
+dfll_soc will not be restored by the time dfllCPU resume happens after=20
+dfll_ref.
 
-THX,
+without dfll_soc, dfllCPU cannot be resumed either. So if we decide to=20
+use parent we should use dfll_soc.
 
-Jiunn
+> Either way is good to me, given that DFLL will be disabled during
+> suspend. Resetting DFLL on DFLL's driver resume using PM ops should be
+> good. And then it also will be better to error out if DFLL is active
+> during suspend on the DFLL's driver suspend.
+
+Doing in dfll-fcpu pm_ops is much better as it happens right after all=20
+clocks are restored and unlike other clock enables, dfll need dfll=20
+controller programming as well and is actually registered in dfll-fcpu=20
+driver.
+
+With this, below is the sequence:
+
+CPUFreq suspend switches CPU to PLLP and disables dfll
+
+Will add dfll_suspend/resume in dfll-fcpu driver and in dfll suspend=20
+will check for dfll active and will error out suspend.
+
+dfll resume does dfll reinit.
+
+CPUFreq resume enables dfll and switches CPU to dfll.
+
+
+Will go with doing in dfll-fcpu pm_ops rather than parenting dfllCPU_OUT...
+
