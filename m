@@ -2,100 +2,156 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B56C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BE2C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF152173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AA62173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391191AbfGRSSa (ORCPT
+        id S2391223AbfGRSSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:18:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42268 "EHLO mx1.redhat.com"
+        Thu, 18 Jul 2019 14:18:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:33476 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391148AbfGRSS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:18:26 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 30D0C317916D;
-        Thu, 18 Jul 2019 18:18:26 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B2DA41001B35;
-        Thu, 18 Jul 2019 18:18:25 +0000 (UTC)
-Subject: Re: [PATCH] scsi: ses: Fix out-of-bounds memory access in
- ses_enclosure_data_process()
-To:     James Bottomley <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190501180535.26718-1-longman@redhat.com>
- <1fd39969-4413-2f11-86b2-729787680efa@redhat.com>
- <1558363938.3742.1.camel@linux.ibm.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <729b0751-01a6-7c0b-ce0d-f19807b59dee@redhat.com>
-Date:   Thu, 18 Jul 2019 14:18:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2391161AbfGRSS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:18:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77D4A1516;
+        Thu, 18 Jul 2019 11:18:27 -0700 (PDT)
+Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C73103F71A;
+        Thu, 18 Jul 2019 11:18:24 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>, Michal Koutny <mkoutny@suse.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH v12 5/6] sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+Date:   Thu, 18 Jul 2019 19:17:47 +0100
+Message-Id: <20190718181748.28446-6-patrick.bellasi@arm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190718181748.28446-1-patrick.bellasi@arm.com>
+References: <20190718181748.28446-1-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1558363938.3742.1.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Jul 2019 18:18:26 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 10:52 AM, James Bottomley wrote:
-> On Mon, 2019-05-20 at 10:41 -0400, Waiman Long wrote:
-> [...]
->>> --- a/drivers/scsi/ses.c
->>> +++ b/drivers/scsi/ses.c
->>> @@ -605,9 +605,14 @@ static void ses_enclosure_data_process(struct
->>> enclosure_device *edev,
->>>  			     /* these elements are optional */
->>>  			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
->>>  			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
->>> -			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
->>> +			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS)) {
->>>  				addl_desc_ptr += addl_desc_ptr[1]
->>> + 2;
->>>  
->>> +				/* Ensure no out-of-bounds memory
->>> access */
->>> +				if (addl_desc_ptr >= ses_dev-
->>>> page10 +
->>> +						     ses_dev-
->>>> page10_len)
->>> +					addl_desc_ptr = NULL;
->>> +			}
->>>  		}
->>>  	}
->>>  	kfree(buf);
->> Ping! Any comment on this patch.
-> The update looks fine to me:
->
-> Reviewed-by: James E.J. Bottomley <jejb@linux.ibm.com>
->
-> It might also be interesting to find out how the proliant is
-> structuring this descriptor array to precipitate the out of bounds: Is
-> it just an off by one or something more serious?
->
-> James
->
-Is someone going to merge this patch in the current cycle?
+On updates of task group (TG) clamp values, ensure that these new values
+are enforced on all RUNNABLE tasks of the task group, i.e. all RUNNABLE
+tasks are immediately boosted and/or capped as requested.
 
-Thanks,
-Longman
+Do that each time we update effective clamps from cpu_util_update_eff().
+Use the *cgroup_subsys_state (css) to walk the list of tasks in each
+affected TG and update their RUNNABLE tasks.
+Update each task by using the same mechanism used for cpu affinity masks
+updates, i.e. by taking the rq lock.
+
+Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>
+---
+ kernel/sched/core.c | 58 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 57 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 426736b2c4d7..26ac1cbec0be 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1043,6 +1043,57 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 		uclamp_rq_dec_id(rq, p, clamp_id);
+ }
+ 
++static inline void
++uclamp_update_active(struct task_struct *p, unsigned int clamp_id)
++{
++	struct rq_flags rf;
++	struct rq *rq;
++
++	/*
++	 * Lock the task and the rq where the task is (or was) queued.
++	 *
++	 * We might lock the (previous) rq of a !RUNNABLE task, but that's the
++	 * price to pay to safely serialize util_{min,max} updates with
++	 * enqueues, dequeues and migration operations.
++	 * This is the same locking schema used by __set_cpus_allowed_ptr().
++	 */
++	rq = task_rq_lock(p, &rf);
++
++	/*
++	 * Setting the clamp bucket is serialized by task_rq_lock().
++	 * If the task is not yet RUNNABLE and its task_struct is not
++	 * affecting a valid clamp bucket, the next time it's enqueued,
++	 * it will already see the updated clamp bucket value.
++	 */
++	if (!p->uclamp[clamp_id].active)
++		goto done;
++
++	uclamp_rq_dec_id(rq, p, clamp_id);
++	uclamp_rq_inc_id(rq, p, clamp_id);
++
++done:
++
++	task_rq_unlock(rq, p, &rf);
++}
++
++static inline void
++uclamp_update_active_tasks(struct cgroup_subsys_state *css,
++			   unsigned int clamps)
++{
++	struct css_task_iter it;
++	struct task_struct *p;
++	unsigned int clamp_id;
++
++	css_task_iter_start(css, 0, &it);
++	while ((p = css_task_iter_next(&it))) {
++		for_each_clamp_id(clamp_id) {
++			if ((0x1 << clamp_id) & clamps)
++				uclamp_update_active(p, clamp_id);
++		}
++	}
++	css_task_iter_end(&it);
++}
++
+ #ifdef CONFIG_UCLAMP_TASK_GROUP
+ static void cpu_util_update_eff(struct cgroup_subsys_state *css);
+ static void uclamp_update_root_tg(void)
+@@ -7091,8 +7142,13 @@ static void cpu_util_update_eff(struct cgroup_subsys_state *css)
+ 			uc_se[clamp_id].bucket_id = uclamp_bucket_id(eff[clamp_id]);
+ 			clamps |= (0x1 << clamp_id);
+ 		}
+-		if (!clamps)
++		if (!clamps) {
+ 			css = css_rightmost_descendant(css);
++			continue;
++		}
++
++		/* Immediately update descendants RUNNABLE tasks */
++		uclamp_update_active_tasks(css, clamps);
+ 	}
+ }
+ 
+-- 
+2.22.0
 
