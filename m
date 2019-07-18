@@ -2,144 +2,163 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0BAC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68881C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045172083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KWAJqDln"
+	by mail.kernel.org (Postfix) with ESMTP id 427672083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfGRR3g (ORCPT
+        id S1727927AbfGRRgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:29:36 -0400
-Received: from mail-eopbgr680056.outbound.protection.outlook.com ([40.107.68.56]:10630
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726715AbfGRR3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:29:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J64l/XzY5QP8ronq/fmbuf9ueelpuX0+WsfWSeXJBnPC9wBDdDjJeFLXH/xr3bR6uMi4OgyzxZlScSgsUJKivtiPvytvrmP0jQyPOZfOjaIpoFo68fIvlhIt+LFYq9dO001EzjcP5Q9vAI592LkOVaAvYw+fAT16dbWnhmS+NN8OqfaayG3YR+QL5WuVqbr9jd28gTkl7nS6kxktQaSsMNXbCFHyIFPSYpcc+3+YXxW5vi4lQH74xm+PwIDm/ZAfkkGUW9PZLllrtskOneOWMwn/lvOnLnUhTfrbYYUHE/VpXITOOzoi2uSeVURjh8h/XQzUl9KnJ+vK15jTJtFOdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ad+6b7kITJgXg4eMCaY92QAzPBBwQY35tBvaAL5/8ws=;
- b=Ncj+0nQa9VIame/3By3e7PeoGRnAbMVvQaQJtHLmVWUAwCj/30fLLWBNIiroOLB7529ZFQGKNe1GMcuN2KgCShgjGL1A5IhVt6xMzTvRsHAU4KYMblf26P7PftaXD1dm7DG/HwwZG1N11rZOCMJRt3lmT4yykIRe1ryAg7L8akbVO5xEoPHAknX0AH2kK63E3x4tWDdEMLE7RJ7dr+IBaa/EGLmTh8cibnrulY98kxLLRDN9tIBJGJ7F2K0P4hi2NEBEl257CvOG0Vcri7DAZbE86B1FPaT7nHNnQgUgLh9vq9JyC/dItdvCyFfsupZOhWeWRwNAgAOTqv/AFiRwRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ad+6b7kITJgXg4eMCaY92QAzPBBwQY35tBvaAL5/8ws=;
- b=KWAJqDlnyCPMPyyvCQJ14nniAHQGxMYBwCQMU5yM3TmQw7yAmRknn6gIWKkpekJBJPFvjsA98lCmeUvvjPNik27WfqoLqeiJaWTjLOuImmE7hfdUm8C83inzsTu4LlhoNGhshEkJRfnHTpxGhW2+1qmmStJliGTYZ6Or6tgjQ8U=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3099.namprd12.prod.outlook.com (20.178.30.221) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.11; Thu, 18 Jul 2019 17:29:30 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
- 17:29:30 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 3/6] dma-mapping: Remove dma_check_mask()
-Thread-Topic: [PATCH v3 3/6] dma-mapping: Remove dma_check_mask()
-Thread-Index: AQHVPRkFgsylEpGHoUyUZi7jfgONZabQooCA
-Date:   Thu, 18 Jul 2019 17:29:30 +0000
-Message-ID: <b11497b4-424b-ac42-e85b-e89524e67e8b@amd.com>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com>
- <20190718032858.28744-4-bauerman@linux.ibm.com>
-In-Reply-To: <20190718032858.28744-4-bauerman@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN1PR12CA0099.namprd12.prod.outlook.com
- (2603:10b6:802:21::34) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 08159723-7f29-4350-8322-08d70ba57db8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3099;
-x-ms-traffictypediagnostic: DM6PR12MB3099:
-x-microsoft-antispam-prvs: <DM6PR12MB3099C4EB9F221E315CB13570ECC80@DM6PR12MB3099.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(189003)(199004)(3846002)(25786009)(6486002)(6506007)(386003)(7736002)(71190400001)(53546011)(446003)(71200400001)(7416002)(36756003)(81166006)(316002)(81156014)(110136005)(6116002)(102836004)(68736007)(54906003)(6246003)(76176011)(31696002)(66066001)(6436002)(2501003)(5660300002)(8676002)(31686004)(64756008)(229853002)(66476007)(66446008)(26005)(476003)(486006)(2616005)(66946007)(52116002)(53936002)(8936002)(2906002)(186003)(478600001)(6512007)(14454004)(305945005)(86362001)(66556008)(4326008)(256004)(99286004)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3099;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DyTU5flNDNBBCzjpAqzG1daGdOEdSIVLDhAjRZjhYFO0iSdyyghjrySaNAfY+wLI+1e7AHVMUT08kuV7tkFVu5rRs0pLpptsEdbb+Kve5ESjqoK235JvSCFjW7d77CIJYIabTas/S87OrhwesUtQNBLQwNSsRkNYIW0/zniR3+Zs1wspn7GCQNmGWzN+HpqZxtirA6nhLAe21VIAkUZu1ZpCe9aUK6sqgg3MPPfSYBIveqhlN7nQZ2sSn064K/MKkzGB4tWLfAo5hOtSP0E82sffeghk0AsqzJnOKLQ7Q8XTsyJkSXXbBa0YbTs6wlGW+el9gM30OGAQzIi6UzZO8TgBHYgwqx5GPvWlwtnexCKjqG1haU+QaZ9p0xiPtR7ri0SzT7ZIT9zQXwYKN4iZklYtQbd+uuavzv17brmrYNQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <65559D157A6B024188913D5CB53D72FA@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 18 Jul 2019 13:36:32 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:51090 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRRgc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:36:32 -0400
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: o03CIUk9V5gNn97oaUq886kh1dm/X2WXBiYBG+zZo1OmST283lpTnvczdfbOLNPYyujYxlv/PS
+ aFq72/lOwUyahjn8/wHC0BsCM9iokLoXZ4f/EQioOY7Jn7jqoWxesklie+xp0A40EPokOZz0Pg
+ UPww/FF/oTaqsoNW9yU0o3ZZBmoxuXVgaNf/rvLVabJQbsDscf5xH7smWqk8qa/87TvWEf2z4K
+ f30DkaQYLuiaXUSmSWJnPsttXkyIJexLBGprMMjqjhIyYAsBDSSZKqJUhTGx3T16F83WcYyznR
+ CWs=
+X-SBRS: 2.7
+X-MesageID: 3138803
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,279,1559534400"; 
+   d="scan'208";a="3138803"
+Subject: Re: [Xen-devel] [PATCH 1/2] xen/gntdev: replace global limit of
+ mapped pages by limit per call
+To:     Juergen Gross <jgross@suse.com>, <xen-devel@lists.xenproject.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20190718065222.31310-1-jgross@suse.com>
+ <20190718065222.31310-2-jgross@suse.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
+ 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
+ 6+ahAA==
+Message-ID: <4e402502-acbc-2718-26d4-cbcf83697c15@citrix.com>
+Date:   Thu, 18 Jul 2019 18:36:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08159723-7f29-4350-8322-08d70ba57db8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:29:30.5136
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3099
+In-Reply-To: <20190718065222.31310-2-jgross@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xNy8xOSAxMDoyOCBQTSwgVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIHdyb3RlOg0KPiBzbWVf
-YWN0aXZlKCkgaXMgYW4geDg2LXNwZWNpZmljIGZ1bmN0aW9uIHNvIGl0J3MgYmV0dGVyIG5vdCB0
-byBjYWxsIGl0IGZyb20NCj4gZ2VuZXJpYyBjb2RlLiBDaHJpc3RvcGggSGVsbHdpZyBtZW50aW9u
-ZWQgdGhhdCAiVGhlcmUgaXMgbm8gcmVhc29uIHdoeSB3ZQ0KPiBzaG91bGQgaGF2ZSBhIHNwZWNp
-YWwgZGVidWcgcHJpbnRrIGp1c3QgZm9yIG9uZSBzcGVjaWZpYyByZWFzb24gd2h5IHRoZXJlDQo+
-IGlzIGEgcmVxdWlyZW1lbnQgZm9yIGEgbGFyZ2UgRE1BIG1hc2suIiwgc28ganVzdCByZW1vdmUg
-ZG1hX2NoZWNrX21hc2soKS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFRoaWFnbyBKdW5nIEJhdWVy
-bWFubiA8YmF1ZXJtYW5AbGludXguaWJtLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IFRvbSBMZW5kYWNr
-eSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+DQoNCj4gLS0tDQo+ICBrZXJuZWwvZG1hL21hcHBp
-bmcuYyB8IDggLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGRlbGV0aW9ucygtKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9kbWEvbWFwcGluZy5jIGIva2VybmVsL2RtYS9tYXBwaW5n
-LmMNCj4gaW5kZXggMWY2MjhlN2FjNzA5Li42MWVlZWZiZmNiMzYgMTAwNjQ0DQo+IC0tLSBhL2tl
-cm5lbC9kbWEvbWFwcGluZy5jDQo+ICsrKyBiL2tlcm5lbC9kbWEvbWFwcGluZy5jDQo+IEBAIC0y
-OTEsMTIgKzI5MSw2IEBAIHZvaWQgZG1hX2ZyZWVfYXR0cnMoc3RydWN0IGRldmljZSAqZGV2LCBz
-aXplX3Qgc2l6ZSwgdm9pZCAqY3B1X2FkZHIsDQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MKGRtYV9m
-cmVlX2F0dHJzKTsNCj4gIA0KPiAtc3RhdGljIGlubGluZSB2b2lkIGRtYV9jaGVja19tYXNrKHN0
-cnVjdCBkZXZpY2UgKmRldiwgdTY0IG1hc2spDQo+IC17DQo+IC0JaWYgKHNtZV9hY3RpdmUoKSAm
-JiAobWFzayA8ICgoKHU2NClzbWVfZ2V0X21lX21hc2soKSA8PCAxKSAtIDEpKSkNCj4gLQkJZGV2
-X3dhcm4oZGV2LCAiU01FIGlzIGFjdGl2ZSwgZGV2aWNlIHdpbGwgcmVxdWlyZSBETUEgYm91bmNl
-IGJ1ZmZlcnNcbiIpOw0KPiAtfQ0KPiAtDQo+ICBpbnQgZG1hX3N1cHBvcnRlZChzdHJ1Y3QgZGV2
-aWNlICpkZXYsIHU2NCBtYXNrKQ0KPiAgew0KPiAgCWNvbnN0IHN0cnVjdCBkbWFfbWFwX29wcyAq
-b3BzID0gZ2V0X2RtYV9vcHMoZGV2KTsNCj4gQEAgLTMyNyw3ICszMjEsNiBAQCBpbnQgZG1hX3Nl
-dF9tYXNrKHN0cnVjdCBkZXZpY2UgKmRldiwgdTY0IG1hc2spDQo+ICAJCXJldHVybiAtRUlPOw0K
-PiAgDQo+ICAJYXJjaF9kbWFfc2V0X21hc2soZGV2LCBtYXNrKTsNCj4gLQlkbWFfY2hlY2tfbWFz
-ayhkZXYsIG1hc2spOw0KPiAgCSpkZXYtPmRtYV9tYXNrID0gbWFzazsNCj4gIAlyZXR1cm4gMDsN
-Cj4gIH0NCj4gQEAgLTM0NSw3ICszMzgsNiBAQCBpbnQgZG1hX3NldF9jb2hlcmVudF9tYXNrKHN0
-cnVjdCBkZXZpY2UgKmRldiwgdTY0IG1hc2spDQo+ICAJaWYgKCFkbWFfc3VwcG9ydGVkKGRldiwg
-bWFzaykpDQo+ICAJCXJldHVybiAtRUlPOw0KPiAgDQo+IC0JZG1hX2NoZWNrX21hc2soZGV2LCBt
-YXNrKTsNCj4gIAlkZXYtPmNvaGVyZW50X2RtYV9tYXNrID0gbWFzazsNCj4gIAlyZXR1cm4gMDsN
-Cj4gIH0NCj4gDQo=
+On 18/07/2019 07:52, Juergen Gross wrote:
+> Today there is a global limit of pages mapped via /dev/xen/gntdev set
+> to 1 million pages per default.
+
+The Xen default limit even for dom0 is 1024 pages * 16 entries per page,
+which is far lower than this limit.
+
+> There is no reason why that limit is
+> existing, as total number of foreign mappings is limited by the
+
+s/foreign/grant/ ?
+
+> hypervisor anyway and preferring kernel mappings over userspace ones
+> doesn't make sense.
+
+Its probably also worth stating that this a root-only device, which
+further brings in to question the user/kernel split.
+
+>
+> Additionally checking of that limit is fragile, as the number of pages
+> to map via one call is specified in a 32-bit unsigned variable which
+> isn't tested to stay within reasonable limits (the only test is the
+> value to be <= zero, which basically excludes only calls without any
+> mapping requested). So trying to map e.g. 0xffff0000 pages while
+> already nearly 1000000 pages are mapped will effectively lower the
+> global number of mapped pages such that a parallel call mapping a
+> reasonable amount of pages can succeed in spite of the global limit
+> being violated.
+>
+> So drop the global limit and introduce per call limit instead.
+
+Its probably worth talking about this new limit.  What is it trying to
+protect?
+
+~Andrew
