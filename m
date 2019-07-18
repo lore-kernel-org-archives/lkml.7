@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CFAC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617D4C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78042205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE4C205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419274;
-	bh=Ynu8yvodwMQx0uHwqI/HZYYLMvXKfqE7ZdfD2W0l3r0=;
+	s=default; t=1563419277;
+	bh=EjQiwJFzN6vC59pTA0kUIUoNEPvkuQCYIO3Sbda2fAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwGaswlJV9hXO/X4ae28RPMkTQ+51M9vTCfLKE3hviFX7iEkI21cjrKcQDhrfOlkS
-	 ISZs5p6yrvHE+mfxFMAAjEPDdohnUMmuyg6VaSoTqebKqOosJ4tLZ6ImGWbkWR9EGu
-	 CAlteo3xnjL8TZ9UJhzA6qWuqAD9m+mnnZ5zz5Rs=
+	b=i8H4HiiHI0Fi/Avuwy7T5fbCX5AWacyNuQR803qrPmA7hkadzv8tVuNn44L150A+t
+	 zD4KLLhY6J6LEPMwpdIK5rL/qZx03aE4FN6e4tkzNXT1VocUt8Uh3YspgVnJqs5lAY
+	 yeuIDtTrv1tgC9kjsnZ9E/EL3RBaNeuJoYptWw94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390555AbfGRDHw (ORCPT
+        id S2390569AbfGRDH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389707AbfGRDHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:44 -0400
+        id S2389707AbfGRDHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:53 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E88DD2053B;
-        Thu, 18 Jul 2019 03:07:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B850B2053B;
+        Thu, 18 Jul 2019 03:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419263;
-        bh=Ynu8yvodwMQx0uHwqI/HZYYLMvXKfqE7ZdfD2W0l3r0=;
+        s=default; t=1563419273;
+        bh=EjQiwJFzN6vC59pTA0kUIUoNEPvkuQCYIO3Sbda2fAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FKAorxiG/MDLofclpP7mDtyuTdlhOtz2nIniBQ4F7HV7H6i507D5acedLNs1iEijJ
-         m4hufzAAcAUoBzSmekZtUQg1NRbUgfCpBaaStCaigKZN7y91pteZxhIECgIHNUcm9b
-         NlwhmHGWhQJ92u8fHAbp1M++w1T7CZ9EzVcxzl80=
+        b=JSOMhyIWM4g4kdiAmEViy/KDkHL3ps1yexm5d/HR8ZK+Bxn9zM0zEmsx0u1Z4E2OZ
+         dz/uOMqdclB46xcWcSXXa2MfZsTXe0XXeHL3kGqVtZLxxBRB2y1ADpXHHaxvzIWbkN
+         BkUVhHXRMicZYXgChozUmofQpPLtGuwj3rmBEgM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 4.19 37/47] s390: fix stfle zero padding
-Date:   Thu, 18 Jul 2019 12:01:51 +0900
-Message-Id: <20190718030051.901813536@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 39/47] s390/qdio: dont touch the dsci in tiqdio_add_input_queues()
+Date:   Thu, 18 Jul 2019 12:01:53 +0900
+Message-Id: <20190718030052.060549614@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -59,83 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
+commit ac6639cd3db607d386616487902b4cc1850a7be5 upstream.
 
-The stfle inline assembly returns the number of double words written
-(condition code 0) or the double words it would have written
-(condition code 3), if the memory array it got as parameter would have
-been large enough.
+Current code sets the dsci to 0x00000080. Which doesn't make any sense,
+as the indicator area is located in the _left-most_ byte.
 
-The current stfle implementation assumes that the array is always
-large enough and clears those parts of the array that have not been
-written to with a subsequent memset call.
+Worse: if the dsci is the _shared_ indicator, this potentially clears
+the indication of activity for a _different_ device.
+tiqdio_thinint_handler() will then have no reason to call that device's
+IRQ handler, and the device ends up stalling.
 
-If however the array is not large enough memset will get a negative
-length parameter, which means that memset clears memory until it gets
-an exception and the kernel crashes.
-
-To fix this simply limit the maximum length. Move also the inline
-assembly to an extra function to avoid clobbering of register 0, which
-might happen because of the added min_t invocation together with code
-instrumentation.
-
-The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
-facility list handling") but was rather harmless, since it would only
-write to a rather large array. It became a potential problem with
-commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
-then it writes to an array with only four double words, while some
-machines already deliver three double words. As soon as machines have
-a facility bit within the fifth double a crash on IPL would happen.
-
-Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
-Cc: <stable@vger.kernel.org> # v2.6.37+
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Fixes: d0c9d4a89fff ("[S390] qdio: set correct bit in dsci")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/s390/cio/qdio_thinint.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/s390/include/asm/facility.h
-+++ b/arch/s390/include/asm/facility.h
-@@ -59,6 +59,18 @@ static inline int test_facility(unsigned
- 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -79,7 +79,6 @@ void tiqdio_add_input_queues(struct qdio
+ 	mutex_lock(&tiq_list_lock);
+ 	list_add_rcu(&irq_ptr->input_qs[0]->entry, &tiq_list);
+ 	mutex_unlock(&tiq_list_lock);
+-	xchg(irq_ptr->dsci, 1 << 7);
  }
  
-+static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
-+{
-+	register unsigned long reg0 asm("0") = size - 1;
-+
-+	asm volatile(
-+		".insn s,0xb2b00000,0(%1)" /* stfle */
-+		: "+d" (reg0)
-+		: "a" (stfle_fac_list)
-+		: "memory", "cc");
-+	return reg0;
-+}
-+
- /**
-  * stfle - Store facility list extended
-  * @stfle_fac_list: array where facility list can be stored
-@@ -76,13 +88,8 @@ static inline void stfle(u64 *stfle_fac_
- 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
- 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
- 		/* More facility bits available with stfle */
--		register unsigned long reg0 asm("0") = size - 1;
--
--		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
--			     : "+d" (reg0)
--			     : "a" (stfle_fac_list)
--			     : "memory", "cc");
--		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
-+		nr = __stfle_asm(stfle_fac_list, size);
-+		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
- 	}
- 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
- 	preempt_enable();
+ void tiqdio_remove_input_queues(struct qdio_irq *irq_ptr)
 
 
