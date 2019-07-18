@@ -2,91 +2,110 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6922CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CB6C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456A32184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A002084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfGSBBm (ORCPT
+        id S1726243AbfGSBDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:01:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51316 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725992AbfGSBBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:01:42 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 14D4288903822913EF0F;
-        Fri, 19 Jul 2019 09:01:38 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 19 Jul 2019 09:01:29 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next] mtd: hyperbus: fix build error about CONFIG_REGMAP
-Date:   Fri, 19 Jul 2019 09:07:03 +0800
-Message-ID: <20190719010703.63815-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Thu, 18 Jul 2019 21:03:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38416 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfGSBDu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 21:03:50 -0400
+Received: by mail-pl1-f193.google.com with SMTP id az7so14735218plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 18:03:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=d3rODNYxuy5WSNSg2yOMOvh6Io0aB+kYlsQ525KJnc0=;
+        b=VniQ51CkLGNon56YgITDV/olp4AWOFIA6rzhpqBDYGzue81zg1RfpFXwtVN9A8bnsN
+         axZ1YX+54woQfvdxS4kqHJZdo/UEEtgdXbrq7s5ct7W7aDvTBmTf1ko+L5ShlB/SLLkq
+         f67vqQWc2kQcbQX1Y/mQgCjuIr5K8q2MWIA6eN6W46fYRO56JBmxCE91dI4qGyslPCtu
+         cSZ+fQAtu5jV4Mc7zZAbiLseZc5CeyDdhGW1klz67TI1ZqH5iI/HXyHL+pgPikwzYDKM
+         0xZ+gjhX/XFishj9flq3E7OZKgtC669YLj54pIA/XqZ1zjDffQrkqr4oLSem6JxYYnJx
+         P6fA==
+X-Gm-Message-State: APjAAAXznEitaKSbmKIkMEbl0DWZm6GLo/ypog2st82AtD/AOx2IIgg4
+        7/C6+90Hz3F7gd3KDeERJ5Bv1bovJcc=
+X-Google-Smtp-Source: APXvYqyNnYXLRkRi6Ll9bz/3tajFAV1xPszlLINuuVWkZO2ozRs4+asqt2Ylc201rgEWbM7nm9wEHQ==
+X-Received: by 2002:a17:902:2f84:: with SMTP id t4mr48549709plb.57.1563498229683;
+        Thu, 18 Jul 2019 18:03:49 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id q144sm28887612pfc.103.2019.07.18.18.03.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 18:03:49 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>
+Subject: [RFC 0/7] x86/percpu: Use segment qualifiers 
+Date:   Thu, 18 Jul 2019 10:41:03 -0700
+Message-Id: <20190718174110.4635-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_MUX_MMIO and CONFIG_HBMC_AM654 are both 'm', there are
-some building error as below:
+GCC 6+ supports segment qualifiers. Using them allows to implement
+several optimizations:
 
-drivers/mux/mmio.c: In function mux_mmio_probe:
-drivers/mux/mmio.c:76:20: error: storage size of field isnt known
-   struct reg_field field;
-                    ^~~~~
-drivers/mux/mmio.c:102:15: error: implicit declaration of function devm_regmap_field_alloc; did you mean devm_mux_chip_alloc? [-Werror=implicit-function-declaration]
-   fields[i] = devm_regmap_field_alloc(dev, regmap, field);
-               ^~~~~~~~~~~~~~~~~~~~~~~
-               devm_mux_chip_alloc
-drivers/mux/mmio.c:76:20: warning: unused variable field [-Wunused-variable]
-   struct reg_field field;
-                    ^~~~~
-cc1: some warnings being treated as errors
-make[2]: *** [drivers/mux/mmio.o] Error 1
-make[1]: *** [drivers/mux] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [drivers] Error 2
+1. Avoid unnecessary instructions when an operation is carried on
+read/written per-cpu value, and instead allow the compiler to set
+instructions that access per-cpu value directly.
 
-This because CONFIG_REGMAP is not enable, so change the Kconfig for HBMC_AM654.
+2. Make this_cpu_ptr() more efficient and allow its value to be cached,
+since preemption must be disabled when this_cpu_ptr() is used.
 
-Fixes: b07079f1642c("mtd: hyperbus: Add driver for TI's HyperBus memory controller")
+3. Provide better alternative for this_cpu_read_stable() that caches
+values more efficiently using alias attribute to const variable.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/mtd/hyperbus/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+4. Allow the compiler to perform other optimizations (e.g. CSE).
 
-diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-index cff6bbd..f324fa6 100644
---- a/drivers/mtd/hyperbus/Kconfig
-+++ b/drivers/mtd/hyperbus/Kconfig
-@@ -14,6 +14,8 @@ if MTD_HYPERBUS
- 
- config HBMC_AM654
- 	tristate "HyperBus controller driver for AM65x SoC"
-+	select OF
-+	select REGMAP
- 	select MULTIPLEXER
- 	select MUX_MMIO
- 	help
+5. Use rip-relative addressing in per_cpu_read_stable(), which make it
+PIE-ready.
+
+"size" and Peter's compare do not seem to show the impact on code size
+reduction correctly. Summing the code size according to nm on defconfig
+shows a minor reduction from 11349763 to 11339840 (0.09%).
+
+Nadav Amit (7):
+  compiler: Report x86 segment support
+  x86/percpu: Use compiler segment prefix qualifier
+  x86/percpu: Use C for percpu accesses when possible
+  x86: Fix possible caching of current_task
+  percpu: Assume preemption is disabled on per_cpu_ptr()
+  x86/percpu: Optimized arch_raw_cpu_ptr()
+  x86/current: Aggressive caching of current
+
+ arch/x86/include/asm/current.h         |  30 +++
+ arch/x86/include/asm/fpu/internal.h    |   7 +-
+ arch/x86/include/asm/percpu.h          | 293 +++++++++++++++++++------
+ arch/x86/include/asm/preempt.h         |   3 +-
+ arch/x86/include/asm/resctrl_sched.h   |  14 +-
+ arch/x86/kernel/cpu/Makefile           |   1 +
+ arch/x86/kernel/cpu/common.c           |   7 +-
+ arch/x86/kernel/cpu/current.c          |  16 ++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |   4 +-
+ arch/x86/kernel/process_32.c           |   4 +-
+ arch/x86/kernel/process_64.c           |   4 +-
+ include/asm-generic/percpu.h           |  12 +
+ include/linux/compiler-gcc.h           |   4 +
+ include/linux/compiler.h               |   2 +-
+ include/linux/percpu-defs.h            |  33 ++-
+ 15 files changed, 346 insertions(+), 88 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/current.c
+
 -- 
-2.7.4
+2.17.1
 
