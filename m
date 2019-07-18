@@ -2,114 +2,151 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDE4C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA505C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105112173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5F62173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="yx9okcxf"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="MfU7zanx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389407AbfGRINj (ORCPT
+        id S2389451AbfGRINq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:13:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53288 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387777AbfGRINh (ORCPT
+        Thu, 18 Jul 2019 04:13:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44159 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387777AbfGRINo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:13:37 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so24612418wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:13:35 -0700 (PDT)
+        Thu, 18 Jul 2019 04:13:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so12228993pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:13:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=nThpdK5yO2OfCE8SuE9Qiy+7h9LlRqpG8oEJp9t7qAA=;
-        b=yx9okcxfEfopABERJdTBJBxvDVVkqSqCNVLbxs6ftK0mWnDtLlAL3cnQSrKIrqZQB6
-         Myk598P7HPwm+4Ih1c8U6VhZSaljnFzbLzQyojI9ZotTicPt+KI9A/67chBOElMGXBNx
-         YqFQHneklE2yZ6P6ftQpQ0H01SUxSUjzViXBVAiyT1eKfm1eUZWjTdjPrU6KFuL/xlFj
-         SqE5DenSFXx91R8pllYTzPa0vuN6FDUKjf2ziQMfQlJ2G0RbBanqSUulMAqtzkyQYKIP
-         K1kphWNTxlum/hUN6mTk7J1/SyNx1bxflLWHOZjX+x2rLLjb9G03AVxN2ezAib8/6ZMs
-         kxKw==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WEPQWB9mL7qVaCOqVBJLCz5vsDHBMIw1+BdS4ATmzgQ=;
+        b=MfU7zanxbv9W4UR9Jm9cRC1ssg0R8tJalTrmiDVVaixvRRDkLeAVGFMA/uNkbpOa+D
+         jvpp9Z5eb417ob7VF4kFtVHZC48Lck2SAulQIXeJgt1v8Dl7LeD5SOsZ2Mbw/OPTZDQR
+         9CrmsuhLaWXhojYzNwye0Px6EFygP/7sSZUBBK/dh8/PlRTfwvsVYh3w0WVGd4sm32W8
+         OfFCrOH5636iRoq5zvvnmEI0Gwp093U9jrZm8W6O9jCtw75PA8Hmnzyi+lPlhfYn3h1s
+         z/y3Qu9eORQGiqfnYehet7qlxgR+YqMzKt9G4yVGU7yp5SdTh1GSD+3b8ywVvgFXWIJ4
+         +d9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=nThpdK5yO2OfCE8SuE9Qiy+7h9LlRqpG8oEJp9t7qAA=;
-        b=JUCGVqwNBigoREQiNizGatZ9rhK28pSkhaO4WZ1imhI/GXZxluL0IBm3xiaysTvCHu
-         ruYNLb07aKzI8HjAqstvrPTlDY0NnRN1D6Bn/eWg8jWjQZvgRbGoqUsJpRzHeOe59dpY
-         T6nnjQNbdPyoE3qsq7U88LZIBbxNKmvoRUDjktUTM+XOBg9HwOLZJdfDVlowdHmtPeXQ
-         Rqs+GtkMGyx6dFLsCvcj+d1nt1WX14Pc61sbBSv/FfsFjK9evxtJCLBtOjXhvHG5w46W
-         aFjUSHzrUoQx17rrUxNQDIevQFa2AzaKN6gIhsyJhjhliW5/RFjZx/avqC9ge7tEgpaB
-         Zy9Q==
-X-Gm-Message-State: APjAAAWigWqBmxi9oJPjDHAMfZV8kZploIkilL+h1ex/Boip6+wTZB6O
-        7lt+nY6+eLthtiRDtBacZx0=
-X-Google-Smtp-Source: APXvYqyiKE+ZNi3kj4Soc3BnxSsuO5dLIlqnXPQl+JfrF7CA85nJaFOHlXKrYsQUD4QnyB2i9EC0Bg==
-X-Received: by 2002:a1c:d185:: with SMTP id i127mr42236985wmg.63.1563437615136;
-        Thu, 18 Jul 2019 01:13:35 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d10sm31770837wro.18.2019.07.18.01.13.34
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WEPQWB9mL7qVaCOqVBJLCz5vsDHBMIw1+BdS4ATmzgQ=;
+        b=XzLKjEqauHrMdakV2m0SZnX8ChO0avvcq5ArS+n3WBiilBAdX7LNcMzqPXUqo7/XQN
+         0eb2oHvSHE9w51U+2cj/d7KvF3I2du5bhJ+EbvIBh1BG1oERC/l3+Cpk0Mwub9EJwpXO
+         TN7l0N4AXPgbzxlsuJh1QddvvDWiSt6VnPJj0X7qj11Z26CRw9gKTu0w1DCD1lW6Embw
+         KTbc+APq90DlHpMLwCxntq5HX4jFdfTPR7wNPBjZyZfbRF6N3ns4at/TEkemYgBVvJfU
+         1bwjID0hdwxQO8+wa4fbodxz7Hn7+N4Vg5+Dkha2tnNl5F2Rz/FF0YUdIgGi1vXvU361
+         H2AQ==
+X-Gm-Message-State: APjAAAWfaDPHbOoDM2qZcTyZ2/8g1TyDSOWMFh/m0lNPc3Gwx8liQPsO
+        b+Oh/xxgQ7JCH8nqpaPtK2Q=
+X-Google-Smtp-Source: APXvYqwYbAyTAJi5PUBKz5SoezdiiL/6tSMEnS1yZRWW4nvvCzwLv5HlG+A48+VgqzdCLGCq9W2gxg==
+X-Received: by 2002:a63:490a:: with SMTP id w10mr45466506pga.6.1563437623905;
+        Thu, 18 Jul 2019 01:13:43 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id f72sm37999820pjg.10.2019.07.18.01.13.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 01:13:34 -0700 (PDT)
-Message-ID: <5d302a2e.1c69fb81.6850c.314f@mx.google.com>
-Date:   Thu, 18 Jul 2019 01:13:34 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 18 Jul 2019 01:13:43 -0700 (PDT)
+Subject: Re: [PATCH v2 04/13] powerpc/pseries/svm: Add helpers for
+ UV_SHARE_PAGE and UV_UNSHARE_PAGE
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>
+References: <20190713060023.8479-1-bauerman@linux.ibm.com>
+ <20190713060023.8479-5-bauerman@linux.ibm.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <4fcc84ae-b93a-b5f1-fba4-b0e2af7b727c@ozlabs.ru>
+Date:   Thu, 18 Jul 2019 18:13:37 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.1.18-54-ga80425902cdb
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-5.1.y
-In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
-References: <20190718030053.287374640@linuxfoundation.org>
-Subject: Re: [PATCH 5.1 00/54] 5.1.19-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <20190713060023.8479-5-bauerman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.1.y boot: 135 boots: 1 failed, 133 passed with 1 offline =
-(v5.1.18-54-ga80425902cdb)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.1.y/kernel/v5.1.18-54-ga80425902cdb/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
-/kernel/v5.1.18-54-ga80425902cdb/
 
-Tree: stable-rc
-Branch: linux-5.1.y
-Git Describe: v5.1.18-54-ga80425902cdb
-Git Commit: a80425902cdbd5ab05f9f9af4e992fee397a1d47
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 77 unique boards, 27 SoC families, 17 builds out of 209
+On 13/07/2019 16:00, Thiago Jung Bauermann wrote:
+> From: Ram Pai <linuxram@us.ibm.com>
+> 
+> These functions are used when the guest wants to grant the hypervisor
+> access to certain pages.
+> 
+> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/ultravisor-api.h |  2 ++
+>   arch/powerpc/include/asm/ultravisor.h     | 15 +++++++++++++++
+>   2 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
+> index fe9a0d8d7673..c7513bbadf57 100644
+> --- a/arch/powerpc/include/asm/ultravisor-api.h
+> +++ b/arch/powerpc/include/asm/ultravisor-api.h
+> @@ -25,6 +25,8 @@
+>   #define UV_UNREGISTER_MEM_SLOT		0xF124
+>   #define UV_PAGE_IN			0xF128
+>   #define UV_PAGE_OUT			0xF12C
+> +#define UV_SHARE_PAGE			0xF130
+> +#define UV_UNSHARE_PAGE			0xF134
+>   #define UV_PAGE_INVAL			0xF138
+>   #define UV_SVM_TERMINATE		0xF13C
+>   
+> diff --git a/arch/powerpc/include/asm/ultravisor.h b/arch/powerpc/include/asm/ultravisor.h
+> index f5dc5af739b8..f7418b663a0e 100644
+> --- a/arch/powerpc/include/asm/ultravisor.h
+> +++ b/arch/powerpc/include/asm/ultravisor.h
+> @@ -91,6 +91,21 @@ static inline int uv_svm_terminate(u64 lpid)
+>   
+>   	return ucall(UV_SVM_TERMINATE, retbuf, lpid);
+>   }
+> +
+> +static inline int uv_share_page(u64 pfn, u64 npages)
+> +{
+> +	unsigned long retbuf[UCALL_BUFSIZE];
+> +
+> +	return ucall(UV_SHARE_PAGE, retbuf, pfn, npages);
 
-Boot Failure Detected:
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm4708-smartrg-sr400ac: 1 failed lab
+What is in that retbuf? Can you pass NULL instead?
 
-Offline Platforms:
 
-arm64:
+> +}
+> +
+> +static inline int uv_unshare_page(u64 pfn, u64 npages)
+> +{
+> +	unsigned long retbuf[UCALL_BUFSIZE];
+> +
+> +	return ucall(UV_UNSHARE_PAGE, retbuf, pfn, npages);
+> +}
+> +
+>   #endif /* !__ASSEMBLY__ */
+>   
+>   #endif	/* _ASM_POWERPC_ULTRAVISOR_H */
+> 
 
-    defconfig:
-        gcc-8
-            meson-gxbb-odroidc2: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+-- 
+Alexey
