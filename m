@@ -2,99 +2,111 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7FBC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF18C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9E821019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A2321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:53:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YSUYAiWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390445AbfGRNw5 (ORCPT
+        id S2390529AbfGRNxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:52:57 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46664 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfGRNw5 (ORCPT
+        Thu, 18 Jul 2019 09:53:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43900 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfGRNxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:52:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z1so28767254wru.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 06:52:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2defXGb6i7e6Mhp08ZGJPyYpwSINwFXbDxPiExwBqLw=;
-        b=CMJHMbnau61zLAZQXPOJ5T5SnDYuskeGreQc8/uFEn9bNmAy4BUIyUbKS6x5vktaoS
-         //FWIOHpPUJxqpCxktLeJgBpqf3WJtJvS2byDoZIRixBtxFC8SM0c/QZQcXxlvaTdIfK
-         o/OBiKQYgNmE72eJtJL5/sQZYwe/slRBd/9wms4ggoohAVpmhLWxbd/HPgJZQLSK/Fui
-         tKkh437xiApEe4vkD8ZkBGaVkfSV0PGE3LtWCvm3zszjMIQiu33BxK17gss9ZK/R6ZcF
-         SWVMeOxTL4pxV1yMbfXF0nUknLKYz2E6YHA/FShF7KmriDwOnNMVvBgLfELUPd3FuhU2
-         s1Pg==
-X-Gm-Message-State: APjAAAVKZPrjSjvGSkxyd9uPOa89mJNu5c9GYlnZL/pBUfk64b96E3vm
-        ryAir16+lo/s07QV5ynOndmv+c5MoCHH5Q==
-X-Google-Smtp-Source: APXvYqyWEoHk4aK6RXQz+bas0Gq722UUqaEAn6c901GtELogmOWF10zIm+PB7Lewb7/ketJ/Fti5Rw==
-X-Received: by 2002:adf:f186:: with SMTP id h6mr37752268wro.274.1563457975062;
-        Thu, 18 Jul 2019 06:52:55 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
-        by smtp.gmail.com with ESMTPSA id r123sm24558962wme.7.2019.07.18.06.52.54
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 06:52:54 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: x86/vPMU: refine kvm_pmu err msg when event
- creation failed
-To:     Like Xu <like.xu@linux.intel.com>, Avi Kivity <avi@scylladb.com>
-Cc:     Joe Perches <joe@perches.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190718053514.59742-1-like.xu@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <3d1d84a0-7c63-e470-a1d1-b32f56e52f74@redhat.com>
-Date:   Thu, 18 Jul 2019 15:52:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 18 Jul 2019 09:53:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KL6fWBl+CLFFt4aWnjiO8B6w4bZAMG4MS2WQ/d3Yocs=; b=YSUYAiWqzr3DBTxBUoIHCVB9rg
+        1l5UxWSMkH1h/NyNXxkVxOEBP13QgeXflotf//fBzpymWqjRzKYlyQbtYAJ0sEdenTljMTXBJoU5J
+        dHQCFwtw+wAF3z9vBSYbpFdewzL/hcKwjrVHp/6aOhWxR0HSje30mnK7GqY0shlu2FuxJkVHeBznA
+        Cuh244+8gWxUaDV2pmiwLQcIytasglWvs5AuqkiP8t847bXeXybls5t9tABs1OBcimU1Bjss70oGe
+        OInyY2DJp2+rSAvvulh4fdxCDjMvMd/Mt2BsYmETi589WR2s2Vw0obDkk2Gi3LhTVQ0ScRDtOOux5
+        Dlr/4nVQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ho6qb-0003u4-GB; Thu, 18 Jul 2019 13:53:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id C768320B979A4; Thu, 18 Jul 2019 15:53:22 +0200 (CEST)
+Message-Id: <20190718135206.012378477@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 18 Jul 2019 15:49:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jan Stancek <jstancek@redhat.com>,
+        Waiman Long <longman@redhat.com>, dbueso@suse.de,
+        mingo@redhat.com, jade.alglave@arm.com, paulmck@linux.vnet.ibm.com
+Subject: [PATCH 2/4] rwsem: Add missing ACQUIRE to read_slowpath sleep loop
+References: <20190718134954.496297975@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190718053514.59742-1-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/19 07:35, Like Xu wrote:
-> If a perf_event creation fails due to any reason of the host perf
-> subsystem, it has no chance to log the corresponding event for guest
-> which may cause abnormal sampling data in guest result. In debug mode,
-> this message helps to understand the state of vPMC and we may not
-> limit the number of occurrences but not in a spamming style.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> ---
->  arch/x86/kvm/pmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index aa5a2597305a..cedaa01ceb6f 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -131,8 +131,8 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
->  						 intr ? kvm_perf_overflow_intr :
->  						 kvm_perf_overflow, pmc);
->  	if (IS_ERR(event)) {
-> -		printk_once("kvm_pmu: event creation failed %ld\n",
-> -			    PTR_ERR(event));
-> +		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
-> +			    PTR_ERR(event), pmc->idx);
->  		return;
->  	}
->  
-> 
+While reviewing another read_slowpath patch, both Will and I noticed
+another missing ACQUIRE, namely:
 
-Queued, thanks.
+  X = 0;
 
-Paolo
+  CPU0			CPU1
+
+  rwsem_down_read()
+    for (;;) {
+      set_current_state(TASK_UNINTERRUPTIBLE);
+
+                        X = 1;
+                        rwsem_up_write();
+                          rwsem_mark_wake()
+                            atomic_long_add(adjustment, &sem->count);
+                            smp_store_release(&waiter->task, NULL);
+
+      if (!waiter.task)
+        break;
+
+      ...
+    }
+
+  r = X;
+
+Allows 'r == 0'.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: Will Deacon <will@kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/locking/rwsem.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -1069,8 +1069,10 @@ rwsem_down_read_slowpath(struct rw_semap
+ 	/* wait to be given the lock */
+ 	while (true) {
+ 		set_current_state(state);
+-		if (!waiter.task)
++		if (!smp_load_acquire(&waiter.task)) {
++			/* Orders against rwsem_mark_wake()'s smp_store_release() */
+ 			break;
++		}
+ 		if (signal_pending_state(state, current)) {
+ 			raw_spin_lock_irq(&sem->wait_lock);
+ 			if (waiter.task)
+
+
