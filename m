@@ -2,66 +2,57 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D353BC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A79C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89A92084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D682084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390980AbfGRSzh (ORCPT
+        id S2391069AbfGRSz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:55:37 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:54154 "EHLO
+        Thu, 18 Jul 2019 14:55:59 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:54178 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbfGRSzg (ORCPT
+        with ESMTP id S1727762AbfGRSz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:55:36 -0400
+        Thu, 18 Jul 2019 14:55:58 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4E14F1527D810;
-        Thu, 18 Jul 2019 11:55:35 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 11:55:34 -0700 (PDT)
-Message-Id: <20190718.115534.1778444973119064345.davem@davemloft.net>
-To:     jbenc@redhat.com
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, yhs@fb.com, daniel@iogearbox.net,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH AUTOSEL 5.2 226/249] selftests: bpf: fix inlines in
- test_lwt_seg6local
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 35E8F1527D810;
+        Thu, 18 Jul 2019 11:55:58 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 11:55:57 -0700 (PDT)
+Message-Id: <20190718.115557.1387889272907500684.davem@davemloft.net>
+To:     hslester96@gmail.com
+Cc:     dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] liquidio: Replace vmalloc + memset with vzalloc
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190718093654.0a3426f5@redhat.com>
-References: <20190717114334.5556a14e@redhat.com>
-        <20190717234757.GD3079@sasha-vm>
-        <20190718093654.0a3426f5@redhat.com>
+In-Reply-To: <20190718074542.16329-1-hslester96@gmail.com>
+References: <20190718074542.16329-1-hslester96@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jul 2019 11:55:35 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jul 2019 11:55:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
-Date: Thu, 18 Jul 2019 09:36:54 +0200
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Thu, 18 Jul 2019 15:45:42 +0800
 
-> On Wed, 17 Jul 2019 19:47:57 -0400, Sasha Levin wrote:
->> It fixes a bug, right?
+> Use vzalloc and vzalloc_node instead of using vmalloc and
+> vmalloc_node and then zeroing the allocated memory by
+> memset 0.
+> This simplifies the code.
 > 
-> A bug in selftests. And quite likely, it probably happens only with
-> some compiler versions.
-> 
-> I don't think patches only touching tools/testing/selftests/ qualify
-> for stable in general. They don't affect the end users.
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-It has a significant impact on automated testing which lots of
-individuals and entities perform, therefore I think it very much is
--stable material.
+Applied.
