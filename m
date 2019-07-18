@@ -2,172 +2,137 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA78C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4008FC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762E620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C962184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="t97KHtQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390622AbfGROWn (ORCPT
+        id S2390362AbfGROZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:22:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32340 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfGROWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:22:42 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 07B1D6EB88;
-        Thu, 18 Jul 2019 14:22:42 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-157.ams2.redhat.com [10.36.117.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D073A60A35;
-        Thu, 18 Jul 2019 14:22:39 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v1] drivers/base/node.c: Simplify unregister_memory_block_under_nodes()
-Date:   Thu, 18 Jul 2019 16:22:39 +0200
-Message-Id: <20190718142239.7205-1-david@redhat.com>
+        Thu, 18 Jul 2019 10:25:54 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34152 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfGROZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:25:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEOGU7129764;
+        Thu, 18 Jul 2019 14:25:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=bP97LQ2rSarzasJiMD4pbW+EGY25SG5SddSKUGqYY9U=;
+ b=t97KHtQpbJtVeGXv8xB+M2/C10COpA4rPcuaOzOq4GF3VhBkcytDC58BZ9ROntOqsNKI
+ cZDcb5uiJHqCI8Rhcq3WdDh1Iph1xAxZO0k1tl8GjLlfIyDB/nbfPQm6wwMRX3sZ+hYv
+ u86psqTiAciZPBp2uccYv6nZpB5QEbvBXoOzys5J6ggvZ6GRohIIHds9LRYnjpfww59A
+ wiHLSQyE5M7bq0aeMcGSi9RxbG7N0mpxg64fGVkjLR6PLuj4e94f1FSFZHwgUaXj0NWO
+ hQ3pyea+PnmIlKvyxpNsnkSHLPe6UQneMnh7dYZSwDOxXCJtz6aMu1J2leWGRd/N9l/I YQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2tq78q18fp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 14:25:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEMoho116932;
+        Thu, 18 Jul 2019 14:25:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2tt77hrvnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 14:25:26 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6IEPLeg001422;
+        Thu, 18 Jul 2019 14:25:23 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 18 Jul 2019 14:25:21 +0000
+Date:   Thu, 18 Jul 2019 10:25:15 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathias Krause <minipli@googlemail.com>
+Subject: Re: [PATCH] padata: Replace delayed timer with immediate workqueue
+ in padata_reorder
+Message-ID: <20190718142515.teinr4da3gps5r7a@ca-dmjordan1.us.oracle.com>
+References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
+ <20190716163253.24377-1-daniel.m.jordan@oracle.com>
+ <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
+ <20190717232136.pboms73sqf6fdzic@ca-dmjordan1.us.oracle.com>
+ <20190718033008.wle67s7esg27mrtz@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 18 Jul 2019 14:22:42 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718033008.wle67s7esg27mrtz@gondor.apana.org.au>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907180150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907180150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't allow to offline memory block devices that belong to multiple
-numa nodes. Therefore, such devices can never get removed. It is
-sufficient to process a single node when removing the memory block.
+On Thu, Jul 18, 2019 at 11:30:08AM +0800, Herbert Xu wrote:
+> On Wed, Jul 17, 2019 at 07:21:36PM -0400, Daniel Jordan wrote:
+> >
+> > > @@ -388,12 +336,12 @@ void padata_do_serial(struct padata_priv *padata)
+> > >  	pqueue = per_cpu_ptr(pd->pqueue, cpu);
+> > >  
+> > >  	spin_lock(&pqueue->reorder.lock);
+> > > -	atomic_inc(&pd->reorder_objects);
+> > >  	list_add_tail(&padata->list, &pqueue->reorder.list);
+> > > +	atomic_inc(&pd->reorder_objects);
+> > 
+> > Why switch the lines?  Seems ok to not do this.
+> 
+> This is crucial because otherwise the memory barrier won't apply
+> to the list insertion.  With this patch, we are now using the list
+> insertion as the indicator, rather than reorder_objects.
 
-Remember for each memory block if it belongs to no, a single, or mixed
-nodes, so we can use that information to skip unregistering or print a
-warning (essentially a safety net to catch BUGs).
+Which memory barrier do you mean?  I think you're referring to the one that
+atomic_inc might provide?  If so, the memory model maintainers can correct me
+here, but my understanding is that RMW atomic ops that don't return values are
+unordered, so switching the lines has no effect.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c  |  1 +
- drivers/base/node.c    | 40 ++++++++++++++++------------------------
- include/linux/memory.h |  4 +++-
- 3 files changed, 20 insertions(+), 25 deletions(-)
+Besides, the smp_mb__after_atomic is what orders the list insertion with the
+trylock of pd->lock.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 20c39d1bcef8..154d5d4a0779 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -674,6 +674,7 @@ static int init_memory_block(struct memory_block **memory,
- 	mem->state = state;
- 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
- 	mem->phys_device = arch_get_memory_phys_device(start_pfn);
-+	mem->nid = NUMA_NO_NODE;
- 
- 	ret = register_memory(mem);
- 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 75b7e6f6535b..29d27b8d5fda 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -759,8 +759,6 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
- 	int ret, nid = *(int *)arg;
- 	unsigned long pfn, sect_start_pfn, sect_end_pfn;
- 
--	mem_blk->nid = nid;
--
- 	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
- 	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
- 	sect_end_pfn += PAGES_PER_SECTION - 1;
-@@ -789,6 +787,13 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
- 			if (page_nid != nid)
- 				continue;
- 		}
-+
-+		/* this memory block spans this node */
-+		if (mem_blk->nid == NUMA_NO_NODE)
-+			mem_blk->nid = nid;
-+		else
-+			mem_blk->nid = NUMA_NO_NODE - 1;
-+
- 		ret = sysfs_create_link_nowarn(&node_devices[nid]->dev.kobj,
- 					&mem_blk->dev.kobj,
- 					kobject_name(&mem_blk->dev.kobj));
-@@ -804,32 +809,19 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
- }
- 
- /*
-- * Unregister memory block device under all nodes that it spans.
-- * Has to be called with mem_sysfs_mutex held (due to unlinked_nodes).
-+ * Unregister a memory block device under the node it spans. Memory blocks
-+ * with multiple nodes cannot be offlined and therefore also never be removed.
-  */
- void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
- {
--	unsigned long pfn, sect_start_pfn, sect_end_pfn;
--	static nodemask_t unlinked_nodes;
--
--	nodes_clear(unlinked_nodes);
--	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
--	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
--	for (pfn = sect_start_pfn; pfn <= sect_end_pfn; pfn++) {
--		int nid;
-+	if (mem_blk->nid == NUMA_NO_NODE ||
-+	    WARN_ON_ONCE(mem_blk->nid == NUMA_NO_NODE - 1))
-+		return;
- 
--		nid = get_nid_for_pfn(pfn);
--		if (nid < 0)
--			continue;
--		if (!node_online(nid))
--			continue;
--		if (node_test_and_set(nid, unlinked_nodes))
--			continue;
--		sysfs_remove_link(&node_devices[nid]->dev.kobj,
--			 kobject_name(&mem_blk->dev.kobj));
--		sysfs_remove_link(&mem_blk->dev.kobj,
--			 kobject_name(&node_devices[nid]->dev.kobj));
--	}
-+	sysfs_remove_link(&node_devices[mem_blk->nid]->dev.kobj,
-+		 kobject_name(&mem_blk->dev.kobj));
-+	sysfs_remove_link(&mem_blk->dev.kobj,
-+		 kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
- }
- 
- int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 02e633f3ede0..c91af10d5fb4 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -33,7 +33,9 @@ struct memory_block {
- 	void *hw;			/* optional pointer to fw/hw data */
- 	int (*phys_callback)(struct memory_block *);
- 	struct device dev;
--	int nid;			/* NID for this memory block */
-+	int nid;			/* NID for this memory block.
-+					   - NUMA_NO_NODE: uninitialized
-+					   - NUMA_NO_NODE - 1: mixed nodes */
- };
- 
- int arch_get_memory_phys_device(unsigned long start_pfn);
--- 
-2.21.0
+> > > @@ -538,8 +479,6 @@ static void padata_flush_queues(struct parallel_data *pd)
+> > >  		flush_work(&pqueue->work);
+> > >  	}
+> > >  
+> > > -	del_timer_sync(&pd->timer);
+> > > -
+> > 
+> > >  	if (atomic_read(&pd->reorder_objects))
+> > >  		padata_reorder(pd);
+> > 
+> > I think we can do away with reorder_objects entirely by checking pd->cpu's
+> > reorder queue here.
+> 
+> As I said this will probably disappear altogether since we can't
+> guarantee that padata_reorder will actually do anything if the
+> jobs are stuck in async crypto processing.
 
+Ok, makes sense.
