@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4BDC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B479BC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676D72077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849232173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419687;
-	bh=X2/lEcq6scKsMBWfNNSoFC09TD54ijIEPNUAJEBlZag=;
+	s=default; t=1563419691;
+	bh=2bO7GwenRbsGWRcyCSnUjWse5RkLIAUpMEEIqGQFtrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tUYY0z5icTeG8gWFq/i7KCRXXF23PETRQlOG8ODV4pa+LOiBkb7TXGfrWoTCIhxUD
-	 WBA5andnYq0n/Sp5rX/cZp3B6oP4nGtP8Npcg1s0r9gjS5ISqVNaBu/suKkfT7rXom
-	 2Rb3XIbA4G8otFzIZHH/lbmXSJXmCq6N0O9HUil0=
+	b=CrJk/W1suR1jHGEh7g49pS/977Zyw4sFR0vwmeoKqID8GusEJawO3F9iQS4gjVTyg
+	 zoZt3LmEXop+T1a8jX65ckzyTBJ+TK6neX/ZraFvNar8Uzvv4VdlCqdZAowx7TpkKT
+	 eSWyppJJ/5rTvKr5RZ4TA3MmljWKvFnuehENl4Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403915AbfGRDOq (ORCPT
+        id S2391885AbfGRDOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50904 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389327AbfGRDOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:41 -0400
+        id S2391853AbfGRDOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:38 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7604E21855;
-        Thu, 18 Jul 2019 03:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A0C21851;
+        Thu, 18 Jul 2019 03:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419680;
-        bh=X2/lEcq6scKsMBWfNNSoFC09TD54ijIEPNUAJEBlZag=;
+        s=default; t=1563419677;
+        bh=2bO7GwenRbsGWRcyCSnUjWse5RkLIAUpMEEIqGQFtrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGyGwIO0SLrtMxNaK7pffZ2j4FoqRDitiF/FtP26L3D8uzQWehx6K1jofvNL5NKy4
-         zebWcsXah0/pbb7qE3mkMQsXDixeHfAG3W7AUF0vpaMojHJvkEpniTiII08eZ8NEQY
-         7UCwRODeyS6py2ovVXpi6vIkM3W/G8xmINCRye00=
+        b=JMz5fRzu7ZHmUUpxgoSulepLjoxQ/LQo4MJd5zCwogHCVHnuiF43+5ld9vvd3CHrB
+         o0mDQVdqfPrq4nXLYnYN12z0zcwbfU28MOPToi+UQIdwkQZXkqg7BQcYICXj8aovyP
+         m+5XWlElQgBO89c5Lp8pSC3GYIBwdY02ijw2pOCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andreas Fritiofson <andreas.fritiofson@unjo.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 19/40] USB: serial: ftdi_sio: add ID for isodebug v1
-Date:   Thu, 18 Jul 2019 12:02:15 +0900
-Message-Id: <20190718030046.745450870@linuxfoundation.org>
+        stable@vger.kernel.org, Hongjie Fang <hongjiefang@asrmicro.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 4.4 17/40] fscrypt: dont set policy for a dead directory
+Date:   Thu, 18 Jul 2019 12:02:13 +0900
+Message-Id: <20190718030045.019515227@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -60,44 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Fritiofson <andreas.fritiofson@unjo.com>
+From: Hongjie Fang <hongjiefang@asrmicro.com>
 
-commit f8377eff548170e8ea8022c067a1fbdf9e1c46a8 upstream.
+commit 5858bdad4d0d0fc18bf29f34c3ac836e0b59441f upstream.
 
-This adds the vid:pid of the isodebug v1 isolated JTAG/SWD+UART. Only the
-second channel is available for use as a serial port.
+The directory may have been removed when entering
+fscrypt_ioctl_set_policy().  If so, the empty_dir() check will return
+error for ext4 file system.
 
-Signed-off-by: Andreas Fritiofson <andreas.fritiofson@unjo.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+ext4_rmdir() sets i_size = 0, then ext4_empty_dir() reports an error
+because 'inode->i_size < EXT4_DIR_REC_LEN(1) + EXT4_DIR_REC_LEN(2)'.  If
+the fs is mounted with errors=panic, it will trigger a panic issue.
+
+Add the check IS_DEADDIR() to fix this problem.
+
+Fixes: 9bd8212f981e ("ext4 crypto: add encryption policy and password salt support")
+Cc: <stable@vger.kernel.org> # v4.1+
+Signed-off-by: Hongjie Fang <hongjiefang@asrmicro.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/usb/serial/ftdi_sio.c     |    1 +
- drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
- 2 files changed, 7 insertions(+)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1024,6 +1024,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
- 	/* EZPrototypes devices */
- 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
-+	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
- 	{ }					/* Terminating entry */
- };
+---
+ fs/ext4/crypto_policy.c |    2 ++
+ fs/f2fs/crypto_policy.c |    2 ++
+ 2 files changed, 4 insertions(+)
+
+--- a/fs/ext4/crypto_policy.c
++++ b/fs/ext4/crypto_policy.c
+@@ -111,6 +111,8 @@ int ext4_process_policy(const struct ext
+ 	if (!ext4_inode_has_encryption_context(inode)) {
+ 		if (!S_ISDIR(inode->i_mode))
+ 			return -EINVAL;
++		if (IS_DEADDIR(inode))
++			return -ENOENT;
+ 		if (!ext4_empty_dir(inode))
+ 			return -ENOTEMPTY;
+ 		return ext4_create_encryption_context_from_policy(inode,
+--- a/fs/f2fs/crypto_policy.c
++++ b/fs/f2fs/crypto_policy.c
+@@ -99,6 +99,8 @@ int f2fs_process_policy(const struct f2f
+ 		return -EINVAL;
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1542,3 +1542,9 @@
- #define CHETCO_SEASMART_DISPLAY_PID	0xA5AD /* SeaSmart NMEA2000 Display */
- #define CHETCO_SEASMART_LITE_PID	0xA5AE /* SeaSmart Lite USB Adapter */
- #define CHETCO_SEASMART_ANALOG_PID	0xA5AF /* SeaSmart Analog Adapter */
-+
-+/*
-+ * Unjo AB
-+ */
-+#define UNJO_VID			0x22B7
-+#define UNJO_ISODEBUG_V1_PID		0x150D
+ 	if (!f2fs_inode_has_encryption_context(inode)) {
++		if (IS_DEADDIR(inode))
++			return -ENOENT;
+ 		if (!f2fs_empty_dir(inode))
+ 			return -ENOTEMPTY;
+ 		return f2fs_create_encryption_context_from_policy(inode,
 
 
