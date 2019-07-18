@@ -2,135 +2,154 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC80C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56E3C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D572521783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="LeyNW4RV";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZIoHSOre"
+	by mail.kernel.org (Postfix) with ESMTP id 8BBA221783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390117AbfGRMHQ (ORCPT
+        id S2390186AbfGRMHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:07:16 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:12700 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726715AbfGRMHQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:07:16 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IC43Vb032713;
-        Thu, 18 Jul 2019 05:07:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=proofpoint;
- bh=EZJeBTVR2eK/S8AamVrzFbA3W8V1j26PA4cJalCC+V4=;
- b=LeyNW4RVGgPxtUbMagKk1Sm+i1vd2s8nb9DI2PVpusg8Wo6hD0CfnbVtzwYyQWl7B45E
- r/PHqnrcppMx6Zsag7RhOy46zhH6HdtM+sD4IL9J1U5NL0ydZtOxauCMc/B6uFK+JQnM
- WOzUMg24U9N8ZG5HaD3CDcy7HUZo61R7cAnt0p3Y5E1zSIgxUjBy6A8cH58ds96dF7vV
- G+1CXFchv5jU2RBhvhjT55UfyZorVH6QIq4GV2SqAtx/X2sFGd6txz0935ilubayM8c0
- Jvg4sRjfROZp86ri0a0GIWOXGiZVwyl1HJmHpb76Wkax64zoKzpgDrA6Xhe146EKkCl4 cg== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=jank@cadence.com
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2050.outbound.protection.outlook.com [104.47.42.50])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2tqavwv732-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 05:07:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cq+cIGYLfa60tqeDhdwv0Y2KOsVBLjqF49FbdEflDwEDYNlH4QlXvkPgjFfqW9cIbccCiZBYjrBepOxpb3KlgFkNwKGhCJKXiiWUmuzNubprmjJG/ZixZNdXN2QOXWbmDabvSkLdn7T10aQPKZlmQZTcUUjNCwAvx0dNW+q9+0T0Mn9Jf5pujvPS5KsFR4WkkEGT+B1BaGI2+NgVqW/XgoHsBb3QymkbdGWa5kGEF44mRScPVlB7zgdfbVC2MB6PpMrumbvYPOZf3CYn4MsAydFYqSUCJo7gn8iHDTgU/6f8LT3uUsP/1+R+cQlXIgDbMVh2lPq+BS9KpG2gzc8ZUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EZJeBTVR2eK/S8AamVrzFbA3W8V1j26PA4cJalCC+V4=;
- b=StoFDr5J1muYVdKZDugHHvAxXuM7PWOK0JteAbDMRkcVita+iKVG2D62buAlTgl43wnlQjC4g68Nw20GDhw1PbDjHHYspZJRu1gsIprtB1BiSrGagNZqglz5Gtj7oFwzOVwBY4w+0hJ2lMSrmklmABAYqx23cIevPa2xaOOWsSA9M6n9pfbzIcPu2H1KpfRsc772nxtKoSONzMvgIhhYXSPoOr1UhtfwNfYeXfxNpLdL1kQnbxSK8CkEveo+lEuHtwdXJfKsG6N526li6IlnMqjs+Gd8+F02e+eDY+qxFTQKGndAUSKVVrdHVcK7s3NxqRDSD57NszXX7QUfcMQ6rQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=cadence.com;dmarc=pass action=none
- header.from=cadence.com;dkim=pass header.d=cadence.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EZJeBTVR2eK/S8AamVrzFbA3W8V1j26PA4cJalCC+V4=;
- b=ZIoHSOre0iSoMbncC1T0NBZ0NfYo5x+2rOgNwQsE4Lrged4JoioAyzuAc2i8aTPlEE8sLsTOOluco7GMHGtopV/nRTHv0RoTYmTCJriNT8ektQ6jxPpHMypWReLzgdBl4xvTsrLfMz73HERyFMumCb4XE6/cW/101M4ciKxdBos=
-Received: from CY1PR07MB2521.namprd07.prod.outlook.com (10.167.16.12) by
- CY1PR07MB2586.namprd07.prod.outlook.com (10.166.206.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Thu, 18 Jul 2019 12:07:09 +0000
-Received: from CY1PR07MB2521.namprd07.prod.outlook.com
- ([fe80::fdfa:c66c:60e5:9b07]) by CY1PR07MB2521.namprd07.prod.outlook.com
- ([fe80::fdfa:c66c:60e5:9b07%10]) with mapi id 15.20.2094.011; Thu, 18 Jul
- 2019 12:07:09 +0000
-From:   Jan Kotas <jank@cadence.com>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-CC:     Jan Kotas <jank@cadence.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] media: Add lane checks for Cadence CSI2TX
-Thread-Topic: [PATCH 2/3] media: Add lane checks for Cadence CSI2TX
-Thread-Index: AQHVPVokB1lRWRlUyU+zijqVl4MU4KbQQ/WAgAAD+wA=
-Date:   Thu, 18 Jul 2019 12:07:09 +0000
-Message-ID: <9CAC42FF-30B1-4540-B58B-82A81353D37C@global.cadence.com>
-References: <20190718111509.29924-1-jank@cadence.com>
- <20190718111509.29924-3-jank@cadence.com>
- <0fea09d4-1e8a-b9bf-b549-ee7cd72bd814@free.fr>
-In-Reply-To: <0fea09d4-1e8a-b9bf-b549-ee7cd72bd814@free.fr>
-Accept-Language: en-US, pl-PL
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 395807ea-7461-4826-4c37-08d70b7875a1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY1PR07MB2586;
-x-ms-traffictypediagnostic: CY1PR07MB2586:
-x-microsoft-antispam-prvs: <CY1PR07MB25864275C1A3679162872107D0C80@CY1PR07MB2586.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:513;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(36092001)(7736002)(6486002)(102836004)(25786009)(99286004)(6916009)(305945005)(6246003)(446003)(53936002)(229853002)(4744005)(11346002)(476003)(6506007)(478600001)(53546011)(6436002)(76176011)(14454004)(54906003)(8676002)(33656002)(76116006)(4326008)(71200400001)(256004)(486006)(81166006)(316002)(81156014)(3846002)(6116002)(71190400001)(66066001)(26005)(186003)(68736007)(6512007)(86362001)(8936002)(66556008)(66476007)(66946007)(91956017)(64756008)(2906002)(66446008)(5660300002)(15866825006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2586;H:CY1PR07MB2521.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bsYDt6s9UG4VgDgdYkT9IKKzGWQttqtTMl6M9TuwrVW5ZYpIVoGFRAZQc5BT7iqeMQkvzdGFwVU+M5GQhJMyY+TLOb/nvaKIpdFW0E0KwFsNPUhTcxGIkA9dbr5sy0088BOD/i/tnafapo/rby3VbECd6O/ZF+GpkjJa0XV4djHur8OYOeezZNLC4evus6TXalGrcYv3aoDB/Akb+G1Er2/wW61qQeG5cGR1krczKoS0R/d5AJJ32c/t5TCi2z/s/IhLXy9/iJfuiLQktqKs1ZxZop23ia7N4X82/wiBdY1LmbEu1P9sYYhkm3Q+ncqCaJKRlVRZlAjyvsbNqkG71XFV4piks1e8iFLNnB+OQK9bPRYb2LvTFbPpePrzWE230ZuzpupvNAPcx6qLwUJ7/DZSq4xGgtTiTks93gHt0v4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7B8C9BE056C7674682D4F18DFC3F4EF7@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 18 Jul 2019 08:07:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38042 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727813AbfGRMHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 08:07:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 71A4A307D970;
+        Thu, 18 Jul 2019 12:07:23 +0000 (UTC)
+Received: from [10.36.117.157] (ovpn-117-157.ams2.redhat.com [10.36.117.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EC5F61465;
+        Thu, 18 Jul 2019 12:07:20 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm,sparse: Fix deactivate_section for early sections
+To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
+Cc:     dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        mhocko@suse.com, aneesh.kumar@linux.ibm.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190715081549.32577-1-osalvador@suse.de>
+ <20190715081549.32577-2-osalvador@suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <d2268f86-f20d-22ff-e54f-48a2e609385b@redhat.com>
+Date:   Thu, 18 Jul 2019 14:07:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 395807ea-7461-4826-4c37-08d70b7875a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 12:07:09.2219
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jank@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2586
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=555 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180129
+In-Reply-To: <20190715081549.32577-2-osalvador@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 18 Jul 2019 12:07:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIDE4IEp1bCAyMDE5LCBhdCAxMzo1MiwgTWFyYyBHb256YWxleiA8bWFyYy53Lmdvbnph
-bGV6QGZyZWUuZnI+IHdyb3RlOg0KPiANCj4gRVhURVJOQUwgTUFJTA0KPiANCj4gDQo+IE9uIDE4
-LzA3LzIwMTkgMTM6MTUsIEphbiBLb3RhcyB3cm90ZToNCj4gDQo+PiBUaGlzIHBhdGNoIGFkZHMg
-bGluZSBjaGVja3MgZm9yIENTSTJUWCwgdG8gcHJldmVudA0KPj4gY2xvY2sgbGFuZSBiZWluZyB1
-c2VkIGFzIGEgZGF0YSBsYW5lLg0KPiANCj4gImxpbmUgY2hlY2tzIiBvciAibGFuZSBjaGVja3M/
-IF5fXg0KDQpZZXMsIHlvdeKAmXJlIHJpZ2h0LCBzaG91bGQgYmUgbGFuZSBjaGVja3MgOikNCg0K
-UmVnYXJkcywNCkphbg0KDQo+IA0KPiBOQjogY29tbWl0IG1lc3NhZ2VzIG1heSBiZSB1cCB0byA3
-Mi1jaGFyYWN0ZXItd2lkZSA7LSkNCj4gKE5vIG5lZWQgdG8gbGluZS13cmFwIGF0IDUwKQ0KPiAN
-Cj4gUmVnYXJkcy4NCg0K
+On 15.07.19 10:15, Oscar Salvador wrote:
+> deactivate_section checks whether a section is early or not
+> in order to either call free_map_bootmem() or depopulate_section_memmap().
+> Being the former for sections added at boot time, and the latter for
+> sections hotplugged.
+> 
+> The problem is that we zero section_mem_map, so the last early_section()
+> will always report false and the section will not be removed.
+> 
+> Fix this checking whether a section is early or not at function
+> entry.
+> 
+> Fixes: mmotm ("mm/sparsemem: Support sub-section hotplug")
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  mm/sparse.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 3267c4001c6d..1e224149aab6 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -738,6 +738,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+>  	struct mem_section *ms = __pfn_to_section(pfn);
+> +	bool section_is_early = early_section(ms);
+>  	struct page *memmap = NULL;
+>  	unsigned long *subsection_map = ms->usage
+>  		? &ms->usage->subsection_map[0] : NULL;
+> @@ -772,7 +773,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
+>  		unsigned long section_nr = pfn_to_section_nr(pfn);
+>  
+> -		if (!early_section(ms)) {
+> +		if (!section_is_early) {
+>  			kfree(ms->usage);
+>  			ms->usage = NULL;
+>  		}
+> @@ -780,7 +781,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
+>  	}
+>  
+> -	if (early_section(ms) && memmap)
+> +	if (section_is_early && memmap)
+>  		free_map_bootmem(memmap);
+>  	else
+>  		depopulate_section_memmap(pfn, nr_pages, altmap);
+> 
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+
+Thanks,
+
+David / dhildenb
