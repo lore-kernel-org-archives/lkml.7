@@ -2,123 +2,91 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD9EC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 04:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD56C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 04:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342A621019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 04:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661CD2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 04:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfGRENb (ORCPT
+        id S1726769AbfGRE1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 00:13:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58142 "EHLO mx1.redhat.com"
+        Thu, 18 Jul 2019 00:27:01 -0400
+Received: from relay.sw.ru ([185.231.240.75]:45266 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbfGRENa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 00:13:30 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E1FFC053B34;
-        Thu, 18 Jul 2019 04:13:29 +0000 (UTC)
-Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1D7AC600D1;
-        Thu, 18 Jul 2019 04:13:16 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 00:13:15 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Wang, Wei W" <wei.w.wang@intel.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        "pagupta@redhat.com" <pagupta@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "lcapitulino@redhat.com" <lcapitulino@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: use of shrinker in virtio balloon free page hinting
-Message-ID: <20190718000434-mutt-send-email-mst@kernel.org>
-References: <20190717071332-mutt-send-email-mst@kernel.org>
- <286AC319A985734F985F78AFA26841F73E16D4B2@shsmsx102.ccr.corp.intel.com>
+        id S1725782AbfGRE1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 00:27:00 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hny0P-0004TI-85; Thu, 18 Jul 2019 07:26:57 +0300
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH] connector: remove redundant input callback from cn_dev
+To:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>
+Cc:     stanislav.kinsburskiy@gmail.com,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Message-ID: <1f53c1fb-c42e-fb78-7b2b-ad6c4712fe72@virtuozzo.com>
+Date:   Thu, 18 Jul 2019 07:26:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <286AC319A985734F985F78AFA26841F73E16D4B2@shsmsx102.ccr.corp.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Jul 2019 04:13:30 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 03:46:57PM +0000, Wang, Wei W wrote:
-> On Wednesday, July 17, 2019 7:21 PM, Michael S. Tsirkin wrote:
-> > 
-> > Wei, others,
-> > 
-> > ATM virtio_balloon_shrinker_scan will only get registered when deflate on
-> > oom feature bit is set.
-> > 
-> > Not sure whether that's intentional. 
-> 
-> Yes, we wanted to follow the old oom behavior, which allows the oom notifier
-> to deflate pages only when this feature bit has been negotiated.
+A small cleanup: this callback is never used.
+Originally fixed by Stanislav Kinsburskiy <skinsbursky@virtuozzo.com>
+for OpenVZ7 bug OVZ-6877
 
-It makes sense for pages in the balloon (requested by hypervisor).
-However free page hinting can freeze up lots of memory for its own
-internal reasons. It does not make sense to ask hypervisor
-to set flags in order to fix internal guest issues.
+cc: stanislav.kinsburskiy@gmail.com
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+---
+ drivers/connector/connector.c | 6 +-----
+ include/linux/connector.h     | 1 -
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-> > Assuming it is:
-> > 
-> > virtio_balloon_shrinker_scan will try to locate and free pages that are
-> > processed by host.
-> > The above seems broken in several ways:
-> > - count ignores the free page list completely
-> 
-> Do you mean virtio_balloon_shrinker_count()? It just reports to
-> do_shrink_slab the amount of freeable memory that balloon has.
-> (vb->num_pages and vb->num_free_page_blocks are all included )
-
-Right. But that does not include the pages in the hint vq,
-which could be a significant amount of memory.
-
-
-> > - if free pages are being reported, pages freed
-> >   by shrinker will just get re-allocated again
-> 
-> fill_balloon will re-try the allocation after sleeping 200ms once allocation fails.
-
-Even if ballon was never inflated, if shrinker frees some memory while
-we are hinting, hint vq will keep going and allocate it back without
-sleeping.
-
->  
-> > I was unable to make this part of code behave in any reasonable way - was
-> > shrinker usage tested? What's a good way to test that?
-> 
-> Please see the example that I tested before : https://lkml.org/lkml/2018/8/6/29
-> (just the first one: *1. V3 patches)
-> 
-> What problem did you see?
-> I just tried the latest code, and find ballooning reports a #GP (seems caused by
-> 418a3ab1e). 
-> I'll take a look at the details in the office tomorrow.
-> 
-> Best,
-> Wei
-
-I saw that VM hangs. Could be the above problem, let me know how it
-goes.
+diff --git a/drivers/connector/connector.c b/drivers/connector/connector.c
+index 23553ed6b548..2d22d6bf52f2 100644
+--- a/drivers/connector/connector.c
++++ b/drivers/connector/connector.c
+@@ -248,16 +248,12 @@ static int __maybe_unused cn_proc_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ 
+-static struct cn_dev cdev = {
+-	.input   = cn_rx_skb,
+-};
+-
+ static int cn_init(void)
+ {
+ 	struct cn_dev *dev = &cdev;
+ 	struct netlink_kernel_cfg cfg = {
+ 		.groups	= CN_NETLINK_USERS + 0xf,
+-		.input	= dev->input,
++		.input	= cn_rx_skb,
+ 	};
+ 
+ 	dev->nls = netlink_kernel_create(&init_net, NETLINK_CONNECTOR, &cfg);
+diff --git a/include/linux/connector.h b/include/linux/connector.h
+index 1d72ef76f24f..bc18f04e8b46 100644
+--- a/include/linux/connector.h
++++ b/include/linux/connector.h
+@@ -50,7 +50,6 @@ struct cn_dev {
+ 
+ 	u32 seq, groups;
+ 	struct sock *nls;
+-	void (*input) (struct sk_buff *skb);
+ 
+ 	struct cn_queue_dev *cbdev;
+ };
+-- 
+2.17.1
 
