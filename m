@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA35FC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02BAC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912F32173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0F92053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419131;
-	bh=poCa17KB4EoV73zCLWQXwNerWkkC8XFA9xpyH2sxeZc=;
+	s=default; t=1563419134;
+	bh=lD9OqQc2mRSNgykSipBy5wuaBor9EoomcHkZdwZRgEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcyLyoyfFOtqQ7QUwAj+mU5mRX6jjwEsFdrUE2MvtxuQH5IMNcGAokp8Kpq7qZJLu
-	 J1WmYMKlgPRhhSaYb3mCbUIah6X0QvuPqUskpZClgkH1sc1OebIVGRYbwve+hZodIU
-	 yoSopOBH0gIn5nO+kJrItOlwKra7eU+vvPC6fzPU=
+	b=knIPLGJXgdAigb3PAXsC1FM/1iKPamrtr/kkI7wTACyA/TA3ER35xoLOCLl1IJnDx
+	 Y1nBF3nDrW8LgJ3yPU6OPWNxNAtK/+7RPptrD5+BxZewrjpX+/KaqGjlYkN1iVTWku
+	 aRRM3h6ZazvlEBEiWWzAAxGgeHCQhp94EUwYRZvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389971AbfGRDFa (ORCPT
+        id S2389992AbfGRDFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389933AbfGRDFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:05:23 -0400
+        id S2389964AbfGRDFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:05:30 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B062173B;
-        Thu, 18 Jul 2019 03:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2401F2173B;
+        Thu, 18 Jul 2019 03:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419122;
-        bh=poCa17KB4EoV73zCLWQXwNerWkkC8XFA9xpyH2sxeZc=;
+        s=default; t=1563419129;
+        bh=lD9OqQc2mRSNgykSipBy5wuaBor9EoomcHkZdwZRgEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fekfe2NEVS+Ujgb+iRlmTVhyEttZ8u0x+C5cLvu7I/8EZ4dtjd09JGBq7usd7rLwf
-         Gi3+DzMbROfhTGSlYWjnDcNzjaQ8SRYzUEeesInGilCfjygnjRopZaDxhLrFNikw51
-         SY6LjDuNxG1fXbj0FFvA2ug4BDMSGG33QtWfCmEo=
+        b=UiwgGKjQ+eUU3L+DlH5oHITla/0+/adkGwQBqE0e/WBvDRLPOwzzDud1f9NhKopzt
+         4/lDIkPXntiRfM3ToND96f26mBAag2cJAsHd8IZbJdV911OBfYX0/qIKAcNjWUQZxr
+         ksAOpaL0CoucfR3GdU5Tplg3oB1/l8QFhMkKriks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Wind Yu <yuzhoujian@didichuxing.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 38/54] mm/oom_kill.c: fix uninitialized oc->constraint
-Date:   Thu, 18 Jul 2019 12:01:33 +0900
-Message-Id: <20190718030056.186241465@linuxfoundation.org>
+Subject: [PATCH 5.1 22/54] ppp: mppe: Add softdep to arc4
+Date:   Thu, 18 Jul 2019 12:01:17 +0900
+Message-Id: <20190718030055.083166383@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -63,77 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 432b1de0de02a83f64695e69a2d83cbee10c236f ]
+[ Upstream commit aad1dcc4f011ea409850e040363dff1e59aa4175 ]
 
-In dump_oom_summary() oc->constraint is used to show oom_constraint_text,
-but it hasn't been set before.  So the value of it is always the default
-value 0.  We should inititialize it before.
+The arc4 crypto is mandatory at ppp_mppe probe time, so let's put a
+softdep line, so that the corresponding module gets prepared
+gracefully.  Without this, a simple inclusion to initrd via dracut
+failed due to the missing dependency, for example.
 
-Bellow is the output when memcg oom occurs,
-
-before this patch:
-  oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null), cpuset=/,mems_allowed=0,oom_memcg=/foo,task_memcg=/foo,task=bash,pid=7997,uid=0
-
-after this patch:
-  oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null), cpuset=/,mems_allowed=0,oom_memcg=/foo,task_memcg=/foo,task=bash,pid=13681,uid=0
-
-Link: http://lkml.kernel.org/r/1560522038-15879-1-git-send-email-laoar.shao@gmail.com
-Fixes: ef8444ea01d7 ("mm, oom: reorganize the oom report in dump_header")
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Wind Yu <yuzhoujian@didichuxing.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/oom_kill.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/net/ppp/ppp_mppe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 3a2484884cfd..263efad6fc7e 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -985,8 +985,7 @@ static void oom_kill_process(struct oom_control *oc, const char *message)
- /*
-  * Determines whether the kernel must panic because of the panic_on_oom sysctl.
-  */
--static void check_panic_on_oom(struct oom_control *oc,
--			       enum oom_constraint constraint)
-+static void check_panic_on_oom(struct oom_control *oc)
- {
- 	if (likely(!sysctl_panic_on_oom))
- 		return;
-@@ -996,7 +995,7 @@ static void check_panic_on_oom(struct oom_control *oc,
- 		 * does not panic for cpuset, mempolicy, or memcg allocation
- 		 * failures.
- 		 */
--		if (constraint != CONSTRAINT_NONE)
-+		if (oc->constraint != CONSTRAINT_NONE)
- 			return;
- 	}
- 	/* Do not panic for oom kills triggered by sysrq */
-@@ -1033,7 +1032,6 @@ EXPORT_SYMBOL_GPL(unregister_oom_notifier);
- bool out_of_memory(struct oom_control *oc)
- {
- 	unsigned long freed = 0;
--	enum oom_constraint constraint = CONSTRAINT_NONE;
+diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
+index 7ccdc62c6052..06d620b10704 100644
+--- a/drivers/net/ppp/ppp_mppe.c
++++ b/drivers/net/ppp/ppp_mppe.c
+@@ -63,6 +63,7 @@ MODULE_AUTHOR("Frank Cusack <fcusack@fcusack.com>");
+ MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
++MODULE_SOFTDEP("pre: arc4");
+ MODULE_VERSION("1.0.2");
  
- 	if (oom_killer_disabled)
- 		return false;
-@@ -1069,10 +1067,10 @@ bool out_of_memory(struct oom_control *oc)
- 	 * Check if there were limitations on the allocation (only relevant for
- 	 * NUMA and memcg) that may require different handling.
- 	 */
--	constraint = constrained_alloc(oc);
--	if (constraint != CONSTRAINT_MEMORY_POLICY)
-+	oc->constraint = constrained_alloc(oc);
-+	if (oc->constraint != CONSTRAINT_MEMORY_POLICY)
- 		oc->nodemask = NULL;
--	check_panic_on_oom(oc, constraint);
-+	check_panic_on_oom(oc);
- 
- 	if (!is_memcg_oom(oc) && sysctl_oom_kill_allocating_task &&
- 	    current->mm && !oom_unkillable_task(current, NULL, oc->nodemask) &&
+ static unsigned int
 -- 
 2.20.1
 
