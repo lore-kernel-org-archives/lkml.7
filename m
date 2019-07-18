@@ -2,156 +2,101 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD762C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535B4C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13E2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238B12173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HtvtQx53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389425AbfGRIRu (ORCPT
+        id S2389446AbfGRISu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:17:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2678 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbfGRIRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:17:50 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DC0A470A26760DD399DD;
-        Thu, 18 Jul 2019 16:17:47 +0800 (CST)
-Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 18 Jul 2019 16:17:39 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <marc.zyngier@arm.com>, <james.morse@arm.com>,
-        <julien.thierry@arm.com>, <suzuki.poulose@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, <andrew.murray@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v2] KVM: arm/arm64: Introduce kvm_pmu_vcpu_init() to setup PMU counter idx
-Date:   Thu, 18 Jul 2019 08:15:10 +0000
-Message-ID: <1563437710-30756-1-git-send-email-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+        Thu, 18 Jul 2019 04:18:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34872 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfGRISu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:18:50 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so13481060plp.2;
+        Thu, 18 Jul 2019 01:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=11mjxUgmlKpFT65Qn2eRET8NgzSw6D9B85VQzs3KMfo=;
+        b=HtvtQx53myfqvYkQHosyY0m2p2GWHSgJJFqxDjRNT3U1hCs+p/fPZ89zb5atB9tEHk
+         upOI07pZfj0LpeDY79dNU+aDhdiMhF2PuuZ9ecJHPFs7P6E3BGj5WWeYyuZM0Csf/Npd
+         wTJq85Ysb2fGCQNjrp+6WDjrjbBonUxrMZnAdQeklgBldQHRe5jppXfpjvKKeHcB0bSt
+         PkzVzGTgWBcF0I44iDTR/dLI13Iz77Iav2txppTF+8e34wwtKdz0Cea78dER1cWCLjiL
+         zBrTPRwFNYIIIW0NYoH2gqsIxMjf1SbqEF1cSUJKRVh5IhW9GDveHDWeGEvcBHfQMm5z
+         KvyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=11mjxUgmlKpFT65Qn2eRET8NgzSw6D9B85VQzs3KMfo=;
+        b=Bak/pQjPa5hXCqo9oUSkLnNVoHCDyNip7QbC5pluWbryevJ4gMsbdhllCl8Fs2irnw
+         jvK6jy9fWVMQYQnyfoWbZ30ub+4TndOke7JlbA/Wmv+eBvF9ySk8HYTDvCxNYe5Ua5rw
+         vlYcAAm6cycGYtRulP1whbz++zv5K0e7sClovEvUlUXPCSI98onB/M5huKyW5tbYHWQu
+         qa2kF/XJCC6YWhdVtOjLvOiGfw9j8b9s75O79EaTmLG5fmV++gqcioDoW6BkN37KVSYF
+         EA7vOTKkQM10ALZTH5elAwmR6i4hc35xGXUzJ5045skXO9hCQQypHgeH6If7jArEtwG/
+         9LuA==
+X-Gm-Message-State: APjAAAVz9mIptoM5z6QW9zyO/Vtg/yY/KYgmzvODe7FT/gmR4dF0UPZd
+        0nGALvFqPvFa4FyA2P8TLrY=
+X-Google-Smtp-Source: APXvYqxQjMJEfvJGrhGFiRueAoYUztOJhNxXAleug7p9acbsgKYgBHkrzTU/a9kvRRQPAFedi8jUWg==
+X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr49146527plv.106.1563437929386;
+        Thu, 18 Jul 2019 01:18:49 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id l4sm26669847pff.50.2019.07.18.01.18.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 01:18:48 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     QLogic-Storage-Upstream@cavium.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 3/3] scsi: qedf: Replace vmalloc + memset with vzalloc
+Date:   Thu, 18 Jul 2019 16:18:32 +0800
+Message-Id: <20190718081832.28808-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We use "pmc->idx" and the "chained" bitmap to determine if the pmc is
-chained, in kvm_pmu_pmc_is_chained().  But idx might be uninitialized
-(and random) when we doing this decision, through a KVM_ARM_VCPU_INIT
-ioctl -> kvm_pmu_vcpu_reset(). And the test_bit() against this random
-idx will potentially hit a KASAN BUG [1].
+Use vzalloc instead of using vmalloc to allocate memory
+and then zeroing it with memset 0.
+This simplifies the code.
 
-In general, idx is the static property of a PMU counter that is not
-expected to be modified across resets, as suggested by Julien.  It
-looks more reasonable if we can setup the PMU counter idx for a vcpu
-in its creation time. Introduce a new function - kvm_pmu_vcpu_init()
-for this basic setup. Oh, and the KASAN BUG will get fixed this way.
-
-[1] https://www.spinics.net/lists/kvm-arm/msg36700.html
-
-Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
-Suggested-by: Andrew Murray <andrew.murray@arm.com>
-Suggested-by: Julien Thierry <julien.thierry@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
+ drivers/scsi/qedf/qedf_dbg.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Changes since v1:
- - Introduce kvm_pmu_vcpu_init() in vcpu's creation time, move the
-   assignment of pmc->idx into it.
- - Thus change the subject. The old one is "KVM: arm/arm64: Assign
-   pmc->idx before kvm_pmu_stop_counter()".
-
-Julien, I haven't collected your Acked-by into this version. If you're
-still happy with the change, please Ack again. Thanks!
-
- include/kvm/arm_pmu.h |  2 ++
- virt/kvm/arm/arm.c    |  2 ++
- virt/kvm/arm/pmu.c    | 18 +++++++++++++++---
- 3 files changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-index 16c769a..6db0304 100644
---- a/include/kvm/arm_pmu.h
-+++ b/include/kvm/arm_pmu.h
-@@ -34,6 +34,7 @@ struct kvm_pmu {
- u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx);
- void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx, u64 val);
- u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu);
-+void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu);
- void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu);
- void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu);
- void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val);
-@@ -71,6 +72,7 @@ static inline u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu)
+diff --git a/drivers/scsi/qedf/qedf_dbg.c b/drivers/scsi/qedf/qedf_dbg.c
+index e0387e495261..0d2aed82882a 100644
+--- a/drivers/scsi/qedf/qedf_dbg.c
++++ b/drivers/scsi/qedf/qedf_dbg.c
+@@ -106,11 +106,10 @@ qedf_dbg_info(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
+ int
+ qedf_alloc_grc_dump_buf(u8 **buf, uint32_t len)
  {
- 	return 0;
- }
-+static inline void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu) {}
- static inline void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu) {}
- static inline void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu) {}
- static inline void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val) {}
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index f645c0f..c704fa6 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -340,6 +340,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
- 	/* Set up the timer */
- 	kvm_timer_vcpu_init(vcpu);
+-		*buf = vmalloc(len);
++		*buf = vzalloc(len);
+ 		if (!(*buf))
+ 			return -ENOMEM;
  
-+	kvm_pmu_vcpu_init(vcpu);
-+
- 	kvm_arm_reset_debug_ptr(vcpu);
- 
- 	return kvm_vgic_vcpu_init(vcpu);
-diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-index 3dd8238..362a018 100644
---- a/virt/kvm/arm/pmu.c
-+++ b/virt/kvm/arm/pmu.c
-@@ -215,6 +215,20 @@ static void kvm_pmu_stop_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc)
+-		memset(*buf, 0, len);
+ 		return 0;
  }
  
- /**
-+ * kvm_pmu_vcpu_init - assign pmu counter idx for cpu
-+ * @vcpu: The vcpu pointer
-+ *
-+ */
-+void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu)
-+{
-+	int i;
-+	struct kvm_pmu *pmu = &vcpu->arch.pmu;
-+
-+	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
-+		pmu->pmc[i].idx = i;
-+}
-+
-+/**
-  * kvm_pmu_vcpu_reset - reset pmu state for cpu
-  * @vcpu: The vcpu pointer
-  *
-@@ -224,10 +238,8 @@ void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
- 	int i;
- 	struct kvm_pmu *pmu = &vcpu->arch.pmu;
- 
--	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++) {
-+	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
- 		kvm_pmu_stop_counter(vcpu, &pmu->pmc[i]);
--		pmu->pmc[i].idx = i;
--	}
- 
- 	bitmap_zero(vcpu->arch.pmu.chained, ARMV8_PMU_MAX_COUNTER_PAIRS);
- }
 -- 
-1.8.3.1
-
+2.20.1
 
