@@ -2,121 +2,115 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E382CC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFE8C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCEC217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109BF2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:12:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ym5531K9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389943AbfGRKKn (ORCPT
+        id S2389818AbfGRKL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:10:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:2216 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfGRKKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:10:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 03:10:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="162031470"
-Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by orsmga008.jf.intel.com with ESMTP; 18 Jul 2019 03:10:39 -0700
-From:   Wei Wang <wei.w.wang@intel.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, mst@redhat.com, xdeguillard@vmware.com,
-        namit@vmware.com
-Cc:     akpm@linux-foundation.org, pagupta@redhat.com, riel@surriel.com,
-        dave.hansen@intel.com, david@redhat.com, konrad.wilk@oracle.com,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, lcapitulino@redhat.com,
-        aarcange@redhat.com, pbonzini@redhat.com,
-        alexander.h.duyck@linux.intel.com, dan.j.williams@intel.com
-Subject: [PATCH v2] mm/balloon_compaction: avoid duplicate page removal
-Date:   Thu, 18 Jul 2019 17:27:20 +0800
-Message-Id: <1563442040-13510-1-git-send-email-wei.w.wang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 18 Jul 2019 06:11:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41791 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfGRKL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 06:11:58 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so12403481pff.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 03:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s9DT+PnaINXuv9oV1a0Ft7cKsvtMXtYwpq9P51Iz0jY=;
+        b=Ym5531K9rdO392M7jAuvruX+alhuJi7Nzi/Qf3G1JhevvTuQAQRyoSU5q3sbGuYXAa
+         caq2XuCqcfKL6NOEg4+cLFesMlRGBouFDDlP9B4nvq9rv/TCRI6MtByBt55vH4R1xk1X
+         TAwHG1DteMqFyXZlWqs2InoygHSGLj/USrw5fL5BrQo66Pwb+L2lZOf7YXbukxJ2bPf4
+         OwDmBelFAClsX5fyMufooyazE1b18aSwifmVzg0XSqpIY8ogb9ehCFndquoAyQ4125WH
+         uIVM3lbjSy3WV5Uea0ozbkhCDud+wBsC4wfDR7Pxyolb6p9zeAs1v+JyIs6iSjhvJSLW
+         nwmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s9DT+PnaINXuv9oV1a0Ft7cKsvtMXtYwpq9P51Iz0jY=;
+        b=q7JEY9F9IlZz1s669JhcIJtfQzCKPnkDiQv+u2RJ8I790580T/JCMZy1KMEnE0AwE0
+         n17zxL+ihYW/FDhIRoyOaO7kr/bqMfh+GtJEhzRAZrAOpAXO75D+4R4v48M+xMz509w8
+         YyoQ3npm8FBkSur4f+ojy5HKG1xxdGJVKfbr6R+0TM0R9GE2laeKe914rIAXDfuM6XgW
+         0xLFJwDaF+T1QG8v9fhjkSJtocGbRr+bpBHuxtYDKbcVS1gnaFLEve07Bd9kEsCAnu0w
+         L2Wq0zAY7nIuymzrChQf1fwzOPbVF/yVCdN3GJYKhlJnCrIq3ZW+T20x5j1w+6MH2rz/
+         BofQ==
+X-Gm-Message-State: APjAAAUw3LGLuvhOlmYpzeIFARJaxDVJN7S46iODrA9jZ9Js1Y8r2jYu
+        JbJlvnKp3rw4zxQ43GaYeftnm0nf
+X-Google-Smtp-Source: APXvYqzGF58o+OEoT0EIVTSvp51t+mzaXnA4x5C8fWZi/Hrr42rzvsQGcHA0MS/naRe8j8tS7xxoNA==
+X-Received: by 2002:a65:5183:: with SMTP id h3mr46687819pgq.250.1563444717807;
+        Thu, 18 Jul 2019 03:11:57 -0700 (PDT)
+Received: from localhost ([39.7.59.92])
+        by smtp.gmail.com with ESMTPSA id p23sm30339045pfn.10.2019.07.18.03.11.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 03:11:57 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 19:11:53 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Ogness <john.ogness@linutronix.de>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Konstantin Khlebnikov <koct9i@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
+ only when safe
+Message-ID: <20190718101123.GB10041@jagdpanzerIV>
+References: <20190716072805.22445-1-pmladek@suse.com>
+ <20190716072805.22445-2-pmladek@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716072805.22445-2-pmladek@suse.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
+On (07/16/19 09:28), Petr Mladek wrote:
+[..]
+> +int printk_bust_lock_safe(void)
+> +{
+> +	if (!raw_spin_is_locked(&logbuf_lock))
+> +		return 0;
+> +
+> +	if (num_online_cpus() == 1) {
+> +		debug_locks_off();
+> +		raw_spin_lock_init(&logbuf_lock);
+> +		return 0;
+> +	}
+> +
+> +	return -EWOULDBLOCK;
+> +}
 
-A #GP is reported in the guest when requesting balloon inflation via
-virtio-balloon. The reason is that the virtio-balloon driver has
-removed the page from its internal page list (via balloon_page_pop),
-but balloon_page_enqueue_one also calls "list_del"  to do the removal.
-This is necessary when it's used from balloon_page_enqueue_list, but
-not from balloon_page_enqueue_one.
+A side note:
 
-So remove the list_del balloon_page_enqueue_one, and update some
-comments as a reminder.
+I'd say that we also need to clear console_owner and re-init
+console_owner_lock spin_lock, panic CPU can spin forever
+otherwise; and I think it would also be reasonable to re-init
+console_sem's spin_lock, yet another lock on which panic CPU
+can spin forever. (Assuming that one of remote CPUs that we
+have NMI killed had owned any of those locks).
 
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
----
-ChangeLong:
-v1->v2: updated some comments
+Console drivers' locks are mostly OK, as long as drivers check
+oops_in_progress in ->write() path and act accordingly, but
+printk() has to deal with more than one lock (logbuf_lock)
+before it invokes console drivers.
 
- mm/balloon_compaction.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-index 83a7b61..8639bfc 100644
---- a/mm/balloon_compaction.c
-+++ b/mm/balloon_compaction.c
-@@ -21,7 +21,6 @@ static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
- 	 * memory corruption is possible and we should stop execution.
- 	 */
- 	BUG_ON(!trylock_page(page));
--	list_del(&page->lru);
- 	balloon_page_insert(b_dev_info, page);
- 	unlock_page(page);
- 	__count_vm_event(BALLOON_INFLATE);
-@@ -33,7 +32,7 @@ static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
-  * @b_dev_info: balloon device descriptor where we will insert a new page to
-  * @pages: pages to enqueue - allocated using balloon_page_alloc.
-  *
-- * Driver must call it to properly enqueue a balloon pages before definitively
-+ * Driver must call it to properly enqueue balloon pages before definitively
-  * removing it from the guest system.
-  *
-  * Return: number of pages that were enqueued.
-@@ -47,6 +46,7 @@ size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
- 
- 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
- 	list_for_each_entry_safe(page, tmp, pages, lru) {
-+		list_del(&page->lru);
- 		balloon_page_enqueue_one(b_dev_info, page);
- 		n_pages++;
- 	}
-@@ -128,13 +128,19 @@ struct page *balloon_page_alloc(void)
- EXPORT_SYMBOL_GPL(balloon_page_alloc);
- 
- /*
-- * balloon_page_enqueue - allocates a new page and inserts it into the balloon
-- *			  page list.
-+ * balloon_page_enqueue - inserts a new page into the balloon page list.
-+ *
-  * @b_dev_info: balloon device descriptor where we will insert a new page to
-  * @page: new page to enqueue - allocated using balloon_page_alloc.
-  *
-  * Driver must call it to properly enqueue a new allocated balloon page
-  * before definitively removing it from the guest system.
-+ *
-+ * Drivers must not call balloon_page_enqueue on pages that have been
-+ * pushed to a list with balloon_page_push before removing them with
-+ * balloon_page_pop. To all pages on a list, use balloon_page_list_enqueue
-+ * instead.
-+ *
-  * This function returns the page address for the recently enqueued page or
-  * NULL in the case we fail to allocate a new page this turn.
-  */
--- 
-2.7.4
-
+	-ss
