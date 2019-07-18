@@ -7,604 +7,203 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB299C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA9CC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 04:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870862082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA90208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 04:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563422149;
-	bh=jvtzeRKJVDJgWXOHDvXSiviGFZZyWQ2Yheg8cVSEEew=;
+	s=default; t=1563422408;
+	bh=XHxvAzXMESKUif9uHHTNssIoixW2oCEvuFfuaMJvfk0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kE9ruWLku5J96FXs19wh5VH1h6ku697fCCGJ4tNdxkfwTCu8WlxbgEEaYWsDu3JbS
-	 NAn4owzA9JamYEtAPqwmMMl3E0whb0hwwB1HQBffTrLshAe9DYwmvyedRG5pCiPcfW
-	 LzbQ1+rlSwRe8cQBrSbzdmsJUjDcnjkl/nGYDt3Y=
+	b=F7YCVsrHcrvhHHuANFVxF+pRkyS/RI4J4VgGi1o7C4ZLBbbnfP7AJMXvC/+EGL1QO
+	 459UXrz7nr3UbhNz/1MREk51GBKBW7KlaiXQ2LysHNw2RhQU/LaMuOTEHj7rja3i/y
+	 ZTdX7A1TubNhpQKbpAFVE4oqK/uUEZQsle5QSO8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389067AbfGRDzr (ORCPT
+        id S1726467AbfGREAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44760 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 00:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727544AbfGRDzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:55:47 -0400
-Received: from X250 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725613AbfGREAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 00:00:07 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD06206DD;
-        Thu, 18 Jul 2019 03:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 748FF2085A;
+        Thu, 18 Jul 2019 04:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563422145;
-        bh=jvtzeRKJVDJgWXOHDvXSiviGFZZyWQ2Yheg8cVSEEew=;
+        s=default; t=1563422406;
+        bh=XHxvAzXMESKUif9uHHTNssIoixW2oCEvuFfuaMJvfk0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KM0KfnRHs2aUAJpxxrnXrx048R7w8CsybCifx/54hrZlmjXGNHumhNTGRZwgyvxIh
-         FngXMQIiQFPGkuVqmC4T+Rp5Ztvu4TWsqgqsBO5GKvfBeJyRPfBleLkw4nxsF/gvGR
-         3VpJnJmyeKhaZCqiGIouExkfx6azXNu+zWl6Ypj8=
-Date:   Thu, 18 Jul 2019 11:55:30 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com,
-        festevam@gmail.com, aisheng.dong@nxp.com, l.stach@pengutronix.de,
-        angus@akkea.ca, vabhav.sharma@nxp.com, pankaj.bansal@nxp.com,
-        bhaskar.upadhaya@nxp.com, ping.bai@nxp.com,
-        manivannan.sadhasivam@linaro.org, richard.hu@technexion.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        matti.vaittinen@fi.rohmeurope.com, linux-imx@nxp.com,
-        daniel.baluta@nxp.com
-Subject: Re: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the
- PICO-PI-IMX8M
-Message-ID: <20190718035523.GD11324@X250>
-References: <20190625123407.15888-1-andradanciu1997@gmail.com>
+        b=OUR/nfX0mtrLRj8tgV95jebAyyh7jJxswB1enkiX1ZqrDdbuMTCHtvnPsnYRyGv8k
+         2pIBsuQlN64LIFelNWLBibjALSnahA0kdNaOzJ+2N8tMdrdfrUxST/iFSRGjAQLMyc
+         J77HQTOVyRqOdvgT4R4lwbFRWoIFOJLxraYARLFA=
+Date:   Wed, 17 Jul 2019 21:00:05 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to read source block before
+ invalidating it
+Message-ID: <20190718040005.GA81995@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190718013718.70335-1-jaegeuk@kernel.org>
+ <20190718031214.GA78336@jaegeuk-macbookpro.roam.corp.google.com>
+ <19a25101-da74-de98-6ca4-a9fd9fa09ef2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625123407.15888-1-andradanciu1997@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <19a25101-da74-de98-6ca4-a9fd9fa09ef2@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 03:34:07PM +0300, Andra Danciu wrote:
-> From: Richard Hu <richard.hu@technexion.com>
+On 07/18, Chao Yu wrote:
+> On 2019/7/18 11:12, Jaegeuk Kim wrote:
+> > f2fs_allocate_data_block() invalidates old block address and enable new block
+> > address. Then, if we try to read old block by f2fs_submit_page_bio(), it will
+> > give WARN due to reading invalid blocks.
+> > 
+> > Let's make the order sanely back.
 > 
-> The current level of support yields a working console and is able to boot
-> userspace from an initial ramdisk copied via u-boot in RAM.
+> Hmm.. to avoid WARM, we may suffer one more memcpy, I suspect this can reduce
+> online resize or foreground gc ioctl performance...
+
+I worried about performance tho, more concern came to me that there may exist a
+chance that other thread can allocate and write something in old block address.
+
 > 
-> Additional subsystems that are active :
-> 	- Ethernet
-> 	- USB
+> Can we just relief to use DATA_GENERIC_ENHANCE_READ for this case...?
+
+We need to keep consistency for this api.
+
+Thanks,
+
 > 
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Signed-off-by: Richard Hu <richard.hu@technexion.com>
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> ---
-> Changes since v1:
->  - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
->  - removed pinctrl_csi1, pinctrl_wifi_ctrl
->  - used generic name for pmic
->  - removed gpo node
->  - delete regulator-virtuals node
->  - remove always-on property from buck1-8 and ldo3-7
->  - remove pmic-buck-uses-i2c-dvs property for buck1-4
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > 
->  arch/arm64/boot/dts/freescale/Makefile       |   1 +
->  arch/arm64/boot/dts/freescale/pico-pi-8m.dts | 458 +++++++++++++++++++++++++++
->  2 files changed, 459 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/pico-pi-8m.dts
+> Except performance, I'm okay with this change.
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index c043aca66572..538422903e8a 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -26,3 +26,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += pico-pi-8m.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/pico-pi-8m.dts b/arch/arm64/boot/dts/freescale/pico-pi-8m.dts
-> new file mode 100644
-> index 000000000000..23422c8fc43f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/pico-pi-8m.dts
-> @@ -0,0 +1,458 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2018 Wandboard, Org.
-> + * Copyright 2017 NXP
-> + *
-> + * Author: Richard Hu <hakahu@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8mq.dtsi"
-> +
-> +/ {
-> +	model = "PICO-PI-8M";
-> +	compatible = "wand,imx8mq-pico-pi", "fsl,imx8mq";
-
-The board compatible needs to be documented.
-
-> +
-> +	chosen {
-> +		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
-
-The earlycon is only needed for debugging early hang issue.  Do you
-really want it by default?  If no, we can save the 'bootargs' here,
-since 'stdout-path' below will get you correct console setup.
-
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-
-Drop this container node and put fixed regulator directly under root
-node.
-
-> +
-> +		reg_usb_otg_vbus: usb_otg_vbus {
-
-Please use node name like 'regulator-xxx'.
-
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_otg_vbus>;
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "usb_otg_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&gpio3 14 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names = "default";
-
-The 'pinctrl-names' is pointless if there is no 'pinctrl' property.
-
-> +
-> +	wand-pi-8m {
-
-Drop this container node.
-
-> +		pinctrl_otg_vbus: otgvbusgrp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14		0x19   /* USB OTG VBUS Enable */
-> +			>;
-> +		};
-> +
-> +		pinctrl_enet_3v3: enet3v3grp {
-
-Sort these pinctrl nodes alphabetically.
-
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_GPIO1_IO00_GPIO1_IO0		0x19
-> +			>;
-> +		};
-> +
-> +		pinctrl_fec1: fec1grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC		0x3
-> +				MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO	0x23
-> +				MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
-> +				MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
-> +				MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
-> +				MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
-> +				MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
-> +				MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
-> +				MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
-> +				MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
-> +				MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
-> +				MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
-> +				MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-> +				MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-> +				MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
-> +				MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL			0x4000007f
-> +				MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA			0x4000007f
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-> +				MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x49
-> +				MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x49
-> +				MX8MQ_IOMUXC_UART4_RXD_UART2_DCE_CTS_B		0x49
-> +				MX8MQ_IOMUXC_UART4_TXD_UART2_DCE_RTS_B		0x49
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc1: usdhc1grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-> +				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-> +				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-> +				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
-> +				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
-> +				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
-> +				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
-> +				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
-> +				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
-> +				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc2_gpio: usdhc2grpgpio {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc2: usdhc2grp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-> +				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-> +				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-> +				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-> +				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-> +				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-> +				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
-> +				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-> +				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
-> +				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
-> +				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
-> +				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
-> +				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
-> +				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
-> +				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
-> +				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
-> +				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
-> +				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
-> +				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-> +			>;
-> +		};
-> +
-> +		pinctrl_wdog: wdoggrp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
-> +			>;
-> +		};
-> +
-> +		pinctrl_pmic: pmicirq {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-> +			>;
-> +		};
-> +
-> +		pinctrl_tusb320_irq: tusb320_irqgrp {
-
-Please name the pinctrl node in a more consistent way, i.e. no
-underscore.
-
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_NAND_DATA00_GPIO3_IO6	0x41
-> +			>;
-> +		};
-> +
-> +		pinctrl_typec_ss_sel: typec_ss_selgrp {
-> +			fsl,pins = <
-> +				MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5		0x19
-> +			>;
-> +		};
-> +	};
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1 &pinctrl_enet_3v3>;
-> +	phy-mode = "rgmii-id";
-> +	pinctrl-assert-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-> +	phy-handle = <&ethphy0>;
-> +	fsl,magic-packet;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@1 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <1>;
-> +			at803x,led-act-blind-workaround;
-> +			at803x,eee-disabled;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	typec_tusb320:tusb320@47 {
-> +		compatible = "ti,tusb320";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tusb320_irq &pinctrl_typec_ss_sel>;
-> +		reg = <0x47>;
-> +		vbus-supply = <&reg_usb_otg_vbus>;
-> +		ss-sel-gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-> +		tusb320,int-gpio = <&gpio3 6 GPIO_ACTIVE_LOW>;
-> +		tusb320,select-mode = <0>;
-> +		tusb320,dfp-power = <0>;
-> +	};
-
-Where is the bindings doc for this device?
-
-> +
-> +	pmic: pmic@4b {
-> +		reg = <0x4b>;
-> +		compatible = "rohm,bd71837";
-> +		/* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> +		pinctrl-0 = <&pinctrl_pmic>;
-> +		gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-
-Where is the bindings for this property?
-
-> +
-> +		regulators {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			buck1: BUCK1 {
-> +				regulator-name = "buck1";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-ramp-delay = <1250>;
-> +				rohm,dvs-run-voltage = <900000>;
-> +				rohm,dvs-idle-voltage = <850000>;
-> +				rohm,dvs-suspend-voltage = <800000>;
-> +			};
-> +
-> +			buck2: BUCK2 {
-> +				regulator-name = "buck2";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-ramp-delay = <1250>;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +				rohm,dvs-idle-voltage = <900000>;
-> +			};
-> +
-> +			buck3: BUCK3 {
-> +				regulator-name = "buck3";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +			};
-> +
-> +			buck4: BUCK4 {
-> +				regulator-name = "buck4";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +			};
-> +
-> +			buck5: BUCK5 {
-> +				regulator-name = "buck5";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck6: BUCK6 {
-> +				regulator-name = "buck6";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck7: BUCK7 {
-> +				regulator-name = "buck7";
-> +				regulator-min-microvolt = <1605000>;
-> +				regulator-max-microvolt = <1995000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck8: BUCK8 {
-> +				regulator-name = "buck8";
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1400000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			ldo1: LDO1 {
-> +				regulator-name = "ldo1";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo2: LDO2 {
-> +				regulator-name = "ldo2";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo3: LDO3 {
-> +				regulator-name = "ldo3";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			ldo4: LDO4 {
-> +				regulator-name = "ldo4";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			ldo5: LDO5 {
-> +				regulator-name = "ldo5";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			ldo6: LDO6 {
-> +				regulator-name = "ldo6";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			ldo7: LDO7 {
-> +				regulator-name = "ldo7";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +};
-> +
-> +&uart1 { /* console */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-> +	status = "okay";
-> +};
-> +
-> +&usb3_phy0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_dwc3_0 {
-> +	extcon = <&typec_tusb320>;
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
-> +&usb3_phy1 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_dwc3_1 {
-> +	status = "okay";
-> +	dr_mode = "host";
-
-We prefer to end the property list with 'status', so please flip the
-order here.
-
-Shawn
-
-> +};
-> +
-> +&wdog1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_wdog>;
-> +	fsl,ext-reset-output;
-> +	status = "okay";
-> +};
-> +
-> +&A53_0 {
-> +	operating-points = <
-> +		/* kHz    uV */
-> +		1500000 1000000
-> +		1300000 1000000
-> +		1000000 900000
-> +		800000  900000
-> +	>;
-> +};
-> -- 
-> 2.11.0
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
 > 
+> Thanks,
+> 
+> > ---
+> > v2:
+> > I was fixing the comments. :)
+> > 
+> >  fs/f2fs/gc.c | 70 +++++++++++++++++++++++++---------------------------
+> >  1 file changed, 34 insertions(+), 36 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> > index 6691f526fa40..8974672db78f 100644
+> > --- a/fs/f2fs/gc.c
+> > +++ b/fs/f2fs/gc.c
+> > @@ -796,6 +796,29 @@ static int move_data_block(struct inode *inode, block_t bidx,
+> >  	if (lfs_mode)
+> >  		down_write(&fio.sbi->io_order_lock);
+> >  
+> > +	mpage = f2fs_grab_cache_page(META_MAPPING(fio.sbi),
+> > +					fio.old_blkaddr, false);
+> > +	if (!mpage)
+> > +		goto up_out;
+> > +
+> > +	fio.encrypted_page = mpage;
+> > +
+> > +	/* read source block in mpage */
+> > +	if (!PageUptodate(mpage)) {
+> > +		err = f2fs_submit_page_bio(&fio);
+> > +		if (err) {
+> > +			f2fs_put_page(mpage, 1);
+> > +			goto up_out;
+> > +		}
+> > +		lock_page(mpage);
+> > +		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
+> > +						!PageUptodate(mpage))) {
+> > +			err = -EIO;
+> > +			f2fs_put_page(mpage, 1);
+> > +			goto up_out;
+> > +		}
+> > +	}
+> > +
+> >  	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
+> >  					&sum, CURSEG_COLD_DATA, NULL, false);
+> >  
+> > @@ -803,44 +826,18 @@ static int move_data_block(struct inode *inode, block_t bidx,
+> >  				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
+> >  	if (!fio.encrypted_page) {
+> >  		err = -ENOMEM;
+> > -		goto recover_block;
+> > -	}
+> > -
+> > -	mpage = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
+> > -					fio.old_blkaddr, FGP_LOCK, GFP_NOFS);
+> > -	if (mpage) {
+> > -		bool updated = false;
+> > -
+> > -		if (PageUptodate(mpage)) {
+> > -			memcpy(page_address(fio.encrypted_page),
+> > -					page_address(mpage), PAGE_SIZE);
+> > -			updated = true;
+> > -		}
+> >  		f2fs_put_page(mpage, 1);
+> > -		invalidate_mapping_pages(META_MAPPING(fio.sbi),
+> > -					fio.old_blkaddr, fio.old_blkaddr);
+> > -		if (updated)
+> > -			goto write_page;
+> > -	}
+> > -
+> > -	err = f2fs_submit_page_bio(&fio);
+> > -	if (err)
+> > -		goto put_page_out;
+> > -
+> > -	/* write page */
+> > -	lock_page(fio.encrypted_page);
+> > -
+> > -	if (unlikely(fio.encrypted_page->mapping != META_MAPPING(fio.sbi))) {
+> > -		err = -EIO;
+> > -		goto put_page_out;
+> > -	}
+> > -	if (unlikely(!PageUptodate(fio.encrypted_page))) {
+> > -		err = -EIO;
+> > -		goto put_page_out;
+> > +		goto recover_block;
+> >  	}
+> >  
+> > -write_page:
+> > +	/* write target block */
+> >  	f2fs_wait_on_page_writeback(fio.encrypted_page, DATA, true, true);
+> > +	memcpy(page_address(fio.encrypted_page),
+> > +				page_address(mpage), PAGE_SIZE);
+> > +	f2fs_put_page(mpage, 1);
+> > +	invalidate_mapping_pages(META_MAPPING(fio.sbi),
+> > +				fio.old_blkaddr, fio.old_blkaddr);
+> > +
+> >  	set_page_dirty(fio.encrypted_page);
+> >  	if (clear_page_dirty_for_io(fio.encrypted_page))
+> >  		dec_page_count(fio.sbi, F2FS_DIRTY_META);
+> > @@ -871,11 +868,12 @@ static int move_data_block(struct inode *inode, block_t bidx,
+> >  put_page_out:
+> >  	f2fs_put_page(fio.encrypted_page, 1);
+> >  recover_block:
+> > -	if (lfs_mode)
+> > -		up_write(&fio.sbi->io_order_lock);
+> >  	if (err)
+> >  		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
+> >  								true, true);
+> > +up_out:
+> > +	if (lfs_mode)
+> > +		up_write(&fio.sbi->io_order_lock);
+> >  put_out:
+> >  	f2fs_put_dnode(&dn);
+> >  out:
+> > 
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
