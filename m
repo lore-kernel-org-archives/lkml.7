@@ -2,250 +2,89 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52C0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5EFC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE56021849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C0D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbfGRNDc (ORCPT
+        id S2390504AbfGRNDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:03:32 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:57986 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfGRNDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:03:32 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 8EB7E2070A;
-        Thu, 18 Jul 2019 15:03:30 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 73348206B8;
-        Thu, 18 Jul 2019 15:03:30 +0200 (CEST)
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v3] media: dvb: Provide 4 devm variants
-To:     Sean Young <sean@mess.org>, Brad Love <brad@nextdimension.cc>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Message-ID: <068836c7-a116-7e6f-cbb2-f2176fbb9a38@free.fr>
-Date:   Thu, 18 Jul 2019 15:03:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 18 Jul 2019 09:03:36 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45863 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390481AbfGRNDe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:03:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x22so22132278qtp.12;
+        Thu, 18 Jul 2019 06:03:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lb5k3Q5zQv7ZLYwKsi5srpJUcaAhZ2VH3/ijP9EHPxI=;
+        b=bJZUe2Q4TPeH0V6Mu45JwPPUVuQzsLbVcT5whNJqDcId54bdTKAvznV94DL75HArIn
+         ImDqGrCKqr7DU6uOcEBlKeV++Dl/051kiLMksb5sGpK1d9Jw7rL2Y4z2vRl7hrbqO7ji
+         fLwVlvjC/mdjdzc+7FP4FMHX+3/oULVuUOwhO3ZlkX/fdW5iqB0SNA9/LHYNWL8ouhdc
+         IraIPpxtjBzEHlQh0Ye4SrdGKTIkWCx3Cd17rhzMC8JOcWyVZ3b0snfZup0XEoXavIUZ
+         4/x4Gb0b21xs5p5EU+wN/3bFV2mZp/7ZTKFQME/ziwg+LH0LDnzKInK33zKwptDSPpM0
+         eaCQ==
+X-Gm-Message-State: APjAAAWDonUdkXTV5MHL2PA2UK1cX7/2wuHsfZ3rrLNbCOIZXe7yBEu4
+        NfdiGJtgGCnIsUny82NwsbX7YtK+q9JcKRkkckQ=
+X-Google-Smtp-Source: APXvYqz9nIctHx6Rxddq8cesuADplI3Y1SDM5MUlVUyjc8+t0YSaOlsFqe0AC18MyfvhBpwKa4Wro3+CjshsGETrsVs=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr31403781qtd.18.1563455013554;
+ Thu, 18 Jul 2019 06:03:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jul 18 15:03:30 2019 +0200 (CEST)
+References: <20190718125509.775525-1-arnd@arndb.de> <20190718125703.GA28332@lst.de>
+In-Reply-To: <20190718125703.GA28332@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 18 Jul 2019 15:03:15 +0200
+Message-ID: <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
+Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide devm variants for automatic resource release on device removal.
-Makes error-handling in probe() simpler, thus less error-prone.
-Once all resources are devmanaged, remove() is no longer needed.
+On Thu, Jul 18, 2019 at 2:57 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Thu, Jul 18, 2019 at 02:55:01PM +0200, Arnd Bergmann wrote:
+> > When CONFIG_BLOCK is disabled, SECTOR_SHIFT is unknown:
+> >
+> > In file included from <built-in>:3:
+> > include/linux/iomap.h:76:48: error: use of undeclared identifier 'SECTOR_SHIFT'
+> >         return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
+> >
+> > Since there are no callers in this case, just hide the function in
+> > the same ifdef.
+> >
+> > Fixes: db074436f421 ("iomap: move the direct IO code into a separate file")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Can we just not include iomap.c when CONFIG_BLOCK is not set?
+> Which file do you see this with?
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
-Changes from v2:
-x Handle dvb_register_adapter() return code correctly
-Changes from v1:
-x Simplify devm_dvb_register_adapter() implementation
-x Add 3 more devm APIs
-x Document them in devres.rst
----
- Documentation/driver-model/devres.rst |  6 ++++++
- drivers/media/dvb-core/dmxdev.c       | 13 +++++++++++++
- drivers/media/dvb-core/dvb_demux.c    | 13 +++++++++++++
- drivers/media/dvb-core/dvb_frontend.c | 13 +++++++++++++
- drivers/media/dvb-core/dvbdev.c       | 12 ++++++++++++
- include/media/dmxdev.h                |  3 +++
- include/media/dvb_demux.h             |  2 ++
- include/media/dvb_frontend.h          |  3 +++
- include/media/dvbdev.h                |  3 +++
- 9 files changed, 68 insertions(+)
+The inclusion comes from the recently added header check in commit
+c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
 
-diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
-index 6af41a6a4bb6..84bdb61f27a3 100644
---- a/Documentation/driver-model/devres.rst
-+++ b/Documentation/driver-model/devres.rst
-@@ -268,6 +268,12 @@ DMA
- DRM
-   devm_drm_dev_init()
- 
-+DVB
-+  devm_dvb_dmx_init()
-+  devm_dvb_dmxdev_init()
-+  devm_dvb_register_adapter()
-+  devm_dvb_register_frontend()
-+
- GPIO
-   devm_gpiod_get()
-   devm_gpiod_get_index()
-diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
-index f14a872d1268..f38b65d1b430 100644
---- a/drivers/media/dvb-core/dmxdev.c
-+++ b/drivers/media/dvb-core/dmxdev.c
-@@ -1444,6 +1444,19 @@ int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *dvb_adapter)
- 
- EXPORT_SYMBOL(dvb_dmxdev_init);
- 
-+static void dmxdev_release(void *dmxdev)
-+{
-+	dvb_dmxdev_release(dmxdev);
-+}
-+
-+int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
-+		struct dvb_adapter *dvb_adapter)
-+{
-+	int rc = dvb_dmxdev_init(dmxdev, dvb_adapter);
-+	return rc ? : devm_add_action_or_reset(dev, dmxdev_release, dmxdev);
-+}
-+EXPORT_SYMBOL(devm_dvb_dmxdev_init);
-+
- void dvb_dmxdev_release(struct dmxdev *dmxdev)
- {
- 	dmxdev->exit = 1;
-diff --git a/drivers/media/dvb-core/dvb_demux.c b/drivers/media/dvb-core/dvb_demux.c
-index 39a2c6ccf31d..55b9675b99c5 100644
---- a/drivers/media/dvb-core/dvb_demux.c
-+++ b/drivers/media/dvb-core/dvb_demux.c
-@@ -28,6 +28,7 @@
- #include <linux/string.h>
- #include <linux/crc32.h>
- #include <linux/uaccess.h>
-+#include <linux/device.h>
- #include <asm/div64.h>
- 
- #include <media/dvb_demux.h>
-@@ -1317,6 +1318,18 @@ int dvb_dmx_init(struct dvb_demux *dvbdemux)
- 
- EXPORT_SYMBOL(dvb_dmx_init);
- 
-+static void dmx_release(void *dvbdemux)
-+{
-+	dvb_dmx_release(dvbdemux);
-+}
-+
-+int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *dvbdemux)
-+{
-+	int rc = dvb_dmx_init(dvbdemux);
-+	return rc ? : devm_add_action_or_reset(dev, dmx_release, dvbdemux);
-+}
-+EXPORT_SYMBOL(devm_dvb_dmx_init);
-+
- void dvb_dmx_release(struct dvb_demux *dvbdemux)
- {
- 	vfree(dvbdemux->cnt_storage);
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 209186c5cd9b..4a281cd8c064 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -3007,6 +3007,19 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
- }
- EXPORT_SYMBOL(dvb_register_frontend);
- 
-+static void unregister_frontend(void *fe)
-+{
-+	dvb_unregister_frontend(fe);
-+}
-+
-+int devm_dvb_register_frontend(struct device *dev,
-+		struct dvb_adapter *dvb, struct dvb_frontend *fe)
-+{
-+	int rc = dvb_register_frontend(dvb, fe);
-+	return rc ? : devm_add_action_or_reset(dev, unregister_frontend, fe);
-+}
-+EXPORT_SYMBOL(devm_dvb_register_frontend);
-+
- int dvb_unregister_frontend(struct dvb_frontend *fe)
- {
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index a3393cd4e584..0fc8dbf65045 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -885,6 +885,18 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
- }
- EXPORT_SYMBOL(dvb_register_adapter);
- 
-+static void unreg_adapter(void *adap)
-+{
-+	dvb_unregister_adapter(adap);
-+}
-+
-+int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
-+		const char *name, struct module *module, short *adapter_nums)
-+{
-+	int rc = dvb_register_adapter(adap, name, module, dev, adapter_nums);
-+	return rc < 0 ? rc : devm_add_action_or_reset(dev, unreg_adapter, adap);
-+}
-+EXPORT_SYMBOL(devm_dvb_register_adapter);
- 
- int dvb_unregister_adapter(struct dvb_adapter *adap)
- {
-diff --git a/include/media/dmxdev.h b/include/media/dmxdev.h
-index baafa3b8aca4..0300d829aeea 100644
---- a/include/media/dmxdev.h
-+++ b/include/media/dmxdev.h
-@@ -204,6 +204,9 @@ struct dmxdev {
-  */
- int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *adap);
- 
-+int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
-+		struct dvb_adapter *dvb_adapter);
-+
- /**
-  * dvb_dmxdev_release - releases a digital TV demux and unregisters it.
-  *
-diff --git a/include/media/dvb_demux.h b/include/media/dvb_demux.h
-index 3b6aeca7a49e..95fe901076d7 100644
---- a/include/media/dvb_demux.h
-+++ b/include/media/dvb_demux.h
-@@ -266,6 +266,8 @@ struct dvb_demux {
-  */
- int dvb_dmx_init(struct dvb_demux *demux);
- 
-+int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *demux);
-+
- /**
-  * dvb_dmx_release - releases a digital TV demux internal buffers.
-  *
-diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
-index f05cd7b94a2c..56dbaf3cc7a9 100644
---- a/include/media/dvb_frontend.h
-+++ b/include/media/dvb_frontend.h
-@@ -713,6 +713,9 @@ struct dvb_frontend {
- int dvb_register_frontend(struct dvb_adapter *dvb,
- 				 struct dvb_frontend *fe);
- 
-+int devm_dvb_register_frontend(struct device *dev,
-+		struct dvb_adapter *dvb, struct dvb_frontend *fe);
-+
- /**
-  * dvb_unregister_frontend() - Unregisters a DVB frontend
-  *
-diff --git a/include/media/dvbdev.h b/include/media/dvbdev.h
-index 551325858de3..32f8d1626319 100644
---- a/include/media/dvbdev.h
-+++ b/include/media/dvbdev.h
-@@ -202,6 +202,9 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
- 			 struct module *module, struct device *device,
- 			 short *adapter_nums);
- 
-+int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
-+		const char *name, struct module *module, short *adapter_nums);
-+
- /**
-  * dvb_unregister_adapter - Unregisters a DVB adapter
-  *
--- 
-2.17.1
+This just tries to include every header by itself to see if there are build
+failures from missing indirect includes. We probably don't want to
+add an exception for iomap.h there.
+
+      Arnd
