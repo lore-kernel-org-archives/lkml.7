@@ -2,81 +2,138 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B920C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AC4C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEF121019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F5121019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R0kiNCZz"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="uB51C6Ol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfGRRAZ (ORCPT
+        id S1728082AbfGRRCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:00:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:44908 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRRAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:00:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kQiZc2BE9wRnWMclPA1/QFPclKiqhlGdalRsxoIeIes=; b=R0kiNCZzuWz3Y1/fV4KDs3PDVs
-        016j9Tvzhuf7t5FbFkGVLeMQaocJTLFp2zG0WRyRs6xDXsts9VuXGQNOLz641YGXfMK42zIUPAKc+
-        uyoXCjLqvEwTSi8o0UtlGtu/QFvIHKkCW89s9rv+15jjvPSWZ/huebb5vKpiCeizTvkxmBpQA8vy0
-        rOMRlVvVYCTxDBn30v7sfJH/bS4wZ3ZLjPmKkPaEL1YECqpqVK9pqUXq1AYfzbNkqqAAMzZrI5YHG
-        wqOPEVVRbUD0szyTr0x/V6y9If5TBuW8AroCHNLvmw82Q60mPrD1HRPZu6VvICB+rtea8GARhszH9
-        Noirag6A==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1ho9lX-0005fg-3z; Thu, 18 Jul 2019 17:00:23 +0000
-Subject: Re: linux-next: Tree for Jul 18 (header build error)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-References: <20190718133751.3cf036be@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <127d228c-322d-6349-382b-d304974df148@infradead.org>
-Date:   Thu, 18 Jul 2019 10:00:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190718133751.3cf036be@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 18 Jul 2019 13:02:14 -0400
+Received: from mail-eopbgr790088.outbound.protection.outlook.com ([40.107.79.88]:1460
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726040AbfGRRCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:02:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RXJqP2zcZ1mclGhasGKM7UWcP90cs62LtgspzhDEkOVwg2LLHrRQZoScJx2NvsZMOCYO8EM3gUR0zVOgT0W2Yr6ZxEuMaS5bY7XCdnYXYUAex0H2+SWa8wnNehGyjp8g6dL71k2GAcnrmiglKumO71ahvPzE1tORYdnIDFCSdKSiBlp5L+8o1tnZSnVlxzbbbZwlUiY6mfrLLAlVijdqX9/hsBgbaMs26WFIB68MiKssWTy+DUpdkD0COGpWDeaQ74C6mjlBbZ0zPv0OaUUhHW/yFAobf8tbEZ546mdWawMsdpO+T9DgCKFYbqvZoIhX96lMl+qEO4J+Gjgd93SdzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y/6g0lbBmPe8icy0EOaITt7XapN2C0qB3+2KSYGqB7M=;
+ b=N9pyho9BFf+BUiZaquvt1J3kbfN71Po2MoVfjL0vOCaNqaeV1G0Qb/9kDVekyZxin0sH8P/VTmK/YWNwsGq09S9SgtiNEcF17q5ZSTEd2FjFuaqkcY172PcMVwQzK8asYPyGGR9LOOZYvH/vXUxsAK6V8fUOyMbxoLYEgL52bsR5OCbF3rXUDrnmQcUqWEdGrr673pOfW6wyKChcE4AhMOZ4DVh40fwJF3n9b2QyEjgMuK6wmm0gnHZYCQyMaHnKEc7GkSB5p7Q647a0A1apRhiyVPiVGZAv7qoUBuAD82t4QMdruLTUUhEBbFjTbd3lDUmFOlwk/No1AoRHuxkkoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y/6g0lbBmPe8icy0EOaITt7XapN2C0qB3+2KSYGqB7M=;
+ b=uB51C6OlNx5cFtbU8VL9xo0jBf8/GGwaFMWzDDdfkA6ZLdkz9ivFEwSl3/Wjv+i8tZD71//s6P5ONdYDps+8TjTFMdJ4eaiVPuM/ABaO7EWJyvtvCvJ0xgKaLBtZdj8ecvAoeZDJjmxHNkYwweILjixOkiy856O3gbmNKohQoL4=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4775.namprd05.prod.outlook.com (52.135.233.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.10; Thu, 18 Jul 2019 17:02:07 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2094.009; Thu, 18 Jul 2019
+ 17:02:07 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Wei Wang <wei.w.wang@intel.com>, Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Xavier Deguillard <xdeguillard@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "yang.zhang.wz@gmail.com" <yang.zhang.wz@gmail.com>,
+        "nitesh@redhat.com" <nitesh@redhat.com>,
+        "lcapitulino@redhat.com" <lcapitulino@redhat.com>,
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "alexander.h.duyck@linux.intel.com" 
+        <alexander.h.duyck@linux.intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2] mm/balloon_compaction: avoid duplicate page removal
+Thread-Topic: [PATCH v2] mm/balloon_compaction: avoid duplicate page removal
+Thread-Index: AQHVPVETq+d/PdgRAE68BsHO2xGkqabQTVWAgABNFwA=
+Date:   Thu, 18 Jul 2019 17:02:07 +0000
+Message-ID: <4FC18511-DD19-4B10-BCAF-906E264B0411@vmware.com>
+References: <1563442040-13510-1-git-send-email-wei.w.wang@intel.com>
+ <20190718082535-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190718082535-mutt-send-email-mst@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8d8161b6-8a25-4510-6e31-08d70ba1aac1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4775;
+x-ms-traffictypediagnostic: BYAPR05MB4775:
+x-microsoft-antispam-prvs: <BYAPR05MB4775C2FD7924573D5C548257D0C80@BYAPR05MB4775.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(136003)(376002)(39860400002)(199004)(189003)(64756008)(76116006)(6512007)(66476007)(66446008)(25786009)(66946007)(68736007)(53936002)(33656002)(66556008)(6246003)(316002)(6116002)(7736002)(6486002)(36756003)(4326008)(2906002)(476003)(3846002)(305945005)(6436002)(6916009)(71200400001)(14454004)(8676002)(71190400001)(11346002)(446003)(86362001)(4744005)(486006)(26005)(66066001)(102836004)(76176011)(6506007)(5660300002)(53546011)(186003)(14444005)(99286004)(81156014)(81166006)(256004)(8936002)(478600001)(7416002)(54906003)(229853002)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4775;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3H4cEqrf76gadOEu7acGHaUp5c8KWfuWofhQDbzvWLRAvZr4mBBLwLrB38FfZRDHVUrYTIZsaiNJ+Ko9HGHdqkrxpWh7rGyqUT4hJNhjU23G/k4UBKejLBwgTMm7kZQ4Bycu6Wroo0fazmwvVkb0EQ+6tu9mCQqico1BmtbgQgrR3Sa8MD5bcYCnaYO/iIfm6gAF5jsRZ/rF+lh60OIgYDhZFuUX+1PtiZ4l7/otRhpZYCIJmJmPJTfzL4ZFKrFkjVLpljwe9sFEnWMvVivguzTFSKgNmbVYg7L9mskxGaDcBtHMfrzJnnXtBA8rE7aKFWvn0oSPs2wstUMkrCQlnimBbK47oGOHxcSQ/RFdzxC1gtcthRrr/0YrePNke9kIelCYcu+svH1aFNARBIOrr4e++fPWyl0QPZSq1JQwQvw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B3E1CA15BF28004E91F935580443763C@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d8161b6-8a25-4510-6e31-08d70ba1aac1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:02:07.5889
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4775
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/19 8:37 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add v5.4 material to your linux-next included branches
-> until after v5.3-rc1 has been released.
-> 
-> Changes since 20190717:
-> 
+> On Jul 18, 2019, at 5:26 AM, Michael S. Tsirkin <mst@redhat.com> wrote:
+>=20
+> On Thu, Jul 18, 2019 at 05:27:20PM +0800, Wei Wang wrote:
+>> Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
+>>=20
+>> A #GP is reported in the guest when requesting balloon inflation via
+>> virtio-balloon. The reason is that the virtio-balloon driver has
+>> removed the page from its internal page list (via balloon_page_pop),
+>> but balloon_page_enqueue_one also calls "list_del"  to do the removal.
+>> This is necessary when it's used from balloon_page_enqueue_list, but
+>> not from balloon_page_enqueue_one.
+>>=20
+>> So remove the list_del balloon_page_enqueue_one, and update some
+>> comments as a reminder.
+>>=20
+>> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+>=20
+>=20
+> ok I posted v3 with typo fixes. 1/2 is this patch with comment changes. P=
+ls take a look.
 
-on x86_64, when CONFIG_BLOCK is not set:
+Thanks (Wei, Michael) for taking care of it. Please cc me on future
+iterations of the patch.
 
-  CC      include/linux/iomap.h.s
-In file included from <command-line>:0:0:
-./../include/linux/iomap.h: In function ‘iomap_sector’:
-./../include/linux/iomap.h:76:48: error: ‘SECTOR_SHIFT’ undeclared (first use in this function); did you mean ‘SECTIONS_SHIFT’?
-  return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
-                                                ^~~~~~~~~~~~
+Acked-by: Nadav Amit <namit@vmware.com>
 
-
--- 
-~Randy
