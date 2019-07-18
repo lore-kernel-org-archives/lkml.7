@@ -2,191 +2,128 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BA8C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D25EC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8572217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GZjJVzEi"
+	by mail.kernel.org (Postfix) with ESMTP id 681C6217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563411125;
+	bh=TF6c8DHV4IC0S97LT0eYfmV81npEomR7oGutaE5KF5c=;
+	h=Date:From:To:Subject:List-ID:From;
+	b=lkKlZ/8hR3zfz1PiigrPK83Wy820Udnv9AtrVxTeyZKaSSsNkXQcEjJn2UptUv/Qq
+	 xOJgwvpbHQWkpT4AstAyJ70df0fU8VTKFYnRGPT6zeKorPbvL1b3OBWbnwegsr5LRh
+	 DEt3URzzGNKVMNe0Ks9v9d7FrAzrjcdTbqBY79g8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732072AbfGRAtr (ORCPT
+        id S1728538AbfGRAwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:49:47 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42694 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbfGRAtr (ORCPT
+        Wed, 17 Jul 2019 20:52:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38011 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfGRAwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:49:47 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 201so19041470qkm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 17:49:46 -0700 (PDT)
+        Wed, 17 Jul 2019 20:52:03 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n11so25394914qtl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 17:52:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7K9LFXNQszPVt9oolCuthJEpelngJlWY3awPIGBoIrc=;
-        b=GZjJVzEiaTVbs3gP0mhVx/ascqRuKFftBg0qG8OjLCs9Uet45jCXXHASsA+I78EcEM
-         hnXVwAzXuOMkmmeiVNSMXOz6qQ6PQrO13L850mZrPiDOmrEl4+tmsaJATgsPDLzvCuHX
-         pKtA0WAL6PfYZ732t/8Hn7t/mcLhGq8mgFBmgAyj3C3f4w6pLEclhG2GZnZyY2pwiyIv
-         PbfEpwmggZ6X+dlw2lyCk8k5yM+HeTs5ukcAG8TCaHwMNf5XhyNs1uxa8lhpwmCm/N4j
-         arlVs+uOoN4ASTWBLtHsXFZOsmspHBc7JksnLpoBGrrHRb1mDJi7fsHLqiyUCUtZWwqy
-         SVTQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=j18WraFuZIluoyKhD6u2cAa7N3YW50rIzRpqn3W/qyo=;
+        b=ku/dsPt2CV4/LzppNoofF/xj17vxxH4Am/eVLliH4v+oBKAhu8qbqE0cbl3nhyfvPf
+         DkMSVTBbDUgQEGkZo5l98rjFv6VF4YQW56xJgQdRcBG9J+17qo8Ujm0F8JJnt6WriJZk
+         IvZgWTxkCqYoassa2sZadLBXpl6m5N5rTPjitv9dggsP4vOVt+wDCib+XmlcUw5gStui
+         tntmFhONphfREnnnqs54XEHJ8MQvqqmfMZNjUCvH39ji/EYdNR36LX+KgAVXJmpv9WAh
+         Fsc5qNNUFkPcjOE7kurckOuVdoQhvVvjlmM4A7xL9FgCCsrM2jo84+OT0YU3nS1CfEdm
+         kNWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7K9LFXNQszPVt9oolCuthJEpelngJlWY3awPIGBoIrc=;
-        b=q7zcBaQhbgtLnj2bNAhGU53xbLrgCieRQ0esO2VyrtxPb+LCh1T1FaeHIwldWQYuUK
-         s0qLOJYYDC9EoL0uAJvpO3R+p8H3Y1zo6xLUFAB1cedbTQel3O31MZ2ECaIJ8EinvvIE
-         1byMlcVzxgVTuY2ZVxN/jNHLUc/a+rFNm/b473UggcnmoDGEH2SU8sZ1IRqhJLl7VF55
-         OuGIz+YgxlMcs6ixoU287GqnEUBbN0SOf+AvoKT1sCT8qqHcbOiPamX1ctYeiloY+8Jg
-         4wJNQNuuGo53fblc8Wdeg0ssP8+Z0PzggvYdF7MuOMkLZG+x8i9p8FUgxj3gMqgxU2GM
-         YTzw==
-X-Gm-Message-State: APjAAAU/sAhoxt/Lx7V9G3A45syIdmT4gQOAP3jkKs4PIZWbUXobPsXU
-        KBHK/RkiQGEHy2FThTxBzA8qtA==
-X-Google-Smtp-Source: APXvYqyFZ9N+j7zVEUuW7E/oqpo5oR1MZH84slnFKyHkQq0UmXesigIoFoR8pMXjjDLELyRq2Ou6vA==
-X-Received: by 2002:ae9:f101:: with SMTP id k1mr28781291qkg.337.1563410986046;
-        Wed, 17 Jul 2019 17:49:46 -0700 (PDT)
-Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v84sm11985703qkb.0.2019.07.17.17.49.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 17:49:45 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
-Date:   Wed, 17 Jul 2019 20:49:43 -0400
-Cc:     rafael.j.wysocki@intel.com, robert.moore@intel.com,
-        erik.schmauss@intel.com, jkim@freebsd.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <73A4565B-837B-4E13-8B72-63F69BF408E7@lca.pw>
-References: <20190717033807.1207-1-cai@lca.pw>
- <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=j18WraFuZIluoyKhD6u2cAa7N3YW50rIzRpqn3W/qyo=;
+        b=ft1Z26xup+T8Z2tkLDchXI6gbAieZzYlPnfCKytkWpKR08qBTX0x691i/TF5hCam7d
+         cxhuJQdCn/R63hkkoPcz+CyG1IT5Srj23jdlrDYPcIw2Hhpe2IFFb9yvN8NlBn3EbB8G
+         3pgTjdmJGXD44KgccuJ/LScAM1PerzP5DxJQpsjHInjDHHkCtf0MH9tdxfchml2BWOij
+         uRziYyv4EV17J/js+3yvHnmBeJnlCxcKQvmIchKBkKzQW5TRgIaqz1rYsoBKBetfsSsr
+         PsLBb9He2rPVbTtc1KetTFEVhf9qZbpI0uSV+/41PP0JeOJnlAfv2m43U8NIUvpsUlA4
+         tFQw==
+X-Gm-Message-State: APjAAAUL5CicPZgDDwaUR3+m4TZlPbS7Z0ed15FSuPe4rqHFxDeO8wlV
+        FRsL3C3XyG2uRSTYoKIuFJD2pQEUO8w=
+X-Google-Smtp-Source: APXvYqzWnrReab7SToU+AaYtwoMN2X2d3/rvf+DPDu/2s3OV39Bc03HEeA4XHkRWKImbUBr89GOMNA==
+X-Received: by 2002:a0c:8705:: with SMTP id 5mr30105641qvh.32.1563411122629;
+        Wed, 17 Jul 2019 17:52:02 -0700 (PDT)
+Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
+        by smtp.gmail.com with ESMTPSA id 123sm10593436qkm.61.2019.07.17.17.52.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jul 2019 17:52:02 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 20:52:00 -0400
+From:   Konrad Rzeszutek Wilk <konrad@kernel.org>
+To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] (swiotlb) for-linus-5.2
+Message-ID: <20190718005159.GA19783@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-> On Jul 17, 2019, at 6:01 PM, Nick Desaulniers =
-<ndesaulniers@google.com> wrote:
->=20
-> On Tue, Jul 16, 2019 at 8:38 PM Qian Cai <cai@lca.pw> wrote:
->>=20
->> Clang generate quite a few of those warnings.
->>=20
->> drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer
->> treated as a cast from integer to pointer is a GNU extension
->> [-Wnull-pointer-arithmetic]
->>                status =3D acpi_get_handle(ACPI_ROOT_OBJECT,
->> obj->string.pointer,
->>                                         ^~~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:458:56: note: expanded from macro
->> 'ACPI_ROOT_OBJECT'
->> #define ACPI_ROOT_OBJECT                ((acpi_handle) =
-ACPI_TO_POINTER
->> (ACPI_MAX_PTR))
->>                                                        =
-^~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:509:41: note: expanded from macro
->> 'ACPI_TO_POINTER'
->> #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) =
-0,
->> (acpi_size) (i))
->>                                         =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:503:84: note: expanded from macro
->> 'ACPI_ADD_PTR'
->> #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
->> (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
->>                                         ^~~~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:501:66: note: expanded from macro
->> 'ACPI_CAST_PTR'
->> #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->>                                                                  ^
->> This is because pointer arithmetic on a pointer not pointing to an =
-array
->> is an undefined behavior. Fix it by doing an integer arithmetic
->> instead.
->=20
-> Hi Qian, thanks for the patch.  How do I reproduce this issue,
-> precisely?  I just tried:
-> $ make CC=3Dclang -j71 drivers/acpi/scan.o
-> on linux-next today and don't observe the warning.  My clang is ToT
-> built sometime this week.  It looks like drivers/acpi/scan.o when
-> CONFIG_ACPI=3Dy, which is set in the defconfig.  Is there another set =
-of
-> configs to enable to observe the warning?
-
-# make W=3D1 -j 256
-
-With the config,
-
-https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config=20
-
->=20
-> Also, the fix is curious.  Arithmetic on pointers to different
-> "objects" (with one element passed the end) may lead to provence
-> issues due to undefined behavior, but I would have expected some cases
-> to uintptr_t, then arithmetic on that type, as the solution (which is
-> what I suspect ACPI_CAST_PTR is doing).
->=20
-> Further, you seem to have modified ACPI_ADD_PTR but not ACPI_SUB_PTR;
-> I would have expected both to be afflicted together or not at all
-> based on their existing implementations.
-
-Yes, I thought about that, but ACPI_SUB_PTR does not seem used anywhere, =
-so I thought maybe just start a new discussion to remove it all together =
-later.
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
->=20
->>=20
->> Signed-off-by: Qian Cai <cai@lca.pw>
->> ---
->> include/acpi/actypes.h | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
->> index ad6892a24015..25b4a32da177 100644
->> --- a/include/acpi/actypes.h
->> +++ b/include/acpi/actypes.h
->> @@ -500,13 +500,13 @@ typedef u64 acpi_integer;
->>=20
->> #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->> #define ACPI_CAST_INDIRECT_PTR(t, p)    ((t **) (acpi_uintptr_t) (p))
->> -#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, =
-(ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
->> +#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, (a) + =
-(acpi_size)(b))
->> #define ACPI_SUB_PTR(t, a, b)           ACPI_CAST_PTR (t, =
-(ACPI_CAST_PTR (u8, (a)) - (acpi_size)(b)))
->> #define ACPI_PTR_DIFF(a, b)             ((acpi_size) (ACPI_CAST_PTR =
-(u8, (a)) - ACPI_CAST_PTR (u8, (b))))
->>=20
->> /* Pointer/Integer type conversions */
->>=20
->> -#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) =
-0, (acpi_size) (i))
->> +#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, 0, =
-(acpi_size) (i))
->=20
-> IIUC, these are adding `i` to NULL (or (void*)0)? X + 0 =3D=3D X ?
-> --=20
-> Thanks,
-> ~Nick Desaulniers
+Hey Linus,
 
+Please git pull the following branch:
+
+  git pull git://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git for-linus-5.2
+
+which has one compiler fix, and a bug-fix in swiotlb_nr_tbl() and swiotlb_max_segment()
+to check also for no_iotlb_memory.
+
+Diffstat and changelog below:
+
+drivers/xen/swiotlb-xen.c |  2 +-
+ kernel/dma/swiotlb.c      | 30 ++++++++++++++++--------------
+ 2 files changed, 17 insertions(+), 15 deletions(-)
+
+
+Arnd Bergmann (1):
+      swiotlb: fix phys_addr_t overflow warning
+
+Florian Fainelli (2):
+      swiotlb: Group identical cleanup in swiotlb_cleanup()
+      swiotlb: Return consistent SWIOTLB segments/nr_tbl
+
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJdL8KvAAoJEFKlDoTx2wm/03YP/2FxnLFTxEAi1qFcD55yuC+v
+6yYRmot29jCMA84rWhxEFCnsCPamG++eF+mx9d9HJrMonBWsvtm6FV5cpcsh9B3G
+Yqun9DZWWsop97ZVn5XsLdmLo7UCIJnjc+Z10ca91pQaV14CrNvtU7ZiaGGaUTXo
+MJ3WLil+sD5P8GrMgnYENA74jcnbEimd37XDtap2AE7lKpcQL1ihTHptAUO0pHne
+kuyPnwtzJALa2RNdsouFY4MCuRlmOsL4tIAUEzQE/NT5SmHt47zmf0n6Kk/1i1Le
+k7a91/TPxjNWvagwZozBRc4zuVbZgS5xMuUlMjzQHrWaqXYrSTSILZ3ZVnCKmyPK
+e8dZJZXtmcRLsSBW6wfE0HYv8SQGVMDTWBCAWjefqXa6uqkfvBaPWpa9r7qtBUZf
+B0oAls9LzdDliavybRXJL23nyq7Zjvdauw19L9CCBCMjuAoriEOkg9nZc/13H/w2
+XUWqhAjW/64U7wEjVBKkVWtXptTEpEp7T112hgXYxm39/Uk5pZnte2WouQbI1AMo
+xRr9G7y2V6pcXApgeUaCTYQmR7m8speRAfnoCy6xIl7skUIdTR6tQasfN3HHKu+q
+kAZdGGEKf7rSDthUMOeDN+z17AmX9OqORaBsOdMslo4L4qEtusm001djJoWL9+1U
+Z2zSIe/jS6Q9EwfS4EaS
+=WIqP
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
