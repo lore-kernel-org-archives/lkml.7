@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFADBC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508F1C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A0C2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363A521783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbfGRCPI (ORCPT
+        id S1732780AbfGRCUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 22:15:08 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:47248 "EHLO
+        Wed, 17 Jul 2019 22:20:53 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:33101 "EHLO
         heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727787AbfGRCPI (ORCPT
+        with ESMTP id S1727793AbfGRCUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 22:15:08 -0400
+        Wed, 17 Jul 2019 22:20:52 -0400
 X-IronPort-AV: E=Sophos;i="5.64,276,1559491200"; 
-   d="scan'208";a="71677718"
+   d="scan'208";a="71678284"
 Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 18 Jul 2019 10:15:05 +0800
+  by heian.cn.fujitsu.com with ESMTP; 18 Jul 2019 10:20:49 +0800
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id CAEE14B40405;
-        Thu, 18 Jul 2019 10:15:00 +0800 (CST)
+        by cn.fujitsu.com (Postfix) with ESMTP id B11224CDDAEB;
+        Thu, 18 Jul 2019 10:20:46 +0800 (CST)
 Received: from localhost.localdomain (10.167.226.33) by
  G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Thu, 18 Jul 2019 10:15:07 +0800
+ (TLS) id 14.3.439.0; Thu, 18 Jul 2019 10:20:52 +0800
 From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
 To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Subject: [PATCH] udp: Fix typo in udpv4/p.c
-Date:   Thu, 18 Jul 2019 10:13:37 +0800
-Message-ID: <1563416017-6193-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+Subject: [PATCH] udp: Fix typo in net/ipv4/udp.c
+Date:   Thu, 18 Jul 2019 10:19:23 +0800
+Message-ID: <1563416363-7036-1-git-send-email-suyj.fnst@cn.fujitsu.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: CAEE14B40405.ABB3E
+X-yoursite-MailScanner-ID: B11224CDDAEB.AFD44
 X-yoursite-MailScanner: Found to be clean
 X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
