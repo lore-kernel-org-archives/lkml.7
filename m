@@ -2,125 +2,95 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4704C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B248C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789F721783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E6321783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZAppM5Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiaSk9GA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389725AbfGRJ77 (ORCPT
+        id S2389878AbfGRKAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:59:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36671 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfGRJ77 (ORCPT
+        Thu, 18 Jul 2019 06:00:46 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35502 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfGRKAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:59:59 -0400
-Received: by mail-io1-f68.google.com with SMTP id o9so50564994iom.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 02:59:58 -0700 (PDT)
+        Thu, 18 Jul 2019 06:00:46 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x25so26731668ljh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 03:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=td1HNio79rUWb+NcoR9IwgMiKGmE3lwyhncFJcCDp44=;
-        b=IZAppM5Y50mja8NGPFV1GDclMbKijeYYcITtnbJ6sW6aMb3OVXWrOo4LZ4Xig7oVel
-         36ShU61KzqQm2/2ozUBFLA0WwfcQR9sxpDbt+ngZrxG7adBuYr+ZEFOOVpFS/3xfRYow
-         LvZtfWwCiLIFUdwxjN6KrnAJC4Au27s7E/o3EvS7IUzy4OkIniS26Nc9iA20eIiZAIan
-         xL/JuG9IXv6RZmdYD/8/XGw8wGo3e4zGbNVmNgkxR0m7GaotSdbgeomdzWnKUubdWcau
-         vhM3tb7E/o9TTQ2YrxjwjZWpJrf24ngRD+mePZLl8IWwBFods8EvW3uR/zSUjWfce5KP
-         aJAQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=FFgfnC6kqNasXzV8UpG733mU8hUnuk4aGDjYgveXuxc=;
+        b=RiaSk9GAGx/vZ197tf/jXWn6iRN9wOrv35h8IkQRWT2mFAWG0k+hPTlhiy2oolroEC
+         hcGaqhNNyeu08mglTpxPndyLAM/+rXPUcoMPgR1Ri79pH8nPbUy0G3+KZ2Y2ipAZRYdV
+         GrdgDDLkzdLmvkF4in1t4K1blNLsGksVNCocejs8XPsp7xNtw1OFRnd7sFUldrPU1NXY
+         A3VQc+w78HdGXPLI7SptbNe+JUgR/l0UKBhBmIWS3mfaBybO9eX+vdYy95QeYJ3IESbg
+         xra65KeaVOIEpJMVfhMwvI9t7GP0Ou/TFWOKiOGRv5Gzoh0tnW2azrh2FOPwVPq0gWXj
+         akRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=td1HNio79rUWb+NcoR9IwgMiKGmE3lwyhncFJcCDp44=;
-        b=GQQFWmgxajmgY1AH0FwONzZLPkSu1umD1T0FStyuMV81zq6ThORS6hWDcWWY+O3UqM
-         ZuLCAMpwmmlsfJQt7X+UQo511IYF5lltKJ0nDT8Ha1GdKn3dPrgmus2/LIi8EZn0KAoj
-         hfvdfr3Pi4vYinQcdKPEKdGXFSQV3g0LapMJKqQmjjHBG/CuxB/1jtwBeDs6EnUxJD/d
-         w6o3JlRksUDOrVtgrS+BxV3Whc3Co5dVxmPb6ZNPY1Ae9moNLpJFxEMmTcjlH8GQsBjE
-         e0dqwnYJQ7X6HTklvDO4YIXob4ewS8ZERwhS/wzgrhIsHbS+JZPBK8iEF63SL7fz2O0B
-         hSgw==
-X-Gm-Message-State: APjAAAVW9MaSD9fs2uTR8AMualLOwhimkbxTvYZd1ESIoNM4KaSI5/Zh
-        xqbVx+wb+b4sGWpG8AAjjNkhDQPh3993+SxoFqA=
-X-Google-Smtp-Source: APXvYqzud4Nxrnbh/PR/qsFuLeijrfWc+GtbQkjrYSx0pkm9JVhMAxNcRNl3hHIX/xhg46sLiQ+hB988QEtyYUyyPD0=
-X-Received: by 2002:a02:4005:: with SMTP id n5mr48318285jaa.73.1563443998110;
- Thu, 18 Jul 2019 02:59:58 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=FFgfnC6kqNasXzV8UpG733mU8hUnuk4aGDjYgveXuxc=;
+        b=Oq3HpjN9IQ3hdt+qiqPRzU6tLkKf8I8l88QvWXlmNirlZcwgh20fgXEknIIrEeVxST
+         bPHDq6cFWcT2etE3XZDJqAPtEkAs1bnB1AL9Jw0YFtkHleOkqFZTr29nskM6udNighlP
+         sFzWf7s16JC6Uql1GXJEp2g/4riIQH4oMD0ueaAsYc51J3WAHn+XIR0+aQiZbelPR6s8
+         8LJX/Awuvy8cwBO0aNVz8Lb8vxFxGU1fmXeJaNKWVAA+LYycwttBYywv8HleOZ1BH1Hi
+         zG/CQ4MiUfiX5OdT7Y1zxPpLvef+vQ1icgoBNIQyAXhERjluWCEDEBiOAoDt2DhtHnqW
+         Gmkw==
+X-Gm-Message-State: APjAAAUqm818xTax3TGqg8liG+0i11oSmsZNJ3oJdKHdmerOVMWueLEW
+        QJvxBzLAm6xKPzRzc+XcNM97MpVv
+X-Google-Smtp-Source: APXvYqzmGLV3HPu73qDuUNevF/7k1MnioPoKXgWOGKuzxw7RQSVxjt+y5Xoe5F07e28lrFB/XrQAyQ==
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr23650657ljj.113.1563444044253;
+        Thu, 18 Jul 2019 03:00:44 -0700 (PDT)
+Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id n187sm3896510lfa.30.2019.07.18.03.00.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 03:00:43 -0700 (PDT)
+Subject: Re: [Xen-devel] [PATCH 0/2] xen/gntdev: sanitize user interface
+ handling
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20190718065222.31310-1-jgross@suse.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <620bb347-f776-eb3a-7a8b-e9519a613d70@gmail.com>
+Date:   Thu, 18 Jul 2019 13:00:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190716072805.22445-1-pmladek@suse.com>
-In-Reply-To: <20190716072805.22445-1-pmladek@suse.com>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Thu, 18 Jul 2019 12:59:47 +0300
-Message-ID: <CALYGNiPETLPeOOuRwQtYca=yrwWHgg11A6Fc_qZipG56N8KP8A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] panic/printk/x86: Prevent some more printk-related
- deadlocks in panic()
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190718065222.31310-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:28 AM Petr Mladek <pmladek@suse.com> wrote:
+On 7/18/19 9:52 AM, Juergen Gross wrote:
+> The Xen gntdev driver's checking of the number of allowed mapped pages
+> is in need of some sanitizing work.
 >
-> Hi,
+> Juergen Gross (2):
+>    xen/gntdev: replace global limit of mapped pages by limit per call
+>    xen/gntdev: switch from kcalloc() to kvcalloc()
 >
-> I have found some spare duct tape and wrapped some more printk-related
-> deadlocks in panic().
+>   drivers/xen/gntdev-common.h |  2 +-
+>   drivers/xen/gntdev-dmabuf.c | 11 +++-------
+>   drivers/xen/gntdev.c        | 52 ++++++++++++++++++---------------------------
+>   3 files changed, 25 insertions(+), 40 deletions(-)
 >
-> More seriously, someone reported a deadlock in panic(). Some non-trivial
-> debugging pointed out a problem with the following combination:
->
->      + x86_64 architecture
->      + panic()
->      + pstore configured as message dumper (kmsg_dump())
->      + crash kernel configured
->      + crash_kexec_post_notifiers
->
-> In this case, CPUs are stopped by crash_smp_send_stop(). It uses
-> NMI but it does not modify cpu_online_mask. Therefore logbuf_lock
-> might stay locked, see 2nd patch for more details.
->
-> The above is a real corner case. But similar problem seems to be
-> even in the common situations on architectures that do not use
-> NMI in smp_send_stop() as a fallback, see 1st patch.
->
-> Back to the duct tape. I hope that we will get rid of these problems
-> with the lockless printk ringbuffer rather sooner than later.
-> But it still might take some time. And the two fixes might be
-> useful also for stable kernels.
-
-Looks good.
-
-Reviewed-by: Konstantin Khebnikov <khlebnikov@yandex-team.ru>
-
->
->
-> Petr Mladek (2):
->   printk/panic: Access the main printk log in panic() only when safe
->   printk/panic/x86: Allow to access printk log buffer after
->     crash_smp_send_stop()
->
->  arch/x86/kernel/crash.c     |  6 +++++-
->  include/linux/printk.h      |  6 ++++++
->  kernel/panic.c              | 49 +++++++++++++++++++++++++++------------------
->  kernel/printk/printk_safe.c | 37 ++++++++++++++++++++++------------
->  4 files changed, 65 insertions(+), 33 deletions(-)
->
-> --
-> 2.16.4
->
+For the series:
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
