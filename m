@@ -2,101 +2,67 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC069C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309C8C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FA9208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E13208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389509AbfGRImq (ORCPT
+        id S2389539AbfGRInB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:42:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58046 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfGRImq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:42:46 -0400
-Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 52ae64ba30307854; Thu, 18 Jul 2019 10:42:43 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Busch <keith.busch@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] acpi: fix false-positive -Wuninitialized warning
-Date:   Thu, 18 Jul 2019 10:42:43 +0200
-Message-ID: <7785979.oluxICSiVJ@kreacher>
-In-Reply-To: <20190712090148.36582-1-arnd@arndb.de>
-References: <20190712090148.36582-1-arnd@arndb.de>
+        Thu, 18 Jul 2019 04:43:01 -0400
+Received: from verein.lst.de ([213.95.11.211]:57850 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbfGRInA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:43:00 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9FFC668B05; Thu, 18 Jul 2019 10:42:58 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 10:42:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH v3 4/6] x86,s390/mm: Move sme_active() and sme_me_mask
+ to x86-specific header
+Message-ID: <20190718084258.GC24562@lst.de>
+References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-5-bauerman@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718032858.28744-5-bauerman@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, July 12, 2019 11:01:21 AM CEST Arnd Bergmann wrote:
-> clang gets confused by an uninitialized variable in what looks
-> to it like a never executed code path:
+On Thu, Jul 18, 2019 at 12:28:56AM -0300, Thiago Jung Bauermann wrote:
+> Now that generic code doesn't reference them, move sme_active() and
+> sme_me_mask to x86's <asm/mem_encrypt.h>.
 > 
-> arch/x86/kernel/acpi/boot.c:618:13: error: variable 'polarity' is uninitialized when used here [-Werror,-Wuninitialized]
->         polarity = polarity ? ACPI_ACTIVE_LOW : ACPI_ACTIVE_HIGH;
->                    ^~~~~~~~
-> arch/x86/kernel/acpi/boot.c:606:32: note: initialize the variable 'polarity' to silence this warning
->         int rc, irq, trigger, polarity;
->                                       ^
->                                        = 0
-> arch/x86/kernel/acpi/boot.c:617:12: error: variable 'trigger' is uninitialized when used here [-Werror,-Wuninitialized]
->         trigger = trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE;
->                   ^~~~~~~
-> arch/x86/kernel/acpi/boot.c:606:22: note: initialize the variable 'trigger' to silence this warning
->         int rc, irq, trigger, polarity;
->                             ^
->                              = 0
+> Also remove the export for sme_active() since it's only used in files that
+> won't be built as modules. sme_me_mask on the other hand is used in
+> arch/x86/kvm/svm.c (via __sme_set() and __psp_pa()) which can be built as a
+> module so its export needs to stay.
 > 
-> This is unfortunately a design decision in clang and won't be fixed.
-> 
-> Changing the acpi_get_override_irq() macro to an inline function
-> reliably avoids the issue.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/linux/acpi.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index a95cce5e82e7..9426b9aaed86 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -324,7 +324,10 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
->  #ifdef CONFIG_X86_IO_APIC
->  extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
->  #else
-> -#define acpi_get_override_irq(gsi, trigger, polarity) (-1)
-> +static inline int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity)
-> +{
-> +	return -1;
-> +}
->  #endif
->  /*
->   * This function undoes the effect of one call to acpi_register_gsi().
-> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Applied, thanks!
+Looks good,
 
-
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
