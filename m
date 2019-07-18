@@ -2,191 +2,185 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7526EC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E362C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CD42173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:49:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JB3U7fFH"
+	by mail.kernel.org (Postfix) with ESMTP id 757B02184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391556AbfGRWt2 (ORCPT
+        id S2391669AbfGRWvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 18:49:28 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41934 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfGRWt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 18:49:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 62so15485409lfa.8;
-        Thu, 18 Jul 2019 15:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FYSYVvULwOnX4TuGoyoE29guebgctrQhwWO22CQ6v3s=;
-        b=JB3U7fFHi+DnnTJ+ZKAvw+joIvhm0bBQk3MGxcT4XqwEHKS2NX0kQCK8gxKa/ppl15
-         s9c0zuKUFxTjY8mRt6Lm1NnRKPNhcULd+AyGBD3S72Aoz/lw/7mwJWufernq8vC1Jdl7
-         brQ/njqM2XJXOQsJPo2iRPCx+5GIFmVT4FdbApc6rY4WrXTozGQI+cLwQtBasCXwV9v9
-         tl+5uJkaS0EKORS4Ze/iyevEkKNpcutpqgJwzATlJ4mf1mZKMPATjZduDCBAg/0EpJ6Q
-         fE70vcUH1SaM/eWd5eHrJkxbW0ZwisyIb70SapUoDqhRz/0sebT0TzJDdh/XG+urbRQ5
-         DIKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FYSYVvULwOnX4TuGoyoE29guebgctrQhwWO22CQ6v3s=;
-        b=Y85gc+EwWyywqoJJf8VvmCyyAMUMlafDn8Kre9e0O9VNIMIbwmHjk0LcQpUefe86GR
-         sekB3jU49y30GTib/pr6nOGoa3aNB0B7BT/9Oa1IoPfAqa2aNshgRlwjx8UJ5lvuA/kO
-         Vfa3rZyiXDh1kQ/oIkLC6nCAPr6jZhjD89BI+hCanhc8xeKpgvVkS2Yq0wCVxJ7nRqT0
-         tLB1JutshcV/nQqwvnZ8nAdTK3zXuAYnZmQipx3pfY5UKjw1V7HBjCO+Xd27+DwoE0eN
-         /iILl4pA6pdpY17PpzNz0A1j0VD1Du6p3zXzqmMon+uCR29ce6lgCXnjp7osA78FihAQ
-         wu8Q==
-X-Gm-Message-State: APjAAAUc1OuBuUG7BQNCnbJINhGUJuxoXLZ+2rxwB0fmFSjELtj0PVOq
-        UpFIREeWTdYHKCf0YQg5FIY=
-X-Google-Smtp-Source: APXvYqx8xvojicSTIez9VtjDCWX2HhNqbh1S3A4FG/YyyPEtKKuv1ZIjngCEOnzqq+QLZTnZ8A9i+w==
-X-Received: by 2002:ac2:4349:: with SMTP id o9mr1004296lfl.74.1563490164275;
-        Thu, 18 Jul 2019 15:49:24 -0700 (PDT)
-Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id 27sm5292098ljw.97.2019.07.18.15.49.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 15:49:23 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 01:52:59 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>, <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Message-ID: <20190719015259.30941f3c@dimatab>
-In-Reply-To: <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
-References: <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
-        <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
-        <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
-        <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
-        <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
-        <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
-        <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
-        <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
-        <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
-        <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
-        <20190718194222.GH12715@pdeschrijver-desktop.Nvidia.com>
-        <056496ed-9abf-6907-c61c-a99ccf23b834@gmail.com>
-        <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        Thu, 18 Jul 2019 18:51:54 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:47544 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728040AbfGRWvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 18:51:53 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hoFFf-0001to-Bh; Thu, 18 Jul 2019 16:51:53 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hoFFc-0001XK-AT; Thu, 18 Jul 2019 16:51:48 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 18 Jul 2019 16:51:31 -0600
+Message-Id: <20190718225132.5865-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH 1/2] nvme-core: Fix extra device_put() call on error path
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=92 Thu, 18 Jul 2019 13:36:35 -0700
-Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+In the error path for nvme_init_subsystem(), nvme_put_subsystem()
+will call device_put(), but it will get called again after the
+mutex_unlock().
 
-> On 7/18/19 1:26 PM, Dmitry Osipenko wrote:
-> > 18.07.2019 22:42, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82: =20
-> >> On Thu, Jul 18, 2019 at 02:44:56AM +0300, Dmitry Osipenko wrote: =20
-> >>>> dependencies I am referring are dfll_ref, dfll_soc, and DVFS
-> >>>> peripheral clocks which need to be restored prior to DFLL
-> >>>> reinit. =20
-> >>> Okay, but that shouldn't be a problem if clock dependencies are
-> >>> set up properly.
-> >>> =20
-> >>>>>> reverse list order during restore might not work as all other
-> >>>>>> clocks are in proper order no with any ref clocks for plls
-> >>>>>> getting restored prior to their clients =20
-> >>>>> Why? The ref clocks should be registered first and be the roots
-> >>>>> for PLLs and the rest. If it's not currently the case, then
-> >>>>> this need to be fixed. You need to ensure that each clock is
-> >>>>> modeled properly. If some child clock really depends on
-> >>>>> multiple parents, then the parents need to in the correct order
-> >>>>> or CCF need to be taught about such multi-dependencies.
-> >>>>>
-> >>>>> If some required feature is missed, then you have to implement
-> >>>>> it properly and for all, that's how things are done in
-> >>>>> upstream. Sometimes it's quite a lot of extra work that
-> >>>>> everyone are benefiting from in the end.
-> >>>>>
-> >>>>> [snip] =20
-> >>>> Yes, we should register ref/parents before their clients.
-> >>>>
-> >>>> cclk_g clk is registered last after all pll and peripheral
-> >>>> clocks are registers during clock init.
-> >>>>
-> >>>> dfllCPU_out clk is registered later during dfll-fcpu driver
-> >>>> probe and gets added to the clock list.
-> >>>>
-> >>>> Probably the issue seems to be not linking dfll_ref and dfll_soc
-> >>>> dependencies for dfllCPU_out thru clock list.
-> >>>>
-> >>>> clk-dfll driver during dfll_init_clks gets ref_clk and soc_clk
-> >>>> reference thru DT. =20
-> >> The dfll does not have any parents. It has some clocks which are
-> >> needed for the logic part of the dfll to function, but there's no
-> >> parent clock as such unlike for peripheral clocks or PLLs where
-> >> the parent is at least used as a reference. The I2C controller of
-> >> the DFLL shares the lines with a normal I2C controller using some
-> >> arbitration logic. That logic only works if the clock for the
-> >> normal I2C controller is enabled. So you need probably 3 clocks
-> >> enabled to initialize the dfll in that case. I don't think it
-> >> makes sense to add complicated logic to the clock core to deal
-> >> with this rather strange case. To me it makes more sense to use
-> >> pmops and open code the sequence there. =20
-> > It looks to me that dfllCPU is a PLL and dfll_ref is its reference
-> > parent, while dfll_soc clocks the logic that dynamically
-> > reconfigures dfllCPU in background. I see that PLLP is defined as a
-> > parent for dfll_ref and dfll_soc in the code. Hence seems dfll_ref
-> > should be set as a parent for dfllCPU, no? =20
->=20
-> dfll_soc will not be restored by the time dfllCPU resume happens
-> after dfll_ref.
->=20
-> without dfll_soc, dfllCPU cannot be resumed either. So if we decide
-> to use parent we should use dfll_soc.
+The device_put() only needs to be called if device_add() fails.
 
-Okay, my point is that the parents should be properly specified any
-ways.
+This bug caused a KASAN use-after-free error when adding and
+removing subsytems in a loop:
 
-> > Either way is good to me, given that DFLL will be disabled during
-> > suspend. Resetting DFLL on DFLL's driver resume using PM ops should
-> > be good. And then it also will be better to error out if DFLL is
-> > active during suspend on the DFLL's driver suspend. =20
->=20
-> Doing in dfll-fcpu pm_ops is much better as it happens right after
-> all clocks are restored and unlike other clock enables, dfll need
-> dfll controller programming as well and is actually registered in
-> dfll-fcpu driver.
->=20
-> With this, below is the sequence:
->=20
-> CPUFreq suspend switches CPU to PLLP and disables dfll
->=20
-> Will add dfll_suspend/resume in dfll-fcpu driver and in dfll suspend=20
-> will check for dfll active and will error out suspend.
->=20
-> dfll resume does dfll reinit.
->=20
-> CPUFreq resume enables dfll and switches CPU to dfll.
->=20
->=20
-> Will go with doing in dfll-fcpu pm_ops rather than parenting
-> dfllCPU_OUT...
->=20
+  BUG: KASAN: use-after-free in device_del+0x8d9/0x9a0
+  Read of size 8 at addr ffff8883cdaf7120 by task multipathd/329
 
-Sounds good.
+  CPU: 0 PID: 329 Comm: multipathd Not tainted 5.2.0-rc6-vmlocalyes-00019-g70a2b39005fd-dirty #314
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  Call Trace:
+   dump_stack+0x7b/0xb5
+   print_address_description+0x6f/0x280
+   ? device_del+0x8d9/0x9a0
+   __kasan_report+0x148/0x199
+   ? device_del+0x8d9/0x9a0
+   ? class_release+0x100/0x130
+   ? device_del+0x8d9/0x9a0
+   kasan_report+0x12/0x20
+   __asan_report_load8_noabort+0x14/0x20
+   device_del+0x8d9/0x9a0
+   ? device_platform_notify+0x70/0x70
+   nvme_destroy_subsystem+0xf9/0x150
+   nvme_free_ctrl+0x280/0x3a0
+   device_release+0x72/0x1d0
+   kobject_put+0x144/0x410
+   put_device+0x13/0x20
+   nvme_free_ns+0xc4/0x100
+   nvme_release+0xb3/0xe0
+   __blkdev_put+0x549/0x6e0
+   ? kasan_check_write+0x14/0x20
+   ? bd_set_size+0xb0/0xb0
+   ? kasan_check_write+0x14/0x20
+   ? mutex_lock+0x8f/0xe0
+   ? __mutex_lock_slowpath+0x20/0x20
+   ? locks_remove_file+0x239/0x370
+   blkdev_put+0x72/0x2c0
+   blkdev_close+0x8d/0xd0
+   __fput+0x256/0x770
+   ? _raw_read_lock_irq+0x40/0x40
+   ____fput+0xe/0x10
+   task_work_run+0x10c/0x180
+   ? filp_close+0xf7/0x140
+   exit_to_usermode_loop+0x151/0x170
+   do_syscall_64+0x240/0x2e0
+   ? prepare_exit_to_usermode+0xd5/0x190
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f5a79af05d7
+  Code: 00 00 0f 05 48 3d 00 f0 ff ff 77 3f c3 66 0f 1f 44 00 00 53 89 fb 48 83 ec 10 e8 c4 fb ff ff 89 df 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2b 89 d7 89 44 24 0c e8 06 fc ff ff 8b 44 24
+  RSP: 002b:00007f5a7799c810 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+  RAX: 0000000000000000 RBX: 0000000000000008 RCX: 00007f5a79af05d7
+  RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000008
+  RBP: 00007f5a58000f98 R08: 0000000000000002 R09: 00007f5a7935ee80
+  R10: 0000000000000000 R11: 0000000000000293 R12: 000055e432447240
+  R13: 0000000000000000 R14: 0000000000000001 R15: 000055e4324a9cf0
+
+  Allocated by task 1236:
+   save_stack+0x21/0x80
+   __kasan_kmalloc.constprop.6+0xab/0xe0
+   kasan_kmalloc+0x9/0x10
+   kmem_cache_alloc_trace+0x102/0x210
+   nvme_init_identify+0x13c3/0x3820
+   nvme_loop_configure_admin_queue+0x4fa/0x5e0
+   nvme_loop_create_ctrl+0x469/0xf40
+   nvmf_dev_write+0x19a3/0x21ab
+   __vfs_write+0x66/0x120
+   vfs_write+0x154/0x490
+   ksys_write+0x104/0x240
+   __x64_sys_write+0x73/0xb0
+   do_syscall_64+0xa5/0x2e0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  Freed by task 329:
+   save_stack+0x21/0x80
+   __kasan_slab_free+0x129/0x190
+   kasan_slab_free+0xe/0x10
+   kfree+0xa7/0x200
+   nvme_release_subsystem+0x49/0x60
+   device_release+0x72/0x1d0
+   kobject_put+0x144/0x410
+   put_device+0x13/0x20
+   klist_class_dev_put+0x31/0x40
+   klist_put+0x8f/0xf0
+   klist_del+0xe/0x10
+   device_del+0x3a7/0x9a0
+   nvme_destroy_subsystem+0xf9/0x150
+   nvme_free_ctrl+0x280/0x3a0
+   device_release+0x72/0x1d0
+   kobject_put+0x144/0x410
+   put_device+0x13/0x20
+   nvme_free_ns+0xc4/0x100
+   nvme_release+0xb3/0xe0
+   __blkdev_put+0x549/0x6e0
+   blkdev_put+0x72/0x2c0
+   blkdev_close+0x8d/0xd0
+   __fput+0x256/0x770
+   ____fput+0xe/0x10
+   task_work_run+0x10c/0x180
+   exit_to_usermode_loop+0x151/0x170
+   do_syscall_64+0x240/0x2e0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index cc09b81fc7f4..3ca33a2714e5 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2489,6 +2489,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		if (ret) {
+ 			dev_err(ctrl->device,
+ 				"failed to register subsystem device.\n");
++			put_device(&subsys->dev);
+ 			goto out_unlock;
+ 		}
+ 		ida_init(&subsys->ns_ida);
+@@ -2511,7 +2512,6 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	nvme_put_subsystem(subsys);
+ out_unlock:
+ 	mutex_unlock(&nvme_subsystems_lock);
+-	put_device(&subsys->dev);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
