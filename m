@@ -2,111 +2,134 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79836C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0105FC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5984C204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FF821019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwRuicFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390018AbfGRLSE (ORCPT
+        id S2390090AbfGRLSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:18:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56736 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727655AbfGRLSD (ORCPT
+        Thu, 18 Jul 2019 07:18:45 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35654 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfGRLSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:18:03 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IB2oUT034951
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:18:02 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttq5chnyj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:18:02 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 18 Jul 2019 12:18:00 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 12:17:58 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IBHv9559179204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 11:17:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D51E1A4051;
-        Thu, 18 Jul 2019 11:17:57 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 767EEA4059;
-        Thu, 18 Jul 2019 11:17:57 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.168])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Jul 2019 11:17:57 +0000 (GMT)
-Date:   Thu, 18 Jul 2019 14:17:55 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Jeremy Cline <jcline@redhat.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs/vm: transhuge: fix typo in madvise reference
-References: <20190716144908.25843-1-jcline@redhat.com>
+        Thu, 18 Jul 2019 07:18:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j19so28606793otq.2;
+        Thu, 18 Jul 2019 04:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aj2rqABk0xuHkR9UGCVKlVt81H3iXGb+Hp1fclBgK0k=;
+        b=LwRuicFm6ghp8965yMx2N/Mf3pRxn2pcfB3y8A89qv2GrqgGFDc3FzbUFxhsr6IMX0
+         h3Yvbay4jN1p7vNT44yr19HuGyAG5ALGS/Nnnsq2Pk2y46XkQadATq08L5fyQ9e4p8jg
+         6cNhivL9NpsV/BU6SHykSy+eYJVR3bc2b9cBaclf9AdfiUzm+m9bPm4yRyDr1LglKnjQ
+         3Ua1mlQ9ULtAKnwgNEvDQnh4bBpM1DsTQpR9OfrErolad5fHlaD0li+GPow8BTSoJTAU
+         pE/kbJPZE57qZvK3hM+ulLCuSk+NYluQuxzsgfjaCQtFRFTYu/3c5XntoG583fI1w7Xb
+         ubZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aj2rqABk0xuHkR9UGCVKlVt81H3iXGb+Hp1fclBgK0k=;
+        b=iqmOZigrIzAZ6Xf7r9EPFYYHF1rdoonsz9ugh0pk4YfjUIGsHmPZI+u7y0KMG+Dv+5
+         lmnVwRuCAU/aRYwZqgiDPTKZaCJCNnClzEwPXKA2rl0rpfxrPSoJVEDWZ8va3UR24IfM
+         3OnSD3K2TeB9NnF+gmI/jIjgdxq26jg7597XbDD0JzF4S27MZ5o+7RiPPCsJ7L0rgL1t
+         qZq5OIkaKFVN+ghPB+oMdo4tTQUglCgyhsqffed3f1uRil2HYW0F2ZQPMpyThBSPU0Nn
+         +8U4fJWFCCkMlBfcUKU3v3kqmnVoEC0lLQ1oGsNsEQfu8tY5RgfO4u/mrVflVgEi/IUw
+         YSnQ==
+X-Gm-Message-State: APjAAAVY4cCqemOTgcNhwOk/WvpLSiP/aEPYZow9PZRGm5iVXyOV2DTr
+        7SsR5sOQwERqsyTMCHycwQM4DfQqJ7xDray/xDY=
+X-Google-Smtp-Source: APXvYqwW+8Qp0sCOChKDlD2SYquMDCfHQEumwfAoGI0H3Qi7XJFTlYr0GE2VfUmfFnWm9gyjhcWDuPddC6FEvq5vh94=
+X-Received: by 2002:a05:6830:1697:: with SMTP id k23mr3310130otr.16.1563448724309;
+ Thu, 18 Jul 2019 04:18:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716144908.25843-1-jcline@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19071811-0016-0000-0000-00000293FDE1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071811-0017-0000-0000-000032F1D99E
-Message-Id: <20190718111755.GF20726@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180122
+References: <20190717201925.fur57qfs2x3ha6aq@debian> <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
+ <CADVatmO_m-NYotb9Htd7gS0d2-o0DeEWeDJ1uYKE+oj_HjoN0Q@mail.gmail.com>
+ <alpine.DEB.2.21.1907172345360.1778@nanos.tec.linutronix.de> <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
+In-Reply-To: <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Thu, 18 Jul 2019 12:18:07 +0100
+Message-ID: <CADVatmN6xNO1iMQ4ihsT5OqV2cuj2ajq+v00NrtUyOHkiKPo-Q@mail.gmail.com>
+Subject: Re: regression with napi/softirq ?
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:49:08AM -0400, Jeremy Cline wrote:
-> Fix an off-by-one typo in the transparent huge pages admin
-> documentation.
-> 
-> Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Hi Eric,
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+On Thu, Jul 18, 2019 at 7:58 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 7/17/19 11:52 PM, Thomas Gleixner wrote:
+> > Sudip,
+> >
+> > On Wed, 17 Jul 2019, Sudip Mukherjee wrote:
+> >> On Wed, Jul 17, 2019 at 9:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>> You can hack ksoftirq_running() to return always false to avoid this, but
+> >>> that might cause application starvation and a huge packet buffer backlog
+> >>> when the amount of incoming packets makes the CPU do nothing else than
+> >>> softirq processing.
+> >>
+> >> I tried that now, it is better but still not as good as v3.8
+> >> Now I am getting 375.9usec as the maximum time between raising the softirq
+> >> and it starting to execute and packet drops still there.
+> >>
+> >> And just a thought, do you think there should be a CONFIG_ option for
+> >> this feature of ksoftirqd_running() so that it can be disabled if needed
+> >> by users like us?
+> >
+> > If at all then a sysctl to allow runtime control.
+> >
 
-> ---
->  Documentation/admin-guide/mm/transhuge.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index 7ab93a8404b9..bd5714547cee 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -53,7 +53,7 @@ disabled, there is ``khugepaged`` daemon that scans memory and
->  collapses sequences of basic pages into huge pages.
-> 
->  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
-> -interface and using madivse(2) and prctl(2) system calls.
-> +interface and using madvise(2) and prctl(2) system calls.
-> 
->  Transparent Hugepage Support maximizes the usefulness of free memory
->  if compared to the reservation approach of hugetlbfs by allowing all
-> -- 
-> 2.21.0
-> 
+<snip>
+
+>
+> ksoftirqd might be spuriously scheduled from tx path, when
+> __qdisc_run() also reacts to need_resched().
+>
+> By raising NET_TX while we are processing NET_RX (say we send a TCP ACK packet
+> in response to incoming packet), we force __do_softirq() to perform
+> another loop, but before doing an other round, it will also check need_resched()
+> and eventually call wakeup_softirqd()
+>
+> I wonder if following patch makes any difference.
+>
+> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+> index 11c03cf4aa74b44663c74e0e3284140b0c75d9c4..ab736e974396394ae6ba409868aaea56a50ad57b 100644
+> --- a/net/sched/sch_generic.c
+> +++ b/net/sched/sch_generic.c
+> @@ -377,6 +377,8 @@ void __qdisc_run(struct Qdisc *q)
+>         int packets;
+>
+>         while (qdisc_restart(q, &packets)) {
+> +               if (qdisc_is_empty(q))
+> +                       break;
+
+unfortunately its v4.14.55 and qdisc_is_empty() is not yet introduced.
+And I can not backport 28cff537ef2e ("net: sched: add empty status
+flag for NOLOCK qdisc")
+also as TCQ_F_NOLOCK is there. :(
+
 
 -- 
-Sincerely yours,
-Mike.
-
+Regards
+Sudip
