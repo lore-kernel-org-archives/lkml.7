@@ -2,52 +2,50 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E268C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35548C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696D62077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A9921849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420021;
-	bh=S50crHlM90Om8iqHd3k+bo0yXA4w29zcfbIz8fh6KPY=;
+	s=default; t=1563420026;
+	bh=/xAkpM3kOJg/Mwhe9RfVtMXfWjwQWzDs/GzrNCpYdjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d4+AshkVE/ik6YxuAuw5tQF43/802wnSRkFbOYaZj/EpRc6MbWd1/B4AGLmZB7h4t
-	 HeuI9A/iJUIrlq/VbzvqaHsjS0YocdRGMBgEoTkl/lTZ6le/wX5ykufx7yXCol/RCR
-	 RBY5NI5T/AvYzA0J+sygaw5nqQpiRNJUCPhfBsPo=
+	b=vNejcftJ67Tn7lWkJ5hE2ZG6TP/+R/V2YRJIxJpu1t6Wg1uM9bIMXY8synyAshyg/
+	 K/GeXueB5oef+bnTeHcAmoCVYmAgsUyxgj90sreoP73KGZ+MX9n9oMCprJOpI/OBhP
+	 jpMFh3l3w8yZE9uSiOzcJbrLglMNp4WQljyNrYBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390936AbfGRDLO (ORCPT
+        id S2391407AbfGRDUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:20:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389638AbfGRDK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:56 -0400
+        id S2391238AbfGRDLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:12 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EE0F2173E;
-        Thu, 18 Jul 2019 03:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D188205F4;
+        Thu, 18 Jul 2019 03:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419455;
-        bh=S50crHlM90Om8iqHd3k+bo0yXA4w29zcfbIz8fh6KPY=;
+        s=default; t=1563419471;
+        bh=/xAkpM3kOJg/Mwhe9RfVtMXfWjwQWzDs/GzrNCpYdjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oWQ7l2JTpoVIYnwlim2tcWqQMKAG0mFFUk3UdDhNSBrOOhcuGD7w9X3mLLUhI7/Eq
-         WKuW340XPgts+xtX/MQhrhJsk3lpPslYMtLf9mDyC1aeRNOiPGnYpkh0CnXb7AYcGQ
-         fi0Zn/b53Je2/KUKvvThNWADBMxQOoj9/VkCNPUU=
+        b=W1fZdEi/LEuEq9OhXuWty+4l/FLjTZZnP7msv38ztiC8Glm+5hx+aAWweE7TGkpzN
+         7wibxiG9q1uq7Ms3XdZ28sqFnMcqoJJl8IH8MoIAndc3jKtjD6Q/3RxRHz6aS+JBcA
+         Mj0eOUzIRJm4jolWtz4uMSerVTVmyAsPJ/D4GuoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
-        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 72/80] cpu/hotplug: Fix out-of-bounds read when setting fail state
-Date:   Thu, 18 Jul 2019 12:02:03 +0900
-Message-Id: <20190718030104.825807363@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 57/80] staging: comedi: amplc_pci230: fix null pointer deref on interrupt
+Date:   Thu, 18 Jul 2019 12:01:48 +0900
+Message-Id: <20190718030102.953260755@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,72 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
+From: Ian Abbott <abbotti@mev.co.uk>
 
-Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
-can control `struct cpuhp_step *sp` address, results in the following
-global-out-of-bounds read.
+commit 7379e6baeddf580d01feca650ec1ad508b6ea8ee upstream.
 
-Reproducer:
+The interrupt handler `pci230_interrupt()` causes a null pointer
+dereference for a PCI260 card.  There is no analog output subdevice for
+a PCI260.  The `dev->write_subdev` subdevice pointer and therefore the
+`s_ao` subdevice pointer variable will be `NULL` for a PCI260.  The
+following call near the end of the interrupt handler results in the null
+pointer dereference for a PCI260:
 
-  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
+	comedi_handle_events(dev, s_ao);
 
-KASAN report:
+Fix it by only calling the above function if `s_ao` is valid.
 
-  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
-  Read of size 8 at addr ffffffff89734438 by task bash/1941
+Note that the other uses of `s_ao` in the calls
+`pci230_handle_ao_nofifo(dev, s_ao);` and `pci230_handle_ao_fifo(dev,
+s_ao);` will never be reached for a PCI260, so they are safe.
 
-  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
-  Call Trace:
-   write_cpuhp_fail+0x2cd/0x2e0
-   dev_attr_store+0x58/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f05e4f4c970
+Fixes: 39064f23284c ("staging: comedi: amplc_pci230: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  The buggy address belongs to the variable:
-   cpu_hotplug_lock+0x98/0xa0
-
-  Memory state around the buggy address:
-   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-                                          ^
-   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Add a sanity check for the value written from user space.
-
-Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: peterz@infradead.org
-Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/staging/comedi/drivers/amplc_pci230.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index f370a0f43005..d768e15bef83 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1944,6 +1944,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
+--- a/drivers/staging/comedi/drivers/amplc_pci230.c
++++ b/drivers/staging/comedi/drivers/amplc_pci230.c
+@@ -2339,7 +2339,8 @@ static irqreturn_t pci230_interrupt(int
+ 	devpriv->intr_running = false;
+ 	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
  
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
--- 
-2.20.1
-
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
+ 	comedi_handle_events(dev, s_ai);
+ 
+ 	return IRQ_HANDLED;
 
 
