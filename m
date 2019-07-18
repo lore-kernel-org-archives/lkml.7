@@ -2,141 +2,145 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C967C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3087C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221422184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7345208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rrnpLwV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390703AbfGRPur (ORCPT
+        id S2390766AbfGRPvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:50:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37486 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727767AbfGRPur (ORCPT
+        Thu, 18 Jul 2019 11:51:52 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35947 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRPvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:50:47 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IFoSA6082509
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 11:50:46 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tttqt30mn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 11:50:45 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
-        Thu, 18 Jul 2019 16:50:43 +0100
-Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 16:50:39 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IFocVw60621270
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 15:50:38 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC60AC6057;
-        Thu, 18 Jul 2019 15:50:38 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02588C6055;
-        Thu, 18 Jul 2019 15:50:34 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.162.151])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 15:50:34 +0000 (GMT)
-Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in
- ZONE_MOVABLE
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Date:   Thu, 18 Jul 2019 12:50:29 -0300
-In-Reply-To: <1563430353.3077.1.camel@suse.de>
-References: <20190718024133.3873-1-leonardo@linux.ibm.com>
-         <1563430353.3077.1.camel@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-3qG8sm/tWDfxGznMgLRc"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 18 Jul 2019 11:51:52 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k21so30793786edq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o1/2Vj7xsNu11SnVwjU6bjgxspYgWkQ65EmdfVPZ5+g=;
+        b=rrnpLwV7JKspeC+AT2HYLoo9is9pcRiv0lSu2Nwr16wbT8io4MRCltJUtLp6gxkOOp
+         GrvYZW/wmX6ePV5SX6KzndxJF3rnLFHo6k0CuBRfOWW7BAyYgmWLia99W9sKY1XNqlMK
+         S5F5yW2QFJVUeLDjwjndf4LM+WJ0CKJPICGGDQMqytNQgTmapQHO+cMj/SOFj2fF/Jlo
+         Jl6iXHrdvgP1MaHj23a2/dWBd5A/yd+r2BTot1UI8B8CM19+Keu1npKPe3BosAitZu8m
+         ZZIkNpY6HoTnZrMG1UIFMxz2Ev7Xe3Wft58UOkLropjQF4PlPrjtcdZAAY7o492IKrcY
+         o8QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o1/2Vj7xsNu11SnVwjU6bjgxspYgWkQ65EmdfVPZ5+g=;
+        b=bbiGtGgiveZJCd54I76j2y7SYraPBDa4AJtZIHPC7Oblf0yHxLB6/HIsbCo8G7RxtD
+         KFWiCKOFaCAcorqdrwz1wfar0uDOi0QwHgZoDYm2KmAWwT6YOo0NAEw1m0mPz/8GTm7W
+         sqUqlmNGRQz1ExC6bf6S+H37vsdwUn92rvjNP3i58AIW3qJJGGpf2HXS7DnrqhTq8ZAJ
+         ubJgN2M1EeEvUm7/Ir85Cq7TjvzicmIUE9TiuBqT9RPXpf3StbLXvfJigEPd+M39zTTc
+         zx9RRd6t9hCovFO8vw7kEyK29dSYC15NsiAhhmu6q3GbtckoECmwoQoGhTL9O6ASukXe
+         5pYw==
+X-Gm-Message-State: APjAAAXOWu0FxFPWDMWYBEIQYPDRPJxvSHRNpXTemGcqhhn+Yv3SFp0h
+        2OvKoIigTF9iYE3cMf+TN1OK9chq2Pz2+yLm7eDbGQ==
+X-Google-Smtp-Source: APXvYqw00ujty99sE0UwyCrWserbFlWAFCGTN+6SZBiwaPFyqiJ29qMg1gTGBJT2Tgv5+5XWImY/7i+W2RoFb/dclQs=
+X-Received: by 2002:a17:906:4bcb:: with SMTP id x11mr36854194ejv.1.1563465110036;
+ Thu, 18 Jul 2019 08:51:50 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-x-cbid: 19071815-0016-0000-0000-000009D1B406
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011452; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01233984; UDB=6.00650254; IPR=6.01015312;
- MB=3.00027780; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 15:50:43
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071815-0017-0000-0000-00004412BFFF
-Message-Id: <0e67afe465cbbdf6ec9b122f596910cae77bc734.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180164
+References: <20190708150532.GB17098@dennisz-mbp>
+In-Reply-To: <20190708150532.GB17098@dennisz-mbp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 18 Jul 2019 17:51:37 +0200
+Message-ID: <CACT4Y+YevDd-y4Au33=mr-0-UQPy8NR0vmG8zSiCfmzx6gTB-w@mail.gmail.com>
+Subject: Re: kasan: paging percpu + kasan causes a double fault
+To:     Dennis Zhou <dennis@kernel.org>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Tejun Heo <tj@kernel.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 8, 2019 at 5:05 PM Dennis Zhou <dennis@kernel.org> wrote:
+>
+> Hi Andrey, Alexander, and Dmitry,
+>
+> It was reported to me that when percpu is ran with param
+> percpu_alloc=page or the embed allocation scheme fails and falls back to
+> page that a double fault occurs.
+>
+> I don't know much about how kasan works, but a difference between the
+> two is that we manually reserve vm area via vm_area_register_early().
+> I guessed it had something to do with the stack canary or the irq_stack,
+> and manually mapped the shadow vm area with kasan_add_zero_shadow(), but
+> that didn't seem to do the trick.
+>
+> RIP resolves to the fixed_percpu_data declaration.
+>
+> Double fault below:
+> [    0.000000] PANIC: double fault, error_code: 0x0
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-rc7-00007-ge0afe6d4d12c-dirty #299
+> [    0.000000] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+> [    0.000000] RIP: 0010:no_context+0x38/0x4b0
+> [    0.000000] Code: df 41 57 41 56 4c 8d bf 88 00 00 00 41 55 49 89 d5 41 54 49 89 f4 55 48 89 fd 4c8
+> [    0.000000] RSP: 0000:ffffc8ffffffff28 EFLAGS: 00010096
+> [    0.000000] RAX: dffffc0000000000 RBX: ffffc8ffffffff50 RCX: 000000000000000b
+> [    0.000000] RDX: fffff52000000030 RSI: 0000000000000003 RDI: ffffc90000000130
+> [    0.000000] RBP: ffffc900000000a8 R08: 0000000000000001 R09: 0000000000000000
+> [    0.000000] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+> [    0.000000] R13: fffff52000000030 R14: 0000000000000000 R15: ffffc90000000130
+> [    0.000000] FS:  0000000000000000(0000) GS:ffffc90000000000(0000) knlGS:0000000000000000
+> [    0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.000000] CR2: ffffc8ffffffff18 CR3: 0000000002e0d001 CR4: 00000000000606b0
+> [    0.000000] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    0.000000] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    0.000000] Call Trace:
+> [    0.000000] Kernel panic - not syncing: Machine halted.
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-rc7-00007-ge0afe6d4d12c-dirty #299
+> [    0.000000] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+> [    0.000000] Call Trace:
+> [    0.000000]  <#DF>
+> [    0.000000]  dump_stack+0x5b/0x90
+> [    0.000000]  panic+0x17e/0x36e
+> [    0.000000]  ? __warn_printk+0xdb/0xdb
+> [    0.000000]  ? spurious_kernel_fault_check+0x1a/0x60
+> [    0.000000]  df_debug+0x2e/0x39
+> [    0.000000]  do_double_fault+0x89/0xb0
+> [    0.000000]  double_fault+0x1e/0x30
+> [    0.000000] RIP: 0010:no_context+0x38/0x4b0
+> [    0.000000] Code: df 41 57 41 56 4c 8d bf 88 00 00 00 41 55 49 89 d5 41 54 49 89 f4 55 48 89 fd 4c8
+> [    0.000000] RSP: 0000:ffffc8ffffffff28 EFLAGS: 00010096
+> [    0.000000] RAX: dffffc0000000000 RBX: ffffc8ffffffff50 RCX: 000000000000000b
+> [    0.000000] RDX: fffff52000000030 RSI: 0000000000000003 RDI: ffffc90000000130
+> [    0.000000] RBP: ffffc900000000a8 R08: 0000000000000001 R09: 0000000000000000
+> [    0.000000] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
+> [ 0.000000] R13: fffff52000000030 R14: 0000000000000000 R15: ffffc90000000130
 
---=-3qG8sm/tWDfxGznMgLRc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-07-18 at 08:12 +0200, Oscar Salvador wrote:
-> We do already have "movable_node" boot option, which exactly has that
-> effect.
-> Any hotplugged range will be placed in ZONE_MOVABLE.
-Oh, I was not aware of it.
+Hi Dennis,
 
-> Why do we need yet another option to achieve the same? Was not that
-> enough for your case?
-Well, another use of this config could be doing this boot option a
-default on any given kernel.=20
-But in the above case I agree it would be wiser to add the code on
-movable_node_is_enabled() directly, and not where I did put.
+I don't have lots of useful info, but a naive question: could you stop
+using percpu_alloc=page with KASAN? That should resolve the problem :)
+We could even add a runtime check that will clearly say that this
+combintation does not work.
 
-What do you think about it?
-
-Thanks for the feedback,
-
-Leonardo Br=C3=A1s
-
---=-3qG8sm/tWDfxGznMgLRc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl0wlUUACgkQlQYWtz9S
-ttRBRRAAzXZyanM8TpDhxFNBGg0BldrMpkUJO/FKHGIUyK70KPr3a0bsWtNx2GLs
-nrCP5UQhcNmKdiofCOf2kpAqsAv13a57vUoo0iozKF771s3gpih92gC1CuGrwKUp
-lMRt9G3q6GqQx0fXPlrImutBHICAHTHOD5NUJkRF2FgGwKVxHXsPRF0h/yOxegMV
-I/ToF2NmuOBbtBbQD7aEDMW7XG3w5nM/yn9aNqbwrDcuG4F77jsbaLqfBFMLEI5C
-3hrvE98xy5W7XO3/yA3QcYC+WczN8dyzb1Y9F8nz9mWMiGKsBtGQxHyog2YMOMj3
-NB43X4xEVlJwPD2eMdd3loukeoudUhnlIvjD7yIxd4z3oPXsz5wSL+r6cd9q1B05
-v+Rw8QR6FQRlbv8idhMZ7Y5//g6Mwrxc8ecZfhpACmyIsWwSeMz7HXQmoFm7SM9k
-mx5ET3BNYtrB08mRMt/cA1XakfMAp1PFi8OwhjIQShZib8xpOzWqVVKE79oVPptG
-5H/71zXj2rgP/W5Zv0dGl2x7co+SbPwVwbMMBTiYf+8KXBhD+1K5AowNKZKMetR1
-Ag7Cs18NBFpawxIoMPNbLYIz/hf1CvH2//vA7O7hV39CnD7Vakz8NNPVQkc109RJ
-2OxDKtiVu+SCT6rjcTBkZfUJ7wTXKd2zKnvn1gKEpU2qKDC4tVw=
-=OHH1
------END PGP SIGNATURE-----
-
---=-3qG8sm/tWDfxGznMgLRc--
-
+I see that setup_per_cpu_areas is called after kasan_init which is
+called from setup_arch. So KASAN should already map final shadow at
+that point.
+The only potential reason that I see is that setup_per_cpu_areas maps
+the percpu region at address that is not covered/expected by
+kasan_init. Where is page-based percpu is mapped? Is that covered by
+kasan_init?
+Otherwise, seeing the full stack trace of the fault may shed some light.
