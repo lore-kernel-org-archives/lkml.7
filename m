@@ -2,136 +2,146 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C609EC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5FBC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872D721849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C6A21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfGRA7D (ORCPT
+        id S1729489AbfGRBBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:59:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7542 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727658AbfGRA7C (ORCPT
+        Wed, 17 Jul 2019 21:01:23 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:46726 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbfGRBBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:59:02 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I0vF3F104787;
-        Wed, 17 Jul 2019 20:58:51 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttcq7kkay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jul 2019 20:58:51 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6I0ub5c021234;
-        Thu, 18 Jul 2019 00:58:50 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03dal.us.ibm.com with ESMTP id 2tq6x7kqsj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 00:58:50 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I0wmJS46858604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 00:58:48 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4D916A04F;
-        Thu, 18 Jul 2019 00:58:48 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 348C76A04D;
-        Thu, 18 Jul 2019 00:58:48 +0000 (GMT)
-Received: from linux-xej6.aus.stglabs.ibm.com (unknown [9.40.195.184])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 00:58:48 +0000 (GMT)
-From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-To:     james.bottomley@hansenpartnership.com
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        brking@linux.vnet.ibm.com, abdhalee@linux.vnet.ibm.com,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Subject: [PATCH] ibmvfc: fix WARN_ON during event pool release
-Date:   Wed, 17 Jul 2019 14:48:27 -0500
-Message-Id: <20190717194827.12514-1-tyreld@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.12.3
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=249 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180007
+        Wed, 17 Jul 2019 21:01:23 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x6I0xWSG038122;
+        Thu, 18 Jul 2019 08:59:32 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 3D60852754C570DA3E11;
+        Thu, 18 Jul 2019 08:59:32 +0800 (CST)
+In-Reply-To: <93e86083-7f8a-402d-db4b-26263719be25@cogentembedded.com>
+References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw> <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw> <93e86083-7f8a-402d-db4b-26263719be25@cogentembedded.com>
+To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com,
+        miquel.raynal@bootlin.com, paul@crapouillou.net,
+        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
+        stefan@agner.ch, vigneshr@ti.com
+Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
+ bindings
+MIME-Version: 1.0
+X-KeepSent: A58FF3D1:7CE1288C-4825843B:0005429C;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFA58FF3D1.7CE1288C-ON4825843B.0005429C-4825843B.00057367@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 18 Jul 2019 08:59:32 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/07/18 AM 08:59:32,
+        Serialize complete at 2019/07/18 AM 08:59:32
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x6I0xWSG038122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While removing an ibmvfc client adapter a WARN_ON like the following WARN_ON
-is seen in the kernel log:
 
-WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
-ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
-NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
-REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
-MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
-CFAR: c00000000036e408 SOFTE: 1
-GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
-GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
-GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
-GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
-GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
-GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
-GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
-NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
-Call Trace:
-[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
-[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
-[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
-[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
-[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
-[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
-[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
-[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
-[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
-[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
-[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
-Instruction dump:
-e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
-2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
+Hi Sergei,
 
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
-we have quiesced the adapter and its overly paranoid anyways to be holding the
-host lock.
+> > Document the bindings used by the Macronix raw NAND controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >   Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 
+++++++++++++++++++++
+> >   1 file changed, 20 insertions(+)
+> >   create mode 100644 
+Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
+> Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > new file mode 100644
+> > index 0000000..ddd7660
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > @@ -0,0 +1,20 @@
+> > +Macronix Raw NAND Controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: should be "macronix,nand-controller"
+> > +- reg: should contain 1 entrie for the registers
+> > +- interrupts: interrupt line connected to this raw NAND controller
+> > +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
+> > +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
+> > +    "send_dly_clk" clocks
+> > +
+> > +Example:
+> > +
+> > +   nand: mxic-nfc@43c30000 {
+> 
+>     The node names should be generic, and the DT spec 0.2 (section 
+2.2.2) even 
+> has documented "nand-controller", please rename.
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
----
- drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+okay, will fix it to
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index acd16e0d52cf..8cdbac076a1b 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4864,8 +4864,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
- 
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
- 
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
--- 
-2.12.3
+nand: nand-controller@43c30000 {
+
+}
+
+> 
+> > +      compatible = "macronix,nand-controller";
+> > +      reg = <0x43c30000 0x10000>;
+> > +      reg-names = "regs";
+> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> > +   };
+> > 
+> 
+> MBR, Sergei
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
