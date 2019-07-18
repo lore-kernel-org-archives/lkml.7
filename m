@@ -2,143 +2,140 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1477FC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988B4C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45AC2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD5021849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXt46Jwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391587AbfGRUNS (ORCPT
+        id S2391548AbfGRUO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:13:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26220 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727687AbfGRUNS (ORCPT
+        Thu, 18 Jul 2019 16:14:58 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:36539 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391319AbfGRUO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:13:18 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IK8ndj060325;
-        Thu, 18 Jul 2019 16:12:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttvupefxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 16:12:55 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6IKA5R7071430;
-        Thu, 18 Jul 2019 16:12:55 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttvupefwp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 16:12:55 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6IK9wfn001885;
-        Thu, 18 Jul 2019 20:12:54 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma04dal.us.ibm.com with ESMTP id 2trtmrj63w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 20:12:54 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IKCrn934079156
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 20:12:53 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 995DB112066;
-        Thu, 18 Jul 2019 20:12:53 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15580112062;
-        Thu, 18 Jul 2019 20:12:51 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.186.82])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Jul 2019 20:12:50 +0000 (GMT)
-References: <20190713060023.8479-1-bauerman@linux.ibm.com> <20190713060023.8479-5-bauerman@linux.ibm.com> <4fcc84ae-b93a-b5f1-fba4-b0e2af7b727c@ozlabs.ru>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>
-Subject: Re: [PATCH v2 04/13] powerpc/pseries/svm: Add helpers for UV_SHARE_PAGE and UV_UNSHARE_PAGE
-In-reply-to: <4fcc84ae-b93a-b5f1-fba4-b0e2af7b727c@ozlabs.ru>
-Date:   Thu, 18 Jul 2019 17:12:47 -0300
-Message-ID: <877e8f3xvk.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=8 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180207
+        Thu, 18 Jul 2019 16:14:57 -0400
+Received: by mail-io1-f53.google.com with SMTP id o9so53724153iom.3;
+        Thu, 18 Jul 2019 13:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=r2pTm0RwMQarnOMoV8lDgMG4J6XK5815xYl1WaBhWuw=;
+        b=jXt46JwdBMPM4AF2MXHtgaUsQMs3wXwa8Ez4IImyYL5lK0RzY+Por1cwu6pd3tf1GK
+         LrR59Z86usCvS5PmkGhF3DPyAYzBW9zSlJJMqBiO/DfbEJy4NJ+BGaB2eCH1E3ERB7it
+         hf9/1kg5cy1KyOyY/PlWh63D5KRrr8tLDGxHLUH0gxkLR1rYP0+NHe4sRkS08I6N0XrV
+         JU7TSwR1wWwxivUuoIpCQNY8YwM5drG9QWzXEwcQyhOrHW5HW7BGP0GICe9p6fZfIf1V
+         9Mzjq9NaONVeWjIHfoGxtbcHJ/60e/CclfhDs0EBmZQcAJ8WmTyhYeV6q0a9825w6QF3
+         Fa/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=r2pTm0RwMQarnOMoV8lDgMG4J6XK5815xYl1WaBhWuw=;
+        b=SQHJuno+MXcY9P/5NzVi4mOA+gfuygpaXZkFSxrIKaaBo/tpoxJuh5pXit5rF4ZOeW
+         9fKINWwcnZOy1bfWkRNfd0doOs7t51O/ZZj2itJIHJzL6KdxOOhc5+b/qfNNE0kRsRPH
+         AhQ+mYmLl5eZ4OY5RhqIv0HnTWa84U8aj280YPSnQwCxLaOmXkp//oPl/xWVAYby2NN+
+         PF9I0NVUWbWwJ6uMfsnRj5EUGW2Rj/GC9Fjqey0+JyWM5noJ/6zPPE1LoTJaxsqQz7o7
+         XjJf0gTPQERs8xOvd0RaNSBWGCizvRoKe5GHauuYnjQgZZOkQSAVOqXHa/LOKKeRQW1S
+         uJzg==
+X-Gm-Message-State: APjAAAVGrcYiIwfciNqVz8x5MRkRVVzCK/pgzutKiNKs5rJNxJk+BANW
+        Bvj401pAckoJDLVg9a9tCBo=
+X-Google-Smtp-Source: APXvYqxSMTFdNpWMpK6BWoxyGer9NJ15j1T9DNe6DsnJeFmfcT3n3z8uenJp6lvRsFHRyu9jM7R6XA==
+X-Received: by 2002:a5d:8b52:: with SMTP id c18mr44577354iot.89.1563480896915;
+        Thu, 18 Jul 2019 13:14:56 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id p3sm31399170iom.7.2019.07.18.13.14.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 13:14:56 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v1] dt-bindings: fec: explicitly mark deprecated properties
+Date:   Thu, 18 Jul 2019 16:14:53 -0400
+Message-Id: <20190718201453.13062-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+fec's gpio phy reset properties have been deprecated.
+Update the dt-bindings documentation to explicitly mark
+them as such, and provide a short description of the
+recommended alternative.
 
-Hello Alexey,
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ .../devicetree/bindings/net/fsl-fec.txt       | 30 +++++++++++--------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-Thanks for your review!
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+index 2d41fb96ce0a..5b88fae0307d 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -7,18 +7,6 @@ Required properties:
+ - phy-mode : See ethernet.txt file in the same directory
+ 
+ Optional properties:
+-- phy-reset-gpios : Should specify the gpio for phy reset
+-- phy-reset-duration : Reset duration in milliseconds.  Should present
+-  only if property "phy-reset-gpios" is available.  Missing the property
+-  will have the duration be 1 millisecond.  Numbers greater than 1000 are
+-  invalid and 1 millisecond will be used instead.
+-- phy-reset-active-high : If present then the reset sequence using the GPIO
+-  specified in the "phy-reset-gpios" property is reversed (H=reset state,
+-  L=operation state).
+-- phy-reset-post-delay : Post reset delay in milliseconds. If present then
+-  a delay of phy-reset-post-delay milliseconds will be observed after the
+-  phy-reset-gpios has been toggled. Can be omitted thus no delay is
+-  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
+ - phy-supply : regulator that powers the Ethernet PHY.
+ - phy-handle : phandle to the PHY device connected to this device.
+ - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+@@ -47,11 +35,27 @@ Optional properties:
+   For imx6sx, "int0" handles all 3 queues and ENET_MII. "pps" is for the pulse
+   per second interrupt associated with 1588 precision time protocol(PTP).
+ 
+-
+ Optional subnodes:
+ - mdio : specifies the mdio bus in the FEC, used as a container for phy nodes
+   according to phy.txt in the same directory
+ 
++Deprecated optional properties:
++	To avoid these, create a phy node according to phy.txt in the same
++	directory, and point the fec's "phy-handle" property to it. Then use
++	the phy's reset binding, again described by phy.txt.
++- phy-reset-gpios : Should specify the gpio for phy reset
++- phy-reset-duration : Reset duration in milliseconds.  Should present
++  only if property "phy-reset-gpios" is available.  Missing the property
++  will have the duration be 1 millisecond.  Numbers greater than 1000 are
++  invalid and 1 millisecond will be used instead.
++- phy-reset-active-high : If present then the reset sequence using the GPIO
++  specified in the "phy-reset-gpios" property is reversed (H=reset state,
++  L=operation state).
++- phy-reset-post-delay : Post reset delay in milliseconds. If present then
++  a delay of phy-reset-post-delay milliseconds will be observed after the
++  phy-reset-gpios has been toggled. Can be omitted thus no delay is
++  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
++
+ Example:
+ 
+ ethernet@83fec000 {
+-- 
+2.17.1
 
-Alexey Kardashevskiy <aik@ozlabs.ru> writes:
-
-> On 13/07/2019 16:00, Thiago Jung Bauermann wrote:
->> From: Ram Pai <linuxram@us.ibm.com>
->>
->> These functions are used when the guest wants to grant the hypervisor
->> access to certain pages.
->>
->> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> ---
->>   arch/powerpc/include/asm/ultravisor-api.h |  2 ++
->>   arch/powerpc/include/asm/ultravisor.h     | 15 +++++++++++++++
->>   2 files changed, 17 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
->> index fe9a0d8d7673..c7513bbadf57 100644
->> --- a/arch/powerpc/include/asm/ultravisor-api.h
->> +++ b/arch/powerpc/include/asm/ultravisor-api.h
->> @@ -25,6 +25,8 @@
->>   #define UV_UNREGISTER_MEM_SLOT		0xF124
->>   #define UV_PAGE_IN			0xF128
->>   #define UV_PAGE_OUT			0xF12C
->> +#define UV_SHARE_PAGE			0xF130
->> +#define UV_UNSHARE_PAGE			0xF134
->>   #define UV_PAGE_INVAL			0xF138
->>   #define UV_SVM_TERMINATE		0xF13C
->>   diff --git a/arch/powerpc/include/asm/ultravisor.h
->> b/arch/powerpc/include/asm/ultravisor.h
->> index f5dc5af739b8..f7418b663a0e 100644
->> --- a/arch/powerpc/include/asm/ultravisor.h
->> +++ b/arch/powerpc/include/asm/ultravisor.h
->> @@ -91,6 +91,21 @@ static inline int uv_svm_terminate(u64 lpid)
->>     	return ucall(UV_SVM_TERMINATE, retbuf, lpid);
->>   }
->> +
->> +static inline int uv_share_page(u64 pfn, u64 npages)
->> +{
->> +	unsigned long retbuf[UCALL_BUFSIZE];
->> +
->> +	return ucall(UV_SHARE_PAGE, retbuf, pfn, npages);
->
->
-> What is in that retbuf? Can you pass NULL instead?
-
-I think so, that buffer isn't used actually. Claudio is working on a
-ucall_norets() which doesn't take the buffer and I can switch to that.
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
