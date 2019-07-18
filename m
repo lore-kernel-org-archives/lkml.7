@@ -2,50 +2,52 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35548C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1472BC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A9921849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BE02077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420026;
-	bh=/xAkpM3kOJg/Mwhe9RfVtMXfWjwQWzDs/GzrNCpYdjg=;
+	s=default; t=1563420030;
+	bh=DP20boK1KDY+Iu06I4W2JFwC0eRC1R0e+VRqs1yQYBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNejcftJ67Tn7lWkJ5hE2ZG6TP/+R/V2YRJIxJpu1t6Wg1uM9bIMXY8synyAshyg/
-	 K/GeXueB5oef+bnTeHcAmoCVYmAgsUyxgj90sreoP73KGZ+MX9n9oMCprJOpI/OBhP
-	 jpMFh3l3w8yZE9uSiOzcJbrLglMNp4WQljyNrYBg=
+	b=d7ukHToHWF7COu/Kd2jyDLActFTVOM6ht0mgvSkQy2G/85Oh50LsFzb3ozgoEr+qq
+	 kpmYC2nacDO/P61UFvQhHUPDZHa4cK9dHoM5KT8mifg4Qk6zDo6Ebvf+spzj2jG8Wx
+	 Mh/YfHLtv0D16guF2SEh0xeckjv3arz1qvKLpkh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391407AbfGRDUY (ORCPT
+        id S2403888AbfGRDKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:20:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391238AbfGRDLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:12 -0400
+        id S2390762AbfGRDKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:10:46 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D188205F4;
-        Thu, 18 Jul 2019 03:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD6AA205F4;
+        Thu, 18 Jul 2019 03:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419471;
-        bh=/xAkpM3kOJg/Mwhe9RfVtMXfWjwQWzDs/GzrNCpYdjg=;
+        s=default; t=1563419446;
+        bh=DP20boK1KDY+Iu06I4W2JFwC0eRC1R0e+VRqs1yQYBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1fZdEi/LEuEq9OhXuWty+4l/FLjTZZnP7msv38ztiC8Glm+5hx+aAWweE7TGkpzN
-         7wibxiG9q1uq7Ms3XdZ28sqFnMcqoJJl8IH8MoIAndc3jKtjD6Q/3RxRHz6aS+JBcA
-         Mj0eOUzIRJm4jolWtz4uMSerVTVmyAsPJ/D4GuoE=
+        b=PUeCT8mkVLeygqudMeycPFjztiEcZbCT2hP72DBtaxYac9V0nk6YrseccU3ZKt++L
+         axnqPVB10uC2ZCxu4OeFLDKkAR/f7jmt4t6g4TPYWcGHGZUagBK6Rn48uDfs+Vse6X
+         OtKldSnBMXcUMIlRnCq4nioa5euvYTrmc0QelSCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 57/80] staging: comedi: amplc_pci230: fix null pointer deref on interrupt
-Date:   Thu, 18 Jul 2019 12:01:48 +0900
-Message-Id: <20190718030102.953260755@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 67/80] ppp: mppe: Add softdep to arc4
+Date:   Thu, 18 Jul 2019 12:01:58 +0900
+Message-Id: <20190718030103.669983354@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -58,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+[ Upstream commit aad1dcc4f011ea409850e040363dff1e59aa4175 ]
 
-commit 7379e6baeddf580d01feca650ec1ad508b6ea8ee upstream.
+The arc4 crypto is mandatory at ppp_mppe probe time, so let's put a
+softdep line, so that the corresponding module gets prepared
+gracefully.  Without this, a simple inclusion to initrd via dracut
+failed due to the missing dependency, for example.
 
-The interrupt handler `pci230_interrupt()` causes a null pointer
-dereference for a PCI260 card.  There is no analog output subdevice for
-a PCI260.  The `dev->write_subdev` subdevice pointer and therefore the
-`s_ao` subdevice pointer variable will be `NULL` for a PCI260.  The
-following call near the end of the interrupt handler results in the null
-pointer dereference for a PCI260:
-
-	comedi_handle_events(dev, s_ao);
-
-Fix it by only calling the above function if `s_ao` is valid.
-
-Note that the other uses of `s_ao` in the calls
-`pci230_handle_ao_nofifo(dev, s_ao);` and `pci230_handle_ao_fifo(dev,
-s_ao);` will never be reached for a PCI260, so they are safe.
-
-Fixes: 39064f23284c ("staging: comedi: amplc_pci230: use comedi_handle_events()")
-Cc: <stable@vger.kernel.org> # v3.19+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/amplc_pci230.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ppp/ppp_mppe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/comedi/drivers/amplc_pci230.c
-+++ b/drivers/staging/comedi/drivers/amplc_pci230.c
-@@ -2339,7 +2339,8 @@ static irqreturn_t pci230_interrupt(int
- 	devpriv->intr_running = false;
- 	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
+diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
+index 6c7fd98cb00a..d9eda7c217e9 100644
+--- a/drivers/net/ppp/ppp_mppe.c
++++ b/drivers/net/ppp/ppp_mppe.c
+@@ -63,6 +63,7 @@ MODULE_AUTHOR("Frank Cusack <fcusack@fcusack.com>");
+ MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
++MODULE_SOFTDEP("pre: arc4");
+ MODULE_VERSION("1.0.2");
  
--	comedi_handle_events(dev, s_ao);
-+	if (s_ao)
-+		comedi_handle_events(dev, s_ao);
- 	comedi_handle_events(dev, s_ai);
- 
- 	return IRQ_HANDLED;
+ static unsigned int
+-- 
+2.20.1
+
 
 
