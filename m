@@ -2,64 +2,60 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E553FC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8C9C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE38B2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F792173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419043;
-	bh=JtYY4Vwzn8v0lt21O6YG9GEkn3JDc4rb/bksbQJXEFk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=v097PO1NGLMFnUZuJ9Z4hiFxvERV6/NDQglM9z4ZJURsy2Fqle9tgIxQkSIFTpdTy
-	 YjOdEBw4MM7UvpFvYxoWFN94ufx92t3cWwg/FNUpI51ibs7+WuWsXkCeFQqRjby3qs
-	 Q9hJtXi/cXSLNq/6umMbM76q7KYdchDjz+73qHJk=
+	s=default; t=1563419045;
+	bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qBIbuane9wz8x+lLUnrISKz9pGEzqXnB3Wd1jcsRUmofUfcxsWHxhKB4kFj206/c3
+	 N2OqNPfkbQthpfDVZ3uG1EmslmH+T7MaNqCVqYJbGPeJd4aE2Cs+UP/aPXwmU8HaIv
+	 c7OsVTSOVhhdczCYtydJkL64vOHKEv3WvEWW0psw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389592AbfGRDEC (ORCPT
+        id S2389605AbfGRDEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34704 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389549AbfGRDD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:57 -0400
+        id S2389558AbfGRDEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:04:00 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232032053B;
-        Thu, 18 Jul 2019 03:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7349121849;
+        Thu, 18 Jul 2019 03:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419036;
-        bh=JtYY4Vwzn8v0lt21O6YG9GEkn3JDc4rb/bksbQJXEFk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=C3P+TIvp3pYveFnjYP2Q+uXYsKCPqoY1AsrvZsZRZl6cSBNyZoXBjtxR0N5xxEJ1z
-         q5k9BOLfhynUU7+K0GMTRNvFYrDMMHXA9uJQWkxG8E35SQ91qbTFEDzWGIso2iw8fV
-         mM5q2NiBoePsf3QTdHXclB/LJF4R9VRDGuygx5s8=
+        s=default; t=1563419040;
+        bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hwmKOhHKO53gGFg+mx/Cux+7R9Za7ouezchFHl0LGAmosUN2tVuXCb1S9JI96aT3W
+         B/4vXhOOiiisVfyMWQWw12dlBEx+9J24Bp1TnbFAVfnwK4ypuPQVFJN23xzo4Ybikv
+         V1iHApVPGihb1VmbpJnq8Wx6KurodvA8h8mhuTVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.1 00/54] 5.1.19-stable review
-Date:   Thu, 18 Jul 2019 12:00:55 +0900
-Message-Id: <20190718030053.287374640@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 04/54] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
+Date:   Thu, 18 Jul 2019 12:00:59 +0900
+Message-Id: <20190718030053.703927050@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
+References: <20190718030053.287374640@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.1.19-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.1.19-rc1
-X-KernelTest-Deadline: 2019-07-20T03:00+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,260 +63,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.1.19 release.
-There are 54 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.19-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.1.19-rc1
-
-Jiri Slaby <jslaby@suse.cz>
-    x86/entry/32: Fix ENDPROC of common_spurious
-
-Haren Myneni <haren@linux.vnet.ibm.com>
-    crypto/NX: Set receive window credits to max number of CRBs in RxFIFO
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - fix hash on SEC1.
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - move struct talitos_edesc into talitos.h
-
-Julian Wiedmann <jwi@linux.ibm.com>
-    s390/qdio: don't touch the dsci in tiqdio_add_input_queues()
-
-Julian Wiedmann <jwi@linux.ibm.com>
-    s390/qdio: (re-)initialize tiqdio list entries
-
-Heiko Carstens <heiko.carstens@de.ibm.com>
-    s390: fix stfle zero padding
-
-Arnd Bergmann <arnd@arndb.de>
-    ARC: hide unused function unw_hdr_alloc
-
-Thomas Gleixner <tglx@linutronix.de>
-    x86/irq: Seperate unused system vectors from spurious entry again
-
-Thomas Gleixner <tglx@linutronix.de>
-    x86/irq: Handle spurious interrupt after shutdown gracefully
-
-Thomas Gleixner <tglx@linutronix.de>
-    x86/ioapic: Implement irq_get_irqchip_state() callback
-
-Thomas Gleixner <tglx@linutronix.de>
-    genirq: Add optional hardware synchronization for shutdown
-
-Thomas Gleixner <tglx@linutronix.de>
-    genirq: Fix misleading synchronize_irq() documentation
-
-Thomas Gleixner <tglx@linutronix.de>
-    genirq: Delay deactivation in free_irq()
-
-Vinod Koul <vkoul@kernel.org>
-    linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
-
-Andrea Arcangeli <aarcange@redhat.com>
-    fork,memcg: alloc_thread_stack_node needs to set tsk->stack
-
-Yafang Shao <laoar.shao@gmail.com>
-    mm/oom_kill.c: fix uninitialized oc->constraint
-
-Nicolas Boichat <drinkcat@chromium.org>
-    pinctrl: mediatek: Update cur_mask in mask/mask ops
-
-Eiichi Tsukata <devel@etsukata.com>
-    cpu/hotplug: Fix out-of-bounds read when setting fail state
-
-Nicolas Boichat <drinkcat@chromium.org>
-    pinctrl: mediatek: Ignore interrupts that are wake only during resume
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    HID: multitouch: Add pointstick support for ALPS Touchpad
-
-Kyle Godbey <me@kyle.ee>
-    HID: uclogic: Add support for Huion HS64 tablet
-
-Oleksandr Natalenko <oleksandr@redhat.com>
-    HID: chicony: add another quirk for PixArt mouse
-
-Kirill A. Shutemov <kirill@shutemov.name>
-    x86/boot/64: Add missing fixup_pointer() for next_early_pgt access
-
-Kirill A. Shutemov <kirill@shutemov.name>
-    x86/boot/64: Fix crash if kernel image crosses page table boundary
-
-Milan Broz <gmazyland@gmail.com>
-    dm verity: use message limit for data block corruption message
-
-Jerome Marchand <jmarchan@redhat.com>
-    dm table: don't copy from a NULL pointer in realloc_argv()
-
-Alexandre Belloni <alexandre.belloni@bootlin.com>
-    pinctrl: ocelot: fix pinmuxing for pins after 31
-
-Alexandre Belloni <alexandre.belloni@bootlin.com>
-    pinctrl: ocelot: fix gpio direction for pins after 31
-
-Phil Reid <preid@electromag.com.au>
-    pinctrl: mcp23s08: Fix add_data and irqchip_add_nested call order
-
-Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-    ARM: dts: imx6ul: fix PWM[1-4] interrupts
-
-Sergej Benilov <sergej.benilov@googlemail.com>
-    sis900: fix TX completion
-
-Takashi Iwai <tiwai@suse.de>
-    ppp: mppe: Add softdep to arc4
-
-Petr Oros <poros@redhat.com>
-    be2net: fix link failure after ethtool offline test
-
-Colin Ian King <colin.king@canonical.com>
-    x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
-
-Qian Cai <cai@lca.pw>
-    x86/efi: fix a -Wtype-limits compilation warning
-
-David Howells <dhowells@redhat.com>
-    afs: Fix uninitialised spinlock afs_volume::cb_break_lock
-
-Arnd Bergmann <arnd@arndb.de>
-    ARM: omap2: remove incorrect __init annotation
-
-Linus Walleij <linus.walleij@linaro.org>
-    ARM: dts: gemini Fix up DNS-313 compatible string
-
-Peter Zijlstra <peterz@infradead.org>
-    perf/core: Fix perf_sample_regs_user() mm check
-
-Michael Ellerman <mpe@ellerman.id.au>
-    selftests/powerpc: Add test of fork with mapping above 512TB
-
-Ran Wang <ran.wang_1@nxp.com>
-    arm64: dts: ls1028a: Fix CPU idle fail.
-
-Hans de Goede <hdegoede@redhat.com>
-    efi/bgrt: Drop BGRT status field reserved bits check
-
-Tony Lindgren <tony@atomide.com>
-    clk: ti: clkctrl: Fix returning uninitialized data
-
-Heyi Guo <guoheyi@huawei.com>
-    irqchip/gic-v3-its: Fix command queue pointer comparison bug
-
-Guo Ren <ren_guo@c-sky.com>
-    irqchip/irq-csky-mpintc: Support auto irq deliver to all cpus
-
-Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-    ARM: dts: meson8b: fix the operating voltage of the Mali GPU
-
-Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-    ARM: dts: meson8: fix GPU interrupts and drop an undocumented property
-
-Sven Van Asbroeck <thesven73@gmail.com>
-    firmware: improve LSM/IMA security behaviour
-
-James Morse <james.morse@arm.com>
-    drivers: base: cacheinfo: Ensure cpu hotplug work is done before Intel RDT
-
-Masahiro Yamada <yamada.masahiro@socionext.com>
-    nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
-
-Cole Rogers <colerogers@disroot.org>
-    Input: synaptics - enable SMBUS on T480 thinkpad trackpad
-
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-    e1000e: start network tx queue only when link is up
-
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-    Revert "e1000e: fix cyclic resets at link up with active tx"
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arc/kernel/unwind.c                           |  9 +-
- arch/arm/boot/dts/gemini-dlink-dns-313.dts         |  2 +-
- arch/arm/boot/dts/imx6ul.dtsi                      |  8 +-
- arch/arm/boot/dts/meson8.dtsi                      |  5 +-
- arch/arm/boot/dts/meson8b.dtsi                     | 10 +--
- arch/arm/mach-omap2/prm3xxx.c                      |  2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     | 18 ++--
- arch/s390/include/asm/facility.h                   | 21 +++--
- arch/x86/entry/entry_32.S                          | 24 ++++++
- arch/x86/entry/entry_64.S                          | 30 ++++++-
- arch/x86/include/asm/hw_irq.h                      |  5 +-
- arch/x86/kernel/apic/apic.c                        | 36 +++++---
- arch/x86/kernel/apic/io_apic.c                     | 46 ++++++++++
- arch/x86/kernel/apic/vector.c                      |  4 +-
- arch/x86/kernel/head64.c                           | 20 +++--
- arch/x86/kernel/idt.c                              |  3 +-
- arch/x86/kernel/irq.c                              |  2 +-
- arch/x86/platform/efi/quirks.c                     |  2 +-
- drivers/base/cacheinfo.c                           |  3 +-
- drivers/base/firmware_loader/fallback.c            |  2 +-
- drivers/clk/ti/clkctrl.c                           |  7 +-
- drivers/crypto/nx/nx-842-powernv.c                 |  8 +-
- drivers/crypto/talitos.c                           | 99 +++++++++-------------
- drivers/crypto/talitos.h                           | 30 +++++++
- drivers/firmware/efi/efi-bgrt.c                    |  5 --
- drivers/hid/hid-ids.h                              |  3 +
- drivers/hid/hid-multitouch.c                       |  4 +
- drivers/hid/hid-quirks.c                           |  1 +
- drivers/hid/hid-uclogic-core.c                     |  2 +
- drivers/hid/hid-uclogic-params.c                   |  2 +
- drivers/input/mouse/synaptics.c                    |  1 +
- drivers/irqchip/irq-csky-mpintc.c                  | 15 +++-
- drivers/irqchip/irq-gic-v3-its.c                   | 35 +++++---
- drivers/md/dm-table.c                              |  2 +-
- drivers/md/dm-verity-target.c                      |  4 +-
- drivers/net/ethernet/emulex/benet/be_ethtool.c     | 28 ++++--
- drivers/net/ethernet/intel/e1000e/netdev.c         | 21 +++--
- drivers/net/ethernet/sis/sis900.c                  | 16 ++--
- drivers/net/ppp/ppp_mppe.c                         |  1 +
- drivers/pinctrl/mediatek/mtk-eint.c                | 34 ++++----
- drivers/pinctrl/pinctrl-mcp23s08.c                 |  8 +-
- drivers/pinctrl/pinctrl-ocelot.c                   | 18 ++--
- drivers/s390/cio/qdio_setup.c                      |  2 +
- drivers/s390/cio/qdio_thinint.c                    |  5 +-
- fs/afs/callback.c                                  |  4 +-
- fs/afs/internal.h                                  |  2 +-
- fs/afs/volume.c                                    |  1 +
- include/linux/cpuhotplug.h                         |  1 +
- include/linux/kernel.h                             |  3 +-
- include/uapi/linux/nilfs2_ondisk.h                 | 24 +++---
- kernel/cpu.c                                       |  3 +
- kernel/events/core.c                               |  2 +-
- kernel/fork.c                                      |  6 +-
- kernel/irq/autoprobe.c                             |  6 +-
- kernel/irq/chip.c                                  |  6 ++
- kernel/irq/cpuhotplug.c                            |  2 +-
- kernel/irq/internals.h                             |  5 ++
- kernel/irq/manage.c                                | 90 +++++++++++++++-----
- mm/oom_kill.c                                      | 12 ++-
- tools/testing/selftests/powerpc/mm/.gitignore      |  3 +-
- tools/testing/selftests/powerpc/mm/Makefile        |  4 +-
- .../powerpc/mm/large_vm_fork_separation.c          | 87 +++++++++++++++++++
- 63 files changed, 610 insertions(+), 258 deletions(-)
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+commit c32cc30c0544f13982ee0185d55f4910319b1a79 upstream.
+
+cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
+which is not exported to user-space.
+
+UAPI headers must use the ones prefixed with double-underscore.
+
+Detected by compile-testing exported headers:
+
+  include/linux/nilfs2_ondisk.h: In function `nilfs_checkpoint_set_snapshot':
+  include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function `cpu_to_le32' [-Werror=implicit-function-declaration]
+    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                   ^
+  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
+   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+   ^~~~~~~~~~~~~~~~~~~~
+  include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function `le32_to_cpu' [-Werror=implicit-function-declaration]
+    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                               ^
+  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
+   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+   ^~~~~~~~~~~~~~~~~~~~
+  include/linux/nilfs2_ondisk.h: In function `nilfs_segment_usage_set_clean':
+  include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function `cpu_to_le64' [-Werror=implicit-function-declaration]
+    su->su_lastmod = cpu_to_le64(0);
+                     ^~~~~~~~~~~
+
+Link: http://lkml.kernel.org/r/20190605053006.14332-1-yamada.masahiro@socionext.com
+Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to uapi separately")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: <stable@vger.kernel.org>	[4.9+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/uapi/linux/nilfs2_ondisk.h |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+--- a/include/uapi/linux/nilfs2_ondisk.h
++++ b/include/uapi/linux/nilfs2_ondisk.h
+@@ -29,7 +29,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/magic.h>
+-
++#include <asm/byteorder.h>
+ 
+ #define NILFS_INODE_BMAP_SIZE	7
+ 
+@@ -533,19 +533,19 @@ enum {
+ static inline void							\
+ nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
+-				   (1UL << NILFS_CHECKPOINT_##flag));	\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
++				     (1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline void							\
+ nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
+ 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline int							\
+ nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
+ {									\
+-	return !!(le32_to_cpu(cp->cp_flags) &				\
++	return !!(__le32_to_cpu(cp->cp_flags) &				\
+ 		  (1UL << NILFS_CHECKPOINT_##flag));			\
+ }
+ 
+@@ -595,20 +595,20 @@ enum {
+ static inline void							\
+ nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
+ {									\
+-	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
++	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
+ 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
+ }									\
+ static inline void							\
+ nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
+ {									\
+ 	su->su_flags =							\
+-		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
++		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
+ 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
+ }									\
+ static inline int							\
+ nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
+ {									\
+-	return !!(le32_to_cpu(su->su_flags) &				\
++	return !!(__le32_to_cpu(su->su_flags) &				\
+ 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
+ }
+ 
+@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
+ static inline void
+ nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
+ {
+-	su->su_lastmod = cpu_to_le64(0);
+-	su->su_nblocks = cpu_to_le32(0);
+-	su->su_flags = cpu_to_le32(0);
++	su->su_lastmod = __cpu_to_le64(0);
++	su->su_nblocks = __cpu_to_le32(0);
++	su->su_flags = __cpu_to_le32(0);
+ }
+ 
+ static inline int
+ nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
+ {
+-	return !le32_to_cpu(su->su_flags);
++	return !__le32_to_cpu(su->su_flags);
+ }
+ 
+ /**
 
 
