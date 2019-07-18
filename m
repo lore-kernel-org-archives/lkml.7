@@ -2,114 +2,136 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC79DC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4B7C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B17552173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="WlEH0FIE"
+	by mail.kernel.org (Postfix) with ESMTP id AC4602173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389830AbfGRKRo (ORCPT
+        id S2389953AbfGRKSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:17:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33666 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfGRKRo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:17:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so28119397wru.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 03:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oBf2lMyfhY7EY3KqVK9i6b5kfQhduu/064vS7gNPNXs=;
-        b=WlEH0FIED2hjJ3xoIvYe2qPOvQ2qO+x+VBe+H3SWgJlPS2i82UNkA0xSRuHQfStXz9
-         MYG+LZSWG26byysWhUrg/oU3uYv5nZiA4DSn/bJl0U6jU8HAVNS8gPnHL7AdhNnKaqJr
-         3IoS/lbEoaCRlcxso8fqepk+Vg6NTZzEvWGTSDPQ9qIE4+IDNCh9X6JzzqOmpXRsf71a
-         HvMJjGc1mTO7fzqR/aT/c0TOQmttDjrAnYOrZ+GEDqKchn6oUV8U7Dnz9pa2cPJ4D5qP
-         zv+L4hqQCmabpOXK1Az9oj6+KqAbj3MuHBdnHx/EITx5nXpFEe7NNV4iWMMEVNfP5t4c
-         v8Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oBf2lMyfhY7EY3KqVK9i6b5kfQhduu/064vS7gNPNXs=;
-        b=bcSkZjpQpMSCy/ZaKs02IXh8G9I16aJnEVFWXsXtEgz79VuSYZpNbxiAwFTZXZAib4
-         vfcAbFJk7wEf1dIrzZt/oxwESMsQaukm/dypVCcFVmFla1bukEd3bXekl1nflRlTXUaJ
-         /25Sff3UBlHmVavFFckc/BS/aOe+0Y6E3ed0JdHkKN3pnMzwY5JhgDZz0Q+nt93RF9O2
-         hf79ITNrAxlH9BJfIjAaJ78it2vROcqY/vQPKen+OTwuYMWG4P8pdjIb5OLW8Ot9NaLt
-         9Y8DFvfP5fDfNqG1OPBkTeQd7YTSTwKRNrtdkeSfYp5CYzFHwBJllDXY+c7tDLpnwglL
-         l26w==
-X-Gm-Message-State: APjAAAUpZjX3++S4ODevF44jXLytgjGxp2/aP9Pojwyj+VNCernAwJXi
-        qLy6ndwzdjvWhRIArd6JVr8=
-X-Google-Smtp-Source: APXvYqzFM7PBqeuTzxAiUo8pyI3tcXZtVaBVcraYnfuLLLlME0CY+GYai3kvzJPhNn3VdicTZa8SdQ==
-X-Received: by 2002:adf:ec0d:: with SMTP id x13mr50445144wrn.240.1563445061438;
-        Thu, 18 Jul 2019 03:17:41 -0700 (PDT)
-Received: from brauner.io ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id s188sm19818806wmf.40.2019.07.18.03.17.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 03:17:40 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 12:17:40 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        kernel-team@android.com, Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH RFC v1] pidfd: fix a race in setting exit_state for pidfd
- polling
-Message-ID: <20190718101735.pbu6nji6mfwq4mxa@brauner.io>
-References: <20190717172100.261204-1-joel@joelfernandes.org>
+        Thu, 18 Jul 2019 06:18:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44298 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbfGRKSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 06:18:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2F17259465;
+        Thu, 18 Jul 2019 10:18:06 +0000 (UTC)
+Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DE7B608C2;
+        Thu, 18 Jul 2019 10:18:04 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Laurent Vivier <lvivier@redhat.com>,
+        David Gibson <david@gibson.dropbear.id.au>
+Subject: [RFC PATCH] KVM: PPC: Enable the kvm_create_max_vcpus selftest on ppc64
+Date:   Thu, 18 Jul 2019 12:17:58 +0200
+Message-Id: <20190718101758.14428-1-thuth@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190717172100.261204-1-joel@joelfernandes.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 18 Jul 2019 10:18:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 01:21:00PM -0400, Joel Fernandes wrote:
-> From: Suren Baghdasaryan <surenb@google.com>
-> 
-> There is a race between reading task->exit_state in pidfd_poll and writing
-> it after do_notify_parent calls do_notify_pidfd. Expected sequence of
-> events is:
-> 
-> CPU 0                            CPU 1
-> ------------------------------------------------
-> exit_notify
->   do_notify_parent
->     do_notify_pidfd
->   tsk->exit_state = EXIT_DEAD
->                                   pidfd_poll
->                                      if (tsk->exit_state)
-> 
-> However nothing prevents the following sequence:
-> 
-> CPU 0                            CPU 1
-> ------------------------------------------------
-> exit_notify
->   do_notify_parent
->     do_notify_pidfd
->                                    pidfd_poll
->                                       if (tsk->exit_state)
->   tsk->exit_state = EXIT_DEAD
-> 
-> This causes a polling task to wait forever, since poll blocks because
-> exit_state is 0 and the waiting task is not notified again. A stress
-> test continuously doing pidfd poll and process exits uncovered this bug,
+The kvm_create_max_vcpus is generic enough so that it works out of the
+box on POWER, too. We just have to provide some stubs for linking the
+code from kvm_util.c.
+Note that you also might have to do "ulimit -n 2500" before running the
+test, to avoid that it runs out of file handles for the vCPUs.
 
-Btw, if that stress test is in any way upstreamable I'd like to put this
-into for-next as well. :)
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ RFC since the stubs are a little bit ugly (does someone here like
+ to implement them?), and since it's a little bit annoying that
+ you have to raise the ulimit for this test in case the kernel provides
+ more vCPUs than the default ulimit...
 
-Christian
+ tools/testing/selftests/kvm/Makefile          |  6 +++
+ .../selftests/kvm/lib/powerpc/processor.c     | 37 +++++++++++++++++++
+ 2 files changed, 43 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/lib/powerpc/processor.c
+
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index ba7849751989..c92dc78ff74b 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -11,6 +11,8 @@ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/ucall.c lib/sparsebi
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c
+ LIBKVM_s390x = lib/s390x/processor.c
++LIBKVM_ppc64 = lib/powerpc/processor.c
++LIBKVM_ppc64le = $(LIBKVM_ppc64)
+ 
+ TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
+ TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
+@@ -35,6 +37,10 @@ TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+ TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+ 
++TEST_GEN_PROGS_ppc64 += kvm_create_max_vcpus
++
++TEST_GEN_PROGS_ppc64le = $(TEST_GEN_PROGS_ppc64)
++
+ TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
+ LIBKVM += $(LIBKVM_$(UNAME_M))
+ 
+diff --git a/tools/testing/selftests/kvm/lib/powerpc/processor.c b/tools/testing/selftests/kvm/lib/powerpc/processor.c
+new file mode 100644
+index 000000000000..c0b7f06e206e
+--- /dev/null
++++ b/tools/testing/selftests/kvm/lib/powerpc/processor.c
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * KVM selftest s390x library code - CPU-related functions
++ */
++
++#define _GNU_SOURCE
++
++#include "kvm_util.h"
++#include "../kvm_util_internal.h"
++
++void virt_pgd_alloc(struct kvm_vm *vm, uint32_t memslot)
++{
++	abort();	/* TODO: implement this */
++}
++
++void virt_pg_map(struct kvm_vm *vm, uint64_t gva, uint64_t gpa,
++		 uint32_t memslot)
++{
++	abort();	/* TODO: implement this */
++}
++
++vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
++{
++	abort();	/* TODO: implement this */
++
++	return -1;
++}
++
++void virt_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
++{
++	abort();	/* TODO: implement this */
++}
++
++void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
++{
++	abort();	/* TODO: implement this */
++}
+-- 
+2.21.0
+
