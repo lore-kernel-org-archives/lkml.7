@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A01C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C8BC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE134205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFBE205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420286;
-	bh=YfICFsESOvdQZDGiHscJVaj94R0uz2pITiwXWI9h5k4=;
+	s=default; t=1563420289;
+	bh=gcoQcpHmMYKJvS8eyy4TEbIp704nm07q9cjihtk1UQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oo7PwzwUxLEl0t5YQna3+2u6GlnWRioGeCgldnK7RrINhjRyRDxPhTrOr+BYQtKeA
-	 gZo7mQ7Bsj1Iqe64d0HwAK3slWWkZsZcgkMKGvBoL0yoFHMv/BHu6ACVHbSJC+o8W/
-	 HXfUleYANSrJz+yW8+/kQcFeOK4TDfCwnnM33sdQ=
+	b=Bvg/e95wusxxoLh/ztm+4zUr+cgXddSJZRZoLEjeKZp01DffSK0VaRwbgoHl4bwji
+	 +Y0mzTPLqpL8NRiLQABcWiKi9H1QX4G6Pd6jcFCWG2hC+XF31wTRKaFoCqp597u6UB
+	 7L8kVK6+lsOI/cXY0i0b9ix25zMgrVZm7H1Oq6AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390842AbfGRDYp (ORCPT
+        id S2390773AbfGRDYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37628 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388725AbfGRDGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:24 -0400
+        id S2390190AbfGRDGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:21 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A928C2053B;
-        Thu, 18 Jul 2019 03:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC562053B;
+        Thu, 18 Jul 2019 03:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419184;
-        bh=YfICFsESOvdQZDGiHscJVaj94R0uz2pITiwXWI9h5k4=;
+        s=default; t=1563419180;
+        bh=gcoQcpHmMYKJvS8eyy4TEbIp704nm07q9cjihtk1UQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tgo68skdWyDkDjeiqqH9k+xU3NHzoCQBeDyukwRruDd34Nuj95RSjLJam3kRm2LCQ
-         Dho8kyYlIkH7bBkPY6VTI97YwvdNeuc9MlRDYZwiQj8CMms8B0Pkoa9SjC1UdFvort
-         8gx1hBQtLJVRupuL1Jv8NYKnGem0iy3dfR/nUXKw=
+        b=J3TeyY/6PbUd1wafyGO/Roj3y3eYumeGm7MuqbFsg7wHflct7P2aBd+NZSMR2k4J2
+         7PeyhbemRAso8IAc2dSXrtVJQPNpGSgqNGQyS5+/ZWXtmq2OpOgsaOXb25A5SWMqw4
+         xxzUMjBoxf89xVBPVN9Fqep8vdTwx6i5F4rOdQ/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.1 49/54] s390/qdio: (re-)initialize tiqdio list entries
-Date:   Thu, 18 Jul 2019 12:01:44 +0900
-Message-Id: <20190718030056.989876091@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 5.1 47/54] ARC: hide unused function unw_hdr_alloc
+Date:   Thu, 18 Jul 2019 12:01:42 +0900
+Message-Id: <20190718030056.830149362@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -59,77 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit e54e4785cb5cb4896cf4285964aeef2125612fb2 upstream.
+commit fd5de2721ea7d16e2b16c4049ac49f229551b290 upstream.
 
-When tiqdio_remove_input_queues() removes a queue from the tiq_list as
-part of qdio_shutdown(), it doesn't re-initialize the queue's list entry
-and the prev/next pointers go stale.
+As kernelci.org reports, this function is not used in
+vdk_hs38_defconfig:
 
-If a subsequent qdio_establish() fails while sending the ESTABLISH cmd,
-it calls qdio_shutdown() again in QDIO_IRQ_STATE_ERR state and
-tiqdio_remove_input_queues() will attempt to remove the queue entry a
-second time. This dereferences the stale pointers, and bad things ensue.
-Fix this by re-initializing the list entry after removing it from the
-list.
+arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
 
-For good practice also initialize the list entry when the queue is first
-allocated, and remove the quirky checks that papered over this omission.
-Note that prior to
-commit e521813468f7 ("s390/qdio: fix access to uninitialized qdio_q fields"),
-these checks were bogus anyway.
-
-setup_queues_misc() clears the whole queue struct, and thus needs to
-re-init the prev/next pointers as well.
-
-Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
+Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/cio/qdio_setup.c   |    2 ++
- drivers/s390/cio/qdio_thinint.c |    4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/arc/kernel/unwind.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -150,6 +150,7 @@ static int __qdio_allocate_qs(struct qdi
- 			return -ENOMEM;
- 		}
- 		irq_ptr_qs[i] = q;
-+		INIT_LIST_HEAD(&q->entry);
- 	}
- 	return 0;
- }
-@@ -178,6 +179,7 @@ static void setup_queues_misc(struct qdi
- 	q->mask = 1 << (31 - i);
- 	q->nr = i;
- 	q->handler = handler;
-+	INIT_LIST_HEAD(&q->entry);
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -184,11 +184,6 @@ static void *__init unw_hdr_alloc_early(
+ 	return memblock_alloc_from(sz, sizeof(unsigned int), MAX_DMA_ADDRESS);
  }
  
- static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
---- a/drivers/s390/cio/qdio_thinint.c
-+++ b/drivers/s390/cio/qdio_thinint.c
-@@ -87,14 +87,14 @@ void tiqdio_remove_input_queues(struct q
- 	struct qdio_q *q;
- 
- 	q = irq_ptr->input_qs[0];
--	/* if establish triggered an error */
--	if (!q || !q->entry.prev || !q->entry.next)
-+	if (!q)
- 		return;
- 
- 	mutex_lock(&tiq_list_lock);
- 	list_del_rcu(&q->entry);
- 	mutex_unlock(&tiq_list_lock);
- 	synchronize_rcu();
-+	INIT_LIST_HEAD(&q->entry);
+-static void *unw_hdr_alloc(unsigned long sz)
+-{
+-	return kmalloc(sz, GFP_KERNEL);
+-}
+-
+ static void init_unwind_table(struct unwind_table *table, const char *name,
+ 			      const void *core_start, unsigned long core_size,
+ 			      const void *init_start, unsigned long init_size,
+@@ -369,6 +364,10 @@ ret_err:
  }
  
- static inline int has_multiple_inq_on_dsci(struct qdio_irq *irq_ptr)
+ #ifdef CONFIG_MODULES
++static void *unw_hdr_alloc(unsigned long sz)
++{
++	return kmalloc(sz, GFP_KERNEL);
++}
+ 
+ static struct unwind_table *last_table;
+ 
 
 
