@@ -2,121 +2,113 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF69C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E5DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084FA20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B541A217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ehV7+gKg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aDk3QWJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390454AbfGROZ5 (ORCPT
+        id S2390552AbfGRO1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:25:57 -0400
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:43731 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfGROZy (ORCPT
+        Thu, 18 Jul 2019 10:27:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42330 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRO1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:25:54 -0400
-Received: by mail-oi1-f175.google.com with SMTP id w79so21645207oif.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NEfHbVHTHxaeDRfwOPqdRBhxdA+kWRw0lTsxb4KwEKY=;
-        b=ehV7+gKgD9TaoC10Ox+amOqzeQyE5iWOsMyaZ6c6J97blX6bDdl27Fkxll2rfap8Ie
-         d3FvKZu4jnSjHtRt+zyjzfqyUjUezaboOSKVN2rTmg6atVMl8zO6SlGfAHF5NRNq3YEw
-         Da9CHQ8/1BtOlwmuHDFcn1FM0YL9LYregEa7sLPL4H/Eso3q4o4OfqiFXIBxIBk7nNYw
-         yfS06g3/EhNX53CTlRtQJf7p4U8FvnwIXEBvkjLcjCMVksc8fMjyCFpN+M7AAyiBsHO9
-         ajCJm7+QxK/4rsLnxw+X8NB8DVWVtPwlt0zdSobQsocGQiqVIqoy/WBxhvdtQXdEqAxE
-         b0RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NEfHbVHTHxaeDRfwOPqdRBhxdA+kWRw0lTsxb4KwEKY=;
-        b=G50EEfKYPJIveFzmhTz9w7af1Fhb6gOXUTOSseN9rlXOMDtk+T1zDMt7uAZQ5KKY8l
-         gFzFOfiNTTRQPqiXBP614/1VXQoy5DkBqE0xGj7eDf/yfuWPPDtTKkfeiOSXKa8QJXoS
-         Kvvgt4ZepYulf/0BFqpmN3dAiwTjCUd6lWDQJ48imqoiHyJzD6lMHqMR6zbV1HcCR9+/
-         CuT1yWiTCR9eSKI7XyANoCYoz7iLqWHklHn6E8NvABORC14TZfpR5wwHbvuzYwr74D5q
-         1ozDqtgIprk2HSG8vSZ9EiERGztG/KLE36eB/nOZ0rw3bahXeCoYuH/50cIiYsy1Sbip
-         Xh6A==
-X-Gm-Message-State: APjAAAX7/sBN+2ysm/Z+UupzjM+Rqm4x/Gfg0+00GTFTAcioAJpdud2k
-        4PgIWs+p3++e0FI0jY3wHySI2DxBfDwjdNegytxg3w==
-X-Google-Smtp-Source: APXvYqyfSizMBYHdg9A4A5XJN/lkGzKxRPIuVjry5ro6O76uXW3vLd0OVskfLnW3se9OsFgQKY699AtG3Mfp0njz298=
-X-Received: by 2002:aca:d80a:: with SMTP id p10mr23203418oig.105.1563459954012;
- Thu, 18 Jul 2019 07:25:54 -0700 (PDT)
+        Thu, 18 Jul 2019 10:27:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEO9kS038738;
+        Thu, 18 Jul 2019 14:27:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=vhx0d9t56CEmR2/7oRomW1whOTJLUCdhb/u4q8az6RQ=;
+ b=aDk3QWJcQe87LWj/Um5HM6XFKoz88VXLgQC3djynvqh3hgjgiEgG0ave5LgbIgPTcy1E
+ qFTrmZ8+CW/TGRmXBPdlwIMsRCDIT7kjh2mnVkjrJQk+qgiB9Y4Te1v2afp6gODIHy38
+ BmRuxS6mLeo4/gwOg8GxPmSpYcIMziPavDFR+N5awVWdf4mkgVZuiUpgTv9bCq21iyJX
+ RJwDepv54+skBUTzB1E/df8PNKkE26Sp3Hr6OIqN1UYCZ2tRoKWrAR0BTVPJsh/NXhbO
+ gamfxoH+wOYnZDgHwOM8EM+Hpz42/hN/u5BVdB/a0Na2+9bdk3cXyKJLLqI0UsHEdWj+ vg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tq6qu1crb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 14:27:38 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IEMoDJ041553;
+        Thu, 18 Jul 2019 14:27:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2ttc8fm7sq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 14:27:37 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6IERZSo021719;
+        Thu, 18 Jul 2019 14:27:35 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 18 Jul 2019 14:27:35 +0000
+Date:   Thu, 18 Jul 2019 10:27:30 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathias Krause <minipli@googlemail.com>
+Subject: Re: [PATCH] padata: Replace delayed timer with immediate workqueue
+ in padata_reorder
+Message-ID: <20190718142730.uhdkwx5onigdpxno@ca-dmjordan1.us.oracle.com>
+References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
+ <20190716163253.24377-1-daniel.m.jordan@oracle.com>
+ <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
+ <20190717183227.b3hqphukkndqumhw@ca-dmjordan1.us.oracle.com>
+ <20190718033131.4m4ypbq7tiucqcsl@gondor.apana.org.au>
 MIME-Version: 1.0
-References: <20190717074124.GA21617@amd> <CAKTCnzkzvPgMK8i-cTuWFLRPPg4=DTkVQmS238VTgYJaUy=iVA@mail.gmail.com>
-In-Reply-To: <CAKTCnzkzvPgMK8i-cTuWFLRPPg4=DTkVQmS238VTgYJaUy=iVA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 18 Jul 2019 07:25:42 -0700
-Message-ID: <CAPcyv4i3vzuWfKQXF-GWKpCXACjE6HTeczPRoHUp+tOBMEAP-Q@mail.gmail.com>
-Subject: Re: HMM_MIRROR has less than useful help text
-To:     Balbir Singh <bsingharora@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Evgeny Baskakov <ebaskakov@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Mark Hairgrove <mhairgrove@nvidia.com>,
-        Sherry Cheung <SCheung@nvidia.com>,
-        Subhash Gutti <sgutti@nvidia.com>,
-        Aneesh Kumar KV <aneesh.kumar@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Nellans <dnellans@nvidia.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Ross Zwisler <ross.zwisler@linux.intel.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Bob Liu <liubo95@huawei.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718033131.4m4ypbq7tiucqcsl@gondor.apana.org.au>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=454
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907180150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=506 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907180150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 4:04 AM Balbir Singh <bsingharora@gmail.com> wrote:
->
-> On Wed, Jul 17, 2019 at 5:41 PM Pavel Machek <pavel@ucw.cz> wrote:
+On Thu, Jul 18, 2019 at 11:31:31AM +0800, Herbert Xu wrote:
+> On Wed, Jul 17, 2019 at 02:32:27PM -0400, Daniel Jordan wrote:
 > >
-> > Hi!
-> >
-> > Commit c0b124054f9e42eb6da545a10fe9122a7d7c3f72 has very nice commit
-> > message, explaining what HMM_MIRROR is and when it is
-> > needed. Unfortunately, it did not make it into Kconfig help:
-> >
-> > CONFIG_HMM_MIRROR:
-> >
-> > Select HMM_MIRROR if you want to mirror range of the CPU page table of
-> > a
-> > process into a device page table. Here, mirror means "keep
-> > synchronized".
-> > Prerequisites: the device must provide the ability to write-protect
-> > its
-> > page tables (at PAGE_SIZE granularity), and must be able to recover
-> > from
-> > the resulting potential page faults.
-> >
-> > Could that be fixed?
-> >
-> > This is key information for me:
-> >
-> > # This is a heterogeneous memory management (HMM) process address space
-> > # mirroring.
-> > # This is useful for NVidia GPU >= Pascal, Mellanox IB >= mlx5 and more
-> > # hardware in the future.
-> >
->
-> That seems like a reasonable request
+> > We'll crash when cpumask_next_wrap returns nr_cpumask_bits and later try to get
+> > the corresponding per-cpu queue.
+> 
+> The whole point of cpumask_next_wrap is to wrap around to the
+> beginning when it hits nr_cpumask_bits.  So it cannot return
+> nr_cpumask_bits.
 
-Hi Pavel, care to send a patch?
+That's what I expected when I first saw it too, but nr_cpumask_bits is returned
+to signal the end of the iteration.  The patch always passes 0 for the 'start'
+argument, so when cpumask_next_wrap is called with the last cpu in the mask,
+the end-of-iteration case is triggered.  To reassure you and myself :) I ran it
+and got the expected crash.
+
+Passing pd->cpu for the start argument instead avoids that problem, but the
+one-cpu-in-mask case still needs handling because cpumask_next_wrap always
+signals end of iteration for that, hence the cpumask_weight check.
