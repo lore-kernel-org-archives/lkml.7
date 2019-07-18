@@ -2,145 +2,122 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E710C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B79C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBFE21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D094B21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YButNhpM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrW2+V7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391468AbfGRUce (ORCPT
+        id S2391590AbfGRUeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:32:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41697 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfGRUcd (ORCPT
+        Thu, 18 Jul 2019 16:34:16 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35552 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727687AbfGRUeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:32:33 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so28635832ljg.8;
-        Thu, 18 Jul 2019 13:32:31 -0700 (PDT)
+        Thu, 18 Jul 2019 16:34:16 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r21so21607478qke.2;
+        Thu, 18 Jul 2019 13:34:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HwI/a5Cgs3FeMDik7cEBcTQmX22SU/+HDKO5amu4FvQ=;
-        b=YButNhpMmXwgmkALyaBYai1v+KxNU1ZRLqTxWqvCr39JGQfj0vpPwbAGVSUZBjOBb+
-         I00rIQBgZvTFcj2VNSWsvMbHIZw8r1zOI7HPEERTgE4kVYGnGt3J0fRpCDTZjZW2/8yx
-         ItZMd16jwGiJlWJ5GvpzsxMfGOvAeTQfoojgfriBmsSQNZggnfac+JeVMFToRjjdWR4B
-         pYsSNzO0YT7Hbu0u2WzCU5TEkjohFb+nEpECj+bCHUQP14JBs8toLF1fmts0T6h/HoZd
-         6G4jTd7xd/N/MfJWnDCjWGLTywiWhXLTIoxyU4D3uZo3OuCIj2rYRpv91ypTCSdzdw0i
-         phTw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lUeG90JN23owse4hkCx6s3PvuPmRRtzpsafpqQdcTUA=;
+        b=QrW2+V7Xl/KTpbKakLlvwVZhX3mvxwY8oW2vB8V+YuPlRdScITuH23acCo57C3rm+/
+         h14/iR5ajTzevvTZgDQqOGErulK0PjguBwTAsH9Y3EKi7j2DqAkinW13yKCiWiMvwlhz
+         G337M9FxyP8xW3prNI+Y46tV6LKGfIKoJnpWP/StoXaJ8VaE6k8S6GraWUdl1DQ0jPVo
+         5Nzq45cBYGbC8mYGBvPk+lRY+CeB7ljQ0M/WcypXEL0YLyup+trYqw1VrHc7N+XihAnT
+         qSr15Qriyhre6ikVXcxStPhA9GKq5L81kUbOPa4ctMEOcvvh0wTxrAiF0q1LX9t8rDOw
+         pMUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HwI/a5Cgs3FeMDik7cEBcTQmX22SU/+HDKO5amu4FvQ=;
-        b=YDZBM3aIAXvXKa1zH50gRcSCGmzBHwsm/shjVEB/g7A+WqejL6XyatFx9Fw+rpuBQ1
-         nQ7g71sftMVToclCOF+QWTmK+y7x+vh+I3+1LiHmDyIkutEvZp4maavGb1vs8wuKDN2j
-         vh6QwgCfBT3K9CI7pKN9Go22OrK2OmVwLOPKxQrO0YMMqx8pbKPQSjAWIZ8q7YxhdWgV
-         jxDav9L0PpP7Sj+R/3fBpSZmWxhapbksdvB+t2lb1QCGuoOz5wgUhn8T3r9UtL5OGYox
-         Zg2oLiib0ffV9bgFZGixMU6jKaSzXAzZbGxDFWju3E23CU79bfylS5elIdb1KCa1BDBl
-         JPPA==
-X-Gm-Message-State: APjAAAU8dJvbuSDrOc6PVlFeJzj4Zdk0slDYzq2NAhbFA/k0dmJryfNz
-        sckIwPyJPphITQw/4AELqemwXcCC
-X-Google-Smtp-Source: APXvYqxxPcB7tkrFt0uUr6AgTcnUfiv+NEcLpntuupHzrvN91QLVboMtMOHpWZzk5aBQdP8Sk6PX9g==
-X-Received: by 2002:a2e:a16c:: with SMTP id u12mr24291144ljl.59.1563481950293;
-        Thu, 18 Jul 2019 13:32:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id z23sm4115943lfq.77.2019.07.18.13.32.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 13:32:29 -0700 (PDT)
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
- <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
- <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
- <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
- <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
- <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
- <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
- <20190718191820.GG12715@pdeschrijver-desktop.Nvidia.com>
- <2274fccb-59d3-824c-cb97-55c23a4eaa75@nvidia.com>
- <5c6e17ed-bdbd-fa27-87e7-aa95dfa7c591@gmail.com>
-Message-ID: <cc358525-eeca-129e-183c-e0627447c9a8@gmail.com>
-Date:   Thu, 18 Jul 2019 23:32:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lUeG90JN23owse4hkCx6s3PvuPmRRtzpsafpqQdcTUA=;
+        b=tV6AzQ70CZ50bIq9WkIk8mYzhWZnE43IifEmj1tFpm0upBP1EYn3XXh68o+Kv/gTH7
+         rV3kE6Cf6f+45UPdPM5yE2lLcWq5QnSnwtQ6EWfOO9yGNcQk/q8l/+lPGfSofhZwjTSM
+         wB7H4udHyzDZJGfpj/MOZHL6O5V+Xk5oUmVWzzyL+PEvlm2stJV7XbCjn+iJ8M9oa5g9
+         r9MEIh7qWvc/O09UmJGa48ksNCLYnnjp83KVpZUqJ7rwOZmu/uY3BTWQvgEivKE3l1Ia
+         sinDbQURHHwgs6x673X9h8+CCC15IpOYDQGtjwR6beBYOKfgDQriNjVVsdmPCbztC7/E
+         qYCw==
+X-Gm-Message-State: APjAAAXGYLlAm+58JuDOP8Wdlm/SjefGYl5/R2l0pnviuR4AWgYDvUI8
+        WQd0NjFxf88hHk7kjLRMJG/6LwimFx1+PyJcqwGTpQ==
+X-Google-Smtp-Source: APXvYqwjvJkRVs5rf6lR3JoHp630zNQ2CmcMU/UwjepgFtUoHLwCD2p9IdMuPtw8xc2XXrQdtk3z1AdJz1RZ4J6/Kh8=
+X-Received: by 2002:a37:9042:: with SMTP id s63mr31248155qkd.344.1563482055130;
+ Thu, 18 Jul 2019 13:34:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5c6e17ed-bdbd-fa27-87e7-aa95dfa7c591@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190716055017-mutt-send-email-mst@kernel.org>
+ <CAKgT0Uc-2k9o7pjtf-GFAgr83c7RM-RTJ8-OrEzFv92uz+MTDw@mail.gmail.com>
+ <20190716115535-mutt-send-email-mst@kernel.org> <CAKgT0Ud47-cWu9VnAAD_Q2Fjia5gaWCz_L9HUF6PBhbugv6tCQ@mail.gmail.com>
+ <20190716125845-mutt-send-email-mst@kernel.org> <CAKgT0UfgPdU1H5ZZ7GL7E=_oZNTzTwZN60Q-+2keBxDgQYODfg@mail.gmail.com>
+ <20190717055804-mutt-send-email-mst@kernel.org> <CAKgT0Uf4iJxEx+3q_Vo9L1QPuv9PhZUv1=M9UCsn6_qs7rG4aw@mail.gmail.com>
+ <20190718003211-mutt-send-email-mst@kernel.org> <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
+ <20190718162040-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190718162040-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 18 Jul 2019 13:34:03 -0700
+Message-ID: <CAKgT0UcKTzSYZnYsMQoG6pXhpDS7uLbDd31dqfojCSXQWSsX_A@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.07.2019 23:11, Dmitry Osipenko пишет:
-> 18.07.2019 22:24, Sowjanya Komatineni пишет:
->>
->> On 7/18/19 12:18 PM, Peter De Schrijver wrote:
->>> On Tue, Jul 16, 2019 at 09:43:16PM +0300, Dmitry Osipenko wrote:
->>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at higher
->>>>> rate
->>>>> so switching to PLL_P during CPUFreq probe prior to dfll clock enable
->>>>> should be safe.
->>>> AFAIK, PLLX could run at ~200MHz. There is also a divided output of PLLP
->>>> which CCLKG supports, the PLLP_OUT4.
->>>>
->>>> Probably, realistically, CPU is always running off a fast PLLX during
->>>> boot, but I'm wondering what may happen on KEXEC. I guess ideally
->>>> CPUFreq driver should also have a 'shutdown' callback to teardown DFLL
->>>> on a reboot, but likely that there are other clock-related problems as
->>>> well that may break KEXEC and thus it is not very important at the
->>>> moment.
->>>>
->>> If you turn off the DFLL, you have to be aware that the voltage margins
->>> for DFLL use are lower than for PLL use. So you either need to be sure
->>> to switch to a frequency below fmax @ Vmin or you program the boot
->>> voltage and then you can use PLLX as setup by the bootloader. For OVR
->>> regulators you can't program a voltage without the DFLL, so you have to
->>> tristate the PWM output which will give you a hardwired boot voltage.
->>>
->>> Peter.
->>
->> Yes, we switch CPU to PLLP and then disable DFLL during suspend.
-> 
-> I'm wondering what happens to T124 on resume from suspend, given that it
-> switches CPU to PLLX [1]. I imagine that CPU voltage could be lower than
-> needed if suspend happened on DFLL. I'm also now vaguely recalling that
-> CPUFreq driver was disabled for T124 because of some problems.
-> 
-> Or maybe warmboot code is actually touching the voltage regulators?
+On Thu, Jul 18, 2019 at 1:24 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Thu, Jul 18, 2019 at 08:34:37AM -0700, Alexander Duyck wrote:
+> > > > > For example we allocate pages until shrinker kicks in.
+> > > > > Fair enough but in fact many it would be better to
+> > > > > do the reverse: trigger shrinker and then send as many
+> > > > > free pages as we can to host.
+> > > >
+> > > > I'm not sure I understand this last part.
+> > >
+> > > Oh basically what I am saying is this: one of the reasons to use page
+> > > hinting is when host is short on memory.  In that case, why don't we use
+> > > shrinker to ask kernel drivers to free up memory? Any memory freed could
+> > > then be reported to host.
+> >
+> > Didn't the balloon driver already have a feature like that where it
+> > could start shrinking memory if the host was under memory pressure? If
+> > so how would adding another one add much value.
+>
+> Well fundamentally the basic balloon inflate kind of does this, yes :)
+>
+> The difference with what I am suggesting is that balloon inflate tries
+> to aggressively achieve a specific goal of freed memory. We could have a
+> weaker "free as much as you can" that is still stronger than free page
+> hint which as you point out below does not try to free at all, just
+> hints what is already free.
 
-Oh wait, warmboot is even irrelevant LP1.
-
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm/mach-tegra/sleep-tegra30.S#n389
-> 
-> That is also should be a problem for T30 if voltage scaling is happening
-> and I have some patches in works that are switching CPU to PLLP instead
-> of PLLX on suspend/resume.
-> 
-
+Yes, but why wait until the host is low on memory? With my
+implementation we can perform the hints in the background for a low
+cost already. So why should we wait to free up memory when we could do
+it immediately. Why let things get to the state where the host is
+under memory pressure when the guests can be proactively freeing up
+the pages and improving performance as a result be reducing swap
+usage?
