@@ -2,119 +2,175 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AC8C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76B6C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBFD21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA5120873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:26:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="eWao9mqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfGRXUS (ORCPT
+        id S1726131AbfGRX0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 19:20:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37902 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbfGRXUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 19:20:18 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 347903082E10;
-        Thu, 18 Jul 2019 23:20:18 +0000 (UTC)
-Received: from treble (ovpn-122-211.rdu2.redhat.com [10.10.122.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 59DD31001B35;
-        Thu, 18 Jul 2019 23:20:17 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 18:20:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
-Message-ID: <20190718232015.bazk37cqbweh52pc@treble>
-References: <CAK8P3a1_8kjzamn6_joBbZTO8NeGn0E3O+MZ+bcOQ0HkkRHXRQ@mail.gmail.com>
- <20190712135755.7qa4wxw3bfmwn5rp@treble>
- <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
- <20190712142928.gmt6gibikdjmkppm@treble>
- <CAKwvOdnOpgo9rEctZZR9Y9rEc60FCthbPtp62UsdMtkGDF5nUg@mail.gmail.com>
- <CAK8P3a0AGpvAOzSfER7iiaz=aLVMbxiVorTsh__yT4xxBOHSyw@mail.gmail.com>
- <CAKwvOd=o16rtGOVm9DWhhqxed0OEW5NKt4Vt3y_6KCcbdU-dhQ@mail.gmail.com>
- <CAK8P3a2Vq+ojOZSefwziMhzU2SG+Bq6HDz2Ssjz7_BpVnMUu=A@mail.gmail.com>
- <20190716230336.y7nk24ybbwguio2s@treble>
- <CAKwvOdm_MiACJWnRww3tSD7033J6MX2Erzs1xwmd1=taNmyg9A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdm_MiACJWnRww3tSD7033J6MX2Erzs1xwmd1=taNmyg9A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 18 Jul 2019 23:20:18 +0000 (UTC)
+        Thu, 18 Jul 2019 19:26:50 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33706 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfGRX0u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 19:26:50 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r6so21940989qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 16:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=TED1YMmih5CMaQpPogtNSe98eoJfXq3PHOIoVZoVmXs=;
+        b=eWao9mqtXSE9FIpvXcxEjX2v53F6fcDEZeDqxHDrpIeaRS5OKgD4U/69LRSNZavmD7
+         rYeX8gV/Hh3ZXxyRPUBw7KyXz8txocn8hhhDI7pU9igo+83feIiGMF56X7JKVhEj0J9W
+         t6SB4Cy35v7f1/5I9equwIeHf+7qmPUlEx+mIYXjOnjMdiGPdMcbqQmoHJtY7GU2SWqB
+         g30Rk2Bkpmn/YEbtqxobLlyI8MWPxYvRFQiMSN4rT3cCJgCNwC0oz1fVtmQbSZv5AWvh
+         HPMpy7q/q3HRkE2pxwIYMXjUVL8WM+m+UfKTQs0in8APrDxMNsW9pBas0Lwipp4Q1MLk
+         PmDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=TED1YMmih5CMaQpPogtNSe98eoJfXq3PHOIoVZoVmXs=;
+        b=LGEk5jKkbsjd9zIibE9ydOf02FqfD5Fl3IMPrLrwBwmCENP6pvRFQgY/YyHSU6L0Tr
+         WWyjIpXv7uGPR2IA72u+jxpA3LQUj9DRbF1VVxsXQ4rNbhDHoX38IICYNLNfLWGLhwEY
+         s0tjLiIEvcqVc+49Ics1EPSdUJTKo2LdXfuFRVZ+RF7dMariz0x7qpKudkMTgTYDF6JO
+         gx9oSJv1djJxgW0gwXUJ8Il2e9Rw10jox8HOyGGyZANZGp8oDHNfm0AYKiyH88x2ZLEz
+         6fRmbsHygG6/1hljxrAPpLIOtLBXVZ/YgC0n2PhGuscf2QoOmv2JDoINb82SEj4Y6r7c
+         Sh+w==
+X-Gm-Message-State: APjAAAU8UxyEoIysMDPZodXykG7aWnP5JnK1TAWkVoWKZIZ8pSRo6uBy
+        j0jCety1DUReNanxEN/CjRYL+A==
+X-Google-Smtp-Source: APXvYqyJVK7Uhlc9y7Ytvg/jKRAuZxqH/0++WZuRk63Rtwo9DtHqJwFSYpumxqGYcgetLL78Fx2oCg==
+X-Received: by 2002:a37:aa0d:: with SMTP id t13mr34659564qke.167.1563492409444;
+        Thu, 18 Jul 2019 16:26:49 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i23sm12971496qtm.17.2019.07.18.16.26.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 16:26:48 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
+Date:   Thu, 18 Jul 2019 19:26:47 -0400
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        James Y Knight <jyknight@google.com>,
+        David Miller <davem@davemloft.net>, sathya.perla@broadcom.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, netdev@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
+References: <1562959401-19815-1-git-send-email-cai@lca.pw>
+ <20190712.154606.493382088615011132.davem@davemloft.net>
+ <EFD25845-097A-46B1-9C1A-02458883E4DA@lca.pw>
+ <20190712.175038.755685144649934618.davem@davemloft.net>
+ <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw>
+ <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
+ <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
+To:     Bill Wendling <morbo@google.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 03:36:47PM -0700, Nick Desaulniers wrote:
-> On Tue, Jul 16, 2019 at 4:03 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Wed, Jul 17, 2019 at 12:05:14AM +0200, Arnd Bergmann wrote:
-> > > On Tue, Jul 16, 2019 at 10:24 PM 'Nick Desaulniers' via Clang Built
-> > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > > >
-> > > > On Fri, Jul 12, 2019 at 1:41 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > >
-> > > > > On Fri, Jul 12, 2019 at 6:59 PM 'Nick Desaulniers' via Clang Built
-> > > > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > > > > > > The issue still needs to get fixed in clang regardless.  There are other
-> > > > > > > noreturn functions in the kernel and this problem could easily pop back
-> > > > > > > up.
-> > > > > >
-> > > > > > Sure, thanks for the report.  Arnd, can you help us get a more minimal
-> > > > > > test case to understand the issue better?
-> > > > >
-> > > > > I reduced it to this testcase:
-> > > > >
-> > > > > int a, b;
-> > > > > void __reiserfs_panic(int, ...) __attribute__((noreturn));
-> > > > > void balance_internal() {
-> > > > >   if (a)
-> > > > >     __reiserfs_panic(0, "", __func__, "", 2, __func__, a);
-> > > > >   if (b)
-> > > > >     __reiserfs_panic(0, "", __func__, "", 5, __func__, a, 0);
-> > > > > }
-> > > > >
-> > > > > https://godbolt.org/z/Byfvmx
-> > > >
-> > > > Is this the same issue as Josh pointed out?  IIUC, Josh pointed to a
-> > > > jump destination that was past a `push %rbp`, and I don't see it in
-> > > > your link.  (Or, did I miss it?)
-> > >
-> > > I think it can be any push. The point is that the stack is different
-> > > between the two branches leading up to the noreturn call.
-> >
-> > Right.
-> 
-> So if I remove the `-mstack-alignment=8` command line flag, it looks
-> like the stack depth will still differ on calls to __reiserfs_panic,
-> but now the call is not shared (two separate code paths):
-> https://godbolt.org/z/tvkXwK. Is that ok or also bad?
 
-That looks ok.  I'm not sure whether removing the stack alignment would
-fix it though, you might have just gotten lucky.
 
-> I'm getting the feeling that `-mstack-alignment=8` might have some
-> issues once we start pushing parameters on the stack.  How many can we
-> use registers for in x86 before resorting to the stack, and does the
-> function being variadic affect this? (if not, maybe a test case
-> without variadic and many-parameters would not conflate the issue?)
+> On Jul 18, 2019, at 5:21 PM, Bill Wendling <morbo@google.com> wrote:
+>=20
+> [My previous response was marked as spam...]
+>=20
+> Top-of-tree clang says that it's const:
+>=20
+> $ gcc a.c -O2 && ./a.out
+> a is a const.
+>=20
+> $ clang a.c -O2 && ./a.out
+> a is a const.
 
-Yeah, I think calling a variadic function (or a function with more than
-6 args) does have something to do with it, because then some arguments
-have to be passed on the stack.
 
--- 
-Josh
+I used clang-7.0.1. So, this is getting worse where both GCC and clang =
+will start to suffer the
+same problem.
+
+>=20
+>=20
+> On Thu, Jul 18, 2019 at 2:10 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+>>=20
+>> On Thu, Jul 18, 2019 at 2:01 PM Qian Cai <cai@lca.pw> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>>> On Jul 12, 2019, at 8:50 PM, David Miller <davem@davemloft.net> =
+wrote:
+>>>>=20
+>>>> From: Qian Cai <cai@lca.pw>
+>>>> Date: Fri, 12 Jul 2019 20:27:09 -0400
+>>>>=20
+>>>>> Actually, GCC would consider it a const with -O2 optimized level =
+because it found that it was never modified and it does not understand =
+it is a module parameter. Considering the following code.
+>>>>>=20
+>>>>> # cat const.c
+>>>>> #include <stdio.h>
+>>>>>=20
+>>>>> static int a =3D 1;
+>>>>>=20
+>>>>> int main(void)
+>>>>> {
+>>>>>     if (__builtin_constant_p(a))
+>>>>>             printf("a is a const.\n");
+>>>>>=20
+>>>>>     return 0;
+>>>>> }
+>>>>>=20
+>>>>> # gcc -O2 const.c -o const
+>>>>=20
+>>>> That's not a complete test case, and with a proper test case that
+>>>> shows the externalization of the address of &a done by the module
+>>>> parameter macros, gcc should not make this optimization or we =
+should
+>>>> define the module parameter macros in a way that makes this =
+properly
+>>>> clear to the compiler.
+>>>>=20
+>>>> It makes no sense to hack around this locally in drivers and other
+>>>> modules.
+>>>=20
+>>> If you see the warning in the original patch,
+>>>=20
+>>> =
+https://lore.kernel.org/netdev/1562959401-19815-1-git-send-email-cai@lca.p=
+w/
+>>>=20
+>>> GCC definitely optimize rx_frag_size  to be a constant while I just =
+confirmed clang
+>>> -O2 does not. The problem is that I have no clue about how to let =
+GCC not to
+>>> optimize a module parameter.
+>>>=20
+>>> Though, I have added a few people who might know more of compilers =
+than myself.
+>>=20
+>> + Bill and James, who probably knows more than they'd like to about
+>> __builtin_constant_p and more than other LLVM folks at this point.
+>>=20
+>> --
+>> Thanks,
+>> ~Nick Desaulniers
+
