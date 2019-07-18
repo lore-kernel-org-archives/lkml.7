@@ -2,168 +2,231 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F90CC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F57C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92FC21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D506C21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Ydsnii7N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAxlwSVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390314AbfGRRs0 (ORCPT
+        id S2390695AbfGRRtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:48:26 -0400
-Received: from mail-eopbgr800055.outbound.protection.outlook.com ([40.107.80.55]:23161
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727685AbfGRRsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:48:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XPPxH6gh4mXQqnHWxflqPG/I4aUGr7gfIkvM7sjI40E5itSTgKmYDDYmayEM0LvXPywK30l3RknR5DSTHSwLVJEx/ojJ7nNTNUhvV0L6vVNh9k7tfxzyVZS0pNL5tVmBWTTjbS9hwJUl7noaICnmtXA0szwnX3UWKWUoa2blOYINmBYAwdszZynx+kAh7y/fcct3+PpGIZL17Z1Bb8NfakVHxEwP3f21YCobX11lwsoF35C0svnD8zaCamNwwaatVnmLI9gbyfxznbCXSvscu5kvBEBNYpN1fRX7ZqzADAYT3qDk6g9AGJ9Yt6vB9XnvNVeQnTdSRM04de7MV3uFwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sqYFTzPvqkPp1ogzDvPxzxk/XaqAr8Tx7Z9lSjMtonE=;
- b=W+dtYDUyyyYNi2uko7wt7U/hPpZIbArNg9Xv8OroVZ25hfYKznctPiy/EeIn3fQ49WYbHN/bTF6b7vK3zVwzQGEgnWxB6ApxEYTJ6fJECAUa49Spf826VzvA5osP7O/p6e1M+xJZ8P5kDMRKdBIt4R5bPnPu/rMZuL+yRsOo6S14rdG7SND0BUCsb+IufP28YInIDuvGclLTXqcdHgfNlfbFdNrom8s2vXi9eE1avLVHzuUQL1MMTqOGz0sFcymiCLfAvYwlaiIaENHCd9XKWCjrEZttU/SJ96h1qqxkibzyANrrNOQAyyrOc0PrY1z51UvgdONmEY+EqQcRgoNccg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
+        Thu, 18 Jul 2019 13:49:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41311 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfGRRtV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:49:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so26435604wrm.8;
+        Thu, 18 Jul 2019 10:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sqYFTzPvqkPp1ogzDvPxzxk/XaqAr8Tx7Z9lSjMtonE=;
- b=Ydsnii7NOzgZPaNaKd6KPEklvenCDIaa9NA3eF4qFPUtPP7NMR5ncnAOQJxDNfvljE1vDNjCvdIG0Sd/JhuZP/0LNs0eqvwcPqm7hQ8uc0WIgm4suhTkkbNzaa/GIWEvmo311Zxc69PDKgxuUJ2T98HUMJDcrpi6cZfY/nrW90g=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3081.namprd12.prod.outlook.com (20.178.30.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.11; Thu, 18 Jul 2019 17:48:21 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
- 17:48:21 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 0/6] Remove x86-specific code from generic headers
-Thread-Topic: [PATCH v3 0/6] Remove x86-specific code from generic headers
-Thread-Index: AQHVPRj/oX9x6en7K0GjSSUSyjk8U6bQp8QA
-Date:   Thu, 18 Jul 2019 17:48:21 +0000
-Message-ID: <680bb92e-66eb-8959-88a5-3447a6a282c8@amd.com>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com>
-In-Reply-To: <20190718032858.28744-1-bauerman@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0156.namprd05.prod.outlook.com
- (2603:10b6:803:2c::34) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 42a63cdc-3ef7-4951-4b30-08d70ba81fd7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3081;
-x-ms-traffictypediagnostic: DM6PR12MB3081:
-x-microsoft-antispam-prvs: <DM6PR12MB30815EF8FE340B88AFC3097EECC80@DM6PR12MB3081.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(54534003)(189003)(199004)(6512007)(305945005)(3846002)(478600001)(476003)(71200400001)(25786009)(6116002)(71190400001)(66946007)(2501003)(386003)(446003)(316002)(4326008)(54906003)(31686004)(11346002)(53936002)(256004)(52116002)(7736002)(66446008)(64756008)(6246003)(8676002)(8936002)(110136005)(66066001)(66476007)(99286004)(26005)(81166006)(2616005)(81156014)(5660300002)(6436002)(31696002)(6506007)(66556008)(86362001)(68736007)(14454004)(36756003)(6486002)(53546011)(229853002)(7416002)(486006)(186003)(102836004)(2906002)(76176011)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3081;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uvrtIfqOdJtQYYDYYQJHcGAIs5Vw2llnYaQuU65O9PMMmzz0QyQmvkIkKoD9xZvv4LPLiCIpU6nsdudoW7BBvlxb6AmRcweI0zWirRdD4f+244ss6J6bKT5RL0gJ0xXUwnVJSt9bSOHaLimXU46Cv+HiBQaeXLwaeyi9F3l4xsX5rJSp0pqpry2mf9ys9Uu0x/2gFzQ/0J70vqD6Rz4UDCBXWJdJ5+gVAERAn77t65WHxkGbUdcAPeEv9gf9h2d3xMQPdujLAKKTDv7TQQaD1AYBDR8EALksDqOkaLS8l4vYBcQY4yj9QRLoVXI58SoqEj0DXt8/4xzwXN0Z2/B/iq4hNKkfQEK2WizBMRZzqfh6ZfnE5MutkBuBs12DUinnlfwAEvLeEGyah9f+vp5JRJ3p5RHzxEMEy9FtrJGqfbI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F722F6675EEF4B4E824FE180F10FA466@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pgafvxZ2WNWOqgq4j6/+Wz8LCOx0VkOfOwXK6KTHB34=;
+        b=VAxlwSVpmVGpT9xS2WTQl3NmzWZ20jUxLMaYhEhhFTBnQJ0smUNnpUv0E/+apDK+hY
+         DWKMVRrbqlhgT7uKkSv4S1xXRXNLsmwv+oOnjBZZyOSp89NpwsU0lSBiSeT0oTF6TcZ4
+         yOPeL4CzjUljTXllLsRszWlPsrWrtG2zBbfuX0BeHVO3MkjkAjPnC4MxTHS3fZEsPwMM
+         w2ohrzgn8v7/HX9TY1UMlDH3Nl+14RaLI39kzW61ULL0Tc7xv0aSFc/tjuYcIiNtRtg/
+         YZblwpMroF1o4LdvaaPUS4cq8aXDuQt2ULSnAQb/KMArm0J5WnyIqIl9DUPLHkpJBVRn
+         1tMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pgafvxZ2WNWOqgq4j6/+Wz8LCOx0VkOfOwXK6KTHB34=;
+        b=p4yHfiwsc680RFi65MYBsVNCuy5U44r7seRHAgCn9oVirAoTYuaC0EC03TBk79iVLj
+         Ok1Xgqgw+a+x3Z0LqRguSf25to+AoPEKp6X4feTU32Bthq1D1t5aEdCSLfMN09p0yUY+
+         kWpSvzU3T3V194ofPrJbKBb3tNYppWgkoo2I2Sv7ssdBN/+cyMYF84eXA87349wlepkF
+         rbv527xFzhASDeRA4Vxc45ctXRLIrfxOZNqivjUUtuKHbclK/5tRX1zbhpzKX7pwBClE
+         CKjf7SFfskiZDQDRffMAb7oEikNxcjHvTtcZX09XeEemLkvxrMU82JMiiXL1RRSLVRph
+         OBaA==
+X-Gm-Message-State: APjAAAW2rW0k9GKbZ/ot7bnG8v7L5v53zyA4PAIl2oeAf7UTKspcuVic
+        6Zc8kNu+jPFNhEvhBAZlcJTGpL//
+X-Google-Smtp-Source: APXvYqwX6QHAojsT4El/TU5a8Dhou+Cy9JrzDxlSR6Xq30IWTzmVa7RKLhI201PVB1QL3KxlQEsMng==
+X-Received: by 2002:a5d:518f:: with SMTP id k15mr10642655wrv.321.1563472157706;
+        Thu, 18 Jul 2019 10:49:17 -0700 (PDT)
+Received: from [192.168.1.19] (bkt159.neoplus.adsl.tpnet.pl. [83.28.187.159])
+        by smtp.gmail.com with ESMTPSA id t3sm20585948wmi.6.2019.07.18.10.49.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 10:49:17 -0700 (PDT)
+Subject: Re: [PATCH v3 2/3] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        daniel.thompson@linaro.org
+Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20190717135948.19340-1-jjhiblot@ti.com>
+ <20190717135948.19340-3-jjhiblot@ti.com>
+ <4bd3b558-ea5b-0d2e-16b2-5b2e8bb484d2@gmail.com>
+ <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
+ 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
+ aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
+ hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
+ T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
+ R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
+ 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
+ eGGiEQ==
+Message-ID: <928fd71b-d1d3-cbf3-1aed-ae7fa97f6cf0@gmail.com>
+Date:   Thu, 18 Jul 2019 19:49:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42a63cdc-3ef7-4951-4b30-08d70ba81fd7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:48:21.4418
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3081
+In-Reply-To: <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xNy8xOSAxMDoyOCBQTSwgVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIHdyb3RlOg0KPiBIZWxs
-bywNCj4gDQo+IFRoaXMgdmVyc2lvbiBpcyBtb3N0bHkgYWJvdXQgc3BsaXR0aW5nIHVwIHBhdGNo
-IDIvMyBpbnRvIHRocmVlIHNlcGFyYXRlDQo+IHBhdGNoZXMsIGFzIHN1Z2dlc3RlZCBieSBDaHJp
-c3RvcGggSGVsbHdpZy4gVHdvIG90aGVyIGNoYW5nZXMgYXJlIGEgZml4IGluDQo+IHBhdGNoIDEg
-d2hpY2ggd2Fzbid0IHNlbGVjdGluZyBBUkNIX0hBU19NRU1fRU5DUllQVCBmb3IgczM5MCBzcG90
-dGVkIGJ5DQo+IEphbmFuaSBhbmQgcmVtb3ZhbCBvZiBzbWVfYWN0aXZlIGFuZCBzZXZfYWN0aXZl
-IHN5bWJvbCBleHBvcnRzIGFzIHN1Z2dlc3RlZA0KPiBieSBDaHJpc3RvcGggSGVsbHdpZy4NCj4g
-DQo+IFRoZXNlIHBhdGNoZXMgYXJlIGFwcGxpZWQgb24gdG9wIG9mIHRvZGF5J3MgZG1hLW1hcHBp
-bmcvZm9yLW5leHQuDQo+IA0KPiBJIGRvbid0IGhhdmUgYSB3YXkgdG8gdGVzdCBTTUUsIFNFViwg
-bm9yIHMzOTAncyBQRUYgc28gdGhlIHBhdGNoZXMgaGF2ZSBvbmx5DQo+IGJlZW4gYnVpbGQgdGVz
-dGVkLg0KDQpJJ2xsIHRyeSBhbmQgZ2V0IHRoaXMgdGVzdGVkIHF1aWNrbHkgdG8gYmUgc3VyZSBl
-dmVyeXRoaW5nIHdvcmtzIGZvciBTTUUNCmFuZCBTRVYuDQoNClRoYW5rcywNClRvbQ0KDQo+IA0K
-PiBDaGFuZ2Vsb2cNCj4gDQo+IFNpbmNlIHYyOg0KPiANCj4gLSBQYXRjaCAieDg2LHMzOTA6IE1v
-dmUgQVJDSF9IQVNfTUVNX0VOQ1JZUFQgZGVmaW5pdGlvbiB0byBhcmNoL0tjb25maWciDQo+ICAg
-LSBBZGRlZCAic2VsZWN0IEFSQ0hfSEFTX01FTV9FTkNSWVBUIiB0byBjb25maWcgUzM5MC4gU3Vn
-Z2VzdGVkIGJ5IEphbmFuaS4NCj4gDQo+IC0gUGF0Y2ggIkRNQSBtYXBwaW5nOiBNb3ZlIFNNRSBo
-YW5kbGluZyB0byB4ODYtc3BlY2lmaWMgZmlsZXMiDQo+ICAgLSBTcGxpdCB1cCBpbnRvIDMgbmV3
-IHBhdGNoZXMuIFN1Z2dlc3RlZCBieSBDaHJpc3RvcGggSGVsbHdpZy4NCj4gDQo+IC0gUGF0Y2gg
-InN3aW90bGI6IFJlbW92ZSBjYWxsIHRvIHNtZV9hY3RpdmUoKSINCj4gICAtIE5ldyBwYXRjaC4N
-Cj4gDQo+IC0gUGF0Y2ggImRtYS1tYXBwaW5nOiBSZW1vdmUgZG1hX2NoZWNrX21hc2soKSINCj4g
-ICAtIE5ldyBwYXRjaC4NCj4gDQo+IC0gUGF0Y2ggIng4NixzMzkwL21tOiBNb3ZlIHNtZV9hY3Rp
-dmUoKSBhbmQgc21lX21lX21hc2sgdG8geDg2LXNwZWNpZmljIGhlYWRlciINCj4gICAtIE5ldyBw
-YXRjaC4NCj4gICAtIFJlbW92ZWQgZXhwb3J0IG9mIHNtZV9hY3RpdmUgc3ltYm9sLiBTdWdnZXN0
-ZWQgYnkgQ2hyaXN0b3BoIEhlbGx3aWcuDQo+IA0KPiAtIFBhdGNoICJmcy9jb3JlL3ZtY29yZTog
-TW92ZSBzZXZfYWN0aXZlKCkgcmVmZXJlbmNlIHRvIHg4NiBhcmNoIGNvZGUiDQo+ICAgLSBSZW1v
-dmVkIGV4cG9ydCBvZiBzZXZfYWN0aXZlIHN5bWJvbC4gU3VnZ2VzdGVkIGJ5IENocmlzdG9waCBI
-ZWxsd2lnLg0KPiANCj4gLSBQYXRjaCAiczM5MC9tbTogUmVtb3ZlIHNldl9hY3RpdmUoKSBmdW5j
-dGlvbiINCj4gICAtIE5ldyBwYXRjaC4NCj4gDQo+IFNpbmNlIHYxOg0KPiANCj4gLSBQYXRjaCAi
-eDg2LHMzOTA6IE1vdmUgQVJDSF9IQVNfTUVNX0VOQ1JZUFQgZGVmaW5pdGlvbiB0byBhcmNoL0tj
-b25maWciDQo+ICAgLSBSZW1vdmUgZGVmaW5pdGlvbiBvZiBBUkNIX0hBU19NRU1fRU5DUllQVCBm
-cm9tIHMzOTAvS2NvbmZpZyBhcyB3ZWxsLg0KPiAgIC0gUmV3b3JkZWQgcGF0Y2ggdGl0bGUgYW5k
-IG1lc3NhZ2UgYSBsaXR0bGUgYml0Lg0KPiANCj4gLSBQYXRjaCAiRE1BIG1hcHBpbmc6IE1vdmUg
-U01FIGhhbmRsaW5nIHRvIHg4Ni1zcGVjaWZpYyBmaWxlcyINCj4gICAtIEFkYXB0IHMzOTAncyA8
-YXNtL21lbV9lbmNyeXB0Lmg+IGFzIHdlbGwuDQo+ICAgLSBSZW1vdmUgZG1hX2NoZWNrX21hc2so
-KSBmcm9tIGtlcm5lbC9kbWEvbWFwcGluZy5jLiBTdWdnZXN0ZWQgYnkNCj4gICAgIENocmlzdG9w
-aCBIZWxsd2lnLg0KPiANCj4gVGhpYWdvIEp1bmcgQmF1ZXJtYW5uICg2KToNCj4gICB4ODYsczM5
-MDogTW92ZSBBUkNIX0hBU19NRU1fRU5DUllQVCBkZWZpbml0aW9uIHRvIGFyY2gvS2NvbmZpZw0K
-PiAgIHN3aW90bGI6IFJlbW92ZSBjYWxsIHRvIHNtZV9hY3RpdmUoKQ0KPiAgIGRtYS1tYXBwaW5n
-OiBSZW1vdmUgZG1hX2NoZWNrX21hc2soKQ0KPiAgIHg4NixzMzkwL21tOiBNb3ZlIHNtZV9hY3Rp
-dmUoKSBhbmQgc21lX21lX21hc2sgdG8geDg2LXNwZWNpZmljIGhlYWRlcg0KPiAgIGZzL2NvcmUv
-dm1jb3JlOiBNb3ZlIHNldl9hY3RpdmUoKSByZWZlcmVuY2UgdG8geDg2IGFyY2ggY29kZQ0KPiAg
-IHMzOTAvbW06IFJlbW92ZSBzZXZfYWN0aXZlKCkgZnVuY3Rpb24NCj4gDQo+ICBhcmNoL0tjb25m
-aWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAzICsrKw0KPiAgYXJjaC9zMzkwL0tjb25maWcg
-ICAgICAgICAgICAgICAgICAgfCAgNCArLS0tDQo+ICBhcmNoL3MzOTAvaW5jbHVkZS9hc20vbWVt
-X2VuY3J5cHQuaCB8ICA1ICstLS0tDQo+ICBhcmNoL3MzOTAvbW0vaW5pdC5jICAgICAgICAgICAg
-ICAgICB8ICA4ICstLS0tLS0tDQo+ICBhcmNoL3g4Ni9LY29uZmlnICAgICAgICAgICAgICAgICAg
-ICB8ICA0ICstLS0NCj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL21lbV9lbmNyeXB0LmggIHwgMTAg
-KysrKysrKysrKw0KPiAgYXJjaC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuYyAgICAgfCAgNSAr
-KysrKw0KPiAgYXJjaC94ODYvbW0vbWVtX2VuY3J5cHQuYyAgICAgICAgICAgfCAgMiAtLQ0KPiAg
-ZnMvcHJvYy92bWNvcmUuYyAgICAgICAgICAgICAgICAgICAgfCAgOCArKysrLS0tLQ0KPiAgaW5j
-bHVkZS9saW51eC9jcmFzaF9kdW1wLmggICAgICAgICAgfCAxNCArKysrKysrKysrKysrKw0KPiAg
-aW5jbHVkZS9saW51eC9tZW1fZW5jcnlwdC5oICAgICAgICAgfCAxNSArLS0tLS0tLS0tLS0tLS0N
-Cj4gIGtlcm5lbC9kbWEvbWFwcGluZy5jICAgICAgICAgICAgICAgIHwgIDggLS0tLS0tLS0NCj4g
-IGtlcm5lbC9kbWEvc3dpb3RsYi5jICAgICAgICAgICAgICAgIHwgIDMgKy0tDQo+ICAxMyBmaWxl
-cyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCA0NyBkZWxldGlvbnMoLSkNCj4gDQo=
+On 7/18/19 3:31 PM, Jean-Jacques Hiblot wrote:
+> 
+> On 18/07/2019 14:24, Jacek Anaszewski wrote:
+>> Hi Jean,
+>>
+>> Thank you for the updated patch set.
+>>
+>> I have some more comments below.
+>>
+>> On 7/17/19 3:59 PM, Jean-Jacques Hiblot wrote:
+>>>   +static bool __led_need_regulator_update(struct led_classdev
+>>> *led_cdev,
+>>> +                    int brightness)
+>>> +{
+>>> +    bool new_state = (brightness != LED_OFF);
+>> How about:
+>>
+>> bool new_state = !!brightness;
+> 
+> Throughout the code LED_OFF is used when the LED is turned off. I think
+> it would be more consistent to use it there too.
+
+Basically brightness is a scalar and 0 always means off.
+We treat enum led_brightness as a legacy type - it is no
+longer valid on the whole its span since LED_FULL = 255
+was depreciated with addition of max_brightness property.
+
+IMHO use of reverse logic here only hinders code analysis.
+
+>>> +
+>>> +    return led_cdev->regulator && led_cdev->regulator_state !=
+>>> new_state;
+>>> +}
+>>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+>>> +                int brightness)
+>>> +{
+>>> +    int rc;
+>>> +
+>>> +    if (__led_need_regulator_update(led_cdev, brightness)) {
+>>> +
+>>> +        if (brightness != LED_OFF)
+>>> +            rc = regulator_enable(led_cdev->regulator);
+>>> +        else
+>>> +            rc = regulator_disable(led_cdev->regulator);
+>>> +        if (rc)
+>>> +            return rc;
+>>> +
+>>> +        led_cdev->regulator_state = (brightness != LED_OFF);
+>>> +    }
+>>> +    return 0;
+>>> +}
+>> Let's have these function names without leading underscores.
+> OK.
+>>
+>>>   static int __led_set_brightness(struct led_classdev *led_cdev,
+>>>                   enum led_brightness value)
+>>>   {
+>>> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
+>>> work_struct *ws)
+>>>       if (ret == -ENOTSUPP)
+>>>           ret = __led_set_brightness_blocking(led_cdev,
+>>>                       led_cdev->delayed_set_value);
+>>> +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value)
+>> If you called it from __led_set_brightness() and
+> 
+> We cannot call it from __led_set_brightness() because it is supposed not
+> to block.
+
+You're right. The problematic part is that with regulator handling
+we cannot treat the whole brightness setting operation uniformly
+for brightness_set op case, i.e. without mediation of a workqueue.
+
+Now you have to fire workqueue in led_set_brightness_nopm()
+even for brightness_set() op path, if regulator state needs update.
+This is ugly and can be misleading. Can be also error prone and
+have non-obvious implications for software blink state transitions.
+
+I think we would first need to improve locking between the workqueue
+and led_timer_function(). I proposed a patch [0] over a year
+ago.
+
+Only then we could think of adding another asynchronous dependency
+to the brightness setting chain.
+
+[0] https://lkml.org/lkml/2018/1/17/1144
+
+-- 
+Best regards,
+Jacek Anaszewski
