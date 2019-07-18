@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1270DC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07CBC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19B82173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA4A2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YiSLHEbW"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="R9ETAx8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391282AbfGRTVv (ORCPT
+        id S2391370AbfGRTWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:21:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40199 "EHLO
+        Thu, 18 Jul 2019 15:22:32 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58979 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfGRTVv (ORCPT
+        with ESMTP id S2391349AbfGRTWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:21:51 -0400
+        Thu, 18 Jul 2019 15:22:32 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJLXFY2126235
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJMIaK2126395
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:21:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJLXFY2126235
+        Thu, 18 Jul 2019 12:22:18 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJMIaK2126395
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477694;
-        bh=CnyZSSXgIKqDfh9kzVsFZ+320vtrkUBou3/dE6r75Jc=;
+        s=2019061801; t=1563477739;
+        bh=25VcJ1Dt0l2/VCsx/Ds7GuEHA0Z3O8CBESqu3eQxZFs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=YiSLHEbW1nXbljV4cbxlhcbl4widNgNjVd7XZZXa7SJaraPUCL+OXtHekR/2HK2Ky
-         /vS5LE2D73dtEn8/Pp7wPGnUTJoFTcjXYMT6YlVzQHAN+0jF2QcDcVmw8uij0E5gBF
-         7hyBwnMTvR3F9aUuwo5jhMXluI0MDZ5j1hPEs7cjQukTvqCdti60dapzL7vj4l1+/1
-         4wKk4m8ncW0sROcB52FbBFdYAsNldf4gAALBnfCAQwlsvQVPF2bBJtE/CZuKcrWKO/
-         NVmoKjQt+zixiIRwM6x7ptCroutOnQbkjPkbZ8QqZA12a34xO/9HKb/F+4zdUuLQjP
-         j8vehATiyiOwQ==
+        b=R9ETAx8vmHh/L4o+NjGikRmyS79l6+73HfiYTVCMxbzVLog9bXN7C+fKkrF3tsfV1
+         bhfMEDMCMTIBklTaAagX6PfEbcvj6wNrs6ax2ynmmRT3HBbkgTWQZmyVIb6MViQDf3
+         QKru7sN6q762i+tqlf3GkFmO1CmlTVzo3A25IjrbC8SQnTt1a+/oo2cxw9TZjD8/2N
+         zcPqA3UpsET7iJePpC/7VggSFds0TVIEBcYqSE1R5RD4qUnD2aHTDdL/YEO4JMXM5N
+         HzuhU7srU/n0QwRZDAe1DilM1cRmovLddZB0EaP8xzo8adRGOa3QHI5Bs3yKgUFami
+         mG09HGGzvqiJg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJLX0W2126232;
-        Thu, 18 Jul 2019 12:21:33 -0700
-Date:   Thu, 18 Jul 2019 12:21:33 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJMIFP2126387;
+        Thu, 18 Jul 2019 12:22:18 -0700
+Date:   Thu, 18 Jul 2019 12:22:18 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-e65050b94d8c518fdbee572ea4ca6d352e1fda37@git.kernel.org>
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        mingo@kernel.org, ndesaulniers@google.com, arnd@arndb.de,
-        tglx@linutronix.de, peterz@infradead.org
-Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-          peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-          arnd@arndb.de, ndesaulniers@google.com
-In-Reply-To: <a9db88eec4f1ca089e040989846961748238b6d8.1563413318.git.jpoimboe@redhat.com>
-References: <a9db88eec4f1ca089e040989846961748238b6d8.1563413318.git.jpoimboe@redhat.com>
+Message-ID: <tip-9fe7b7642fe2c5158904d06fe31b740ca0695a01@git.kernel.org>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, tglx@linutronix.de, ndesaulniers@google.com,
+        mingo@kernel.org, hpa@zytor.com
+Reply-To: tglx@linutronix.de, peterz@infradead.org,
+          linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+          mingo@kernel.org, hpa@zytor.com, ndesaulniers@google.com
+In-Reply-To: <0740e96af0d40e54cfd6a07bf09db0fbd10793cd.1563413318.git.jpoimboe@redhat.com>
+References: <0740e96af0d40e54cfd6a07bf09db0fbd10793cd.1563413318.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Fix seg fault on bad switch table entry
-Git-Commit-ID: e65050b94d8c518fdbee572ea4ca6d352e1fda37
+Subject: [tip:core/urgent] objtool: Convert insn type to enum
+Git-Commit-ID: 9fe7b7642fe2c5158904d06fe31b740ca0695a01
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,100 +69,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e65050b94d8c518fdbee572ea4ca6d352e1fda37
-Gitweb:     https://git.kernel.org/tip/e65050b94d8c518fdbee572ea4ca6d352e1fda37
+Commit-ID:  9fe7b7642fe2c5158904d06fe31b740ca0695a01
+Gitweb:     https://git.kernel.org/tip/9fe7b7642fe2c5158904d06fe31b740ca0695a01
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:55 -0500
+AuthorDate: Wed, 17 Jul 2019 20:36:56 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 18 Jul 2019 21:01:10 +0200
 
-objtool: Fix seg fault on bad switch table entry
+objtool: Convert insn type to enum
 
-In one rare case, Clang generated the following code:
+This makes it easier to add new instruction types.  Also it's hopefully
+more robust since the compiler should warn about out-of-range enums.
 
- 5ca:       83 e0 21                and    $0x21,%eax
- 5cd:       b9 04 00 00 00          mov    $0x4,%ecx
- 5d2:       ff 24 c5 00 00 00 00    jmpq   *0x0(,%rax,8)
-                    5d5: R_X86_64_32S       .rodata+0x38
-
-which uses the corresponding jump table relocations:
-
-  000000000038  000200000001 R_X86_64_64       0000000000000000 .text + 834
-  000000000040  000200000001 R_X86_64_64       0000000000000000 .text + 5d9
-  000000000048  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000050  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000058  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000060  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000068  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000070  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000078  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000080  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000088  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000090  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000098  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000a0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000a8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000b0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000b8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000c0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000c8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000d0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000d8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000e0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000e8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000f0  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  0000000000f8  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000100  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000108  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000110  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000118  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000120  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000128  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000130  000200000001 R_X86_64_64       0000000000000000 .text + b96
-  000000000138  000200000001 R_X86_64_64       0000000000000000 .text + 82f
-  000000000140  000200000001 R_X86_64_64       0000000000000000 .text + 828
-
-Since %eax was masked with 0x21, only the first two and the last two
-entries are possible.
-
-Objtool doesn't actually emulate all the code, so it isn't smart enough
-to know that all the middle entries aren't reachable.  They point to the
-NOP padding area after the end of the function, so objtool seg faulted
-when it tried to dereference a NULL insn->func.
-
-After this fix, objtool still gives an "unreachable" error because it
-stops reading the jump table when it encounters the bad addresses:
-
-  /home/jpoimboe/objtool-tests/adm1275.o: warning: objtool: adm1275_probe()+0x828: unreachable instruction
-
-While the above code is technically correct, it's very wasteful of
-memory -- it uses 34 jump table entries when only 4 are needed.  It's
-also not possible for objtool to validate this type of switch table
-because the unused entries point outside the function and objtool has no
-way of determining if that's intentional.  Hopefully the Clang folks can
-fix it.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/a9db88eec4f1ca089e040989846961748238b6d8.1563413318.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/0740e96af0d40e54cfd6a07bf09db0fbd10793cd.1563413318.git.jpoimboe@redhat.com
 
 ---
- tools/objtool/check.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/arch.h            | 35 ++++++++++++++++++-----------------
+ tools/objtool/arch/x86/decode.c |  2 +-
+ tools/objtool/check.c           |  7 -------
+ tools/objtool/check.h           |  2 +-
+ 4 files changed, 20 insertions(+), 26 deletions(-)
 
+diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+index 580e344db3dd..50448c0c4bca 100644
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -11,22 +11,23 @@
+ #include "elf.h"
+ #include "cfi.h"
+ 
+-#define INSN_JUMP_CONDITIONAL	1
+-#define INSN_JUMP_UNCONDITIONAL	2
+-#define INSN_JUMP_DYNAMIC	3
+-#define INSN_CALL		4
+-#define INSN_CALL_DYNAMIC	5
+-#define INSN_RETURN		6
+-#define INSN_CONTEXT_SWITCH	7
+-#define INSN_STACK		8
+-#define INSN_BUG		9
+-#define INSN_NOP		10
+-#define INSN_STAC		11
+-#define INSN_CLAC		12
+-#define INSN_STD		13
+-#define INSN_CLD		14
+-#define INSN_OTHER		15
+-#define INSN_LAST		INSN_OTHER
++enum insn_type {
++	INSN_JUMP_CONDITIONAL,
++	INSN_JUMP_UNCONDITIONAL,
++	INSN_JUMP_DYNAMIC,
++	INSN_CALL,
++	INSN_CALL_DYNAMIC,
++	INSN_RETURN,
++	INSN_CONTEXT_SWITCH,
++	INSN_STACK,
++	INSN_BUG,
++	INSN_NOP,
++	INSN_STAC,
++	INSN_CLAC,
++	INSN_STD,
++	INSN_CLD,
++	INSN_OTHER,
++};
+ 
+ enum op_dest_type {
+ 	OP_DEST_REG,
+@@ -68,7 +69,7 @@ void arch_initial_func_cfi_state(struct cfi_state *state);
+ 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+-			    unsigned int *len, unsigned char *type,
++			    unsigned int *len, enum insn_type *type,
+ 			    unsigned long *immediate, struct stack_op *op);
+ 
+ bool arch_callee_saved_reg(unsigned char reg);
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 584568f27a83..0567c47a91b1 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -68,7 +68,7 @@ bool arch_callee_saved_reg(unsigned char reg)
+ 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+-			    unsigned int *len, unsigned char *type,
++			    unsigned int *len, enum insn_type *type,
+ 			    unsigned long *immediate, struct stack_op *op)
+ {
+ 	struct insn insn;
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 66f7c01385a4..a966b22a32ef 100644
+index a966b22a32ef..04572a049cfc 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -932,7 +932,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 			break;
+@@ -267,13 +267,6 @@ static int decode_instructions(struct objtool_file *file)
+ 			if (ret)
+ 				goto err;
  
- 		/* Make sure the destination is in the same function: */
--		if (dest_insn->func->pfunc != pfunc)
-+		if (!dest_insn->func || dest_insn->func->pfunc != pfunc)
- 			break;
- 
- 		alt = malloc(sizeof(*alt));
+-			if (!insn->type || insn->type > INSN_LAST) {
+-				WARN_FUNC("invalid instruction type %d",
+-					  insn->sec, insn->offset, insn->type);
+-				ret = -1;
+-				goto err;
+-			}
+-
+ 			hash_add(file->insn_hash, &insn->hash, insn->offset);
+ 			list_add_tail(&insn->list, &file->insn_list);
+ 		}
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index afa6a79e0715..b881fafcf55d 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -31,7 +31,7 @@ struct instruction {
+ 	struct section *sec;
+ 	unsigned long offset;
+ 	unsigned int len;
+-	unsigned char type;
++	enum insn_type type;
+ 	unsigned long immediate;
+ 	bool alt_group, visited, dead_end, ignore, hint, save, restore, ignore_alts;
+ 	bool retpoline_safe;
