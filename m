@@ -2,157 +2,183 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A84C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F391EC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33C42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rQbKY5tT"
+	by mail.kernel.org (Postfix) with ESMTP id C1624217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563440791;
+	bh=Lh/pHkfkrzsc2HtrIp+4exBHCq1jPV4cq+iT0DAoVXc=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=oaN5PmwxxlUqAZBOCYWdkMGLMP9S8EYy2fx/Ke5ATIiqAdvWOZPGQiqbqGdMNqGkV
+	 N0G2EjtxOxxu27RLk710dINktzKH1YUIXpr5YzZgkKksDpOI3b5FBM6LVFygHPY+FA
+	 0Z5sEy2BblSGpWpfGN+oIXdbGx3Wa/Yrq5MpEfYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389598AbfGRJGD (ORCPT
+        id S2389672AbfGRJGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:06:03 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:57781 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726665AbfGRJGD (ORCPT
+        Thu, 18 Jul 2019 05:06:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:32837 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfGRJGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:06:03 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190718090559epoutp01bfe9647e53aa5fc473848b9f76462e76~ydRZ28ezz2120221202epoutp01i
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:05:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190718090559epoutp01bfe9647e53aa5fc473848b9f76462e76~ydRZ28ezz2120221202epoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563440760;
-        bh=qWrYdPfDRW4odSxkNZfEskpNsPLhKp0Foumpb2G/9bE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=rQbKY5tTFxoZGFiiU29Ri4fmyVIuCTqClnzpMUkE3o3MdO9VfpSNymZoWHV/kU9sm
-         lQusZZw6cSAOSIY9e6DpZdQ2GtAmBOzxmmF3Y8fC8OyHP3X+ZSSuKbY/5nwA6oelyj
-         UAKXbry+6977g5fwgovtlYeak6gbOhTs52vYSc9A=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190718090559epcas1p3d8ce45f251b1989b3dfd227040f38f89~ydRZO3zRB1230012300epcas1p3g;
-        Thu, 18 Jul 2019 09:05:59 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 45q7XP19Q3zMqYkf; Thu, 18 Jul
-        2019 09:05:57 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        72.04.04088.576303D5; Thu, 18 Jul 2019 18:05:57 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190718090556epcas1p1ecf1dd1ae605ab33a62dabb56667aa9a~ydRWrl5OO0925709257epcas1p1S;
-        Thu, 18 Jul 2019 09:05:56 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190718090556epsmtrp2cc7a9806a955c34e8f06fdfd59be2429~ydRWqeIXR1846618466epsmtrp2h;
-        Thu, 18 Jul 2019 09:05:56 +0000 (GMT)
-X-AuditID: b6c32a35-845ff70000000ff8-65-5d30367556da
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        56.5A.03638.476303D5; Thu, 18 Jul 2019 18:05:56 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190718090556epsmtip297663eca605c694ff1a6cc8b4673708e~ydRWcir8a1349213492epsmtip2n;
-        Thu, 18 Jul 2019 09:05:56 +0000 (GMT)
-Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
- functions
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <45621f73-2f86-cde7-a92e-2a34810b9c05@samsung.com>
-Date:   Thu, 18 Jul 2019 18:09:05 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Thu, 18 Jul 2019 05:06:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so28194170otl.0;
+        Thu, 18 Jul 2019 02:06:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=FbAj5yhaqo7OvIXAnydPecQ9dRAE9THaUdkKuKLzG1w=;
+        b=K/g+6mHUNOSF2J+5zlaBOCLJ8T4bvEvWSHKyhOW248BJqAe8qFl6cu9M6ReX3FG6xO
+         7BvYEfE+QP6Cc3ibzXcvcr2FROwH8x8eUQWlbttMvM9M0wr1bDHsTps4uQY7OHYjh/Nv
+         mvng6hIEp+LM3y/7HyhhnH3viErVPVESIWN6yD9OBJ/kyJZkozVk/PjMGtLEtfn8LsPg
+         sUAFa3rxn83WgTFhr6h6oiBHeD9mIpgQJdn3xFEoRc1VWGHXRxwayFxcTL8qVaJ/2f9v
+         eiXg+aPQCj+CZ2Lx1Fue1sTAII+SGmt0WmPaJKmbgOWbwFpYnDIH6xWttazgi1BRoJ28
+         I1Qg==
+X-Gm-Message-State: APjAAAW6JrRkqANHUQw1yf66cOQsJvvxDRBpkDDDfuWSKIvggIrizPYo
+        YlIwexdTpQ7WjcepZWIK+HS3DU+Fv0WpEE5xEjE=
+X-Google-Smtp-Source: APXvYqwVELilhcj7/AyvcoyPaqePI4XcNocPmBuVGOTQJOffopuzXvFDyxzznYHI9PGWCSEnBWFy36yMNNu1I19cKoI=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr30020650otp.189.1563440789073;
+ Thu, 18 Jul 2019 02:06:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRTv2+PuKs6+puZpRdmN/lDU7Wqzq2QERQySMHqZIPOitynuxb1b
-        lAVZ9jJSSotqpb2jl1RLSwUb6DBNeif0Mitt9ND1MKOy17a7yP9+53d+5zvnd75DSlWXCDVZ
-        bLFzvIU1UUS47Gp7fHKSI02bp/3SSDDnP/UjZovzuIy5tXlQwTxoOUwww5UexFR8cRLM001n
-        COZ7S52Mqaq/T8wL0zf1nkT6ZmevQl9Z7iP0VQ3nkH7YNTVbnlsyp4hjCzk+jrMUWAuLLcZM
-        atFSw3yDLk1LJ9HpzGwqzsKauUxqQVZ20sJik38gKm4Na3L4qWxWECjN3Dm81WHn4oqsgj2T
-        4myFJlu6LVlgzYLDYkwusJozaK02RecX5pcUuQbeKmy15Frv9U5ZGeomdqIwEvAsGOp5iHai
-        cFKFmxA0vW6XiMFnBK8quxVi8BXB++c+xb+SJ4335GKiFUH3vr5gQoU/IPhWkxjAUXgZvDjz
-        IyiKxr8RVHwvDzaU4lXQ3nxeEsAETgD3m0dBfjyeDj3f+lEAK/Fc6Dv2KaiR4ZlQ6fMGcQzO
-        gZueOpmomQBdBweCOAxnwskRLxLfj4UnA0ckIp4G5Y2HpIEhAP8hoKPshFy0sAAa+lyhDUTB
-        uxsNIWtqGPa1hvj1cLbLQ4jFOxA0uO+GilPBfarG34H0d4iHiy0akZ4OzaO1oSEiwTeySx6Q
-        AFbCjm0qUTIDHrzolYh4EpzYXkHsRpRzjB3nGAvOMRac/5sdRbJzaCJnE8xGTqBt9NjvdqHg
-        tSbomtDe21ltCJOIilA+ojR5Kjm7RlhnbkNASqlo5dO3fkpZyK4r5XirgXeYOKEN6fzb3iNV
-        xxRY/bdvsRtoXUpqaiozi07T0TQVq6z7GZ+nwkbWzpVwnI3j/9VJyDB1Gar2xG4ad6Am/YoV
-        Wofa+A3ecMOk/fTW1a72GY8j52/MeUbjJbkXLl/rl3fe/7yc7wlf4akdWabe76OSX9qqI1Zm
-        kR+91VMWJ6L6mdu7FhuPsx0Zu6K67iTueRbTMTvS7rn+ymg9VpVyb7Im7dIv6vTezlvvct2D
-        +Tp7qSZaOugepWRCEUsnSHmB/Qsxmma5wwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSvG6JmUGswYt/sharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZm568ZC+Yy1HxbN8JlgbG02xdjJwcEgImEre2
-        XmQFsYUEdjNKrN9eCRGXlJh28ShzFyMHkC0scfhwcRcjF1DJW0aJ/z3nmUFqhAVCJB6s+MUK
-        khARaGKS2NR7gR0kwSwQKdEzdwsbxNA5TBLLVgqC2GwCWhL7X9wAi/MLKEpc/fGYEcTmFbCT
-        uL/wIxOIzSKgKtH77hmYLSoQITHp2k4WiBpBiZMzn4DZnAK2Eku+PmOE2KUu8WfeJWYIW1zi
-        1pP5TBC2vETz1tnMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7N
-        S9dLzs/dxAiOMC2tHYwnTsQfYhTgYFTi4b2hpB8rxJpYVlyZe4hRgoNZSYT39kugEG9KYmVV
-        alF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6pBkYLxfzp1qtT7M2CVdTO
-        H9U0+dJ+uqbHye/axavz/hmeejXz6ZHwI+0cYhEnPzgf1DuWljg15G188PMJNe2f469tfTuP
-        h4l31wG7Pm8l24rX68I6X9Yzz2p9os8TwytyR/7h03tTF7vzdp82kDieV8MvyqNtU+5/4Mp6
-        TQ517r/TwhiWpq+xvqTEUpyRaKjFXFScCADhFw+brAIAAA==
-X-CMS-MailID: 20190718090556epcas1p1ecf1dd1ae605ab33a62dabb56667aa9a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
-        <20190707223303.6755-13-digetx@gmail.com>
-        <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
-        <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 18 Jul 2019 11:06:18 +0200
+Message-ID: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
+Subject: [GIT PULL] More power management updates for v5.3-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 16. 오후 10:35, Dmitry Osipenko wrote:
-> 16.07.2019 15:26, Chanwoo Choi пишет:
->> Hi Dmitry,
->>
->> I'm not sure that it is necessary.
->> As I knew, usally, the 'inline' is used on header file
->> to define the empty functions.
->>
->> Do we have to change it with 'inline' keyword?
-> 
-> The 'inline' attribute tells compiler that instead of jumping into the
-> function, it should take the function's code and replace the function's
-> invocation with that code. This is done in order to help compiler
-> optimize code properly, please see [1]. There is absolutely no need to
-> create a function call into a function that consists of a single
-> instruction.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Inline.html
-> 
+Hi Linus,
 
-If you want to add 'inline' keyword, I recommend that 
-you better to remove the modified function in this patch
-and then just call the 'write_relaxed or read_relaxed' function
-directly. It is same result when using inline keyword.
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.3-rc1-2
+
+with top-most commit 918e162e6a71e924a343b41f71789ad14e1e3229
+
+ Merge branch 'pm-cpufreq'
+
+on top of commit cf2d213e49fdf47e4c10dc629a3659e0026a54b8
+
+ Merge tag 'pm-5.3-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive more power management updates for 5.3-rc1.
+
+These modify the Intel RAPL driver to allow it to use an MMIO
+interface to the hardware, make the int340X thermal driver provide
+such an interface for it, add Intel Ice Lake CPU IDs to the RAPL
+driver (these changes depend on the previously merged x86 arch
+changes), update cpufreq to use the PM QoS framework for managing
+the min and max frequency limits, and add update the imx-cpufreq-dt
+cpufreq driver to support i.MX8MN.
+
+Specifics:
+
+ - Add MMIO interface support to the Intel RAPL power capping
+   driver and update the int340X thermal driver to provide a
+   RAPL MMIO interface (Zhang Rui, Stephen Rothwell).
+
+ - Add Intel Ice Lake CPU IDs to the RAPL driver (Zhang Rui,
+   Rajneesh Bhardwaj).
+
+ - Make cpufreq use the PM QoS framework (instead of notifiers) for
+   managing the min and max frequency constraints (Viresh Kumar).
+
+ - Add i.MX8MN support to the imx-cpufreq-dt cpufreq driver (Anson
+   Huang).
+
+Thanks!
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+---------------
+
+Anson Huang (1):
+      cpufreq: imx-cpufreq-dt: Add i.MX8MN support
+
+Rajneesh Bhardwaj (1):
+      powercap/rapl: Add Ice Lake NNPI support to RAPL driver
+
+Stephen Rothwell (1):
+      intel_rapl: need linux/cpuhotplug.h for enum cpuhp_state
+
+Viresh Kumar (8):
+      PM / QOS: Pass request type to dev_pm_qos_{add|remove}_notifier()
+      PM / QOS: Rename __dev_pm_qos_read_value() and dev_pm_qos_raw_read_value()
+      PM / QOS: Pass request type to dev_pm_qos_read_value()
+      PM / QoS: Add support for MIN/MAX frequency constraints
+      cpufreq: Register notifiers with the PM QoS framework
+      cpufreq: intel_pstate: Reuse refresh_frequency_limits()
+      cpufreq: Add QoS requests for userspace constraints
+      cpufreq: Make cpufreq_generic_init() return void
+
+Zhang Rui (16):
+      intel_rapl: use reg instead of msr
+      intel_rapl: remove hardcoded register index
+      intel_rapl: introduce intel_rapl.h
+      intel_rapl: introduce struct rapl_if_private
+      intel_rapl: abstract register address
+      intel_rapl: abstract register access operations
+      intel_rapl: cleanup some functions
+      intel_rapl: cleanup hardcoded MSR access
+      intel_rapl: abstract RAPL common code
+      intel_rapl: support 64 bit register
+      intel_rapl: support two power limits for every RAPL domain
+      int340X/processor_thermal_device: add support for MMIO RAPL
+      intel_rapl: Fix module autoloading issue
+      powercap/intel_rapl: add support for IceLake desktop
+      powercap/intel_rapl: add support for ICX
+      powercap/intel_rapl: add support for ICX-D
+
+---------------
+
+ Documentation/power/pm_qos_interface.txt           |  12 +-
+ MAINTAINERS                                        |   1 +
+ drivers/base/power/domain.c                        |   8 +-
+ drivers/base/power/domain_governor.c               |   4 +-
+ drivers/base/power/qos.c                           | 135 +++-
+ drivers/base/power/runtime.c                       |   2 +-
+ drivers/cpufreq/bmips-cpufreq.c                    |  17 +-
+ drivers/cpufreq/cpufreq.c                          | 216 ++++--
+ drivers/cpufreq/davinci-cpufreq.c                  |   3 +-
+ drivers/cpufreq/imx-cpufreq-dt.c                   |   3 +-
+ drivers/cpufreq/imx6q-cpufreq.c                    |   6 +-
+ drivers/cpufreq/intel_pstate.c                     |   7 +-
+ drivers/cpufreq/kirkwood-cpufreq.c                 |   3 +-
+ drivers/cpufreq/loongson1-cpufreq.c                |   8 +-
+ drivers/cpufreq/loongson2_cpufreq.c                |   3 +-
+ drivers/cpufreq/maple-cpufreq.c                    |   3 +-
+ drivers/cpufreq/omap-cpufreq.c                     |  15 +-
+ drivers/cpufreq/pasemi-cpufreq.c                   |   3 +-
+ drivers/cpufreq/pmac32-cpufreq.c                   |   3 +-
+ drivers/cpufreq/pmac64-cpufreq.c                   |   3 +-
+ drivers/cpufreq/s3c2416-cpufreq.c                  |   9 +-
+ drivers/cpufreq/s3c64xx-cpufreq.c                  |  15 +-
+ drivers/cpufreq/s5pv210-cpufreq.c                  |   3 +-
+ drivers/cpufreq/sa1100-cpufreq.c                   |   3 +-
+ drivers/cpufreq/sa1110-cpufreq.c                   |   3 +-
+ drivers/cpufreq/spear-cpufreq.c                    |   3 +-
+ drivers/cpufreq/tegra20-cpufreq.c                  |   8 +-
+ drivers/cpuidle/governor.c                         |   2 +-
+ drivers/powercap/Kconfig                           |  11 +-
+ drivers/powercap/Makefile                          |   3 +-
+ .../powercap/{intel_rapl.c => intel_rapl_common.c} | 801 ++++++++-------------
+ drivers/powercap/intel_rapl_msr.c                  | 183 +++++
+ drivers/thermal/intel/int340x_thermal/Kconfig      |   6 +
+ .../int340x_thermal/processor_thermal_device.c     | 173 ++++-
+ include/linux/cpufreq.h                            |  14 +-
+ include/linux/intel_rapl.h                         | 155 ++++
+ include/linux/pm_qos.h                             |  48 +-
+ 37 files changed, 1196 insertions(+), 699 deletions(-)
