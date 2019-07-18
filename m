@@ -2,54 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6A3C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF19C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EEE2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CD72053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419259;
-	bh=Ll0mToFWxutfEGmwbbvOvd2laMWvkUQ53iF9q3c6kns=;
+	s=default; t=1563419268;
+	bh=6TvLc+s1Z5B/h1l3/U0Pe2FamVxtuWOhIhEnM7zXQp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P6O84DoBTD0yczQd29K7LUkZi53wY/CH2w3Krcq9QUdAhdVtd9ccu73Z/xU0pv514
-	 WouvoNkwFk8cnLZc7Te0sk3hWLOxjycxPv8ENnp9/oZyhsuAqUHhS4Q0MnKZzTZbl2
-	 nh0xfK0b6WUp2arPXrCg2KAFa66zk3xdopQPVMws=
+	b=dSN1EK0cXhTC817B2i8xm5WqulXrp8XqKq9YMeWFvew36yFNVJKASo0QTmd+HcElV
+	 Jh7tl4t/0v32HM1tpx3dL1ExOg2pahixNRNP/6wKNzgW9yEySqGFjLedSlJyvM8LA3
+	 +sQTNb7enfbDoOsW86MH6l3neAm0mAgAm7VK2vkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390507AbfGRDHi (ORCPT
+        id S2390549AbfGRDHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389728AbfGRDHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:36 -0400
+        id S2390513AbfGRDHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:42 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6922F21848;
-        Thu, 18 Jul 2019 03:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF19B2173E;
+        Thu, 18 Jul 2019 03:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419254;
-        bh=Ll0mToFWxutfEGmwbbvOvd2laMWvkUQ53iF9q3c6kns=;
+        s=default; t=1563419261;
+        bh=6TvLc+s1Z5B/h1l3/U0Pe2FamVxtuWOhIhEnM7zXQp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lo7s+pPIBYHKHsn+FgTXO8tI1RnQho2HrZGxUsOzdZcnmuIE+9gQ34U+Mz0jvs6c1
-         BgQr4va27MIa6xMvuo8yrcv51U2nq9l6Yq7xiBBKA221Cj0zoVqPfydmInghnJp4yW
-         9qRxZzuZdfv1+9qOwf80FYVr3NdjAznqPRM6X3J8=
+        b=ryx4VF8mZCxLzgYAN6epACOtx1BkSrnpK0C+gcxdKTAYVhOWQ0KOoCCSwCRO2G++o
+         cbrAWTpTSRNZ3dbZH9ssTD7lKLY6PJ+v3AWoHKrnJJvYRlZP2wJmQg7KVrxUzI0Qqt
+         +vlMTYDuh12YNm/q9NDyIeMyihtNZstx7sOX7ucY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Heyi Guo <guoheyi@huawei.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/47] irqchip/gic-v3-its: Fix command queue pointer comparison bug
-Date:   Thu, 18 Jul 2019 12:01:21 +0900
-Message-Id: <20190718030049.020637230@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.19 36/47] ARC: hide unused function unw_hdr_alloc
+Date:   Thu, 18 Jul 2019 12:01:50 +0900
+Message-Id: <20190718030051.825109263@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -62,146 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a050fa5476d418fc16b25abe168b3d38ba11e13c ]
+From: Arnd Bergmann <arnd@arndb.de>
 
-When we run several VMs with PCI passthrough and GICv4 enabled, not
-pinning vCPUs, we will occasionally see below warnings in dmesg:
+commit fd5de2721ea7d16e2b16c4049ac49f229551b290 upstream.
 
-ITS queue timeout (65440 65504 480)
-ITS cmd its_build_vmovp_cmd failed
+As kernelci.org reports, this function is not used in
+vdk_hs38_defconfig:
 
-The reason for the above issue is that in BUILD_SINGLE_CMD_FUNC:
-1. Post the write command.
-2. Release the lock.
-3. Start to read GITS_CREADR to get the reader pointer.
-4. Compare the reader pointer to the target pointer.
-5. If reader pointer does not reach the target, sleep 1us and continue
-to try.
+arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
 
-If we have several processors running the above concurrently, other
-CPUs will post write commands while the 1st CPU is waiting the
-completion. So we may have below issue:
+Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
+Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-phase 1:
----rd_idx-----from_idx-----to_idx--0---------
-
-wait 1us:
-
-phase 2:
---------------from_idx-----to_idx--0-rd_idx--
-
-That is the rd_idx may fly ahead of to_idx, and if in case to_idx is
-near the wrap point, rd_idx will wrap around. So the below condition
-will not be met even after 1s:
-
-if (from_idx < to_idx && rd_idx >= to_idx)
-
-There is another theoretical issue. For a slow and busy ITS, the
-initial rd_idx may fall behind from_idx a lot, just as below:
-
----rd_idx---0--from_idx-----to_idx-----------
-
-This will cause the wait function exit too early.
-
-Actually, it does not make much sense to use from_idx to judge if
-to_idx is wrapped, but we need a initial rd_idx when lock is still
-acquired, and it can be used to judge whether to_idx is wrapped and
-the current rd_idx is wrapped.
-
-We switch to a method of calculating the delta of two adjacent reads
-and accumulating it to get the sum, so that we can get the real rd_idx
-from the wrapped value even when the queue is almost full.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Signed-off-by: Heyi Guo <guoheyi@huawei.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 35 ++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ arch/arc/kernel/unwind.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 65ab2c80529c..ee30e8965d1b 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -740,32 +740,43 @@ static void its_flush_cmd(struct its_node *its, struct its_cmd_block *cmd)
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -185,11 +185,6 @@ static void *__init unw_hdr_alloc_early(
+ 				       MAX_DMA_ADDRESS);
  }
  
- static int its_wait_for_range_completion(struct its_node *its,
--					 struct its_cmd_block *from,
-+					 u64	prev_idx,
- 					 struct its_cmd_block *to)
- {
--	u64 rd_idx, from_idx, to_idx;
-+	u64 rd_idx, to_idx, linear_idx;
- 	u32 count = 1000000;	/* 1s! */
- 
--	from_idx = its_cmd_ptr_to_offset(its, from);
-+	/* Linearize to_idx if the command set has wrapped around */
- 	to_idx = its_cmd_ptr_to_offset(its, to);
-+	if (to_idx < prev_idx)
-+		to_idx += ITS_CMD_QUEUE_SZ;
-+
-+	linear_idx = prev_idx;
- 
- 	while (1) {
-+		s64 delta;
-+
- 		rd_idx = readl_relaxed(its->base + GITS_CREADR);
- 
--		/* Direct case */
--		if (from_idx < to_idx && rd_idx >= to_idx)
--			break;
-+		/*
-+		 * Compute the read pointer progress, taking the
-+		 * potential wrap-around into account.
-+		 */
-+		delta = rd_idx - prev_idx;
-+		if (rd_idx < prev_idx)
-+			delta += ITS_CMD_QUEUE_SZ;
- 
--		/* Wrapped case */
--		if (from_idx >= to_idx && rd_idx >= to_idx && rd_idx < from_idx)
-+		linear_idx += delta;
-+		if (linear_idx >= to_idx)
- 			break;
- 
- 		count--;
- 		if (!count) {
--			pr_err_ratelimited("ITS queue timeout (%llu %llu %llu)\n",
--					   from_idx, to_idx, rd_idx);
-+			pr_err_ratelimited("ITS queue timeout (%llu %llu)\n",
-+					   to_idx, linear_idx);
- 			return -1;
- 		}
-+		prev_idx = rd_idx;
- 		cpu_relax();
- 		udelay(1);
- 	}
-@@ -782,6 +793,7 @@ void name(struct its_node *its,						\
- 	struct its_cmd_block *cmd, *sync_cmd, *next_cmd;		\
- 	synctype *sync_obj;						\
- 	unsigned long flags;						\
-+	u64 rd_idx;							\
- 									\
- 	raw_spin_lock_irqsave(&its->lock, flags);			\
- 									\
-@@ -803,10 +815,11 @@ void name(struct its_node *its,						\
- 	}								\
- 									\
- post:									\
-+	rd_idx = readl_relaxed(its->base + GITS_CREADR);		\
- 	next_cmd = its_post_commands(its);				\
- 	raw_spin_unlock_irqrestore(&its->lock, flags);			\
- 									\
--	if (its_wait_for_range_completion(its, cmd, next_cmd))		\
-+	if (its_wait_for_range_completion(its, rd_idx, next_cmd))	\
- 		pr_err_ratelimited("ITS cmd %ps failed\n", builder);	\
+-static void *unw_hdr_alloc(unsigned long sz)
+-{
+-	return kmalloc(sz, GFP_KERNEL);
+-}
+-
+ static void init_unwind_table(struct unwind_table *table, const char *name,
+ 			      const void *core_start, unsigned long core_size,
+ 			      const void *init_start, unsigned long init_size,
+@@ -370,6 +365,10 @@ ret_err:
  }
  
--- 
-2.20.1
-
+ #ifdef CONFIG_MODULES
++static void *unw_hdr_alloc(unsigned long sz)
++{
++	return kmalloc(sz, GFP_KERNEL);
++}
+ 
+ static struct unwind_table *last_table;
+ 
 
 
