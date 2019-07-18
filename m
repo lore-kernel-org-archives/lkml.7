@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1C7C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6938DC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71552173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4028E21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419007;
-	bh=PG3T8mXmGSKOIY8ZLT45pOA+wxybHzy/qkPK3tpEaWE=;
+	s=default; t=1563419010;
+	bh=XZdhTy0JEJZY3lK6Jn/I1noxcLUvIqAh9WQXu1Larbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUFjcYIdBJnNrtkZDbrbFK9pl4+AE31H9qvTb9ueHAL1Ya4W4YEJEPdVW7KZ9A2mb
-	 4RmeY+cmoHRb6lLK3E1thwI68bt26PPjsMFnTZ+rjurrarDbT5TJyJ+vBB4XDju3B1
-	 RyQY3Hxxdu1qMT0O38Q+fJuIuprsrVnS4hfumgYs=
+	b=khtLj6CjSuPZufr43DmShlc2t3leXOfpv71DRSBu+KQfdYL+31Cy5YE0L/R8c29X7
+	 w7fjjijyY+v6HiD/3XCsCkWD7KfdBIK0A42JFQGqR/3UA4FnuBlYsPWI9gJJ+cpXna
+	 kB2ngW6W4DSYC1SFqkxhXB+EOG0Wiz02AairVV0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbfGRDD0 (ORCPT
+        id S2389346AbfGRDD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbfGRDDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:24 -0400
+        id S2389318AbfGRDD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:03:26 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BF692173B;
-        Thu, 18 Jul 2019 03:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D010721849;
+        Thu, 18 Jul 2019 03:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419004;
-        bh=PG3T8mXmGSKOIY8ZLT45pOA+wxybHzy/qkPK3tpEaWE=;
+        s=default; t=1563419006;
+        bh=XZdhTy0JEJZY3lK6Jn/I1noxcLUvIqAh9WQXu1Larbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aZx7/l7cmmOOivGKNWf6vMzb+kMnPU5DpRGjL/XOIjKbt/2txuHlwfimCxuqRObyI
-         aKoIqZusVSpuu1TvChQgLSBZDEyYAIPHlaDG5bdPAJfrusfHdPVrP2k5tuulcQhQLI
-         JF/MU3+hNY28eUX4R/iagsurUFzmmffQgSIQ2PJA=
+        b=nzoifOENBshaVXw5HuNO8fDSqPvcl+hTtd6DPS+WRrUOEDqCD6eSEnPaG3JhdUH7y
+         41g1GrXnN1iC7kMf8hdt3nl12kjayaU4z0rCDWwjiKPtsd4Vr2DVmBWxEC3WY/NzzC
+         GDUIrqzzLRb3oQm3fLZchPJvMF9WN9kUwfZRSv7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH 5.2 05/21] drivers: base: cacheinfo: Ensure cpu hotplug work is done before Intel RDT
-Date:   Thu, 18 Jul 2019 12:01:23 +0900
-Message-Id: <20190718030031.591880791@linuxfoundation.org>
+        stable@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.2 06/21] firmware: improve LSM/IMA security behaviour
+Date:   Thu, 18 Jul 2019 12:01:24 +0900
+Message-Id: <20190718030031.805647808@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -60,60 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-commit 83b44fe343b5abfcb1b2261289bd0cfcfcfd60a8 upstream.
+commit 2472d64af2d3561954e2f05365a67692bb852f2a upstream.
 
-The cacheinfo structures are alloced/freed by cpu online/offline
-callbacks. Originally these were only used by sysfs to expose the
-cache topology to user space. Without any in-kernel dependencies
-CPUHP_AP_ONLINE_DYN was an appropriate choice.
+The firmware loader queries if LSM/IMA permits it to load firmware
+via the sysfs fallback. Unfortunately, the code does the opposite:
+it expressly permits sysfs fw loading if security_kernel_load_data(
+LOADING_FIRMWARE) returns -EACCES. This happens because a
+zero-on-success return value is cast to a bool that's true on success.
 
-resctrl has started using these structures to identify CPUs that
-share a cache. It updates its 'domain' structures from cpu
-online/offline callbacks. These depend on the cacheinfo structures
-(resctrl_online_cpu()->domain_add_cpu()->get_cache_id()->
- get_cpu_cacheinfo()).
-These also run as CPUHP_AP_ONLINE_DYN.
+Fix the return value handling so we get the correct behaviour.
 
-Now that there is an in-kernel dependency, move the cacheinfo
-work earlier so we know its done before resctrl's CPUHP_AP_ONLINE_DYN
-work runs.
-
-Fixes: 2264d9c74dda1 ("x86/intel_rdt: Build structures for each resource based on cache topology")
-Cc: <stable@vger.kernel.org>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Link: https://lore.kernel.org/r/20190624173656.202407-1-james.morse@arm.com
+Fixes: 6e852651f28e ("firmware: add call to LSM hook before firmware sysfs fallback")
+Cc: Stable <stable@vger.kernel.org>
+Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/cacheinfo.c   |    3 ++-
- include/linux/cpuhotplug.h |    1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/base/firmware_loader/fallback.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/base/cacheinfo.c
-+++ b/drivers/base/cacheinfo.c
-@@ -655,7 +655,8 @@ static int cacheinfo_cpu_pre_down(unsign
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -659,7 +659,7 @@ static bool fw_run_sysfs_fallback(enum f
+ 	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
+ 	ret = security_kernel_load_data(LOADING_FIRMWARE);
+ 	if (ret < 0)
+-		return ret;
++		return false;
  
- static int __init cacheinfo_sysfs_init(void)
- {
--	return cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "base/cacheinfo:online",
-+	return cpuhp_setup_state(CPUHP_AP_BASE_CACHEINFO_ONLINE,
-+				 "base/cacheinfo:online",
- 				 cacheinfo_cpu_online, cacheinfo_cpu_pre_down);
+ 	return fw_force_sysfs_fallback(opt_flags);
  }
- device_initcall(cacheinfo_sysfs_init);
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -176,6 +176,7 @@ enum cpuhp_state {
- 	CPUHP_AP_WATCHDOG_ONLINE,
- 	CPUHP_AP_WORKQUEUE_ONLINE,
- 	CPUHP_AP_RCUTREE_ONLINE,
-+	CPUHP_AP_BASE_CACHEINFO_ONLINE,
- 	CPUHP_AP_ONLINE_DYN,
- 	CPUHP_AP_ONLINE_DYN_END		= CPUHP_AP_ONLINE_DYN + 30,
- 	CPUHP_AP_X86_HPET_ONLINE,
 
 
