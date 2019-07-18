@@ -2,114 +2,87 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE99C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B28C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6D121872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D4A21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:30:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MWl276me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390770AbfGRP1f (ORCPT
+        id S1727994AbfGRPag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:27:35 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43879 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRP1f (ORCPT
+        Thu, 18 Jul 2019 11:30:36 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42357 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRPag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:27:35 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m14so20717044qka.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:27:34 -0700 (PDT)
+        Thu, 18 Jul 2019 11:30:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so14073011plb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=enTxUkUzWwDVJKls4jnHiVkcuCVL3Z4nxXwF8v+fVOY=;
+        b=MWl276meOjKDs2ZS61poZVM2fiDXKc6ShVWsOBZzjVtWKusvdwhSesvk7MvjqjkoyL
+         g1rWRtaUPlMy/4rS4zBg1y7kfjnCaxe/N7x5YSaEwh/xVHHkACf2EW3e4Qx1v0E6NogR
+         zXri1kaUUKJ9QcZk/OmRUkOalB6Cb57IwqzQ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=97JpaqZJUw6kOHercdAb+lo0dDWCEEL1RlsGMmUyUJQ=;
-        b=tWJgr62KjtHPGUkyoVPZXKxBecZxa2nYe+IAyitW4DcGEA+SBcnVFSUx2M/nKeheUh
-         vQoRxzO0KKZgwSveJzrsHiei6CPa4kpcVzgju5BdPphz4i1ySIDRWIZI5ssoWPYhl7Q9
-         P1L9/EPn9EpV4OaYKEARqmnj+H9HY3AmEez/hSkcrrolscW26wJzlpLB+3IdFAEf5/FK
-         tOQSJKfDm89WGoIUt3pnKLBJhsCy0TVKSfOk67KIvsLkJzKr+KUa4z2Cywvezi30JVYd
-         AP+oT78Ii0UXB7a/n/ZikcuS5wq84E9nNQRcRzV1qQnrElDb5ndpNO3Dm63Irv5CK4Oz
-         aCMg==
-X-Gm-Message-State: APjAAAXjGNdR6cENuuX6hWOsHnlv6fnXW/Md0qAbxxEQls2KBYPbhHjY
-        yBKWkmOxLR2gIy/ei3YQyibRjpW/9SE1SP6z1lw=
-X-Google-Smtp-Source: APXvYqxCIjZHXKpNfPhDaPyGIIjSTqwDj1CDG3aJkAn737qQb0zmMiuJqk6Oo2xG5QZIRkFASljYqsiIXCBl020X4vI=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr30135208qka.138.1563463654235;
- Thu, 18 Jul 2019 08:27:34 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=enTxUkUzWwDVJKls4jnHiVkcuCVL3Z4nxXwF8v+fVOY=;
+        b=lvF83oVVnHckOd5jjZj4+6rhWmSw9U1WvLtYeblSF2gEl8kuL+TyOTmrFXsrBz3062
+         U44qqL9pNzivtAY/idd/GGZhNHpPtIldi5rpnnUja/HY2IkzJ2JPBAM5EHfsXitJjfvS
+         3v5Y74ZAT2gYjZgQqBJVWJ/9MZbMFVw1m+JKkUCUcaQr5GrzxqkbonQ6eOnvyoqpJte9
+         rY5UdK3qsieeSDUk34sHIZgKA06gxltsR9SygunUc9FzDSzcj7JM5jNlvZ5xXUGk6g1n
+         WgSEzhBsPGPRiEJ7efRMXiC3hZ5fxYZVoD7YIXdmc4yDci9cRgVv/lmA0ud7AUP/ThhJ
+         x8Yw==
+X-Gm-Message-State: APjAAAVG6XBmUs9SAPtxNhzbQeLqAL7kRSa4rg7iH+Ar7rAa3q0udame
+        gNUPlMAb4K7MdGLqE1kRSOyyvw==
+X-Google-Smtp-Source: APXvYqwwHOdtFI3g0e9QUZENq+nEdLyWEtPqwnAB8Ja1AUOSKTg5KC9sGrRwnscxa+7h15LnEJpM1Q==
+X-Received: by 2002:a17:902:26c:: with SMTP id 99mr52459455plc.215.1563463835657;
+        Thu, 18 Jul 2019 08:30:35 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s5sm2217471pfm.97.2019.07.18.08.30.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 08:30:34 -0700 (PDT)
+Message-ID: <5d30909a.1c69fb81.23a02.413d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <CGME20190718134253epcas3p32a5afece52c47aaac0cd5795ff4cf022@epcas3p3.samsung.com>
- <20190718134240.2265724-1-arnd@arndb.de> <ea59751e-7391-e3e9-bb46-00e86b25f1a8@samsung.com>
- <CAK8P3a0q5xmi+mCvb1ET4d1uQmbnw+J2VkjRCzjemCXGy+5OBg@mail.gmail.com>
- <7da08013-5ee0-1c39-e16b-8b6843a28381@samsung.com> <CAK8P3a2nYArwNQrifW2xgzN=GUkN2wAjmZVo21JNw6YjHzwh7Q@mail.gmail.com>
- <CAKdAkRS0w3KM-F95-F1jUicq2srAzWu21_7Npnw28F5fF+UxtA@mail.gmail.com>
-In-Reply-To: <CAKdAkRS0w3KM-F95-F1jUicq2srAzWu21_7Npnw28F5fF+UxtA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 18 Jul 2019 17:27:18 +0200
-Message-ID: <CAK8P3a2O9jaV=EfCLp=_X1wW6yAB9_cSGfMUBwFHjS+1x76yPg@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: fix RC_CORE dependency
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?Q?Ronald_Tschal=C3=A4r?= <ronald@innovation.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190718065101.26994-1-yamada.masahiro@socionext.com>
+References: <20190718065101.26994-1-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] gpio: refactor gpiochip_allocate_mask() with bitmap_alloc()
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 18 Jul 2019 08:30:33 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 5:17 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Thu, Jul 18, 2019 at 6:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Jul 18, 2019 at 4:56 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
-> > > On 18.07.2019 16:21, Arnd Bergmann wrote:
-> > > > On Thu, Jul 18, 2019 at 4:16 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
-> > > >> Proper solution has been already merged via input tree[1].
-> > > >>
-> > > >>
-> > > >> [1]:
-> > > >> https://lore.kernel.org/lkml/CAKdAkRTGXNbUsuKASNGLfwUwC7Asod9K5baYLPWPU7EX-42-yA@mail.gmail.com/
-> > > > At that link, I only see the patch that caused the regression, not
-> > > > the solution. Are you sure it's fixed?
-> > >
-> > >
-> > > Ups, you are right, I though you are fixing what this patch attempted to
-> > > fix :)
-> > >
-> > > Anyway, we want to avoid dependency on RC_CORE - this driver does not
-> > > require it, but with RC_CORE it has additional features.
-> >
-> > Right, that's what my patch does: if RC_CORE is disabled, you can
-> > still set DRM_SIL_SII8620=y, but if RC_CORE=m, DRM_SIL_SII8620
-> > can only be =m or =n.
-> >
-> > > Maybe "imply INPUT" would help?
-> >
-> > No, that would make it worse. Device drivers really have no business
-> > turning on other subsystems.
-> >
->
-> OK, in the meantime I will redo the branch by dropping the
-> sil-sii8620.c Kconfig changes and also drop all "imply" business from
-> applespi driver as they give us more trouble than they are worth. We
-> do not have "imply" for i801_smbus for Symaptics SMBUS mode and it
-> works fine. It it distro's task to configure the kernel properly.
+Quoting Masahiro Yamada (2019-07-17 23:51:01)
+> Refactor gpiochip_allocate_mask() slightly by using bitmap_alloc().
+>=20
+> I used bitmap_free() for the corresponding free parts. Actually,
+> bitmap_free() is a wrapper of kfree(), but I did this for consistency.
+>=20
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Thanks!
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-I think the "drm/bridge: make remote control optional" patch is
-fine with my fixup, the IS_ENABLED() checks take care of the
-case where RC_CORE is unavailable, and the 'depends on
-RC_CORE || !RC_CORE' line takes care of the RC_CORE=m
-case.
-
-I suppose Ronald could send a replacement patch with my
-fixup after the merge window.
-
-      Arnd
