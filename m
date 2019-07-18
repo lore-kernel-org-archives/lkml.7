@@ -2,131 +2,81 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCDBC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3456FC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B5920873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1112173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563408527;
+	bh=1FFEoza9+5oT6pKKCXm7RkOmgECLKITXvUuSVaUAhPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rdb2Ws3lYHld2wPm7eCvfNicOKTt2p1LKaiXB8q7A24eL23s2K64qFgrfSMbCJ0zt
+	 XL9gPwNsRAOGpHd0JDwX7lMjEtE27Qonsswma5CE+M+D/gh2ef6VjtzeMYpF7e064Y
+	 q2N5fQdi0SMGCTWo6SsjDPDW/++EMmp1DSHMEFkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfGRAGm (ORCPT
+        id S1728660AbfGRAIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:06:42 -0400
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:31915
-        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728049AbfGRAGm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:06:42 -0400
-X-Sender-Id: 18vtm3q735|x-authuser|mail@thomaslambertz.de
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 6030750118A
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 23:48:22 +0000 (UTC)
-Received: from relay004.mxroute.com (100-96-4-184.trex.outbound.svc.cluster.local [100.96.4.184])
-        (Authenticated sender: 18vtm3q735)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 16F6B50152F
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 23:48:20 +0000 (UTC)
-X-Sender-Id: 18vtm3q735|x-authuser|mail@thomaslambertz.de
-Received: from relay004.mxroute.com ([TEMPUNAVAIL]. [185.234.75.11])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.17.3);
-        Wed, 17 Jul 2019 23:48:22 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: 18vtm3q735|x-authuser|mail@thomaslambertz.de
-X-MailChannels-Auth-Id: 18vtm3q735
-X-Belong-Harbor: 7e2961444de4470f_1563407302155_2635510663
-X-MC-Loop-Signature: 1563407302155:2693518527
-X-MC-Ingress-Time: 1563407302155
-Received: from relay-ext1.mxrelay.co (relay-ext1.mxrelay.co [185.19.31.132])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 17 Jul 2019 20:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728068AbfGRAIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 20:08:45 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay004.mxroute.com (Postfix) with ESMTPS id 89E083F0E1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 23:48:13 +0000 (UTC)
-Received: from qrelay100.mxroute.com (qrelay100.mxroute.com [172.82.139.100])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay-ext1.mxrelay.co (Postfix) with ESMTPS id 9121047389
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 23:48:11 +0000 (UTC)
-Received: from filter002.mxroute.com (unknown [94.130.183.33])
-        by qrelay100.mxroute.com (Postfix) with ESMTP id DD93F10086D;
-        Wed, 17 Jul 2019 19:48:09 -0400 (EDT)
-Received: from aus.mxroute.com (unknown [45.125.247.50])
-        by filter002.mxroute.com (Postfix) with ESMTPS id 02F3B3F03D;
-        Wed, 17 Jul 2019 23:48:04 +0000 (UTC)
-From:   Thomas Lambertz <mail@thomaslambertz.de>
-Subject: [5.2 regression] x86/fpu changes cause crashes in KVM guest
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de>
-Date:   Thu, 18 Jul 2019 01:47:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BFA620873;
+        Thu, 18 Jul 2019 00:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563408524;
+        bh=1FFEoza9+5oT6pKKCXm7RkOmgECLKITXvUuSVaUAhPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QKIPG+L38/WFupSp2hHZBakgJUjChj1CZCpQiEJB+frzR6l+M9NKAMbOK5kCYyHfD
+         w96kErKeUPW9Pzn5LJJPFBGeI5YOMEgYAJCZ9x1Mwd+nEQtCW70ylaceo/GiNVWk94
+         rDiPxz2tIh7djPRLMC8GaWWt02FojxcHFppLS4Fw=
+Date:   Thu, 18 Jul 2019 02:08:42 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Lindroth <thomas.lindroth@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] cpuidle: Always stop scheduler tick on adaptive-tick CPUs
+Message-ID: <20190718000841.GA28715@lenoir>
+References: <6254683.2O5gIZElE2@kreacher>
+ <20190716214024.GA8345@lenoir>
+ <CAJZ5v0gB0AHTebjpp87YKA1wmE+tCw5V=eaRE2XDM3nyQYndnA@mail.gmail.com>
+ <20190717132115.GB8345@lenoir>
+ <CAJZ5v0icfumJc7E4+LgWpi3+UNpTsH4usAJOg4FEeCBptYYzUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AuthUser: mail@thomaslambertz.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0icfumJc7E4+LgWpi3+UNpTsH4usAJOg4FEeCBptYYzUQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kernel 5.2, I've been experiencing strange issues in my Windows 10 
-QEMU/KVM guest.
-Via bisection, I have tracked down that the issue lies in the FPU state 
-handling changes.
-Kernels before 8ff468c29e9a9c3afe9152c10c7b141343270bf3 work great, the 
-ones afterwards are affected.
-Sometimes the state seems to be restored incorrectly in the guest.
+On Thu, Jul 18, 2019 at 12:27:09AM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jul 17, 2019 at 3:21 PM Frederic Weisbecker <frederic@kernel.org> wrote:
+> >
+> > On Wed, Jul 17, 2019 at 09:55:08AM +0200, Rafael J. Wysocki wrote:
+> > Well I think we disagree on that assumption that if a nohz_full CPU is put
+> > idle, it will remain there indefinitely. Nohz_full CPUs aren't really special
+> > in this regard, they can sleep on an IO, wait for a short event just like
+> > any other CPU.
+> 
+> Fair enough.
+> 
+> This means that the governor (or rather governors) will need to be
+> modified to address the issue reported by Thomas.
+> 
+> Fortunately, I have a patch going in that direction too. :-)
 
-I have managed to reproduce it relatively cleanly, on a linux guest.
-(ubuntu-server 18.04, but that should not matter, since it occured on 
-windows aswell)
-
-To reproduce the issue, you need prime95 (or mprime), from 
-https://www.mersenne.org/download/ .
-This is just a stress test for the FPU, which helps reproduce the error 
-much quicker.
-
-- Run it in the guest as 'Benchmark Only', and choose the '(2) Small 
-FFTs' torture test. Give it the maximum amount of cores (for me 10).
-- On the host, run the same test. To keep my pc usable, I limited it to 
-5 cores. I do this to put some pressure on the system.
-- repeatedly focus and unfocus the qemu window
-
-With this config, errors in the guest usually occur within 30 seconds. 
-Without the refocusing, takes ~5min on average, but the variance of this 
-time is quite large.
-
-The error messages are either
-     "FATAL ERROR: Rounding was ......., expected less than 0.4"
-or
-     "FATAL ERROR: Resulting sum was ....., expexted: ......",
-suggesting that something in the calculation has gone wrong.
-
-On the host, no errors are ever observed!
-
-
-I am running an AMD Ryzen 5 1600X on an Gigabyte GA-AX370 Gaming 5 
-motherboard.
-My main operating system is ArchLinux, the issue exists both with the 
-Arch and upstream kernel.
-QEMU is managed with virt-manager, but the issue also appears with the 
-following simple qemu cmdline:
-
-qemu-system-x86_64 -hda /var/lib/libvirt/images/ubuntu18.04.qcow2 
--enable-kvm -smp 10 -m 2048
-
-When kvm acceleration is disabled, the issue predictably goes away.
-
-The issue still exists on the latest github upstream kernel, 
-22051d9c4a57d3b4a8b5a7407efc80c71c7bfb16.
-
-- Thomas
+Good to hear, please also Cc me on that one, thanks!
