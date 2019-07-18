@@ -2,123 +2,173 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37BBC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE758C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C5820880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD3D20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390353AbfGRNtg (ORCPT
+        id S2390460AbfGRNuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:49:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:56529 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRNtg (ORCPT
+        Thu, 18 Jul 2019 09:50:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36714 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390350AbfGRNuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:49:36 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MTfgb-1i0NMn18gf-00U1Gc; Thu, 18 Jul 2019 15:49:32 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] reiserfs: fix code unwinding with clang
-Date:   Thu, 18 Jul 2019 15:49:14 +0200
-Message-Id: <20190718134928.2472465-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 18 Jul 2019 09:50:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so28833836wrs.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 06:50:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bz4hXPRK29P5/tSQD68cHTBPadb5Yosu8Qu+r8c9DuM=;
+        b=pCD1gMqdgmj5NS4Z+gMlo3JFwFdzrFskrTqHiSt0KpWe8BEDyO1BT73mmxA3K1Z035
+         ITQX0EekNT+dmS/trs2ABZw3Vzi/ZA+5Xe5BUyZOblwe/D72WU1GCz0hw9XEkvrKCx9r
+         4HUyUJ5tX74Vo9w+XncsT5zbpnbyvleB5ELkTHlrk/tIJUa94D0BX86JFeubzRgZ4+a9
+         FDrr81USElkLGqwMriN4PHmai1Qqt70gQDJdYFVIaOop2RFUXhEvC5/xHYwlBMjbZESl
+         YfuQ5p5oW9VWH5c3tvD9KoxkQxKGsq8eMjGzh/bjZvc40uUbQ2+OZLiLF9gdN+6w6Hv/
+         Fiww==
+X-Gm-Message-State: APjAAAXKcqF3ZFhF9cISkRdyh/EgPxwep+bvYLEAp4WePzQcV93RHSAS
+        A7r3fwaslREhBYKi0BrYJrnP9A==
+X-Google-Smtp-Source: APXvYqwpwFxUVWFfPgX205bMOicWtlXBUDH5d5qy2/uaaO9L8NQkWL0kgSuznvRy5cX56Dyvvft4SA==
+X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr24338666wrx.236.1563457807970;
+        Thu, 18 Jul 2019 06:50:07 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
+        by smtp.gmail.com with ESMTPSA id t13sm33212917wrr.0.2019.07.18.06.50.06
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 06:50:07 -0700 (PDT)
+Subject: Re: [PATCH 1/2] KVM: Boost vCPUs that are delivering interrupts
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     wanpengli@tencent.com, rkrcmar@redhat.com, paulus@ozlabs.org,
+        maz@kernel.org
+References: <1563457031-21189-1-git-send-email-pbonzini@redhat.com>
+ <1563457031-21189-2-git-send-email-pbonzini@redhat.com>
+ <c28fb650-8150-4f42-4d01-8e8b2490c8b6@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <d935d853-fa09-f41a-637a-77b45fd611d3@redhat.com>
+Date:   Thu, 18 Jul 2019 15:50:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <c28fb650-8150-4f42-4d01-8e8b2490c8b6@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:n//jM1UBMvz4mHz40peDwZc0bRe4ei5G+DelCfLdZD7Qggm1mNR
- 5lg/1/Ua7+Flu6b43iHKvvAncGM9RX+0Iu1W0gkjKyJd1fYgvKnretljrYLFMMkQbYO946Y
- eFt8rOCaDb1e0s+DjAkwFbI+kLcWuWFEv4iTjUyQLrMy9g59dy8rFqB3VoVbVC+csXL6NiL
- A9aNZzyatGyOOzim35qsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Dhra0qbXmnY=:zyw1yfG1la0nHo0Ct+9ozv
- oyX//ivF63x4MRRXFd10pqUK/uTuHL2XuzE+SsCgsZXKD5a3C/q2cdrF12xFba2SE4K7rEQLq
- PzZIRxDKm7TfeR7aYQI+IxWW3J6UAFsL0KQgknu2e9llHCY8qw9obDDn3QUCrI4zXMAn3ke9U
- m5V7elH8Gdyqzd/1+KM3Bxdo0Dj2+3Ha3S5ZdUA5OBr9dLN3MD/R3gfErAUVvGl89SqompmFl
- HbysB5BGdjrduFpnVlnH9dU5h9S0aJK8TlJWLZ1Kml9SGR9CGORZHQb0rwFqPPoX+tAbTfBtd
- GnSiRlpNe7Grsa3dg+PMIBYZPb32RV2mJstpOOPvSvyR34e7mIkLzLEISkqc51h+1GGybQK1v
- cnz4FORiZJZW8znDiIlXh57c6HobSu4Twd6HKhnF3/gMYs2IWhZPJoylHBTX1doITR79uOyXp
- /aD9sZmMXwZslA1A13ERrFF94/EegLV3Jw7i4G7nKjQhG+2ACuFCbA5wx22vPn+bnQfQv0p4q
- Q8fLCEHyYbzcAlOmp4oNIAA6xit5lFVFzVrsT6vKCLwP6VJ4p+7GdQ2yS900B+qDRr9qEfQ02
- wpGetCmR6xk/SjeNBrSZyc7FDTo6ImRQTmVop8m4o3U/xDmXmchMmD7Lqtaf22SPAPFTW1HI3
- 4AQJwsJFbIJd/MjzWShdH2TiNYsBFjCCxpVqrQstctczHU4jCQuw/24PiFDFftCocupN+TKEE
- Xc2fAXLIHWDpLM3W4e1SfTGjBl5x1HtR9rQ8AQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building reiserfs with clang leads to objtool warnings about a part of the
-unreachable code that may confuse the ORC unwinder:
+On 18/07/19 15:45, Christian Borntraeger wrote:
+> 
+> 
+> On 18.07.19 15:37, Paolo Bonzini wrote:
+>> From: Wanpeng Li <wanpengli@tencent.com>
+>>
+>> Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during
+>> vcpu wakeup and interrupt delivery), we want to also boost not just
+>> lock holders but also vCPUs that are delivering interrupts. Most
+>> smp_call_function_many calls are synchronous, so the IPI target vCPUs
+>> are also good yield candidates.  This patch introduces vcpu->ready to
+>> boost vCPUs during wakeup and interrupt delivery time; unlike s390 we do
+>> not reuse vcpu->preempted so that voluntarily preempted vCPUs are taken
+>> into account by kvm_vcpu_on_spin, but vmx_vcpu_pi_put is not affected
+>> (VT-d PI handles voluntary preemption separately, in pi_pre_block).
+>>
+>> Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
+>> ebizzy -M
+>>
+>>             vanilla     boosting    improved
+>> 1VM          21443       23520         9%
+>> 2VM           2800        8000       180%
+>> 3VM           1800        3100        72%
+>>
+>> Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs,
+>> one running ebizzy -M, the other running 'stress --cpu 2':
+>>
+>> w/ boosting + w/o pv sched yield(vanilla)
+>>
+>>             vanilla     boosting   improved
+>>               1570         4000      155%
+>>
+>> w/ boosting + w/ pv sched yield(vanilla)
+>>
+>>             vanilla     boosting   improved
+>>               1844         5157      179%
+>>
+>> w/o boosting, perf top in VM:
+>>
+>>  72.33%  [kernel]       [k] smp_call_function_many
+>>   4.22%  [kernel]       [k] call_function_i
+>>   3.71%  [kernel]       [k] async_page_fault
+>>
+>> w/ boosting, perf top in VM:
+>>
+>>  38.43%  [kernel]       [k] smp_call_function_many
+>>   6.31%  [kernel]       [k] async_page_fault
+>>   6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
+>>   4.88%  [kernel]       [k] call_function_interrupt
+>>
+>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>> Cc: Radim Krčmář <rkrcmar@redhat.com>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Cc: Paul Mackerras <paulus@ozlabs.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> ---
+>> 	v2->v3: put it in kvm_vcpu_wake_up, use WRITE_ONCE
+> 
+> 
+> Looks good. Some more comments
+> 
+>>
+>>  arch/s390/kvm/interrupt.c | 2 +-
+>>  include/linux/kvm_host.h  | 1 +
+>>  virt/kvm/kvm_main.c       | 9 +++++++--
+> [...]
+> 
+>> @@ -4205,6 +4206,8 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
+>>  
+>>  	if (vcpu->preempted)
+>>  		vcpu->preempted = false;
+>> +	if (vcpu->ready)
+>> +		WRITE_ONCE(vcpu->ready, false);
+> 
+> What is the rationale of checking before writing. Avoiding writable cache line ping pong?
 
-fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0xe8f: stack state mismatch: cfa1=7+240 cfa2=7+248
-fs/reiserfs/ibalance.o: warning: objtool: internal_move_pointers_items()+0x36f: stack state mismatch: cfa1=7+152 cfa2=7+144
-fs/reiserfs/lbalance.o: warning: objtool: leaf_cut_from_buffer()+0x58b: stack state mismatch: cfa1=7+128 cfa2=7+112
-fs/reiserfs/lbalance.o: warning: objtool: leaf_copy_boundary_item()+0x7a9: stack state mismatch: cfa1=7+104 cfa2=7+96
-fs/reiserfs/lbalance.o: warning: objtool: leaf_copy_items_entirely()+0x3d2: stack state mismatch: cfa1=7+120 cfa2=7+128
-fs/reiserfs/do_balan.o: warning: objtool: replace_key()+0x158: stack state mismatch: cfa1=7+40 cfa2=7+56
-fs/reiserfs/do_balan.o: warning: objtool: balance_leaf()+0x2791: stack state mismatch: cfa1=7+176 cfa2=7+192
+I think it can be removed.  The only case where you'd have ping pong is
+when vcpu->ready is true due to kvm_vcpu_wake_up, so it's not saving
+anything.
 
-Reword this to use the regular BUG() call directly from the original code
-location, since objtool finds the generated object code more reasonable.
+>>  	kvm_arch_sched_in(vcpu, cpu);
+>>  
+>> @@ -4216,8 +4219,10 @@ static void kvm_sched_out(struct preempt_notifier *pn,
+>>  {
+>>  	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
+>>  
+>> -	if (current->state == TASK_RUNNING)
+>> +	if (current->state == TASK_RUNNING) {
+>>  		vcpu->preempted = true;
+> 
+> WOuld it make sense to also use WRITE_ONCE for vcpu->preempted ?
 
-This will likely get fixed in a future clang release, but in the meantime
-the workaround helps us build cleanly with existing releases.
-
-Link: https://groups.google.com/d/msgid/clang-built-linux/20190712135755.7qa4wxw3bfmwn5rp%40treble
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/reiserfs/prints.c   | 5 +++--
- fs/reiserfs/reiserfs.h | 5 ++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/fs/reiserfs/prints.c b/fs/reiserfs/prints.c
-index 9fed1c05f1f4..da996eaaebac 100644
---- a/fs/reiserfs/prints.c
-+++ b/fs/reiserfs/prints.c
-@@ -387,7 +387,6 @@ void __reiserfs_panic(struct super_block *sb, const char *id,
- 	else
- 		printk(KERN_WARNING "REISERFS panic: %s%s%s: %s\n",
- 		      id ? id : "", id ? " " : "", function, error_buf);
--	BUG();
- }
- 
- void __reiserfs_error(struct super_block *sb, const char *id,
-@@ -397,8 +396,10 @@ void __reiserfs_error(struct super_block *sb, const char *id,
- 
- 	BUG_ON(sb == NULL);
- 
--	if (reiserfs_error_panic(sb))
-+	if (reiserfs_error_panic(sb)) {
- 		__reiserfs_panic(sb, id, function, error_buf);
-+		BUG();
-+	}
- 
- 	if (id && id[0])
- 		printk(KERN_CRIT "REISERFS error (device %s): %s %s: %s\n",
-diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
-index e5ca9ed79e54..f5bd17ee21f6 100644
---- a/fs/reiserfs/reiserfs.h
-+++ b/fs/reiserfs/reiserfs.h
-@@ -3185,10 +3185,9 @@ void unfix_nodes(struct tree_balance *);
- 
- /* prints.c */
- void __reiserfs_panic(struct super_block *s, const char *id,
--		      const char *function, const char *fmt, ...)
--    __attribute__ ((noreturn));
-+		      const char *function, const char *fmt, ...);
- #define reiserfs_panic(s, id, fmt, args...) \
--	__reiserfs_panic(s, id, __func__, fmt, ##args)
-+	do { __reiserfs_panic(s, id, __func__, fmt, ##args); BUG(); } while (0)
- void __reiserfs_error(struct super_block *s, const char *id,
- 		      const char *function, const char *fmt, ...);
- #define reiserfs_error(s, id, fmt, args...) \
--- 
-2.20.0
+vcpu->preempted is not read/written anymore by other threads after this
+patch.
+> 
+>> +		WRITE_ONCE(vcpu->ready, true);
+>> +	}
+>>  	kvm_arch_vcpu_put(vcpu);
+>>  }
+>>  
+>>
+> 
 
