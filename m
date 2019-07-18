@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95387C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EECC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600CC20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601452053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419289;
-	bh=/NMn9Q8TUVA7ZHtuJSKbz8Iduk5jCcm0N1Py8ubBZhE=;
+	s=default; t=1563419294;
+	bh=Rco+cMlzC9IAhIErmrGsZyUHE87YUacoyF9rlYIfRL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qztlIRZ5nY1pdwSTaHQbX8BehhkjWbZivxrjuWRNbOnTZNnhlAxSu2f8A+SQAiyjM
-	 mq5on6wy+ee7rovzOmjA6ynQqu0LHwllgPWZb5xOaarYxMYkzgyrA1IlVtGAmChx+5
-	 WM0bqGz0dTgLNdLfRSzHKZX90sqe1IC41KJK0udY=
+	b=F0kI1bhRTF55TpENGuNN3p2iHHu8e/14nbarMRGLSCm2y+3LmtV3dypYlEtMUMaxd
+	 N7Mx0Z/PAwrlSiPniGYG4xldpahX+HdFTRlnjFScR1dwZqYca8LfhXlsgOX+8dRPfz
+	 rhJ1S5bKiMOKKs/dD3QLlyDNKZw4Bn/VFz7XvfBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390123AbfGRDIH (ORCPT
+        id S2390149AbfGRDIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390623AbfGRDIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:05 -0400
+        id S2390648AbfGRDIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:09 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0727E2053B;
-        Thu, 18 Jul 2019 03:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94D412077C;
+        Thu, 18 Jul 2019 03:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419285;
-        bh=/NMn9Q8TUVA7ZHtuJSKbz8Iduk5jCcm0N1Py8ubBZhE=;
+        s=default; t=1563419288;
+        bh=Rco+cMlzC9IAhIErmrGsZyUHE87YUacoyF9rlYIfRL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JYSLQh5mTzmv7/Qf92OHGubu4PmaEx81dSkcbTMYf+CdEdsBhM31uLX4NRsdUOcEA
-         +r8SfKlixqS+G5k8LZUdgd/dPGiCg/vRPosfb9iyNvtFxpw2qtrapTwBNsUqS1elsl
-         L59sVwh8tGIv8QTj2kN+BavvQAym3O6UXsPb6dVk=
+        b=LpYFFwfS1Y4BbTtszo8nu71hnaZ1AWl/bv9nZziJCW1Ps0qQMGnJY1jT8rs+5Rkr6
+         Kaz+G1MZBU+B+bzbb0dg6Cu2hm/Ef6d34rwkcTVXlCx1KY/GMxz4eEi/M0Nm8WPNA4
+         lQOqd8UIVlTMG7qJPPx1ZfDY6tkCJoRJ7wVpjWFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
-        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
+        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/47] cpu/hotplug: Fix out-of-bounds read when setting fail state
-Date:   Thu, 18 Jul 2019 12:01:41 +0900
-Message-Id: <20190718030051.034480603@linuxfoundation.org>
+Subject: [PATCH 4.19 29/47] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
+Date:   Thu, 18 Jul 2019 12:01:43 +0900
+Message-Id: <20190718030051.200640741@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -60,70 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
+[ Upstream commit 8f9fab480c7a87b10bb5440b5555f370272a5d59 ]
 
-Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
-can control `struct cpuhp_step *sp` address, results in the following
-global-out-of-bounds read.
+DIV_ROUND_UP_ULL adds the two arguments and then invokes
+DIV_ROUND_DOWN_ULL.  But on a 32bit system the addition of two 32 bit
+values can overflow.  DIV_ROUND_DOWN_ULL does it correctly and stashes
+the addition into a unsigned long long so cast the result to unsigned
+long long here to avoid the overflow condition.
 
-Reproducer:
-
-  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
-
-KASAN report:
-
-  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
-  Read of size 8 at addr ffffffff89734438 by task bash/1941
-
-  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
-  Call Trace:
-   write_cpuhp_fail+0x2cd/0x2e0
-   dev_attr_store+0x58/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f05e4f4c970
-
-  The buggy address belongs to the variable:
-   cpu_hotplug_lock+0x98/0xa0
-
-  Memory state around the buggy address:
-   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-                                          ^
-   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Add a sanity check for the value written from user space.
-
-Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: peterz@infradead.org
-Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
+[akpm@linux-foundation.org: DIV_ROUND_UP_ULL must be an rval]
+Link: http://lkml.kernel.org/r/20190625100518.30753-1-vkoul@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/kernel.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 46aefe5c0e35..d9f855cb9f6f 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1925,6 +1925,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 3d83ebb302cf..f6f94e54ab96 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -118,7 +118,8 @@
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
+ 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
  
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
+-#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
++#define DIV_ROUND_UP_ULL(ll, d) \
++	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
+ 
+ #if BITS_PER_LONG == 32
+ # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
 -- 
 2.20.1
 
