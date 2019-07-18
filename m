@@ -2,132 +2,98 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41216C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A37EC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235E62173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0779D217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563428614;
+	bh=gYp2Jk6FjA6u7NGwZZNab0rCjKuuYEFKcurXDzkIhwE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GTh10q1H1eOjMLNdhPvbJftHK5jBilS4UGJyaY/51e4Ps79+qwEO3BYKTW9qCZ7+n
+	 OwZ/1fD/vcixT6uFLQey1tbGtPwBo+NErcbobVpBe1FN8uZ/RAdDRcKbEqHtToy8D3
+	 1qg/KoIbBsDHHGhblyX54swGNgbzwwdyuAdPGWVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732928AbfGRFmS (ORCPT
+        id S1733003AbfGRFnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 01:42:18 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:57828 "EHLO deadmen.hmeau.com"
+        Thu, 18 Jul 2019 01:43:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbfGRFmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 01:42:17 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hnzB8-0007Ci-E1; Thu, 18 Jul 2019 13:42:06 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hnzB3-0005f1-MN; Thu, 18 Jul 2019 13:42:01 +0800
-Date:   Thu, 18 Jul 2019 13:42:01 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] padata: use smp_mb in padata_reorder to avoid
- orphaned padata jobs
-Message-ID: <20190718054201.jtfcwkygunyvgwe4@gondor.apana.org.au>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
- <20190716163253.24377-1-daniel.m.jordan@oracle.com>
+        id S1725959AbfGRFnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 01:43:32 -0400
+Received: from localhost.localdomain (115.42.148.210.bf.2iij.net [210.148.42.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7AE02077C;
+        Thu, 18 Jul 2019 05:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563428611;
+        bh=gYp2Jk6FjA6u7NGwZZNab0rCjKuuYEFKcurXDzkIhwE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=i8+x9a3I1RvHmXRr3SUKazCSVfaecwBSIoOOyiemH7yoHRKB3Xb9K823fNu85p0hu
+         W2Gsyt7djBUsjiUTiu01xIg8L4NPOvUg38/WJf3Ygcm2XHoo14/A/WVFVah73KhZ2Z
+         qU7k+O+JZNCsDbnvr2d/fZ7VB5kXkQHpBHLaw82I=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Dan Rue <dan.rue@linaro.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>
+Subject: [PATCH 0/3] arm64: kprobes: Fix some bugs in arm64 kprobes 
+Date:   Thu, 18 Jul 2019 14:43:26 +0900
+Message-Id: <156342860634.8565.14804606041960884732.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716163253.24377-1-daniel.m.jordan@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:32:53PM -0400, Daniel Jordan wrote:
-> Testing padata with the tcrypt module on a 5.2 kernel...
-> 
->     # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
->     # modprobe tcrypt mode=211 sec=1
-> 
-> ...produces this splat:
-> 
->     INFO: task modprobe:10075 blocked for more than 120 seconds.
->           Not tainted 5.2.0-base+ #16
->     modprobe        D    0 10075  10064 0x80004080
->     Call Trace:
->      ? __schedule+0x4dd/0x610
->      ? ring_buffer_unlock_commit+0x23/0x100
->      schedule+0x6c/0x90
->      schedule_timeout+0x3b/0x320
->      ? trace_buffer_unlock_commit_regs+0x4f/0x1f0
->      wait_for_common+0x160/0x1a0
->      ? wake_up_q+0x80/0x80
->      { crypto_wait_req }             # entries in braces added by hand
->      { do_one_aead_op }
->      { test_aead_jiffies }
->      test_aead_speed.constprop.17+0x681/0xf30 [tcrypt]
->      do_test+0x4053/0x6a2b [tcrypt]
->      ? 0xffffffffa00f4000
->      tcrypt_mod_init+0x50/0x1000 [tcrypt]
->      ...
-> 
-> The second modprobe command never finishes because in padata_reorder,
-> CPU0's load of reorder_objects is executed before the unlocking store in
-> spin_unlock_bh(pd->lock), causing CPU0 to miss CPU1's increment:
-> 
-> CPU0                                 CPU1
-> 
-> padata_reorder                       padata_do_serial
->   LOAD reorder_objects  // 0
->                                        INC reorder_objects  // 1
->                                        padata_reorder
->                                          TRYLOCK pd->lock   // failed
->   UNLOCK pd->lock
-> 
-> CPU0 deletes the timer before returning from padata_reorder and since no
-> other job is submitted to padata, modprobe waits indefinitely.
-> 
-> Add a pair of full barriers to guarantee proper ordering:
-> 
-> CPU0                                 CPU1
-> 
-> padata_reorder                       padata_do_serial
->   UNLOCK pd->lock
->   smp_mb()
->   LOAD reorder_objects
->                                        INC reorder_objects
->                                        smp_mb__after_atomic()
->                                        padata_reorder
->                                          TRYLOCK pd->lock
-> 
-> smp_mb__after_atomic is needed so the read part of the trylock operation
-> comes after the INC, as Andrea points out.   Thanks also to Andrea for
-> help with writing a litmus test.
-> 
-> Fixes: 16295bec6398 ("padata: Generic parallelization/serialization interface")
-> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Steffen Klassert <steffen.klassert@secunet.com>
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  kernel/padata.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+Hi,
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Here are the patches which fixes kprobe bugs on arm64.
+
+Naresh reported that recently ftracetest crashes kernel, and I found
+there are 3 different bugs around the crash.
+
+- Kprobes on arm64 doesn't recover pstate.D mask even if probed
+  context masks pstate.D. This causes a real kernel crash if a
+  kprobe is nested.
+- Some symbols which are called from blacklisted function, are not
+  blacklisted.
+- Debug exception handlers on arm64 is using rcu_read_lock(). This
+  doesn't crashes kernel, but kicks suspicious RCU usage warning if
+  we put kprobes on the function which is called in idle context.
+
+This series includes fixes for above bugs.
+
+Thank you,
+
+---
+
+Masami Hiramatsu (3):
+      arm64: kprobes: Recover pstate.D in single-step exception handler
+      arm64: unwind: Prohibit probing on return_address()
+      arm64: debug: Remove rcu_read_lock from debug exception
+
+
+ arch/arm64/kernel/debug-monitors.c |   14 ++++++++------
+ arch/arm64/kernel/probes/kprobes.c |    9 ++++++---
+ arch/arm64/kernel/return_address.c |    4 +++-
+ arch/arm64/kernel/stacktrace.c     |    3 +++
+ 4 files changed, 20 insertions(+), 10 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
