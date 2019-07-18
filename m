@@ -2,193 +2,199 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B41C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719F7C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0C620880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F66020880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtIMiYfp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tmbqnD9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390235AbfGRMaI (ORCPT
+        id S2390297AbfGRMa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:30:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34296 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727694AbfGRMaH (ORCPT
+        Thu, 18 Jul 2019 08:30:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44676 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727757AbfGRMa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:30:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so21405756wmd.1;
-        Thu, 18 Jul 2019 05:30:04 -0700 (PDT)
+        Thu, 18 Jul 2019 08:30:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so12840846pgl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LwpK72EqscYErdzMyBaDvvmD1dD0n7PQxg+3QoVuhP8=;
-        b=rtIMiYfpXN8AnEhAkW3UyyG4JPa7sHO2Ro2xSoe0ccWjJC7D3dex1Aw689fhS5WCIo
-         10KkC6DpqJEqE+Msmq3qbRzSegIGMUUHAwQ11Q3ZjLX6Omsqvocdj8QX1rntUG1XoMCc
-         nDjzy3PdcBwCq2MEhsuiM/vYCk6zS5M9s4gbnUxtPUDTMivhHamZM/XVGnjSC5LGGgPn
-         pY2Iidr3yRae0cO0JE/4NXianAIrSq1AeQgRl65sMvm0MLTvmW6CglD6dpPl8WS8Up3N
-         omdHA4DlCCyq4vmvIn/KdRe7Z1k4sstTIkHn4WcQYB8VwR1q4nEQ0gF8tMcVAkqoCn9x
-         DrWg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sNI/YJaWkX8UYTrYkvZcLx6RHalepOZBtGLT3HE85xM=;
+        b=tmbqnD9Z2jyZ1PMaE2PPWh8eLA6VTQPsy2gwcEbFdjZsyY5zyAV9SRbzaxoHwaECNY
+         0AY71fm67vmhf0SIMYZh4JXFJHXoa2XdYvSzAe8FRLd08zQtPNKfIcWZI14NfGUjtGul
+         x3gLQyvIHZnuN+DnL2PKDuB3Y2pluW7q6DLQDlcXTu6ery2CGb89mK9HqApYaWnFmKIo
+         V2CaMaJml90z94CKs3rAALrMAw7KNLBqaS4FVlKx63XAAVfGZK3XGC3BgeFFcaIsx2CA
+         3YBWkSiU3pAkFz4GXRgJvPji4AtwORwuoIAnfXHXdmPZUOfhDTMSTi0UPPEvQsN9F7mS
+         2AvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LwpK72EqscYErdzMyBaDvvmD1dD0n7PQxg+3QoVuhP8=;
-        b=VZNrfNwnXZDCVNuWVoZS2eVU6D9HO7vPd4qyKdjYw2mPNvpvJdmDe75pbjDlmn3S/8
-         u9ERqIjF/KDCyA5n9XdG4gJuK4SrHm9KyEA1SpW8ucGWmcTaSV16a7irsqJW+eslkUpr
-         4G/Iu0YLtvlPeJ67XITIoOkF/vP9CDuzMCKsapobGuXgvHm8Iin2fXjADe+H7spEsGJJ
-         d7CPfJdwwWRdlJsPUJ2r78/xvoN6OhPHqfRMIajGXGLIKMizNsAoFBwfLYZthaol0gt5
-         9kzxduTxb2HHtJTUO8OULPXZfq/ntnuUMybQnDH9uUDP1KVAi4bTVGH4MUrdfdtyvlTZ
-         fVlg==
-X-Gm-Message-State: APjAAAVp3P3U8J5beFryu6wQTLZbtWijpHkz8DAqDvbb9oEvvx3kI649
-        RMVl3CU1e/mJn0EjQKe779ppGWoc
-X-Google-Smtp-Source: APXvYqyCvlE7syNPeLWbPWH1ax51YnxjP01iwlIFMVhyi3S55aqj6XgWd6Lavenr59cynTzeHLc5dA==
-X-Received: by 2002:a7b:ce18:: with SMTP id m24mr41054490wmc.126.1563453003911;
-        Thu, 18 Jul 2019 05:30:03 -0700 (PDT)
-Received: from [192.168.1.19] (bkt159.neoplus.adsl.tpnet.pl. [83.28.187.159])
-        by smtp.gmail.com with ESMTPSA id i66sm45466749wmi.11.2019.07.18.05.30.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 05:30:03 -0700 (PDT)
-Subject: Re: [PATCH v4 3/4] dt-bindings: backlight: Add led-backlight binding
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
-        robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com
-Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20190717141514.21171-1-jjhiblot@ti.com>
- <20190717141514.21171-4-jjhiblot@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
- 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
- aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
- hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
- T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
- R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
- 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
- eGGiEQ==
-Message-ID: <16865fe5-cc9c-e6f5-6950-54cc70153243@gmail.com>
-Date:   Thu, 18 Jul 2019 14:30:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sNI/YJaWkX8UYTrYkvZcLx6RHalepOZBtGLT3HE85xM=;
+        b=tMoICd3jZViLdof78byTm10esNJIObl7soVA0uZXopaGDugXkkg9nYIeR4lVDHQdJl
+         r+GhsfD5rBnKpPZe3ovhcCObUIzv8+BYqlvERDBg3vikACHv84aQE1Js1LMvQiyiSMOV
+         UpamiBzbcSje/YT8GYT3MGhKS8w7VlhGaNxDATxZaVh2FZGJrCpr8Z9OK97dHhsjjs4I
+         JU7ivujfhX4QiMdkQIHjXnJ355LKwICWVqUj8tMt97lbLUlW+1GqrRjFbP86FH34l5dN
+         uwdCJhkOhMsHmRwvjaWc7C6XQM51xJur6TME9V+t2icoNo3AQyl9sqMjWoaZ4C9WgA6K
+         9whQ==
+X-Gm-Message-State: APjAAAXBOu9GvdTSvVrh7cURHHXMXiHbNruqQOoCA98SnOTdFVbyRyco
+        KUmimG6P+evktIJyZWfiN4W67kp1qQCrDtcMr/zC4V7WGYM=
+X-Google-Smtp-Source: APXvYqzwFskv0W8U7KSgufW5eWmQzcYdRC6ElGBUjTN0Tq/oISZutchUB/HHo7kibgWzx7x5hfc8+8+ufcUb5zuzjAk=
+X-Received: by 2002:a65:4b8b:: with SMTP id t11mr47271992pgq.130.1563453026280;
+ Thu, 18 Jul 2019 05:30:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190717141514.21171-4-jjhiblot@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000d06dc2058dc9f8f2@google.com>
+In-Reply-To: <000000000000d06dc2058dc9f8f2@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 18 Jul 2019 14:30:15 +0200
+Message-ID: <CAAeHK+y03vvKOnP4FpAhs7UACoDotyz-GQVZ52YEEio+D48rcQ@mail.gmail.com>
+Subject: Re: WARNING in shark_write_reg/usb_submit_urb
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc devicetree@vger.kernel.org list - Rob once informed us this gets
-higher priority in his queue this way.
+On Tue, Jul 16, 2019 at 4:17 PM Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> Hello,
+>
+> On Tue, 16 Jul 2019 03:38:05 -0700 (PDT)
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=111fc400600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=4b3f8190f6e13b3efd74
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10784148600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d826a4600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com
+> >
+> > usb 1-1: string descriptor 0 read error: -22
+> > usb 1-1: New USB device found, idVendor=077d, idProduct=627a, bcdDevice=
+> > 0.10
+> > usb 1-1: New USB device strings: Mfr=63, Product=5, SerialNumber=1
+> > ------------[ cut here ]------------
+> > usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+> > WARNING: CPU: 1 PID: 22 at drivers/usb/core/urb.c:477
+> > usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #14
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   panic+0x292/0x6c9 kernel/panic.c:219
+> >   __warn.cold+0x20/0x4b kernel/panic.c:576
+> >   report_bug+0x262/0x2a0 lib/bug.c:186
+> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+> >   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> > RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+> > Code: 4d 85 ed 74 2c e8 c8 69 e8 fd 4c 89 f7 e8 f0 c4 12 ff 41 89 d8 44 89
+> > e1 4c 89 ea 48 89 c6 48 c7 c7 60 3a 1a 86 e8 53 2e be fd <0f> 0b e9 20 f4
+> > ff ff e8 9c 69 e8 fd 4c 89 f2 48 b8 00 00 00 00 00
+> > RSP: 0018:ffff8881d9f96f58 EFLAGS: 00010282
+> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3f2ddd
+> > RBP: ffff8881cf557590 R08: ffff8881d9f88000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+> > R13: ffff8881d0c77000 R14: ffff8881d553cd20 R15: ffff8881d5123b00
+> >   usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
+> >   usb_bulk_msg+0x228/0x550 drivers/usb/core/message.c:253
+> >   shark_write_reg+0x1ef/0x2b0 drivers/media/radio/radio-shark2.c:88
+>
+> Based on
+> drivers/media/radio/radio-shark2.c:88 and
+> drivers/usb/core/message.c:245
+>
+> I say that the warning reported is bogus.
+>
+> A similar one can be found at
+> https://lore.kernel.org/lkml/CAAeHK+zO6s5zWmz_QP6HiXd81Q217X6Viua+v1HkyXiowS_2Sg@mail.gmail.com/
 
-On 7/17/19 4:15 PM, Jean-Jacques Hiblot wrote:
-> Add DT binding for led-backlight.
-> 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->  .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> new file mode 100644
-> index 000000000000..4c7dfbe7f67a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> @@ -0,0 +1,28 @@
-> +led-backlight bindings
-> +
-> +This binding is used to describe a basic backlight device made of LEDs.
-> +It can also be used to describe a backlight device controlled by the output of
-> +a LED driver.
-> +
-> +Required properties:
-> +  - compatible: "led-backlight"
-> +  - leds: a list of LEDs
-> +
-> +Optional properties:
-> +  - brightness-levels: Array of distinct brightness levels. The levels must be
-> +                       in the range accepted by the underlying LED devices.
-> +                       This is used to translate a backlight brightness level
-> +                       into a LED brightness level. If it is not provided, the
-> +                       identity mapping is used.
-> +
-> +  - default-brightness-level: The default brightness level.
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible = "led-backlight";
-> +
-> +		leds = <&led1>, <&led2>;
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <6>;
-> +	};
-> 
+Hi Hilf,
 
--- 
-Best regards,
-Jacek Anaszewski
+As I replied to you in this other thread, this report is not bogus and
+points to a missing endpoint type check in the driver. I've just made
+sure that this report is produced on a stock Linux host by using a
+hardware reproducer for this bug.
+
+Thanks!
+
+>
+> >   radio_tea5777_set_freq+0x1ed/0x470 drivers/media/radio/radio-tea5777.c:213
+> >   radio_tea5777_init+0xb7/0x600 drivers/media/radio/radio-tea5777.c:544
+> >   usb_shark_probe+0x5b9/0x740 drivers/media/radio/radio-shark2.c:318
+> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >   really_probe+0x281/0x660 drivers/base/dd.c:509
+> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >   really_probe+0x281/0x660 drivers/base/dd.c:509
+> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
+> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+> >   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2536
+> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1b3d/0x35f0 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x30b/0x410 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000d06dc2058dc9f8f2%40google.com.
+> For more options, visit https://groups.google.com/d/optout.
