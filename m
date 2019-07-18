@@ -2,109 +2,123 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA99BC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973C7C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0F021851
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563466708;
-	bh=MSb37xjaCMaGDFM4ve1baXDv5W8YHm0nchnq58zBZkc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=zlwQPeUOE/sMiefkE9ijxP3AMTGrrf6dJh7QzHGIi+0rtXmKLZyxkRSN5jgt353Yr
-	 qvl+9UvryhDc3L6PV2SOXArRwF3h7KEhmBG6rXFJWpU4R71qNFecuqpfQEIjWWJq5Q
-	 uvovoHzeVhToOuw+yDQMi2AxHXfb4rAGNLSgIJKk=
+	by mail.kernel.org (Postfix) with ESMTP id 7D24121850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbfGRQS1 (ORCPT
+        id S1732178AbfGRQSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfGRQSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:18:25 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94C4321850;
-        Thu, 18 Jul 2019 16:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563466704;
-        bh=MSb37xjaCMaGDFM4ve1baXDv5W8YHm0nchnq58zBZkc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iR2EvuCfyIr0/+yRJX9kLrPyaRPOrjzmxrwW0XecBCF3TDc1NE3n417pkcByR075N
-         syRZ/N+v2YpY3/zQivkfAJFUArdzJ3NyYdQ7oe6O9i4OgZOW62cHteM/jyLoKD4RjZ
-         OHk1oOSEhOwbMCID/0tNfcEkol6fZpvzxhTn4a9k=
-Date:   Thu, 18 Jul 2019 09:18:24 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: cleanups for 5.3
-Message-ID: <20190718161824.GE7093@magnolia>
+        Thu, 18 Jul 2019 12:18:40 -0400
+Received: from smtprelay0025.hostedemail.com ([216.40.44.25]:36818 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729774AbfGRQSk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:18:40 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 568338023D98;
+        Thu, 18 Jul 2019 16:18:38 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: deer25_684dc6a622a40
+X-Filterd-Recvd-Size: 4295
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 18 Jul 2019 16:18:36 +0000 (UTC)
+Message-ID: <db0a363fa35f1582f20e529d79927995a5512c0d.camel@perches.com>
+Subject: Re: [PATCH] crypto: aegis: fix badly optimized clang output
+From:   Joe Perches <joe@perches.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Ondrej Mosnacek <omosnacek@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Thu, 18 Jul 2019 09:18:35 -0700
+In-Reply-To: <20190718135017.2493006-1-arnd@arndb.de>
+References: <20190718135017.2493006-1-arnd@arndb.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, 2019-07-18 at 15:50 +0200, Arnd Bergmann wrote:
+> Clang sometimes makes very different inlining decisions from gcc.
+> In case of the aegis crypto algorithms, it decides to turn the innermost
+> primitives (and, xor, ...) into separate functions but inline most of
+> the rest.
 
-We had a few more lateish cleanup patches come in for 5.3 -- a couple of
-syncups with the userspace libxfs code and a conversion of the XFS
-administrator's guide to ReST format.
+> This results in a huge amount of variables spilled on the stack, leading
+> to rather slow execution as well as kernel stack usage beyond the 32-bit
+> warning limit when CONFIG_KASAN is enabled:
+> 
+> crypto/aegis256.c:123:13: warning: stack frame size of 648 bytes in function 'crypto_aegis256_encrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis256.c:366:13: warning: stack frame size of 1264 bytes in function 'crypto_aegis256_crypt' [-Wframe-larger-than=]
+> crypto/aegis256.c:187:13: warning: stack frame size of 656 bytes in function 'crypto_aegis256_decrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128l.c:135:13: warning: stack frame size of 832 bytes in function 'crypto_aegis128l_encrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128l.c:415:13: warning: stack frame size of 1480 bytes in function 'crypto_aegis128l_crypt' [-Wframe-larger-than=]
+> crypto/aegis128l.c:218:13: warning: stack frame size of 848 bytes in function 'crypto_aegis128l_decrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128.c:116:13: warning: stack frame size of 584 bytes in function 'crypto_aegis128_encrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128.c:351:13: warning: stack frame size of 1064 bytes in function 'crypto_aegis128_crypt' [-Wframe-larger-than=]
+> crypto/aegis128.c:177:13: warning: stack frame size of 592 bytes in function 'crypto_aegis128_decrypt_chunk' [-Wframe-larger-than=]
+> 
+> Forcing the primitives to all get inlined avoids the issue and the
+> resulting code is similar to what gcc produces.
 
-The branch does /not/ merge cleanly against this morning's HEAD due to a
-conflict in Documentation/admin-guide/index.rst.  The conflict can be
-resolved by adding the "xfs" line after "binderfs".  The series survived
-an overnight run of xfstests.
+Why weren't these functions in .h files
+not always marked with inline?
 
-Please let me know if you run into anything weird, I promise I drank two
-cups of coffee this time around. :)
+Are there other static non-inlined function
+definitions in .h files that should also get
+this inline/__always_inline marking?
 
---D
+I presume there are but can't think of a
+reasonable way to find them off the top of
+my head.
 
-The following changes since commit 488ca3d8d088ec4658c87aaec6a91e98acccdd54:
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  crypto/aegis.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/crypto/aegis.h b/crypto/aegis.h
+> index 41a3090cda8e..efed7251c49d 100644
+> --- a/crypto/aegis.h
+> +++ b/crypto/aegis.h
+> @@ -34,21 +34,21 @@ static const union aegis_block crypto_aegis_const[2] = {
+>  	} },
+>  };
+>  
+> -static void crypto_aegis_block_xor(union aegis_block *dst,
+> +static __always_inline void crypto_aegis_block_xor(union aegis_block *dst,
+>  				   const union aegis_block *src)
+>  {
+>  	dst->words64[0] ^= src->words64[0];
+>  	dst->words64[1] ^= src->words64[1];
+>  }
+>  
+> -static void crypto_aegis_block_and(union aegis_block *dst,
+> +static __always_inline void crypto_aegis_block_and(union aegis_block *dst,
+>  				   const union aegis_block *src)
+>  {
+>  	dst->words64[0] &= src->words64[0];
+>  	dst->words64[1] &= src->words64[1];
+>  }
+>  
+> -static void crypto_aegis_aesenc(union aegis_block *dst,
+> +static __always_inline void crypto_aegis_aesenc(union aegis_block *dst,
+>  				const union aegis_block *src,
+>  				const union aegis_block *key)
+>  {
 
-  xfs: chain bios the right way around in xfs_rw_bdev (2019-07-10 10:04:16 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.3-merge-13
-
-for you to fetch changes up to 89b408a68b9dd163b2705b6f73d8e3cc3579b457:
-
-  Documentation: filesystem: Convert xfs.txt to ReST (2019-07-15 09:15:09 -0700)
-
-----------------------------------------------------------------
-Also new for 5.3:
-- Bring fs/xfs/libxfs/xfs_trans_inode.c in sync with userspace libxfs.
-- Convert the xfs administrator guide to rst and move it into the
-  official admin guide under Documentation
-
-----------------------------------------------------------------
-Eric Sandeen (2):
-      xfs: move xfs_trans_inode.c to libxfs/
-      xfs: sync up xfs_trans_inode with userspace
-
-Sheriff Esseson (1):
-      Documentation: filesystem: Convert xfs.txt to ReST
-
- Documentation/admin-guide/index.rst                |   1 +
- .../{filesystems/xfs.txt => admin-guide/xfs.rst}   | 132 ++++++++++-----------
- Documentation/filesystems/dax.txt                  |   2 +-
- MAINTAINERS                                        |   3 +-
- fs/xfs/Makefile                                    |   4 +-
- fs/xfs/{ => libxfs}/xfs_trans_inode.c              |   4 +
- 6 files changed, 73 insertions(+), 73 deletions(-)
- rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (80%)
- rename fs/xfs/{ => libxfs}/xfs_trans_inode.c (96%)
