@@ -2,171 +2,100 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D18C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D37C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2172173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513152173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="s/VtYSLz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9oXHnjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731647AbfGRCUw (ORCPT
+        id S1733158AbfGRCVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 22:20:52 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:51549 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfGRCUw (ORCPT
+        Wed, 17 Jul 2019 22:21:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40590 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfGRCVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 22:20:52 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6I2KY5k014174
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 11:20:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6I2KY5k014174
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563416435;
-        bh=tkHvMLjjjDHqsY1NCUmploWB82ITvFQnTe0kWRfY618=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=s/VtYSLzYI8pZl0VRgeXLT4YVj2lKkT54FPRnAHyYMnb1IwjXkrAEGQk51yYDcvZR
-         ci6S670X0uREaPAWNYuRz9/dT1w0annFJIRdupnNJsZLbh/0Mz7QeDK2N9T3fpuiYN
-         guzzZpu3sE/X+h5RwPN87hupPUkbKq/k2mYy+9UWJDga/JCfqv6gBfMrPPOAcy5jqg
-         qBUKhs908QTECo00p7NTF4XCndSgyyr5B16nwH0nTlygEM78CNm7otDQxf95/M1pNp
-         3Gc6D8tv66TbRR/waBE3GassIOWVZV++ihnyQPtYkXU0NefbrQdwcvQJ0xYSp+NieV
-         sEdkVEVS6Koig==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id c4so10508716uad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 19:20:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAUNaK8IcQFhUyzB35qjG06Q6SSM64ENlhaTKdPGm4BwHEQh5+Ab
-        /NIfSVjQbYeW64YzgYzAE96CVlTka9RJYTmO0eM=
-X-Google-Smtp-Source: APXvYqyDs8leywH3J63QVoya2xfCFpz3DtNeYlTeZ0uBmpp+YteurwkLd/rG1cd0yyBPuSLAqAEd7Ze7wSrtjyiiTDM=
-X-Received: by 2002:ab0:70d9:: with SMTP id r25mr3602900ual.109.1563416434430;
- Wed, 17 Jul 2019 19:20:34 -0700 (PDT)
+        Wed, 17 Jul 2019 22:21:17 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so12988539pla.7;
+        Wed, 17 Jul 2019 19:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=p+LjhuKBh7nce7Y+lpAKDWjlvBnJG3DCGoCsO8czRPA=;
+        b=V9oXHnjNRMBPoc/XZ7mKAQDwsYqQUg+QzF44fwuMzKNaE/56hg24mSLhmd664iXS9I
+         neugAspe7T7CagYX5h6Ixx3fe1uNSe3YrHuB0qX3WFpMsFA2UISxh6CAP9x8dvMXDojZ
+         t0oSgQByNbYb75yFM3KQX8k14t4whJDqU345lKoxnTVLWFOWBjKkCGSndn0xClnFq6aL
+         jitefDyI/BkvVvS/W/2S1BJI/JIvov1c+1HpIIx0wwlqqe1HkREbWDVBmlCFswOqhAG4
+         bsSAYAit3ogE8QbRKSx1J9K+jIC7elr4KpX9LEw7nWrd1WHl1FmuXAGyBj2YH+WUvKD/
+         aQfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=p+LjhuKBh7nce7Y+lpAKDWjlvBnJG3DCGoCsO8czRPA=;
+        b=UzXmQJxIlroKhhHlznebwDWbPR1HdowpNL59hilcXcF8DUJqysDo4A6iuNyXkolwiL
+         zL6R1IjDqDyz6JTp+CaDyYaLxOR5tyaTXaQzz2eNMI1sFtE4N7VbjR2CdjlfRFvcFAYf
+         +KuMkX/rRgNEVNuxZaGOaZajx0wzmmNm0UUlZgvk1z6eVJYBW+mYBs4C+Neia6lehb9R
+         ow6Vkcjqkj+k8T3u0oN1W2eJu43b5i1webd992efWl2EIu3O09ANouRRpaP/qtqwQW7+
+         Xru8EzK5Z00DDkjrPdng2H2D8OsQ88tfw+cDQxQZ1/ETdPPSdo8jnWS0cB9SQThRqQoz
+         Z6Sw==
+X-Gm-Message-State: APjAAAXagb5GxGU33KsVUxz34K88wVFXTtdH/BTxPS7pw7R3TLmTRDJ2
+        UjyOfN6e4XWdb1xnFw/nV+8=
+X-Google-Smtp-Source: APXvYqzhp9UNPhJLbPgEiS9emIzKfx6Lb59KI+5aqhHAwWjsr4RjI3qsDA6KHINu5FC8UZj2ZDrZUw==
+X-Received: by 2002:a17:902:59c3:: with SMTP id d3mr45913396plj.22.1563416476874;
+        Wed, 17 Jul 2019 19:21:16 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id q69sm39143218pjb.0.2019.07.17.19.21.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 19:21:16 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 07:51:10 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: dsa: sja1105: Release lock in error case
+Message-ID: <20190718022110.GA19222@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190713032106.8509-1-yamada.masahiro@socionext.com>
- <20190713124744.GS14074@gate.crashing.org> <20190713131642.GU14074@gate.crashing.org>
- <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com>
- <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au>
- <20190715072959.GB20882@gate.crashing.org> <87pnma89ak.fsf@concordia.ellerman.id.au>
- <20190717143811.GL20882@gate.crashing.org> <CAK7LNATesRrJFGZQOkTY+PL7FNyub5FJ0N6NF4s6icdXdPNr+Q@mail.gmail.com>
- <20190717164628.GN20882@gate.crashing.org>
-In-Reply-To: <20190717164628.GN20882@gate.crashing.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 18 Jul 2019 11:19:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR7jkq1fAi_=xgsANCkgP2AAej9Yv7RZB3B_cpD7C_71Q@mail.gmail.com>
-Message-ID: <CAK7LNAR7jkq1fAi_=xgsANCkgP2AAej9Yv7RZB3B_cpD7C_71Q@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 1:46 AM Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
->
-> On Thu, Jul 18, 2019 at 12:19:36AM +0900, Masahiro Yamada wrote:
-> > On Wed, Jul 17, 2019 at 11:38 PM Segher Boessenkool
-> > <segher@kernel.crashing.org> wrote:
-> > >
-> > > On Tue, Jul 16, 2019 at 10:15:47PM +1000, Michael Ellerman wrote:
-> > > > Segher Boessenkool <segher@kernel.crashing.org> writes:
-> > > > And it's definitely calling ar with no flags, eg:
-> > > >
-> > > >   rm -f init/built-in.a; powerpc-linux-ar rcSTPD init/built-in.a init/main.o init/version.o init/do_mounts.o init/do_mounts_rd.o init/do_mounts_initrd.o init/do_mounts_md.o init/initramfs.o init/init_task.o
-> > >
-> > > This uses thin archives.  Those will work fine.
-> > >
-> > > The failing case was empty files IIRC, stuff created from no inputs.
-> >
-> > Actually, empty files are created everywhere.
->
-> >        cmd_ar_builtin = rm -f $@; $(AR) rcSTP$(KBUILD_ARFLAGS) $@
-> > $(real-prereqs)
->
-> You use thin archives.
->
-> Does every config use thin archives always nowadays?
+This patch adds release of unlock in fail case.
 
-Kbuild always uses thin archives as far as vmlinux is concerned.
+Issue identified by coccicheck
 
-But, there are some other call-sites.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ net/dsa/tag_sja1105.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-masahiro@pug:~/ref/linux$ git grep  '$(AR)' -- :^Documentation :^tools
-arch/powerpc/boot/Makefile:    BOOTAR := $(AR)
-arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBC_A) $(notdir $@) > $@
-arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBGCC_A) $(notdir $@) > $@
-lib/raid6/test/Makefile:         $(AR) cq $@ $^
-scripts/Kbuild.include:ar-option = $(call try-run, $(AR) rc$(1)
-"$$TMP",$(1),$(2))
-scripts/Makefile.build:      cmd_ar_builtin = rm -f $@; $(AR)
-rcSTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
-scripts/Makefile.lib:      cmd_ar = rm -f $@; $(AR)
-rcsTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
-
-
-Probably, you are interested in arch/powerpc/boot/Makefile.
-This does not seem a thin archive.
-
-
-> > BTW, your commit 8995ac8702737147115e1c75879a1a2d75627b9e
-> > dates back to 2008.
-> >
-> > At that time, thin archive was not used.
->
-> Yes, I know.  This isn't about built-in.[oa], it is about *other*
-> archives we at least *used to* create.  If we *know* we do not anymore,
-> then this workaround can of course be removed (and good riddance).
-
-If it is not about built-in.[oa],
-which archive are you talking about?
-
-Can you pin-point the one?
-
-masahiro@pug:~/ref/linux$ git log --oneline  -1
-8995ac870273 (HEAD) [POWERPC] Specify GNUTARGET on $(AR) invocations
-masahiro@pug:~/ref/linux$ git grep '(AR)'
-Documentation/kbuild/makefiles.txt:     per-directory options to $(LD)
-and $(AR).
-arch/powerpc/Makefile:CROSS32AR := GNUTARGET=elf32-powerpc $(AR)
-arch/powerpc/Makefile:override AR       := GNUTARGET=elf$(SZ)-powerpc $(AR)
-drivers/md/raid6test/Makefile:   $(AR) cq $@ $^
-scripts/Makefile.build:               rm -f $@; $(AR) rcs $@)
-scripts/Makefile.build:cmd_link_l_target = rm -f $@; $(AR)
-$(EXTRA_ARFLAGS) rcs $@ $(lib-y)
-masahiro@pug:~/ref/linux$ git grep '(CROSS32AR)'
-arch/powerpc/boot/Makefile:      cmd_bootar = $(CROSS32AR) -cr $@.$$$$
-$(filter-out FORCE,$^); mv $@.$$$$ $@
-
-
-
-> If ar creates an archive file (a real one, not a thin archive), and it
-> has no input files, it uses its default object format as destination
-> format, if it isn't told to use something else.  And that doesn't work,
-> it needs to use some format compatible with what that archive later is
-> linked with.
-
-I compile-tested v4.10, which was before the thin-archive migration,
-but I did not see any problem for building ppc32/64.
-
-Whether or not it is a thin archive,
-an empty archive is always 8-byte file.
-
-masahiro@pug:~/ref/linux$ cat kernel/livepatch/built-in.o
-!<arch>
-
-Is there a room for caring about the under-lying architecture?
-
-
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index 1d96c9d..26363d7 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -216,6 +216,7 @@ static struct sk_buff
+ 		if (!skb) {
+ 			dev_err_ratelimited(dp->ds->dev,
+ 					    "Failed to copy stampable skb\n");
++			spin_unlock(&sp->data->meta_lock);
+ 			return NULL;
+ 		}
+ 		sja1105_transfer_meta(skb, meta);
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
