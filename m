@@ -2,53 +2,53 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5811C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8250C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2F520818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B157721841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420209;
-	bh=1E5KVj4G0WL07FDo69IxQG3sTxcw9QLYL/zcBouUFYM=;
+	s=default; t=1563420211;
+	bh=v0pOiJG1mOvtjYpbErT3N6sGzx26BLv+XJTj6VVqERc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ygENoNocHAJj6Lzop9j3j3WQR69hLXacB2M5Jl4x5YRvF4jeqGAdp3kQ9v9CmdygV
-	 43nijAsWJ28xJG3aqqOFo+kkBKX1NS90loK6pxRObYirzhUmslTuToJ5NAHSXIUhnL
-	 vaEJs2mMkrJyVoYx+1SFv+uvFzA+DLGJJWKruMNY=
+	b=JKnQVt0SxZqJzXFHBrvGpt+KhG8qPasrtUynLk4NUYqY2OBXHPFblBrqR3kSCYq88
+	 tY/obq9EC/ZXYTv9M2XBKVjVNc4xxqyM1nzqZQ+bZqybk1oHjAwSKBA2e2INmDdITp
+	 gzqpiAn9GD86jv9qQtvYO2DcU50VgcYs9GJpwO/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390629AbfGRDIG (ORCPT
+        id S2390020AbfGRDIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39888 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390601AbfGRDID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:03 -0400
+        id S2390595AbfGRDIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:02 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64342173E;
-        Thu, 18 Jul 2019 03:08:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D61D02053B;
+        Thu, 18 Jul 2019 03:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419283;
-        bh=1E5KVj4G0WL07FDo69IxQG3sTxcw9QLYL/zcBouUFYM=;
+        s=default; t=1563419281;
+        bh=v0pOiJG1mOvtjYpbErT3N6sGzx26BLv+XJTj6VVqERc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vW1BUyzpUHAyNzxAkcyy51r9IcsQSzvJHu/JSU0QtnSMg1PBn4SM468DYoOXoJGYV
-         c/zRboBOFagw42IwBhP3Bwbk3PmWXZ51uj446chwqEUBPLt69unTOyX9uIScHX62Qf
-         cXqN5iXh3L7FeVAAp4sEZ7CTFZSlpo8i+YUzDN40=
+        b=GiSpIIGY9q9fFlVoggV5IaitlU636xftM89VqImaUzvT5J/0pXFu609JZvVUnydRe
+         Cbw8cBG5PiU7aeUZu5Ptj0fnqrCAGUSTSBlHIt6QPy01fPoW53C3p0J/bDQ3gek43y
+         r8DyZw0AociDHqajRmQ0028O6E5br4FLp0sUSov0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 44/47] drm/udl: introduce a macro to convert dev to udl.
-Date:   Thu, 18 Jul 2019 12:01:58 +0900
-Message-Id: <20190718030052.482745174@linuxfoundation.org>
+        stable@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>,
+        Jinyoung Park <jinyoungp@nvidia.com>,
+        Venkat Reddy Talla <vreddytalla@nvidia.com>,
+        Mark Zhang <markz@nvidia.com>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 43/47] regmap-irq: do not write mask register if mask_base is zero
+Date:   Thu, 18 Jul 2019 12:01:57 +0900
+Message-Id: <20190718030052.402102574@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -61,157 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit fd96e0dba19c53c2d66f2a398716bb74df8ca85e upstream.
+From: Mark Zhang <markz@nvidia.com>
 
-This just makes it easier to later embed drm into udl.
+commit 7151449fe7fa5962c6153355f9779d6be99e8e97 upstream.
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405031715.5959-3-airlied@gmail.com
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If client have not provided the mask base register then do not
+write into the mask register.
+
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Signed-off-by: Jinyoung Park <jinyoungp@nvidia.com>
+Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Signed-off-by: Mark Zhang <markz@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/udl/udl_drv.h  |  2 ++
- drivers/gpu/drm/udl/udl_fb.c   | 10 +++++-----
- drivers/gpu/drm/udl/udl_gem.c  |  2 +-
- drivers/gpu/drm/udl/udl_main.c | 12 ++++++------
- 4 files changed, 14 insertions(+), 12 deletions(-)
+ drivers/base/regmap/regmap-irq.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/udl/udl_drv.h b/drivers/gpu/drm/udl/udl_drv.h
-index 4ae67d882eae..b3e08e876d62 100644
---- a/drivers/gpu/drm/udl/udl_drv.h
-+++ b/drivers/gpu/drm/udl/udl_drv.h
-@@ -71,6 +71,8 @@ struct udl_device {
- 	atomic_t cpu_kcycles_used; /* transpired during pixel processing */
- };
- 
-+#define to_udl(x) ((x)->dev_private)
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -91,6 +91,9 @@ static void regmap_irq_sync_unlock(struc
+ 	 * suppress pointless writes.
+ 	 */
+ 	for (i = 0; i < d->chip->num_regs; i++) {
++		if (!d->chip->mask_base)
++			continue;
 +
- struct udl_gem_object {
- 	struct drm_gem_object base;
- 	struct page **pages;
-diff --git a/drivers/gpu/drm/udl/udl_fb.c b/drivers/gpu/drm/udl/udl_fb.c
-index dd9ffded223b..590323ea261f 100644
---- a/drivers/gpu/drm/udl/udl_fb.c
-+++ b/drivers/gpu/drm/udl/udl_fb.c
-@@ -82,7 +82,7 @@ int udl_handle_damage(struct udl_framebuffer *fb, int x, int y,
- 		      int width, int height)
- {
- 	struct drm_device *dev = fb->base.dev;
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int i, ret;
- 	char *cmd;
- 	cycles_t start_cycles, end_cycles;
-@@ -210,7 +210,7 @@ static int udl_fb_open(struct fb_info *info, int user)
- {
- 	struct udl_fbdev *ufbdev = info->par;
- 	struct drm_device *dev = ufbdev->ufb.base.dev;
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 
- 	/* If the USB device is gone, we don't accept new opens */
- 	if (drm_dev_is_unplugged(udl->ddev))
-@@ -441,7 +441,7 @@ static void udl_fbdev_destroy(struct drm_device *dev,
- 
- int udl_fbdev_init(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int bpp_sel = fb_bpp;
- 	struct udl_fbdev *ufbdev;
- 	int ret;
-@@ -480,7 +480,7 @@ int udl_fbdev_init(struct drm_device *dev)
- 
- void udl_fbdev_cleanup(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	if (!udl->fbdev)
- 		return;
- 
-@@ -491,7 +491,7 @@ void udl_fbdev_cleanup(struct drm_device *dev)
- 
- void udl_fbdev_unplug(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	struct udl_fbdev *ufbdev;
- 	if (!udl->fbdev)
- 		return;
-diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
-index bb7b58407039..3b3e17652bb2 100644
---- a/drivers/gpu/drm/udl/udl_gem.c
-+++ b/drivers/gpu/drm/udl/udl_gem.c
-@@ -203,7 +203,7 @@ int udl_gem_mmap(struct drm_file *file, struct drm_device *dev,
- {
- 	struct udl_gem_object *gobj;
- 	struct drm_gem_object *obj;
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int ret = 0;
- 
- 	mutex_lock(&udl->gem_lock);
-diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
-index 19055dda3140..09ce98113c0e 100644
---- a/drivers/gpu/drm/udl/udl_main.c
-+++ b/drivers/gpu/drm/udl/udl_main.c
-@@ -29,7 +29,7 @@
- static int udl_parse_vendor_descriptor(struct drm_device *dev,
- 				       struct usb_device *usbdev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	char *desc;
- 	char *buf;
- 	char *desc_end;
-@@ -165,7 +165,7 @@ void udl_urb_completion(struct urb *urb)
- 
- static void udl_free_urb_list(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int count = udl->urbs.count;
- 	struct list_head *node;
- 	struct urb_node *unode;
-@@ -198,7 +198,7 @@ static void udl_free_urb_list(struct drm_device *dev)
- 
- static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	struct urb *urb;
- 	struct urb_node *unode;
- 	char *buf;
-@@ -262,7 +262,7 @@ static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
- 
- struct urb *udl_get_urb(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int ret = 0;
- 	struct list_head *entry;
- 	struct urb_node *unode;
-@@ -295,7 +295,7 @@ struct urb *udl_get_urb(struct drm_device *dev)
- 
- int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int ret;
- 
- 	BUG_ON(len > udl->urbs.size);
-@@ -370,7 +370,7 @@ int udl_drop_usb(struct drm_device *dev)
- 
- void udl_driver_unload(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 
- 	drm_kms_helper_poll_fini(dev);
- 
--- 
-2.20.1
-
+ 		reg = d->chip->mask_base +
+ 			(i * map->reg_stride * d->irq_reg_stride);
+ 		if (d->chip->mask_invert) {
+@@ -526,6 +529,9 @@ int regmap_add_irq_chip(struct regmap *m
+ 	/* Mask all the interrupts by default */
+ 	for (i = 0; i < chip->num_regs; i++) {
+ 		d->mask_buf[i] = d->mask_buf_def[i];
++		if (!chip->mask_base)
++			continue;
++
+ 		reg = chip->mask_base +
+ 			(i * map->reg_stride * d->irq_reg_stride);
+ 		if (chip->mask_invert)
 
 
