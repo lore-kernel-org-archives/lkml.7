@@ -2,177 +2,108 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA61C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08E7C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EC22173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wPOnKLug"
+	by mail.kernel.org (Postfix) with ESMTP id B9C6B2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfGRIa7 (ORCPT
+        id S2389214AbfGRIeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:30:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42624 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfGRIa7 (ORCPT
+        Thu, 18 Jul 2019 04:34:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54488 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbfGRIeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:30:59 -0400
-Received: by mail-lf1-f66.google.com with SMTP id s19so18560635lfb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J5aa8e3384tNR0ek0YeLuPV1EaI/aSRXIrr9YhtkCxY=;
-        b=wPOnKLugFPVGfuWHSTREC0xYuOzkIyzMgszm6xTuIO0tAhxGi3uo8o8lA7KFYA7KZY
-         DQtK3Was3TBNh2aD4gGFAdN63bLLlKi9wYJ863WnNN7KEr4kpR6WW5/oIcXulbixHSMR
-         zboREA6o5FCPwDOk2uyxyEoGIYCWLIHCDqnOKCwZ30JueiIVZfYbGaEU+RQfJ3JYjQ5H
-         mlaCKKmXlwJ3yknviw27OXzsau7PlGlVD6RpHlqeuncUxShwoZmDFNxkwLI4wYoMXmzB
-         UX1INuhjo7DL3lCSs9IepIz0ti35rqm625q52L2SXYjr3heEcMKnq5cEuEM6xDydyADQ
-         iAxQ==
+        Thu, 18 Jul 2019 04:34:08 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so24654059wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:34:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J5aa8e3384tNR0ek0YeLuPV1EaI/aSRXIrr9YhtkCxY=;
-        b=M9vCFYOJu0dPQ12ONGsNw5vi/7i1rKKb+GQNiSb/ZL/YgH1EqMdsKYMNUG4p3wQqMQ
-         PuebNhRHC6asJW6CNcbU8qwLCEEdFVUi5FEhsutgCT3VHnwrQSL1InDBHpHZYyLIRETp
-         e+hLQd5LjR+9cnQNkT7xOLK7/uep4rconM7MxA/YOX/nWW6UsX57qoKW+LYltyAbjnQ5
-         rUSQEAdiVeZyIgGjYMHoGFCPevi/pAs0uSPUJwzS/K3qN5SWMHp4kF9v0Gwu+FaUBFKK
-         r7ZPfHXGtzUelpNgfGgY936o7gNZ3LCTtuMO3GmTGI/28J7b7C48mTAXSU2LwBJYClKc
-         I0FQ==
-X-Gm-Message-State: APjAAAVoj9VkfumTnfWWBJKNKpz6nrf14JjALSShm+KsPRl8ILcJ5o84
-        B48X6M3KhNTsoC0R9w4eyggVTMIlFJ/RzJ6Gm8p6JtxxT8U=
-X-Google-Smtp-Source: APXvYqzJh0bC8WKR0g/rTExNwC0rD/6THHHnA1RoZujx16QeZzf98rB/fUVwN+9tXXo17Wc8BGs/MkTfy3ldTMS1mAU=
-X-Received: by 2002:a19:5218:: with SMTP id m24mr3015628lfb.164.1563438656845;
- Thu, 18 Jul 2019 01:30:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oyQnxgvW48MflIIGvDKgphM3U+A4nQhpaY8n8J3JEU8=;
+        b=IGlNY68r6mjDPg5fK/Fzlt8tpPoBZn1wFWpmDjNzUY96U07/D5JH4jqsfuEqATIPAW
+         WD/hZzFuM++6rpCppgArb3MMYB02ykee9lCu/F+6/gVXMbM8e9H/FyNJbYLbFSvsxFt3
+         4k/wHVOdL/5+98T1o2flFctTZMh2+M1wbtW6WvUxRCUSiv3jDAjAsOvB5lPa8QlAZw5Z
+         8KwTIIUOv2tRf9H+drjmnISF/B48tXWa1pT5AcrKjgvbXas9ReCi6C3I8a0RdzjvgQs2
+         aSUR1R4zAMw/BZpK5mSj8X0CPoRfCq3BvUUhCxbAoz5K125cu6HSmtRcLkYA0fcii0fd
+         /yTQ==
+X-Gm-Message-State: APjAAAUu1jojVFJ6Pwcy8kDf6Gsuk/exkM869bv+GrVKqV5hBg7mZnzY
+        KGg+UkeVmF3qTLPEn0FVBvHkHXJgTunwzw==
+X-Google-Smtp-Source: APXvYqxkdaslaXuIOrStTxZXg88Np8F8FRCcSBEQh5L+2SsEztfofLT+uhyL1VDV8EDLffiZ4NpMUg==
+X-Received: by 2002:a1c:44d7:: with SMTP id r206mr42116191wma.164.1563438846134;
+        Thu, 18 Jul 2019 01:34:06 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
+        by smtp.gmail.com with ESMTPSA id p18sm24776435wrm.16.2019.07.18.01.34.05
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 01:34:05 -0700 (PDT)
+Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
+ <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com>
+ <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <e31024e4-f437-becd-a9e3-e1ea8cd2e0c7@redhat.com>
+Date:   Thu, 18 Jul 2019 10:34:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190718030048.392549994@linuxfoundation.org>
-In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 18 Jul 2019 14:00:45 +0530
-Message-ID: <CA+G9fYtNHw-xQu5_R8Kp1yPT5s0xD5NKYJ4x4XP9q9q04tvdvA@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/54] 4.9.186-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 at 08:42, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.186 release.
-> There are 54 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.186-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On 18/07/19 10:15, Christian Borntraeger wrote:
+> 
+> 
+> On 18.07.19 09:59, Paolo Bonzini wrote:
+>> On 12/07/19 09:15, Wanpeng Li wrote:
+>>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+>>> index b4ab59d..2c46705 100644
+>>> --- a/virt/kvm/kvm_main.c
+>>> +++ b/virt/kvm/kvm_main.c
+>>> @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
+>>>  	int me;
+>>>  	int cpu = vcpu->cpu;
+>>>  
+>>> -	if (kvm_vcpu_wake_up(vcpu))
+>>> +	if (kvm_vcpu_wake_up(vcpu)) {
+>>> +		vcpu->preempted = true;
+>>>  		return;
+>>> +	}
+>>>  
+>>>  	me = get_cpu();
+>>>  	if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
+>>>
+>>
+>> Who is resetting vcpu->preempted to false in this case?  This also
+>> applies to s390 in fact.
+> 
+> Isnt that done by the sched_in handler?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I am a bit confused because, if it is done by the sched_in later, I
+don't understand why the sched_out handler hasn't set vcpu->preempted
+already.
 
-Summary
-------------------------------------------------------------------------
+The s390 commit message is not very clear, but it talks about "a former
+sleeping cpu" that "gave up the cpu voluntarily".  Does "voluntarily"
+that mean it is in kvm_vcpu_block?  But then at least for x86 it would
+be after vcpu_load so the preempt notifiers have been registered, and
+for s390 too (kvm_arch_vcpu_ioctl_run -> __vcpu_run -> vcpu_post_run ->
+kvm_handle_sie_intercept etc.).
 
-kernel: 4.9.186-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 0bfad9234a3a02e29c02d95e2c48f4f3aa86df8f
-git describe: v4.9.185-55-g0bfad9234a3a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.185-55-g0bfad9234a3a
-
-
-No regressions (compared to build v4.9.185)
-
-No fixes (compared to build v4.9.185)
-
-Ran 23690 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* prep-tmp-disk
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Paolo
