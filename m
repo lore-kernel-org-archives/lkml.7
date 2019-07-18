@@ -2,160 +2,177 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E193C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59778C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD9521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF1D2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pqmyfLvx"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="P85kKbAz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbfGRRmA (ORCPT
+        id S2389890AbfGRRmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:42:00 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14640 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfGRRl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:41:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d30af630001>; Thu, 18 Jul 2019 10:41:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 18 Jul 2019 10:41:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 10:41:57 -0700
-Received: from [10.110.103.56] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
- 2019 17:41:56 +0000
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-CC:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
- <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
- <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
- <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
- <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
- <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
- <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
- <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
- <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
- <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
- <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
- <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
- <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
- <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
- <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
- <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
- <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
- <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
-Message-ID: <419e1b16-683e-1b56-7334-50d87368c1b9@nvidia.com>
-Date:   Thu, 18 Jul 2019 10:41:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Jul 2019 13:42:24 -0400
+Received: from mail-eopbgr800041.outbound.protection.outlook.com ([40.107.80.41]:54228
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728014AbfGRRmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:42:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=drFoWFi3QIdUpTZPJN6g7kpRgJDTiQ15e9nNHzkX5BrZIj9vjaijqrVtlFO+aYcNIXWIMdb9mh7uQJ9k6WHsb/MzEhdhDLRRmdF3J6SnCcX0lgI2hnUP26uyLDq1sEXtWv+9HlftrIBJSj5Vx9W76yR8gFz+8f/vUsGxOSJXxvgOYuVU65/VDbGhAOmGg9iTnqvTPJoek2f7xTfoeL99pUZ+ytJA9NBs6MI4Cw6RaGLTPWIzKkwIftuVBM2bb+S/6N67GndU+NSt5iW7z8eDUwKCBCzHSuUD8Qg0B8Wtp73U8Vl86afpCvLL9OlqqJhr+L5Q2mSmrvRhVptNgH3K9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pvk/f5VP0rQP3go5PWBd23rYzHqqAjPoZM7BgH7OsRg=;
+ b=FUSce7XoDf6mdHF6tu5IhCykss2dSi3QaGahJBFmZLJQEMeYkK5qw0wsFXYh1jVQK6KlLtMU54ZIB+ozhYnhnbjk0GCoiJ9x2k08WRZb8/QHhE4cL3/fP3MSL40M1G0RnJyYAv+qey5pltwFxlQB1R/ee6yRebmHsM95wpiUB+tlrpC/dTOwQ2hoEDXE4mjP01X/jrx9q5P+EYeHF8RPIgGQJLFe1o0OjDEJhS4VH3skwHTSFBtrkf78gSMhkcWrgv1ADi30TeDsjXYmBsITqQKHq4lco8GuoD3ZtvHQA8Mv4MFfUzTGAyI0VI8ijQzx1Z6iWigoidAQZLmgkzfiBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pvk/f5VP0rQP3go5PWBd23rYzHqqAjPoZM7BgH7OsRg=;
+ b=P85kKbAze8Sv72t8t6NNr09QWiw7qxaEeuSPjmMETZcQIviw3tRabQbnOAoZUnHz/zSSEQUKFHrpN4uA/U5q03yb0r/TqE7xAWL1FgGinqlfbVvKVzHCL+XYsYBzlPOK1N29u9/3CE5vfSaxH14j46wD6bAdV951g/3q1Npeuyw=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB4155.namprd12.prod.outlook.com (10.141.8.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.11; Thu, 18 Jul 2019 17:42:19 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
+ 17:42:19 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH v3 4/6] x86,s390/mm: Move sme_active() and sme_me_mask to
+ x86-specific header
+Thread-Topic: [PATCH v3 4/6] x86,s390/mm: Move sme_active() and sme_me_mask to
+ x86-specific header
+Thread-Index: AQHVPRkIrZFaM8Ikf0iyeedsy3NkD6bQphUA
+Date:   Thu, 18 Jul 2019 17:42:18 +0000
+Message-ID: <cf48e778-130a-df2a-d94b-170bd85d692c@amd.com>
+References: <20190718032858.28744-1-bauerman@linux.ibm.com>
+ <20190718032858.28744-5-bauerman@linux.ibm.com>
+In-Reply-To: <20190718032858.28744-5-bauerman@linux.ibm.com>
+Accept-Language: en-US
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563471715; bh=QDI5IqDp9suDRjNaAkUm8piJMHGnuMn5yRUtK5Yo2lI=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=pqmyfLvxFnfQ1aktHQK/J4AcWiSwU2R+a0KUdxArWu+4aFuEhJ0+cMjBL4vne6j7N
-         BruO6PUAtR/Coz64r22DvkTXeSDlJ9rySclJ/lWtpY+RTwKemflJv5YKTd3tooz10V
-         mkT49WPy0DlDRQiXX7Q7Sn7W4F/6VFLznxSc3yyektij5D6JVy/npmshn3kVId1LK4
-         8lQA7j6tOn/pL2oa6ZA/h2k/HPtWeHWXeb0cj12w+MK2AS/AG3iF63AVBx94tUX9az
-         h1JPxGQnub4ozmyGa3gdASyEeinSrJWBVPNlW1a/RKiqmrk0qxLmBDMpJmzQaSjZZI
-         b6TF+5P/SojHw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0601CA0011.namprd06.prod.outlook.com
+ (2603:10b6:803:2f::21) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e2f5b774-a586-49e3-bac1-08d70ba747c9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB4155;
+x-ms-traffictypediagnostic: DM6PR12MB4155:
+x-microsoft-antispam-prvs: <DM6PR12MB4155B4A78E4C1B6E78FB1125ECC80@DM6PR12MB4155.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(199004)(189003)(8676002)(2501003)(478600001)(3846002)(6116002)(36756003)(71200400001)(66446008)(7736002)(66556008)(66476007)(64756008)(66946007)(81166006)(81156014)(66066001)(305945005)(71190400001)(7416002)(6512007)(8936002)(6246003)(6486002)(53936002)(68736007)(6436002)(6506007)(2616005)(2906002)(76176011)(53546011)(446003)(110136005)(256004)(5660300002)(54906003)(11346002)(316002)(4326008)(476003)(486006)(25786009)(31696002)(186003)(86362001)(102836004)(26005)(31686004)(386003)(229853002)(52116002)(14454004)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4155;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: aMBv+p0O8PA0MM8nKZUp/HxXHBQnrfAOt9MtrdR2SoniYa4Cz1m0lGkDQYde+tILo4j8ju8zrSNhKu0mEFGAuzKkxJWHAbzKQawG1cycc9Rlv8K5lVh1PZnZAjuaZlcHX10vw/uqBVd5MgaUD9kqtAqdQ3r8xvkfeE5Q/1s+kW5dBlKFF2mV1vhIa3nZaiXf6PHe0hqcCoKc4RamCio/q8K+nqyAU/0I1CjBW3TQ6arH8PTXg5FLJem/MWGrASE1VXZrdqWwW/R14WIM900avU2jreQncGr3ZKotidTCQOsVBOdgrpEWPIt2YUyGEVUyZpCYsh+1p6HYdl+jBr6h4P4lYekgp4IedmVvNEwypDu27NL0amvxEcC3TgDUr9YrB4LxsT63DrxM4OB3HCcOQebwpMqmOkicuTPxTWbcJ+s=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D30328A1E6D7174797D57B6D36556B92@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2f5b774-a586-49e3-bac1-08d70ba747c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:42:18.9170
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/18/19 10:22 AM, Sowjanya Komatineni wrote:
->
-> On 7/18/19 9:34 AM, Dmitry Osipenko wrote:
->> 18.07.2019 4:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> [snip]
->>
->>>>> Please try to fix all missing dependencies and orderings.
->>>> Peter,
->>>>
->>>> dfllCPU_OUT is the first one to go thru restore when
->>>> clk_restore_context traverses thru the list.
->>>>
->>>> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
->>>> dependency is unknown to clock-tree.
->>>>
->>>> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
->>>> register so dfllCPU_OUT save/restore happens after their parents are
->>>> restored.
->>>>
->>>> But DFLL needs both of these to be restored before DFLLCPU_Out and as
->>>> DFLL_SOC restore always happens after the REF, thinking to add
->>>> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
->>>> dependencies.
->>>>
->>>> Please comment.
->>>>
->>> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT,=20
->>> its
->>> in proper order after all its dependencies.
->>>
->>> Can now add dfll save/restore to do dfll reinit during restore..
->>>
->> If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
->> kind of dependency isn't very correct and just papers over the real
->> problem, which is that there should be a way for CCF to specify multiple
->> dependencies for the clock or the reverse ordering should be used for
->> the restoring.
->
-> dfll will not work without dfll-soc enabled.
->
-> CLDVFS control logic is split into 2 clock domains. dvfs_ref_clk and=20
-> dvfs_soc_clk.
->
-> Majority of the control logic is clocked from dvfs_soc_clk for=20
-> interfacing control registers.
->
-Note on reverse ordering for restore. Currently restore order goes thru=20
-clock list and for each root goes thru parent -> child restore.
-
-this order is correct and also all clocks are parented properly so they=20
-follow proper order.
-
-dfllCPU is the only one where current driver doesn't take care of=20
-dependency in dfll_soc which gets enabled only after dfll_ref.
-
-
-Based on dfllCPU control logic module design, dfll_ref and dfll_soc=20
-should be enabled prior to dfll init/enable.
-
-So parenting dfll_soc to dfllCPU keeps proper order.
-
+T24gNy8xNy8xOSAxMDoyOCBQTSwgVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIHdyb3RlOg0KPiBOb3cg
+dGhhdCBnZW5lcmljIGNvZGUgZG9lc24ndCByZWZlcmVuY2UgdGhlbSwgbW92ZSBzbWVfYWN0aXZl
+KCkgYW5kDQo+IHNtZV9tZV9tYXNrIHRvIHg4NidzIDxhc20vbWVtX2VuY3J5cHQuaD4uDQo+IA0K
+PiBBbHNvIHJlbW92ZSB0aGUgZXhwb3J0IGZvciBzbWVfYWN0aXZlKCkgc2luY2UgaXQncyBvbmx5
+IHVzZWQgaW4gZmlsZXMgdGhhdA0KPiB3b24ndCBiZSBidWlsdCBhcyBtb2R1bGVzLiBzbWVfbWVf
+bWFzayBvbiB0aGUgb3RoZXIgaGFuZCBpcyB1c2VkIGluDQo+IGFyY2gveDg2L2t2bS9zdm0uYyAo
+dmlhIF9fc21lX3NldCgpIGFuZCBfX3BzcF9wYSgpKSB3aGljaCBjYW4gYmUgYnVpbHQgYXMgYQ0K
+PiBtb2R1bGUgc28gaXRzIGV4cG9ydCBuZWVkcyB0byBzdGF5Lg0KDQpZb3UgbWF5IHdhbnQgdG8g
+dHJ5IGFuZCBidWlsZCB0aGUgb3V0LW9mLXRyZWUgbnZpZGlhIGRyaXZlciBqdXN0IHRvIGJlDQpz
+dXJlIHlvdSBjYW4gcmVtb3ZlIHRoZSBFWFBPUlRfU1lNQk9MKCkuIEJ1dCBJIGJlbGlldmUgdGhh
+dCB3YXMgcmVsYXRlZA0KdG8gdGhlIERNQSBtYXNrIGNoZWNrLCB3aGljaCBub3cgcmVtb3ZlZCwg
+bWF5IG5vIGxvbmdlciBiZSBhIHByb2JsZW0uDQoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFRoaWFn
+byBKdW5nIEJhdWVybWFubiA8YmF1ZXJtYW5AbGludXguaWJtLmNvbT4NCg0KUmV2aWV3ZWQtYnk6
+IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+DQoNCj4gLS0tDQo+ICBhcmNo
+L3MzOTAvaW5jbHVkZS9hc20vbWVtX2VuY3J5cHQuaCB8ICA0ICstLS0NCj4gIGFyY2gveDg2L2lu
+Y2x1ZGUvYXNtL21lbV9lbmNyeXB0LmggIHwgMTAgKysrKysrKysrKw0KPiAgYXJjaC94ODYvbW0v
+bWVtX2VuY3J5cHQuYyAgICAgICAgICAgfCAgMSAtDQo+ICBpbmNsdWRlL2xpbnV4L21lbV9lbmNy
+eXB0LmggICAgICAgICB8IDE0ICstLS0tLS0tLS0tLS0tDQo+ICA0IGZpbGVzIGNoYW5nZWQsIDEy
+IGluc2VydGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gv
+czM5MC9pbmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5oIGIvYXJjaC9zMzkwL2luY2x1ZGUvYXNtL21l
+bV9lbmNyeXB0LmgNCj4gaW5kZXggM2ViMDE4NTA4MTkwLi5mZjgxM2E1NmJjMzAgMTAwNjQ0DQo+
+IC0tLSBhL2FyY2gvczM5MC9pbmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5oDQo+ICsrKyBiL2FyY2gv
+czM5MC9pbmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5oDQo+IEBAIC00LDkgKzQsNyBAQA0KPiAgDQo+
+ICAjaWZuZGVmIF9fQVNTRU1CTFlfXw0KPiAgDQo+IC0jZGVmaW5lIHNtZV9tZV9tYXNrCTBVTEwN
+Cj4gLQ0KPiAtc3RhdGljIGlubGluZSBib29sIHNtZV9hY3RpdmUodm9pZCkgeyByZXR1cm4gZmFs
+c2U7IH0NCj4gK3N0YXRpYyBpbmxpbmUgYm9vbCBtZW1fZW5jcnlwdF9hY3RpdmUodm9pZCkgeyBy
+ZXR1cm4gZmFsc2U7IH0NCj4gIGV4dGVybiBib29sIHNldl9hY3RpdmUodm9pZCk7DQo+ICANCj4g
+IGludCBzZXRfbWVtb3J5X2VuY3J5cHRlZCh1bnNpZ25lZCBsb25nIGFkZHIsIGludCBudW1wYWdl
+cyk7DQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5oIGIv
+YXJjaC94ODYvaW5jbHVkZS9hc20vbWVtX2VuY3J5cHQuaA0KPiBpbmRleCAwYzE5NmM0N2Q2MjEu
+Ljg0OGNlNDNiOTA0MCAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vbWVtX2Vu
+Y3J5cHQuaA0KPiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5oDQo+IEBA
+IC05Miw2ICs5MiwxNiBAQCBlYXJseV9zZXRfbWVtb3J5X2VuY3J5cHRlZCh1bnNpZ25lZCBsb25n
+IHZhZGRyLCB1bnNpZ25lZCBsb25nIHNpemUpIHsgcmV0dXJuIDA7DQo+ICANCj4gIGV4dGVybiBj
+aGFyIF9fc3RhcnRfYnNzX2RlY3J5cHRlZFtdLCBfX2VuZF9ic3NfZGVjcnlwdGVkW10sIF9fc3Rh
+cnRfYnNzX2RlY3J5cHRlZF91bnVzZWRbXTsNCj4gIA0KPiArc3RhdGljIGlubGluZSBib29sIG1l
+bV9lbmNyeXB0X2FjdGl2ZSh2b2lkKQ0KPiArew0KPiArCXJldHVybiBzbWVfbWVfbWFzazsNCj4g
+K30NCj4gKw0KPiArc3RhdGljIGlubGluZSB1NjQgc21lX2dldF9tZV9tYXNrKHZvaWQpDQo+ICt7
+DQo+ICsJcmV0dXJuIHNtZV9tZV9tYXNrOw0KPiArfQ0KPiArDQo+ICAjZW5kaWYJLyogX19BU1NF
+TUJMWV9fICovDQo+ICANCj4gICNlbmRpZgkvKiBfX1g4Nl9NRU1fRU5DUllQVF9IX18gKi8NCj4g
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L21tL21lbV9lbmNyeXB0LmMgYi9hcmNoL3g4Ni9tbS9tZW1f
+ZW5jcnlwdC5jDQo+IGluZGV4IGM4MDVmMGE1YzE2ZS4uNzEzOWYyZjQzOTU1IDEwMDY0NA0KPiAt
+LS0gYS9hcmNoL3g4Ni9tbS9tZW1fZW5jcnlwdC5jDQo+ICsrKyBiL2FyY2gveDg2L21tL21lbV9l
+bmNyeXB0LmMNCj4gQEAgLTM0NCw3ICszNDQsNiBAQCBib29sIHNtZV9hY3RpdmUodm9pZCkNCj4g
+IHsNCj4gIAlyZXR1cm4gc21lX21lX21hc2sgJiYgIXNldl9lbmFibGVkOw0KPiAgfQ0KPiAtRVhQ
+T1JUX1NZTUJPTChzbWVfYWN0aXZlKTsNCj4gIA0KPiAgYm9vbCBzZXZfYWN0aXZlKHZvaWQpDQo+
+ICB7DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21lbV9lbmNyeXB0LmggYi9pbmNsdWRl
+L2xpbnV4L21lbV9lbmNyeXB0LmgNCj4gaW5kZXggNDcwYmQ1M2E4OWRmLi4wYzViMGZmOWViMjkg
+MTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvbWVtX2VuY3J5cHQuaA0KPiArKysgYi9pbmNs
+dWRlL2xpbnV4L21lbV9lbmNyeXB0LmgNCj4gQEAgLTE4LDIzICsxOCwxMSBAQA0KPiAgDQo+ICAj
+ZWxzZQkvKiAhQ09ORklHX0FSQ0hfSEFTX01FTV9FTkNSWVBUICovDQo+ICANCj4gLSNkZWZpbmUg
+c21lX21lX21hc2sJMFVMTA0KPiAtDQo+IC1zdGF0aWMgaW5saW5lIGJvb2wgc21lX2FjdGl2ZSh2
+b2lkKSB7IHJldHVybiBmYWxzZTsgfQ0KPiArc3RhdGljIGlubGluZSBib29sIG1lbV9lbmNyeXB0
+X2FjdGl2ZSh2b2lkKSB7IHJldHVybiBmYWxzZTsgfQ0KPiAgc3RhdGljIGlubGluZSBib29sIHNl
+dl9hY3RpdmUodm9pZCkgeyByZXR1cm4gZmFsc2U7IH0NCj4gIA0KPiAgI2VuZGlmCS8qIENPTkZJ
+R19BUkNIX0hBU19NRU1fRU5DUllQVCAqLw0KPiAgDQo+IC1zdGF0aWMgaW5saW5lIGJvb2wgbWVt
+X2VuY3J5cHRfYWN0aXZlKHZvaWQpDQo+IC17DQo+IC0JcmV0dXJuIHNtZV9tZV9tYXNrOw0KPiAt
+fQ0KPiAtDQo+IC1zdGF0aWMgaW5saW5lIHU2NCBzbWVfZ2V0X21lX21hc2sodm9pZCkNCj4gLXsN
+Cj4gLQlyZXR1cm4gc21lX21lX21hc2s7DQo+IC19DQo+IC0NCj4gICNpZmRlZiBDT05GSUdfQU1E
+X01FTV9FTkNSWVBUDQo+ICAvKg0KPiAgICogVGhlIF9fc21lX3NldCgpIGFuZCBfX3NtZV9jbHIo
+KSBtYWNyb3MgYXJlIHVzZWZ1bCBmb3IgYWRkaW5nIG9yIHJlbW92aW5nDQo+IA0K
