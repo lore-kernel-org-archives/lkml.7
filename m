@@ -2,53 +2,52 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E6AC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B51FC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E922053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469B52053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419811;
-	bh=ZDrj+iEXtjY2Tql++woQSAtb+ji40TswNzVY/i5NrVo=;
+	s=default; t=1563419814;
+	bh=q1xPMWra01nrOEcWLlyRB8X7J9GJa/6nGWrdusL/+h4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUiO47i327DLfPe00niGEd0pMFPe2dD45OX+ObhreknoIdC8Kg+mmrzTZGN889175
-	 ZMG576Zlq81KmSf9+ZCUq8EOnSbEPa5ZszZK94R55jrlfO41VcrIoz2H4r5qmwO0m6
-	 L3CGQO92vPDYyK20PbEY87vAfzeUW3XA7rOaRuIA=
+	b=iJXeqoMKSf0++hPGTAB43xbe9OTzxftOTFj53yZJNVVJriPpu/8ep4VPGGacA9Vzm
+	 sof/RmhEPoYXg6Yr+9FXQSAEcO4vsFFgQWdQ3iPEq0LiRg5i13Z3k2PH54392myCHg
+	 7NJp4h3j8OIcgZjSsON6JOsenBai7wnDvpq1oPiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391722AbfGRDQu (ORCPT
+        id S2391943AbfGRDPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51802 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389903AbfGRDPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:06 -0400
+        id S2391890AbfGRDOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:52 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD1A121855;
-        Thu, 18 Jul 2019 03:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8264C2053B;
+        Thu, 18 Jul 2019 03:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419705;
-        bh=ZDrj+iEXtjY2Tql++woQSAtb+ji40TswNzVY/i5NrVo=;
+        s=default; t=1563419690;
+        bh=q1xPMWra01nrOEcWLlyRB8X7J9GJa/6nGWrdusL/+h4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l+rab36jGBNQuQN3kaGftoOM2C2RFP+jnoeTM7O2ulqkjIMGDssGKZf6K1JeDZtxd
-         QUxHb+ra921xb+5nUxmHyC6Rc9/Hq6RwqX3qoc/Zl1CnBPs/5pGcZtwl04fX2qGAbW
-         cMr3B0mreK2dFKU5HPtAlLE3gws7KsIWuCExHGWY=
+        b=rool33vDgbXwPtIw2EpIYgVsikpkgxQsurJa6uNlgoyFU4dVtIMuibFy4Vgx0qoHd
+         MEhu9dOcmtwRURVwiaCyo7BCgNPK4XjDqXigCi+Tjps0KC8W7+pO4/2Qj/oYfQ9jBV
+         wP12oeY98FTX0TbUQfBRiL9sHwEgL2uDr7hFfcCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sergej Benilov <sergej.benilov@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 33/40] sis900: fix TX completion
-Date:   Thu, 18 Jul 2019 12:02:29 +0900
-Message-Id: <20190718030049.943975637@linuxfoundation.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 09/40] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
+Date:   Thu, 18 Jul 2019 12:02:05 +0900
+Message-Id: <20190718030041.407049117@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -61,115 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ac8a01092b2added0749ef937037bf1912e13e3 ]
+[ Upstream commit 68f2515bb31a664ba3e2bc1eb78dd9f529b10067 ]
 
-Since commit 605ad7f184b60cfaacbc038aa6c55ee68dee3c89 "tcp: refine TSO autosizing",
-outbound throughput is dramatically reduced for some connections, as sis900
-is doing TX completion within idle states only.
+The lcdc device is missing the dma_coherent_mask definition causing the
+following warning on da850-evm:
 
-Make TX completion happen after every transmitted packet.
+da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
+Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
+[<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
+[<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
+[<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
+[<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
+[<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
+[<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
+[<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
+[<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
+[<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
+[<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
+[<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
+[<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
+[<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
+[<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
+[<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
+[<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
+[<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
+Exception stack(0xc6837fb0 to 0xc6837ff8)
+7fa0:                                     00000000 00000000 00000000 00000000
+7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace 8a8073511be81dd2 ]---
 
-Test:
-netperf
+Add a 32-bit mask to the platform device's definition.
 
-before patch:
-> netperf -H remote -l -2000000 -- -s 1000000
-MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
-Recv   Send    Send
-Socket Socket  Message  Elapsed
-Size   Size    Size     Time     Throughput
-bytes  bytes   bytes    secs.    10^6bits/sec
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
- 87380 327680 327680    253.44      0.06
-
-after patch:
-> netperf -H remote -l -10000000 -- -s 1000000
-MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
-Recv   Send    Send
-Socket Socket  Message  Elapsed
-Size   Size    Size     Time     Throughput
-bytes  bytes   bytes    secs.    10^6bits/sec
-
- 87380 327680 327680    5.38       14.89
-
-Thx to Dave Miller and Eric Dumazet for helpful hints
-
-Signed-off-by: Sergej Benilov <sergej.benilov@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sis/sis900.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm/mach-davinci/devices-da8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
-index fd812d2e5e1c..dff5b56738d3 100644
---- a/drivers/net/ethernet/sis/sis900.c
-+++ b/drivers/net/ethernet/sis/sis900.c
-@@ -1058,7 +1058,7 @@ sis900_open(struct net_device *net_dev)
- 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 78d325f3245a..4728d0974849 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -660,6 +660,9 @@ static struct platform_device da8xx_lcdc_device = {
+ 	.id		= 0,
+ 	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
+ 	.resource	= da8xx_lcdc_resources,
++	.dev		= {
++		.coherent_dma_mask	= DMA_BIT_MASK(32),
++	}
+ };
  
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- 	sw32(cr, RxENA | sr32(cr));
- 	sw32(ier, IE);
- 
-@@ -1581,7 +1581,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
- 	sw32(txdp, sis_priv->tx_ring_dma);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- }
- 
- /**
-@@ -1621,7 +1621,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 			spin_unlock_irqrestore(&sis_priv->lock, flags);
- 			return NETDEV_TX_OK;
- 	}
--	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
-+	sis_priv->tx_ring[entry].cmdsts = (OWN | INTR | skb->len);
- 	sw32(cr, TxENA | sr32(cr));
- 
- 	sis_priv->cur_tx ++;
-@@ -1677,7 +1677,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
- 	do {
- 		status = sr32(isr);
- 
--		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
-+		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|TxDESC|RxORN|RxERR|RxOK)) == 0)
- 			/* nothing intresting happened */
- 			break;
- 		handled = 1;
-@@ -1687,7 +1687,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
- 			/* Rx interrupt */
- 			sis900_rx(net_dev);
- 
--		if (status & (TxURN | TxERR | TxIDLE))
-+		if (status & (TxURN | TxERR | TxIDLE | TxDESC))
- 			/* Tx interrupt */
- 			sis900_finish_xmit(net_dev);
- 
-@@ -1899,8 +1899,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
- 
- 		if (tx_status & OWN) {
- 			/* The packet is not transmitted yet (owned by hardware) !
--			 * Note: the interrupt is generated only when Tx Machine
--			 * is idle, so this is an almost impossible case */
-+			 * Note: this is an almost impossible condition
-+			 * in case of TxDESC ('descriptor interrupt') */
- 			break;
- 		}
- 
-@@ -2476,7 +2476,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
- 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- 	sw32(cr, RxENA | sr32(cr));
- 	sw32(ier, IE);
- 
+ int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
 -- 
 2.20.1
 
