@@ -2,52 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAFCC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A66C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C34205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC80B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419470;
-	bh=xsIiUBsDs1ZlreDTAc1c5bQpT9oOoBEQqL+NUT6hrjA=;
+	s=default; t=1563419477;
+	bh=6TvLc+s1Z5B/h1l3/U0Pe2FamVxtuWOhIhEnM7zXQp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0AlRYhWB+VDRXWL/+kjG6POuy6h6Zlell6n0KBXOjpf61DH2N4Up+f+YcEZPt64I
-	 R0TrE4iEh8CKlZ5QyfzIy/0yf8OwfkAB6mR/ucmIXQKDJ9eD14Ouu5OC7OzuGXZRp7
-	 PkoyobvO5E/Mv2b3PwRsHVUbVr8tjtF7hCKiqZBU=
+	b=Ae+1Qy9C+xNra5cHNQhDnnZDaVuv9EwFrx6+Qb4mR7YUGrzFX7v4uOC8LkQRzbRr1
+	 hivYftC3FwsBMzXi0Q4VGh6ijidME67UZRHtx6eITyOJlkSdXCGLYnJhUzhWBK/Ole
+	 HUCW/snE/WS9RT1pIWsl2MYgjG81jcg8vtkAWhBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391235AbfGRDK7 (ORCPT
+        id S2391270AbfGRDLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:10:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44316 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403892AbfGRDKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:52 -0400
+        id S2390542AbfGRDLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:10 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8DF20818;
-        Thu, 18 Jul 2019 03:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3456A2053B;
+        Thu, 18 Jul 2019 03:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419451;
-        bh=xsIiUBsDs1ZlreDTAc1c5bQpT9oOoBEQqL+NUT6hrjA=;
+        s=default; t=1563419469;
+        bh=6TvLc+s1Z5B/h1l3/U0Pe2FamVxtuWOhIhEnM7zXQp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mppUjv06PEUjwHf5qd4M7vTNca+xF6SQ7jrh1YgdEZxll6tRwydhs1Pksh722hPW4
-         O5bq0MWxCuoNJP+KSsbodUqyxCaXX+VjqCGidekt+BGYTACGHkZuc59V3yMWhl+mAh
-         5QZ7qHPCzwvmTVDeqI4JMKcyRHqiqccIXnq2tHaI=
+        b=SadA35HrakSw6/nte+JbUZxIOCGh9Yl60HzJljU7GNfIxMgJvLTeEMIF15l6ZPqGV
+         ZEJEXKg8gKMAch6/4Eu7U8euL6tMqGm7JUxmbZK1tmkzapKGw4jtJsZE4jUKNIdL9I
+         q7hBTE5EegNpG+Pyn92umeoqPdlrZpdKAERjRGek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 70/80] dm verity: use message limit for data block corruption message
-Date:   Thu, 18 Jul 2019 12:02:01 +0900
-Message-Id: <20190718030104.232633360@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.14 74/80] ARC: hide unused function unw_hdr_alloc
+Date:   Thu, 18 Jul 2019 12:02:05 +0900
+Message-Id: <20190718030105.247493008@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,35 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2eba4e640b2c4161e31ae20090a53ee02a518657 ]
+From: Arnd Bergmann <arnd@arndb.de>
 
-DM verity should also use DMERR_LIMIT to limit repeat data block
-corruption messages.
+commit fd5de2721ea7d16e2b16c4049ac49f229551b290 upstream.
 
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As kernelci.org reports, this function is not used in
+vdk_hs38_defconfig:
+
+arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
+
+Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
+Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/dm-verity-target.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arc/kernel/unwind.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index 8573c70a1880..e705799976c2 100644
---- a/drivers/md/dm-verity-target.c
-+++ b/drivers/md/dm-verity-target.c
-@@ -276,8 +276,8 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
- 		BUG();
- 	}
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -185,11 +185,6 @@ static void *__init unw_hdr_alloc_early(
+ 				       MAX_DMA_ADDRESS);
+ }
  
--	DMERR("%s: %s block %llu is corrupted", v->data_dev->name, type_str,
--		block);
-+	DMERR_LIMIT("%s: %s block %llu is corrupted", v->data_dev->name,
-+		    type_str, block);
+-static void *unw_hdr_alloc(unsigned long sz)
+-{
+-	return kmalloc(sz, GFP_KERNEL);
+-}
+-
+ static void init_unwind_table(struct unwind_table *table, const char *name,
+ 			      const void *core_start, unsigned long core_size,
+ 			      const void *init_start, unsigned long init_size,
+@@ -370,6 +365,10 @@ ret_err:
+ }
  
- 	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
- 		DMERR("%s: reached maximum errors", v->data_dev->name);
--- 
-2.20.1
-
+ #ifdef CONFIG_MODULES
++static void *unw_hdr_alloc(unsigned long sz)
++{
++	return kmalloc(sz, GFP_KERNEL);
++}
+ 
+ static struct unwind_table *last_table;
+ 
 
 
