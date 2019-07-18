@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26F8C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9961DC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C821B2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694AE2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419741;
-	bh=RqHs4PD78dqw4xd7ttlwOYA6we00lDzzgKgXO/uJ2ME=;
+	s=default; t=1563419744;
+	bh=6Gyqlx/g7z/7sSbh9rRsi50ThxMobClmjQs1x7td8MA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avw5Yd7Vs9LacExecw7x5bYYfEBhOQNZw6CLONXE1JATqAkRhwEiEl47WM76ZevAP
-	 tPYqafmFwrAK3tfQhoIBEzLPNcRPcJJjgyG3FRdoEgiT8ItARUZ8Ut98qx7KJAs/Po
-	 6WQ+/g+JdYvk7wpXnELOsqpAYHR8DseXvqAxrxqk=
+	b=ag2PXVI4hRWzHtSo/hL0uaViEpssoPmmEPgI8d82BrpdE9wzJO2wHrnfq0F1mJivi
+	 NGxfSJZXJjnshnRwS8jNUzdGFZyfeyun4Jk55YmrJvsEXtQvIiX5/jDsne3iB3yxze
+	 +fVWNzJ8Rk0R7ZOrADy6fW1b3w2Uv50o4Gkm7kVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392110AbfGRDPk (ORCPT
+        id S2391570AbfGRDPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52244 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391985AbfGRDPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:18 -0400
+        id S2391998AbfGRDPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:19 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0189D21849;
-        Thu, 18 Jul 2019 03:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BCF921848;
+        Thu, 18 Jul 2019 03:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419717;
-        bh=RqHs4PD78dqw4xd7ttlwOYA6we00lDzzgKgXO/uJ2ME=;
+        s=default; t=1563419718;
+        bh=6Gyqlx/g7z/7sSbh9rRsi50ThxMobClmjQs1x7td8MA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eq8QFYq6S9xQNOgP5Dl4sKunvUd+MwmmET8eJ01WzV73DSC7qlUMWiBXlxfZBpOAo
-         r8fpFtTS032MMRJcYYMNLUsFOza5BHh8EleuO6FRlVy4Xf/XJNCvAC1o7CWSHrTjMU
-         tD1HzKIvrxa2I3gH+plmyZmfKtgEMeK+qmzZefOk=
+        b=IX12oUAEyfnpLQgZP4asVBDvTz9i1TnHfufAKQRDNs4VGdPP7uNdzfMiO5NZ0fR9o
+         Yk4hTtbngfDE4wT2tdnOEUVYHmgg4DGbwx9gHFyD8AYoOSdiiPu6qpv7ldZ9seyn2D
+         FuoCuQOTMx9VwaJ2w076XTIAew2Tkx/v8MN+AMcE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Zubin Mithra <zsm@google.com>
-Subject: [PATCH 4.4 40/40] KVM: x86: protect KVM_CREATE_PIT/KVM_CREATE_PIT2 with kvm->lock
-Date:   Thu, 18 Jul 2019 12:02:36 +0900
-Message-Id: <20190718030050.616694335@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.4 24/40] staging: comedi: amplc_pci230: fix null pointer deref on interrupt
+Date:   Thu, 18 Jul 2019 12:02:20 +0900
+Message-Id: <20190718030048.870317446@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -61,119 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 250715a6171a076748be8ab88b274e72f0cfb435 upstream.
+commit 7379e6baeddf580d01feca650ec1ad508b6ea8ee upstream.
 
-The syzkaller folks reported a NULL pointer dereference that seems
-to be cause by a race between KVM_CREATE_IRQCHIP and KVM_CREATE_PIT2.
-The former takes kvm->lock (except when registering the devices,
-which needs kvm->slots_lock); the latter takes kvm->slots_lock only.
-Change KVM_CREATE_PIT2 to follow the same model as KVM_CREATE_IRQCHIP.
+The interrupt handler `pci230_interrupt()` causes a null pointer
+dereference for a PCI260 card.  There is no analog output subdevice for
+a PCI260.  The `dev->write_subdev` subdevice pointer and therefore the
+`s_ao` subdevice pointer variable will be `NULL` for a PCI260.  The
+following call near the end of the interrupt handler results in the null
+pointer dereference for a PCI260:
 
-Testcase:
+	comedi_handle_events(dev, s_ao);
 
-    #include <pthread.h>
-    #include <linux/kvm.h>
-    #include <fcntl.h>
-    #include <sys/ioctl.h>
-    #include <stdint.h>
-    #include <string.h>
-    #include <stdlib.h>
-    #include <sys/syscall.h>
-    #include <unistd.h>
+Fix it by only calling the above function if `s_ao` is valid.
 
-    long r[23];
+Note that the other uses of `s_ao` in the calls
+`pci230_handle_ao_nofifo(dev, s_ao);` and `pci230_handle_ao_fifo(dev,
+s_ao);` will never be reached for a PCI260, so they are safe.
 
-    void* thr1(void* arg)
-    {
-        struct kvm_pit_config pitcfg = { .flags = 4 };
-        switch ((long)arg) {
-        case 0: r[2]  = open("/dev/kvm", O_RDONLY|O_ASYNC);    break;
-        case 1: r[3]  = ioctl(r[2], KVM_CREATE_VM, 0);         break;
-        case 2: r[4]  = ioctl(r[3], KVM_CREATE_IRQCHIP, 0);    break;
-        case 3: r[22] = ioctl(r[3], KVM_CREATE_PIT2, &pitcfg); break;
-        }
-        return 0;
-    }
-
-    int main(int argc, char **argv)
-    {
-        long i;
-        pthread_t th[4];
-
-        memset(r, -1, sizeof(r));
-        for (i = 0; i < 4; i++) {
-            pthread_create(&th[i], 0, thr, (void*)i);
-            if (argc > 1 && rand()%2) usleep(rand()%1000);
-        }
-        usleep(20000);
-        return 0;
-    }
-
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Zubin Mithra <zsm@google.com>
+Fixes: 39064f23284c ("staging: comedi: amplc_pci230: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kvm/i8254.c |    5 +++--
- arch/x86/kvm/x86.c   |    4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/i8254.c
-+++ b/arch/x86/kvm/i8254.c
-@@ -678,7 +678,6 @@ static const struct kvm_io_device_ops sp
- 	.write    = speaker_ioport_write,
- };
+---
+ drivers/staging/comedi/drivers/amplc_pci230.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/staging/comedi/drivers/amplc_pci230.c
++++ b/drivers/staging/comedi/drivers/amplc_pci230.c
+@@ -2324,7 +2324,8 @@ static irqreturn_t pci230_interrupt(int
+ 	devpriv->intr_running = false;
+ 	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
  
--/* Caller must hold slots_lock */
- struct kvm_pit *kvm_create_pit(struct kvm *kvm, u32 flags)
- {
- 	struct kvm_pit *pit;
-@@ -733,6 +732,7 @@ struct kvm_pit *kvm_create_pit(struct kv
- 	pit->mask_notifier.func = pit_mask_notifer;
- 	kvm_register_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
+ 	comedi_handle_events(dev, s_ai);
  
-+	mutex_lock(&kvm->slots_lock);
- 	kvm_iodevice_init(&pit->dev, &pit_dev_ops);
- 	ret = kvm_io_bus_register_dev(kvm, KVM_PIO_BUS, KVM_PIT_BASE_ADDRESS,
- 				      KVM_PIT_MEM_LENGTH, &pit->dev);
-@@ -747,13 +747,14 @@ struct kvm_pit *kvm_create_pit(struct kv
- 		if (ret < 0)
- 			goto fail_unregister;
- 	}
-+	mutex_unlock(&kvm->slots_lock);
- 
- 	return pit;
- 
- fail_unregister:
- 	kvm_io_bus_unregister_dev(kvm, KVM_PIO_BUS, &pit->dev);
--
- fail:
-+	mutex_unlock(&kvm->slots_lock);
- 	kvm_unregister_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
- 	kvm_unregister_irq_ack_notifier(kvm, &pit_state->irq_ack_notifier);
- 	kvm_free_irq_source_id(kvm, pit->irq_source_id);
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3867,7 +3867,7 @@ long kvm_arch_vm_ioctl(struct file *filp
- 				   sizeof(struct kvm_pit_config)))
- 			goto out;
- 	create_pit:
--		mutex_lock(&kvm->slots_lock);
-+		mutex_lock(&kvm->lock);
- 		r = -EEXIST;
- 		if (kvm->arch.vpit)
- 			goto create_pit_unlock;
-@@ -3876,7 +3876,7 @@ long kvm_arch_vm_ioctl(struct file *filp
- 		if (kvm->arch.vpit)
- 			r = 0;
- 	create_pit_unlock:
--		mutex_unlock(&kvm->slots_lock);
-+		mutex_unlock(&kvm->lock);
- 		break;
- 	case KVM_GET_IRQCHIP: {
- 		/* 0: PIC master, 1: PIC slave, 2: IOAPIC */
+ 	return IRQ_HANDLED;
 
 
