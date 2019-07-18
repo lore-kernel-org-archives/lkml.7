@@ -2,122 +2,164 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AECC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFC3C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5788E20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrD8yUfD"
+	by mail.kernel.org (Postfix) with ESMTP id 7674E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403780AbfGRPI0 (ORCPT
+        id S2403812AbfGRPKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:08:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39256 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727623AbfGRPIZ (ORCPT
+        Thu, 18 Jul 2019 11:10:41 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40739 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727623AbfGRPKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:08:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u25so15707118wmc.4;
-        Thu, 18 Jul 2019 08:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=THnMSwcMi6ZEUqLptsuGsLv729OzubtW7+jZJzOORao=;
-        b=rrD8yUfD+ihIcehHCcCFz0Ac57bDu5gPMvg4l3QV5LmEugHtJ8MMHJkFzbTKd+raSd
-         QKQTO8fQ6wsYvmnORzbPKfhx0HB0wYtq38PMYbAnQO/qq10Uct+3sLILru/C2C7JhlZm
-         qroEeZHReIXiGF5qRFzqnzyOG7vO+ZnwfnUivun3WuCnhVFtUdsFf45JPUDcCY+uQGY1
-         gzxaSIkelXrvHGxpMGDcaa8UA8Ahnxnf9Y65OE05Q++cqTvMZbVfgGa/qFS9ziunyU99
-         88Jy1MHsyxieFeUZDAGakbkUyz4awFEgT/ozDfyaLqkQ7qwnr/lt6o973s/Vps7f5SAP
-         YKYA==
+        Thu, 18 Jul 2019 11:10:40 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s145so20722123qke.7;
+        Thu, 18 Jul 2019 08:10:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=THnMSwcMi6ZEUqLptsuGsLv729OzubtW7+jZJzOORao=;
-        b=ECBnPTHEK41h25ii/LlnwsuhFVhOTIb29RsF82pgTYiI4kYDpqeUAlnjBjlTev3/3i
-         Tst5ONcDPajP1YX3jaxzZmmO8iYgPpfFcW6AYNUueGhyD8XpaWEOAGNbPGQcu0p2vmY8
-         /S81Jer+LU7kSOm1UAYGhSFRnIw0z3x5NwMkOBkDYusYykauWhMmN++aolUT8vHYq9Ew
-         O6l8NILAQpcLmroX2HhuNodeEW1F+QT9m/iLzhhhd5ee3UNLKr/Bkf5AdNAgfWYOMbfC
-         W3unQ15mK2ch4cTEzb3KCjGCIYWLRiL2fQ+O1BuEKdqsdB2Jw5cEnGRTv33l+v48hUOr
-         XzDg==
-X-Gm-Message-State: APjAAAV7OQFuQFWUuaPLdlGA/y8YbOyEwyuZexpsgA3fDvJM8GoyaSjt
-        8XIX+1Ttq3+ka1HgmVA3t4hkz7JK
-X-Google-Smtp-Source: APXvYqxr+MPNVi7k1iTeINPRi72qSsdg22udy0HGe1QSJ0YtDFSRzi5v9v7U7HJ+vZS5XREyVQSPXQ==
-X-Received: by 2002:a7b:c7c2:: with SMTP id z2mr38589419wmk.147.1563462502909;
-        Thu, 18 Jul 2019 08:08:22 -0700 (PDT)
-Received: from [192.168.8.147] (72.160.185.81.rev.sfr.net. [81.185.160.72])
-        by smtp.gmail.com with ESMTPSA id h16sm26925802wrv.88.2019.07.18.08.08.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 08:08:22 -0700 (PDT)
-Subject: Re: regression with napi/softirq ?
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190717201925.fur57qfs2x3ha6aq@debian>
- <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
- <CADVatmO_m-NYotb9Htd7gS0d2-o0DeEWeDJ1uYKE+oj_HjoN0Q@mail.gmail.com>
- <alpine.DEB.2.21.1907172345360.1778@nanos.tec.linutronix.de>
- <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
- <CADVatmN6xNO1iMQ4ihsT5OqV2cuj2ajq+v00NrtUyOHkiKPo-Q@mail.gmail.com>
- <8124bbe5-eaa8-2106-2695-4788ec0f6544@gmail.com>
- <CADVatmPQRf9A9z1LbHe5cd+bFLrPGG12YxPh2-yXAj_C9s8ZeA@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <870de0d9-5c08-9431-a46a-33ee4d3a6617@gmail.com>
-Date:   Thu, 18 Jul 2019 17:08:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1XVWuLALNboPCBpMHvtA7g3CoUrKrF0vBnrtFanWPT4=;
+        b=uNMGyKFpiV5/NdDwnLap3nQ/K1Tm9DD+6GyGcMY2Qe78+LIG0HJg8gvmpe7KNtScX+
+         ocmxdsLFnmQHavB02uUnWdITNtvdgZUVV6gjGYtzUgUyL101bx2COA+P5GJEB8nUL/si
+         xX9VNpjurF/YIH8K4pRbOmNUfp2t9ascXvvzAmN8JqbF3LGUnbcVvWG+r/eY7BW6dDbE
+         knTCE31c6j90B4zJPTKfVo0AfaPijfILaJmhBbuGf3nOxfSRW+FIerwKGcN9G9c7h1J9
+         QljEyAaRfwsTvFKIQO0h8Zsw7fzxHGQhpcH2zj+Ff7MPOAMzDxkNBXC9D6swUqj3HG9E
+         SpRA==
+X-Gm-Message-State: APjAAAV7gMkfUYn5o8N51yJkmd6XGejNnOOrLcYFBcHIhSrSlqqUt1Gw
+        lGoO9EV8UtrmkKPQlogNaMSLihSIjegnFCVtbl4=
+X-Google-Smtp-Source: APXvYqz91qO2K9L71FiuX0Gt08O/27FhYjsXqzcDsg9SyRt3LsdEPpT+LHh0f5YfOz5Tbuae6UqhheF6pLTx7yCHlYU=
+X-Received: by 2002:a37:ad12:: with SMTP id f18mr30435448qkm.3.1563462638194;
+ Thu, 18 Jul 2019 08:10:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CADVatmPQRf9A9z1LbHe5cd+bFLrPGG12YxPh2-yXAj_C9s8ZeA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190706145737.5299-1-cyphar@cyphar.com> <20190706145737.5299-9-cyphar@cyphar.com>
+In-Reply-To: <20190706145737.5299-9-cyphar@cyphar.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 18 Jul 2019 17:10:21 +0200
+Message-ID: <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com>
+Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        sparclinux <sparclinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 6, 2019 at 5:00 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
 
+> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+> index 9e7704e44f6d..1703d048c141 100644
+> --- a/arch/alpha/kernel/syscalls/syscall.tbl
+> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
+> @@ -461,6 +461,7 @@
+>  530    common  getegid                         sys_getegid
+>  531    common  geteuid                         sys_geteuid
+>  532    common  getppid                         sys_getppid
+> +533    common  openat2                         sys_openat2
+>  # all other architectures have common numbers for new syscall, alpha
+>  # is the exception.
+>  534    common  pidfd_send_signal               sys_pidfd_send_signal
 
-On 7/18/19 2:55 PM, Sudip Mukherjee wrote:
+My plan here was to add new syscalls in the same order as everwhere else,
+just with the number 110 higher. In the long run, I hope we can automate
+this.
 
-> Thanks Eric. But there is no improvement in delay between
-> softirq_raise and softirq_entry with this change.
-> But moving to a later kernel (linus master branch? ) like Thomas has
-> said in the other mail might be difficult atm. I can definitely
-> move to v4.14.133 if that helps. Thomas ?
+> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+> index aaf479a9e92d..4ad262698396 100644
+> --- a/arch/arm/tools/syscall.tbl
+> +++ b/arch/arm/tools/syscall.tbl
+> @@ -447,3 +447,4 @@
+>  431    common  fsconfig                        sys_fsconfig
+>  432    common  fsmount                         sys_fsmount
+>  433    common  fspick                          sys_fspick
+> +434    common  openat2                         sys_openat2
 
-If you are tracking max latency then I guess you have to tweak SOFTIRQ_NOW_MASK
-to include NET_RX_SOFTIRQ
+434 is already used in linux-next, I suggest you use 437 (Palmer
+just submitted fchmodat4, which could become 436).
 
-The patch I gave earlier would only lower the probability of events, not completely get rid of them.
+> +/**
+> + * Arguments for how openat2(2) should open the target path. If @extra is zero,
+> + * then openat2(2) is identical to openat(2).
+> + *
+> + * @flags: O_* flags (unknown flags ignored).
+> + * @mode: O_CREAT file mode (ignored otherwise).
+> + * @upgrade_mask: restrict how the O_PATH may be re-opened (ignored otherwise).
+> + * @resolve: RESOLVE_* flags (-EINVAL on unknown flags).
+> + * @reserved: reserved for future extensions, must be zeroed.
+> + */
+> +struct open_how {
+> +       __u32 flags;
+> +       union {
+> +               __u16 mode;
+> +               __u16 upgrade_mask;
+> +       };
+> +       __u16 resolve;
+> +       __u64 reserved[7]; /* must be zeroed */
+> +};
 
+We can have system calls with up to six arguments on all architectures, so
+this could still be done more conventionally without the indirection: like
 
+long openat2(int dfd, const char __user * filename, int flags, mode_t
+mode_mask, __u16 resolve);
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 0427a86743a46b7e1891f7b6c1ff585a8a1695f5..302046dd8d7e6740e466c422954f22565fe19e69 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -81,7 +81,7 @@ static void wakeup_softirqd(void)
-  * right now. Let ksoftirqd handle this at its own rate, to get fairness,
-  * unless we're doing some of the synchronous softirqs.
-  */
--#define SOFTIRQ_NOW_MASK ((1 << HI_SOFTIRQ) | (1 << TASKLET_SOFTIRQ))
-+#define SOFTIRQ_NOW_MASK ((1 << HI_SOFTIRQ) | (1 << TASKLET_SOFTIRQ) | (1 << NET_RX_SOFTIRQ))
- static bool ksoftirqd_running(unsigned long pending)
- {
-        struct task_struct *tsk = __this_cpu_read(ksoftirqd);
+In fact, that seems similar enough to the existing openat() that I think
+you could also just add the fifth argument to the existing call when
+a newly defined flag is set, similarly to how we only use the 'mode'
+argument when O_CREAT or O_TMPFILE are set.
 
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
 
+This file seems to lack a declaration for the system call, which means it
+will cause a build failure on some architectures, e.g. arch/arc/kernel/sys.c:
 
+#define __SYSCALL(nr, call) [nr] = (call),
+void *sys_call_table[NR_syscalls] = {
+        [0 ... NR_syscalls-1] = sys_ni_syscall,
+#include <asm/unistd.h>
+};
+
+        Arnd
