@@ -2,52 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AB1C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D29C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454402053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DB621841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419418;
-	bh=6eCuCSXv/rUkzbDMseQAaw/Dls8iE2lIaphpMe0on5w=;
+	s=default; t=1563419422;
+	bh=kzkmZ7qim7oRH84vOOV93VugboVAnSZZdaQjUey2iEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XbUHogzhSRZsZbK3MW+bcg5GfrhO2l0U6hgOmNkuzbUpk6u6iaS370UvOKfSpcFSH
-	 kkz9GCwD2q8z2vSSckPwPEPmoy7+i8IxP72UF04xnNynaqnv3VIivjLJz/tVCHRQ6n
-	 uPZ8wlIR+NO7vlpuJmHd62GLvLjxEAQeJlaESE3A=
+	b=j2b3MCiViWJCXArGLyUDoyz/7GB4nskV3KZabLtXcLld5IwJ/IWV5VIM56MdEPr7K
+	 setgcj7dkrqPonqmiqVXzvSECmXw9TC/smOJQMJj/ep7fhuUNXFqyfmtvprEQftIHP
+	 lutyFmANx59KTgQiuk35lZ+5QTbxGRBnN4HCz7KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbfGRDKQ (ORCPT
+        id S2391158AbfGRDKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:10:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389758AbfGRDKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:09 -0400
+        id S2389610AbfGRDKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:10:12 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ADEF205F4;
-        Thu, 18 Jul 2019 03:10:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CDBD2053B;
+        Thu, 18 Jul 2019 03:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419408;
-        bh=6eCuCSXv/rUkzbDMseQAaw/Dls8iE2lIaphpMe0on5w=;
+        s=default; t=1563419411;
+        bh=kzkmZ7qim7oRH84vOOV93VugboVAnSZZdaQjUey2iEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjmVB/Sb27RBLdXMF9x8MtsCo3QuXiLjcXDYdOtB8Gxvee2/fjXHCPyf4SHFoYQiC
-         k78x1dE4auVeKpTrMDpJXvEQa83AwQ6yhaerJLeYiqlt7Z7G9gvvrZ7kOs2YomQD2P
-         FIUVt+ICT9Nv1MkSd5CwyHvkUc1sJnJ2BgsS6dxU=
+        b=oQwO6aFGuSIJOhOyb7a1UC//LapG8dCVRJUbyO7iz6rUzMrIMmQO78Udg+s/uTTlj
+         uKFQGmX4bSAsNeOXrN5zDEOYIH0RJihYmrJCVWVn89rxG/F9Y+iPGtSCV1pew067OQ
+         W9X9wjRstAPgp/SHvrsHOehBpNzQ3symr9dXWhN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.14 54/80] usb: gadget: ether: Fix race between gether_disconnect and rx_submit
-Date:   Thu, 18 Jul 2019 12:01:45 +0900
-Message-Id: <20190718030102.754423223@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 37/80] quota: fix a problem about transfer quota
+Date:   Thu, 18 Jul 2019 12:01:28 +0900
+Message-Id: <20190718030101.509941306@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,50 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
+[ Upstream commit c6d9c35d16f1bafd3fec64b865e569e48cbcb514 ]
 
-commit d29fcf7078bc8be2b6366cbd4418265b53c94fac upstream.
+Run below script as root, dquot_add_space will return -EDQUOT since
+__dquot_transfer call dquot_add_space with flags=0, and dquot_add_space
+think it's a preallocation. Fix it by set flags as DQUOT_SPACE_WARN.
 
-On spin lock release in rx_submit, gether_disconnect get a chance to
-run, it makes port_usb NULL, rx_submit access NULL port USB, hence null
-pointer crash.
+mkfs.ext4 -O quota,project /dev/vdb
+mount -o prjquota /dev/vdb /mnt
+setquota -P 23 1 1 0 0 /dev/vdb
+dd if=/dev/zero of=/mnt/test-file bs=4K count=1
+chattr -p 23 test-file
 
-Fixed by releasing the lock in rx_submit after port_usb is used.
-
-Fixes: 2b3d942c4878 ("usb ethernet gadget: split out network core")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7b9ca4c61bc2 ("quota: Reduce contention on dq_data_lock")
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/u_ether.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/quota/dquot.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/function/u_ether.c
-+++ b/drivers/usb/gadget/function/u_ether.c
-@@ -190,11 +190,12 @@ rx_submit(struct eth_dev *dev, struct us
- 		out = dev->port_usb->out_ep;
- 	else
- 		out = NULL;
--	spin_unlock_irqrestore(&dev->lock, flags);
- 
- 	if (!out)
-+	{
-+		spin_unlock_irqrestore(&dev->lock, flags);
- 		return -ENOTCONN;
--
-+	}
- 
- 	/* Padding up to RX_EXTRA handles minor disagreements with host.
- 	 * Normally we use the USB "terminate on short read" convention;
-@@ -218,6 +219,7 @@ rx_submit(struct eth_dev *dev, struct us
- 
- 	if (dev->port_usb->is_fixed)
- 		size = max_t(size_t, size, dev->port_usb->fixed_out_len);
-+	spin_unlock_irqrestore(&dev->lock, flags);
- 
- 	skb = __netdev_alloc_skb(dev->net, size + NET_IP_ALIGN, gfp_flags);
- 	if (skb == NULL) {
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 4cd0c2336624..9c81fd973418 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1989,8 +1989,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+ 				       &warn_to[cnt]);
+ 		if (ret)
+ 			goto over_quota;
+-		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space, 0,
+-				      &warn_to[cnt]);
++		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space,
++				      DQUOT_SPACE_WARN, &warn_to[cnt]);
+ 		if (ret) {
+ 			spin_lock(&transfer_to[cnt]->dq_dqb_lock);
+ 			dquot_decr_inodes(transfer_to[cnt], inode_usage);
+-- 
+2.20.1
+
 
 
