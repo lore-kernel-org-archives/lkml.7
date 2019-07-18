@@ -2,180 +2,132 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E908C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C434CC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C42E20651
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF98208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dU5C6bmi";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="uHsjF9Gs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="Getiwo6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfGRRFU (ORCPT
+        id S1732401AbfGRRKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:05:20 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:10374 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726649AbfGRRFT (ORCPT
+        Thu, 18 Jul 2019 13:10:06 -0400
+Received: from smtp11.infineon.com ([217.10.52.105]:53366 "EHLO
+        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRRKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:05:19 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IGwu4J012906;
-        Thu, 18 Jul 2019 10:05:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=QojuxV2jTJXF80TcjA6Wa8saY53a7gMAKLPJsicXWR4=;
- b=dU5C6bmioayx34WQLchBEaQmfTdkx4m/PhmMUlHVwZCLbPxAg4JHb8DVSP29ZpnFkxMT
- 51+MCqZth0cDrrIO9VnXX9E3995PmM9WoCX562X0SufoZ4XhlmZ96kL8wwK7Ypp/TewB
- qSIBSMfj6dE0JmIEkRklV7sAxYTIkAgVbR0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ttvqxg1ag-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 18 Jul 2019 10:05:07 -0700
-Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 18 Jul 2019 10:05:06 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 18 Jul 2019 10:05:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cMlNi8RcGzz6mmDpKFXrMzeEEcm3Ewjy8wiLovIPFoL5uMX2bisWLrxewvOj/vA8UitzVFM5QHEmwB7K7wHGdE/8HD7WP4inks3465VwwbQ1lI2flIYP+MnDS+xTrlBdUJuOWJY7GrT1SEy1UnAPVrCrFRxbsN5yi00kxb+6aq1WYsPwftFawiNMpdkOnqF05SMKyZmkicZW0VTMrq4dYnWm5h7bj+54Rxz5pjo9bYd0p2XaOE9hu68yitNgKdVttqd3MgjWqzlogi4hbAIWBQyfVaov+qO886BExp8E7hysRfKRg60Ke0Ne8/HbHMu5SDusNAEXj2XEffby8+legw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QojuxV2jTJXF80TcjA6Wa8saY53a7gMAKLPJsicXWR4=;
- b=ZUwOgw9K+79xfkYy5XXxmziUUv8v31aThYvOqaZz7eH/6ScD0IID6nVtofyg59h75QJhneK9HTKNZoOddjRuiG+Mc8jgujn1FyLJ7MgbQqyCRxhrT4mAluy4OSQ6bEesu4JJplb0pp61i09/EWR8yq9iZ3tZYICDO8GVfKZUtiw51i0Dt91BFF4DEhP+pxBhVIBlLKmJVEsm3seFzOOObfnNhYhbiErlIzkGUZYEXp+PTRLgPysGacYkzupiX8mIM9zE4dOnRpJZbLHIXf59/TK4/+xjCThk8bE0Ev11ks4mba657GKz26P7SrkNmyINvMI2x8cfv8zYo3ZoVNpuGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QojuxV2jTJXF80TcjA6Wa8saY53a7gMAKLPJsicXWR4=;
- b=uHsjF9GsVErIv1RFrd4zzUd8RNma7MZSvASTr0gz/JnlixvuLJRL42H/fjeCytYEULIvt97mhE2X0MyG7MsSV1pyWeo7l1t4neegM20OG4pxjJvLSQKsrjiFPnTSFC+PjAqcHmsnRleJ5C6BNirxr6HlTLK08yDD+X19xitBCLo=
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com (20.179.161.152) by
- DM6PR15MB3212.namprd15.prod.outlook.com (20.179.48.221) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Thu, 18 Jul 2019 17:05:05 +0000
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::fc39:8b78:f4df:a053]) by DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::fc39:8b78:f4df:a053%3]) with mapi id 15.20.2094.011; Thu, 18 Jul 2019
- 17:05:05 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Christopher Lameter <cl@linux.com>
-CC:     Waiman Long <longman@redhat.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "David Rientjes" <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Vladimir Davydov" <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH v2 1/2] mm, slab: Extend slab/shrink to shrink all memcg
- caches
-Thread-Topic: [PATCH v2 1/2] mm, slab: Extend slab/shrink to shrink all memcg
- caches
-Thread-Index: AQHVPN3TlomcCJJgFEONei6lr3vfPKbQQNKAgABbTQA=
-Date:   Thu, 18 Jul 2019 17:05:04 +0000
-Message-ID: <20190718170458.GA6139@castle.dhcp.thefacebook.com>
-References: <20190717202413.13237-1-longman@redhat.com>
- <20190717202413.13237-2-longman@redhat.com>
- <0100016c04e0192f-299df02d-a35f-46db-9833-37ba7a01f5f0-000000@email.amazonses.com>
-In-Reply-To: <0100016c04e0192f-299df02d-a35f-46db-9833-37ba7a01f5f0-000000@email.amazonses.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR15CA0043.namprd15.prod.outlook.com
- (2603:10b6:300:ad::29) To DM6PR15MB2635.namprd15.prod.outlook.com
- (2603:10b6:5:1a6::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c091:500::f13c]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05be2f81-de36-44b7-4bba-08d70ba21433
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB3212;
-x-ms-traffictypediagnostic: DM6PR15MB3212:
-x-microsoft-antispam-prvs: <DM6PR15MB3212CC7F86C6E222DC26C67ABEC80@DM6PR15MB3212.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39860400002)(376002)(136003)(366004)(199004)(189003)(7416002)(256004)(66476007)(6436002)(316002)(386003)(66946007)(54906003)(486006)(8936002)(6486002)(4326008)(6506007)(14454004)(2906002)(66556008)(64756008)(1076003)(33656002)(6512007)(9686003)(66446008)(86362001)(52116002)(46003)(102836004)(478600001)(53936002)(6916009)(5660300002)(446003)(6246003)(11346002)(76176011)(25786009)(229853002)(186003)(6116002)(476003)(81166006)(71190400001)(99286004)(68736007)(81156014)(7736002)(71200400001)(8676002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3212;H:DM6PR15MB2635.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UttzXwjYz37a6xJhARcdDdxfMzY4N4l1ZkfZSMesNi8hLKGwauWy+tYiZS3Fd4o8bv/TsGhPecEXj6K6Mx1cO/asgEvI/Q0G9pUzCGc7Qn6nP8qr1sXys3FiV+XhGFDU+pj2Eukd4fJKpuMuEOZfu2/laAxQvThl2+6VG35RyFdsq6bjjwAyqk/y3W7xZA+Cec2utpY5Apq0U+viC+1WswFlwrOzDRmDVHbhyEJp4d08Ak/0JdA484lMpADsM/HXutXaWzuyWRmXoTWogPcmoON845pEZY5qxgvZ8NM8fQwCdoCxKgg0nV0xdr9wzmlvNUiH+FmYDpdh56cJ0TARFUvLoOrAIsZPx9Wgjlznc4dscFyuFOUF7hdAVvVJz4FFARgUHs5golbHfblvoNYEL3/u1FwLY79KV+GJ9jQGGYw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DF12C64E016D9B4989D6104F9506902D@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Jul 2019 13:10:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1563469806; x=1595005806;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=uYQpB2SpaLcCphJei8uoWMZ+wuxVK+eGJl7as7wxcWw=;
+  b=Getiwo6HDC7X5jixTRKAVPTKCsDAWsqxSb+rARyA7ZjqhgteZBvIINMQ
+   2lqYkXtOrQ/tQSuAuU0xpKcEdzx4BtGrCevIMGF+wwo1WarOA4xYejtSU
+   KwUCR/rXnRg507sAoFSErZDRjLtWA7vLhqwzP+Evu/naNQXHWPrf+7hn2
+   g=;
+IronPort-SDR: rHd4GE8rbjWoeoPfI8EXQQ+1NixxkdbxyuchgG3iLzVAzCtyI6EmxtNfwLf0/axLZVK91DdNNe
+ KOTgfRoSQDSWC0H3Zlt/ixVA2s4UQoJ+ZCg/P8U7KnnU2GZ/Za0Dew6+mb4lSVe6NhjWgG5cJw
+ sfFI1hCHCZ3mnovB2izFm6sv48SKfMRA9XmQJhh2NHrBEq/n2ZAAey8j9da1CS1j8Tj0nkXx8Q
+ HZ1tXBRa51n23zbZ1uRDo2XLZvGKTknDxpuy8jcQ0Owd97YUF/AK6JbbFifZcqZ/t20rXXvdnw
+ 0iE=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9322"; a="128253562"
+X-IronPort-AV: E=Sophos;i="5.64,278,1559512800"; 
+   d="scan'208";a="128253562"
+Received: from unknown (HELO mucxv001.muc.infineon.com) ([172.23.11.16])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 19:10:04 +0200
+Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
+        by mucxv001.muc.infineon.com (Postfix) with ESMTPS;
+        Thu, 18 Jul 2019 19:10:03 +0200 (CEST)
+Received: from [10.154.32.63] (172.23.8.247) by MUCSE708.infineon.com
+ (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1591.10; Thu, 18
+ Jul 2019 19:10:03 +0200
+Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+To:     <Eyal.Cohen@nuvoton.com>, <jarkko.sakkinen@linux.intel.com>,
+        <tmaimon77@gmail.com>
+CC:     <oshrialkoby85@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <peterhuewe@gmx.de>, <jgg@ziepe.ca>,
+        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <oshri.alkoby@nuvoton.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+        <gcwilson@us.ibm.com>, <kgoldman@us.ibm.com>,
+        <nayna@linux.vnet.ibm.com>, <Dan.Morav@nuvoton.com>,
+        <oren.tanami@nuvoton.com>
+References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+ <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
+ <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
+ <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
+ <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
+ <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com>
+ <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
+ <20190715094541.zjqxainggjuvjxd2@linux.intel.com>
+ <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
+From:   Alexander Steffen <Alexander.Steffen@infineon.com>
+Message-ID: <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
+Date:   Thu, 18 Jul 2019 19:10:02 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05be2f81-de36-44b7-4bba-08d70ba21433
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:05:05.0346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3212
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=868 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180179
-X-FB-Internal: deliver
+In-Reply-To: <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.8.247]
+X-ClientProxiedBy: MUCSE714.infineon.com (172.23.7.94) To
+ MUCSE708.infineon.com (172.23.7.82)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:38:11AM +0000, Christopher Lameter wrote:
-> On Wed, 17 Jul 2019, Waiman Long wrote:
->=20
-> > Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
-> > file to shrink the slab by flushing out all the per-cpu slabs and free
-> > slabs in partial lists. This can be useful to squeeze out a bit more me=
-mory
-> > under extreme condition as well as making the active object counts in
-> > /proc/slabinfo more accurate.
->=20
-> Acked-by: Christoph Lameter <cl@linux.com>
->=20
-> >  # grep task_struct /proc/slabinfo
-> >  task_struct        53137  53192   4288   61    4 : tunables    0    0
-> >  0 : slabdata    872    872      0
-> >  # grep "^S[lRU]" /proc/meminfo
-> >  Slab:            3936832 kB
-> >  SReclaimable:     399104 kB
-> >  SUnreclaim:      3537728 kB
-> >
-> > After shrinking slabs:
-> >
-> >  # grep "^S[lRU]" /proc/meminfo
-> >  Slab:            1356288 kB
-> >  SReclaimable:     263296 kB
-> >  SUnreclaim:      1092992 kB
->=20
-> Well another indicator that it may not be a good decision to replicate th=
-e
-> whole set of slabs for each memcg. Migrate the memcg ownership into the
-> objects may allow the use of the same slab cache. In particular together
-> with the slab migration patches this may be a viable way to reduce memory
-> consumption.
->=20
+On 18.07.2019 14:51, Eyal.Cohen@nuvoton.com wrote:
+> Hi Jarkko and Alexander,
+> 
+> We have made an additional code review on the TPM TIS core driver, it looks quite good and we can connect our new I2C driver to this layer.
 
-Btw I'm working on an alternative solution. It's way too early to present
-anything, but preliminary results are looking promising: slab memory usage
-is decreased by 10-40% depending on the workload.
+Great :) In the meantime, I've done some experiments creating an I2C 
+driver based on tpm_tis_core, see 
+https://patchwork.kernel.org/patch/11049363/ Please have a look at that 
+and provide your feedback (and/or use it as a basis for further 
+implementations).
 
-Thanks!
+> However, there are several differences between the SPI interface and the I2C interface that will require changes to the TIS core.
+> At a minimum we thought of:
+> 1. Handling TPM Localities in I2C is different
+
+It turned out not to be that different in the end, see the code 
+mentioned above and my comment here: 
+https://patchwork.kernel.org/cover/11049365/
+
+> 2. Handling I2C CRC - relevant only to I2C bus hence not supported today by TIS core
+
+That is completely optional, so there is no need to implement it in the 
+beginning. Also, do you expect a huge benefit from that functionality? 
+Are bit flips that much more likely on I2C compared to SPI, which has no 
+CRC at all, but still works fine?
+
+> 3. Handling Chip specific issues, since I2C implementation might be slightly different across the various TPM vendors
+
+Right, that seems similar to the cr50 issues 
+(https://lkml.org/lkml/2019/7/17/677), so there should probably be a 
+similar way to do it.
+
+> 4. Modify tpm_tis_send_data and tpm_tis_recv_data to work according the TCG Device Driver Guide (optimization on TPM_STS access and send/recv retry)
+
+Optimizations are always welcome, but I'd expect basic communication to 
+work already with the current code (though maybe not as efficiently as 
+possible).
+
+> Besides this, during development we might encounter additional differences between SPI and I2C.
+> 
+> We currently target to allocate an eng. to work on this on the second half of August with a goal to have the driver ready for the next kernel merge window.
+> 
+> Regards,
+> Eyal.
