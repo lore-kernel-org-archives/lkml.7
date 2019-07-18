@@ -3,96 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD96C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AECC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7582184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5788E20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="fONq6q23"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrD8yUfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390571AbfGRPII (ORCPT
+        id S2403780AbfGRPI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:08:08 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:44410 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726040AbfGRPII (ORCPT
+        Thu, 18 Jul 2019 11:08:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39256 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727623AbfGRPIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:08:08 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 4DA4B2E14E5;
-        Thu, 18 Jul 2019 18:08:05 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id eXvUEDwHGP-84N4WWpg;
-        Thu, 18 Jul 2019 18:08:05 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1563462485; bh=r+b1A4l2F9g/q3ITgDkPw72qBmDym1kZ98ZmcHn0K5o=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=fONq6q23F+TbpfJUloG+4AFtEiPFAzYalIZRoJbbZtzbwYfw3hOzrUGevBCgpBLt3
-         1xSMeWyElu/EiB0c1Y+1qjl6d0f01J5sGN8KzRd1VKZmnVt2ItWA0zRZR1M8fp7vAM
-         uWPWO5qTXUNSaNYmvs/LfFEkPVA88TEFptog/Nzc=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38d2:81d0:9f31:221f])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id QzWFJEUVAn-84ISGi64;
-        Thu, 18 Jul 2019 18:08:04 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 2/2] mm/memcontrol: split local and nested atomic
- vmstats/vmevents counters
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>
-References: <156336655741.2828.4721531901883313745.stgit@buzz>
- <156336655979.2828.15196553724473875230.stgit@buzz>
- <20190717175319.GB25882@cmpxchg.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <e768596e-f012-b8f0-ee3c-773abb7a3692@yandex-team.ru>
-Date:   Thu, 18 Jul 2019 18:08:04 +0300
+        Thu, 18 Jul 2019 11:08:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u25so15707118wmc.4;
+        Thu, 18 Jul 2019 08:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=THnMSwcMi6ZEUqLptsuGsLv729OzubtW7+jZJzOORao=;
+        b=rrD8yUfD+ihIcehHCcCFz0Ac57bDu5gPMvg4l3QV5LmEugHtJ8MMHJkFzbTKd+raSd
+         QKQTO8fQ6wsYvmnORzbPKfhx0HB0wYtq38PMYbAnQO/qq10Uct+3sLILru/C2C7JhlZm
+         qroEeZHReIXiGF5qRFzqnzyOG7vO+ZnwfnUivun3WuCnhVFtUdsFf45JPUDcCY+uQGY1
+         gzxaSIkelXrvHGxpMGDcaa8UA8Ahnxnf9Y65OE05Q++cqTvMZbVfgGa/qFS9ziunyU99
+         88Jy1MHsyxieFeUZDAGakbkUyz4awFEgT/ozDfyaLqkQ7qwnr/lt6o973s/Vps7f5SAP
+         YKYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=THnMSwcMi6ZEUqLptsuGsLv729OzubtW7+jZJzOORao=;
+        b=ECBnPTHEK41h25ii/LlnwsuhFVhOTIb29RsF82pgTYiI4kYDpqeUAlnjBjlTev3/3i
+         Tst5ONcDPajP1YX3jaxzZmmO8iYgPpfFcW6AYNUueGhyD8XpaWEOAGNbPGQcu0p2vmY8
+         /S81Jer+LU7kSOm1UAYGhSFRnIw0z3x5NwMkOBkDYusYykauWhMmN++aolUT8vHYq9Ew
+         O6l8NILAQpcLmroX2HhuNodeEW1F+QT9m/iLzhhhd5ee3UNLKr/Bkf5AdNAgfWYOMbfC
+         W3unQ15mK2ch4cTEzb3KCjGCIYWLRiL2fQ+O1BuEKdqsdB2Jw5cEnGRTv33l+v48hUOr
+         XzDg==
+X-Gm-Message-State: APjAAAV7OQFuQFWUuaPLdlGA/y8YbOyEwyuZexpsgA3fDvJM8GoyaSjt
+        8XIX+1Ttq3+ka1HgmVA3t4hkz7JK
+X-Google-Smtp-Source: APXvYqxr+MPNVi7k1iTeINPRi72qSsdg22udy0HGe1QSJ0YtDFSRzi5v9v7U7HJ+vZS5XREyVQSPXQ==
+X-Received: by 2002:a7b:c7c2:: with SMTP id z2mr38589419wmk.147.1563462502909;
+        Thu, 18 Jul 2019 08:08:22 -0700 (PDT)
+Received: from [192.168.8.147] (72.160.185.81.rev.sfr.net. [81.185.160.72])
+        by smtp.gmail.com with ESMTPSA id h16sm26925802wrv.88.2019.07.18.08.08.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 08:08:22 -0700 (PDT)
+Subject: Re: regression with napi/softirq ?
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190717201925.fur57qfs2x3ha6aq@debian>
+ <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
+ <CADVatmO_m-NYotb9Htd7gS0d2-o0DeEWeDJ1uYKE+oj_HjoN0Q@mail.gmail.com>
+ <alpine.DEB.2.21.1907172345360.1778@nanos.tec.linutronix.de>
+ <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
+ <CADVatmN6xNO1iMQ4ihsT5OqV2cuj2ajq+v00NrtUyOHkiKPo-Q@mail.gmail.com>
+ <8124bbe5-eaa8-2106-2695-4788ec0f6544@gmail.com>
+ <CADVatmPQRf9A9z1LbHe5cd+bFLrPGG12YxPh2-yXAj_C9s8ZeA@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <870de0d9-5c08-9431-a46a-33ee4d3a6617@gmail.com>
+Date:   Thu, 18 Jul 2019 17:08:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190717175319.GB25882@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+In-Reply-To: <CADVatmPQRf9A9z1LbHe5cd+bFLrPGG12YxPh2-yXAj_C9s8ZeA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.07.2019 20:53, Johannes Weiner wrote:
-> On Wed, Jul 17, 2019 at 03:29:19PM +0300, Konstantin Khlebnikov wrote:
->> This is alternative solution for problem addressed in commit 815744d75152
->> ("mm: memcontrol: don't batch updates of local VM stats and events").
->>
->> Instead of adding second set of percpu counters which wastes memory and
->> slows down showing statistics in cgroup-v1 this patch use two arrays of
->> atomic counters: local and nested statistics.
->>
->> Then update has the same amount of atomic operations: local update and
->> one nested for each parent cgroup. Readers of hierarchical statistics
->> have to sum two atomics which isn't a big deal.
->>
->> All updates are still batched using one set of percpu counters.
->>
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> 
-> Yeah that looks better. Note that it was never about the atomics,
-> though, but rather the number of cachelines dirtied. Your patch should
-> solve this problem as well, but it might be a good idea to run
-> will-it-scale on it to make sure the struct layout is still fine.
-> 
 
-Looks like this patch shows 2% regression for 24 core 2 numa node
-machine I have. Compete remove of these counters gives 2% boost.
-Also I cannot reproduce regression fixed by commit 815744d75152 - revert
-have no effect.
 
-So, feel free to ignore second patch. I'll play with this a little more.
+On 7/18/19 2:55 PM, Sudip Mukherjee wrote:
 
-Maybe atomic per-numa counters could give nice balance between scalability add overhead.
-Ideally this memory could be mapped in per-cpu manner to give atomic access via fs/gs.
+> Thanks Eric. But there is no improvement in delay between
+> softirq_raise and softirq_entry with this change.
+> But moving to a later kernel (linus master branch? ) like Thomas has
+> said in the other mail might be difficult atm. I can definitely
+> move to v4.14.133 if that helps. Thomas ?
+
+If you are tracking max latency then I guess you have to tweak SOFTIRQ_NOW_MASK
+to include NET_RX_SOFTIRQ
+
+The patch I gave earlier would only lower the probability of events, not completely get rid of them.
+
+
+
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 0427a86743a46b7e1891f7b6c1ff585a8a1695f5..302046dd8d7e6740e466c422954f22565fe19e69 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -81,7 +81,7 @@ static void wakeup_softirqd(void)
+  * right now. Let ksoftirqd handle this at its own rate, to get fairness,
+  * unless we're doing some of the synchronous softirqs.
+  */
+-#define SOFTIRQ_NOW_MASK ((1 << HI_SOFTIRQ) | (1 << TASKLET_SOFTIRQ))
++#define SOFTIRQ_NOW_MASK ((1 << HI_SOFTIRQ) | (1 << TASKLET_SOFTIRQ) | (1 << NET_RX_SOFTIRQ))
+ static bool ksoftirqd_running(unsigned long pending)
+ {
+        struct task_struct *tsk = __this_cpu_read(ksoftirqd);
+
+
+
