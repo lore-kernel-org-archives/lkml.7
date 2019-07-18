@@ -4,99 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C50C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41CDC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01E5204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2273217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388462AbfGRGZn (ORCPT
+        id S2387675AbfGRG0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:25:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1706 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfGRGZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:25:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 23:25:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="191506532"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 23:25:39 -0700
-Message-ID: <5D301232.7080808@intel.com>
-Date:   Thu, 18 Jul 2019 14:31:14 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        Thu, 18 Jul 2019 02:26:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726498AbfGRG0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 02:26:21 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I6MVx1151536
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 02:26:19 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tthfkd1q3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 02:26:19 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 18 Jul 2019 07:26:17 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 07:26:13 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I6QCkb43516064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 06:26:12 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20EC7AE045;
+        Thu, 18 Jul 2019 06:26:12 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3192AAE053;
+        Thu, 18 Jul 2019 06:26:11 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.168])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 18 Jul 2019 06:26:11 +0000 (GMT)
+Date:   Thu, 18 Jul 2019 09:26:09 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in
+ ZONE_MOVABLE
+References: <20190718024133.3873-1-leonardo@linux.ibm.com>
 MIME-Version: 1.0
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, xdeguillard@vmware.com, namit@vmware.com,
-        akpm@linux-foundation.org, pagupta@redhat.com, riel@surriel.com,
-        dave.hansen@intel.com, david@redhat.com, konrad.wilk@oracle.com,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, lcapitulino@redhat.com,
-        aarcange@redhat.com, pbonzini@redhat.com,
-        alexander.h.duyck@linux.intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v1] mm/balloon_compaction: avoid duplicate page removal
-References: <1563416610-11045-1-git-send-email-wei.w.wang@intel.com> <20190718001605-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190718001605-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718024133.3873-1-leonardo@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19071806-0016-0000-0000-00000293E773
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071806-0017-0000-0000-000032F1C1E3
+Message-Id: <20190718062608.GA20726@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/18/2019 12:31 PM, Michael S. Tsirkin wrote:
-> On Thu, Jul 18, 2019 at 10:23:30AM +0800, Wei Wang wrote:
->> Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
->>
->> A #GP is reported in the guest when requesting balloon inflation via
->> virtio-balloon. The reason is that the virtio-balloon driver has
->> removed the page from its internal page list (via balloon_page_pop),
->> but balloon_page_enqueue_one also calls "list_del"  to do the removal.
-> I would add here "this is necessary when it's used from
-> balloon_page_enqueue_list but not when it's called
-> from balloon_page_enqueue".
->
->> So remove the list_del in balloon_page_enqueue_one, and have the callers
->> do the page removal from their own page lists.
->>
->> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-> Patch is good but comments need some work.
->
->> ---
->>   mm/balloon_compaction.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
->> index 83a7b61..1a5ddc4 100644
->> --- a/mm/balloon_compaction.c
->> +++ b/mm/balloon_compaction.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/export.h>
->>   #include <linux/balloon_compaction.h>
->>   
->> +/* Callers ensure that @page has been removed from its original list. */
-> This comment does not make sense. E.g. balloon_page_enqueue
-> does nothing to ensure this. And drivers are not supposed
-> to care how the page lists are managed. Pls drop.
->
-> Instead please add the following to balloon_page_enqueue:
->
->
-> 	Note: drivers must not call balloon_page_list_enqueue on
+On Wed, Jul 17, 2019 at 11:41:34PM -0300, Leonardo Bras wrote:
+> Adds an option on kernel config to make hot-added memory online in
+> ZONE_MOVABLE by default.
+> 
+> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
+> allowing to choose which zone it will be auto-onlined
+ 
+Please add more elaborate description of the problem you are solving and
+the solution outline.
 
-Probably, you meant balloon_page_enqueue here.
 
-The description for balloon_page_enqueue also seems incorrect:
-"allocates a new page and inserts it into the balloon page list."
-This function doesn't do any allocation itself.
-Plan to reword it: inserts a new page into the balloon page list."
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  drivers/base/memory.c |  3 +++
+>  mm/Kconfig            | 14 ++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index f180427e48f4..378b585785c1 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
+>  	mem->state = state;
+>  	start_pfn = section_nr_to_pfn(mem->start_section_nr);
+>  	mem->phys_device = arch_get_memory_phys_device(start_pfn);
+> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
+> +	mem->online_type = MMOP_ONLINE_MOVABLE;
+> +#endif
 
-Best,
-Wei
+Does it has to be a compile time option?
+Seems like this can be changed at run time or at least at boot.
+  
+>  	ret = register_memory(mem);
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index f0c76ba47695..74e793720f43 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
+>  	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
+>  	depends on MIGRATION
+>  
+> +config MEMORY_HOTPLUG_MOVABLE
+> +	bool "Enhance the likelihood of hot-remove"
+> +	depends on MEMORY_HOTREMOVE
+> +	help
+> +	  This option sets the hot-added memory zone to MOVABLE which
+> +	  drastically reduces the chance of a hot-remove to fail due to
+> +	  unmovable memory segments. Kernel memory can't be allocated in
+> +	  this zone.
+> +
+> +	  Say Y here if you want to have better chance to hot-remove memory
+> +	  that have been previously hot-added.
+> +	  Say N here if you want to make all hot-added memory available to
+> +	  kernel space.
+> +
+>  # Heavily threaded applications may benefit from splitting the mm-wide
+>  # page_table_lock, so that faults on different parts of the user address
+>  # space can be handled with less contention: split it at this NR_CPUS.
+> -- 
+> 2.20.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
