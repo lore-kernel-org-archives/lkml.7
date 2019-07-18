@@ -2,56 +2,61 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC2C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01383C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C3421783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1EE21783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420166;
-	bh=6gd90O/y2lDsWKKRond7nl5/KG/B8OEOYSQUr9f0rWI=;
+	s=default; t=1563420171;
+	bh=GsQDKGHp0bAX604iiTE+AzbVnmm5nkTZCJpC+xIdO/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJW350MUBJVl5r4DV5K8qHwlTxulkjxE0exka5HnLqVxoeOpGzfBxYFP0+8mTuBR+
-	 ft1VAO2OvPzyP4/HRvqyacoVoFZnePUZuEuLZ3cpPQshMWPZy/KRAeyySLaKR1x/uJ
-	 lLwmaLvjBdyi/ylkxX41ZZONJq7b6ToyShVxZkYU=
+	b=QkxlIpa5jSIRHZA51VFDLrdGNMEIH65QbPYwWxaY4h104a6PJSukCBFmowrzLRvvb
+	 LhtA+DEFMfTY/49TPfGOe3KTIsg+4SQ2p+n1pdaNgQjHJ0xV2olAufknz/Jq9p1NS0
+	 P5deZM0AffZOFc6/e/vdeMqcRKBvA7b3/Ct9cbg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391214AbfGRDWp (ORCPT
+        id S2391423AbfGRDWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390786AbfGRDIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:35 -0400
+        id S2390753AbfGRDIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:31 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB20020818;
-        Thu, 18 Jul 2019 03:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C1E92173B;
+        Thu, 18 Jul 2019 03:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419314;
-        bh=6gd90O/y2lDsWKKRond7nl5/KG/B8OEOYSQUr9f0rWI=;
+        s=default; t=1563419310;
+        bh=GsQDKGHp0bAX604iiTE+AzbVnmm5nkTZCJpC+xIdO/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kjkmsiwc6UIg7oClhH98sV5MwOfVmsxjIq1dgeyFM6b0CygcQuAHRpgiGp8M6kTA6
-         23TCwEmxPp1vLiPl4Sznhz337jrjMHurisZGCwTv0C82573NiYL58SX8tPAwmF10Cd
-         oUVOjNd5Hyvp0EVaPs/lpAQjdvPLnpHh68osgeAY=
+        b=xmr4PExle8fNDHR0793Xod04c+o0W//HvI+63qksaags7MTgeWs2F9E7E464AigXs
+         aMpiS0wuqIhCdhAWFbtyrrvEbis5/F02+JhCWhScvm4qM7rw3wug2QFThHvbhlV/bG
+         YnOxQi3cy4tJsvOTzKOU7DlUYR9mAYWwLx9GJAmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@eero.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/80] mac80211: mesh: fix RCU warning
-Date:   Thu, 18 Jul 2019 12:01:02 +0900
-Message-Id: <20190718030059.729049916@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Joseph Yasi <joe.yasi@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.14 01/80] Revert "e1000e: fix cyclic resets at link up with active tx"
+Date:   Thu, 18 Jul 2019 12:00:52 +0900
+Message-Id: <20190718030058.716880377@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,62 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-ifmsh->csa is an RCU-protected pointer. The writer context
-in ieee80211_mesh_finish_csa() is already mutually
-exclusive with wdev->sdata.mtx, but the RCU checker did
-not know this. Use rcu_dereference_protected() to avoid a
-warning.
+commit caff422ea81e144842bc44bab408d85ac449377b upstream.
 
-fixes the following warning:
+This reverts commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61.
 
-[   12.519089] =============================
-[   12.520042] WARNING: suspicious RCU usage
-[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
-[   12.521409] -----------------------------
-[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
-[   12.522928] other info that might help us debug this:
-[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
-[   12.524855] 5 locks held by kworker/u8:2/152:
-[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
-[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
-[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
-[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
-[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
+That change cased false-positive warning about hardware hang:
 
-Signed-off-by: Thomas Pedersen <thomas@eero.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+e1000e: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
+IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+e1000e 0000:00:1f.6 eth0: Detected Hardware Unit Hang:
+   TDH                  <0>
+   TDT                  <1>
+   next_to_use          <1>
+   next_to_clean        <0>
+buffer_info[next_to_clean]:
+   time_stamp           <fffba7a7>
+   next_to_watch        <0>
+   jiffies              <fffbb140>
+   next_to_watch.status <0>
+MAC Status             <40080080>
+PHY Status             <7949>
+PHY 1000BASE-T Status  <0>
+PHY Extended Status    <3000>
+PCI Status             <10>
+e1000e: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
+
+Besides warning everything works fine.
+Original issue will be fixed property in following patch.
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Joseph Yasi <joe.yasi@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203175
+Tested-by: Joseph Yasi <joe.yasi@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/mesh.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index 96e57d7c2872..aca054539f4a 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -1209,7 +1209,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
- 	ifmsh->chsw_ttl = 0;
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5306,13 +5306,8 @@ static void e1000_watchdog_task(struct w
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
+-			 *
+-			 * If the link is lost the controller stops DMA, but
+-			 * if there is queued Tx work it cannot be done.  So
+-			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
+-			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
++			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5335,6 +5330,14 @@ link_up:
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
- 	/* Remove the CSA and MCSP elements from the beacon */
--	tmp_csa_settings = rcu_dereference(ifmsh->csa);
-+	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
-+					    lockdep_is_held(&sdata->wdev.mtx));
- 	RCU_INIT_POINTER(ifmsh->csa, NULL);
- 	if (tmp_csa_settings)
- 		kfree_rcu(tmp_csa_settings, rcu_head);
-@@ -1231,6 +1232,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
- 	struct mesh_csa_settings *tmp_csa_settings;
- 	int ret = 0;
- 
-+	lockdep_assert_held(&sdata->wdev.mtx);
++	/* If the link is lost the controller stops DMA, but
++	 * if there is queued Tx work it cannot be done.  So
++	 * reset the controller to flush the Tx packet buffers.
++	 */
++	if (!netif_carrier_ok(netdev) &&
++	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
++		adapter->flags |= FLAG_RESTART_NOW;
 +
- 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
- 				   GFP_ATOMIC);
- 	if (!tmp_csa_settings)
--- 
-2.20.1
-
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
 
 
