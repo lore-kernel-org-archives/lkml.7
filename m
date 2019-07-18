@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1C9C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BB3C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9352173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AEC2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389288AbfGRBi2 (ORCPT
+        id S2389307AbfGRBid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 21:38:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38282 "EHLO mx1.redhat.com"
+        Wed, 17 Jul 2019 21:38:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58042 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732652AbfGRBhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 21:37:18 -0400
+        id S1732438AbfGRBhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 21:37:15 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 20CB059440;
-        Thu, 18 Jul 2019 01:37:18 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8B4F5307D84B;
+        Thu, 18 Jul 2019 01:37:15 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-122-211.rdu2.redhat.com [10.10.122.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 121B85D9CC;
-        Thu, 18 Jul 2019 01:37:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 64AFF5D9CC;
+        Thu, 18 Jul 2019 01:37:14 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -35,55 +35,55 @@ Cc:     linux-kernel@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
         Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2 07/22] x86/uaccess: Remove ELF function annotation from copy_user_handle_tail()
-Date:   Wed, 17 Jul 2019 20:36:42 -0500
-Message-Id: <6b6e436774678b4b9873811ff023bd29935bee5b.1563413318.git.jpoimboe@redhat.com>
+Subject: [PATCH v2 05/22] x86/entry: Fix thunk function ELF sizes
+Date:   Wed, 17 Jul 2019 20:36:40 -0500
+Message-Id: <89c97adc9f6cc44a0f5d03cde6d0357662938909.1563413318.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1563413318.git.jpoimboe@redhat.com>
 References: <cover.1563413318.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 18 Jul 2019 01:37:18 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 18 Jul 2019 01:37:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After an objtool improvement, it's complaining about the CLAC in
-copy_user_handle_tail():
+Fix the following warnings:
 
-  arch/x86/lib/copy_user_64.o: warning: objtool: .altinstr_replacement+0x12: redundant UACCESS disable
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x6: (alt)
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x2: (alt)
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x0: <=== (func)
-
-copy_user_handle_tail() is incorrectly marked as a callable function, so
-objtool is rightfully concerned about the CLAC with no corresponding
-STAC.
-
-Remove the ELF function annotation.  The copy_user_handle_tail() code
-path is already verified by objtool because it's jumped to by other
-callable asm code (which does the corresponding STAC).
+  arch/x86/entry/thunk_64.o: warning: objtool: trace_hardirqs_on_thunk() is missing an ELF size annotation
+  arch/x86/entry/thunk_64.o: warning: objtool: trace_hardirqs_off_thunk() is missing an ELF size annotation
+  arch/x86/entry/thunk_64.o: warning: objtool: lockdep_sys_exit_thunk() is missing an ELF size annotation
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/lib/copy_user_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/thunk_64.S | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
-index 378a1f70ae7d..4fe1601dbc5d 100644
---- a/arch/x86/lib/copy_user_64.S
-+++ b/arch/x86/lib/copy_user_64.S
-@@ -239,7 +239,7 @@ copy_user_handle_tail:
- 	ret
+diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
+index cfdca8b42c70..cc20465b2867 100644
+--- a/arch/x86/entry/thunk_64.S
++++ b/arch/x86/entry/thunk_64.S
+@@ -12,9 +12,7 @@
  
- 	_ASM_EXTABLE_UA(1b, 2b)
--ENDPROC(copy_user_handle_tail)
-+END(copy_user_handle_tail)
+ 	/* rdi:	arg1 ... normal C conventions. rax is saved/restored. */
+ 	.macro THUNK name, func, put_ret_addr_in_rdi=0
+-	.globl \name
+-	.type \name, @function
+-\name:
++	ENTRY(\name)
+ 	pushq %rbp
+ 	movq %rsp, %rbp
  
- /*
-  * copy_user_nocache - Uncached memory copy with exception handling
+@@ -35,6 +33,7 @@
+ 
+ 	call \func
+ 	jmp  .L_restore
++	ENDPROC(\name)
+ 	_ASM_NOKPROBE(\name)
+ 	.endm
+ 
 -- 
 2.20.1
 
