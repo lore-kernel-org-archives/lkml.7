@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94293C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B1AC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6348021848
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB3221851
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419762;
-	bh=bn+Fhh3D/zjTxPg8luaLzIHorP/HMKgTUHHCoug0LMg=;
+	s=default; t=1563419767;
+	bh=FX2Z3hQoitXwGVLYWO2ffrDXB/93Wnqv7jzv26SpfMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzOnIgZiU1W6Bww+hk5bnMwWcxvZyGlhlzUD7Sy716b7JNsVyqDsX1ZsNShbG5euX
-	 wFl71GMPg20QnC3pkGQn5z/pG4xqPbwZv3+Yg890JZrAdIMtmfSEq4cnAQPcCAbzYH
-	 sgsQIGFc296I2Kh7dkXnOzIbwzPi1lrSD5X7Q6ks=
+	b=MVsBPQZK3PPadS/qqjhZS3kLHhtZlPbTPveqvsYcfccYTz+VwB0I677MYpf/bfdGP
+	 DSLtTJSZSTJF2MYEhRnVQ+RCgTsXKVHgwrBrxvX5aT7uC+nnzTiq/czxwL14s4dzbB
+	 ZZVUUSgE8431tjt6SqcIf89+2htggco8zYf3DMAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392197AbfGRDQA (ORCPT
+        id S2391086AbfGRDPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52994 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392100AbfGRDPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:40 -0400
+        id S2392066AbfGRDPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:30 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A386D21848;
-        Thu, 18 Jul 2019 03:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396B92053B;
+        Thu, 18 Jul 2019 03:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419739;
-        bh=bn+Fhh3D/zjTxPg8luaLzIHorP/HMKgTUHHCoug0LMg=;
+        s=default; t=1563419729;
+        bh=FX2Z3hQoitXwGVLYWO2ffrDXB/93Wnqv7jzv26SpfMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=muSGMbF1kfF/QC8XTxO7r9pa9VANVajbGFqwpN57/s+9t7jP10Ky7Liy3Lj5gwFne
-         UGRPuJJQrvTaTL/Bk3ocOshXWidok5+6gVTayYOXCbkKgxzDTZewyX1PzAX/v00RS/
-         LdIlyYa0fB0jM2ZVYapcG3xH82kKyqySoMmT3eac=
+        b=PzeIqagLPln0AVj4RVFuqBLP2+xH+9i02Q+D6VM0SaIROGGOQHL1fywje1DO4W2nQ
+         xhjG1S02y4Yi2AhPFspUPgf6QVpDRGH0rmL3H/6Aqf8wm2NjeqOvVIW6LxnyYBpG93
+         QuO2OtLHbV3t7J2JzLEwQeVuHsKFOX/D3nFqnRpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/47] ARM: dts: imx6ul: fix PWM[1-4] interrupts
-Date:   Thu, 18 Jul 2019 12:01:32 +0900
-Message-Id: <20190718030050.209834935@linuxfoundation.org>
+Subject: [PATCH 4.4 30/40] ARM: omap2: remove incorrect __init annotation
+Date:   Thu, 18 Jul 2019 12:02:26 +0900
+Message-Id: <20190718030049.653464043@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
-References: <20190718030045.780672747@linuxfoundation.org>
+In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
+References: <20190718030039.676518610@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,60 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3cf10132ac8d536565f2c02f60a3aeb315863a52 ]
+[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
 
-According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
-summary", the interrupts for the PWM[1-4] go from 83 to 86.
+omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
+we get a warning with clang-8:
 
-Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
+The function omap3xxx_prm_late_init() references
+the function __init omap3xxx_prm_enable_io_wakeup().
+This is often because omap3xxx_prm_late_init lacks a __init
+annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+
+When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
+inlined, so we never noticed in the past.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/mach-omap2/prm3xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 2366f093cc76..336cdead3da5 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -359,7 +359,7 @@
- 			pwm1: pwm@2080000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02080000 0x4000>;
--				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM1>,
- 					 <&clks IMX6UL_CLK_PWM1>;
- 				clock-names = "ipg", "per";
-@@ -370,7 +370,7 @@
- 			pwm2: pwm@2084000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02084000 0x4000>;
--				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM2>,
- 					 <&clks IMX6UL_CLK_PWM2>;
- 				clock-names = "ipg", "per";
-@@ -381,7 +381,7 @@
- 			pwm3: pwm@2088000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02088000 0x4000>;
--				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM3>,
- 					 <&clks IMX6UL_CLK_PWM3>;
- 				clock-names = "ipg", "per";
-@@ -392,7 +392,7 @@
- 			pwm4: pwm@208c000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x0208c000 0x4000>;
--				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM4>,
- 					 <&clks IMX6UL_CLK_PWM4>;
- 				clock-names = "ipg", "per";
+diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
+index 62680aad2126..b5ce9ca76336 100644
+--- a/arch/arm/mach-omap2/prm3xxx.c
++++ b/arch/arm/mach-omap2/prm3xxx.c
+@@ -430,7 +430,7 @@ static void omap3_prm_reconfigure_io_chain(void)
+  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
+  * No return value.
+  */
+-static void __init omap3xxx_prm_enable_io_wakeup(void)
++static void omap3xxx_prm_enable_io_wakeup(void)
+ {
+ 	if (prm_features & PRM_HAS_IO_WAKEUP)
+ 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
 -- 
 2.20.1
 
