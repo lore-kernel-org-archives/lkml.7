@@ -2,95 +2,95 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49614C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A41C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294B02173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E90F2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ix4Fqd9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403765AbfGRTBR (ORCPT
+        id S2390945AbfGRTC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:01:17 -0400
-Received: from mail.us.es ([193.147.175.20]:45598 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbfGRTBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:01:16 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id BDDF51022AB
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 21:01:13 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id AF64C115108
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 21:01:13 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 929279615A; Thu, 18 Jul 2019 21:01:13 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 802B2D2F98;
-        Thu, 18 Jul 2019 21:01:11 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Thu, 18 Jul 2019 21:01:11 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 4BCCE4265A31;
-        Thu, 18 Jul 2019 21:01:11 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 21:01:10 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>, wenxu <wenxu@ucloud.cn>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Thu, 18 Jul 2019 15:02:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40528 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfGRTC7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 15:02:59 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b17so19995437lff.7;
+        Thu, 18 Jul 2019 12:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HB/bd47iRXpFzL6ymnsSikUvO8FPX+2PI8fyAjuW//g=;
+        b=ix4Fqd9wxwYwDgrgC7if/Ja6EXYAtIlQosTXdEgLUnxla479zBMT5FU86muxSYLZgH
+         iyo3BABNMAoSWk7OSzIUu2gQWlOOiW6PiTUIFw7m9I7uKOfnnFPJyDkip9UhK7jQdmZs
+         R6Z9seRmBWN9l4ALVQTFzuakuWkReZx72GU9BcV8wH3pGZ4242TCNdnRp6PZSUysy3lc
+         X+parvLr3zlXh8Y6ICCFWj/4jIsCoQzP6m9oCpHdhlWf0kWZwchbtcK3kGYZD1o9hcw7
+         SnLbIy0QD1BojrP9RM+gZM3xArpgw00n8uE1zEjtCNStpEMf8cE570pDVd45TZ9yoKjD
+         g1ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HB/bd47iRXpFzL6ymnsSikUvO8FPX+2PI8fyAjuW//g=;
+        b=nMUHF9ECuYPzzJqZWTM9PTgGE/SNLEBXtYOSOOWNMsoSvdrzmo59iM32KuaOryyqjV
+         1GErQKqEqYQAs5hK+8kwHLWwzB+DdlPUs6ud7sPIMH4lZksl0DFa3M0fmyBD6lB3mGtq
+         N0ht20pq3f90+tByJjBm+uiYN5dH+5ZVQjjcNi6C3aUYFLjJ1pzfve9U0cqQBOv35L1X
+         u+RnNvR2RWQhPh01+ZegUc8LLo6+i+3Yr1GLwhCEpB/vT7zhxj6oPpMRJ7I/wv/TNSFq
+         5ZGtaRh3K7N8C1FxJDHOYNVqwyxCTr6teEIB7bc6qDMWzEQUo66fUrwggp7E1ngn+PoN
+         eMdw==
+X-Gm-Message-State: APjAAAVVu0keWM+uXn/0wOEVDX7t4Op+u7cuzcOmRwZJTYJ/Od7GniCI
+        w1nirsnTjwaK6QpFK33XDuk=
+X-Google-Smtp-Source: APXvYqyp0EUj2X5MUNmi6S433nDN9vCK+4YeXM8FssJZ5i+spMaSQHQq89MCzBenSKy362Zini1hqA==
+X-Received: by 2002:ac2:454e:: with SMTP id j14mr21179643lfm.7.1563476576941;
+        Thu, 18 Jul 2019 12:02:56 -0700 (PDT)
+Received: from ul001888.eu.tieto.com ([91.90.160.140])
+        by smtp.gmail.com with ESMTPSA id z22sm5272431ljz.20.2019.07.18.12.02.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 12:02:55 -0700 (PDT)
+From:   Vasyl Gomonovych <gomonovych@gmail.com>
+To:     satishkh@cisco.com, sebaddel@cisco.com, kartilak@cisco.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [net-next] netfilter: bridge: make NF_TABLES_BRIDGE
- tristate
-Message-ID: <20190718190110.akn54iwb2mui72cd@salvia>
-References: <20190710080835.296696-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710080835.296696-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: [PATCH] fnic: remove casting vmalloc
+Date:   Thu, 18 Jul 2019 21:02:35 +0200
+Message-Id: <20190718190235.8089-1-gomonovych@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:08:20AM +0200, Arnd Bergmann wrote:
-> The new nft_meta_bridge code fails to link as built-in when NF_TABLES
-> is a loadable module.
-> 
-> net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_eval':
-> nft_meta_bridge.c:(.text+0x1e8): undefined reference to `nft_meta_get_eval'
-> net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_init':
-> nft_meta_bridge.c:(.text+0x468): undefined reference to `nft_meta_get_init'
-> nft_meta_bridge.c:(.text+0x49c): undefined reference to `nft_parse_register'
-> nft_meta_bridge.c:(.text+0x4cc): undefined reference to `nft_validate_register_store'
-> net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_exit':
-> nft_meta_bridge.c:(.exit.text+0x14): undefined reference to `nft_unregister_expr'
-> net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_init':
-> nft_meta_bridge.c:(.init.text+0x14): undefined reference to `nft_register_expr'
-> net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x60): undefined reference to `nft_meta_get_dump'
-> net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x88): undefined reference to `nft_meta_set_eval'
-> 
-> This can happen because the NF_TABLES_BRIDGE dependency itself is just a
-> 'bool'.  Make the symbol a 'tristate' instead so Kconfig can propagate the
-> dependencies correctly.
+Generated by:  alloc_cast.cocci
 
-Hm. Something breaks here. Investigating. Looks like bridge support is
-gone after this, nft fails to register the filter chain type:
+Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
+---
+ drivers/scsi/fnic/fnic_debugfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-# nft add table bridge x
-# nft add chain bridge x y { type filter hook input priority 0\; }
-Error: Could not process rule: No such file or directory
+diff --git a/drivers/scsi/fnic/fnic_debugfs.c b/drivers/scsi/fnic/fnic_debugfs.c
+index 21991c99db7c..8c5bae6165d6 100644
+--- a/drivers/scsi/fnic/fnic_debugfs.c
++++ b/drivers/scsi/fnic/fnic_debugfs.c
+@@ -59,8 +59,7 @@ int fnic_debugfs_init(void)
+ 						fnic_trace_debugfs_root);
+ 
+ 	/* Allocate memory to structure */
+-	fc_trc_flag = (struct fc_trace_flag_type *)
+-		vmalloc(sizeof(struct fc_trace_flag_type));
++	fc_trc_flag = vmalloc(sizeof(struct fc_trace_flag_type));
+ 
+ 	if (fc_trc_flag) {
+ 		fc_trc_flag->fc_row_file = 0;
+-- 
+2.17.1
+
