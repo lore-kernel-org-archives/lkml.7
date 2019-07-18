@@ -2,255 +2,151 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12F3C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F34C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEAF208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA08208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jdap8+4m"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fvjXH2nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfGRV5J (ORCPT
+        id S2391295AbfGRWA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:57:09 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44829 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGRV5I (ORCPT
+        Thu, 18 Jul 2019 18:00:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32925 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbfGRWA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:57:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so14519439plr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:57:08 -0700 (PDT)
+        Thu, 18 Jul 2019 18:00:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so13231274pfq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9NQWIYIb3zofiCzg+GVgOIJ0wwu6tmW9/oeA0AthTQA=;
-        b=Jdap8+4mcc3eFAOhQHwxZ5WXvdobqWzQDiAYdXC9xE+6DY8wMTmtxIYIX6PMcDexwI
-         SckVNHUILX5YBmoNozTcGrdglFtkAzj2NaxaTF8EJ2v3j6Kmuf8m8th7RhZoRpy4fNnQ
-         ApbPJGMUBCS/HP7I+h9Ej7t86Q21bE3HXLrCkT4Tc4pPM/I3BtJ86xldJhRFKuPvywni
-         rAFQFF2ShNJpwiQGr5LbDLhuuxtj+KFhBgqWEJfoF6PUh8oPJV7G9FFu7bivZQ5k3Znz
-         sRKlm6KMd214c66wXV5wC/O13P2SsRcNv/67UxN5P0i0U/0htoSkZtm9zoC1NoV3eMad
-         SC1g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8xR8jl+9vgMnbRgGnFx+VtGRpj/KzIWKtjg0q2reL/k=;
+        b=fvjXH2nbjQoatTbzrPNj3OZ46b6cJ+8n6SnDBNxFLsZs+Ehs5Nb2/vKueM3hgJyOJK
+         driQhgj5ndG2WvD3hJDb/eqBOZJjflB58QRW/rS+Ul8xcwNxLk/NouJA0iGnkoyDGFRk
+         eBOQekrr6gV7U/V3SAiqCidSranhnIz6b24Kc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9NQWIYIb3zofiCzg+GVgOIJ0wwu6tmW9/oeA0AthTQA=;
-        b=FGQZHKRQ9tlMEdYtFje7rcF/iKJCK59RczlPeH3M3+sm+cELJ30S3Tv1eJs0ieCAXA
-         KFUcX8M9pNcl7lvNdTJtTa82/+X5ZI/yVVwZBK4CdDbkZ9BSxOtSE4SC7ydVXaGOWQHy
-         6Rdbksm6LakQjE4A/i3HJgSiZybO0omVHpCxjqCprCEjDgj7V4N0rRrrK2EHXsPiGgZ8
-         A774fPNbPduYpLgxcs12qnthmh7I5ycZM4uxFcoeOzJcdBUF2JweyVSFfgCFOABk89Wt
-         xoJZClRlTH6+gdM7zTiZhFutHycERu+n1p8pk0EoRmMXh+CiULhzFP86gbCK+Yngbo5r
-         nqOg==
-X-Gm-Message-State: APjAAAU+MAwa0OHbE8TUlsmOrrklsRv+WkEf8jRCvaC3qR5b9qKeMseX
-        bGwbSmvhYoEGAjD5rXfvsWuf3Da26CS+1ySNcIvpzQ==
-X-Google-Smtp-Source: APXvYqxVHFZG25s8tacIiBWnDZc7GkdNevsOnib9tFOEtpBkY+1WZIp27vsk69ZC5f4fXIQLmVA1Y8RwmOZ3IluUxtk=
-X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr50488531pld.119.1563487027518;
- Thu, 18 Jul 2019 14:57:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8xR8jl+9vgMnbRgGnFx+VtGRpj/KzIWKtjg0q2reL/k=;
+        b=ggbltCyuSYEtDTBLf0jwqb9FX+UE8SdE5GlBfOnXsZcifYF1AzdNp0d2V2RrcHuSgr
+         DSK9EYYYLDbJ+vlJ+EdG+w+pqab9x6VYo+q1MvZCE+JQ0ez6uRrUkts4YYeWAGEyO/oV
+         jXteWe+ZXHPyRIgx+KxnH4f58xGTfQc1k5X9dqGkgAf6p5csLowJTP9uZhX2KeBfxHDH
+         vYAEQ9WYprr+v2sUP9/DPfvyjj/NKXCQCJQ1pKitB7XCWj3dHJ6McJ1OJveitbzi5tjW
+         kTC8I1dQD1kIVYb+tQ6IUKcItbjo3+wy3NPXzmFVBpfl5JEw5k3R7slnZRf7JlJ3isBO
+         JSBQ==
+X-Gm-Message-State: APjAAAXX+WtnuCJckxrxqkDu6N53HGSUfkfX1S6vwYuwsCegVJNmMVv7
+        jCvEu7PVYvNgq+cqnD8xbUMKQA==
+X-Google-Smtp-Source: APXvYqwHrAAKS7n0aYl9H4nAYcLxIe5S0CqR2dUHEXjXNNZYBdVXXjPs1QuIMv19nVjZhcPF43F+OQ==
+X-Received: by 2002:a63:3203:: with SMTP id y3mr50691914pgy.191.1563487256758;
+        Thu, 18 Jul 2019 15:00:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 124sm30444223pfw.142.2019.07.18.15.00.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jul 2019 15:00:56 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 15:00:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     corbet@lwn.net, solar@openwall.com, will@kernel.org,
+        peterz@infradead.org, gregkh@linuxfoundation.org,
+        tyhicks@canonical.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation/security-bugs: provide more information
+ about linux-distros
+Message-ID: <201907181457.D61AC061C@keescook>
+References: <20190717231103.13949-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190718000206.121392-1-vaibhavrustagi@google.com> <20190718000206.121392-3-vaibhavrustagi@google.com>
-In-Reply-To: <20190718000206.121392-3-vaibhavrustagi@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 18 Jul 2019 14:56:56 -0700
-Message-ID: <CAKwvOd=wrN_MhO57ft6ER=z9PB7or7UKUo=Shd=8bn1rDQNgiA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/purgatory: do not use __builtin_memcpy and __builtin_memset.
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Vivek Goyal <vgoyal@redhat.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vaibhav Rustagi <vaibhavrustagi@google.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Hans Boehm <hboehm@google.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717231103.13949-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 5:02 PM Vaibhav Rustagi
-<vaibhavrustagi@google.com> wrote:
->
-> From: Nick Desaulniers <ndesaulniers@google.com>
->
-> Implementing memcpy and memset in terms of __builtin_memcpy and
-> __builtin_memset is problematic.
->
-> GCC at -O2 will replace calls to the builtins with calls to memcpy and
-> memset (but will generate an inline implementation at -Os).  Clang will
-> replace the builtins with these calls regardless of optimization level.
->
-> $ llvm-objdump -dr arch/x86/purgatory/string.o | tail
->
-> 0000000000000339 memcpy:
->      339: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
->                 000000000000033b:  R_X86_64_64  memcpy
->      343: ff e0                         jmpq    *%rax
->
-> 0000000000000345 memset:
->      345: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
->                 0000000000000347:  R_X86_64_64  memset
->      34f: ff e0
->
-> Such code results in infinite recursion at runtime. This is observed
-> when doing kexec.
+On Wed, Jul 17, 2019 at 07:11:03PM -0400, Sasha Levin wrote:
+> Provide more information about how to interact with the linux-distros
+> mailing list for disclosing security bugs.
+> 
+> Reference the linux-distros list policy and clarify that the reporter
+> must read and understand those policies as they differ from
+> security@kernel.org's policy.
+> 
+> Suggested-by: Solar Designer <solar@openwall.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Just so it's crystal clear to other reviewers, consider this codegen
-between compilers and optimization levels:
-https://godbolt.org/z/jcfKsw
-So I'd imagine the commit that introduced these implementations very
-much relied on being compiled at -Os to work.
+Sorry, but NACK, see below...
 
->
-> Instead, reuse an implementation from arch/x86/boot/compressed/string.c
-> if we define warn as a symbol.
-
-Alternatively, I was getting fancy trying to match what GCC lowers
-__builtin_memcpy/__builtin_memset to:
-diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
-index 795ca4f..e055f65 100644
---- a/arch/x86/purgatory/string.c
-+++ b/arch/x86/purgatory/string.c
-@@ -16,10 +16,23 @@
-
- void *memcpy(void *dst, const void *src, size_t len)
- {
-- return __builtin_memcpy(dst, src, len);
-+ asm(
-+ "movq %0, %%rax\n\t"
-+ "movq %2, %%rcx\n\t"
-+ "rep movsb\n\t"
-+ : "=r"(dst) : "r"(src), "ri"(len) : "rax", "rcx");
-+ return dst;
- }
-
- void *memset(void *dst, int c, size_t len)
- {
-- return __builtin_memset(dst, c, len);
-+ void* ret;
-+ asm(
-+ "movq %1, %%r8\n\t"
-+ "movl %2, %%eax\n\t"
-+ "movq %3, %%rcx\n\t"
-+ "rep stosb\n\t"
-+ "movq %%r8, %0"
-+ : "=r"(ret) : "r"(dst), "ri"(c), "ri"(len) : "r8", "eax", "rcx");
-+ return ret;
- }
-
-but then Alistair pointed out that we have a proliferation of
-memcpy+memest definitions in the kernel, and we should probably just
-reuse an existing one rather than add to the arms race.
-
->
-> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=984056
-> Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Debugged-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Debugged-by: Manoj Gupta <manojgupta@google.com>
-> Suggested-by: Alistair Delva <adelva@google.com>
-> Signed-off-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
->  arch/x86/purgatory/Makefile    |  3 +++
->  arch/x86/purgatory/purgatory.c |  6 ++++++
->  arch/x86/purgatory/string.c    | 23 -----------------------
->  3 files changed, 9 insertions(+), 23 deletions(-)
->  delete mode 100644 arch/x86/purgatory/string.c
->
-> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> index 3589ec4a28c7..84b8314ddb2d 100644
-> --- a/arch/x86/purgatory/Makefile
-> +++ b/arch/x86/purgatory/Makefile
-> @@ -6,6 +6,9 @@ purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string
->  targets += $(purgatory-y)
->  PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
->
-> +$(obj)/string.o: $(srctree)/arch/x86/boot/compressed/string.c FORCE
-> +       $(call if_changed_rule,cc_o_c)
-> +
->  $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
->         $(call if_changed_rule,cc_o_c)
->
-> diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
-> index 6d8d5a34c377..b607bda786f6 100644
-> --- a/arch/x86/purgatory/purgatory.c
-> +++ b/arch/x86/purgatory/purgatory.c
-> @@ -68,3 +68,9 @@ void purgatory(void)
->         }
->         copy_backup_region();
->  }
-> +
-> +/*
-> + * Defined in order to reuse memcpy() and memset() from
-> + * arch/x86/boot/compressed/string.c
-> + */
-> +void warn(const char *msg) {}
+> 
+> Changes in v2:
+>  - Focus more on pointing to the linux-distros wiki and policies.
 
-This is the one part I feel bad about; memcpy() in
-arch/x86/boot/compressed/string.c calls warn() which would result in
-an undefined symbol in purgatory.ro. Maybe there's a preferred
-solution, or this is ok for purgatory/kexec?  There's other x86
-memsets+memcpys, but IMO this is the smallest incision without playing
-the satisfy-the-symbol-dependencies game.
+I think this is already happening in the text. What specifically do you
+want described differently?
 
-If the maintainers are ok with this, then the series looks ready to go
-to me. Thanks for debugging/sending Vaibhav.
+>  - Remove explicit linux-distros email.
 
-Orthogonally, I showed Hans Boehm the pointer comparisons+subtraction
-in arch/x86/boot/compressed/string.c's memcpy asking about pointer
-provenance issues
-(https://wiki.sei.cmu.edu/confluence/display/c/ARR36-C.+Do+not+subtract+or+compare+two+pointers+that+do+not+refer+to+the+same+array,
-http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2090.htm) introduced
-in commit 00ec2c37031e ("x86/boot: Warn on future overlapping memcpy()
-use") and he started cursing in Spanish (I don't think he speaks
-Spanish) and performed the sign of the cross.  Y'all need
-<strikethrough>Jesus</strikethrough>[u]intptr_t.
+I don't like this because we had past trouble with notifications going
+to the distros@ list and leaking Linux-only flaws to the BSDs. As there
+isn't a separate linux-distros wiki, the clarification of WHICH list is
+needed.
 
-> diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
-> deleted file mode 100644
-> index 01ad43873ad9..000000000000
-> --- a/arch/x86/purgatory/string.c
-> +++ /dev/null
-> @@ -1,23 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -/*
-> - * Simple string functions.
-> - *
-> - * Copyright (C) 2014 Red Hat Inc.
-> - *
-> - * Author:
-> - *       Vivek Goyal <vgoyal@redhat.com>
-> - */
-> -
-> -#include <linux/types.h>
-> -
-> -#include "../boot/string.c"
-> -
-> -void *memcpy(void *dst, const void *src, size_t len)
-> -{
-> -       return __builtin_memcpy(dst, src, len);
-> -}
-> -
-> -void *memset(void *dst, int c, size_t len)
-> -{
-> -       return __builtin_memset(dst, c, len);
-> -}
-> --
-> 2.22.0.510.g264f2c817a-goog
->
+>  - Remove various explanations of linux-distros policies.
 
+I don't think there's value in removing the Tue-Thu comment, nor
+providing context for why distros need time. This has been a regular
+thing we've had to explain to researchers that aren't familiar with
+update procedures and publication timing.
+
+-Kees
+
+> 
+>  Documentation/admin-guide/security-bugs.rst | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/security-bugs.rst b/Documentation/admin-guide/security-bugs.rst
+> index dcd6c93c7aac..380d44fd618d 100644
+> --- a/Documentation/admin-guide/security-bugs.rst
+> +++ b/Documentation/admin-guide/security-bugs.rst
+> @@ -60,16 +60,15 @@ Coordination
+>  ------------
+>  
+>  Fixes for sensitive bugs, such as those that might lead to privilege
+> -escalations, may need to be coordinated with the private
+> -<linux-distros@vs.openwall.org> mailing list so that distribution vendors
+> -are well prepared to issue a fixed kernel upon public disclosure of the
+> -upstream fix. Distros will need some time to test the proposed patch and
+> -will generally request at least a few days of embargo, and vendor update
+> -publication prefers to happen Tuesday through Thursday. When appropriate,
+> -the security team can assist with this coordination, or the reporter can
+> -include linux-distros from the start. In this case, remember to prefix
+> -the email Subject line with "[vs]" as described in the linux-distros wiki:
+> -<http://oss-security.openwall.org/wiki/mailing-lists/distros#how-to-use-the-lists>
+> +escalations, may need to be coordinated with the private linux-distros mailing
+> +list so that distribution vendors are well prepared to issue a fixed kernel
+> +upon public disclosure of the upstream fix. Please read and follow the policies
+> +of linux-distros as specified in the linux-distros wiki page before reporting:
+> +<https://oss-security.openwall.org/wiki/mailing-lists/distros>. When
+> +appropriate, the security team can assist with this coordination, or the
+> +reporter can include linux-distros from the start. In this case, remember to
+> +prefix the email Subject line with "[vs]" as described in the linux-distros
+> +wiki.
+>  
+>  CVE assignment
+>  --------------
+> -- 
+> 2.20.1
+> 
 
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
