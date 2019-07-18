@@ -2,110 +2,207 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39303C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711A1C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6DE2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D5621871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1/o08/7t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuDFDNHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390190AbfGRLiX (ORCPT
+        id S2390073AbfGRLjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:38:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43324 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390175AbfGRLiX (ORCPT
+        Thu, 18 Jul 2019 07:39:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44210 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfGRLjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:38:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1XG9ETPfNXBdNR3murMRWQhuyxiiIWkFmuE6S3E2wT8=; b=1/o08/7tmX+HDtavM1ps+YmJb
-        MhYxip3PmYG60pHlETONIUpfVDnYkS1v+bG/HXysh/59aCdbHUOzVyWiI7GlO2LPlUqh3CkCCsyTk
-        lWTPjsmj+7gGGhiNnOsTXNQ5VgvFl3ad4WssRDPUvwt8qbmdKh/3tBe3PKdhh4/REyVTtBZU1b5u7
-        hl40aTazOPDFSG1gAxTz4TIQTHXDa6aFL3VZg11Eo9K18p6xDYRmcaKJbLuMyph8GYAWak3TnjCyv
-        Yts4VkIHfqpIBRI7pGZS8zY0yDb95xKKJdE9wNb6sLYt9EXYOfz0GuAcjkU7XauiCK3nO7GWeMF1u
-        qcNHrqcGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1ho4jX-0003CC-TY; Thu, 18 Jul 2019 11:38:04 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A42B920197A71; Thu, 18 Jul 2019 13:37:58 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 13:37:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        prakash.sangappa@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, Paul Turner <pjt@google.com>
-Subject: Re: [RFC PATCH 2/3] sched: change scheduler to give preference to
- soft affinity CPUs
-Message-ID: <20190718113758.GN3402@hirez.programming.kicks-ass.net>
-References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
- <20190626224718.21973-3-subhra.mazumdar@oracle.com>
- <20190702172851.GA3436@hirez.programming.kicks-ass.net>
- <a91c09ce-aec1-eaa1-4daf-70024cebf360@oracle.com>
+        Thu, 18 Jul 2019 07:39:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so13722078plr.11;
+        Thu, 18 Jul 2019 04:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MmxGcGhhhPgISj08dbFbh46iPwYGrMKIu9SeI7KQRpY=;
+        b=CuDFDNHQVLkTwYCuN4InUnJUAMEXhqoQxlPt9ex9Hti+TJuifdje7dzehm+92qgO0r
+         uqjEiKOxSvMQ4Z0jo8CpzMX/LPMbilIPW3pZhFy5vlKb2iDafMG2eCB+vLDg4dxGg8Se
+         Ldhj7VrwvGLzPZ7j73GH113S9a5QqDXpPwy5cjxw9SmAvq6pQU0Sf2OkcET//xai6u3d
+         blfU7eGRjoz2YzMqnx82dQuIrSRmOAUOca0nRMNo2t2caDW6HEIc8hyKxrhVFpWLw+N5
+         58p8WjVe1VmWm7QLa7fH4pcvDt0I+PynXd7UklGS3MpPqsmHcbGDdH/VORpQT6EisbDe
+         hwFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MmxGcGhhhPgISj08dbFbh46iPwYGrMKIu9SeI7KQRpY=;
+        b=L23ZrRWQs0x6GCVzfEDvDrpDWUleQ8YPjNZSGs+aj5z6eaRh83aPX5nxk4Ibp02RSp
+         OM+kD5TPKSIL4+Y+uEKy356RnuBE8cCS7VQSEgRaB8xSflXPYdF2ShWFV9hUK03hxgvM
+         eXbW8AtI4UbixIHiESq1mp9aclbCoSfFsfMNhvr7ZewTLrMAUW792OO83nbAJlJ6IumA
+         YngV5RP9MuTWV3+SKm1eTI6mhYaVMiRTrc9a+NxpxBMOCr1Am4nt+vgdMpWhTwq0g628
+         m4rFLjHSwaOrz89h6usP5v29OgJffRFiZerz9vQydZUIOLMMgcTX1HcqZ4O2Hgmd5B1P
+         FK7w==
+X-Gm-Message-State: APjAAAXOlTg9XTemiRfexG8aQtHPeibEiJmc0WY6OS6GQqB1DtHlav3y
+        AKf4woozyIOOFRNO5RStqdugRg7D5d4=
+X-Google-Smtp-Source: APXvYqxLC4gzsgo2wx1PJJ+ObDrzz9h8I6f5ofIvI45cg0CcrS8JSHSajBOGak9Wcm+1AaSfVQ768A==
+X-Received: by 2002:a17:902:7087:: with SMTP id z7mr49036394plk.184.1563449953088;
+        Thu, 18 Jul 2019 04:39:13 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id f15sm11908581pgu.2.2019.07.18.04.39.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 18 Jul 2019 04:39:12 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v2 1/2] KVM: Boosting vCPUs that are delivering interrupts
+Date:   Thu, 18 Jul 2019 19:39:06 +0800
+Message-Id: <1563449947-7749-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a91c09ce-aec1-eaa1-4daf-70024cebf360@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 08:31:25AM +0530, Subhra Mazumdar wrote:
-> 
-> On 7/2/19 10:58 PM, Peter Zijlstra wrote:
-> > On Wed, Jun 26, 2019 at 03:47:17PM -0700, subhra mazumdar wrote:
-> > > The soft affinity CPUs present in the cpumask cpus_preferred is used by the
-> > > scheduler in two levels of search. First is in determining wake affine
-> > > which choses the LLC domain and secondly while searching for idle CPUs in
-> > > LLC domain. In the first level it uses cpus_preferred to prune out the
-> > > search space. In the second level it first searches the cpus_preferred and
-> > > then cpus_allowed. Using affinity_unequal flag it breaks early to avoid
-> > > any overhead in the scheduler fast path when soft affinity is not used.
-> > > This only changes the wake up path of the scheduler, the idle balancing
-> > > is unchanged; together they achieve the "softness" of scheduling.
-> > I really dislike this implementation.
-> > 
-> > I thought the idea was to remain work conserving (in so far as that
-> > we're that anyway), so changing select_idle_sibling() doesn't make sense
-> > to me. If there is idle, we use it.
-> > 
-> > Same for newidle; which you already retained.
-> The scheduler is already not work conserving in many ways. Soft affinity is
-> only for those who want to use it and has no side effects when not used.
-> Also the way scheduler is implemented in the first level of search it may
-> not be possible to do it in a work conserving way, I am open to ideas.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-I really don't understand the premise of this soft affinity stuff then.
+Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during vcpu wakeup 
+and interrupt delivery), except the lock holder, we want to also boost vCPUs 
+that are delivering interrupts. Actually most smp_call_function_many calls are 
+synchronous ipi calls, the ipi target vCPUs are also good yield candidates. 
+This patch introduces vcpu->ready to boost vCPUs during wakeup and interrupt 
+delivery time.
 
-I understood it was to allow spreading if under-utilized, but group when
-over-utilized, but you're arguing for the exact opposite, which doesn't
-make sense.
+Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
+ebizzy -M
 
-> > And I also really don't want a second utilization tipping point; we
-> > already have the overloaded thing.
-> The numbers in the cover letter show that a static tipping point will not
-> work for all workloads. What soft affinity is doing is essentially trading
-> off cache coherence for more CPU. The optimum tradeoff point will vary
-> from workload to workload and the system metrics of coherence overhead etc.
-> If we just use the domain overload that becomes a static definition of
-> tipping point, we need something tunable that captures this tradeoff. The
-> ratio of CPU util seemed to work well and capture that.
+            vanilla     boosting    improved
+1VM          21443       23520         9%                      
+2VM           2800        8000       180%
+3VM           1800        3100        72%
 
-And then you run two workloads with different characteristics on the
-same box.
+Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs, 
+one running ebizzy -M, the other running 'stress --cpu 2':
 
-Global knobs are buggered.
+w/ boosting + w/o pv sched yield(vanilla)   
+
+            vanilla     boosting   improved 
+              1570         4000      155%
+
+w/ boosting + w/ pv sched yield(vanilla)
+
+            vanilla     boosting   improved 
+              1844         5157      179%   
+
+w/o boosting, perf top in VM:
+
+ 72.33%  [kernel]       [k] smp_call_function_many
+  4.22%  [kernel]       [k] call_function_i
+  3.71%  [kernel]       [k] async_page_fault
+
+w/ boosting, perf top in VM:
+
+ 38.43%  [kernel]       [k] smp_call_function_many
+  6.31%  [kernel]       [k] async_page_fault
+  6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
+  4.88%  [kernel]       [k] call_function_interrupt
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/s390/kvm/interrupt.c |  2 +-
+ include/linux/kvm_host.h  |  1 +
+ virt/kvm/kvm_main.c       | 12 +++++++++---
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+index 9dde4d7..26f8bf4 100644
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -1240,7 +1240,7 @@ void kvm_s390_vcpu_wakeup(struct kvm_vcpu *vcpu)
+ 		 * The vcpu gave up the cpu voluntarily, mark it as a good
+ 		 * yield-candidate.
+ 		 */
+-		vcpu->preempted = true;
++		vcpu->ready = true;
+ 		swake_up_one(&vcpu->wq);
+ 		vcpu->stat.halt_wakeup++;
+ 	}
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index c5da875..5c5b586 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -318,6 +318,7 @@ struct kvm_vcpu {
+ 	} spin_loop;
+ #endif
+ 	bool preempted;
++	bool ready;
+ 	struct kvm_vcpu_arch arch;
+ 	struct dentry *debugfs_dentry;
+ };
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index b4ab59d..8412900 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
+ 	int me;
+ 	int cpu = vcpu->cpu;
+ 
+-	if (kvm_vcpu_wake_up(vcpu))
++	if (kvm_vcpu_wake_up(vcpu)) {
++		vcpu->ready = true;
+ 		return;
++	}
+ 
+ 	me = get_cpu();
+ 	if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
+@@ -2500,7 +2502,7 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
+ 				continue;
+ 			} else if (pass && i > last_boosted_vcpu)
+ 				break;
+-			if (!READ_ONCE(vcpu->preempted))
++			if (!READ_ONCE(vcpu->ready))
+ 				continue;
+ 			if (vcpu == me)
+ 				continue;
+@@ -4205,6 +4207,8 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
+ 
+ 	if (vcpu->preempted)
+ 		vcpu->preempted = false;
++	if (vcpu->ready)
++		vcpu->ready = false;
+ 
+ 	kvm_arch_sched_in(vcpu, cpu);
+ 
+@@ -4216,8 +4220,10 @@ static void kvm_sched_out(struct preempt_notifier *pn,
+ {
+ 	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
+ 
+-	if (current->state == TASK_RUNNING)
++	if (current->state == TASK_RUNNING) {
+ 		vcpu->preempted = true;
++		vcpu->ready = true;
++	}
+ 	kvm_arch_vcpu_put(vcpu);
+ }
+ 
+-- 
+2.7.4
+
