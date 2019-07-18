@@ -2,88 +2,76 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BDBC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE8C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE4421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563474608;
-	bh=8L3YAQ+MHhbI9yfjQXTU3IP9TGV0wBqCEFFkC+HLkRw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=K+u9UnI6UwlCis+E1JgleLKKOJBWZ1l/Hnqbrxp1oimZWiFFwDrK2B9ygCXM6X6Lc
-	 HPoH0Z7gItKR4gCLAx37KFie94so6AEIap/ucTbPg0+46AJ6zEDk2O3gTV3eOb+7Zs
-	 bi+wiNBptEY43qCA2tt6hkPku9RkKJG5SCUWL56k=
+	by mail.kernel.org (Postfix) with ESMTP id 728192184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391127AbfGRSaH (ORCPT
+        id S2391183AbfGRSaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 14:30:17 -0400
+Received: from mail.us.es ([193.147.175.20]:39416 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGRSaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:30:05 -0400
-Subject: Re: [GIT PULL REQUEST] watchdog - v5.3 Merge window
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563474604;
-        bh=8L3YAQ+MHhbI9yfjQXTU3IP9TGV0wBqCEFFkC+HLkRw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=MCwgmXHlgBGaUOBcL0ZJPsS2Rw/9q0yD6KG/taycjjALlbb0EYas5tUeaebQ3Adbp
-         p4B+WKyziNaRgft0oBE/p27eYxni091uu8puhcA/qruSRmaW4m8OAphGsBwwDhTump
-         h7yIPIw4f48U81RYg+CAckgZBnc/G9PPsfHo6nqE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190717195828.GA25283@www.linux-watchdog.org>
-References: <20190717195828.GA25283@www.linux-watchdog.org>
-X-PR-Tracked-List-Id: <linux-watchdog.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190717195828.GA25283@www.linux-watchdog.org>
-X-PR-Tracked-Remote: git://www.linux-watchdog.org/linux-watchdog.git
- tags/linux-watchdog-5.3-rc1
-X-PR-Tracked-Commit-Id: 7fb832ae72949c883da52d6316ff08f03c75d300
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d77e9e4e18ce9da3b4981a5c537979c42b06638c
-Message-Id: <156347460488.12683.10471871917152605765.pr-tracker-bot@kernel.org>
-Date:   Thu, 18 Jul 2019 18:30:04 +0000
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hoan Nguyen An <na-hoan@jinso.co.jp>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Ken Sloat <ksloat@aampglobal.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+        id S2391149AbfGRSaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:30:16 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 4D8FDB5AAD
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 20:30:14 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 3F0C91150B9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 20:30:14 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 20F8B4FA29; Thu, 18 Jul 2019 20:30:14 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 7281C202D2;
+        Thu, 18 Jul 2019 20:30:11 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Thu, 18 Jul 2019 20:30:11 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 49BF44265A31;
+        Thu, 18 Jul 2019 20:30:11 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 20:30:10 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, kadlec@netfilter.org, fw@strlen.de,
+        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
+        wenxu@ucloud.cn, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bridge@lists.linux-foundation.org,
+        coreteam@netfilter.org, netfilter-devel@vger.kernel.org
+Subject: Re: [PATCH net-next] netfilter: nft_meta: Fix build error
+Message-ID: <20190718183010.s243aiunyycpz3np@salvia>
+References: <20190709070126.29972-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709070126.29972-1-yuehaibing@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 17 Jul 2019 21:58:28 +0200:
+On Tue, Jul 09, 2019 at 03:01:26PM +0800, YueHaibing wrote:
+> If NFT_BRIDGE_META is y and NF_TABLES is m, building fails:
+> 
+> net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_init':
+> nft_meta_bridge.c:(.text+0xd0): undefined reference to `nft_parse_register'
+> nft_meta_bridge.c:(.text+0xec): undefined reference to `nft_validate_register_store'
 
-> git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.3-rc1
+I took this one from Arnd instead:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d77e9e4e18ce9da3b4981a5c537979c42b06638c
+https://patchwork.ozlabs.org/patch/1130262/
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks.
