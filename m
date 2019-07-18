@@ -2,109 +2,94 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5087EC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77315C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D312173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WAxcqoDi"
+	by mail.kernel.org (Postfix) with ESMTP id 42B5E208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389816AbfGRJVp (ORCPT
+        id S1727702AbfGRJYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:21:45 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10419 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfGRJVp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:21:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d303a280000>; Thu, 18 Jul 2019 02:21:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 18 Jul 2019 02:21:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 02:21:44 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
- 2019 09:21:42 +0000
-Subject: Re: [PATCH 5.2 00/21] 5.2.2-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190718030030.456918453@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b4fe5385-9e61-51ad-0dd1-2910c529e083@nvidia.com>
-Date:   Thu, 18 Jul 2019 10:21:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563441704; bh=ZYVYnxGFwKMvl8gbfGM0VUNV92MR4Io7TpBGNgZMXz0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WAxcqoDi+VNotd1qjuG7eaOtt9+EUcsQ/U1LiZ2hRzj/mXgnD/XIy02slfBHn7AtZ
-         oFiIH367ri2t/7KEAlFHY8WkNghup1xh/UAKZQGO7HAngupx+wslWqtkyO5YWSzC5b
-         O0+fYciQZzanhKlHB0iQ+hQogmtRWLHxL+U03oHutf8BCTlhX4+bUyam1HSFaYczFm
-         MSt+Ej5cCj1k1+sQGTxaUfp602IrOPGFtXOAArWQMLTeCZ7K+jotkiHBF2lnIz+b6f
-         27lN0VfuWVkxYS0b6uvamUycYd2K3AIrVk7WFOd3/ow8fk++oiPmF2Jg3o0LI5zLTj
-         fN9ePRIDQT4bw==
+        Thu, 18 Jul 2019 05:24:30 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:44656 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfGRJYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:24:30 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F98E200125;
+        Thu, 18 Jul 2019 11:24:28 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A58A20013E;
+        Thu, 18 Jul 2019 11:24:23 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 58D3440296;
+        Thu, 18 Jul 2019 17:24:16 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/4] ARM: dts: imx6sx: move GIC to right location in DT
+Date:   Thu, 18 Jul 2019 17:15:05 +0800
+Message-Id: <20190718091508.3248-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On 18/07/2019 04:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.2 release.
-> There are 21 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.2-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+GIC is inside of SoC from architecture perspective, it should
+be located inside of soc node in DT.
 
-All tests are passing for Tegra ...
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.2.2-rc1-gcc78552c7d92
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index bb25add..fe00f9a 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -90,15 +90,6 @@
+ 		};
+ 	};
+ 
+-	intc: interrupt-controller@a01000 {
+-		compatible = "arm,cortex-a9-gic";
+-		#interrupt-cells = <3>;
+-		interrupt-controller;
+-		reg = <0x00a01000 0x1000>,
+-		      <0x00a00100 0x100>;
+-		interrupt-parent = <&intc>;
+-	};
+-
+ 	ckil: clock-ckil {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -181,6 +172,15 @@
+ 			clocks = <&clks IMX6SX_CLK_OCRAM>;
+ 		};
+ 
++		intc: interrupt-controller@a01000 {
++			compatible = "arm,cortex-a9-gic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x00a01000 0x1000>,
++			      <0x00a00100 0x100>;
++			interrupt-parent = <&intc>;
++		};
++
+ 		L2: l2-cache@a02000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x00a02000 0x1000>;
 -- 
-nvpublic
+2.7.4
+
