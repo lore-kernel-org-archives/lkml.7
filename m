@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E07C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1C7C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CFD204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71552173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419004;
-	bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+	s=default; t=1563419007;
+	bh=PG3T8mXmGSKOIY8ZLT45pOA+wxybHzy/qkPK3tpEaWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trWGW/77hoQVt60jh8EHjVwfLb9MQOuUBkd817x3+r45wCGvp7YIPWs3BD5aco/Pm
-	 YL7Q3XHHPgvcQOTi+FiPx4LdTO26dfCng4SrapGabwcdgXoabkgGIfkNQkEHexYtmo
-	 aSygtbQLamLIpRtdI3FgF8vYYHQYz36XRco3ojeY=
+	b=NUFjcYIdBJnNrtkZDbrbFK9pl4+AE31H9qvTb9ueHAL1Ya4W4YEJEPdVW7KZ9A2mb
+	 4RmeY+cmoHRb6lLK3E1thwI68bt26PPjsMFnTZ+rjurrarDbT5TJyJ+vBB4XDju3B1
+	 RyQY3Hxxdu1qMT0O38Q+fJuIuprsrVnS4hfumgYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389297AbfGRDDX (ORCPT
+        id S2389324AbfGRDD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbfGRDDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:21 -0400
+        id S2389252AbfGRDDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:03:24 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E932173B;
-        Thu, 18 Jul 2019 03:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BF692173B;
+        Thu, 18 Jul 2019 03:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419000;
-        bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+        s=default; t=1563419004;
+        bh=PG3T8mXmGSKOIY8ZLT45pOA+wxybHzy/qkPK3tpEaWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2HR06FedZxaz7DJY0pBnjLjfnXIL+pSXL/k/Wg0iEkJqzBBha2aWgygD1hyHDB3Vf
-         BPzKYmy5Kpqz20Sd25KagtOdZCDGdv6knRN82EoO5AZy55UUhQzCf/PEVopwr16DuW
-         cW5CqChZW5C951D0Midxt+2YucTBrR/ZLbnwFRgM=
+        b=aZx7/l7cmmOOivGKNWf6vMzb+kMnPU5DpRGjL/XOIjKbt/2txuHlwfimCxuqRObyI
+         aKoIqZusVSpuu1TvChQgLSBZDEyYAIPHlaDG5bdPAJfrusfHdPVrP2k5tuulcQhQLI
+         JF/MU3+hNY28eUX4R/iagsurUFzmmffQgSIQ2PJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 04/21] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
-Date:   Thu, 18 Jul 2019 12:01:22 +0900
-Message-Id: <20190718030031.251273422@linuxfoundation.org>
+        stable@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH 5.2 05/21] drivers: base: cacheinfo: Ensure cpu hotplug work is done before Intel RDT
+Date:   Thu, 18 Jul 2019 12:01:23 +0900
+Message-Id: <20190718030031.591880791@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -63,129 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: James Morse <james.morse@arm.com>
 
-commit c32cc30c0544f13982ee0185d55f4910319b1a79 upstream.
+commit 83b44fe343b5abfcb1b2261289bd0cfcfcfd60a8 upstream.
 
-cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
-which is not exported to user-space.
+The cacheinfo structures are alloced/freed by cpu online/offline
+callbacks. Originally these were only used by sysfs to expose the
+cache topology to user space. Without any in-kernel dependencies
+CPUHP_AP_ONLINE_DYN was an appropriate choice.
 
-UAPI headers must use the ones prefixed with double-underscore.
+resctrl has started using these structures to identify CPUs that
+share a cache. It updates its 'domain' structures from cpu
+online/offline callbacks. These depend on the cacheinfo structures
+(resctrl_online_cpu()->domain_add_cpu()->get_cache_id()->
+ get_cpu_cacheinfo()).
+These also run as CPUHP_AP_ONLINE_DYN.
 
-Detected by compile-testing exported headers:
+Now that there is an in-kernel dependency, move the cacheinfo
+work earlier so we know its done before resctrl's CPUHP_AP_ONLINE_DYN
+work runs.
 
-  include/linux/nilfs2_ondisk.h: In function `nilfs_checkpoint_set_snapshot':
-  include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function `cpu_to_le32' [-Werror=implicit-function-declaration]
-    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
-                   ^
-  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
-   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
-   ^~~~~~~~~~~~~~~~~~~~
-  include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function `le32_to_cpu' [-Werror=implicit-function-declaration]
-    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
-                               ^
-  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
-   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
-   ^~~~~~~~~~~~~~~~~~~~
-  include/linux/nilfs2_ondisk.h: In function `nilfs_segment_usage_set_clean':
-  include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function `cpu_to_le64' [-Werror=implicit-function-declaration]
-    su->su_lastmod = cpu_to_le64(0);
-                     ^~~~~~~~~~~
-
-Link: http://lkml.kernel.org/r/20190605053006.14332-1-yamada.masahiro@socionext.com
-Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to uapi separately")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: <stable@vger.kernel.org>	[4.9+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 2264d9c74dda1 ("x86/intel_rdt: Build structures for each resource based on cache topology")
+Cc: <stable@vger.kernel.org>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Link: https://lore.kernel.org/r/20190624173656.202407-1-james.morse@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/nilfs2_ondisk.h |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/base/cacheinfo.c   |    3 ++-
+ include/linux/cpuhotplug.h |    1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/include/uapi/linux/nilfs2_ondisk.h
-+++ b/include/uapi/linux/nilfs2_ondisk.h
-@@ -29,7 +29,7 @@
+--- a/drivers/base/cacheinfo.c
++++ b/drivers/base/cacheinfo.c
+@@ -655,7 +655,8 @@ static int cacheinfo_cpu_pre_down(unsign
  
- #include <linux/types.h>
- #include <linux/magic.h>
--
-+#include <asm/byteorder.h>
- 
- #define NILFS_INODE_BMAP_SIZE	7
- 
-@@ -533,19 +533,19 @@ enum {
- static inline void							\
- nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
- {									\
--	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
--				   (1UL << NILFS_CHECKPOINT_##flag));	\
-+	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
-+				     (1UL << NILFS_CHECKPOINT_##flag));	\
- }									\
- static inline void							\
- nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
- {									\
--	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
-+	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
- 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
- }									\
- static inline int							\
- nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
- {									\
--	return !!(le32_to_cpu(cp->cp_flags) &				\
-+	return !!(__le32_to_cpu(cp->cp_flags) &				\
- 		  (1UL << NILFS_CHECKPOINT_##flag));			\
- }
- 
-@@ -595,20 +595,20 @@ enum {
- static inline void							\
- nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
- {									\
--	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
-+	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
- 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
- }									\
- static inline void							\
- nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
- {									\
- 	su->su_flags =							\
--		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
-+		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
- 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
- }									\
- static inline int							\
- nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
- {									\
--	return !!(le32_to_cpu(su->su_flags) &				\
-+	return !!(__le32_to_cpu(su->su_flags) &				\
- 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
- }
- 
-@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
- static inline void
- nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
+ static int __init cacheinfo_sysfs_init(void)
  {
--	su->su_lastmod = cpu_to_le64(0);
--	su->su_nblocks = cpu_to_le32(0);
--	su->su_flags = cpu_to_le32(0);
-+	su->su_lastmod = __cpu_to_le64(0);
-+	su->su_nblocks = __cpu_to_le32(0);
-+	su->su_flags = __cpu_to_le32(0);
+-	return cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "base/cacheinfo:online",
++	return cpuhp_setup_state(CPUHP_AP_BASE_CACHEINFO_ONLINE,
++				 "base/cacheinfo:online",
+ 				 cacheinfo_cpu_online, cacheinfo_cpu_pre_down);
  }
- 
- static inline int
- nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
- {
--	return !le32_to_cpu(su->su_flags);
-+	return !__le32_to_cpu(su->su_flags);
- }
- 
- /**
+ device_initcall(cacheinfo_sysfs_init);
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -176,6 +176,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_WATCHDOG_ONLINE,
+ 	CPUHP_AP_WORKQUEUE_ONLINE,
+ 	CPUHP_AP_RCUTREE_ONLINE,
++	CPUHP_AP_BASE_CACHEINFO_ONLINE,
+ 	CPUHP_AP_ONLINE_DYN,
+ 	CPUHP_AP_ONLINE_DYN_END		= CPUHP_AP_ONLINE_DYN + 30,
+ 	CPUHP_AP_X86_HPET_ONLINE,
 
 
