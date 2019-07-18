@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B3C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D51C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB2A21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A76C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419125;
-	bh=Cw8nZhSNTC1JErlNBl+stX66sOGdrKeE3CNCJw9MiTQ=;
+	s=default; t=1563419128;
+	bh=l1EEUCPHh1aJx9m0gcIHChMvU9fddZ+kRica2HsYdWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6eLTwbNugIIq/BzAjwSxUPCCrpdWOCNjbehy6Eftq80Vs3J1JYZanLF6v5Gq/b5Z
-	 9b/2w03UaFU1FKKRrD9a7lXKgj/3DmTZm+Yvqr1l+JHq8MwXCw64nsRDYD+OGyXCKz
-	 R+2co7Sd1LTXliTGXodJ+5zvgSA+D7HzOfOSDYZc=
+	b=RXxR5m0Qb2B1IpuJF0K+OwMPKdyWhk++pgsVerghe8JF/sq1ECH3wW2Ip5wq39Del
+	 +4wltVeywOXn/4yA8KurmMxPBUrjRzY0+hb69//d/E27pkBuAsdiELmmdP78Kg4twZ
+	 VqqD5vKuW7e1gTgRnpQgxbaFfdbmJYuD7zJA7vyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389941AbfGRDFY (ORCPT
+        id S2389955AbfGRDF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36394 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389899AbfGRDFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:05:19 -0400
+        id S2389926AbfGRDFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:05:22 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 812C021848;
-        Thu, 18 Jul 2019 03:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D7C204EC;
+        Thu, 18 Jul 2019 03:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419118;
-        bh=Cw8nZhSNTC1JErlNBl+stX66sOGdrKeE3CNCJw9MiTQ=;
+        s=default; t=1563419120;
+        bh=l1EEUCPHh1aJx9m0gcIHChMvU9fddZ+kRica2HsYdWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQAxbbL9LLEQOhg77C8Im7f+Iomg7AQ3o0eoZu4BjiFE/7Ny5LKAKjaAOLl63jz9s
-         Vh485AaehisXaxquO78dDrMsjRXZPYJk4N4rWm28+LsgJa/d4QmIySLpGC4KukGFel
-         EbKtGXUqIpQeVWm2erfgr0EtKN/X9Y+3zV3NAblY=
+        b=IyYFmwlgayBht9YXzOgH5zioJnWs8zboMvMC5vypbMTVwEdYiYoOEJJDgl87wUMQy
+         w4DS6TiY0U6xelf+G8L+QEhf1y/9ECZVJMNhCxvoAZBaQ3BTBFRb2wSd5U1fze1jnK
+         FW1a8XpuR6HbhPrpL6GKl2lJF3bXZyEMLD0tO94w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
-        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 36/54] cpu/hotplug: Fix out-of-bounds read when setting fail state
-Date:   Thu, 18 Jul 2019 12:01:31 +0900
-Message-Id: <20190718030056.073634451@linuxfoundation.org>
+Subject: [PATCH 5.1 37/54] pinctrl: mediatek: Update cur_mask in mask/mask ops
+Date:   Thu, 18 Jul 2019 12:01:32 +0900
+Message-Id: <20190718030056.125250607@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -60,70 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
+[ Upstream commit 9d957a959bc8c3dfe37572ac8e99affb5a885965 ]
 
-Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
-can control `struct cpuhp_step *sp` address, results in the following
-global-out-of-bounds read.
+During suspend/resume, mtk_eint_mask may be called while
+wake_mask is active. For example, this happens if a wake-source
+with an active interrupt handler wakes the system:
+irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+that it can be handled later on in the resume flow.
 
-Reproducer:
+However, this may happen before mtk_eint_do_resume is called:
+in this case, wake_mask is loaded, and cur_mask is restored
+from an older copy, re-enabling the interrupt, and causing
+an interrupt storm (especially for level interrupts).
 
-  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
+Step by step, for a line that has both wake and interrupt enabled:
+ 1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+    enabled at hardware level)
+ 2. System suspends, resumes due to that line (at this stage EINT_EN
+    == wake_mask)
+ 3. irq_pm_check_wakeup is called, and disables the interrupt =>
+    EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+ 4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+    it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
+    is not yet ready to handle the interrupt.
 
-KASAN report:
+This patch fixes the issue in step 3, by recording all mask/unmask
+changes in cur_mask. This also avoids the need to read the current
+mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
+function.
 
-  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
-  Read of size 8 at addr ffffffff89734438 by task bash/1941
+The interrupt will be re-enabled properly later on, sometimes after
+mtk_eint_do_resume, when the driver is ready to handle it.
 
-  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
-  Call Trace:
-   write_cpuhp_fail+0x2cd/0x2e0
-   dev_attr_store+0x58/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f05e4f4c970
-
-  The buggy address belongs to the variable:
-   cpu_hotplug_lock+0x98/0xa0
-
-  Memory state around the buggy address:
-   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-                                          ^
-   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Add a sanity check for the value written from user space.
-
-Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: peterz@infradead.org
-Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
+Fixes: 58a5e1b64bb0 ("pinctrl: mediatek: Implement wake handler and suspend resume")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Sean Wang <sean.wang@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 6170034f4118..e97e7224ab47 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1954,6 +1954,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index 737385e86beb..7e526bcf5e0b 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
+ 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+ 						eint->regs->mask_set);
  
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
++	eint->cur_mask[d->hwirq >> 5] &= ~mask;
 +
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
+ 	writel(mask, reg);
+ }
+ 
+@@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
+ 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+ 						eint->regs->mask_clr);
+ 
++	eint->cur_mask[d->hwirq >> 5] |= mask;
++
+ 	writel(mask, reg);
+ 
+ 	if (eint->dual_edge[d->hwirq])
+@@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
+ 	}
+ }
+ 
+-static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
+-				    void __iomem *base, u32 *buf)
+-{
+-	int port;
+-	void __iomem *reg;
+-
+-	for (port = 0; port < eint->hw->ports; port++) {
+-		reg = base + eint->regs->mask + (port << 2);
+-		buf[port] = ~readl_relaxed(reg);
+-		/* Mask is 0 when irq is enabled, and 1 when disabled. */
+-	}
+-}
+-
+ static int mtk_eint_irq_request_resources(struct irq_data *d)
+ {
+ 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
+@@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+ 
+ int mtk_eint_do_suspend(struct mtk_eint *eint)
+ {
+-	mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
+ 	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
+ 
+ 	return 0;
 -- 
 2.20.1
 
