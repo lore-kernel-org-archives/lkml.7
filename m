@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2027CC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66715C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E443421851
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB7A21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419662;
-	bh=vCkPE5Z7XQRvT1p86g8mOPOWcsKPZ4ABtHFkyEgCIwc=;
+	s=default; t=1563419665;
+	bh=TlS8tz8H1kZrLczaaWRcbYa0MA4c8Uqfg5UsM/T03iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJCxdbt1OtX5s7vv3eioNtoOhephbj+5wCH2NTI42m+3Qed1Kp0f54AzcMiyMr50W
-	 xka827HyZYhn4JkfhE0DrxWSKYOCzr/c2vzwJcGZGYVziutRRGn2iFcLGzGrQMa7a+
-	 clSZ0K3+PzNN2VxfXKJtzNOC8VgU0ogJQTPN+Cx0=
+	b=waZD5PI7YLzntQRZ9Z8qXT6pwjfzxEUnluQAjP8z6YDCi/t3086qxelDhoaeewk7l
+	 rbaPjo7VyhxqO0cBLsjkOBPrAp2iXZLgktEgpfR4vcP+l9EaY1M/sCC50k9w4Cs31/
+	 IUjD/EKdOCwjcr8qAiUJzKH+F19yZ21//HDBq9io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391761AbfGRDOU (ORCPT
+        id S2391773AbfGRDOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:14:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390854AbfGRDOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:17 -0400
+        id S2391748AbfGRDOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:19 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B2C2173E;
-        Thu, 18 Jul 2019 03:14:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB17121851;
+        Thu, 18 Jul 2019 03:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419656;
-        bh=vCkPE5Z7XQRvT1p86g8mOPOWcsKPZ4ABtHFkyEgCIwc=;
+        s=default; t=1563419658;
+        bh=TlS8tz8H1kZrLczaaWRcbYa0MA4c8Uqfg5UsM/T03iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPxlSMW/RIpPI4+K2PhbMHiXzWUrsPtkkrvm7JLjoloTMrvQNxuGBmSZKj9ZstmeV
-         v7we9mWpVdz1ndBV+2AlNYmA5zML1KRhnN5Boqb0Z2T/5yvOeT551nf/fKtRJRtvzk
-         ZYD5bupGd1KjmSi7pz3i0/o2Pb+NOZM2VFVSgXKo=
+        b=v6TL5jlhQbabfW6viGiiohEWZvVk+mJsIZxKbeurhQhW36bVMZFoqp7gKMvnZ2ixH
+         eILIdwr6upavNu1lySvoIH5cuxHzF+aH+in/We2AEb6zsEkjFaMCezbYsMC3/sA9mp
+         Rml08fCIrAQKhCzoJufAXuOzWvJ28HteKtzvseVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Joseph Yasi <joe.yasi@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.9 41/54] e1000e: start network tx queue only when link is up
-Date:   Thu, 18 Jul 2019 12:02:11 +0900
-Message-Id: <20190718030052.661140062@linuxfoundation.org>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 42/54] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
+Date:   Thu, 18 Jul 2019 12:02:12 +0900
+Message-Id: <20190718030052.757659787@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -64,74 +63,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit d17ba0f616a08f597d9348c372d89b8c0405ccf3 upstream.
+commit c32cc30c0544f13982ee0185d55f4910319b1a79 upstream.
 
-Driver does not want to keep packets in Tx queue when link is lost.
-But present code only reset NIC to flush them, but does not prevent
-queuing new packets. Moreover reset sequence itself could generate
-new packets via netconsole and NIC falls into endless reset loop.
+cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
+which is not exported to user-space.
 
-This patch wakes Tx queue only when NIC is ready to send packets.
+UAPI headers must use the ones prefixed with double-underscore.
 
-This is proper fix for problem addressed by commit 0f9e980bf5ee
-("e1000e: fix cyclic resets at link up with active tx").
+Detected by compile-testing exported headers:
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Tested-by: Joseph Yasi <joe.yasi@gmail.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+  include/linux/nilfs2_ondisk.h: In function `nilfs_checkpoint_set_snapshot':
+  include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function `cpu_to_le32' [-Werror=implicit-function-declaration]
+    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                   ^
+  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
+   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+   ^~~~~~~~~~~~~~~~~~~~
+  include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function `le32_to_cpu' [-Werror=implicit-function-declaration]
+    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
+                               ^
+  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
+   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
+   ^~~~~~~~~~~~~~~~~~~~
+  include/linux/nilfs2_ondisk.h: In function `nilfs_segment_usage_set_clean':
+  include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function `cpu_to_le64' [-Werror=implicit-function-declaration]
+    su->su_lastmod = cpu_to_le64(0);
+                     ^~~~~~~~~~~
+
+Link: http://lkml.kernel.org/r/20190605053006.14332-1-yamada.masahiro@socionext.com
+Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to uapi separately")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: <stable@vger.kernel.org>	[4.9+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/uapi/linux/nilfs2_ondisk.h |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4212,7 +4212,7 @@ void e1000e_up(struct e1000_adapter *ada
- 		e1000_configure_msix(adapter);
- 	e1000_irq_enable(adapter);
+--- a/include/uapi/linux/nilfs2_ondisk.h
++++ b/include/uapi/linux/nilfs2_ondisk.h
+@@ -28,7 +28,7 @@
  
--	netif_start_queue(adapter->netdev);
-+	/* Tx queue started by watchdog timer when link is up */
+ #include <linux/types.h>
+ #include <linux/magic.h>
+-
++#include <asm/byteorder.h>
  
- 	e1000e_trigger_lsc(adapter);
+ #define NILFS_INODE_BMAP_SIZE	7
+ 
+@@ -532,19 +532,19 @@ enum {
+ static inline void							\
+ nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
+-				   (1UL << NILFS_CHECKPOINT_##flag));	\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
++				     (1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline void							\
+ nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
+ {									\
+-	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
++	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
+ 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
+ }									\
+ static inline int							\
+ nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
+ {									\
+-	return !!(le32_to_cpu(cp->cp_flags) &				\
++	return !!(__le32_to_cpu(cp->cp_flags) &				\
+ 		  (1UL << NILFS_CHECKPOINT_##flag));			\
  }
-@@ -4588,6 +4588,7 @@ int e1000e_open(struct net_device *netde
- 	pm_runtime_get_sync(&pdev->dev);
  
- 	netif_carrier_off(netdev);
-+	netif_stop_queue(netdev);
+@@ -594,20 +594,20 @@ enum {
+ static inline void							\
+ nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
+ {									\
+-	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
++	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
+ 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
+ }									\
+ static inline void							\
+ nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
+ {									\
+ 	su->su_flags =							\
+-		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
++		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
+ 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
+ }									\
+ static inline int							\
+ nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
+ {									\
+-	return !!(le32_to_cpu(su->su_flags) &				\
++	return !!(__le32_to_cpu(su->su_flags) &				\
+ 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
+ }
  
- 	/* allocate transmit descriptors */
- 	err = e1000e_setup_tx_resources(adapter->tx_ring);
-@@ -4648,7 +4649,6 @@ int e1000e_open(struct net_device *netde
- 	e1000_irq_enable(adapter);
+@@ -618,15 +618,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
+ static inline void
+ nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
+ {
+-	su->su_lastmod = cpu_to_le64(0);
+-	su->su_nblocks = cpu_to_le32(0);
+-	su->su_flags = cpu_to_le32(0);
++	su->su_lastmod = __cpu_to_le64(0);
++	su->su_nblocks = __cpu_to_le32(0);
++	su->su_flags = __cpu_to_le32(0);
+ }
  
- 	adapter->tx_hang_recheck = false;
--	netif_start_queue(netdev);
+ static inline int
+ nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
+ {
+-	return !le32_to_cpu(su->su_flags);
++	return !__le32_to_cpu(su->su_flags);
+ }
  
- 	hw->mac.get_link_status = true;
- 	pm_runtime_put(&pdev->dev);
-@@ -5271,6 +5271,7 @@ static void e1000_watchdog_task(struct w
- 			if (phy->ops.cfg_on_link_up)
- 				phy->ops.cfg_on_link_up(hw);
- 
-+			netif_wake_queue(netdev);
- 			netif_carrier_on(netdev);
- 
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -5284,6 +5285,7 @@ static void e1000_watchdog_task(struct w
- 			/* Link status message must follow this format */
- 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
- 			netif_carrier_off(netdev);
-+			netif_stop_queue(netdev);
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
- 				mod_timer(&adapter->phy_info_timer,
- 					  round_jiffies(jiffies + 2 * HZ));
+ /**
 
 
