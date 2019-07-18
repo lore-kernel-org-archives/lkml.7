@@ -2,53 +2,53 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E4EC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E6AC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7902053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E922053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419805;
-	bh=85YpcDmppaGqjPf78UKpVnm5N7xmEXTllliY6TV9Mko=;
+	s=default; t=1563419811;
+	bh=ZDrj+iEXtjY2Tql++woQSAtb+ji40TswNzVY/i5NrVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYSSHvup933l9nC8a60sCG3nYpNAUnt1j2xtJN8xRA/QVj8WP7QwmBrUWGkcV3mUP
-	 SxcqxyFi647EWmtVukCJONKxaEJ1kOofh3ksiYfdX8JjIM/5W8X+v0vsz7fopKAiLD
-	 38iSBClGvoAPrOVnFddFOaRQfFL9QX2+/E/p7vhw=
+	b=LUiO47i327DLfPe00niGEd0pMFPe2dD45OX+ObhreknoIdC8Kg+mmrzTZGN889175
+	 ZMG576Zlq81KmSf9+ZCUq8EOnSbEPa5ZszZK94R55jrlfO41VcrIoz2H4r5qmwO0m6
+	 L3CGQO92vPDYyK20PbEY87vAfzeUW3XA7rOaRuIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391666AbfGRDQo (ORCPT
+        id S2391722AbfGRDQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51878 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391963AbfGRDPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:09 -0400
+        id S2389903AbfGRDPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:06 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6155321851;
-        Thu, 18 Jul 2019 03:15:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1A121855;
+        Thu, 18 Jul 2019 03:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419708;
-        bh=85YpcDmppaGqjPf78UKpVnm5N7xmEXTllliY6TV9Mko=;
+        s=default; t=1563419705;
+        bh=ZDrj+iEXtjY2Tql++woQSAtb+ji40TswNzVY/i5NrVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H/LZq9JljM59XGueBpWU2kCT+Gjm2MExXylwpqWJZ4ESWTbB/EjxpdjNGwARwfbEB
-         CpicY6efNRyFmCLiWuqnvFHUVvZXxgYiovDaW05vLPTea4HjRBAl9OPbRNad2scvzo
-         sqb9Zr2tOdqvM5rAp56wox7URJhEZzdmWO+GcO/I=
+        b=l+rab36jGBNQuQN3kaGftoOM2C2RFP+jnoeTM7O2ulqkjIMGDssGKZf6K1JeDZtxd
+         QUxHb+ra921xb+5nUxmHyC6Rc9/Hq6RwqX3qoc/Zl1CnBPs/5pGcZtwl04fX2qGAbW
+         cMr3B0mreK2dFKU5HPtAlLE3gws7KsIWuCExHGWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.4 35/40] kvm: x86: avoid warning on repeated KVM_SET_TSS_ADDR
-Date:   Thu, 18 Jul 2019 12:02:31 +0900
-Message-Id: <20190718030050.133509558@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergej Benilov <sergej.benilov@googlemail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 33/40] sis900: fix TX completion
+Date:   Thu, 18 Jul 2019 12:02:29 +0900
+Message-Id: <20190718030049.943975637@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -61,71 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+[ Upstream commit 8ac8a01092b2added0749ef937037bf1912e13e3 ]
 
-commit b21629da120dd6145d14dbd6d028e1bba680a92b upstream.
+Since commit 605ad7f184b60cfaacbc038aa6c55ee68dee3c89 "tcp: refine TSO autosizing",
+outbound throughput is dramatically reduced for some connections, as sis900
+is doing TX completion within idle states only.
 
-Found by syzkaller:
+Make TX completion happen after every transmitted packet.
 
-    WARNING: CPU: 3 PID: 15175 at arch/x86/kvm/x86.c:7705 __x86_set_memory_region+0x1dc/0x1f0 [kvm]()
-    CPU: 3 PID: 15175 Comm: a.out Tainted: G        W       4.4.6-300.fc23.x86_64 #1
-    Hardware name: LENOVO 2325F51/2325F51, BIOS G2ET32WW (1.12 ) 05/30/2012
-     0000000000000286 00000000950899a7 ffff88011ab3fbf0 ffffffff813b542e
-     0000000000000000 ffffffffa0966496 ffff88011ab3fc28 ffffffff810a40f2
-     00000000000001fd 0000000000003000 ffff88014fc50000 0000000000000000
-    Call Trace:
-     [<ffffffff813b542e>] dump_stack+0x63/0x85
-     [<ffffffff810a40f2>] warn_slowpath_common+0x82/0xc0
-     [<ffffffff810a423a>] warn_slowpath_null+0x1a/0x20
-     [<ffffffffa09251cc>] __x86_set_memory_region+0x1dc/0x1f0 [kvm]
-     [<ffffffffa092521b>] x86_set_memory_region+0x3b/0x60 [kvm]
-     [<ffffffffa09bb61c>] vmx_set_tss_addr+0x3c/0x150 [kvm_intel]
-     [<ffffffffa092f4d4>] kvm_arch_vm_ioctl+0x654/0xbc0 [kvm]
-     [<ffffffffa091d31a>] kvm_vm_ioctl+0x9a/0x6f0 [kvm]
-     [<ffffffff81241248>] do_vfs_ioctl+0x298/0x480
-     [<ffffffff812414a9>] SyS_ioctl+0x79/0x90
-     [<ffffffff817a04ee>] entry_SYSCALL_64_fastpath+0x12/0x71
+Test:
+netperf
 
-Testcase:
+before patch:
+> netperf -H remote -l -2000000 -- -s 1000000
+MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
+Recv   Send    Send
+Socket Socket  Message  Elapsed
+Size   Size    Size     Time     Throughput
+bytes  bytes   bytes    secs.    10^6bits/sec
 
-    #include <unistd.h>
-    #include <sys/ioctl.h>
-    #include <fcntl.h>
-    #include <string.h>
-    #include <linux/kvm.h>
+ 87380 327680 327680    253.44      0.06
 
-    long r[8];
+after patch:
+> netperf -H remote -l -10000000 -- -s 1000000
+MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
+Recv   Send    Send
+Socket Socket  Message  Elapsed
+Size   Size    Size     Time     Throughput
+bytes  bytes   bytes    secs.    10^6bits/sec
 
-    int main()
-    {
-        memset(r, -1, sizeof(r));
-	r[2] = open("/dev/kvm", O_RDONLY|O_TRUNC);
-        r[3] = ioctl(r[2], KVM_CREATE_VM, 0x0ul);
-        r[5] = ioctl(r[3], KVM_SET_TSS_ADDR, 0x20000000ul);
-        r[7] = ioctl(r[3], KVM_SET_TSS_ADDR, 0x20000000ul);
-        return 0;
-    }
+ 87380 327680 327680    5.38       14.89
 
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Zubin Mithra <zsm@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thx to Dave Miller and Eric Dumazet for helpful hints
 
+Signed-off-by: Sergej Benilov <sergej.benilov@googlemail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/sis/sis900.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7799,7 +7799,7 @@ int __x86_set_memory_region(struct kvm *
+diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
+index fd812d2e5e1c..dff5b56738d3 100644
+--- a/drivers/net/ethernet/sis/sis900.c
++++ b/drivers/net/ethernet/sis/sis900.c
+@@ -1058,7 +1058,7 @@ sis900_open(struct net_device *net_dev)
+ 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
  
- 	slot = id_to_memslot(slots, id);
- 	if (size) {
--		if (WARN_ON(slot->npages))
-+		if (slot->npages)
- 			return -EEXIST;
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ 	sw32(cr, RxENA | sr32(cr));
+ 	sw32(ier, IE);
  
- 		/*
+@@ -1581,7 +1581,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
+ 	sw32(txdp, sis_priv->tx_ring_dma);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ }
+ 
+ /**
+@@ -1621,7 +1621,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+ 			spin_unlock_irqrestore(&sis_priv->lock, flags);
+ 			return NETDEV_TX_OK;
+ 	}
+-	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
++	sis_priv->tx_ring[entry].cmdsts = (OWN | INTR | skb->len);
+ 	sw32(cr, TxENA | sr32(cr));
+ 
+ 	sis_priv->cur_tx ++;
+@@ -1677,7 +1677,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+ 	do {
+ 		status = sr32(isr);
+ 
+-		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
++		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|TxDESC|RxORN|RxERR|RxOK)) == 0)
+ 			/* nothing intresting happened */
+ 			break;
+ 		handled = 1;
+@@ -1687,7 +1687,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+ 			/* Rx interrupt */
+ 			sis900_rx(net_dev);
+ 
+-		if (status & (TxURN | TxERR | TxIDLE))
++		if (status & (TxURN | TxERR | TxIDLE | TxDESC))
+ 			/* Tx interrupt */
+ 			sis900_finish_xmit(net_dev);
+ 
+@@ -1899,8 +1899,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
+ 
+ 		if (tx_status & OWN) {
+ 			/* The packet is not transmitted yet (owned by hardware) !
+-			 * Note: the interrupt is generated only when Tx Machine
+-			 * is idle, so this is an almost impossible case */
++			 * Note: this is an almost impossible condition
++			 * in case of TxDESC ('descriptor interrupt') */
+ 			break;
+ 		}
+ 
+@@ -2476,7 +2476,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
+ 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ 	sw32(cr, RxENA | sr32(cr));
+ 	sw32(ier, IE);
+ 
+-- 
+2.20.1
+
 
 
