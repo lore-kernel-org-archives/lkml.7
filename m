@@ -2,114 +2,83 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D491DC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A4FC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66DF21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6699A21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390469AbfGROm5 (ORCPT
+        id S2390551AbfGROnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:42:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37236 "EHLO mx1.redhat.com"
+        Thu, 18 Jul 2019 10:43:31 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:38092 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGROm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:42:57 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 35C6DC065134;
-        Thu, 18 Jul 2019 14:42:56 +0000 (UTC)
-Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 972C45D739;
-        Thu, 18 Jul 2019 14:42:48 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 10:42:47 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     ? jiang <jiangkidd@hotmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
-Subject: Re: [PATCH] virtio-net: parameterize min ring num_free for virtio
- receive
-Message-ID: <20190718103641-mutt-send-email-mst@kernel.org>
-References: <BYAPR14MB32056583C4963342F5D817C4A6C80@BYAPR14MB3205.namprd14.prod.outlook.com>
- <20190718085836-mutt-send-email-mst@kernel.org>
- <bdd30ef5-4f69-8218-eed0-38c6daac42db@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bdd30ef5-4f69-8218-eed0-38c6daac42db@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Jul 2019 14:42:56 +0000 (UTC)
+        id S1727623AbfGROna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:43:30 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 21F1D200088;
+        Thu, 18 Jul 2019 16:43:29 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 15433200009;
+        Thu, 18 Jul 2019 16:43:29 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C55A5205C7;
+        Thu, 18 Jul 2019 16:43:28 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: gcm - restrict assoclen for rfc4543
+Date:   Thu, 18 Jul 2019 17:43:04 +0300
+Message-Id: <1563460984-24593-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:01:05PM +0800, Jason Wang wrote:
-> 
-> On 2019/7/18 下午9:04, Michael S. Tsirkin wrote:
-> > On Thu, Jul 18, 2019 at 12:55:50PM +0000, ? jiang wrote:
-> > > This change makes ring buffer reclaim threshold num_free configurable
-> > > for better performance, while it's hard coded as 1/2 * queue now.
-> > > According to our test with qemu + dpdk, packet dropping happens when
-> > > the guest is not able to provide free buffer in avail ring timely.
-> > > Smaller value of num_free does decrease the number of packet dropping
-> > > during our test as it makes virtio_net reclaim buffer earlier.
-> > > 
-> > > At least, we should leave the value changeable to user while the
-> > > default value as 1/2 * queue is kept.
-> > > 
-> > > Signed-off-by: jiangkidd<jiangkidd@hotmail.com>
-> > That would be one reason, but I suspect it's not the
-> > true one. If you need more buffer due to jitter
-> > then just increase the queue size. Would be cleaner.
-> > 
-> > 
-> > However are you sure this is the reason for
-> > packet drops? Do you see them dropped by dpdk
-> > due to lack of space in the ring? As opposed to
-> > by guest?
-> > 
-> > 
-> 
-> Besides those, this patch depends on the user to choose a suitable threshold
-> which is not good. You need either a good value with demonstrated numbers or
-> something smarter.
-> 
-> Thanks
+Based on seqiv, IPsec ESP and rfc4543/rfc4106 the assoclen can be 16 or
+20 bytes.
 
-I do however think that we have a problem right now: try_fill_recv can
-take up a long time during which net stack does not run at all. Imagine
-a 1K queue - we are talking 512 packets. That's exceessive.  napi poll
-weight solves a similar problem, so it might make sense to cap this at
-napi_poll_weight.
+From esp4/esp6, assoclen is sizeof IP Header. This includes spi, seq_no
+and extended seq_no, that is 8 or 12 bytes.
+In seqiv, to asscolen is added the IV size (8 bytes).
+Therefore, the assoclen, for rfc4543, should be restricted to 16 or 20
+bytes, as for rfc4106.
 
-Which will allow tweaking it through a module parameter as a
-side effect :) Maybe just do NAPI_POLL_WEIGHT.
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+ crypto/gcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Need to be careful though: queues can also be small and I don't think we
-want to exceed queue size / 2, or maybe queue size - napi_poll_weight.
-Definitely must not exceed the full queue size.
-
+diff --git a/crypto/gcm.c b/crypto/gcm.c
+index 33f45a9..4d720e6 100644
+--- a/crypto/gcm.c
++++ b/crypto/gcm.c
+@@ -1048,11 +1048,17 @@ static int crypto_rfc4543_copy_src_to_dst(struct aead_request *req, bool enc)
+ 
+ static int crypto_rfc4543_encrypt(struct aead_request *req)
+ {
++	if (req->assoclen != 16 && req->assoclen != 20)
++		return -EINVAL;
++
+ 	return crypto_rfc4543_crypt(req, true);
+ }
+ 
+ static int crypto_rfc4543_decrypt(struct aead_request *req)
+ {
++	if (req->assoclen != 16 && req->assoclen != 20)
++		return -EINVAL;
++
+ 	return crypto_rfc4543_crypt(req, false);
+ }
+ 
 -- 
-MST
+2.1.0
+
