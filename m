@@ -2,91 +2,126 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCAEC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC6C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3079E21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENXS4jDh"
+	by mail.kernel.org (Postfix) with ESMTP id 91FAD21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391680AbfGRTrR (ORCPT
+        id S2391749AbfGRTr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:47:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37234 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391394AbfGRTrQ (ORCPT
+        Thu, 18 Jul 2019 15:47:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391704AbfGRTrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:47:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so14402552plr.4;
-        Thu, 18 Jul 2019 12:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WCeZhvjMPxe0X8TT7PbsY5EmMpx/Napv2I1k7N1YFk0=;
-        b=ENXS4jDhS0Qd5mbCjrCUqlBRrj0bVDgtLElaqlY/Fmr9jV0p7OJ4FVqCfCfNpqiVNN
-         7YmvmHfU4IyHNnApQfjbk1uvGZT05dcS4CAA1TfLI3Xs2zMswZv/3i70Z1/cyn5f5hEi
-         J7VfM0w9bB6KjFf/ZvSBXLLSq0llXTr7Ex31pJ6gkFJ7KZqcXrLzFpu0ef0SGcao0wYS
-         NH8xwdYQ5GH2NgoG6+XuVyIl9HSXSPuX6zXRnEzDrLH7/D+6e+ZadeHbdb8csFcQ/6cN
-         wHQtiWgQ+6UgTnugrHWmt3WEaOl19qKMq5VsCwMYn9gFB0MAPLV3KLnnghXe/ai5jX0y
-         +ATg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WCeZhvjMPxe0X8TT7PbsY5EmMpx/Napv2I1k7N1YFk0=;
-        b=FN6CD+ozaIAuOMpeJoZtbwtmDBM3EC1S6HHUsdTV4jVkAb3D5sB58BzrnUGQkLmQpK
-         q21xyzTjFmyNRaC8u98BjQ2Zpm5XbgYHGcAb4QIoSNXtU2uMV7Qz1zeWXlMaQ7JVW73o
-         pWk9FvfkAUbnboni/CCg+Sb+oesm2a0+8NrOac5hHxD8FqSE+2T27Q57ldcsaR6yfezb
-         XjHuIx/wY1H9PDVnUWVLWyGkmkKL59SycJLcSrKDHTYcyEkB0LUn3Tz7IjFtHVlorhMT
-         RZUbixiNx0YyULGf2txCrclMdyhq3LqRs6+KY85W5K/gLivs69uZLS0Dh4quq/EqA5NB
-         93Hg==
-X-Gm-Message-State: APjAAAVV5BFTLqjIGe7JpzZo6PwPuA+R2pJVEIM7nTpeQRSbmxssrIbQ
-        KoqePdi99xakkbrj1KRuJhU=
-X-Google-Smtp-Source: APXvYqwVPN15asyLKMZcr03KoOgq+EUL2ozfRLgFh6Tj6c95U9/BPUTnSfC1trgces5Rvv09nbuYMQ==
-X-Received: by 2002:a17:902:23:: with SMTP id 32mr52029908pla.34.1563479236003;
-        Thu, 18 Jul 2019 12:47:16 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 131sm33900891pfx.57.2019.07.18.12.47.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 12:47:15 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 12:47:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/40] 4.4.186-stable review
-Message-ID: <20190718194714.GA24320@roeck-us.net>
-References: <20190718030039.676518610@linuxfoundation.org>
+        Thu, 18 Jul 2019 15:47:25 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IJiBFQ013261
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:47:24 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttvjvxbeg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:47:23 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 18 Jul 2019 20:47:23 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 20:47:18 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IJlHl035455434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 19:47:17 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35C1EAE064;
+        Thu, 18 Jul 2019 19:47:17 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8940AE05C;
+        Thu, 18 Jul 2019 19:47:13 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.186.82])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 18 Jul 2019 19:47:13 +0000 (GMT)
+References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-3-bauerman@linux.ibm.com> <alpine.DEB.2.21.1907121806160.1788@nanos.tec.linutronix.de>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH 2/3] DMA mapping: Move SME handling to x86-specific files
+In-reply-to: <alpine.DEB.2.21.1907121806160.1788@nanos.tec.linutronix.de>
+Date:   Thu, 18 Jul 2019 16:47:09 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19071819-2213-0000-0000-000003B2DB12
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011453; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01234063; UDB=6.00650301; IPR=6.01015390;
+ MB=3.00027784; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 19:47:21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071819-2214-0000-0000-00005F4C56EA
+Message-Id: <878ssv3z2a.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:01:56PM +0900, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.186 release.
-> There are 40 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 170 pass: 170 fail: 0
-Qemu test results:
-	total: 307 pass: 307 fail: 0
 
-Guenter
+Thomas Gleixner <tglx@linutronix.de> writes:
+
+> On Fri, 12 Jul 2019, Thiago Jung Bauermann wrote:
+>> diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
+>> index b310a9c18113..f2e399fb626b 100644
+>> --- a/include/linux/mem_encrypt.h
+>> +++ b/include/linux/mem_encrypt.h
+>> @@ -21,23 +21,11 @@
+>>  
+>>  #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
+>>  
+>> -#define sme_me_mask	0ULL
+>> -
+>> -static inline bool sme_active(void) { return false; }
+>>  static inline bool sev_active(void) { return false; }
+>
+> You want to move out sev_active as well, the only relevant thing is
+> mem_encrypt_active(). Everything SME/SEV is an architecture detail.
+
+I'm sure you saw it. I addressed sev_active in a separate patch.
+
+Thanks for reviewing this series!
+
+>> +static inline bool mem_encrypt_active(void) { return false; }
+>
+> Thanks,
+>
+> 	tglx
+
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
