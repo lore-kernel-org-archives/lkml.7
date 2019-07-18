@@ -2,103 +2,130 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940D3C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD2DC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6813421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38E621019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S2OJTrzZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VgFYnWus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391648AbfGRW11 (ORCPT
+        id S2391342AbfGRWhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 18:27:27 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43537 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfGRW10 (ORCPT
+        Thu, 18 Jul 2019 18:37:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40072 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfGRWhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 18:27:26 -0400
-Received: by mail-io1-f66.google.com with SMTP id k20so54325453ios.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:27:26 -0700 (PDT)
+        Thu, 18 Jul 2019 18:37:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so13528217pgj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=/Nlsaz5MlWmeG7OKcfAd5EyR46Qw5/w4N5D2o/Xi5j8=;
-        b=S2OJTrzZNoGv5Oe95478I33bsvRX3JhcvnGALVidpZsmcTGK7KRJc0EDSlqlS4L4XA
-         0STBB7lVgcwjS/IJSIpaTAgsMJnKFFMooSAji1SDqJfCwsZ/f8u/vDaB4UocHIDdSTH1
-         XKm5HvoVMCi1p5S0NGTQWcZCnpZH7a1YeTvkvdFiKe4szmrxwWlNeyUi1kTax0/HFPEM
-         irdA7TC4I480cdukehKRLpNoHfzK/SsYlSnepp4W0TipFZowgpq/XEsK9gcipqh3RU4I
-         EAIZy1rv4IuAp2RGvqEmTiTAwoPuYEUOPEvWt0KOLEUH5St9R+4BVVV04coqkRHolTwa
-         9KAg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zlHONfgp4QrkRiAasjKvrG/YSZVb2X1BIf4rO6PjDZs=;
+        b=VgFYnWusXHilzo0Ku47Cvh49q8V68B4awJ2TdrpuYGgFUJHuBvIDJT5tlkVBHjbV15
+         +dxqU5Xf1FICAoZNSxbxvcH3HUuqtiZ9twnA92SAyze5g8YqlDWvzU/9kpZL+dJShZVn
+         y0/yYsOW3lOZc390krTK1D71UDcuP6BMLTGlWcAZHWsga9r4MM2ElyjJp0GK/Qbx/pIm
+         sQpl5qeeeczzCjtMLSFbt7PwNRY1FK2LGeBJ8gP90hL3IRRvHWirSzMjFOspsQtdVOze
+         OsOEhQap8rWRdJnfQRIOs671ectGxWhSthjGKbGjzmN8eMIyok7fspYiU7QbviuHWdIg
+         FObA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=/Nlsaz5MlWmeG7OKcfAd5EyR46Qw5/w4N5D2o/Xi5j8=;
-        b=g518xeIbKdJKLTu7jHZJwBNpSY9A08ZEY/TQOt/WIZxHpyggC6QBM3YbjftjorAktL
-         t5aGLDMkmta8IW1xutiaOWVFbCIVmF5plID4Bun6+C3DhCNqUSBRIjwn6jMOjRRuozKy
-         2GCREWaNGEf7n95kBeGeocp9ODJXgAFLqCrb6SQGGdzsQJAA5YswihvDnf3cuBK4iChC
-         LeXGTFW6VTBQdYo53dbDInckPoCiHPvWRve70LFdX1gbvKZfS1IstATumUDXVKSNnsCD
-         xes04EYxF2WkfVWFi132a/PnfY9ns/I9K2i45DeeRWROl5av05ngS6/3a7AOUEEqyhhP
-         yOGQ==
-X-Gm-Message-State: APjAAAX6X0oaJrPTKOkC2Nco+wJpLcLELHmY2EyKZc7f+ySZr4rkjaN5
-        gJIOO4ef0I4HIqquNn+0YVuKhg==
-X-Google-Smtp-Source: APXvYqxYmBc5hPbEHd8dKBbXsXLhJPs3Zt6OYV7PpRmuLIRO9YvaCy8DLBta9gqpmIwjP84gIIx/Dw==
-X-Received: by 2002:a6b:6b02:: with SMTP id g2mr40561759ioc.13.1563488845967;
-        Thu, 18 Jul 2019 15:27:25 -0700 (PDT)
-Received: from localhost (67-0-62-24.albq.qwest.net. [67.0.62.24])
-        by smtp.gmail.com with ESMTPSA id f17sm26051739ioc.2.2019.07.18.15.27.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 15:27:25 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 15:27:24 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2] riscv: include generic support for MSI irqdomains
-Message-ID: <alpine.DEB.2.21.9999.1907181525540.20168@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zlHONfgp4QrkRiAasjKvrG/YSZVb2X1BIf4rO6PjDZs=;
+        b=kh1NqlshA5pmNvu1WHpWJO60CCRToB0KiwVVY2gXMRbaWbKdFD4RSaJy8bo6HUZDaV
+         5ZN0RE34m7S5HhZjpGNNPrudCOdvEv3tBwlSosIFLqgeOcgufAAkBBQiz/9Tx8BJ+M9D
+         AFkljZFB258Qz/TpkrLqxaj8j2WPK+LetnGn3JUKVfcm2fmN1p6fxWi6+foYdRM1csXt
+         uz2R7ASf1Tj+VxehzQ0nRsJoDKBlajoFLBTfZ6lqGKHS8OFhLjBmAGekbWJyowiiLROn
+         VNz4e1jWgOYWlngyw90y0erelA4X5mArHSe1T9GTDF/uBagDVZqkKclWrAL++tA0G8V5
+         W+DQ==
+X-Gm-Message-State: APjAAAVzxX/r4STBVGuFgKaVFl6fvpA0veiEU+Dw57Z4AW9atrJBcagE
+        LSU8Yu3mmPlWA0XnlOetZSGEaRxGYcapYK/r5sJo5g==
+X-Google-Smtp-Source: APXvYqxjy2Gq2Lm2eY+1vfPzCn/zXiWCb/tZiQuoAH6R+x3cesLE0GBHZOkZ0E9++wSw1Wg/gc51UVTmxZV/TodgFFU=
+X-Received: by 2002:a63:2cd1:: with SMTP id s200mr46619294pgs.10.1563489419062;
+ Thu, 18 Jul 2019 15:36:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CAG48ez3ipuPHLxbqqc50=Kn4QuoNczkd7VqEoLPVd3WWLk2s+Q@mail.gmail.com>
+ <CAK8P3a2=SJQp7Jvyf+BX-7XsUr8bh6eBMo6ue2m8FW4aYf=PPw@mail.gmail.com>
+ <CAK8P3a1_8kjzamn6_joBbZTO8NeGn0E3O+MZ+bcOQ0HkkRHXRQ@mail.gmail.com>
+ <20190712135755.7qa4wxw3bfmwn5rp@treble> <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
+ <20190712142928.gmt6gibikdjmkppm@treble> <CAKwvOdnOpgo9rEctZZR9Y9rEc60FCthbPtp62UsdMtkGDF5nUg@mail.gmail.com>
+ <CAK8P3a0AGpvAOzSfER7iiaz=aLVMbxiVorTsh__yT4xxBOHSyw@mail.gmail.com>
+ <CAKwvOd=o16rtGOVm9DWhhqxed0OEW5NKt4Vt3y_6KCcbdU-dhQ@mail.gmail.com>
+ <CAK8P3a2Vq+ojOZSefwziMhzU2SG+Bq6HDz2Ssjz7_BpVnMUu=A@mail.gmail.com> <20190716230336.y7nk24ybbwguio2s@treble>
+In-Reply-To: <20190716230336.y7nk24ybbwguio2s@treble>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jul 2019 15:36:47 -0700
+Message-ID: <CAKwvOdm_MiACJWnRww3tSD7033J6MX2Erzs1xwmd1=taNmyg9A@mail.gmail.com>
+Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wesley Terpstra <wesley@sifive.com>
+On Tue, Jul 16, 2019 at 4:03 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Wed, Jul 17, 2019 at 12:05:14AM +0200, Arnd Bergmann wrote:
+> > On Tue, Jul 16, 2019 at 10:24 PM 'Nick Desaulniers' via Clang Built
+> > Linux <clang-built-linux@googlegroups.com> wrote:
+> > >
+> > > On Fri, Jul 12, 2019 at 1:41 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > >
+> > > > On Fri, Jul 12, 2019 at 6:59 PM 'Nick Desaulniers' via Clang Built
+> > > > Linux <clang-built-linux@googlegroups.com> wrote:
+> > > > > > The issue still needs to get fixed in clang regardless.  There are other
+> > > > > > noreturn functions in the kernel and this problem could easily pop back
+> > > > > > up.
+> > > > >
+> > > > > Sure, thanks for the report.  Arnd, can you help us get a more minimal
+> > > > > test case to understand the issue better?
+> > > >
+> > > > I reduced it to this testcase:
+> > > >
+> > > > int a, b;
+> > > > void __reiserfs_panic(int, ...) __attribute__((noreturn));
+> > > > void balance_internal() {
+> > > >   if (a)
+> > > >     __reiserfs_panic(0, "", __func__, "", 2, __func__, a);
+> > > >   if (b)
+> > > >     __reiserfs_panic(0, "", __func__, "", 5, __func__, a, 0);
+> > > > }
+> > > >
+> > > > https://godbolt.org/z/Byfvmx
+> > >
+> > > Is this the same issue as Josh pointed out?  IIUC, Josh pointed to a
+> > > jump destination that was past a `push %rbp`, and I don't see it in
+> > > your link.  (Or, did I miss it?)
+> >
+> > I think it can be any push. The point is that the stack is different
+> > between the two branches leading up to the noreturn call.
+>
+> Right.
 
-Some RISC-V systems include PCIe host controllers that support PCIe
-message-signaled interrupts.  For this to work on Linux, we need to
-enable PCI_MSI_IRQ_DOMAIN and define struct msi_alloc_info.  Support
-for the latter is enabled by including the architecture-generic msi.h
-include.
+So if I remove the `-mstack-alignment=8` command line flag, it looks
+like the stack depth will still differ on calls to __reiserfs_panic,
+but now the call is not shared (two separate code paths):
+https://godbolt.org/z/tvkXwK. Is that ok or also bad?
 
-Signed-off-by: Wesley Terpstra <wesley@sifive.com>
-[paul.walmsley@sifive.com: split initial patch into one arch/riscv
- patch and one drivers/pci patch]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
-Planned for v5.3-rc.
-
- arch/riscv/include/asm/Kbuild | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index 3d019e062c6f..b0a9fa34be5a 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -20,6 +20,7 @@ generic-y += kvm_para.h
- generic-y += local.h
- generic-y += local64.h
- generic-y += mm-arch-hooks.h
-+generic-y += msi.h
- generic-y += percpu.h
- generic-y += preempt.h
- generic-y += sections.h
+I'm getting the feeling that `-mstack-alignment=8` might have some
+issues once we start pushing parameters on the stack.  How many can we
+use registers for in x86 before resorting to the stack, and does the
+function being variadic affect this? (if not, maybe a test case
+without variadic and many-parameters would not conflate the issue?)
 -- 
-2.22.0
+Thanks,
+~Nick Desaulniers
