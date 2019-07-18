@@ -2,165 +2,115 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49216C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E1C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE402173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405B721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:06:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVGH0KxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfGRHBE (ORCPT
+        id S1727496AbfGRHGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 03:01:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56267 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfGRHBE (ORCPT
+        Thu, 18 Jul 2019 03:06:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46670 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfGRHGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:01:04 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ho0PM-00009E-Bd; Thu, 18 Jul 2019 09:00:52 +0200
-Date:   Thu, 18 Jul 2019 09:00:50 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dexuan Cui <decui@microsoft.com>
-cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>, vkuznets <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>
-Subject: RE: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
- offlining
-In-Reply-To: <PU1P153MB01693AB444C4A432FBA2507BBFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Message-ID: <alpine.DEB.2.21.1907180846290.1778@nanos.tec.linutronix.de>
-References: <PU1P153MB01697CBE66649B4BA91D8B48BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <alpine.DEB.2.21.1907180058210.1778@nanos.tec.linutronix.de> <PU1P153MB01693AB444C4A432FBA2507BBFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 18 Jul 2019 03:06:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z1so27360551wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AjHCbwBrWhsfLtVDroYK4H9JzJ/y/JeFj0V80CAWrXw=;
+        b=dVGH0KxN6IWsqILmypdJN4ffQoCPa2LdoyifWahZfeHOoPNHQTGt8fE1xe1MSWS4uw
+         3z3/+hqTViU1WPFnk1rbvI7YmuGNFFkVwWP7zYDAZitxcvVUbuAIgRCGyAuOdFr3yGAu
+         +Vetkcpm6wt7w5dxfjzV17UX6+KSHP4fzyLXXAnbzy4Cw4373BJ9cpVsww8NC1RX7NkW
+         sLqz8+Sw3+jMGZUgDk7gV3VD3Kf2vOPwHMdldJUW6DdNxMdiQQX1jymVRkBA7LkBxmr+
+         GU2jr6+/K0OPFYMXdYBlqYv+PesxCApS2onGI5eDrig3q7k+29ISZmzIwTJYaaD/dTHC
+         DZPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AjHCbwBrWhsfLtVDroYK4H9JzJ/y/JeFj0V80CAWrXw=;
+        b=V+HppMC8hUNDveU3TEWQS/OqD7lBRKTrv9bGsf3lv9pZwvLBpdOBVhvxS14NnaVRVq
+         bL3CZUoJvpzTdJTeRIafNobdWz7WzG179Ru6FWpEQCVRHa8j0HZTo/GqDoYwafwpieif
+         Vg3ZDhA3TOpEfBptIjqghKSJKo2HjK3i3ShrxBwMdLTBUj3hUT2AIPxt/0sL02b2YPpy
+         KqTjJDLocLnNAQv95Qg7ZFmEOUKE5IOvqKU4pIyBld6NlXndsmgilayubUK6x6KcR5M/
+         5C2W9fki2lGozNuN8z/IuVsUoGiwb4w0x2n7NY95pEyzkmvclckvRBu5UwegGi3m60J4
+         27nA==
+X-Gm-Message-State: APjAAAX+5o0HNKYhsyw2iUDiVBPlh+WylHTLdFzSFU5MTlmMzQlOh5Bk
+        fEpKjsB+tSCFc3jAF9UwHURV6w==
+X-Google-Smtp-Source: APXvYqwZgraIaMNlL/RuU9cyBFJWX9VGmgZznSLju1U+tv3DN8TEIZD+AhpTERo3x4as2ww2RMcmGA==
+X-Received: by 2002:a5d:63c8:: with SMTP id c8mr5109243wrw.21.1563433603713;
+        Thu, 18 Jul 2019 00:06:43 -0700 (PDT)
+Received: from [192.168.0.100] (146-241-85-178.dyn.eolo.it. [146.241.85.178])
+        by smtp.gmail.com with ESMTPSA id i18sm31923341wrp.91.2019.07.18.00.06.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 00:06:43 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH BUGFIX IMPROVEMENT V2 0/1] block, bfq: eliminate latency
+ regression with fast drives
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <6867cf11-d7f8-cadf-b9ec-85549bb86af3@kernel.dk>
+Date:   Thu, 18 Jul 2019 09:06:41 +0200
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <12B115BF-AF31-44F8-9A3A-EC64D3284FBB@linaro.org>
+References: <20190715105719.20353-1-paolo.valente@linaro.org>
+ <6867cf11-d7f8-cadf-b9ec-85549bb86af3@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019, Dexuan Cui wrote:
-> > On Thu, 4 Jul 2019, Dexuan Cui wrote:
-> > This is the allocation when the CPU is brought online for the first
-> > time. So what effect has zeroing at allocation time vs. offlining and
-> > potentially receiving IPIs? That allocation is never freed.
-> > 
-> > Neither the comment nor the changelog make any sense to me.
-> > 	tglx
-> 
-> That allocation was introduced by the commit
-> a46d15cc1ae5 ("x86/hyper-v: allocate and use Virtual Processor Assist Pages").
-> 
-> I think it's ok to not free the page when a CPU is offlined: every
-> CPU uses only 1 page and CPU offlining is not really a very usual
-> operation except for the scenario of hibernation (and suspend-to-memory), 
-> where the CPUs are quickly onlined again, when we resume from hibernation.
-> IMO Vitaly intentionally decided to not free the page for simplicity of the
-> code.
-> 
-> When a CPU (e.g. CPU1) is being onlined, in hv_cpu_init(), we allocate the
-> VP_ASSIST_PAGE page and enable the PV EOI optimization for this CPU by
-> writing the MSR HV_X64_MSR_VP_ASSIST_PAGE. From now on, this CPU
-> *always* uses hvp->apic_assist (which is updated by the hypervisor) to
-> decide if it needs to write the EOI MSR:
-> 
-> static void hv_apic_eoi_write(u32 reg, u32 val)
-> {
->         struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
-> 
->         if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
->                 return;
-> 
->         wrmsr(HV_X64_MSR_EOI, val, 0);
-> }
-> 
-> When a CPU (e.g. CPU1) is being offlined, on this CPU, we do:
-> 1. in hv_cpu_die(), we disable the PV EOI optimizaton for this CPU;
-> 2. we finish the remaining work of stopping this CPU;
-> 3. this CPU is completed stopped.
-> 
-> Between 1 and 3, this CPU can still receive interrupts (e.g. IPIs from CPU0,
-> and Local APIC timer interrupts), and this CPU *must* write the EOI MSR for
-> every interrupt received, otherwise the hypervisor may not deliver further
-> interrupts, which may be needed to stop this CPU completely.
-> 
-> So we need to make sure hvp->apic_assist.bit0 is zero, after we run the line
-> "wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);" in hv_cpu_die(). The easiest
-> way is what I do in this patch. Alternatively, we can use the below patch:
-> 
-> @@ -188,8 +188,12 @@ static int hv_cpu_die(unsigned int cpu)
->         local_irq_restore(flags);
->         free_page((unsigned long)input_pg);
-> 
-> -       if (hv_vp_assist_page && hv_vp_assist_page[cpu])
-> +       if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
-> +               local_irq_save(flags);
->                 wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
-> +               hvp->apic_assist &= ~1;
-> +               local_irq_restore(flags);
-> +       }
-> 
->         if (hv_reenlightenment_cb == NULL)
->                 return 0;
-> 
-> This second version needs 3+ lines, so I prefer the one-line version. :-)
 
-Those are two different things. The GPF_ZERO allocation makes sense on it's
-own but it _cannot_ prevent the following scenario:
 
-    cpu_init()
-      if (!hvp)
-      	 hvp = vmalloc(...., GFP_ZERO);
-    ...
+> Il giorno 16 lug 2019, alle ore 16:11, Jens Axboe <axboe@kernel.dk> ha =
+scritto:
+>=20
+> On 7/15/19 4:57 AM, Paolo Valente wrote:
+>> [V2 that should apply cleanly on current HEAD]
+>>=20
+>> Hi Jens,
+>> I've spotted a regression on a fast SSD: a loss of I/O-latency =
+control
+>> with interactive tasks (such as the application start up I usually
+>> test). Details in the commit.
+>>=20
+>> I do hope that, after proper review, this commit makes it for 5.3.
+>=20
+> If it's a regression, it should have a Fixes: line telling us which
+> commit originally introduced the regression. This is important for
+> folks doing backports.
 
-    hvp->apic_assist |= 1;
+Right, sorry.
 
-#1   cpu_die()
-      if (....)
-           wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
+> Can you add that?
+>=20
 
-   ---> IPI
-   	if (!(hvp->apic_assist & 1))	
-	   wrmsr(APIC_EOI);    <- PATH not taken
+Added, together with an explanation of why the fixed commit fails.
 
-#3   cpu is dead
-
-    cpu_init()
-       if (!hvp)
-          hvp = vmalloc(....m, GFP_ZERO);  <- NOT TAKEN because hvp != NULL
-
-So you have to come up with a better fairy tale why GFP_ZERO 'fixes' this.
-
-Allocating hvp with GFP_ZERO makes sense on it's own so the allocated
-memory has a defined state, but that's a different story.
-
-The 3 liner patch above makes way more sense and you can spare the
-local_irq_save/restore by moving the whole condition into the
-irq_save/restore region above.
+Sending a V3.
 
 Thanks,
+Paolo
 
-	tglx
+> --=20
+> Jens Axboe
+>=20
 
