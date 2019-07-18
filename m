@@ -2,113 +2,72 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95141C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61E8C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66BB72173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JHF5kY9Q"
+	by mail.kernel.org (Postfix) with ESMTP id BDE7721783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563437721;
+	bh=NXP1dxMRStA2YoZIugG0Hfaixlo5PPncW8E/6st36ck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j8o52kzloW8jWpjuZeCmFzB7Ijo/VQ2a5VuCwpW1rX+1E+HyhBZSqI/5kWBStB8uq
+	 qh6k5EKgKZH5EtHXkCJ2RnyX1TdWmYLonjo65uogWc5d+Fq4ClwoLlhPmsmLX3+cXS
+	 ohDZjC+tIQY58Aq9uQQu/03+Me/fUa5VGVScS5jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389475AbfGRIOo (ORCPT
+        id S2389337AbfGRIPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:14:44 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58488 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfGRIOn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:14:43 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6I8E53H117444;
-        Thu, 18 Jul 2019 08:14:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=MnWKO1aPepCSn5Io1XMEqlaALN7Sd2EdfHGfadQRpQ4=;
- b=JHF5kY9QipPRj5DmCnbVs9QEtCrzknotJLpXqBTUZTaFmEdGTSTpUGTCZc58/5J8/CeY
- vPYcSWEzZPyAV3kl+3eBhazuJbPiTJAuq15oMLk3uwLG4ShNc7zTR6kt0ptV8srOqhoC
- 82qymY2E/0aM15M3GkdIDF2KhHvBgNW6ALcHkgnStqrSgFJd4MOgzewgmIQGrOpjmauY
- g9WaMa+AfVyrlmxRqAVCVC4hulJpfpL5/f1DZjeeLVCN72AYSyOoPWdvTQpZCLW/jS2r
- 288C7wBo45PWhcjqU6CyPtlyC2CXgg0ahZzI1KHP+WvnIX6QW07Y7tttLKR7mcAQnPo/ Jg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tq6qtyet2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 08:14:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6I8CgO1054919;
-        Thu, 18 Jul 2019 08:14:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2tt77hkg61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 08:14:04 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6I8DuVE018307;
-        Thu, 18 Jul 2019 08:13:58 GMT
-Received: from [10.191.31.100] (/10.191.31.100)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 18 Jul 2019 08:13:56 +0000
-Subject: Re: [PATCH] x86/boot/compressed/64: Remove unused variable
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-References: <1563283040-31101-1-git-send-email-zhenzhong.duan@oracle.com>
- <20190717143451.xbz6dkjnmxd7rcon@black.fi.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <e513acb4-a893-8134-4853-d31bd3b87ef9@oracle.com>
-Date:   Thu, 18 Jul 2019 16:13:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 18 Jul 2019 04:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbfGRIPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:15:20 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 255832173B;
+        Thu, 18 Jul 2019 08:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563437719;
+        bh=NXP1dxMRStA2YoZIugG0Hfaixlo5PPncW8E/6st36ck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vFFbhUW1Vk4qL91O8zs/wnRq17O2v+nBsHGqgNG1fQWGrH76f7mvP2R8Fzq8e0jws
+         nryRGuJnwg0srh9I6wgqTg54lCEYY9fNeXVts1t/ZXEfRX1qrFbdz0HcMW2DavFY88
+         Y686nLMjxJanA3xR7TH7pP7OBl0GBuEQrV8JKmms=
+Date:   Thu, 18 Jul 2019 16:14:57 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        viresh.kumar@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com,
+        agx@sigxcpu.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mq: Add gpio-ranges property
+Message-ID: <20190718081456.GN3738@dragon>
+References: <20190702014400.33554-1-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190717143451.xbz6dkjnmxd7rcon@black.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907180095
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907180095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702014400.33554-1-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 02, 2019 at 09:43:59AM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Add "gpio-ranges" property to establish connections between GPIOs
+> and PINs on i.MX8MQ pinctrl driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On 2019/7/17 22:34, Kirill A. Shutemov wrote:
-> On Tue, Jul 16, 2019 at 01:17:20PM +0000, Zhenzhong Duan wrote:
->> Fix gcc warning:
->>
->> arch/x86/boot/compressed/pgtable_64.c: In function 'find_trampoline_placement':
->> arch/x86/boot/compressed/pgtable_64.c:43:16: warning: unused variable 'trampoline_start' [-Wunused-variable]
->>    unsigned long trampoline_start;
->>                  ^
->>
->> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->
-> Have no idea why I don't see the warning in my setup.
-
-Try below:
-
-make bzImage EXTRA_CFLAGS="-Wunused-variable"
-
-Zhenzhong
+Applied both, thanks.
