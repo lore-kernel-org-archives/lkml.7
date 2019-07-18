@@ -2,56 +2,55 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC461C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8FBC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC792053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA462053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420179;
-	bh=HVq0OY3XtiBCPDAHr9rv9F9mDFCboIdnwymOPwkKx90=;
+	s=default; t=1563420187;
+	bh=tMIkPAUrJX4cVcb2pgdpRWKSEyW7lM/2TE9CNA6vFO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yIbbpGwtp6vyEBspcNt+DFz94oknspZv0uXcWfoEmLREp61+e0NWBMYjxT34Mnyug
-	 1pPBgzXPDKNCRbm/jITOC3R8jxhtNGEGukz76OOVrC6vX7bdEqV4znyh5uN7RVTmYM
-	 +Rd1qJentAYvjclgSfxhjXvL5EvPBxhgka3V9TYc=
+	b=GVj9Mgt7O3bpJhDxtTWBelaS0TQh6ImQ5W9bXHEIv+jma8pEAcWAVkuNlqoJbb92C
+	 WCYU12tWfR9uJ4TLYIk0kkjo3jGOwJaBm9nH5pm7sa06+R8vgEilK5Vj1/N/IYHfH0
+	 sfswAN2REVCbYEJGlwusKEf2bQ4dACVHGUyK7E+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391436AbfGRDW6 (ORCPT
+        id S2391792AbfGRDXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389729AbfGRDIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:25 -0400
+        id S1727601AbfGRDXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:23:04 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A222173B;
-        Thu, 18 Jul 2019 03:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C856B20818;
+        Thu, 18 Jul 2019 03:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419304;
-        bh=HVq0OY3XtiBCPDAHr9rv9F9mDFCboIdnwymOPwkKx90=;
+        s=default; t=1563419618;
+        bh=tMIkPAUrJX4cVcb2pgdpRWKSEyW7lM/2TE9CNA6vFO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYYCDSnETtciBpXg3ErMQKMFHnq5r367NuXcnlFh8Wps4oyzi7P2A8gXhd5lVFDe0
-         BEg2BCegcI0tManP1NLmjJGSmsPtK4jDylXTIj+16bkoa7QS/B9++qRU1qPT+kjiq6
-         xtLKcAkOQRdy0FgfrXVIpkNVINfo3dQrtLsBjKQU=
+        b=TVd1OEYBeUrOcFN8oQLn+I0Apsj4Q2XIMyoTeB/OLMhcy3V80VFZ24BWHVuj2KuIX
+         NmND+GqHS6XJW248AoFAyN+PS/v3Gs6XZYKUqX+G1aD7ZDCcXnqusDsXEPsKQXSGkx
+         5BYrN3+6Ppyk4fx6egkLVarDgRMcrrkZWtxpCe2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/47] drm/udl: move to embedding drm device inside udl device.
-Date:   Thu, 18 Jul 2019 12:02:00 +0900
-Message-Id: <20190718030052.641913444@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.9 34/54] usb: renesas_usbhs: add a workaround for a race condition of workqueue
+Date:   Thu, 18 Jul 2019 12:02:04 +0900
+Message-Id: <20190718030052.084474453@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
-References: <20190718030045.780672747@linuxfoundation.org>
+In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
+References: <20190718030048.392549994@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,219 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 6ecac85eadb9d4065b9038fa3d3c66d49038e14b upstream.
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-This should help with some of the lifetime issues, and move us away
-from load/unload.
+commit b2357839c56ab7d06bcd4e866ebc2d0e2b7997f3 upstream.
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405031715.5959-4-airlied@gmail.com
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The old commit 6e4b74e4690d ("usb: renesas: fix scheduling in atomic
+context bug") fixed an atomic issue by using workqueue for the shdmac
+dmaengine driver. However, this has a potential race condition issue
+between the work pending and usbhsg_ep_free_request() in gadget mode.
+When usbhsg_ep_free_request() is called while pending the queue,
+since the work_struct will be freed and then the work handler is
+called, kernel panic happens on process_one_work().
+
+To fix the issue, if we could call cancel_work_sync() at somewhere
+before the free request, it could be easy. However,
+the usbhsg_ep_free_request() is called on atomic (e.g. f_ncm driver
+calls free request via gether_disconnect()).
+
+For now, almost all users are having "USB-DMAC" and the DMAengine
+driver can be used on atomic. So, this patch adds a workaround for
+a race condition to call the DMAengine APIs without the workqueue.
+
+This means we still have TODO on shdmac environment (SH7724), but
+since it doesn't have SMP, the race condition might not happen.
+
+Fixes: ab330cf3888d ("usb: renesas_usbhs: add support for USB-DMAC")
+Cc: <stable@vger.kernel.org> # v4.1+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/udl/udl_drv.c  | 56 +++++++++++++++++++++++++++-------
- drivers/gpu/drm/udl/udl_drv.h  |  9 +++---
- drivers/gpu/drm/udl/udl_fb.c   |  2 +-
- drivers/gpu/drm/udl/udl_main.c | 23 ++------------
- 4 files changed, 53 insertions(+), 37 deletions(-)
+ drivers/usb/renesas_usbhs/fifo.c |   34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
-index bd4f0b88bbd7..f28703db8dbd 100644
---- a/drivers/gpu/drm/udl/udl_drv.c
-+++ b/drivers/gpu/drm/udl/udl_drv.c
-@@ -47,10 +47,16 @@ static const struct file_operations udl_driver_fops = {
- 	.llseek = noop_llseek,
- };
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -821,9 +821,8 @@ static int __usbhsf_dma_map_ctrl(struct
+ }
  
-+static void udl_driver_release(struct drm_device *dev)
-+{
-+	udl_fini(dev);
-+	udl_modeset_cleanup(dev);
-+	drm_dev_fini(dev);
-+	kfree(dev);
-+}
-+
- static struct drm_driver driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME,
--	.load = udl_driver_load,
--	.unload = udl_driver_unload,
- 	.release = udl_driver_release,
- 
- 	/* gem hooks */
-@@ -74,28 +80,56 @@ static struct drm_driver driver = {
- 	.patchlevel = DRIVER_PATCHLEVEL,
- };
- 
-+static struct udl_device *udl_driver_create(struct usb_interface *interface)
-+{
-+	struct usb_device *udev = interface_to_usbdev(interface);
-+	struct udl_device *udl;
-+	int r;
-+
-+	udl = kzalloc(sizeof(*udl), GFP_KERNEL);
-+	if (!udl)
-+		return ERR_PTR(-ENOMEM);
-+
-+	r = drm_dev_init(&udl->drm, &driver, &interface->dev);
-+	if (r) {
-+		kfree(udl);
-+		return ERR_PTR(r);
-+	}
-+
-+	udl->udev = udev;
-+	udl->drm.dev_private = udl;
-+
-+	r = udl_init(udl);
-+	if (r) {
-+		drm_dev_fini(&udl->drm);
-+		kfree(udl);
-+		return ERR_PTR(r);
-+	}
-+
-+	usb_set_intfdata(interface, udl);
-+	return udl;
-+}
-+
- static int udl_usb_probe(struct usb_interface *interface,
- 			 const struct usb_device_id *id)
+ static void usbhsf_dma_complete(void *arg);
+-static void xfer_work(struct work_struct *work)
++static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
  {
--	struct usb_device *udev = interface_to_usbdev(interface);
--	struct drm_device *dev;
- 	int r;
-+	struct udl_device *udl;
+-	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+ 	struct usbhs_fifo *fifo;
+ 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
+@@ -831,12 +830,10 @@ static void xfer_work(struct work_struct
+ 	struct dma_chan *chan;
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	enum dma_transfer_direction dir;
+-	unsigned long flags;
  
--	dev = drm_dev_alloc(&driver, &interface->dev);
--	if (IS_ERR(dev))
--		return PTR_ERR(dev);
-+	udl = udl_driver_create(interface);
-+	if (IS_ERR(udl))
-+		return PTR_ERR(udl);
+-	usbhs_lock(priv, flags);
+ 	fifo = usbhs_pipe_to_fifo(pipe);
+ 	if (!fifo)
+-		goto xfer_work_end;
++		return;
  
--	r = drm_dev_register(dev, (unsigned long)udev);
-+	r = drm_dev_register(&udl->drm, 0);
- 	if (r)
- 		goto err_free;
+ 	chan = usbhsf_dma_chan_get(fifo, pkt);
+ 	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+@@ -845,7 +842,7 @@ static void xfer_work(struct work_struct
+ 					pkt->trans, dir,
+ 					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc)
+-		goto xfer_work_end;
++		return;
  
--	usb_set_intfdata(interface, dev);
--	DRM_INFO("Initialized udl on minor %d\n", dev->primary->index);
-+	DRM_INFO("Initialized udl on minor %d\n", udl->drm.primary->index);
+ 	desc->callback		= usbhsf_dma_complete;
+ 	desc->callback_param	= pipe;
+@@ -853,7 +850,7 @@ static void xfer_work(struct work_struct
+ 	pkt->cookie = dmaengine_submit(desc);
+ 	if (pkt->cookie < 0) {
+ 		dev_err(dev, "Failed to submit dma descriptor\n");
+-		goto xfer_work_end;
++		return;
+ 	}
+ 
+ 	dev_dbg(dev, "  %s %d (%d/ %d)\n",
+@@ -864,8 +861,17 @@ static void xfer_work(struct work_struct
+ 	dma_async_issue_pending(chan);
+ 	usbhsf_dma_start(pipe, fifo);
+ 	usbhs_pipe_enable(pipe);
++}
++
++static void xfer_work(struct work_struct *work)
++{
++	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
++	struct usbhs_pipe *pipe = pkt->pipe;
++	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
++	unsigned long flags;
+ 
+-xfer_work_end:
++	usbhs_lock(priv, flags);
++	usbhsf_dma_xfer_preparing(pkt);
+ 	usbhs_unlock(priv, flags);
+ }
+ 
+@@ -918,8 +924,13 @@ static int usbhsf_dma_prepare_push(struc
+ 	pkt->trans = len;
+ 
+ 	usbhsf_tx_irq_ctrl(pipe, 0);
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	/* FIXME: Workaound for usb dmac that driver can be used in atomic */
++	if (usbhs_get_dparam(priv, has_usb_dmac)) {
++		usbhsf_dma_xfer_preparing(pkt);
++	} else {
++		INIT_WORK(&pkt->work, xfer_work);
++		schedule_work(&pkt->work);
++	}
  
  	return 0;
  
- err_free:
--	drm_dev_put(dev);
-+	drm_dev_put(&udl->drm);
- 	return r;
- }
+@@ -1025,8 +1036,7 @@ static int usbhsf_dma_prepare_pop_with_u
  
-diff --git a/drivers/gpu/drm/udl/udl_drv.h b/drivers/gpu/drm/udl/udl_drv.h
-index b3e08e876d62..35c1f33fbc1a 100644
---- a/drivers/gpu/drm/udl/udl_drv.h
-+++ b/drivers/gpu/drm/udl/udl_drv.h
-@@ -50,8 +50,8 @@ struct urb_list {
- struct udl_fbdev;
+ 	pkt->trans = pkt->length;
  
- struct udl_device {
-+	struct drm_device drm;
- 	struct device *dev;
--	struct drm_device *ddev;
- 	struct usb_device *udev;
- 	struct drm_crtc *crtc;
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	usbhsf_dma_xfer_preparing(pkt);
  
-@@ -71,7 +71,7 @@ struct udl_device {
- 	atomic_t cpu_kcycles_used; /* transpired during pixel processing */
- };
- 
--#define to_udl(x) ((x)->dev_private)
-+#define to_udl(x) container_of(x, struct udl_device, drm)
- 
- struct udl_gem_object {
- 	struct drm_gem_object base;
-@@ -104,9 +104,8 @@ struct urb *udl_get_urb(struct drm_device *dev);
- int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len);
- void udl_urb_completion(struct urb *urb);
- 
--int udl_driver_load(struct drm_device *dev, unsigned long flags);
--void udl_driver_unload(struct drm_device *dev);
--void udl_driver_release(struct drm_device *dev);
-+int udl_init(struct udl_device *udl);
-+void udl_fini(struct drm_device *dev);
- 
- int udl_fbdev_init(struct drm_device *dev);
- void udl_fbdev_cleanup(struct drm_device *dev);
-diff --git a/drivers/gpu/drm/udl/udl_fb.c b/drivers/gpu/drm/udl/udl_fb.c
-index 590323ea261f..4ab101bf1df0 100644
---- a/drivers/gpu/drm/udl/udl_fb.c
-+++ b/drivers/gpu/drm/udl/udl_fb.c
-@@ -213,7 +213,7 @@ static int udl_fb_open(struct fb_info *info, int user)
- 	struct udl_device *udl = to_udl(dev);
- 
- 	/* If the USB device is gone, we don't accept new opens */
--	if (drm_dev_is_unplugged(udl->ddev))
-+	if (drm_dev_is_unplugged(&udl->drm))
- 		return -ENODEV;
- 
- 	ufbdev->fb_count++;
-diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
-index 09ce98113c0e..8d22b6cd5241 100644
---- a/drivers/gpu/drm/udl/udl_main.c
-+++ b/drivers/gpu/drm/udl/udl_main.c
-@@ -310,20 +310,12 @@ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
- 	return ret;
- }
- 
--int udl_driver_load(struct drm_device *dev, unsigned long flags)
-+int udl_init(struct udl_device *udl)
- {
--	struct usb_device *udev = (void*)flags;
--	struct udl_device *udl;
-+	struct drm_device *dev = &udl->drm;
- 	int ret = -ENOMEM;
- 
- 	DRM_DEBUG("\n");
--	udl = kzalloc(sizeof(struct udl_device), GFP_KERNEL);
--	if (!udl)
--		return -ENOMEM;
--
--	udl->udev = udev;
--	udl->ddev = dev;
--	dev->dev_private = udl;
- 
- 	mutex_init(&udl->gem_lock);
- 
-@@ -357,7 +349,6 @@ int udl_driver_load(struct drm_device *dev, unsigned long flags)
- err:
- 	if (udl->urbs.count)
- 		udl_free_urb_list(dev);
--	kfree(udl);
- 	DRM_ERROR("%d\n", ret);
- 	return ret;
- }
-@@ -368,7 +359,7 @@ int udl_drop_usb(struct drm_device *dev)
  	return 0;
- }
  
--void udl_driver_unload(struct drm_device *dev)
-+void udl_fini(struct drm_device *dev)
- {
- 	struct udl_device *udl = to_udl(dev);
- 
-@@ -378,12 +369,4 @@ void udl_driver_unload(struct drm_device *dev)
- 		udl_free_urb_list(dev);
- 
- 	udl_fbdev_cleanup(dev);
--	kfree(udl);
--}
--
--void udl_driver_release(struct drm_device *dev)
--{
--	udl_modeset_cleanup(dev);
--	drm_dev_fini(dev);
--	kfree(dev);
- }
--- 
-2.20.1
-
 
 
