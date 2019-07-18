@@ -2,116 +2,191 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21652C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BA8C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE83821849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563410840;
-	bh=xdUPLnhzHIdZRYZi8AUKI9yOcgq9hjqy1SmitBqoN1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fIGoFQwydkaOIenYr72hzQXEVKNXHa/CPuGJfEShHhglWmBH+sp21S3Y6+U9erl/0
-	 KUujoD6jgwwR3lirq+AMiZ859EdEBEu5sDGzITNtbW3kriYTn4L4jbHzxEP5G8LFj6
-	 bvfvP2U9J/itnd3t/yUte1Mj3HsgLaPvT9YQdLaE=
+	by mail.kernel.org (Postfix) with ESMTP id D8572217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GZjJVzEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732032AbfGRArT (ORCPT
+        id S1732072AbfGRAtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbfGRArS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:47:18 -0400
-Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5B4217F4;
-        Thu, 18 Jul 2019 00:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563410837;
-        bh=xdUPLnhzHIdZRYZi8AUKI9yOcgq9hjqy1SmitBqoN1k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=moALQlLXZ2zUwy7M4eJ872ZP8pni0uVTPRs5iRtREQbZLbfB6Junpc+piQ0kFklt/
-         x/Rhw75/MByDS0k0J4Zb1HEinxnFXFscat18Bve55q5AwQRk0q1cnFZNm4T52Ezd8/
-         HPAsizUyafk7GSk5dYymd2CQ2YIaBn14f2lk+gbY=
-Date:   Thu, 18 Jul 2019 09:47:15 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vaibhav Rustagi <vaibhavrustagi@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org, Manoj Gupta <manojgupta@google.com>,
-        Alistair Delva <adelva@google.com>
-Subject: Re: [PATCH 2/2] x86/purgatory: do not use __builtin_memcpy and
- __builtin_memset.
-Message-ID: <20190718004715.GB31085@kroah.com>
-References: <20190718000206.121392-1-vaibhavrustagi@google.com>
- <20190718000206.121392-3-vaibhavrustagi@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718000206.121392-3-vaibhavrustagi@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 17 Jul 2019 20:49:47 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42694 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbfGRAtr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 20:49:47 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so19041470qkm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 17:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7K9LFXNQszPVt9oolCuthJEpelngJlWY3awPIGBoIrc=;
+        b=GZjJVzEiaTVbs3gP0mhVx/ascqRuKFftBg0qG8OjLCs9Uet45jCXXHASsA+I78EcEM
+         hnXVwAzXuOMkmmeiVNSMXOz6qQ6PQrO13L850mZrPiDOmrEl4+tmsaJATgsPDLzvCuHX
+         pKtA0WAL6PfYZ732t/8Hn7t/mcLhGq8mgFBmgAyj3C3f4w6pLEclhG2GZnZyY2pwiyIv
+         PbfEpwmggZ6X+dlw2lyCk8k5yM+HeTs5ukcAG8TCaHwMNf5XhyNs1uxa8lhpwmCm/N4j
+         arlVs+uOoN4ASTWBLtHsXFZOsmspHBc7JksnLpoBGrrHRb1mDJi7fsHLqiyUCUtZWwqy
+         SVTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7K9LFXNQszPVt9oolCuthJEpelngJlWY3awPIGBoIrc=;
+        b=q7zcBaQhbgtLnj2bNAhGU53xbLrgCieRQ0esO2VyrtxPb+LCh1T1FaeHIwldWQYuUK
+         s0qLOJYYDC9EoL0uAJvpO3R+p8H3Y1zo6xLUFAB1cedbTQel3O31MZ2ECaIJ8EinvvIE
+         1byMlcVzxgVTuY2ZVxN/jNHLUc/a+rFNm/b473UggcnmoDGEH2SU8sZ1IRqhJLl7VF55
+         OuGIz+YgxlMcs6ixoU287GqnEUBbN0SOf+AvoKT1sCT8qqHcbOiPamX1ctYeiloY+8Jg
+         4wJNQNuuGo53fblc8Wdeg0ssP8+Z0PzggvYdF7MuOMkLZG+x8i9p8FUgxj3gMqgxU2GM
+         YTzw==
+X-Gm-Message-State: APjAAAU/sAhoxt/Lx7V9G3A45syIdmT4gQOAP3jkKs4PIZWbUXobPsXU
+        KBHK/RkiQGEHy2FThTxBzA8qtA==
+X-Google-Smtp-Source: APXvYqyFZ9N+j7zVEUuW7E/oqpo5oR1MZH84slnFKyHkQq0UmXesigIoFoR8pMXjjDLELyRq2Ou6vA==
+X-Received: by 2002:ae9:f101:: with SMTP id k1mr28781291qkg.337.1563410986046;
+        Wed, 17 Jul 2019 17:49:46 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v84sm11985703qkb.0.2019.07.17.17.49.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 17:49:45 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
+Date:   Wed, 17 Jul 2019 20:49:43 -0400
+Cc:     rafael.j.wysocki@intel.com, robert.moore@intel.com,
+        erik.schmauss@intel.com, jkim@freebsd.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <73A4565B-837B-4E13-8B72-63F69BF408E7@lca.pw>
+References: <20190717033807.1207-1-cai@lca.pw>
+ <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 05:02:06PM -0700, Vaibhav Rustagi wrote:
-> From: Nick Desaulniers <ndesaulniers@google.com>
-> 
-> Implementing memcpy and memset in terms of __builtin_memcpy and
-> __builtin_memset is problematic.
-> 
-> GCC at -O2 will replace calls to the builtins with calls to memcpy and
-> memset (but will generate an inline implementation at -Os).  Clang will
-> replace the builtins with these calls regardless of optimization level.
-> 
-> $ llvm-objdump -dr arch/x86/purgatory/string.o | tail
-> 
-> 0000000000000339 memcpy:
->      339: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
->                 000000000000033b:  R_X86_64_64  memcpy
->      343: ff e0                         jmpq    *%rax
-> 
-> 0000000000000345 memset:
->      345: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
->                 0000000000000347:  R_X86_64_64  memset
->      34f: ff e0
-> 
-> Such code results in infinite recursion at runtime. This is observed
-> when doing kexec.
-> 
-> Instead, reuse an implementation from arch/x86/boot/compressed/string.c
-> if we define warn as a symbol.
-> 
-> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=984056
-> Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Debugged-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Debugged-by: Manoj Gupta <manojgupta@google.com>
-> Suggested-by: Alistair Delva <adelva@google.com>
-> Signed-off-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/x86/purgatory/Makefile    |  3 +++
->  arch/x86/purgatory/purgatory.c |  6 ++++++
->  arch/x86/purgatory/string.c    | 23 -----------------------
->  3 files changed, 9 insertions(+), 23 deletions(-)
->  delete mode 100644 arch/x86/purgatory/string.c
 
-<formletter>
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+> On Jul 17, 2019, at 6:01 PM, Nick Desaulniers =
+<ndesaulniers@google.com> wrote:
+>=20
+> On Tue, Jul 16, 2019 at 8:38 PM Qian Cai <cai@lca.pw> wrote:
+>>=20
+>> Clang generate quite a few of those warnings.
+>>=20
+>> drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer
+>> treated as a cast from integer to pointer is a GNU extension
+>> [-Wnull-pointer-arithmetic]
+>>                status =3D acpi_get_handle(ACPI_ROOT_OBJECT,
+>> obj->string.pointer,
+>>                                         ^~~~~~~~~~~~~~~~
+>> ./include/acpi/actypes.h:458:56: note: expanded from macro
+>> 'ACPI_ROOT_OBJECT'
+>> #define ACPI_ROOT_OBJECT                ((acpi_handle) =
+ACPI_TO_POINTER
+>> (ACPI_MAX_PTR))
+>>                                                        =
+^~~~~~~~~~~~~~~
+>> ./include/acpi/actypes.h:509:41: note: expanded from macro
+>> 'ACPI_TO_POINTER'
+>> #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) =
+0,
+>> (acpi_size) (i))
+>>                                         =
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> ./include/acpi/actypes.h:503:84: note: expanded from macro
+>> 'ACPI_ADD_PTR'
+>> #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
+>> (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
+>>                                         ^~~~~~~~~~~~~~~~~
+>> ./include/acpi/actypes.h:501:66: note: expanded from macro
+>> 'ACPI_CAST_PTR'
+>> #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
+>>                                                                  ^
+>> This is because pointer arithmetic on a pointer not pointing to an =
+array
+>> is an undefined behavior. Fix it by doing an integer arithmetic
+>> instead.
+>=20
+> Hi Qian, thanks for the patch.  How do I reproduce this issue,
+> precisely?  I just tried:
+> $ make CC=3Dclang -j71 drivers/acpi/scan.o
+> on linux-next today and don't observe the warning.  My clang is ToT
+> built sometime this week.  It looks like drivers/acpi/scan.o when
+> CONFIG_ACPI=3Dy, which is set in the defconfig.  Is there another set =
+of
+> configs to enable to observe the warning?
 
-</formletter>
+# make W=3D1 -j 256
+
+With the config,
+
+https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config=20
+
+>=20
+> Also, the fix is curious.  Arithmetic on pointers to different
+> "objects" (with one element passed the end) may lead to provence
+> issues due to undefined behavior, but I would have expected some cases
+> to uintptr_t, then arithmetic on that type, as the solution (which is
+> what I suspect ACPI_CAST_PTR is doing).
+>=20
+> Further, you seem to have modified ACPI_ADD_PTR but not ACPI_SUB_PTR;
+> I would have expected both to be afflicted together or not at all
+> based on their existing implementations.
+
+Yes, I thought about that, but ACPI_SUB_PTR does not seem used anywhere, =
+so I thought maybe just start a new discussion to remove it all together =
+later.
+
+
+>=20
+>>=20
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>> ---
+>> include/acpi/actypes.h | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
+>> index ad6892a24015..25b4a32da177 100644
+>> --- a/include/acpi/actypes.h
+>> +++ b/include/acpi/actypes.h
+>> @@ -500,13 +500,13 @@ typedef u64 acpi_integer;
+>>=20
+>> #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
+>> #define ACPI_CAST_INDIRECT_PTR(t, p)    ((t **) (acpi_uintptr_t) (p))
+>> -#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, =
+(ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
+>> +#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, (a) + =
+(acpi_size)(b))
+>> #define ACPI_SUB_PTR(t, a, b)           ACPI_CAST_PTR (t, =
+(ACPI_CAST_PTR (u8, (a)) - (acpi_size)(b)))
+>> #define ACPI_PTR_DIFF(a, b)             ((acpi_size) (ACPI_CAST_PTR =
+(u8, (a)) - ACPI_CAST_PTR (u8, (b))))
+>>=20
+>> /* Pointer/Integer type conversions */
+>>=20
+>> -#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) =
+0, (acpi_size) (i))
+>> +#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, 0, =
+(acpi_size) (i))
+>=20
+> IIUC, these are adding `i` to NULL (or (void*)0)? X + 0 =3D=3D X ?
+> --=20
+> Thanks,
+> ~Nick Desaulniers
+
