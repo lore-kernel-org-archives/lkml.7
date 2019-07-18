@@ -2,140 +2,90 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988B4C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05713C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD5021849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXt46Jwd"
+	by mail.kernel.org (Postfix) with ESMTP id C58CC2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391548AbfGRUO6 (ORCPT
+        id S2391518AbfGRURQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:14:58 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:36539 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391319AbfGRUO5 (ORCPT
+        Thu, 18 Jul 2019 16:17:16 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:42108 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727687AbfGRURQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:14:57 -0400
-Received: by mail-io1-f53.google.com with SMTP id o9so53724153iom.3;
-        Thu, 18 Jul 2019 13:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=r2pTm0RwMQarnOMoV8lDgMG4J6XK5815xYl1WaBhWuw=;
-        b=jXt46JwdBMPM4AF2MXHtgaUsQMs3wXwa8Ez4IImyYL5lK0RzY+Por1cwu6pd3tf1GK
-         LrR59Z86usCvS5PmkGhF3DPyAYzBW9zSlJJMqBiO/DfbEJy4NJ+BGaB2eCH1E3ERB7it
-         hf9/1kg5cy1KyOyY/PlWh63D5KRrr8tLDGxHLUH0gxkLR1rYP0+NHe4sRkS08I6N0XrV
-         JU7TSwR1wWwxivUuoIpCQNY8YwM5drG9QWzXEwcQyhOrHW5HW7BGP0GICe9p6fZfIf1V
-         9Mzjq9NaONVeWjIHfoGxtbcHJ/60e/CclfhDs0EBmZQcAJ8WmTyhYeV6q0a9825w6QF3
-         Fa/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=r2pTm0RwMQarnOMoV8lDgMG4J6XK5815xYl1WaBhWuw=;
-        b=SQHJuno+MXcY9P/5NzVi4mOA+gfuygpaXZkFSxrIKaaBo/tpoxJuh5pXit5rF4ZOeW
-         9fKINWwcnZOy1bfWkRNfd0doOs7t51O/ZZj2itJIHJzL6KdxOOhc5+b/qfNNE0kRsRPH
-         AhQ+mYmLl5eZ4OY5RhqIv0HnTWa84U8aj280YPSnQwCxLaOmXkp//oPl/xWVAYby2NN+
-         PF9I0NVUWbWwJ6uMfsnRj5EUGW2Rj/GC9Fjqey0+JyWM5noJ/6zPPE1LoTJaxsqQz7o7
-         XjJf0gTPQERs8xOvd0RaNSBWGCizvRoKe5GHauuYnjQgZZOkQSAVOqXHa/LOKKeRQW1S
-         uJzg==
-X-Gm-Message-State: APjAAAVGrcYiIwfciNqVz8x5MRkRVVzCK/pgzutKiNKs5rJNxJk+BANW
-        Bvj401pAckoJDLVg9a9tCBo=
-X-Google-Smtp-Source: APXvYqxSMTFdNpWMpK6BWoxyGer9NJ15j1T9DNe6DsnJeFmfcT3n3z8uenJp6lvRsFHRyu9jM7R6XA==
-X-Received: by 2002:a5d:8b52:: with SMTP id c18mr44577354iot.89.1563480896915;
-        Thu, 18 Jul 2019 13:14:56 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id p3sm31399170iom.7.2019.07.18.13.14.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 13:14:56 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Fugang Duan <fugang.duan@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v1] dt-bindings: fec: explicitly mark deprecated properties
-Date:   Thu, 18 Jul 2019 16:14:53 -0400
-Message-Id: <20190718201453.13062-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 18 Jul 2019 16:17:16 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 2B2CC802B6; Thu, 18 Jul 2019 22:17:03 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 22:17:13 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Subject: USB Modem support for Droid 4
+Message-ID: <20190718201713.GA25103@amd>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fec's gpio phy reset properties have been deprecated.
-Update the dt-bindings documentation to explicitly mark
-them as such, and provide a short description of the
-recommended alternative.
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- .../devicetree/bindings/net/fsl-fec.txt       | 30 +++++++++++--------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-index 2d41fb96ce0a..5b88fae0307d 100644
---- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-@@ -7,18 +7,6 @@ Required properties:
- - phy-mode : See ethernet.txt file in the same directory
- 
- Optional properties:
--- phy-reset-gpios : Should specify the gpio for phy reset
--- phy-reset-duration : Reset duration in milliseconds.  Should present
--  only if property "phy-reset-gpios" is available.  Missing the property
--  will have the duration be 1 millisecond.  Numbers greater than 1000 are
--  invalid and 1 millisecond will be used instead.
--- phy-reset-active-high : If present then the reset sequence using the GPIO
--  specified in the "phy-reset-gpios" property is reversed (H=reset state,
--  L=operation state).
--- phy-reset-post-delay : Post reset delay in milliseconds. If present then
--  a delay of phy-reset-post-delay milliseconds will be observed after the
--  phy-reset-gpios has been toggled. Can be omitted thus no delay is
--  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
- - phy-supply : regulator that powers the Ethernet PHY.
- - phy-handle : phandle to the PHY device connected to this device.
- - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-@@ -47,11 +35,27 @@ Optional properties:
-   For imx6sx, "int0" handles all 3 queues and ENET_MII. "pps" is for the pulse
-   per second interrupt associated with 1588 precision time protocol(PTP).
- 
--
- Optional subnodes:
- - mdio : specifies the mdio bus in the FEC, used as a container for phy nodes
-   according to phy.txt in the same directory
- 
-+Deprecated optional properties:
-+	To avoid these, create a phy node according to phy.txt in the same
-+	directory, and point the fec's "phy-handle" property to it. Then use
-+	the phy's reset binding, again described by phy.txt.
-+- phy-reset-gpios : Should specify the gpio for phy reset
-+- phy-reset-duration : Reset duration in milliseconds.  Should present
-+  only if property "phy-reset-gpios" is available.  Missing the property
-+  will have the duration be 1 millisecond.  Numbers greater than 1000 are
-+  invalid and 1 millisecond will be used instead.
-+- phy-reset-active-high : If present then the reset sequence using the GPIO
-+  specified in the "phy-reset-gpios" property is reversed (H=reset state,
-+  L=operation state).
-+- phy-reset-post-delay : Post reset delay in milliseconds. If present then
-+  a delay of phy-reset-post-delay milliseconds will be observed after the
-+  phy-reset-gpios has been toggled. Can be omitted thus no delay is
-+  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
+=46rom: Tony Lindgren <tony@atomide.com>
+
+Droid starts to have useful support in linux-next. Modem is tricky to
+play with, but this is enough to get basic support.
+
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+diff --git a/drivers/usb/serial/qcserial.c b/drivers/usb/serial/qcserial.c
+index 613f91a..3ca9439 100644
+--- a/drivers/usb/serial/qcserial.c
++++ b/drivers/usb/serial/qcserial.c
+@@ -181,6 +181,9 @@ static const struct usb_device_id id_table[] =3D {
+ 	/* Huawei devices */
+ 	{DEVICE_HWI(0x03f0, 0x581d)},	/* HP lt4112 LTE/HSPA+ Gobi 4G Modem (Huawe=
+i me906e) */
+=20
++	/* Motorola devices */
++	{DEVICE_HWI(0x22b8, 0x2a70)},	/* Droid 4 mdm6600 */
 +
- Example:
- 
- ethernet@83fec000 {
--- 
-2.17.1
+ 	{ }				/* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, id_table);
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--azLHFNyN32YCQGCU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0w08kACgkQMOfwapXb+vJpwQCfTiUS2K4a1CVoJwFu6/B1FtTc
+z+kAnRGFucsG+uLBUmYmxdZiQpeyBTXZ
+=SQkN
+-----END PGP SIGNATURE-----
+
+--azLHFNyN32YCQGCU--
