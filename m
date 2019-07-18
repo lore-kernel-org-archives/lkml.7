@@ -6,184 +6,306 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2B1C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E577AC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9CC20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B883420880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390407AbfGRNQ4 (ORCPT
+        id S2390414AbfGRNRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:16:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:23121 "EHLO mga07.intel.com"
+        Thu, 18 Jul 2019 09:17:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:58296 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390258AbfGRNQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:16:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 06:16:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,278,1559545200"; 
-   d="scan'208";a="367350792"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Jul 2019 06:16:54 -0700
-Date:   Thu, 18 Jul 2019 06:16:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v2 04/22] x86/kvm: Don't call kvm_spurious_fault() from
- .fixup
-Message-ID: <20190718131654.GE28096@linux.intel.com>
-References: <cover.1563413318.git.jpoimboe@redhat.com>
- <64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com>
- <65bbf58d-f88b-c7d6-523b-6e35f4972bf2@redhat.com>
+        id S1727655AbfGRNRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:17:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9973344;
+        Thu, 18 Jul 2019 06:17:38 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CC9D3F71F;
+        Thu, 18 Jul 2019 06:17:38 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 39CF96827B0; Thu, 18 Jul 2019 14:17:37 +0100 (BST)
+Date:   Thu, 18 Jul 2019 14:17:37 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds error event print functionality
+Message-ID: <20190718131737.GD5942@e110455-lin.cambridge.arm.com>
+References: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <65bbf58d-f88b-c7d6-523b-6e35f4972bf2@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:22:50AM +0200, Paolo Bonzini wrote:
-> On 18/07/19 03:36, Josh Poimboeuf wrote:
-> > After making a change to improve objtool's sibling call detection, it
-> > started showing the following warning:
-> > 
-> >   arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
-> > 
-> > The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
-> > fake call by pushing a fake RIP and doing a jump.  That tricks the
-> > unwinder into printing the function which triggered the exception,
-> > rather than the .fixup code.
-> > 
-> > Instead of the hack to make it look like the original function made the
-> > call, just change the macro so that the original function actually does
-> > make the call.  This allows removal of the hack, and also makes objtool
-> > happy.
-> > 
-> > I triggered a vmx instruction exception and verified that the stack
-> > trace is still sane:
-> > 
-> >   kernel BUG at arch/x86/kvm/x86.c:358!
-> >   invalid opcode: 0000 [#1] SMP PTI
-> >   CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
-> >   Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
-> >   RIP: 0010:kvm_spurious_fault+0x5/0x10
-> >   Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
-> >   RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
-> >   RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
-> >   RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
-> >   RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
-> >   R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
-> >   R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
-> >   FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
-> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >   CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
-> >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >   PKRU: 55555554
-> >   Call Trace:
-> >    loaded_vmcs_init+0x4f/0xe0
-> >    alloc_loaded_vmcs+0x38/0xd0
-> >    vmx_create_vcpu+0xf7/0x600
-> >    kvm_vm_ioctl+0x5e9/0x980
-> >    ? __switch_to_asm+0x40/0x70
-> >    ? __switch_to_asm+0x34/0x70
-> >    ? __switch_to_asm+0x40/0x70
-> >    ? __switch_to_asm+0x34/0x70
-> >    ? free_one_page+0x13f/0x4e0
-> >    do_vfs_ioctl+0xa4/0x630
-> >    ksys_ioctl+0x60/0x90
-> >    __x64_sys_ioctl+0x16/0x20
-> >    do_syscall_64+0x55/0x1c0
-> >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >   RIP: 0033:0x7fa349b1ee5b
-> > 
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> > v2: Fix ____kvm_handle_fault_on_reboot() comment [Paolo]
-> > 
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > ---
-> >  arch/x86/include/asm/kvm_host.h | 34 ++++++++++++++++++---------------
-> >  1 file changed, 19 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index 0cc5b611a113..8282b8d41209 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -1496,25 +1496,29 @@ enum {
-> >  #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
-> >  #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
-> >  
-> > +asmlinkage void __noreturn kvm_spurious_fault(void);
-
-With __noreturn added, can the entry in __dead_end_function() in
-tools/objtool/check.c be removed?
-
-> > +
-> >  /*
-> >   * Hardware virtualization extension instructions may fault if a
-> >   * reboot turns off virtualization while processes are running.
-> > - * Trap the fault and ignore the instruction if that happens.
-> > + * Usually after catching the fault we just panic; during reboot
-> > + * instead the instruction is ignored.
-> >   */
-> > -asmlinkage void kvm_spurious_fault(void);
-> > -
-> > -#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
-> > -	"666: " insn "\n\t" \
-> > -	"668: \n\t"                           \
-> > -	".pushsection .fixup, \"ax\" \n" \
-> > -	"667: \n\t" \
-> > -	cleanup_insn "\n\t"		      \
-> > -	"cmpb $0, kvm_rebooting \n\t"	      \
-> > -	"jne 668b \n\t"      		      \
-> > -	__ASM_SIZE(push) " $666b \n\t"	      \
-> > -	"jmp kvm_spurious_fault \n\t"	      \
-> > -	".popsection \n\t" \
-> > -	_ASM_EXTABLE(666b, 667b)
-> > +#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
-> > +	"666: \n\t"							\
-> > +	insn "\n\t"							\
-> > +	"jmp	668f \n\t"						\
-> > +	"667: \n\t"							\
-> > +	"call	kvm_spurious_fault \n\t"				\
-> > +	"668: \n\t"							\
-> > +	".pushsection .fixup, \"ax\" \n\t"				\
-> > +	"700: \n\t"							\
-> > +	cleanup_insn "\n\t"						\
-> > +	"cmpb	$0, kvm_rebooting\n\t"					\
-> > +	"je	667b \n\t"						\
-> > +	"jmp	668b \n\t"						\
-> > +	".popsection \n\t"						\
-> > +	_ASM_EXTABLE(666b, 700b)
-> >  
-> >  #define __kvm_handle_fault_on_reboot(insn)		\
-> >  	____kvm_handle_fault_on_reboot(insn, "")
-> > 
+On Thu, Jun 27, 2019 at 04:10:36AM +0100, Lowry Li (Arm Technology China) wrote:
+> Adds to print the event message when error happens and the same event
+> will not be printed until next vsync.
 > 
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/Makefile       |   1 +
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   |  13 ++
+>  drivers/gpu/drm/arm/display/komeda/komeda_event.c | 144 ++++++++++++++++++++++
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.c   |   2 +
+>  4 files changed, 160 insertions(+)
+>  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_event.c
 > 
-> This has a side effect of adding a jump in a generally hot path, but
-> let's hope that the speculation gods for once help us.
+> diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
+> index 38aa584..3f53d2d 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/Makefile
+> +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
+> @@ -7,6 +7,7 @@ ccflags-y := \
+>  komeda-y := \
+>  	komeda_drv.o \
+>  	komeda_dev.o \
+> +	komeda_event.o \
+>  	komeda_format_caps.o \
+>  	komeda_coeffs.o \
+>  	komeda_color_mgmt.o \
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> index 096f9f7..e863ec3 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> @@ -40,6 +40,17 @@
+>  #define KOMEDA_ERR_TTNG			BIT_ULL(30)
+>  #define KOMEDA_ERR_TTF			BIT_ULL(31)
+>  
+> +#define KOMEDA_ERR_EVENTS	\
+> +	(KOMEDA_EVENT_URUN	| KOMEDA_EVENT_IBSY	| KOMEDA_EVENT_OVR |\
+> +	KOMEDA_ERR_TETO		| KOMEDA_ERR_TEMR	| KOMEDA_ERR_TITR |\
+> +	KOMEDA_ERR_CPE		| KOMEDA_ERR_CFGE	| KOMEDA_ERR_AXIE |\
+> +	KOMEDA_ERR_ACE0		| KOMEDA_ERR_ACE1	| KOMEDA_ERR_ACE2 |\
+> +	KOMEDA_ERR_ACE3		| KOMEDA_ERR_DRIFTTO	| KOMEDA_ERR_FRAMETO |\
+> +	KOMEDA_ERR_ZME		| KOMEDA_ERR_MERR	| KOMEDA_ERR_TCF |\
+> +	KOMEDA_ERR_TTNG		| KOMEDA_ERR_TTF)
+> +
+> +#define KOMEDA_WARN_EVENTS	KOMEDA_ERR_CSCE
+> +
+>  /* malidp device id */
+>  enum {
+>  	MALI_D71 = 0,
+> @@ -207,6 +218,8 @@ struct komeda_dev {
+>  
+>  struct komeda_dev *dev_to_mdev(struct device *dev);
+>  
+> +void komeda_print_events(struct komeda_events *evts);
+> +
+>  int komeda_dev_resume(struct komeda_dev *mdev);
+>  int komeda_dev_suspend(struct komeda_dev *mdev);
+>  #endif /*_KOMEDA_DEV_H_*/
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> new file mode 100644
+> index 0000000..309dbe2
+> --- /dev/null
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> @@ -0,0 +1,144 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
+> + * Author: James.Qian.Wang <james.qian.wang@arm.com>
+> + *
+> + */
+> +#include <drm/drm_print.h>
+> +
+> +#include "komeda_dev.h"
+> +
+> +struct komeda_str {
+> +	char *str;
+> +	u32 sz;
+> +	u32 len;
+> +};
+> +
+> +/* return 0 on success,  < 0 on no space.
+> + */
+> +static int komeda_sprintf(struct komeda_str *str, const char *fmt, ...)
+> +{
+> +	va_list args;
+> +	int num, free_sz;
+> +	int err;
+> +
+> +	free_sz = str->sz - str->len;
+> +	if (free_sz <= 0)
+> +		return -ENOSPC;
+> +
+> +	va_start(args, fmt);
+> +
+> +	num = vsnprintf(str->str + str->len, free_sz, fmt, args);
+> +
+> +	va_end(args);
+> +
+> +	if (num <= free_sz) {
+> +		str->len += num;
+> +		err = 0;
+> +	} else {
+> +		str->len = str->sz;
+> +		err = -ENOSPC;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static void evt_sprintf(struct komeda_str *str, u64 evt, const char *msg)
+> +{
+> +	if (evt)
+> +		komeda_sprintf(str, msg);
+> +}
 
-Any reason not to take the same approach as vmx_vmenter() and ud2 directly
-from fixup?  I've never found kvm_spurious_fault() to be all that helpful,
-IMO it's a win win. :-)
+Why do we need this wrapper?
+
+> +
+> +static void evt_str(struct komeda_str *str, u64 events)
+> +{
+> +	if (events == 0ULL) {
+> +		evt_sprintf(str, 1, "None");
+> +		return;
+> +	}
+> +
+> +	evt_sprintf(str, events & KOMEDA_EVENT_VSYNC, "VSYNC|");
+> +	evt_sprintf(str, events & KOMEDA_EVENT_FLIP, "FLIP|");
+> +	evt_sprintf(str, events & KOMEDA_EVENT_EOW, "EOW|");
+> +	evt_sprintf(str, events & KOMEDA_EVENT_MODE, "OP-MODE|");
+> +
+> +	evt_sprintf(str, events & KOMEDA_EVENT_URUN, "UNDERRUN|");
+> +	evt_sprintf(str, events & KOMEDA_EVENT_OVR, "OVERRUN|");
+> +
+> +	/* GLB error */
+> +	evt_sprintf(str, events & KOMEDA_ERR_MERR, "MERR|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
+> +
+> +	/* DOU error */
+> +	evt_sprintf(str, events & KOMEDA_ERR_DRIFTTO, "DRIFTTO|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_TETO, "TETO|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_CSCE, "CSCE|");
+> +
+> +	/* LPU errors or events */
+> +	evt_sprintf(str, events & KOMEDA_EVENT_IBSY, "IBSY|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_AXIE, "AXIE|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_ACE0, "ACE0|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_ACE1, "ACE1|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_ACE2, "ACE2|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_ACE3, "ACE3|");
+> +
+> +	/* LPU TBU errors*/
+> +	evt_sprintf(str, events & KOMEDA_ERR_TCF, "TCF|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_TTNG, "TTNG|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_TITR, "TITR|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_TTF, "TTF|");
+> +
+> +	/* CU errors*/
+> +	evt_sprintf(str, events & KOMEDA_ERR_CPE, "COPROC|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_ZME, "ZME|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_CFGE, "CFGE|");
+> +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
+> +
+> +	if (str->len > 0 && (str->str[str->len - 1] == '|')) {
+> +		str->str[str->len - 1] = 0;
+> +		str->len--;
+> +	}
+> +}
+> +
+> +static bool is_new_frame(struct komeda_events *a)
+> +{
+> +	return (a->pipes[0] | a->pipes[1]) & KOMEDA_EVENT_FLIP;
+> +}
+> +
+> +void komeda_print_events(struct komeda_events *evts)
+> +{
+> +	u64 print_evts = KOMEDA_ERR_EVENTS;
+> +	static bool en_print = true;
+> +
+> +	/* reduce the same msg print, only print the first evt for one frame */
+> +	if (evts->global || is_new_frame(evts))
+> +		en_print = true;
+> +	if (!en_print)
+> +		return;
+
+When does en_print ever get false?
+
+> +
+> +#ifdef DEBUG
+> +	print_evts |= KOMEDA_WARN_EVENTS;
+> +#endif
+> +
+> +	if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_evts) {
+> +		#define STR_SZ		128
+> +		char msg[STR_SZ];
+
+I've counted about 27 evt_sprintf() calls in evt_str() function, with an
+average of 5 characters each, so thats 135 characters printed into a buffer
+that is only 128 bytes. Please don't do this!
+
+> +		struct komeda_str str;
+> +
+> +		str.str = msg;
+> +		str.sz  = STR_SZ;
+> +		str.len = 0;
+> +
+> +		komeda_sprintf(&str, "gcu: ");
+> +		evt_str(&str, evts->global);
+> +		komeda_sprintf(&str, ", pipes[0]: ");
+> +		evt_str(&str, evts->pipes[0]);
+> +		komeda_sprintf(&str, ", pipes[1]: ");
+> +		evt_str(&str, evts->pipes[1]);
+> +
+> +		DRM_ERROR("err detect: %s\n", msg);
+> +
+> +		en_print = false;
+> +	}
+> +}
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> index 647bce5..1462bac 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> @@ -47,6 +47,8 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+>  	memset(&evts, 0, sizeof(evts));
+>  	status = mdev->funcs->irq_handler(mdev, &evts);
+>  
+> +	komeda_print_events(&evts);
+
+Calling this function from the IRQ handler is a bad idea. We should use debugfs
+if you really want to have a trace of the events, but I personally don't see
+value in having this functionality in the kernel at all. You can expose the
+value of the evts->global and evts->pipes[] as integers and decode that in
+userspace or as a debugfs entry.
+
+Best regards,
+Liviu
+
+> +
+>  	/* Notify the crtc to handle the events */
+>  	for (i = 0; i < kms->n_crtcs; i++)
+>  		komeda_crtc_handle_event(&kms->crtcs[i], &evts);
+> -- 
+> 1.9.1
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
