@@ -2,197 +2,74 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D4FC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A0C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF032173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="as4v7Ko2"
+	by mail.kernel.org (Postfix) with ESMTP id 36A802173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfGRFhw (ORCPT
+        id S1732235AbfGRFiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 01:37:52 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37245 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfGRFhv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 01:37:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so12040951pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 22:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cFuA1lpQLfGAEPl1nEFaxlniB911ulQvQm5uHCNrLKw=;
-        b=as4v7Ko2dUT43t0bn5kPXJUfGkUB7NpfPcTN7tgnokmlLx/3EdGTCHuJm3sKWpNmS2
-         kbBsLklLEan+12lI+V2S5klivUMFkoIZ/tNKIFSYoV1CdA76e56BKRqMVM0xxscnzEa2
-         1rHeYh1gA7y9Hn+3maWN4q/wcLSRsTSAXfsfr5vo6FHq/54OBRud8F/jInlN3eQh5FLB
-         dZbGpoQDbsTDb+ZiZf6S2dYbdJ0+AeoGnCdVQXbdIMRVv0imbJqP/PwZc17AKH69+Zeo
-         ICwewFJnq6v7AqWr23fFwWwoCf0VK8imyXGlcm0s8l00RFXeRe/EvD83iea4mmQbOzoB
-         rzfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cFuA1lpQLfGAEPl1nEFaxlniB911ulQvQm5uHCNrLKw=;
-        b=WwS+YXZmZAJxaHLERXVmW4qDhcONlBlk4AtqZSC811fjANLgQNCCjriwle6M/TnstW
-         JqdYq6JeiWMnIiWZ1lmUgRDEFjK0K8AuhCU8A1+ZxAW7Kmg1BRR1P+N5nbooHvUh8eof
-         RdVOU1D9fsa7uTdHAad+SAZNpCWVHw4wssxJWPvHHa3jvXp/ljSvPGZDM8DcLvrjM3f5
-         joiYw5pfpvOvjRH0VYP95WfYZQ9GhJYtEOZgXw3XY8/7+HgBcR5dznjujwS1vt+jYR7/
-         aoibLJ45YSYZhMcVDq/wXSBGODYX6m2Zjis8g4iz+HHiIry8qChVTjCtqlRxtFhAuNbL
-         anzw==
-X-Gm-Message-State: APjAAAVEsWSJphx2Iv2hVFnbSvaRwLQLjGO5jpd8pNxN7QTjtcOoQH5Q
-        kiOi0WxAOJjWN79KLHwzG3tLlA==
-X-Google-Smtp-Source: APXvYqwdjuF+Axdpruw+kIQpC0dUpNr8vbQzGxEG5BFvLwzw25Cuao2XGx28aKvAMXE1Hnsfh1IJmw==
-X-Received: by 2002:a17:90a:1c17:: with SMTP id s23mr49192637pjs.108.1563428270862;
-        Wed, 17 Jul 2019 22:37:50 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id y128sm40860470pgy.41.2019.07.17.22.37.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 22:37:49 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 11:07:46 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
-Message-ID: <20190718053746.64drmonk72vwnt4s@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190717103220.f7cys267hq23fbsb@vireshk-i7>
- <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
+        Thu, 18 Jul 2019 01:38:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:40469 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbfGRFiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 01:38:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 22:38:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
+   d="scan'208";a="161969852"
+Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.159])
+  by orsmga008.jf.intel.com with ESMTP; 17 Jul 2019 22:38:20 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, Avi Kivity <avi@scylladb.com>
+Cc:     Joe Perches <joe@perches.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, like.xu@linux.intel.com
+Subject: [PATCH v2] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+Date:   Thu, 18 Jul 2019 13:35:14 +0800
+Message-Id: <20190718053514.59742-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I know you have explained lots of things earlier as well, but they are
-available over multiple threads and I don't know where to reply now :)
+If a perf_event creation fails due to any reason of the host perf
+subsystem, it has no chance to log the corresponding event for guest
+which may cause abnormal sampling data in guest result. In debug mode,
+this message helps to understand the state of vPMC and we may not
+limit the number of occurrences but not in a spamming style.
 
-Lets have proper discussion (once again) here and be done with it.
-Sorry for the trouble of explaining things again.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+---
+ arch/x86/kvm/pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 17-07-19, 13:34, Saravana Kannan wrote:
-> On Wed, Jul 17, 2019 at 3:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 02-07-19, 18:10, Saravana Kannan wrote:
-> > > gpu_cache_opp_table: gpu_cache_opp_table {
-> > >       compatible = "operating-points-v2";
-> > >
-> > >       gpu_cache_3000: opp-3000 {
-> > >               opp-peak-KBps = <3000>;
-> > >               opp-avg-KBps = <1000>;
-> > >       };
-> > >       gpu_cache_6000: opp-6000 {
-> > >               opp-peak-KBps = <6000>;
-> > >               opp-avg-KBps = <2000>;
-> > >       };
-> > >       gpu_cache_9000: opp-9000 {
-> > >               opp-peak-KBps = <9000>;
-> > >               opp-avg-KBps = <9000>;
-> > >       };
-> > > };
-> > >
-> > > gpu_ddr_opp_table: gpu_ddr_opp_table {
-> > >       compatible = "operating-points-v2";
-> > >
-> > >       gpu_ddr_1525: opp-1525 {
-> > >               opp-peak-KBps = <1525>;
-> > >               opp-avg-KBps = <452>;
-> > >       };
-> > >       gpu_ddr_3051: opp-3051 {
-> > >               opp-peak-KBps = <3051>;
-> > >               opp-avg-KBps = <915>;
-> > >       };
-> > >       gpu_ddr_7500: opp-7500 {
-> > >               opp-peak-KBps = <7500>;
-> > >               opp-avg-KBps = <3000>;
-> > >       };
-> > > };
-> >
-> > Who is going to use the above tables and how ?
-> 
-> In this example the GPU driver would use these. It'll go through these
-> and then decide what peak and average bw to pick based on whatever
-> criteria.
-
-Are you saying that the GPU driver will decide which bandwidth to
-choose while running at a particular frequency (say 2 GHz) ? And that
-it can choose 1525 or 3051 or 7500 from the ddr path ?
-
-Will it be possible to publicly share how we derive to these decisions
-?
-
-The thing is I don't like these separate OPP tables which will not be
-used by anyone else, but just GPU (or a single device). I would like
-to put this data in the GPU OPP table only. What about putting a
-range in the GPU OPP table for the Bandwidth if it can change so much
-for the same frequency.
-
-> > These are the maximum
-> > BW available over these paths, right ?
-> 
-> I wouldn't call them "maximum" because there can't be multiple
-> maximums :) But yes, these are the meaningful bandwidth from the GPU's
-> perspective to use over these paths.
-> 
-> >
-> > > gpu_opp_table: gpu_opp_table {
-> > >       compatible = "operating-points-v2";
-> > >       opp-shared;
-> > >
-> > >       opp-200000000 {
-> > >               opp-hz = /bits/ 64 <200000000>;
-> > >       };
-> > >       opp-400000000 {
-> > >               opp-hz = /bits/ 64 <400000000>;
-> > >       };
-> > > };
-> >
-> > Shouldn't this link back to the above tables via required-opp, etc ?
-> > How will we know how much BW is required by the GPU device for all the
-> > paths ?
-> 
-> If that's what the GPU driver wants to do, then yes. But the GPU
-> driver could also choose to scale the bandwidth for these paths based
-> on multiple other signals. Eg: bus port busy percentage, measure
-> bandwidth, etc.
-
-Lets say that the GPU is running at 2 GHz right now and based on above
-inputs it wants to increase the bandwidth to 7500 for ddr path, now
-does it make sense to run at 4 GHz instead of 2 so we utilize the
-bandwidth to the best of our ability and waste less power ?
-
-If something like that is acceptable, then what about keeping the
-bandwidth fixed for frequencies and rather scale the frequency of the
-GPU on the inputs your provided (like bus port busy percentage, etc).
-
-The current proposal makes me wonder on why should we try to reuse OPP
-tables for providing these bandwidth values as the OPP tables for
-interconnect paths isn't really a lot of data, only bandwidth all the
-time and there is no linking from the device's OPP table as well.
-
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index aa5a2597305a..cedaa01ceb6f 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -131,8 +131,8 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+ 						 intr ? kvm_perf_overflow_intr :
+ 						 kvm_perf_overflow, pmc);
+ 	if (IS_ERR(event)) {
+-		printk_once("kvm_pmu: event creation failed %ld\n",
+-			    PTR_ERR(event));
++		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
++			    PTR_ERR(event), pmc->idx);
+ 		return;
+ 	}
+ 
 -- 
-viresh
+2.21.0
+
