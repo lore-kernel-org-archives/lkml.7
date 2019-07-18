@@ -2,54 +2,56 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E34C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F9C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE4C2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2C02173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419747;
-	bh=rGTmn1Do0fdE2xwr//1vrCgSU5zRYdNtOrcaVxu+SRk=;
+	s=default; t=1563419750;
+	bh=Uj4g1/o+uZ5Aia03rIlXGVBRnbOQ8CuSVQjGAjrtdeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y7DwPi0qEqEZv51qb/wEBhKN5hCbo78lOMn8BQ5H2Vfi6aRDYapKCH754Cyh+UEeY
-	 g8zpcDoF/ExPzgoomgq6OuvQOBDoS9QA5IAYTjAktZreHSoWuYO3xsqr24mpayO4Ly
-	 3W+ruNrZrisJWhcePo/VOBk7wwtWJ3eTjuIINDIE=
+	b=En/BC+FCItY3g/oeeGrn3Rm75DgnU+HOTGG55rNC5bPC9YulHxjSNDDWWvXncA/A8
+	 Yvn/vnkriQ/h1g26q49WYTEWnOK2q25D8aexvbyfGguugSAPfzzrhtY06UJ2Uyaq6R
+	 60Uyqf843S01EOyJLyGBBEmk3gy/cFxlwjJMiilo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392123AbfGRDPq (ORCPT
+        id S2391311AbfGRDPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392027AbfGRDPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:24 -0400
+        id S2392045AbfGRDP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:26 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B52C21848;
-        Thu, 18 Jul 2019 03:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A182077C;
+        Thu, 18 Jul 2019 03:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419723;
-        bh=rGTmn1Do0fdE2xwr//1vrCgSU5zRYdNtOrcaVxu+SRk=;
+        s=default; t=1563419725;
+        bh=Uj4g1/o+uZ5Aia03rIlXGVBRnbOQ8CuSVQjGAjrtdeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JG9UpmGzZ1nQBHzjXL/UfFwE4kiXStdsMAYd/94B97mftEJJtPsgzMEUdy8Hcjd07
-         Kci5XMzncvI21hguXIsw0h4XTdnstv+RVSlK4Hw9Nscfa6/AgviX+V6XwyPKX/Ak49
-         WmlaUx29g6oruXZBwzkFSckUGiyoEUozyIqPtkhU=
+        b=jMpvKYeaZVzB+lpJudSfEvpv7CWER6x1bA4yvaxjToYcJvBcP2nn4kXX9WrCzRerY
+         aAYpdyPAw+JXei4EOPzduSNfmGFl/P1dkk1Rs4ViwpNLFm5vx0EjX0+G5joafyvztO
+         sPhL+C9hg9R+PGCI34zinFlwQUOUZY3xgwe8s/kU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
-        Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH 4.4 27/40] MIPS: Remove superfluous check for __linux__
-Date:   Thu, 18 Jul 2019 12:02:23 +0900
-Message-Id: <20190718030049.386724125@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Joseph Yasi <joe.yasi@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.4 28/40] e1000e: start network tx queue only when link is up
+Date:   Thu, 18 Jul 2019 12:02:24 +0900
+Message-Id: <20190718030049.487065577@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -62,52 +64,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 1287533d3d95d5ad8b02773733044500b1be06bc upstream.
+commit d17ba0f616a08f597d9348c372d89b8c0405ccf3 upstream.
 
-When building BPF code using "clang -target bpf -c", clang does not
-define __linux__.
+Driver does not want to keep packets in Tx queue when link is lost.
+But present code only reset NIC to flush them, but does not prevent
+queuing new packets. Moreover reset sequence itself could generate
+new packets via netconsole and NIC falls into endless reset loop.
 
-To build BPF IR decoders the include linux/lirc.h is needed which
-includes linux/types.h. Currently this workaround is needed:
+This patch wakes Tx queue only when NIC is ready to send packets.
 
-https://git.linuxtv.org/v4l-utils.git/commit/?id=dd3ff81f58c4e1e6f33765dc61ad33c48ae6bb07
+This is proper fix for problem addressed by commit 0f9e980bf5ee
+("e1000e: fix cyclic resets at link up with active tx").
 
-This check might otherwise be useful to stop users from using a non-linux
-compiler, but if you're doing that you are going to have a lot more
-trouble anyway.
-
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/21149/
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Tested-by: Joseph Yasi <joe.yasi@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/uapi/asm/sgidefs.h |    8 --------
- 1 file changed, 8 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/mips/include/uapi/asm/sgidefs.h
-+++ b/arch/mips/include/uapi/asm/sgidefs.h
-@@ -11,14 +11,6 @@
- #define __ASM_SGIDEFS_H
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -4171,7 +4171,7 @@ int e1000e_up(struct e1000_adapter *adap
+ 		e1000_configure_msix(adapter);
+ 	e1000_irq_enable(adapter);
  
- /*
-- * Using a Linux compiler for building Linux seems logic but not to
-- * everybody.
-- */
--#ifndef __linux__
--#error Use a Linux compiler or give up.
--#endif
--
--/*
-  * Definitions for the ISA levels
-  *
-  * With the introduction of MIPS32 / MIPS64 instruction sets definitions
+-	netif_start_queue(adapter->netdev);
++	/* Tx queue started by watchdog timer when link is up */
+ 
+ 	/* fire a link change interrupt to start the watchdog */
+ 	if (adapter->msix_entries)
+@@ -4539,6 +4539,7 @@ static int e1000_open(struct net_device
+ 	pm_runtime_get_sync(&pdev->dev);
+ 
+ 	netif_carrier_off(netdev);
++	netif_stop_queue(netdev);
+ 
+ 	/* allocate transmit descriptors */
+ 	err = e1000e_setup_tx_resources(adapter->tx_ring);
+@@ -4599,7 +4600,6 @@ static int e1000_open(struct net_device
+ 	e1000_irq_enable(adapter);
+ 
+ 	adapter->tx_hang_recheck = false;
+-	netif_start_queue(netdev);
+ 
+ 	hw->mac.get_link_status = true;
+ 	pm_runtime_put(&pdev->dev);
+@@ -5226,6 +5226,7 @@ static void e1000_watchdog_task(struct w
+ 			if (phy->ops.cfg_on_link_up)
+ 				phy->ops.cfg_on_link_up(hw);
+ 
++			netif_wake_queue(netdev);
+ 			netif_carrier_on(netdev);
+ 
+ 			if (!test_bit(__E1000_DOWN, &adapter->state))
+@@ -5239,6 +5240,7 @@ static void e1000_watchdog_task(struct w
+ 			/* Link status message must follow this format */
+ 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
+ 			netif_carrier_off(netdev);
++			netif_stop_queue(netdev);
+ 			if (!test_bit(__E1000_DOWN, &adapter->state))
+ 				mod_timer(&adapter->phy_info_timer,
+ 					  round_jiffies(jiffies + 2 * HZ));
 
 
