@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5984C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA2C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFB22184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967EB2189F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732966AbfGRBhU (ORCPT
+        id S1733127AbfGRBhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 21:37:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53038 "EHLO mx1.redhat.com"
+        Wed, 17 Jul 2019 21:37:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58766 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731985AbfGRBhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 21:37:12 -0400
+        id S1732517AbfGRBhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 21:37:17 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 95051300CB05;
-        Thu, 18 Jul 2019 01:37:12 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id DA43231628F9;
+        Thu, 18 Jul 2019 01:37:16 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-122-211.rdu2.redhat.com [10.10.122.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F08D5D9CC;
-        Thu, 18 Jul 2019 01:37:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B634D5D9CC;
+        Thu, 18 Jul 2019 01:37:15 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -34,64 +34,53 @@ Cc:     linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH v2 03/22] x86/kvm: Replace vmx_vmenter()'s call to kvm_spurious_fault() with UD2
-Date:   Wed, 17 Jul 2019 20:36:38 -0500
-Message-Id: <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2 06/22] x86/head/64: Annotate start_cpu0() as non-callable
+Date:   Wed, 17 Jul 2019 20:36:41 -0500
+Message-Id: <6b1b4505fcb90571a55fa1b52d71fb458ca24454.1563413318.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1563413318.git.jpoimboe@redhat.com>
 References: <cover.1563413318.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 18 Jul 2019 01:37:12 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Jul 2019 01:37:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Objtool reports the following:
+After an objtool improvement, it complains about the fact that
+start_cpu0() jumps to code which has an LRET instruction.
 
-  arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
+  arch/x86/kernel/head_64.o: warning: objtool: .head.text+0xe4: unsupported instruction in callable function
 
-But frame pointers are necessarily broken anyway, because
-__vmx_vcpu_run() clobbers RBP with the guest's value before calling
-vmx_vmenter().  So calling without a frame pointer doesn't make things
-any worse.
+Technically, start_cpu0() is callable, but it acts nothing like a
+callable function.  Prevent objtool from treating it like one by
+removing its ELF function annotation.
 
-Make objtool happy by changing the call to a UD2.
-
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
-v2: ud2 instead of kvm_spurious_fault() [Paolo]
+ arch/x86/kernel/head_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
----
- arch/x86/kvm/vmx/vmenter.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-index d4cb1945b2e3..4010d519eb8c 100644
---- a/arch/x86/kvm/vmx/vmenter.S
-+++ b/arch/x86/kvm/vmx/vmenter.S
-@@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
- 	ret
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index bcd206c8ac90..66b4a7757397 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -253,10 +253,10 @@ END(secondary_startup_64)
+  * start_secondary() via .Ljump_to_C_code.
+  */
+ ENTRY(start_cpu0)
+-	movq	initial_stack(%rip), %rsp
+ 	UNWIND_HINT_EMPTY
++	movq	initial_stack(%rip), %rsp
+ 	jmp	.Ljump_to_C_code
+-ENDPROC(start_cpu0)
++END(start_cpu0)
+ #endif
  
- 3:	cmpb $0, kvm_rebooting
--	jne 4f
--	call kvm_spurious_fault
--4:	ret
-+	je 4f
-+	ret
-+4:	ud2
- 
- 	.pushsection .fixup, "ax"
- 5:	jmp 3b
+ 	/* Both SMP bootup and ACPI suspend change these variables */
 -- 
 2.20.1
 
