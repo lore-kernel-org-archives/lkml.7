@@ -2,55 +2,58 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D53C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94293C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C322173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6348021848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419759;
-	bh=5J0E8RNEEuMAYIko229uI7Q0fj1mJJ5kr1+XawMKN+4=;
+	s=default; t=1563419762;
+	bh=bn+Fhh3D/zjTxPg8luaLzIHorP/HMKgTUHHCoug0LMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDzwVel1QybjS/LPrnKOdIotM0wZYZXUBp59ECa4qrYkjUXgN2PVAPqa0JT6+vEeE
-	 ZZNaOat8hJ1WrXnNwSg+1+giGrRo50QyHx+W+9zXrjA/kArqBcLFJn9KyubZKP2MTN
-	 OKMXTOGl0gvr/Jm7x0nDPaf3Hwv+aVY7SvNq8mxo=
+	b=lzOnIgZiU1W6Bww+hk5bnMwWcxvZyGlhlzUD7Sy716b7JNsVyqDsX1ZsNShbG5euX
+	 wFl71GMPg20QnC3pkGQn5z/pG4xqPbwZv3+Yg890JZrAdIMtmfSEq4cnAQPcCAbzYH
+	 sgsQIGFc296I2Kh7dkXnOzIbwzPi1lrSD5X7Q6ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392187AbfGRDP6 (ORCPT
+        id S2392197AbfGRDQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390946AbfGRDPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:34 -0400
+        id S2392100AbfGRDPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:40 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865392186A;
-        Thu, 18 Jul 2019 03:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A386D21848;
+        Thu, 18 Jul 2019 03:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419732;
-        bh=5J0E8RNEEuMAYIko229uI7Q0fj1mJJ5kr1+XawMKN+4=;
+        s=default; t=1563419739;
+        bh=bn+Fhh3D/zjTxPg8luaLzIHorP/HMKgTUHHCoug0LMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NcBqyIZK0AK69vCW0Qkq03LqkF20zMo0jrCKELF3T3MnmmsKwCp8PRNu4EpmCkjfF
-         TuJYWie5qxFdoGaAvWKMISXXEWfhlZPeW3vFRlW+U5+e1D8hL4I8olTCLzyLGD4sV7
-         XPTqc3N9NDaObJQRjkdbkeZERzq+a55Zred9KE84=
+        b=muSGMbF1kfF/QC8XTxO7r9pa9VANVajbGFqwpN57/s+9t7jP10Ky7Liy3Lj5gwFne
+         UGRPuJJQrvTaTL/Bk3ocOshXWidok5+6gVTayYOXCbkKgxzDTZewyX1PzAX/v00RS/
+         LdIlyYa0fB0jM2ZVYapcG3xH82kKyqySoMmT3eac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.4 22/40] usb: renesas_usbhs: add a workaround for a race condition of workqueue
-Date:   Thu, 18 Jul 2019 12:02:18 +0900
-Message-Id: <20190718030047.393366639@linuxfoundation.org>
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/47] ARM: dts: imx6ul: fix PWM[1-4] interrupts
+Date:   Thu, 18 Jul 2019 12:01:32 +0900
+Message-Id: <20190718030050.209834935@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
-References: <20190718030039.676518610@linuxfoundation.org>
+In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
+References: <20190718030045.780672747@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,129 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[ Upstream commit 3cf10132ac8d536565f2c02f60a3aeb315863a52 ]
 
-commit b2357839c56ab7d06bcd4e866ebc2d0e2b7997f3 upstream.
+According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
+summary", the interrupts for the PWM[1-4] go from 83 to 86.
 
-The old commit 6e4b74e4690d ("usb: renesas: fix scheduling in atomic
-context bug") fixed an atomic issue by using workqueue for the shdmac
-dmaengine driver. However, this has a potential race condition issue
-between the work pending and usbhsg_ep_free_request() in gadget mode.
-When usbhsg_ep_free_request() is called while pending the queue,
-since the work_struct will be freed and then the work handler is
-called, kernel panic happens on process_one_work().
-
-To fix the issue, if we could call cancel_work_sync() at somewhere
-before the free request, it could be easy. However,
-the usbhsg_ep_free_request() is called on atomic (e.g. f_ncm driver
-calls free request via gether_disconnect()).
-
-For now, almost all users are having "USB-DMAC" and the DMAengine
-driver can be used on atomic. So, this patch adds a workaround for
-a race condition to call the DMAengine APIs without the workqueue.
-
-This means we still have TODO on shdmac environment (SH7724), but
-since it doesn't have SMP, the race condition might not happen.
-
-Fixes: ab330cf3888d ("usb: renesas_usbhs: add support for USB-DMAC")
-Cc: <stable@vger.kernel.org> # v4.1+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/renesas_usbhs/fifo.c |   34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/renesas_usbhs/fifo.c
-+++ b/drivers/usb/renesas_usbhs/fifo.c
-@@ -819,9 +819,8 @@ static int __usbhsf_dma_map_ctrl(struct
- }
- 
- static void usbhsf_dma_complete(void *arg);
--static void xfer_work(struct work_struct *work)
-+static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
- {
--	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
- 	struct usbhs_pipe *pipe = pkt->pipe;
- 	struct usbhs_fifo *fifo;
- 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
-@@ -829,12 +828,10 @@ static void xfer_work(struct work_struct
- 	struct dma_chan *chan;
- 	struct device *dev = usbhs_priv_to_dev(priv);
- 	enum dma_transfer_direction dir;
--	unsigned long flags;
- 
--	usbhs_lock(priv, flags);
- 	fifo = usbhs_pipe_to_fifo(pipe);
- 	if (!fifo)
--		goto xfer_work_end;
-+		return;
- 
- 	chan = usbhsf_dma_chan_get(fifo, pkt);
- 	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
-@@ -843,7 +840,7 @@ static void xfer_work(struct work_struct
- 					pkt->trans, dir,
- 					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc)
--		goto xfer_work_end;
-+		return;
- 
- 	desc->callback		= usbhsf_dma_complete;
- 	desc->callback_param	= pipe;
-@@ -851,7 +848,7 @@ static void xfer_work(struct work_struct
- 	pkt->cookie = dmaengine_submit(desc);
- 	if (pkt->cookie < 0) {
- 		dev_err(dev, "Failed to submit dma descriptor\n");
--		goto xfer_work_end;
-+		return;
- 	}
- 
- 	dev_dbg(dev, "  %s %d (%d/ %d)\n",
-@@ -862,8 +859,17 @@ static void xfer_work(struct work_struct
- 	dma_async_issue_pending(chan);
- 	usbhsf_dma_start(pipe, fifo);
- 	usbhs_pipe_enable(pipe);
-+}
-+
-+static void xfer_work(struct work_struct *work)
-+{
-+	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
-+	struct usbhs_pipe *pipe = pkt->pipe;
-+	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
-+	unsigned long flags;
- 
--xfer_work_end:
-+	usbhs_lock(priv, flags);
-+	usbhsf_dma_xfer_preparing(pkt);
- 	usbhs_unlock(priv, flags);
- }
- 
-@@ -916,8 +922,13 @@ static int usbhsf_dma_prepare_push(struc
- 	pkt->trans = len;
- 
- 	usbhsf_tx_irq_ctrl(pipe, 0);
--	INIT_WORK(&pkt->work, xfer_work);
--	schedule_work(&pkt->work);
-+	/* FIXME: Workaound for usb dmac that driver can be used in atomic */
-+	if (usbhs_get_dparam(priv, has_usb_dmac)) {
-+		usbhsf_dma_xfer_preparing(pkt);
-+	} else {
-+		INIT_WORK(&pkt->work, xfer_work);
-+		schedule_work(&pkt->work);
-+	}
- 
- 	return 0;
- 
-@@ -1023,8 +1034,7 @@ static int usbhsf_dma_prepare_pop_with_u
- 
- 	pkt->trans = pkt->length;
- 
--	INIT_WORK(&pkt->work, xfer_work);
--	schedule_work(&pkt->work);
-+	usbhsf_dma_xfer_preparing(pkt);
- 
- 	return 0;
- 
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 2366f093cc76..336cdead3da5 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -359,7 +359,7 @@
+ 			pwm1: pwm@2080000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02080000 0x4000>;
+-				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM1>,
+ 					 <&clks IMX6UL_CLK_PWM1>;
+ 				clock-names = "ipg", "per";
+@@ -370,7 +370,7 @@
+ 			pwm2: pwm@2084000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02084000 0x4000>;
+-				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM2>,
+ 					 <&clks IMX6UL_CLK_PWM2>;
+ 				clock-names = "ipg", "per";
+@@ -381,7 +381,7 @@
+ 			pwm3: pwm@2088000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02088000 0x4000>;
+-				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM3>,
+ 					 <&clks IMX6UL_CLK_PWM3>;
+ 				clock-names = "ipg", "per";
+@@ -392,7 +392,7 @@
+ 			pwm4: pwm@208c000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x0208c000 0x4000>;
+-				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM4>,
+ 					 <&clks IMX6UL_CLK_PWM4>;
+ 				clock-names = "ipg", "per";
+-- 
+2.20.1
+
 
 
