@@ -2,117 +2,57 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0440BC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F7BC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D329D2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:14:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OVL3O3jI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AQVPQaTi"
+	by mail.kernel.org (Postfix) with ESMTP id D89912173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389499AbfGRJOP (ORCPT
+        id S2389545AbfGRJP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:14:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56714 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbfGRJOO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:14:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6528B611DC; Thu, 18 Jul 2019 09:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563441253;
-        bh=VhDyfrl5HF7LGKh1nzpDD9O11fTQif36TkBw/IKiH5Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OVL3O3jIY5WcsCb/ZP/hpi5L6lTZWXe7BdNfgZalajMwCXDNyBeKYQiDM1uq5pI6K
-         iear6cz7SIpDlGprULiWjQXaHVEf9H8/g3eOCYj1UqMxuLA6tA+kv9DghqfxMUrPGx
-         sNjjEdbYJ7FyxZiu86XBqs4P1D8lgppftVz1g0ow=
-Received: from [192.168.43.47] (unknown [157.49.202.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7CC8260E3F;
-        Thu, 18 Jul 2019 09:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563441252;
-        bh=VhDyfrl5HF7LGKh1nzpDD9O11fTQif36TkBw/IKiH5Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AQVPQaTiOnZUezDn0KluvVO5TaRPiYrHEJ9e7Y+Tb+9Wod7o7Gsy6ivk8Af2gZN8x
-         4fFxU233qf5HYgKxRlsqZTAHNyBUXL9GIOG/DCV8oxn7gACXq2TkWFEntxLMat/5B+
-         ZSBTJTvitkcHsFJquUNqv6mmpH4hfX1HqD/uIiII=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7CC8260E3F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCHv8 2/5] arm64: dts: qcom: msm8998: Add Coresight support
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        gregkh@linuxfoundation.org, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
-        mike.leach@linaro.org, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        david.brown@linaro.org, mark.rutland@arm.com
-Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
-        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        marc.w.gonzalez@free.fr
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <e510df23f741205fac9030f2c95d06d607549caa.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <3b192063-f31f-b861-d913-61d737cecc57@arm.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <4854b0f7-6a81-bc87-3e63-d2b7c68a44f6@codeaurora.org>
-Date:   Thu, 18 Jul 2019 14:44:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 18 Jul 2019 05:15:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:58112 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbfGRJP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:15:29 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5018A68B05; Thu, 18 Jul 2019 11:15:26 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 11:15:26 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, phil@raspberrypi.org, stefan.wahren@i2se.com,
+        f.fainelli@gmail.com, mbrugger@suse.com,
+        Jisheng.Zhang@synaptics.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 3/4] dma-direct: add dma_direct_min_mask
+Message-ID: <20190718091526.GA25321@lst.de>
+References: <20190717153135.15507-1-nsaenzjulienne@suse.de> <20190717153135.15507-4-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <3b192063-f31f-b861-d913-61d737cecc57@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717153135.15507-4-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
-
-On 7/18/2019 1:58 PM, Suzuki K Poulose wrote:
-> Hi Sai,
+On Wed, Jul 17, 2019 at 05:31:34PM +0200, Nicolas Saenz Julienne wrote:
+> Historically devices with ZONE_DMA32 have been assumed to be able to
+> address at least the lower 4GB of ram for DMA. This is still the defualt
+> behavior yet the Raspberry Pi 4 is limited to the first GB of memory.
+> This has been observed to trigger failures in dma_direct_supported() as
+> the 'min_mask' isn't properly set.
 > 
-> 
->          etr@6048000 {
->> +            compatible = "arm,coresight-tmc", "arm,primecell";
->> +            reg = <0x06048000 0x1000>;
->> +
->> +            clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc 
->> RPM_SMD_QDSS_A_CLK>;
->> +            clock-names = "apb_pclk", "atclk";
->> +            arm,scatter-gather;
-> 
-> Please could you confirm that you have tested the scatter-gather mode 
-> with ETR ? Either via perf/sysfs. Please could you share your results ? 
-> Unless verified
-> this is going to be fatal for the system.
-> 
-> Similarly for other platforms.
-> 
+> We create 'dma_direct_min_mask' in order for the arch init code to be
+> able to fine-tune dma direct's 'min_dma' mask.
 
-Yes I have tested with scatter-gather mode with ETR on all platforms
-which I have posted via sysfs(not perf) before on previous versions of 
-this patch series and no issues were found. And I suppose this was
-discussed in v2 of this patch series [1].
-
-As said in one of the series initially [1], QCOM msm downstream kernels 
-have been using scatter gather mode and we haven't seen any fatal issues.
-
-[1] https://patchwork.kernel.org/patch/10769535/
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Normally we use ZONE_DMA for that case.
