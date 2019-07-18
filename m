@@ -2,126 +2,138 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B423EC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4334EC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCBE2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IT62zS5B"
+	by mail.kernel.org (Postfix) with ESMTP id 25E4E21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391593AbfGRVug (ORCPT
+        id S2391267AbfGRVwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:50:36 -0400
-Received: from mail-eopbgr680084.outbound.protection.outlook.com ([40.107.68.84]:35298
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        Thu, 18 Jul 2019 17:52:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40098 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727685AbfGRVug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:50:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iQuGqhwP6/sV8JqVQ39AGBLBDsBkMtP+FX/HBi3ER2n+cVDfr6p+71NT0geEVOcpwHJ8y9fbieTy+DkU+6WeEtnPdz5FQqLQWOfrEdr9DA6GXo+M6USnGqXCpgpYjXadTUmkk2DFly0Pvch5DpZg4XvzZKbOWaw5CSdLAMDcrnzomsi2UGF/cQAaVW3FSnKFkeHhNrzSwblAAgs9iiqys/Av6lEWsO6Ac3ixfeNIigRqkmgs3J5SSnKTwIUQeCUgvBqkxeBq8VGWTN/Q836lULZUPliT0LK99wmY+C7+mzjuNP29Uh1NKs8YDPs4Rom2rey+fTg5Y7ykDJ7mywG8Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ml4QJQt6AsHKmiNwstugxARYL4BanhaEiYosIzoklw=;
- b=C8/TZNVkIN9DqE1Njgu+Zc7lWiLsIqLG30F6y2yogzu4SqvK85bzoPZECT751LjACUt2C4n2ULPNjijHMyK/p1a8bA11wMttFPcQONsIoMmjqdSwv5c34L3scLjBzwZb6kO/jJskBwstuQjY7hHHpDDYJaE/WFsWcxVyqoCvAZqe5RvQvuTK/NVRhUETUrzuC9RRVfXcRTMMDZ9QMPKjfD3bFOBQRjl9/EsxgBhYaNU0tGM2WBIymviiZbNLtuZcmeAOWMUh3DcL/m2hmXH3OZ25nRIo08eVe699AR+lp/tBw7TjOsWDM1OrE8ZESMMf1mGweKzXCKlXDUXDadZhnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ml4QJQt6AsHKmiNwstugxARYL4BanhaEiYosIzoklw=;
- b=IT62zS5Bz5AMA65hmZCidU77Gmb6Rvhu89Vt6VvfQ/ahBh5mtBJv2cI6a+PXdAHoLYqdKvteAUxNJKxmlVpW7lY6dcetF69Oxc7MEHVsk/6JN9NmKxsBeq+5YSce83kPgIjsOqKEP6U4vir9ykft64MAwZ/rCPUnT8IBuDp6SWk=
-Received: from CY4PR12MB1448.namprd12.prod.outlook.com (10.172.71.140) by
- CY4PR12MB1159.namprd12.prod.outlook.com (10.168.163.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Thu, 18 Jul 2019 21:50:32 +0000
-Received: from CY4PR12MB1448.namprd12.prod.outlook.com
- ([fe80::347c:e57d:856e:d567]) by CY4PR12MB1448.namprd12.prod.outlook.com
- ([fe80::347c:e57d:856e:d567%9]) with mapi id 15.20.2094.011; Thu, 18 Jul 2019
- 21:50:32 +0000
-From:   Gary R Hook <ghook@amd.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] crypto: ccp - Replace dma_pool_alloc + memset with
- dma_pool_zalloc
-Thread-Topic: [PATCH] crypto: ccp - Replace dma_pool_alloc + memset with
- dma_pool_zalloc
-Thread-Index: AQHVPWsDtOPD9/LY2UmVglhxf2PvaabQ6swA
-Date:   Thu, 18 Jul 2019 21:50:32 +0000
-Message-ID: <96cc55c8-16d1-7c2e-1a7c-2b73c5cfa267@amd.com>
-References: <20190718131609.10974-1-hslester96@gmail.com>
-In-Reply-To: <20190718131609.10974-1-hslester96@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0091.namprd05.prod.outlook.com
- (2603:10b6:803:22::29) To CY4PR12MB1448.namprd12.prod.outlook.com
- (2603:10b6:910:f::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Gary.Hook@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d10e8f67-c3aa-4e0f-1114-08d70bc9f4e6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR12MB1159;
-x-ms-traffictypediagnostic: CY4PR12MB1159:
-x-microsoft-antispam-prvs: <CY4PR12MB115950E8A4107314000D9705FDC80@CY4PR12MB1159.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:409;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(189003)(199004)(2616005)(14454004)(102836004)(6506007)(26005)(53546011)(386003)(186003)(25786009)(446003)(76176011)(31686004)(11346002)(4326008)(66556008)(8676002)(7736002)(6436002)(476003)(66476007)(6486002)(64756008)(66946007)(6512007)(99286004)(316002)(6246003)(2906002)(6116002)(486006)(66066001)(71190400001)(6916009)(71200400001)(54906003)(66446008)(81166006)(68736007)(36756003)(8936002)(229853002)(31696002)(478600001)(3846002)(53936002)(1411001)(5660300002)(52116002)(256004)(305945005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1159;H:CY4PR12MB1448.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JETpTMaeWOosD/QfOTGGmt0HvR536bOE0bN8n1EqkOV453PlkE+8Cx6TF05opHAphhxj5ZOtnJSwk8bBk0RH3Kf9ZlkHPs2ozDOmTTpOL4CHOxJzpf1yocvLs4AfA+0eTWu1qVmM4z+ObsoWF49CXfYtBUgu8pIKN+h7Pv2500oFB7dWxuvGjcg9oDcRFpL8bBzbbPmofkVA7rwJimbccxxiE94RwDV+gcN/vvPh6xTETICkq8xiX6hQxrOLuW9DNZcXugbh9iqB9syDgJfyLbHclVupa3pbWACkzEdFOPDXlO8uORIWXY3I7nL/7pzztZkHGfblHRxzzlF1VCITl3MITi2pS/fpT8q2y4xOqscGIpVyiIdLAEyirrOj/eqsGJpubc2+Mw/mm5sHgalk1GikFEc7RBMdi8jkgwkLyhQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <30AAF94BC3181248921FE11258035F31@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1727780AbfGRVwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 17:52:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 38828B12A;
+        Thu, 18 Jul 2019 21:52:06 +0000 (UTC)
+Subject: Re: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
+        rientjes@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
+ <4a07a6b8-8ff2-419c-eac8-3e7dc17670df@suse.cz>
+ <5dde4380-68b4-66ee-2c3c-9b9da0c243ca@linux.alibaba.com>
+ <20190718144459.7a20ac42ee16e093bdfcfab4@linux-foundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
+ KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
+ n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
+ AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
+ DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
+ ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
+ T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
+ k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
+ YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
+ 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
+ k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
+ Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
+ B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
+ 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
+ uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
+ 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
+ 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
+ +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
+ J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
+ rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
+ D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
+ ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
+ Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
+ NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
+ NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
+ F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
+ J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
+ PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
+ gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
+ rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
+ miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
+ hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
+ E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
+ 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
+ xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
+ 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
+ hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
+ Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
+Message-ID: <dd44eb2f-a982-bd0e-a1ed-ab3ecbf3fc91@suse.cz>
+Date:   Thu, 18 Jul 2019 23:52:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d10e8f67-c3aa-4e0f-1114-08d70bc9f4e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 21:50:32.4443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ghook@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1159
+In-Reply-To: <20190718144459.7a20ac42ee16e093bdfcfab4@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xOC8xOSA4OjE2IEFNLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+IFVzZSBkbWFfcG9vbF96
-YWxsb2MgaW5zdGVhZCBvZiB1c2luZyBkbWFfcG9vbF9hbGxvYyB0byBhbGxvY2F0ZQ0KPiBtZW1v
-cnkgYW5kIHRoZW4gemVyb2luZyBpdCB3aXRoIG1lbXNldCAwLg0KPiBUaGlzIHNpbXBsaWZpZXMg
-dGhlIGNvZGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaHVob25nIFl1YW4gPGhzbGVzdGVyOTZA
-Z21haWwuY29tPg0KDQpBY2tlZC1ieTogR2FyeSBSIEhvb2sgPGdhcnkuaG9va0BhbWQuY29tPg0K
-DQo+IC0tLQ0KPiAgIGRyaXZlcnMvY3J5cHRvL2NjcC9jY3Atb3BzLmMgfCAzICstLQ0KPiAgIDEg
-ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2NyeXB0by9jY3AvY2NwLW9wcy5jIGIvZHJpdmVycy9jcnlwdG8vY2Nw
-L2NjcC1vcHMuYw0KPiBpbmRleCA4NjZiMmUwNWNhNzcuLjAzNzk3YzQyYjMzNiAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy9jcnlwdG8vY2NwL2NjcC1vcHMuYw0KPiArKysgYi9kcml2ZXJzL2NyeXB0
-by9jY3AvY2NwLW9wcy5jDQo+IEBAIC0xNTAsMTQgKzE1MCwxMyBAQCBzdGF0aWMgaW50IGNjcF9p
-bml0X2RtX3dvcmthcmVhKHN0cnVjdCBjY3BfZG1fd29ya2FyZWEgKndhLA0KPiAgIAlpZiAobGVu
-IDw9IENDUF9ETUFQT09MX01BWF9TSVpFKSB7DQo+ICAgCQl3YS0+ZG1hX3Bvb2wgPSBjbWRfcS0+
-ZG1hX3Bvb2w7DQo+ICAgDQo+IC0JCXdhLT5hZGRyZXNzID0gZG1hX3Bvb2xfYWxsb2Mod2EtPmRt
-YV9wb29sLCBHRlBfS0VSTkVMLA0KPiArCQl3YS0+YWRkcmVzcyA9IGRtYV9wb29sX3phbGxvYyh3
-YS0+ZG1hX3Bvb2wsIEdGUF9LRVJORUwsDQo+ICAgCQkJCQkgICAgICZ3YS0+ZG1hLmFkZHJlc3Mp
-Ow0KPiAgIAkJaWYgKCF3YS0+YWRkcmVzcykNCj4gICAJCQlyZXR1cm4gLUVOT01FTTsNCj4gICAN
-Cj4gICAJCXdhLT5kbWEubGVuZ3RoID0gQ0NQX0RNQVBPT0xfTUFYX1NJWkU7DQo+ICAgDQo+IC0J
-CW1lbXNldCh3YS0+YWRkcmVzcywgMCwgQ0NQX0RNQVBPT0xfTUFYX1NJWkUpOw0KPiAgIAl9IGVs
-c2Ugew0KPiAgIAkJd2EtPmFkZHJlc3MgPSBremFsbG9jKGxlbiwgR0ZQX0tFUk5FTCk7DQo+ICAg
-CQlpZiAoIXdhLT5hZGRyZXNzKQ0KPiANCg0K
+On 7/18/19 11:44 PM, Andrew Morton wrote:
+> On Wed, 19 Jun 2019 09:28:42 -0700 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+> 
+>>> Sorry for replying rather late, and not in the v2 thread, but unlike
+>>> Hugh I'm not convinced that we should include vma size/alignment in the
+>>> test for reporting THPeligible, which was supposed to reflect
+>>> administrative settings and madvise hints. I guess it's mostly a matter
+>>> of personal feeling. But one objective distinction is that the admin
+>>> settings and madvise do have an exact binary result for the whole VMA,
+>>> while this check is more fuzzy - only part of the VMA's span might be
+>>> properly sized+aligned, and THPeligible will be 1 for the whole VMA.
+>>
+>> I think THPeligible is used to tell us if the vma is suitable for 
+>> allocating THP. Both anonymous and shmem THP checks vma size/alignment 
+>> to decide to or not to allocate THP.
+>>
+>> And, if vma size/alignment is not checked, THPeligible may show "true" 
+>> for even 4K mapping. This doesn't make too much sense either.
+> 
+> This discussion seems rather inconclusive.  I'll merge up the patchset
+> anyway.  Vlastimil, if you think some changes are needed here then
+> please let's get them sorted out over the next few weeks?
+
+Well, Hugh did ack it, albeit without commenting on this part. I don't
+feel strongly enough about this for a nack.
+
