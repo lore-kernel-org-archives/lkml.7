@@ -2,185 +2,109 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F30C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0A5C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC0D205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E520205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m895fmqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389893AbfGRDaD (ORCPT
+        id S2389979AbfGRDaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:30:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28118 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389773AbfGRD35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:29:57 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I3S3k3020823;
-        Wed, 17 Jul 2019 23:29:36 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttd5fxwqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jul 2019 23:29:36 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6I3TZ4g023661;
-        Wed, 17 Jul 2019 23:29:35 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttd5fxwpx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jul 2019 23:29:35 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6I3QAfC014366;
-        Thu, 18 Jul 2019 03:29:34 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x6cjtc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 03:29:34 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I3TYeq49152454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 03:29:34 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3AE38AE05F;
-        Thu, 18 Jul 2019 03:29:34 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9695AE060;
-        Thu, 18 Jul 2019 03:29:29 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.85.129.123])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 03:29:29 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     x86@kernel.org
-Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v3 4/6] x86,s390/mm: Move sme_active() and sme_me_mask to x86-specific header
-Date:   Thu, 18 Jul 2019 00:28:56 -0300
-Message-Id: <20190718032858.28744-5-bauerman@linux.ibm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190718032858.28744-1-bauerman@linux.ibm.com>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com>
+        Wed, 17 Jul 2019 23:30:20 -0400
+Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:4327
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389773AbfGRDaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:30:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W2rabypVK7X9Rdgvlad6bfzEpAT2b3n0lKES8amWaeTV1ofa9N8QLW6B02HGyCkeGzLA/dV+bWKm//bAgnLaLUjzXk91h+np7xNigcrL4XTrxVAVz9dYh+OOf/kThXDihozfxnDG3IGTpng2J6uQqjxXu31dpfCO0WxVHtuGtR3KOn1dA3/wm5H74pZPKrnYS94ovoddtjvHFL2Q9PMZIbNqupKfE0e8JZkvA0q7SElHufJKUYLh7X4ieGs7AuLEEOFO70Su1rXbAwWyuvXL9pJ7UzI7uhBqhSnICaX+3HyFqlaZNIhGTb1JT1z3FGjW5B1sYUA0suLVnCQVcVkSAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCgkhsgF0SnJpGM5mZaKF3Y16kIIuExe5osNM0Ole5Y=;
+ b=Cg0YEiBBEnL8/WelOdPEZFSGWjIgGbCHg+8Vz1wELsMSc8Zg9Brnp18uualU52R5Laf32p92+Ptgq/7OoQ4nogKa/rTAKM2FBNOorQhhAS/KHGEKpp3sCf3yOWSy0eDQHh+PDp7f51z9TfVjP++978Lw2SwNq7tZ2gA4sG/EMHLUu0096n72yNvtfHF+ohTCTZvZVlrC6/sVqBUCz7QROxqXxfYaYJpkrvjzj78lE7jDSH9CPMaPhajujPVZbVdG1Sb6+Yv75W47SwbOruaWWVCbTVpM4GnY15B///2QtNCjWbP7wV+EFLPO/kHMyDsB+sKpGkm795q3U3AWNPjDcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCgkhsgF0SnJpGM5mZaKF3Y16kIIuExe5osNM0Ole5Y=;
+ b=m895fmqnWmYolX1WLQO+uILTQd+g00BzZQDHPvNXLcLYEvlTHK9yvMncFxmfiSHaTD3WxrPmxlH3uEf0MgfpAwyVdRB/VJ+lTHUzStFrTufLk4UjbjQYox4U3mR5jrGz8hMPY7JXpp/3MqP6zS0ZiQEnUYpF8osT+2hKElZqjLQ=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB5857.eurprd04.prod.outlook.com (20.178.118.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Thu, 18 Jul 2019 03:30:16 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
+ 03:30:16 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: RE: [PATCH 3/3] firmware: imx: scu-pd: Add IRQSTR_DSP PD range
+Thread-Topic: [PATCH 3/3] firmware: imx: scu-pd: Add IRQSTR_DSP PD range
+Thread-Index: AQHVMdIgOTCMFsCxF0qH2yiAwH8izabPzmyw
+Date:   Thu, 18 Jul 2019 03:30:16 +0000
+Message-ID: <AM0PR04MB421126724996C4E0BC80954980C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190703190404.21136-1-daniel.baluta@nxp.com>
+ <20190703190404.21136-4-daniel.baluta@nxp.com>
+In-Reply-To: <20190703190404.21136-4-daniel.baluta@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a280a931-b88e-407b-e3c4-08d70b304078
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5857;
+x-ms-traffictypediagnostic: AM0PR04MB5857:
+x-microsoft-antispam-prvs: <AM0PR04MB5857850609FC0DE97D87E61580C80@AM0PR04MB5857.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:765;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(396003)(39860400002)(189003)(199004)(2501003)(66946007)(76116006)(66476007)(478600001)(66446008)(64756008)(305945005)(55016002)(11346002)(14454004)(9686003)(52536014)(25786009)(6506007)(186003)(74316002)(71190400001)(229853002)(558084003)(26005)(71200400001)(102836004)(6246003)(5660300002)(53936002)(4326008)(110136005)(316002)(7736002)(68736007)(256004)(86362001)(99286004)(476003)(7696005)(44832011)(486006)(76176011)(446003)(81156014)(8676002)(81166006)(6116002)(3846002)(8936002)(33656002)(6436002)(2906002)(66066001)(54906003)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5857;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VENMirr+A4PZggc6UILaiXRffFgRgISW1LwSxYLeSN9ujmiGu0kfAfW7Rpk8JTg5WZ7+9qje+N6V+bvwK8FR+8TSdtFkuZWEcCPmxEXfHFLyZGIDk88at2RI0exH5L0zp5UW88glLI0XSB/JqSnDKNaMnltz5XaHsC5/XzMu6A+UTYgxWDkLZ88wFn4+na85hQCBzZMhxmIz9+FDOkN8PtqVhPuGB6KdMoY5JjfohvRT4FBVE5esPaDzTdf5Ji7z2hRfhE5+KtR7fbMLwqn/HjLtcOwV69Oqnh5CWdDi7Kg+LuNDo1m6rYUu0WtFtUeSYUPiqZqfGtp2Dy6E4Shj2N5X2lgrDE1YtY1varVKOSesnF3lIQCPGc3WSQTdWhNvUXo0BlnTQV3IcPjrdqxjim+XO9ktZg4yEjse+jioUw0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180037
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a280a931-b88e-407b-e3c4-08d70b304078
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 03:30:16.3215
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5857
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that generic code doesn't reference them, move sme_active() and
-sme_me_mask to x86's <asm/mem_encrypt.h>.
-
-Also remove the export for sme_active() since it's only used in files that
-won't be built as modules. sme_me_mask on the other hand is used in
-arch/x86/kvm/svm.c (via __sme_set() and __psp_pa()) which can be built as a
-module so its export needs to stay.
-
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- arch/s390/include/asm/mem_encrypt.h |  4 +---
- arch/x86/include/asm/mem_encrypt.h  | 10 ++++++++++
- arch/x86/mm/mem_encrypt.c           |  1 -
- include/linux/mem_encrypt.h         | 14 +-------------
- 4 files changed, 12 insertions(+), 17 deletions(-)
-
-diff --git a/arch/s390/include/asm/mem_encrypt.h b/arch/s390/include/asm/mem_encrypt.h
-index 3eb018508190..ff813a56bc30 100644
---- a/arch/s390/include/asm/mem_encrypt.h
-+++ b/arch/s390/include/asm/mem_encrypt.h
-@@ -4,9 +4,7 @@
- 
- #ifndef __ASSEMBLY__
- 
--#define sme_me_mask	0ULL
--
--static inline bool sme_active(void) { return false; }
-+static inline bool mem_encrypt_active(void) { return false; }
- extern bool sev_active(void);
- 
- int set_memory_encrypted(unsigned long addr, int numpages);
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 0c196c47d621..848ce43b9040 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -92,6 +92,16 @@ early_set_memory_encrypted(unsigned long vaddr, unsigned long size) { return 0;
- 
- extern char __start_bss_decrypted[], __end_bss_decrypted[], __start_bss_decrypted_unused[];
- 
-+static inline bool mem_encrypt_active(void)
-+{
-+	return sme_me_mask;
-+}
-+
-+static inline u64 sme_get_me_mask(void)
-+{
-+	return sme_me_mask;
-+}
-+
- #endif	/* __ASSEMBLY__ */
- 
- #endif	/* __X86_MEM_ENCRYPT_H__ */
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index c805f0a5c16e..7139f2f43955 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -344,7 +344,6 @@ bool sme_active(void)
- {
- 	return sme_me_mask && !sev_enabled;
- }
--EXPORT_SYMBOL(sme_active);
- 
- bool sev_active(void)
- {
-diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
-index 470bd53a89df..0c5b0ff9eb29 100644
---- a/include/linux/mem_encrypt.h
-+++ b/include/linux/mem_encrypt.h
-@@ -18,23 +18,11 @@
- 
- #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
- 
--#define sme_me_mask	0ULL
--
--static inline bool sme_active(void) { return false; }
-+static inline bool mem_encrypt_active(void) { return false; }
- static inline bool sev_active(void) { return false; }
- 
- #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
- 
--static inline bool mem_encrypt_active(void)
--{
--	return sme_me_mask;
--}
--
--static inline u64 sme_get_me_mask(void)
--{
--	return sme_me_mask;
--}
--
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- /*
-  * The __sme_set() and __sme_clr() macros are useful for adding or removing
+PiBGcm9tOiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+DQo+IFNlbnQ6IFRo
+dXJzZGF5LCBKdWx5IDQsIDIwMTkgMzowNCBBTQ0KPiANCj4gVGhlIERTUCBpbnRlcnJ1cHQgc3Rl
+ZXIgZ2F0aGVycyBpbnRlcnJ1cHRzIGZyb20gdGhlIHN5c3RlbSBhbmQgY2FuIGJlIHVzZWQgdG8N
+Cj4gc3RlZXIgdGhlbSB0byBEU1AuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgQmFsdXRh
+IDxkYW5pZWwuYmFsdXRhQG54cC5jb20+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFp
+c2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
