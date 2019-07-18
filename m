@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4373DC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6A3C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EE321849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EEE2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419257;
-	bh=bE2enI5xvjxZALLm1U9tjjHIdAb7DAaS0QTXeC3g0oU=;
+	s=default; t=1563419259;
+	bh=Ll0mToFWxutfEGmwbbvOvd2laMWvkUQ53iF9q3c6kns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G3CeTFJKnjQZlbaL8WZdOOW/uQFSZUEwAlGi7CdUi4H8wZLuRGD5OzBQ8jh0mPq60
-	 jb9FG22sxvR2eFJHLk4qyLcyzHXnQoEpiW/fW/vvXUmb5g+kdPumofphE0W26j1Yi+
-	 UYVUQFv2KJUPF9A88Nby7HwWCO8BbXhhiUSqrpOY=
+	b=P6O84DoBTD0yczQd29K7LUkZi53wY/CH2w3Krcq9QUdAhdVtd9ccu73Z/xU0pv514
+	 WouvoNkwFk8cnLZc7Te0sk3hWLOxjycxPv8ENnp9/oZyhsuAqUHhS4Q0MnKZzTZbl2
+	 nh0xfK0b6WUp2arPXrCg2KAFa66zk3xdopQPVMws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389759AbfGRDHf (ORCPT
+        id S2390507AbfGRDHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390460AbfGRDHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:31 -0400
+        id S2389728AbfGRDHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:36 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41BDC2173E;
-        Thu, 18 Jul 2019 03:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6922F21848;
+        Thu, 18 Jul 2019 03:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419250;
-        bh=bE2enI5xvjxZALLm1U9tjjHIdAb7DAaS0QTXeC3g0oU=;
+        s=default; t=1563419254;
+        bh=Ll0mToFWxutfEGmwbbvOvd2laMWvkUQ53iF9q3c6kns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RA0YNxGCMyeBO/dyRTvJinfdhTM/LjCIaY28qha16ACYxVQbUQcivse06p9f65JS/
-         +U2/GG/1dObhoGsrD5YKxgDLifpZXbzOX2GN/4qZvdUXdfpn0K5Y3aaYxdpIK6DgmS
-         F9GCWZsR4XgtdsKFjfwm5qXLTlLchXVw63GAc32s=
+        b=lo7s+pPIBYHKHsn+FgTXO8tI1RnQho2HrZGxUsOzdZcnmuIE+9gQ34U+Mz0jvs6c1
+         BgQr4va27MIa6xMvuo8yrcv51U2nq9l6Yq7xiBBKA221Cj0zoVqPfydmInghnJp4yW
+         9qRxZzuZdfv1+9qOwf80FYVr3NdjAznqPRM6X3J8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Oros <poros@redhat.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Heyi Guo <guoheyi@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/47] be2net: fix link failure after ethtool offline test
-Date:   Thu, 18 Jul 2019 12:01:29 +0900
-Message-Id: <20190718030049.933115197@linuxfoundation.org>
+Subject: [PATCH 4.19 07/47] irqchip/gic-v3-its: Fix command queue pointer comparison bug
+Date:   Thu, 18 Jul 2019 12:01:21 +0900
+Message-Id: <20190718030049.020637230@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -61,77 +62,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 ]
+[ Upstream commit a050fa5476d418fc16b25abe168b3d38ba11e13c ]
 
-Certain cards in conjunction with certain switches need a little more
-time for link setup that results in ethtool link test failure after
-offline test. Patch adds a loop that waits for a link setup finish.
+When we run several VMs with PCI passthrough and GICv4 enabled, not
+pinning vCPUs, we will occasionally see below warnings in dmesg:
 
-Changes in v2:
-- added fixes header
+ITS queue timeout (65440 65504 480)
+ITS cmd its_build_vmovp_cmd failed
 
-Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
-Signed-off-by: Petr Oros <poros@redhat.com>
-Reviewed-by: Ivan Vecera <ivecera@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The reason for the above issue is that in BUILD_SINGLE_CMD_FUNC:
+1. Post the write command.
+2. Release the lock.
+3. Start to read GITS_CREADR to get the reader pointer.
+4. Compare the reader pointer to the target pointer.
+5. If reader pointer does not reach the target, sleep 1us and continue
+to try.
+
+If we have several processors running the above concurrently, other
+CPUs will post write commands while the 1st CPU is waiting the
+completion. So we may have below issue:
+
+phase 1:
+---rd_idx-----from_idx-----to_idx--0---------
+
+wait 1us:
+
+phase 2:
+--------------from_idx-----to_idx--0-rd_idx--
+
+That is the rd_idx may fly ahead of to_idx, and if in case to_idx is
+near the wrap point, rd_idx will wrap around. So the below condition
+will not be met even after 1s:
+
+if (from_idx < to_idx && rd_idx >= to_idx)
+
+There is another theoretical issue. For a slow and busy ITS, the
+initial rd_idx may fall behind from_idx a lot, just as below:
+
+---rd_idx---0--from_idx-----to_idx-----------
+
+This will cause the wait function exit too early.
+
+Actually, it does not make much sense to use from_idx to judge if
+to_idx is wrapped, but we need a initial rd_idx when lock is still
+acquired, and it can be used to judge whether to_idx is wrapped and
+the current rd_idx is wrapped.
+
+We switch to a method of calculating the delta of two adjacent reads
+and accumulating it to get the sum, so that we can get the real rd_idx
+from the wrapped value even when the queue is almost full.
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 35 ++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index bfb16a474490..d1905d50c26c 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -895,7 +895,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 			 u64 *data)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 65ab2c80529c..ee30e8965d1b 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -740,32 +740,43 @@ static void its_flush_cmd(struct its_node *its, struct its_cmd_block *cmd)
+ }
+ 
+ static int its_wait_for_range_completion(struct its_node *its,
+-					 struct its_cmd_block *from,
++					 u64	prev_idx,
+ 					 struct its_cmd_block *to)
  {
- 	struct be_adapter *adapter = netdev_priv(netdev);
--	int status;
-+	int status, cnt;
- 	u8 link_status = 0;
+-	u64 rd_idx, from_idx, to_idx;
++	u64 rd_idx, to_idx, linear_idx;
+ 	u32 count = 1000000;	/* 1s! */
  
- 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -906,6 +906,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 
- 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
- 
-+	/* check link status before offline tests */
-+	link_status = netif_carrier_ok(netdev);
+-	from_idx = its_cmd_ptr_to_offset(its, from);
++	/* Linearize to_idx if the command set has wrapped around */
+ 	to_idx = its_cmd_ptr_to_offset(its, to);
++	if (to_idx < prev_idx)
++		to_idx += ITS_CMD_QUEUE_SZ;
 +
- 	if (test->flags & ETH_TEST_FL_OFFLINE) {
- 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
- 			test->flags |= ETH_TEST_FL_FAILED;
-@@ -926,13 +929,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 		test->flags |= ETH_TEST_FL_FAILED;
++	linear_idx = prev_idx;
+ 
+ 	while (1) {
++		s64 delta;
++
+ 		rd_idx = readl_relaxed(its->base + GITS_CREADR);
+ 
+-		/* Direct case */
+-		if (from_idx < to_idx && rd_idx >= to_idx)
+-			break;
++		/*
++		 * Compute the read pointer progress, taking the
++		 * potential wrap-around into account.
++		 */
++		delta = rd_idx - prev_idx;
++		if (rd_idx < prev_idx)
++			delta += ITS_CMD_QUEUE_SZ;
+ 
+-		/* Wrapped case */
+-		if (from_idx >= to_idx && rd_idx >= to_idx && rd_idx < from_idx)
++		linear_idx += delta;
++		if (linear_idx >= to_idx)
+ 			break;
+ 
+ 		count--;
+ 		if (!count) {
+-			pr_err_ratelimited("ITS queue timeout (%llu %llu %llu)\n",
+-					   from_idx, to_idx, rd_idx);
++			pr_err_ratelimited("ITS queue timeout (%llu %llu)\n",
++					   to_idx, linear_idx);
+ 			return -1;
+ 		}
++		prev_idx = rd_idx;
+ 		cpu_relax();
+ 		udelay(1);
  	}
- 
--	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
--	if (status) {
--		test->flags |= ETH_TEST_FL_FAILED;
--		data[4] = -1;
--	} else if (!link_status) {
-+	/* link status was down prior to test */
-+	if (!link_status) {
- 		test->flags |= ETH_TEST_FL_FAILED;
- 		data[4] = 1;
-+		return;
-+	}
-+
-+	for (cnt = 10; cnt; cnt--) {
-+		status = be_cmd_link_status_query(adapter, NULL, &link_status,
-+						  0);
-+		if (status) {
-+			test->flags |= ETH_TEST_FL_FAILED;
-+			data[4] = -1;
-+			break;
-+		}
-+
-+		if (link_status)
-+			break;
-+
-+		msleep_interruptible(500);
- 	}
+@@ -782,6 +793,7 @@ void name(struct its_node *its,						\
+ 	struct its_cmd_block *cmd, *sync_cmd, *next_cmd;		\
+ 	synctype *sync_obj;						\
+ 	unsigned long flags;						\
++	u64 rd_idx;							\
+ 									\
+ 	raw_spin_lock_irqsave(&its->lock, flags);			\
+ 									\
+@@ -803,10 +815,11 @@ void name(struct its_node *its,						\
+ 	}								\
+ 									\
+ post:									\
++	rd_idx = readl_relaxed(its->base + GITS_CREADR);		\
+ 	next_cmd = its_post_commands(its);				\
+ 	raw_spin_unlock_irqrestore(&its->lock, flags);			\
+ 									\
+-	if (its_wait_for_range_completion(its, cmd, next_cmd))		\
++	if (its_wait_for_range_completion(its, rd_idx, next_cmd))	\
+ 		pr_err_ratelimited("ITS cmd %ps failed\n", builder);	\
  }
  
 -- 
