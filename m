@@ -2,88 +2,106 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB9C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CA9C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CB620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E662173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:37:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mGythxfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390376AbfGROhE (ORCPT
+        id S2390527AbfGROhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:37:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50288 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGROhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:37:04 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8C258C09AD0F;
-        Thu, 18 Jul 2019 14:37:02 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14D3660576;
-        Thu, 18 Jul 2019 14:36:59 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm, slab: Show last shrink time in us when
- slab/shrink is read
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <20190717202413.13237-1-longman@redhat.com>
- <20190717202413.13237-3-longman@redhat.com>
- <0100016c04e1562a-e516c595-1d46-40df-ab29-da1709277e9a-000000@email.amazonses.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <6fb9f679-02d1-c33f-2d79-4c2eaa45d264@redhat.com>
-Date:   Thu, 18 Jul 2019 10:36:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 18 Jul 2019 10:37:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45422 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfGROhT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:37:19 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x22so22504781qtp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=P952fJXBLk5gGmwzQWc4AdTbQsUFnxHNQ/JjKtt4NKc=;
+        b=mGythxfugEaFvl0wyE39KZQUFGsK+FuHqI4IU0NimV+KcqB82JKwxtNkJYwrBATEBJ
+         c/Cd25vpiSXyQEREaH66Utgzdw+g4fYhB+0VYAuoTeM3N3qHyl6WbR75bH+NIKMeeV2e
+         cwh63Sl3S1aqo4pnm12YqKlEYwetRIANDF33tUMpoThDQmnV52nqKcKScBS+gkn1/NOg
+         Gh/63dvdIPrMahiYbuhKcWd/K40WXUA/XWKiL3WlKx43udHTGN0e8l7ez0zyLgGYXACv
+         1frTvKYJdrQcaikMAbT7y6F/IaYIQGvG4gJZbmukAWqiNzL8aHkITUKWY+7kcYHXvu/g
+         wmNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=P952fJXBLk5gGmwzQWc4AdTbQsUFnxHNQ/JjKtt4NKc=;
+        b=buSdxn3NgffQWX3aLtITYOrbzzod/4pzqfGLRes73yNcRLB1zLIhuG0L2IEX3Q395C
+         GzPSbctsOL2Ah6wLaKOQQVvr6PFhWI8hDg7OcIMgF7cKe1RywtOBbTQt1I+cKQkqs9sH
+         kvHoSfqsujuZgZQrVB0lp9LHbdYEo318sWbgMX922yWd77d/5cUSDwLVRnJUm2Gdmj9z
+         nh0elWRdQ+yKKIGgeaeMTgZhyhufp6Y5p40iXBIWu9VjpW4Pjur9fCzDtISchw4O5Z+J
+         376+Q275VmEtH+ctgtvc4yZJJPc425Suh/q2IUDhDoezFnpfyfAx3FSM3m7nVPkDQ2zF
+         nnaw==
+X-Gm-Message-State: APjAAAW8BFqSW+64K3f/DxAu43Clpo2TNolAs1O8XiBfED5PMUVIlsNS
+        EI7GwVKBic7FkqsugX7jxXOdyHzNc/nF1YrBzxW6gA==
+X-Google-Smtp-Source: APXvYqwlRBjp0w1syFaW3nPSBwwug0SrJnGWLAMIYDiIoIGHAU6aSAPrRGiIr53fvkPxLKi+KZvUIFrxm7qmxiv9rs8=
+X-Received: by 2002:ac8:1e8a:: with SMTP id c10mr31333075qtm.45.1563460638305;
+ Thu, 18 Jul 2019 07:37:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0100016c04e1562a-e516c595-1d46-40df-ab29-da1709277e9a-000000@email.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 18 Jul 2019 14:37:03 +0000 (UTC)
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 18 Jul 2019 07:37:07 -0700
+Message-ID: <CAPcyv4jMjvPYTa00hbq=64LZ=Vcu-gi7hLcgDTnD9d4dF0t9ng@mail.gmail.com>
+Subject: [GIT PULL] dax for 5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/19 7:39 AM, Christopher Lameter wrote:
-> On Wed, 17 Jul 2019, Waiman Long wrote:
->
->> The show method of /sys/kernel/slab/<slab>/shrink sysfs file currently
->> returns nothing. This is now modified to show the time of the last
->> cache shrink operation in us.
-> What is this useful for? Any use cases?
+Hi Linus, please pull from:
 
-I got query about how much time will the slab_mutex be held when
-shrinking the cache. I don't have a solid answer as it depends on how
-many memcg caches are there. This patch is a partial answer to that as
-it give a rough upper bound of the lock hold time.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/dax-for-5.3
 
+...to receive the fruits of a bug hunt in the fsdax implementation
+with Willy and a small feature update for device-dax. These have
+appeared in a -next release with no reported issues.
 
->> CONFIG_SLUB_DEBUG depends on CONFIG_SYSFS. So the new shrink_us field
->> is always available to the shrink methods.
-> Aside from minimal systems without CONFIG_SYSFS... Does this build without
-> CONFIG_SYSFS?
+---
 
-The sysfs code in mm/slub.c is guarded by CONFIG_SLUB_DEBUG which, in
-turn, depends on CONFIG_SYSFS. So if CONFIG_SYSFS is off, the shrink
-sysfs methods will be off as well. I haven't tried doing a minimal
-build. I will certainly try that, but I don't expect any problem here.
+The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
 
-Cheers,
-Longman
+  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/dax-for-5.3
+
+for you to fetch changes up to 23c84eb7837514e16d79ed6d849b13745e0ce688:
+
+  dax: Fix missed wakeup with PMD faults (2019-07-16 19:30:59 -0700)
+
+----------------------------------------------------------------
+- Fix a hang condition that started triggering after the Xarray
+  conversion of fsdax in the v4.20 kernel.
+
+- Add a 'resource' (root-only physical base address) sysfs attribute to
+  device-dax instances to correlate memory-blocks onlined via the kmem
+  driver with a given device instance.
+
+----------------------------------------------------------------
+Matthew Wilcox (Oracle) (1):
+      dax: Fix missed wakeup with PMD faults
+
+Vishal Verma (1):
+      device-dax: Add a 'resource' attribute
+
+ drivers/dax/bus.c | 19 +++++++++++++++++++
+ fs/dax.c          | 53 +++++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 52 insertions(+), 20 deletions(-)
