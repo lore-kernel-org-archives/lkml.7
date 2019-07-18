@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF751C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D27EC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00DD2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F272173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419079;
-	bh=M4Hp0DidtU4Z5FyikNxfkGbejwLV+GEO4duPURQZ+B0=;
+	s=default; t=1563419082;
+	bh=26eAjIac7+2nGolq1DK+LxeeY4nVbF8uw7n8iF6+A6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOpZEvTbhp5HXKKxTLJkfvpQp68CTJ7VVIaV5ZP61uuX4s0SBcP4zo4DW4Tgj6vk2
-	 CNvBniMLepgC1EII7Dfer1Z2lFbuqk2eUipX9Z6RJ45d7bg+PmwEwhIyswjgTsXbd2
-	 WPme2QPoaWM6CyzVJJVheIr3AdpXLS0PVAljcuT0=
+	b=FXaQu9YdCxrAtmPibBtc7TgDJ45W5rp6K5s5c1TkK5HWne8OFbbZ9S1ACIv+TUfqV
+	 R6/wQfgSRcHkbEPx+MkiBmyal1ErTe8jZ3nVN3KlHU87Zz+NkAYqExQMRONxytEyu4
+	 6UhUmTgXLZ3stbESJmRvCAKctbfJGIBYw0vxwdJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389753AbfGRDEi (ORCPT
+        id S2389768AbfGRDEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbfGRDEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:04:37 -0400
+        id S1727541AbfGRDEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:04:40 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACC82173B;
-        Thu, 18 Jul 2019 03:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA342173B;
+        Thu, 18 Jul 2019 03:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419076;
-        bh=M4Hp0DidtU4Z5FyikNxfkGbejwLV+GEO4duPURQZ+B0=;
+        s=default; t=1563419079;
+        bh=26eAjIac7+2nGolq1DK+LxeeY4nVbF8uw7n8iF6+A6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Es3I931gMQy+ZJLHPxjARqCsnsntzO6zav4W0Ijncg3xFNKr/mWbwJgvO8H6ri0Ry
-         nbTboP1mtDXvJqdzxyWv6gxpScvgqE4BtP6892u5IzUA+uWMH40IltEPl13UdvKcPM
-         v36bb0U3MewvP6qaQ59FugRREP/Y4MlnoIIONm0I=
+        b=IO/k+MM0JVpIJbWA5lxjs/NRexzkjuXWWObsKBml59a6NK/jxdzuvwe5AWBClgSpJ
+         f6cnM0I9k4PbqtOWuupGH0rGMIvZHEbJS/pvVTXBWi86mwd2qjPQGHiWNqx0c6ae9X
+         XRTAVXJL9tUycWHjrHCIQsA+DugI59xKRY9TfnJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 07/54] ARM: dts: meson8: fix GPU interrupts and drop an undocumented property
-Date:   Thu, 18 Jul 2019 12:01:02 +0900
-Message-Id: <20190718030053.928285686@linuxfoundation.org>
+Subject: [PATCH 5.1 08/54] ARM: dts: meson8b: fix the operating voltage of the Mali GPU
+Date:   Thu, 18 Jul 2019 12:01:03 +0900
+Message-Id: <20190718030053.997389489@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -61,48 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 01dfdd7b4693496854ac92d1ebfb18d7b108f777 ]
+[ Upstream commit 26d65140e92a626e39c73c9abf769fd174bf5076 ]
 
-The interrupts in Amlogic's vendor kernel sources are all contiguous.
-There are two typos leading to pp2 and pp4 as well as ppmmu2 and ppmmu4
-incorrectly sharing the same interrupt line.
-Fix this by using interrupt 170 for pp2 and 171 for ppmmu2.
+Amlogic's vendor kernel defines an OPP for the GPU on Meson8b boards
+with a voltage of 1.15V. It turns out that the vendor kernel relies on
+the bootloader to set up the voltage. The bootloader however sets a
+fixed voltage of 1.10V.
 
-Also drop the undocumented "switch-delay" which is a left-over from my
-experiments with an early lima kernel driver when it was still
-out-of-tree and required this property on Amlogic SoCs.
+Amlogic's patched u-boot sources (uboot-2015-01-15-23a3562521) confirm
+this:
+$ grep -oiE "VDD(EE|AO)_VOLTAGE[ ]+[0-9]+" board/amlogic/configs/m8b_*
+  board/amlogic/configs/m8b_m100_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m101_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m102_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m200_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
+  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
+  board/amlogic/configs/m8b_m202_v1.h:VDDEE_VOLTAGE            1100
 
-Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
+Another hint at this is the VDDEE voltage on the EC-100 and Odroid-C1
+boards. The VDDEE regulator supplies the Mali GPU. It's basically a copy
+of the VCCK (CPU supply) which means it's limited to 0.86V to 1.14V.
+
+Update the operating voltage of the Mali GPU on Meson8b to 1.10V so it
+matches with what the vendor u-boot sets.
+
+Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/meson8b.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index a9781243453e..048b55c8dc1e 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -248,8 +248,8 @@
- 				     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>,
-@@ -264,7 +264,6 @@
- 			clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
- 			clock-names = "bus", "core";
- 			operating-points-v2 = <&gpu_opp_table>;
--			switch-delay = <0xffff>;
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index fe84a8c3ce81..6b80aff32fc2 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -163,23 +163,23 @@
+ 
+ 		opp-255000000 {
+ 			opp-hz = /bits/ 64 <255000000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-364300000 {
+ 			opp-hz = /bits/ 64 <364300000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-425000000 {
+ 			opp-hz = /bits/ 64 <425000000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-510000000 {
+ 			opp-hz = /bits/ 64 <510000000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-637500000 {
+ 			opp-hz = /bits/ 64 <637500000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 			turbo-mode;
  		};
  	};
- }; /* end of / */
 -- 
 2.20.1
 
