@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E26C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05181C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34132173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31292173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420114;
-	bh=7Y8YRFl8H93Muj1svu/vDRN/yurF3Z9YW4mttXOGQYU=;
+	s=default; t=1563420119;
+	bh=2G9q8qP6fJ4eEklSPm4lYLVjtzDEF3InBG5aajNxFn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=witISCxkfvOgbGnsLLUyootaILjVEg1ieRq3zKr+zOoA09m4dlJUhhMGs1wauYEpT
-	 XtX3XqMs4TnZmJ0varHUkXluJUeznIEoWKSwZ7GiqO0suVF+znzKSmWCIHlA3nvW54
-	 y9ZClxZkQ/50TzrMq4NAp7YDvt9yQVJt5MdroFMU=
+	b=iJXF+kg9k9zmX3ayeBXz8jKMTQuo21m3wIkPdrtVxCY5+U0zwAOV9hR1B4acmLVZ2
+	 R0T0a9EQ6hcSoQ8nTgMWxGzyYUsAdoxFjZqSZcEYRF7gRa2VjECX4KZzEyMgXZdJq+
+	 n7/s/BDbmWWMndrSp9nGx7gssf4qgJJk60leJcbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391003AbfGRDJd (ORCPT
+        id S2391741AbfGRDV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:21:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390145AbfGRDJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:09:27 -0400
+        id S2387680AbfGRDJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:09:29 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F302053B;
-        Thu, 18 Jul 2019 03:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 973452053B;
+        Thu, 18 Jul 2019 03:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419366;
-        bh=7Y8YRFl8H93Muj1svu/vDRN/yurF3Z9YW4mttXOGQYU=;
+        s=default; t=1563419369;
+        bh=2G9q8qP6fJ4eEklSPm4lYLVjtzDEF3InBG5aajNxFn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwYkJeqHfHdC/ORJSRgc7y190BoLEJwxNRJKSpk9mBx5RpHMlBexmH2DTdXH6KyI3
-         4wb3SNVcU9crjuaFjOhm/CMQtGBSF1owCdf044JnP/oHYuVltmVRogfz40ZxDz8wLc
-         d5EMx+lZTixLQR34Cj+VTUo/4p4ZTrxIipRdBEi4=
+        b=vexa7grTK069RqHAMhTT/T5tFeuP5xt7HjsBHBIJbs+WccS4up2cyKkkwE8S4+mir
+         ygeTpDMDx/9T18k1qpxAdqa+t0MjH8LDcwK7U9baFPcVCDzxElLCXEzSYMOzjXzQlw
+         5nLEKrUopCabXeDV/Tt0Tjtz75FoAn8jNVosLH3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/80] bnx2x: Check if transceiver implements DDM before access
-Date:   Thu, 18 Jul 2019 12:01:24 +0900
-Message-Id: <20190718030101.222214072@linuxfoundation.org>
+Subject: [PATCH 4.14 34/80] drm: return -EFAULT if copy_to_user() fails
+Date:   Thu, 18 Jul 2019 12:01:25 +0900
+Message-Id: <20190718030101.285675784@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -62,61 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf18cecca911c0db96b868072665347efe6df46f ]
+[ Upstream commit 74b67efa8d7b4f90137f0ab9a80dd319da050350 ]
 
-Some transceivers may comply with SFF-8472 even though they do not
-implement the Digital Diagnostic Monitoring (DDM) interface described in
-the spec. The existence of such area is specified by the 6th bit of byte
-92, set to 1 if implemented.
+The copy_from_user() function returns the number of bytes remaining
+to be copied but we want to return a negative error code.  Otherwise
+the callers treat it as a successful copy.
 
-Currently, without checking this bit, bnx2x fails trying to read sfp
-module's EEPROM with the follow message:
-
-ethtool -m enP5p1s0f1
-Cannot get Module EEPROM data: Input/output error
-
-Because it fails to read the additional 256 bytes in which it is assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The EEPROM
-data was confirmed by Mellanox as correct and similar to other Passive
-DACs from other manufacturers.
-
-Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
-Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618131843.GA29463@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c | 3 ++-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h    | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_bufs.c  | 5 ++++-
+ drivers/gpu/drm/drm_ioc32.c | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-index 3fd1085a093f..65bc1929d1a8 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -1581,7 +1581,8 @@ static int bnx2x_get_module_info(struct net_device *dev,
- 	}
+diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
+index 0f05b8d8fefa..b829fde80f7b 100644
+--- a/drivers/gpu/drm/drm_bufs.c
++++ b/drivers/gpu/drm/drm_bufs.c
+@@ -1321,7 +1321,10 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
+ 				 .size = from->buf_size,
+ 				 .low_mark = from->low_mark,
+ 				 .high_mark = from->high_mark};
+-	return copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags));
++
++	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
++		return -EFAULT;
++	return 0;
+ }
  
- 	if (!sff8472_comp ||
--	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ)) {
-+	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ) ||
-+	    !(diag_type & SFP_EEPROM_DDM_IMPLEMENTED)) {
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
- 	} else {
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-index b7d251108c19..7115f5025664 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-@@ -62,6 +62,7 @@
- #define SFP_EEPROM_DIAG_TYPE_ADDR		0x5c
- #define SFP_EEPROM_DIAG_TYPE_SIZE		1
- #define SFP_EEPROM_DIAG_ADDR_CHANGE_REQ		(1<<2)
-+#define SFP_EEPROM_DDM_IMPLEMENTED		(1<<6)
- #define SFP_EEPROM_SFF_8472_COMP_ADDR		0x5e
- #define SFP_EEPROM_SFF_8472_COMP_SIZE		1
+ int drm_legacy_infobufs(struct drm_device *dev, void *data,
+diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
+index f8e96e648acf..bfeeb6a56135 100644
+--- a/drivers/gpu/drm/drm_ioc32.c
++++ b/drivers/gpu/drm/drm_ioc32.c
+@@ -372,7 +372,10 @@ static int copy_one_buf32(void *data, int count, struct drm_buf_entry *from)
+ 			      .size = from->buf_size,
+ 			      .low_mark = from->low_mark,
+ 			      .high_mark = from->high_mark};
+-	return copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags));
++
++	if (copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags)))
++		return -EFAULT;
++	return 0;
+ }
  
+ static int drm_legacy_infobufs32(struct drm_device *dev, void *data,
 -- 
 2.20.1
 
