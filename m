@@ -2,175 +2,124 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D65C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B632C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC1221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D457721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EvOoroJq"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QqhaGhOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391054AbfGRTHj (ORCPT
+        id S2391129AbfGRTHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:07:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46279 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGRTHj (ORCPT
+        Thu, 18 Jul 2019 15:07:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58711 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfGRTHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:07:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so53185235iol.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=MQUZMSd8XzLJvG3kqon6Z7O6xL3wGkssHmZcIZJnmv8=;
-        b=EvOoroJqXk90Np+OA+Gy1HD9IFvuOM3F6KVcElccvHImWBkweE9IcwQ+fFYQvkMZ9i
-         3C7TGrXvQX1/K29F2ddJvyLrBt5A5E50Qws/BQpY2OM9GUIGtYL1cUjaU2m9thKICpqd
-         oLtsW4dstSTM8SPWXF5VefG6b9SEFuHlYkPatg8C3WdEkDJfnahU/C+Wy72Yq829pFkp
-         H0ptNkpWIk6wJ+KDo3bsAJQp+P5e3KkNYZvmBMoBzA6OHsNvjVqRhF8dWQ/jQaC6F00D
-         uh80XKIXkR7Cg6/tsvJggCkuRqT9+S/QoHsoDzZsQiu28rk3MKraANiH4gcJsH9Jz1/1
-         06pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=MQUZMSd8XzLJvG3kqon6Z7O6xL3wGkssHmZcIZJnmv8=;
-        b=nZp2uVo1qBF2B9tlSWkQ604qfq1AoS/CbGpzJWjvdl1yQROxVpen4y6YCSK2qgEyrW
-         i/u3vJDrKjIzWvRtW+2K25b2vPvY8qBNoV9VcC9KIKjatWhSUYjGPxzPY/fNGb34auXk
-         X24PrEnshttckt7uyL2aQ1mIpOFtd2K5c2zcW6+yFwzh07UxaZwFkHYhidWOYUzuRnJm
-         4KjQxxcO2oJUfeIDGIx2eYBt7Q2Y3f30uJrUSwwzIln8JqQP8xYgfOm3Xoz6z8s+JIxe
-         JkpVXqFuE8A++H781v+H5EGh6QlRQTS+Grlv/MILEs2kjKckUvOhrZSWH4kO0DrPN10F
-         YadA==
-X-Gm-Message-State: APjAAAWRszt4cYCJF9nQXlI2CwOiTT5Dx0IZlcOKPxGQlB6NYveKGcHX
-        7OWbuvWg48HAFetdeA07EUj4AJnOoqY=
-X-Google-Smtp-Source: APXvYqyhJxkNfXL7NWy4swrh8GSZ5IwccJV82aIpycrs3GVBegCdaYy0F+qdLW8XH19x/r9Ypt+kMA==
-X-Received: by 2002:a5d:9bc6:: with SMTP id d6mr36025209ion.160.1563476858439;
-        Thu, 18 Jul 2019 12:07:38 -0700 (PDT)
-Received: from localhost (67-0-62-24.albq.qwest.net. [67.0.62.24])
-        by smtp.gmail.com with ESMTPSA id s10sm78233725iod.46.2019.07.18.12.07.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 12:07:37 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 12:07:36 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [GIT PULL] RISC-V updates for v5.3
-Message-ID: <alpine.DEB.2.21.9999.1907181155050.17807@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 18 Jul 2019 15:07:44 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJ7L2K2123545
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 18 Jul 2019 12:07:22 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJ7L2K2123545
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563476842;
+        bh=3Q/67xmSF60QreiyFoMQf4x91Gql9kff1+3IAqL53Fc=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=QqhaGhOSLNrAOJ1bxwt0cxdD+E130w7wLiSS7oXO6Hxo8M7cV+pDFP7VSiu2luMPV
+         m7OjvapHI4WaOLOU4FjrE8f6H2r4QwXSf2Hcch4JP1BFciDHm0CluJliA6+xc+i3O0
+         AuMeatmSk/fHZKyxG3nFhVatGR8SjMCPs86ONQBA0aHeZVa2hLrSLv+lT2fJ6H3o4H
+         P+r6v1rnTx8hYFPRD6z7d1p3KQGQBu8yEYPJS9qVmkSq049Gn7jgqYO7jv8Ub+LCMD
+         ct3BJbUO6bgdoOsRYyIRgxFsX+8PseoWONk75k1YZgAEbSGoj6HFoUuZ4qBTViEFPC
+         xGB3TpzZA+2IA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJ7LGh2123541;
+        Thu, 18 Jul 2019 12:07:21 -0700
+Date:   Thu, 18 Jul 2019 12:07:21 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-083db6764821996526970e42d09c1ab2f4155dd4@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, jgross@suse.com,
+        jpoimboe@redhat.com, tglx@linutronix.de, hpa@zytor.com,
+        peterz@infradead.org
+Reply-To: peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de,
+          jpoimboe@redhat.com, jgross@suse.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com>
+References: <afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/urgent] x86/paravirt: Fix callee-saved function ELF sizes
+Git-Commit-ID: 083db6764821996526970e42d09c1ab2f4155dd4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Commit-ID:  083db6764821996526970e42d09c1ab2f4155dd4
+Gitweb:     https://git.kernel.org/tip/083db6764821996526970e42d09c1ab2f4155dd4
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Wed, 17 Jul 2019 20:36:36 -0500
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 18 Jul 2019 21:01:03 +0200
 
-The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
+x86/paravirt: Fix callee-saved function ELF sizes
 
-  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
+The __raw_callee_save_*() functions have an ELF symbol size of zero,
+which confuses objtool and other tools.
 
-are available in the Git repository at:
+Fixes a bunch of warnings like the following:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.3-rc1
+  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pte_val() is missing an ELF size annotation
+  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_pgd_val() is missing an ELF size annotation
+  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pte() is missing an ELF size annotation
+  arch/x86/xen/mmu_pv.o: warning: objtool: __raw_callee_save_xen_make_pgd() is missing an ELF size annotation
 
-for you to fetch changes up to 2d69fbf3d01a5b71e98137e2406d4087960c512e:
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/afa6d49bb07497ca62e4fc3b27a2d0cece545b4e.1563413318.git.jpoimboe@redhat.com
 
-  riscv: fix build break after macro-to-function conversion in generic cacheflush.h (2019-07-18 08:16:56 -0700)
+---
+ arch/x86/include/asm/paravirt.h | 1 +
+ arch/x86/kernel/kvm.c           | 1 +
+ 2 files changed, 2 insertions(+)
 
-----------------------------------------------------------------
-RISC-V updates for v5.3
-
-- Hugepage support
-
-- "Image" header support for RISC-V kernel binaries, compatible with
-  the current ARM64 "Image" header
-
-- Initial page table setup now split into two stages
-
-- CONFIG_SOC support (starting with SiFive SoCs)
-
-- Avoid reserving memory between RAM start and the kernel in setup_bootmem()
-
-- Enable high-res timers and dynamic tick in the RV64 defconfig
-
-- Remove long-deprecated gate area stubs
-
-- MAINTAINERS updates to switch to the newly-created shared RISC-V git
-  tree, and to fix a get_maintainers.pl issue for patches involving
-  SiFive E-mail addresses
-
-Also, one integration fix to resolve a build problem introduced during
-in the v5.3-rc1 merge window:
-
-- Fix build break after macro-to-function conversion in
-  asm-generic/cacheflush.h
-
-----------------------------------------------------------------
-Alexandre Ghiti (2):
-      x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE config in arch/Kconfig
-      riscv: Introduce huge page support for 32/64bit kernel
-
-Andy Lutomirski (1):
-      riscv: Remove gate area stubs
-
-Anup Patel (3):
-      RISC-V: defconfig: Enable NO_HZ_IDLE and HIGH_RES_TIMERS
-      RISC-V: Fix memory reservation in setup_bootmem()
-      RISC-V: Setup initial page tables in two stages
-
-Atish Patra (1):
-      RISC-V: Add an Image header that boot loader can parse.
-
-Christoph Hellwig (1):
-      riscv: remove free_initrd_mem
-
-Loys Ollivier (3):
-      arch: riscv: add config option for building SiFive's SoC resource
-      riscv: select SiFive platform drivers with SOC_SIFIVE
-      riscv: defconfig: enable SOC_SIFIVE
-
-Paul Walmsley (3):
-      MAINTAINERS: don't automatically patches involving SiFive to the linux-riscv list
-      MAINTAINERS: change the arch/riscv git tree to the new shared tree
-      riscv: fix build break after macro-to-function conversion in generic cacheflush.h
-
-Yash Shah (1):
-      riscv: ccache: Remove unused variable
-
- Documentation/riscv/boot-image-header.txt |  50 +++++
- MAINTAINERS                               |   4 +-
- arch/Kconfig                              |   3 +
- arch/arm64/Kconfig                        |   2 +-
- arch/riscv/Kconfig                        |  10 +
- arch/riscv/Kconfig.socs                   |  13 ++
- arch/riscv/boot/dts/sifive/Makefile       |   2 +-
- arch/riscv/configs/defconfig              |   8 +-
- arch/riscv/configs/rv32_defconfig         |   2 +
- arch/riscv/include/asm/cacheflush.h       |  63 +++++-
- arch/riscv/include/asm/fixmap.h           |   5 +
- arch/riscv/include/asm/hugetlb.h          |  18 ++
- arch/riscv/include/asm/image.h            |  65 ++++++
- arch/riscv/include/asm/page.h             |  14 +-
- arch/riscv/include/asm/pgtable-64.h       |   5 +
- arch/riscv/include/asm/pgtable.h          |  16 +-
- arch/riscv/kernel/head.S                  |  49 ++++-
- arch/riscv/kernel/setup.c                 |   6 +-
- arch/riscv/kernel/vdso.c                  |  19 --
- arch/riscv/mm/Makefile                    |   2 +
- arch/riscv/mm/hugetlbpage.c               |  44 ++++
- arch/riscv/mm/init.c                      | 326 ++++++++++++++++++++++++------
- arch/riscv/mm/sifive_l2_cache.c           |  11 +-
- arch/x86/Kconfig                          |   4 +-
- 24 files changed, 620 insertions(+), 121 deletions(-)
- create mode 100644 Documentation/riscv/boot-image-header.txt
- create mode 100644 arch/riscv/Kconfig.socs
- create mode 100644 arch/riscv/include/asm/hugetlb.h
- create mode 100644 arch/riscv/include/asm/image.h
- create mode 100644 arch/riscv/mm/hugetlbpage.c
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index c25c38a05c1c..d6f5ae2c79ab 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -746,6 +746,7 @@ bool __raw_callee_save___native_vcpu_is_preempted(long cpu);
+ 	    PV_RESTORE_ALL_CALLER_REGS					\
+ 	    FRAME_END							\
+ 	    "ret;"							\
++	    ".size " PV_THUNK_NAME(func) ", .-" PV_THUNK_NAME(func) ";"	\
+ 	    ".popsection")
+ 
+ /* Get a reference to a callee-save function */
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 82caf01b63dd..6661bd2f08a6 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -838,6 +838,7 @@ asm(
+ "cmpb	$0, " __stringify(KVM_STEAL_TIME_preempted) "+steal_time(%rax);"
+ "setne	%al;"
+ "ret;"
++".size __raw_callee_save___kvm_vcpu_is_preempted, .-__raw_callee_save___kvm_vcpu_is_preempted;"
+ ".popsection");
+ 
+ #endif
