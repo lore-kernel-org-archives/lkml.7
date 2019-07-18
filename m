@@ -2,157 +2,154 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FC3C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE68C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA882173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8B22173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SOLhkQMp"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pks6e7p+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfGRJzs (ORCPT
+        id S2389618AbfGRJ5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:55:48 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:16561 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfGRJzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:55:47 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190718095544epoutp046cd562531661aa14885f6c1ed47571e1~yd81u7T4p1432714327epoutp04D
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:55:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190718095544epoutp046cd562531661aa14885f6c1ed47571e1~yd81u7T4p1432714327epoutp04D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563443744;
-        bh=1cYZWpty8TVGacXVxE+PxB2lbSa/vNMvyWISzXqDHPg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=SOLhkQMptzOFLLzK0sLglZS6dRFxO9+eD90xcukFKdq0d6WWrE68HFS4e/zBlGxww
-         20e9951/1EnBxWxYZmF4DcdwZ2/ALPHp9z21V76vp/ofMS7TtKVlro8EJjvn4jcQCT
-         B1Broy7YgbylRhBMj8XonHoVEFUHDSlfuQGH4LX8=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190718095544epcas1p47240fdfe7dd495da81d22e1ef39ec478~yd81TlRIl1186211862epcas1p43;
-        Thu, 18 Jul 2019 09:55:44 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 45q8dn4NRtzMqYkW; Thu, 18 Jul
-        2019 09:55:41 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1D.0A.04066.D12403D5; Thu, 18 Jul 2019 18:55:41 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190718095540epcas1p18bda7f795298f17535b8a0dcb84ffa06~yd8yFw3gd3203532035epcas1p1F;
-        Thu, 18 Jul 2019 09:55:40 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190718095540epsmtrp15f171dcf38d6fa0e3c90b1eecbc85174~yd8yE-SvJ2027720277epsmtrp1R;
-        Thu, 18 Jul 2019 09:55:40 +0000 (GMT)
-X-AuditID: b6c32a37-e27ff70000000fe2-64-5d30421d46b2
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        52.AD.03706.C12403D5; Thu, 18 Jul 2019 18:55:40 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190718095540epsmtip28e3b00eaf901b54c93cb191b8e1e25de~yd8x5H1TW1226412264epsmtip2n;
-        Thu, 18 Jul 2019 09:55:40 +0000 (GMT)
-Subject: Re: [PATCH v4 22/24] PM / devfreq: tegra30: Include appropriate
- header
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <2f317faf-8de0-2717-cda7-b15374039493@samsung.com>
-Date:   Thu, 18 Jul 2019 18:58:50 +0900
+        Thu, 18 Jul 2019 05:57:25 -0400
+Received: from mout.web.de ([212.227.17.11]:55491 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfGRJ5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:57:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563443780;
+        bh=TgYOjUhDBEP1juVeE/AiHjQJY6XMoYGl3kH+EftdEj0=;
+        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
+        b=pks6e7p+ConDTX+soo38ISz0y9LJMrQCZyQM326PvDI8VfJSFAjuWwIzD4a716/jl
+         k2b+rSkcx+EShd5GH2F4hvxWz+o0jjYBNAnu9ligWcWQseS71VQbIr8vY2oZ5Jo4iJ
+         yFIIxuCU2ZcXcsBy3ZrPLo21dwT0aitanWt2MOnA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.59.79]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MN4Oy-1hlsMN3Vyi-006iYK; Thu, 18
+ Jul 2019 11:56:19 +0200
+To:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Takashi Iwai <tiwai@suse.com>, Wen Yang <wen.yang99@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] ASoC: samsung: odroid: Use common code in
+ odroid_audio_probe()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Message-ID: <c4c10934-f06f-24a8-1162-b023e4ab4066@web.de>
+Date:   Thu, 18 Jul 2019 11:55:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-23-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUwTQRTGMz22rbG6FtEnRq2LGCGBdi2FRQWNEtJEY/BK1ARxhU1Berlb
-        iMc/KAYBRSXeK7bGI4h3FJBWDaaixjMqIUGgIoGoIIHgCSrGbbdG/vvNN9+b976ZUUo1V7AI
-        Za7NybA22kJgY2R196N1sdMW6zP0PYOR1KXBLkTt5s/IqOe7+hRUk7cSo76UNyKq9CuPUW07
-        L2DUsNclo/ZfeY0tUpnq/eeQycP7Fabyon7MtL/mIjJ9uTE9Xb4+b0EOQ2czrJaxZdmzc23m
-        ZGLpqswlmcYEPRlLJlGJhNZGW5lkInVZemxarkUYiNAW0JZ8QUqnOY7QpSxg7flORptj55zJ
-        BOPItjiSHHEcbeXybea4LLt1HqnXzzUKxo15OVc73iBHp2Lr4NFj8kLUgJUhlRLweBh8+CnI
-        Grwegevz0jI0RuDPCCr21krExXcEnuFPin8VR0oKFeLGXQR7qw4gcTGA4KGvXTgLU4bhKyAj
-        oE7E/yAoHS4KdpDi6+C+55IkwBgeAw0fW4L6eHwmNA91oQCr8RTw+tuDHhkeBT/flskDHI6v
-        hSeNLpnomQCPT3QHWYUnQNdAJxLPnwyt3W6JyDOgqPakNDAE4D8waK3oC0VOheq6e6EwYdD7
-        qCbEEdBzoDjEO6D6cSMmFpcgqGl4KRc3DNBw/pDQQSl0iIZrXp0ozwTPr1OhIcZB/7d98oAF
-        cDWUFGtESyQ0vfNLRJ4CZ/eUYgcRwY+Kw4+KwI+KwP9vdhrJLqJJjIOzmhmOdBhGv/UNFPyq
-        MYn16PqLZT6EKxExVt1C6DI0crqA22b1IVBKiYnqth5BUmfT27YzrD2TzbcwnA8ZhduukEaE
-        Z9mFj29zZpLGuQaDgYonE4wkSUxWu35HZ2hwM+1k8hjGwbD/6iRKVUQhmhXn9g+psenFZ8An
-        iSe3JLZVze+QZvWGP7m58h68ab3OpmjXXJ6jXZha9ar8sHO9a94UY9hqrPR4k46ffWfzpltl
-        afS+bnbDs8sfCr4XFd7OPV03cHZkSfP748vtfKRK1j3ydGTaA7XPM2mjua5yndstdZsOOmuj
-        vO1pU39WVHYSMi6HJmOkLEf/BTpiWwfAAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSvK6Mk0GsQWe/qcXqj48ZLVpmLWKx
-        ONv0ht3i8q45bBafe48wWnR+mcVmcbtxBZvFz13zWCz61l5ic+D02HF3CaPHzll32T16m9+x
-        efRtWcXo8XmTXABrFJdNSmpOZllqkb5dAlfGuvs3GQsesld8nDadtYFxP1sXIyeHhICJxNSO
-        BvYuRi4OIYHdjBINO9YzQiQkJaZdPMrcxcgBZAtLHD5cDFHzllFi+t5OoAY2DmGBQIlYkKiI
-        QBOTxKbeC+wgncwCkRI9c7ewQZRvYZR42NfPCpJgE9CS2P/iBthefgFFias/HoOt4hWwk9h1
-        9w4TiM0ioCrx614XWL2oQITEpGs7WSBqBCVOznwCZnMKmEk8fv+QEWKZusSfeZeYIWxxiVtP
-        5jNB2PISzVtnM09gFJ6FpH0WkpZZSFpmIWlZwMiyilEytaA4Nz232LDAMC+1XK84Mbe4NC9d
-        Lzk/dxMjOL60NHcwXl4Sf4hRgINRiYf3hpJ+rBBrYllxZe4hRgkOZiUR3tsvgUK8KYmVValF
-        +fFFpTmpxYcYpTlYlMR5n+YdixQSSE8sSc1OTS1ILYLJMnFwSjUwZkw3ap7b4iXCIKaS6Xj9
-        RVa6nkKZVPFmrdDkR9tL/uc2HVynpFzrtLU0/MftrqgAofI64bC3ZezX5s/pd2Lm8Nki35ZV
-        9Vsxt7r6Lte5LLc0oT8sEp/aDy1ojlWLCBGvtW/6EfFhdoDqXw0ns13VoenFzbusH+WszVIt
-        /h4Wfulz+z3hfCWW4oxEQy3mouJEAPmzSrSrAgAA
-X-CMS-MailID: 20190718095540epcas1p18bda7f795298f17535b8a0dcb84ffa06
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223620epcas4p16538beeb317e2ed0cbecb64147f32b71
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223620epcas4p16538beeb317e2ed0cbecb64147f32b71@epcas4p1.samsung.com>
-        <20190707223303.6755-23-digetx@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x1N9WkizngMMedlvA+2H9oFOxXnJ6uwcd1/0TQwNrZ9rwFMiCjD
+ m0NbUIc3OeH405Jcoski7NgLD5QaQrdzpKFtdHWgIRLlMHPFjIaUMNwPrmTEoa3eOZGQtL6
+ 4cMYXPxZqaReWb7evJC7qyY447r6SLefnQ/TcYfk6ZK7pY3eRD6Of1wy2btbRY3QL+5NaKj
+ xkWsXlwNnqaSKtXC0s3vQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DGYQBBR74xE=:4I1tkhejdpu5SkpnlkxDqH
+ cNp2jZnUp9LDEkBkjh1S1XCbYE6MliY0N4EDyR/ZLbLHXKrvR9QdWzF0hK6LirmlMF1D75hJp
+ 5eTDsETJDxwn5hXMzcemY96FkBkxRZoCSpyTTmH3ijYCciUNFdFDOxoGz900+FCt7Q3eexIvm
+ ala7DfMnnw6AqyNQdaHSqddCeZljX3hm8S4wf9wbsZbZkuLgi/ZXMPzuKQ4w0nkfKQtEtQJsp
+ nnTwDIXifBHIeA4yjkBgmN+IfrYeLqTQpHy2zF4Z6GGax9DMg9Tb5oAt5RS42t71FsevEKwxS
+ lMvfR9qN6DSDjuFZYJ4PthB/t+amuUqeyRGRQ3eJVHMDDiH7KJYTN2UxMN4w646WT+/wt1Q/x
+ 5Usd/hkMJdMEcNjoOU+DI2qOihLc6uIiZVFiQZYFceuuI7uv6fP9dtfrxMfUjp9ds9L0qqKEe
+ 7ilFULllosR40BSKFr4PdVgCKcZez09EQ9eOme4nlVMmjrlXUgj1fX/oIX2SICyi9LH/16HUt
+ iER6aq1HPQpEsbfkK9XsREEt3b/gBxkHfN7k1VyzR40ltKGIFxVz25b93tFNeHhoGImBtF44E
+ cSQkozGWyPlIRInfCOgwJDjA6W13V23A8UuU+DnSXneqjpupTJ0Cs8MqcQw+unEez60gOGjmW
+ MF+6ndOWrlckFYGWoUTAxsE/k55z6pmBZhEEpnYc7EpPJcY5W8x8HlC5p/MtrQRLXNRLMsz0Q
+ IAv/+S1Fe/pd6tN+GB/HdbkgZV0x7jJ9CPBq9D8mBK1l8q7lxiWdBLU2bt3mNHqn/g3bOUp4Q
+ XDZ7ZyVEoNPvhAxGvM+OQ91eIQ/AdqRWCwh3IVPYiAr+ITbrBdPyW/zCm+6nK/vMi/o+mwQlm
+ GgI8C9og8J1cAXFZcg92pq23kuZ2wpD83k3RJrKfoAfoeGfNciDojAALES5qAeb9Eax2W/AYl
+ 4g6aQeTBAV8LGotbEghT/5MBFXgcyi8TQAOwmnXP3lBt6vfM/ey6tMq7cHzM9qBtUiVPTzv64
+ Pzgd6rDcjttEe4OUrR/fCGQ0oQ1zSJKrWhFEp0lYraKPD3sMwBCfHzfrZoJO5aaKWehf3nQ4u
+ wT0rpJwWDjNVc+PIPzctBenM0UhB9n6HJw8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 8. 오전 7:33, Dmitry Osipenko wrote:
-> It's not very correct to include mod_devicetable.h for the OF device
-> drivers and of_device.h should be included instead.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 8a674fad26be..19e872a64148 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -13,7 +13,7 @@
->  #include <linux/io.h>
->  #include <linux/irq.h>
->  #include <linux/module.h>
-> -#include <linux/mod_devicetable.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_opp.h>
->  #include <linux/reset.h>
-> 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 18 Jul 2019 11:42:29 +0200
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Replace a function call and a return statement by a goto statement so that
+a bit of common code will be reused at the end of this function.
 
-Is not there other unused header file anymore?
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ sound/soc/samsung/odroid.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index f0f5fa9c27d3..d152ef8dfea3 100644
+=2D-- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -316,8 +316,7 @@ static int odroid_audio_probe(struct platform_device *=
+pdev)
+ 	}
+
+ 	of_node_put(cpu_dai);
+-	of_node_put(codec);
+-	return 0;
++	goto err_put_node;
+
+ err_put_clk_i2s:
+ 	clk_put(priv->clk_i2s_bus);
+=2D-
+2.22.0
+
