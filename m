@@ -2,146 +2,101 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5FBC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BC7C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C6A21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51832173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mHmwAYFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfGRBBX (ORCPT
+        id S1728588AbfGRBEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 21:01:23 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:46726 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbfGRBBX (ORCPT
+        Wed, 17 Jul 2019 21:04:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39312 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbfGRBEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 21:01:23 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x6I0xWSG038122;
-        Thu, 18 Jul 2019 08:59:32 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id 3D60852754C570DA3E11;
-        Thu, 18 Jul 2019 08:59:32 +0800 (CST)
-In-Reply-To: <93e86083-7f8a-402d-db4b-26263719be25@cogentembedded.com>
-References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw> <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw> <93e86083-7f8a-402d-db4b-26263719be25@cogentembedded.com>
-To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
-Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, mark.rutland@arm.com,
-        miquel.raynal@bootlin.com, paul@crapouillou.net,
-        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
-        stefan@agner.ch, vigneshr@ti.com
-Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
- bindings
+        Wed, 17 Jul 2019 21:04:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yL1QRBLgiuTEBo6M7mFjYzXgwvS+vJNgmxYl0NAvUEs=; b=mHmwAYFl8MnzVDFln77SJazjT
+        oG5816qIGlCpjSZhs/9XnQCOfSYlwVtXYOW5HMdXYm9LbZGcySnZMcwgB8bWSqJhJCXVwCtDUZsZb
+        iNl4jnQcWmBPS+dsT066VquHLTdR5nKRHs9iME5jtjDoWpnlMazXXDnEEQkEi/RHfLnPY+1HGDvY2
+        g1UNFh1LjyLbhELEYprPFOlU3PsIU+LLzZ9aBaavDDE3oQdrkmDXC/6QIDexd6G0U3ybh7xi3vDvF
+        RLXXYYXPnZKT9p1q9XVbL4vVv5yyBIBZBBrBDya9VpZqy4ZDKz0D7qTmyDdbJzpZ3IxfMdv7wCKBI
+        AG37BwH1w==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnuql-0002QV-HP; Thu, 18 Jul 2019 01:04:47 +0000
+Subject: Re: [RFC PATCH v7 1/1] Add dm verity root hash pkcs7 sig validation.
+To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
+        gmazyland@gmail.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        mdsakib@microsoft.com, mpatocka@redhat.com, ebiggers@google.com
+References: <20190718004615.16818-1-jaskarankhurana@linux.microsoft.com>
+ <20190718004615.16818-2-jaskarankhurana@linux.microsoft.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d057b88f-0a21-0843-1212-af46f67343a2@infradead.org>
+Date:   Wed, 17 Jul 2019 18:04:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-KeepSent: A58FF3D1:7CE1288C-4825843B:0005429C;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFA58FF3D1.7CE1288C-ON4825843B.0005429C-4825843B.00057367@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Thu, 18 Jul 2019 08:59:32 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/07/18 AM 08:59:32,
-        Serialize complete at 2019/07/18 AM 08:59:32
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x6I0xWSG038122
+In-Reply-To: <20190718004615.16818-2-jaskarankhurana@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+Just a couple of minor nits:
 
-Hi Sergei,
+On 7/17/19 5:46 PM, Jaskaran Khurana wrote:
+> diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+> index 3834332f4963..c2b04d226c90 100644
+> --- a/drivers/md/Kconfig
+> +++ b/drivers/md/Kconfig
+> @@ -490,6 +490,18 @@ config DM_VERITY
+>  
+>  	  If unsure, say N.
+>  
+> +config DM_VERITY_VERIFY_ROOTHASH_SIG
+> +	def_bool n
 
-> > Document the bindings used by the Macronix raw NAND controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >   Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 
-++++++++++++++++++++
-> >   1 file changed, 20 insertions(+)
-> >   create mode 100644 
-Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
-> Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > new file mode 100644
-> > index 0000000..ddd7660
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > @@ -0,0 +1,20 @@
-> > +Macronix Raw NAND Controller Device Tree Bindings
-> > +-------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: should be "macronix,nand-controller"
-> > +- reg: should contain 1 entrie for the registers
-> > +- interrupts: interrupt line connected to this raw NAND controller
-> > +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
-> > +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
-> > +    "send_dly_clk" clocks
-> > +
-> > +Example:
-> > +
-> > +   nand: mxic-nfc@43c30000 {
-> 
->     The node names should be generic, and the DT spec 0.2 (section 
-2.2.2) even 
-> has documented "nand-controller", please rename.
+It already defaults to n, so we usually try to omit that (don't repeat it).
 
-okay, will fix it to
+> +	bool "Verity data device root hash signature verification support"
+> +	depends on DM_VERITY
+> +	select SYSTEM_DATA_VERIFICATION
+> +	  help
 
-nand: nand-controller@43c30000 {
+"help" should only be indented by one tab (and not the extra 2 spaces).
 
-}
-
-> 
-> > +      compatible = "macronix,nand-controller";
-> > +      reg = <0x43c30000 0x10000>;
-> > +      reg-names = "regs";
-> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> > +   };
-> > 
-> 
-> MBR, Sergei
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+> +	  The device mapper target created by DM-VERITY can be validated if the
+> +	  pre-generated tree of cryptographic checksums passed has a pkcs#7
+> +	  signature file that can validate the roothash of the tree.
+> +
+> +	  If unsure, say N.
+> +
+>  config DM_VERITY_FEC
+>  	bool "Verity forward error correction support"
+>  	depends on DM_VERITY
 
 
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+thanks.
+-- 
+~Randy
