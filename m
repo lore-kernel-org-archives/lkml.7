@@ -2,52 +2,53 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EA3C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5811C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1091320578
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2F520818
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420204;
-	bh=MBiBm6iOBbyz/8UWVhfVFS5NLihhtEUDUC2dsjaqIbY=;
+	s=default; t=1563420209;
+	bh=1E5KVj4G0WL07FDo69IxQG3sTxcw9QLYL/zcBouUFYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DDMDICyGfWQm+6cXOASot5NfgMsgbsVTU1++lTOu+n7PcHgg73ghU4BtjPxvpkkrI
-	 TgPSv1clCD6dGvCHbVlPwekXNL3h48UO6JgZWK29UUGk0q+nHKLeaXab5soylKfqi6
-	 1SqE5M5A4s39c6jK2QS2fdxTmwQKQ0UlMGBBPUXw=
+	b=ygENoNocHAJj6Lzop9j3j3WQR69hLXacB2M5Jl4x5YRvF4jeqGAdp3kQ9v9CmdygV
+	 43nijAsWJ28xJG3aqqOFo+kkBKX1NS90loK6pxRObYirzhUmslTuToJ5NAHSXIUhnL
+	 vaEJs2mMkrJyVoYx+1SFv+uvFzA+DLGJJWKruMNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbfGRDXV (ORCPT
+        id S2390629AbfGRDIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390656AbfGRDIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:12 -0400
+        id S2390601AbfGRDID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:03 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9FB20818;
-        Thu, 18 Jul 2019 03:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D64342173E;
+        Thu, 18 Jul 2019 03:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419291;
-        bh=MBiBm6iOBbyz/8UWVhfVFS5NLihhtEUDUC2dsjaqIbY=;
+        s=default; t=1563419283;
+        bh=1E5KVj4G0WL07FDo69IxQG3sTxcw9QLYL/zcBouUFYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B8s39OBWkgTHK2leSOs4EEHQ2aouqH2TgTA/fNXMzXrQxPFNh+SY9LToQN1b/YPBH
-         SaokReD8jv/kk8bop0OFIrXE/7GbqeVg8MfTFAVNcrarjMVH+ubDVgvmugiPCGGWAK
-         Grm9BlZejrvQ2Vl+nqIL4a+gyKMbgVNIJC7HMLXg=
+        b=vW1BUyzpUHAyNzxAkcyy51r9IcsQSzvJHu/JSU0QtnSMg1PBn4SM468DYoOXoJGYV
+         c/zRboBOFagw42IwBhP3Bwbk3PmWXZ51uj446chwqEUBPLt69unTOyX9uIScHX62Qf
+         cXqN5iXh3L7FeVAAp4sEZ7CTFZSlpo8i+YUzDN40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 4.19 30/47] genirq: Delay deactivation in free_irq()
-Date:   Thu, 18 Jul 2019 12:01:44 +0900
-Message-Id: <20190718030051.289662042@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 44/47] drm/udl: introduce a macro to convert dev to udl.
+Date:   Thu, 18 Jul 2019 12:01:58 +0900
+Message-Id: <20190718030052.482745174@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -60,141 +61,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner tglx@linutronix.de
+commit fd96e0dba19c53c2d66f2a398716bb74df8ca85e upstream.
 
-commit 4001d8e8762f57d418b66e4e668601791900a1dd upstream
+This just makes it easier to later embed drm into udl.
 
-When interrupts are shutdown, they are immediately deactivated in the
-irqdomain hierarchy. While this looks obviously correct there is a subtle
-issue:
-
-There might be an interrupt in flight when free_irq() is invoking the
-shutdown. This is properly handled at the irq descriptor / primary handler
-level, but the deactivation might completely disable resources which are
-required to acknowledge the interrupt.
-
-Split the shutdown code and deactivate the interrupt after synchronization
-in free_irq(). Fixup all other usage sites where this is not an issue to
-invoke the combined shutdown_and_deactivate() function instead.
-
-This still might be an issue if the interrupt in flight servicing is
-delayed on a remote CPU beyond the invocation of synchronize_irq(), but
-that cannot be handled at that level and needs to be handled in the
-synchronize_irq() context.
-
-Fixes: f8264e34965a ("irqdomain: Introduce new interfaces to support hierarchy irqdomains")
-Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/20190628111440.098196390@linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190405031715.5959-3-airlied@gmail.com
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/autoprobe.c  |    6 +++---
- kernel/irq/chip.c       |    6 ++++++
- kernel/irq/cpuhotplug.c |    2 +-
- kernel/irq/internals.h  |    1 +
- kernel/irq/manage.c     |   10 ++++++++++
- 5 files changed, 21 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/udl/udl_drv.h  |  2 ++
+ drivers/gpu/drm/udl/udl_fb.c   | 10 +++++-----
+ drivers/gpu/drm/udl/udl_gem.c  |  2 +-
+ drivers/gpu/drm/udl/udl_main.c | 12 ++++++------
+ 4 files changed, 14 insertions(+), 12 deletions(-)
 
---- a/kernel/irq/autoprobe.c
-+++ b/kernel/irq/autoprobe.c
-@@ -90,7 +90,7 @@ unsigned long probe_irq_on(void)
- 			/* It triggered already - consider it spurious. */
- 			if (!(desc->istate & IRQS_WAITING)) {
- 				desc->istate &= ~IRQS_AUTODETECT;
--				irq_shutdown(desc);
-+				irq_shutdown_and_deactivate(desc);
- 			} else
- 				if (i < 32)
- 					mask |= 1 << i;
-@@ -127,7 +127,7 @@ unsigned int probe_irq_mask(unsigned lon
- 				mask |= 1 << i;
+diff --git a/drivers/gpu/drm/udl/udl_drv.h b/drivers/gpu/drm/udl/udl_drv.h
+index 4ae67d882eae..b3e08e876d62 100644
+--- a/drivers/gpu/drm/udl/udl_drv.h
++++ b/drivers/gpu/drm/udl/udl_drv.h
+@@ -71,6 +71,8 @@ struct udl_device {
+ 	atomic_t cpu_kcycles_used; /* transpired during pixel processing */
+ };
  
- 			desc->istate &= ~IRQS_AUTODETECT;
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 		}
- 		raw_spin_unlock_irq(&desc->lock);
- 	}
-@@ -169,7 +169,7 @@ int probe_irq_off(unsigned long val)
- 				nr_of_irqs++;
- 			}
- 			desc->istate &= ~IRQS_AUTODETECT;
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 		}
- 		raw_spin_unlock_irq(&desc->lock);
- 	}
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -314,6 +314,12 @@ void irq_shutdown(struct irq_desc *desc)
- 		}
- 		irq_state_clr_started(desc);
- 	}
-+}
++#define to_udl(x) ((x)->dev_private)
 +
-+
-+void irq_shutdown_and_deactivate(struct irq_desc *desc)
-+{
-+	irq_shutdown(desc);
- 	/*
- 	 * This must be called even if the interrupt was never started up,
- 	 * because the activation can happen before the interrupt is
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -116,7 +116,7 @@ static bool migrate_one_irq(struct irq_d
- 		 */
- 		if (irqd_affinity_is_managed(d)) {
- 			irqd_set_managed_shutdown(d);
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 			return false;
- 		}
- 		affinity = cpu_online_mask;
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -80,6 +80,7 @@ extern int irq_activate_and_startup(stru
- extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
+ struct udl_gem_object {
+ 	struct drm_gem_object base;
+ 	struct page **pages;
+diff --git a/drivers/gpu/drm/udl/udl_fb.c b/drivers/gpu/drm/udl/udl_fb.c
+index dd9ffded223b..590323ea261f 100644
+--- a/drivers/gpu/drm/udl/udl_fb.c
++++ b/drivers/gpu/drm/udl/udl_fb.c
+@@ -82,7 +82,7 @@ int udl_handle_damage(struct udl_framebuffer *fb, int x, int y,
+ 		      int width, int height)
+ {
+ 	struct drm_device *dev = fb->base.dev;
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int i, ret;
+ 	char *cmd;
+ 	cycles_t start_cycles, end_cycles;
+@@ -210,7 +210,7 @@ static int udl_fb_open(struct fb_info *info, int user)
+ {
+ 	struct udl_fbdev *ufbdev = info->par;
+ 	struct drm_device *dev = ufbdev->ufb.base.dev;
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
  
- extern void irq_shutdown(struct irq_desc *desc);
-+extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
- extern void irq_enable(struct irq_desc *desc);
- extern void irq_disable(struct irq_desc *desc);
- extern void irq_percpu_enable(struct irq_desc *desc, unsigned int cpu);
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/random.h>
- #include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/rt.h>
-@@ -1619,6 +1620,7 @@ static struct irqaction *__free_irq(stru
- 	/* If this was the last handler, shut down the IRQ line: */
- 	if (!desc->action) {
- 		irq_settings_clr_disable_unlazy(desc);
-+		/* Only shutdown. Deactivate after synchronize_hardirq() */
- 		irq_shutdown(desc);
- 	}
+ 	/* If the USB device is gone, we don't accept new opens */
+ 	if (drm_dev_is_unplugged(udl->ddev))
+@@ -441,7 +441,7 @@ static void udl_fbdev_destroy(struct drm_device *dev,
  
-@@ -1688,6 +1690,14 @@ static struct irqaction *__free_irq(stru
- 		 * require it to deallocate resources over the slow bus.
- 		 */
- 		chip_bus_lock(desc);
-+		/*
-+		 * There is no interrupt on the fly anymore. Deactivate it
-+		 * completely.
-+		 */
-+		raw_spin_lock_irqsave(&desc->lock, flags);
-+		irq_domain_deactivate_irq(&desc->irq_data);
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+
- 		irq_release_resources(desc);
- 		chip_bus_sync_unlock(desc);
- 		irq_remove_timings(desc);
+ int udl_fbdev_init(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int bpp_sel = fb_bpp;
+ 	struct udl_fbdev *ufbdev;
+ 	int ret;
+@@ -480,7 +480,7 @@ int udl_fbdev_init(struct drm_device *dev)
+ 
+ void udl_fbdev_cleanup(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	if (!udl->fbdev)
+ 		return;
+ 
+@@ -491,7 +491,7 @@ void udl_fbdev_cleanup(struct drm_device *dev)
+ 
+ void udl_fbdev_unplug(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	struct udl_fbdev *ufbdev;
+ 	if (!udl->fbdev)
+ 		return;
+diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
+index bb7b58407039..3b3e17652bb2 100644
+--- a/drivers/gpu/drm/udl/udl_gem.c
++++ b/drivers/gpu/drm/udl/udl_gem.c
+@@ -203,7 +203,7 @@ int udl_gem_mmap(struct drm_file *file, struct drm_device *dev,
+ {
+ 	struct udl_gem_object *gobj;
+ 	struct drm_gem_object *obj;
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int ret = 0;
+ 
+ 	mutex_lock(&udl->gem_lock);
+diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
+index 19055dda3140..09ce98113c0e 100644
+--- a/drivers/gpu/drm/udl/udl_main.c
++++ b/drivers/gpu/drm/udl/udl_main.c
+@@ -29,7 +29,7 @@
+ static int udl_parse_vendor_descriptor(struct drm_device *dev,
+ 				       struct usb_device *usbdev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	char *desc;
+ 	char *buf;
+ 	char *desc_end;
+@@ -165,7 +165,7 @@ void udl_urb_completion(struct urb *urb)
+ 
+ static void udl_free_urb_list(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int count = udl->urbs.count;
+ 	struct list_head *node;
+ 	struct urb_node *unode;
+@@ -198,7 +198,7 @@ static void udl_free_urb_list(struct drm_device *dev)
+ 
+ static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	struct urb *urb;
+ 	struct urb_node *unode;
+ 	char *buf;
+@@ -262,7 +262,7 @@ static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
+ 
+ struct urb *udl_get_urb(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int ret = 0;
+ 	struct list_head *entry;
+ 	struct urb_node *unode;
+@@ -295,7 +295,7 @@ struct urb *udl_get_urb(struct drm_device *dev)
+ 
+ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int ret;
+ 
+ 	BUG_ON(len > udl->urbs.size);
+@@ -370,7 +370,7 @@ int udl_drop_usb(struct drm_device *dev)
+ 
+ void udl_driver_unload(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 
+ 	drm_kms_helper_poll_fini(dev);
+ 
+-- 
+2.20.1
+
 
 
