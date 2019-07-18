@@ -2,57 +2,87 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A79C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB96C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D682084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9D12173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391069AbfGRSz7 (ORCPT
+        id S2390889AbfGRTAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:55:59 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:54178 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbfGRSz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:55:58 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 35E8F1527D810;
-        Thu, 18 Jul 2019 11:55:58 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 11:55:57 -0700 (PDT)
-Message-Id: <20190718.115557.1387889272907500684.davem@davemloft.net>
-To:     hslester96@gmail.com
-Cc:     dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] liquidio: Replace vmalloc + memset with vzalloc
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190718074542.16329-1-hslester96@gmail.com>
-References: <20190718074542.16329-1-hslester96@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jul 2019 11:55:58 -0700 (PDT)
+        Thu, 18 Jul 2019 15:00:37 -0400
+Received: from er-systems.de ([148.251.68.21]:51964 "EHLO er-systems.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727742AbfGRTAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 15:00:37 -0400
+X-Greylist: delayed 602 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jul 2019 15:00:36 EDT
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        by er-systems.de (Postfix) with ESMTP id 44CC8D6005E;
+        Thu, 18 Jul 2019 20:50:30 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by er-systems.de (Postfix) with ESMTPS id 229DAD6005A;
+        Thu, 18 Jul 2019 20:50:30 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 20:50:29 +0200 (CEST)
+From:   Thomas Voegtle <tv@lio96.de>
+X-X-Sender: thomas@er-systems.de
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: network problems with r8169
+Message-ID: <alpine.LSU.2.21.1907182032370.7080@er-systems.de>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-Virus-Status: No
+X-Virus-Checker-Version: clamassassin 1.2.4 with clamdscan / ClamAV 0.100.3/25514/Thu Jul 18 10:12:59 2019 signatures 58.
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
-Date: Thu, 18 Jul 2019 15:45:42 +0800
 
-> Use vzalloc and vzalloc_node instead of using vmalloc and
-> vmalloc_node and then zeroing the allocated memory by
-> memset 0.
-> This simplifies the code.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Hello,
 
-Applied.
+I'm having network problems with the commits on r8169 since v5.2. There 
+are ping packet loss, sometimes 100%, sometimes 50%. In the end network is 
+unusable.
+
+v5.2 is fine, I bisected it down to:
+
+a2928d28643e3c064ff41397281d20c445525032 is the first bad commit
+commit a2928d28643e3c064ff41397281d20c445525032
+Author: Heiner Kallweit <hkallweit1@gmail.com>
+Date:   Sun Jun 2 10:53:49 2019 +0200
+
+     r8169: use paged versions of phylib MDIO access functions
+
+     Use paged versions of phylib MDIO access functions to simplify
+     the code.
+
+     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+     Signed-off-by: David S. Miller <davem@davemloft.net>
+
+
+Reverting that commit on top of v5.2-11564-g22051d9c4a57 fixes the problem
+for me (had to adjust the renaming to r8169_main.c).
+
+I have a:
+04:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev
+0c)
+         Subsystem: Biostar Microtech Int'l Corp Device [1565:2400]
+         Kernel driver in use: r8169
+
+on a BIOSTAR H81MG motherboard.
+
+
+greetings,
+
+   Thomas
+
