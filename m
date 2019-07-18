@@ -2,132 +2,161 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAA4C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5540C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66B02184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB17E2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jy9lZlRY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YuBqieem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfGRVBb (ORCPT
+        id S2391227AbfGRVG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:01:31 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39131 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391404AbfGRVBa (ORCPT
+        Thu, 18 Jul 2019 17:06:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45504 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfGRVG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:01:30 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w190so21622408qkc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:01:29 -0700 (PDT)
+        Thu, 18 Jul 2019 17:06:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id o13so13422894pgp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=d3gbOiHWq+PQGcMb84EGW5VHcSxkdLLOkJ058Sc+Rjk=;
-        b=jy9lZlRYlM8JvML25Tv8fe+vQV0yYqaChAXX99N+l/b8CgwUZFls+Mtq+bVnuMUsep
-         S5TCoSCQG7H2sNk7TQ4y1vW1DYglPnuZ+hmRp0r1sHiESBnnEdfTNLCfG/Q/29XWyn2d
-         TAGeGRjxENk5Zwlp0dsa8AJ+vlB+egVE/oed4QYBeXM15iISqHmw1B2e6JltUroQq0s8
-         1KUTG2uxDBV/jcgwc6kynh9u3ugYvKoJ9HmPPSZFuiaTgEkh2eVpwFqzd1FRlioVSyrN
-         DduCXRUWfjHpxf42DYoajqLXwSZOsMYF9MfwxLd6D1h5xSXB1ThszMKzQT2TOUlk+VfJ
-         xRZA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WbqvTZRMPilPykZWVhvoxtFXrd6vEGyWRNvRQY3FrVY=;
+        b=YuBqieemLplECQ2tH/pG6L6tc/rTnFTMpeDaWShqOatuUcH5vJ2dep6eL85zPo12Lw
+         W7LL9PkDztBYUbpE0iQ/gP/4zCjPSZdlLmH4agGAULNqgKcm2KPBa/uM8sRzf99+Liua
+         8sO38Nj37oxRNdCe2374hm8nBKB7uopUcuQvY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=d3gbOiHWq+PQGcMb84EGW5VHcSxkdLLOkJ058Sc+Rjk=;
-        b=MTjP0D/KGAvWvd5Hlex5CjTn48vrkJ0AT6lOIxgQe4YuvSvSRfR4tIiWWwJMm8RWxs
-         v6SQ7yV7LQrgzq++dwuAMOTggO24ynb5lfwTbGCdoJjGCB5dRIHMmpZJvBLLIgkD1pmH
-         YgnE9G8l05RLRJk4+acEgzZJDmh9F6KtXMDHYgihf9v0uFpGhrGlt3fPmjID1fJWqzq4
-         1afZ80q/z+wXQrDlnfU6+zFYGqYMzJ04jkRgU0sZS6mtvE+cQ+xq7SRNiDac3E41p7oZ
-         fqDepzjnl8krxudz1JkIT8Mfc0HaH/Ol7v80vb0FywDfam7u+kOV1hy1EDkpDb1d1/6M
-         q6cA==
-X-Gm-Message-State: APjAAAVclvT52WNDgNcmkmg5zMnWwUI5VG/iGwkHeYSfXkQFLacKSr10
-        ZxA20sMgrIF4IYNbX58MyV+TIw==
-X-Google-Smtp-Source: APXvYqzYEVlqRbknyJdNr7IF8xQFjBVOZ61wk9QdKZJMce5AC0j3Ju2qkIoD1gIRBmjt53tYD4nZ9g==
-X-Received: by 2002:a37:96c4:: with SMTP id y187mr32372461qkd.462.1563483689167;
-        Thu, 18 Jul 2019 14:01:29 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r26sm12644419qkm.57.2019.07.18.14.01.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 14:01:28 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20190712.175038.755685144649934618.davem@davemloft.net>
-Date:   Thu, 18 Jul 2019 17:01:27 -0400
-Cc:     sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        arnd@arndb.de, dhowells@redhat.com, hpa@zytor.com,
-        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        natechancellor@gmail.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw>
-References: <1562959401-19815-1-git-send-email-cai@lca.pw>
- <20190712.154606.493382088615011132.davem@davemloft.net>
- <EFD25845-097A-46B1-9C1A-02458883E4DA@lca.pw>
- <20190712.175038.755685144649934618.davem@davemloft.net>
-To:     David Miller <davem@davemloft.net>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WbqvTZRMPilPykZWVhvoxtFXrd6vEGyWRNvRQY3FrVY=;
+        b=ojaqwePUFoFlE3cWvpigT1jtrUHeI2GmZf0374KBXww1pEMjES2MAzDsxnZnEesobm
+         hEKo37Dx6PyYMKS5mmrc9jWm9y+0uUTywY1vOp8HP7LNUNmPF9LcBAr0jNAVqJwUjLEW
+         IYPJKKho42BmbXWMAxflXXHztf/cli4sIQvTxdgurwOS6EVhAV/kbk3CkBRW+JRlfDB5
+         gXSJR7iV9UjppQWpDsIY8hncsoj7LYpFBJ0MFPMrWAUYs0jCeKejMwu5/s52m/EstuPn
+         gvBLszsI7NGWcNYOjZH1tKDhXRr2HuipJ5AV4Y+tVlaq0YR1euB3VXzCRLBmOb3HIrUG
+         fwwA==
+X-Gm-Message-State: APjAAAVaR/IdiVO6Ci39r85/u9PFpttW/g4EcOnVbGZXbeITiU0uIO+Z
+        knZUYp1Vanz+GgJ/MPnEXw9HOg==
+X-Google-Smtp-Source: APXvYqyq9AjPD5SPt+olfQCatSnGeaWAoPrrNc6BbxQUjdvCPcK5Oi5IYuPhiLIocpqczA0WTnqOjA==
+X-Received: by 2002:a17:90a:2641:: with SMTP id l59mr50383336pje.55.1563483985639;
+        Thu, 18 Jul 2019 14:06:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 23sm31483030pfn.176.2019.07.18.14.06.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jul 2019 14:06:24 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 14:06:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Garrett <mjg59@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH V36 20/29] x86/mmiotrace: Lock down the testmmiotrace
+ module
+Message-ID: <201907181406.0E364D490@keescook>
+References: <20190718194415.108476-1-matthewgarrett@google.com>
+ <20190718194415.108476-21-matthewgarrett@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718194415.108476-21-matthewgarrett@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 18, 2019 at 12:44:06PM -0700, Matthew Garrett wrote:
+> From: David Howells <dhowells@redhat.com>
+> 
+> The testmmiotrace module shouldn't be permitted when the kernel is locked
+> down as it can be used to arbitrarily read and write MMIO space. This is
+> a runtime check rather than buildtime in order to allow configurations
+> where the same kernel may be run in both locked down or permissive modes
+> depending on local policy.
+> 
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: David Howells <dhowells@redhat.com
 
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> On Jul 12, 2019, at 8:50 PM, David Miller <davem@davemloft.net> wrote:
->=20
-> From: Qian Cai <cai@lca.pw>
-> Date: Fri, 12 Jul 2019 20:27:09 -0400
->=20
->> Actually, GCC would consider it a const with -O2 optimized level =
-because it found that it was never modified and it does not understand =
-it is a module parameter. Considering the following code.
->>=20
->> # cat const.c=20
->> #include <stdio.h>
->>=20
->> static int a =3D 1;
->>=20
->> int main(void)
->> {
->> 	if (__builtin_constant_p(a))
->> 		printf("a is a const.\n");
->>=20
->> 	return 0;
->> }
->>=20
->> # gcc -O2 const.c -o const
->=20
-> That's not a complete test case, and with a proper test case that
-> shows the externalization of the address of &a done by the module
-> parameter macros, gcc should not make this optimization or we should
-> define the module parameter macros in a way that makes this properly
-> clear to the compiler.
->=20
-> It makes no sense to hack around this locally in drivers and other
-> modules.
+-Kees
 
-If you see the warning in the original patch,
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> cc: Thomas Gleixner <tglx@linutronix.de>
+> cc: Steven Rostedt <rostedt@goodmis.org>
+> cc: Ingo Molnar <mingo@kernel.org>
+> cc: "H. Peter Anvin" <hpa@zytor.com>
+> cc: x86@kernel.org
+> ---
+>  arch/x86/mm/testmmiotrace.c  | 5 +++++
+>  include/linux/security.h     | 1 +
+>  security/lockdown/lockdown.c | 1 +
+>  3 files changed, 7 insertions(+)
+> 
+> diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
+> index 0881e1ff1e58..a8bd952e136d 100644
+> --- a/arch/x86/mm/testmmiotrace.c
+> +++ b/arch/x86/mm/testmmiotrace.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/module.h>
+>  #include <linux/io.h>
+>  #include <linux/mmiotrace.h>
+> +#include <linux/security.h>
+>  
+>  static unsigned long mmio_address;
+>  module_param_hw(mmio_address, ulong, iomem, 0);
+> @@ -115,6 +116,10 @@ static void do_test_bulk_ioremapping(void)
+>  static int __init init(void)
+>  {
+>  	unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
+> +	int ret = security_locked_down(LOCKDOWN_MMIOTRACE);
+> +
+> +	if (ret)
+> +		return ret;
+>  
+>  	if (mmio_address == 0) {
+>  		pr_err("you have to use the module argument mmio_address.\n");
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 43fa3486522b..3f7b6a4cd65a 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -114,6 +114,7 @@ enum lockdown_reason {
+>  	LOCKDOWN_PCMCIA_CIS,
+>  	LOCKDOWN_TIOCSSERIAL,
+>  	LOCKDOWN_MODULE_PARAMETERS,
+> +	LOCKDOWN_MMIOTRACE,
+>  	LOCKDOWN_INTEGRITY_MAX,
+>  	LOCKDOWN_CONFIDENTIALITY_MAX,
+>  };
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> index 5177938cfa0d..37b7d7e50474 100644
+> --- a/security/lockdown/lockdown.c
+> +++ b/security/lockdown/lockdown.c
+> @@ -29,6 +29,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>  	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
+>  	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+>  	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+> +	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
+>  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+>  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+>  };
+> -- 
+> 2.22.0.510.g264f2c817a-goog
+> 
 
-=
-https://lore.kernel.org/netdev/1562959401-19815-1-git-send-email-cai@lca.p=
-w/
-
-GCC definitely optimize rx_frag_size  to be a constant while I just =
-confirmed clang
--O2 does not. The problem is that I have no clue about how to let GCC =
-not to
-optimize a module parameter.
-
-Though, I have added a few people who might know more of compilers than =
-myself.=
+-- 
+Kees Cook
