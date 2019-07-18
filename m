@@ -2,125 +2,101 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BD9C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E948C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C76521849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A152173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTzC65bg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tY5mTvi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391107AbfGRUy2 (ORCPT
+        id S2391263AbfGRUzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:54:28 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46144 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfGRUy1 (ORCPT
+        Thu, 18 Jul 2019 16:55:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41784 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRUzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:54:27 -0400
-Received: by mail-qk1-f194.google.com with SMTP id r4so21552639qkm.13;
-        Thu, 18 Jul 2019 13:54:27 -0700 (PDT)
+        Thu, 18 Jul 2019 16:55:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id j5so49693859ioj.8;
+        Thu, 18 Jul 2019 13:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7emRYoT5fb8r2z6gXsWHsiNYUTpTl/PouMaFyVOjnww=;
-        b=UTzC65bgSmS0ZVhgdWSoC3T5DMUpzjrxwzvNfIMglsBH1bv2RR184lr6xU7FEpxEwW
-         rGcf8KKjlzepDJvuwOk+V7PacziM1Wa46b0Mda1ESFrVemjZtCu3R+3xko8BvfDtYqlg
-         NsDu1s5waBUWJQIa+G4+mxanK2mzuA1uLYeDJ0YmKMpRgfFIDKYzNcRSMbNdAPxdNVly
-         NAMdVsTdSkjj0OK4oeOSEVmTagAyQ0jo8t/q6CXLUvBEVqDWnX1rqmORNv6VJpEhAiIj
-         sf1FZZBwqUMSvo1ik1WbhMkklOPSy7WXWxxCMV3zSbp8gHG/NRQDvDwKM51n95pq/Bvk
-         h9jw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2lHvCLHsVCIqQeBhGfBlVgWdPAk01p9AcqlSJ4fZdDg=;
+        b=tY5mTvi0v8MkXwTv/P+m5ZI+EmMJRSXze9zzDfp2ScagUylxPKJCEyO3PA7A2bZr0G
+         2XYBkb1AdBtf++CiFRD/q9/UUHHxERwzpqprO2Arlw72FrZ1pDsJcIPOOxUcXuCPriDN
+         UsUTXPJjiOy/JgAgfW5fQ/PYbon9lH2auzOKHOofIbr/eWgvGpNUfRoCNCdTw1KnVJOQ
+         s8hGjzY75MnU+aHAy/yt9BBob4ghwKfENx2F44KeWIscxmIKLGt/bUKW2sU2XSYU4mpt
+         X1+z9rBLFb6OFSG1d6flOeqmuVu04PuJCVXtFpMFaeNSMntni/Tq/bpHF53tVDXoZ/Zd
+         m4tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7emRYoT5fb8r2z6gXsWHsiNYUTpTl/PouMaFyVOjnww=;
-        b=Tz7X3mz7MFPYGv6qr0C5kxt3yOcXtDwqhE2XB5FNjzXGgwIshtPIkvUXfmCiWB0EsQ
-         hFE1DJK4gPWPba2DO44YWnx5lA8Ud1MgQ/vwW7zDjv4CbSRtZU9F/WjwuZRQMMkmHtgp
-         DNvjpxoFY9SAN8ZKF0loAdwt4UiOB0FuFD8XX8c5zyFiWLC9S4dSJH/Jys/mOeRhXV79
-         BCRD6AU5es44SPZvSagkmUurknqeA9I8THdMJTQ/7/pSU+VYxU5kCjxD40xNLpcvKTFh
-         hHAfXnSvywWwf4gEFQNFRuWvE8GPnKaw5FLwp3y0WEt5t7yla/9ccbfz05PyiLP60ObN
-         4Obw==
-X-Gm-Message-State: APjAAAUBGrCS9Ggj8xtaFaFym1bo8CARZe1JEFuYv/kgOvQFg8OrG6QZ
-        sjDU9tJsYgOU6CZZd/yAWzjLMbKpJvxBt6SH1sE=
-X-Google-Smtp-Source: APXvYqzCbtKw7lABM5d7gtaXQR8QpjKah4ysVH7vLjkBhNJeiCYXH0PXPFpR/DGO1YaYtTEaiy/hYhgQ9cACF4oYkSQ=
-X-Received: by 2002:a37:7ec1:: with SMTP id z184mr32664238qkc.491.1563483266795;
- Thu, 18 Jul 2019 13:54:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2lHvCLHsVCIqQeBhGfBlVgWdPAk01p9AcqlSJ4fZdDg=;
+        b=uZjw7FbU6x9qmGvyh53K0f1/aEtIY4P5n/r9JM4xKU5ps/Q599zk42+gMqioye9342
+         DchLLQBL8TPz7ZZen4zyYOXkKx7+u9JpSQeGDC5vLoZLEh/JOs2EhRb91LNlvIBlH/+O
+         8xv5/FlnF/uU5dGdUyvKTWMkByVNQLB1/GfGmpgIWOn3xxdJvevfO6TAVJk57gbEoRbn
+         7f6HRQiku9IUM1dKPWwj2lc8SkGYdSleZZGSklpL6m94xqfsyS4NXIKl2chi2q7sYz4y
+         bmXPEY+ceIgdCt9AstWUD1RjqOwGsiBbkw7nQTijku7gfOpLcg+F2h2wUgpNFLpHX3aN
+         0oOA==
+X-Gm-Message-State: APjAAAWNfP9Tka3FxOQ7QHlVhtm9zl/m5Hu9Qo2vSxI3ez9zbS7deiRF
+        IWwY/bpOhWTszTbNB2HmHR8=
+X-Google-Smtp-Source: APXvYqwWJMPn1O6OYImPQF/nNomMHRLkkYUT7yn9aJUpxE32yRvcxQP5OYXSfVfTF9T3GezwAzpJYg==
+X-Received: by 2002:a5d:8c97:: with SMTP id g23mr8471905ion.250.1563483306010;
+        Thu, 18 Jul 2019 13:55:06 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id e26sm24082254iod.10.2019.07.18.13.55.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 13:55:05 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 14:55:03 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/80] 4.14.134-stable review
+Message-ID: <20190718205503.GA6020@JATN>
+References: <20190718030058.615992480@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190716115535-mutt-send-email-mst@kernel.org>
- <CAKgT0Ud47-cWu9VnAAD_Q2Fjia5gaWCz_L9HUF6PBhbugv6tCQ@mail.gmail.com>
- <20190716125845-mutt-send-email-mst@kernel.org> <CAKgT0UfgPdU1H5ZZ7GL7E=_oZNTzTwZN60Q-+2keBxDgQYODfg@mail.gmail.com>
- <20190717055804-mutt-send-email-mst@kernel.org> <CAKgT0Uf4iJxEx+3q_Vo9L1QPuv9PhZUv1=M9UCsn6_qs7rG4aw@mail.gmail.com>
- <20190718003211-mutt-send-email-mst@kernel.org> <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
- <20190718113548-mutt-send-email-mst@kernel.org> <CAKgT0UeRy2eHKnz4CorefBAG8ro+3h4oFX+z1JY2qRm17fcV8w@mail.gmail.com>
- <20190718163325-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190718163325-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 18 Jul 2019 13:54:15 -0700
-Message-ID: <CAKgT0UcFqYm-b1zh4UT8m=3gi950T0c-gsxjhszeVgANfKQCRA@mail.gmail.com>
-Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
- via hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lcapitulino@redhat.com, wei.w.wang@intel.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 1:37 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Thu, Jul 18, 2019 at 01:29:14PM -0700, Alexander Duyck wrote:
-> > So one thing that is still an issue then is that my approach would
-> > only work on the first migration. The problem is the logic I have
-> > implemented assumes that once we have hinted on a page we don't need
-> > to do it again. However in order to support migration you would need
-> > to reset the hinting entirely and start over again after doing a
-> > migration.
->
-> Well with precopy at least it's simple: just clear the
-> dirty bit, it won't be sent, and then on destination
-> you get a zero page and later COW on first write.
-> Right?
+On Thu, Jul 18, 2019 at 12:00:51PM +0900, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.134 release.
+> There are 80 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.134-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Are you talking about adding MADV_DONTNEED functionality to FREE_PAGE_HINTS?
+Compiled and booted with no regressions on my system.
 
-> With precopy it is tricker as destination waits until it gets
-> all of memory. I think we could use some trick to
-> make source pretend it's a zero page, that is cheap to send.
-
-So I am confused again.
-
-What I was getting at is that if I am not mistaken block->bmap is set
-to all 1s for each page in ram_list_init_bitmaps(). After that the
-precopy starts and begins moving memory over. We need to be able to go
-in and hint away all the free pages from that initial bitmap. To do
-that we would need to have the "Hinted" flag I added in the patch set
-cleared for all pages, and then go through all free memory and start
-over in order to hint on which pages are actually free. Otherwise all
-we are doing is hinting on which pages have been freed since the last
-round of hints.
-
-Essentially this is another case where being incremental is
-problematic for this design. What I would need to do is reset the
-"Hinted" flag in all of the free pages after the migration has been
-completed.
+-Kelsey
