@@ -2,116 +2,126 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0830C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F91C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F492080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eJB1Eb8z"
+	by mail.kernel.org (Postfix) with ESMTP id CAFBB2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563461563;
+	bh=eJedqD04pIPQyDVAt+QNFlTydCXgJIwv19f+g7211xE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k//ymCh85O8EtZmeR1Wemz0osVpgNSkQCCzS2But2yprEjrtZnOeYHQteG6DOTnds
+	 oZIxE8ygkeB407PVPC0KBeEzyfBF+181X7N1dfRK8+WJcZgULl/KSW730UGekkiAmR
+	 Vvn5dpBwcqRixnYEUmNU1oHRpzYLj/8JmVK7OGtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390715AbfGROwd (ORCPT
+        id S2390754AbfGROwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:52:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41681 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727730AbfGROwd (ORCPT
+        Thu, 18 Jul 2019 10:52:43 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46657 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbfGROwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:52:33 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IEq5jr2033251
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 07:52:05 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IEq5jr2033251
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563461525;
-        bh=A3YdLeuls4rg/UNG7F4whLwwLK+7fliRjPcY2W75YgY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=eJB1Eb8zpeddDcWz5i6n14kUMN8OmNwZz0vpBcwh11I5q7LzNOYGXgRSf4pc2O1Xa
-         UowH9r1hwVAsPgPQXnUfvXoBoMLKAdalBkiAf+sVElzdO96Lp66hJTKYWDBteWXrd5
-         FjYSS3XI2BZ6lOxF25akIElrzydTxKz2JiWduR8Z+aD9sci62Yy+4ehQs5rSRjymOx
-         SJJ+EF0m5B+GDKOOFuAy0bzNK8tbTKFzCHhAnROnjsW4u7fPPdXouNEtI3wqHk2Bsp
-         V5DH5kOqNIc56u92L71E0CwdNS3mMQyVkrIeIrTTyJBYCbvOW3MW5NUywVSqBN/lw6
-         p62Wm/ZglMbww==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IEq4ba2033246;
-        Thu, 18 Jul 2019 07:52:04 -0700
-Date:   Thu, 18 Jul 2019 07:52:04 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-cac9b9a4b08304f11daace03b8b48659355e44c1@git.kernel.org>
-Cc:     tglx@linutronix.de, mingo@kernel.org, vegard.nossum@oracle.com,
-        devel@etsukata.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        joel@joelfernandes.org, peterz@infradead.org
-Reply-To: peterz@infradead.org, joel@joelfernandes.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          vegard.nossum@oracle.com, devel@etsukata.com, tglx@linutronix.de
-In-Reply-To: <20190718085754.GM3402@hirez.programming.kicks-ass.net>
-References: <20190718085754.GM3402@hirez.programming.kicks-ass.net>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] stacktrace: Force USER_DS for
- stack_trace_save_user()
-Git-Commit-ID: cac9b9a4b08304f11daace03b8b48659355e44c1
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 18 Jul 2019 10:52:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c73so12733754pfb.13;
+        Thu, 18 Jul 2019 07:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kdlQ+ZPSDRxy+hMQiUFO3ksp/qaRtATcUb/dMo1TYd8=;
+        b=G+uVkXPjAw9NiiNh0jU82g/OdTfB+WNeo3P9z2cDgfiGo9WeXQE3bYhkBh5ly/uz6E
+         CL4byZQIvhkL6bhSQ5x4P1do4jCpVslucPVrCK+dKvNTDD9FGQk05KOByR6qOcdIezJf
+         AtCYmAtuQvopQ7T3Wfb5d9dv0Cn1se0lZUpn3wzHFoLbpNum61jVlOvxcmwL9i4rbLKh
+         wzaNXh8a5pY5+7uv58oX35qtG17b0hCwt1kZD8xVEKgGj+NeRPcWVDWuCmyzlcNvaBCe
+         v/XvA6/r2kh4U9h6d24kXXxgwwf7Ndkq0ZTQxz0R4jfbXF4BgwlDFwWjy4JogJVzoSh3
+         IAqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kdlQ+ZPSDRxy+hMQiUFO3ksp/qaRtATcUb/dMo1TYd8=;
+        b=Lt1imdreh9TeM8Nlvm+xOzpCM0LGNtj94F2eeyncL+Fu5PxjxQQp6aGsxPdk/ykQp+
+         6wgXtx+wScw5bALGrbf3VIHSpg2Mat5P+u/VCwC/he2nk9a8sx2cfjkEMcvPvWRurVB9
+         bUDiiaLObsZlTSGFv9KQYM2Oska1H7D1meMRgdwgSv61qZ8RuHPtFQc12haSHuKrNpEf
+         wSsN0Ce3fmkfk6/tlwUwjdktAdUtJ5P6yJz0yD9xq9OyntMvVSZLwFAFI9M0XzR2WWCb
+         UVTJWz4wDe4lVG6JaOQCkg3UNTVLq5bYjo1L86Vd9d1C65Y0ElXM8Zk5DWp1K2XQmNh2
+         BKTQ==
+X-Gm-Message-State: APjAAAXv7JnhFG1qGQr1tY6IE/7t+XHvEpiRsT/6IdsgRoj2lLrmI8gs
+        kEQgNI53yO/SFoNTD5FTWuY=
+X-Google-Smtp-Source: APXvYqySnzdXAX4u91l+VhDPTH/tfBFQlI/XuZZomIx2iYuA2XchF451YLajdmdVBI0K3ZquysErGQ==
+X-Received: by 2002:a65:500a:: with SMTP id f10mr17214847pgo.105.1563461561641;
+        Thu, 18 Jul 2019 07:52:41 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:ef9b])
+        by smtp.gmail.com with ESMTPSA id z24sm49803845pfr.51.2019.07.18.07.52.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 07:52:40 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 07:52:38 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v11 1/5] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190718145238.GD696309@devbig004.ftw2.facebook.com>
+References: <20190708084357.12944-1-patrick.bellasi@arm.com>
+ <20190708084357.12944-2-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190708084357.12944-2-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cac9b9a4b08304f11daace03b8b48659355e44c1
-Gitweb:     https://git.kernel.org/tip/cac9b9a4b08304f11daace03b8b48659355e44c1
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Thu, 18 Jul 2019 10:47:47 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Jul 2019 16:47:24 +0200
+Hello, Patrick.
 
-stacktrace: Force USER_DS for stack_trace_save_user()
+On Mon, Jul 08, 2019 at 09:43:53AM +0100, Patrick Bellasi wrote:
+> +static inline void cpu_uclamp_print(struct seq_file *sf,
+> +				    enum uclamp_id clamp_id)
+> +{
+> +	struct task_group *tg;
+> +	u64 util_clamp;
+> +	u64 percent;
+> +	u32 rem;
+> +
+> +	rcu_read_lock();
+> +	tg = css_tg(seq_css(sf));
+> +	util_clamp = tg->uclamp_req[clamp_id].value;
+> +	rcu_read_unlock();
+> +
+> +	if (util_clamp == SCHED_CAPACITY_SCALE) {
+> +		seq_puts(sf, "max\n");
+> +		return;
+> +	}
+> +
+> +	percent = uclamp_percent_from_scale(util_clamp);
+> +	percent = div_u64_rem(percent, 100, &rem);
+> +	seq_printf(sf, "%llu.%u\n", percent, rem);
 
-When walking userspace stacks, USER_DS needs to be set, otherwise
-access_ok() will not function as expected.
+"%llu.%02u" otherwise 20.01 gets printed as 20.1
 
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reported-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lkml.kernel.org/r/20190718085754.GM3402@hirez.programming.kicks-ass.net
----
- kernel/stacktrace.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks.
 
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index e6a02b274b73..f5440abb7532 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -226,12 +226,17 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
- 		.store	= store,
- 		.size	= size,
- 	};
-+	mm_segment_t fs;
- 
- 	/* Trace user stack if not a kernel thread */
- 	if (current->flags & PF_KTHREAD)
- 		return 0;
- 
-+	fs = get_fs();
-+	set_fs(USER_DS);
- 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
-+	set_fs(fs);
-+
- 	return c.len;
- }
- #endif
+-- 
+tejun
