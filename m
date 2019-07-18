@@ -2,189 +2,143 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A27C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D50C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A72821849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32ECF2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:21:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="C129nuXc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c/8BoGQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391328AbfGRVRv (ORCPT
+        id S2391057AbfGRVVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:17:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38107 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391249AbfGRVRu (ORCPT
+        Thu, 18 Jul 2019 17:21:42 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33503 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbfGRVVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:17:50 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6ILGHQO2166514
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 14:16:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6ILGHQO2166514
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563484578;
-        bh=jz7955kGbyUBLoiWj4srCxrmMGflmpWrYP14eUEMtK4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=C129nuXcuVNQKSK1Hg8+zcaPGaPyE3PmwHSbXRGDb/XxXg2n6CWSrl0cEAGNjLyLz
-         LYHGiNWzOeH1iQsYuuFGvulLnzByQAiWqZ9DUaZ5a/0wNPdc2JMmTfNRzZRe9uk0Dg
-         40UDbNKJAD7aU94YttCyQ8SXyXcQi7R7XWv95DI/zyxlg1ZWcMd45VEv046E2atosK
-         U1Tv5GcH9e7YKxddKQQzUpELKrG3qjMfWry4kePRVjfowwEjTDp22dpu985RGVNf3+
-         lsIXL+61z/+cVHBU38w+lz73Gx4pN4YlQh9TyVspczyln57dRZ81qpcr6sQrNJJvTV
-         bmsQIgBE4dYEQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6ILGGNR2166511;
-        Thu, 18 Jul 2019 14:16:16 -0700
-Date:   Thu, 18 Jul 2019 14:16:16 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-a50a3f4b6a313dc76912bd4ad3b8b4f4b479c801@git.kernel.org>
-Cc:     julia@ni.com, tglx@linutronix.de, peterz@infradead.org,
-        paulmck@linux.ibm.com, frederic@kernel.org,
-        linux-kernel@vger.kernel.org, tj@kernel.org, lgoncalv@redhat.com,
-        lukas.bulwahn@gmail.com, bigeasy@linutronix.de,
-        rostedt@goodmis.org, mingo@kernel.org, bristot@redhat.com,
-        tom.zanussi@linux.intel.com, marc.zyngier@arm.com, efault@gmx.de,
-        gratian.crisan@ni.com, williams@redhat.com, hch@lst.de,
-        wagi@monom.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        akpm@linuxfoundation.org, torvalds@linux-foundation.org
-Reply-To: akpm@linuxfoundation.org, torvalds@linux-foundation.org,
-          gratian.crisan@ni.com, hch@lst.de, williams@redhat.com,
-          wagi@monom.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-          efault@gmx.de, tom.zanussi@linux.intel.com, marc.zyngier@arm.com,
-          lukas.bulwahn@gmail.com, bigeasy@linutronix.de,
-          rostedt@goodmis.org, mingo@kernel.org, bristot@redhat.com,
-          tj@kernel.org, lgoncalv@redhat.com, linux-kernel@vger.kernel.org,
-          julia@ni.com, tglx@linutronix.de, peterz@infradead.org,
-          paulmck@linux.ibm.com, frederic@kernel.org
-In-Reply-To: <alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/urgent] sched/rt, Kconfig: Introduce CONFIG_PREEMPT_RT
-Git-Commit-ID: a50a3f4b6a313dc76912bd4ad3b8b4f4b479c801
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 18 Jul 2019 17:21:42 -0400
+Received: by mail-vs1-f66.google.com with SMTP id m8so20216175vsj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:21:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JLWgE4G1xumD+5ZusInPzcVsAid5/1NnJBPXIPh5kwU=;
+        b=c/8BoGQt9/QOqtqbYVLLVLcLBKKCNOL7ZGgciVXxCS21F1WB5gBw1Lhtv1yMwGbQ/8
+         FL7h6h0baE/EM6HpjnHtdgaCQxgO1LCBFh5EMOP8abh9QCVx9P0iVVBR1osJKkuIj37I
+         7In1Y7cMeJe/ozyMDC/3pmdbyV+j2J3tmfucx9P0zn3zlgwZMEGPszlG/ypDkHx9w0ey
+         VmnNdkY5C43kS4BMQYBEBtVWCnmD58X/+gFuHIi7F0VXGS7IeLhQ6lpyF6vygZUViVa0
+         OEbs/lPqkuIOfBqlLezNboG1lpxEwSrVjAGOZTHk62zaj5AxQJAcmrSg06aF3ENi3eNO
+         sM1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JLWgE4G1xumD+5ZusInPzcVsAid5/1NnJBPXIPh5kwU=;
+        b=UcyfIzwe5LBWI2001g+RkY43DhcagznvN0OcHBGFyvOx8WeftAh3oqIlodMTPkgJw2
+         YPeWFoKVqExaOXHLO67sLhW7HXfn4ERfVwOEYf4Cy3+dibUoCWBuGnAJWD/LER5X9PLw
+         m0ns1D2m96+e/WLhQ9y6DB7SfUA+fYKwbHYkO90zYrVEVodXtztAmIiPKAwVtMwbPdk5
+         41Xw6xwfDjLlRHg8cWKsyFU3k0m6kLKw8iGBK5oRILImcx6Dkh0iz5gf8wM7mmttEsX8
+         dwuCPlY//k4nGqWWSVJeTNvfwDarWZCU7StpZQ6inHNeVZsGq5F0PktaO5RfPlmHakn/
+         jqzQ==
+X-Gm-Message-State: APjAAAWZLbJZhzMXOW3eSpGcMgQEBuMePz9pEwT/jjc1+uZ0SpnrgpEx
+        jRP3l5oDTLGPnimcl4WP39XGQama5PdRRoRvgWfu
+X-Google-Smtp-Source: APXvYqzw6e79MIrSSr/wveDt3o5nS/x3WVT9g6SIC9rmt/BfJdmhC96Gcdb7mp3vJdj09OD/y6QUPsswLWFlksDLylI=
+X-Received: by 2002:a67:d39e:: with SMTP id b30mr30387881vsj.212.1563484900833;
+ Thu, 18 Jul 2019 14:21:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1562959401-19815-1-git-send-email-cai@lca.pw> <20190712.154606.493382088615011132.davem@davemloft.net>
+ <EFD25845-097A-46B1-9C1A-02458883E4DA@lca.pw> <20190712.175038.755685144649934618.davem@davemloft.net>
+ <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw> <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
+In-Reply-To: <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
+From:   Bill Wendling <morbo@google.com>
+Date:   Thu, 18 Jul 2019 14:21:29 -0700
+Message-ID: <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
+Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Qian Cai <cai@lca.pw>, James Y Knight <jyknight@google.com>,
+        David Miller <davem@davemloft.net>, sathya.perla@broadcom.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, netdev@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a50a3f4b6a313dc76912bd4ad3b8b4f4b479c801
-Gitweb:     https://git.kernel.org/tip/a50a3f4b6a313dc76912bd4ad3b8b4f4b479c801
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Wed, 17 Jul 2019 22:01:49 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 18 Jul 2019 23:10:57 +0200
+[My previous response was marked as spam...]
 
-sched/rt, Kconfig: Introduce CONFIG_PREEMPT_RT
+Top-of-tree clang says that it's const:
 
-Add a new entry to the preemption menu which enables the real-time support
-for the kernel. The choice is only enabled when an architecture supports
-it.
+$ gcc a.c -O2 && ./a.out
+a is a const.
 
-It selects PREEMPT as the RT features depend on it. To achieve that the
-existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
-well.
+$ clang a.c -O2 && ./a.out
+a is a const.
 
-No functional change.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Clark Williams <williams@redhat.com>
-Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Acked-by: Daniel Wagner <wagi@monom.org>
-Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Acked-by: Julia Cartwright <julia@ni.com>
-Acked-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Acked-by: Gratian Crisan <gratian.crisan@ni.com>
-Acked-by: Sebastian Siewior <bigeasy@linutronix.de>
-Cc: Andrew Morton <akpm@linuxfoundation.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Tejun Heo <tj@kernel.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/Kconfig           |  3 +++
- kernel/Kconfig.preempt | 25 +++++++++++++++++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index c47b328eada0..ada51f36bd5d 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -801,6 +801,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
- config ARCH_NO_PREEMPT
- 	bool
- 
-+config ARCH_SUPPORTS_RT
-+	bool
-+
- config CPU_NO_EFFICIENT_FFS
- 	def_bool n
- 
-diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
-index dc0b682ec2d9..fc020c09b7e8 100644
---- a/kernel/Kconfig.preempt
-+++ b/kernel/Kconfig.preempt
-@@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
- 
- 	  Select this if you are building a kernel for a desktop system.
- 
--config PREEMPT
-+config PREEMPT_LL
- 	bool "Preemptible Kernel (Low-Latency Desktop)"
- 	depends on !ARCH_NO_PREEMPT
--	select PREEMPT_COUNT
-+	select PREEMPT
- 	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
- 	help
- 	  This option reduces the latency of the kernel by making
-@@ -55,7 +55,28 @@ config PREEMPT
- 	  embedded system with latency requirements in the milliseconds
- 	  range.
- 
-+config PREEMPT_RT
-+	bool "Fully Preemptible Kernel (Real-Time)"
-+	depends on EXPERT && ARCH_SUPPORTS_RT
-+	select PREEMPT
-+	help
-+	  This option turns the kernel into a real-time kernel by replacing
-+	  various locking primitives (spinlocks, rwlocks, etc.) with
-+	  preemptible priority-inheritance aware variants, enforcing
-+	  interrupt threading and introducing mechanisms to break up long
-+	  non-preemptible sections. This makes the kernel, except for very
-+	  low level and critical code pathes (entry code, scheduler, low
-+	  level interrupt handling) fully preemptible and brings most
-+	  execution contexts under scheduler control.
-+
-+	  Select this if you are building a kernel for systems which
-+	  require real-time guarantees.
-+
- endchoice
- 
- config PREEMPT_COUNT
-        bool
-+
-+config PREEMPT
-+       bool
-+       select PREEMPT_COUNT
+On Thu, Jul 18, 2019 at 2:10 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Thu, Jul 18, 2019 at 2:01 PM Qian Cai <cai@lca.pw> wrote:
+> >
+> >
+> >
+> > > On Jul 12, 2019, at 8:50 PM, David Miller <davem@davemloft.net> wrote:
+> > >
+> > > From: Qian Cai <cai@lca.pw>
+> > > Date: Fri, 12 Jul 2019 20:27:09 -0400
+> > >
+> > >> Actually, GCC would consider it a const with -O2 optimized level because it found that it was never modified and it does not understand it is a module parameter. Considering the following code.
+> > >>
+> > >> # cat const.c
+> > >> #include <stdio.h>
+> > >>
+> > >> static int a = 1;
+> > >>
+> > >> int main(void)
+> > >> {
+> > >>      if (__builtin_constant_p(a))
+> > >>              printf("a is a const.\n");
+> > >>
+> > >>      return 0;
+> > >> }
+> > >>
+> > >> # gcc -O2 const.c -o const
+> > >
+> > > That's not a complete test case, and with a proper test case that
+> > > shows the externalization of the address of &a done by the module
+> > > parameter macros, gcc should not make this optimization or we should
+> > > define the module parameter macros in a way that makes this properly
+> > > clear to the compiler.
+> > >
+> > > It makes no sense to hack around this locally in drivers and other
+> > > modules.
+> >
+> > If you see the warning in the original patch,
+> >
+> > https://lore.kernel.org/netdev/1562959401-19815-1-git-send-email-cai@lca.pw/
+> >
+> > GCC definitely optimize rx_frag_size  to be a constant while I just confirmed clang
+> > -O2 does not. The problem is that I have no clue about how to let GCC not to
+> > optimize a module parameter.
+> >
+> > Though, I have added a few people who might know more of compilers than myself.
+>
+> + Bill and James, who probably knows more than they'd like to about
+> __builtin_constant_p and more than other LLVM folks at this point.
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
