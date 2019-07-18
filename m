@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428B4C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D122CC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C1C20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE2620818
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420298;
-	bh=mV5teUn+3qRhaigH+wulIqmPjLqPh/jUeac6KggzE2M=;
+	s=default; t=1563420306;
+	bh=p7qARXKPniQ4Gp1UilfQNwHUhNLhD7ZHzbN/ZdiWL40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2LfbNfawC9wNvuEec1cvTgTdu7sct8CTuDAN/OL2FyDAesgJDVjtEMizoG77P8hf
-	 Lh1zUKIB7DxIaNlmTbXTZMFVlGkc0R6uOrv94m+3XM88qAO4fPfx8+h6Jr5jgwLubj
-	 HX7VjOVoWNUQ3tmcGYHadXQhOwTVkeeto4gxOtok=
+	b=TU0yn6HZAqg5l++K2LK7dBFHR0AsDHuy1jnBg+5x2YdpT6hd3/bZRwXYjepyylGNB
+	 ZjefkP9Y8BiMOvl9pIExGkTrzPeRyUCCr6KQe553/DQZx/7l6YZ31SF9fnx/s28tFB
+	 fL3qr+LDr6pfxTqPg/hpgs6wMKA7eYWa5MxvfR50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390964AbfGRDY5 (ORCPT
+        id S2391053AbfGRDZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390163AbfGRDGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:11 -0400
+        id S2390124AbfGRDGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:01 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1551121852;
-        Thu, 18 Jul 2019 03:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E1B204EC;
+        Thu, 18 Jul 2019 03:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419170;
-        bh=mV5teUn+3qRhaigH+wulIqmPjLqPh/jUeac6KggzE2M=;
+        s=default; t=1563419160;
+        bh=p7qARXKPniQ4Gp1UilfQNwHUhNLhD7ZHzbN/ZdiWL40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dO94hztjQWi8ALfQ+/n8mxWKaEQeiVzd25hTSlhpoAwB56hQM2SBc3wfqmxYOod1p
-         WBbuGbYi6eXYnPUaMvtZEKVciyoPiEnyW/1qsSUXaRjDbC0MiLmVM4h5oMep6C75+8
-         dQb7CO6M4v0MOh5yaB5pfxxzKH+Hv/exrZsqLB6Y=
+        b=KklUylW6yZrS5SR49J3Cee6xO172NsnCAk7O8CliSaVfI9HpUZBRfPU/3pR4ROVzh
+         KavIM+NmoVkBOpzPmZxeLRxqFbapBYy6Om/st6vLc8sxk/Lp8qbMaz1c5EZk8E4qVO
+         j/5QdOpafxXXpLiybe5jH133A+DqbPOk0eGLbWCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 5.1 44/54] x86/ioapic: Implement irq_get_irqchip_state() callback
-Date:   Thu, 18 Jul 2019 12:01:39 +0900
-Message-Id: <20190718030056.570448637@linuxfoundation.org>
+        stable@vger.kernel.org, Haren Myneni <haren@us.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 53/54] crypto/NX: Set receive window credits to max number of CRBs in RxFIFO
+Date:   Thu, 18 Jul 2019 12:01:48 +0900
+Message-Id: <20190718030057.294006798@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -60,114 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Haren Myneni <haren@linux.vnet.ibm.com>
 
-commit dfe0cf8b51b07e56ded571e3de0a4a9382517231 upstream.
+commit e52d484d9869eb291140545746ccbe5ffc7c9306 upstream.
 
-When an interrupt is shut down in free_irq() there might be an inflight
-interrupt pending in the IO-APIC remote IRR which is not yet serviced. That
-means the interrupt has been sent to the target CPUs local APIC, but the
-target CPU is in a state which delays the servicing.
+System gets checkstop if RxFIFO overruns with more requests than the
+maximum possible number of CRBs in FIFO at the same time. The max number
+of requests per window is controlled by window credits. So find max
+CRBs from FIFO size and set it to receive window credits.
 
-So free_irq() would proceed to free resources and to clear the vector
-because synchronize_hardirq() does not see an interrupt handler in
-progress.
-
-That can trigger a spurious interrupt warning, which is harmless and just
-confuses users, but it also can leave the remote IRR in a stale state
-because once the handler is invoked the interrupt resources might be freed
-already and therefore acknowledgement is not possible anymore.
-
-Implement the irq_get_irqchip_state() callback for the IO-APIC irq chip. The
-callback is invoked from free_irq() via __synchronize_hardirq(). Check the
-remote IRR bit of the interrupt and return 'in flight' if it is set and the
-interrupt is configured in level mode. For edge mode the remote IRR has no
-meaning.
-
-As this is only meaningful for level triggered interrupts this won't cure
-the potential spurious interrupt warning for edge triggered interrupts, but
-the edge trigger case does not result in stale hardware state. This has to
-be addressed at the vector/interrupt entry level seperately.
-
-Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
-Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/20190628111440.370295517@linutronix.de
+Fixes: b0d6c9bab5e4 ("crypto/nx: Add P9 NX support for 842 compression engine")
+CC: stable@vger.kernel.org # v4.14+
+Signed-off-by:Haren Myneni <haren@us.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/x86/kernel/apic/io_apic.c |   46 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1893,6 +1893,50 @@ static int ioapic_set_affinity(struct ir
- 	return ret;
- }
+---
+ drivers/crypto/nx/nx-842-powernv.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- a/drivers/crypto/nx/nx-842-powernv.c
++++ b/drivers/crypto/nx/nx-842-powernv.c
+@@ -36,8 +36,6 @@ MODULE_ALIAS_CRYPTO("842-nx");
+ #define WORKMEM_ALIGN	(CRB_ALIGN)
+ #define CSB_WAIT_MAX	(5000) /* ms */
+ #define VAS_RETRIES	(10)
+-/* # of requests allowed per RxFIFO at a time. 0 for unlimited */
+-#define MAX_CREDITS_PER_RXFIFO	(1024)
  
-+/*
-+ * Interrupt shutdown masks the ioapic pin, but the interrupt might already
-+ * be in flight, but not yet serviced by the target CPU. That means
-+ * __synchronize_hardirq() would return and claim that everything is calmed
-+ * down. So free_irq() would proceed and deactivate the interrupt and free
-+ * resources.
-+ *
-+ * Once the target CPU comes around to service it it will find a cleared
-+ * vector and complain. While the spurious interrupt is harmless, the full
-+ * release of resources might prevent the interrupt from being acknowledged
-+ * which keeps the hardware in a weird state.
-+ *
-+ * Verify that the corresponding Remote-IRR bits are clear.
-+ */
-+static int ioapic_irq_get_chip_state(struct irq_data *irqd,
-+				   enum irqchip_irq_state which,
-+				   bool *state)
-+{
-+	struct mp_chip_data *mcd = irqd->chip_data;
-+	struct IO_APIC_route_entry rentry;
-+	struct irq_pin_list *p;
-+
-+	if (which != IRQCHIP_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	*state = false;
-+	raw_spin_lock(&ioapic_lock);
-+	for_each_irq_pin(p, mcd->irq_2_pin) {
-+		rentry = __ioapic_read_entry(p->apic, p->pin);
-+		/*
-+		 * The remote IRR is only valid in level trigger mode. It's
-+		 * meaning is undefined for edge triggered interrupts and
-+		 * irrelevant because the IO-APIC treats them as fire and
-+		 * forget.
-+		 */
-+		if (rentry.irr && rentry.trigger) {
-+			*state = true;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock(&ioapic_lock);
-+	return 0;
-+}
-+
- static struct irq_chip ioapic_chip __read_mostly = {
- 	.name			= "IO-APIC",
- 	.irq_startup		= startup_ioapic_irq,
-@@ -1902,6 +1946,7 @@ static struct irq_chip ioapic_chip __rea
- 	.irq_eoi		= ioapic_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
+ struct nx842_workmem {
+ 	/* Below fields must be properly aligned */
+@@ -821,7 +819,11 @@ static int __init vas_cfg_coproc_info(st
+ 	rxattr.lnotify_lpid = lpid;
+ 	rxattr.lnotify_pid = pid;
+ 	rxattr.lnotify_tid = tid;
+-	rxattr.wcreds_max = MAX_CREDITS_PER_RXFIFO;
++	/*
++	 * Maximum RX window credits can not be more than #CRBs in
++	 * RxFIFO. Otherwise, can get checkstop if RxFIFO overruns.
++	 */
++	rxattr.wcreds_max = fifo_size / CRB_SIZE;
  
-@@ -1914,6 +1959,7 @@ static struct irq_chip ioapic_ir_chip __
- 	.irq_eoi		= ioapic_ir_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
- 
+ 	/*
+ 	 * Open a VAS receice window which is used to configure RxFIFO
 
 
