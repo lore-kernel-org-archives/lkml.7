@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1945DC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13188C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C4021019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C845E2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hc+MMoyd"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZC+f//z7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391071AbfGRTT3 (ORCPT
+        id S2391157AbfGRTUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:19:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41493 "EHLO
+        Thu, 18 Jul 2019 15:20:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43463 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGRTT2 (ORCPT
+        with ESMTP id S1726040AbfGRTUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:19:28 -0400
+        Thu, 18 Jul 2019 15:20:23 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJJDeJ2125739
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJK16i2125797
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:19:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJJDeJ2125739
+        Thu, 18 Jul 2019 12:20:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJK16i2125797
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477554;
-        bh=HfsYD/s5hnd0Wqifza4N1bGlDvMBmupgw4LOg9JnZ7g=;
+        s=2019061801; t=1563477602;
+        bh=CQcJQVloIa4EcDJIDsphByGJkJ8vBwFmOaqJ6pgJocM=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Hc+MMoyd0DWVOQeaYx/aXgjDM3d105kztB7fDvXYHq9nQKgZt6Hv6chrqh1l+oye9
-         VRDnhD09nEoGIvI38HPx5eT5Rjdq6hN58Jp2Ilu/9Z4NFqof8VsfJUhNNpkU0fnNvG
-         CKogGzT4y9xn9O9h+yOaKA7BuxJD7XNC0ZYLT4lWrf1sUyxqHHVmiRByGD96Us84S0
-         NMJMxWQryYPjgF459AXyZlNIFHfYomZ29CwchrisXVxGX8ojAXS0Vfps9O75GzSl0O
-         866vNT+7FDdeBDzxS20yhnkC+LdBcUCYyn3TICmzrnAnkH1I4ss8K+C0n58dbQ1ECy
-         cvmSxNYUPln3Q==
+        b=ZC+f//z7yLXj8zp/PtQXDtjOQeKdISBq8bV2ASJSx8lE5uAQwmmqbLMTH9a9QFa1z
+         XQQi9qEzgS6krbPxH15p2U22yZnHV6DQYePzI0NU/fvSuhoeax3EWr1Ut4Xs9Oi1IT
+         +xRR1gSBuCXsTUEr6CzCY+jaExD/LgIy1Cbvk8+ypmE5DOowFCaAildnP+Ka7Vk4qC
+         AH0tmlOu/AmCpSufzdzSTuzTGX8B+2zTUrWqHn9NPt/PCIOwBlTfmKamdDJcYIMt6M
+         WLaa7pCz9YjT6EgxXkaJsKoLnIZjur7R38R3TixwRwY0wwp16/0A3SHvV8PQ0MQEQz
+         mwFv1TX8Uj3ew==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJJDVo2125732;
-        Thu, 18 Jul 2019 12:19:13 -0700
-Date:   Thu, 18 Jul 2019 12:19:13 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJK1bE2125794;
+        Thu, 18 Jul 2019 12:20:01 -0700
+Date:   Thu, 18 Jul 2019 12:20:01 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-0c1ddd33177530feb3685a800bba1ac4cc58cc4b@git.kernel.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        ndesaulniers@google.com, mingo@kernel.org, jpoimboe@redhat.com,
-        hpa@zytor.com, peterz@infradead.org
-Reply-To: hpa@zytor.com, peterz@infradead.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          ndesaulniers@google.com, jpoimboe@redhat.com
-In-Reply-To: <8357dbef9e7f5512e76bf83a76c81722fc09eb5e.1563413318.git.jpoimboe@redhat.com>
-References: <8357dbef9e7f5512e76bf83a76c81722fc09eb5e.1563413318.git.jpoimboe@redhat.com>
+Message-ID: <tip-e7c2bc37bfae120bce3e7cc8c8abf9d110af0757@git.kernel.org>
+Cc:     mingo@kernel.org, peterz@infradead.org, jpoimboe@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        ndesaulniers@google.com
+Reply-To: ndesaulniers@google.com, linux-kernel@vger.kernel.org,
+          jpoimboe@redhat.com, tglx@linutronix.de, peterz@infradead.org,
+          mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <cf951b0c0641628e0b9b81f7ceccd9bcabcb4bd8.1563413318.git.jpoimboe@redhat.com>
+References: <cf951b0c0641628e0b9b81f7ceccd9bcabcb4bd8.1563413318.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Refactor sibling call detection logic
-Git-Commit-ID: 0c1ddd33177530feb3685a800bba1ac4cc58cc4b
+Subject: [tip:core/urgent] objtool: Refactor jump table code
+Git-Commit-ID: e7c2bc37bfae120bce3e7cc8c8abf9d110af0757
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,168 +69,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0c1ddd33177530feb3685a800bba1ac4cc58cc4b
-Gitweb:     https://git.kernel.org/tip/0c1ddd33177530feb3685a800bba1ac4cc58cc4b
+Commit-ID:  e7c2bc37bfae120bce3e7cc8c8abf9d110af0757
+Gitweb:     https://git.kernel.org/tip/e7c2bc37bfae120bce3e7cc8c8abf9d110af0757
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:52 -0500
+AuthorDate: Wed, 17 Jul 2019 20:36:53 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Jul 2019 21:01:08 +0200
+CommitDate: Thu, 18 Jul 2019 21:01:09 +0200
 
-objtool: Refactor sibling call detection logic
+objtool: Refactor jump table code
 
-Simplify the sibling call detection logic a bit.
+Now that C jump tables are supported, call them "jump tables" instead of
+"switch tables".  Also rename some other variables, add comments, and
+simplify the code flow a bit.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/8357dbef9e7f5512e76bf83a76c81722fc09eb5e.1563413318.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/cf951b0c0641628e0b9b81f7ceccd9bcabcb4bd8.1563413318.git.jpoimboe@redhat.com
 
 ---
- tools/objtool/check.c | 65 ++++++++++++++++++++++++++-------------------------
- 1 file changed, 33 insertions(+), 32 deletions(-)
+ tools/objtool/check.c | 82 +++++++++++++++++++++++++++------------------------
+ tools/objtool/elf.c   |  2 +-
+ tools/objtool/elf.h   |  2 +-
+ 3 files changed, 46 insertions(+), 40 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 0d2a8e54a82e..7fe31e0f8afe 100644
+index 7fe31e0f8afe..4525cf677a1b 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -97,6 +97,20 @@ static struct instruction *next_insn_same_func(struct objtool_file *file,
- 	for (insn = next_insn_same_sec(file, insn); insn;		\
- 	     insn = next_insn_same_sec(file, insn))
- 
-+static bool is_sibling_call(struct instruction *insn)
-+{
-+	/* An indirect jump is either a sibling call or a jump to a table. */
-+	if (insn->type == INSN_JUMP_DYNAMIC)
-+		return list_empty(&insn->alts);
-+
-+	if (insn->type != INSN_JUMP_CONDITIONAL &&
-+	    insn->type != INSN_JUMP_UNCONDITIONAL)
-+		return false;
-+
-+	/* add_jump_destinations() sets insn->call_dest for sibling calls. */
-+	return !!insn->call_dest;
-+}
-+
- /*
-  * This checks to see if the given function is a "noreturn" function.
-  *
-@@ -167,34 +181,25 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 	 * of the sibling call returns.
- 	 */
- 	func_for_each_insn_all(file, func, insn) {
--		if (insn->type == INSN_JUMP_UNCONDITIONAL) {
-+		if (is_sibling_call(insn)) {
- 			struct instruction *dest = insn->jump_dest;
- 
- 			if (!dest)
- 				/* sibling call to another file */
- 				return false;
- 
--			if (dest->func && dest->func->pfunc != insn->func->pfunc) {
--
--				/* local sibling call */
--				if (recursion == 5) {
--					/*
--					 * Infinite recursion: two functions
--					 * have sibling calls to each other.
--					 * This is a very rare case.  It means
--					 * they aren't dead ends.
--					 */
--					return false;
--				}
--
--				return __dead_end_function(file, dest->func,
--							   recursion + 1);
-+			/* local sibling call */
-+			if (recursion == 5) {
-+				/*
-+				 * Infinite recursion: two functions have
-+				 * sibling calls to each other.  This is a very
-+				 * rare case.  It means they aren't dead ends.
-+				 */
-+				return false;
- 			}
--		}
- 
--		if (insn->type == INSN_JUMP_DYNAMIC && list_empty(&insn->alts))
--			/* sibling call */
--			return false;
-+			return __dead_end_function(file, dest->func, recursion+1);
-+		}
- 	}
- 
- 	return true;
-@@ -581,9 +586,8 @@ static int add_jump_destinations(struct objtool_file *file)
- 			insn->retpoline_safe = true;
- 			continue;
- 		} else {
--			/* sibling call */
-+			/* external sibling call */
- 			insn->call_dest = rela->sym;
--			insn->jump_dest = NULL;
- 			continue;
- 		}
- 
-@@ -633,9 +637,8 @@ static int add_jump_destinations(struct objtool_file *file)
- 			} else if (insn->jump_dest->func->pfunc != insn->func->pfunc &&
- 				   insn->jump_dest->offset == insn->jump_dest->func->offset) {
- 
--				/* sibling class */
-+				/* internal sibling call */
- 				insn->call_dest = insn->jump_dest->func;
--				insn->jump_dest = NULL;
- 			}
- 		}
- 	}
-@@ -1889,7 +1892,7 @@ static inline bool func_uaccess_safe(struct symbol *func)
- 	return false;
+@@ -627,7 +627,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 			 * However this code can't completely replace the
+ 			 * read_symbols() code because this doesn't detect the
+ 			 * case where the parent function's only reference to a
+-			 * subfunction is through a switch table.
++			 * subfunction is through a jump table.
+ 			 */
+ 			if (!strstr(insn->func->name, ".cold.") &&
+ 			    strstr(insn->jump_dest->func->name, ".cold.")) {
+@@ -899,20 +899,24 @@ out:
+ 	return ret;
  }
  
--static inline const char *insn_dest_name(struct instruction *insn)
-+static inline const char *call_dest_name(struct instruction *insn)
+-static int add_switch_table(struct objtool_file *file, struct instruction *insn,
++static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 			    struct rela *table, struct rela *next_table)
  {
- 	if (insn->call_dest)
- 		return insn->call_dest->name;
-@@ -1901,13 +1904,13 @@ static int validate_call(struct instruction *insn, struct insn_state *state)
- {
- 	if (state->uaccess && !func_uaccess_safe(insn->call_dest)) {
- 		WARN_FUNC("call to %s() with UACCESS enabled",
--				insn->sec, insn->offset, insn_dest_name(insn));
-+				insn->sec, insn->offset, call_dest_name(insn));
- 		return 1;
- 	}
+ 	struct rela *rela = table;
+-	struct instruction *alt_insn;
++	struct instruction *dest_insn;
+ 	struct alternative *alt;
+ 	struct symbol *pfunc = insn->func->pfunc;
+ 	unsigned int prev_offset = 0;
  
- 	if (state->df) {
- 		WARN_FUNC("call to %s() with DF set",
--				insn->sec, insn->offset, insn_dest_name(insn));
-+				insn->sec, insn->offset, call_dest_name(insn));
- 		return 1;
- 	}
- 
-@@ -2088,14 +2091,12 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
- 		case INSN_JUMP_CONDITIONAL:
- 		case INSN_JUMP_UNCONDITIONAL:
--			if (func && !insn->jump_dest) {
-+			if (func && is_sibling_call(insn)) {
- 				ret = validate_sibling_call(insn, &state);
- 				if (ret)
- 					return ret;
- 
--			} else if (insn->jump_dest &&
--				   (!func || !insn->jump_dest->func ||
--				    insn->jump_dest->func->pfunc == func)) {
-+			} else if (insn->jump_dest) {
- 				ret = validate_branch(file, func,
- 						      insn->jump_dest, state);
- 				if (ret) {
-@@ -2111,7 +2112,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+-	list_for_each_entry_from(rela, &table->rela_sec->rela_list, list) {
++	/*
++	 * Each @rela is a switch table relocation which points to the target
++	 * instruction.
++	 */
++	list_for_each_entry_from(rela, &table->sec->rela_list, list) {
+ 		if (rela == next_table)
  			break;
  
- 		case INSN_JUMP_DYNAMIC:
--			if (func && list_empty(&insn->alts)) {
-+			if (func && is_sibling_call(insn)) {
- 				ret = validate_sibling_call(insn, &state);
- 				if (ret)
- 					return ret;
+-		/* Make sure the switch table entries are consecutive: */
++		/* Make sure the table entries are consecutive: */
+ 		if (prev_offset && rela->offset != prev_offset + 8)
+ 			break;
+ 
+@@ -921,12 +925,12 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+ 		    rela->addend == pfunc->offset)
+ 			break;
+ 
+-		alt_insn = find_insn(file, rela->sym->sec, rela->addend);
+-		if (!alt_insn)
++		dest_insn = find_insn(file, rela->sym->sec, rela->addend);
++		if (!dest_insn)
+ 			break;
+ 
+-		/* Make sure the jmp dest is in the function or subfunction: */
+-		if (alt_insn->func->pfunc != pfunc)
++		/* Make sure the destination is in the same function: */
++		if (dest_insn->func->pfunc != pfunc)
+ 			break;
+ 
+ 		alt = malloc(sizeof(*alt));
+@@ -935,7 +939,7 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+ 			return -1;
+ 		}
+ 
+-		alt->insn = alt_insn;
++		alt->insn = dest_insn;
+ 		list_add_tail(&alt->list, &insn->alts);
+ 		prev_offset = rela->offset;
+ 	}
+@@ -950,7 +954,7 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+ }
+ 
+ /*
+- * find_switch_table() - Given a dynamic jump, find the switch jump table in
++ * find_jump_table() - Given a dynamic jump, find the switch jump table in
+  * .rodata associated with it.
+  *
+  * There are 3 basic patterns:
+@@ -992,13 +996,13 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+  *
+  *    NOTE: RETPOLINE made it harder still to decode dynamic jumps.
+  */
+-static struct rela *find_switch_table(struct objtool_file *file,
++static struct rela *find_jump_table(struct objtool_file *file,
+ 				      struct symbol *func,
+ 				      struct instruction *insn)
+ {
+-	struct rela *text_rela, *rodata_rela;
++	struct rela *text_rela, *table_rela;
+ 	struct instruction *orig_insn = insn;
+-	struct section *rodata_sec;
++	struct section *table_sec;
+ 	unsigned long table_offset;
+ 
+ 	/*
+@@ -1031,7 +1035,7 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 			continue;
+ 
+ 		table_offset = text_rela->addend;
+-		rodata_sec = text_rela->sym->sec;
++		table_sec = text_rela->sym->sec;
+ 
+ 		if (text_rela->type == R_X86_64_PC32)
+ 			table_offset += 4;
+@@ -1045,29 +1049,31 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 		 * need to be placed in the C_JUMP_TABLE_SECTION section.  They
+ 		 * have symbols associated with them.
+ 		 */
+-		if (find_symbol_containing(rodata_sec, table_offset) &&
+-		    strcmp(rodata_sec->name, C_JUMP_TABLE_SECTION))
++		if (find_symbol_containing(table_sec, table_offset) &&
++		    strcmp(table_sec->name, C_JUMP_TABLE_SECTION))
+ 			continue;
+ 
+-		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+-		if (rodata_rela) {
+-			/*
+-			 * Use of RIP-relative switch jumps is quite rare, and
+-			 * indicates a rare GCC quirk/bug which can leave dead
+-			 * code behind.
+-			 */
+-			if (text_rela->type == R_X86_64_PC32)
+-				file->ignore_unreachables = true;
++		/* Each table entry has a rela associated with it. */
++		table_rela = find_rela_by_dest(table_sec, table_offset);
++		if (!table_rela)
++			continue;
+ 
+-			return rodata_rela;
+-		}
++		/*
++		 * Use of RIP-relative switch jumps is quite rare, and
++		 * indicates a rare GCC quirk/bug which can leave dead code
++		 * behind.
++		 */
++		if (text_rela->type == R_X86_64_PC32)
++			file->ignore_unreachables = true;
++
++		return table_rela;
+ 	}
+ 
+ 	return NULL;
+ }
+ 
+ 
+-static int add_func_switch_tables(struct objtool_file *file,
++static int add_func_jump_tables(struct objtool_file *file,
+ 				  struct symbol *func)
+ {
+ 	struct instruction *insn, *last = NULL, *prev_jump = NULL;
+@@ -1080,7 +1086,7 @@ static int add_func_switch_tables(struct objtool_file *file,
+ 
+ 		/*
+ 		 * Store back-pointers for unconditional forward jumps such
+-		 * that find_switch_table() can back-track using those and
++		 * that find_jump_table() can back-track using those and
+ 		 * avoid some potentially confusing code.
+ 		 */
+ 		if (insn->type == INSN_JUMP_UNCONDITIONAL && insn->jump_dest &&
+@@ -1095,17 +1101,17 @@ static int add_func_switch_tables(struct objtool_file *file,
+ 		if (insn->type != INSN_JUMP_DYNAMIC)
+ 			continue;
+ 
+-		rela = find_switch_table(file, func, insn);
++		rela = find_jump_table(file, func, insn);
+ 		if (!rela)
+ 			continue;
+ 
+ 		/*
+-		 * We found a switch table, but we don't know yet how big it
++		 * We found a jump table, but we don't know yet how big it
+ 		 * is.  Don't add it until we reach the end of the function or
+-		 * the beginning of another switch table in the same function.
++		 * the beginning of another jump table in the same function.
+ 		 */
+ 		if (prev_jump) {
+-			ret = add_switch_table(file, prev_jump, prev_rela, rela);
++			ret = add_jump_table(file, prev_jump, prev_rela, rela);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -1115,7 +1121,7 @@ static int add_func_switch_tables(struct objtool_file *file,
+ 	}
+ 
+ 	if (prev_jump) {
+-		ret = add_switch_table(file, prev_jump, prev_rela, NULL);
++		ret = add_jump_table(file, prev_jump, prev_rela, NULL);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1128,7 +1134,7 @@ static int add_func_switch_tables(struct objtool_file *file,
+  * section which contains a list of addresses within the function to jump to.
+  * This finds these jump tables and adds them to the insn->alts lists.
+  */
+-static int add_switch_table_alts(struct objtool_file *file)
++static int add_jump_table_alts(struct objtool_file *file)
+ {
+ 	struct section *sec;
+ 	struct symbol *func;
+@@ -1142,7 +1148,7 @@ static int add_switch_table_alts(struct objtool_file *file)
+ 			if (func->type != STT_FUNC)
+ 				continue;
+ 
+-			ret = add_func_switch_tables(file, func);
++			ret = add_func_jump_tables(file, func);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -1339,7 +1345,7 @@ static int decode_sections(struct objtool_file *file)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = add_switch_table_alts(file);
++	ret = add_jump_table_alts(file);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 9194732a673d..edba4745f25a 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -385,7 +385,7 @@ static int read_relas(struct elf *elf)
+ 			rela->offset = rela->rela.r_offset;
+ 			symndx = GELF_R_SYM(rela->rela.r_info);
+ 			rela->sym = find_symbol_by_index(elf, symndx);
+-			rela->rela_sec = sec;
++			rela->sec = sec;
+ 			if (!rela->sym) {
+ 				WARN("can't find rela entry symbol %d for %s",
+ 				     symndx, sec->name);
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index 2fe0b0aa741d..d4d3e0528d4a 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -57,7 +57,7 @@ struct rela {
+ 	struct list_head list;
+ 	struct hlist_node hash;
+ 	GElf_Rela rela;
+-	struct section *rela_sec;
++	struct section *sec;
+ 	struct symbol *sym;
+ 	unsigned int type;
+ 	unsigned long offset;
