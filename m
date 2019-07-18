@@ -2,176 +2,93 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DE7C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5DBC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B90204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419216;
-	bh=gTH0e8Mlg3KOJ8aqeGQWp1Y+oCvRQ5Lp7NhXpx454Pk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=db03DRJUsbZTj7SJum87CRh6iCPzUliNLj4kVDyBOhmTbI6yc9zI+FC3h3qEjct4G
-	 q2u6EJ3pCxuCdobSgcKljzkOey1oytO0qwbA/3oGlNXAI2f85/ZnHwKNf2I7A5F0o0
-	 Se8mDLMBLXoxa23gxgKLG8/WoDSyaGna5steZc/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 4EB722173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390324AbfGRDGz (ORCPT
+        id S2390331AbfGRDG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:06:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38280 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:06:59 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49738 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390318AbfGRDGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390322AbfGRDGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jul 2019 23:06:52 -0400
-Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ABD42173B;
-        Thu, 18 Jul 2019 03:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419210;
-        bh=gTH0e8Mlg3KOJ8aqeGQWp1Y+oCvRQ5Lp7NhXpx454Pk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c16GPP/By8HmtU43RCCO0uvSvK93arMVxAKAJ/M5X99lUwHmrwWd1MFvhTLl34VWP
-         /AL52L84saP6KOx9dzF/kg3DhIjdbgz/MRzKnQclz8tNSVp6/O7umrQxzmigG9rTVm
-         HdVn3T+z576Ds2r2tiwfzc3BN9NeoSGxBkcCPwSE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergej Benilov <sergej.benilov@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/47] sis900: fix TX completion
-Date:   Thu, 18 Jul 2019 12:01:31 +0900
-Message-Id: <20190718030050.127545621@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
-References: <20190718030045.780672747@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 20:06:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
+   d="scan'208";a="175892069"
+Received: from devel-ww.sh.intel.com ([10.239.48.128])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Jul 2019 20:06:49 -0700
+From:   Wei Wang <wei.w.wang@intel.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, mst@redhat.com, xdeguillard@vmware.com,
+        namit@vmware.com
+Cc:     akpm@linux-foundation.org, pagupta@redhat.com, riel@surriel.com,
+        dave.hansen@intel.com, david@redhat.com, konrad.wilk@oracle.com,
+        yang.zhang.wz@gmail.com, nitesh@redhat.com, lcapitulino@redhat.com,
+        aarcange@redhat.com, pbonzini@redhat.com,
+        alexander.h.duyck@linux.intel.com, dan.j.williams@intel.com
+Subject: [PATCH v1] mm/balloon_compaction: avoid duplicate page removal
+Date:   Thu, 18 Jul 2019 10:23:30 +0800
+Message-Id: <1563416610-11045-1-git-send-email-wei.w.wang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ac8a01092b2added0749ef937037bf1912e13e3 ]
+Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
 
-Since commit 605ad7f184b60cfaacbc038aa6c55ee68dee3c89 "tcp: refine TSO autosizing",
-outbound throughput is dramatically reduced for some connections, as sis900
-is doing TX completion within idle states only.
+A #GP is reported in the guest when requesting balloon inflation via
+virtio-balloon. The reason is that the virtio-balloon driver has
+removed the page from its internal page list (via balloon_page_pop),
+but balloon_page_enqueue_one also calls "list_del"  to do the removal.
+So remove the list_del in balloon_page_enqueue_one, and have the callers
+do the page removal from their own page lists.
 
-Make TX completion happen after every transmitted packet.
-
-Test:
-netperf
-
-before patch:
-> netperf -H remote -l -2000000 -- -s 1000000
-MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
-Recv   Send    Send
-Socket Socket  Message  Elapsed
-Size   Size    Size     Time     Throughput
-bytes  bytes   bytes    secs.    10^6bits/sec
-
- 87380 327680 327680    253.44      0.06
-
-after patch:
-> netperf -H remote -l -10000000 -- -s 1000000
-MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
-Recv   Send    Send
-Socket Socket  Message  Elapsed
-Size   Size    Size     Time     Throughput
-bytes  bytes   bytes    secs.    10^6bits/sec
-
- 87380 327680 327680    5.38       14.89
-
-Thx to Dave Miller and Eric Dumazet for helpful hints
-
-Signed-off-by: Sergej Benilov <sergej.benilov@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Wei Wang <wei.w.wang@intel.com>
 ---
- drivers/net/ethernet/sis/sis900.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ mm/balloon_compaction.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
-index 4bb89f74742c..d5bcbc40a55f 100644
---- a/drivers/net/ethernet/sis/sis900.c
-+++ b/drivers/net/ethernet/sis/sis900.c
-@@ -1057,7 +1057,7 @@ sis900_open(struct net_device *net_dev)
- 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
+diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+index 83a7b61..1a5ddc4 100644
+--- a/mm/balloon_compaction.c
++++ b/mm/balloon_compaction.c
+@@ -11,6 +11,7 @@
+ #include <linux/export.h>
+ #include <linux/balloon_compaction.h>
  
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- 	sw32(cr, RxENA | sr32(cr));
- 	sw32(ier, IE);
++/* Callers ensure that @page has been removed from its original list. */
+ static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
+ 				     struct page *page)
+ {
+@@ -21,7 +22,6 @@ static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
+ 	 * memory corruption is possible and we should stop execution.
+ 	 */
+ 	BUG_ON(!trylock_page(page));
+-	list_del(&page->lru);
+ 	balloon_page_insert(b_dev_info, page);
+ 	unlock_page(page);
+ 	__count_vm_event(BALLOON_INFLATE);
+@@ -47,6 +47,7 @@ size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
  
-@@ -1578,7 +1578,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
- 	sw32(txdp, sis_priv->tx_ring_dma);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- }
- 
- /**
-@@ -1618,7 +1618,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 			spin_unlock_irqrestore(&sis_priv->lock, flags);
- 			return NETDEV_TX_OK;
+ 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+ 	list_for_each_entry_safe(page, tmp, pages, lru) {
++		list_del(&page->lru);
+ 		balloon_page_enqueue_one(b_dev_info, page);
+ 		n_pages++;
  	}
--	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
-+	sis_priv->tx_ring[entry].cmdsts = (OWN | INTR | skb->len);
- 	sw32(cr, TxENA | sr32(cr));
- 
- 	sis_priv->cur_tx ++;
-@@ -1674,7 +1674,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
- 	do {
- 		status = sr32(isr);
- 
--		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
-+		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|TxDESC|RxORN|RxERR|RxOK)) == 0)
- 			/* nothing intresting happened */
- 			break;
- 		handled = 1;
-@@ -1684,7 +1684,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
- 			/* Rx interrupt */
- 			sis900_rx(net_dev);
- 
--		if (status & (TxURN | TxERR | TxIDLE))
-+		if (status & (TxURN | TxERR | TxIDLE | TxDESC))
- 			/* Tx interrupt */
- 			sis900_finish_xmit(net_dev);
- 
-@@ -1896,8 +1896,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
- 
- 		if (tx_status & OWN) {
- 			/* The packet is not transmitted yet (owned by hardware) !
--			 * Note: the interrupt is generated only when Tx Machine
--			 * is idle, so this is an almost impossible case */
-+			 * Note: this is an almost impossible condition
-+			 * in case of TxDESC ('descriptor interrupt') */
- 			break;
- 		}
- 
-@@ -2473,7 +2473,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
- 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- 	sw32(cr, RxENA | sr32(cr));
- 	sw32(ier, IE);
- 
 -- 
-2.20.1
-
-
+2.7.4
 
