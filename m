@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1B9C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B407C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D6A21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA0E2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfGRBh2 (ORCPT
+        id S2389105AbfGRBhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 21:37:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52538 "EHLO mx1.redhat.com"
+        Wed, 17 Jul 2019 21:37:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43642 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733059AbfGRBhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 21:37:22 -0400
+        id S2388738AbfGRBhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 21:37:34 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C9EB7C057E29;
-        Thu, 18 Jul 2019 01:37:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 800DB85365;
+        Thu, 18 Jul 2019 01:37:33 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-122-211.rdu2.redhat.com [10.10.122.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5A835D9CC;
-        Thu, 18 Jul 2019 01:37:20 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FED55D9CC;
+        Thu, 18 Jul 2019 01:37:32 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -35,153 +35,278 @@ Cc:     linux-kernel@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
         Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2 09/22] x86/uaccess: Remove redundant CLACs in getuser/putuser error paths
-Date:   Wed, 17 Jul 2019 20:36:44 -0500
-Message-Id: <bc14ded2755ae75bd9010c446079e113dbddb74b.1563413318.git.jpoimboe@redhat.com>
+Subject: [PATCH v2 18/22] objtool: Refactor jump table code
+Date:   Wed, 17 Jul 2019 20:36:53 -0500
+Message-Id: <cf951b0c0641628e0b9b81f7ceccd9bcabcb4bd8.1563413318.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1563413318.git.jpoimboe@redhat.com>
 References: <cover.1563413318.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Jul 2019 01:37:21 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 18 Jul 2019 01:37:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The same getuser/putuser error paths are used regardless of whether AC
-is set.  In non-exception failure cases, this results in an unnecessary
-CLAC.
-
-Fixes the following warnings:
-
-  arch/x86/lib/getuser.o: warning: objtool: .altinstr_replacement+0x18: redundant UACCESS disable
-  arch/x86/lib/putuser.o: warning: objtool: .altinstr_replacement+0x18: redundant UACCESS disable
+Now that C jump tables are supported, call them "jump tables" instead of
+"switch tables".  Also rename some other variables, add comments, and
+simplify the code flow a bit.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/x86/lib/getuser.S | 20 ++++++++++----------
- arch/x86/lib/putuser.S | 29 ++++++++++++++++-------------
- 2 files changed, 26 insertions(+), 23 deletions(-)
+v2:
+- comment tweak: "switch jump table" -> "jump table" [PeterZ]
+---
+ tools/objtool/check.c | 82 +++++++++++++++++++++++--------------------
+ tools/objtool/elf.c   |  2 +-
+ tools/objtool/elf.h   |  2 +-
+ 3 files changed, 46 insertions(+), 40 deletions(-)
 
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index 74fdff968ea3..304f958c27b2 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -115,29 +115,29 @@ ENDPROC(__get_user_8)
- EXPORT_SYMBOL(__get_user_8)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index a190a6e79a91..a904f98236b4 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -627,7 +627,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 			 * However this code can't completely replace the
+ 			 * read_symbols() code because this doesn't detect the
+ 			 * case where the parent function's only reference to a
+-			 * subfunction is through a switch table.
++			 * subfunction is through a jump table.
+ 			 */
+ 			if (!strstr(insn->func->name, ".cold.") &&
+ 			    strstr(insn->jump_dest->func->name, ".cold.")) {
+@@ -899,20 +899,24 @@ static int add_special_section_alts(struct objtool_file *file)
+ 	return ret;
+ }
  
+-static int add_switch_table(struct objtool_file *file, struct instruction *insn,
++static int add_jump_table(struct objtool_file *file, struct instruction *insn,
+ 			    struct rela *table, struct rela *next_table)
+ {
+ 	struct rela *rela = table;
+-	struct instruction *alt_insn;
++	struct instruction *dest_insn;
+ 	struct alternative *alt;
+ 	struct symbol *pfunc = insn->func->pfunc;
+ 	unsigned int prev_offset = 0;
  
-+bad_get_user_clac:
-+	ASM_CLAC
- bad_get_user:
- 	xor %edx,%edx
- 	mov $(-EFAULT),%_ASM_AX
--	ASM_CLAC
- 	ret
--END(bad_get_user)
+-	list_for_each_entry_from(rela, &table->rela_sec->rela_list, list) {
++	/*
++	 * Each @rela is a switch table relocation which points to the target
++	 * instruction.
++	 */
++	list_for_each_entry_from(rela, &table->sec->rela_list, list) {
+ 		if (rela == next_table)
+ 			break;
  
- #ifdef CONFIG_X86_32
-+bad_get_user_8_clac:
-+	ASM_CLAC
- bad_get_user_8:
- 	xor %edx,%edx
- 	xor %ecx,%ecx
- 	mov $(-EFAULT),%_ASM_AX
--	ASM_CLAC
- 	ret
--END(bad_get_user_8)
- #endif
+-		/* Make sure the switch table entries are consecutive: */
++		/* Make sure the table entries are consecutive: */
+ 		if (prev_offset && rela->offset != prev_offset + 8)
+ 			break;
  
--	_ASM_EXTABLE_UA(1b, bad_get_user)
--	_ASM_EXTABLE_UA(2b, bad_get_user)
--	_ASM_EXTABLE_UA(3b, bad_get_user)
-+	_ASM_EXTABLE_UA(1b, bad_get_user_clac)
-+	_ASM_EXTABLE_UA(2b, bad_get_user_clac)
-+	_ASM_EXTABLE_UA(3b, bad_get_user_clac)
- #ifdef CONFIG_X86_64
--	_ASM_EXTABLE_UA(4b, bad_get_user)
-+	_ASM_EXTABLE_UA(4b, bad_get_user_clac)
- #else
--	_ASM_EXTABLE_UA(4b, bad_get_user_8)
--	_ASM_EXTABLE_UA(5b, bad_get_user_8)
-+	_ASM_EXTABLE_UA(4b, bad_get_user_8_clac)
-+	_ASM_EXTABLE_UA(5b, bad_get_user_8_clac)
- #endif
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index d2e5c9c39601..14bf78341d3c 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -32,8 +32,6 @@
+@@ -921,12 +925,12 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+ 		    rela->addend == pfunc->offset)
+ 			break;
+ 
+-		alt_insn = find_insn(file, rela->sym->sec, rela->addend);
+-		if (!alt_insn)
++		dest_insn = find_insn(file, rela->sym->sec, rela->addend);
++		if (!dest_insn)
+ 			break;
+ 
+-		/* Make sure the jmp dest is in the function or subfunction: */
+-		if (alt_insn->func->pfunc != pfunc)
++		/* Make sure the destination is in the same function: */
++		if (dest_insn->func->pfunc != pfunc)
+ 			break;
+ 
+ 		alt = malloc(sizeof(*alt));
+@@ -935,7 +939,7 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+ 			return -1;
+ 		}
+ 
+-		alt->insn = alt_insn;
++		alt->insn = dest_insn;
+ 		list_add_tail(&alt->list, &insn->alts);
+ 		prev_offset = rela->offset;
+ 	}
+@@ -950,7 +954,7 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+ }
+ 
+ /*
+- * find_switch_table() - Given a dynamic jump, find the switch jump table in
++ * find_jump_table() - Given a dynamic jump, find the switch jump table in
+  * .rodata associated with it.
+  *
+  * There are 3 basic patterns:
+@@ -992,13 +996,13 @@ static int add_switch_table(struct objtool_file *file, struct instruction *insn,
+  *
+  *    NOTE: RETPOLINE made it harder still to decode dynamic jumps.
   */
+-static struct rela *find_switch_table(struct objtool_file *file,
++static struct rela *find_jump_table(struct objtool_file *file,
+ 				      struct symbol *func,
+ 				      struct instruction *insn)
+ {
+-	struct rela *text_rela, *rodata_rela;
++	struct rela *text_rela, *table_rela;
+ 	struct instruction *orig_insn = insn;
+-	struct section *rodata_sec;
++	struct section *table_sec;
+ 	unsigned long table_offset;
  
- #define ENTER	mov PER_CPU_VAR(current_task), %_ASM_BX
--#define EXIT	ASM_CLAC ;	\
--		ret
+ 	/*
+@@ -1031,7 +1035,7 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 			continue;
  
- .text
- ENTRY(__put_user_1)
-@@ -43,7 +41,8 @@ ENTRY(__put_user_1)
- 	ASM_STAC
- 1:	movb %al,(%_ASM_CX)
- 	xor %eax,%eax
--	EXIT
-+	ASM_CLAC
-+	ret
- ENDPROC(__put_user_1)
- EXPORT_SYMBOL(__put_user_1)
+ 		table_offset = text_rela->addend;
+-		rodata_sec = text_rela->sym->sec;
++		table_sec = text_rela->sym->sec;
  
-@@ -56,7 +55,8 @@ ENTRY(__put_user_2)
- 	ASM_STAC
- 2:	movw %ax,(%_ASM_CX)
- 	xor %eax,%eax
--	EXIT
-+	ASM_CLAC
-+	ret
- ENDPROC(__put_user_2)
- EXPORT_SYMBOL(__put_user_2)
+ 		if (text_rela->type == R_X86_64_PC32)
+ 			table_offset += 4;
+@@ -1045,29 +1049,31 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 		 * need to be placed in the C_JUMP_TABLE_SECTION section.  They
+ 		 * have symbols associated with them.
+ 		 */
+-		if (find_symbol_containing(rodata_sec, table_offset) &&
+-		    strcmp(rodata_sec->name, C_JUMP_TABLE_SECTION))
++		if (find_symbol_containing(table_sec, table_offset) &&
++		    strcmp(table_sec->name, C_JUMP_TABLE_SECTION))
+ 			continue;
  
-@@ -69,7 +69,8 @@ ENTRY(__put_user_4)
- 	ASM_STAC
- 3:	movl %eax,(%_ASM_CX)
- 	xor %eax,%eax
--	EXIT
-+	ASM_CLAC
-+	ret
- ENDPROC(__put_user_4)
- EXPORT_SYMBOL(__put_user_4)
+-		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+-		if (rodata_rela) {
+-			/*
+-			 * Use of RIP-relative switch jumps is quite rare, and
+-			 * indicates a rare GCC quirk/bug which can leave dead
+-			 * code behind.
+-			 */
+-			if (text_rela->type == R_X86_64_PC32)
+-				file->ignore_unreachables = true;
++		/* Each table entry has a rela associated with it. */
++		table_rela = find_rela_by_dest(table_sec, table_offset);
++		if (!table_rela)
++			continue;
  
-@@ -85,19 +86,21 @@ ENTRY(__put_user_8)
- 5:	movl %edx,4(%_ASM_CX)
- #endif
- 	xor %eax,%eax
--	EXIT
-+	ASM_CLAC
-+	RET
- ENDPROC(__put_user_8)
- EXPORT_SYMBOL(__put_user_8)
+-			return rodata_rela;
+-		}
++		/*
++		 * Use of RIP-relative switch jumps is quite rare, and
++		 * indicates a rare GCC quirk/bug which can leave dead code
++		 * behind.
++		 */
++		if (text_rela->type == R_X86_64_PC32)
++			file->ignore_unreachables = true;
++
++		return table_rela;
+ 	}
  
-+bad_put_user_clac:
-+	ASM_CLAC
- bad_put_user:
- 	movl $-EFAULT,%eax
--	EXIT
--END(bad_put_user)
-+	RET
+ 	return NULL;
+ }
  
--	_ASM_EXTABLE_UA(1b, bad_put_user)
--	_ASM_EXTABLE_UA(2b, bad_put_user)
--	_ASM_EXTABLE_UA(3b, bad_put_user)
--	_ASM_EXTABLE_UA(4b, bad_put_user)
-+	_ASM_EXTABLE_UA(1b, bad_put_user_clac)
-+	_ASM_EXTABLE_UA(2b, bad_put_user_clac)
-+	_ASM_EXTABLE_UA(3b, bad_put_user_clac)
-+	_ASM_EXTABLE_UA(4b, bad_put_user_clac)
- #ifdef CONFIG_X86_32
--	_ASM_EXTABLE_UA(5b, bad_put_user)
-+	_ASM_EXTABLE_UA(5b, bad_put_user_clac)
- #endif
+ 
+-static int add_func_switch_tables(struct objtool_file *file,
++static int add_func_jump_tables(struct objtool_file *file,
+ 				  struct symbol *func)
+ {
+ 	struct instruction *insn, *last = NULL, *prev_jump = NULL;
+@@ -1080,7 +1086,7 @@ static int add_func_switch_tables(struct objtool_file *file,
+ 
+ 		/*
+ 		 * Store back-pointers for unconditional forward jumps such
+-		 * that find_switch_table() can back-track using those and
++		 * that find_jump_table() can back-track using those and
+ 		 * avoid some potentially confusing code.
+ 		 */
+ 		if (insn->type == INSN_JUMP_UNCONDITIONAL && insn->jump_dest &&
+@@ -1095,17 +1101,17 @@ static int add_func_switch_tables(struct objtool_file *file,
+ 		if (insn->type != INSN_JUMP_DYNAMIC)
+ 			continue;
+ 
+-		rela = find_switch_table(file, func, insn);
++		rela = find_jump_table(file, func, insn);
+ 		if (!rela)
+ 			continue;
+ 
+ 		/*
+-		 * We found a switch table, but we don't know yet how big it
++		 * We found a jump table, but we don't know yet how big it
+ 		 * is.  Don't add it until we reach the end of the function or
+-		 * the beginning of another switch table in the same function.
++		 * the beginning of another jump table in the same function.
+ 		 */
+ 		if (prev_jump) {
+-			ret = add_switch_table(file, prev_jump, prev_rela, rela);
++			ret = add_jump_table(file, prev_jump, prev_rela, rela);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -1115,7 +1121,7 @@ static int add_func_switch_tables(struct objtool_file *file,
+ 	}
+ 
+ 	if (prev_jump) {
+-		ret = add_switch_table(file, prev_jump, prev_rela, NULL);
++		ret = add_jump_table(file, prev_jump, prev_rela, NULL);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1128,7 +1134,7 @@ static int add_func_switch_tables(struct objtool_file *file,
+  * section which contains a list of addresses within the function to jump to.
+  * This finds these jump tables and adds them to the insn->alts lists.
+  */
+-static int add_switch_table_alts(struct objtool_file *file)
++static int add_jump_table_alts(struct objtool_file *file)
+ {
+ 	struct section *sec;
+ 	struct symbol *func;
+@@ -1142,7 +1148,7 @@ static int add_switch_table_alts(struct objtool_file *file)
+ 			if (func->type != STT_FUNC)
+ 				continue;
+ 
+-			ret = add_func_switch_tables(file, func);
++			ret = add_func_jump_tables(file, func);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -1339,7 +1345,7 @@ static int decode_sections(struct objtool_file *file)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = add_switch_table_alts(file);
++	ret = add_jump_table_alts(file);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index d2c211b0a5a0..4650f5d3fff2 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -385,7 +385,7 @@ static int read_relas(struct elf *elf)
+ 			rela->offset = rela->rela.r_offset;
+ 			symndx = GELF_R_SYM(rela->rela.r_info);
+ 			rela->sym = find_symbol_by_index(elf, symndx);
+-			rela->rela_sec = sec;
++			rela->sec = sec;
+ 			if (!rela->sym) {
+ 				WARN("can't find rela entry symbol %d for %s",
+ 				     symndx, sec->name);
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index e44ca5d51871..1b638de4e7c0 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -57,7 +57,7 @@ struct rela {
+ 	struct list_head list;
+ 	struct hlist_node hash;
+ 	GElf_Rela rela;
+-	struct section *rela_sec;
++	struct section *sec;
+ 	struct symbol *sym;
+ 	unsigned int type;
+ 	unsigned long offset;
 -- 
 2.20.1
 
