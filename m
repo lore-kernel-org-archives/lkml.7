@@ -2,160 +2,99 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2D6C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7FBC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFB020873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHyse0Ol"
+	by mail.kernel.org (Postfix) with ESMTP id 6E9E821019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390544AbfGRNvF (ORCPT
+        id S2390445AbfGRNw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:51:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38657 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbfGRNvF (ORCPT
+        Thu, 18 Jul 2019 09:52:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46664 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfGRNw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:51:05 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so27423093ljg.5;
-        Thu, 18 Jul 2019 06:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=1BOBfJjzAO1ncQLuZBsQ1y8vAYf9kKWTQWjBVQihWco=;
-        b=dHyse0OlMCR4dZAzAAy2KlktQbXcOjLVPAOst3rFciJTqSnSxShtGX4cZEhASN6Md8
-         mEPhZljNWjS+gaNti3Nhzt2pTEWpt1psSiSVfMRtJHzCQIlxHUDAjayBw9J4/zMgvioR
-         gqYwDm9oAms8jXfZjPfcquZpbVP7zgN70pd1UVO9T9Owt8sDq6bzsGsvOaE2GDTD2KJi
-         PRb5qKo+4Uc7CngWgl6cooCenuqmBj9WE62JVFIjbzrpbALjrNXhIZk8RgGfOU/xyN1p
-         qKB/1I6AO8oWujv8oJjxVJQRRNwd4p22+G6zmTGOjz7IaqhAqgAl/C7hnCcYGIM5ucoW
-         I6QA==
+        Thu, 18 Jul 2019 09:52:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so28767254wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 06:52:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=1BOBfJjzAO1ncQLuZBsQ1y8vAYf9kKWTQWjBVQihWco=;
-        b=F8dLLiqZL7k5QTKuDfHypuPYjEWY+HPJ0Cs1XRza+AAhXPDPUSPgCWi3AT8uXbuyxk
-         BeuOpwRcl/tCaZdrI6D1cdLqyYHlR1QbXZfpmIW6MAyVnA+sW5HtWAQAWQMjKU0YDS77
-         K3+k68mD+Uf2cNU4Cef7C938R+DaxKqzxxMfOt/rlftYWy4AcqRwjV/gZ21jiUgsaL+x
-         HnUxbVJNMn1qnRNHAFyjC1wG5vkGZvaov8vxgl9gPLlqlIEza1jUwg5mXrcTN0fCu15u
-         ecdi5fkVClJkXXsBTid5wqVni6vea9FTIk9M2Cq9408VWkicu9EtO9PnsefkubVnyEAE
-         D5Qw==
-X-Gm-Message-State: APjAAAVy6O2rTU815Q9jgfXCwrH6vHAEo886/VfrN5s7ynHKrnih5pSd
-        ETyYaunPKvrMYRYTzt5ZX1Uss2L2aK8io/li0BE=
-X-Google-Smtp-Source: APXvYqxt/0B7BmQXX4nJWn8Apr06RMr6QZRBEqRaQXynp22L7R1W2vLTcurN1dI9F092AnQEmnQ/OKbzBhiLIf5IAz8=
-X-Received: by 2002:a2e:8155:: with SMTP id t21mr24203961ljg.80.1563457862034;
- Thu, 18 Jul 2019 06:51:02 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2defXGb6i7e6Mhp08ZGJPyYpwSINwFXbDxPiExwBqLw=;
+        b=CMJHMbnau61zLAZQXPOJ5T5SnDYuskeGreQc8/uFEn9bNmAy4BUIyUbKS6x5vktaoS
+         //FWIOHpPUJxqpCxktLeJgBpqf3WJtJvS2byDoZIRixBtxFC8SM0c/QZQcXxlvaTdIfK
+         o/OBiKQYgNmE72eJtJL5/sQZYwe/slRBd/9wms4ggoohAVpmhLWxbd/HPgJZQLSK/Fui
+         tKkh437xiApEe4vkD8ZkBGaVkfSV0PGE3LtWCvm3zszjMIQiu33BxK17gss9ZK/R6ZcF
+         SWVMeOxTL4pxV1yMbfXF0nUknLKYz2E6YHA/FShF7KmriDwOnNMVvBgLfELUPd3FuhU2
+         s1Pg==
+X-Gm-Message-State: APjAAAVKZPrjSjvGSkxyd9uPOa89mJNu5c9GYlnZL/pBUfk64b96E3vm
+        ryAir16+lo/s07QV5ynOndmv+c5MoCHH5Q==
+X-Google-Smtp-Source: APXvYqyWEoHk4aK6RXQz+bas0Gq722UUqaEAn6c901GtELogmOWF10zIm+PB7Lewb7/ketJ/Fti5Rw==
+X-Received: by 2002:adf:f186:: with SMTP id h6mr37752268wro.274.1563457975062;
+        Thu, 18 Jul 2019 06:52:55 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
+        by smtp.gmail.com with ESMTPSA id r123sm24558962wme.7.2019.07.18.06.52.54
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 06:52:54 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: x86/vPMU: refine kvm_pmu err msg when event
+ creation failed
+To:     Like Xu <like.xu@linux.intel.com>, Avi Kivity <avi@scylladb.com>
+Cc:     Joe Perches <joe@perches.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190718053514.59742-1-like.xu@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3d1d84a0-7c63-e470-a1d1-b32f56e52f74@redhat.com>
+Date:   Thu, 18 Jul 2019 15:52:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190718020745.8867-1-fred@fredlawl.com>
-In-Reply-To: <20190718020745.8867-1-fred@fredlawl.com>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Thu, 18 Jul 2019 08:50:50 -0500
-Message-ID: <CABhMZUWX055ysYoy7CyFoKE1DCCrGnQXuh9cEqNHk4r5Se+5fA@mail.gmail.com>
-Subject: Re: [PATCH] cxgb4: Prefer pcie_capability_read_word()
-To:     Frederick Lawler <fred@fredlawl.com>
-Cc:     vishal@chelsio.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190718053514.59742-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 9:08 PM Frederick Lawler <fred@fredlawl.com> wrote:
->
-> Commit 8c0d3a02c130 ("PCI: Add accessors for PCI Express Capability")
-> added accessors for the PCI Express Capability so that drivers didn't
-> need to be aware of differences between v1 and v2 of the PCI
-> Express Capability.
->
-> Replace pci_read_config_word() and pci_write_config_word() calls with
-> pcie_capability_read_word() and pcie_capability_write_word().
->
-> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
-
-Nice job on all these patches!  These all help avoid errors and
-identify possibilities for refactoring.
-
-If there were a cover letter for the series, I would have replied to
-that, but for all of them:
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-If you post the series again for any reason, you can add that.
-Otherwise, whoever applies them can add my reviewed-by.
-
+On 18/07/19 07:35, Like Xu wrote:
+> If a perf_event creation fails due to any reason of the host perf
+> subsystem, it has no chance to log the corresponding event for guest
+> which may cause abnormal sampling data in guest result. In debug mode,
+> this message helps to understand the state of vPMC and we may not
+> limit the number of occurrences but not in a spamming style.
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
 > ---
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 6 ++----
->  drivers/net/ethernet/chelsio/cxgb4/t4_hw.c      | 9 +++------
->  2 files changed, 5 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> index 715e4edcf4a2..98ff71434673 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> @@ -5441,7 +5441,6 @@ static int cxgb4_iov_configure(struct pci_dev *pdev, int num_vfs)
->                 char name[IFNAMSIZ];
->                 u32 devcap2;
->                 u16 flags;
-> -               int pos;
->
->                 /* If we want to instantiate Virtual Functions, then our
->                  * parent bridge's PCI-E needs to support Alternative Routing
-> @@ -5449,9 +5448,8 @@ static int cxgb4_iov_configure(struct pci_dev *pdev, int num_vfs)
->                  * and above.
->                  */
->                 pbridge = pdev->bus->self;
-> -               pos = pci_find_capability(pbridge, PCI_CAP_ID_EXP);
-> -               pci_read_config_word(pbridge, pos + PCI_EXP_FLAGS, &flags);
-> -               pci_read_config_dword(pbridge, pos + PCI_EXP_DEVCAP2, &devcap2);
-> +               pcie_capability_read_word(pbridge, PCI_EXP_FLAGS, &flags);
-> +               pcie_capability_read_dword(pbridge, PCI_EXP_DEVCAP2, &devcap2);
->
->                 if ((flags & PCI_EXP_FLAGS_VERS) < 2 ||
->                     !(devcap2 & PCI_EXP_DEVCAP2_ARI)) {
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-> index f9b70be59792..346d7b59c50b 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-> @@ -7267,7 +7267,6 @@ int t4_fixup_host_params(struct adapter *adap, unsigned int page_size,
->         } else {
->                 unsigned int pack_align;
->                 unsigned int ingpad, ingpack;
-> -               unsigned int pcie_cap;
->
->                 /* T5 introduced the separation of the Free List Padding and
->                  * Packing Boundaries.  Thus, we can select a smaller Padding
-> @@ -7292,8 +7291,7 @@ int t4_fixup_host_params(struct adapter *adap, unsigned int page_size,
->                  * multiple of the Maximum Payload Size.
->                  */
->                 pack_align = fl_align;
-> -               pcie_cap = pci_find_capability(adap->pdev, PCI_CAP_ID_EXP);
-> -               if (pcie_cap) {
-> +               if (pci_is_pcie(adap->pdev)) {
->                         unsigned int mps, mps_log;
->                         u16 devctl;
->
-> @@ -7301,9 +7299,8 @@ int t4_fixup_host_params(struct adapter *adap, unsigned int page_size,
->                          * [bits 7:5] encodes sizes as powers of 2 starting at
->                          * 128 bytes.
->                          */
-> -                       pci_read_config_word(adap->pdev,
-> -                                            pcie_cap + PCI_EXP_DEVCTL,
-> -                                            &devctl);
-> +                       pcie_capability_read_word(adap->pdev, PCI_EXP_DEVCTL,
-> +                                                 &devctl);
->                         mps_log = ((devctl & PCI_EXP_DEVCTL_PAYLOAD) >> 5) + 7;
->                         mps = 1 << mps_log;
->                         if (mps > pack_align)
-> --
-> 2.17.1
->
+>  arch/x86/kvm/pmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index aa5a2597305a..cedaa01ceb6f 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -131,8 +131,8 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>  						 intr ? kvm_perf_overflow_intr :
+>  						 kvm_perf_overflow, pmc);
+>  	if (IS_ERR(event)) {
+> -		printk_once("kvm_pmu: event creation failed %ld\n",
+> -			    PTR_ERR(event));
+> +		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
+> +			    PTR_ERR(event), pmc->idx);
+>  		return;
+>  	}
+>  
+> 
+
+Queued, thanks.
+
+Paolo
