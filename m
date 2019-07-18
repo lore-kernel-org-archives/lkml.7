@@ -2,128 +2,175 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D25EC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE066C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681C6217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563411125;
-	bh=TF6c8DHV4IC0S97LT0eYfmV81npEomR7oGutaE5KF5c=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=lkKlZ/8hR3zfz1PiigrPK83Wy820Udnv9AtrVxTeyZKaSSsNkXQcEjJn2UptUv/Qq
-	 xOJgwvpbHQWkpT4AstAyJ70df0fU8VTKFYnRGPT6zeKorPbvL1b3OBWbnwegsr5LRh
-	 DEt3URzzGNKVMNe0Ks9v9d7FrAzrjcdTbqBY79g8=
+	by mail.kernel.org (Postfix) with ESMTP id A18A321849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfGRAwD (ORCPT
+        id S1731688AbfGRAwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:52:03 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38011 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727557AbfGRAwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:52:03 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n11so25394914qtl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 17:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=j18WraFuZIluoyKhD6u2cAa7N3YW50rIzRpqn3W/qyo=;
-        b=ku/dsPt2CV4/LzppNoofF/xj17vxxH4Am/eVLliH4v+oBKAhu8qbqE0cbl3nhyfvPf
-         DkMSVTBbDUgQEGkZo5l98rjFv6VF4YQW56xJgQdRcBG9J+17qo8Ujm0F8JJnt6WriJZk
-         IvZgWTxkCqYoassa2sZadLBXpl6m5N5rTPjitv9dggsP4vOVt+wDCib+XmlcUw5gStui
-         tntmFhONphfREnnnqs54XEHJ8MQvqqmfMZNjUCvH39ji/EYdNR36LX+KgAVXJmpv9WAh
-         Fsc5qNNUFkPcjOE7kurckOuVdoQhvVvjlmM4A7xL9FgCCsrM2jo84+OT0YU3nS1CfEdm
-         kNWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=j18WraFuZIluoyKhD6u2cAa7N3YW50rIzRpqn3W/qyo=;
-        b=ft1Z26xup+T8Z2tkLDchXI6gbAieZzYlPnfCKytkWpKR08qBTX0x691i/TF5hCam7d
-         cxhuJQdCn/R63hkkoPcz+CyG1IT5Srj23jdlrDYPcIw2Hhpe2IFFb9yvN8NlBn3EbB8G
-         3pgTjdmJGXD44KgccuJ/LScAM1PerzP5DxJQpsjHInjDHHkCtf0MH9tdxfchml2BWOij
-         uRziYyv4EV17J/js+3yvHnmBeJnlCxcKQvmIchKBkKzQW5TRgIaqz1rYsoBKBetfsSsr
-         PsLBb9He2rPVbTtc1KetTFEVhf9qZbpI0uSV+/41PP0JeOJnlAfv2m43U8NIUvpsUlA4
-         tFQw==
-X-Gm-Message-State: APjAAAUL5CicPZgDDwaUR3+m4TZlPbS7Z0ed15FSuPe4rqHFxDeO8wlV
-        FRsL3C3XyG2uRSTYoKIuFJD2pQEUO8w=
-X-Google-Smtp-Source: APXvYqzWnrReab7SToU+AaYtwoMN2X2d3/rvf+DPDu/2s3OV39Bc03HEeA4XHkRWKImbUBr89GOMNA==
-X-Received: by 2002:a0c:8705:: with SMTP id 5mr30105641qvh.32.1563411122629;
-        Wed, 17 Jul 2019 17:52:02 -0700 (PDT)
-Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
-        by smtp.gmail.com with ESMTPSA id 123sm10593436qkm.61.2019.07.17.17.52.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jul 2019 17:52:02 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 20:52:00 -0400
-From:   Konrad Rzeszutek Wilk <konrad@kernel.org>
-To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] (swiotlb) for-linus-5.2
-Message-ID: <20190718005159.GA19783@localhost.localdomain>
+        Wed, 17 Jul 2019 20:52:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49296 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727557AbfGRAwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 20:52:06 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D39253179B56;
+        Thu, 18 Jul 2019 00:52:00 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-14.phx2.redhat.com [10.3.112.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CCA60544F3;
+        Thu, 18 Jul 2019 00:51:48 +0000 (UTC)
+Date:   Wed, 17 Jul 2019 20:51:45 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        ebiederm@xmission.com, nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+Message-ID: <20190718005145.eshekqfr3navqqiy@madcap2.tricolour.ca>
+References: <20190529153427.GB8959@cisco>
+ <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
+ <20190529222835.GD8959@cisco>
+ <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
+ <20190530170913.GA16722@mail.hallyn.com>
+ <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
+ <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
+ <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
+ <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
+ <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Jul 2019 00:52:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-07-16 19:30, Paul Moore wrote:
+> On Tue, Jul 16, 2019 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-07-15 17:04, Paul Moore wrote:
+> > > On Mon, Jul 8, 2019 at 2:06 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> 
+> ...
+> 
+> > > > If we can't trust ns_capable() then why are we passing on
+> > > > CAP_AUDIT_CONTROL?  It is being passed down and not stripped purposely
+> > > > by the orchestrator/engine.  If ns_capable() isn't inherited how is it
+> > > > gained otherwise?  Can it be inserted by cotainer image?  I think the
+> > > > answer is "no".  Either we trust ns_capable() or we have audit
+> > > > namespaces (recommend based on user namespace) (or both).
+> > >
+> > > My thinking is that since ns_capable() checks the credentials with
+> > > respect to the current user namespace we can't rely on it to control
+> > > access since it would be possible for a privileged process running
+> > > inside an unprivileged container to manipulate the audit container ID
+> > > (containerized process has CAP_AUDIT_CONTROL, e.g. running as root in
+> > > the container, while the container itself does not).
+> >
+> > What makes an unprivileged container unprivileged?  "root", or "CAP_*"?
+> 
+> My understanding is that when most people refer to an unprivileged
+> container they are referring to a container run without capabilities
+> or a container run by a user other than root.  I'm sure there are
+> better definitions out there, by folks much smarter than me on these
+> things, but that's my working definition.
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Close enough to my understanding...
 
+> > If CAP_AUDIT_CONTROL is granted, does "root" matter?
+> 
+> Our discussions here have been about capabilities, not UIDs.  The only
+> reason root might matter is that it generally has the full capability
+> set.
 
-Hey Linus,
+Good, that's my understanding.
 
-Please git pull the following branch:
+> > Does it matter what user namespace it is in?
+> 
+> What likely matters is what check is called: capable() or
+> ns_capable().  Those can yield very different results.
 
-  git pull git://git.kernel.org/pub/scm/linux/kernel/git/konrad/swiotlb.git for-linus-5.2
+Ok, I finally found what I was looking for to better understand the
+challenge with trusting ns_capable().  Sorry for being so dense and slow
+on this one.  I thought I had gone through the code carefully enough,
+but this time I finally found it.  set_cred_user_ns() sets a full set of
+capabilities rather than inheriting them from the parent user_ns, called
+from userns_install() or create_userns().  Even if the container
+orchestrator/engine restricts those capabilities on its own containers,
+they could easily unshare a userns and get a full set unless it also
+restricted CAP_SYS_ADMIN, which is used too many other places to be
+practical to restrict.
 
-which has one compiler fix, and a bug-fix in swiotlb_nr_tbl() and swiotlb_max_segment()
-to check also for no_iotlb_memory.
+> > I understand that root is *gained* in an
+> > unprivileged user namespace, but capabilities are inherited or permitted
+> > and that process either has it or it doesn't and an unprivileged user
+> > namespace can't gain a capability that has been rescinded.  Different
+> > subsystems use the userid or capabilities or both to determine
+> > privileges.
+> 
+> Once again, I believe the important thing to focus on here is
+> capable() vs ns_capable().  We can't safely rely on ns_capable() for
+> the audit container ID policy since that is easily met inside the
+> container regardless of the process' creds which started the
+> container.
 
-Diffstat and changelog below:
+Agreed.
 
-drivers/xen/swiotlb-xen.c |  2 +-
- kernel/dma/swiotlb.c      | 30 ++++++++++++++++--------------
- 2 files changed, 17 insertions(+), 15 deletions(-)
+> > In this case, is the userid relevant?
+> 
+> We don't do UID checks, we do capability checks, so yes, the UID is irrelevant.
 
+Agreed.
 
-Arnd Bergmann (1):
-      swiotlb: fix phys_addr_t overflow warning
+> > > > At this point I would say we are at an impasse unless we trust
+> > > > ns_capable() or we implement audit namespaces.
+> > >
+> > > I'm not sure how we can trust ns_capable(), but if you can think of a
+> > > way I would love to hear it.  I'm also not sure how namespacing audit
+> > > is helpful (see my above comments), but if you think it is please
+> > > explain.
+> >
+> > So if we are not namespacing, why do we not trust capabilities?
+> 
+> We can trust capable(CAP_AUDIT_CONTROL) for enforcing audit container
+> ID policy, we can not trust ns_capable(CAP_AUDIT_CONTROL).
 
-Florian Fainelli (2):
-      swiotlb: Group identical cleanup in swiotlb_cleanup()
-      swiotlb: Return consistent SWIOTLB segments/nr_tbl
+Ok.  So does a process in a non-init user namespace have two (or more)
+sets of capabilities stored in creds, one in the init_user_ns, and one
+in current_user_ns?  Or does it get stripped of all its capabilities in
+init_user_ns once it has its own set in current_user_ns?  If the former,
+then we can use capable().  If the latter, we need another mechanism, as
+you have suggested might be needed.
 
+If some random unprivileged user wants to fire up a container
+orchestrator/engine in his own user namespace, then audit needs to be
+namespaced.  Can we safely discard this scenario for now?  That user can
+use a VM.
 
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
+> paul moore
 
------BEGIN PGP SIGNATURE-----
+- RGB
 
-iQIcBAEBAgAGBQJdL8KvAAoJEFKlDoTx2wm/03YP/2FxnLFTxEAi1qFcD55yuC+v
-6yYRmot29jCMA84rWhxEFCnsCPamG++eF+mx9d9HJrMonBWsvtm6FV5cpcsh9B3G
-Yqun9DZWWsop97ZVn5XsLdmLo7UCIJnjc+Z10ca91pQaV14CrNvtU7ZiaGGaUTXo
-MJ3WLil+sD5P8GrMgnYENA74jcnbEimd37XDtap2AE7lKpcQL1ihTHptAUO0pHne
-kuyPnwtzJALa2RNdsouFY4MCuRlmOsL4tIAUEzQE/NT5SmHt47zmf0n6Kk/1i1Le
-k7a91/TPxjNWvagwZozBRc4zuVbZgS5xMuUlMjzQHrWaqXYrSTSILZ3ZVnCKmyPK
-e8dZJZXtmcRLsSBW6wfE0HYv8SQGVMDTWBCAWjefqXa6uqkfvBaPWpa9r7qtBUZf
-B0oAls9LzdDliavybRXJL23nyq7Zjvdauw19L9CCBCMjuAoriEOkg9nZc/13H/w2
-XUWqhAjW/64U7wEjVBKkVWtXptTEpEp7T112hgXYxm39/Uk5pZnte2WouQbI1AMo
-xRr9G7y2V6pcXApgeUaCTYQmR7m8speRAfnoCy6xIl7skUIdTR6tQasfN3HHKu+q
-kAZdGGEKf7rSDthUMOeDN+z17AmX9OqORaBsOdMslo4L4qEtusm001djJoWL9+1U
-Z2zSIe/jS6Q9EwfS4EaS
-=WIqP
------END PGP SIGNATURE-----
-
---FCuugMFkClbJLl1L--
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
