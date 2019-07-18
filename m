@@ -2,169 +2,140 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9481C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E33C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23622173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E58C21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k0b4SHcy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/A6ZSXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403848AbfGRVGm (ORCPT
+        id S2391043AbfGRVJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:06:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45517 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfGRVGm (ORCPT
+        Thu, 18 Jul 2019 17:09:23 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37193 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727687AbfGRVJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:06:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so13423162pgp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:06:41 -0700 (PDT)
+        Thu, 18 Jul 2019 17:09:22 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so28761525qto.4;
+        Thu, 18 Jul 2019 14:09:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WHBYUvj9JGt1SYE4KDr6Cz0xmk9pn3DzGdEMJem8w6M=;
-        b=k0b4SHcyBjdAtwD9RJNFolaMMkMhrDoStFrJRvQsgwkWh2XpUphj4gS5DKLq/llGF/
-         39sE3TzdtW8s123SyMA+Oe3DwQpfkszvS0mpa26giIimqBA+5dr0q/qgm1cEOeI0OK0l
-         OdUaHLgvStngj7WwSLrwbiDOYE07o0VsJCs04=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dyup3V+7x6vR5f0mEdgXHm4ad/gxVODy2UYvXjZtm38=;
+        b=g/A6ZSXFBVZwZkYYxAc6/240ZOw/nl+fyU7BjnEptzhSBtU1aTXriTXck/+BG1DVOY
+         EV7nAttQx1wz7J9GFiiRlu0+0fpCDFuK708Veu0VrtQUKch3fKT7QXOYuBgA8ioW/L8g
+         2yZ0VeWPfE0VAB52AKfusR8k1B+mH6sY1xsE/zS6Lw2e7m1ItUaud6iua3qpHdSKDx8W
+         +J+F5QDBMqMYtZmLIUaPCxV6mlxG/HcVbe7ITBXceI3phQoSF7h/u01JzOVR0mj3Kh2y
+         H9GcUErP1w0nbrRy6K7wnuPkIyOSttzXPL1P2OKYyjOOPeZvocpNWmgMp6FzpqRmFiHN
+         SOfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WHBYUvj9JGt1SYE4KDr6Cz0xmk9pn3DzGdEMJem8w6M=;
-        b=AVnSQlfBhWmWcBiJGPdNN1HN4UTgB2NHofaR7qtteFpsZNd6KEMr68RXb/0AsQeo6r
-         liiCfgNTHVtIHdq7GlAplvnMw6jUHMec7uHuqPgdJutiY1s7Q95YoztUjwTJ4qusQ5q1
-         l2+vqQqxEdtOOwcogJS36NFmcnBC+wI8rwjoIWUvP4YT9GwQosfGb4D0+E+fyYxKZyei
-         YEmhOYXJ8GG7Z/ERA0eZDdHMLhLtjNO4Kbo2jjWls0pxpNQb9692k+FFWsiHlu4Q+WDZ
-         nW7wl73j5w1mrPRNLDGgMhlFbq7OGGvNEaf6nGJzpj72HP0La1Auob+qITmw8efAXrNC
-         YQSA==
-X-Gm-Message-State: APjAAAXzMT/Hnn7addDpMtGdcs695AmLgwCjfj/jkWDwJdYGudwa7+Oc
-        qwwkmtZzE8AijkFo9s5RtKJwq26of0A=
-X-Google-Smtp-Source: APXvYqyw88KMjZmP2UlNUKCxHokf10xRn72SPzK4naVkut7nVWidBL7H7RX/dBpZIWSSAw8y7+lrjw==
-X-Received: by 2002:a63:eb51:: with SMTP id b17mr48524550pgk.384.1563484001438;
-        Thu, 18 Jul 2019 14:06:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v8sm23845337pgs.82.2019.07.18.14.06.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Jul 2019 14:06:40 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 14:06:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matthew Garrett <mjg59@google.com>, netdev@vger.kernel.org,
-        Chun-Yi Lee <jlee@suse.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH V36 23/29] bpf: Restrict bpf when kernel lockdown is in
- confidentiality mode
-Message-ID: <201907181406.001618FB6@keescook>
-References: <20190718194415.108476-1-matthewgarrett@google.com>
- <20190718194415.108476-24-matthewgarrett@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dyup3V+7x6vR5f0mEdgXHm4ad/gxVODy2UYvXjZtm38=;
+        b=NGHzAZu8riSRlZtN2VE8iL/AYp3oMgBD6wMr6OoatI8aSeApYuCcgM3+6nSTy0Fcv9
+         cbda8P5jLWwDHNhwpdIkf21ybWnd/tYiFwMohmSiM3GgPvU+hFVhgF1+2dUzqBwAIfVi
+         ktjOXLGEmEFADG7rQfkm3bLaKUXvKDbG/rJetveAak67x7itc7amn97Es0wX1S7xfd6z
+         N30791N4g/k8lCPR1cw/8NTnVgmxw/mWf72tJ4J87Zx5uSzA2yz67COuoDQZjOJ1jCpT
+         dBW+jmcMUixl7jMiv9lwEFR8iM695XToDDUXUhdDMHwzcB7/wm8d4ftIf2wUskJPyvlV
+         Lpaw==
+X-Gm-Message-State: APjAAAXcvfMFP7FTvP0p/taVZ/zfO9hX1oL7SbHteVz/pvKlKf0PIhw/
+        aSLWHFTFsSO7zIcFI1EfKJw5dTA48wo0IWoX9Mc=
+X-Google-Smtp-Source: APXvYqx/Xj+iAj6ZhkMjTX1Z+74RGCpbHhz221hQ/4tFr/eSNb0ZRWjxjhZdyPpTxY3WuORbyCrdGEBMm+KsiHIPG48=
+X-Received: by 2002:a0c:b095:: with SMTP id o21mr35480609qvc.73.1563484161439;
+ Thu, 18 Jul 2019 14:09:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718194415.108476-24-matthewgarrett@google.com>
+References: <20190716115535-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ud47-cWu9VnAAD_Q2Fjia5gaWCz_L9HUF6PBhbugv6tCQ@mail.gmail.com>
+ <20190716125845-mutt-send-email-mst@kernel.org> <CAKgT0UfgPdU1H5ZZ7GL7E=_oZNTzTwZN60Q-+2keBxDgQYODfg@mail.gmail.com>
+ <20190717055804-mutt-send-email-mst@kernel.org> <CAKgT0Uf4iJxEx+3q_Vo9L1QPuv9PhZUv1=M9UCsn6_qs7rG4aw@mail.gmail.com>
+ <20190718003211-mutt-send-email-mst@kernel.org> <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
+ <20190718162040-mutt-send-email-mst@kernel.org> <CAKgT0UcKTzSYZnYsMQoG6pXhpDS7uLbDd31dqfojCSXQWSsX_A@mail.gmail.com>
+ <20190718164656-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190718164656-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 18 Jul 2019 14:09:10 -0700
+Message-ID: <CAKgT0UchVPRuM1pNnsuxcJrTg1-tWQWzW1+q=_v7VuEDS3pL5g@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:44:09PM -0700, Matthew Garrett wrote:
-> From: David Howells <dhowells@redhat.com>
-> 
-> bpf_read() and bpf_read_str() could potentially be abused to (eg) allow
-> private keys in kernel memory to be leaked. Disable them if the kernel
-> has been locked down in confidentiality mode.
-> 
-> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
+On Thu, Jul 18, 2019 at 1:49 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Thu, Jul 18, 2019 at 01:34:03PM -0700, Alexander Duyck wrote:
+> > On Thu, Jul 18, 2019 at 1:24 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Thu, Jul 18, 2019 at 08:34:37AM -0700, Alexander Duyck wrote:
+> > > > > > > For example we allocate pages until shrinker kicks in.
+> > > > > > > Fair enough but in fact many it would be better to
+> > > > > > > do the reverse: trigger shrinker and then send as many
+> > > > > > > free pages as we can to host.
+> > > > > >
+> > > > > > I'm not sure I understand this last part.
+> > > > >
+> > > > > Oh basically what I am saying is this: one of the reasons to use page
+> > > > > hinting is when host is short on memory.  In that case, why don't we use
+> > > > > shrinker to ask kernel drivers to free up memory? Any memory freed could
+> > > > > then be reported to host.
+> > > >
+> > > > Didn't the balloon driver already have a feature like that where it
+> > > > could start shrinking memory if the host was under memory pressure? If
+> > > > so how would adding another one add much value.
+> > >
+> > > Well fundamentally the basic balloon inflate kind of does this, yes :)
+> > >
+> > > The difference with what I am suggesting is that balloon inflate tries
+> > > to aggressively achieve a specific goal of freed memory. We could have a
+> > > weaker "free as much as you can" that is still stronger than free page
+> > > hint which as you point out below does not try to free at all, just
+> > > hints what is already free.
+> >
+> > Yes, but why wait until the host is low on memory?
+>
+> It can come about for a variety of reasons, such as
+> other VMs being aggressive, or ours aggressively caching
+> stuff in memory.
+>
+> > With my
+> > implementation we can perform the hints in the background for a low
+> > cost already. So why should we wait to free up memory when we could do
+> > it immediately. Why let things get to the state where the host is
+> > under memory pressure when the guests can be proactively freeing up
+> > the pages and improving performance as a result be reducing swap
+> > usage?
+>
+> You are talking about sending free memory to host.
+> Fair enough but if you have drivers that aggressively
+> allocate memory then there won't be that much free guest
+> memory without invoking a shrinker.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> cc: netdev@vger.kernel.org
-> cc: Chun-Yi Lee <jlee@suse.com>
-> cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> ---
->  include/linux/security.h     |  1 +
->  kernel/trace/bpf_trace.c     | 10 ++++++++++
->  security/lockdown/lockdown.c |  1 +
->  3 files changed, 12 insertions(+)
-> 
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 987d8427f091..8dd1741a52cd 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -118,6 +118,7 @@ enum lockdown_reason {
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_KCORE,
->  	LOCKDOWN_KPROBES,
-> +	LOCKDOWN_BPF_READ,
->  	LOCKDOWN_CONFIDENTIALITY_MAX,
->  };
->  
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index ca1255d14576..492a8bfaae98 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -142,8 +142,13 @@ BPF_CALL_3(bpf_probe_read, void *, dst, u32, size, const void *, unsafe_ptr)
->  {
->  	int ret;
->  
-> +	ret = security_locked_down(LOCKDOWN_BPF_READ);
-> +	if (ret < 0)
-> +		goto out;
-> +
->  	ret = probe_kernel_read(dst, unsafe_ptr, size);
->  	if (unlikely(ret < 0))
-> +out:
->  		memset(dst, 0, size);
->  
->  	return ret;
-> @@ -569,6 +574,10 @@ BPF_CALL_3(bpf_probe_read_str, void *, dst, u32, size,
->  {
->  	int ret;
->  
-> +	ret = security_locked_down(LOCKDOWN_BPF_READ);
-> +	if (ret < 0)
-> +		goto out;
-> +
->  	/*
->  	 * The strncpy_from_unsafe() call will likely not fill the entire
->  	 * buffer, but that's okay in this circumstance as we're probing
-> @@ -580,6 +589,7 @@ BPF_CALL_3(bpf_probe_read_str, void *, dst, u32, size,
->  	 */
->  	ret = strncpy_from_unsafe(dst, unsafe_ptr, size);
->  	if (unlikely(ret < 0))
-> +out:
->  		memset(dst, 0, size);
->  
->  	return ret;
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index 6b123cbf3748..1b89d3e8e54d 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -33,6 +33,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_KCORE] = "/proc/kcore access",
->  	[LOCKDOWN_KPROBES] = "use of kprobes",
-> +	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
->  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
->  };
->  
-> -- 
-> 2.22.0.510.g264f2c817a-goog
-> 
-
--- 
-Kees Cook
+So then what we really need is a way for the host to trigger the
+shrinker via a call to drop_slab() on the guest don't we? Then we
+could automatically hint the free pages to the host.
