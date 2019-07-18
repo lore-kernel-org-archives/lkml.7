@@ -2,198 +2,110 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0FCC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00818C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCD521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C56204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Xd4SjiAW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jiDbTl6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391174AbfGRTSB (ORCPT
+        id S2391277AbfGRTSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:18:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35643 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbfGRTSA (ORCPT
+        Thu, 18 Jul 2019 15:18:24 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4737 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbfGRTSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:18:00 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJHjNw2125329
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:17:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJHjNw2125329
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477466;
-        bh=Q1tBsD/0Pd9DEsappsRA20ksFX/R82Dtp+wHnHiHzOw=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Xd4SjiAWXN5bi/h8KYmUkmnfWvTIVBWy/5uMd7D0040+N2QFVuz3W4RT1XgrcQNgz
-         533IRNJ2Now5juP7hTZUnolMyo3HrTG2XYxqlmeDwFSH8BSG0ShuMuppoeLl5udCCj
-         yzjAYuaRM78d/5Fk59ip2Gy0wY6nZb8qFQu2eRGvLawOmIPO5zaEOO+3Ywz4j9/4a6
-         wM6HvQY15RP1AjOm+zdxSSytb3rUDZe1ZPSRAUTo4455QJ23V3Kf+3E1sQRWx6VtYB
-         xuK7Vz8/Oe0xfGgDiXIR64hVSoAuqbLb73cn6hqmzMR0BbbE6I6qzUfQ40qooC3YXn
-         MIvn0922zpdqA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJHj612125326;
-        Thu, 18 Jul 2019 12:17:45 -0700
-Date:   Thu, 18 Jul 2019 12:17:45 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-8e25c9f8b482ea8d8b6fb4f6f5c09bcc5ee18663@git.kernel.org>
-Cc:     peterz@infradead.org, jpoimboe@redhat.com, ndesaulniers@google.com,
-        hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: jpoimboe@redhat.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          mingo@kernel.org, ndesaulniers@google.com
-In-Reply-To: <9e6679610768fb6e6c51dca23f7d4d0c03b0c910.1563413318.git.jpoimboe@redhat.com>
-References: <9e6679610768fb6e6c51dca23f7d4d0c03b0c910.1563413318.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Change dead_end_function() to return
- boolean
-Git-Commit-ID: 8e25c9f8b482ea8d8b6fb4f6f5c09bcc5ee18663
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 18 Jul 2019 15:18:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d30c5ff0000>; Thu, 18 Jul 2019 12:18:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 18 Jul 2019 12:18:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 12:18:23 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
+ 2019 19:18:22 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id D5FEB40FB7; Thu, 18 Jul 2019 22:18:20 +0300 (EEST)
+Date:   Thu, 18 Jul 2019 22:18:20 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Message-ID: <20190718191820.GG12715@pdeschrijver-desktop.Nvidia.com>
+References: <20190716083701.225f0fd9@dimatab>
+ <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
+ <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
+ <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
+ <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
+ <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
+ <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
+ <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
+ <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
+ <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563477503; bh=ftwX0g5kKU4Fe+glQVQ57kSzC4Dhkae8J2hTRCDjCYI=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=jiDbTl6X2iJyZ2RF71RR5kRDG5pjsOKISScH0EtjrEedvZjoAjSrAomEnXFDV+v+7
+         WlrqT5ZGMwUJlpiKhiLH421Sbbqnwtk+9w0aMU6Q0Cg1h1XBTiDCE/59L3cTKcIdyk
+         A01BZ8WY8kZgEZ8PGt8HLYN9j0jQwvKQZZwxlJybftNJ93Ar5BT2VjAesDc4q96LeZ
+         R2YxijpsSpDSbYwt1GrIVXljL1Jg5QavVX7a3axjaAsb8gDAOfE5U3yQ2P6ibSGxNL
+         HhH5OMId9rC0F0YI6J1kQHoDjhoj3T1dElCHu8G23UMsh8hBpqcCvgQpK4J2G61sKi
+         Vq12hXvTZp2gQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8e25c9f8b482ea8d8b6fb4f6f5c09bcc5ee18663
-Gitweb:     https://git.kernel.org/tip/8e25c9f8b482ea8d8b6fb4f6f5c09bcc5ee18663
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:50 -0500
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Jul 2019 21:01:08 +0200
+On Tue, Jul 16, 2019 at 09:43:16PM +0300, Dmitry Osipenko wrote:
+> > CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at higher rate
+> > so switching to PLL_P during CPUFreq probe prior to dfll clock enable
+> > should be safe.
+> 
+> AFAIK, PLLX could run at ~200MHz. There is also a divided output of PLLP
+> which CCLKG supports, the PLLP_OUT4.
+> 
+> Probably, realistically, CPU is always running off a fast PLLX during
+> boot, but I'm wondering what may happen on KEXEC. I guess ideally
+> CPUFreq driver should also have a 'shutdown' callback to teardown DFLL
+> on a reboot, but likely that there are other clock-related problems as
+> well that may break KEXEC and thus it is not very important at the moment.
+> 
 
-objtool: Change dead_end_function() to return boolean
+If you turn off the DFLL, you have to be aware that the voltage margins
+for DFLL use are lower than for PLL use. So you either need to be sure
+to switch to a frequency below fmax @ Vmin or you program the boot
+voltage and then you can use PLLX as setup by the bootloader. For OVR
+regulators you can't program a voltage without the DFLL, so you have to
+tristate the PWM output which will give you a hardwired boot voltage.
 
-dead_end_function() can no longer return an error.  Simplify its
-interface by making it return boolean.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/9e6679610768fb6e6c51dca23f7d4d0c03b0c910.1563413318.git.jpoimboe@redhat.com
-
----
- tools/objtool/check.c | 36 ++++++++++++++----------------------
- 1 file changed, 14 insertions(+), 22 deletions(-)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index dece3253ff6a..d9d1c9b54947 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -105,14 +105,9 @@ static struct instruction *next_insn_same_func(struct objtool_file *file,
-  *
-  * For local functions, we have to detect them manually by simply looking for
-  * the lack of a return instruction.
-- *
-- * Returns:
-- *  -1: error
-- *   0: no dead end
-- *   1: dead end
-  */
--static int __dead_end_function(struct objtool_file *file, struct symbol *func,
--			       int recursion)
-+static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
-+				int recursion)
- {
- 	int i;
- 	struct instruction *insn;
-@@ -139,29 +134,29 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 	};
- 
- 	if (func->bind == STB_WEAK)
--		return 0;
-+		return false;
- 
- 	if (func->bind == STB_GLOBAL)
- 		for (i = 0; i < ARRAY_SIZE(global_noreturns); i++)
- 			if (!strcmp(func->name, global_noreturns[i]))
--				return 1;
-+				return true;
- 
- 	if (!func->len)
--		return 0;
-+		return false;
- 
- 	insn = find_insn(file, func->sec, func->offset);
- 	if (!insn->func)
--		return 0;
-+		return false;
- 
- 	func_for_each_insn_all(file, func, insn) {
- 		empty = false;
- 
- 		if (insn->type == INSN_RETURN)
--			return 0;
-+			return false;
- 	}
- 
- 	if (empty)
--		return 0;
-+		return false;
- 
- 	/*
- 	 * A function can have a sibling call instead of a return.  In that
-@@ -174,7 +169,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 
- 			if (!dest)
- 				/* sibling call to another file */
--				return 0;
-+				return false;
- 
- 			if (dest->func && dest->func->pfunc != insn->func->pfunc) {
- 
-@@ -186,7 +181,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 					 * This is a very rare case.  It means
- 					 * they aren't dead ends.
- 					 */
--					return 0;
-+					return false;
- 				}
- 
- 				return __dead_end_function(file, dest->func,
-@@ -196,13 +191,13 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 
- 		if (insn->type == INSN_JUMP_DYNAMIC && list_empty(&insn->alts))
- 			/* sibling call */
--			return 0;
-+			return false;
- 	}
- 
--	return 1;
-+	return true;
- }
- 
--static int dead_end_function(struct objtool_file *file, struct symbol *func)
-+static bool dead_end_function(struct objtool_file *file, struct symbol *func)
- {
- 	return __dead_end_function(file, func, 0);
- }
-@@ -2080,11 +2075,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 				if (is_fentry_call(insn))
- 					break;
- 
--				ret = dead_end_function(file, insn->call_dest);
--				if (ret == 1)
-+				if (dead_end_function(file, insn->call_dest))
- 					return 0;
--				if (ret == -1)
--					return 1;
- 			}
- 
- 			if (!no_fp && func && !has_valid_stack_frame(&state)) {
+Peter.
