@@ -2,145 +2,115 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDA0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B7FC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C57521783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HP98btX4"
+	by mail.kernel.org (Postfix) with ESMTP id 0A58B21783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563449636;
+	bh=WPhvEjgESiuygEpB/DftI4TTGrjJpMdsKyZDeI+W3lg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=nKe9sl7Hjsov+izGZ4NmRjjPjJ8tCi1sfsG0ghUjva0QiOUc/wFRyKdoyP459UGTa
+	 +jOKD7FD2aMp0w+8VpQz1SGE2cGQ4TY1xpXNb/ZHo1iyFt3dpkx8h50TZwgwD1xFyl
+	 2GQEQlrVmkW+Y3AVOP7aM5mKTTCRg9CsTmJdX9uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbfGRLaA (ORCPT
+        id S1727880AbfGRLdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:30:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42644 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRL37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:29:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t132so12760392pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IXN6tBOn9742CwcvhjcLaTFptFk037zPhxHTUhOqHvs=;
-        b=HP98btX4EinKwxJWborSBP35sYAMvoIzYVdMaep0VO8zLeuTIxbT9nr2OKCe6Yiumv
-         hNKsQYEWvKTq+9hrvN07MUyQrH/z1RZ00FegbS5DAjEVSulNidW9y6cIw3pHPJKjGhyZ
-         P5R5vHo1dyop/sXl5GB2vqjV6AI6btInD5AGrrowOIGsph5JS4MLxxB+Rr6lT7iah36M
-         kEDR0TRr8p+/x5/ipA8N9IOR7HlHmpE30TACILIdjnDVZAE4GdTvzGjjkFSpFfCQsQxz
-         CtHn/drnPh6iCmJgGYCyDDiWe3EVOXDN6ok6vHAOooh4JoTTNU9/MCdmiiL54NREo5ub
-         KwkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IXN6tBOn9742CwcvhjcLaTFptFk037zPhxHTUhOqHvs=;
-        b=QVrjPHdBxPMZiniAgB1uBVKIJSNGmGq8xTHd3GMr+QcGEDRWrhHLx2EhsuiMz7y5N5
-         +AvGD+TwYScQqltk1zKK4kNwVmbfy/WTFXU3RU/gEmkmuy8HbuzRpllI+y+HlfLRFO1r
-         ykOKygZVgwWgvxaRx2mNc4GED5P0hLNRMMAAMtKfpDKJoPcG13nTW9vRW1akxRCPZtAb
-         fDcDZRsqKmjDtUd3aD4hdnzXn+V3E9aF+RUGT/vz32Sb4z3O4IUd8tuFfJRW6bo9DGrn
-         jHQcnk84sRVBxmbl2aL7YcZV3D92DeB3CQIImzEF8hkIeMAllUn5Ld1zw38JmbOFGzm3
-         Jogg==
-X-Gm-Message-State: APjAAAW0TubmP1ZC1V1396ILvAypwTh+Jr35TLWJVjyyr/1V0xVqHe+D
-        Wl/xfK+bxFKcAXRoIPZAZFVlYAgm
-X-Google-Smtp-Source: APXvYqzUFygz6Z97TylRIv+ZdLCzz93hsA3cMib/Uz0jEQHw51nimecSpEDc4QHrMA4yyr6F1+sFUA==
-X-Received: by 2002:a65:5188:: with SMTP id h8mr14807872pgq.294.1563449399025;
-        Thu, 18 Jul 2019 04:29:59 -0700 (PDT)
-Received: from localhost ([39.7.59.92])
-        by smtp.gmail.com with ESMTPSA id b126sm41216659pfa.126.2019.07.18.04.29.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 04:29:58 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 20:29:54 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Konstantin Khlebnikov <koct9i@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] printk/panic/x86: Allow to access printk log buffer
- after crash_smp_send_stop()
-Message-ID: <20190718112954.GA1774@jagdpanzerIV>
-References: <20190716072805.22445-1-pmladek@suse.com>
- <20190716072805.22445-3-pmladek@suse.com>
- <20190718104756.GA22851@jagdpanzerIV>
- <CALYGNiMnqUKxKsY1JRi075xs-P_QzfA4Pg3XANiW0mFYkp_RQQ@mail.gmail.com>
+        Thu, 18 Jul 2019 07:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727655AbfGRLdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 07:33:54 -0400
+Received: from linux-8ccs (ip5f5ade87.dynamic.kabel-deutschland.de [95.90.222.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77AC321783;
+        Thu, 18 Jul 2019 11:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563449633;
+        bh=WPhvEjgESiuygEpB/DftI4TTGrjJpMdsKyZDeI+W3lg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZUgnYuj2bewUXgApSGXhIvzz6GNG5d75s/ZNaGO3uNUWZjBv70p6tiAtIbA/T6AtZ
+         taUMpwFeQoHkD3z/y/d53MMXucO2lxm1Kc2BtJ/vDkC+K2aelgbLUCBltC+x4Ywkzh
+         CjqJb5EaanmdG2wG8N/OvAA9YTU2Xudc4zdfDtbc=
+Date:   Thu, 18 Jul 2019 13:33:49 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Modules updates for v5.3
+Message-ID: <20190718113346.GA19574@linux-8ccs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CALYGNiMnqUKxKsY1JRi075xs-P_QzfA4Pg3XANiW0mFYkp_RQQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (07/18/19 14:07), Konstantin Khlebnikov wrote:
-> > Let me test the waters. Criticize the following idea:
-> >
-> > Can we, sort of, disconnect "supposed to be dead" CPUs from printk()
-> > so then we can unconditionally re-init printk() from panic-CPU?
-> >
-> > We have per-CPU printk_state; so panic-CPU can set, let's say,
-> > DEAD_CPUS_TELL_NO_TALES bit on all CPUs but self, and vprintk_func()
-> > will do nothing if DEAD_CPUS_TELL_NO_TALES bit set on particular
-> > CPU. Foreign CPUs are not even supposed to be alive, and smp_send_stop()
-> > waits for IPI acks from secondary CPUs long enough on average (need
-> > to check that) so if one of the CPUs is misbehaving and doesn't want
-> > to die (geez...) we will just "disconnect" it from printk() to minimize
-> > possible logbuf/console drivers interventions and then proceed with
-> > panic; assuming that misbehaving CPUs are actually up to something
-> > sane. Sometimes, you know, in some cases, those CPUs are already dead:
-> > either accidentally powered off, or went completely nuts and do nothing,
-> > etc. etc. but we still can kdump() and console_flush_on_panic().
-> 
-> Good idea.
-> Panic-CPU could just increment state to reroute printk into 'safe'
-> per-cpu buffer.
+Hi Linus,
 
-Yeah, that's better.
+Please pull below to receive modules updates for the 5.3 merge window.
+Details can be found in the signed tag.
 
-So we can do something like this
+Thanks!
 
-@@ -269,15 +269,21 @@ void printk_safe_flush_on_panic(void)
- 	 * Make sure that we could access the main ring buffer.
- 	 * Do not risk a double release when more CPUs are up.
- 	 */
--	if (raw_spin_is_locked(&logbuf_lock)) {
--		if (num_online_cpus() > 1)
--			return;
-+	debug_locks_off();
-+	raw_spin_lock_init(&logbuf_lock);
-+	/* + re-init the rest of printk() locks */
-+	printk_safe_flush();
-+}
+Jessica
 
-[..]
+---
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-+void printk_switch_to_panic_mode(int panic_cpu)
-+{
-+	int cpu;
- 
-+	for_each_possible_cpu(cpu) {
-+		if (cpu == panic_cpu)
-+			continue;
-+		per_cpu(printk_context, cpu) = 42;
-+	}
- }
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
-And call printk_switch_to_panic_mode() from panic(). And we don't
-need to touch arch code (it also covers the case when some new ARCH
-will gain NMI support).
+are available in the Git repository at:
 
-	-ss
+  git://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.3
+
+for you to fetch changes up to 93651f80dcb616b8c9115cdafc8e57a781af22d0:
+
+  modules: fix compile error if don't have strict module rwx (2019-06-26 19:27:59 +0200)
+
+----------------------------------------------------------------
+Modules updates for v5.3
+
+Summary of modules changes for the 5.3 merge window:
+
+- Code fixes and cleanups
+
+- Fix bug where set_memory_x() wasn't being called when rodata=n
+
+- Fix bug where -EEXIST was being returned for going modules
+
+- Allow arches to override module_exit_section()
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      kernel: module: Use struct_size() helper
+
+Matthias Schiffer (2):
+      module: allow arch overrides for .exit section names
+      ARM: module: recognize unwind exit sections
+
+Prarit Bhargava (1):
+      kernel/module.c: Only return -EEXIST for modules that have finished loading
+
+Yang Yingliang (2):
+      modules: fix BUG when load module with rodata=n
+      modules: fix compile error if don't have strict module rwx
+
+YueHaibing (1):
+      kernel/module: Fix mem leak in module_add_modinfo_attrs
+
+ arch/arm/kernel/module.c     |  7 ++++++
+ include/linux/moduleloader.h |  5 ++++
+ kernel/module.c              | 60 ++++++++++++++++++++++++++++++--------------
+ 3 files changed, 53 insertions(+), 19 deletions(-)
