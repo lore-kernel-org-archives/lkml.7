@@ -2,128 +2,162 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C6CC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD61C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8003C205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HPBlUKWC"
+	by mail.kernel.org (Postfix) with ESMTP id 0F9F82085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389261AbfGRD3K (ORCPT
+        id S2389400AbfGRD3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:29:10 -0400
-Received: from mail-eopbgr150083.outbound.protection.outlook.com ([40.107.15.83]:18986
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727601AbfGRD3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:29:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RzRlR4+SZKWYSLt3cpDa3RAE801nw64Wfrjr/cVsCeqffV3yZ2XZTHXqYF4kCy83vu+/XV5BDcvetg3fe5iLNGp9T+gCL2mg2aJsoyefifGLY8meOpS9nOAitsrgOsRaUAJiP5f/ez/iyxGXpD1M+/rP8mcXQ+3CvDhT749HNFsFCGD0DGDKCI2l6MmJ+WXV6jzKl9jbIorOooxak9TqLEaQwol1E/rTXejpiuWi9KkOFXyhu8McKhWURlAwCDFrG5VMJc0JUNavAyVdxBORDSESfhUKl4ZUdS3D+O5tOfu5tppE2Id3uUWGhFmRFojPCKbH3oIr2gJPQncQLVL8nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TbgJrcGw4l5ov7UeLUe0ybC+oqv2tlXgAe/QEPk/v4=;
- b=fRma4TBGVhZ8kg6FMWgx6uTmn1RrXbPGNzVvhxot9kXHwyFgSTiBTUXn1yQ1O0EsAn4AKZMODKkpGHd8ubDjjs7Y2mt5I1j0R8RqLUJdFQ/w2LdAhhfw1qBHVmhWte+y42YNmhWFaGncanS7pD9cKP+W6c22fEilv5m3Lx6+P44vqsP7t0XNf0c5hFBNL3HQeGkhSkE7crrvsY942DrY8CgswPJDKLAQJjeaebnmlqeWr8wFAsOAlcFHkKVXYUzZpHcZCVJXIb1fwscXv20jR4O7GQ9cZpm4d0nfOufS5rRRn8oVdAoYTsX6D6GQ5pAFtCY6vOmFDZOqBU889IC4hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TbgJrcGw4l5ov7UeLUe0ybC+oqv2tlXgAe/QEPk/v4=;
- b=HPBlUKWCZzayI66zY54X1ITmI43eu891fjFYVWiNEmfy+B4gxpSQrzF42Hd63qluKDoYV3odB1vFN1dWomX45yn/X2hvoSo/YLWVSVWMshCtbyCNsfAL7IUWXaDPVXfPRqaE/9rbpy75q9shBvj28WksfyjWRyp0ccbfmktyS54=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB6291.eurprd04.prod.outlook.com (20.179.33.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Thu, 18 Jul 2019 03:29:06 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
- 03:29:06 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: RE: [PATCH 2/3] firmware: imx: scu-pd: Add mu_b side PD range
-Thread-Topic: [PATCH 2/3] firmware: imx: scu-pd: Add mu_b side PD range
-Thread-Index: AQHVMdIf/A/Nl6mgYkmorW+PMBHFi6bPyyMA
-Date:   Thu, 18 Jul 2019 03:29:06 +0000
-Message-ID: <AM0PR04MB42114DD325C5DB2E06011A4A80C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190703190404.21136-1-daniel.baluta@nxp.com>
- <20190703190404.21136-3-daniel.baluta@nxp.com>
-In-Reply-To: <20190703190404.21136-3-daniel.baluta@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e10935ee-66f1-4d68-19fb-08d70b301698
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6291;
-x-ms-traffictypediagnostic: AM0PR04MB6291:
-x-microsoft-antispam-prvs: <AM0PR04MB6291AD87C88E0C62CC9DE13380C80@AM0PR04MB6291.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:268;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(66476007)(102836004)(53546011)(6116002)(256004)(478600001)(71200400001)(68736007)(25786009)(33656002)(2906002)(55016002)(8936002)(8676002)(6246003)(99286004)(81156014)(54906003)(7736002)(4326008)(26005)(76176011)(3846002)(14454004)(53936002)(74316002)(11346002)(6506007)(64756008)(86362001)(316002)(66946007)(71190400001)(44832011)(7696005)(446003)(6436002)(66556008)(305945005)(76116006)(186003)(476003)(81166006)(486006)(110136005)(9686003)(52536014)(66066001)(229853002)(5660300002)(2501003)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6291;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ep4IcrbBfoT3mdMvO7IfpQUCXMwN3lphUIihIgKkVWJlBw3Hm6MqOsp7TbV38OpBG/yot2zJii+M4NGAlcJYMZ30w3ukV1DteCBt9wOwmQL01G0uh17me5DPZnbnV7ZS5/ec+oM6ldizsFVj2Li9nGnMtg154iqs5OSD6CJpW0njWbJTLUINwN8uQCyj0UmZdE/s/EDVuNYGuruLyjOH5/xUDZL6CtJf6n4XLNOD6CEWFt56Wl7RIlV2cvfaQJnBGl/ci8lxgwo/gtEQIwNMhS0AMlnOLX4ClXWfNqs8+2FcXyCtWCrkviGn1YWza8cUfEc9wQL+5QGXvMO/a82T5wg+MOy87GOEROuHCqhkg4RkIltmCGQ4VSB481JesG2P+wWz+1J0QKqDTi2mV+3D0wYNUgA3LkOzDNmlDvaxK80=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 17 Jul 2019 23:29:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389282AbfGRD3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:29:30 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I3S9HY033743
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 23:29:28 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttgjegp10-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 23:29:27 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 18 Jul 2019 04:29:27 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 04:29:21 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I3TKoU49152394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 03:29:20 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F321AE05C;
+        Thu, 18 Jul 2019 03:29:20 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D236EAE062;
+        Thu, 18 Jul 2019 03:29:15 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.129.123])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jul 2019 03:29:15 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     x86@kernel.org
+Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH v3 1/6] x86,s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig
+Date:   Thu, 18 Jul 2019 00:28:53 -0300
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190718032858.28744-1-bauerman@linux.ibm.com>
+References: <20190718032858.28744-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e10935ee-66f1-4d68-19fb-08d70b301698
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 03:29:06.0467
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6291
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071803-0052-0000-0000-000003E297FE
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011449; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01233737; UDB=6.00650106; IPR=6.01015065;
+ MB=3.00027771; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 03:29:25
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071803-0053-0000-0000-000061BE0F36
+Message-Id: <20190718032858.28744-2-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+DQo+IFNlbnQ6IFRo
-dXJzZGF5LCBKdWx5IDQsIDIwMTkgMzowNCBBTQ0KPiBTdWJqZWN0OiBbUEFUQ0ggMi8zXSBmaXJt
-d2FyZTogaW14OiBzY3UtcGQ6IEFkZCBtdV9iIHNpZGUgUEQgcmFuZ2UNCj4gDQo+IExTSU8gc3Vi
-c3lzdGVtIGNvbnRhaW5zIDE0IE1VIGluc3RhbmNlcy4NCj4gDQo+IDUgTVVzIHRvIGNvbW11bmlj
-YXRlIGJldHdlZW4gQVAgPC0+IFNDVQ0KPiAgIC0gc2lkZS1BIFBEIHJhbmdlIG1hbmFnZWQgYnkg
-QVANCj4gICAtIHNpZGUtQiBQRCByYW5nZSBtYW5hZ2VkIGJ5IFNDVQ0KPiANCj4gOSBNVXMgdG8g
-Y29tbXVuaWNhdGUgYmV0d2VlbiBBUCA8LT4gTTQNCg0KVGhlIGxlZnQgOU1VcyBhcmUgZ2VuZXJh
-bCBhbmQgY2FuIGJlIHVzZWQgYnkgYWxsIGNvcmVzLA0KZS5nIEFQL000L0RTUC4NClNvIGJlbG93
-IGRlc2NyaXB0aW9uIGlzIG5vdCBjb3JyZWN0Lg0KDQo+ICAgLSBzaWRlLUEgUEQgcmFuZ2UgbWFu
-YWdlZCBieSBBUA0KPiAgIC0gc2lkZS1CIFBEIHJhbmdlIG1hbmFnZWQgYnkgQVANCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCj4gLS0t
-DQo+ICBkcml2ZXJzL2Zpcm13YXJlL2lteC9zY3UtcGQuYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9p
-bXgvc2N1LXBkLmMgYi9kcml2ZXJzL2Zpcm13YXJlL2lteC9zY3UtcGQuYw0KPiBpbmRleCA5NTBk
-MzAyMzgxODYuLjMwYWRjMzEwNDM0NyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9p
-bXgvc2N1LXBkLmMNCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9pbXgvc2N1LXBkLmMNCj4gQEAg
-LTkzLDYgKzkzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpbXhfc2NfcGRfcmFuZ2UNCj4gaW14
-OHF4cF9zY3VfcGRfcmFuZ2VzW10gPSB7DQo+ICAJeyAia3BwIiwgSU1YX1NDX1JfS1BQLCAxLCBm
-YWxzZSwgMCB9LA0KPiAgCXsgImZzcGkiLCBJTVhfU0NfUl9GU1BJXzAsIDIsIHRydWUsIDAgfSwN
-Cj4gIAl7ICJtdV9hIiwgSU1YX1NDX1JfTVVfMEEsIDE0LCB0cnVlLCAwIH0sDQo+ICsJeyAibXVf
-YiIsIElNWF9TQ19SX01VXzVCLCA5LCB0cnVlLCAwIH0sDQoNClNob3VsZCBzdGFydCBmcm9tIDU/
-DQp7ICJtdV9iIiwgSU1YX1NDX1JfTVVfNUIsIDksIHRydWUsIDUgfSwNCg0KUmVnYXJkcw0KQWlz
-aGVuZw0KDQo+IA0KPiAgCS8qIENPTk4gU1MgKi8NCj4gIAl7ICJ1c2IiLCBJTVhfU0NfUl9VU0Jf
-MCwgMiwgdHJ1ZSwgMCB9LA0KPiAtLQ0KPiAyLjE3LjENCg0K
+powerpc is also going to use this feature, so put it in a generic location.
+
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/Kconfig      | 3 +++
+ arch/s390/Kconfig | 4 +---
+ arch/x86/Kconfig  | 4 +---
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index e8d19c3cb91f..8fc285180848 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -935,6 +935,9 @@ config LOCK_EVENT_COUNTS
+ 	  the chance of application behavior change because of timing
+ 	  differences. The counts are reported via debugfs.
+ 
++config ARCH_HAS_MEM_ENCRYPT
++	bool
++
+ source "kernel/gcov/Kconfig"
+ 
+ source "scripts/gcc-plugins/Kconfig"
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index a4ad2733eedf..f43319c44454 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -1,7 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-config ARCH_HAS_MEM_ENCRYPT
+-        def_bool y
+-
+ config MMU
+ 	def_bool y
+ 
+@@ -68,6 +65,7 @@ config S390
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_HAS_KCOV
++	select ARCH_HAS_MEM_ENCRYPT
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_STRICT_KERNEL_RWX
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c9f331bb538b..5d3295f2df94 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -68,6 +68,7 @@ config X86
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_KCOV			if X86_64
++	select ARCH_HAS_MEM_ENCRYPT
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_PMEM_API		if X86_64
+ 	select ARCH_HAS_PTE_SPECIAL
+@@ -1520,9 +1521,6 @@ config X86_CPA_STATISTICS
+ 	  helps to determine the effectiveness of preserving large and huge
+ 	  page mappings when mapping protections are changed.
+ 
+-config ARCH_HAS_MEM_ENCRYPT
+-	def_bool y
+-
+ config AMD_MEM_ENCRYPT
+ 	bool "AMD Secure Memory Encryption (SME) support"
+ 	depends on X86_64 && CPU_SUP_AMD
+
