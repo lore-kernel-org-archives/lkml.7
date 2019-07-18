@@ -2,104 +2,84 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935ECC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F739C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E973217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:52:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlX/qesz"
+	by mail.kernel.org (Postfix) with ESMTP id 317E52184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563465429;
+	bh=vewp5JqrG7m3ZxgCBMNQmLevnrYi6BZYLDQvIVRpB3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IWaUvQvRA1VDLRCxeOyOdSFcHtFszgvVDdClw9CyedMIKbHxUGPf7zuXgrVRYOSd1
+	 OjHax1ZbbTQZOV2MXcKCbWjNsNDMstAob6pg8NEC0ZQjRYFDbyE0wS73fQNZ1hQ6ai
+	 GdISZuThBQjkE27crJdAwY0i+szqfvyYhd8QIsEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390806AbfGRPw4 (ORCPT
+        id S1727955AbfGRP5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:52:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34370 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRPwz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:52:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so12830051pfo.1;
-        Thu, 18 Jul 2019 08:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oohisSi7J471LAwyLN/lEHYPf1816pDxaK6cMg+thfk=;
-        b=KlX/qeszoT+vixCBkQhynFUGPtr/9hQ0nDg8VDw1l3Zcswkj6scLZAGoXhKH/jSic4
-         Z8vq6NGud/R8P08WaR/FiTgpRGChwaFGFNukl0kNxhE6/VZPIhM/T/ReDpKa9JkPce7E
-         N6y9jJxDoKCJbggBuFvl555GxepSKn1KhlS93yWgz2BfhUcpgNHS+15KeUZK7SpWMNP0
-         aSTTMq8ImIvKMJamJ5ZpGVXzUEpHfKNY0wsKXVYOodWoWdPngVTA1TOygPmlGZbHirmg
-         2zVaekTOOHoec1SHh2zhpmRjKIl1j6lGTQhMYVbCYdjnGxd9pOKVWI6FVQ2it+XybzqZ
-         OwCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oohisSi7J471LAwyLN/lEHYPf1816pDxaK6cMg+thfk=;
-        b=aszxCFZ750XK1q6LpkyHly2nw0zE4oaYlpZblV2EpZInqUlBIwClLLeXrDP/UK3WQ8
-         5skVxhgduQydq8woZ8mKLS4g3pRgiBydmbwO4HnyGURd/yrzN1YAIvd+icESjHE1Rpov
-         dUbw0OJoK9nUnQ2EJLdqWzz+2z5akzzJkaQzMNGJBgDWuG3yM2Fzk7Dj6mnGbv6taKvn
-         CD+zbZuayz9WAUpLeIOHou7VKFEBBJffXclnaCefNkZ/YzbYZhWkJ94r8NcD+40BvpY8
-         CWfSlAUzH1LrblHLNVfBWmP+SlAazVva90J/dVRmf/jBAbd5MYDTOef8wYrd7YSDMM2s
-         Wv1g==
-X-Gm-Message-State: APjAAAUJ5IUYzmMIccIeFQUBWc+GRiFdooY3YMadyc4jcdcsrHPBZpo+
-        vMFsdCgIt0ozBGxYPyA+bI9in1U3ezD+4A==
-X-Google-Smtp-Source: APXvYqxjwjWjE0DuSDDmh9AWYidB6XsO2kxTbL+/yWH3pPEiIiZwcAOGX8aLN+p2UX9YMzy6tE1sig==
-X-Received: by 2002:a17:90a:1d8:: with SMTP id 24mr52512118pjd.70.1563465175141;
-        Thu, 18 Jul 2019 08:52:55 -0700 (PDT)
-Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id cx22sm23050527pjb.25.2019.07.18.08.52.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 08:52:54 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-Cc:     mbalant3@gmail.com, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pavel Andrianov <andrianov@ispras.ru>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer() concerning ali_timeout_bits variable.  variable.
-Date:   Thu, 18 Jul 2019 08:52:38 -0700
-Message-Id: <20190718155238.3066-1-mbalant3@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 18 Jul 2019 11:57:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34660 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726040AbfGRP5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 11:57:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 438B1AF6B;
+        Thu, 18 Jul 2019 15:57:06 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 17:57:04 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in
+ ZONE_MOVABLE
+Message-ID: <20190718155704.GD30461@dhcp22.suse.cz>
+References: <20190718024133.3873-1-leonardo@linux.ibm.com>
+ <1563430353.3077.1.camel@suse.de>
+ <0e67afe465cbbdf6ec9b122f596910cae77bc734.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e67afe465cbbdf6ec9b122f596910cae77bc734.camel@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- drivers/watchdog/alim1535_wdt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu 18-07-19 12:50:29, Leonardo Bras wrote:
+> On Thu, 2019-07-18 at 08:12 +0200, Oscar Salvador wrote:
+> > We do already have "movable_node" boot option, which exactly has that
+> > effect.
+> > Any hotplugged range will be placed in ZONE_MOVABLE.
+> Oh, I was not aware of it.
+> 
+> > Why do we need yet another option to achieve the same? Was not that
+> > enough for your case?
+> Well, another use of this config could be doing this boot option a
+> default on any given kernel. 
+> But in the above case I agree it would be wiser to add the code on
+> movable_node_is_enabled() directly, and not where I did put.
+> 
+> What do you think about it?
 
-diff --git a/drivers/watchdog/alim1535_wdt.c b/drivers/watchdog/alim1535_wdt.c
-index 60f0c2eb..4ba2b860 100644
---- a/drivers/watchdog/alim1535_wdt.c
-+++ b/drivers/watchdog/alim1535_wdt.c
-@@ -107,6 +107,7 @@ static void ali_keepalive(void)
- 
- static int ali_settimer(int t)
- {
-+    spin_lock(&ali_lock);
-     if (t < 0)
-         return -EINVAL;
-     else if (t < 60)
-@@ -117,7 +118,7 @@ static int ali_settimer(int t)
-         ali_timeout_bits = (t / 300)|(1 << 6)|(1 << 7);
-     else
-         return -EINVAL;
--
-+    spin_unlock(&ali_lock);
-     timeout = t;
-     return 0;
- }
+No further config options please. We do have means a more flexible way
+to achieve movable node onlining so let's use it. Or could you be more
+specific about cases which cannot use the command line option and really
+need a config option to workaround that?
 -- 
-2.17.1
-Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
-Cc: Pavel Andrianov <andrianov@ispras.ru>
-Cc:Wim Van Sebroeck <wim@linux-watchdog.org> (maintainer:WATCHDOG DEVICE DRIVERS)
-Cc: Guenter Roeck <linux@roeck-us.net> (maintainer:WATCHDOG DEVICE DRIVERS)
-Cc:linux-watchdog@vger.kernel.org (open list:WATCHDOG DEVICE DRIVERS)
-Cc:linux-kernel@vger.kernel.org (open list)
+Michal Hocko
+SUSE Labs
