@@ -2,191 +2,186 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B46C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3359C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA18B208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IJLgZMs7"
+	by mail.kernel.org (Postfix) with ESMTP id 939A2208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389573AbfGRIsh (ORCPT
+        id S2389356AbfGRIvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:48:37 -0400
-Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:32676
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389528AbfGRIsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:48:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h6MfIS5dhRfxtOyLqMT/K+7q7EmUTbPyMXwB0ZdNDDbcjo2I5NilGE/Gi4J8U8PvKGLIhLHsVAaPu/Q6MSdd/Oue4PLYu4r9cGjVN30dzo1UhMeKSamxZ3MCaCGes8KuBt+bo85U3p8IPqEOrtocsZ88b9vz3mlr/WTAi10SE0pQE1YtnVOwDjhYlq17u8Vs/PsUNKEyCyk6ZFP7EamcWoh3Nb0VIvsL8TgE8G7+XTO3jSCfkHkC5JSzmtGzBpFYqnch6Apjga5yd9Qaurq5U0aEsCAOJ1tzvoiVkLxKuTIFSXmMQxOvmtLGILnMyTa/P2VLV6ej8xngOHVrMocm7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XhZ6MFuNqPvtei1ESQKY3A/LgusY6bjONwJXUrTGH6E=;
- b=PtXR5erITWYD1Uxlgg25xDBl8hBOVwLRzRiY8JgM+LR+McG1Yo9RQmSZzB2AMO7/sXCgJxD1cEE1wMYIAFe9S8VvSILLMwO9n0k1Q1zIU+mUMZxnFJac70VcjfCb8nkN0TNjz5xvi8uyTVJiGCcZ0rq1D2+oAE95b7n5e74+VsodvYu7PJUnyQeMTcltAyUxVk/n9ndkihu1P1mWbQW5coUhaWtUQvVBBZZA0JEgB84oKfBDgYvdt/V70FH1N7QMZal4fN69ieSfwUgUqkAcFFAbMqy44b7Kop3kHTSIGehloYRv1hmU6UwjmDQdTLkgwjAzmrMdgNTLWSKc/7aNhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XhZ6MFuNqPvtei1ESQKY3A/LgusY6bjONwJXUrTGH6E=;
- b=IJLgZMs7pgSrzH577zdI4XQ+6BZ3JPcOGxmjktBRf/4Ev8d8DuH27+T2rmtVuiBwUSdWsw/SDVddpmXtHamdhA7hmhXcGneJofWuXyKWSWP/RooBWRnlRQR+xRrjf+oSQyDGLvdVcaiOKYiWrcssjojMAPBqADtmzeRvTPnrR0o=
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com (52.135.167.33) by
- AM6PR04MB3973.eurprd04.prod.outlook.com (52.135.160.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Thu, 18 Jul 2019 08:48:32 +0000
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::f14c:9aff:4a98:1bcf]) by AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::f14c:9aff:4a98:1bcf%7]) with mapi id 15.20.2094.011; Thu, 18 Jul 2019
- 08:48:31 +0000
-From:   Chuanhua Han <chuanhua.han@nxp.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     "lenb@kernel.org" <lenb@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
-        Udit Kumar <udit.kumar@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] ACPI: support for NXP i2c controller
-Thread-Topic: [EXT] Re: [PATCH] ACPI: support for NXP i2c controller
-Thread-Index: AQHVN9RWC3fNidOxSkCq2pP/dOUIIabQGo4AgAAAmTA=
-Date:   Thu, 18 Jul 2019 08:48:31 +0000
-Message-ID: <AM6PR04MB435762D38C6CA133A97C037097C80@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190711102601.20582-1-chuanhua.han@nxp.com>
- <4848044.j3iIk1DuVf@kreacher>
-In-Reply-To: <4848044.j3iIk1DuVf@kreacher>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chuanhua.han@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e3b79c5b-9777-4905-4f8e-08d70b5cb644
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB3973;
-x-ms-traffictypediagnostic: AM6PR04MB3973:
-x-microsoft-antispam-prvs: <AM6PR04MB3973C25E3A8FC1EA1D5C6C9D97C80@AM6PR04MB3973.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(366004)(346002)(376002)(39860400002)(136003)(396003)(189003)(199004)(13464003)(54906003)(446003)(256004)(5660300002)(52536014)(99286004)(6116002)(4326008)(186003)(3846002)(26005)(53546011)(66556008)(71200400001)(71190400001)(76116006)(14454004)(316002)(66066001)(102836004)(9686003)(66446008)(66476007)(66946007)(64756008)(6506007)(229853002)(2906002)(44832011)(486006)(478600001)(11346002)(74316002)(7736002)(305945005)(6436002)(68736007)(476003)(53936002)(81156014)(33656002)(7696005)(81166006)(8676002)(76176011)(6246003)(6916009)(86362001)(25786009)(55016002)(8936002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB3973;H:AM6PR04MB4357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2o9eqHPaoQTFxFgTqZvxdS5nWd/UtYVHhHstM6mzMUAdiN28CIJ7VF1jDlNsO2LBVGUA3guN7UZNob2K8/ntX5CjEYKxoKBkLl+m2OPCKD1sX0UwHgSQs9Gbvnag4n0nOFO1y2zkOQRTNBZix/31wd91fNOq5kZAQzg1Vzkf09BpI/or5azYx7+rre97dbqxzoilFxIMH6NvqSMqh+Lo1gknHVT3VRdJp1WL5mgN9+c/w2FCLsMzU8MkaThfy+zzm4nAq+TPnqh6fssa/Y3zTNk73PLz5cPJ1DoFJ1Rkd6+3Zl0VeD6zjKSJXzXUhLdnKRdL2sInTT+zV/mPeduPNDRyCczbdzVAXqoul7lb29zIsvskfk0Q6dT9BbJaKUkg+BMO9UiA4/CxwHkZoWYdNPA2A7uzem77eU8QBnyQkTM=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3b79c5b-9777-4905-4f8e-08d70b5cb644
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 08:48:31.8022
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: chuanhua.han@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3973
+        Thu, 18 Jul 2019 04:51:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59040 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbfGRIvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:51:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 794D830C1336;
+        Thu, 18 Jul 2019 08:51:35 +0000 (UTC)
+Received: from dustball.brq.redhat.com (unknown [10.43.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F6705DE68;
+        Thu, 18 Jul 2019 08:51:29 +0000 (UTC)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     longman@redhat.com, dbueso@suse.de, will@kernel.org,
+        peterz@infradead.org, mingo@redhat.com, jstancek@redhat.com
+Subject: [PATCH v3] locking/rwsem: add acquire barrier to read_slowpath exit when queue is empty
+Date:   Thu, 18 Jul 2019 10:51:25 +0200
+Message-Id: <50b8914e20d1d62bb2dee42d342836c2c16ebee7.1563438048.git.jstancek@redhat.com>
+In-Reply-To: <1950f8bd-e0f4-9b65-fee6-701ecf531d1c@redhat.com>
+References: <1950f8bd-e0f4-9b65-fee6-701ecf531d1c@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 18 Jul 2019 08:51:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFJhZmFlbCBKLiBXeXNvY2tpDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogUmFmYWVsIEouIFd5c29ja2kgPHJqd0Byand5c29ja2kubmV0Pg0KPiBTZW50OiAyMDE5
-xOo31MIxOMjVIDE2OjQ1DQo+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29t
-Pg0KPiBDYzogbGVuYkBrZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBl
-bmd1dHJvbml4LmRlOw0KPiBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtaTJjQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNv
-bT47IE1lZW5ha3NoaSBBZ2dhcndhbCA8bWVlbmFrc2hpLmFnZ2Fyd2FsQG54cC5jb20+Ow0KPiBV
-ZGl0IEt1bWFyIDx1ZGl0Lmt1bWFyQG54cC5jb20+DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFU
-Q0hdIEFDUEk6IHN1cHBvcnQgZm9yIE5YUCBpMmMgY29udHJvbGxlcg0KPiANCj4gQ2F1dGlvbjog
-RVhUIEVtYWlsDQo+IA0KPiBPbiBUaHVyc2RheSwgSnVseSAxMSwgMjAxOSAxMjoyNjowMSBQTSBD
-RVNUIENodWFuaHVhIEhhbiB3cm90ZToNCj4gPiBFbmFibGUgTlhQIGkyYyBjb250cm9sbGVyIHRv
-IGJvb3Qgd2l0aCBBQ1BJDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNZWVuYWtzaGkgQWdnYXJ3
-YWwgPG1lZW5ha3NoaS5hZ2dhcndhbEBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFVkaXQg
-S3VtYXIgPHVkaXQua3VtYXJAbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmh1YSBI
-YW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiANCj4gSW4gY2FzZSB5b3Ugd2FudCB0aGlzIHRv
-IGdvIGluIHRocm91Z2ggdGhlIGkyYyB0cmVlOg0KPiANCj4gQWNrZWQtYnk6IFJhZmFlbCBKLiBX
-eXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVsLmNvbT4NCj4gDQo+IG9yIGluIGNhc2UgeW91
-IHdhbnQgbWUgdG8gdGFrZSBpdCwgcGxlYXNlIGxldCBtZSBrbm93LCBidXQgSSB3aWxsIG5lZWQg
-YW4gQUNLDQo+IGZyb20gdGhlIGkyYyBzaWRlIHRoZW4uDQpJJ20gc29ycnksIEkgZG9uJ3QgcXVp
-dGUgdW5kZXJzdGFuZA0KPiANCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9hY3BpL2FjcGlfYXBkLmMg
-ICAgICB8ICA2ICsrKysrKw0KPiA+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jIHwgMTUg
-KysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKQ0K
-PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9hY3BpX2FwZC5jIGIvZHJpdmVycy9h
-Y3BpL2FjcGlfYXBkLmMgaW5kZXgNCj4gPiBmZjQ3MzE3Li5jZjg1NjZjIDEwMDY0NA0KPiA+IC0t
-LSBhL2RyaXZlcnMvYWNwaS9hY3BpX2FwZC5jDQo+ID4gKysrIGIvZHJpdmVycy9hY3BpL2FjcGlf
-YXBkLmMNCj4gPiBAQCAtMTY1LDYgKzE2NSwxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGFwZF9k
-ZXZpY2VfZGVzYw0KPiB0aHVuZGVyeDJfaTJjX2Rlc2MgPSB7DQo+ID4gICAgICAgLmZpeGVkX2Ns
-a19yYXRlID0gMTI1MDAwMDAwLA0KPiA+ICB9Ow0KPiA+DQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1
-Y3QgYXBkX2RldmljZV9kZXNjIG54cF9pMmNfZGVzYyA9IHsNCj4gPiArICAgICAuc2V0dXAgPSBh
-Y3BpX2FwZF9zZXR1cCwNCj4gPiArICAgICAuZml4ZWRfY2xrX3JhdGUgPSAzNTAwMDAwMDAsDQo+
-ID4gK307DQo+ID4gKw0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGFwZF9kZXZpY2VfZGVzYyBo
-aXAwOF9zcGlfZGVzYyA9IHsNCj4gPiAgICAgICAuc2V0dXAgPSBhY3BpX2FwZF9zZXR1cCwNCj4g
-PiAgICAgICAuZml4ZWRfY2xrX3JhdGUgPSAyNTAwMDAwMDAsDQo+ID4gQEAgLTIzOCw2ICsyNDMs
-NyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGFjcGlfZGV2aWNlX2lkDQo+IGFjcGlfYXBkX2Rldmlj
-ZV9pZHNbXSA9IHsNCj4gPiAgICAgICB7ICJISVNJMDJBMSIsIEFQRF9BRERSKGhpcDA3X2kyY19k
-ZXNjKSB9LA0KPiA+ICAgICAgIHsgIkhJU0kwMkEyIiwgQVBEX0FERFIoaGlwMDhfaTJjX2Rlc2Mp
-IH0sDQo+ID4gICAgICAgeyAiSElTSTAxNzMiLCBBUERfQUREUihoaXAwOF9zcGlfZGVzYykgfSwN
-Cj4gPiArICAgICB7ICJOWFAwMDAxIiwgQVBEX0FERFIobnhwX2kyY19kZXNjKSB9LA0KPiA+ICAj
-ZW5kaWYNCj4gPiAgICAgICB7IH0NCj4gPiAgfTsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
-MmMvYnVzc2VzL2kyYy1pbXguYw0KPiA+IGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1pbXguYyBp
-bmRleCBiMWI4YjkzLi45OWY5Yjk2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nl
-cy9pMmMtaW14LmMNCj4gPiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQo+ID4g
-QEAgLTQ0LDYgKzQ0LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4g
-PiAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9hY3BpLmg+DQo+ID4NCj4gPiAgLyogVGhpcyB3aWxsIGJl
-IHRoZSBkcml2ZXIgbmFtZSB0aGUga2VybmVsIHJlcG9ydHMgKi8gICNkZWZpbmUNCj4gPiBEUklW
-RVJfTkFNRSAiaW14LWkyYyINCj4gPiBAQCAtMjU1LDYgKzI1NiwxMiBAQCBzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBpMmNfaW14X2R0X2lkc1tdDQo+ID4gPSB7ICB9OyAgTU9EVUxF
-X0RFVklDRV9UQUJMRShvZiwgaTJjX2lteF9kdF9pZHMpOw0KPiA+DQo+ID4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgYWNwaV9kZXZpY2VfaWQgaTJjX2lteF9hY3BpX2lkc1tdID0gew0KPiA+ICsgICAg
-IHsiTlhQMDAwMSIsIC5kcml2ZXJfZGF0YSA9IChrZXJuZWxfdWxvbmdfdCkmdmY2MTBfaTJjX2h3
-ZGF0YX0sDQo+ID4gKyAgICAgeyB9DQo+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUo
-YWNwaSwgaTJjX2lteF9hY3BpX2lkcyk7DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW5saW5lIGludCBp
-c19pbXgxX2kyYyhzdHJ1Y3QgaW14X2kyY19zdHJ1Y3QgKmkyY19pbXgpICB7DQo+ID4gICAgICAg
-cmV0dXJuIGkyY19pbXgtPmh3ZGF0YS0+ZGV2dHlwZSA9PSBJTVgxX0kyQzsgQEAgLTEwNTIsNiAr
-MTA1OSw5DQo+ID4gQEAgc3RhdGljIGludCBpMmNfaW14X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpICB7DQo+ID4gICAgICAgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2Zf
-aWQgPSBvZl9tYXRjaF9kZXZpY2UoaTJjX2lteF9kdF9pZHMsDQo+ID4NCj4gJnBkZXYtPmRldik7
-DQo+ID4gKyAgICAgY29uc3Qgc3RydWN0IGFjcGlfZGV2aWNlX2lkICphY3BpX2lkID0NCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgYWNwaV9tYXRjaF9kZXZpY2UoaTJjX2lteF9hY3BpX2lkcywN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnBkZXYtPmRldik7
-DQo+ID4gICAgICAgc3RydWN0IGlteF9pMmNfc3RydWN0ICppMmNfaW14Ow0KPiA+ICAgICAgIHN0
-cnVjdCByZXNvdXJjZSAqcmVzOw0KPiA+ICAgICAgIHN0cnVjdCBpbXhpMmNfcGxhdGZvcm1fZGF0
-YSAqcGRhdGEgPQ0KPiA+IGRldl9nZXRfcGxhdGRhdGEoJnBkZXYtPmRldik7IEBAIC0xMDc5LDYg
-KzEwODksOSBAQCBzdGF0aWMgaW50DQo+ID4gaTJjX2lteF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQ0KPiA+DQo+ID4gICAgICAgaWYgKG9mX2lkKQ0KPiA+ICAgICAgICAgICAg
-ICAgaTJjX2lteC0+aHdkYXRhID0gb2ZfaWQtPmRhdGE7DQo+ID4gKyAgICAgZWxzZSBpZiAoYWNw
-aV9pZCkNCj4gPiArICAgICAgICAgICAgIGkyY19pbXgtPmh3ZGF0YSA9IChzdHJ1Y3QgaW14X2ky
-Y19od2RhdGEgKikNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY3BpX2lkLT5k
-cml2ZXJfZGF0YTsNCj4gPiAgICAgICBlbHNlDQo+ID4gICAgICAgICAgICAgICBpMmNfaW14LT5o
-d2RhdGEgPSAoc3RydWN0IGlteF9pMmNfaHdkYXRhICopDQo+ID4NCj4gPiBwbGF0Zm9ybV9nZXRf
-ZGV2aWNlX2lkKHBkZXYpLT5kcml2ZXJfZGF0YTsNCj4gPiBAQCAtMTA5MSw2ICsxMTA0LDcgQEAg
-c3RhdGljIGludCBpMmNfaW14X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYp
-DQo+ID4gICAgICAgaTJjX2lteC0+YWRhcHRlci5uciAgICAgICAgICAgICA9IHBkZXYtPmlkOw0K
-PiA+ICAgICAgIGkyY19pbXgtPmFkYXB0ZXIuZGV2Lm9mX25vZGUgICAgPSBwZGV2LT5kZXYub2Zf
-bm9kZTsNCj4gPiAgICAgICBpMmNfaW14LT5iYXNlICAgICAgICAgICAgICAgICAgID0gYmFzZTsN
-Cj4gPiArICAgICBBQ1BJX0NPTVBBTklPTl9TRVQoJmkyY19pbXgtPmFkYXB0ZXIuZGV2LA0KPiA+
-ICsgQUNQSV9DT01QQU5JT04oJnBkZXYtPmRldikpOw0KPiA+DQo+ID4gICAgICAgLyogR2V0IEky
-QyBjbG9jayAqLw0KPiA+ICAgICAgIGkyY19pbXgtPmNsayA9IGRldm1fY2xrX2dldCgmcGRldi0+
-ZGV2LCBOVUxMKTsgQEAgLTEyNTMsNg0KPiA+ICsxMjY3LDcgQEAgc3RhdGljIHN0cnVjdCBwbGF0
-Zm9ybV9kcml2ZXIgaTJjX2lteF9kcml2ZXIgPSB7DQo+ID4gICAgICAgICAgICAgICAubmFtZSA9
-IERSSVZFUl9OQU1FLA0KPiA+ICAgICAgICAgICAgICAgLnBtID0gJmkyY19pbXhfcG1fb3BzLA0K
-PiA+ICAgICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gaTJjX2lteF9kdF9pZHMsDQo+ID4g
-KyAgICAgICAgICAgICAuYWNwaV9tYXRjaF90YWJsZSA9IEFDUElfUFRSKGkyY19pbXhfYWNwaV9p
-ZHMpLA0KPiA+ICAgICAgIH0sDQo+ID4gICAgICAgLmlkX3RhYmxlID0gaW14X2kyY19kZXZ0eXBl
-LA0KPiA+ICB9Ow0KPiA+DQo+IA0KPiANCj4gDQoNCg==
+LTP mtest06 has been observed to rarely hit "still mapped when deleted"
+and following BUG_ON on arm64:
+  page:ffff7e02fa37e480 refcount:3 mapcount:1 mapping:ffff80be3d678ab0 index:0x0
+  xfs_address_space_operations [xfs]
+  flags: 0xbfffe000000037(locked|referenced|uptodate|lru|active)
+  page dumped because: VM_BUG_ON_PAGE(page_mapped(page))
+  ------------[ cut here ]------------
+  kernel BUG at mm/filemap.c:171!
+  Internal error: Oops - BUG: 0 [#1] SMP
+  CPU: 220 PID: 154292 Comm: mmap1 Not tainted 5.2.0-0ecfebd.cki #1
+  Hardware name: HPE Apollo 70 /C01_APACHE_MB , BIOS L50_5.13_1.10 05/17/2019
+  pstate: 40400089 (nZcv daIf +PAN -UAO)
+  pc : unaccount_page_cache_page+0x17c/0x1a0
+  lr : unaccount_page_cache_page+0x17c/0x1a0
+  Call trace:
+  unaccount_page_cache_page+0x17c/0x1a0
+  delete_from_page_cache_batch+0xa0/0x300
+  truncate_inode_pages_range+0x1b8/0x640
+  truncate_inode_pages_final+0x88/0xa8
+  evict+0x1a0/0x1d8
+  iput+0x150/0x240
+  dentry_unlink_inode+0x120/0x130
+  __dentry_kill+0xd8/0x1d0
+  dentry_kill+0x88/0x248
+  dput+0x168/0x1b8
+  __fput+0xe8/0x208
+  ____fput+0x20/0x30
+  task_work_run+0xc0/0xf0
+  do_notify_resume+0x2b0/0x328
+  work_pending+0x8/0x10
+
+The extra mapcount originated from pagefault handler, which handled
+pagefault for vma that has already been detached. vma is detached
+under mmap_sem write lock by detach_vmas_to_be_unmapped(), which
+also invalidates vmacache.
+
+When pagefault handler (under mmap_sem read lock) called find_vma(),
+vmacache_valid() wrongly reported vmacache as valid.
+
+After rwsem down_read() returns via 'queue empty' path (as of v5.2),
+it does so without issuing read_acquire on sem->count:
+  down_read
+    __down_read
+      rwsem_down_read_failed
+        __rwsem_down_read_failed_common
+          raw_spin_lock_irq(&sem->wait_lock);
+          if (list_empty(&sem->wait_list)) {
+            if (atomic_long_read(&sem->count) >= 0) {
+              raw_spin_unlock_irq(&sem->wait_lock);
+              return sem;
+
+Suspected problem here is that last *_acquire on down_read() side
+happens before write side issues *_release:
+  1. writer: has the lock
+  2. reader: down_read() issues *read_acquire on entry
+  3. writer: mm->vmacache_seqnum++; downgrades lock (*fetch_add_release)
+  4. reader: __rwsem_down_read_failed_common() finds it can take lock and returns
+  5. reader: observes stale mm->vmacache_seqnum
+
+----------------------------------- 8< ------------------------------------
+C rwsem
+
+{
+	atomic_t rwsem_count = ATOMIC_INIT(1);
+	int vmacache_seqnum = 10;
+}
+
+P0(int *vmacache_seqnum, atomic_t *rwsem_count)
+{
+	r0 = READ_ONCE(*vmacache_seqnum);
+	WRITE_ONCE(*vmacache_seqnum, r0 + 1);
+	/* downgrade_write */
+	r1 = atomic_fetch_add_release(-1+256, rwsem_count);
+}
+
+P1(int *vmacache_seqnum, atomic_t *rwsem_count, spinlock_t *sem_wait_lock)
+{
+	/* rwsem_read_trylock */
+	r0 = atomic_add_return_acquire(256, rwsem_count);
+	/* rwsem_down_read_slowpath */
+	spin_lock(sem_wait_lock);
+	r0 = atomic_read(rwsem_count);
+	if ((r0 & 1) == 0) {
+		// BUG: needs barrier
+		spin_unlock(sem_wait_lock);
+		r1 = READ_ONCE(*vmacache_seqnum);
+	}
+}
+exists (1:r1=10)
+----------------------------------- >8 ------------------------------------
+
+I can reproduce the problem by running LTP mtest06 in a loop and building
+kernel (-j $NCPUS) in parallel. It does reproduce since v4.20 up to v5.2
+on arm64 HPE Apollo 70 (224 CPUs, 256GB RAM, 2 nodes). It triggers reliably
+within ~hour. Patched kernel ran fine for 10+ hours with clean dmesg.
+Tests were done against v5.2, since commit cf69482d62d9 ("locking/rwsem:
+Enable readers spinning on writer") makes it much harder to reproduce.
+
+v2: Move barrier after test (Waiman Long)
+    Use smp_acquire__after_ctrl_dep() (Peter Zijlstra)
+v3: Add comment to barrier (Waiman Long, Will Deacon)
+    Add litmus test
+
+Related: https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/mtest06/mmap1.c
+Related: commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
+Fixes: 4b486b535c33 ("locking/rwsem: Exit read lock slowpath if queue empty & no writer")
+
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Reviewed-by: Will Deacon <will@kernel.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: stable@vger.kernel.org # v4.20+
+Cc: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dbueso@suse.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+---
+ kernel/locking/rwsem.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 37524a47f002..fe02aef39e9d 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -1032,6 +1032,13 @@ static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
+ 		 */
+ 		if (adjustment && !(atomic_long_read(&sem->count) &
+ 		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
++			/*
++			 * Add an acquire barrier here to make sure no stale
++			 * data acquired before the above test, where the writer
++			 * may still be holding the lock, will be reused in the
++			 * reader critical section.
++			 */
++			smp_acquire__after_ctrl_dep();
+ 			raw_spin_unlock_irq(&sem->wait_lock);
+ 			rwsem_set_reader_owned(sem);
+ 			lockevent_inc(rwsem_rlock_fast);
+-- 
+1.8.3.1
+
