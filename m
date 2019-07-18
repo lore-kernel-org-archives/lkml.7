@@ -2,256 +2,135 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1884C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC80C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D67421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D572521783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="LeyNW4RV";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZIoHSOre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390003AbfGRMFx (ORCPT
+        id S2390117AbfGRMHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:05:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34390 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726715AbfGRMFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:05:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1FAC3AD4D;
-        Thu, 18 Jul 2019 12:05:50 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 14:05:47 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, david@redhat.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        aneesh.kumar@linux.ibm.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: Fix shrink_{zone,node}_span
-Message-ID: <20190718120543.GA8500@linux>
-References: <20190715081549.32577-1-osalvador@suse.de>
- <20190715081549.32577-3-osalvador@suse.de>
+        Thu, 18 Jul 2019 08:07:16 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:12700 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726715AbfGRMHQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 08:07:16 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IC43Vb032713;
+        Thu, 18 Jul 2019 05:07:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=proofpoint;
+ bh=EZJeBTVR2eK/S8AamVrzFbA3W8V1j26PA4cJalCC+V4=;
+ b=LeyNW4RVGgPxtUbMagKk1Sm+i1vd2s8nb9DI2PVpusg8Wo6hD0CfnbVtzwYyQWl7B45E
+ r/PHqnrcppMx6Zsag7RhOy46zhH6HdtM+sD4IL9J1U5NL0ydZtOxauCMc/B6uFK+JQnM
+ WOzUMg24U9N8ZG5HaD3CDcy7HUZo61R7cAnt0p3Y5E1zSIgxUjBy6A8cH58ds96dF7vV
+ G+1CXFchv5jU2RBhvhjT55UfyZorVH6QIq4GV2SqAtx/X2sFGd6txz0935ilubayM8c0
+ Jvg4sRjfROZp86ri0a0GIWOXGiZVwyl1HJmHpb76Wkax64zoKzpgDrA6Xhe146EKkCl4 cg== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=jank@cadence.com
+Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2050.outbound.protection.outlook.com [104.47.42.50])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2tqavwv732-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 05:07:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cq+cIGYLfa60tqeDhdwv0Y2KOsVBLjqF49FbdEflDwEDYNlH4QlXvkPgjFfqW9cIbccCiZBYjrBepOxpb3KlgFkNwKGhCJKXiiWUmuzNubprmjJG/ZixZNdXN2QOXWbmDabvSkLdn7T10aQPKZlmQZTcUUjNCwAvx0dNW+q9+0T0Mn9Jf5pujvPS5KsFR4WkkEGT+B1BaGI2+NgVqW/XgoHsBb3QymkbdGWa5kGEF44mRScPVlB7zgdfbVC2MB6PpMrumbvYPOZf3CYn4MsAydFYqSUCJo7gn8iHDTgU/6f8LT3uUsP/1+R+cQlXIgDbMVh2lPq+BS9KpG2gzc8ZUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EZJeBTVR2eK/S8AamVrzFbA3W8V1j26PA4cJalCC+V4=;
+ b=StoFDr5J1muYVdKZDugHHvAxXuM7PWOK0JteAbDMRkcVita+iKVG2D62buAlTgl43wnlQjC4g68Nw20GDhw1PbDjHHYspZJRu1gsIprtB1BiSrGagNZqglz5Gtj7oFwzOVwBY4w+0hJ2lMSrmklmABAYqx23cIevPa2xaOOWsSA9M6n9pfbzIcPu2H1KpfRsc772nxtKoSONzMvgIhhYXSPoOr1UhtfwNfYeXfxNpLdL1kQnbxSK8CkEveo+lEuHtwdXJfKsG6N526li6IlnMqjs+Gd8+F02e+eDY+qxFTQKGndAUSKVVrdHVcK7s3NxqRDSD57NszXX7QUfcMQ6rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=cadence.com;dmarc=pass action=none
+ header.from=cadence.com;dkim=pass header.d=cadence.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EZJeBTVR2eK/S8AamVrzFbA3W8V1j26PA4cJalCC+V4=;
+ b=ZIoHSOre0iSoMbncC1T0NBZ0NfYo5x+2rOgNwQsE4Lrged4JoioAyzuAc2i8aTPlEE8sLsTOOluco7GMHGtopV/nRTHv0RoTYmTCJriNT8ektQ6jxPpHMypWReLzgdBl4xvTsrLfMz73HERyFMumCb4XE6/cW/101M4ciKxdBos=
+Received: from CY1PR07MB2521.namprd07.prod.outlook.com (10.167.16.12) by
+ CY1PR07MB2586.namprd07.prod.outlook.com (10.166.206.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Thu, 18 Jul 2019 12:07:09 +0000
+Received: from CY1PR07MB2521.namprd07.prod.outlook.com
+ ([fe80::fdfa:c66c:60e5:9b07]) by CY1PR07MB2521.namprd07.prod.outlook.com
+ ([fe80::fdfa:c66c:60e5:9b07%10]) with mapi id 15.20.2094.011; Thu, 18 Jul
+ 2019 12:07:09 +0000
+From:   Jan Kotas <jank@cadence.com>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+CC:     Jan Kotas <jank@cadence.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] media: Add lane checks for Cadence CSI2TX
+Thread-Topic: [PATCH 2/3] media: Add lane checks for Cadence CSI2TX
+Thread-Index: AQHVPVokB1lRWRlUyU+zijqVl4MU4KbQQ/WAgAAD+wA=
+Date:   Thu, 18 Jul 2019 12:07:09 +0000
+Message-ID: <9CAC42FF-30B1-4540-B58B-82A81353D37C@global.cadence.com>
+References: <20190718111509.29924-1-jank@cadence.com>
+ <20190718111509.29924-3-jank@cadence.com>
+ <0fea09d4-1e8a-b9bf-b549-ee7cd72bd814@free.fr>
+In-Reply-To: <0fea09d4-1e8a-b9bf-b549-ee7cd72bd814@free.fr>
+Accept-Language: en-US, pl-PL
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 395807ea-7461-4826-4c37-08d70b7875a1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY1PR07MB2586;
+x-ms-traffictypediagnostic: CY1PR07MB2586:
+x-microsoft-antispam-prvs: <CY1PR07MB25864275C1A3679162872107D0C80@CY1PR07MB2586.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:513;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(36092001)(7736002)(6486002)(102836004)(25786009)(99286004)(6916009)(305945005)(6246003)(446003)(53936002)(229853002)(4744005)(11346002)(476003)(6506007)(478600001)(53546011)(6436002)(76176011)(14454004)(54906003)(8676002)(33656002)(76116006)(4326008)(71200400001)(256004)(486006)(81166006)(316002)(81156014)(3846002)(6116002)(71190400001)(66066001)(26005)(186003)(68736007)(6512007)(86362001)(8936002)(66556008)(66476007)(66946007)(91956017)(64756008)(2906002)(66446008)(5660300002)(15866825006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2586;H:CY1PR07MB2521.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bsYDt6s9UG4VgDgdYkT9IKKzGWQttqtTMl6M9TuwrVW5ZYpIVoGFRAZQc5BT7iqeMQkvzdGFwVU+M5GQhJMyY+TLOb/nvaKIpdFW0E0KwFsNPUhTcxGIkA9dbr5sy0088BOD/i/tnafapo/rby3VbECd6O/ZF+GpkjJa0XV4djHur8OYOeezZNLC4evus6TXalGrcYv3aoDB/Akb+G1Er2/wW61qQeG5cGR1krczKoS0R/d5AJJ32c/t5TCi2z/s/IhLXy9/iJfuiLQktqKs1ZxZop23ia7N4X82/wiBdY1LmbEu1P9sYYhkm3Q+ncqCaJKRlVRZlAjyvsbNqkG71XFV4piks1e8iFLNnB+OQK9bPRYb2LvTFbPpePrzWE230ZuzpupvNAPcx6qLwUJ7/DZSq4xGgtTiTks93gHt0v4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7B8C9BE056C7674682D4F18DFC3F4EF7@namprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715081549.32577-3-osalvador@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 395807ea-7461-4826-4c37-08d70b7875a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 12:07:09.2219
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jank@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2586
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=555 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 10:15:49AM +0200, Oscar Salvador wrote:
-> Since [1], shrink_{zone,node}_span work on PAGES_PER_SUBSECTION granularity.
-> The problem is that deactivation of the section occurs later on in
-> sparse_remove_section, so pfn_valid()->pfn_section_valid() will always return
-> true before we deactivate the {sub}section.
-> 
-> I spotted this during hotplug hotremove tests, there I always saw that
-> spanned_pages was, at least, left with PAGES_PER_SECTION, even if we
-> removed all memory linked to that zone.
-> 
-> Fix this by decoupling section_deactivate from sparse_remove_section, and
-> re-order the function calls.
-> 
-> Now, __remove_section will:
-> 
-> 1) deactivate section
-> 2) shrink {zone,node}'s pages
-> 3) remove section
-> 
-> [1] https://patchwork.kernel.org/patch/11003467/
-
-Hi Andrew,
-
-Please, drop this patch as patch [1] is the easiest way to fix this.
-
-thanks a lot
-
-[1] https://patchwork.kernel.org/patch/11047499/
-
-> 
-> Fixes: mmotm ("mm/hotplug: prepare shrink_{zone, pgdat}_span for sub-section removal")
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  include/linux/memory_hotplug.h |  7 ++--
->  mm/memory_hotplug.c            |  6 +++-
->  mm/sparse.c                    | 77 +++++++++++++++++++++++++++++-------------
->  3 files changed, 62 insertions(+), 28 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f46ea71b4ffd..d2eb917aad5f 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -348,9 +348,10 @@ extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  extern bool is_memblock_offlined(struct memory_block *mem);
->  extern int sparse_add_section(int nid, unsigned long pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap);
-> -extern void sparse_remove_section(struct mem_section *ms,
-> -		unsigned long pfn, unsigned long nr_pages,
-> -		unsigned long map_offset, struct vmem_altmap *altmap);
-> +int sparse_deactivate_section(unsigned long pfn, unsigned long nr_pages);
-> +void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
-> +                           unsigned long map_offset, struct vmem_altmap *altmap,
-> +                           int section_empty);
->  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
->  					  unsigned long pnum);
->  extern bool allow_online_pfn_range(int nid, unsigned long pfn, unsigned long nr_pages,
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index b9ba5b85f9f7..03d535eee60d 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -517,12 +517,16 @@ static void __remove_section(struct zone *zone, unsigned long pfn,
->  		struct vmem_altmap *altmap)
->  {
->  	struct mem_section *ms = __nr_to_section(pfn_to_section_nr(pfn));
-> +	int ret;
->  
->  	if (WARN_ON_ONCE(!valid_section(ms)))
->  		return;
->  
-> +	ret = sparse_deactivate_section(pfn, nr_pages);
->  	__remove_zone(zone, pfn, nr_pages);
-> -	sparse_remove_section(ms, pfn, nr_pages, map_offset, altmap);
-> +	if (ret >= 0)
-> +		sparse_remove_section(pfn, nr_pages, map_offset, altmap,
-> +				      ret);
->  }
->  
->  /**
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 1e224149aab6..d4953ee1d087 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -732,16 +732,47 @@ static void free_map_bootmem(struct page *memmap)
->  }
->  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
->  
-> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> -		struct vmem_altmap *altmap)
-> +static void section_remove(unsigned long pfn, unsigned long nr_pages,
-> +			   struct vmem_altmap *altmap, int section_empty)
-> +{
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	bool section_early = early_section(ms);
-> +	struct page *memmap = NULL;
-> +
-> +	if (section_empty) {
-> +		unsigned long section_nr = pfn_to_section_nr(pfn);
-> +
-> +		if (!section_early) {
-> +			kfree(ms->usage);
-> +			ms->usage = NULL;
-> +		}
-> +		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> +		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-> +	}
-> +
-> +        if (section_early && memmap)
-> +		free_map_bootmem(memmap);
-> +        else
-> +		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +}
-> +
-> +/**
-> + * section_deactivate: Deactivate a {sub}section.
-> + *
-> + * Return:
-> + * * -1         - {sub}section has already been deactivated.
-> + * * 0          - Section is not empty
-> + * * 1          - Section is empty
-> + */
-> +
-> +static int section_deactivate(unsigned long pfn, unsigned long nr_pages)
->  {
->  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
->  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
->  	struct mem_section *ms = __pfn_to_section(pfn);
-> -	bool section_is_early = early_section(ms);
-> -	struct page *memmap = NULL;
->  	unsigned long *subsection_map = ms->usage
->  		? &ms->usage->subsection_map[0] : NULL;
-> +	int section_empty = 0;
->  
->  	subsection_mask_set(map, pfn, nr_pages);
->  	if (subsection_map)
-> @@ -750,7 +781,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
->  				"section already deactivated (%#lx + %ld)\n",
->  				pfn, nr_pages))
-> -		return;
-> +		return -1;
->  
->  	/*
->  	 * There are 3 cases to handle across two configurations
-> @@ -770,21 +801,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
->  	 */
->  	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> -	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
-> -		unsigned long section_nr = pfn_to_section_nr(pfn);
-> -
-> -		if (!section_is_early) {
-> -			kfree(ms->usage);
-> -			ms->usage = NULL;
-> -		}
-> -		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> -		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-> -	}
-> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
-> +		section_empty = 1;
->  
-> -	if (section_is_early && memmap)
-> -		free_map_bootmem(memmap);
-> -	else
-> -		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +	return section_empty;
->  }
->  
->  static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> @@ -834,7 +854,11 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
->  
->  	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap);
->  	if (!memmap) {
-> -		section_deactivate(pfn, nr_pages, altmap);
-> +		int ret;
-> +
-> +		ret = section_deactivate(pfn, nr_pages);
-> +		if (ret >= 0)
-> +			section_remove(pfn, nr_pages, altmap, ret);
->  		return ERR_PTR(-ENOMEM);
->  	}
->  
-> @@ -919,12 +943,17 @@ static inline void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
->  }
->  #endif
->  
-> -void sparse_remove_section(struct mem_section *ms, unsigned long pfn,
-> -		unsigned long nr_pages, unsigned long map_offset,
-> -		struct vmem_altmap *altmap)
-> +int sparse_deactivate_section(unsigned long pfn, unsigned long nr_pages)
-> +{
-> +	return section_deactivate(pfn, nr_pages);
-> +}
-> +
-> +void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
-> +			   unsigned long map_offset, struct vmem_altmap *altmap,
-> +			   int section_empty)
->  {
->  	clear_hwpoisoned_pages(pfn_to_page(pfn) + map_offset,
->  			nr_pages - map_offset);
-> -	section_deactivate(pfn, nr_pages, altmap);
-> +	section_remove(pfn, nr_pages, altmap, section_empty);
->  }
->  #endif /* CONFIG_MEMORY_HOTPLUG */
-> -- 
-> 2.12.3
-> 
-
--- 
-Oscar Salvador
-SUSE L3
+DQo+IE9uIDE4IEp1bCAyMDE5LCBhdCAxMzo1MiwgTWFyYyBHb256YWxleiA8bWFyYy53Lmdvbnph
+bGV6QGZyZWUuZnI+IHdyb3RlOg0KPiANCj4gRVhURVJOQUwgTUFJTA0KPiANCj4gDQo+IE9uIDE4
+LzA3LzIwMTkgMTM6MTUsIEphbiBLb3RhcyB3cm90ZToNCj4gDQo+PiBUaGlzIHBhdGNoIGFkZHMg
+bGluZSBjaGVja3MgZm9yIENTSTJUWCwgdG8gcHJldmVudA0KPj4gY2xvY2sgbGFuZSBiZWluZyB1
+c2VkIGFzIGEgZGF0YSBsYW5lLg0KPiANCj4gImxpbmUgY2hlY2tzIiBvciAibGFuZSBjaGVja3M/
+IF5fXg0KDQpZZXMsIHlvdeKAmXJlIHJpZ2h0LCBzaG91bGQgYmUgbGFuZSBjaGVja3MgOikNCg0K
+UmVnYXJkcywNCkphbg0KDQo+IA0KPiBOQjogY29tbWl0IG1lc3NhZ2VzIG1heSBiZSB1cCB0byA3
+Mi1jaGFyYWN0ZXItd2lkZSA7LSkNCj4gKE5vIG5lZWQgdG8gbGluZS13cmFwIGF0IDUwKQ0KPiAN
+Cj4gUmVnYXJkcy4NCg0K
