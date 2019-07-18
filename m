@@ -2,118 +2,92 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97141C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83271C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C7E20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C44A20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:09:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6gcpxU8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rk9Fldlo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfGRLHd (ORCPT
+        id S1727875AbfGRLJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:07:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36841 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfGRLHc (ORCPT
+        Thu, 18 Jul 2019 07:09:35 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43174 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfGRLJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:07:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id o9so50830815iom.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V7FC7XwlYl6RQGfalPlfGNpAUBYGPQKgbX3nww64Y9w=;
-        b=i6gcpxU8ZYmHtNxLwGxFffbFI5O1D+I/lq8Dh/E2wO8OvMurAhpIHuCrcePTQDlaHw
-         XT2fqRPDjkCpYR47yzU5yXHMdFEs1OUjS1DaGcypDsFrrrKrv3lZOO3B+uMxmafy3VGJ
-         o8GtPGSB6lA1j7efaVRA/vhmEmLtgRTx1b8RJy3Qmpkqb0kNINTX3VED2SvjYZGxNlJ5
-         Wg+RHZx9xMKsi6m+iKBpcTYHsFfX5bNnEE+ZpvUPbRKzpAaRiYw/vOz0sJCGCjpIZh+1
-         tRVBBIS7TCe85rGQkiQgVkJsY4sBi0MATL67AZcYgNUYqYUDyLuIAr1M79wR9dVMyeyZ
-         QruA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V7FC7XwlYl6RQGfalPlfGNpAUBYGPQKgbX3nww64Y9w=;
-        b=Dy1/CHm2iSX8cTDIwglCGd4TxxAUfuZwgKT06fOHhFExfhF6xtzkRsntZAn+nDn/sW
-         JsPDZIsaiuxj8cOKmhTCq88JjN56SwIBNayIeYE1QvYGkxjeS3n9rCuX0E8ukM6ZohQl
-         Tl7QKV3F9KYausRYdAz3GR5kAg4l2dx1KPGG/FbnQCOPG7HyEnRx2Lba3jL7GyDuhd3y
-         14DCg3PgBO5/5cHLs1sownbLTOF0nTZiJX2Wv4Jr6kyiEAL2RzAoFDcI35CFFmUV6LWj
-         4YyxLg3FZLyC8ixX8zIi4SkbSZd548tJTOSAhfhl9KJQWAfX28LJg41XYLD42/LDMnX1
-         KdnA==
-X-Gm-Message-State: APjAAAXSdHj0GQFC4pdWPy/gUz3lAc6LLPlO8PL3GfekcArtix3djYq8
-        5ArinXI+HDEs8PN1J+kbNgNPQsmqikY7clFz5Ts=
-X-Google-Smtp-Source: APXvYqxMt0pfpdL1v3ZiA05raxMlScFxpa2O+JAe1ixVfBfblUC2oHbn4D5e9vLiAs+77EeaxNCLN9n8EMJ5lkUePKM=
-X-Received: by 2002:a6b:4e1a:: with SMTP id c26mr42462765iob.178.1563448051792;
- Thu, 18 Jul 2019 04:07:31 -0700 (PDT)
+        Thu, 18 Jul 2019 07:09:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WkAmz9ErFFMrP6yoc8ym+52otaHCvNXCSIBUiMMe6Ow=; b=rk9FldloEb7sNuqItRd33pML7
+        eCHNmsllqc/6/RCNqz1N9v8yDSIZIkufa3MY6o2o/Y95x/fZjm2FENTqsl1CX5VW9CRng7fd08OXp
+        Ly5SMMufDho/D1LFBj9V11nMpHQ9P0xYTQGTAKJ7KBvmkA5mTeK/51s6DxeiKdt51oAbndcdy4XvZ
+        NbJyYO3AP464Kq/+ksmWAx4nq5k8grJVyK0FuflX/IilseUdqavU2ttJ/Re0ZBZ2TcGq4U10sz2Mq
+        6wtw00o3YlefMLRfZNXG0RAiQkSzT316JClL+A+nPMtvLardQjVQydUFC3w9Qzsmcj1wue+XVRI/S
+        nlT+YwK9Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ho4Hx-00034d-Js; Thu, 18 Jul 2019 11:09:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5AB2320197A71; Thu, 18 Jul 2019 13:09:28 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 13:09:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+        linux-kernel@vger.kernel.org, dbueso@suse.de, mingo@redhat.com,
+        jade alglave <jade.alglave@arm.com>, paulmck@linux.vnet.ibm.com
+Subject: Re: [PATCH v2] locking/rwsem: add acquire barrier to read_slowpath
+ exit when queue is empty
+Message-ID: <20190718110928.GT3463@hirez.programming.kicks-ass.net>
+References: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
+ <a524cf95ab0dbdd1eb65e9decb9283e73d416b1d.1563352912.git.jstancek@redhat.com>
+ <20190717131335.b2ry43t2ov7ba4t4@willie-the-truck>
+ <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com>
+ <20190717192200.GA17687@dustball.usersys.redhat.com>
+ <20190718092640.52oliw3sid7gxyh6@willie-the-truck>
+ <79224323.853324.1563447052432.JavaMail.zimbra@redhat.com>
+ <20190718110446.GC3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190716072805.22445-1-pmladek@suse.com> <20190716072805.22445-3-pmladek@suse.com>
- <20190718104756.GA22851@jagdpanzerIV>
-In-Reply-To: <20190718104756.GA22851@jagdpanzerIV>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Thu, 18 Jul 2019 14:07:20 +0300
-Message-ID: <CALYGNiMnqUKxKsY1JRi075xs-P_QzfA4Pg3XANiW0mFYkp_RQQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] printk/panic/x86: Allow to access printk log buffer
- after crash_smp_send_stop()
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Tesarik <ptesarik@suse.cz>, x86@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718110446.GC3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 1:48 PM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (07/16/19 09:28), Petr Mladek wrote:
-> [..]
-> > +int printk_bust_lock_safe(bool kdump_smp_stop)
-> >  {
-> >       if (!raw_spin_is_locked(&logbuf_lock))
-> >               return 0;
-> >
-> > -     if (num_online_cpus() == 1) {
-> > +     if (num_online_cpus() == 1 || kdump_smp_stop)  {
-> >               debug_locks_off();
-> >               raw_spin_lock_init(&logbuf_lock);
-> >               return 0;
->
-> Let me test the waters. Criticize the following idea:
->
-> Can we, sort of, disconnect "supposed to be dead" CPUs from printk()
-> so then we can unconditionally re-init printk() from panic-CPU?
->
-> We have per-CPU printk_state; so panic-CPU can set, let's say,
-> DEAD_CPUS_TELL_NO_TALES bit on all CPUs but self, and vprintk_func()
-> will do nothing if DEAD_CPUS_TELL_NO_TALES bit set on particular
-> CPU. Foreign CPUs are not even supposed to be alive, and smp_send_stop()
-> waits for IPI acks from secondary CPUs long enough on average (need
-> to check that) so if one of the CPUs is misbehaving and doesn't want
-> to die (geez...) we will just "disconnect" it from printk() to minimize
-> possible logbuf/console drivers interventions and then proceed with
-> panic; assuming that misbehaving CPUs are actually up to something
-> sane. Sometimes, you know, in some cases, those CPUs are already dead:
-> either accidentally powered off, or went completely nuts and do nothing,
-> etc. etc. but we still can kdump() and console_flush_on_panic().
 
-Good idea.
-Panic-CPU could just increment state to reroute printk into 'safe'
-per-cpu buffer.
+It's simpler like so:
 
+On Thu, Jul 18, 2019 at 01:04:46PM +0200, Peter Zijlstra wrote:
+> X = 0;
+> 
+> 	rwsem_down_read()
+> 	  for (;;) {
+> 	    set_current_state(TASK_UNINTERRUPTIBLE);
 >
->         -ss
+>								X = 1;
+>                                                               rwsem_up_write();
+> 								  rwsem_mark_wake()
+> 								    atomic_long_add(adjustment, &sem->count);
+> 								    smp_store_release(&waiter->task, NULL);
+> 
+> 	    if (!waiter.task)
+> 	      break;
+> 
+> 	    ...
+> 	  }
+> 
+> 	r = X;
+> 
+
