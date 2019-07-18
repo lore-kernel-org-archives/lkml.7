@@ -2,120 +2,121 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C798C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773E8C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A13F21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5593421849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389858AbfGRQl6 (ORCPT
+        id S2390758AbfGRQmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:41:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51724 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726040AbfGRQl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:41:57 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IGas38068926
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:41:56 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tttqt4urf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:41:56 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Thu, 18 Jul 2019 17:41:55 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 17:41:50 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IGfmwM34341242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 16:41:49 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B510CC6057;
-        Thu, 18 Jul 2019 16:41:48 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8093CC6095;
-        Thu, 18 Jul 2019 16:41:44 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.186.82])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Jul 2019 16:41:44 +0000 (GMT)
-References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-7-bauerman@linux.ibm.com> <20190718084456.GE24562@lst.de>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 18 Jul 2019 12:42:11 -0400
+Received: from verein.lst.de ([213.95.11.211]:60829 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbfGRQmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:42:10 -0400
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 414D6227A81; Thu, 18 Jul 2019 18:42:07 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 18:42:07 +0200
+From:   Torsten Duwe <duwe@lst.de>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 6/6] s390/mm: Remove sev_active() function
-In-reply-to: <20190718084456.GE24562@lst.de>
-Date:   Thu, 18 Jul 2019 13:41:25 -0300
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] drm/bridge: Add Analogix anx6345 support
+Message-ID: <20190718164207.GA29501@lst.de>
+References: <20190604122150.29D6468B05@newverein.lst.de> <CGME20190604122331epcas1p45e234dfad3f1288cb557e3bae7f9af38@epcas1p4.samsung.com> <20190604122302.006A168C7B@newverein.lst.de> <610ab353-7e05-81b6-2cc4-2dac09823d42@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071816-0016-0000-0000-000009D1B85B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011452; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01234001; UDB=6.00650264; IPR=6.01015328;
- MB=3.00027782; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 16:41:55
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071816-0017-0000-0000-00004412E0B8
-Message-Id: <87d0i747nu.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=989 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180174
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <610ab353-7e05-81b6-2cc4-2dac09823d42@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 11:13:10AM +0200, Andrzej Hajda wrote:
+> On 04.06.2019 14:23, Torsten Duwe wrote:
+> > +
+> > +static void anx6345_poweron(struct anx6345 *anx6345)
+> > +{
+> > +	int err;
+> > +
+> > +	/* Ensure reset is asserted before starting power on sequence */
+> > +	gpiod_set_value_cansleep(anx6345->gpiod_reset, 1);
+> 
+> With fixed devm_gpiod_get below this line can be removed.
 
-Christoph Hellwig <hch@lst.de> writes:
+In any case, reset must be asserted for this procedure to succeed...
 
->> -/* are we a protected virtualization guest? */
->> -bool sev_active(void)
->> -{
->> -	return is_prot_virt_guest();
->> -}
->> -
->>  bool force_dma_unencrypted(struct device *dev)
->>  {
->> -	return sev_active();
->> +	return is_prot_virt_guest();
->>  }
->
-> Do we want to keep the comment for force_dma_unencrypted?
->
-> Otherwise looks good:
->
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > +static enum drm_mode_status
+> > +anx6345_bridge_mode_valid(struct drm_bridge *bridge,
+> > +			  const struct drm_display_mode *mode)
+> > +{
+> > +	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+> > +		return MODE_NO_INTERLACE;
+> > +
+> > +	/* Max 1200p at 5.4 Ghz, one lane */
+> > +	if (mode->clock > 154000)
+> > +		return MODE_CLOCK_HIGH;
+> 
+> I wonder if you shouldn't take into account training results here, ie.
+> training perfrormed before validation.
 
-Thank you for your review on al these patches.
+Sure, but this is verbatim from the anx78xx.c sibling, code provided
+by analogix. Lacking in-depth datasheets, this is probably the best effort.
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+> > +
+> > +	/* 2.5V digital core power regulator  */
+> > +	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25-supply");
+> > +	if (IS_ERR(anx6345->dvdd25)) {
+> > +		DRM_ERROR("dvdd25-supply not found\n");
+> > +		return PTR_ERR(anx6345->dvdd25);
+> > +	}
+> > +
+> > +	/* GPIO for chip reset */
+> > +	anx6345->gpiod_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> 
+> Shouldn't be set to GPIOD_OUT_HIGH?
+
+It used to be in the original submission, and confused even more people ;-)
+Fact is, the reset for this chip _is_ low active; I'm following
+Documentation/devicetree/bindings/gpio/gpio.txt, "1.1) GPIO specifier
+best practices", which I find rather comprehensive.
+
+Any suggestions on how to phrase this even better are appreciated.
+
+> > +};
+> > +module_i2c_driver(anx6345_driver);
+> > +
+> > +MODULE_DESCRIPTION("ANX6345 eDP Transmitter driver");
+> > +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
+> 
+> Submitter, patch author, and module author are different, this can be
+> correct, but maybe somebody forgot to update some of these fields.
+
+As mentioned in the v2 cover letter, I had a closer look on which code got
+actually introduced and which lines were simply copied around, and made the
+copyright and authorship stick to where they belong. *I* believe this is
+correct now; specific improvements welcome.
+
+	Torsten
+
 
