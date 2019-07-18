@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D4EC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD243C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD5B2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B844A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419026;
-	bh=rNZMM3N9RKTRm0K8TpzstOUDkLj8uGcAApZZJGzJxd0=;
+	s=default; t=1563419029;
+	bh=BJ9zIYxkn1CTCL32DcCF3xpYoTTLYqY6mHsnGFoEtVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2CywblsB05L2atFtBRavpzOVn2YwPF5n+GJ5bwnMEI7wxuAAc5uXL+cpyZZqBywf
-	 P8/A11Nrt5w+q3aD7Emzt+HU7JDISVf6aAWyeBGGzo7ruoNylRw1ARawQcUzGHBo3p
-	 G4XougGWOsIBYbyokbr6PZikr/K3+PsCK3nLoJEM=
+	b=tDph8RdpeRtx4V2gIkYz7pWMIJvFuE2jLC8Easl13aw6bcF1X+pjJvORNpLEV0s0K
+	 T8iAsDJabHKUyR80ZFKISnQPtZJ0ttFJ3T2jCbUw1x7C+XQLiRvrEM3e1G+TN+IGkR
+	 Xerv0IRr53lOPClq2nr4uHicmCQx+LEjst5q94j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389479AbfGRDDp (ORCPT
+        id S2389496AbfGRDDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389432AbfGRDDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:42 -0400
+        id S2389458AbfGRDDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:03:44 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7643D21849;
-        Thu, 18 Jul 2019 03:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E5AF2173B;
+        Thu, 18 Jul 2019 03:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419021;
-        bh=rNZMM3N9RKTRm0K8TpzstOUDkLj8uGcAApZZJGzJxd0=;
+        s=default; t=1563419023;
+        bh=BJ9zIYxkn1CTCL32DcCF3xpYoTTLYqY6mHsnGFoEtVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yMZGPNn6kdLsU88mDLPuc9DoozE8m+vD3806rTCxN9U7/HMdzxoflITKshXffIE0K
-         hei3rhMe2zAjtgLQ6L2xJ46gBy9h2D/ARmBQUdOttfDGGjyB9Y36nuff+mXqRLfhGE
-         X8uvxFENLqjGXxxAEpSWzhTZNgzbRNSzJfLBLr7s=
+        b=wjoqn8exHHgjFnc/OolCDwysEuAe9Q8P1SZVwc97I2Cg170GNKHpyYZ2COWBH7ghe
+         SR0+RLk6iOK+rNGX+rMMrLmR2Z846zh8mfgPAkki0/kevxyYrUctDOq/iG0+NIbXdB
+         cKSPFm7+0ml2kjlW4eyaVD2gHZL+L1pxWryXKY1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Joseph Yasi <joe.yasi@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.2 02/21] e1000e: start network tx queue only when link is up
-Date:   Thu, 18 Jul 2019 12:01:20 +0900
-Message-Id: <20190718030030.975683114@linuxfoundation.org>
+        stable@vger.kernel.org, Haren Myneni <haren@us.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.2 20/21] crypto/NX: Set receive window credits to max number of CRBs in RxFIFO
+Date:   Thu, 18 Jul 2019 12:01:38 +0900
+Message-Id: <20190718030035.970872560@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -64,74 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Haren Myneni <haren@linux.vnet.ibm.com>
 
-commit d17ba0f616a08f597d9348c372d89b8c0405ccf3 upstream.
+commit e52d484d9869eb291140545746ccbe5ffc7c9306 upstream.
 
-Driver does not want to keep packets in Tx queue when link is lost.
-But present code only reset NIC to flush them, but does not prevent
-queuing new packets. Moreover reset sequence itself could generate
-new packets via netconsole and NIC falls into endless reset loop.
+System gets checkstop if RxFIFO overruns with more requests than the
+maximum possible number of CRBs in FIFO at the same time. The max number
+of requests per window is controlled by window credits. So find max
+CRBs from FIFO size and set it to receive window credits.
 
-This patch wakes Tx queue only when NIC is ready to send packets.
-
-This is proper fix for problem addressed by commit 0f9e980bf5ee
-("e1000e: fix cyclic resets at link up with active tx").
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Tested-by: Joseph Yasi <joe.yasi@gmail.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: b0d6c9bab5e4 ("crypto/nx: Add P9 NX support for 842 compression engine")
+CC: stable@vger.kernel.org # v4.14+
+Signed-off-by:Haren Myneni <haren@us.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/net/ethernet/intel/e1000e/netdev.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4208,7 +4208,7 @@ void e1000e_up(struct e1000_adapter *ada
- 		e1000_configure_msix(adapter);
- 	e1000_irq_enable(adapter);
+---
+ drivers/crypto/nx/nx-842-powernv.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- a/drivers/crypto/nx/nx-842-powernv.c
++++ b/drivers/crypto/nx/nx-842-powernv.c
+@@ -27,8 +27,6 @@ MODULE_ALIAS_CRYPTO("842-nx");
+ #define WORKMEM_ALIGN	(CRB_ALIGN)
+ #define CSB_WAIT_MAX	(5000) /* ms */
+ #define VAS_RETRIES	(10)
+-/* # of requests allowed per RxFIFO at a time. 0 for unlimited */
+-#define MAX_CREDITS_PER_RXFIFO	(1024)
  
--	netif_start_queue(adapter->netdev);
-+	/* Tx queue started by watchdog timer when link is up */
+ struct nx842_workmem {
+ 	/* Below fields must be properly aligned */
+@@ -812,7 +810,11 @@ static int __init vas_cfg_coproc_info(st
+ 	rxattr.lnotify_lpid = lpid;
+ 	rxattr.lnotify_pid = pid;
+ 	rxattr.lnotify_tid = tid;
+-	rxattr.wcreds_max = MAX_CREDITS_PER_RXFIFO;
++	/*
++	 * Maximum RX window credits can not be more than #CRBs in
++	 * RxFIFO. Otherwise, can get checkstop if RxFIFO overruns.
++	 */
++	rxattr.wcreds_max = fifo_size / CRB_SIZE;
  
- 	e1000e_trigger_lsc(adapter);
- }
-@@ -4606,6 +4606,7 @@ int e1000e_open(struct net_device *netde
- 	pm_runtime_get_sync(&pdev->dev);
- 
- 	netif_carrier_off(netdev);
-+	netif_stop_queue(netdev);
- 
- 	/* allocate transmit descriptors */
- 	err = e1000e_setup_tx_resources(adapter->tx_ring);
-@@ -4666,7 +4667,6 @@ int e1000e_open(struct net_device *netde
- 	e1000_irq_enable(adapter);
- 
- 	adapter->tx_hang_recheck = false;
--	netif_start_queue(netdev);
- 
- 	hw->mac.get_link_status = true;
- 	pm_runtime_put(&pdev->dev);
-@@ -5288,6 +5288,7 @@ static void e1000_watchdog_task(struct w
- 			if (phy->ops.cfg_on_link_up)
- 				phy->ops.cfg_on_link_up(hw);
- 
-+			netif_wake_queue(netdev);
- 			netif_carrier_on(netdev);
- 
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -5301,6 +5302,7 @@ static void e1000_watchdog_task(struct w
- 			/* Link status message must follow this format */
- 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
- 			netif_carrier_off(netdev);
-+			netif_stop_queue(netdev);
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
- 				mod_timer(&adapter->phy_info_timer,
- 					  round_jiffies(jiffies + 2 * HZ));
+ 	/*
+ 	 * Open a VAS receice window which is used to configure RxFIFO
 
 
