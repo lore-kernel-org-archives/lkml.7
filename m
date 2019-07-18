@@ -2,216 +2,174 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB54C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542F0C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF6221783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A22720873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TZjOKys0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GOu5Z9IY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390181AbfGRMUA (ORCPT
+        id S2390078AbfGRMX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:20:00 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35965 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRMT7 (ORCPT
+        Thu, 18 Jul 2019 08:23:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43526 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRMX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:19:59 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k21so30050462edq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CCVHqVtcDr9kxRQz1YfpzaVckBtPbq59VjeQ1p3zOVc=;
-        b=TZjOKys03SMFxMLBoi3A5eP5IIETYuLZHVfNo9Sr5/oPvhYZ0sb9eu01Cww8CLUsEd
-         WPZF0Q9MGYDAvp2lkAO7a9++fepsHkgI/ajVgs70C0p5gEz5P7HanQfcIB6qVyuNqz9z
-         iJo5Z2/SVIU8BaIXJRS/33G0P3lByvJnZg1uWKv6z7eFCAEI6bXWkrmS0YjHAq6oDLCP
-         2E0AzCzK8vwAv6Y6HWbul7rfc//Qds6XVQOCwcWwrAQj7cQHoK0qXszAT1ErTmeHBDCo
-         C+vJpLIuTeehs4DMEMSuV/71VgxMyynAKxeEUBkszIZI3fPE53lLKtfq+U319K1kPf9I
-         JPbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CCVHqVtcDr9kxRQz1YfpzaVckBtPbq59VjeQ1p3zOVc=;
-        b=ZuccUs2/4/55F03om9QpOo8gpyB+VxfaZBx6b9rwWxavBnarhj6ZXhqZQOCglpO8GS
-         3aKgRok856Z8kCbwj1shbHKC73KOeFHK2790zsbWFJbT5mugOTRXhIZqWjUX5chIX22T
-         1Qu6xcCjeoiTE0qDoyvdyibxeIGYBfiCRJK83ZJesbVPpckAKQ1UPFLw47OB1MMAiZQ5
-         46XwcmtoUrJytxoHbgi++HZKm9NIiWngymz1mZPyOAQh8qwrmw1lwIJNXP7TMNAnIeMc
-         Fs7j50g6O5yCluKmGND5HqMPzx8PUBdjYBII0brXiSe/y0JtlS4FO+IPK/n9MLPAU5q6
-         XEKA==
-X-Gm-Message-State: APjAAAWOPDyv6lMWLkesrOYC7WYBxwQQWnVkmmeT7v0CofsAIOtFLx6e
-        m8R5YDwXVCV/NoSAAW8de+sOUVuSYNvj+UKOzYk=
-X-Google-Smtp-Source: APXvYqzcA8/9pmEX4K9HZSZ6a8HBFZKEBUeGXpnUZGdqw3SL92Bxma0PiWv2EMFLoPf3cMiLE1hgkjSOYVvuQa/1ork=
-X-Received: by 2002:a17:906:5409:: with SMTP id q9mr36460845ejo.209.1563452397474;
- Thu, 18 Jul 2019 05:19:57 -0700 (PDT)
+        Thu, 18 Jul 2019 08:23:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N9PeuYcS0dRBsgMS8SHInxU3JDHybR3gL7ZkPh7ajCE=; b=GOu5Z9IYPEcr+BEby4R2m8kyp
+        OnjzJW7wcq4ctswfv6rLA15aCiq2WCpKK2XA52w5/kEIPz0CPvE42FJ8D9+MFFNI2Q03Br+R9vPt6
+        ezTHA3Wr/9QcmF+VOYJ3qhFwCceYBX0NSOR7UluvtxGMI6cRNCpDQx39WxIf4wUFASDcpvpGTKJdj
+        fdRNpVqvwEf92oSdIu3MEkyocgp5XJG+/y1gv9kpLF/S3/9GY8w9kJkYMmoKMnIUTfJnQLojhma3H
+        FxIMTFek3w15/F90W9kmy4z8jHfCUcSMX4pHnIASCn4Tfz8/W9CIoJ+vKGWo9qu67Sg8K3P45FIYs
+        P3fp59UAw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ho5RN-0003Qn-QB; Thu, 18 Jul 2019 12:23:18 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 048BF20197A72; Thu, 18 Jul 2019 14:23:14 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 14:23:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jan Stancek <jstancek@redhat.com>,
+        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+        dbueso@suse.de, mingo@redhat.com, jade.alglave@arm.com,
+        paulmck@linux.vnet.ibm.com
+Subject: Re: [PATCH v2] locking/rwsem: add acquire barrier to read_slowpath
+ exit when queue is empty
+Message-ID: <20190718122313.GO3402@hirez.programming.kicks-ass.net>
+References: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
+ <a524cf95ab0dbdd1eb65e9decb9283e73d416b1d.1563352912.git.jstancek@redhat.com>
+ <20190717131335.b2ry43t2ov7ba4t4@willie-the-truck>
+ <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com>
+ <20190717192200.GA17687@dustball.usersys.redhat.com>
+ <20190718092640.52oliw3sid7gxyh6@willie-the-truck>
+ <20190718105812.GB3419@hirez.programming.kicks-ass.net>
+ <20190718114547.v4c7ucsp6k4i6o3b@willie-the-truck>
 MIME-Version: 1.0
-References: <20190718024133.3873-1-leonardo@linux.ibm.com>
-In-Reply-To: <20190718024133.3873-1-leonardo@linux.ibm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 18 Jul 2019 08:19:46 -0400
-Message-ID: <CA+CK2bBu7DnG73SaBDwf9cBceNvKnZDEqA-gBJmKC9K_rqgO+A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in ZONE_MOVABLE
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718114547.v4c7ucsp6k4i6o3b@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:42 PM Leonardo Bras <leonardo@linux.ibm.com> wrote:
->
-> Adds an option on kernel config to make hot-added memory online in
-> ZONE_MOVABLE by default.
->
-> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
-> allowing to choose which zone it will be auto-onlined
+On Thu, Jul 18, 2019 at 12:45:47PM +0100, Will Deacon wrote:
+> On Thu, Jul 18, 2019 at 12:58:12PM +0200, Peter Zijlstra wrote:
+> > On Thu, Jul 18, 2019 at 10:26:41AM +0100, Will Deacon wrote:
+> > 
+> > > /*
+> > >  * We need to ensure ACQUIRE semantics when reading sem->count so that
+> > >  * we pair with the RELEASE store performed by an unlocking/downgrading
+> > >  * writer.
+> > >  *
+> > >  * P0 (writer)			P1 (reader)
+> > >  *
+> > >  * down_write(sem);
+> > >  * <write shared data>
+> > >  * downgrade_write(sem);
+> > >  * -> fetch_add_release(&sem->count)
+> > >  *
+> > >  *				down_read_slowpath(sem);
+> > >  *				-> atomic_read(&sem->count)
+> > >  *				   <ctrl dep>
+> > >  *				   smp_acquire__after_ctrl_dep()
+> > >  *				<read shared data>
+> > >  */
+> > 
+> > So I'm thinking all this is excessive; the simple rule is: lock acquire
+> > should imply ACQUIRE, we all know why.
+> 
+> Fair enough, I just thought this was worth highlighting because you can't
+> reply on the wait_lock to give you ACQUIRE ordering.
 
-This is a desired feature. From reading the code it looks to me that
-auto-selection of online method type should be done in
-memory_subsys_online().
+Right, not in this case, because sem->count is not fully serialized by
+it, whereas below the wait-queue is.
 
-When it is called from device online, mem->online_type should be -1:
+> > ---
+> > diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> > index 37524a47f002..9eb630904a17 100644
+> > --- a/kernel/locking/rwsem.c
+> > +++ b/kernel/locking/rwsem.c
+> > @@ -1000,6 +1000,7 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+> >  	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+> >  	adjustment = 0;
+> >  	if (rwsem_optimistic_spin(sem, false)) {
+> > +		/* rwsem_optimistic_spin() implies ACQUIRE through rwsem_*trylock() */
+> 
+> I couldn't figure out if this was dependent on the return value or not,
 
-if (mem->online_type < 0)
-     mem->online_type = MMOP_ONLINE_KEEP;
+I went with the fact that the only way to return true is if taken
+becomes true; and that only happens through
+rwsem_try_{read,write}_lock_unqueued(), and both imply ACQUIRE on
+success.
 
-Change it to:
-if (mem->online_type < 0)
-     mem->online_type = MMOP_DEFAULT_ONLINE_TYPE;
+> and looking at osq_lock() I also couldn't see the ACQUIRE barrier when we're
+> spinning on node->locked. Hmm.
 
-And in "linux/memory_hotplug.h"
-#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
-#define MMOP_DEFAULT_ONLINE_TYPE MMOP_ONLINE_MOVABLE
-#else
-#define MMOP_DEFAULT_ONLINE_TYPE MMOP_ONLINE_KEEP
-#endif
+Yes, osq is not a full lock and does not imply these barriers. This came
+up somewhere, did we forget to write a comment on that? Lemme go look.
 
-Could be expanded to support MMOP_ONLINE_KERNEL as well.
+> >  		/*
+> >  		 * Wake up other readers in the wait list if the front
+> >  		 * waiter is a reader.
+> > @@ -1014,6 +1015,7 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+> >  		}
+> >  		return sem;
+> >  	} else if (rwsem_reader_phase_trylock(sem, waiter.last_rowner)) {
+> > +		/* rwsem_reader_phase_trylock() implies ACQUIRE */
+> 
+> Can we add "on success" to the end of this, please?
 
-Pasha
+Good point.
 
->
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->  drivers/base/memory.c |  3 +++
->  mm/Kconfig            | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
->
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index f180427e48f4..378b585785c1 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
->         mem->state = state;
->         start_pfn = section_nr_to_pfn(mem->start_section_nr);
->         mem->phys_device = arch_get_memory_phys_device(start_pfn);
-> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
-> +       mem->online_type = MMOP_ONLINE_MOVABLE;
-> +#endif
->
->         ret = register_memory(mem);
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f0c76ba47695..74e793720f43 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
->         depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
->         depends on MIGRATION
->
-> +config MEMORY_HOTPLUG_MOVABLE
-> +       bool "Enhance the likelihood of hot-remove"
-> +       depends on MEMORY_HOTREMOVE
-> +       help
-> +         This option sets the hot-added memory zone to MOVABLE which
-> +         drastically reduces the chance of a hot-remove to fail due to
-> +         unmovable memory segments. Kernel memory can't be allocated in
-> +         this zone.
-> +
-> +         Say Y here if you want to have better chance to hot-remove memory
-> +         that have been previously hot-added.
-> +         Say N here if you want to make all hot-added memory available to
-> +         kernel space.
-> +
->  # Heavily threaded applications may benefit from splitting the mm-wide
->  # page_table_lock, so that faults on different parts of the user address
->  # space can be handled with less contention: split it at this NR_CPUS.
-> --
-> 2.20.1
->
+> >  		return sem;
+> >  	}
+> >  
+> > @@ -1032,6 +1034,8 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+> >  		 */
+> >  		if (adjustment && !(atomic_long_read(&sem->count) &
+> >  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+> > +			/* Provide lock ACQUIRE */
+> > +			smp_acquire__after_ctrl_dep();
+> >  			raw_spin_unlock_irq(&sem->wait_lock);
+> >  			rwsem_set_reader_owned(sem);
+> >  			lockevent_inc(rwsem_rlock_fast);
+> > @@ -1065,15 +1069,25 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+> >  	wake_up_q(&wake_q);
+> >  
+> >  	/* wait to be given the lock */
+> > -	while (true) {
+> > +	for (;;) {
+> >  		set_current_state(state);
+> > -		if (!waiter.task)
+> > +		if (!smp_load_acquire(&waiter.task)) {
+> > +			/*
+> > +			 * Matches rwsem_mark_wake()'s smp_store_release() and ensures
+> > +			 * we're ordered against its sem->count operations.
+> > +			 */
+> >  			break;
+> > +		}
+> 
+> Ack. Also, grepping for 'waiter.task' reveals a similar usage in
+> drivers/tty/tty_ldsem.c if you're feeling brave enough.
 
-On Wed, Jul 17, 2019 at 10:42 PM Leonardo Bras <leonardo@linux.ibm.com> wrote:
->
-> Adds an option on kernel config to make hot-added memory online in
-> ZONE_MOVABLE by default.
->
-> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
-> allowing to choose which zone it will be auto-onlined
->
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->  drivers/base/memory.c |  3 +++
->  mm/Kconfig            | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
->
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index f180427e48f4..378b585785c1 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
->         mem->state = state;
->         start_pfn = section_nr_to_pfn(mem->start_section_nr);
->         mem->phys_device = arch_get_memory_phys_device(start_pfn);
-> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
-> +       mem->online_type = MMOP_ONLINE_MOVABLE;
-> +#endif
->
->         ret = register_memory(mem);
->
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f0c76ba47695..74e793720f43 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
->         depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
->         depends on MIGRATION
->
-> +config MEMORY_HOTPLUG_MOVABLE
-> +       bool "Enhance the likelihood of hot-remove"
-> +       depends on MEMORY_HOTREMOVE
-> +       help
-> +         This option sets the hot-added memory zone to MOVABLE which
-> +         drastically reduces the chance of a hot-remove to fail due to
-> +         unmovable memory segments. Kernel memory can't be allocated in
-> +         this zone.
-> +
-> +         Say Y here if you want to have better chance to hot-remove memory
-> +         that have been previously hot-added.
-> +         Say N here if you want to make all hot-added memory available to
-> +         kernel space.
-> +
->  # Heavily threaded applications may benefit from splitting the mm-wide
->  # page_table_lock, so that faults on different parts of the user address
->  # space can be handled with less contention: split it at this NR_CPUS.
-> --
-> 2.20.1
->
+*sigh* of course, for every bug there needs to be a second copy
+somewhere.
+
+I'll go look there too. Thanks!
+
+
