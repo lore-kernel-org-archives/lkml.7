@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B479BC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096CFC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849232173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77122053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419691;
-	bh=2bO7GwenRbsGWRcyCSnUjWse5RkLIAUpMEEIqGQFtrY=;
+	s=default; t=1563419694;
+	bh=ygdv+YsAuveBpw2fT4ksARAzgv+byXQjMTAXBDwhsPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CrJk/W1suR1jHGEh7g49pS/977Zyw4sFR0vwmeoKqID8GusEJawO3F9iQS4gjVTyg
-	 zoZt3LmEXop+T1a8jX65ckzyTBJ+TK6neX/ZraFvNar8Uzvv4VdlCqdZAowx7TpkKT
-	 eSWyppJJ/5rTvKr5RZ4TA3MmljWKvFnuehENl4Fo=
+	b=bPQOERxyOVYMVOVhaib/ti7FwF6fs9u5HbqZGO7JNnje0ZpINd+0+eqbXfVEUztfS
+	 ZYgY7oQ+lvwzFg2y43EdAd/tv50uHybC+bQn1N/GkjKEPEL7xXpEb8LKwb47Z+oHck
+	 28Zzu5XyN11T5NwdHMyf8hhIdqhz9vovxbEmh018=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391885AbfGRDOt (ORCPT
+        id S2391898AbfGRDOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:14:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50766 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391853AbfGRDOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:38 -0400
+        id S2391876AbfGRDOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:43 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A0C21851;
-        Thu, 18 Jul 2019 03:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06CB12077C;
+        Thu, 18 Jul 2019 03:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419677;
-        bh=2bO7GwenRbsGWRcyCSnUjWse5RkLIAUpMEEIqGQFtrY=;
+        s=default; t=1563419682;
+        bh=ygdv+YsAuveBpw2fT4ksARAzgv+byXQjMTAXBDwhsPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JMz5fRzu7ZHmUUpxgoSulepLjoxQ/LQo4MJd5zCwogHCVHnuiF43+5ld9vvd3CHrB
-         o0mDQVdqfPrq4nXLYnYN12z0zcwbfU28MOPToi+UQIdwkQZXkqg7BQcYICXj8aovyP
-         m+5XWlElQgBO89c5Lp8pSC3GYIBwdY02ijw2pOCg=
+        b=v+SBUeUSs0Vti+LbklzWUISR8XgkmIPKD3FUtGSF1bjbi+2qI4KQOJE1KUNyKQc0p
+         yVjr9BTFbxYwyM5CBKyvbJIy+irm2xJl/1VZi3RTONTlmYa7BhcboAHi4PuaMMEbkT
+         D6NRjZAYpgJNfgS9Qr+0jWEoCxn0kahztqb2n8YM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hongjie Fang <hongjiefang@asrmicro.com>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.4 17/40] fscrypt: dont set policy for a dead directory
-Date:   Thu, 18 Jul 2019 12:02:13 +0900
-Message-Id: <20190718030045.019515227@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 20/40] USB: serial: option: add support for GosunCn ME3630 RNDIS mode
+Date:   Thu, 18 Jul 2019 12:02:16 +0900
+Message-Id: <20190718030046.935324695@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -59,53 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hongjie Fang <hongjiefang@asrmicro.com>
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
-commit 5858bdad4d0d0fc18bf29f34c3ac836e0b59441f upstream.
+commit aed2a26283528fb69c38e414f649411aa48fb391 upstream.
 
-The directory may have been removed when entering
-fscrypt_ioctl_set_policy().  If so, the empty_dir() check will return
-error for ext4 file system.
+Added USB IDs for GosunCn ME3630 cellular module in RNDIS mode.
 
-ext4_rmdir() sets i_size = 0, then ext4_empty_dir() reports an error
-because 'inode->i_size < EXT4_DIR_REC_LEN(1) + EXT4_DIR_REC_LEN(2)'.  If
-the fs is mounted with errors=panic, it will trigger a panic issue.
+T:  Bus=03 Lev=01 Prnt=01 Port=01 Cnt=03 Dev#= 18 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=19d2 ProdID=0601 Rev=03.18
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=b950269c
+C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 
-Add the check IS_DEADDIR() to fix this problem.
-
-Fixes: 9bd8212f981e ("ext4 crypto: add encryption policy and password salt support")
-Cc: <stable@vger.kernel.org> # v4.1+
-Signed-off-by: Hongjie Fang <hongjiefang@asrmicro.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/ext4/crypto_policy.c |    2 ++
- fs/f2fs/crypto_policy.c |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/usb/serial/option.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ext4/crypto_policy.c
-+++ b/fs/ext4/crypto_policy.c
-@@ -111,6 +111,8 @@ int ext4_process_policy(const struct ext
- 	if (!ext4_inode_has_encryption_context(inode)) {
- 		if (!S_ISDIR(inode->i_mode))
- 			return -EINVAL;
-+		if (IS_DEADDIR(inode))
-+			return -ENOENT;
- 		if (!ext4_empty_dir(inode))
- 			return -ENOTEMPTY;
- 		return ext4_create_encryption_context_from_policy(inode,
---- a/fs/f2fs/crypto_policy.c
-+++ b/fs/f2fs/crypto_policy.c
-@@ -99,6 +99,8 @@ int f2fs_process_policy(const struct f2f
- 		return -EINVAL;
- 
- 	if (!f2fs_inode_has_encryption_context(inode)) {
-+		if (IS_DEADDIR(inode))
-+			return -ENOENT;
- 		if (!f2fs_empty_dir(inode))
- 			return -ENOTEMPTY;
- 		return f2fs_create_encryption_context_from_policy(inode,
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1338,6 +1338,7 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0414, 0xff, 0xff, 0xff) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0417, 0xff, 0xff, 0xff) },
++	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0601, 0xff) },	/* GosunCn ZTE WeLink ME3630 (RNDIS mode) */
+ 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0602, 0xff) },	/* GosunCn ZTE WeLink ME3630 (MBIM mode) */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1008, 0xff, 0xff, 0xff),
+ 	  .driver_info = RSVD(4) },
 
 
