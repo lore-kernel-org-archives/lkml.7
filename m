@@ -2,53 +2,52 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C1C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D53C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3962173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C322173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419756;
-	bh=dJceh5GuZD1qx718708X96536gfKf2Bn+LkDgawMbf8=;
+	s=default; t=1563419759;
+	bh=5J0E8RNEEuMAYIko229uI7Q0fj1mJJ5kr1+XawMKN+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Bpzk6N2M0gBJsqMQozZURbcZLQ0iSqhqNA0w7LXVViz1/YIkd3LPxcIbPXQk8EiN
-	 VP9lMHvm5R9c/XYxdWeyYURIEouCoAB2sLq21PgIxpvNQSBfzo+c2oW6mTRtWK7JZM
-	 djwC584AE8wVUfJ0NNlY9CwNHNhtq9YJhxH6IJ7w=
+	b=uDzwVel1QybjS/LPrnKOdIotM0wZYZXUBp59ECa4qrYkjUXgN2PVAPqa0JT6+vEeE
+	 ZZNaOat8hJ1WrXnNwSg+1+giGrRo50QyHx+W+9zXrjA/kArqBcLFJn9KyubZKP2MTN
+	 OKMXTOGl0gvr/Jm7x0nDPaf3Hwv+aVY7SvNq8mxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392175AbfGRDPz (ORCPT
+        id S2392187AbfGRDP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392072AbfGRDPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:32 -0400
+        id S2390946AbfGRDPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:34 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 027DF2077C;
-        Thu, 18 Jul 2019 03:15:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865392186A;
+        Thu, 18 Jul 2019 03:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419731;
-        bh=dJceh5GuZD1qx718708X96536gfKf2Bn+LkDgawMbf8=;
+        s=default; t=1563419732;
+        bh=5J0E8RNEEuMAYIko229uI7Q0fj1mJJ5kr1+XawMKN+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ds2A36u1w+4QCI75dl1QNXL6KRFwj1qNjK06aqMh8V7koJQhrl9dwjEwRdRai9IwS
-         CCazOgiDS9RAmcCfbilXqVxVarBBlz6V71kMPKz8zSHRADSETS6M4hxM6ojJfs2ypQ
-         /i+KYgsO0u7iOyiB+JKaWnAep3+faUpQ/ul00Yro=
+        b=NcBqyIZK0AK69vCW0Qkq03LqkF20zMo0jrCKELF3T3MnmmsKwCp8PRNu4EpmCkjfF
+         TuJYWie5qxFdoGaAvWKMISXXEWfhlZPeW3vFRlW+U5+e1D8hL4I8olTCLzyLGD4sV7
+         XPTqc3N9NDaObJQRjkdbkeZERzq+a55Zred9KE84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Oros <poros@redhat.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 31/40] be2net: fix link failure after ethtool offline test
-Date:   Thu, 18 Jul 2019 12:02:27 +0900
-Message-Id: <20190718030049.741161856@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.4 22/40] usb: renesas_usbhs: add a workaround for a race condition of workqueue
+Date:   Thu, 18 Jul 2019 12:02:18 +0900
+Message-Id: <20190718030047.393366639@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -61,81 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 ]
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Certain cards in conjunction with certain switches need a little more
-time for link setup that results in ethtool link test failure after
-offline test. Patch adds a loop that waits for a link setup finish.
+commit b2357839c56ab7d06bcd4e866ebc2d0e2b7997f3 upstream.
 
-Changes in v2:
-- added fixes header
+The old commit 6e4b74e4690d ("usb: renesas: fix scheduling in atomic
+context bug") fixed an atomic issue by using workqueue for the shdmac
+dmaengine driver. However, this has a potential race condition issue
+between the work pending and usbhsg_ep_free_request() in gadget mode.
+When usbhsg_ep_free_request() is called while pending the queue,
+since the work_struct will be freed and then the work handler is
+called, kernel panic happens on process_one_work().
 
-Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
-Signed-off-by: Petr Oros <poros@redhat.com>
-Reviewed-by: Ivan Vecera <ivecera@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To fix the issue, if we could call cancel_work_sync() at somewhere
+before the free request, it could be easy. However,
+the usbhsg_ep_free_request() is called on atomic (e.g. f_ncm driver
+calls free request via gether_disconnect()).
+
+For now, almost all users are having "USB-DMAC" and the DMAengine
+driver can be used on atomic. So, this patch adds a workaround for
+a race condition to call the DMAengine APIs without the workqueue.
+
+This means we still have TODO on shdmac environment (SH7724), but
+since it doesn't have SMP, the race condition might not happen.
+
+Fixes: ab330cf3888d ("usb: renesas_usbhs: add support for USB-DMAC")
+Cc: <stable@vger.kernel.org> # v4.1+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ drivers/usb/renesas_usbhs/fifo.c |   34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index 51bfe74be8d4..4e5646b3da09 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -868,7 +868,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 			 u64 *data)
- {
- 	struct be_adapter *adapter = netdev_priv(netdev);
--	int status;
-+	int status, cnt;
- 	u8 link_status = 0;
- 
- 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -879,6 +879,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 
- 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
- 
-+	/* check link status before offline tests */
-+	link_status = netif_carrier_ok(netdev);
-+
- 	if (test->flags & ETH_TEST_FL_OFFLINE) {
- 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
- 			test->flags |= ETH_TEST_FL_FAILED;
-@@ -899,13 +902,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 		test->flags |= ETH_TEST_FL_FAILED;
- 	}
- 
--	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
--	if (status) {
--		test->flags |= ETH_TEST_FL_FAILED;
--		data[4] = -1;
--	} else if (!link_status) {
-+	/* link status was down prior to test */
-+	if (!link_status) {
- 		test->flags |= ETH_TEST_FL_FAILED;
- 		data[4] = 1;
-+		return;
-+	}
-+
-+	for (cnt = 10; cnt; cnt--) {
-+		status = be_cmd_link_status_query(adapter, NULL, &link_status,
-+						  0);
-+		if (status) {
-+			test->flags |= ETH_TEST_FL_FAILED;
-+			data[4] = -1;
-+			break;
-+		}
-+
-+		if (link_status)
-+			break;
-+
-+		msleep_interruptible(500);
- 	}
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -819,9 +819,8 @@ static int __usbhsf_dma_map_ctrl(struct
  }
  
--- 
-2.20.1
-
+ static void usbhsf_dma_complete(void *arg);
+-static void xfer_work(struct work_struct *work)
++static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
+ {
+-	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
+ 	struct usbhs_pipe *pipe = pkt->pipe;
+ 	struct usbhs_fifo *fifo;
+ 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
+@@ -829,12 +828,10 @@ static void xfer_work(struct work_struct
+ 	struct dma_chan *chan;
+ 	struct device *dev = usbhs_priv_to_dev(priv);
+ 	enum dma_transfer_direction dir;
+-	unsigned long flags;
+ 
+-	usbhs_lock(priv, flags);
+ 	fifo = usbhs_pipe_to_fifo(pipe);
+ 	if (!fifo)
+-		goto xfer_work_end;
++		return;
+ 
+ 	chan = usbhsf_dma_chan_get(fifo, pkt);
+ 	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+@@ -843,7 +840,7 @@ static void xfer_work(struct work_struct
+ 					pkt->trans, dir,
+ 					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc)
+-		goto xfer_work_end;
++		return;
+ 
+ 	desc->callback		= usbhsf_dma_complete;
+ 	desc->callback_param	= pipe;
+@@ -851,7 +848,7 @@ static void xfer_work(struct work_struct
+ 	pkt->cookie = dmaengine_submit(desc);
+ 	if (pkt->cookie < 0) {
+ 		dev_err(dev, "Failed to submit dma descriptor\n");
+-		goto xfer_work_end;
++		return;
+ 	}
+ 
+ 	dev_dbg(dev, "  %s %d (%d/ %d)\n",
+@@ -862,8 +859,17 @@ static void xfer_work(struct work_struct
+ 	dma_async_issue_pending(chan);
+ 	usbhsf_dma_start(pipe, fifo);
+ 	usbhs_pipe_enable(pipe);
++}
++
++static void xfer_work(struct work_struct *work)
++{
++	struct usbhs_pkt *pkt = container_of(work, struct usbhs_pkt, work);
++	struct usbhs_pipe *pipe = pkt->pipe;
++	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
++	unsigned long flags;
+ 
+-xfer_work_end:
++	usbhs_lock(priv, flags);
++	usbhsf_dma_xfer_preparing(pkt);
+ 	usbhs_unlock(priv, flags);
+ }
+ 
+@@ -916,8 +922,13 @@ static int usbhsf_dma_prepare_push(struc
+ 	pkt->trans = len;
+ 
+ 	usbhsf_tx_irq_ctrl(pipe, 0);
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	/* FIXME: Workaound for usb dmac that driver can be used in atomic */
++	if (usbhs_get_dparam(priv, has_usb_dmac)) {
++		usbhsf_dma_xfer_preparing(pkt);
++	} else {
++		INIT_WORK(&pkt->work, xfer_work);
++		schedule_work(&pkt->work);
++	}
+ 
+ 	return 0;
+ 
+@@ -1023,8 +1034,7 @@ static int usbhsf_dma_prepare_pop_with_u
+ 
+ 	pkt->trans = pkt->length;
+ 
+-	INIT_WORK(&pkt->work, xfer_work);
+-	schedule_work(&pkt->work);
++	usbhsf_dma_xfer_preparing(pkt);
+ 
+ 	return 0;
+ 
 
 
