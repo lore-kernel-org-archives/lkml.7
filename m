@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A66C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3CFC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC80B2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0A620818
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419477;
-	bh=6TvLc+s1Z5B/h1l3/U0Pe2FamVxtuWOhIhEnM7zXQp8=;
+	s=default; t=1563419487;
+	bh=Ynu8yvodwMQx0uHwqI/HZYYLMvXKfqE7ZdfD2W0l3r0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ae+1Qy9C+xNra5cHNQhDnnZDaVuv9EwFrx6+Qb4mR7YUGrzFX7v4uOC8LkQRzbRr1
-	 hivYftC3FwsBMzXi0Q4VGh6ijidME67UZRHtx6eITyOJlkSdXCGLYnJhUzhWBK/Ole
-	 HUCW/snE/WS9RT1pIWsl2MYgjG81jcg8vtkAWhBE=
+	b=SrteNJGTytrCFxWJNNuyxF+LCbxH70jrh3riXsZwtKSHB15eitYGHZF8UjdsesBWk
+	 4GQ7zGmeU10cquYMBIvzMsnHxfxm2pHIWg0O2HtAouIArm7thI/tojxnCkS4J4Woo7
+	 QoTz13YuJ+2LiHNR1FyT4Fxr9n0RuWA8kMJfxGNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391270AbfGRDLQ (ORCPT
+        id S2391291AbfGRDLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44670 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390542AbfGRDLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:10 -0400
+        id S2391260AbfGRDLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:14 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3456A2053B;
-        Thu, 18 Jul 2019 03:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55E012053B;
+        Thu, 18 Jul 2019 03:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419469;
-        bh=6TvLc+s1Z5B/h1l3/U0Pe2FamVxtuWOhIhEnM7zXQp8=;
+        s=default; t=1563419473;
+        bh=Ynu8yvodwMQx0uHwqI/HZYYLMvXKfqE7ZdfD2W0l3r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SadA35HrakSw6/nte+JbUZxIOCGh9Yl60HzJljU7GNfIxMgJvLTeEMIF15l6ZPqGV
-         ZEJEXKg8gKMAch6/4Eu7U8euL6tMqGm7JUxmbZK1tmkzapKGw4jtJsZE4jUKNIdL9I
-         q7hBTE5EegNpG+Pyn92umeoqPdlrZpdKAERjRGek=
+        b=B3t0zhezrlKSPaZzGfLyHUvG3qZdr0Ph0BQXxMGZPD/4qAjDIFgnNdmRhTYlrFQcB
+         0EFCFCZbB/nIdjzU+XhQ3YIXn3jnhBGnR44XuWi4XorPsTSpgAmdT7g9J6SUhFQz8U
+         PCSij2JKLvHnzhAL8srrOPaUeYR5QbRLYBmOmLh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 4.14 74/80] ARC: hide unused function unw_hdr_alloc
-Date:   Thu, 18 Jul 2019 12:02:05 +0900
-Message-Id: <20190718030105.247493008@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH 4.14 75/80] s390: fix stfle zero padding
+Date:   Thu, 18 Jul 2019 12:02:06 +0900
+Message-Id: <20190718030105.337133111@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -59,50 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-commit fd5de2721ea7d16e2b16c4049ac49f229551b290 upstream.
+commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
 
-As kernelci.org reports, this function is not used in
-vdk_hs38_defconfig:
+The stfle inline assembly returns the number of double words written
+(condition code 0) or the double words it would have written
+(condition code 3), if the memory array it got as parameter would have
+been large enough.
 
-arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
+The current stfle implementation assumes that the array is always
+large enough and clears those parts of the array that have not been
+written to with a subsequent memset call.
 
-Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
-Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+If however the array is not large enough memset will get a negative
+length parameter, which means that memset clears memory until it gets
+an exception and the kernel crashes.
+
+To fix this simply limit the maximum length. Move also the inline
+assembly to an extra function to avoid clobbering of register 0, which
+might happen because of the added min_t invocation together with code
+instrumentation.
+
+The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
+facility list handling") but was rather harmless, since it would only
+write to a rather large array. It became a potential problem with
+commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
+then it writes to an array with only four double words, while some
+machines already deliver three double words. As soon as machines have
+a facility bit within the fifth double a crash on IPL would happen.
+
+Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
+Cc: <stable@vger.kernel.org> # v2.6.37+
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/kernel/unwind.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/arch/arc/kernel/unwind.c
-+++ b/arch/arc/kernel/unwind.c
-@@ -185,11 +185,6 @@ static void *__init unw_hdr_alloc_early(
- 				       MAX_DMA_ADDRESS);
+--- a/arch/s390/include/asm/facility.h
++++ b/arch/s390/include/asm/facility.h
+@@ -59,6 +59,18 @@ static inline int test_facility(unsigned
+ 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
  }
  
--static void *unw_hdr_alloc(unsigned long sz)
--{
--	return kmalloc(sz, GFP_KERNEL);
--}
--
- static void init_unwind_table(struct unwind_table *table, const char *name,
- 			      const void *core_start, unsigned long core_size,
- 			      const void *init_start, unsigned long init_size,
-@@ -370,6 +365,10 @@ ret_err:
- }
- 
- #ifdef CONFIG_MODULES
-+static void *unw_hdr_alloc(unsigned long sz)
++static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
 +{
-+	return kmalloc(sz, GFP_KERNEL);
++	register unsigned long reg0 asm("0") = size - 1;
++
++	asm volatile(
++		".insn s,0xb2b00000,0(%1)" /* stfle */
++		: "+d" (reg0)
++		: "a" (stfle_fac_list)
++		: "memory", "cc");
++	return reg0;
 +}
- 
- static struct unwind_table *last_table;
- 
++
+ /**
+  * stfle - Store facility list extended
+  * @stfle_fac_list: array where facility list can be stored
+@@ -76,13 +88,8 @@ static inline void stfle(u64 *stfle_fac_
+ 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
+ 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
+ 		/* More facility bits available with stfle */
+-		register unsigned long reg0 asm("0") = size - 1;
+-
+-		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
+-			     : "+d" (reg0)
+-			     : "a" (stfle_fac_list)
+-			     : "memory", "cc");
+-		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
++		nr = __stfle_asm(stfle_fac_list, size);
++		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
+ 	}
+ 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
+ 	preempt_enable();
 
 
