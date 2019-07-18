@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FCBC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815E2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93272084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CA22084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfGSBEA (ORCPT
+        id S1726750AbfGSBED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:04:00 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34162 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfGSBD5 (ORCPT
+        Thu, 18 Jul 2019 21:04:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40171 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfGSBD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:03:57 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so7439792pgc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 18:03:56 -0700 (PDT)
+        Thu, 18 Jul 2019 21:03:59 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so14718379pla.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 18:03:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=234sLOzVHB5hCj+BQKTblG2UsxBEUB0HpiZuWiY8m1k=;
-        b=fIn/C+oxIkXyH3rgsASOjz9QnUUYWGfYapVj08rHpJUVzsLcJ0/RXEhrvjzoNv+LJC
-         tf638XI6ng1o7PbvomKPkCwgNP2auqSxI6Im+cpd79YpTaFpsLKNpZla/NiEeAlrn/KQ
-         hr6rkw+VKP7wv81GhwekEquH459W2H0iLYTNzbyDj/oJSV8+IWoWrSUit53GDdgIkR18
-         ih6iincWXDm9Sy6Q/MnWbIatD5w7VMViOebN/Oaja6tD+VbghK7TtEApuMbr6OYwNzQE
-         TEY7Bg5xrboMwdMFsh9JX+4FYV6EdfYkPSqT+IoNgBf8kIUXjlLBkvlT8t+nKX7BJF0r
-         iT/w==
-X-Gm-Message-State: APjAAAVBXYlLFuTTkBK2QQaYeX0YekZAzI4C1cYNXXxTcFI9poPjgUJI
-        7chdPBzjhaqu6PI/kiOqsJ0=
-X-Google-Smtp-Source: APXvYqxVw4bYMMHJy9xZz2XbQ8FkLcAt/G11LsNEEH3AYxw1NB7JbL6nJQIqi9P5oSIllZx+WVr1og==
-X-Received: by 2002:a17:90a:20a2:: with SMTP id f31mr53921159pjg.90.1563498236261;
-        Thu, 18 Jul 2019 18:03:56 -0700 (PDT)
+        bh=AfEn5k4rF+4iyOCNDK+njemPaPAtLOhaIH1NFhEtQDU=;
+        b=OWZU34Z10dfkKPVRMCR09vXrHEVJy64/m6t9wpT/Z37/d6xD6xhOS9Rp/Cflo2Ic1J
+         ra+XakdWkWRLLH5qiSOLZP5ZdMoLkWw3NILb/aIfisL/Sde1Z2Sj3IjfTVvFXz1SGT/2
+         xyk0QakcrsNHbr46BhudRSIpVBjPFggjn4T9Oix/ICoeWstUn26u/nwQqgTtnYYW05a8
+         5g2c4tf6OyaM5TpSDQNtggACNUNxSKsDTeRazu3R6KwVLZ37DAGPhzPTm0PYnOy+wWni
+         GLH0hgg7vqifp9Y1yMfPLXcy5q1L668j/yscvtuf3igpT8wliWzy/q5ffZVgG1KF11MU
+         Qghw==
+X-Gm-Message-State: APjAAAVBRuNo/4TikxQA5fC7fZh/GvONJV8rKzPG01QUQWoun596T4fa
+        pJKSosJFaArW7C8diA2U3nI=
+X-Google-Smtp-Source: APXvYqyhsq27MEfPksB3VDBaqIt0D5Qk2mg7fN8v214SkBZF3Le67xP0kHhrV+oxZ1OoWlXOu59bwQ==
+X-Received: by 2002:a17:902:be15:: with SMTP id r21mr52291590pls.293.1563498238781;
+        Thu, 18 Jul 2019 18:03:58 -0700 (PDT)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id q144sm28887612pfc.103.2019.07.18.18.03.55
+        by smtp.gmail.com with ESMTPSA id q144sm28887612pfc.103.2019.07.18.18.03.57
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 18:03:55 -0700 (PDT)
+        Thu, 18 Jul 2019 18:03:58 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
@@ -50,9 +50,9 @@ Cc:     Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>
-Subject: [RFC 5/7] percpu: Assume preemption is disabled on per_cpu_ptr()
-Date:   Thu, 18 Jul 2019 10:41:08 -0700
-Message-Id: <20190718174110.4635-6-namit@vmware.com>
+Subject: [RFC 7/7] x86/current: Aggressive caching of current
+Date:   Thu, 18 Jul 2019 10:41:10 -0700
+Message-Id: <20190718174110.4635-8-namit@vmware.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190718174110.4635-1-namit@vmware.com>
 References: <20190718174110.4635-1-namit@vmware.com>
@@ -61,107 +61,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When per_cpu_ptr() is used, the caller should have preemption disabled,
-as otherwise the pointer is meaningless. If the user wants an "unstable"
-pointer he should call raw_cpu_ptr().
+The current_task is supposed to be constant in each thread and therefore
+does not need to be reread. There is already an attempt to cache it
+using inline assembly, using this_cpu_read_stable(), which hides the
+dependency on the read memory address.
 
-Add an assertion to check that indeed preemption is disabled, and
-distinguish between the two cases to allow further, per-arch
-optimizations.
+However, this caching is not working very well. For example,
+sync_mm_rss() still reads current_task twice for no reason.
+
+Allow more aggressive caching by aliasing current_task to
+into a constant const_current_task and reading from the constant copy.
+Doing so requires the compiler to support x86 segment qualifiers.
+Hide const_current_task in a different compilation unit to avoid the
+compiler from assuming that the value is constant during compilation.
 
 Signed-off-by: Nadav Amit <namit@vmware.com>
 ---
- include/asm-generic/percpu.h | 12 ++++++++++++
- include/linux/percpu-defs.h  | 33 ++++++++++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/current.h | 30 ++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/Makefile   |  1 +
+ arch/x86/kernel/cpu/common.c   |  7 +------
+ arch/x86/kernel/cpu/current.c  | 16 ++++++++++++++++
+ include/linux/compiler.h       |  2 +-
+ 5 files changed, 49 insertions(+), 7 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/current.c
 
-diff --git a/include/asm-generic/percpu.h b/include/asm-generic/percpu.h
-index c2de013b2cf4..7853605f4210 100644
---- a/include/asm-generic/percpu.h
-+++ b/include/asm-generic/percpu.h
-@@ -36,6 +36,14 @@ extern unsigned long __per_cpu_offset[NR_CPUS];
- #define my_cpu_offset __my_cpu_offset
- #endif
+diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
+index 3e204e6140b5..7f093e81a647 100644
+--- a/arch/x86/include/asm/current.h
++++ b/arch/x86/include/asm/current.h
+@@ -10,11 +10,41 @@ struct task_struct;
  
-+/*
-+ * Determine the offset of the current active processor when preemption is
-+ * disabled. Can be overriden by arch code.
-+ */
-+#ifndef __raw_my_cpu_offset
-+#define __raw_my_cpu_offset __my_cpu_offset
-+#endif
+ DECLARE_PER_CPU(struct task_struct *, current_task);
+ 
++#if USE_X86_SEG_SUPPORT
 +
++/*
++ * Hold a constant alias for current_task, which would allow to avoid caching of
++ * current task.
++ *
++ * We must mark const_current_task with the segment qualifiers, as otherwise gcc
++ * would do redundant reads of const_current_task.
++ */
++DECLARE_PER_CPU(struct task_struct * const __percpu_seg_override, const_current_task);
++
++static __always_inline struct task_struct *get_current(void)
++{
++
++	/*
++	 * GCC is missing functionality of removing segment qualifiers, which
++	 * messes with per-cpu infrastructure that holds local copies. Use
++	 * __raw_cpu_read to avoid holding any copy.
++	 */
++	return __raw_cpu_read(, const_current_task);
++}
++
++#else /* USE_X86_SEG_SUPPORT */
++
++/*
++ * Without segment qualifier support, the per-cpu infrastrucutre is not
++ * suitable for reading constants, so use this_cpu_read_stable() in this case.
++ */
+ static __always_inline struct task_struct *get_current(void)
+ {
+ 	return this_cpu_read_stable(current_task);
+ }
+ 
++#endif /* USE_X86_SEG_SUPPORT */
++
+ #define current get_current()
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+index d7a1e5a9331c..d816f03a37d7 100644
+--- a/arch/x86/kernel/cpu/Makefile
++++ b/arch/x86/kernel/cpu/Makefile
+@@ -19,6 +19,7 @@ CFLAGS_common.o		:= $(nostackp)
+ 
+ obj-y			:= cacheinfo.o scattered.o topology.o
+ obj-y			+= common.o
++obj-y			+= current.o
+ obj-y			+= rdrand.o
+ obj-y			+= match.o
+ obj-y			+= bugs.o
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index e0489d2860d3..33a6b51e8059 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1607,13 +1607,8 @@ DEFINE_PER_CPU_FIRST(struct fixed_percpu_data,
+ EXPORT_PER_CPU_SYMBOL_GPL(fixed_percpu_data);
+ 
  /*
-  * Arch may define arch_raw_cpu_ptr() to provide more efficient address
-  * translations for raw_cpu_ptr().
-@@ -44,6 +52,10 @@ extern unsigned long __per_cpu_offset[NR_CPUS];
- #define arch_raw_cpu_ptr(ptr) SHIFT_PERCPU_PTR(ptr, __my_cpu_offset)
- #endif
+- * The following percpu variables are hot.  Align current_task to
+- * cacheline size such that they fall in the same cacheline.
++ * The following percpu variables are hot.
+  */
+-DEFINE_PER_CPU(struct task_struct *, current_task) ____cacheline_aligned =
+-	&init_task;
+-EXPORT_PER_CPU_SYMBOL(current_task);
+-
+ DEFINE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
+ DEFINE_PER_CPU(unsigned int, irq_count) __visible = -1;
  
-+#ifndef arch_raw_cpu_ptr_preemptable
-+#define arch_raw_cpu_ptr_preemptable(ptr) SHIFT_PERCPU_PTR(ptr, __raw_my_cpu_offset)
-+#endif
-+
- #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
- extern void setup_per_cpu_areas(void);
- #endif
-diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
-index a6fabd865211..13afca8a37e7 100644
---- a/include/linux/percpu-defs.h
-+++ b/include/linux/percpu-defs.h
-@@ -237,20 +237,51 @@ do {									\
- 	SHIFT_PERCPU_PTR((ptr), per_cpu_offset((cpu)));			\
- })
- 
-+#ifndef arch_raw_cpu_ptr_preemption_disabled
-+#define arch_raw_cpu_ptr_preemption_disabled(ptr)			\
-+	arch_raw_cpu_ptr(ptr)
-+#endif
-+
-+#define raw_cpu_ptr_preemption_disabled(ptr)				\
-+({									\
-+	__verify_pcpu_ptr(ptr);						\
-+	arch_raw_cpu_ptr_preemption_disabled(ptr);			\
-+})
+diff --git a/arch/x86/kernel/cpu/current.c b/arch/x86/kernel/cpu/current.c
+new file mode 100644
+index 000000000000..3238c6e34984
+--- /dev/null
++++ b/arch/x86/kernel/cpu/current.c
+@@ -0,0 +1,16 @@
++#include <linux/sched/task.h>
++#include <asm/current.h>
 +
 +/*
-+ * If preemption is enabled, we need to read the pointer atomically on
-+ * raw_cpu_ptr(). However if it is disabled, we can use the
-+ * raw_cpu_ptr_nopreempt(), which is potentially more efficient. Similarly, we
-+ * can use the preemption-disabled version if the kernel is non-preemptable or
-+ * if voluntary preemption is used.
++ * Align current_task to cacheline size such that they fall in the same
++ * cacheline.
 + */
-+#ifdef CONFIG_PREEMPT
++DEFINE_PER_CPU(struct task_struct *, current_task) ____cacheline_aligned =
++	&init_task;
++EXPORT_PER_CPU_SYMBOL(current_task);
 +
- #define raw_cpu_ptr(ptr)						\
- ({									\
- 	__verify_pcpu_ptr(ptr);						\
- 	arch_raw_cpu_ptr(ptr);						\
- })
- 
-+#else
-+
-+#define raw_cpu_ptr(ptr)	raw_cpu_ptr_preemption_disabled(ptr)
-+
++#if USE_X86_SEG_SUPPORT
++DECLARE_PER_CPU(struct task_struct * const __percpu_seg_override, const_current_task)
++	__attribute__((alias("current_task")));
++EXPORT_PER_CPU_SYMBOL(const_current_task);
 +#endif
-+
- #ifdef CONFIG_DEBUG_PREEMPT
-+/*
-+ * Unlike other this_cpu_* operations, this_cpu_ptr() requires that preemption
-+ * will be disabled. In contrast, raw_cpu_ptr() does not require that.
-+ */
- #define this_cpu_ptr(ptr)						\
- ({									\
-+	__this_cpu_preempt_check("ptr");				\
- 	__verify_pcpu_ptr(ptr);						\
- 	SHIFT_PERCPU_PTR(ptr, my_cpu_offset);				\
- })
- #else
--#define this_cpu_ptr(ptr) raw_cpu_ptr(ptr)
-+#define this_cpu_ptr(ptr) raw_cpu_ptr_preemption_disabled(ptr)
- #endif
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index f0fd5636fddb..1b6ee9ab6373 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -299,7 +299,7 @@ unsigned long read_word_at_a_time(const void *addr)
+  */
+ #define __ADDRESSABLE(sym) \
+ 	static void * __section(".discard.addressable") __used \
+-		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
++		__PASTE(__addressable_##sym, __LINE__) = (void *)(uintptr_t)&sym;
  
- #else	/* CONFIG_SMP */
+ /**
+  * offset_to_ptr - convert a relative memory offset to an absolute pointer
 -- 
 2.17.1
 
