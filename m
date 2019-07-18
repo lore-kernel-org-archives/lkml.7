@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46087C76198
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B4EC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAAC2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847BE2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390769AbfGROps (ORCPT
+        id S2390792AbfGROpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:45:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40202 "EHLO inva021.nxp.com"
+        Thu, 18 Jul 2019 10:45:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49480 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390695AbfGROpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:45:44 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B87E9200088;
+        id S1726715AbfGROpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:45:43 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 562501A035E;
         Thu, 18 Jul 2019 16:45:41 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ABD52200009;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4A3F21A035C;
         Thu, 18 Jul 2019 16:45:41 +0200 (CEST)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 591F0205C7;
-        Thu, 18 Jul 2019 16:45:41 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id EC115205C7;
+        Thu, 18 Jul 2019 16:45:40 +0200 (CEST)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -35,9 +35,9 @@ To:     Herbert Xu <herbert@gondor.apana.org.au>,
 Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 13/14] crypto: caam - unregister algorithm only if the registration succeeded
-Date:   Thu, 18 Jul 2019 17:45:23 +0300
-Message-Id: <1563461124-24641-14-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH 12/14] crypto: caam - execute module exit point only if necessary
+Date:   Thu, 18 Jul 2019 17:45:22 +0300
+Message-Id: <1563461124-24641-13-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
 References: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
@@ -47,101 +47,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To know if a registration succeeded added a new struct,
-caam_akcipher_alg, that keeps, also, the registration status.
-This status is updated in caam_pkc_init and verified in
-caam_pkc_exit to unregister an algorithm.
+Commit 1b46c90c8e00 ("crypto: caam - convert top level drivers to libraries")
+changed entry and exit points behavior for caamalg,
+caamalg_qi, caamalg_qi2, caamhash, caampkc, caamrng.
 
+For example, previously caam_pkc_init() and caam_pkc_exit() were
+module entry/exit points. This means that if an error would happen
+in caam_pkc_init(), then caam_pkc_exit() wouldn't have been called.
+After the mentioned commit, caam_pkc_init() and caam_pkc_exit()
+are manually called - from jr.c. caam_pkc_exit() is called
+unconditionally, even if caam_pkc_init() failed.
+
+Added a global variable to keep the status of the algorithm
+registration and free of resources.
+The exit point of caampkc/caamrng module is executed only if the
+registration was successful. Therefore we avoid double free of
+resources in case the algorithm registration failed.
+
+Fixes: 1b46c90c8e00 ("crypto: caam - convert top level drivers to libraries")
 Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 ---
- drivers/crypto/caam/caampkc.c | 49 ++++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 19 deletions(-)
+ drivers/crypto/caam/caampkc.c | 11 +++++++++++
+ drivers/crypto/caam/caamrng.c | 14 +++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
-index cfdf7a2..a669688 100644
+index 574428c7..cfdf7a2 100644
 --- a/drivers/crypto/caam/caampkc.c
 +++ b/drivers/crypto/caam/caampkc.c
-@@ -35,6 +35,11 @@ static u8 *zero_buffer;
-  */
- static bool init_done;
+@@ -29,6 +29,12 @@
+ /* buffer filled with zeros, used for padding */
+ static u8 *zero_buffer;
  
-+struct caam_akcipher_alg {
-+	struct akcipher_alg akcipher;
-+	bool registered;
-+};
++/*
++ * variable used to avoid double free of resources in case
++ * algorithm registration was unsuccessful
++ */
++static bool init_done;
 +
  static void rsa_io_unmap(struct device *dev, struct rsa_edesc *edesc,
  			 struct akcipher_request *req)
  {
-@@ -1063,22 +1068,24 @@ static void caam_rsa_exit_tfm(struct crypto_akcipher *tfm)
- 	caam_jr_free(ctx->dev);
- }
+@@ -1081,6 +1087,7 @@ int caam_pkc_init(struct device *ctrldev)
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	u32 pk_inst;
+ 	int err;
++	init_done = false;
  
--static struct akcipher_alg caam_rsa = {
--	.encrypt = caam_rsa_enc,
--	.decrypt = caam_rsa_dec,
--	.set_pub_key = caam_rsa_set_pub_key,
--	.set_priv_key = caam_rsa_set_priv_key,
--	.max_size = caam_rsa_max_size,
--	.init = caam_rsa_init_tfm,
--	.exit = caam_rsa_exit_tfm,
--	.reqsize = sizeof(struct caam_rsa_req_ctx),
--	.base = {
--		.cra_name = "rsa",
--		.cra_driver_name = "rsa-caam",
--		.cra_priority = 3000,
--		.cra_module = THIS_MODULE,
--		.cra_ctxsize = sizeof(struct caam_rsa_ctx),
--	},
-+static struct caam_akcipher_alg caam_rsa = {
-+	.akcipher = {
-+		.encrypt = caam_rsa_enc,
-+		.decrypt = caam_rsa_dec,
-+		.set_pub_key = caam_rsa_set_pub_key,
-+		.set_priv_key = caam_rsa_set_priv_key,
-+		.max_size = caam_rsa_max_size,
-+		.init = caam_rsa_init_tfm,
-+		.exit = caam_rsa_exit_tfm,
-+		.reqsize = sizeof(struct caam_rsa_req_ctx),
-+		.base = {
-+			.cra_name = "rsa",
-+			.cra_driver_name = "rsa-caam",
-+			.cra_priority = 3000,
-+			.cra_module = THIS_MODULE,
-+			.cra_ctxsize = sizeof(struct caam_rsa_ctx),
-+		},
-+	}
- };
- 
- /* Public Key Cryptography module initialization handler */
-@@ -1106,13 +1113,15 @@ int caam_pkc_init(struct device *ctrldev)
- 	if (!zero_buffer)
- 		return -ENOMEM;
- 
--	err = crypto_register_akcipher(&caam_rsa);
-+	err = crypto_register_akcipher(&caam_rsa.akcipher);
-+
- 	if (err) {
- 		kfree(zero_buffer);
+ 	/* Determine public key hardware accelerator presence. */
+ 	if (priv->era < 10)
+@@ -1105,6 +1112,7 @@ int caam_pkc_init(struct device *ctrldev)
  		dev_warn(ctrldev, "%s alg registration failed\n",
--			 caam_rsa.base.cra_driver_name);
-+			 caam_rsa.akcipher.base.cra_driver_name);
+ 			 caam_rsa.base.cra_driver_name);
  	} else {
- 		init_done = true;
-+		caam_rsa.registered = true;
++		init_done = true;
  		dev_info(ctrldev, "caam pkc algorithms registered in /proc/crypto\n");
  	}
  
-@@ -1124,6 +1133,8 @@ void caam_pkc_exit(void)
- 	if (!init_done)
- 		return;
+@@ -1113,6 +1121,9 @@ int caam_pkc_init(struct device *ctrldev)
  
-+	if (caam_rsa.registered)
-+		crypto_unregister_akcipher(&caam_rsa.akcipher);
+ void caam_pkc_exit(void)
+ {
++	if (!init_done)
++		return;
 +
  	kfree(zero_buffer);
--	crypto_unregister_akcipher(&caam_rsa);
+ 	crypto_unregister_akcipher(&caam_rsa);
  }
+diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+index 54c32d5..7fbda1b 100644
+--- a/drivers/crypto/caam/caamrng.c
++++ b/drivers/crypto/caam/caamrng.c
+@@ -80,6 +80,12 @@ struct caam_rng_ctx {
+ 
+ static struct caam_rng_ctx *rng_ctx;
+ 
++/*
++ * Variable used to avoid double free of resources in case
++ * algorithm registration was unsuccessful
++ */
++static bool init_done;
++
+ static inline void rng_unmap_buf(struct device *jrdev, struct buf_data *bd)
+ {
+ 	if (bd->addr)
+@@ -296,6 +302,9 @@ static struct hwrng caam_rng = {
+ 
+ void caam_rng_exit(void)
+ {
++	if (!init_done)
++		return;
++
+ 	caam_jr_free(rng_ctx->jrdev);
+ 	hwrng_unregister(&caam_rng);
+ 	kfree(rng_ctx);
+@@ -307,6 +316,7 @@ int caam_rng_init(struct device *ctrldev)
+ 	u32 rng_inst;
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	int err;
++	init_done = false;
+ 
+ 	/* Check for an instantiated RNG before registration */
+ 	if (priv->era < 10)
+@@ -335,8 +345,10 @@ int caam_rng_init(struct device *ctrldev)
+ 	dev_info(dev, "registering rng-caam\n");
+ 
+ 	err = hwrng_register(&caam_rng);
+-	if (!err)
++	if (!err) {
++		init_done = true;
+ 		return err;
++	}
+ 
+ free_rng_ctx:
+ 	kfree(rng_ctx);
 -- 
 2.1.0
 
