@@ -2,89 +2,106 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E5C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F90C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D608021849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563482190;
-	bh=n33RnYgEWXmqJNz9rAt/hhFEfid9BuR/+DJfKxYaK0U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TBtz9oY3uNJzpm/ZmDtmhYlrTr2k+r3H6g9K8NOX1/io/l0LuAq4nGGiN5Tz4AZ1g
-	 mlQO7rlIDS9G7EyCKeVva3Qi64mzzc0CCcp7lE54K38mMo1rVOkTx0n0hLc0N8R6rJ
-	 HGcF0Dze4bkeQT1jkTjuvuo5cVqFJ4VctSQw3XTc=
+	by mail.kernel.org (Postfix) with ESMTP id 7CBEC21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:36:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OO57QEKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390915AbfGRUg2 (ORCPT
+        id S2391028AbfGRUgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:36:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfGRUg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:36:28 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D45A21019;
-        Thu, 18 Jul 2019 20:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563482187;
-        bh=n33RnYgEWXmqJNz9rAt/hhFEfid9BuR/+DJfKxYaK0U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lUOwsJeO09VcivQzELIEb1xspaeMrv8igfqpVje7IjB8d0vzktO7JZSGLFIM+EfTr
-         h/bHRCTZ3vQJKeX3CNOxKC0fE0T4geSoEIcdsi2HhD4Y4RNcoErz93W0ItzQFE/qdX
-         vMDMu7ZP5PtAPbBp6eeXNJtHCfHbt5jrTeJLUhF0=
-Date:   Thu, 18 Jul 2019 13:36:26 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Wei Wang <wei.w.wang@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        xdeguillard@vmware.com, namit@vmware.com, pagupta@redhat.com,
-        riel@surriel.com, dave.hansen@intel.com, david@redhat.com,
-        konrad.wilk@oracle.com, yang.zhang.wz@gmail.com, nitesh@redhat.com,
-        lcapitulino@redhat.com, aarcange@redhat.com, pbonzini@redhat.com,
-        alexander.h.duyck@linux.intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v2] mm/balloon_compaction: avoid duplicate page removal
-Message-Id: <20190718133626.e30bec8fc506689b3daf48ee@linux-foundation.org>
-In-Reply-To: <20190718082535-mutt-send-email-mst@kernel.org>
-References: <1563442040-13510-1-git-send-email-wei.w.wang@intel.com>
-        <20190718082535-mutt-send-email-mst@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jul 2019 16:36:38 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34202 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfGRUgi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 16:36:38 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so30513499otk.1;
+        Thu, 18 Jul 2019 13:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OY9UR9zkTdLDOjE/tTwcXypGYfY2Y7i9s+/aTr0TUyU=;
+        b=OO57QEKH+VuW/gw4VaXDrWVYTt9xqAKiPtCaTBXdRJcPaJAItekcL3v+21IRE7zBeT
+         gI2hZi2c9yLrPwur48hfzlVsXXbkVGYiZlqXV8abSHX7uT+FfkM52leqES/Zu4Q/9cSs
+         Ebv1mFqaKN2H78kfpNWLmWU+SAg++muUOvKmuJf5n9/bBTyHvvNIEnX45yatqcAkgjZt
+         ZRMmzV6zVv4V1TlHXx4pEqQe1wwfYj+nVE0zm9SjyHy4wi3vp8NnJlIcwm3jUFHLCvZ3
+         k9rXldwWbtSsYLqO/Sy+Ix1W647U+Fc8em6KNz4axIBvL96Q3KgIdgn6n5E2py9k3eDv
+         Kzmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OY9UR9zkTdLDOjE/tTwcXypGYfY2Y7i9s+/aTr0TUyU=;
+        b=RcwpcN3YxuqiAn+zprkxt3RcvIjpKi6cgt0Dl0dOvsFGXxH0Q1ncBItLYvcO2bQCht
+         4swOL1olW6fZ7L0ECJ2a1CLeSeRrS7qY8tU9UNv9+guA2dp1L+E6zzEeNwh6nCblpesi
+         b7ytg9S7Yr36eTNityq/adXcmvAHLVtyjXv0Bdr5xCO4tEZDfjUx+ONab6s+0+7L8w3l
+         XYbSJ3rR9TkMPwoQMnONGvn4YlhDPDIZZ6Ls9dfBUP84NOfqNzDBDd9Geye+kuRiAClu
+         BSalTZoH019G7XIMR7BqGa41ycWVD4IMhLrt8/Bl2Nc+hDE/1P91a5eZqp66bK9IPx3i
+         owCA==
+X-Gm-Message-State: APjAAAUkq5aP6CxHbzK0uG7zMdrNANoLxiMfPrA4SB+h8jE83uk/ABjy
+        /r0f9Cnpk1coF0Gl4pvRLiLelB4IVOg=
+X-Google-Smtp-Source: APXvYqwsOyICYj+jizrXxiNM7ZP395rkZVEKBWwwSNIYXHh5krxURjXLJqDgEHpZ1vqdmgShwCR/Nw==
+X-Received: by 2002:a9d:5c0d:: with SMTP id o13mr17379827otk.310.1563482197096;
+        Thu, 18 Jul 2019 13:36:37 -0700 (PDT)
+Received: from rYz3n ([2600:1700:210:3790::38])
+        by smtp.gmail.com with ESMTPSA id m7sm10035563otm.5.2019.07.18.13.36.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 13:36:36 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 15:36:36 -0500
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 00/54] 5.1.19-stable review
+Message-ID: <20190718203635.hzue3utbi2tydrnv@rYz3n>
+References: <20190718030053.287374640@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 08:26:11 -0400 "Michael S. Tsirkin" <mst@redhat.com> wrote:
-
-> On Thu, Jul 18, 2019 at 05:27:20PM +0800, Wei Wang wrote:
-> > Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
-> > 
-> > A #GP is reported in the guest when requesting balloon inflation via
-> > virtio-balloon. The reason is that the virtio-balloon driver has
-> > removed the page from its internal page list (via balloon_page_pop),
-> > but balloon_page_enqueue_one also calls "list_del"  to do the removal.
-> > This is necessary when it's used from balloon_page_enqueue_list, but
-> > not from balloon_page_enqueue_one.
-> > 
-> > So remove the list_del balloon_page_enqueue_one, and update some
-> > comments as a reminder.
-> > 
-> > Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+On Thu, Jul 18, 2019 at 12:00:55PM +0900, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.19 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
+> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
+> Anything received after that time might be too late.
 > 
-> ok I posted v3 with typo fixes. 1/2 is this patch with comment changes. Pls take a look.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.19-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
 
-I really have no idea what you're talking about here :(.  Some other
-discussion and patch thread, I suppose.
+Hello,
 
-You're OK with this patch?
+Compiled and booted.  No regressions on x86_64.
 
-Should this patch have cc:stable?
+THX,
+
+Jiunn
