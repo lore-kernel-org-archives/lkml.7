@@ -3,118 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719CAC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473D1C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BAC21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CB021849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390663AbfGROn5 (ORCPT
+        id S2390452AbfGROpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:43:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38860 "EHLO mx1.redhat.com"
+        Thu, 18 Jul 2019 10:45:38 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49410 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390574AbfGROn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:43:56 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 83C208A004;
-        Thu, 18 Jul 2019 14:43:55 +0000 (UTC)
-Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BF4B6056F;
-        Thu, 18 Jul 2019 14:43:47 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 10:43:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     ? jiang <jiangkidd@hotmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
-Subject: Re: [PATCH] virtio-net: parameterize min ring num_free for virtio
- receive
-Message-ID: <20190718104307-mutt-send-email-mst@kernel.org>
-References: <BYAPR14MB32056583C4963342F5D817C4A6C80@BYAPR14MB3205.namprd14.prod.outlook.com>
- <20190718085836-mutt-send-email-mst@kernel.org>
- <bdd30ef5-4f69-8218-eed0-38c6daac42db@redhat.com>
- <20190718103641-mutt-send-email-mst@kernel.org>
+        id S1726513AbfGROpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:45:38 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 944EC1A0086;
+        Thu, 18 Jul 2019 16:45:36 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 883991A0006;
+        Thu, 18 Jul 2019 16:45:36 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B5E6205C7;
+        Thu, 18 Jul 2019 16:45:36 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH 00/14] crypto: caam - fixes for kernel v5.3
+Date:   Thu, 18 Jul 2019 17:45:10 +0300
+Message-Id: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190718103641-mutt-send-email-mst@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 18 Jul 2019 14:43:55 +0000 (UTC)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:42:47AM -0400, Michael S. Tsirkin wrote:
-> On Thu, Jul 18, 2019 at 10:01:05PM +0800, Jason Wang wrote:
-> > 
-> > On 2019/7/18 下午9:04, Michael S. Tsirkin wrote:
-> > > On Thu, Jul 18, 2019 at 12:55:50PM +0000, ? jiang wrote:
-> > > > This change makes ring buffer reclaim threshold num_free configurable
-> > > > for better performance, while it's hard coded as 1/2 * queue now.
-> > > > According to our test with qemu + dpdk, packet dropping happens when
-> > > > the guest is not able to provide free buffer in avail ring timely.
-> > > > Smaller value of num_free does decrease the number of packet dropping
-> > > > during our test as it makes virtio_net reclaim buffer earlier.
-> > > > 
-> > > > At least, we should leave the value changeable to user while the
-> > > > default value as 1/2 * queue is kept.
-> > > > 
-> > > > Signed-off-by: jiangkidd<jiangkidd@hotmail.com>
-> > > That would be one reason, but I suspect it's not the
-> > > true one. If you need more buffer due to jitter
-> > > then just increase the queue size. Would be cleaner.
-> > > 
-> > > 
-> > > However are you sure this is the reason for
-> > > packet drops? Do you see them dropped by dpdk
-> > > due to lack of space in the ring? As opposed to
-> > > by guest?
-> > > 
-> > > 
-> > 
-> > Besides those, this patch depends on the user to choose a suitable threshold
-> > which is not good. You need either a good value with demonstrated numbers or
-> > something smarter.
-> > 
-> > Thanks
-> 
-> I do however think that we have a problem right now: try_fill_recv can
-> take up a long time during which net stack does not run at all. Imagine
-> a 1K queue - we are talking 512 packets. That's exceessive.  napi poll
-> weight solves a similar problem, so it might make sense to cap this at
-> napi_poll_weight.
-> 
-> Which will allow tweaking it through a module parameter as a
-> side effect :) Maybe just do NAPI_POLL_WEIGHT.
+The series solves:
+- the failures found with fuzz testing;
+- resources clean-up on caampkc/caamrng exit path.
 
-Or maybe NAPI_POLL_WEIGHT/2 like we do at half the queue ;). Please
-experiment, measure performance and let the list know
+The first 10 patches solve the issues found with
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS enabled.
+They modify the drivers to provide a valid error (and not the hardware
+error ID) to the user, via completion callbacks.
+They check key length, assoclen, authsize and input size to solve the
+fuzz tests that expect -EINVAL to be returned when these values are
+not valid.
 
-> Need to be careful though: queues can also be small and I don't think we
-> want to exceed queue size / 2, or maybe queue size - napi_poll_weight.
-> Definitely must not exceed the full queue size.
-> 
-> -- 
-> MST
+The next 4 patches check the algorithm registration for caampkc
+module and unregister it only if the registration was successful.
+Also, on caampkc/caamrng, the exit point function is executed only if the
+registration was successful to avoid double freeing of resources in case
+the initialization function failed.
+
+Horia Geantă (5):
+  crypto: caam/qi - fix error handling in ERN handler
+  crypto: caam - fix return code in completion callbacks
+  crypto: caam - update IV only when crypto operation succeeds
+  crypto: caam - keep both virtual and dma key addresses
+  crypto: caam - fix DKP for certain key lengths
+
+Iuliana Prodan (9):
+  crypto: caam - check key length
+  crypto: caam - check authsize
+  crypto: caam - check assoclen
+  crypto: caam - check zero-length input
+  crypto: caam - update rfc4106 sh desc to support zero length input
+  crypto: caam - free resources in case caam_rng registration failed
+  crypto: caam - execute module exit point only if necessary
+  crypto: caam - unregister algorithm only if the registration succeeded
+  crypto: caam - change return value in case CAAM has no MDHA
+
+ drivers/crypto/caam/Makefile        |   2 +-
+ drivers/crypto/caam/caamalg.c       | 226 ++++++++++++++++----------
+ drivers/crypto/caam/caamalg_desc.c  |  46 ++++--
+ drivers/crypto/caam/caamalg_desc.h  |   2 +-
+ drivers/crypto/caam/caamalg_qi.c    | 222 +++++++++++++++----------
+ drivers/crypto/caam/caamalg_qi2.c   | 316 ++++++++++++++++++++++++------------
+ drivers/crypto/caam/caamhash.c      | 113 ++++++++-----
+ drivers/crypto/caam/caamhash_desc.c |   5 +-
+ drivers/crypto/caam/caamhash_desc.h |   2 +-
+ drivers/crypto/caam/caampkc.c       |  80 ++++++---
+ drivers/crypto/caam/caamrng.c       |  17 +-
+ drivers/crypto/caam/common_if.c     |  88 ++++++++++
+ drivers/crypto/caam/common_if.h     |  19 +++
+ drivers/crypto/caam/desc_constr.h   |  34 ++--
+ drivers/crypto/caam/error.c         |  61 ++++---
+ drivers/crypto/caam/error.h         |   2 +-
+ drivers/crypto/caam/key_gen.c       |   5 +-
+ drivers/crypto/caam/qi.c            |  10 +-
+ drivers/crypto/caam/regs.h          |   1 +
+ 19 files changed, 851 insertions(+), 400 deletions(-)
+ create mode 100644 drivers/crypto/caam/common_if.c
+ create mode 100644 drivers/crypto/caam/common_if.h
+
+-- 
+2.1.0
+
