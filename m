@@ -2,90 +2,98 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D95C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2FFC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332F02173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1219D21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391596AbfGRUSg (ORCPT
+        id S2391559AbfGRUYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:18:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57394 "EHLO mx1.redhat.com"
+        Thu, 18 Jul 2019 16:24:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57940 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbfGRUSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:18:36 -0400
+        id S1727687AbfGRUYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 16:24:30 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A5DF68E22C;
-        Thu, 18 Jul 2019 20:18:35 +0000 (UTC)
-Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C787B19D7A;
-        Thu, 18 Jul 2019 20:18:34 +0000 (UTC)
-Subject: Re: [PATCH v2 08/11] kbuild: create *.mod with full directory path
- and remove MODVERDIR
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
- <20190711054434.1177-9-yamada.masahiro@socionext.com>
- <20190716214023.GA15159@redhat.com>
- <CAK7LNAQ41NhPPO6xoVObgFctTO6WewSXPfZkE7_bZXsdAtKSpA@mail.gmail.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <f1222c8a-9301-1e76-981d-a36e8687a29f@redhat.com>
-Date:   Thu, 18 Jul 2019 16:18:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mx1.redhat.com (Postfix) with ESMTPS id DEE297FDF5;
+        Thu, 18 Jul 2019 20:24:29 +0000 (UTC)
+Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A0D7919D70;
+        Thu, 18 Jul 2019 20:24:16 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 16:24:15 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+Message-ID: <20190718162040-mutt-send-email-mst@kernel.org>
+References: <20190716055017-mutt-send-email-mst@kernel.org>
+ <CAKgT0Uc-2k9o7pjtf-GFAgr83c7RM-RTJ8-OrEzFv92uz+MTDw@mail.gmail.com>
+ <20190716115535-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ud47-cWu9VnAAD_Q2Fjia5gaWCz_L9HUF6PBhbugv6tCQ@mail.gmail.com>
+ <20190716125845-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfgPdU1H5ZZ7GL7E=_oZNTzTwZN60Q-+2keBxDgQYODfg@mail.gmail.com>
+ <20190717055804-mutt-send-email-mst@kernel.org>
+ <CAKgT0Uf4iJxEx+3q_Vo9L1QPuv9PhZUv1=M9UCsn6_qs7rG4aw@mail.gmail.com>
+ <20190718003211-mutt-send-email-mst@kernel.org>
+ <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQ41NhPPO6xoVObgFctTO6WewSXPfZkE7_bZXsdAtKSpA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 18 Jul 2019 20:18:36 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 18 Jul 2019 20:24:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/19 1:21 AM, Masahiro Yamada wrote:
->> Hi Masahiro,
->>
->> I'm following this patchset changes as they will affect the klp-convert
->> series [1] that the livepatching folks have been working on...
+On Thu, Jul 18, 2019 at 08:34:37AM -0700, Alexander Duyck wrote:
+> > > > For example we allocate pages until shrinker kicks in.
+> > > > Fair enough but in fact many it would be better to
+> > > > do the reverse: trigger shrinker and then send as many
+> > > > free pages as we can to host.
+> > >
+> > > I'm not sure I understand this last part.
+> >
+> > Oh basically what I am saying is this: one of the reasons to use page
+> > hinting is when host is short on memory.  In that case, why don't we use
+> > shrinker to ask kernel drivers to free up memory? Any memory freed could
+> > then be reported to host.
 > 
-> Empty files .tmp_versions/*.livepatch are touched
-> to keep track of 'LIVEPATCH_* := y', right?
-> 
+> Didn't the balloon driver already have a feature like that where it
+> could start shrinking memory if the host was under memory pressure? If
+> so how would adding another one add much value.
 
-Pretty much.  From that patchset I think the rework would need to  modify..
+Well fundamentally the basic balloon inflate kind of does this, yes :)
 
-- [PATCH v4 02/10] kbuild: Support for Symbols.list creation: creates a 
-Symbols.list file of kernel and module symbols, but *not* including any 
-from LIVEPATCH_* modules.
+The difference with what I am suggesting is that balloon inflate tries
+to aggressively achieve a specific goal of freed memory. We could have a
+weaker "free as much as you can" that is still stronger than free page
+hint which as you point out below does not try to free at all, just
+hints what is already free.
 
-- [PATCH v4 05/10] modpost: Integrate klp-convert: if a LIVEPATCH_* 
-module has changed, call a newly introduced klp-convert script on it.
 
-- [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules: find 
-any LIVEPATCH_* mod, add it to a livepatchmods file, then pass that file 
-to modpost
-
-> Perhaps, adding a new field
-> to *.mod files might be cleaner.
-
-I can look into that.  By "field" you mean a new row in the file?
-
-Regards,
-
--- Joe
+> The idea here is if the memory is free we just mark it as such. As
+> long as we can do so with no noticeable overhead on the guest or host
+> why not just do it?
