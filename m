@@ -2,149 +2,183 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129E5C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DDEC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6AA21783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EMo3sNQf"
+	by mail.kernel.org (Postfix) with ESMTP id 0091821783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390041AbfGRKsw (ORCPT
+        id S2390057AbfGRKux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:48:52 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42994 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfGRKsv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:48:51 -0400
-Received: by mail-vs1-f66.google.com with SMTP id 190so18769874vsf.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 03:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NppfMkA9YSp2bcd8lowDgozs69+YWUjU8R8XC2mh2Ng=;
-        b=EMo3sNQfR8AxwQbc/nsBmFB2MttmgcYpKR6+imTy+1EG/hxf2H1FX4coJIjBZs9MU4
-         T5gfuRfY0RJvbYIUjVknrZr6Eg6Zw3N5HG7aed/9UdUeTX7a1AlUZLU0w2OsoUoEoMMt
-         rNcp0hzFlDtjweQ0S7IYVyCrtnbDY7fv+TpkkRIQfdT9q0pWwfYCh9v0s/AYlWjWKojb
-         Q+FcvGHicvaXo3IiVCcV9apv0MI03oWm1qSfSilrp9K00e6Am331V9AMy4viOYZqv9JI
-         kKEBYgZiDcA6zHuKe3PNvCPdq/SzEDbDaWOug2ZuxcVj6N1EZ6a6yqkw7R+JUtFUrKoi
-         rCtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NppfMkA9YSp2bcd8lowDgozs69+YWUjU8R8XC2mh2Ng=;
-        b=d50LJ2MJc67fU3Vf457mtpZS3kx2KmX8Hgv6JecJj8rYXjIZuOqLEezLyOpJOFwcsi
-         4202xp+YO8TjoT7n2qNl/p8aHf5O8fVNTF6BJ4Yyv8ceoYyhu5SOdwm5LW/hLW9xH7cb
-         1vH5LguZtEIXiVQ96QPYHCn50xcFIs1ElEKr9JOZihC9X6WYvQeR+s1mFlF1Mct9OBAu
-         4ViamhKbybla/cz1IIE7sZ4NDtntDFEEXpvlBpIYz1Yx5cSPDiO+vZR8bPU4SupTSRkR
-         LY5MxgyOdcl/dYf9YznnM94Jn8QATdQz5W0c/j24Ipzruxv8CLhl/C1G2Z/k5Rd6ka3v
-         Lpwg==
-X-Gm-Message-State: APjAAAXphlm3nUgyVuosoq5OHldooXXaPVR6+dEguDSapMVzs//qSDU/
-        YxCJJE6iAehSD3Ylt/miRm6hnDaCzFQV2RByls6pPg==
-X-Google-Smtp-Source: APXvYqztqpfIkQ19AlRQPrqfsqTvP4cIR4ExKB8fsNIFkHPM8GZNpANZzIhR9gX186T9JnVglUf6rgxAB2sJLtT7RWg=
-X-Received: by 2002:a67:ee16:: with SMTP id f22mr28577969vsp.191.1563446930654;
- Thu, 18 Jul 2019 03:48:50 -0700 (PDT)
+        Thu, 18 Jul 2019 06:50:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46544 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbfGRKux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 06:50:53 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA96BA3B46;
+        Thu, 18 Jul 2019 10:50:52 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9D35660C8E;
+        Thu, 18 Jul 2019 10:50:52 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7F32C4E58D;
+        Thu, 18 Jul 2019 10:50:52 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 06:50:52 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+        dbueso@suse.de, peterz@infradead.org, mingo@redhat.com,
+        jade alglave <jade.alglave@arm.com>,
+        paulmck@linux.vnet.ibm.com, Jan Stancek <jstancek@redhat.com>
+Message-ID: <79224323.853324.1563447052432.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190718092640.52oliw3sid7gxyh6@willie-the-truck>
+References: <20190716185807.GJ3402@hirez.programming.kicks-ass.net> <a524cf95ab0dbdd1eb65e9decb9283e73d416b1d.1563352912.git.jstancek@redhat.com> <20190717131335.b2ry43t2ov7ba4t4@willie-the-truck> <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com> <20190717192200.GA17687@dustball.usersys.redhat.com> <20190718092640.52oliw3sid7gxyh6@willie-the-truck>
+Subject: Re: [PATCH v2] locking/rwsem: add acquire barrier to read_slowpath
+ exit when queue is empty
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-19-ulf.hansson@linaro.org>
- <20190716144744.GB7250@e107155-lin>
-In-Reply-To: <20190716144744.GB7250@e107155-lin>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 18 Jul 2019 12:48:14 +0200
-Message-ID: <CAPDyKFpc26yL6rOnfwawL=eL649NsgTMrF1WrMHZv7AVd=3PCA@mail.gmail.com>
-Subject: Re: [PATCH 18/18] arm64: dts: hikey: Convert to the hierarchical CPU
- topology layout
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.17.163, 10.4.195.24]
+Thread-Topic: locking/rwsem: add acquire barrier to read_slowpath exit when queue is empty
+Thread-Index: o2nqmyFzePBpYTAcf1w+YWoIawuE7A==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 18 Jul 2019 10:50:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 at 16:47, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Mon, May 13, 2019 at 09:23:00PM +0200, Ulf Hansson wrote:
-> > To enable the OS to manage last-man standing activities for a CPU, while an
-> > idle state for a group of CPUs is selected, let's convert the Hikey
-> > platform into using the hierarchical CPU topology layout.
-> >
-> > Cc: Wei Xu <xuwei5@hisilicon.com>
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > ---
-> >
-> > Changes:
-> >       - None.
-> >
-> > ---
-> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 87 ++++++++++++++++++++---
-> >  1 file changed, 76 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > index 108e2a4227f6..36ff460f428f 100644
-> > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> >       cpus {
->
-> [...]
->
-> > @@ -70,9 +128,8 @@
-> >                       };
-> >
-> >                       CLUSTER_SLEEP: cluster-sleep {
-> > -                             compatible = "arm,idle-state";
-> > -                             local-timer-stop;
-> > -                             arm,psci-suspend-param = <0x1010000>;
-> > +                             compatible = "domain-idle-state";
-> > +                             arm,psci-suspend-param = <0x1000000>;
-> >                               entry-latency-us = <1000>;
-> >                               exit-latency-us = <700>;
-> >                               min-residency-us = <2700>;
->
-> Again this must be original format and as per PSCI spec, your patch
-> changes this cluster sleep state into cluster retention state which I
-> think is not what you intended.
 
-If the hierarchical topology is used, the parameter for cluster states
-are ORed with the deepest idle state for the CPU.
+----- Original Message -----
+> Hi Jan, Waiman, [+Jade and Paul for the litmus test at the end]
+> 
+> On Wed, Jul 17, 2019 at 09:22:00PM +0200, Jan Stancek wrote:
+> > On Wed, Jul 17, 2019 at 10:19:04AM -0400, Waiman Long wrote:
+> > > > If you add a comment to the code outlining the issue (preferably as a
+> > > > litmus
+> > > > test involving sem->count and some shared data which happens to be
+> > > > vmacache_seqnum in your test)), then:
+> > > > 
+> > > > Reviewed-by: Will Deacon <will@kernel.org>
+> > > > 
+> > > > Thanks,
+> > > > 
+> > > > Will
+> > > 
+> > > Agreed. A comment just above smp_acquire__after_ctrl_dep() on why this
+> > > is needed will be great.
+> > > 
+> > > Other than that,
+> > > 
+> > > Acked-by: Waiman Long <longman@redhat.com>
+> > > 
+> > 
+> > litmus test looks a bit long, would following be acceptable?
+> > 
+> > diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> > index 37524a47f002..d9c96651bfc7 100644
+> > --- a/kernel/locking/rwsem.c
+> > +++ b/kernel/locking/rwsem.c
+> > @@ -1032,6 +1032,13 @@ static inline bool rwsem_reader_phase_trylock(struct
+> > rw_semaphore *sem,
+> >  		 */
+> >  		if (adjustment && !(atomic_long_read(&sem->count) &
+> >  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+> > +			/*
+> > +			 * down_read() issued ACQUIRE on enter, but we can race
+> > +			 * with writer who did RELEASE only after us.
+> > +			 * ACQUIRE here makes sure reader operations happen only
+> > +			 * after all writer ones.
+> > +			 */
+> 
+> How about an abridged form of the litmus test here, just to show the cod
+> flow? e.g.:
+> 
+> /*
+>  * We need to ensure ACQUIRE semantics when reading sem->count so that
+>  * we pair with the RELEASE store performed by an unlocking/downgrading
+>  * writer.
+>  *
+>  * P0 (writer)			P1 (reader)
+>  *
+>  * down_write(sem);
+>  * <write shared data>
+>  * downgrade_write(sem);
+>  * -> fetch_add_release(&sem->count)
+>  *
+>  *				down_read_slowpath(sem);
+>  *				-> atomic_read(&sem->count)
+>  *				   <ctrl dep>
+>  *				   smp_acquire__after_ctrl_dep()
+>  *				<read shared data>
+>  */
 
-CPU_SLEEP: 0x0010000
-CLUSTER_SLEEP: 0x1000000
+Works for me. The code is at 3 level of indentation, but I can try
+to squeeze it in for v4.
 
-After the ORed operation
-CLUSTER_SLEEP: 0x1010000
+> 
+> In writing this, I also noticed that we don't have any explicit ordering
+> at the end of the reader slowpath when we wait on the queue but get woken
+> immediately:
+> 
+> 	if (!waiter.task)
+> 		break;
+> 
+> Am I missing something?
 
-So, this indeed works as expected.
+I'm assuming this isn't problem, because set_current_state() on line above
+is using smp_store_mb().
 
-However, are you saying that ORing the state parameters like above has
-other problems? I am reading your other replies...
-
-Kind regards
-Uffe
+> 
+> > +			smp_acquire__after_ctrl_dep();
+> >  			raw_spin_unlock_irq(&sem->wait_lock);
+> >  			rwsem_set_reader_owned(sem);
+> >  			lockevent_inc(rwsem_rlock_fast);
+> > 
+> > 
+> > with litmus test in commit log:
+> > ----------------------------------- 8< ------------------------------------
+> > C rwsem
+> > 
+> > {
+> > 	atomic_t rwsem_count = ATOMIC_INIT(1);
+> > 	int vmacache_seqnum = 10;
+> > }
+> > 
+> > P0(int *vmacache_seqnum, atomic_t *rwsem_count)
+> > {
+> > 	r0 = READ_ONCE(*vmacache_seqnum);
+> > 	WRITE_ONCE(*vmacache_seqnum, r0 + 1);
+> > 	/* downgrade_write */
+> > 	r1 = atomic_fetch_add_release(-1+256, rwsem_count);
+> > }
+> > 
+> > P1(int *vmacache_seqnum, atomic_t *rwsem_count, spinlock_t *sem_wait_lock)
+> > {
+> > 	/* rwsem_read_trylock */
+> > 	r0 = atomic_add_return_acquire(256, rwsem_count);
+> > 	/* rwsem_down_read_slowpath */
+> > 	spin_lock(sem_wait_lock);
+> > 	r0 = atomic_read(rwsem_count);
+> > 	if ((r0 & 1) == 0) {
+> > 		// BUG: needs barrier
+> > 		spin_unlock(sem_wait_lock);
+> > 		r1 = READ_ONCE(*vmacache_seqnum);
+> > 	}
+> > }
+> > exists (1:r1=10)
+> > ----------------------------------- 8< ------------------------------------
+> 
+> Thanks for writing this! It's definitely worth sticking it in the commit
+> log, but Paul and Jade might also like to include it as part of their litmus
+> test repository too.
+> 
+> Will
+> 
