@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4C9C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C4CC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D773E205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A91205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420325;
-	bh=MKmrmbqy5hJvcVzqmZ9tMC+8YuEOu0xqZsJ1k769JSA=;
+	s=default; t=1563420327;
+	bh=xEJfFbW/KJr18UXoT2i7LmkC1YH6YKjoOumLgfY4aa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZzu9zlrpsYqvp5srh3szb1TapKQZxRz3hDdBs5qN+P5Cq4dr4pZVKDrikMXRM9yY
-	 zun1VXDwYwUi8pMb4s62Y53erdRldP8FDTaNfrjKd4ER6mfaWbJqBkiE4E8N/sRwPh
-	 g7In5kAoPzRye14DUvWMiku420QIgtLCxNKbhdfU=
+	b=BPFprCuov4YYXLQkfYjvBCW6Kcc1HtvM00qqH28u2txulgZiGymB81eAFC+R95t0f
+	 ICbn0DDFOxYrjbFji181qsRfi7hijZnoEv9uskzzlNBSGyJs6i9r8Zh+N6j4VZHj6Z
+	 vna36ORXSJqLXRwUlXZJrKzxOuZdLD0MoJW02Ky8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390037AbfGRDFl (ORCPT
+        id S2389465AbfGRDFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36746 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390018AbfGRDFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:05:38 -0400
+        id S2389995AbfGRDFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:05:34 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629572053B;
-        Thu, 18 Jul 2019 03:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC03F204EC;
+        Thu, 18 Jul 2019 03:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419137;
-        bh=MKmrmbqy5hJvcVzqmZ9tMC+8YuEOu0xqZsJ1k769JSA=;
+        s=default; t=1563419134;
+        bh=xEJfFbW/KJr18UXoT2i7LmkC1YH6YKjoOumLgfY4aa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOHq3GIvvgzjJODkreXta+nTtVY5fFgmuUgbpx92efzA0zUBaEgdpoLWBoon4kfYG
-         a8+mlZmhvG5zL4cpt7wl3kwXcI5pu5ZLF5SVoqewbCoax8ijf3w/IQTJiWuAJpnw+G
-         /mWb3VE2rV6PvNFfXIUM1vA8dSukWAKMbBdmOLXs=
+        b=C4m6P6CmpLyjES565AIBEO794UFJ4I/a8EMMpZJflH0dYzQsMUE09G3b9oan0YThd
+         nzQ2p8G3T5P1LWlUOJSj93RDaKFRacP6MrFGkK53oyO2ufGw81UfEuqhypILjJ2BMx
+         mb9CdHKp+hQlfSZfVPgULKsvU6P2cE9uYVpNWB6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Phil Reid <preid@electromag.com.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 25/54] pinctrl: mcp23s08: Fix add_data and irqchip_add_nested call order
-Date:   Thu, 18 Jul 2019 12:01:20 +0900
-Message-Id: <20190718030055.337933790@linuxfoundation.org>
+Subject: [PATCH 5.1 24/54] ARM: dts: imx6ul: fix PWM[1-4] interrupts
+Date:   Thu, 18 Jul 2019 12:01:19 +0900
+Message-Id: <20190718030055.250317634@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -61,68 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6dbc6e6f58556369bf999cd7d9793586f1b0e4b4 ]
+[ Upstream commit 3cf10132ac8d536565f2c02f60a3aeb315863a52 ]
 
-Currently probing of the mcp23s08 results in an error message
-"detected irqchip that is shared with multiple gpiochips:
-please fix the driver"
+According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
+summary", the interrupts for the PWM[1-4] go from 83 to 86.
 
-This is due to the following:
-
-Call to mcp23s08_irqchip_setup() with call hierarchy:
-mcp23s08_irqchip_setup()
-  gpiochip_irqchip_add_nested()
-    gpiochip_irqchip_add_key()
-      gpiochip_set_irq_hooks()
-
-Call to devm_gpiochip_add_data() with call hierarchy:
-devm_gpiochip_add_data()
-  gpiochip_add_data_with_key()
-    gpiochip_add_irqchip()
-      gpiochip_set_irq_hooks()
-
-The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
-but we added a irqchip due to the previous mcp23s08_irqchip_setup()
-call. So it calls gpiochip_set_irq_hooks() a second time.
-
-Fix this by moving the call to devm_gpiochip_add_data before
-the call to mcp23s08_irqchip_setup
-
-Fixes: 02e389e63e35 ("pinctrl: mcp23s08: fix irq setup order")
-Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Phil Reid <preid@electromag.com.au>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
+ arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 5d7a8514def9..b727de5654cd 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -881,6 +881,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 	if (ret < 0)
- 		goto fail;
- 
-+	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
-+	if (ret < 0)
-+		goto fail;
-+
- 	mcp->irq_controller =
- 		device_property_read_bool(dev, "interrupt-controller");
- 	if (mcp->irq && mcp->irq_controller) {
-@@ -922,10 +926,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 			goto fail;
- 	}
- 
--	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
--	if (ret < 0)
--		goto fail;
--
- 	if (one_regmap_config) {
- 		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
- 				"mcp23xxx-pinctrl.%d", raw_chip_address);
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index facd65602c2d..572c04296fe1 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -358,7 +358,7 @@
+ 			pwm1: pwm@2080000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02080000 0x4000>;
+-				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM1>,
+ 					 <&clks IMX6UL_CLK_PWM1>;
+ 				clock-names = "ipg", "per";
+@@ -369,7 +369,7 @@
+ 			pwm2: pwm@2084000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02084000 0x4000>;
+-				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM2>,
+ 					 <&clks IMX6UL_CLK_PWM2>;
+ 				clock-names = "ipg", "per";
+@@ -380,7 +380,7 @@
+ 			pwm3: pwm@2088000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02088000 0x4000>;
+-				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM3>,
+ 					 <&clks IMX6UL_CLK_PWM3>;
+ 				clock-names = "ipg", "per";
+@@ -391,7 +391,7 @@
+ 			pwm4: pwm@208c000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x0208c000 0x4000>;
+-				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM4>,
+ 					 <&clks IMX6UL_CLK_PWM4>;
+ 				clock-names = "ipg", "per";
 -- 
 2.20.1
 
