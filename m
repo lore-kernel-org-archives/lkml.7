@@ -2,182 +2,142 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A743EC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860BCC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA3D2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560B021849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:23:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="aNeIpJVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390707AbfGRPWW (ORCPT
+        id S2390646AbfGRPXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:22:22 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:9384 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGRPWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:22:21 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id A31DB4DF37;
-        Thu, 18 Jul 2019 17:22:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id xmIYYji9PWVu; Thu, 18 Jul 2019 17:22:09 +0200 (CEST)
-Date:   Fri, 19 Jul 2019 01:21:23 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
-Message-ID: <20190718152123.m33t44dapy6y4nwy@yavin>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-9-cyphar@cyphar.com>
- <845e4364-685f-343b-46fb-c418766dce3e@rasmusvillemoes.dk>
+        Thu, 18 Jul 2019 11:23:53 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43386 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfGRPXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 11:23:52 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m14so20707037qka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WNiVs/zOlaxMgnUWU86FyaftSbm6ryQPjqyll3zSd7Q=;
+        b=aNeIpJVdfnDhyIUT2LAXagP7hoA7Rh25uvo/HHVFsCpBrjupsYt4NhQaL0dOF93ewa
+         oP+HJmgYhPLpUCdx/O/PMX/j1h1kw4h1IZwvvAiSCnN0mVd6SRT6JzlwXWTKGWoKVKZz
+         na0PYmDkNh2V2hGj9NTYQytJvXcrkF2O44nFHXgdxiLRknegEEjcX7lX5C1UNHb11NTe
+         9lWPynxuTVev8aJFEVI9VwuYxIz9b3OMKabpt/RXNsdbbfHRxMSIqV4DRVgjKjMGdQ4a
+         CsSmwEcoj1j7qyWN2m093ietZTMi7X/hw3uBIgAcC+na0VUCiSiFlACmANmGt+tsklM0
+         WDMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WNiVs/zOlaxMgnUWU86FyaftSbm6ryQPjqyll3zSd7Q=;
+        b=mGx9HYuOJ4q3q+w+9SbS9HU1lEDe2aQuns2MEjFnJj8q+s+5Mx63xyOqT8tMS+qXCR
+         Gkkkcr2a8f1dRJpFXBWAkNlBsVAvJ0hz5Ci1jRxoKDSdLvLP+ZcTmWlUUEnnTJLEbvfM
+         3w9Jfx3iYCJmOLUA3A65vK/Elb2XXAAWXLV+65vQh7P0nioV6VjskSz1DnLvz3zymWWL
+         BmYR5JwT8OLkstHOx7FutUyqLudb/EjJOWVV5ppYQlX+00axSA1EJMefctW2Zw+udJgv
+         utXGWvXMHNojtX4H2OgjrTFsYmuoPhzhGkrszhi+VdF+c29NvHLiXgN0UH2W+nusHgrI
+         0VTg==
+X-Gm-Message-State: APjAAAWNReUwNtkD8kw9LGDYpN5dn6eRDWleI/JkjoCSNwegjGBc2zQc
+        b83eapPJcfu6usVTPo+/AX1JSw==
+X-Google-Smtp-Source: APXvYqw3bbMMThZJQ3Zq+6BKVLoqpi23GsXIPv2dGahb9QdwCD00hd6jKX1mCTp164RNhZSg0IVhCg==
+X-Received: by 2002:a37:8d04:: with SMTP id p4mr31358574qkd.113.1563463431641;
+        Thu, 18 Jul 2019 08:23:51 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id r40sm15914278qtk.2.2019.07.18.08.23.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 08:23:51 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 11:23:50 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+Cc:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds error event print functionality
+Message-ID: <20190718152350.GC31819@art_vandelay>
+References: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
+ <20190718131737.GD5942@e110455-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x55cx7xfpotu25go"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <845e4364-685f-343b-46fb-c418766dce3e@rasmusvillemoes.dk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190718131737.GD5942@e110455-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 18, 2019 at 02:17:37PM +0100, Liviu Dudau wrote:
+> On Thu, Jun 27, 2019 at 04:10:36AM +0100, Lowry Li (Arm Technology China) wrote:
 
---x55cx7xfpotu25go
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+/snip
 
-On 2019-07-18, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
-> On 06/07/2019 16.57, Aleksa Sarai wrote:
-> > --- a/fs/open.c
-> > +++ b/fs/open.c
-> > @@ -928,24 +928,32 @@ struct file *open_with_fake_path(const struct pat=
-h *path, int flags,
-> >  }
-> >  EXPORT_SYMBOL(open_with_fake_path);
-> > =20
-> > -static inline int build_open_flags(int flags, umode_t mode, struct ope=
-n_flags *op)
-> > +static inline int build_open_flags(struct open_how how, struct open_fl=
-ags *op)
-> >  {
->=20
-> How does passing such a huge struct by value affect code generation?
-> Does gcc actually inline the function (and does it even inline the old
-> one given that it's already non-trivial and has more than one caller).
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > index 647bce5..1462bac 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > @@ -47,6 +47,8 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+> >  	memset(&evts, 0, sizeof(evts));
+> >  	status = mdev->funcs->irq_handler(mdev, &evts);
+> >  
+> > +	komeda_print_events(&evts);
+> 
+> Calling this function from the IRQ handler is a bad idea. We should use debugfs
+> if you really want to have a trace of the events, but I personally don't see
+> value in having this functionality in the kernel at all. You can expose the
+> value of the evts->global and evts->pipes[] as integers and decode that in
+> userspace or as a debugfs entry.
 
-I'm not sure, but I'll just do what you suggested with passing a const
-reference and just copying the few fields that actually are touched by
-this function.
+Alternatively, consider using kernel trace events. They allow you to selectively
+turn on/off certain events and also allow you to customize which data is
+recorded and how it's formatted. Seems like a good fit from the quick scan I've
+done.
 
-> > =20
-> > diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-> > index 2868ae6c8fc1..e59917292213 100644
-> > --- a/include/linux/fcntl.h
-> > +++ b/include/linux/fcntl.h
-> > @@ -4,13 +4,26 @@
-> > =20
-> >  #include <uapi/linux/fcntl.h>
-> > =20
-> > -/* list of all valid flags for the open/openat flags argument: */
-> > +/* Should open_how.mode be set for older syscalls wrappers? */
-> > +#define OPENHOW_MODE(flags, mode) \
-> > +	(((flags) | (O_CREAT | __O_TMPFILE)) ? (mode) : 0)
+Sean
+
+> 
+> Best regards,
+> Liviu
+> 
 > > +
->=20
-> Typo: (((flags) & (O_CREAT | __O_TMPFILE)) ? (mode) : 0)
+> >  	/* Notify the crtc to handle the events */
+> >  	for (i = 0; i < kms->n_crtcs; i++)
+> >  		komeda_crtc_handle_event(&kms->crtcs[i], &evts);
+> > -- 
+> > 1.9.1
+> > 
+> 
+> -- 
+> ====================
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     ¯\_(ツ)_/¯
 
-Yup, thanks. I'm not sure why my tests passed on v9 with this bug (they
-didn't pass in my v10-draft until I fixed this bug earlier today).
-
->=20
-> > +/**
-> > + * Arguments for how openat2(2) should open the target path. If @extra=
- is zero,
-> > + * then openat2(2) is identical to openat(2).
-> > + *
-> > + * @flags: O_* flags (unknown flags ignored).
-> > + * @mode: O_CREAT file mode (ignored otherwise).
->=20
-> should probably say "O_CREAT/O_TMPFILE file mode".
-
-:+1:
-
-> > + * @upgrade_mask: restrict how the O_PATH may be re-opened (ignored ot=
-herwise).
-> > + * @resolve: RESOLVE_* flags (-EINVAL on unknown flags).
-> > + * @reserved: reserved for future extensions, must be zeroed.
-> > + */
-> > +struct open_how {
-> > +	__u32 flags;
-> > +	union {
-> > +		__u16 mode;
-> > +		__u16 upgrade_mask;
-> > +	};
-> > +	__u16 resolve;
->=20
-> So mode and upgrade_mask are naturally u16 aka mode_t. And yes, they
-> probably never need to be used together, so the union works. That then
-> makes the next member 2-byte aligned, so using a u16 for the resolve
-> flags brings us to an 8-byte boundary, and 11 unused flag bits should be
-> enough for a while. But it seems a bit artificial to cram all this
-> together and then add 56 bytes of reserved space.
-
-I will happily admit that padding to 64 bytes is probably _very_ extreme
-(I picked it purely because it's the size of a cache-line so anything
-bigger makes even less sense). I was hoping someone would suggest a
-better size once I posted the patchset, since I couldn't think of a good
-answer myself.
-
-Do you have any suggestions for a better layout or padding size?
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---x55cx7xfpotu25go
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXTCOcAAKCRCdlLljIbnQ
-EllZAP4qSUDEVdU4aP8+s9uysbQoCi6l463vJM+jdHxpJ66OfQEAxlI5lXwcL6G0
-jPCtI0Vs5LI5kpJuE2k98ol8BVMyZAg=
-=2lKS
------END PGP SIGNATURE-----
-
---x55cx7xfpotu25go--
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
