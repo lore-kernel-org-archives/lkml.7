@@ -2,136 +2,144 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4B7C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC5C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4602173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C401217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbfGRKSH (ORCPT
+        id S1727666AbfGRKYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:18:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44298 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfGRKSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:18:06 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2F17259465;
-        Thu, 18 Jul 2019 10:18:06 +0000 (UTC)
-Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DE7B608C2;
-        Thu, 18 Jul 2019 10:18:04 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Laurent Vivier <lvivier@redhat.com>,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: [RFC PATCH] KVM: PPC: Enable the kvm_create_max_vcpus selftest on ppc64
-Date:   Thu, 18 Jul 2019 12:17:58 +0200
-Message-Id: <20190718101758.14428-1-thuth@redhat.com>
+        Thu, 18 Jul 2019 06:24:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2284 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726482AbfGRKYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 06:24:20 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C55CBDD3F6F9763A5C94;
+        Thu, 18 Jul 2019 18:24:18 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 18 Jul 2019 18:24:09 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: separate NOCoW and pinfile semantics
+Date:   Thu, 18 Jul 2019 18:24:06 +0800
+Message-ID: <20190718102406.55774-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 18 Jul 2019 10:18:06 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kvm_create_max_vcpus is generic enough so that it works out of the
-box on POWER, too. We just have to provide some stubs for linking the
-code from kvm_util.c.
-Note that you also might have to do "ulimit -n 2500" before running the
-test, to avoid that it runs out of file handles for the vCPUs.
+Pinning a file is heavy, because skipping pinned files make GC
+running with heavy load or no effect.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
+So that this patch propose to separate nocow and pinfile semantics:
+- NOCoW flag can only be set on regular file.
+- NOCoW file will only trigger IPU at common writeback/flush.
+- NOCow file will do OPU during GC.
+
+For the demand of 1) avoid fragment of file's physical block and
+2) userspace don't care about file's specific physical address,
+tagging file as NOCoW will be cheaper than pinned one.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- RFC since the stubs are a little bit ugly (does someone here like
- to implement them?), and since it's a little bit annoying that
- you have to raise the ulimit for this test in case the kernel provides
- more vCPUs than the default ulimit...
+ fs/f2fs/data.c |  3 ++-
+ fs/f2fs/f2fs.h |  1 +
+ fs/f2fs/file.c | 20 +++++++++++++++++---
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
- tools/testing/selftests/kvm/Makefile          |  6 +++
- .../selftests/kvm/lib/powerpc/processor.c     | 37 +++++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/lib/powerpc/processor.c
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index ba7849751989..c92dc78ff74b 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -11,6 +11,8 @@ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/ucall.c lib/sparsebi
- LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c
- LIBKVM_aarch64 = lib/aarch64/processor.c
- LIBKVM_s390x = lib/s390x/processor.c
-+LIBKVM_ppc64 = lib/powerpc/processor.c
-+LIBKVM_ppc64le = $(LIBKVM_ppc64)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index a2a28bb269bf..15fb8954c363 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
  
- TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
- TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
-@@ -35,6 +37,10 @@ TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
- TEST_GEN_PROGS_s390x += s390x/sync_regs_test
- TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+ bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
+ {
+-	if (f2fs_is_pinned_file(inode))
++	if (f2fs_is_pinned_file(inode) ||
++			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
+ 		return true;
  
-+TEST_GEN_PROGS_ppc64 += kvm_create_max_vcpus
-+
-+TEST_GEN_PROGS_ppc64le = $(TEST_GEN_PROGS_ppc64)
-+
- TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
- LIBKVM += $(LIBKVM_$(UNAME_M))
+ 	/* if this is cold file, we should overwrite to avoid fragmentation */
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 596ab3e1dd7b..f6c5a3d2e659 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+ #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
+ #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+ #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
++#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
+ #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
  
-diff --git a/tools/testing/selftests/kvm/lib/powerpc/processor.c b/tools/testing/selftests/kvm/lib/powerpc/processor.c
-new file mode 100644
-index 000000000000..c0b7f06e206e
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/powerpc/processor.c
-@@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * KVM selftest s390x library code - CPU-related functions
-+ */
+ /* Flags that should be inherited by new inodes from their parent. */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 7ca545874060..ed6556f4cba7 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1659,6 +1659,20 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+ 	if (IS_NOQUOTA(inode))
+ 		return -EPERM;
+ 
++	if ((iflags ^ oldflags) & F2FS_NOCOW_FL) {
++		int err;
 +
-+#define _GNU_SOURCE
++		if (!S_ISREG(inode->i_mode))
++			return -EINVAL;
 +
-+#include "kvm_util.h"
-+#include "../kvm_util_internal.h"
++		if (f2fs_should_update_outplace(inode, NULL))
++			return -EINVAL;
 +
-+void virt_pgd_alloc(struct kvm_vm *vm, uint32_t memslot)
-+{
-+	abort();	/* TODO: implement this */
-+}
++		err = f2fs_convert_inline_inode(inode);
++		if (err)
++			return err;
++	}
 +
-+void virt_pg_map(struct kvm_vm *vm, uint64_t gva, uint64_t gpa,
-+		 uint32_t memslot)
-+{
-+	abort();	/* TODO: implement this */
-+}
-+
-+vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
-+{
-+	abort();	/* TODO: implement this */
-+
-+	return -1;
-+}
-+
-+void virt_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
-+{
-+	abort();	/* TODO: implement this */
-+}
-+
-+void vcpu_dump(FILE *stream, struct kvm_vm *vm, uint32_t vcpuid, uint8_t indent)
-+{
-+	abort();	/* TODO: implement this */
-+}
+ 	fi->i_flags = iflags | (fi->i_flags & ~mask);
+ 
+ 	if (fi->i_flags & F2FS_PROJINHERIT_FL)
+@@ -1692,6 +1706,7 @@ static const struct {
+ 	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+ 	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+ 	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
++	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
+ 	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+ };
+ 
+@@ -1715,7 +1730,8 @@ static const struct {
+ 		FS_NODUMP_FL |		\
+ 		FS_NOATIME_FL |		\
+ 		FS_DIRSYNC_FL |		\
+-		FS_PROJINHERIT_FL)
++		FS_PROJINHERIT_FL |	\
++		FS_NOCOW_FL)
+ 
+ /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+ static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+@@ -1753,8 +1769,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+ 		fsflags |= FS_ENCRYPT_FL;
+ 	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+ 		fsflags |= FS_INLINE_DATA_FL;
+-	if (is_inode_flag_set(inode, FI_PIN_FILE))
+-		fsflags |= FS_NOCOW_FL;
+ 
+ 	fsflags &= F2FS_GETTABLE_FS_FL;
+ 
 -- 
-2.21.0
+2.18.0.rc1
 
