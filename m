@@ -2,130 +2,86 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71450C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D62C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F477208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F69221019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AwJGFVo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbfGRQgF (ORCPT
+        id S1732662AbfGRQgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:36:05 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36432 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfGRQgE (ORCPT
+        Thu, 18 Jul 2019 12:36:32 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:53356 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbfGRQgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:36:04 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 262EE8029D; Thu, 18 Jul 2019 18:35:51 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 18:36:01 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Balbir Singh <bsingharora@gmail.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Evgeny Baskakov <ebaskakov@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Mark Hairgrove <mhairgrove@nvidia.com>,
-        Sherry Cheung <SCheung@nvidia.com>,
-        Subhash Gutti <sgutti@nvidia.com>,
-        Aneesh Kumar KV <aneesh.kumar@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        David Nellans <dnellans@nvidia.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Ross Zwisler <ross.zwisler@linux.intel.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Bob Liu <liubo95@huawei.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: HMM_MIRROR has less than useful help text
-Message-ID: <20190718163601.GA21502@amd>
-References: <20190717074124.GA21617@amd>
- <CAKTCnzkzvPgMK8i-cTuWFLRPPg4=DTkVQmS238VTgYJaUy=iVA@mail.gmail.com>
- <CAPcyv4i3vzuWfKQXF-GWKpCXACjE6HTeczPRoHUp+tOBMEAP-Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4i3vzuWfKQXF-GWKpCXACjE6HTeczPRoHUp+tOBMEAP-Q@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 18 Jul 2019 12:36:32 -0400
+Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6IGZOWl002955;
+        Fri, 19 Jul 2019 01:35:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6IGZOWl002955
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563467725;
+        bh=qK9D5U+XFfqL5PNQLZVCavZVXOZYKbNuMcBF5YYDexc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AwJGFVo7gC9IRoHpzS9XdsWJxZf5fekGyj87nCAQUjlC6xMkr8sLpNuB7Y32wyS4T
+         IFoKLw0LA22VWi10KmUS9iORar5oEEXPVBQM+4GkY3yAaLi1mPfadOPiStKG0XpiWg
+         r/NB7XOxa2rVsJq4EWMndJHHYvHJjwZaGe2BuNYAD9tNLOOuL4FXPGYgN3975Kovv3
+         FQih3cQX5oApRAHBZ9yi1HmgxrU4Vbrv2Srzshf5GtixkM7TD6xEp000kN94vKGQRJ
+         vXkAyF35eXFIdG7gAEt3Kc3WodbSngjgSBjWCWamRAoLiEteQmUFNhS15lzLdYkXHT
+         VoO1dEc3V9XxA==
+X-Nifty-SrcIP: [126.26.94.249]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     patches@arm.linux.org.uk
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: visit mach-* and plat-* directories when cleaning
+Date:   Fri, 19 Jul 2019 01:35:23 +0900
+Message-Id: <20190718163523.18842-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When you run "make clean" for arm, it never visits mach-* or plat-*
+directories because machine-y and plat-y are just empty.
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When cleaning, all machine, plat directories are accumulated to
+machine-, plat-, respectively. So, let's pass them to core- to
+clean up those directories.
 
-On Thu 2019-07-18 07:25:42, Dan Williams wrote:
-> On Thu, Jul 18, 2019 at 4:04 AM Balbir Singh <bsingharora@gmail.com> wrot=
-e:
-> >
-> > On Wed, Jul 17, 2019 at 5:41 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > >
-> > > Hi!
-> > >
-> > > Commit c0b124054f9e42eb6da545a10fe9122a7d7c3f72 has very nice commit
-> > > message, explaining what HMM_MIRROR is and when it is
-> > > needed. Unfortunately, it did not make it into Kconfig help:
-> > >
-> > > CONFIG_HMM_MIRROR:
-> > >
-> > > Select HMM_MIRROR if you want to mirror range of the CPU page table of
-> > > a
-> > > process into a device page table. Here, mirror means "keep
-> > > synchronized".
-> > > Prerequisites: the device must provide the ability to write-protect
-> > > its
-> > > page tables (at PAGE_SIZE granularity), and must be able to recover
-> > > from
-> > > the resulting potential page faults.
-> > >
-> > > Could that be fixed?
-> > >
-> > > This is key information for me:
-> > >
-> > > # This is a heterogeneous memory management (HMM) process address spa=
-ce
-> > > # mirroring.
-> > > # This is useful for NVidia GPU >=3D Pascal, Mellanox IB >=3D mlx5 an=
-d more
-> > > # hardware in the future.
-> > >
-> >
-> > That seems like a reasonable request
->=20
-> Hi Pavel, care to send a patch?
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-I hoped patch author would fix up their code. I'm not HMM expert, he
-should be...
+KernelVersion: v5.3-rc1
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+ arch/arm/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 792f7fa16a24..c3eb0d9a2fdd 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -286,6 +286,10 @@ core-y				+= arch/arm/net/
+ core-y				+= arch/arm/crypto/
+ core-y				+= $(machdirs) $(platdirs)
+ 
++# For cleaning
++core-				+= $(patsubst %,arch/arm/mach-%/, $(machine-))
++core-				+= $(patsubst %,arch/arm/plat-%/, $(plat-))
++
+ drivers-$(CONFIG_OPROFILE)      += arch/arm/oprofile/
+ 
+ libs-y				:= arch/arm/lib/ $(libs-y)
+-- 
+2.17.1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0wn/EACgkQMOfwapXb+vLB6ACeLmMyj948TuYUlFIoTfib+UuC
-2KwAn3SFfrNn/UFu/9H/1W7LWAGPUp1U
-=54UH
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
