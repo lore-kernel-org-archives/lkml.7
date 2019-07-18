@@ -2,92 +2,126 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01007C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F95C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD0BF21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF2E208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:47:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ftglu6wL"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ncseqEI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391777AbfGRTrj (ORCPT
+        id S2391659AbfGRTr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:47:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42726 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391659AbfGRTri (ORCPT
+        Thu, 18 Jul 2019 15:47:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57271 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391704AbfGRTr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:47:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id ay6so14402511plb.9;
-        Thu, 18 Jul 2019 12:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=krzlGymBfNQVsh3pMqLr3oARPpMOHBPeT86nOpKf9+Y=;
-        b=Ftglu6wLu1BQme9z46YuDvVeUQgz1r3YSYkwL4qbl4gky1MB5LmwIcEVh0NQvVSx5v
-         WFYMkQsNYuTVoi0nhv7eV0vuzLr9ZzVfh/SJt+Y6SmXHWK0BE1VX2hsVYu8LFLLqjGd9
-         uaYCL5Nca9Z0WpyR4k7UwFMdI3WW3j/LhyQeYO2OmGLInrpy3Tp2LALS9UgkMLYrbpOq
-         B0rVCZhVsvDCqgXPWNuIGVRWOQvEBQKZ2L6yvV3SiQiWUonKTlAH4t55FoOiWSnwWTuT
-         Jl01iN7o8Eah2kNMc0vMmnUR/Us0u9eYSHTUKqj5VC3Q0muRr8uSnq/iSiU1N0wUUNRL
-         qpuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=krzlGymBfNQVsh3pMqLr3oARPpMOHBPeT86nOpKf9+Y=;
-        b=G95FsXLI3260TOM68Z2exPT3dQHm6bqVy0KTqECc9YVsz0lXvk8ZUzCbK7j/f3aNf/
-         HauUdwTaYW0x79dgsRxqVIgmA6dwIzdkS0XQL7AeDEUnUmlRgMSxgYvuz+Gfv+e5NSIx
-         MCxgGax/jeAphZ4DxZIycXjJ+pmoEHWETMVynwvIg8tc66edF4mT0yew1DCC4vYzSxNI
-         mriqsb4uBp4MNFuPuUUfONDMDzfU+LnFWWRfKSDV2dcEkj2f3rmHE94GGnc/UwQ4PSCg
-         33CpY6HCRMebNKPU5p/co1fk7XebQ0QavvUcws5+Ddolgtc+Oc7nR1a8KNqpacC7MXNf
-         u00g==
-X-Gm-Message-State: APjAAAXDOdEfGQ2gTR6jd/TYQS03BqdcsTng0wl5SQXV8P3hIXoZ4n+k
-        ZVyLf/isCrIdXgSmIpRUHTI=
-X-Google-Smtp-Source: APXvYqxxQVqaIuhJGwwRVIf3+Fj9Ul+FBKGlV4Qa/wJPiKnLK4A0Npi/Ho+GlEnZpMcSz/U0RfOXow==
-X-Received: by 2002:a17:902:b20d:: with SMTP id t13mr49532995plr.229.1563479257406;
-        Thu, 18 Jul 2019 12:47:37 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s7sm24397359pjn.28.2019.07.18.12.47.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 12:47:36 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 12:47:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/54] 4.9.186-stable review
-Message-ID: <20190718194735.GB24320@roeck-us.net>
-References: <20190718030048.392549994@linuxfoundation.org>
+        Thu, 18 Jul 2019 15:47:57 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJloer2136718
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 18 Jul 2019 12:47:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJloer2136718
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563479270;
+        bh=1Je2KUaiTya9zcT84RXi+zABJ3OIOKD3Bvd4vMnat3M=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ncseqEI2Dv6A4QrQeSmAo0tVV3TtWmiB/vWcumkHlEt19BdWWNNvCGwVctBsjVcRw
+         MBvLlipeS7qn9ybtSiXYh3TUBjRVbjM0QdI0NtpevUke+gbnoxb7gjjaGZF8MHjdhc
+         UJZZkjdoRcqhx3KZA//Vj5ewZb4c2zcLQ9D0oIbiLPuLHr1l8IdB8++LkufwkTa7BX
+         pVcCtPWgkgsH2kQ+4xKiaUT9hq5iwzWmTOiefKlPlcLEGGziDQWmbJURHYl6D8pfdt
+         /sTRYEsB7IbJPTzWZ7HMsMUocfiSvhDZu51TpQz7Wc6Wfnvflz61iOqfSv+dNT1ZrA
+         MUc1NqAFF1xFQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJloCZ2136715;
+        Thu, 18 Jul 2019 12:47:50 -0700
+Date:   Thu, 18 Jul 2019 12:47:50 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Zhenzhong Duan <tipbot@zytor.com>
+Message-ID: <tip-8c5477e8046ca139bac250386c08453da37ec1ae@git.kernel.org>
+Cc:     hpa@zytor.com, zhenzhong.duan@oracle.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Reply-To: zhenzhong.duan@oracle.com, hpa@zytor.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86, boot: Remove multiple copy of static function
+ sanitize_boot_params()
+Git-Commit-ID: 8c5477e8046ca139bac250386c08453da37ec1ae
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:01:30PM +0900, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.186 release.
-> There are 54 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 20 Jul 2019 02:59:27 AM UTC.
-> Anything received after that time might be too late.
-> 
+Commit-ID:  8c5477e8046ca139bac250386c08453da37ec1ae
+Gitweb:     https://git.kernel.org/tip/8c5477e8046ca139bac250386c08453da37ec1ae
+Author:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+AuthorDate: Tue, 16 Jul 2019 21:18:12 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 18 Jul 2019 21:41:57 +0200
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 333 pass: 333 fail: 0
+x86, boot: Remove multiple copy of static function sanitize_boot_params()
 
-Guenter
+Kernel build warns:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
+
+at below files:
+  arch/x86/boot/compressed/cmdline.c
+  arch/x86/boot/compressed/error.c
+  arch/x86/boot/compressed/early_serial_console.c
+  arch/x86/boot/compressed/acpi.c
+
+That's becausethey each include misc.h which includes a definition of
+sanitize_boot_params() via bootparam_utils.h.
+
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com
+
+---
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 24e65a0f756d..53ac0cb2396d 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -17,6 +17,7 @@
+ #include "pgtable.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
+ 
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index d2f184165934..c8181392f70d 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -23,7 +23,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
+ 
+ #define BOOT_CTYPE_H
+ #include <linux/acpi.h>
