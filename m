@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB55C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F48C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BC121849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927B921849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419060;
-	bh=JNmnvDPMdyjpXwlIPvXfoBh6zAcM6I6OFKdO/kIsPkk=;
+	s=default; t=1563419063;
+	bh=C/lJQjxBqTHrO3zrvIpW2fIpqbFXgCS4j3YOvCL61M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8Y4Q3t0Ol5YJX3h/9rAaugaR5DWlfQi2UK2ayGxtS1C4O7UjIFRgMtN5+Vh6ddze
-	 gWNWTgb+/s4wVulrhlT9wMDtnwrkDzHF1uhho1ZuDAPE5tc06Ud99i/IJyn0xYnqPl
-	 J3xptzJk++Us4Y2qw6e82RslPM4/cvgK7U3/P1QQ=
+	b=yq1651A1yHt+iWu24wO0UTq/czJKDYP1uzRueJKf+Z2k/9ZnZsAVl9Ugi/oIQQ23G
+	 lhWLcfNn0jD0cWXBhljL/kGC+7XQ2hQuVxvlqEiUY+orWlvGfVsRclZshmv1ESDpMD
+	 D4kOLtNIY4ZN1xnQdYNgN4Un9RNb8ku9osyRb1ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389676AbfGRDES (ORCPT
+        id S2389695AbfGRDEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389593AbfGRDEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:04:16 -0400
+        id S1728079AbfGRDET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:04:19 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A00421880;
-        Thu, 18 Jul 2019 03:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0092E2173E;
+        Thu, 18 Jul 2019 03:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419055;
-        bh=JNmnvDPMdyjpXwlIPvXfoBh6zAcM6I6OFKdO/kIsPkk=;
+        s=default; t=1563419058;
+        bh=C/lJQjxBqTHrO3zrvIpW2fIpqbFXgCS4j3YOvCL61M0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XnW+e3anIjXNz0lRLvfyayhZ5kKyZeRTxMItjEM+xsFgpeW+5QcgPCqGkEebV+V9A
-         czIS983cnDYbAqghugQ28eggwd3QHdRPWc6Sdxvf/VHn3XzEL3+Q+tSAZBcJ/CntXy
-         GVv33V8DrZD1uvWrnY0b+xUiBlMtEYyr4bxzP78o=
+        b=SkkZ+4u15DOddiN5/gvWEnncowaunJIRSINx4616oM7OwOgve4hdOV9bihtwIdTRn
+         is371pyJesstgeW1u2IBzVngVKgVqBMND37HGAEAWcBZPpWYiKQaoIspKLZCqub03P
+         CvtoERYLsWf9iE59InewI3jdUhPkZUhrXDeLzZhk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 17/54] ARM: omap2: remove incorrect __init annotation
-Date:   Thu, 18 Jul 2019 12:01:12 +0900
-Message-Id: <20190718030054.740556655@linuxfoundation.org>
+Subject: [PATCH 5.1 18/54] afs: Fix uninitialised spinlock afs_volume::cb_break_lock
+Date:   Thu, 18 Jul 2019 12:01:13 +0900
+Message-Id: <20190718030054.822376953@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -63,43 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
+[ Upstream commit 90fa9b64523a645a97edc0bdcf2d74759957eeee ]
 
-omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-we get a warning with clang-8:
+Fix the cb_break_lock spinlock in afs_volume struct by initialising it when
+the volume record is allocated.
 
-WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-The function omap3xxx_prm_late_init() references
-the function __init omap3xxx_prm_enable_io_wakeup().
-This is often because omap3xxx_prm_late_init lacks a __init
-annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+Also rename the lock to cb_v_break_lock to distinguish it from the lock of
+the same name in the afs_server struct.
 
-When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-inlined, so we never noticed in the past.
+Without this, the following trace may be observed when a volume-break
+callback is received:
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+  INFO: trying to register non-static key.
+  the code is fine but needs lockdep annotation.
+  turning off the locking correctness validator.
+  CPU: 2 PID: 50 Comm: kworker/2:1 Not tainted 5.2.0-rc1-fscache+ #3045
+  Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
+  Workqueue: afs SRXAFSCB_CallBack
+  Call Trace:
+   dump_stack+0x67/0x8e
+   register_lock_class+0x23b/0x421
+   ? check_usage_forwards+0x13c/0x13c
+   __lock_acquire+0x89/0xf73
+   lock_acquire+0x13b/0x166
+   ? afs_break_callbacks+0x1b2/0x3dd
+   _raw_write_lock+0x2c/0x36
+   ? afs_break_callbacks+0x1b2/0x3dd
+   afs_break_callbacks+0x1b2/0x3dd
+   ? trace_event_raw_event_afs_server+0x61/0xac
+   SRXAFSCB_CallBack+0x11f/0x16c
+   process_one_work+0x2c5/0x4ee
+   ? worker_thread+0x234/0x2ac
+   worker_thread+0x1d8/0x2ac
+   ? cancel_delayed_work_sync+0xf/0xf
+   kthread+0x11f/0x127
+   ? kthread_park+0x76/0x76
+   ret_from_fork+0x24/0x30
+
+Fixes: 68251f0a6818 ("afs: Fix whole-volume callback handling")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/prm3xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/callback.c | 4 ++--
+ fs/afs/internal.h | 2 +-
+ fs/afs/volume.c   | 1 +
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index 05858f966f7d..dfa65fc2c82b 100644
---- a/arch/arm/mach-omap2/prm3xxx.c
-+++ b/arch/arm/mach-omap2/prm3xxx.c
-@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
-  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
-  * No return value.
-  */
--static void __init omap3xxx_prm_enable_io_wakeup(void)
-+static void omap3xxx_prm_enable_io_wakeup(void)
- {
- 	if (prm_features & PRM_HAS_IO_WAKEUP)
- 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
+diff --git a/fs/afs/callback.c b/fs/afs/callback.c
+index 128f2dbe256a..fee6fde79e6b 100644
+--- a/fs/afs/callback.c
++++ b/fs/afs/callback.c
+@@ -278,9 +278,9 @@ static void afs_break_one_callback(struct afs_server *server,
+ 			struct afs_super_info *as = AFS_FS_S(cbi->sb);
+ 			struct afs_volume *volume = as->volume;
+ 
+-			write_lock(&volume->cb_break_lock);
++			write_lock(&volume->cb_v_break_lock);
+ 			volume->cb_v_break++;
+-			write_unlock(&volume->cb_break_lock);
++			write_unlock(&volume->cb_v_break_lock);
+ 		} else {
+ 			data.volume = NULL;
+ 			data.fid = *fid;
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 3904ab0b9563..fd0750fb96a5 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -582,7 +582,7 @@ struct afs_volume {
+ 	unsigned int		servers_seq;	/* Incremented each time ->servers changes */
+ 
+ 	unsigned		cb_v_break;	/* Break-everything counter. */
+-	rwlock_t		cb_break_lock;
++	rwlock_t		cb_v_break_lock;
+ 
+ 	afs_voltype_t		type;		/* type of volume */
+ 	short			error;
+diff --git a/fs/afs/volume.c b/fs/afs/volume.c
+index f6eba2def0a1..3e8dbee09f87 100644
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -47,6 +47,7 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
+ 	atomic_set(&volume->usage, 1);
+ 	INIT_LIST_HEAD(&volume->proc_link);
+ 	rwlock_init(&volume->servers_lock);
++	rwlock_init(&volume->cb_v_break_lock);
+ 	memcpy(volume->name, vldb->name, vldb->name_len + 1);
+ 
+ 	slist = afs_alloc_server_list(params->cell, params->key, vldb, type_mask);
 -- 
 2.20.1
 
