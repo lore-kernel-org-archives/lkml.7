@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DABC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CB5C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB34B2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060E92053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419461;
-	bh=roeJe8G7lmglKri+Qefg6bnKVLVqP3hO1Y8pTFehGW0=;
+	s=default; t=1563419467;
+	bh=Y2HbY6nMTyaVNBvYYnjLTL+BRCTxKa+hPrWPXEPUo+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dmk0+3DMv5cjHI8Opsr3Twqm/J7gPB7IhvO+awESefOZ2a0FQfXVxG244IleBRw3q
-	 QyzMQ4BNHvN2Fpcwuj5YjLqVHajqpECOri/ByfnHtiPg4suJgZ0onJi/1KrmJIJlmj
-	 yvGRisF8iXqShA3I4NLnWZ79eWD0zQCHpe92AQE0=
+	b=U6wRFU7wRKaNwmPpBgaodxzL3jY+TJtLfqNTu5mrCzWqLdof5+fu8N/1NhSlNDZj6
+	 rgbK7t9yDmwigVLhnPBBO6R3sRfx2l8gvnRL0Ik531PtszCmj3HGMt4HkwQcIaOchw
+	 w7CTmQugJ0NmYOYthi0mDsFe4MT5kf1wsIFyHbWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391245AbfGRDLA (ORCPT
+        id S2390917AbfGRDLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390865AbfGRDKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:54 -0400
+        id S2390808AbfGRDLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:02 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C6A620818;
-        Thu, 18 Jul 2019 03:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1900B205F4;
+        Thu, 18 Jul 2019 03:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419453;
-        bh=roeJe8G7lmglKri+Qefg6bnKVLVqP3hO1Y8pTFehGW0=;
+        s=default; t=1563419462;
+        bh=Y2HbY6nMTyaVNBvYYnjLTL+BRCTxKa+hPrWPXEPUo+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uvuBUxyndXH1tEQVsQFFqnROvtBx+b5JVPdv9wZNh+g/LyiX6xXWlcxIE+uDv+X8a
-         qtcIR8kHprGVskmffWLcl3yaokUc1j4nAzdNblOJnvlDATqBng9nPDGa4xTxX1OdB2
-         6XuZRk+GKs8AJg820gXRRrXgjDzWkjwmacFq7/u0=
+        b=MzfKpe2vY3G6wzHdC20ahT4MampRs4J70eqM4clCDtnFTSGYsRez7sx2nKppM00I3
+         07n5E5haGV6oVBkUCld08vpLMHo420UtywsaGPCllB1eLGHEeSZ4IMsT5Cc8JaVKDm
+         7CvZoChGNgkT1/vkkiiUheAzLuwm40Lr/9nbI1WU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 71/80] x86/boot/64: Fix crash if kernel image crosses page table boundary
-Date:   Thu, 18 Jul 2019 12:02:02 +0900
-Message-Id: <20190718030104.500783696@linuxfoundation.org>
+Subject: [PATCH 4.14 73/80] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
+Date:   Thu, 18 Jul 2019 12:02:04 +0900
+Message-Id: <20190718030105.125331132@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -66,86 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81c7ed296dcd02bc0b4488246d040e03e633737a ]
+[ Upstream commit 8f9fab480c7a87b10bb5440b5555f370272a5d59 ]
 
-A kernel which boots in 5-level paging mode crashes in a small percentage
-of cases if KASLR is enabled.
+DIV_ROUND_UP_ULL adds the two arguments and then invokes
+DIV_ROUND_DOWN_ULL.  But on a 32bit system the addition of two 32 bit
+values can overflow.  DIV_ROUND_DOWN_ULL does it correctly and stashes
+the addition into a unsigned long long so cast the result to unsigned
+long long here to avoid the overflow condition.
 
-This issue was tracked down to the case when the kernel image unpacks in a
-way that it crosses an 1G boundary. The crash is caused by an overrun of
-the PMD page table in __startup_64() and corruption of P4D page table
-allocated next to it. This particular issue is not visible with 4-level
-paging as P4D page tables are not used.
-
-But the P4D and the PUD calculation have similar problems.
-
-The PMD index calculation is wrong due to operator precedence, which fails
-to confine the PMDs in the PMD array on wrap around.
-
-The P4D calculation for 5-level paging and the PUD calculation calculate
-the first index correctly, but then blindly increment it which causes the
-same issue when a kernel image is located across a 512G and for 5-level
-paging across a 46T boundary.
-
-This wrap around mishandling was introduced when these parts moved from
-assembly to C.
-
-Restore it to the correct behaviour.
-
-Fixes: c88d71508e36 ("x86/boot/64: Rewrite startup_64() in C")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190620112345.28833-1-kirill.shutemov@linux.intel.com
+[akpm@linux-foundation.org: DIV_ROUND_UP_ULL must be an rval]
+Link: http://lkml.kernel.org/r/20190625100518.30753-1-vkoul@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head64.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ include/linux/kernel.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 45b5c6c4a55e..7c67d8939f3e 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -117,26 +117,27 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
- 		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 1c5469adaa85..bb7baecef002 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -101,7 +101,8 @@
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
+ 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
  
--		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
--		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
--		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
-+		i = physaddr >> P4D_SHIFT;
-+		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-+		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
- 	} else {
- 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
- 		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
- 		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
- 	}
+-#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
++#define DIV_ROUND_UP_ULL(ll, d) \
++	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
  
--	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
--	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
--	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
-+	i = physaddr >> PUD_SHIFT;
-+	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-+	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
- 
- 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
- 	pmd_entry += sme_get_me_mask();
- 	pmd_entry +=  physaddr;
- 
- 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
--		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
--		pmd[idx] = pmd_entry + i * PMD_SIZE;
-+		int idx = i + (physaddr >> PMD_SHIFT);
-+
-+		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
- 	}
- 
- 	/*
+ #if BITS_PER_LONG == 32
+ # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
 -- 
 2.20.1
 
