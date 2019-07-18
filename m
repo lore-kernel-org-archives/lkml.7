@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650CFC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E8C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9082077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E55D2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420038;
-	bh=R0oSbD04DuMQtvAo9NBZYV4VCvTugFoIioDtQHdSFmw=;
+	s=default; t=1563420043;
+	bh=KKKMov8CfIyqKpdpy8gKJhF3FLqYcO/YSEMQo+fuiiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ge47REMJL8hG/PnFOp56p0WQbIbVdsCYNV5jMKbdkHwQWwO8f+yJDT1TxwdIxz32B
-	 7+XWLnJcAERqvAgQXjxkSySajHlxHrQc81mEE9HLLLA5i9GdXsvCUSi+hdqV8iWz6U
-	 5naZa0ZLA0jXhxuwEVDA10UAu0mDyH2yDeh3FKN8=
+	b=gGi55uKSQNXF1JiyCgl4VXVBWGM4rHrSd4GCF9+XcA9YFccVF2EKn2y0HLp4gu84j
+	 aWSWlltp683EGuJ2X9bRKXyjnCobTD7aiOMD6V7d9Zavltjy3stIXUXWLtbHcfkDLF
+	 EabJVkDHDp8rMi36W6IHyMpjIyED2D7PZfXnf+yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389606AbfGRDKf (ORCPT
+        id S2391691AbfGRDUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43648 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:20:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391169AbfGRDKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:24 -0400
+        id S2391191AbfGRDKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:10:31 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5133120818;
-        Thu, 18 Jul 2019 03:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17B172077C;
+        Thu, 18 Jul 2019 03:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419423;
-        bh=R0oSbD04DuMQtvAo9NBZYV4VCvTugFoIioDtQHdSFmw=;
+        s=default; t=1563419430;
+        bh=KKKMov8CfIyqKpdpy8gKJhF3FLqYcO/YSEMQo+fuiiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XXy1fYAb0kZ5vMH6mOUQLtN9AATRf31n/NCL88A3QHw/bOhgPekaetHzkI/9ryn2x
-         R5hqSLPba+NB982qkVOZs1HmtJYjzs42svTJg4ylp5KZ9e0wycY3tEdcUmniaC++ib
-         3kQArTsrBlzuTQ8RoYUopZmsPFsOdiXD0Ebl+ivM=
+        b=YtCsqrAWsdyHIzbB4gSzsSgiSdMOHTPGgii7g1Ac4Lt5FyJ9RR/prkBKGzNT2pkkR
+         qoe3Q9YZ77nfP5wf+C+Ua8pOYHbZwOxSGX+ngkhiwl3QdHiaF/TzXx7Zkn1FNRLrYT
+         pOUPDEwtvyDs/7Q5sItP4VeWGWjszO53p+yK5zFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Valente <paolo.valente@unimore.it>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 43/80] block, bfq: NULL out the bic when its no longer valid
-Date:   Thu, 18 Jul 2019 12:01:34 +0900
-Message-Id: <20190718030101.972173918@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 56/80] staging: comedi: dt282x: fix a null pointer deref on interrupt
+Date:   Thu, 18 Jul 2019 12:01:47 +0900
+Message-Id: <20190718030102.888348730@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,78 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit dbc3117d4ca9e17819ac73501e914b8422686750 upstream.
+commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
 
-In reboot tests on several devices we were seeing a "use after free"
-when slub_debug or KASAN was enabled.  The kernel complained about:
+The interrupt handler `dt282x_interrupt()` causes a null pointer
+dereference for those supported boards that have no analog output
+support.  For these boards, `dev->write_subdev` will be `NULL` and
+therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
+case, the following call near the end of the interrupt handler results
+in a null pointer dereference:
 
-  Unable to handle kernel paging request at virtual address 6b6b6c2b
+	comedi_handle_events(dev, s_ao);
 
-...which is a classic sign of use after free under slub_debug.  The
-stack crawl in kgdb looked like:
+Fix it by only calling the above function if `s_ao` is valid.
 
- 0  test_bit (addr=<optimized out>, nr=<optimized out>)
- 1  bfq_bfqq_busy (bfqq=<optimized out>)
- 2  bfq_select_queue (bfqd=<optimized out>)
- 3  __bfq_dispatch_request (hctx=<optimized out>)
- 4  bfq_dispatch_request (hctx=<optimized out>)
- 5  0xc056ef00 in blk_mq_do_dispatch_sched (hctx=0xed249440)
- 6  0xc056f728 in blk_mq_sched_dispatch_requests (hctx=0xed249440)
- 7  0xc0568d24 in __blk_mq_run_hw_queue (hctx=0xed249440)
- 8  0xc0568d94 in blk_mq_run_work_fn (work=<optimized out>)
- 9  0xc024c5c4 in process_one_work (worker=0xec6d4640, work=0xed249480)
- 10 0xc024cff4 in worker_thread (__worker=0xec6d4640)
+(There are other uses of `s_ao` by the interrupt handler that may or may
+not be reached depending on values of hardware registers.  Trust that
+they are reliable for now.)
 
-Digging in kgdb, it could be found that, though bfqq looked fine,
-bfqq->bic had been freed.
+Note:
+commit 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+propagates an earlier error from
+commit f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()").
 
-Through further digging, I postulated that perhaps it is illegal to
-access a "bic" (AKA an "icq") after bfq_exit_icq() had been called
-because the "bic" can be freed at some point in time after this call
-is made.  I confirmed that there certainly were cases where the exact
-crashing code path would access the "bic" after bfq_exit_icq() had
-been called.  Sspecifically I set the "bfqq->bic" to (void *)0x7 and
-saw that the bic was 0x7 at the time of the crash.
-
-To understand a bit more about why this crash was fairly uncommon (I
-saw it only once in a few hundred reboots), you can see that much of
-the time bfq_exit_icq_fbqq() fully frees the bfqq and thus it can't
-access the ->bic anymore.  The only case it doesn't is if
-bfq_put_queue() sees a reference still held.
-
-However, even in the case when bfqq isn't freed, the crash is still
-rare.  Why?  I tracked what happened to the "bic" after the exit
-routine.  It doesn't get freed right away.  Rather,
-put_io_context_active() eventually called put_io_context() which
-queued up freeing on a workqueue.  The freeing then actually happened
-later than that through call_rcu().  Despite all these delays, some
-extra debugging showed that all the hoops could be jumped through in
-time and the memory could be freed causing the original crash.  Phew!
-
-To make a long story short, assuming it truly is illegal to access an
-icq after the "exit_icq" callback is finished, this patch is needed.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Paolo Valente <paolo.valente@unimore.it>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bfq-iosched.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/comedi/drivers/dt282x.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -3760,6 +3760,7 @@ static void bfq_exit_icq_bfqq(struct bfq
- 		unsigned long flags;
+--- a/drivers/staging/comedi/drivers/dt282x.c
++++ b/drivers/staging/comedi/drivers/dt282x.c
+@@ -566,7 +566,8 @@ static irqreturn_t dt282x_interrupt(int
+ 	}
+ #endif
+ 	comedi_handle_events(dev, s);
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
  
- 		spin_lock_irqsave(&bfqd->lock, flags);
-+		bfqq->bic = NULL;
- 		bfq_exit_bfqq(bfqd, bfqq);
- 		bic_set_bfqq(bic, NULL, is_sync);
- 		spin_unlock_irqrestore(&bfqd->lock, flags);
+ 	return IRQ_RETVAL(handled);
+ }
 
 
