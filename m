@@ -2,102 +2,199 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A82C76198
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485B7C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB5B2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F462173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfGSDjL (ORCPT
+        id S1726642AbfGSDoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:39:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:35999 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfGSDjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:39:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qcDr4nkfz9s00;
-        Fri, 19 Jul 2019 13:39:08 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Segher Boessenkool <segher@kernel.crashing.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-In-Reply-To: <20190718204631.GV20882@gate.crashing.org>
-References: <20190713131642.GU14074@gate.crashing.org> <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com> <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au> <20190715072959.GB20882@gate.crashing.org> <87pnma89ak.fsf@concordia.ellerman.id.au> <20190717143811.GL20882@gate.crashing.org> <CAK7LNATesRrJFGZQOkTY+PL7FNyub5FJ0N6NF4s6icdXdPNr+Q@mail.gmail.com> <20190717164628.GN20882@gate.crashing.org> <CAK7LNAR7jkq1fAi_=xgsANCkgP2AAej9Yv7RZB3B_cpD7C_71Q@mail.gmail.com> <20190718204631.GV20882@gate.crashing.org>
-Date:   Fri, 19 Jul 2019 13:39:08 +1000
-Message-ID: <87blxq8zhf.fsf@concordia.ellerman.id.au>
+        Thu, 18 Jul 2019 23:44:22 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56554 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfGSDoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:44:21 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoJoh-0007PZ-CO; Fri, 19 Jul 2019 03:44:19 +0000
+Date:   Fri, 19 Jul 2019 04:44:19 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [git pull] vfs.git work.mount0
+Message-ID: <20190719034419.GX17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Segher Boessenkool <segher@kernel.crashing.org> writes:
-> On Thu, Jul 18, 2019 at 11:19:58AM +0900, Masahiro Yamada wrote:
->> On Thu, Jul 18, 2019 at 1:46 AM Segher Boessenkool
->> <segher@kernel.crashing.org> wrote:
->> Kbuild always uses thin archives as far as vmlinux is concerned.
->> 
->> But, there are some other call-sites.
->> 
->> masahiro@pug:~/ref/linux$ git grep  '$(AR)' -- :^Documentation :^tools
->> arch/powerpc/boot/Makefile:    BOOTAR := $(AR)
->> arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBC_A) $(notdir $@) > $@
->> arch/unicore32/lib/Makefile:    $(Q)$(AR) p $(GNU_LIBGCC_A) $(notdir $@) > $@
->> lib/raid6/test/Makefile:         $(AR) cq $@ $^
->> scripts/Kbuild.include:ar-option = $(call try-run, $(AR) rc$(1)
->> "$$TMP",$(1),$(2))
->> scripts/Makefile.build:      cmd_ar_builtin = rm -f $@; $(AR)
->> rcSTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
->> scripts/Makefile.lib:      cmd_ar = rm -f $@; $(AR)
->> rcsTP$(KBUILD_ARFLAGS) $@ $(real-prereqs)
->> 
->> Probably, you are interested in arch/powerpc/boot/Makefile.
->
-> That one seems fine actually.  The raid6 one I don't know.
->
->
-> My original commit message was
->
->     Without this, some versions of GNU ar fail to create
->     an archive index if the object files it is packing
->     together are of a different object format than ar's
->     default format (for example, binutils compiled to
->     default to 64-bit, with 32-bit objects).
->
-> but I cannot reproduce the problem anymore.  Shortly after my patch the
-> thin archive code happened to binutils, and that overhauled some other
-> things, which might have fixed it already?
->
->> > Yes, I know.  This isn't about built-in.[oa], it is about *other*
->> > archives we at least *used to* create.  If we *know* we do not anymore,
->> > then this workaround can of course be removed (and good riddance).
->> 
->> If it is not about built-in.[oa],
->> which archive are you talking about?
->> 
->> Can you pin-point the one?
->
-> No, not anymore.  Lost in the mists of time, I guess?  I think we'll
-> just have to file it as "it seems to work fine now".
+	The first part of mount updates.  It's messier than I'd like;
+the branch itself merges with a couple of trivial conflicts, but there
+are two filesystems that have grown the need of update while in
+separate branches.  I can do backmerges for those two (dmabuf and
+vmballon), but fixups required are rather trivial.  Not sure what
+would be the best way to deal with that; it could be folded into
+the merge commit, but...
 
-Yeah I think so. If someone finds a case it breaks we can fix it then.
+	Anyway, I'd pushed the proposed conflict resolution into
+#merge-candidate, with followups in separate commit on top of the
+merge; folding that into the merge itself is trivial.  Up to you.
+FWIW, the fixup itself (as had been done in -next) amounts to
+ drivers/dma-buf/dma-buf.c  | 14 +++++++++-----
+ drivers/misc/vmw_balloon.c | 14 ++++----------
+ 2 files changed, 13 insertions(+), 15 deletions(-)
+and it's basically conversions of two pseudo-filesystems to
+init_pseudo().
 
-> Thank you (and everyone else) for the time looking at this!
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Likewise.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-cheers
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.mount0
+
+for you to fetch changes up to 037f11b4752f717201143a1dc5d6acf3cb71ddfa:
+
+  mnt_init(): call shmem_init() unconditionally (2019-07-04 22:01:59 -0400)
+
+----------------------------------------------------------------
+Al Viro (25):
+      drm: don't bother with super_operations and dentry_operations
+      cxl: don't bother with dentry_operations
+      cxlflash: don't bother with dentry_operations
+      balloon: don't bother with dentry_operations
+      zsmalloc: don't bother with dentry_operations
+      unexport simple_dname()
+      mount_pseudo(): drop 'name' argument, switch to d_make_root()
+      no need to protect against put_user_ns(NULL)
+      start massaging the checks in sget_...(): move to sget_userns()
+      consolidate the capability checks in sget_{fc,userns}()
+      move the capability checks from sget_userns() to legacy_get_tree()
+      legacy_get_tree(): pass fc->user_ns to mount_capable()
+      switch mount_capable() to fs_context
+      mqueue: set ->user_ns before ->get_tree()
+      procfs: set ->user_ns before calling ->get_tree()
+      cpuset: move mount -t cpuset logics into cgroup.c
+      move mount_capable() calls to vfs_get_tree()
+      move mount_capable() further out
+      fold mount_pseudo_xattr() into pseudo_fs_get_tree()
+      convenience helper get_tree_nodev()
+      convenience helper: get_tree_single()
+      init_rootfs(): don't bother with init_ramfs_fs()
+      don't bother with registering rootfs
+      constify ksys_mount() string arguments
+      mnt_init(): call shmem_init() unconditionally
+
+Dan Williams (1):
+      device-dax: Drop register_filesystem()
+
+David Howells (37):
+      z3fold: don't bother with dentry_operations
+      vfs: Convert rpc_pipefs to use the new mount API
+      vfs: Convert nfsctl to use the new mount API
+      vfs: Kill mount_ns()
+      vfs: Fix refcounting of filenames in fs_parser
+      vfs: Provide sb->s_iflags settings in fs_context struct
+      vfs: Provide a mount_pseudo-replacement for the new mount API
+      vfs: Convert aio to use the new mount API
+      vfs: Convert anon_inodes to use the new mount API
+      vfs: Convert bdev to use the new mount API
+      vfs: Convert nsfs to use the new mount API
+      vfs: Convert pipe to use the new mount API
+      vfs: Convert zsmalloc to use the new mount API
+      zsfold: Convert zsfold to use the new mount API
+      vfs: Convert sockfs to use the new mount API
+      vfs: Convert dax to use the new mount API
+      vfs: Convert drm to use the new mount API
+      vfs: Convert ia64 perfmon to use the new mount API
+      vfs: Convert cxl to use the new mount API
+      vfs: Convert ocxlflash to use the new mount API
+      vfs: Convert virtio_balloon to use the new mount API
+      vfs: Convert btrfs_test to use the new mount API
+      vfs: Use sget_fc() for pseudo-filesystems
+      vfs: Kill sget_userns()
+      vfs: Convert binfmt_misc to use the new mount API
+      vfs: Convert configfs to use the new mount API
+      vfs: Convert efivarfs to use the new mount API
+      vfs: Convert qib_fs/ipathfs to use the new mount API
+      vfs: Convert ibmasmfs to use the new mount API
+      vfs: Convert oprofilefs to use the new mount API
+      vfs: Convert gadgetfs to use the new mount API
+      vfs: Convert xenfs to use the new mount API
+      vfs: Convert openpromfs to use the new mount API
+      vfs: Convert apparmorfs to use the new mount API
+      vfs: Convert securityfs to use the new mount API
+      vfs: Convert selinuxfs to use the new mount API
+      vfs: Convert smackfs to use the new mount API
+
+ arch/ia64/kernel/perfmon.c             |  17 ++--
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |   3 +-
+ drivers/base/devtmpfs.c                |   3 +-
+ drivers/dax/super.c                    |  23 +++--
+ drivers/gpu/drm/drm_drv.c              |  20 +----
+ drivers/infiniband/hw/qib/qib_fs.c     |  26 ++++--
+ drivers/misc/cxl/api.c                 |  13 +--
+ drivers/misc/ibmasm/ibmasmfs.c         |  21 +++--
+ drivers/oprofile/oprofilefs.c          |  20 +++--
+ drivers/scsi/cxlflash/ocxl_hw.c        |  23 +----
+ drivers/usb/gadget/legacy/inode.c      |  21 +++--
+ drivers/virtio/virtio_balloon.c        |  13 +--
+ drivers/xen/xenfs/super.c              |  21 +++--
+ fs/aio.c                               |  16 ++--
+ fs/anon_inodes.c                       |  13 +--
+ fs/binfmt_misc.c                       |  20 +++--
+ fs/block_dev.c                         |  17 ++--
+ fs/btrfs/tests/btrfs-tests.c           |  15 ++--
+ fs/configfs/mount.c                    |  20 +++--
+ fs/d_path.c                            |   1 -
+ fs/efivarfs/super.c                    |  25 +++---
+ fs/fs_parser.c                         |   1 +
+ fs/fsopen.c                            |   2 +
+ fs/fuse/control.c                      |   2 +-
+ fs/hugetlbfs/inode.c                   |   2 +-
+ fs/internal.h                          |   3 +
+ fs/libfs.c                             |  82 ++++++++++--------
+ fs/namespace.c                         |  15 ++--
+ fs/nfsd/nfsctl.c                       |  33 ++++++--
+ fs/nsfs.c                              |  16 ++--
+ fs/openpromfs/inode.c                  |  20 +++--
+ fs/pipe.c                              |  15 ++--
+ fs/proc/root.c                         |   7 +-
+ fs/ramfs/inode.c                       |   6 +-
+ fs/super.c                             | 148 ++++++++++-----------------------
+ fs/sysfs/mount.c                       |   3 +-
+ include/linux/dcache.h                 |   1 -
+ include/linux/fs.h                     |  21 -----
+ include/linux/fs_context.h             |   7 ++
+ include/linux/init.h                   |   5 +-
+ include/linux/pseudo_fs.h              |  16 ++++
+ include/linux/ramfs.h                  |   1 -
+ include/linux/syscalls.h               |   4 +-
+ include/uapi/linux/magic.h             |   1 +
+ init/do_mounts.c                       |  24 +-----
+ init/main.c                            |   1 -
+ ipc/mqueue.c                           |   9 +-
+ kernel/cgroup/cgroup.c                 |  50 ++++++++++-
+ kernel/cgroup/cpuset.c                 |  61 +-------------
+ mm/shmem.c                             |   4 -
+ mm/z3fold.c                            |  14 ++--
+ mm/zsmalloc.c                          |  12 +--
+ net/socket.c                           |  16 ++--
+ net/sunrpc/rpc_pipe.c                  |  34 ++++++--
+ security/apparmor/apparmorfs.c         |  20 +++--
+ security/inode.c                       |  21 +++--
+ security/selinux/selinuxfs.c           |  20 +++--
+ security/smack/smackfs.c               |  34 +++++---
+ 58 files changed, 566 insertions(+), 516 deletions(-)
+ create mode 100644 include/linux/pseudo_fs.h
