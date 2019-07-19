@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6FFC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 399E6C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3822173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06355206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510811;
-	bh=2cRbhK4sG1EWt8bmvhrSC8rBHoz0j9kKf4MkuRJTtwQ=;
+	s=default; t=1563510817;
+	bh=Ieid9JHW9cHMr72tyAO8o2PtFtDA8gd5V7g1Ll5dUiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7IL3sx9ueJRDYbWIvpX3UWVDu5zJscp7qZC30fH34WJCWEVMVEoS+wPXEJCwRtPl
-	 55yjKatulLVpjyfZCN8OG1gqDvwSWlo5MESL+105QcjzF08N3kUHrOh0GkwJa2dry7
-	 nCqGLvNwIbAPr4Yzi/aaffB50mo6yf7LqD/A6LnA=
+	b=FcNvsPdPzc3UMUz2tr9E+IBekiIKCmNyRaGm8EoDNRIvvtCAcRXnkmA8r1l8E2Eqq
+	 QMtDlC0V1prdv76ZZ+yvd02Ce/0yu0HlFim8gnaen3Ba+R0k4wcSl9BCMnkQ3X8M/m
+	 0uPgFHFb68jLWAc5j/MoQb0KyTVGmQ+Vn2h5a8HE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbfGSEda (ORCPT
+        id S1732136AbfGSEdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730255AbfGSEDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:03:05 -0400
+        id S1729276AbfGSEDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E46C21850;
-        Fri, 19 Jul 2019 04:03:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E71021873;
+        Fri, 19 Jul 2019 04:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508985;
-        bh=2cRbhK4sG1EWt8bmvhrSC8rBHoz0j9kKf4MkuRJTtwQ=;
+        s=default; t=1563508979;
+        bh=Ieid9JHW9cHMr72tyAO8o2PtFtDA8gd5V7g1Ll5dUiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUt/uRtu0bPcWwh0XOOAE21/m492fYeuMjEp7yOkpJEOTxoHAJmkjNCSKvJlYuN8H
-         KODegTa0eyrtklxVMTJEedm4AJ8blZu2mDDC4wsJb1oMiU+Bs17TBYTTjruxm851cZ
-         gzbDlkbtUVKjV57PfpvizGo88Dn4BOEP+nnHrmKU=
+        b=s5bh6m6QcjrG5vQWsN4S8rVrnF6Ec1on8w5uBKEP6KyCSn6i0ePNhVsCBNTaBFk05
+         TxxkXvdEtoP0OiaM5k2C3YJpdTKBaZY2w1eoYDTBrJIySVx7ttWArbRMe/3/YpcUkF
+         tARG5e898EUGyQagetpbbBIEeCXb3bO9eP6vGQeA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 010/141] pinctrl: rockchip: fix leaked of_node references
-Date:   Fri, 19 Jul 2019 00:00:35 -0400
-Message-Id: <20190719040246.15945-10-sashal@kernel.org>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 007/141] drm/bochs: Fix connector leak during driver unload
+Date:   Fri, 19 Jul 2019 00:00:32 -0400
+Message-Id: <20190719040246.15945-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,42 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
+[ Upstream commit 3c6b8625dde82600fd03ad1fcba223f1303ee535 ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When unloading the bochs-drm driver, a warning message is printed by
+drm_mode_config_cleanup() because a reference is still held to one of
+the drm_connector structs.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+Correct this by calling drm_atomic_helper_shutdown() in
+bochs_pci_remove().
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 6579c39594ae ("drm/bochs: atomic: switch planes to atomic, wire up helpers.")
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/93b363ad62f4938d9ddf3e05b2a61e3f66b2dcd3.1558416473.git.sbobroff@linux.ibm.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bochs/bochs_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 16bf21bf69a2..64363363fe27 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3212,6 +3212,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 						    base,
- 						    &rockchip_regmap_config);
- 		}
-+		of_node_put(node);
- 	}
+diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+index 6b6e037258c3..7031f0168795 100644
+--- a/drivers/gpu/drm/bochs/bochs_drv.c
++++ b/drivers/gpu/drm/bochs/bochs_drv.c
+@@ -10,6 +10,7 @@
+ #include <linux/slab.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_atomic_helper.h>
  
- 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+ #include "bochs.h"
+ 
+@@ -174,6 +175,7 @@ static void bochs_pci_remove(struct pci_dev *pdev)
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 
++	drm_atomic_helper_shutdown(dev);
+ 	drm_dev_unregister(dev);
+ 	bochs_unload(dev);
+ 	drm_dev_put(dev);
 -- 
 2.20.1
 
