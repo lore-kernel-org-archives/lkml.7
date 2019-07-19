@@ -4,69 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A80C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F1EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F25206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76311206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510948;
-	bh=VZYhGO+wZgOgOOzXf5CsdNH7PZ6O3JbGnuCqN9yB02I=;
+	s=default; t=1563510952;
+	bh=Z8EGbjGGLBQhMRtEXGQdvloxUdaoPMMaXHey5XDkslc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHakJ8l1dhqjo5tvLZ2BXAnmD8A4KdZ+nUm0/raibKG0wSDc46FUrAHULPJKfJqPI
-	 7XC1A7FyA/zSjL2GWfNYRg6+r1RBeHK/Bw3HdE+8oBchhRxdppSjBBhXNJf2tRMyxk
-	 mExVhIyQSnir6HCPCtGyUmXF+MC7fKcKHLnHryz8=
+	b=uxLlvJq3lQODR9FNjuG6Z6YUBiexcOA0TlAaqB0Pm3CgVaEVhjyfcGv9SU6gOnjJo
+	 FqjTyF3EfYN55H2KVkPK45ed9iyH9SIbPwseAxTtX1r5JqPJQ+AsAZ4GAS9EDhBa4X
+	 x/lQ4mfS7UIJC8kNl/RBqDf6xsqra6AYnvFYMLGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfGSEBK (ORCPT
+        id S1728386AbfGSEA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729301AbfGSEBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:03 -0400
+        id S1729216AbfGSEAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D80421850;
-        Fri, 19 Jul 2019 04:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5ACB218A3;
+        Fri, 19 Jul 2019 04:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508861;
-        bh=VZYhGO+wZgOgOOzXf5CsdNH7PZ6O3JbGnuCqN9yB02I=;
+        s=default; t=1563508851;
+        bh=Z8EGbjGGLBQhMRtEXGQdvloxUdaoPMMaXHey5XDkslc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/ZDM53LLB52WVgdmEBiXHGDNc4YiNa1BWQ4K+BHQz0SESePHKTgybVOIflOTGhi7
-         PoeQFOw4BI+StAsUbxJtA8FIaqj1v2USRRqm3J3UvhhA+Tcu1dcmNi51absy+IFPmE
-         WnaMApvBHDt8vY1GHUVSCe5NVtgiz5hqAbowcR6A=
+        b=IlXC2p0gG3BbkIGl+HhHAkohYoGp7c+JNYOvPZBnDbBrW6uygnnS3cVkmrYh+lW8g
+         eZEKbKszPAvUjAia3Fz1YMAuX0of799eeWQh+d/V6XG6EgI/D5cpbqn9Ml5GEBCqf2
+         81nq5wTyrVFtRIiO0jguZldd3VhKvZi7inn24pm0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will.deacon@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        Chris Lameter <cl@linux.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Maurer <bmaurer@fb.com>, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 127/171] perf session: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Thu, 18 Jul 2019 23:55:58 -0400
-Message-Id: <20190719035643.14300-127-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 124/171] rseq/selftests: Fix Thumb mode build failure on arm32
+Date:   Thu, 18 Jul 2019 23:55:55 -0400
+Message-Id: <20190719035643.14300-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -79,79 +82,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
+[ Upstream commit ee8a84c60bcc1f1615bd9cb3edfe501e26cdc85b ]
 
-Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+Using ".arm .inst" for the arm signature introduces build issues for
+programs compiled in Thumb mode because the assembler stays in the
+arm mode for the rest of the inline assembly. Revert to using a ".word"
+to express the signature as data instead.
 
-  tools/perf/util/session.c:1252
-  dump_read() error: we previously assumed 'evsel' could be null
-  (see line 1249)
+The choice of signature is a valid trap instruction on arm32 little
+endian, where both code and data are little endian.
 
-  tools/perf/util/session.c
-  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
-  1241 {
-  1242         struct read_event *read_event = &event->read;
-  1243         u64 read_format;
-  1244
-  1245         if (!dump_trace)
-  1246                 return;
-  1247
-  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
-  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
-  1250                event->read.value);
-  1251
-  1252         read_format = evsel->attr.read_format;
-                             ^^^^^^^
+ARMv6+ big endian (BE8) generates mixed endianness code vs data:
+little-endian code and big-endian data. The data value of the signature
+needs to have its byte order reversed to generate the trap instruction.
 
-'evsel' could be NULL pointer, for this case this patch directly bails
-out without dumping read_event.
+Prior to ARMv6, -mbig-endian generates big-endian code and data
+(which match), so the endianness of the data representation of the
+signature should not be reversed. However, the choice between BE32
+and BE8 is done by the linker, so we cannot know whether code and
+data endianness will be mixed before the linker is invoked. So rather
+than try to play tricks with the linker, the rseq signature is simply
+data (not a trap instruction) prior to ARMv6 on big endian. This is
+why the signature is expressed as data (.word) rather than as
+instruction (.inst) in assembler.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Because a ".word" is used to emit the signature, it will be interpreted
+as a literal pool by a disassembler, not as an actual instruction.
+Considering that the signature is not meant to be executed except in
+scenarios where the program execution is completely bogus, this should
+not be an issue.
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Joel Fernandes <joelaf@google.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Shuah Khan <shuah@kernel.org>
+CC: Andi Kleen <andi@firstfloor.org>
+CC: linux-kselftest@vger.kernel.org
+CC: "H . Peter Anvin" <hpa@zytor.com>
+CC: Chris Lameter <cl@linux.com>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: Michael Kerrisk <mtk.manpages@gmail.com>
+CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Paul Turner <pjt@google.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Josh Triplett <josh@joshtriplett.org>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: linux-api@vger.kernel.org
+CC: Andy Lutomirski <luto@amacapital.net>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/session.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/rseq/rseq-arm.h | 61 +++++++++++++------------
+ 1 file changed, 33 insertions(+), 28 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 54cf163347f7..2e61dd6a3574 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1249,6 +1249,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
- 	       evsel ? perf_evsel__name(evsel) : "FAIL",
- 	       event->read.value);
+diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
+index 84f28f147fb6..5943c816c07c 100644
+--- a/tools/testing/selftests/rseq/rseq-arm.h
++++ b/tools/testing/selftests/rseq/rseq-arm.h
+@@ -6,6 +6,8 @@
+  */
  
-+	if (!evsel)
-+		return;
-+
- 	read_format = evsel->attr.read_format;
+ /*
++ * - ARM little endian
++ *
+  * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
+  * value 0x5de3. This traps if user-space reaches this instruction by mistake,
+  * and the uncommon operand ensures the kernel does not move the instruction
+@@ -22,36 +24,40 @@
+  * def3        udf    #243      ; 0xf3
+  * e7f5        b.n    <7f5>
+  *
+- * pre-ARMv6 big endian code:
+- * e7f5        b.n    <7f5>
+- * def3        udf    #243      ; 0xf3
++ * - ARMv6+ big endian (BE8):
+  *
+  * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
+- * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
+- * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
+- * (which match), so there is no need to reverse the endianness of the data
+- * representation of the signature. However, the choice between BE32 and BE8
+- * is done by the linker, so we cannot know whether code and data endianness
+- * will be mixed before the linker is invoked.
++ * code and big-endian data. The data value of the signature needs to have its
++ * byte order reversed to generate the trap instruction:
++ *
++ * Data: 0xf3def5e7
++ *
++ * Translates to this A32 instruction pattern:
++ *
++ * e7f5def3    udf    #24035    ; 0x5de3
++ *
++ * Translates to this T16 instruction pattern:
++ *
++ * def3        udf    #243      ; 0xf3
++ * e7f5        b.n    <7f5>
++ *
++ * - Prior to ARMv6 big endian (BE32):
++ *
++ * Prior to ARMv6, -mbig-endian generates big-endian code and data
++ * (which match), so the endianness of the data representation of the
++ * signature should not be reversed. However, the choice between BE32
++ * and BE8 is done by the linker, so we cannot know whether code and
++ * data endianness will be mixed before the linker is invoked. So rather
++ * than try to play tricks with the linker, the rseq signature is simply
++ * data (not a trap instruction) prior to ARMv6 on big endian. This is
++ * why the signature is expressed as data (.word) rather than as
++ * instruction (.inst) in assembler.
+  */
  
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+-#define RSEQ_SIG_CODE	0xe7f5def3
+-
+-#ifndef __ASSEMBLER__
+-
+-#define RSEQ_SIG_DATA							\
+-	({								\
+-		int sig;						\
+-		asm volatile ("b 2f\n\t"				\
+-			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
+-			      "2:\n\t"					\
+-			      "ldr %[sig], 1b\n\t"			\
+-			      : [sig] "=r" (sig));			\
+-		sig;							\
+-	})
+-
+-#define RSEQ_SIG	RSEQ_SIG_DATA
+-
++#ifdef __ARMEB__
++#define RSEQ_SIG    0xf3def5e7      /* udf    #24035    ; 0x5de3 (ARMv6+) */
++#else
++#define RSEQ_SIG    0xe7f5def3      /* udf    #24035    ; 0x5de3 */
+ #endif
+ 
+ #define rseq_smp_mb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
+@@ -125,8 +131,7 @@ do {									\
+ 		__rseq_str(table_label) ":\n\t"				\
+ 		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
+ 		".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
+-		".arm\n\t"						\
+-		".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"		\
++		".word " __rseq_str(RSEQ_SIG) "\n\t"			\
+ 		__rseq_str(label) ":\n\t"				\
+ 		teardown						\
+ 		"b %l[" __rseq_str(abort_label) "]\n\t"
 -- 
 2.20.1
 
