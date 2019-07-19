@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1638C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DC6C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861CE21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43CA21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508663;
-	bh=JRMsjUM6twyTvjz1WSwYCsB1tXVYUgsBy61Dm3RlWuM=;
+	s=default; t=1563508666;
+	bh=fnhJtHhZ7psncufqizd+johqm8CCDOQCcGb61BQAxMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s/bH5LxbJ+mDjVCPFyEl0edels6VS0epteMgl4Z1aKKy7kwFFZI24M1aOza9o3MrY
-	 fOL2w0NzJsRmgAwTsekXoD74cuEXQ/OddZhxAbzHp/qEJpPK/v15/47ERWVbxww6m7
-	 I7t12RHV+mvcdGPm8W7aWHitHXIz4FqUCnbpznic=
+	b=rK5wreC6Y9M0VNxMEMJEYZhR5UwXVD8EbBbvpY2yNrSm2VfHiq7PWvs1XtR8bKGok
+	 DOV8A4xbIQr1s3Wiq8b1UJYbHLApEV8+xxV4liNfyaoH7u4UHgCp2tF6SAUFwKl7fZ
+	 Y3w9NBl2r2rv3lnUktW6WQ4jS3PLV1bcyOE3PQCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfGSD5m (ORCPT
+        id S1727496AbfGSD5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:57:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727356AbfGSD5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:40 -0400
+        id S1727356AbfGSD5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:57:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 940EF2082E;
-        Fri, 19 Jul 2019 03:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0914A21852;
+        Fri, 19 Jul 2019 03:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508659;
-        bh=JRMsjUM6twyTvjz1WSwYCsB1tXVYUgsBy61Dm3RlWuM=;
+        s=default; t=1563508663;
+        bh=fnhJtHhZ7psncufqizd+johqm8CCDOQCcGb61BQAxMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmb9RpqEmRDt7QRUQGQoeaJcBWpdWKX+oW8j189PXKY3t36pVMEqh47MbvnbQ1wUJ
-         pk0CL2nY12IroE5exOXkRZ0BmmJUuqd3AISCETihSzsgz3RJDLSLkyLL3ZKVsd6/pP
-         f2wZ2DABZDc3thbUsbTuWBVJthI9l43Fevyk/HJ4=
+        b=vRqbRgIf84hL8vDyIJkdhQECnhmt84w9FjXKgcYDw8dAZktKWlox09LVdr+FWX4zU
+         fkZ3QnsUq5DfHCDTExcfkLlQmR8G+5Bfhuq18/TTm+Yv5GXKqHipuzYQTPUrGRJkpV
+         dqURjNRGLLsRgZPSKFsXAlduSr3AKhWBr3/RzxMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 020/171] drm/msm/a6xx: Avoid freeing gmu resources multiple times
-Date:   Thu, 18 Jul 2019 23:54:11 -0400
-Message-Id: <20190719035643.14300-20-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 021/171] drm/amd/display: Disable cursor when offscreen in negative direction
+Date:   Thu, 18 Jul 2019 23:54:12 -0400
+Message-Id: <20190719035643.14300-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,113 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit 606ec90fc2266284f584a96ebf7f874589f56251 ]
+[ Upstream commit e371e19c10a264bd72c2ff1d21e2167b994710d1 ]
 
-The driver checks for gmu->mmio as a sign that the device has been
-initialized, however there are failures in probe below the mmio init.
-If one of those is hit, mmio will be non-null but freed.
+[Why]
+When x or y is negative we set the x and y values to 0 and compensate
+with a positive cursor hotspot in DM since DC expects positive cursor
+values.
 
-In that case, a6xx_gmu_probe will return an error to a6xx_gpu_init which
-will in turn call a6xx_gmu_remove which checks gmu->mmio and tries to free
-resources for a second time. This causes a great boom.
+When x or y is less than or equal to the maximum cursor width or height
+the cursor hotspot is clamped so the hotspot doesn't exceed the
+cursor size:
 
-Fix this by adding an initialized member to gmu which is set on
-successful probe and cleared on removal.
+if (x < 0) {
+        xorigin = min(-x, amdgpu_crtc->max_cursor_width - 1);
+        x = 0;
+}
 
-Changes in v2:
-- None
+if (y < 0) {
+        yorigin = min(-y, amdgpu_crtc->max_cursor_height - 1);
+        y = 0;
+}
 
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190523171653.138678-1-sean@poorly.run
+This incorrectly forces the cursor to be at least 1 pixel on the screen
+in either direction when x or y is sufficiently negative.
+
+[How]
+Just disable the cursor when it goes far enough off the screen in one
+of these directions.
+
+This fixes kms_cursor_crc@cursor-256x256-offscreen.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 14 +++++++++-----
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h |  1 +
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 418bb08bbed7..6910d0468e3c 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -74,7 +74,7 @@ bool a6xx_gmu_sptprac_is_on(struct a6xx_gmu *gmu)
- 	u32 val;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index ab7c5c3004ee..fa268dd736f4 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4952,12 +4952,12 @@ static int get_cursor_position(struct drm_plane *plane, struct drm_crtc *crtc,
+ 	int x, y;
+ 	int xorigin = 0, yorigin = 0;
  
- 	/* This can be called from gpu state code so make sure GMU is valid */
--	if (IS_ERR_OR_NULL(gmu->mmio))
-+	if (!gmu->initialized)
- 		return false;
- 
- 	val = gmu_read(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS);
-@@ -90,7 +90,7 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
- 	u32 val;
- 
- 	/* This can be called from gpu state code so make sure GMU is valid */
--	if (IS_ERR_OR_NULL(gmu->mmio))
-+	if (!gmu->initialized)
- 		return false;
- 
- 	val = gmu_read(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS);
-@@ -697,7 +697,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
- 	int status, ret;
- 
--	if (WARN(!gmu->mmio, "The GMU is not set up yet\n"))
-+	if (WARN(!gmu->initialized, "The GMU is not set up yet\n"))
+-	if (!crtc || !plane->state->fb) {
+-		position->enable = false;
+-		position->x = 0;
+-		position->y = 0;
++	position->enable = false;
++	position->x = 0;
++	position->y = 0;
++
++	if (!crtc || !plane->state->fb)
  		return 0;
+-	}
  
- 	gmu->hung = false;
-@@ -767,7 +767,7 @@ bool a6xx_gmu_isidle(struct a6xx_gmu *gmu)
- {
- 	u32 reg;
+ 	if ((plane->state->crtc_w > amdgpu_crtc->max_cursor_width) ||
+ 	    (plane->state->crtc_h > amdgpu_crtc->max_cursor_height)) {
+@@ -4971,6 +4971,10 @@ static int get_cursor_position(struct drm_plane *plane, struct drm_crtc *crtc,
+ 	x = plane->state->crtc_x;
+ 	y = plane->state->crtc_y;
  
--	if (!gmu->mmio)
-+	if (!gmu->initialized)
- 		return true;
- 
- 	reg = gmu_read(gmu, REG_A6XX_GPU_GMU_AO_GPU_CX_BUSY_STATUS);
-@@ -1229,7 +1229,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
- {
- 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
- 
--	if (IS_ERR_OR_NULL(gmu->mmio))
-+	if (!gmu->initialized)
- 		return;
- 
- 	a6xx_gmu_stop(a6xx_gpu);
-@@ -1247,6 +1247,8 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
- 	iommu_detach_device(gmu->domain, gmu->dev);
- 
- 	iommu_domain_free(gmu->domain);
++	if (x <= -amdgpu_crtc->max_cursor_width ||
++	    y <= -amdgpu_crtc->max_cursor_height)
++		return 0;
 +
-+	gmu->initialized = false;
- }
- 
- int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
-@@ -1311,6 +1313,8 @@ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
- 	/* Set up the HFI queues */
- 	a6xx_hfi_init(gmu);
- 
-+	gmu->initialized = true;
-+
- 	return 0;
- err:
- 	a6xx_gmu_memory_free(gmu, gmu->hfi);
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-index bedd8e6a63aa..39a26dd63674 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-@@ -75,6 +75,7 @@ struct a6xx_gmu {
- 
- 	struct a6xx_hfi_queue queues[2];
- 
-+	bool initialized;
- 	bool hung;
- };
- 
+ 	if (crtc->primary->state) {
+ 		/* avivo cursor are offset into the total surface */
+ 		x += crtc->primary->state->src_x >> 16;
 -- 
 2.20.1
 
