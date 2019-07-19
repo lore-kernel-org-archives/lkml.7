@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21C3C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05ECC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4A320873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CB82173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510335;
-	bh=1CwINq6ddVz977iW3jfsQALZ9ehD5WNBaDNQl/qhAFc=;
+	s=default; t=1563510345;
+	bh=9ukidh25MQROVRS6jwQ4gvmq8UI0wDzcsHUs1QeyUS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIGfzWHIakLfKBnu5Z+yLbKyIfuGEvYjj53NGB549dKDeJKmv2eRO7eDQAcTsnslj
-	 pIE0dpacaOTQ790Da671HTqwya0QmcgRSNxXBCN/s/AHPO1gnGzw3Y8GRhIS2A+trK
-	 BgZwmSsXz9QpVxkuVw7irORnCS0LMF4VRXejchRQ=
+	b=Sn4bf+bTZCFGsoBwUB8QHJyyfs1pHh3uVkcMIxw9yylUaLaBCN2vV+4jk8795DnDM
+	 E7ZSpHKpTAnerH2kyMPxFGq3iWu5dc8EoNnxfaLDpODc6Y8BBWKTkVoleKhBuRHAl6
+	 wkoWuAH+lBTin1Rt0YVW1dsF6cveVz6OibblQzdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388968AbfGSEZe (ORCPT
+        id S1733210AbfGSEIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43426 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbfGSEI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:58 -0400
+        id S1733168AbfGSEIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53781218C5;
-        Fri, 19 Jul 2019 04:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0305A21873;
+        Fri, 19 Jul 2019 04:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509337;
-        bh=1CwINq6ddVz977iW3jfsQALZ9ehD5WNBaDNQl/qhAFc=;
+        s=default; t=1563509318;
+        bh=9ukidh25MQROVRS6jwQ4gvmq8UI0wDzcsHUs1QeyUS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RqThVXANCA4ifdglwfKl4OtcQGspntwa5ukm0wcYpTyb4nH4t1QN4aYXnJDs33y6D
-         C8EIMhxPm2laNMqNDYk259c99VJL5i2/PacPwtqIkgMXqzpNVx+e0yHRvRkTsg2BwI
-         1crhk+0NpsvNsb/w/HZbdKcqdWfmn8E+6hpVMdjk=
+        b=dibIJrWHFK8yKXgyTUjAVTL2UgPGGdZDnB7iBm/FOLMim4IWHYX9Qfsx/nlLQ80/N
+         FKRsA/vqr6A0akQdnc/ReVisv/xaBAXFK/C2PmN18b7R5TMJd74CPylNDu2/gvVSqn
+         /2X/BblVe+WWNJeIW9MtRLzJylMcm6bEQZ7GUyuA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 041/101] PCI: sysfs: Ignore lockdep for remove attribute
-Date:   Fri, 19 Jul 2019 00:06:32 -0400
-Message-Id: <20190719040732.17285-41-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 031/101] drm/rockchip: Properly adjust to a true clock in adjusted_mode
+Date:   Fri, 19 Jul 2019 00:06:22 -0400
+Message-Id: <20190719040732.17285-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -63,61 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
+[ Upstream commit 99b9683f2142b20bad78e61f7f829e8714e45685 ]
 
-With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
-below it causes a lockdep warning, e.g.,
+When fixing up the clock in vop_crtc_mode_fixup() we're not doing it
+quite correctly.  Specifically if we've got the true clock 266666667 Hz,
+we'll perform this calculation:
+   266666667 / 1000 => 266666
 
-  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
-  ============================================
-  WARNING: possible recursive locking detected
-  ...
-  pci_bus 0000:01: busn_res: [bus 01] is released
+Later when we try to set the clock we'll do clk_set_rate(266666 *
+1000).  The common clock framework won't actually pick the proper clock
+in this case since it always wants clocks <= the specified one.
 
-The remove recursively removes the subtree below the bridge.  Each call
-uses a different lock so there's no deadlock, but the locks were all
-created with the same lockdep key so the lockdep checker can't tell them
-apart.
+Let's solve this by using DIV_ROUND_UP.
 
-Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
-safe to ignore the lockdep check between different "remove" kernfs
-instances.
-
-There's discussion about a similar issue in USB at [1], which resulted in
-356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
-e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
-basically the same thing for USB "remove" and i2c "delete_device" files.
-
-[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
-Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-[bhelgaas: trim commit log, details at above links]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>
+Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Reviewed-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190614224730.98622-1-dianders@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 9ecfe13157c0..1edf5a1836ea 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -478,7 +478,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
- 	return count;
- }
--static struct device_attribute dev_remove_attr = __ATTR(remove,
-+static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
- 							(S_IWUSR|S_IWGRP),
- 							NULL, remove_store);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index f8f9ae6622eb..873624a11ce8 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -880,7 +880,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+ 	struct vop *vop = to_vop(crtc);
  
+ 	adjusted_mode->clock =
+-		clk_round_rate(vop->dclk, mode->clock * 1000) / 1000;
++		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
++			     1000);
+ 
+ 	return true;
+ }
 -- 
 2.20.1
 
