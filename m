@@ -2,72 +2,200 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3F5C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904E7C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0699D2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60533208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LcfO+stf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfGSCBd (ORCPT
+        id S1726542AbfGSCDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:01:33 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2681 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726042AbfGSCBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:01:33 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EEFA8E4162363BA56F5F;
-        Fri, 19 Jul 2019 10:01:30 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 19 Jul
- 2019 10:01:26 +0800
-Subject: Re: [PATCH v2 2/2] f2fs: Support case-insensitive file name lookups
-To:     Daniel Rosenberg <drosen@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <kernel-team@android.com>
-References: <20190717031408.114104-1-drosen@google.com>
- <20190717031408.114104-3-drosen@google.com>
- <cbaf59d4-0bd3-6980-4750-fbab14941bdb@huawei.com>
- <4ef17922-d1e9-1b83-9e89-d332ea6fb7ae@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <8f1c8f28-9afa-94b0-05b2-12df71db201c@huawei.com>
-Date:   Fri, 19 Jul 2019 10:01:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 18 Jul 2019 22:03:05 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:10897 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSCDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 22:03:05 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190719020258epoutp03b18171938402c5ce73719499c8a26411~yrJWIjqM12298222982epoutp03a
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 02:02:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190719020258epoutp03b18171938402c5ce73719499c8a26411~yrJWIjqM12298222982epoutp03a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563501778;
+        bh=SD1I4CitgOBqLy/a7BM33AXflBImf0vOY5HIuOGjbN8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LcfO+stf/MtYPWI7YPjj9LdFcUonCCJkLNZnaEskHWsk9dR9A3B10JINEbXLSUB5o
+         fNZYdLMBo3JqnplJxGdb7sw92F7jV0JSqgvzrk6AALgEBSllbcNGUr8gyu/K1Mz3GE
+         iLsGa7PweO6nA/C1dhh9f8vh6HCZoW2jOzmJmWkQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190719020258epcas1p1822b8f78edb67b2cea48e192e8963bbd~yrJVqCUyX2163621636epcas1p1T;
+        Fri, 19 Jul 2019 02:02:58 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 45qZ5q63wczMqYlx; Fri, 19 Jul
+        2019 02:02:55 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        48.82.04066.FC4213D5; Fri, 19 Jul 2019 11:02:55 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190719020255epcas1p1ef47cbb71d96427ac80038f64cf308ba~yrJSy5gKo2163621636epcas1p1J;
+        Fri, 19 Jul 2019 02:02:55 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190719020255epsmtrp194618aadc0b0e2719863904ed9db66dc~yrJSyIyEF1521615216epsmtrp1c;
+        Fri, 19 Jul 2019 02:02:55 +0000 (GMT)
+X-AuditID: b6c32a37-e27ff70000000fe2-9b-5d3124cf41d9
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3E.E2.03638.FC4213D5; Fri, 19 Jul 2019 11:02:55 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190719020254epsmtip1e4599b07bf8607c4544c1a0b158a5fb1~yrJSfTYod1535715357epsmtip1m;
+        Fri, 19 Jul 2019 02:02:54 +0000 (GMT)
+Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
+ watermark selection
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
+Date:   Fri, 19 Jul 2019 11:06:05 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <4ef17922-d1e9-1b83-9e89-d332ea6fb7ae@google.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190719045943.73b53e31@dimatab>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURDH87rtdjFWngV05IPCeiRgoF1KdTWgJl5VSSTReJEGN7AC0ivd
+        lghKolSxoHJo/OCiqHiAeCEBg0REATWYeKAxEhWDEQ/UgBa8Mdp2a+Tbb+b9Z9783xuKUNeR
+        4VSWxcHbLZyJJsfIL7dHaWLuT2OM2p1lGvbs51eI3SlWydm7BR+V7KPmwyQ7tK8DsUXDIsk+
+        21FDsj+aK+VsyfmH5IIgQ1PPSWS4IvYoDftcA6ShpKEWGYbqJycrNmQnZPJcOm+P4C1p1vQs
+        S0YivWJV6sJU/SwtE8PMYWfTERbOzCfSi5KSY5ZkmbwD0RE5nMnpTSVzgkBr5iXYrU4HH5Fp
+        FRyJNG9LN9nm2GIFziw4LRmxaVbzXEarjdN7hRuzM8vO9hK292FbPBfKie3o4fhiFEQBjgfx
+        dQdRjMZQatyEYMQ1opQCD4K9f+4opOArAs+357J/JUN1LwIHLQi6dv0MBIMIrle5/aoQzEFX
+        6VuFj0PxDKi+OeIXEfiSDG7XnfOLSBwNre+6SR8H40h4/P0VKkYUpcLzoOrgGl9ajqfDm7JG
+        5OMwvA48ve3+nio8HjoP9cl9HIRjwTV4wt+GwBPhad9RmcRTwNVY4TcH2KWErzcuBywsgt/u
+        flLiEHh/u0EpcTj0lxYGeCuc6ewgpWI3gobWBwrpQAetpw7IfIMSOAouNmukdCRc+XUESReP
+        g4EvexU+CWAVuAvVkmQqPOrtCYwwCU7sLiLLEC2OsiOOsiCOsiD+v+wYkteiCbxNMGfwAmPT
+        jf7ueuTf1ujZTajuXlIbwhSix6qSzVqjWsHlCLnmNgQUQYeqnvVrjGpVOpebx9utqXaniRfa
+        kN772uVEeFia1bv7Fkcqo4/T6XRsPDNLzzD0RFXlSJRRjTM4B5/N8zbe/q9ORgWFb0erE4Lj
+        jy9FjZu25ZVf/fay5WZkyq2C+P193ergj7nr3igLjhnFlUmd9fkFCX9yNmvfrmwnYzZpDTtk
+        eeVjB6qX7e9NWp/vyd72uGJxZeH6orhOMaUx69YwPuDe8+TDjd/DF0pKu06b807P3N3+rmjg
+        6PwHNcsrnbULY68NrpXn00T3J1ouZHJMNGEXuL//5Zw2wwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnO55FcNYg+0HeCxWf3zMaNEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
+        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyJqx+wFzwSrTi07qJzA2MlwS7GDk5JARMJD5v
+        uMfaxcjFISSwm1Hi+KodLBAJSYlpF48ydzFyANnCEocPF4OEhQTeMkqc2+ECYgsLJEpc7H/O
+        CmKLCKhJLD/6B2wOs8BmJomzp1azQQztZZLoW3aZDaSKTUBLYv+LG2A2v4CixNUfjxlBFvAK
+        2EksmhoGEmYRUJV4NmErI4gtKhAhcXjHLDCbV0BQ4uTMJ2C3cQroSTS/Xww2hllAXeLPvEvM
+        ELa4xK0n85kgbHmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJdarlec
+        mFtcmpeul5yfu4kRHGFaWjsYT5yIP8QowMGoxMMbkGsQK8SaWFZcmXuIUYKDWUmE9/ZL/Vgh
+        3pTEyqrUovz4otKc1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFINjKsiv3BwPBET
+        e1Kfmp9z76LOW89bmScvqgqnVtrsmzjXPnVe4rIzCUef86sYqClwmO9hefJdJjv49AdB9aum
+        9Z6+0Q5sq1gu5P1dvHP2Vlb9plk1SffDPVfIen6RfrW7y27JV8YetS8Oc3WVVArvTTqR+nam
+        QWDynGcVVTuk3cu1HnYdP9xRocRSnJFoqMVcVJwIAMogfx6sAgAA
+X-CMS-MailID: 20190719020255epcas1p1ef47cbb71d96427ac80038f64cf308ba
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
+        <20190707223303.6755-21-digetx@gmail.com>
+        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
+        <20190719045943.73b53e31@dimatab>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/19 5:31, Daniel Rosenberg wrote:
+On 19. 7. 19. 오전 10:59, Dmitry Osipenko wrote:
+> В Fri, 19 Jul 2019 10:36:30 +0900
+> Chanwoo Choi <cw00.choi@samsung.com> пишет:
 > 
-> On 7/17/19 3:11 AM, Chao Yu wrote:
->> We need to add one more entry f2fs_fsflags_map[] to map F2FS_CASEFOLD_FL to
->> FS_CASEFOLD_FL correctly and adapt F2FS_GETTABLE_FS_FL/F2FS_SETTABLE_FS_FL as well.
+>> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+>>> I noticed that CPU may be crossing the dependency threshold very
+>>> frequently for some workloads and this results in a lot of
+>>> interrupts which could be avoided if MCALL client is keeping actual
+>>> EMC frequency at a higher rate.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
+>>>  1 file changed, 18 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/devfreq/tegra30-devfreq.c
+>>> b/drivers/devfreq/tegra30-devfreq.c index
+>>> c3cf87231d25..4d582809acb6 100644 ---
+>>> a/drivers/devfreq/tegra30-devfreq.c +++
+>>> b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static void
+>>> tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
+>>>  
+>>>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
+>>> *tegra,
+>>> -					   struct
+>>> tegra_devfreq_device *dev)
+>>> +					   struct
+>>> tegra_devfreq_device *dev,
+>>> +					   unsigned long freq)
+>>>  {
+>>>  	unsigned long avg_threshold, lower, upper;
+>>>  
+>>> @@ -323,6 +324,15 @@ static void
+>>> tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
+>>> avg_threshold = dev->config->avg_dependency_threshold;
+>>> avg_threshold = avg_threshold * ACTMON_SAMPLING_PERIOD; 
+>>> +	/*
+>>> +	 * If cumulative EMC frequency selection is higher than the
+>>> +	 * device's, then there is no need to set upper watermark
+>>> to
+>>> +	 * a lower value because it will result in unnecessary
+>>> upper
+>>> +	 * interrupts.
+>>> +	 */
+>>> +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
+>>> +		upper = freq * ACTMON_SAMPLING_PERIOD;  
+>>
+>> Also, 'upper value is used on the patch5. You can combine this code
+>> to patch5 or if this patch depends on the cpu notifier, you can
+>> combine it to the patch of adding cpu notifier without separate patch.
 > 
-> I don't see FS_CASEFOLD_FL. It would make sense for it to exist, but unless it's in some recent patch I don't think that's currently in the kernel. Or are you suggesting adding it in this patch?
+> Well okay, I'll try to squash some of the patches in the next revision.
+> Usually I'm receiving comments in the other direction, asking to
+> separate patches into smaller changes ;) So that's more a personal
+> preference of each maintainer, I'd say.
+> 
 
-Yeah, I think we can use a separated patch to propose uplifting the flag to a
-common one in fs.h, and then adjust
-f2fs_fsflags_map/F2FS_GETTABLE_FS_FL/F2FS_SETTABLE_FS_FL mapping. Otherwise we
-will fail to set CASEFOLD flag to inode.
+Right. We have to make the patch with atomic attribute.
+But, if there are patches which touch the same code
+in the same patchset. We can squash or do refactorig
+of this code.
 
-Thanks,
+And also, if possible, I'd like you to make the patch
+list according to the role of patch. For example,
+the patches related to the 'watermark' could be sequentially
+listed. But, it is not forced opinion. If just possible.
 
-> 
-> .
-> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
