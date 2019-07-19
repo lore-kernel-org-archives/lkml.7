@@ -7,56 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF50C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A994BC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E6721851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837FF20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510171;
-	bh=ayNMgFyXiftuip0Uxel5UmXwcABdBHOMaIPv9xzWQSo=;
+	s=default; t=1563510183;
+	bh=ijB9av6DrhXc91gE0CblfZ+XGFXvzBrHZFhDPDU0TSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KVYmhMj2D/WeUAhFtx6xdAtaqAekOlBYXi6O9LdjHpQ9rjjlSxSUsTn2lATzHy1YA
-	 vakZP8GvfkKH0TjlwIcchGXDhQXjEXBdn95JgHa71pB3R7KaRzHQ99O7mLzbw3nxHB
-	 Z60pq/9F/Uiox0ds6ENP8guEm4LzrZLPobY0u9OE=
+	b=1JKP4uGsF7J1yJek3z9yuM1At0o4jL07hKNtVpDN/T/7lpRabuNscG9eENZ6OEQPx
+	 uONteffXno/zFWFwlfQY5VZ1l879WI+7wyf7c3GOnI6EXue9hRkPyqJ/51RBg+WZKZ
+	 F98cMIpv8I0rZtjamMhS/qlOU6L90uax8q5IXr7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390003AbfGSEWu (ORCPT
+        id S1731099AbfGSEKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388297AbfGSELJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:09 -0400
+        id S1733178AbfGSEKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D682121872;
-        Fri, 19 Jul 2019 04:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40A812189D;
+        Fri, 19 Jul 2019 04:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509468;
-        bh=ayNMgFyXiftuip0Uxel5UmXwcABdBHOMaIPv9xzWQSo=;
+        s=default; t=1563509440;
+        bh=ijB9av6DrhXc91gE0CblfZ+XGFXvzBrHZFhDPDU0TSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qo6+nRkjkjO/LNYSE9MHCDPglUMV4XD4WsEMR7jOFp5/KIycU6JFUAUqCBgG+Yptz
-         5oakQhx9R8Ka2GSyIAjZSNqBbKuQIOHoNckgtoCfGnnEFAPrpk2msTUpKQ8CVDOWTZ
-         oR2n9SPwYbXu+l4OrWK4OOHNC7j4RTNfLZCNbM68=
+        b=fa2mh0NBTzgVUViCTt0xQn7pOM6ks0nfM1KlK6YYkd3jCX006jol5FWGGUUoN/1ZU
+         i4TSEriVd2qsgg+rnmzn/L30Osc19Os+IJLXqGPgNZD/IhCa1glfrVHHbY8JVJy+ol
+         SjUzsGdr/YzimEGg8id3aurvwnTVnglZfPlFZCzU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Roman Gushchin <guro@fb.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 101/101] mm: use down_read_killable for locking mmap_sem in access_remote_vm
-Date:   Fri, 19 Jul 2019 00:07:32 -0400
-Message-Id: <20190719040732.17285-101-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 093/101] mm/mmu_notifier: use hlist_add_head_rcu()
+Date:   Fri, 19 Jul 2019 00:07:24 -0400
+Message-Id: <20190719040732.17285-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -70,69 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-[ Upstream commit 1e426fe28261b03f297992e89da3320b42816f4e ]
+[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
 
-This function is used by ptrace and proc files like /proc/pid/cmdline and
-/proc/pid/environ.
+Make mmu_notifier_register() safer by issuing a memory barrier before
+registering a new notifier.  This fixes a theoretical bug on weakly
+ordered CPUs.  For example, take this simplified use of notifiers by a
+driver:
 
-Access_remote_vm never returns error codes, all errors are ignored and
-only size of successfully read data is returned.  So, if current task was
-killed we'll simply return 0 (bytes read).
+	my_struct->mn.ops = &my_ops; /* (1) */
+	mmu_notifier_register(&my_struct->mn, mm)
+		...
+		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
+		...
 
-Mmap_sem could be locked for a long time or forever if something goes
-wrong.  Using a killable lock permits cleanup of stuck tasks and
-simplifies investigation.
+Once mmu_notifier_register() releases the mm locks, another thread can
+invalidate a range:
 
-Link: http://lkml.kernel.org/r/156007494202.3335.16782303099589302087.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Cyrill Gorcunov <gorcunov@gmail.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Roman Gushchin <guro@fb.com>
+	mmu_notifier_invalidate_range()
+		...
+		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
+			if (mn->ops->invalidate_range)
+
+The read side relies on the data dependency between mn and ops to ensure
+that the pointer is properly initialized.  But the write side doesn't have
+any dependency between (1) and (2), so they could be reordered and the
+readers could dereference an invalid mn->ops.  mmu_notifier_register()
+does take all the mm locks before adding to the hlist, but those have
+acquire semantics which isn't sufficient.
+
+By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
+hlist using a store-release, ensuring that readers see prior
+initialization of my_struct.  This situation is better illustated by
+litmus test MP+onceassign+derefonce.
+
+Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
+Fixes: cddb8a5c14aa ("mmu-notifiers: core")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory.c | 4 +++-
- mm/nommu.c  | 3 ++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ mm/mmu_notifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index e0010cb870e0..fb5655b518c9 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4491,7 +4491,9 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
- 	void *old_buf = buf;
- 	int write = gup_flags & FOLL_WRITE;
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index 82bb1a939c0e..06dedb175572 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -316,7 +316,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+ 	 * thanks to mm_take_all_locks().
+ 	 */
+ 	spin_lock(&mm->mmu_notifier_mm->lock);
+-	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
++	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
+ 	spin_unlock(&mm->mmu_notifier_mm->lock);
  
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem))
-+		return 0;
-+
- 	/* ignore errors, just check how much was successfully transferred */
- 	while (len) {
- 		int bytes, ret, offset;
-diff --git a/mm/nommu.c b/mm/nommu.c
-index e4aac33216ae..1d63ecfc98c5 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -1779,7 +1779,8 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
- 	struct vm_area_struct *vma;
- 	int write = gup_flags & FOLL_WRITE;
- 
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem))
-+		return 0;
- 
- 	/* the access must start within one of the target process's mappings */
- 	vma = find_vma(mm, addr);
+ 	mm_drop_all_locks(mm);
 -- 
 2.20.1
 
