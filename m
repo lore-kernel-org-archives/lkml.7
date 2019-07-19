@@ -7,51 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15663C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D40BC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF20218BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439C521852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509034;
-	bh=6t3CAgcV6XpPNrDoO83vKqpOcFu/CSfxU4by1Tzh9ak=;
+	s=default; t=1563509038;
+	bh=guzUZgOKDvGjX7Bi80hdbzQK5EMcnZJJ7C5EuFWknyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dALMxJx0wqch/KWH7kSFMNg2ix9r4cCdc7lNIisnG4z7HAlQIi+6/zTAtq23BlWlJ
-	 a59pXYLsp+1XLQC/xdgAMMUoTOryS6VvjmnJSLLVmPnzeewt5cmltizuY505fDgmJR
-	 +NVNkRG9yqlCX+kFlpbUy50OOmBsyLJbbXMmFjFs=
+	b=HvQlhffJ+xUN7WBXzSz850r/tRCkvANXvKHm456BDy9n8suSZY0ICkwGjdhbogdKs
+	 xBAZLQJt2Qckb1Yeh0NQb14rLilyPFFE+KBJhoiDlD1daeYNF5HiYV8Bh3JL8P98v4
+	 sT7z5Hgf6nVUWOYv+ZTTmtTL0wso0cLkXyeKF/ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfGSEDx (ORCPT
+        id S1730760AbfGSED5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:03:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730663AbfGSEDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:03:49 -0400
+        id S1729684AbfGSEDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA24A21873;
-        Fri, 19 Jul 2019 04:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14461218B8;
+        Fri, 19 Jul 2019 04:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509028;
-        bh=6t3CAgcV6XpPNrDoO83vKqpOcFu/CSfxU4by1Tzh9ak=;
+        s=default; t=1563509032;
+        bh=guzUZgOKDvGjX7Bi80hdbzQK5EMcnZJJ7C5EuFWknyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C67vdf5t9Z+5JwrG1y3twhkSetpI6EVw3xCtdQmcE7Trf5CVxTneLRZoB6rkxkBQb
-         HbtdGkEetDPQavYNjmcM6kj+tABVi6YLfjBrIGUVKoKxPLXRVb+9bk/m+VrsWiWZxT
-         k0zOabNveYOB2fr8BZ66m8dgPHd+oveUrvAOrLWc=
+        b=Pw3enuzbrI/WbuNBOh3wOt0fN+o9NTjWqWsTjk0WCvpnDmzL8GYfDVISC5LFcsQqp
+         GtOp/0oVQdn+SX62SrYBnWbPX0ObDorLkIXo60FIxBJeF+yS1PVWApKJoGBL93HOBs
+         5/T/O2F/aUO7bmdrU4K/luHIB59JsJ7BVdf6qGXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Rosenberg <drosen@google.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 028/141] f2fs: Fix accounting for unusable blocks
-Date:   Fri, 19 Jul 2019 00:00:53 -0400
-Message-Id: <20190719040246.15945-28-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 031/141] drm/crc-debugfs: User irqsafe spinlock in drm_crtc_add_crc_entry
+Date:   Fri, 19 Jul 2019 00:00:56 -0400
+Message-Id: <20190719040246.15945-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,62 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Rosenberg <drosen@google.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit a4c3ecaaadac5693f555cfef1c9eecf4c39df818 ]
+[ Upstream commit 1882018a70e06376234133e69ede9dd743b4dbd9 ]
 
-Fixes possible underflows when dealing with unusable blocks.
+We can be called from any context, we need to be prepared.
 
-Signed-off-by: Daniel Rosenberg <drosen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Noticed this while hacking on vkms, which calls this function from a
+normal worker. Which really upsets lockdep.
+
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190605194556.16744-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_debugfs_crc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 2ba2478d0663..f1157d5c62bb 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1761,8 +1761,12 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index 00e743153e94..1a6a5b78e30f 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -389,8 +389,9 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 	struct drm_crtc_crc *crc = &crtc->crc;
+ 	struct drm_crtc_crc_entry *entry;
+ 	int head, tail;
++	unsigned long flags;
  
- 	if (!__allow_reserved_blocks(sbi, inode, true))
- 		avail_user_block_count -= F2FS_OPTION(sbi).root_reserved_blocks;
--	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
--		avail_user_block_count -= sbi->unusable_block_count;
-+	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
-+		if (avail_user_block_count > sbi->unusable_block_count)
-+			avail_user_block_count -= sbi->unusable_block_count;
-+		else
-+			avail_user_block_count = 0;
-+	}
- 	if (unlikely(sbi->total_valid_block_count > avail_user_block_count)) {
- 		diff = sbi->total_valid_block_count - avail_user_block_count;
- 		if (diff > *count)
-@@ -1958,7 +1962,7 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
- 					struct inode *inode, bool is_inode)
- {
- 	block_t	valid_block_count;
--	unsigned int valid_node_count;
-+	unsigned int valid_node_count, user_block_count;
- 	int err;
+-	spin_lock(&crc->lock);
++	spin_lock_irqsave(&crc->lock, flags);
  
- 	if (is_inode) {
-@@ -1985,10 +1989,11 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
+ 	/* Caller may not have noticed yet that userspace has stopped reading */
+ 	if (!crc->entries) {
+@@ -421,7 +422,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
+ 	head = (head + 1) & (DRM_CRC_ENTRIES_NR - 1);
+ 	crc->head = head;
  
- 	if (!__allow_reserved_blocks(sbi, inode, false))
- 		valid_block_count += F2FS_OPTION(sbi).root_reserved_blocks;
-+	user_block_count = sbi->user_block_count;
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
--		valid_block_count += sbi->unusable_block_count;
-+		user_block_count -= sbi->unusable_block_count;
+-	spin_unlock(&crc->lock);
++	spin_unlock_irqrestore(&crc->lock, flags);
  
--	if (unlikely(valid_block_count > sbi->user_block_count)) {
-+	if (unlikely(valid_block_count > user_block_count)) {
- 		spin_unlock(&sbi->stat_lock);
- 		goto enospc;
- 	}
+ 	wake_up_interruptible(&crc->wq);
+ 
 -- 
 2.20.1
 
