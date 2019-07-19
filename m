@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47F6C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE529C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754C32082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849B5218B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509710;
-	bh=CzhaAv+1g3tc7icQWTPDGHo0swJkwJI0NH1Fk+Xz0mc=;
+	s=default; t=1563509714;
+	bh=/EQ1w8gR6g3qcNT8caFVXf3PCM05WaMi9SnkxpZmX7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TT0xObJQ1/tFLm2uIKvveLryxZFpbnZXHvC0Lxlxj8rzhdCbnm8IQqNJ0huCxM4bf
-	 fnUnAyusZAfG8ITqJVzcNMnGlbYsuSY92ftLwuD+AQoNmjD3WFVVTD3KrfNZTFHIaR
-	 bi0/ur8K2PZ6Sb3wjfdfqd0VHpZOh7lTdrKwrW3E=
+	b=U4s63ZMUPv9moUuRQycsFzW+udaCoP+8SeraiOroLbJW++VcRvdsdD17Q7qbYfuPU
+	 zojD20Ki/SrL6kffIGu+14yKJgk/lNTpmjFZbtVFFqsQcLx3BOJnj6VUqoNpcpw9u3
+	 GxTvu7oPiUmPqsr2BysW1NdLlecH2SpQN8wqgczs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390048AbfGSEPJ (ORCPT
+        id S2390015AbfGSEPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51404 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387449AbfGSEPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:15:07 -0400
+        id S2389936AbfGSEPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:15:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36ACA21873;
-        Fri, 19 Jul 2019 04:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9739B21851;
+        Fri, 19 Jul 2019 04:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509706;
-        bh=CzhaAv+1g3tc7icQWTPDGHo0swJkwJI0NH1Fk+Xz0mc=;
+        s=default; t=1563509700;
+        bh=/EQ1w8gR6g3qcNT8caFVXf3PCM05WaMi9SnkxpZmX7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Parq9vliu2E8RZWglf6Nfxc4x/O0C7FoF14VAI8gBHTdyABLBhaJ68j2FJN9JLCxK
-         CG2umtLTrwlT2CZwFdmTcgkGsjX3E2ArjqquVbY0ivAnAwhW5Xqy6fZZQoa419MYpU
-         oyZran+7QGQUV2td598BNKoaUd7PxQWssBN3h61U=
+        b=EOhjfcCgxipud/FiwYsCFIV+o0+YLVew/mju2rwlHj8Lq9vKzYh8eJ4RKGeCVFaLk
+         7XYA0EitfjQ6rpohygbkJtzII9Waqb3MMIzg+lTpe3exEqDQTCUpykVsJP/SkUgCuz
+         fTuIHyhafnP6uqMbX5garhSMjZ82bH3NDu0JYgQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 23/35] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
-Date:   Fri, 19 Jul 2019 00:14:11 -0400
-Message-Id: <20190719041423.19322-23-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 19/35] recordmcount: Fix spurious mcount entries on powerpc
+Date:   Fri, 19 Jul 2019 00:14:07 -0400
+Message-Id: <20190719041423.19322-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -59,38 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
+[ Upstream commit 80e5302e4bc85a6b685b7668c36c6487b5f90e9a ]
 
-When testing out gpio-keys with a button, a spurious
-interrupt (and therefore a key press or release event)
-gets triggered as soon as the driver enables the irq
-line for the first time.
+An impending change to enable HAVE_C_RECORDMCOUNT on powerpc leads to
+warnings such as the following:
 
-This patch clears any potential bogus generated interrupt
-that was caused by the switching of the associated irq's
-type and polarity.
+  # modprobe kprobe_example
+  ftrace-powerpc: Not expected bl: opcode is 3c4c0001
+  WARNING: CPU: 0 PID: 227 at kernel/trace/ftrace.c:2001 ftrace_bug+0x90/0x318
+  Modules linked in:
+  CPU: 0 PID: 227 Comm: modprobe Not tainted 5.2.0-rc6-00678-g1c329100b942 #2
+  NIP:  c000000000264318 LR: c00000000025d694 CTR: c000000000f5cd30
+  REGS: c000000001f2b7b0 TRAP: 0700   Not tainted  (5.2.0-rc6-00678-g1c329100b942)
+  MSR:  900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 28228222  XER: 00000000
+  CFAR: c0000000002642fc IRQMASK: 0
+  <snip>
+  NIP [c000000000264318] ftrace_bug+0x90/0x318
+  LR [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
+  Call Trace:
+  [c000000001f2ba40] [0000000000000004] 0x4 (unreliable)
+  [c000000001f2bad0] [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
+  [c000000001f2bb90] [c00000000020ff10] load_module+0x25b0/0x30c0
+  [c000000001f2bd00] [c000000000210cb0] sys_finit_module+0xc0/0x130
+  [c000000001f2be20] [c00000000000bda4] system_call+0x5c/0x70
+  Instruction dump:
+  419e0018 2f83ffff 419e00bc 2f83ffea 409e00cc 4800001c 0fe00000 3c62ff96
+  39000001 39400000 386386d0 480000c4 <0fe00000> 3ce20003 39000001 3c62ff96
+  ---[ end trace 4c438d5cebf78381 ]---
+  ftrace failed to modify
+  [<c0080000012a0008>] 0xc0080000012a0008
+   actual:   01:00:4c:3c
+  Initializing ftrace call sites
+  ftrace record flags: 2000000
+   (0)
+   expected tramp: c00000000006af4c
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Looking at the relocation records in __mcount_loc shows a few spurious
+entries:
+
+  RELOCATION RECORDS FOR [__mcount_loc]:
+  OFFSET           TYPE              VALUE
+  0000000000000000 R_PPC64_ADDR64    .text.unlikely+0x0000000000000008
+  0000000000000008 R_PPC64_ADDR64    .text.unlikely+0x0000000000000014
+  0000000000000010 R_PPC64_ADDR64    .text.unlikely+0x0000000000000060
+  0000000000000018 R_PPC64_ADDR64    .text.unlikely+0x00000000000000b4
+  0000000000000020 R_PPC64_ADDR64    .init.text+0x0000000000000008
+  0000000000000028 R_PPC64_ADDR64    .init.text+0x0000000000000014
+
+The first entry in each section is incorrect. Looking at the
+relocation records, the spurious entries correspond to the
+R_PPC64_ENTRY records:
+
+  RELOCATION RECORDS FOR [.text.unlikely]:
+  OFFSET           TYPE              VALUE
+  0000000000000000 R_PPC64_REL64     .TOC.-0x0000000000000008
+  0000000000000008 R_PPC64_ENTRY     *ABS*
+  0000000000000014 R_PPC64_REL24     _mcount
+  <snip>
+
+The problem is that we are not validating the return value from
+get_mcountsym() in sift_rel_mcount(). With this entry, mcountsym is 0,
+but Elf_r_sym(relp) also ends up being 0. Fix this by ensuring
+mcountsym is valid before processing the entry.
+
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/uic.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/recordmcount.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/sysdev/uic.c b/arch/powerpc/sysdev/uic.c
-index 6893d8f236df..225346dda151 100644
---- a/arch/powerpc/sysdev/uic.c
-+++ b/arch/powerpc/sysdev/uic.c
-@@ -158,6 +158,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
+diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
+index b9897e2be404..04151ede8043 100644
+--- a/scripts/recordmcount.h
++++ b/scripts/recordmcount.h
+@@ -326,7 +326,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
+ 		if (!mcountsym)
+ 			mcountsym = get_mcountsym(sym0, relp, str0);
  
- 	mtdcr(uic->dcrbase + UIC_PR, pr);
- 	mtdcr(uic->dcrbase + UIC_TR, tr);
-+	mtdcr(uic->dcrbase + UIC_SR, ~mask);
- 
- 	raw_spin_unlock_irqrestore(&uic->lock, flags);
- 
+-		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
++		if (mcountsym && mcountsym == Elf_r_sym(relp) &&
++				!is_fake_mcount(relp)) {
+ 			uint_t const addend =
+ 				_w(_w(relp->r_offset) - recval + mcount_adjust);
+ 			mrelp->r_offset = _w(offbase
 -- 
 2.20.1
 
