@@ -2,162 +2,126 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA870C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655B4C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913B021849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A01921849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfGSCjk (ORCPT
+        id S1726425AbfGSCmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:39:40 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:52150 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGSCjj (ORCPT
+        Thu, 18 Jul 2019 22:42:53 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:34092 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbfGSCmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:39:39 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x6J2cuaQ072409;
-        Fri, 19 Jul 2019 10:38:56 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id B17D5E65125DE4DC5AE3;
-        Fri, 19 Jul 2019 10:38:56 +0800 (CST)
-In-Reply-To: <CAMuHMdUPmj0tAhJ18DhQEbYxP7g4MMBMe0U_2eQFQ7mOq4ZFLQ@mail.gmail.com>
-References: <1561023046-20886-1-git-send-email-masonccyang@mxic.com.tw> <1561023046-20886-3-git-send-email-masonccyang@mxic.com.tw> <CAMuHMdUPmj0tAhJ18DhQEbYxP7g4MMBMe0U_2eQFQ7mOq4ZFLQ@mail.gmail.com>
-To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
-        "linux-spi" <linux-spi@vger.kernel.org>,
-        "Marek Vasut" <marek.vasut@gmail.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v14 2/2] dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF
- controller bindings
+        Thu, 18 Jul 2019 22:42:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TXF5rRz_1563504168;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TXF5rRz_1563504168)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 19 Jul 2019 10:42:49 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Wanpeng Li <wanpeng.li@hotmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] cputime: remove rq parameter for irqtime_account_process_tick func
+Date:   Fri, 19 Jul 2019 10:42:41 +0800
+Message-Id: <20190719024242.249429-1-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
 MIME-Version: 1.0
-X-KeepSent: 43DF9AAE:9EB63E41-4825843C:000C61B7;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF43DF9AAE.9EB63E41-ON4825843C.000C61B7-4825843C.000E8D45@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 19 Jul 2019 10:38:56 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/07/19 AM 10:38:56,
-        Serialize complete at 2019/07/19 AM 10:38:56
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x6J2cuaQ072409
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Using the per cpu rq in function directly is enough, don't need get and
+pass it from outside as a parameter. That's make function neat.
 
-Hi Geert, 
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Wanpeng Li <wanpeng.li@hotmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/sched/cputime.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 2305ce89a26c..3aaf761ede81 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -355,7 +355,7 @@ void thread_group_cputime(struct task_struct *tsk, struct task_cputime *times)
+  * softirq as those do not count in task exec_runtime any more.
+  */
+ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+-					 struct rq *rq, int ticks)
++					 int ticks)
+ {
+ 	u64 other, cputime = TICK_NSEC * ticks;
  
-Thanks for your review!
-
-Will fix it as 
-
-+Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-+---------------------------------------------------------
-+
-+Required properties:
-+- compatible: should be an SoC-specific compatible value, followed by
-+                                "renesas,rcar-gen3-rpc" as a fallback.
-+                                supported SoC-specific values are:
-+                                "renesas,r8a77980-rpc"          (R-Car 
-V3H)
-+                                "renesas,r8a77995-rpc"          (R-Car 
-D3)
-+- reg: should contain three register areas:
-+       first for the base address of RPC-IF registers,
-+       second for the direct mapping read mode and
-+       third for the write buffer area.
-+- reg-names: should contain "regs", "dirmap" and "wbuf"
-+- clocks: should contain the clock phandle/specifier pair for the module 
-clock.
-+- clock-names: should contain "rpc"
-+- power-domains: should contain the power domain phandle/secifier pair.
-+- resets: should contain the reset controller phandle/specifier pair.
-+- #address-cells: should be 1
-+- #size-cells: should be 0
-+
-+  flash: should be represented by a subnode of the RPC-IF node, 
-+  which "compatible" property contains "jedec,spi-nor", it presents SPI 
-is used.
-+
-+Example:
-+
-+                rpc: spi@ee200000 {
-+                                compatible = "renesas,r8a77995-rpc", 
-"renesas,rcar-gen3-rpc";
-+                                reg = <0 0xee200000 0 0x200>, <0 
-0x08000000 0 0x4000000>,
-+                                      <0 0xee208000 0 0x100>;
-+                                reg-names = "regs", "dirmap", "wbuf";
-+                                clocks = <&cpg CPG_MOD 917>;
-+                                clock-names = "rpc";
-+                                power-domains = <&sysc 
-R8A77995_PD_ALWAYS_ON>;
-+                                resets = <&cpg 917>;
-+                                #address-cells = <1>;
-+                                #size-cells = <0>;
-+
-+                                flash@0 {
-+                                                compatible = 
-"jedec,spi-nor";
-+                                                reg = <0>;
-+                                                spi-max-frequency = 
-<40000000>;
-+                                                spi-tx-bus-width = <1>;
-+                                                spi-rx-bus-width = <1>;
-+                                };
-+                };
-
-Is it OK ?
-
-thanks & best regards,
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+@@ -381,7 +381,7 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+ 		account_system_index_time(p, cputime, CPUTIME_SOFTIRQ);
+ 	} else if (user_tick) {
+ 		account_user_time(p, cputime);
+-	} else if (p == rq->idle) {
++	} else if (p == this_rq()->idle) {
+ 		account_idle_time(cputime);
+ 	} else if (p->flags & PF_VCPU) { /* System time or guest time */
+ 		account_guest_time(p, cputime);
+@@ -392,14 +392,12 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+ 
+ static void irqtime_account_idle_ticks(int ticks)
+ {
+-	struct rq *rq = this_rq();
+-
+-	irqtime_account_process_tick(current, 0, rq, ticks);
++	irqtime_account_process_tick(current, 0, ticks);
+ }
+ #else /* CONFIG_IRQ_TIME_ACCOUNTING */
+ static inline void irqtime_account_idle_ticks(int ticks) { }
+ static inline void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+-						struct rq *rq, int nr_ticks) { }
++						int nr_ticks) { }
+ #endif /* CONFIG_IRQ_TIME_ACCOUNTING */
+ 
+ /*
+@@ -475,13 +473,12 @@ void thread_group_cputime_adjusted(struct task_struct *p, u64 *ut, u64 *st)
+ void account_process_tick(struct task_struct *p, int user_tick)
+ {
+ 	u64 cputime, steal;
+-	struct rq *rq = this_rq();
+ 
+ 	if (vtime_accounting_cpu_enabled())
+ 		return;
+ 
+ 	if (sched_clock_irqtime) {
+-		irqtime_account_process_tick(p, user_tick, rq, 1);
++		irqtime_account_process_tick(p, user_tick, 1);
+ 		return;
+ 	}
+ 
+@@ -495,7 +492,7 @@ void account_process_tick(struct task_struct *p, int user_tick)
+ 
+ 	if (user_tick)
+ 		account_user_time(p, cputime);
+-	else if ((p != rq->idle) || (irq_count() != HARDIRQ_OFFSET))
++	else if ((p != this_rq()->idle) || (irq_count() != HARDIRQ_OFFSET))
+ 		account_system_time(p, HARDIRQ_OFFSET, cputime);
+ 	else
+ 		account_idle_time(cputime);
+-- 
+2.19.1.856.g8858448bb
 
