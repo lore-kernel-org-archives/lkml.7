@@ -2,129 +2,104 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF349C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D45C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E972184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4032C20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ckfiZo9H"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XUpdAcDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfGSAvY (ORCPT
+        id S1726317AbfGSAxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:51:24 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42816 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfGSAvX (ORCPT
+        Thu, 18 Jul 2019 20:53:07 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45132 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSAxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:51:23 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so14743341plb.9;
-        Thu, 18 Jul 2019 17:51:23 -0700 (PDT)
+        Thu, 18 Jul 2019 20:53:06 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u10so20491029lfm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S45qd7gaDXikhWp3JAm28CCVCVAPb9P65aHBd8beHKU=;
-        b=ckfiZo9HwxUFLq75+7WFC0KY/Cu2i6pUU61QBfZw+cFv7r5ZYUWxnIhH6LbM/zY2sb
-         rgiLp9GE1NeExmPRsbK3EmjIDZFOrnqxO1GIiXEjrgRL/2s7xz5TCN+6C7NbR13k1lq0
-         PW2VqsEpOWUdmWipe/ROnlTGot9gzsR0LBvTzhHxY4HQ9Hvk6T82vmMhYPWrfpK+LDFt
-         6xuphE9nkl2113gUvgRzLtV3CkeEPg/oobz7HqfM32UOMwmmIJ2MvLydi6UixR3cnFrJ
-         QcutKB9Oz1MLFGDF1KsH0HxfgYxHR3F8KYa6/qn3UfWYnMrOSIgGjj6GIpraG7yyEdwv
-         9cqQ==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a8L65F9AQGJRzB3szm9mqAdZSenP8LnqkTdF8dSw5FI=;
+        b=XUpdAcDe2vJdXVzv1xf3m2JRca5f/a5HLfbekG0XZhNANeKcbX9jBKx5PB4EW4VAvd
+         oBYSrrNtboa6iSG5PAh1OxnqPKpEGyOS3O2MR4QHHZvC/EfGGPpFyNJiHw93lOUXB23F
+         rB6R67fgB2OGcKOdQ0qqQ9Rq+IUcT/U10UZvI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=S45qd7gaDXikhWp3JAm28CCVCVAPb9P65aHBd8beHKU=;
-        b=iYiVoq5rW+FDqJoE+ks99xFNc44abH0M11rjzwgdZ1YGmoAPLYhTwI0p1tdHOBE16Z
-         J2Dr7FnJLPah1gLdri7L2qx0cHRfR+9+TsWBMHxAwupno3K5I3EOfQQlTHN8hHBySPbJ
-         vfD1ACt8mxXlnppOP/geDdhhnZ5s8P7mbLDsLkcMQXnKxqXpU+oIT10DTUDTOGfvbbSB
-         9sl3x1tGQl52V89sCNWJhjTC8eRGjKcZTZQK1rYnbVU/xqtUHYDqYSpO9VtSrwA3ofO0
-         ULIu/D0e3RAhMye0enAlFq/D+URLUGzNoyAijcLd5ZSbaokI+yc8XmlnmZZvWuIel9wf
-         p40w==
-X-Gm-Message-State: APjAAAUaJ0mUhd8qLA3a+yH2/cOACTdeqPRbur0rRkxYRY6FaK+8GCeW
-        2dvaZRnoQvHp9Ro7XdOEVPNWjnIm
-X-Google-Smtp-Source: APXvYqzvOE6KU+OpdMuoTYYbg5Hvkb8L75u+Rc31+XSe3vtIwNV36Djj8vN2RiyNdCBZH1JNeB0BWQ==
-X-Received: by 2002:a17:902:694a:: with SMTP id k10mr52954272plt.255.1563497483071;
-        Thu, 18 Jul 2019 17:51:23 -0700 (PDT)
-Received: from [10.67.51.137] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s15sm28526063pfd.183.2019.07.18.17.51.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 17:51:22 -0700 (PDT)
-Subject: Re: [PATCH] net: bcmgenet: use promisc for unsupported filters
-To:     justinpopo6@gmail.com, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, davem@davemloft.net,
-        f.fainelli@gmail.com
-References: <1563400733-39451-1-git-send-email-justinpopo6@gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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 YVs=
-Message-ID: <f54b5a80-4ef2-b531-b247-05ff85d7f219@gmail.com>
-Date:   Thu, 18 Jul 2019 17:51:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a8L65F9AQGJRzB3szm9mqAdZSenP8LnqkTdF8dSw5FI=;
+        b=AyGmwftaSHdt7XRbOAfIJ0in9JNZxLatJHCO8rhQmennhOciG6j5ZUrArFLzRCPXQq
+         B3cXF8qSHQs7l1+s1x5gd2xIyQPZoKM11QXK+z3hukPvNVJoKEN4SGIicooKbafPDYRR
+         A6NF8GR1o+SsJZfXgHjX7emkqLnK2aDJ3K66B1D1c9iRuJ+5VFIZ7T13uaup2st/8MOd
+         oGDHtJ9LG5LEU9oV0mkvDTDNVuO1Il0UAFt6uUlFaCWGXmf5DCNX9WpXogehZHC2A3rZ
+         KXxREOyDL/0ajSLMMtrZ9bEfsPxBQlQ3uIcBFKJ4huY2sBVSgRN1Cn8vXCtawxZpzYNI
+         PhkA==
+X-Gm-Message-State: APjAAAU5GBeEkVYRQevaTM2nJcAal0DGCBt4CjvMevyaZWw+vvBSA6ek
+        cDsbPazz2pc184LeXY9PRAR8KK92gaNJS/Nr42I=
+X-Google-Smtp-Source: APXvYqxpvLN/gPfkb8t+MjnOCRt5mQiOz1c97gvHcz1OEntDBN567HK03KCzI6OapCKpAibKK/LWLkN+xFnG+zEXpao=
+X-Received: by 2002:a19:ccc6:: with SMTP id c189mr22285509lfg.160.1563497584456;
+ Thu, 18 Jul 2019 17:53:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1563400733-39451-1-git-send-email-justinpopo6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190711164818.GA260447@google.com> <20190711195839.GA163275@google.com>
+ <20190712063240.GD7702@X58A-UD3R> <20190712125116.GB92297@google.com>
+ <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
+ <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
+ <20190713151330.GE26519@linux.ibm.com> <20190713154257.GE133650@google.com>
+ <20190713174111.GG26519@linux.ibm.com> <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
+ <20190719003942.GA28226@X58A-UD3R>
+In-Reply-To: <20190719003942.GA28226@X58A-UD3R>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 18 Jul 2019 20:52:52 -0400
+Message-ID: <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+To:     Byungchul Park <byungchul.park@lge.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@lge.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/19 2:58 PM, justinpopo6@gmail.com wrote:
-> From: Justin Chen <justinpopo6@gmail.com>
-> 
-> Currently we silently ignore filters if we cannot meet the filter
-> requirements. This will lead to the MAC dropping packets that are
-> expected to pass. A better solution would be to set the NIC to promisc
-> mode when the required filters cannot be met.
-> 
-> Also correct the number of MDF filters supported. It should be 17,
-> not 16.
-> 
-> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
+[snip]
+> > - There is a bug in the CPU stopper machinery itself preventing it
+> > from scheduling the stopper on Y. Even though Y is not holding up the
+> > grace period.
+>
+> Or any thread on Y is busy with preemption/irq disabled preventing the
+> stopper from being scheduled on Y.
+>
+> Or something is stuck in ttwu() to wake up the stopper on Y due to any
+> scheduler locks such as pi_lock or rq->lock or something.
+>
+> I think what you mentioned can happen easily.
+>
+> Basically we would need information about preemption/irq disabled
+> sections on Y and scheduler's current activity on every cpu at that time.
 
-Acked-by: Doug Berger <opendmb@gmail.com>
+I think all that's needed is an NMI backtrace on all CPUs. An ARM we
+don't have NMI solutions and only IPI or interrupt based backtrace
+works which should at least catch and the preempt disable and softirq
+disable cases.
 
-Thanks Justin :)
-    Doug
+But yeah I don't see why just the stacks of those CPUs that are
+blocking the CPU X would not suffice for the trivial cases where a
+piece of misbehaving code disable interrupts / preemption and
+prevented the stopper thread from executing.
+
+May be once the test case is ready (no rush!) , then it will be more
+clear what can help.
+
+J.
