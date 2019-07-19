@@ -2,119 +2,155 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B11EC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB65C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2CA21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7F821849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kSM15fI5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PgS4m85g";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PgS4m85g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732927AbfGSXcg (ORCPT
+        id S1732966AbfGSXd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 19:32:36 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15731 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728247AbfGSXcg (ORCPT
+        Fri, 19 Jul 2019 19:33:28 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51014 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728247AbfGSXd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 19:32:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3253190000>; Fri, 19 Jul 2019 16:32:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 16:32:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 16:32:35 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 23:32:34 +0000
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 23:32:34 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 19 Jul 2019 23:32:34 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d3253120000>; Fri, 19 Jul 2019 16:32:34 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        <stable@vger.kernel.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] mm/migrate: initialize pud_entry in migrate_vma()
-Date:   Fri, 19 Jul 2019 16:32:25 -0700
-Message-ID: <20190719233225.12243-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-X-NVConfidentiality: public
+        Fri, 19 Jul 2019 19:33:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CFADB8EE109;
+        Fri, 19 Jul 2019 16:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563579207;
+        bh=LqTkQf38ZyZNHBsEs0FRO7l02fVIaHk37E45mYH6Eus=;
+        h=Subject:From:To:Cc:Date:From;
+        b=PgS4m85goUu3itIpIledemu5peXYvopzu/9hisi8eRVhR9IkFipWKEFRuzlEapolb
+         gctP4Q8ax7vIBS74F9qlAX4q36qNTkwSj8P5AKj2n+AoVUAwPmJ08/v7RqBkYfPkak
+         Dwh6v6Xw1LWsvoWTPKvc6Q60Yvs8Z/HXKiNnys84=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yOQ9zMAQY4U6; Fri, 19 Jul 2019 16:33:27 -0700 (PDT)
+Received: from [192.168.11.4] (122x212x32x58.ap122.ftth.ucom.ne.jp [122.212.32.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 910868EE0EF;
+        Fri, 19 Jul 2019 16:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563579207;
+        bh=LqTkQf38ZyZNHBsEs0FRO7l02fVIaHk37E45mYH6Eus=;
+        h=Subject:From:To:Cc:Date:From;
+        b=PgS4m85goUu3itIpIledemu5peXYvopzu/9hisi8eRVhR9IkFipWKEFRuzlEapolb
+         gctP4Q8ax7vIBS74F9qlAX4q36qNTkwSj8P5AKj2n+AoVUAwPmJ08/v7RqBkYfPkak
+         Dwh6v6Xw1LWsvoWTPKvc6Q60Yvs8Z/HXKiNnys84=
+Message-ID: <1563579201.1602.7.camel@HansenPartnership.com>
+Subject: [GIT PULL] final round of SCSI updates for the 5.2+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 20 Jul 2019 08:33:21 +0900
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563579161; bh=cBV6E3QUPkSFHVwkOFQ0NgttBSDLgksbh5PnUNNrN0w=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=kSM15fI5BAWSOEp5MwrwxhHFCEKX/TAHdTgJ7Umkm6B4XXIZWumZsK8I6vNXvxlBf
-         mFrioVqQhDUY9lYgLXSEnboJcf1bL/ZoAKjGMjxauf+fSi4rSqbEMXL47cK9CyGGTF
-         g6UlqhfdPh1zpX6I83oWpf4TQZ5ThZp39QFmpxmGe0zDXrvtiRevb+VXkN4GGzgnTj
-         j2UwuGP1+O33GpEIbinCf9pcrWajXQUHszoY1LGP8X93xswc/goUG/PiV0lKQP61j0
-         yyhegnK0/aA1cHamqHHjTT59Bc4wWgAHlHX8HarC1Pa3Ate7T5z0I+3qd3KlqLYSpG
-         ucjUxT5cNsAQw==
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
-migrate_vma_collect() which initializes a struct mm_walk but
-didn't initialize mm_walk.pud_entry. (Found by code inspection)
-Use a C structure initialization to make sure it is set to NULL.
+This is the final round of mostly small fixes in our initial
+submit.  It's mostly minor fixes and driver updates.  The only change
+of note is adding a virt_boundary_mask to the SCSI host and host
+template to parametrise this for NVMe devices instead of having them do
+a call in slave_alloc.  It's a fairly straightforward conversion except
+in the two NVMe handling drivers that didn't set it who now have a
+virtual infinity parameter added.
 
-Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use with
-device memory")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- mm/migrate.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+The patch is available here:
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 515718392b24..a42858d8e00b 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2340,16 +2340,13 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
- static void migrate_vma_collect(struct migrate_vma *migrate)
- {
- 	struct mmu_notifier_range range;
--	struct mm_walk mm_walk;
--
--	mm_walk.pmd_entry =3D migrate_vma_collect_pmd;
--	mm_walk.pte_entry =3D NULL;
--	mm_walk.pte_hole =3D migrate_vma_collect_hole;
--	mm_walk.hugetlb_entry =3D NULL;
--	mm_walk.test_walk =3D NULL;
--	mm_walk.vma =3D migrate->vma;
--	mm_walk.mm =3D migrate->vma->vm_mm;
--	mm_walk.private =3D migrate;
-+	struct mm_walk mm_walk =3D {
-+		.pmd_entry =3D migrate_vma_collect_pmd,
-+		.pte_hole =3D migrate_vma_collect_hole,
-+		.vma =3D migrate->vma,
-+		.mm =3D migrate->vma->vm_mm,
-+		.private =3D migrate,
-+	};
-=20
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm_walk.mm,
- 				migrate->start,
---=20
-2.20.1
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+
+The short changelog is:
+
+Arnd Bergmann (1):
+      scsi: lpfc: reduce stack size with CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE
+
+Benjamin Block (3):
+      scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+      scsi: zfcp: fix request object use-after-free in send path causing wrong traces
+      scsi: zfcp: fix request object use-after-free in send path causing seqno errors
+
+Christoph Hellwig (8):
+      scsi: megaraid_sas: set an unlimited max_segment_size
+      scsi: mpt3sas: set an unlimited max_segment_size for SAS 3.0 HBAs
+      scsi: IB/srp: set virt_boundary_mask in the scsi host
+      scsi: IB/iser: set virt_boundary_mask in the scsi host
+      scsi: storvsc: set virt_boundary_mask in the scsi host template
+      scsi: ufshcd: set max_segment_size in the scsi host template
+      scsi: core: take the DMA max mapping size into account
+      scsi: core: add a host / host template field for the virt boundary
+
+Colin Ian King (1):
+      scsi: libfc: fix null pointer dereference on a null lport
+
+Damien Le Moal (1):
+      scsi: sd_zbc: Fix compilation warning
+
+Deepak Ukey (1):
+      scsi: pm80xx: Fixed kernel panic during error recovery for SATA drive
+
+Denis Efremov (1):
+      scsi: libsas: remove the exporting of sas_wait_eh
+
+Marcos Paulo de Souza (1):
+      scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk Cruzer Blade
+
+Maurizio Lombardi (1):
+      scsi: core: use scmd_printk() to print which command timed out
+
+Ming Lei (1):
+      scsi: core: Fix race on creating sense cache
+
+Shivasharan S (4):
+      scsi: megaraid_sas: Update driver version to 07.710.50.00
+      scsi: megaraid_sas: Add module parameter for FW Async event logging
+      scsi: megaraid_sas: Enable msix_load_balance for Invader and later controllers
+      scsi: megaraid_sas: Fix calculation of target ID
+
+YueHaibing (1):
+      scsi: megaraid_sas: Make some symbols static
+
+And the diffstat:
+
+ drivers/infiniband/ulp/iser/iscsi_iser.c  | 35 ++++----------------
+ drivers/infiniband/ulp/srp/ib_srp.c       | 18 ++--------
+ drivers/s390/scsi/zfcp_erp.c              |  7 ++++
+ drivers/s390/scsi/zfcp_fsf.c              | 55 +++++++++++++++++++++++++++----
+ drivers/scsi/hosts.c                      |  3 ++
+ drivers/scsi/libfc/fc_exch.c              |  2 +-
+ drivers/scsi/libsas/sas_scsi_host.c       |  1 -
+ drivers/scsi/lpfc/lpfc_debugfs.h          |  2 +-
+ drivers/scsi/megaraid/megaraid_sas.h      |  4 +--
+ drivers/scsi/megaraid/megaraid_sas_base.c | 31 +++++++++++++----
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  1 +
+ drivers/scsi/pm8001/pm8001_sas.c          |  6 +++-
+ drivers/scsi/pm8001/pm80xx_hwi.c          |  2 +-
+ drivers/scsi/pm8001/pm80xx_hwi.h          |  2 ++
+ drivers/scsi/scsi_devinfo.c               |  2 ++
+ drivers/scsi/scsi_lib.c                   | 13 +++++---
+ drivers/scsi/sd_zbc.c                     |  2 +-
+ drivers/scsi/storvsc_drv.c                |  5 ++-
+ drivers/scsi/ufs/ufshcd.c                 |  3 +-
+ include/scsi/scsi_host.h                  |  3 ++
+ 20 files changed, 123 insertions(+), 74 deletions(-)
+
+James
 
