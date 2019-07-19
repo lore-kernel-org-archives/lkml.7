@@ -2,71 +2,108 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D96C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C127C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A849120873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA1021849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfGSGvw (ORCPT
+        id S1727120AbfGSGzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:51:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40148 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfGSGvv (ORCPT
+        Fri, 19 Jul 2019 02:55:47 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:29417 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725616AbfGSGzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:51:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so29893604qtn.7;
-        Thu, 18 Jul 2019 23:51:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B6pVkHoM9zYOJWO3sG9HTZxpM7QAoYB/MD0csvlC6pM=;
-        b=T7JAkSM39gH68585/3qWmn++25iUFXk9chPbH/jc3Vrpdx1nWcemi5z89RC5LVBBSu
-         ES2qVsobDwCR8ABAf0+XcqlBaABI1QnyHILgVh/z9HLW/uy+30jeyFus0xvJNhGZwpNh
-         PsFkoSZy53JHnjdaHUhAGutcraF+iiODuYpl77ePYyOrUWMjK9rqwbRV9B6zcwmWB+qQ
-         2ctWTiFYvVy+pOHp185FmqzeYIwcAA4/EIXBCsb04O/cJS8/29IpMEcD9/UaM30VogZl
-         fttHqH86JlmvrGfqdtf9V02PAYPu6dVPWyzjMZIbaJSpuvdOG/BK3VtHLsocKoOsrsDm
-         isNw==
-X-Gm-Message-State: APjAAAXV82AjnCQ4dJ2AICNgh7Dz3f2VLBE2fEgIuqp+PCrmx3Ee3+u/
-        8sI47ULzkJ1vIo0Z8DfqkbcUpojjpI6kwON8ksmKEbOh
-X-Google-Smtp-Source: APXvYqw0TyPKAz3bnZYB03kiIZxHNAdt0cNgEJ4uL/TFU4FLHUfRsbCjK0Jy4aD5N6o27WowLlF5susEFCyyHEVpttw=
-X-Received: by 2002:a0c:dd86:: with SMTP id v6mr36463964qvk.176.1563519109822;
- Thu, 18 Jul 2019 23:51:49 -0700 (PDT)
+        Fri, 19 Jul 2019 02:55:46 -0400
+X-UUID: af31ce153ea848c1bc425f9b6cf813ef-20190719
+X-UUID: af31ce153ea848c1bc425f9b6cf813ef-20190719
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1331009977; Fri, 19 Jul 2019 14:55:39 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 19 Jul 2019 14:55:38 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 19 Jul 2019 14:55:38 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 3/3] mt76: mt7615: add cwmin/cwmax initial values
+Date:   Fri, 19 Jul 2019 14:55:36 +0800
+Message-ID: <c83e14787bc86f8f8062e0aa44e03ef80c3fd38a.1563518381.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <50d28c9b0f9e7d6b277d36fc93f55142d7535259.1563518381.git.ryder.lee@mediatek.com>
+References: <50d28c9b0f9e7d6b277d36fc93f55142d7535259.1563518381.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-References: <20190718134928.2472465-1-arnd@arndb.de> <cedfd2fb31d943564e19c1652bc8983a18de45d4.camel@perches.com>
-In-Reply-To: <cedfd2fb31d943564e19c1652bc8983a18de45d4.camel@perches.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 19 Jul 2019 08:51:33 +0200
-Message-ID: <CAK8P3a2nL0Ji2NmDvVcqyO4Rp_N9FN0OSZHRnUb+BpTdneuVMQ@mail.gmail.com>
-Subject: Re: [PATCH] reiserfs: fix code unwinding with clang
-To:     Joe Perches <joe@perches.com>
-Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-        reiserfs-devel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
-> On Thu, 2019-07-18 at 15:49 +0200, Arnd Bergmann wrote:
-> > This will likely get fixed in a future clang release, but in the meantime
-> > the workaround helps us build cleanly with existing releases.
->
-> The original code read better.
->
-> This is kinda a gross solution that should probably be
-> commented on in the code rather than just the commit message.
+Add initial values in mt7615_mcu_set_wmm() to cleanup setup flow.
 
-I'll just wait for the fix in llvm then and filter out the objtool warnings
-from my build logs.
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-      Arnd
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index 5fd162be3654..154c09428b69 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -622,10 +622,7 @@ int mt7615_mcu_set_rts_thresh(struct mt7615_dev *dev, u32 val)
+ int mt7615_mcu_set_wmm(struct mt7615_dev *dev, u8 queue,
+ 		       const struct ieee80211_tx_queue_params *params)
+ {
+-#define WMM_AIFS_SET	BIT(0)
+-#define WMM_CW_MIN_SET	BIT(1)
+-#define WMM_CW_MAX_SET	BIT(2)
+-#define WMM_TXOP_SET	BIT(3)
++#define WMM_PARAM_SET	GENMASK(3, 0)
+ 	struct req_data {
+ 		u8 number;
+ 		u8 rsv[3];
+@@ -638,19 +635,17 @@ int mt7615_mcu_set_wmm(struct mt7615_dev *dev, u8 queue,
+ 	} __packed req = {
+ 		.number = 1,
+ 		.queue = queue,
+-		.valid = WMM_AIFS_SET | WMM_TXOP_SET,
++		.valid = WMM_PARAM_SET,
+ 		.aifs = params->aifs,
++		.cw_min = BIT(5) - 1,
++		.cw_max = cpu_to_le16(BIT(10) - 1),
+ 		.txop = cpu_to_le16(params->txop),
+ 	};
+ 
+-	if (params->cw_min) {
+-		req.valid |= WMM_CW_MIN_SET;
++	if (params->cw_min)
+ 		req.cw_min = params->cw_min;
+-	}
+-	if (params->cw_max) {
+-		req.valid |= WMM_CW_MAX_SET;
++	if (params->cw_max)
+ 		req.cw_max = cpu_to_le16(params->cw_max);
+-	}
+ 
+ 	return __mt76_mcu_send_msg(&dev->mt76, MCU_EXT_CMD_EDCA_UPDATE,
+ 				   &req, sizeof(req), true);
+-- 
+2.18.0
+
