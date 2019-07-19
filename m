@@ -2,106 +2,111 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831BFC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C65C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF9F2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCCF2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfGSJgL (ORCPT
+        id S1726858AbfGSJpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 05:36:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42360 "EHLO inva021.nxp.com"
+        Fri, 19 Jul 2019 05:45:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:40966 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfGSJgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 05:36:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CCB58200158;
-        Fri, 19 Jul 2019 11:36:08 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 71BEB200153;
-        Fri, 19 Jul 2019 11:36:04 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C92B4402B5;
-        Fri, 19 Jul 2019 17:35:58 +0800 (SGT)
-From:   fugang.duan@nxp.com
-To:     hch@lst.de, m.szyprowski@samsung.com
-Cc:     festevam@gmail.com, robin.murphy@arm.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        aisheng.dong@nxp.com, Fugang Duan <fugang.duan@nxp.com>
-Subject: [PATCH dma  1/1] dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device
-Date:   Fri, 19 Jul 2019 17:26:48 +0800
-Message-Id: <20190719092648.11085-1-fugang.duan@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725794AbfGSJpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 05:45:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93A29337;
+        Fri, 19 Jul 2019 02:45:49 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7DE33F59C;
+        Fri, 19 Jul 2019 02:45:46 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 10:45:30 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lina Iyer <lina.iyer@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM
+ domains using genpd
+Message-ID: <20190719094530.GA15248@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-10-ulf.hansson@linaro.org>
+ <20190716150533.GD7250@e107155-lin>
+ <CAPDyKFqaE2L419siFY=LGDsotAnpBt+H_vpmG62AqQw8UQJZJA@mail.gmail.com>
+ <20190718131913.GB28633@e107155-lin>
+ <20190718175746.GE25567@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718175746.GE25567@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+On Thu, Jul 18, 2019 at 11:57:46AM -0600, Lina Iyer wrote:
+> On Thu, Jul 18 2019 at 07:19 -0600, Sudeep Holla wrote:
+[...]
 
-dma_map_sg() may use swiotlb buffer when kernel parameter include
-"swiotlb=force" or the dma_addr is out of dev->dma_mask range. After
-DMA complete the memory moving from device to memory, then user call
-dma_sync_sg_for_cpu() to sync with DMA buffer, and copy the original
-virtual buffer to other space.
+> >
+> > Yes 2 different issues here:
+> > 1. The direct assignment overwriting the value is problem which you agree.
+> > 2. The OR logic on it's own is bit not so clear from the specification.
+> >   Since firmware authors need to be aware of this to make all these
+> >   work. So it's not implicit, either we set this requirement in form
+> >   of binding. We were also thinking of stating composite state in the
+> >   DT, still just a thought, need to come up with examples/illustrations.
+> >
+> It is generally very obvious to firmware authors to map hardware
+> definitions to specific bits in the state param. If a cluster component
+> has more than on/off state, more bits are assigned to the define the
+> idle states of the component.
 
-So dma_direct_sync_sg_for_cpu() should use swiotlb physical addr, not
-the original physical addr from sg_phys(sg).
+While I completely agree that generally the firmware authors tend to
+assign a bit(s) to indicate a state, it not so evident from the PSCI
+specification. My worry is someone shouldn't come up with sequential
+numbering and expect this to work.
 
-dma_direct_sync_sg_for_device() also has the similar issue, correct it.
+I am fine with OR, but we need to document it somewhere so that we
+can point people so that the driver in the kernel is not expected
+to work with any other schema of numbering StateID that violates
+the assumption.
 
-Fixes: 55897af63091("dma-direct: merge swiotlb_dma_ops into the dma_direct code")
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- kernel/dma/direct.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+> Addition is also an option, but there are enough bits compared to the
+> hardware components that we have in each state, that it hasn't been a
+> problem.
+>
+Yes, but with extended format, the StateType move to bit 30, and if
+we represent each individual state to indicate that bit correctly(I
+except everyone to so that and it shouldn't cause issue if we OR the
+parameters to get composite states), addition may cause issues.
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index b90e1ae..0e87f86 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -242,12 +242,14 @@ void dma_direct_sync_sg_for_device(struct device *dev,
- 	int i;
- 
- 	for_each_sg(sgl, sg, nents, i) {
--		if (unlikely(is_swiotlb_buffer(sg_phys(sg))))
--			swiotlb_tbl_sync_single(dev, sg_phys(sg), sg->length,
-+		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
-+
-+		if (unlikely(is_swiotlb_buffer(paddr)))
-+			swiotlb_tbl_sync_single(dev, paddr, sg->length,
- 					dir, SYNC_FOR_DEVICE);
- 
- 		if (!dev_is_dma_coherent(dev))
--			arch_sync_dma_for_device(dev, sg_phys(sg), sg->length,
-+			arch_sync_dma_for_device(dev, paddr, sg->length,
- 					dir);
- 	}
- }
-@@ -279,11 +281,13 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
- 	int i;
- 
- 	for_each_sg(sgl, sg, nents, i) {
-+		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
-+
- 		if (!dev_is_dma_coherent(dev))
--			arch_sync_dma_for_cpu(dev, sg_phys(sg), sg->length, dir);
--	
--		if (unlikely(is_swiotlb_buffer(sg_phys(sg))))
--			swiotlb_tbl_sync_single(dev, sg_phys(sg), sg->length, dir,
-+			arch_sync_dma_for_cpu(dev, paddr, sg->length, dir);
-+
-+		if (unlikely(is_swiotlb_buffer(paddr)))
-+			swiotlb_tbl_sync_single(dev, paddr, sg->length, dir,
- 					SYNC_FOR_CPU);
- 	}
- 
--- 
-2.7.4
+--
+Regards,
+Sudeep
 
