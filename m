@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34020C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E397C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08058206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698CC206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511076;
-	bh=9f1wajjvi5fzOiQPCP16sLyUiNuP4qgvjsgcriCP8us=;
+	s=default; t=1563511084;
+	bh=3GGrEOm9fazLA5eumls6MQ4xq/akDvOrKzvg5TbmCUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jklgqOoDV4/PHqRGR1hmlcmgXRxQDEiXsGo2VMZ2WXRNkX433HHRzNc37b27IYLcu
-	 TOrRGYrIOycXkxv7IbZTewkqYIXdXpkVR756X9AqkSZj1//m5237JkjDBCXGM2Ij3C
-	 ioMYzut9Jx/U19JZurnD1wETpBvhioAudSZgxg3A=
+	b=sndt1Q0WI54C4iNrY9wPOEtx1Nr5cXnaYBuOiwUkVbsrdoLh5M07L08GvdmMYfjhn
+	 +jwaIg0rlF6k0KozzmT5XMgrh+WP6bvFPaiEJ39hhXz1Ldiwb+rr2MGHB71OxODHzD
+	 /gACNtWYKiCkMaOCYNX5nrsZ7LX3cCHoR4Wbhyo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389393AbfGSEhy (ORCPT
+        id S2389723AbfGSEiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbfGSD7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:38 -0400
+        id S1727483AbfGSD7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA162189F;
-        Fri, 19 Jul 2019 03:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA8E2189F;
+        Fri, 19 Jul 2019 03:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508777;
-        bh=9f1wajjvi5fzOiQPCP16sLyUiNuP4qgvjsgcriCP8us=;
+        s=default; t=1563508770;
+        bh=3GGrEOm9fazLA5eumls6MQ4xq/akDvOrKzvg5TbmCUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2a/LfTbcb12rrIGe+d3zYnH+a+BKUGKzQwX8Z+4IGIi4PPCEDQwjYK3JtzToMiva/
-         xzbRwunUyOkQx7bXUPSrkg6rkp9dnjAKAd9/+HcYd9XTYtg6l1754rF1CDPgAqxdGu
-         r/fwfIoxmIGspwggS7Nnmm8LILssyv8fpN+0nzTg=
+        b=Sz4jSDsiyRMvVJvoyIeoqAq6kElmEzTaHO1nUwLs+sSBK5qKtiWN/+kAO1oz0Qo6K
+         Ie0sJSaEeTvzBMVBljwFqPt+3Lm0o2aGhjRbP+N+RuIUEDafk8zu0L2f8QSzDdNriQ
+         OhVMvRIoNxX2qOQUdQKEfCHQE+QIQdtxELVgmy34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Denis Ciocca <denis.ciocca@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 084/171] iio: st_accel: fix iio_triggered_buffer_{pre,post}enable positions
-Date:   Thu, 18 Jul 2019 23:55:15 -0400
-Message-Id: <20190719035643.14300-84-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.2 080/171] staging: ks7010: Fix build error
+Date:   Thu, 18 Jul 2019 23:55:11 -0400
+Message-Id: <20190719035643.14300-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,81 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 05b8bcc96278c9ef927a6f25a98e233e55de42e1 ]
+[ Upstream commit 3e5bc68fa596874500e8c718605aa44d5e42a34c ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+when CRYPTO is m and KS7010 is y, building fails:
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+drivers/staging/ks7010/ks_hostif.o: In function `michael_mic.constprop.13':
+ks_hostif.c:(.text+0x560): undefined reference to `crypto_alloc_shash'
+ks_hostif.c:(.text+0x580): undefined reference to `crypto_shash_setkey'
+ks_hostif.c:(.text+0x5e0): undefined reference to `crypto_destroy_tfm'
+ks_hostif.c:(.text+0x614): undefined reference to `crypto_shash_update'
+ks_hostif.c:(.text+0x62c): undefined reference to `crypto_shash_update'
+ks_hostif.c:(.text+0x648): undefined reference to `crypto_shash_finup'
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Acked-by: Denis Ciocca <denis.ciocca@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Add CRYPTO and CRYPTO_HASH dependencies to fix this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 8b523f20417d ("staging: ks7010: removed custom Michael MIC implementation.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/st_accel_buffer.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/staging/ks7010/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/accel/st_accel_buffer.c b/drivers/iio/accel/st_accel_buffer.c
-index 54f2ae91f614..0205c0167cdd 100644
---- a/drivers/iio/accel/st_accel_buffer.c
-+++ b/drivers/iio/accel/st_accel_buffer.c
-@@ -45,17 +45,19 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
- 		goto allocate_memory_error;
- 	}
- 
--	err = st_sensors_set_axis_enable(indio_dev,
--					(u8)indio_dev->active_scan_mask[0]);
-+	err = iio_triggered_buffer_postenable(indio_dev);
- 	if (err < 0)
- 		goto st_accel_buffer_postenable_error;
- 
--	err = iio_triggered_buffer_postenable(indio_dev);
-+	err = st_sensors_set_axis_enable(indio_dev,
-+					(u8)indio_dev->active_scan_mask[0]);
- 	if (err < 0)
--		goto st_accel_buffer_postenable_error;
-+		goto st_sensors_set_axis_enable_error;
- 
- 	return err;
- 
-+st_sensors_set_axis_enable_error:
-+	iio_triggered_buffer_predisable(indio_dev);
- st_accel_buffer_postenable_error:
- 	kfree(adata->buffer_data);
- allocate_memory_error:
-@@ -64,20 +66,22 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
- 
- static int st_accel_buffer_predisable(struct iio_dev *indio_dev)
- {
--	int err;
-+	int err, err2;
- 	struct st_sensor_data *adata = iio_priv(indio_dev);
- 
--	err = iio_triggered_buffer_predisable(indio_dev);
--	if (err < 0)
--		goto st_accel_buffer_predisable_error;
--
- 	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
- 	if (err < 0)
- 		goto st_accel_buffer_predisable_error;
- 
- 	err = st_sensors_set_enable(indio_dev, false);
-+	if (err < 0)
-+		goto st_accel_buffer_predisable_error;
- 
- st_accel_buffer_predisable_error:
-+	err2 = iio_triggered_buffer_predisable(indio_dev);
-+	if (!err)
-+		err = err2;
-+
- 	kfree(adata->buffer_data);
- 	return err;
- }
+diff --git a/drivers/staging/ks7010/Kconfig b/drivers/staging/ks7010/Kconfig
+index 0987fdc2f70d..9d7cbc8b12df 100644
+--- a/drivers/staging/ks7010/Kconfig
++++ b/drivers/staging/ks7010/Kconfig
+@@ -5,6 +5,7 @@ config KS7010
+ 	select WIRELESS_EXT
+ 	select WEXT_PRIV
+ 	select FW_LOADER
++	depends on CRYPTO && CRYPTO_HASH
+ 	help
+ 	  This is a driver for KeyStream KS7010 based SDIO WIFI cards. It is
+ 	  found on at least later Spectec SDW-821 (FCC-ID "S2Y-WLAN-11G-K" only,
 -- 
 2.20.1
 
