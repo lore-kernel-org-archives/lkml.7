@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B3C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982D4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0382084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687CC2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509941;
-	bh=QoNhA/E3iRwdS19rm21kkSOAa3YfFVivd0airztDrc8=;
+	s=default; t=1563509951;
+	bh=zMn6S17+mdkJMuVd2nBPRzwcFgccNxk5NbIjJ5mgM+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkpxMBbbUXa5ZmZVDqF8qs4cRAFw/yDMRZi88LxufL0SjJgIlEf+3lpm3sJJHJVlq
-	 XtOQufbpPMj2xOerR2Dx3TzaF86Sd8yfHNVgrAeFNqY81pY2WB63741ZsDZu8hhKlt
-	 W01BIJD0d4N2OeAqpt+QM/b/Evf+GlxEnAPiWuK0=
+	b=AtVZlLmHa/2th6fm1/WBzv2vrijquTDdH6h/iVmmJTh/WOHfsdsj32urQVDNB1UK1
+	 NOHy+467fRC31CgOYO8AGFs0BoJ+GIt7UzgwNI3psPSQzojEz4uMpOtVPeNd27ZuWC
+	 MfoGrbcx/YoN/59WwUGUsk6Y1PILvTQE1G8EDOGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389210AbfGSEN0 (ORCPT
+        id S2389645AbfGSETK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49222 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389152AbfGSENV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:21 -0400
+        id S2389113AbfGSENQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2F6621872;
-        Fri, 19 Jul 2019 04:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B2B521872;
+        Fri, 19 Jul 2019 04:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509600;
-        bh=QoNhA/E3iRwdS19rm21kkSOAa3YfFVivd0airztDrc8=;
+        s=default; t=1563509595;
+        bh=zMn6S17+mdkJMuVd2nBPRzwcFgccNxk5NbIjJ5mgM+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFGR6JuiN+37yXjDHC22k85lRgodS/JZYW5daUSzYn2SeD3NlXkOzZJe/e0WV9u1u
-         wWH/poDmVaXZusFbeT/lr0XR/sgg2TrwMHy0wQufjdfH9MyTLMUBOHvsB2xqTD6P9i
-         KgnNY4hPw6PmLR8jTnEXD3GnvHfd5QpcFb0i5Jng=
+        b=k8xgRdAsQ6iIkZqOJWXn3qdhg/AFkxd0xHp9+cwrxZ+9xdYUWaswsQF/N9QAPlfqH
+         GnkQ3Lwraib/DEW3muDLYBj6A8piBFp1J/9AudHrphQv3FU3iDoHgI3w6LZfTvfIIw
+         8QDi/k8H2MJzdZfqeZhB0RYXSnvzUCWtQBpwCOl4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/45] tty/serial: digicolor: Fix digicolor-usart already registered warning
-Date:   Fri, 19 Jul 2019 00:12:29 -0400
-Message-Id: <20190719041304.18849-10-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 07/45] drm/bridge: tc358767: read display_props in get_modes()
+Date:   Fri, 19 Jul 2019 00:12:26 -0400
+Message-Id: <20190719041304.18849-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -61,44 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
+[ Upstream commit 3231573065ad4f4ecc5c9147b24f29f846dc0c2f ]
 
-When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
-the kernel complained,
+We need to know the link bandwidth to filter out modes we cannot
+support, so we need to have read the display props before doing the
+filtering.
 
-  proc_dir_entry 'driver/digicolor-usart' already registered
-  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+To ensure we have up to date display props, call tc_get_display_props()
+in the beginning of tc_connector_get_modes().
 
-Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190528082747.3631-22-tomi.valkeinen@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/digicolor-usart.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/tc358767.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
-index 02ad6953b167..50ec5f1ac77f 100644
---- a/drivers/tty/serial/digicolor-usart.c
-+++ b/drivers/tty/serial/digicolor-usart.c
-@@ -545,7 +545,11 @@ static int __init digicolor_uart_init(void)
- 	if (ret)
- 		return ret;
- 
--	return platform_driver_register(&digicolor_uart_platform);
-+	ret = platform_driver_register(&digicolor_uart_platform);
-+	if (ret)
-+		uart_unregister_driver(&digicolor_uart);
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index fa3f2f039a74..80993a8734e0 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -1153,6 +1153,13 @@ static int tc_connector_get_modes(struct drm_connector *connector)
+ 	struct tc_data *tc = connector_to_tc(connector);
+ 	struct edid *edid;
+ 	unsigned int count;
++	int ret;
 +
-+	return ret;
- }
- module_init(digicolor_uart_init);
++	ret = tc_get_display_props(tc);
++	if (ret < 0) {
++		dev_err(tc->dev, "failed to read display props: %d\n", ret);
++		return 0;
++	}
  
+ 	if (tc->panel && tc->panel->funcs && tc->panel->funcs->get_modes) {
+ 		count = tc->panel->funcs->get_modes(tc->panel);
 -- 
 2.20.1
 
