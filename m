@@ -2,113 +2,82 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28487C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865E4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AF120873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MS0Q2am2"
+	by mail.kernel.org (Postfix) with ESMTP id 4FF2620873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563546550;
+	bh=Gqo7iyFdcgpyUJW4CelZOxi59jie+bJEzYoKT+/A010=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rliS/8emWd4gOM1AxEyDeGr39qNotglMFWOBeklwwij3flmNlP6EJFHMe8ZxmKzpZ
+	 u7cIWiOYWZGrP/B9ythE0aGOjCPmcBbUlxd2OfPYL0jmnw6TiyYE5s4YZGNMN2kSc7
+	 egq0XTP20CnrpoZRAvWgmKKRxy+6Jp6eKUkqMSz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfGSO2A (ORCPT
+        id S1729617AbfGSO3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 10:28:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39944 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfGSO2A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:28:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JEJVOY170553;
-        Fri, 19 Jul 2019 14:27:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=WPq+2EVaGsECQLAP69ghpdVbMZZEMFfA5hf01l4L/3Q=;
- b=MS0Q2am2bOEhSyldCDGr5IudVGNRM69cQuo3SdJgQwglQ7uwwPl/J1r/e0jay2lGTMdp
- aD0/ZSN72CRZibAKkluIjjtIQ17E1IFCpaWj5tBV5EmQDr+Jdbd+RPZXkrJ5WTSc01oa
- dxAvGqT2dqiM6rM2zI7BbGiW8B34jX5y7uNdrJ8lA+oDLei8DsvlbO293Wp6kDBkKJxA
- I+fR/EvAXTB7vJ8CpnxWVYTJAzg+4X9kjWbfznqIPhRX83mlmQojQ9BZ7BSqwN9rgWTv
- dR2ZJhFcLjiMuYsgUh0nEpolFqZc0bW/AwWS/pWDcKNMlQ1LG2T/2ZQMqepxWEPCt0B6 MA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tq6qu75mu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 14:27:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JEHbHg066514;
-        Fri, 19 Jul 2019 14:27:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tsmcdmgtg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 14:27:42 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6JEReu2030896;
-        Fri, 19 Jul 2019 14:27:41 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Jul 2019 14:27:40 +0000
-Date:   Fri, 19 Jul 2019 10:27:35 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>
-Subject: Re: [PATCH] padata: Replace delayed timer with immediate workqueue
- in padata_reorder
-Message-ID: <20190719142735.s2oggziz4wqwebxf@ca-dmjordan1.us.oracle.com>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
- <20190716163253.24377-1-daniel.m.jordan@oracle.com>
- <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
- <20190717183227.b3hqphukkndqumhw@ca-dmjordan1.us.oracle.com>
- <20190718033131.4m4ypbq7tiucqcsl@gondor.apana.org.au>
- <20190718142730.uhdkwx5onigdpxno@ca-dmjordan1.us.oracle.com>
- <20190718145634.xagjemdqpoe44xxh@gondor.apana.org.au>
+        Fri, 19 Jul 2019 10:29:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40510 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729465AbfGSO3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 10:29:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AE41BB061;
+        Fri, 19 Jul 2019 14:29:07 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 16:29:06 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: [PATCH v2 2/2] mm, slab: Show last shrink time in us when
+ slab/shrink is read
+Message-ID: <20190719142906.GU30461@dhcp22.suse.cz>
+References: <20190717202413.13237-1-longman@redhat.com>
+ <20190717202413.13237-3-longman@redhat.com>
+ <20190719061410.GJ30461@dhcp22.suse.cz>
+ <a0ea7cd2-d66c-f251-d14f-979e0913c7ef@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190718145634.xagjemdqpoe44xxh@gondor.apana.org.au>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=376
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907190160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=428 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907190160
+In-Reply-To: <a0ea7cd2-d66c-f251-d14f-979e0913c7ef@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 10:56:34PM +0800, Herbert Xu wrote:
-> On Thu, Jul 18, 2019 at 10:27:30AM -0400, Daniel Jordan wrote:
-> >
-> > That's what I expected when I first saw it too, but nr_cpumask_bits is returned
-> > to signal the end of the iteration.  The patch always passes 0 for the 'start'
-> > argument, so when cpumask_next_wrap is called with the last cpu in the mask,
-> > the end-of-iteration case is triggered.  To reassure you and myself :) I ran it
-> > and got the expected crash.
-> > 
-> > Passing pd->cpu for the start argument instead avoids that problem, but the
-> > one-cpu-in-mask case still needs handling because cpumask_next_wrap always
-> > signals end of iteration for that, hence the cpumask_weight check.
+On Fri 19-07-19 10:07:20, Waiman Long wrote:
+> On 7/19/19 2:14 AM, Michal Hocko wrote:
+> > On Wed 17-07-19 16:24:13, Waiman Long wrote:
+> >> The show method of /sys/kernel/slab/<slab>/shrink sysfs file currently
+> >> returns nothing. This is now modified to show the time of the last
+> >> cache shrink operation in us.
+> > Isn't this something that tracing can be used for without any kernel
+> > modifications?
 > 
-> My bad.  I should have set start to -1 to make it do the right thing.
+> That is true, but it will be a bit more cumbersome to get the data.
 
-Oh, you're right, that's nicer, just noticed other callers do it that way as
-well.
+I have no say for this code but if there is a way to capture timing data
+I prefer to rely on the tracing infrastructure. If the current tooling
+makes it cumbersome to get then this is a good reason to ask for a less
+cumbersome way. On the other hand, if you somehow hardwire it to a user
+visible interface then you just establish ABI which might stand in way
+for potential/future development.
+
+So take it as my 2c
+-- 
+Michal Hocko
+SUSE Labs
