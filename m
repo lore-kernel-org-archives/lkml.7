@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8774C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D09C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8907E2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8402077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511174;
-	bh=dCMCrBXXrlPWsuWbPGNG1JXo6HFZCM3Qn+fUwg5WFGU=;
+	s=default; t=1563511179;
+	bh=sjTpvekg/2jA/Awx9NsiMfabj+abuEMmkKiAxKHsi9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sMUnlwAR4Cp5+VV7HPrc+/Lqgw8stcE6RYbZTizzKSvuwajV43N9kGBAa4IWO9Jxs
-	 yJRzdbaLSZzBfhPjQV05+kHWv2fpOz7Meghubqyaxf3+4WoS9OVRTunlZYy3Qlv/vc
-	 ds1H9M5DGPbwe9NumSM4iQYeBwEFtMIMphArOies=
+	b=Ye5EJhPb7HZ6FIMdaP3NAqO31KgjPNRNMyejFhALD0qxkzI1jlFuA2me0OmgeAVSn
+	 BUejOLoSuTISsWpYk4zMLEysRRiYIiZgHn/jimuD0pal/RlHoJHbfpgbn3SN0F1zni
+	 +hB++fveEDBdbWr/93HXMeb0JyblTDFO3rX42ZoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfGSD6g (ORCPT
+        id S1728127AbfGSD6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728084AbfGSD6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:34 -0400
+        id S1728032AbfGSD60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB82521851;
-        Fri, 19 Jul 2019 03:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A1E2189D;
+        Fri, 19 Jul 2019 03:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508713;
-        bh=dCMCrBXXrlPWsuWbPGNG1JXo6HFZCM3Qn+fUwg5WFGU=;
+        s=default; t=1563508705;
+        bh=sjTpvekg/2jA/Awx9NsiMfabj+abuEMmkKiAxKHsi9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFeVrIG9wvZAteg+X1U5murjuhOnT0N2qLn5gRNs9gcQJYb9S7FA05t9KlwAHBhCG
-         m/5kUkROXNZ9aXa2U73GrGEV/tch9zjBb8H7c7m3WxniidUTxlwPWW7ZiH7jAF1jhm
-         LCIIsqRFL7Clo4ARvijJMYGvVy2doMDkDWprcmek=
+        b=bwZTS6WDBmSQ7cizhIbPh+6YnFCMMN+wOE6jPo6F0geUjp54XMXIkd4kCMJBUpu87
+         M3avqzucB+dtzURI0/TAphm9AMOr1X9+ZnYXahjUplMmc2nz238qkLkRZNI0s6Z8lE
+         Ef26n4OpEzU4MqdRgmUEYi9581bN8WUz3nmd7xy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 049/171] tty: serial: msm_serial: avoid system lockup condition
-Date:   Thu, 18 Jul 2019 23:54:40 -0400
-Message-Id: <20190719035643.14300-49-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 043/171] drm/vkms: Forward timer right after drm_crtc_handle_vblank
+Date:   Thu, 18 Jul 2019 23:54:34 -0400
+Message-Id: <20190719035643.14300-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,42 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit 7355965da22b8d9ebac8bce4b776399fb0bb9d32 ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+In
 
-Tested on SoC QCS404.
+commit def35e7c592616bc09be328de8795e5e624a3cf8
+Author: Shayenne Moura <shayenneluzmoura@gmail.com>
+Date:   Wed Jan 30 14:06:36 2019 -0200
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    drm/vkms: Bugfix extra vblank frame
+
+we fixed the vblank counter to give accurate results outside of
+drm_crtc_handle_vblank, which fixed bugs around vblank timestamps
+being off-by-one and causing the vblank counter to jump when it
+shouldn't.
+
+The trouble is that this completely broke crc generation. Shayenne and
+Rodrigo tracked this down to the vblank timestamp going backwards in
+time somehow. Which then resulted in an underflow in drm_vblank.c
+code, which resulted in all kinds of things breaking really badly.
+
+The reason for this is that once we've called drm_crtc_handle_vblank
+and the hrtimer isn't forwarded yet, we're returning a vblank
+timestamp in the past. This race is really hard to hit since it's
+small, except when you enable crc generation: In that case there's a
+call to drm_crtc_accurate_vblank right in-betwen, so we're guaranteed
+to hit the bug.
+
+The fix is to roll the hrtimer forward _before_ we do the vblank
+processing (which has a side-effect of incrementing the vblank
+counter), and we always subtract one frame from the hrtimer - since
+now it's always one frame in the future.
+
+To make sure we don't hit this again also add a WARN_ON checking for
+whether our timestamp is somehow moving into the past, which is never
+should.
+
+This also aligns more with how real hw works:
+1. first all registers are updated with the new timestamp/vblank
+counter values.
+2. then an interrupt is generated
+3. kernel interrupt handler eventually fires.
+
+So doing this aligns vkms closer with what drm_vblank.c expects.
+Document this also in a comment.
+
+Cc: Shayenne Moura <shayenneluzmoura@gmail.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Tested-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190606084404.12014-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/vkms/vkms_crtc.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 23833ad952ba..3657a24913fc 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -383,10 +383,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index bb66dbcd5e3f..e447b7588d06 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -15,6 +15,10 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
  
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
+ 	spin_lock(&output->lock);
+ 
++	ret_overrun = hrtimer_forward_now(&output->vblank_hrtimer,
++					  output->period_ns);
++	WARN_ON(ret_overrun != 1);
 +
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
+ 	ret = drm_crtc_handle_vblank(crtc);
+ 	if (!ret)
+ 		DRM_ERROR("vkms failure on handling vblank");
+@@ -35,10 +39,6 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+ 			DRM_WARN("failed to queue vkms_crc_work_handle");
  	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
+ 
+-	ret_overrun = hrtimer_forward_now(&output->vblank_hrtimer,
+-					  output->period_ns);
+-	WARN_ON(ret_overrun != 1);
+-
+ 	spin_unlock(&output->lock);
+ 
+ 	return HRTIMER_RESTART;
+@@ -74,11 +74,21 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+ {
+ 	struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
+ 	struct vkms_output *output = &vkmsdev->output;
++	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+ 
+ 	*vblank_time = output->vblank_hrtimer.node.expires;
+ 
+-	if (!in_vblank_irq)
+-		*vblank_time -= output->period_ns;
++	if (WARN_ON(*vblank_time == vblank->time))
++		return true;
++
++	/*
++	 * To prevent races we roll the hrtimer forward before we do any
++	 * interrupt processing - this is how real hw works (the interrupt is
++	 * only generated after all the vblank registers are updated) and what
++	 * the vblank core expects. Therefore we need to always correct the
++	 * timestampe by one frame.
++	 */
++	*vblank_time -= output->period_ns;
+ 
+ 	return true;
  }
 -- 
 2.20.1
