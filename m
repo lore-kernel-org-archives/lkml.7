@@ -2,54 +2,55 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E61FC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BDBC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D939D21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D5A21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509696;
-	bh=7U2BUEeK4uB+If/d2qldWdCukizqe1BKbHpDcqSTgQg=;
+	s=default; t=1563509698;
+	bh=doW1pNbRNm25n+plM/F0fagJPoO0pVGD2Zv+6e+xzh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZXS9Q8SagICvRURhf1ItkfBdKz+c11nbS/nS4RcK2r+Z/8RAZphKjzTiHurmwRIM5
-	 iR8KI7oi6irnlVzaVIv554cnxqKhf0G8tDNfBxZdu+zK7subpB8ZpCuqivRh3F1nX4
-	 0T5g91Sibr/APnskjk/T0z8IZXAG5fbjO5RELy8w=
+	b=NEDriqpOeqtB91qnZIV/gabFYGkECY02MfGwBafedvp9Zi//1jhIMdEiLpYqqlU5J
+	 rFzDmcSMSJKKJr4hkibcYHTOt3yi6Tz0fe64F/3cTcgPQh/3L3ez2zt4Zodve5SKhJ
+	 N6RMs6x7r+/sgcqZcd3yPb4mL5SImcpmderA4gvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389919AbfGSEOz (ORCPT
+        id S2389932AbfGSEO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388511AbfGSEOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:53 -0400
+        id S1730088AbfGSEOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC7342082F;
-        Fri, 19 Jul 2019 04:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41E1D21851;
+        Fri, 19 Jul 2019 04:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509692;
-        bh=7U2BUEeK4uB+If/d2qldWdCukizqe1BKbHpDcqSTgQg=;
+        s=default; t=1563509694;
+        bh=doW1pNbRNm25n+plM/F0fagJPoO0pVGD2Zv+6e+xzh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X4QomDFQVNOco1N0Ns5s7L4OwX/kec3i9LPtRxFO21Ri7/G/W9IN0DSvv4sqLqRqo
-         MU+sZyj+iP7YMNgvNGuJvVGM7N+zSfN+KcRxYbrNBmkKOKt6WlibR45LCV63D4afVB
-         gkswAOwfnYUeINUsaxeUcb5hLsMUC/JC4785pfVw=
+        b=2YlA7JjuvFct4t4JOaivzoQ6k6JOM2ZJ8il4ae9zZr3G8e8Fa8hBxOFs4p9ft5+w5
+         YOtGXiAisRGllg6hudbOoUiC6o/0Nyjqcin/UOgjSFa5235CpcyDSM7QZjI40NMN4S
+         WD8geNl5GKWRnx3OV9u6iKFYUztpSi5oRUu6pQEU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 15/35] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
-Date:   Fri, 19 Jul 2019 00:14:03 -0400
-Message-Id: <20190719041423.19322-15-sashal@kernel.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 16/35] PCI: sysfs: Ignore lockdep for remove attribute
+Date:   Fri, 19 Jul 2019 00:14:04 -0400
+Message-Id: <20190719041423.19322-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -62,65 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
+[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
 
-When the firmware does PCI BAR resource allocation, it passes the assigned
-addresses and flags (prefetch/64bit/...) via the "reg" property of
-a PCI device device tree node so the kernel does not need to do
-resource allocation.
+With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
+below it causes a lockdep warning, e.g.,
 
-The flags are stored in resource::flags - the lower byte stores
-PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
-Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
-such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
-When parsing the "reg" property, we copy the prefetch flag but we skip
-on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
+  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
+  ============================================
+  WARNING: possible recursive locking detected
+  ...
+  pci_bus 0000:01: busn_res: [bus 01] is released
 
-The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
-1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
-or by passing "/chosen/linux,pci-probe-only");
-2. we request resource alignment (by passing pci=resource_alignment=
-via the kernel cmd line to request PAGE_SIZE alignment or defining
-ppc_md.pcibios_default_alignment which returns anything but 0). Note that
-the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
+The remove recursively removes the subtree below the bridge.  Each call
+uses a different lock so there's no deadlock, but the locks were all
+created with the same lockdep key so the lockdep checker can't tell them
+apart.
 
-With 1) and 2), the generic PCI code in the kernel unconditionally
-decides to:
-- reassign the BARs in pci_specified_resource_alignment() (works fine)
-- write new BARs to the device - this fails for 64bit BARs as the generic
-code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
-of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
-in the hypervisor.
+Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
+safe to ignore the lockdep check between different "remove" kernfs
+instances.
 
-This fixes the issue by copying the flag. This is useful if we want to
-enforce certain BAR alignment per platform as handling subpage sized BARs
-is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
+There's discussion about a similar issue in USB at [1], which resulted in
+356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
+e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
+basically the same thing for USB "remove" and i2c "delete_device" files.
 
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Shawn Anastasio <shawn@anastas.io>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
+Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+[bhelgaas: trim commit log, details at above links]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/pci_of_scan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-index 2e710c15893f..a38d7293460d 100644
---- a/arch/powerpc/kernel/pci_of_scan.c
-+++ b/arch/powerpc/kernel/pci_of_scan.c
-@@ -45,6 +45,8 @@ static unsigned int pci_parse_of_flags(u32 addr0, int bridge)
- 	if (addr0 & 0x02000000) {
- 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
- 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
-+		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-+			flags |= IORESOURCE_MEM_64;
- 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
- 		if (addr0 & 0x40000000)
- 			flags |= IORESOURCE_PREFETCH
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 5fb4ed6ea322..6ac6618c1c10 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -371,7 +371,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+ 	return count;
+ }
+-static struct device_attribute dev_remove_attr = __ATTR(remove,
++static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+ 							(S_IWUSR|S_IWGRP),
+ 							NULL, remove_store);
+ 
 -- 
 2.20.1
 
