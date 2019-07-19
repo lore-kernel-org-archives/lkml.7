@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F9CC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB5C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A33D2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DD321849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510034;
-	bh=B7XcmmDrEYhFQjp6wQGmlqrHF2BJW0to0gwzTZJeFds=;
+	s=default; t=1563510051;
+	bh=hiTHTmyk3KOj/EoQupVp/vhM9auTA+2n0b+Szdifsqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dilITJIiduq+mw6B+3wmLzaCOGGhXxshtMZi7qHvznntee6hZsHGcILfxNVUhEIaP
-	 bOCa4eBf7RL1ZR/t3pOvCEFty6HaZ6Ai5Rxw8PUpE4dns6ff9co5C4mV0FvtW2T8wV
-	 ozZegJkkAnqI/093VvomkyYtXz9Tdpl4do9HLv50=
+	b=L2mRAbRCdW3J+tu6lsVwy3snmfNN9qwIx48u9NMkh/n/iq+wRCDg3/KgPpl8N0bwO
+	 m0UNgAKzfWGWrA+VB1tDlEtdwUW4+Vi19deiEUrGx4OyGscWzvrpiYWQQcXlTup6Gx
+	 qiVi9ItVUKRoUrcvdBZY3FItnMEmgP2RAC883UAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388820AbfGSEU3 (ORCPT
+        id S2390142AbfGSEUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48160 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729651AbfGSEMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:40 -0400
+        id S1732409AbfGSEMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ED82218C3;
-        Fri, 19 Jul 2019 04:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B060218D2;
+        Fri, 19 Jul 2019 04:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509560;
-        bh=B7XcmmDrEYhFQjp6wQGmlqrHF2BJW0to0gwzTZJeFds=;
+        s=default; t=1563509538;
+        bh=hiTHTmyk3KOj/EoQupVp/vhM9auTA+2n0b+Szdifsqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrGS1sMh5IY6DLRdTo6ou4SQfVL53g9KjvS0v/5EgGzPxgmOavmQYdAUyN0YO+EXD
-         IrxyFDfK6LJj1q2GoJc4/Vyv6wZrJ/UwHL2+3g9PJHWjJuiCGQplyxPR4WmhQbF5eO
-         RPX5cDgdijqf5Qp4AOHdB+0Uqkj++o7zgNsEh0wk=
+        b=y7yd2REnIT0k9rDn9Au9IYAAA4kgrEPVLNgtuSC+hdfqXt/ZpKsx3ZSgR+/TXrYSa
+         aNniuEeOWjOMQUlV2DHkh0Of+AMKdtve9PX09W6iWCl9LHvM3d0GEI92tXPtXSbnwd
+         Hbi5IfnwNCHdmN5tCg3qcrWWKm9tnmWP1Jx6EkVg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 47/60] PCI: dwc: pci-dra7xx: Fix compilation when !CONFIG_GPIOLIB
-Date:   Fri, 19 Jul 2019 00:10:56 -0400
-Message-Id: <20190719041109.18262-47-sashal@kernel.org>
+Cc:     "Liu, Changcheng" <changcheng.liu@intel.com>,
+        Changcheng Liu <changcheng.liu@aliyun.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 38/60] RDMA/i40iw: Set queue pair state when being queried
+Date:   Fri, 19 Jul 2019 00:10:47 -0400
+Message-Id: <20190719041109.18262-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,51 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: "Liu, Changcheng" <changcheng.liu@intel.com>
 
-[ Upstream commit 381ed79c8655a40268ee7391f716edd90c5c3a97 ]
+[ Upstream commit 2e67e775845373905d2c2aecb9062c2c4352a535 ]
 
-If CONFIG_GPIOLIB is not selected the compilation results in the
-following build errors:
+The API for ib_query_qp requires the driver to set qp_state and
+cur_qp_state on return, add the missing sets.
 
-drivers/pci/controller/dwc/pci-dra7xx.c:
- In function dra7xx_pcie_probe:
-drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
- error: implicit declaration of function devm_gpiod_get_optional;
- did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
-
-  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
-
-drivers/pci/controller/dwc/pci-dra7xx.c:778:45: error: ‘GPIOD_OUT_HIGH’
-undeclared (first use in this function); did you mean ‘GPIOF_INIT_HIGH’?
-  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
-                                             ^~~~~~~~~~~~~~
-                                             GPIOF_INIT_HIGH
-
-Fix them by including the appropriate header file.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: d37498417947 ("i40iw: add files for iwarp interface")
+Signed-off-by: Changcheng Liu <changcheng.liu@aliyun.com>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/dwc/pci-dra7xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/i40iw/i40iw_verbs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
-index 06eae132aff7..63052c5e5f82 100644
---- a/drivers/pci/dwc/pci-dra7xx.c
-+++ b/drivers/pci/dwc/pci-dra7xx.c
-@@ -29,6 +29,7 @@
- #include <linux/types.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-+#include <linux/gpio/consumer.h>
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_verbs.c b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+index c1021b4afb41..57bfe4808247 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_verbs.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+@@ -821,6 +821,8 @@ static int i40iw_query_qp(struct ib_qp *ibqp,
+ 	struct i40iw_qp *iwqp = to_iwqp(ibqp);
+ 	struct i40iw_sc_qp *qp = &iwqp->sc_qp;
  
- #include "pcie-designware.h"
- 
++	attr->qp_state = iwqp->ibqp_state;
++	attr->cur_qp_state = attr->qp_state;
+ 	attr->qp_access_flags = 0;
+ 	attr->cap.max_send_wr = qp->qp_uk.sq_size;
+ 	attr->cap.max_recv_wr = qp->qp_uk.rq_size;
 -- 
 2.20.1
 
