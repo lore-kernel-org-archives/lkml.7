@@ -2,91 +2,112 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051BEC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF62C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2D720873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F72520873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfGSKOG (ORCPT
+        id S1727379AbfGSKSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:14:06 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34076 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfGSKOG (ORCPT
+        Fri, 19 Jul 2019 06:18:02 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53594 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725794AbfGSKSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:14:06 -0400
-Received: by mail-qt1-f195.google.com with SMTP id k10so30410160qtq.1;
-        Fri, 19 Jul 2019 03:14:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEA/qYrslnJQSaGGlFD67XDakglb2NrPc4LdtRzasUM=;
-        b=S1oS7rABdAEOFS9JfqV/L4sngaCmiBEzl18rCQWH0Tr9zowRB3RTOpw5DSX1W/HHwp
-         p5rtnvAdoP4i0PM1N74DXHzL9QksXFUG9lLnRdmsxGqsA7c+daY0qttUGayKzr6Euc2F
-         U87UMPV3mfaTBd/K1/od1YKQWEGhrCOEXjgkXadKqxi+Y9/mXI1SJdMZLeVa3w5vecCq
-         l5GIfkQ+vjL/U7oTCekF89a2LlIcjXb17h07+eQWHoy4Hdja1qg2uh7Lj8AFxzqt/O6S
-         7CKLlwrSSIRWgjCPwIr8oNd2nVFZMayrUyGwGj59cYI2UG02rdmkYcjZ5rjw9BclAgFQ
-         qpjA==
-X-Gm-Message-State: APjAAAWlqYZJxxNQb5Q5BZN4U8Hf8kqLSPs7n+vEzI/U1L4HLt1Ftb7s
-        V6dOO2EhvKIQEW5Fd13XaqGVLZtC03uuGxY1f1Y=
-X-Google-Smtp-Source: APXvYqwx+hz1jgDJSNdK+FPtkfEYjlkByMGj0qO/PIQ8lNunHQmzt6oVVr/kPQZSfG2Cnl5IgmmSIuzKVVlzBnQSFQw=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr36413863qtf.204.1563531244937;
- Fri, 19 Jul 2019 03:14:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190719100859.11227-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190719100859.11227-1-yamada.masahiro@socionext.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 19 Jul 2019 12:13:48 +0200
-Message-ID: <CAK8P3a13WKoDCTRk-PpF5Efi2JUu-e-hMt2vmgrnvuybO-sROw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: disable compile-test of kernel headers for now
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 19 Jul 2019 06:18:02 -0400
+X-UUID: 263050394edc4ec59f48a13859d9414e-20190719
+X-UUID: 263050394edc4ec59f48a13859d9414e-20190719
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2101253499; Fri, 19 Jul 2019 18:17:57 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 19 Jul 2019 18:17:56 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 19 Jul 2019 18:17:56 +0800
+Message-ID: <1563531476.17970.2.camel@mtkswgap22>
+Subject: Re: [PATCH 3/3] mt76: mt7615: add cwmin/cwmax initial values
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>
+CC:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 19 Jul 2019 18:17:56 +0800
+In-Reply-To: <c83e14787bc86f8f8062e0aa44e03ef80c3fd38a.1563518381.git.ryder.lee@mediatek.com>
+References: <50d28c9b0f9e7d6b277d36fc93f55142d7535259.1563518381.git.ryder.lee@mediatek.com>
+         <c83e14787bc86f8f8062e0aa44e03ef80c3fd38a.1563518381.git.ryder.lee@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 12:09 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> This compile-test started from the strong belief that (almost) all
-> headers should be able to be compiled as a standalone unit, but this
-> requirement seems to be just annoying.
->
-> I believe compile-test of exported headers is good. On the other hand,
-> in-kernel headers are not necessarily supposed to be always compilable.
-> Actually, some headers are only included under a certain combination
-> of CONFIG options, and that is definitely fine.
->
-> This test is still causing false positive errors in randconfig.
-> Moreover, newly added headers are compile-tested by default, sometimes
-> they catch (not fatal) bugs, but often raise false positive errors to
-> end up with making people upset.
->
-> The merge window is closing shortly, so there is not much I can do.
-> Disable it for now, and take a pause to re-think whether we should
-> continue this or change the course.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Fri, 2019-07-19 at 14:55 +0800, Ryder Lee wrote:
+> Add initial values in mt7615_mcu_set_wmm() to cleanup setup flow.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> index 5fd162be3654..154c09428b69 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> @@ -622,10 +622,7 @@ int mt7615_mcu_set_rts_thresh(struct mt7615_dev *dev, u32 val)
+>  int mt7615_mcu_set_wmm(struct mt7615_dev *dev, u8 queue,
+>  		       const struct ieee80211_tx_queue_params *params)
+>  {
+> -#define WMM_AIFS_SET	BIT(0)
+> -#define WMM_CW_MIN_SET	BIT(1)
+> -#define WMM_CW_MAX_SET	BIT(2)
+> -#define WMM_TXOP_SET	BIT(3)
+> +#define WMM_PARAM_SET	GENMASK(3, 0)
+>  	struct req_data {
+>  		u8 number;
+>  		u8 rsv[3];
+> @@ -638,19 +635,17 @@ int mt7615_mcu_set_wmm(struct mt7615_dev *dev, u8 queue,
+>  	} __packed req = {
+>  		.number = 1,
+>  		.queue = queue,
+> -		.valid = WMM_AIFS_SET | WMM_TXOP_SET,
+> +		.valid = WMM_PARAM_SET,
+>  		.aifs = params->aifs,
+> +		.cw_min = BIT(5) - 1,
+> +		.cw_max = cpu_to_le16(BIT(10) - 1),
+>  		.txop = cpu_to_le16(params->txop),
+>  	};
+>  
+> -	if (params->cw_min) {
+> -		req.valid |= WMM_CW_MIN_SET;
+> +	if (params->cw_min)
+>  		req.cw_min = params->cw_min;
+> -	}
+> -	if (params->cw_max) {
+> -		req.valid |= WMM_CW_MAX_SET;
+> +	if (params->cw_max)
+>  		req.cw_max = cpu_to_le16(params->cw_max);
+> -	}
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+I should use fls() here and will send a v2
 
-FWIW, I only saw occasional failures for one file (linux/iomap.h)
-when doing many randconfig builds across x86, arm32 and arm64.
-I think those are fixable, but disabling it for the 5.3 is clearly the safer
-option.
+>  	return __mt76_mcu_send_msg(&dev->mt76, MCU_EXT_CMD_EDCA_UPDATE,
+>  				   &req, sizeof(req), true);
 
-       Arnd
+
