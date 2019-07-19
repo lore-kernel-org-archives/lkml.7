@@ -2,115 +2,166 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3C0C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C94C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E3021873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563573879;
-	bh=WpIhaQ1joRo/MH17c0t17VXik9ibq2E9ekgS84Bsqq0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=tAKPeiSonp2rBvHymnlK8vnBfOs99BzIUVa8lVnPxh/vyovkR2dTBixe0R0sU8Q+4
-	 KzcqXsOw0NBTwbcjj5HVdcY1QB7M0hmL5kfRZerHPjXIaLaFBQzDQP2p+fsQMw6xBQ
-	 z5TEK/vjcPxlziqflSXmUSaIg1p1bMVjKp/DMSH8=
+	by mail.kernel.org (Postfix) with ESMTP id 1185F2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:06:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bFvTmgg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfGSWEi (ORCPT
+        id S1728665AbfGSWGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 18:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727344AbfGSWEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 18:04:37 -0400
-Received: from [172.20.8.67] (fs96f9c61d.tkyc509.ap.nuro.jp [150.249.198.29])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC2E2084D;
-        Fri, 19 Jul 2019 22:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563573877;
-        bh=WpIhaQ1joRo/MH17c0t17VXik9ibq2E9ekgS84Bsqq0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=urXENChsdLG1xeJQdusgUINM/llCFuGkdvhSq4cG5a3Yrv/AiqVp/HQC6s4LD/tDN
-         14dvkAbSxzCr5Xmpnuc+1tKdq7HTFrwHBmxcsULbDkjOHyaX6O+oTFbk1gnlcncBvT
-         OKOnhmedUzhdkvVUPs7l//ehcSC5UgGGIUhf3SW8=
-Subject: Re: [PATCH v2 0/2] usbip: Implement SG support
-To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
-        stern@rowland.harvard.edu, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190705164355.14025-1-suwan.kim027@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <7eaaf016-8da5-6089-fe19-bf62c3bbe187@kernel.org>
-Date:   Fri, 19 Jul 2019 16:04:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190705164355.14025-1-suwan.kim027@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 18:06:42 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33146 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfGSWGm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 18:06:42 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JM4TOR030145;
+        Fri, 19 Jul 2019 22:06:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=AyCDw5eS2gHSdtk2d/K7siUKLe143t2UqK+Wt0Mb2Y4=;
+ b=bFvTmgg9GWglSd1kgZYfKfAKFK+zBAXU87xdBXi3jXfKem9IIPyeEk03TuvxHIg1ZZZ0
+ FxsjkTaNNKQmhja/V68hhA27UBqGT9MrR5VKS9BmrmsWQo612zmdlFi42gGYHOQfhNEN
+ 8lGu/X1iA0rpXc+BUijLZ951xUVPJeHrjU4XJienovtTDsNdDLP/Hki8rhGGemzn+yQH
+ ZN11c+bAZ/f4ttz3nwdbQ3fIvvIGxy9VSV7g9UDRcE8OBC0qrH+VD4LYzIr17CvUhvOY
+ /urmVxfB4W7dhu/I0lXHDwSOP+rvrs7zY5lL5y/NdlgrlzAeKgpEcQQ8z1svD7fVOuJw 2w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tq78q8teb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 22:06:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JM2nYT102761;
+        Fri, 19 Jul 2019 22:06:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tsmcdtsgr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 22:06:28 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6JM6RJ7022517;
+        Fri, 19 Jul 2019 22:06:27 GMT
+Received: from [10.74.126.79] (/10.74.126.79)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jul 2019 22:06:27 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v2] KVM: nVMX: do not use dangling shadow VMCS after guest
+ reset
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <1563572390-28823-1-git-send-email-pbonzini@redhat.com>
+Date:   Sat, 20 Jul 2019 01:06:23 +0300
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A523C8F1-2A15-4B14-AB83-9D2659A7E78F@oracle.com>
+References: <1563572390-28823-1-git-send-email-pbonzini@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9323 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907190232
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9323 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907190232
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/19 10:43 AM, Suwan Kim wrote:
-> There are bugs on vhci with usb 3.0 storage device. Originally, vhci
-> doesn't supported SG, so USB storage driver on vhci breaks SG list
-> into multiple URBs and it causes error that a transfer got terminated
-> too early because the transfer length for one of the URBs was not
-> divisible by the maxpacket size.
-> 
-> To support SG, vhci doesn't map and unmap URB for DMA to use native
-> SG list (urb->num_sgs). In DMA mapping function of vhci, it sets
-> URB_DMA_MAP_SG flag in urb->transfer_flags if URB has SG list and
-> this flag will tell the stub driver to use SG list.
-> 
-> In this patch, vhci basically support SG and it sends each SG list
-> entry to the stub driver. Then, the stub driver sees the total length
-> of the buffer and allocates SG table and pages according to the total
-> buffer length calling sgl_alloc(). After the stub driver receives
-> completed URB, it again sends each SG list entry to vhci.
-> 
-> If HCD of the server doesn't support SG, the stub driver breaks a
-> single SG reqeust into several URBs and submit them to the server's
-> HCD. When all the split URBs are completed, the stub driver
-> reassembles the URBs into a single return command and sends it to
-> vhci.
-> 
-> Alan fixed vhci bug with the USB 3.0 storage device by modifying
-> USB storage driver.
-> ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
-> But the fundamental solution of it is to add SG support to vhci.
-> 
-> This patch works well with the USB 3.0 storage devices without Alan's
-> patch, and we can revert Alan's patch if it causes some troubles.
-> 
-> Suwan Kim (2):
->    usbip: Skip DMA mapping and unmapping for urb at vhci
->    usbip: Implement SG support to vhci
-> 
->   drivers/usb/usbip/stub.h         |   7 +-
->   drivers/usb/usbip/stub_main.c    |  52 +++++---
->   drivers/usb/usbip/stub_rx.c      | 207 ++++++++++++++++++++++---------
->   drivers/usb/usbip/stub_tx.c      | 108 +++++++++++-----
->   drivers/usb/usbip/usbip_common.c |  60 +++++++--
->   drivers/usb/usbip/vhci_hcd.c     |  29 ++++-
->   drivers/usb/usbip/vhci_tx.c      |  49 ++++++--
->   7 files changed, 391 insertions(+), 121 deletions(-)
-> 
 
-Hi Suwan,
 
-I have been traveling and would like to test this series before I ask
-Greg to pick it up.
+> On 20 Jul 2019, at 0:39, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> If a KVM guest is reset while running a nested guest, free_nested will
+> disable the shadow VMCS execution control in the vmcs01.  However,
+> on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
+> the VMCS12 to the shadow VMCS which has since been freed.
+>=20
+> This causes a vmptrld of a NULL pointer on my machime, but Jan reports
+> the host to hang altogether.  Let's see how much this trivial patch =
+fixes.
+>=20
+> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Just a quick note that I will get to this early next week.
+1) Are we sure we prefer WARN_ON() instead of WARN_ON_ONCE()?
+2) Should we also check for WARN_ON(!vmcs12)? As free_nested() also =
+kfree(vmx->nested.cached_vmcs12).
+In fact, because free_nested() don=E2=80=99t put NULL in cached_vmcs12 =
+after kfree() it, I wonder if we shouldn=E2=80=99t create a separate =
+patch that does:
+(a) Modify free_nested() to put NULL in cached_vmcs12 after kfree().
+(b) Put BUG_ON(!cached_vmcs12) in get_vmcs12() before returning value.
 
-thanks,
--- Shuah
+-Liran
+
+> ---
+> arch/x86/kvm/vmx/nested.c | 8 +++++++-
+> 1 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 4f23e34f628b..0f1378789bd0 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -194,6 +194,7 @@ static void vmx_disable_shadow_vmcs(struct =
+vcpu_vmx *vmx)
+> {
+> 	secondary_exec_controls_clearbit(vmx, =
+SECONDARY_EXEC_SHADOW_VMCS);
+> 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
+> +	vmx->nested.need_vmcs12_to_shadow_sync =3D false;
+> }
+>=20
+> static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
+> @@ -1341,6 +1342,9 @@ static void copy_shadow_to_vmcs12(struct =
+vcpu_vmx *vmx)
+> 	unsigned long val;
+> 	int i;
+>=20
+> +	if (WARN_ON(!shadow_vmcs))
+> +		return;
+> +
+> 	preempt_disable();
+>=20
+> 	vmcs_load(shadow_vmcs);
+> @@ -1373,6 +1377,9 @@ static void copy_vmcs12_to_shadow(struct =
+vcpu_vmx *vmx)
+> 	unsigned long val;
+> 	int i, q;
+>=20
+> +	if (WARN_ON(!shadow_vmcs))
+> +		return;
+> +
+> 	vmcs_load(shadow_vmcs);
+>=20
+> 	for (q =3D 0; q < ARRAY_SIZE(fields); q++) {
+> @@ -4436,7 +4443,6 @@ static inline void nested_release_vmcs12(struct =
+kvm_vcpu *vcpu)
+> 		/* copy to memory all shadowed fields in case
+> 		   they were modified */
+> 		copy_shadow_to_vmcs12(vmx);
+> -		vmx->nested.need_vmcs12_to_shadow_sync =3D false;
+> 		vmx_disable_shadow_vmcs(vmx);
+> 	}
+> 	vmx->nested.posted_intr_nv =3D -1;
+> --=20
+> 1.8.3.1
+>=20
+
