@@ -2,94 +2,274 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58974C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39E4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C23D21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A6820659
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLE0oo5Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiZmpTr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfGSHc1 (ORCPT
+        id S1727299AbfGSHdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:32:27 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38566 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGSHc0 (ORCPT
+        Fri, 19 Jul 2019 03:33:18 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45311 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGSHdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:32:26 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so31209407wrr.5;
-        Fri, 19 Jul 2019 00:32:25 -0700 (PDT)
+        Fri, 19 Jul 2019 03:33:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r1so13781486pfq.12;
+        Fri, 19 Jul 2019 00:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hf3Z5Db1yz+0z1tr8VMjazLVeMcit8uK7umZ1IwIpvE=;
-        b=SLE0oo5QSzQIP95QmV8vZvQn1KRcaWlbCpvXzONJ4/CeRcVKNOqqgxoFJZUmr88bN4
-         SUQ+CSvxA++ejAB6PFDy7iY1pqyC7eUPd7rYGqB8DmhJncjBJnJCrquGzuMiNtvBU/7Q
-         ky/pBrRv4pPD/LSVipCIlhHwXKkbclKmn0BCNhbugBfyEzObDonHdIPgry1LK90+nsdD
-         FQus/g6DE2FqYVFcQRBSWxquPoz8YoqXVciAJ6HhcC4X4WvZhp38c7BB3sSx1BH9ylb9
-         feEDLKnC9SrMapkFGLHfIToKVFCv46q2bi3p3BXQyLWoRWVwS/9mLdb/GeTQCCU8PgcT
-         6+6Q==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=Z/1Ns8Q5yQIoK5C+2IG3JQc28kJqQvVZmZq7uJ5ipgc=;
+        b=UiZmpTr+u3YKoSEeBOrFLdcCqLEi7IurP+F7llSzQfwr5IuTlXBqo/ShZh6FW9KVPE
+         mOKeeM3POF/NWvyFKlODuRAOJ90AicrzhdLqR8lN+IpFmko3u3zv4aeiSo3Z8eLPvSmF
+         oPX8CAtYRrn3ESihThCM3o9OotJGEI28DjPcBmYTcShdaPJiiKEYSMuZoAA4zDVRmxz5
+         FCW0vVZ1SYFzb0hwHZRLeFUmDE4yiMUjM41Tg9sbRGbgoB6VxmAd6qR4wloHTSOgHuh0
+         0mcm8s3rCMZ5c+UGYL6EgE4BORaSxmGggL9HadWHvtHudLFKhKO7QR5tQ4fkDzbrwpzK
+         Dddg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hf3Z5Db1yz+0z1tr8VMjazLVeMcit8uK7umZ1IwIpvE=;
-        b=VgtugEC+Qid+tXo+hVjj9hYFO0FwnE9135h8e1rS7ciHGkRWOAAhd9AV2VP9N+B4vE
-         Q7ssfeSqBQTqb1WJvT47HXrPSLKM2AnIFo9AiqK3nDKIcj1ZxD5Dq9H/Hh3id6hYzF8S
-         g/ok3huYzyglZtpHoF6eR4b9CJTFpHpCAvDyO1gF+M4MBG3J3otXVDV4xjy/KMjtUA5+
-         qh5Pb3+gaC1MM2IurSM8ZtvZV79HvG1dvsTeiYu+gmnzkpo/bJIBPhx1oSuwQ7P/PApS
-         Ddz7aR0z1hgRlKw5HY4KJdSECwZ6Xrtu2AjMsRAq5MvWQsQh7Wo/KbNXu4u7HYxW19Xf
-         l+vA==
-X-Gm-Message-State: APjAAAX5ZITOW9qKXVlsJqouFBdv2TZs/U6qyosRan5DvJEWO1ltEjOJ
-        /3mPDXJ6kSnAE7DkkmhtI7lIicsS0mzgh29PH78=
-X-Google-Smtp-Source: APXvYqxR9/WsFLxqc7cvzJhK1urFpGl4gUB4HAwVzSC1fDeD1++buc2QQSGtK15wBHAhYaYamjbSOAR6gsjJ8ZcFoo4=
-X-Received: by 2002:adf:f450:: with SMTP id f16mr23333290wrp.335.1563521544375;
- Fri, 19 Jul 2019 00:32:24 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=Z/1Ns8Q5yQIoK5C+2IG3JQc28kJqQvVZmZq7uJ5ipgc=;
+        b=kJeqbOei37Gll14cfJv0MxiEjbeZISYqDMjoVhug7Pcj2pryhaStH4lwz+AUAb+V0P
+         H3asWUSngVRPH1CmpiSUzYIo6ZihdgYWWjNAftPEju7L959XsrDXH/BbG0VuZpsWmJcI
+         n7fd4qUp47CVcxpnuaVeTefBAN68reY53+2liL9Q3zH9sFAp5Ct66XkOw9APf1BoqTHq
+         fqteV43FOIUUkS4IdsL1sSP+aKUx+Q4z1Vo1TikDgPpwMQmXqcE2zWNNVFz6a+pbXn3d
+         JJQD3VDktdaA3EdfeDb1IKuGUxafz6Soo2OBxR2+ZLaZbpLrZN4DNNNd4iWmxzrJ2YI2
+         Wr8w==
+X-Gm-Message-State: APjAAAVjNL829kLROnMzpT6LD/B4RwDSq7v75JQELBsPFI4ZEaQx8nG8
+        9HUY4FE7C94uLBooZ9gWk3c=
+X-Google-Smtp-Source: APXvYqx7TYyvr0dBFlh8DOt1DM2OnzcSFCUygKZIR9W/g1JV6SUeSyDex+Fzb/s2EE/7XGtx9vUqfw==
+X-Received: by 2002:a17:90a:338b:: with SMTP id n11mr55423791pjb.21.1563521596791;
+        Fri, 19 Jul 2019 00:33:16 -0700 (PDT)
+Received: from [192.168.1.10] ([117.248.75.47])
+        by smtp.gmail.com with ESMTPSA id 2sm53221155pgm.39.2019.07.19.00.33.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 00:33:16 -0700 (PDT)
+To:     syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
+Cc:     allison@lohutok.net, hverkuil-cisco@xs4all.nl,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        rfontana@redhat.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Akihiro TSUKADA <tskd08@gmail.com>
+From:   Vandana BN <bnvandana@gmail.com>
+Subject: KASAN: global-out-of-bounds Read in dvb_pll_attach
+Message-ID: <dd743f2b-4f86-196b-bdae-16c3286c8904@gmail.com>
+Date:   Fri, 19 Jul 2019 13:03:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190718151346.3523-1-daniel.baluta@nxp.com> <20190719070005.mkqvfhjras2jmo52@pengutronix.de>
-In-Reply-To: <20190719070005.mkqvfhjras2jmo52@pengutronix.de>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 19 Jul 2019 10:32:12 +0300
-Message-ID: <CAEnQRZC8D7MR08x_P19kmutN83Jo4wMkHySRhK702TSUHFDqiA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Add DSP node on i.MX8QXP board
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Frank Li <Frank.Li@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        sound-open-firmware@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed;
+ boundary="------------20606FF4D637D5321B11CAC1"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 10:00 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Daniel,
->
-> thanks for your patches :) but it's quite common to bundle the driver
-> related and the dt related patches. Can you add the firmware related
-> patch to this series in your v2?
+This is a multi-part message in MIME format.
+--------------20606FF4D637D5321B11CAC1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Sure. Will do that in v2.
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+
+--------------20606FF4D637D5321B11CAC1
+Content-Type: text/x-patch;
+ name="0001-media-dvb-frontends-Remove-dvb_pll_devcount-and-id-m.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-media-dvb-frontends-Remove-dvb_pll_devcount-and-id-m.pa";
+ filename*1="tch"
+
+From 47fdaac830354fdf1775cd6e41a545148557e6e7 Mon Sep 17 00:00:00 2001
+From: Vandana BN <bnvandana@gmail.com>
+Date: Wed, 17 Jul 2019 02:48:06 +0530
+Subject: [PATCH] media:dvb-frontends:Remove dvb_pll_devcount and id module
+ parameters.
+
+Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
+accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
+that is more than size of 'id' which is DVB_PLL_MAX(64).
+
+Fix would be to check if DVB_PLL_MAX devices are attached and if so return
+NULL from dvb_pll_attach(). But this will put a limit on the number of
+devices that can be attached.
+Also dvb_pll_devcount and "id" module parameter are used for debugging
+purpose to override/force PLL type.
+So this patch removes these module parameters.
+
+Reported-by: syz...@syzkaller.appspotmail.com
+
+usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+software demuxer
+dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
+usb 1-1: media controller created
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+tc90522 0-0018: Toshiba TC90522 attached.
+usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
+module)...
+dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
+module' registered.
+==================================================================
+BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
+drivers/media/dvb-frontends/dvb-pll.c:798
+Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
+  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
+  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
+  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
+  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
+  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
+  dvb_usbv2_adapter_frontend_init
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
+  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+[inline]
+  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+  dvb_usbv2_probe.cold+0x24dc/0x255d
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the variable:
+  id+0x100/0x120
+
+Memory state around the buggy address:
+  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
+  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+                                                        ^
+  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+==================================================================
+
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+---
+ drivers/media/dvb-frontends/dvb-pll.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+index ba0c49107bd2..c3a04751e9cf 100644
+--- a/drivers/media/dvb-frontends/dvb-pll.c
++++ b/drivers/media/dvb-frontends/dvb-pll.c
+@@ -33,19 +33,11 @@ struct dvb_pll_priv {
+ 	u32 bandwidth;
+ };
+ 
+-#define DVB_PLL_MAX 64
+-
+-static unsigned int dvb_pll_devcount;
+ 
+ static int debug;
+ module_param(debug, int, 0644);
+ MODULE_PARM_DESC(debug, "enable verbose debug messages");
+ 
+-static unsigned int id[DVB_PLL_MAX] =
+-	{ [ 0 ... (DVB_PLL_MAX-1) ] = DVB_PLL_UNDEFINED };
+-module_param_array(id, int, NULL, 0644);
+-MODULE_PARM_DESC(id, "force pll id to use (DEBUG ONLY)");
+-
+ /* ----------------------------------------------------------- */
+ 
+ struct dvb_pll_desc {
+@@ -795,10 +787,6 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	b1[0] = 0;
+ 	msg.buf = b1;
+ 
+-	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
+-	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
+-		pll_desc_id = id[dvb_pll_devcount];
+-
+ 	BUG_ON(pll_desc_id < 1 || pll_desc_id >= ARRAY_SIZE(pll_list));
+ 
+ 	desc = pll_list[pll_desc_id];
+@@ -825,7 +813,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	priv->pll_i2c_address = pll_addr;
+ 	priv->i2c = i2c;
+ 	priv->pll_desc = desc;
+-	priv->nr = dvb_pll_devcount++;
++	priv->nr = pll_desc_id;
+ 
+ 	memcpy(&fe->ops.tuner_ops, &dvb_pll_tuner_ops,
+ 	       sizeof(struct dvb_tuner_ops));
+@@ -846,13 +834,12 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 
+ 	fe->tuner_priv = priv;
+ 
+-	if ((debug) || (id[priv->nr] == pll_desc_id)) {
++	if (debug) {
+ 		dprintk("dvb-pll[%d]", priv->nr);
+ 		if (i2c != NULL)
+ 			pr_cont(" %d-%04x", i2c_adapter_id(i2c), pll_addr);
+ 		pr_cont(": id# %d (%s) attached, %s\n", pll_desc_id, desc->name,
+-		       id[priv->nr] == pll_desc_id ?
+-				"insmod option" : "autodetected");
++				"insmod option");
+ 	}
+ 
+ 	kfree(b1);
+-- 
+2.17.1
+
+
+--------------20606FF4D637D5321B11CAC1--
