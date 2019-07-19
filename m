@@ -2,121 +2,147 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70600C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044DCC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422C421850
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27B421851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfGSHAL (ORCPT
+        id S1727416AbfGSHAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:00:11 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44015 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfGSHAK (ORCPT
+        Fri, 19 Jul 2019 03:00:39 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40524 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfGSHAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:00:10 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hoMsB-0007Ad-DF; Fri, 19 Jul 2019 09:00:07 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hoMs9-0003lG-Hi; Fri, 19 Jul 2019 09:00:05 +0200
-Date:   Fri, 19 Jul 2019 09:00:05 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     shawnguo@kernel.org, mark.rutland@arm.com, aisheng.dong@nxp.com,
-        peng.fan@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org,
-        s.hauer@pengutronix.de, Frank.Li@nxp.com,
-        linux-kernel@vger.kernel.org, paul.olaru@nxp.com,
-        robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
-        leonard.crestez@nxp.com, festevam@gmail.com, shengjiu.wang@nxp.com,
-        linux-arm-kernel@lists.infradead.org,
-        sound-open-firmware@alsa-project.org
-Subject: Re: [PATCH 0/3] Add DSP node on i.MX8QXP board
-Message-ID: <20190719070005.mkqvfhjras2jmo52@pengutronix.de>
-References: <20190718151346.3523-1-daniel.baluta@nxp.com>
+        Fri, 19 Jul 2019 03:00:39 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s145so22537028qke.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 00:00:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VlN+fpVehtgU0BVWJLT3nUlfPtMws+h2ksG4OpU0Bug=;
+        b=JgNWK/ATKOHHcU2xegUVKXdegtsJe9R/ACZYpaJqQJaepMk4b4V1YPkP9xIj5THs9Q
+         TJOF2CWnWZQh+lJr4ANcGjtOSLIHVfZ7UxHboetZzThnK4L2yCdksjcNmMgp94CKLtv9
+         EFI/dp2zJyVBN82N0IK5CLKFxGwL9EpTaGRls0YwySlfe9YpUsZ7hLghNy7YXWEwb+YJ
+         X2ltyd0Q1VClQk74u923H25aLtCSvromwNMx8ZEcptyXdO7Lq8rbXfAYxdwF9RE++PnY
+         CsjmH83KNWzaTUCEK4yKhGk6+C5iEc3t6JaMBlp/nI6JFnqck7UxQrswkA1ckhM201A5
+         4ijg==
+X-Gm-Message-State: APjAAAWoWE8u0YFtINCFzjZEgPdNld9wwFzrRST95gaiuXnnTGPi7H0/
+        08dTNpIduvDlwddPNmKl5OETqn6EFIyXl5DeFaI=
+X-Google-Smtp-Source: APXvYqw9BPrE7HWDtjoNSCSvckjT6LcvuI1IHZgSsQ6KCfSkfXyksKAKvpihyTK39skHsTR+cnxu1LCzvZ3OUsQbep4=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr34294524qkb.286.1563519637939;
+ Fri, 19 Jul 2019 00:00:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718151346.3523-1-daniel.baluta@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:55:39 up 62 days, 13:13, 49 users,  load average: 0.14, 0.13,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de>
+ <20190718205839.GA40219@archlinux-threadripper> <alpine.DEB.2.21.1907190837350.1785@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907190837350.1785@nanos.tec.linutronix.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 19 Jul 2019 09:00:21 +0200
+Message-ID: <CAK8P3a3ghOxkY8SQs9Wz-3ikoM=QL8m+F3JYdAMPT+RDvLAhbQ@mail.gmail.com>
+Subject: Re: x86 - clang / objtool status
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Fri, Jul 19, 2019 at 8:39 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Thu, 18 Jul 2019, Nathan Chancellor wrote:
+>
+> > Hi Thomas,
+> >
+> > I can't comment on the objtool stuff as it is a bit outside of my area
+> > of expertise (probably going to be my next major learning project) but I
+> > can comment on the other errors.
+> >
+> > On Thu, Jul 18, 2019 at 10:40:09PM +0200, Thomas Gleixner wrote:
+> > >  Build fails with:
+> > >
+> > >   clang-10: error: unknown argument: '-mpreferred-stack-boundary=4'
+> > >   make[5]: *** [linux/scripts/Makefile.build:279: drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.o] Error 1
+> >
+> > Arnd sent a patch for this which has been picked up:
+> > https://lore.kernel.org/lkml/CADnq5_Mm=Fj4AkFtuo+W_295q8r6DY3Sumo7gTG-McUYY=CeVg@mail.gmail.com/
+>
+> Which I applied and now I get:
+>
+> ERROR: "__fixdfsi" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+> ERROR: "__eqdf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+> ERROR: "__truncdfsf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+> ERROR: "__nedf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
 
-thanks for your patches :) but it's quite common to bundle the driver
-related and the dt related patches. Can you add the firmware related
-patch to this series in your v2?
+I saw that earlier and use this local workaround that I still need to
+submit, see
+the bottom of this mail.
 
-Regards,
-  Marco
+The amdgpu driver has a rather liberal use of floating point math in the kernel
+that has caused other problems in the past as it is not portable to non-x86
+architectures and breaks at least KCOV. Ideally we would try to get the
+driver owners to rewrite that code to avoid floating point math, but that
+does not seem likely.
 
-On 19-07-18 18:13, Daniel Baluta wrote:
-> i.MX8QXP boards feature an Hifi4 DSP from Tensilica. This patch series
-> adds the DT node.
-> 
-> Note that we switched to the new yaml format for bindings documentation.
-> 
-> The DSP will run SOF Firmware [1]. Patches adding support for Linux DSP
-> driver are already sent for review to SOF folks [2].
-> 
-> This patch series also contains a patch introducing DT related clocks.
-> 
-> The patch was already reviewed here:
-> 	https://lkml.org/lkml/2019/7/17/975
-> 
-> but I added it in this patch series because it wasn't yet picked by
-> Shawn so patches 2/3 will not compiled without patch 1.
-> 
-> [1] https://github.com/thesofproject/sof
-> [2] https://github.com/thesofproject/linux/pull/1048/commits
-> 
-> Daniel Baluta (3):
->   clk: imx8: Add DSP related clocks
->   arm64: dts: imx8qxp: Add DSP DT node
->   dt-bindings: dsp: fsl: Add DSP core binding support
-> 
->  .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  4 +
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 32 +++++++
->  drivers/clk/imx/clk-imx8qxp-lpcg.c            |  5 ++
->  include/dt-bindings/clock/imx8-clock.h        |  6 +-
->  5 files changed, 133 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> 
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+It is also possible that we just need to pass the correct flags to clang to
+make it actually use hardfloat mode.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+      Arnd
+
+commit 3c12c0c7fceaf492d41e6bfc46f0000198f496df
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Thu Jul 11 16:09:18 2019 +0200
+
+    drm/amd/display: disable DRM_AMD_DC_DCN1_0 with clang
+
+    The DRM_AMD_DC_DCN1_0 code and several other parts of the display
+    code use x86 floating point math. When compiling with clang instead
+    of gcc, this causes link errors:
+
+    ERROR: "__subdf3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__gedf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__truncdfsf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__muldf3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__divdf3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__ledf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__fixdfsi" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__floatunsidf" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__adddf3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__extendsfdf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__fixunsdfsi" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__ltdf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__floatsidf" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+    ERROR: "__gtdf2" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+
+    I don't really see a way to fix this, so disable the DCN when
+    building with clang instead until someone finds a way to fix it.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/drivers/gpu/drm/amd/display/Kconfig
+b/drivers/gpu/drm/amd/display/Kconfig
+index f954bf61af28..2cfbbf3b85dd 100644
+--- a/drivers/gpu/drm/amd/display/Kconfig
++++ b/drivers/gpu/drm/amd/display/Kconfig
+@@ -6,7 +6,7 @@ config DRM_AMD_DC
+  bool "AMD DC - Enable new display engine"
+  default y
+  select SND_HDA_COMPONENT if SND_HDA_CORE
+- select DRM_AMD_DC_DCN1_0 if X86 && !(KCOV_INSTRUMENT_ALL &&
+KCOV_ENABLE_COMPARISONS)
++ select DRM_AMD_DC_DCN1_0 if X86 && !(KCOV_INSTRUMENT_ALL &&
+KCOV_ENABLE_COMPARISONS) && !CC_IS_CLANG
+  help
+    Choose this option if you want to use the new display engine
+    support for AMDGPU. This adds required support for Vega and
