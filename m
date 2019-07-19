@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B476BC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C192AC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8214D2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975D72082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510601;
-	bh=XRfZBIvwwvJEotxUX79ZQHqiqmY7KdKnFRGsQhI4u9s=;
+	s=default; t=1563510609;
+	bh=iZXdCxrNKNxAbyJ1PBwAC67lJ7ZrOeEjgLlg4ZJzvX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blNBpYy9pTJ5v58vNbDxsp6aPQK/RSs8cZrmFozrYUT56lnTiwp18mTddBc2wkZ6A
-	 SlUA8dzfSXJRNXMe+kN29Ozbmzpqyi9yA0CUS0n+pqaS1RamTs/4q+HKzfrWjeqgTy
-	 D9FMgf4OC55vDNErQPTyMBEH6njpamdvZPKUXIAE=
+	b=sqWh/5h7gdY8fY05Tmn8kzXangAsd7DQLFQkTyCtNZlpc4yS5BJ9sEdI/qCafMmZP
+	 T3n4jayBOg+wZET448Ks34dLg69I3tf19W9vuHEN0L1doHd0HYDs+wMQoeEDRtA/KI
+	 qSgyLMpuvMEhyMWaqJQWbMJ7aQuJVIhFTVou+DgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732824AbfGSEaA (ORCPT
+        id S2388471AbfGSEaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730321AbfGSEFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:24 -0400
+        id S1728451AbfGSEFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629BA2189F;
-        Fri, 19 Jul 2019 04:05:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC900218A3;
+        Fri, 19 Jul 2019 04:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509124;
-        bh=XRfZBIvwwvJEotxUX79ZQHqiqmY7KdKnFRGsQhI4u9s=;
+        s=default; t=1563509118;
+        bh=iZXdCxrNKNxAbyJ1PBwAC67lJ7ZrOeEjgLlg4ZJzvX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IH1RaVWBXmH8RF/Dd0mKsbnHrdvx6SDPrIplcpufmUAsGYfD9ksl7QRJhaKNf4B6J
-         4JwtEvKsdef3NMwiE/wfGAW79hFKsCW6WCtCc2ZfH1JB7uy/vpovz3/eAebT3g/LJx
-         zjJqvNA5aFdK1odQd5wSUziacCygfVmAglGMHdmE=
+        b=JiB1x9FamqQqgtvNVb3TtPbJLYLnmFypwfchH+p0esEle0fB/bX0/FvyNvl2Dv0Dg
+         dXI55G3EN27OvGMT+Lgo2d4hl5cqSKWX+IYMPIwM6q4J4Y1+OqDSJlV5ulJoi4GRFg
+         T7Tm1AXmGNEBE75hijd67/7qBkZE9aKIJYL738oE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 083/141] serial: sh-sci: Terminate TX DMA during buffer flushing
-Date:   Fri, 19 Jul 2019 00:01:48 -0400
-Message-Id: <20190719040246.15945-83-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 079/141] um: Silence lockdep complaint about mmap_sem
+Date:   Fri, 19 Jul 2019 00:01:44 -0400
+Message-Id: <20190719040246.15945-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,54 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 775b7ffd7d6d5db320d99b0a485c51e04dfcf9f1 ]
+[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
 
-While the .flush_buffer() callback clears sci_port.tx_dma_len since
-commit 1cf4a7efdc71cab8 ("serial: sh-sci: Fix race condition causing
-garbage during shutdown"), it does not terminate a transmit DMA
-operation that may be in progress.
+When we get into activate_mm(), lockdep complains that we're doing
+something strange:
 
-Fix this by terminating any pending DMA operations, and resetting the
-corresponding cookie.
+    WARNING: possible circular locking dependency detected
+    5.1.0-10252-gb00152307319-dirty #121 Not tainted
+    ------------------------------------------------------
+    inside.sh/366 is trying to acquire lock:
+    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+    but task is already holding lock:
+    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
 
-Link: https://lore.kernel.org/r/20190624123540.20629-3-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    which lock already depends on the new lock.
+
+    the existing dependency chain (in reverse order) is:
+
+    -> #1 (&mm->mmap_sem){++++}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           down_write+0x3f/0x98
+           flush_old_exec+0x748/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           _raw_spin_lock+0x30/0x83
+           flush_old_exec+0x703/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    other info that might help us debug this:
+
+     Possible unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(&mm->mmap_sem);
+                                   lock(&(&p->alloc_lock)->rlock);
+                                   lock(&mm->mmap_sem);
+      lock(&(&p->alloc_lock)->rlock);
+
+     *** DEADLOCK ***
+
+    2 locks held by inside.sh/366:
+     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
+     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+
+    stack backtrace:
+    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
+    Stack:
+     [...]
+    Call Trace:
+     [<600420de>] show_stack+0x13b/0x155
+     [<6048906b>] dump_stack+0x2a/0x2c
+     [<6009ae64>] print_circular_bug+0x332/0x343
+     [<6009c5c6>] check_prev_add+0x669/0xdad
+     [<600a06b4>] __lock_acquire+0x12ab/0x139f
+     [<6009f3d0>] lock_acquire+0x155/0x18e
+     [<604a07e0>] _raw_spin_lock+0x30/0x83
+     [<60151e6a>] flush_old_exec+0x703/0x8d7
+     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
+     [...]
+
+I think it's because in exec_mmap() we have
+
+	down_read(&old_mm->mmap_sem);
+...
+        task_lock(tsk);
+...
+	activate_mm(active_mm, mm);
+	(which does down_write(&mm->mmap_sem))
+
+I'm not really sure why lockdep throws in the whole knowledge
+about the task lock, but it seems that old_mm and mm shouldn't
+ever be the same (and it doesn't deadlock) so tell lockdep that
+they're different.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/sh-sci.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/um/include/asm/mmu_context.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index abc705716aa0..1d25c4e2d0d2 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1648,11 +1648,18 @@ static void sci_free_dma(struct uart_port *port)
- 
- static void sci_flush_buffer(struct uart_port *port)
- {
-+	struct sci_port *s = to_sci_port(port);
-+
- 	/*
- 	 * In uart_flush_buffer(), the xmit circular buffer has just been
--	 * cleared, so we have to reset tx_dma_len accordingly.
-+	 * cleared, so we have to reset tx_dma_len accordingly, and stop any
-+	 * pending transfers
+diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
+index 9f4b4bb78120..00cefd33afdd 100644
+--- a/arch/um/include/asm/mmu_context.h
++++ b/arch/um/include/asm/mmu_context.h
+@@ -52,7 +52,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+ 	 * when the new ->mm is used for the first time.
  	 */
--	to_sci_port(port)->tx_dma_len = 0;
-+	s->tx_dma_len = 0;
-+	if (s->chan_tx) {
-+		dmaengine_terminate_async(s->chan_tx);
-+		s->cookie_tx = -EINVAL;
-+	}
+ 	__switch_mm(&new->context.id);
+-	down_write(&new->mmap_sem);
++	down_write_nested(&new->mmap_sem, 1);
+ 	uml_setup_stubs(new);
+ 	up_write(&new->mmap_sem);
  }
- #else /* !CONFIG_SERIAL_SH_SCI_DMA */
- static inline void sci_request_dma(struct uart_port *port)
 -- 
 2.20.1
 
