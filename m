@@ -2,78 +2,144 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607B3C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513D4C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401B221849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D942184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V1Z0kK5U";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EUFE27ch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfGSK1K (ORCPT
+        id S1727177AbfGSK3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:27:10 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50354 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSK1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:27:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0334E2000C9;
-        Fri, 19 Jul 2019 12:27:09 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8658A20000A;
-        Fri, 19 Jul 2019 12:27:05 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EB33A402B5;
-        Fri, 19 Jul 2019 18:27:00 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        p.zabel@pengutronix.de
-Cc:     leoyang.li@nxp.com, linux-imx@nxp.com, Wen He <wen.he_1@nxp.com>
-Subject: [v2] gpu: ipu-v3: allow to build with ARCH_LAYERSCAPE
-Date:   Fri, 19 Jul 2019 18:17:51 +0800
-Message-Id: <20190719101751.12315-1-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 19 Jul 2019 06:29:10 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52336 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfGSK3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:29:09 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7B75561633; Fri, 19 Jul 2019 10:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563532148;
+        bh=VV9h9+j4OURu4RUr60QbOyNI3a2ZiA7WIr1P5diLdXY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=V1Z0kK5UI4uEc+a4c4JW2JUb1A17pWw7RbBr9UfKu9ALdbWrkLwoCV9r/hw//F0su
+         UH75FVFtqBtBQwsBhNZsyHx15dsZNod829rfw18b26O4cTuaYtJ5ungxJRv5nNtC4C
+         FahTl8+4rabBbtV8Q3HH8RpQ61uypevkdksXaitw=
+Received: from [192.168.43.47] (unknown [157.49.206.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 615F760275;
+        Fri, 19 Jul 2019 10:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563532147;
+        bh=VV9h9+j4OURu4RUr60QbOyNI3a2ZiA7WIr1P5diLdXY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EUFE27chUPuph25X/Y7xP28qz93qjEb1Y6tC3kgo296KaENOv9XuFs9NG6U+Uq5uF
+         tJxaWrPDKh1ArNq2/YhgCw1yZhhVokF2Hl5TEIIY8TKCZKCPy0dl4s5DSpchj2shLQ
+         1oLxm++aU0dhV3RurE9Om9f70GFRuSbMj2pfYUG8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 615F760275
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCHv8 1/5] arm64: dts: qcom: sdm845: Add Coresight support
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        gregkh@linuxfoundation.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
+        mike.leach@linaro.org, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        marc.w.gonzalez@free.fr
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <33215f68-1bf9-322a-d889-1d22514bdbdc@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <a1a2a9c6-f58b-f849-76e4-3a76d6faaab5@codeaurora.org>
+Date:   Fri, 19 Jul 2019 15:58:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <33215f68-1bf9-322a-d889-1d22514bdbdc@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new LS1028A DP driver code causes a link failure when DRM_IMX built-in,
-but platform is ARCH_LAYERSCAPE:
+Hi Suzuki,
 
-drivers/gpu/drm/imx/ipuv3-crtc.c:51: undefined reference to `ipu_prg_enable'
-drivers/gpu/drm/imx/ipuv3-crtc.c:52: undefined reference to `ipu_dc_enable'
-drivers/gpu/drm/imx/ipuv3-crtc.c:53: undefined reference to `ipu_dc_enable_channel'
-drivers/gpu/drm/imx/ipuv3-crtc.c:54: undefined reference to `ipu_di_enable'
-drivers/gpu/drm/imx/ipuv3-crtc.o: In function `ipu_crtc_mode_set_nofb
+On 7/19/2019 3:16 PM, Suzuki K Poulose wrote:
+> 
+> Hi Sai,
+> 
+> 
+> On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
+>> Add coresight components found on Qualcomm SDM845 SoC.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 +++++++++++++++++++++++++++
+>>   1 file changed, 451 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index 4babff5f19b5..5d7e3f8e0f91 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -1815,6 +1815,457 @@
+>>               clock-names = "xo";
+>>           };
+>> +        stm@6002000 {
+>> +            compatible = "arm,coresight-stm", "arm,primecell";
+>> +            reg = <0 0x06002000 0 0x1000>,
+>> +                  <0 0x16280000 0 0x180000>;
+>> +            reg-names = "stm-base", "stm-stimulus-base";
+>> +
+>> +            clocks = <&aoss_qmp>;
+>> +            clock-names = "apb_pclk";
+>> +
+>> +            out-ports {
+>> +                port {
+>> +                    stm_out: endpoint {
+>> +                        remote-endpoint =
+>> +                          <&funnel0_in7>;
+>> +                    };
+>> +                };
+>> +            };
+>> +        };
+>> +
+>> +        funnel@6041000 {
+>> +            compatible = "arm,coresight-funnel", "arm,primecell";
+> 
+> We added support for static funnels and have thus updated our DT 
+> bindings. And
+> that implies, the above binding is now obsolete.
+> As of the coresight/next tree, and thus linux-next, this must be 
+> arm,coresight-dynamic-funnel and same applies everywhere else in the 
+> series. Please could you
+> update the series ?
+> 
 
-Adding a Kconfig dependency allow to build if ARCH_LAYERSCAPE is enable.
+Sure, will update in the next version of the series.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v2:
-        - fix Kconfig conflit issue after rebased to kernel 5.2
+Thanks,
+Sai
 
- drivers/gpu/ipu-v3/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/ipu-v3/Kconfig b/drivers/gpu/ipu-v3/Kconfig
-index 061fb990c120..be515dd95c2c 100644
---- a/drivers/gpu/ipu-v3/Kconfig
-+++ b/drivers/gpu/ipu-v3/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config IMX_IPUV3_CORE
- 	tristate "IPUv3 core support"
--	depends on SOC_IMX5 || SOC_IMX6Q || ARCH_MULTIPLATFORM || COMPILE_TEST
-+	depends on SOC_IMX5 || SOC_IMX6Q || ARCH_MULTIPLATFORM || COMPILE_TEST || ARCH_LAYERSCAPE
- 	depends on DRM || !DRM # if DRM=m, this can't be 'y'
- 	select BITREVERSE
- 	select GENERIC_ALLOCATOR if DRM
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
