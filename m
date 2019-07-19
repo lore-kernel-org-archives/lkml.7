@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC2C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEAAC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD372206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E9B20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510912;
-	bh=CH3O2LPFoEMwAWzghnExfL2XH60fUknYpeXbotU+tPI=;
+	s=default; t=1563510915;
+	bh=I17DrcFi7+urAICnpGho+Udc/SRWzTgx9Ys7b2roMz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=INv+DZ/8DtKnO23KRt0VVXbEu/PYVeZ7x6DqZxNcauXzeuuGy7lRzl+yzEOp0AEzx
-	 e7qyMwJ9OgIgV0oQwaInmN4klUCFfbiNeKVmufzTFusyAb+e2dTlU5Q45iHMFxAQj7
-	 WECZ/egQmSwl0tTxgoxFeIEa0WoNtft5AbiTQSZs=
+	b=qvUbks1/MnPKP4yzQ83oZJD5CyuvoEvN4kiYC7lQHmhMIAUhODOufDp1y/dCeIUus
+	 y+6yLqYQzL0nhIF3aG+XxkpOA+pTqxCLOsc+R0PD3uVuZAtF7vPTPAsxA6ZmeXgThp
+	 CFOXI9YRFUyRa7/DemadoIaNn1Y4V9WoHF/5Bw7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfGSEBh (ORCPT
+        id S1729500AbfGSEBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33192 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbfGSEB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:27 -0400
+        id S1729409AbfGSEBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91B0B21852;
-        Fri, 19 Jul 2019 04:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 579B921873;
+        Fri, 19 Jul 2019 04:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508886;
-        bh=CH3O2LPFoEMwAWzghnExfL2XH60fUknYpeXbotU+tPI=;
+        s=default; t=1563508884;
+        bh=I17DrcFi7+urAICnpGho+Udc/SRWzTgx9Ys7b2roMz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vF3iHJ8XAu869BlR4jRn/iu6KYViP56hR6tmSyI+ZYGYZmbC656AyOVCtW4Al/xW/
-         sV8hM0j22Xej1i0/1VPdw80U6DClRPYBhmAdR5G1+mwvIdhrdLQ2P75ualQAYQXOSe
-         VOWxCi6+1QcWG8+xfOED3kRbMd6Q+yok35E2KsN8=
+        b=tI87Xu24wtfN0JlayL0WoI+Ox7SvC9i+8npqGZ47T9MHdRQTf9+UJSQZZr7WUwP76
+         7sSGMN5WQYwOtLym0WtD7GKZAeujPFvHpbk9oGnHrGwfSFJ3tREMmWrVmaUsoSjSuP
+         WONVyeY94r9yPT20eV9yGEgj+6jdVMY8WbkjL4o4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>,
         Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 137/171] nvme-tcp: don't use sendpage for SLAB pages
-Date:   Thu, 18 Jul 2019 23:56:08 -0400
-Message-Id: <20190719035643.14300-137-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-nvme@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 135/171] nvme-pci: check for NULL return from pci_alloc_p2pmem()
+Date:   Thu, 18 Jul 2019 23:56:06 -0400
+Message-Id: <20190719035643.14300-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,42 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-[ Upstream commit 37c15219599f7a4baa73f6e3432afc69ba7cc530 ]
+[ Upstream commit bfac8e9f55cf62a000b643a0081488badbe92d96 ]
 
-According to commit a10674bf2406 ("tcp: detecting the misuse of
-.sendpage for Slab objects") and previous discussion, tcp_sendpage
-should not be used for pages that is managed by SLAB, as SLAB is not
-taking page reference counters into consideration.
+Modify nvme_alloc_sq_cmds() to call pci_free_p2pmem() to free the memory
+it allocated using pci_alloc_p2pmem() in case pci_p2pmem_virt_to_bus()
+returns null.
 
-Signed-off-by: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Makes sure not to call pci_free_p2pmem() if pci_alloc_p2pmem() returned
+NULL, which can happen if CONFIG_PCI_P2PDMA is not configured.
+
+The current implementation is not expected to leak since
+pci_p2pmem_virt_to_bus() is expected to fail only if pci_alloc_p2pmem()
+returns null. However, checking the return value of pci_alloc_p2pmem()
+is more explicit.
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 08a2501b9357..606b13d35d16 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -860,7 +860,14 @@ static int nvme_tcp_try_send_data(struct nvme_tcp_request *req)
- 		else
- 			flags |= MSG_MORE;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 524d6bd6d095..5dfa067f6506 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1456,11 +1456,15 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
  
--		ret = kernel_sendpage(queue->sock, page, offset, len, flags);
-+		/* can't zcopy slab pages */
-+		if (unlikely(PageSlab(page))) {
-+			ret = sock_no_sendpage(queue->sock, page, offset, len,
-+					flags);
-+		} else {
-+			ret = kernel_sendpage(queue->sock, page, offset, len,
-+					flags);
-+		}
- 		if (ret <= 0)
- 			return ret;
+ 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+ 		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
+-		nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+-						nvmeq->sq_cmds);
+-		if (nvmeq->sq_dma_addr) {
+-			set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
+-			return 0; 
++		if (nvmeq->sq_cmds) {
++			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
++							nvmeq->sq_cmds);
++			if (nvmeq->sq_dma_addr) {
++				set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
++				return 0;
++			}
++
++			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
+ 		}
+ 	}
  
 -- 
 2.20.1
