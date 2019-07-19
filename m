@@ -2,70 +2,119 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E991C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC78C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5458A2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8162186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kpemiLVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731847AbfGSQrP convert rfc822-to-8bit (ORCPT
+        id S1728814AbfGSQve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:47:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43608 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727528AbfGSQrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:47:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 80171AF9C;
-        Fri, 19 Jul 2019 16:47:13 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 18:47:11 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     keescook@chromium.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        Peter Zijlstra <peterz@infradead.org>, mcgrof@kernel.org,
-        mhocko@kernel.org, linux-mm@kvack.org,
-        Ingo Molnar <mingo@redhat.com>, riel@surriel.com,
-        Mel Gorman <mgorman@suse.de>, cgroups@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
- statistic
-Message-ID: <20190719164711.GB854@blackbody.suse.cz>
-References: <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
- <20190711134754.GD3402@hirez.programming.kicks-ass.net>
- <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
- <20190712075815.GN3402@hirez.programming.kicks-ass.net>
- <37474414-1a54-8e3a-60df-eb7e5e1cc1ed@linux.alibaba.com>
- <20190712094214.GR3402@hirez.programming.kicks-ass.net>
- <f8020f92-045e-d515-360b-faf9a149ab80@linux.alibaba.com>
- <20190715121025.GN9035@blackbody.suse.cz>
- <ecd21563-539c-06b1-92f2-26a111163174@linux.alibaba.com>
+        Fri, 19 Jul 2019 12:51:34 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44109 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728148AbfGSQvd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:51:33 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d79so23679596qke.11
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MD20IfExCxC1GSVGQW60wKgomTGICWCjQ6hD4XxAnGw=;
+        b=kpemiLVuSTkgT1yRxRYlnKwPO1WAGRaWdvcqlRA3oLQwivdx6ZKdJ7WbUnqL/ge+RK
+         vWKFZXCa7xA0NhQqNQmi1YLnL8o8BU/PtEAbdIA2WDCLJrxWy/h+Qbru5yd2c/AqKMnW
+         K17Nh83xnyZ0IEHjtPwvOY8Gcp7TapRJCrQuqGwxZkdu7/CckPAfel11whgQ+G0WHYto
+         1XcWWVF6KPmQxdIkDVeFJkQqSkoIb6/0vuF3cX9ImdLB4v7gkjhzYrPZ6ihwA+/mM3/1
+         x2d2cT/J9Vrv08GmCH564foY6M3QTyHmB1BkmMRljqh5qvs8ZcLBk/wfBeCQogizVvGw
+         Tbrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MD20IfExCxC1GSVGQW60wKgomTGICWCjQ6hD4XxAnGw=;
+        b=dLcA7HWZo70GG7a0zNfVYRUgN37yA3ji/lwgz+UR+UX9l+88et1qjb9EBsqpESBxfw
+         G1faTIM6RofXqPfljJzjzAzAVXgqjyTc0A2AQz0MxEpYyBj3m+cJdKS4HcGcBRGovldV
+         fn2CIXtaQmO+0VyZXDK2eJgKc8kKQG5T5toaygH2qNWBXpDptIxNKKIDHUcdVFPN6XUg
+         mKGntVM0Wzd+Ff653tC/wtg4fKjKLcDOSSFJvMblcfhufcHGXZKovZsy5GCrFfMf7SNB
+         BuY9gKumbrdUnzSaS2Wru2uQH7/qf0SA/9W5Rb1TqN432zrquWh9IPOzSql0TW0jhg6u
+         b0RA==
+X-Gm-Message-State: APjAAAVtNSgzLRDn1YiWWl6KK57sAemwzvrIyBqPZxl/Ky2ciHc2dDPa
+        O8/LEqmbLAM5SreRrTAZt8ViwVK+PgSxSx2ngiCvoQ==
+X-Google-Smtp-Source: APXvYqxA9uMEtiLCs3KpiACSlD4ESvf1ubbKecKsByV25EeIOZ3pnWqiQ+487s8rBEvBmb5TaYFiz4unMZ7PvQttApA=
+X-Received: by 2002:a37:4714:: with SMTP id u20mr35695754qka.162.1563555092394;
+ Fri, 19 Jul 2019 09:51:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <ecd21563-539c-06b1-92f2-26a111163174@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190717172100.261204-1-joel@joelfernandes.org>
+ <20190719161404.GA24170@redhat.com> <20190719162726.u5fi5k3tqove6hgn@brauner.io>
+In-Reply-To: <20190719162726.u5fi5k3tqove6hgn@brauner.io>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Fri, 19 Jul 2019 12:51:20 -0400
+Message-ID: <CAJWu+orxkFyoTTmFJs23FD0PKX-NetF4kVVLXnWkyLdCU2_cYQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v1] pidfd: fix a race in setting exit_state for pidfd polling
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:41:36AM +0800, 王贇  <yun.wang@linux.alibaba.com> wrote:
-> Actually whatever the memory node sets or cpu allow sets is, it will
-> take effect on task's behavior regarding memory location and cpu
-> location, while the locality only care about the results rather than
-> the sets.
-My previous response missed much of the context, so it was a bit off.
+On Fri, Jul 19, 2019 at 12:27 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> On Fri, Jul 19, 2019 at 06:14:05PM +0200, Oleg Nesterov wrote:
+> > it seems that I missed something else...
+> >
+> > On 07/17, Joel Fernandes (Google) wrote:
+> > >
+> > > @@ -1156,10 +1157,11 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
+> > >             ptrace_unlink(p);
+> > >
+> > >             /* If parent wants a zombie, don't release it now */
+> > > -           state = EXIT_ZOMBIE;
+> > > +           p->exit_state = EXIT_ZOMBIE;
+> > >             if (do_notify_parent(p, p->exit_signal))
+> > > -                   state = EXIT_DEAD;
+> > > -           p->exit_state = state;
+> > > +                   p->exit_state = EXIT_DEAD;
+> > > +
+> > > +           state = p->exit_state;
+> > >             write_unlock_irq(&tasklist_lock);
+> >
+> > why do you think we also need to change wait_task_zombie() ?
+> >
+> > pidfd_poll() only needs the exit_state != 0 check, we know that it
+> > is not zero at this point. Why do we need to change exit_state before
+> > do_notify_parent() ?
+>
+> Oh, because of?:
+>
+>         /*
+>          * Move the task's state to DEAD/TRACE, only one thread can do this.
+>          */
+>         state = (ptrace_reparented(p) && thread_group_leader(p)) ?
+>                 EXIT_TRACE : EXIT_DEAD;
+>         if (cmpxchg(&p->exit_state, EXIT_ZOMBIE, state) != EXIT_ZOMBIE)
+>                 return 0;
+>
+> So exit_state will definitely be set in this scenario. Good point.
+>
 
-I see what you mean by the locality now. Alas, I can't assess whether
-it's the right thing to do regarding NUMA behavior that you try to
-optimize (i.e. you need an answer from someone more familiar with NUMA
-balancing).
-
-Michal
+Agreed. Christian, do you mind dropping this hunk from the patch or do
+you want me to resend the patch with the hunk dropped?
