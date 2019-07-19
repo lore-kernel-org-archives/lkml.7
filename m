@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4240EC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA99C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191EE2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122A721851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509759;
-	bh=fzSmJcAGmEYFtPIb7d9L7LHLf+7JukwywMtYfEC8msM=;
+	s=default; t=1563509762;
+	bh=GgWJieV+f/vfttWKUOUbNSDuhOWm9LEZvnKvk9nlnnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1V0shZhJtzfdkvUJwIx2TPSt5FrZSTK/Ji9tSVuP13mOGl4Eamo6ZB0VhnbDPq61k
-	 hRfGoEwVyNm0VCB4AFSvBW4C5thMBk67bZz4uz/0k/GCZDBAi6HMB4SvT4/kQN+2qt
-	 UiNNR+wugd4+A9ggav9GSvfmSWC5+RSQQuD5fBlA=
+	b=ui1ztlLM3Ezn3BUUzkt64t0P+IGn/rgD77XOJT91pE2m2b1Glx/WJu2m+daJIdeY1
+	 vpJ87grX1P/+YSnOnU+wuVT6T7A1eUTI13jdv9dYMqS6DDSBiZymutgFHzqGHs7aqd
+	 rs+BX3qN9H3BZY8/TJYaKPWQN0qr/1LCalcQjdNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfGSEPk (ORCPT
+        id S2390149AbfGSEPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51726 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389325AbfGSEP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:15:27 -0400
+        id S2390088AbfGSEPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:15:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCDF221873;
-        Fri, 19 Jul 2019 04:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DAEB218A5;
+        Fri, 19 Jul 2019 04:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509726;
-        bh=fzSmJcAGmEYFtPIb7d9L7LHLf+7JukwywMtYfEC8msM=;
+        s=default; t=1563509723;
+        bh=GgWJieV+f/vfttWKUOUbNSDuhOWm9LEZvnKvk9nlnnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGpEicj5LfyO2uIs5LmN39WHddwp3bIGzDsiPnIGFwSKBCrpjWyYzBK8sxCZ8kzB8
-         S2EJGA6cma80KFHcKJK4FiORVu2PxA5tkYhND3ygIOVGbgPPZYY0JiVGfqA5IDgSKL
-         V9NtCOTgIBxgUB+nqmNrL8aeeg5XrnFWGze4vCBc=
+        b=BxQTTQMqQshXxprbXHC9pLEA493caT5bYJtd7jYWiGWITqEuZ0F47AvsJjk4yJG5p
+         0VL9/OMnq3QRuJAnEKG3HqyaXGcvCq7TxBT18XQGbrp35TSdUw8eNLCbqWFGp5E9R8
+         +X/k3x3sovU7IYLaPFoOKr2AJQUcSX3ia6xF0/jY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 31/35] sh: prevent warnings when using iounmap
-Date:   Fri, 19 Jul 2019 00:14:19 -0400
-Message-Id: <20190719041423.19322-31-sashal@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 30/35] powerpc/eeh: Handle hugepages in ioremap space
+Date:   Fri, 19 Jul 2019 00:14:18 -0400
+Message-Id: <20190719041423.19322-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -67,62 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
+[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
 
-When building drm/exynos for sh, as part of an allmodconfig build, the
-following warning triggered:
+In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
+space") support for using hugepages in the vmalloc and ioremap areas was
+enabled for radix. Unfortunately this broke EEH MMIO error checking.
 
-  exynos7_drm_decon.c: In function `decon_remove':
-  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
-    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
+Detection works by inserting a hook which checks the results of the
+ioreadXX() set of functions.  When a read returns a 0xFFs response we
+need to check for an error which we do by mapping the (virtual) MMIO
+address back to a physical address, then mapping physical address to a
+PCI device via an interval tree.
 
-The ctx variable is only used as argument to iounmap().
+When translating virt -> phys we currently assume the ioremap space is
+only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
+emit a WARN_ON(), but otherwise handles the check as though a normal
+page was found. In pathalogical cases such as copying a buffer
+containing a lot of 0xFFs from BAR memory this can result in the system
+not booting because it's too busy printing WARN_ON()s.
 
-In sh - allmodconfig CONFIG_MMU is not defined
-so it ended up in:
+There's no real reason to assume huge pages can't be present and we're
+prefectly capable of handling them, so do that.
 
-\#define __iounmap(addr)	do { } while (0)
-\#define iounmap		__iounmap
-
-Fix the warning by introducing a static inline function for iounmap.
-
-This is similar to several other architectures.
-
-Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Inki Dae <inki.dae@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/asm/io.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 3280a6bfa503..b2592c3864ad 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -370,7 +370,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
+index 6696c1986844..16193d7b0635 100644
+--- a/arch/powerpc/kernel/eeh.c
++++ b/arch/powerpc/kernel/eeh.c
+@@ -363,10 +363,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
+ 					   NULL, &hugepage_shift);
+ 	if (!ptep)
+ 		return token;
+-	WARN_ON(hugepage_shift);
+-	pa = pte_pfn(*ptep) << PAGE_SHIFT;
  
- #define ioremap_nocache	ioremap
- #define ioremap_uc	ioremap
--#define iounmap		__iounmap
+-	return pa | (token & (PAGE_SIZE-1));
++	pa = pte_pfn(*ptep);
 +
-+static inline void iounmap(void __iomem *addr)
-+{
-+	__iounmap(addr);
-+}
++	/* On radix we can do hugepage mappings for io, so handle that */
++	if (hugepage_shift) {
++		pa <<= hugepage_shift;
++		pa |= token & ((1ul << hugepage_shift) - 1);
++	} else {
++		pa <<= PAGE_SHIFT;
++		pa |= token & (PAGE_SIZE - 1);
++	}
++
++	return pa;
+ }
  
  /*
-  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
 -- 
 2.20.1
 
