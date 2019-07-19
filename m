@@ -2,79 +2,121 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C34C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E975C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6061720873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2206F2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfGSKSJ (ORCPT
+        id S1727604AbfGSKTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:18:09 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54409 "EHLO ozlabs.org"
+        Fri, 19 Jul 2019 06:19:07 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:53950 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbfGSKSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:18:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qn5722thz9s3Z;
-        Fri, 19 Jul 2019 20:18:03 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christian Brauner <christian@brauner.io>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
-In-Reply-To: <20190716130631.tohj4ub54md25dys@brauner.io>
-References: <20190714192205.27190-1-christian@brauner.io> <20190714192205.27190-2-christian@brauner.io> <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com> <20190716130631.tohj4ub54md25dys@brauner.io>
-Date:   Fri, 19 Jul 2019 20:18:02 +1000
-Message-ID: <874l3i8h0l.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1725798AbfGSKTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:19:06 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 54E871A0144;
+        Fri, 19 Jul 2019 12:19:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE9E51A0046;
+        Fri, 19 Jul 2019 12:18:59 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 51F78402CF;
+        Fri, 19 Jul 2019 18:18:54 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
+Subject: [v2 1/4] dt-bindings: display: Add DT bindings for LS1028A HDP-TX PHY.
+Date:   Fri, 19 Jul 2019 18:09:39 +0800
+Message-Id: <20190719100942.12016-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian@brauner.io> writes:
-> On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
->> I think Vasily already has a clone3 patch for s390x with 435. 
->
-> A quick follow-up on this. Helge and Michael have asked whether there
-> are any tests for clone3. Yes, there will be and I try to have them
-> ready by the end of the this or next week for review. In the meantime I
-> hope the following minimalistic test program that just verifies very
-> very basic functionality (It's not pretty.) will help you test:
+Add DT bindings documentmation for the HDP-TX PHY controller. The describes
+which could be found on NXP Layerscape ls1028a platform.
 
-Hi Christian,
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+change in v2:
+        - correction the node name.
 
-Thanks for the test.
+ .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/fsl,hdp.txt
 
-This actually oopses on powerpc, it hits the BUG_ON in CHECK_FULL_REGS
-in process.c around line 1633:
+diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+new file mode 100644
+index 000000000000..53ca08337587
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+@@ -0,0 +1,56 @@
++NXP Layerscpae ls1028a HDP-TX PHY Controller
++============================================
++
++The following bindings describe the Cadence HDP TX PHY on ls1028a that
++offer multi-protocol support of standars such as eDP and Displayport,
++supports for 25-600MHz pixel clock and up to 4k2k at 60MHz resolution.
++The HDP transmitter is a Cadence HDP TX controller IP with a companion
++PHY IP.
++
++Required properties:
++  - compatible:   Should be "fsl,ls1028a-dp" for ls1028a.
++  - reg:          Physical base address and size of the block of registers used
++  by the processor.
++  - interrupts:   HDP hotplug in/out detect interrupt number
++  - clocks:       A list of phandle + clock-specifier pairs, one for each entry
++  in 'clock-names'
++  - clock-names:  A list of clock names. It should contain:
++      - "clk_ipg": inter-Integrated circuit clock
++      - "clk_core": for the Main Display TX controller clock
++      - "clk_pxl": for the pixel clock feeding the output PLL of the processor
++      - "clk_pxl_mux": for the high PerfPLL bypass clock
++      - "clk_pxl_link": for the link rate pixel clock
++      - "clk_apb": for the APB interface clock
++      - "clk_vif": for the Video pixel clock
++
++Required sub-nodes:
++  - port: The HDP connection to an encoder output port. The connection
++    is modelled using the OF graph bindings specified in
++    Documentation/devicetree/bindings/graph.txt
++
++
++Example:
++
++/ {
++        ...
++
++        hdptx0: display@f200000 {
++                compatible = "fsl,ls1028a-dp";
++		reg = <0x0 0xf1f0000 0x0 0xffff>,
++		    <0x0 0xf200000 0x0 0xfffff>;
++                interrupts = <0 221 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&sysclk>, <&hdpclk>, <&dpclk>,
++                         <&dpclk>, <&dpclk>, <&pclk>, <&dpclk>;
++		clock-names = "clk_ipg", "clk_core", "clk_pxl",
++                              "clk_pxl_mux", "clk_pxl_link", "clk_apb",
++                              "clk_vif";
++
++		port {
++			dp1_output: endpoint {
++				remote-endpoint = <&dp0_input>;
++			};
++		};
++        };
++
++        ...
++};
+-- 
+2.17.1
 
-	} else {
-		/* user thread */
-		struct pt_regs *regs = current_pt_regs();
-		CHECK_FULL_REGS(regs);
-		*childregs = *regs;
-		if (usp)
-
-
-So I'll have to dig into how we fix that before we wire up clone3.
-
-Turns out testing is good! :)
-
-cheers
