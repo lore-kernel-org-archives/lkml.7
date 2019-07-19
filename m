@@ -2,171 +2,134 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B081C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C2CC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4C12184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273832186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJW2PMHh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="J0SvgNFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbfGSQwP (ORCPT
+        id S1730468AbfGSQxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:52:15 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42074 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbfGSQwO (ORCPT
+        Fri, 19 Jul 2019 12:53:54 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43238 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727717AbfGSQxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:52:14 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so31405379lje.9;
-        Fri, 19 Jul 2019 09:52:12 -0700 (PDT)
+        Fri, 19 Jul 2019 12:53:54 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j11so9180828otp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=F/NqcpcqNnQBv2t10umQVWFAVbQLRfDfp+FWKm32iHs=;
-        b=JJW2PMHhieQszRIIrrnKK/J/vACC/ORoGPwTTL120LkaGiTr0HRuJJu9dfNIEqfctP
-         2jtVUXgcjMq6bTTDJiWhCogCcjBBHiTtflwn3BsIzC68GJ0DG3RYauKzM4fnda0Jqzvh
-         hx/Rn+RYPp9DzqZCPlIUyildnXR47kl4V3K8b7qIHRgsj383A0m3XjCx/Vak4Ok4uXrH
-         C7AceBZhdZYGVduc7Ovg5fjtJYYetyHSraf3+6Xmf8p7T6G4hhFWQeQkLqIM+nb6x4Rv
-         aWEmsSk2yrSCVlFIvghtEiRMmPEPknEWa6iOy004zykfYbh1MlXHOP5JuEiHp/eK/EEN
-         ESdA==
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=W6Id2apSO0w+oDefY5998IEGsU/bQYe3SdY14bHlNAI=;
+        b=J0SvgNFhOGDy8g8QY/w1QwAYPSBe0785So5Ef8PCu0eG8fvW2Yjspbp76HCDseoPYy
+         xAzoRaSj4CtH8k348QGLoBdiSQztIyUZS/QYzoJ4oRK9LFmWkaknioQt0cXmVRw2eG2h
+         qqkc1PHLXNZxR5d2Fu2MCzeK2ANmvicuaZtcr+NEd54BQZc41C/Ik64X1VUjhgpCnXum
+         OwZ1399Rwg0XjnxV6mgn0o48sUN8dHUtW6y9fVW6MHMxnwycBG2FUk0Q0rwr8OZUkbKh
+         uETwqhcw7Dy2RjgoK3D0PTH6WDPW/IE9Axo1YvGTt5595OXwWiqskQvIrPu5sysvRekU
+         MnhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F/NqcpcqNnQBv2t10umQVWFAVbQLRfDfp+FWKm32iHs=;
-        b=eQPPvw2a2cFh/aWledFIVQ6GyjT+1fSIcI4OwOSxkzFMjeACAQU0JtzwEO/7X1BEJj
-         mH2+Jrwc4gH5qcGMuQKjYZ+dZGYnmt84sOkr1nREnt14NK/B79wj0My0e6KW2tKUZHPK
-         toWWmKAmFTYwRb6MMGeqDTo0M8YD6cdHzam0Z9I1nOSCt8TQWP1KDqS8lIg90A63l1RU
-         4eTKFUgZuNMGownDCx513Ik34JJ20IH8Q9oQcocBLs10rXKHSEM2XtiFMdB4NqNoDysU
-         4QIEKzuIwfnF1uoPHoPJ0wXj/dpUYHUmTG3wiRMfwfpgVjAQoShYR2XxZDBIepdAxcQa
-         aA4w==
-X-Gm-Message-State: APjAAAXiQk8RsTnuRzeoEUshownh0vWznnj77SJspyXDUxQkpP+jn2hM
-        Vyzq08I/uLzGvtk7uAlPjUQqpEHf
-X-Google-Smtp-Source: APXvYqyx+NhqwIUFY9oz+GmmOoGEUH37wd39XVbfpVgTHjN1l8sRKyLaxnag4kXhVVhr56Xzl6fRMQ==
-X-Received: by 2002:a2e:994:: with SMTP id 142mr27639380ljj.130.1563555131536;
-        Fri, 19 Jul 2019 09:52:11 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id f1sm5764658ljf.53.2019.07.19.09.52.10
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=W6Id2apSO0w+oDefY5998IEGsU/bQYe3SdY14bHlNAI=;
+        b=czZn2aSyqkaQKcS8oxIr2rnoAsn9yrH1/nbyHAZbuBtAYvrLsoeVDWW7rO1leMNCLE
+         rPFTAXGeNPQStxqhn9b1HtDdj9P1OsCwYiM9Vu4g2btUQObhq53rNxrwniEhph0Mut9i
+         MQwhOwY+bU7l8rqnKgTwzhhypnT+P/wsyIVK/Y5RSl/y3noKgXY/ptSvAtOKdae3YDib
+         06HRxMviq3CgmPra1Ykri5w8nhr2KztwCxaMGK33DQncFix9WfVN0zSb+NHyqwhhploK
+         JJtcfvPT8mx4vd2LN+KWfBE/eoDTM/mV4EqI8bQJ6u2ayFfH3V5zKKnca4TlDkV9uiaq
+         AAsw==
+X-Gm-Message-State: APjAAAUkE5dgpPigU96CdvwRX4uJ1CbIAyMo4DU+hADljHVDQ+FQNmYF
+        8Ed9Nm8lbkr1vP2Wp5ik1oI=
+X-Google-Smtp-Source: APXvYqxgiZ+oFBTjcTdnWdGZxD5geWB90IDB3Fm5dAm4Lj/cQbTKevyk7+7fNixz82rNIpEzEaklmA==
+X-Received: by 2002:a9d:4c8b:: with SMTP id m11mr17441400otf.293.1563555233209;
+        Fri, 19 Jul 2019 09:53:53 -0700 (PDT)
+Received: from [26.82.125.95] ([208.54.86.221])
+        by smtp.gmail.com with ESMTPSA id b2sm10783966otf.48.2019.07.19.09.53.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 09:52:10 -0700 (PDT)
-Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
- functions
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
- <20190707223303.6755-13-digetx@gmail.com>
- <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
- <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
- <45621f73-2f86-cde7-a92e-2a34810b9c05@samsung.com>
- <20190719042251.37cc9cda@dimatab>
- <92f82420-5c50-468f-a403-7b4c36958076@samsung.com>
- <97f2a317-989a-bcad-dd45-ccf00ba18cca@samsung.com>
- <20190719051426.4e4145d8@dimatab>
- <8e3de3b8-d3c6-fba3-0883-a2cd8d0c4c98@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <12ea5667-bd93-1103-b20f-95b012047d1d@gmail.com>
-Date:   Fri, 19 Jul 2019 19:52:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 19 Jul 2019 09:53:52 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 18:53:46 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAJWu+orxkFyoTTmFJs23FD0PKX-NetF4kVVLXnWkyLdCU2_cYQ@mail.gmail.com>
+References: <20190717172100.261204-1-joel@joelfernandes.org> <20190719161404.GA24170@redhat.com> <20190719162726.u5fi5k3tqove6hgn@brauner.io> <CAJWu+orxkFyoTTmFJs23FD0PKX-NetF4kVVLXnWkyLdCU2_cYQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8e3de3b8-d3c6-fba3-0883-a2cd8d0c4c98@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC v1] pidfd: fix a race in setting exit_state for pidfd polling
+To:     Joel Fernandes <joelaf@google.com>
+CC:     Oleg Nesterov <oleg@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Tejun Heo <tj@kernel.org>
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <28DEE709-0BD6-4915-B9AB-0ACCC7C02111@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.07.2019 9:01, Chanwoo Choi пишет:
-> On 19. 7. 19. 오전 11:14, Dmitry Osipenko wrote:
->> В Fri, 19 Jul 2019 10:27:16 +0900
->> Chanwoo Choi <cw00.choi@samsung.com> пишет:
+On July 19, 2019 6:51:20 PM GMT+02:00, Joel Fernandes <joelaf@google=2Ecom>=
+ wrote:
+>On Fri, Jul 19, 2019 at 12:27 PM Christian Brauner
+><christian@brauner=2Eio> wrote:
 >>
->>> On 19. 7. 19. 오전 10:24, Chanwoo Choi wrote:
->>>> On 19. 7. 19. 오전 10:22, Dmitry Osipenko wrote:  
->>>>> В Thu, 18 Jul 2019 18:09:05 +0900
->>>>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
->>>>>  
->>>>>> On 19. 7. 16. 오후 10:35, Dmitry Osipenko wrote:  
->>>>>>> 16.07.2019 15:26, Chanwoo Choi пишет:    
->>>>>>>> Hi Dmitry,
->>>>>>>>
->>>>>>>> I'm not sure that it is necessary.
->>>>>>>> As I knew, usally, the 'inline' is used on header file
->>>>>>>> to define the empty functions.
->>>>>>>>
->>>>>>>> Do we have to change it with 'inline' keyword?    
->>>>>>>
->>>>>>> The 'inline' attribute tells compiler that instead of jumping
->>>>>>> into the function, it should take the function's code and
->>>>>>> replace the function's invocation with that code. This is done
->>>>>>> in order to help compiler optimize code properly, please see
->>>>>>> [1]. There is absolutely no need to create a function call into
->>>>>>> a function that consists of a single instruction.
->>>>>>>
->>>>>>> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Inline.html
->>>>>>>     
->>>>>>
->>>>>> If you want to add 'inline' keyword, I recommend that 
->>>>>> you better to remove the modified function in this patch
->>>>>> and then just call the 'write_relaxed or read_relaxed' function
->>>>>> directly. It is same result when using inline keyword.  
->>>>>
->>>>> That could be done, but it makes code less readable.
->>>>>
->>>>> See the difference:
->>>>>
->>>>> device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
->>>>> ACTMON_DEV_INTR_STATUS);
->>>>>
->>>>> writel_relaxed(ACTMON_INTR_STATUS_CLEAR,
->>>>> 	       dev->regs + ACTMON_DEV_INTR_STATUS);  
->>>>
->>>> No problem if you add the detailed comment and you want to use
->>>> the 'inline' keyword.  
->>>
->>> Basically, I think that 'inline' keyword is not necessary.
+>> On Fri, Jul 19, 2019 at 06:14:05PM +0200, Oleg Nesterov wrote:
+>> > it seems that I missed something else=2E=2E=2E
+>> >
+>> > On 07/17, Joel Fernandes (Google) wrote:
+>> > >
+>> > > @@ -1156,10 +1157,11 @@ static int wait_task_zombie(struct
+>wait_opts *wo, struct task_struct *p)
+>> > >             ptrace_unlink(p);
+>> > >
+>> > >             /* If parent wants a zombie, don't release it now */
+>> > > -           state =3D EXIT_ZOMBIE;
+>> > > +           p->exit_state =3D EXIT_ZOMBIE;
+>> > >             if (do_notify_parent(p, p->exit_signal))
+>> > > -                   state =3D EXIT_DEAD;
+>> > > -           p->exit_state =3D state;
+>> > > +                   p->exit_state =3D EXIT_DEAD;
+>> > > +
+>> > > +           state =3D p->exit_state;
+>> > >             write_unlock_irq(&tasklist_lock);
+>> >
+>> > why do you think we also need to change wait_task_zombie() ?
+>> >
+>> > pidfd_poll() only needs the exit_state !=3D 0 check, we know that it
+>> > is not zero at this point=2E Why do we need to change exit_state
+>before
+>> > do_notify_parent() ?
 >>
->> Sure, but I'm finding that it's always nicer to explicitly inline a very
->> simple functions because compiler may not do it properly itself in some
->> cases.
+>> Oh, because of?:
 >>
->>> But if you want to use 'inline' keyword, I recommend
->>> that call the 'write_relaxed or read_relaxed' function directly
->>> with detailed description. 
+>>         /*
+>>          * Move the task's state to DEAD/TRACE, only one thread can
+>do this=2E
+>>          */
+>>         state =3D (ptrace_reparented(p) && thread_group_leader(p)) ?
+>>                 EXIT_TRACE : EXIT_DEAD;
+>>         if (cmpxchg(&p->exit_state, EXIT_ZOMBIE, state) !=3D
+>EXIT_ZOMBIE)
+>>                 return 0;
 >>
->> Could you please reword this sentence? Not sure that I'm understanding
->> it correctly.
+>> So exit_state will definitely be set in this scenario=2E Good point=2E
 >>
-> 
-> If you want to used 'inline' keyword,
-> Instead, I recommend that remove 'actmon_readl/writel' wrapper functions
-> and then you calls 'write_relaxed or read_relaxed' function directly
-> with detailed description.
-> 
+>
+>Agreed=2E Christian, do you mind dropping this hunk from the patch or do
+>you want me to resend the patch with the hunk dropped?
 
-This is a step into a wrong direction. Look, there is no need for extra
-comments and the code is clean with the variant I'm proposing, while you
-are asking to make code less readable and then paper that over with
-comments.
-
-I'll probably just drop this, #11 and #17 for now. Since these patches
-and not essential for the functionality of the driver and they are
-raising more questions than should be. Maybe we could get back to them
-at some point later.
+Yeah, no problem=2E :)
