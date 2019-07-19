@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B8EC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200CEC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A47A2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E093A2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510198;
-	bh=K+lgvhlJARZzRR8BpW0eTQ6hiGRb26FnZGlVHZoy5sw=;
+	s=default; t=1563510203;
+	bh=Y7yIv7NiqnMKlqnS/XdFV5YvI/uXmczHl1XNE5xGnh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWX1p8XKoEOT64smhbc8q7m5Ix62b92jThF6Dkg7ENfTiXvKBdgUt1jKrBBHM/N43
-	 NrFbRN+UDSn7beOh2cfoCPUeMGGtmsUhdmhsBRbcAcWF7il5UFf9NvHmdomK3z9RXl
-	 pT7BBfH/llrWCniWEjZ4cA1EAkeMSbXqT6dB0gF4=
+	b=oSUPSsQvvTgqmDm+pwPm/bgn6YFzY+pqV/JYaIKbexN8XJ6K8ou3KnY8EqfQPsZcr
+	 BQRtLQkx4KjNMCwEUOOhYuNIiKt9RH/zTwJzoJi7BU93AYChN2r6ymP9HeB9pPDlek
+	 FxqjjL+cYsOJgqOxlrFOo1F6PDaB2cGY6TDuJ+5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbfGSEXR (ORCPT
+        id S1732747AbfGSEKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45212 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733011AbfGSEK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:29 -0400
+        id S2388005AbfGSEKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA75218B6;
-        Fri, 19 Jul 2019 04:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2C4421873;
+        Fri, 19 Jul 2019 04:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509428;
-        bh=K+lgvhlJARZzRR8BpW0eTQ6hiGRb26FnZGlVHZoy5sw=;
+        s=default; t=1563509420;
+        bh=Y7yIv7NiqnMKlqnS/XdFV5YvI/uXmczHl1XNE5xGnh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CwPpeZJ6gnjhEQvDrHOocicErA3y9ZsKcI0D1c8yFcLBqS9pXcDf3O7+QizRLctb4
-         9dn/5E9EusnoITofmpqqtLJmeY/mLMwhFi3JCJh4CMqY8tQUha2OUWPn3IAXZ9btd8
-         3adAb0yWlXCJV2KxOmEEQak/JbedZL4+Ae1TGqbM=
+        b=Gu+bEUFlYth/LhwXqYYBhxe8DjK8dHI49LxT4UiOP/xbfuREEEmsv0xEbG4raivIV
+         FlfQ9rXtKscds7YQcsMKb7vbTfMLaKehTWDrd7XzAQnaINdXzxSWioGenJSjQGTrkF
+         1/uWn7sd/rzrjtd50ywQRxkt2HMizYNuVbGyXWNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 088/101] mm/kmemleak.c: fix check for softirq context
-Date:   Fri, 19 Jul 2019 00:07:19 -0400
-Message-Id: <20190719040732.17285-88-sashal@kernel.org>
+Cc:     David Windsor <dwindsor@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.19 083/101] dlm: check if workqueues are NULL before flushing/destroying
+Date:   Fri, 19 Jul 2019 00:07:14 -0400
+Message-Id: <20190719040732.17285-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -61,96 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Vyukov <dvyukov@google.com>
+From: David Windsor <dwindsor@redhat.com>
 
-[ Upstream commit 6ef9056952532c3b746de46aa10d45b4d7797bd8 ]
+[ Upstream commit b355516f450703c9015316e429b66a93dfff0e6f ]
 
-in_softirq() is a wrong predicate to check if we are in a softirq
-context.  It also returns true if we have BH disabled, so objects are
-falsely stamped with "softirq" comm.  The correct predicate is
-in_serving_softirq().
+If the DLM lowcomms stack is shut down before any DLM
+traffic can be generated, flush_workqueue() and
+destroy_workqueue() can be called on empty send and/or recv
+workqueues.
 
-If user does cat from /sys/kernel/debug/kmemleak previously they would
-see this, which is clearly wrong, this is system call context (see the
-comm):
+Insert guard conditionals to only call flush_workqueue()
+and destroy_workqueue() on workqueues that are not NULL.
 
-unreferenced object 0xffff88805bd661c0 (size 64):
-  comm "softirq", pid 0, jiffies 4294942959 (age 12.400s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000007dcb30c>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<0000000007dcb30c>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<0000000007dcb30c>] slab_alloc mm/slab.c:3326 [inline]
-    [<0000000007dcb30c>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-    [<00000000969722b7>] kmalloc include/linux/slab.h:547 [inline]
-    [<00000000969722b7>] kzalloc include/linux/slab.h:742 [inline]
-    [<00000000969722b7>] ip_mc_add1_src net/ipv4/igmp.c:1961 [inline]
-    [<00000000969722b7>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2085
-    [<00000000a4134b5f>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2475
-    [<00000000d20248ad>] do_ip_setsockopt.isra.0+0x19fe/0x1c00 net/ipv4/ip_sockglue.c:957
-    [<000000003d367be7>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1246
-    [<000000003c7c76af>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
-    [<000000000c1aeb23>] sock_common_setsockopt+0x3e/0x50 net/core/sock.c:3130
-    [<000000000157b92b>] __sys_setsockopt+0x9e/0x120 net/socket.c:2078
-    [<00000000a9f3d058>] __do_sys_setsockopt net/socket.c:2089 [inline]
-    [<00000000a9f3d058>] __se_sys_setsockopt net/socket.c:2086 [inline]
-    [<00000000a9f3d058>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-    [<000000001b8da885>] do_syscall_64+0x7c/0x1a0 arch/x86/entry/common.c:301
-    [<00000000ba770c62>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-now they will see this:
-
-unreferenced object 0xffff88805413c800 (size 64):
-  comm "syz-executor.4", pid 8960, jiffies 4294994003 (age 14.350s)
-  hex dump (first 32 bytes):
-    00 7a 8a 57 80 88 ff ff e0 00 00 01 00 00 00 00  .z.W............
-    00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000c5d3be64>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<00000000c5d3be64>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<00000000c5d3be64>] slab_alloc mm/slab.c:3326 [inline]
-    [<00000000c5d3be64>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-    [<0000000023865be2>] kmalloc include/linux/slab.h:547 [inline]
-    [<0000000023865be2>] kzalloc include/linux/slab.h:742 [inline]
-    [<0000000023865be2>] ip_mc_add1_src net/ipv4/igmp.c:1961 [inline]
-    [<0000000023865be2>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2085
-    [<000000003029a9d4>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2475
-    [<00000000ccd0a87c>] do_ip_setsockopt.isra.0+0x19fe/0x1c00 net/ipv4/ip_sockglue.c:957
-    [<00000000a85a3785>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1246
-    [<00000000ec13c18d>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
-    [<0000000052d748e3>] sock_common_setsockopt+0x3e/0x50 net/core/sock.c:3130
-    [<00000000512f1014>] __sys_setsockopt+0x9e/0x120 net/socket.c:2078
-    [<00000000181758bc>] __do_sys_setsockopt net/socket.c:2089 [inline]
-    [<00000000181758bc>] __se_sys_setsockopt net/socket.c:2086 [inline]
-    [<00000000181758bc>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-    [<00000000d4b73623>] do_syscall_64+0x7c/0x1a0 arch/x86/entry/common.c:301
-    [<00000000c1098bec>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Link: http://lkml.kernel.org/r/20190517171507.96046-1-dvyukov@gmail.com
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Windsor <dwindsor@redhat.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/kmemleak.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/dlm/lowcomms.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 72e3fb3bb037..6c94b6865ac2 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -576,7 +576,7 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
- 	if (in_irq()) {
- 		object->pid = 0;
- 		strncpy(object->comm, "hardirq", sizeof(object->comm));
--	} else if (in_softirq()) {
-+	} else if (in_serving_softirq()) {
- 		object->pid = 0;
- 		strncpy(object->comm, "softirq", sizeof(object->comm));
- 	} else {
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index a5e4a221435c..a93ebffe84b3 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1630,8 +1630,10 @@ static void clean_writequeues(void)
+ 
+ static void work_stop(void)
+ {
+-	destroy_workqueue(recv_workqueue);
+-	destroy_workqueue(send_workqueue);
++	if (recv_workqueue)
++		destroy_workqueue(recv_workqueue);
++	if (send_workqueue)
++		destroy_workqueue(send_workqueue);
+ }
+ 
+ static int work_start(void)
+@@ -1691,13 +1693,17 @@ static void work_flush(void)
+ 	struct hlist_node *n;
+ 	struct connection *con;
+ 
+-	flush_workqueue(recv_workqueue);
+-	flush_workqueue(send_workqueue);
++	if (recv_workqueue)
++		flush_workqueue(recv_workqueue);
++	if (send_workqueue)
++		flush_workqueue(send_workqueue);
+ 	do {
+ 		ok = 1;
+ 		foreach_conn(stop_conn);
+-		flush_workqueue(recv_workqueue);
+-		flush_workqueue(send_workqueue);
++		if (recv_workqueue)
++			flush_workqueue(recv_workqueue);
++		if (send_workqueue)
++			flush_workqueue(send_workqueue);
+ 		for (i = 0; i < CONN_HASH_SIZE && ok; i++) {
+ 			hlist_for_each_entry_safe(con, n,
+ 						  &connection_hash[i], list) {
 -- 
 2.20.1
 
