@@ -2,121 +2,142 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E7C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9492C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0BB2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="S7NSIgws"
+	by mail.kernel.org (Postfix) with ESMTP id 8E857218BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388693AbfGSVrz (ORCPT
+        id S2388747AbfGSVt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 17:47:55 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40531 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbfGSVrz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 17:47:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a15so32594851qtn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 14:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5HwGl0g54Inu2dbHSvUTjnjBXO/l4Rj8T8rMQLiptqQ=;
-        b=S7NSIgwsEeldpe7xNOPbAeT15AiLbQlHN5SkR4PFzKcUrnCuWgDYdIi6GFqO4QmLGa
-         O3p+XMs7pGfbtW2YdDsMea5DMxRqTA0bXKv+rqrhuC0PazCUwnTPKItm7cicOl6tC8b9
-         2QqkNbWkQoXW/Yhtza4WUxK82UPmCnyz5wZk/cUU5Dknmzxb5fM3F1KitYTurr36JSYp
-         NIfODJan61L2wwW69zYnwz0MTnkdPy6fPggNtG8vSFnXIyyv9z6P876+ZRoVBRFWeWOB
-         2lnMzlNyRswXmzb10WlEo7w5xTHFZPGwALYR0LUh6qVntZKzGMnS/8MhxrV0oAjyjNwB
-         3mhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5HwGl0g54Inu2dbHSvUTjnjBXO/l4Rj8T8rMQLiptqQ=;
-        b=F0rEZIvo8hoccuAdU/HxT8QRa/ptfg8ijG0nEOlNu+wuc/j5f33PM+sOk453GrtCBu
-         dfOethY2RDzbLWNSmuV/5hpkn1cTsf+LPph+S+mJt0BqOjgj0SiNnkLnCJQhX6yCX89v
-         UoXjVCuBgLT+NnkNA0zy1fc4I8SaN4Nypcy+rR9MVm35MFIXaWzmHGGiYEmIZlPA9hsn
-         occLx906Tbtm7i10F/rhWruc/bETMDDNQWaHr1mtjFmHF5Y9/MEw6JSIg0igP6jYMG5K
-         LxALBHVp9unwA+crnbzQAPKHPQ7F+h/ZMT2ZaLG1uzCfoUqRjuw7ac7AXjjzBGsrZiIy
-         r/XA==
-X-Gm-Message-State: APjAAAUBpaKv4PCgRxcunl6nqSDIWbhhzEiuDOlLIDq6PtQPjFFWj0vb
-        3O/MV7gMtzkdnoGjrZDRi7UX7w==
-X-Google-Smtp-Source: APXvYqw2RzqAIIsmVz3/U7pX3OR2QqfQEoLGKDqx/8DZeQgj2h2q3hME8vDfKuW76z7cPpa6BS23kA==
-X-Received: by 2002:ac8:394b:: with SMTP id t11mr38419556qtb.286.1563572874284;
-        Fri, 19 Jul 2019 14:47:54 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z1sm15011603qke.122.2019.07.19.14.47.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 14:47:53 -0700 (PDT)
-Message-ID: <1563572871.11067.2.camel@lca.pw>
-Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
-From:   Qian Cai <cai@lca.pw>
-To:     David Miller <davem@davemloft.net>
-Cc:     morbo@google.com, ndesaulniers@google.com, jyknight@google.com,
-        sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        arnd@arndb.de, dhowells@redhat.com, hpa@zytor.com,
-        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, natechancellor@gmail.com
-Date:   Fri, 19 Jul 2019 17:47:51 -0400
-In-Reply-To: <20190718.162928.124906203979938369.davem@davemloft.net>
-References: <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
-         <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
-         <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
-         <20190718.162928.124906203979938369.davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 19 Jul 2019 17:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728308AbfGSVt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 17:49:57 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E98A2184E;
+        Fri, 19 Jul 2019 21:49:57 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hoalI-0007yk-3x; Fri, 19 Jul 2019 17:49:56 -0400
+Message-Id: <20190719214931.700049248@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Fri, 19 Jul 2019 17:49:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        John Kacur <jkacur@redhat.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com
+Subject: [PATCH RT 00/16] Linux 4.19.59-rt24-rc1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-18 at 16:29 -0700, David Miller wrote:
-> From: Qian Cai <cai@lca.pw>
-> Date: Thu, 18 Jul 2019 19:26:47 -0400
-> 
-> > 
-> > 
-> >> On Jul 18, 2019, at 5:21 PM, Bill Wendling <morbo@google.com> wrote:
-> >> 
-> >> [My previous response was marked as spam...]
-> >> 
-> >> Top-of-tree clang says that it's const:
-> >> 
-> >> $ gcc a.c -O2 && ./a.out
-> >> a is a const.
-> >> 
-> >> $ clang a.c -O2 && ./a.out
-> >> a is a const.
-> > 
-> > 
-> > I used clang-7.0.1. So, this is getting worse where both GCC and clang will
-> start to suffer the
-> > same problem.
-> 
-> Then rewrite the module parameter macros such that the non-constness
-> is evident to all compilers regardless of version.
-> 
-> That is the place to fix this, otherwise we will just be adding hacks
-> all over the place rather than in just one spot.
 
-The problem is that when the compiler is compiling be_main.o, it has no
-knowledge about what is going to happen in load_module().  The compiler can only
-see that a "const struct kernel_param_ops" "__param_ops_rx_frag_size" at the
-time with
+Dear RT Folks,
 
-__param_ops_rx_frag_size.arg = &rx_frag_size
+This is the RT stable review cycle of patch 4.19.59-rt24-rc1.
 
-but only in load_module()->parse_args()->parse_one()->param_set_ushort(), it
-changes "__param_ops_rx_frag_size.arg" which in-turn changes the value
-of "rx_frag_size".
+Please scream at me if I messed something up. Please test the patches too.
+
+The -rc release will be uploaded to kernel.org and will be deleted when
+the final release is out. This is just a review release (or release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main release
+on 7/23/2019.
+
+Enjoy,
+
+-- Steve
+
+
+To build 4.19.59-rt24-rc1 directly, the following patches should be applied:
+
+  http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.59.xz
+
+  http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.59-rt24-rc1.patch.xz
+
+You can also build from 4.19.59-rt23 by applying the incremental patch:
+
+http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.59-rt23-rt24-rc1.patch.xz
+
+
+Changes from 4.19.59-rt23:
+
+---
+
+
+Luis Claudio R. Goncalves (1):
+      mm/zswap: Do not disable preemption in zswap_frontswap_store()
+
+Sebastian Andrzej Siewior (12):
+      kthread: add a global worker thread.
+      genirq: Do not invoke the affinity callback via a workqueue on RT
+      genirq: Handle missing work_struct in irq_set_affinity_notifier()
+      arm: imx6: cpuidle: Use raw_spinlock_t
+      rcu: Don't allow to change rcu_normal_after_boot on RT
+      sched/core: Drop a preempt_disable_rt() statement
+      timers: Redo the notification of canceling timers on -RT
+      Revert "futex: Ensure lock/unlock symetry versus pi_lock and hash bucket lock"
+      Revert "futex: Fix bug on when a requeued RT task times out"
+      Revert "rtmutex: Handle the various new futex race conditions"
+      Revert "futex: workaround migrate_disable/enable in different context"
+      futex: Make the futex_hash_bucket lock raw
+
+Steven Rostedt (VMware) (1):
+      Linux 4.19.59-rt24-rc1
+
+Thomas Gleixner (1):
+      futex: Delay deallocation of pi_state
+
+kbuild test robot (1):
+      pci/switchtec: fix stream_open.cocci warnings
+
+----
+ arch/arm/mach-imx/cpuidle-imx6q.c |  10 +-
+ drivers/block/loop.c              |   2 +-
+ drivers/pci/switch/switchtec.c    |   2 +-
+ drivers/spi/spi-rockchip.c        |   1 +
+ fs/timerfd.c                      |   5 +-
+ include/linux/hrtimer.h           |  17 +--
+ include/linux/interrupt.h         |   5 +-
+ include/linux/kthread-cgroup.h    |  17 +++
+ include/linux/kthread.h           |  17 ++-
+ include/linux/posix-timers.h      |   1 +
+ init/main.c                       |   1 +
+ kernel/futex.c                    | 231 ++++++++++++++++----------------------
+ kernel/irq/manage.c               |  24 ++--
+ kernel/kthread.c                  |  14 +++
+ kernel/locking/rtmutex.c          |  65 +----------
+ kernel/locking/rtmutex_common.h   |   3 -
+ kernel/rcu/update.c               |   2 +
+ kernel/sched/core.c               |   9 +-
+ kernel/time/alarmtimer.c          |   2 +-
+ kernel/time/hrtimer.c             |  36 ++----
+ kernel/time/itimer.c              |   2 +-
+ kernel/time/posix-cpu-timers.c    |  23 ++++
+ kernel/time/posix-timers.c        |  69 +++++-------
+ kernel/time/posix-timers.h        |   2 +
+ kernel/time/timer.c               |  96 ++++++++--------
+ localversion-rt                   |   2 +-
+ mm/zswap.c                        |  12 +-
+ 27 files changed, 290 insertions(+), 380 deletions(-)
+ create mode 100644 include/linux/kthread-cgroup.h
