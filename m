@@ -2,179 +2,78 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A141FC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEC6C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA9B208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:21:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nKh4nI3F"
+	by mail.kernel.org (Postfix) with ESMTP id 4811B2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfGSBVO (ORCPT
+        id S1726451AbfGSBYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:21:14 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:41180 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGSBVN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:21:13 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190719012111epoutp03f3fa20909d2a79e1f5688867ef45acbb~yqk253Rfs1397613976epoutp03h
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:21:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190719012111epoutp03f3fa20909d2a79e1f5688867ef45acbb~yqk253Rfs1397613976epoutp03h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563499271;
-        bh=8i7fTUFcI/SDJ3Ggs014esCNo3juctoyUC0Pve9OCu8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=nKh4nI3FLaRQOpwKEbXa5zU8vypEit/XHWA2G4EohkG0bJmNaKyWV6ADY7vgecJKO
-         BppVytiKUNJ/kVmZ96uPabGoMLuOVN+PQhm8+STNFiCaDhM84LyGnFo1PuKAkraISl
-         fEewgDslIZYIY98NuhnEEKcDykKaKRZ4nZbh2JzU=
-Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190719012111epcas1p2e6b90841af6c3627582eea48e69cbee0~yqk2nuS9a1279712797epcas1p2G;
-        Fri, 19 Jul 2019 01:21:11 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp5.localdomain (Postfix) with ESMTP id 45qY9c4fNfzMqYkp; Fri, 19 Jul
-        2019 01:21:08 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B3.31.04085.40B113D5; Fri, 19 Jul 2019 10:21:08 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190719012108epcas1p2288f8a788bcb6c8f584590d4566450bb~yqkz4fJmL2962429624epcas1p2V;
-        Fri, 19 Jul 2019 01:21:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190719012108epsmtrp102e95978fff87ca0336d5921a885d3fe~yqkz3sGVh1724117241epsmtrp1d;
-        Fri, 19 Jul 2019 01:21:08 +0000 (GMT)
-X-AuditID: b6c32a39-d03ff70000000ff5-0d-5d311b049eb8
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        82.F1.03706.40B113D5; Fri, 19 Jul 2019 10:21:08 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190719012108epsmtip1f032be36f67c71a51a2c3c8be7f28741~yqkzsCF0g2009120091epsmtip1S;
-        Fri, 19 Jul 2019 01:21:07 +0000 (GMT)
-Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
- functions
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <92f82420-5c50-468f-a403-7b4c36958076@samsung.com>
-Date:   Fri, 19 Jul 2019 10:24:18 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 18 Jul 2019 21:24:11 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2286 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726042AbfGSBYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 21:24:11 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0AB1B904D98FE21B46D7;
+        Fri, 19 Jul 2019 09:24:09 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 19 Jul 2019 09:24:01 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <bmt@zurich.ibm.com>, <dledford@redhat.com>, <jgg@ziepe.ca>
+CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next] infiniband: siw: remove set but not used variables 'rv'
+Date:   Fri, 19 Jul 2019 09:29:38 +0800
+Message-ID: <20190719012938.100628-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190719042251.37cc9cda@dimatab>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa2xLYRj29ZyedqN8uuFVCXVkki3Z1rOtnGEuMTQxM5mIkGWO9eiW9aan
-        G0PiUsY2HSaIjrnfzYZZqsySrSwIYY3EJZOKSVwns06wRrQ9xP49z/s+7/e8z/d9ckLZSKnk
-        RWY7bzNzRpqKJpvb4xMTyXFMnsb5Oo691PsWsdtdJ0n20bbPMtbnOUKxfU4vYisCLop9tfU8
-        xf701JFsdX0nNTtK5+46jXQ3XV0yndPRQ+mqmy4iXd+18TnSFcUzCnlOz9vUvLnAoi8yGzLo
-        hbn5c/O1UzRMIpPOTqXVZs7EZ9CZWTmJ84uMoYVodSlnLAmVcjhBoJNnzrBZSuy8utAi2DNo
-        3qo3WtOtSQJnEkrMhqQCi2kao9GkaEPCVcWF5Zd/Say+Yevdnq/SLagquhJFyQGnge9OJ1WJ
-        ouVK7EZwL1BFiOQbggOOE3/JdwS/3bXkv5Hm5hqZ2GhBUH3mKCmSrwg8DU+JsCoGLwX/+V/S
-        MI7Fk+Hc3aA0LCLwVQl0NF6WhBsUToDW98+pMB6BJ8KzH29RGCvwTPC390aGSRwHQcfeSH0U
-        Xg7f/O1SUTMS7h/ujqwUhZPg845DEWMCj4GX3cckIp4Ajhu1kQyAHTJ4sL0yROQhkglf3qnF
-        ODHwsaNJJmIVfNhT/hdvhAv3vZQ4uwtBU+sTqdhIhdYz+yXhcwgcDw2eZLE8EW4OHEWi73Do
-        6d8tFa0UsKtcKUomgc/fJRHxWDi1s4Lai2jXoDSuQQlcgxK4/psdR+RFNJq3CiYDLzBW7eDn
-        voYivzUh3Y3uPc5qQ1iO6GGKHJMmTynlSoUyUxsCOUHHKl59SM5TKvRc2QbeZsm3lRh5oQ1p
-        Q5e9j1CNKrCE/r7Zns9oU1JTU9k0ZoqWYegxirpgfJ4SGzg7X8zzVt72b04ij1JtQWmbnLn9
-        9beHzFISFTesTq/SoOvWTCp+UbAGD2wcGBrdF3wQiJnQtvRKd2c2P7Ih9+HvOS36dV7V6MXq
-        dm/jAvbFhowl1z2rM71vig7+4D6eHVhQteyZac3telvL5nmBqdP3VR5e53+ZsnbRyZoeQzDd
-        geL041XESl/2kcCVhV23PtGkUMgxCYRN4P4A7eJK0sMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnC6LtGGswb0J7BarPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZbWt+MRVc5qnYses9awNjN1cXIyeHhICJxLZt
-        k9i7GLk4hAR2M0p8XvqTCSIhKTHt4lHmLkYOIFtY4vDhYoiat4wS3x5OYwOpERYIkXiw4hcr
-        iC0ioCax/OgfVpAiZoHNTBJnT60GKxIS+MokseNWCIjNJqAlsf/FDbA4v4CixNUfjxlBbF4B
-        O4kHhz+CDWIRUJX40zwBLC4qECFxeMcsqBpBiZMzn7CA2JwCehJvWqczg9jMAuoSf+ZdgrLF
-        JW49mc8EYctLNG+dzTyBUXgWkvZZSFpmIWmZhaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi
-        0rx0veT83E2M4BjT0tzBeHlJ/CFGAQ5GJR7egFyDWCHWxLLiytxDjBIczEoivLdf6scK8aYk
-        VlalFuXHF5XmpBYfYpTmYFES532adyxSSCA9sSQ1OzW1ILUIJsvEwSnVwGgjuLFD8f3dpWvc
-        Hy03mny7W85wtoNHzmnBMku1nJf7+ZTXaMWz3l/1/cFq0002LosvPWBNDnLVjt2TtG6S0y7L
-        lL8MDX9dGUKu1d+f+cra4vJzi79WIV+Xc3ULev/e+l/x2fNvbgVdiyPXnyjYwTlnyyadbQKh
-        Os0v2x0Mvpr2nuNd4bHAOUyJpTgj0VCLuag4EQBYo5r8rQIAAA==
-X-CMS-MailID: 20190719012108epcas1p2288f8a788bcb6c8f584590d4566450bb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
-        <20190707223303.6755-13-digetx@gmail.com>
-        <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
-        <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
-        <45621f73-2f86-cde7-a92e-2a34810b9c05@samsung.com>
-        <20190719042251.37cc9cda@dimatab>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 19. 오전 10:22, Dmitry Osipenko wrote:
-> В Thu, 18 Jul 2019 18:09:05 +0900
-> Chanwoo Choi <cw00.choi@samsung.com> пишет:
-> 
->> On 19. 7. 16. 오후 10:35, Dmitry Osipenko wrote:
->>> 16.07.2019 15:26, Chanwoo Choi пишет:  
->>>> Hi Dmitry,
->>>>
->>>> I'm not sure that it is necessary.
->>>> As I knew, usally, the 'inline' is used on header file
->>>> to define the empty functions.
->>>>
->>>> Do we have to change it with 'inline' keyword?  
->>>
->>> The 'inline' attribute tells compiler that instead of jumping into
->>> the function, it should take the function's code and replace the
->>> function's invocation with that code. This is done in order to help
->>> compiler optimize code properly, please see [1]. There is
->>> absolutely no need to create a function call into a function that
->>> consists of a single instruction.
->>>
->>> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Inline.html
->>>   
->>
->> If you want to add 'inline' keyword, I recommend that 
->> you better to remove the modified function in this patch
->> and then just call the 'write_relaxed or read_relaxed' function
->> directly. It is same result when using inline keyword.
-> 
-> That could be done, but it makes code less readable.
-> 
-> See the difference:
-> 
-> device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
-> 
-> writel_relaxed(ACTMON_INTR_STATUS_CLEAR,
-> 	       dev->regs + ACTMON_DEV_INTR_STATUS);
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-No problem if you add the detailed comment and you want to use
-the 'inline' keyword.
+drivers/infiniband/sw/siw/siw_cm.c: In function siw_cep_set_inuse:
+drivers/infiniband/sw/siw/siw_cm.c:223:6: warning: variable rv set but not used [-Wunused-but-set-variable]
 
-> 
-> 
-> 
+It is not used since commit 6c52fdc244b5("rdma/siw: connection management")
 
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/infiniband/sw/siw/siw_cm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
+index a7cde98..9ce8a1b 100644
+--- a/drivers/infiniband/sw/siw/siw_cm.c
++++ b/drivers/infiniband/sw/siw/siw_cm.c
+@@ -220,13 +220,12 @@ static void siw_put_work(struct siw_cm_work *work)
+ static void siw_cep_set_inuse(struct siw_cep *cep)
+ {
+ 	unsigned long flags;
+-	int rv;
+ retry:
+ 	spin_lock_irqsave(&cep->lock, flags);
+ 
+ 	if (cep->in_use) {
+ 		spin_unlock_irqrestore(&cep->lock, flags);
+-		rv = wait_event_interruptible(cep->waitq, !cep->in_use);
++		wait_event_interruptible(cep->waitq, !cep->in_use);
+ 		if (signal_pending(current))
+ 			flush_signals(current);
+ 		goto retry;
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.7.4
+
