@@ -2,185 +2,143 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5992FC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7A4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239BA2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852902173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ih1HuuGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbfGSND0 (ORCPT
+        id S1728630AbfGSNFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:03:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37794 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726239AbfGSND0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:03:26 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 337BB58917896E0CF7E2;
-        Fri, 19 Jul 2019 21:03:24 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 19 Jul 2019
- 21:03:13 +0800
-From:   Zhihao@vger.kernel.org, Cheng@vger.kernel.org
-To:     <richard@nod.at>, <s.hauer@pengutronix.de>, <dedekind1@gmail.com>,
-        <yi.zhang@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH] ubifs: ubifs_tnc_start_commit: Fix OOB in layout_in_gaps
-Date:   Fri, 19 Jul 2019 21:09:00 +0800
-Message-ID: <1563541740-16726-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Jul 2019 09:05:01 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41360 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfGSNFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:05:00 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p15so34412652eds.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1Y5NlMhSpO0VyQx0ha3QqhFg3+xYgYUJ2KEPauiVoxY=;
+        b=ih1HuuGtn1KrC32/4Glz27f/kABjff30TWWMylH5ohzHv458wMCCVyI5IH0pDOT4ZD
+         aoI+8KpssatKdCdvWeqrn69QCNgrHF/LPyVttmhWgGS7HTSY5xeViY5asiPDUQoJMdYU
+         CxY2/dTEXR2NFxLCrK2rQJQF4xZDUnNlAGTMI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=1Y5NlMhSpO0VyQx0ha3QqhFg3+xYgYUJ2KEPauiVoxY=;
+        b=NGmY64f5Test+QCVQzYaqF3w/VceSa9bml+ScmJgpcGvm5Ol9LGWFZQHhs8pbZusHk
+         KB0MiOICNDJYKED2BeAJjPCNG6fMieOwvMYOinJ9m8qk5XsBITKxJWmNxj3CHGXkk0fF
+         BXPJsvu7eJf2H9FOGSbOkLVT0XMFhtZQS1uoIP/mbpGysrs9xa3unAzQk6YGq8F9NKin
+         kN7Sj/TBhyVOT8f0Okfu5MFAU6tBCrMjC70M8ghREiagOr2STytnRweupC/BLigZNUs9
+         LPorwDzipt7Y+H6Mj2pTDaabhfK62sBFEZ3+z962moYMO4z30BVFdDletQeBREsaz5xZ
+         mhHw==
+X-Gm-Message-State: APjAAAW8cV0/p9aOPcBXlmTFspI33Dd+TjyVs0nCCVF1d8gz5iGbWpAC
+        gxiCL259F3xpzFMiZmV/p+o=
+X-Google-Smtp-Source: APXvYqxPcBIc/kUti8pmP2meIW9/V9n5TtNotZwmEuAS3s2qNUF7hKzZkfvwNTTEOd1u4xQnQwRlhg==
+X-Received: by 2002:a17:906:2510:: with SMTP id i16mr40718573ejb.130.1563541499029;
+        Fri, 19 Jul 2019 06:04:59 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id q14sm6151066eju.47.2019.07.19.06.04.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 06:04:57 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 15:04:55 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     YueHaibing <yuehaibing@huawei.com>, james.qian.wang@arm.com,
+        liviu.dudau@arm.com, brian.starkey@arm.com, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH -next] drm/komeda: remove set but not used variable 'old'
+Message-ID: <20190719130455.GP15868@phenom.ffwll.local>
+Mail-Followup-To: YueHaibing <yuehaibing@huawei.com>,
+        james.qian.wang@arm.com, liviu.dudau@arm.com, brian.starkey@arm.com,
+        airlied@linux.ie, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20190709135808.56388-1-yuehaibing@huawei.com>
+ <20190718185150.GC15868@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718185150.GC15868@phenom.ffwll.local>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+On Thu, Jul 18, 2019 at 08:51:50PM +0200, Daniel Vetter wrote:
+> On Tue, Jul 09, 2019 at 09:58:08PM +0800, YueHaibing wrote:
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> > 
+> > drivers/gpu/drm/arm/display/komeda/komeda_plane.c:
+> >  In function komeda_plane_atomic_duplicate_state:
+> > drivers/gpu/drm/arm/display/komeda/komeda_plane.c:161:35:
+> >  warning: variable old set but not used [-Wunused-but-set-variable
+> > 
+> > It is not used since commit 990dee3aa456 ("drm/komeda:
+> > Computing image enhancer internally")
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Queued for 5.3, thanks for your patch.
 
-Running stress-test test_2 in mtd-utils on ubi device, sometimes we can
-get follwing oops message:
+Correction, this doesn't even compile. Please compile-test patches before
+submitting.
 
-  BUG: unable to handle page fault for address: ffffffff00000140
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 280a067 P4D 280a067 PUD 0
-  Oops: 0000 [#1] SMP
-  CPU: 0 PID: 60 Comm: kworker/u16:1 Kdump: loaded Not tainted 5.2.0 #13
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
-  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  Workqueue: writeback wb_workfn (flush-ubifs_0_0)
-  RIP: 0010:rb_next_postorder+0x2e/0xb0
-  Code: 80 db 03 01 48 85 ff 0f 84 97 00 00 00 48 8b 17 48 83 05 bc 80 db
-  03 01 48 83 e2 fc 0f 84 82 00 00 00 48 83 05 b2 80 db 03 01 <48> 3b 7a
-  10 48 89 d0 74 02 f3 c3 48 8b 52 08 48 83 05 a3 80 db 03
-  RSP: 0018:ffffc90000887758 EFLAGS: 00010202
-  RAX: ffff888129ae4700 RBX: ffff888138b08400 RCX: 0000000080800001
-  RDX: ffffffff00000130 RSI: 0000000080800024 RDI: ffff888138b08400
-  RBP: ffff888138b08400 R08: ffffea0004a6b920 R09: 0000000000000000
-  R10: ffffc90000887740 R11: 0000000000000001 R12: ffff888128d48000
-  R13: 0000000000000800 R14: 000000000000011e R15: 00000000000007c8
-  FS:  0000000000000000(0000) GS:ffff88813ba00000(0000)
-  knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffffff00000140 CR3: 000000013789d000 CR4: 00000000000006f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-    destroy_old_idx+0x5d/0xa0 [ubifs]
-    ubifs_tnc_start_commit+0x4fe/0x1380 [ubifs]
-    do_commit+0x3eb/0x830 [ubifs]
-    ubifs_run_commit+0xdc/0x1c0 [ubifs]
+Thanks, Daniel
 
-Above Oops are due to the slab-out-of-bounds happened in do-while of
-function layout_in_gaps indirectly called by ubifs_tnc_start_commit. In
-function layout_in_gaps, there is a do-while loop placing index nodes
-into the gaps created by obsolete index nodes in non-empty index LEBs
-until rest index nodes can totally be placed into pre-allocated empty
-LEBs. @c->gap_lebs points to a memory area(integer array) which records
-LEB numbers used by 'in-the-gaps' method. Whenever a fitable index LEB
-is found, corresponding lnum will be incrementally written into the
-memory area pointed by @c->gap_lebs. The size
-((@c->lst.idx_lebs + 1) * sizeof(int)) of memory area is allocated before
-do-while loop and can not be changed in the loop. But @c->lst.idx_lebs
-could be increased by function ubifs_change_lp (called by
-layout_leb_in_gaps->ubifs_find_dirty_idx_leb->get_idx_gc_leb) during the
-loop. So, sometimes oob happens when number of cycles in do-while loop
-exceeds the original value of @c->lst.idx_lebs. See detail in
-https://bugzilla.kernel.org/show_bug.cgi?id=204229.
-This patch fixes oob in layout_in_gaps.
+> -Daniel
+> 
+> > ---
+> >  drivers/gpu/drm/arm/display/komeda/komeda_plane.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> > index c095af1..c1381ac 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> > @@ -158,8 +158,6 @@ static void komeda_plane_reset(struct drm_plane *plane)
+> >  static struct drm_plane_state *
+> >  komeda_plane_atomic_duplicate_state(struct drm_plane *plane)
+> >  {
+> > -	struct komeda_plane_state *new, *old;
+> > -
+> >  	if (WARN_ON(!plane->state))
+> >  		return NULL;
+> >  
+> > @@ -169,8 +167,6 @@ komeda_plane_atomic_duplicate_state(struct drm_plane *plane)
+> >  
+> >  	__drm_atomic_helper_plane_duplicate_state(plane, &new->base);
+> >  
+> > -	old = to_kplane_st(plane->state);
+> > -
+> >  	return &new->base;
+> >  }
+> >  
+> > -- 
+> > 2.7.4
+> > 
+> > 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
----
- fs/ubifs/tnc_commit.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
-
-diff --git a/fs/ubifs/tnc_commit.c b/fs/ubifs/tnc_commit.c
-index a384a0f..9fc6b8e 100644
---- a/fs/ubifs/tnc_commit.c
-+++ b/fs/ubifs/tnc_commit.c
-@@ -212,7 +212,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
- /**
-  * layout_leb_in_gaps - layout index nodes using in-the-gaps method.
-  * @c: UBIFS file-system description object
-- * @p: return LEB number here
-+ * @p: return LEB number in @c->gap_lebs[p]
-  *
-  * This function lays out new index nodes for dirty znodes using in-the-gaps
-  * method of TNC commit.
-@@ -221,7 +221,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
-  * This function returns the number of index nodes written into the gaps, or a
-  * negative error code on failure.
-  */
--static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
-+static int layout_leb_in_gaps(struct ubifs_info *c, int p)
- {
- 	struct ubifs_scan_leb *sleb;
- 	struct ubifs_scan_node *snod;
-@@ -236,7 +236,7 @@ static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
- 		 * filled, however we do not check there at present.
- 		 */
- 		return lnum; /* Error code */
--	*p = lnum;
-+	c->gap_lebs[p] = lnum;
- 	dbg_gc("LEB %d", lnum);
- 	/*
- 	 * Scan the index LEB.  We use the generic scan for this even though
-@@ -355,7 +355,8 @@ static int get_leb_cnt(struct ubifs_info *c, int cnt)
-  */
- static int layout_in_gaps(struct ubifs_info *c, int cnt)
- {
--	int err, leb_needed_cnt, written, *p;
-+	int err, leb_needed_cnt, written, p = 0, old_idx_lebs;
-+	old_idx_lebs = c->lst.idx_lebs;
- 
- 	dbg_gc("%d znodes to write", cnt);
- 
-@@ -364,9 +365,8 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
- 	if (!c->gap_lebs)
- 		return -ENOMEM;
- 
--	p = c->gap_lebs;
- 	do {
--		ubifs_assert(c, p < c->gap_lebs + c->lst.idx_lebs);
-+		ubifs_assert(c, p < c->lst.idx_lebs);
- 		written = layout_leb_in_gaps(c, p);
- 		if (written < 0) {
- 			err = written;
-@@ -392,9 +392,25 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
- 		leb_needed_cnt = get_leb_cnt(c, cnt);
- 		dbg_gc("%d znodes remaining, need %d LEBs, have %d", cnt,
- 		       leb_needed_cnt, c->ileb_cnt);
-+		/*
-+		 * Dynamically change the size of @c->gap_lebs to prevent
-+		 * oob, because @c->lst.idx_lebs could be increased by
-+		 * function @get_idx_gc_leb (called by layout_leb_in_gaps->
-+		 * ubifs_find_dirty_idx_leb) during loop. Only enlarge
-+		 * @c->gap_lebs when needed.
-+		 *
-+		 */
-+		if (leb_needed_cnt > c->ileb_cnt && p >= old_idx_lebs &&
-+		    old_idx_lebs < c->lst.idx_lebs) {
-+			old_idx_lebs = c->lst.idx_lebs;
-+			c->gap_lebs = krealloc(c->gap_lebs, sizeof(int) *
-+					       (old_idx_lebs + 1), GFP_NOFS);
-+			if (!c->gap_lebs)
-+			      return -ENOMEM;
-+		}
- 	} while (leb_needed_cnt > c->ileb_cnt);
- 
--	*p = -1;
-+	c->gap_lebs[p] = -1;
- 	return 0;
- }
- 
 -- 
-2.7.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
