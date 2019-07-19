@@ -2,124 +2,98 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D31C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB51C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F361D21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lEIwx3RL"
+	by mail.kernel.org (Postfix) with ESMTP id 47DED2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388093AbfGSUic (ORCPT
+        id S2388123AbfGSUlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:38:32 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10966 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfGSUia (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:38:30 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d322a430000>; Fri, 19 Jul 2019 13:38:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 13:38:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 19 Jul 2019 13:38:29 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 20:38:29 +0000
-Subject: Re: [PATCH] mm/Kconfig: additional help text for HMM_MIRROR option
-To:     Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@infradead.org>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>, <john.hubbard@gmail.com>,
-        <SCheung@nvidia.com>, <akpm@linux-foundation.org>,
-        <aneesh.kumar@linux.vnet.ibm.com>, <benh@kernel.crashing.org>,
-        <bsingharora@gmail.com>, <dan.j.williams@intel.com>,
-        <dnellans@nvidia.com>, <ebaskakov@nvidia.com>,
-        <hannes@cmpxchg.org>, <jglisse@redhat.com>,
-        <kirill.shutemov@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-        <liubo95@huawei.com>, <mhairgrove@nvidia.com>, <mhocko@kernel.org>,
-        <paulmck@linux.vnet.ibm.com>, <ross.zwisler@linux.intel.com>,
-        <sgutti@nvidia.com>, <torvalds@linux-foundation.org>,
-        <vdavydov.dev@gmail.com>
-References: <20190717074124.GA21617@amd>
- <20190719013253.17642-1-jhubbard@nvidia.com>
- <20190719055748.GA29082@infradead.org> <20190719105239.GA10627@amd>
- <20190719114853.GB15816@ziepe.ca> <20190719120043.GA15320@infradead.org>
- <20190719120432.GC11224@amd>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b5143eb4-f519-57bc-4058-4ed934596ee1@nvidia.com>
-Date:   Fri, 19 Jul 2019 13:38:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 16:41:21 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46747 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728051AbfGSUlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:41:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:41:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
+   d="scan'208";a="168655824"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.165])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:19 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] KVM: VMX: Optimize VMX instrs error/fault handling
+Date:   Fri, 19 Jul 2019 13:41:05 -0700
+Message-Id: <20190719204110.18306-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190719120432.GC11224@amd>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563568707; bh=HOgbiC1squQlyZUEfp8+w/ovzOM9+ohIqBzXO8QodaU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lEIwx3RL04lFpBNY5+S/Kw1meYhtyvjL8ui4abkMkEnIpTrUAs8thEX5l66mPbQHD
-         DT9/FtywQh1keTjnzfeOvVEgLB4yeQRQwvY01O21U4FJPx5KHn74cOqmXjVipWMvmd
-         YPLOEM205r71SXNovjMmiRrBZ6imBZSFp54TXs6os43ujWgUQNfjb/0M3Dx6+ejJcd
-         7Y0KCB0cOQfkYuhuS3JeriCtdXgsuHbRcE/3Ifr5Xe8HeO5QPaXc2/CErw9bWWtEkq
-         viWB/uyB1gsFnPwpv6XwWTrGGJZgSo2/MjygaVNPma09JiD4ShLMxQq3UABzUSZ3ZP
-         xAlbRrO1obU6g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/19 5:04 AM, Pavel Machek wrote:
-> On Fri 2019-07-19 05:00:43, Christoph Hellwig wrote:
->> On Fri, Jul 19, 2019 at 08:48:53AM -0300, Jason Gunthorpe wrote:
->>> It is like MMU_NOTIFIERS, if something needs it, then it will select
->>> it.
->>>
->>> Maybe it should just be a hidden kconfig anyhow as there is no reason
->>> to turn it on without also turning on a using driver.
->>
->> We can't just select it due to the odd X86_64 || PPC64 dependency.
->>
->> Which also answers Pavels question:  you never really need it, as we
->> can only use it for optional functionality due to that.
-> 
-> Okay, just explain it in the help text :-)..
-> 
-> Alternatively... you can have WANT_HMM_MIRROR option drivers select,
-> and option HMM_MIRROR which is yes if WANT_HMM_MIRROR && (X86_64 ||
-> PPC64), no?
-> 
+A recent commit reworked __kvm_handle_fault_on_reboot() to play nice with
+objtool.  An unfortunate side effect is that JMP is now inserted after
+most VMX instructions so that the reboot macro can use an actual CALL to
+kvm_spurious_fault() instead of a funky PUSH+JMP facsimile in .fixup.
 
-Yes. This really should be a hidden option that just auto-enables. It's
-not ideal to require people to both *find* HMM_MIRROR, *and* figure out 
-that they need it. (I think it's just this way due to the history of how
-HMM got merged--it started off as a kind of experimental sandbox, so
-it had it's own config options, to avoid bothering anything else.)
+Rework the low level VMX instruction helpers to handle unexpected faults
+manually instead of relying on the "fault on reboot" macro.  By using
+asm-goto, most helpers can branch directly to an in-function call to
+kvm_spurious_fault(), which can then be optimized by compilers to reside
+out-of-line at the end of the function instead of inline as done by
+"fault on reboot".
 
-I'll send out a new patch to just auto-select. The WANT_HMM_MIRROR
-approach seems accurate, given the (X86_64 || PPC64) complication, probably
-after -rc1 is ready (I don't see the ODP code using HMM yet, so that
-must not have been merged yet.)
+The net impact relative to the current code base is more or less a nop
+when building with a compiler that supports __GCC_ASM_FLAG_OUTPUTS__.
+A bunch of code that was previously in .fixup gets moved into the slow
+paths of functions, but the fast paths are more basically unchanged.
 
-Longer term, I vaguely recall that there is no strong reason preventing 
-HMM from being made to work on other arches, and am hoping that it was
-just done this way to save development time. I don't want to leave it 
-this way unless there's a good reason to.
+Without __GCC_ASM_FLAG_OUTPUTS__, manually coding the Jcc is a net
+positive as CC_SET() without compiler support almost always generates a
+SETcc+CMP+Jcc sequence, which is now replaced with a single Jcc.
 
-thanks,
+A small bonus is that the Jcc instrs are hinted to predict that the VMX
+instr will be successful.
+
+v2:
+  - Rebased to x86/master, commit eceffd88ca20 ("Merge branch 'x86/urgent'")
+  - Reworded changelogs to reference the commit instead lkml link for
+    the recent changes to __kvm_handle_fault_on_reboot().
+  - Added Paolo's acks for patch 1-4
+  - Added patch 5 to do more cleanup, which was made possible by rebasing
+    on top of the __kvm_handle_fault_on_reboot() changes.
+  
+Sean Christopherson (5):
+  objtool: KVM: x86: Check kvm_rebooting in kvm_spurious_fault()
+  KVM: VMX: Optimize VMX instruction error and fault handling
+  KVM: VMX: Add error handling to VMREAD helper
+  KVM: x86: Drop ____kvm_handle_fault_on_reboot()
+  KVM: x86: Don't check kvm_rebooting in __kvm_handle_fault_on_reboot()
+
+ arch/x86/include/asm/kvm_host.h | 16 ++----
+ arch/x86/kvm/vmx/ops.h          | 93 ++++++++++++++++++++-------------
+ arch/x86/kvm/vmx/vmx.c          | 42 +++++++++++++++
+ arch/x86/kvm/x86.c              |  3 +-
+ tools/objtool/check.c           |  1 -
+ 5 files changed, 104 insertions(+), 51 deletions(-)
+
 -- 
-John Hubbard
-NVIDIA
+2.22.0
+
