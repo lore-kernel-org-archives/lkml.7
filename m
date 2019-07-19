@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84120C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0553C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B0321849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793042173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510130;
-	bh=N/baHv5FccMsejpscTTRCDSezMRcSj1IH53OyTadKEA=;
+	s=default; t=1563510134;
+	bh=lTpd3BwJntjvisbyb/KkUvM8RQIScLiS5UOe+xKdDrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNXYFSK5JsMUFf5a5H8ve/TrrbKT1I4LZqxw5H52Ai3OHRF5DwtoHAjtRk8Gafm78
-	 HQFgo5FeoPmyo76LIExuKe7A6X+dcsOv/EsWWL1EGDOqW+u6EHzpe9Mz/yrO8KJhfK
-	 mXvtb3HyuHml18JlzwWgQRSGDdSCJC8oy1Y/Md4s=
+	b=vJUsG1VLQVb3tjPAvYreR3bQNDyMvsGATRl0X8TlxwzJkhCDca/vD04yiBaTm6FEn
+	 oINXgwq8qDdVo2KOXiOpaUU0b7IMv+aEbKGGGdmAlUcTvo3mL/pO1b1tBpYRJ/Ju/b
+	 rN7ZdE6v2weImA9RS0IrTVT7L8Om1+YyibThwt9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389281AbfGSEWJ (ORCPT
+        id S2388445AbfGSEL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732454AbfGSEL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:29 -0400
+        id S1730254AbfGSELW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D43121873;
-        Fri, 19 Jul 2019 04:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3991121873;
+        Fri, 19 Jul 2019 04:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509488;
-        bh=N/baHv5FccMsejpscTTRCDSezMRcSj1IH53OyTadKEA=;
+        s=default; t=1563509481;
+        bh=lTpd3BwJntjvisbyb/KkUvM8RQIScLiS5UOe+xKdDrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzUTZ0791CVI3UDli3YY/2ZtkI6OIMH6SzWVCAm8MRx10vMJcd1MZuyZE2ofnaqiS
-         PyOV/Pnx7R13hqy8g4O7HyCZhmhp7+rB82x+YOy1ixnGOS3kk36ciaR8G8afvqp6A3
-         OYpWs7Bntk4J3T6G1b4Yizua8P6TH+3QamotczhU=
+        b=IK5y7uGNwssdy/6IMIpU1xh/iUIngh849+YaD94uVrjPS8aMcKCIWlgO8lykg+VF2
+         1g3zSWOa9apHjCxADf7uNsxdLBP/7c+KIdv5uN1mbIAM+iKa+37cedi8d1bLGsJfsw
+         5pStqknUABx0rz8M3SJoYXLKJ1WMV80HckPej+yo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai26@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/60] memstick: Fix error cleanup path of memstick_init
-Date:   Fri, 19 Jul 2019 00:10:20 -0400
-Message-Id: <20190719041109.18262-11-sashal@kernel.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/60] PCI: Return error if cannot probe VF
+Date:   Fri, 19 Jul 2019 00:10:16 -0400
+Message-Id: <20190719041109.18262-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -59,75 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai26@huawei.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
+[ Upstream commit 76002d8b48c4b08c9bd414517dd295e132ad910b ]
 
-If bus_register fails. On its error handling path, it has cleaned up
-what it has done. There is no need to call bus_unregister again.
-Otherwise, if bus_unregister is called, issues such as null-ptr-deref
-will arise.
+Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+VF driver binding") allows the user to specify that drivers for VFs of
+a PF should not be probed, but it actually causes pci_device_probe() to
+return success back to the driver core in this case.  Therefore by all
+sysfs appearances the device is bound to a driver, the driver link from
+the device exists as does the device link back from the driver, yet the
+driver's probe function is never called on the device.  We also fail to
+do any sort of cleanup when we're prohibited from probing the device,
+the IRQ setup remains in place and we even hold a device reference.
 
-Syzkaller report this:
+Instead, abort with errno before any setup or references are taken when
+pci_device_can_probe() prevents us from trying to probe the device.
 
-kobject_add_internal failed for memstick (error: -12 parent: bus)
-BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
-Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
-
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- __kasan_report+0x171/0x18d mm/kasan/report.c:321
- kasan_report+0xe/0x20 mm/kasan/common.c:614
- sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
- remove_probe_files drivers/base/bus.c:599 [inline]
- bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
- memstick_init+0x7a/0x1000 [memstick]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai26@huawei.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/lkml/155672991496.20698.4279330795743262888.stgit@gimli.home
+Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memstick/core/memstick.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/pci/pci-driver.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
-index 1246d69ba187..b1564cacd19e 100644
---- a/drivers/memstick/core/memstick.c
-+++ b/drivers/memstick/core/memstick.c
-@@ -629,13 +629,18 @@ static int __init memstick_init(void)
- 		return -ENOMEM;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index ea69b4dbab66..e5a8bf2c9b37 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -415,6 +415,9 @@ static int pci_device_probe(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	struct pci_driver *drv = to_pci_driver(dev->driver);
  
- 	rc = bus_register(&memstick_bus_type);
--	if (!rc)
--		rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_destroy_workqueue;
- 
--	if (!rc)
--		return 0;
-+	rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_bus_unregister;
++	if (!pci_device_can_probe(pci_dev))
++		return -ENODEV;
 +
-+	return 0;
+ 	pci_assign_irq(pci_dev);
  
-+error_bus_unregister:
- 	bus_unregister(&memstick_bus_type);
-+error_destroy_workqueue:
- 	destroy_workqueue(workqueue);
+ 	error = pcibios_alloc_irq(pci_dev);
+@@ -422,12 +425,10 @@ static int pci_device_probe(struct device *dev)
+ 		return error;
  
- 	return rc;
+ 	pci_dev_get(pci_dev);
+-	if (pci_device_can_probe(pci_dev)) {
+-		error = __pci_device_probe(drv, pci_dev);
+-		if (error) {
+-			pcibios_free_irq(pci_dev);
+-			pci_dev_put(pci_dev);
+-		}
++	error = __pci_device_probe(drv, pci_dev);
++	if (error) {
++		pcibios_free_irq(pci_dev);
++		pci_dev_put(pci_dev);
+ 	}
+ 
+ 	return error;
 -- 
 2.20.1
 
