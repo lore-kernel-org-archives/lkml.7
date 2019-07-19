@@ -2,144 +2,84 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B32C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCB6C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB0920873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RMdPRofs"
+	by mail.kernel.org (Postfix) with ESMTP id E4E0220873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfGSCdQ (ORCPT
+        id S1726606AbfGSCfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:33:16 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:61955 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGSCdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:33:16 -0400
-X-Greylist: delayed 780 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jul 2019 22:33:14 EDT
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x6J2WrVH023138;
-        Fri, 19 Jul 2019 11:32:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6J2WrVH023138
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563503574;
-        bh=o4kDIEiOXzUdJ+Z8z6JPgMvwKPIQSozYhtOJGTXOPH8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RMdPRofs+7OaQN9HtrCnCFAbbr9cR/BuVUFbXazR8UQ/vLxR7isJfq/QUtwv/l22y
-         kMFUZSeZOeokFzN4X1Ot11J+oA9En+gXvuwz78TQcOq/kcTr7yLkcCPL7wbqa+VdyU
-         ApL4MFmHqEHZN5aKo8fEpD9JGa/VhucgBtrTIvO0ZuA5LFaJNliYCr4WHz3YennSKr
-         pNYT2nH3pqlS6NJHJNtxu2hkkTNQ6S8A9ylLSfr/MmHSgaK6y8ebQEzQRYj6CczEVd
-         2tYbo5d6nXDuAMuPZCub65GwET1H1cTaScnooWEwb1zm4DvSct27hCOaudHeXolUP6
-         4GXdQu9zmD8+Q==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id g11so11977832uak.0;
-        Thu, 18 Jul 2019 19:32:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAUSSvWvWlCb7ZVVsPmUQv7m8xlcrlV382AjPCvXSMnIMHTflPxh
-        iViEuBv3faK3c2DQdR/GTEbGYB4cl+FsYVWNSrw=
-X-Google-Smtp-Source: APXvYqwJmFaw0ttu0Pk2N9UVkHCPbJkVCU9BI9jrIXysKgBPsfG9hnw2XaoBBKOEWE6BPwJXpxMQBBMke6pbEo87Ym0=
-X-Received: by 2002:a9f:2265:: with SMTP id 92mr17211400uad.121.1563503572441;
- Thu, 18 Jul 2019 19:32:52 -0700 (PDT)
+        Thu, 18 Jul 2019 22:35:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2682 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726015AbfGSCfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 22:35:30 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 313D2F73CA5F42628F4B;
+        Fri, 19 Jul 2019 10:35:28 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 19 Jul 2019 10:35:20 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <ville.syrjala@linux.intel.com>,
+        <maarten.lankhorst@linux.intel.com>, <matthew.d.roper@intel.com>
+CC:     YueHaibing <yuehaibing@huawei.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] drm/i915/icl: Remove set but not used variable 'src_y'
+Date:   Fri, 19 Jul 2019 02:41:00 +0000
+Message-ID: <20190719024100.64738-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190718125509.775525-1-arnd@arndb.de> <20190718125703.GA28332@lst.de>
- <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
- <20190718130835.GA28520@lst.de> <20190718142525.GE7116@magnolia>
- <CAK7LNASN5d_ppx6wJSm+fcf9HiX9i6zX4fxiR5_WuF6QUOExXQ@mail.gmail.com> <d63adfdf-7ac2-bc42-38c6-db1404a87d47@infradead.org>
-In-Reply-To: <d63adfdf-7ac2-bc42-38c6-db1404a87d47@infradead.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 19 Jul 2019 11:32:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT-E-2j-kDJ9qSjydRrW__PrCMy4D3GSw-+PP20Ax3zyA@mail.gmail.com>
-Message-ID: <CAK7LNAT-E-2j-kDJ9qSjydRrW__PrCMy4D3GSw-+PP20Ax3zyA@mail.gmail.com>
-Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 11:24 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 7/18/19 7:19 PM, Masahiro Yamada wrote:
-> > Hi.
-> >
-> > On Thu, Jul 18, 2019 at 11:28 PM Darrick J. Wong
-> > <darrick.wong@oracle.com> wrote:
-> >>
-> >> On Thu, Jul 18, 2019 at 03:08:35PM +0200, Christoph Hellwig wrote:
-> >>> On Thu, Jul 18, 2019 at 03:03:15PM +0200, Arnd Bergmann wrote:
-> >>>> The inclusion comes from the recently added header check in commit
-> >>>> c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
-> >>>>
-> >>>> This just tries to include every header by itself to see if there are build
-> >>>> failures from missing indirect includes. We probably don't want to
-> >>>> add an exception for iomap.h there.
-> >>>
-> >>> I very much disagree with that check.  We don't need to make every
-> >>> header compilable with a setup where it should not be included.
-> >>
-> >> Seconded, unless there's some scenario where someone needs iomap when
-> >> CONFIG_BLOCK=n (???)
-> >
-> > I agree.
-> >
-> > There is no situation that iomap.h is included when CONFIG_BLOCK=n.
-> > So, it is pointless to surround offending code with #ifdef
-> > just for the purpose of satisfying the header-test.
-> >
-> >
-> > I started to think
-> > compiling all headers is more painful than useful.
-> >
-> >
-> > MW is closing, so I am thinking of disabling it for now
-> > to take time to re-think.
-> >
-> >
-> > diff --git a/init/Kconfig b/init/Kconfig
-> > index bd7d650d4a99..cbb31d134f7e 100644
-> > --- a/init/Kconfig
-> > +++ b/init/Kconfig
-> > @@ -111,6 +111,7 @@ config HEADER_TEST
-> >  config KERNEL_HEADER_TEST
-> >         bool "Compile test kernel headers"
-> >         depends on HEADER_TEST
-> > +       depends on BROKEN
-> >         help
-> >           Headers in include/ are used to build external moduls.
-> >           Compile test them to ensure they are self-contained, i.e.
-> >
-> >
-> >
-> > Maybe, we should compile-test headers
-> > only when it is reasonable to do so.
->
-> Maybe.  But I would find it easier to use if it were a make target
-> instead of a Kconfig symbol, so someone could do
-> $ make compile_test_headers
+Fixes gcc '-Wunused-but-set-variable' warning:
+
+drivers/gpu/drm/i915/display/intel_sprite.c: In function 'g4x_sprite_check_scaling':
+drivers/gpu/drm/i915/display/intel_sprite.c:1494:13: warning:
+ variable 'src_y' set but not used [-Wunused-but-set-variable]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/i915/display/intel_sprite.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c b/drivers/gpu/drm/i915/display/intel_sprite.c
+index 34586f29be60..9c3367491f04 100644
+--- a/drivers/gpu/drm/i915/display/intel_sprite.c
++++ b/drivers/gpu/drm/i915/display/intel_sprite.c
+@@ -1491,7 +1491,7 @@ g4x_sprite_check_scaling(struct intel_crtc_state *crtc_state,
+ 	const struct drm_framebuffer *fb = plane_state->base.fb;
+ 	const struct drm_rect *src = &plane_state->base.src;
+ 	const struct drm_rect *dst = &plane_state->base.dst;
+-	int src_x, src_y, src_w, src_h, crtc_w, crtc_h;
++	int src_x, src_w, src_h, crtc_w, crtc_h;
+ 	const struct drm_display_mode *adjusted_mode =
+ 		&crtc_state->base.adjusted_mode;
+ 	unsigned int cpp = fb->format->cpp[0];
+@@ -1502,7 +1502,6 @@ g4x_sprite_check_scaling(struct intel_crtc_state *crtc_state,
+ 	crtc_h = drm_rect_height(dst);
+ 
+ 	src_x = src->x1 >> 16;
+-	src_y = src->y1 >> 16;
+ 	src_w = drm_rect_width(src) >> 16;
+ 	src_h = drm_rect_height(src) >> 16;
 
 
-You can do equivalent with this:
 
-$ ./scripts/config -e HEADER_TEST
-$ make include/
-
-
--- 
-Best Regards
-Masahiro Yamada
