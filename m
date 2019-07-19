@@ -2,32 +2,32 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB51C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB28AC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DED2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC62621883
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfGSUlV (ORCPT
+        id S2388230AbfGSUlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:41:21 -0400
+        Fri, 19 Jul 2019 16:41:25 -0400
 Received: from mga12.intel.com ([192.55.52.136]:46747 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbfGSUlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:41:20 -0400
+        id S2388128AbfGSUlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:41:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:41:20 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:41:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="168655824"
+   d="scan'208";a="168655834"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.165])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:19 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:21 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -37,10 +37,12 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/5] KVM: VMX: Optimize VMX instrs error/fault handling
-Date:   Fri, 19 Jul 2019 13:41:05 -0700
-Message-Id: <20190719204110.18306-1-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 3/5] KVM: VMX: Add error handling to VMREAD helper
+Date:   Fri, 19 Jul 2019 13:41:08 -0700
+Message-Id: <20190719204110.18306-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190719204110.18306-1-sean.j.christopherson@intel.com>
+References: <20190719204110.18306-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,52 +50,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent commit reworked __kvm_handle_fault_on_reboot() to play nice with
-objtool.  An unfortunate side effect is that JMP is now inserted after
-most VMX instructions so that the reboot macro can use an actual CALL to
-kvm_spurious_fault() instead of a funky PUSH+JMP facsimile in .fixup.
+Now that VMREAD flows require a taken branch, courtesy of commit
 
-Rework the low level VMX instruction helpers to handle unexpected faults
-manually instead of relying on the "fault on reboot" macro.  By using
-asm-goto, most helpers can branch directly to an in-function call to
-kvm_spurious_fault(), which can then be optimized by compilers to reside
-out-of-line at the end of the function instead of inline as done by
-"fault on reboot".
+  3901336ed9887 ("x86/kvm: Don't call kvm_spurious_fault() from .fixup")
 
-The net impact relative to the current code base is more or less a nop
-when building with a compiler that supports __GCC_ASM_FLAG_OUTPUTS__.
-A bunch of code that was previously in .fixup gets moved into the slow
-paths of functions, but the fast paths are more basically unchanged.
+bite the bullet and add full error handling to VMREAD, i.e. replace the
+JMP added by __ex()/____kvm_handle_fault_on_reboot() with a hinted Jcc.
 
-Without __GCC_ASM_FLAG_OUTPUTS__, manually coding the Jcc is a net
-positive as CC_SET() without compiler support almost always generates a
-SETcc+CMP+Jcc sequence, which is now replaced with a single Jcc.
+To minimize the code footprint, add a helper function, vmread_error(),
+to handle both faults and failures so that the inline flow has a single
+CALL.
 
-A small bonus is that the Jcc instrs are hinted to predict that the VMX
-instr will be successful.
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/ops.h | 21 +++++++++++++++++----
+ arch/x86/kvm/vmx/vmx.c |  8 ++++++++
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-v2:
-  - Rebased to x86/master, commit eceffd88ca20 ("Merge branch 'x86/urgent'")
-  - Reworded changelogs to reference the commit instead lkml link for
-    the recent changes to __kvm_handle_fault_on_reboot().
-  - Added Paolo's acks for patch 1-4
-  - Added patch 5 to do more cleanup, which was made possible by rebasing
-    on top of the __kvm_handle_fault_on_reboot() changes.
-  
-Sean Christopherson (5):
-  objtool: KVM: x86: Check kvm_rebooting in kvm_spurious_fault()
-  KVM: VMX: Optimize VMX instruction error and fault handling
-  KVM: VMX: Add error handling to VMREAD helper
-  KVM: x86: Drop ____kvm_handle_fault_on_reboot()
-  KVM: x86: Don't check kvm_rebooting in __kvm_handle_fault_on_reboot()
-
- arch/x86/include/asm/kvm_host.h | 16 ++----
- arch/x86/kvm/vmx/ops.h          | 93 ++++++++++++++++++++-------------
- arch/x86/kvm/vmx/vmx.c          | 42 +++++++++++++++
- arch/x86/kvm/x86.c              |  3 +-
- tools/objtool/check.c           |  1 -
- 5 files changed, 104 insertions(+), 51 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 79e25d49d4d9..45eaedee2ac0 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -11,9 +11,8 @@
+ #include "vmcs.h"
+ 
+ #define __ex(x) __kvm_handle_fault_on_reboot(x)
+-#define __ex_clear(x, reg) \
+-	____kvm_handle_fault_on_reboot(x, "xor " reg ", " reg)
+ 
++asmlinkage void vmread_error(unsigned long field, bool fault);
+ void vmwrite_error(unsigned long field, unsigned long value);
+ void vmclear_error(struct vmcs *vmcs, u64 phys_addr);
+ void vmptrld_error(struct vmcs *vmcs, u64 phys_addr);
+@@ -68,8 +67,22 @@ static __always_inline unsigned long __vmcs_readl(unsigned long field)
+ {
+ 	unsigned long value;
+ 
+-	asm volatile (__ex_clear("vmread %1, %0", "%k0")
+-		      : "=r"(value) : "r"(field));
++	asm volatile("1: vmread %2, %1\n\t"
++		     ".byte 0x3e\n\t" /* branch taken hint */
++		     "ja 3f\n\t"
++		     "mov %2, %%" _ASM_ARG1 "\n\t"
++		     "xor %%" _ASM_ARG2 ", %%" _ASM_ARG2 "\n\t"
++		     "2: call vmread_error\n\t"
++		     "xor %k1, %k1\n\t"
++		     "3:\n\t"
++
++		     ".pushsection .fixup, \"ax\"\n\t"
++		     "4: mov %2, %%" _ASM_ARG1 "\n\t"
++		     "mov $1, %%" _ASM_ARG2 "\n\t"
++		     "jmp 2b\n\t"
++		     ".popsection\n\t"
++		     _ASM_EXTABLE(1b, 4b)
++		     : ASM_CALL_CONSTRAINT, "=r"(value) : "r"(field) : "cc");
+ 	return value;
+ }
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 46689019ebf7..9acf3d6395d3 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -349,6 +349,14 @@ do {					\
+ 	pr_warn_ratelimited(fmt);	\
+ } while (0)
+ 
++asmlinkage void vmread_error(unsigned long field, bool fault)
++{
++	if (fault)
++		kvm_spurious_fault();
++	else
++		vmx_insn_failed("kvm: vmread failed: field=%lx\n", field);
++}
++
+ noinline void vmwrite_error(unsigned long field, unsigned long value)
+ {
+ 	vmx_insn_failed("kvm: vmwrite failed: field=%lx val=%lx err=%d\n",
 -- 
 2.22.0
 
