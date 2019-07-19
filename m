@@ -2,192 +2,196 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049EAC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA4EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE27620665
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ABF72080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfGSIrw (ORCPT
+        id S1727007AbfGSIsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:47:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52440 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725794AbfGSIrw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:47:52 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6J8l5o7093576
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:47:51 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tu95dkgqb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:47:51 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <hoeppner@linux.ibm.com>;
-        Fri, 19 Jul 2019 09:47:48 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 19 Jul 2019 09:47:45 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6J8lid351577020
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 08:47:44 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 335114203F;
-        Fri, 19 Jul 2019 08:47:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A52D42049;
-        Fri, 19 Jul 2019 08:47:43 +0000 (GMT)
-Received: from [9.145.166.247] (unknown [9.145.166.247])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Jul 2019 08:47:43 +0000 (GMT)
-Subject: Re: [PATCH AUTOSEL 5.2 149/171] s390/dasd: Make layout analysis ESE
- compatible
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Stefan Haberland <sth@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <20190719035643.14300-1-sashal@kernel.org>
- <20190719035643.14300-149-sashal@kernel.org>
- <a8ad62c7-383a-a890-ca20-4348d8ab9dec@de.ibm.com>
-From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
-Date:   Fri, 19 Jul 2019 10:47:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <a8ad62c7-383a-a890-ca20-4348d8ab9dec@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071908-4275-0000-0000-0000034EB5CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071908-4276-0000-0000-0000385ED14F
-Message-Id: <018f17c4-07c9-7fcf-1f22-0a712b452b25@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-19_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907190102
+        Fri, 19 Jul 2019 04:48:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38000 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726402AbfGSIsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 04:48:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F04C3AF10;
+        Fri, 19 Jul 2019 08:48:12 +0000 (UTC)
+From:   Nikolay Borisov <nborisov@suse.com>
+To:     linux-btrfs@vger.kernel.org
+Cc:     paulmck@linux.ibm.com, linux-kernel@vger.kernel.org,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [RFC PATCH] btrfs: Hook btrfs' DRW lock to locktorture infrastructure
+Date:   Fri, 19 Jul 2019 11:48:08 +0300
+Message-Id: <20190719084808.5877-1-nborisov@suse.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190719083949.5351-1-nborisov@suse.com>
+References: <20190719083949.5351-1-nborisov@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.07.19 09:47, Christian Borntraeger wrote:
-> The comment is true for all stable versions.
-> 
-> This patch is part of a larger series that enables ESE volumes.
-> I think it should not go alone as other patches like 
-> 5e2b17e712cf s390/dasd: Add dynamic formatting support for ESE volumes
-> are needed to actually work with ESE volumes.
-> So I suggest to drop this patch.
-> Jan, Stefan, do you agree?
-> 
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+---
 
-This patch is a requirement for ESE volumes to work and doesn't
-add any value alone. I suggest to drop this patch as well.
+Hello Paul, 
 
-Jan
+Here is the code I used to test the DRW lock via the lock torture infrastructure. 
+It's rather ugly but got the job done for me. It's definitely not in a mergeable
+form. At the very least I think including btrfs headers constitutes a violation 
+of separation of different subsystems. Would it be acceptable to guard them 
+behind something like "#if BTRFS && BTRFS_DEBUG" ? 
 
-> 
-> 
-> On 19.07.19 05:56, Sasha Levin wrote:
->> From: Jan Höppner <hoeppner@linux.ibm.com>
->>
->> [ Upstream commit ce6915f5343f5f2a2a937b683d8ffbf12dab3ad4 ]
->>
->> The disk layout and volume information of a DASD reside in the first two
->> tracks of cylinder 0. When a DASD is set online, currently the first
->> three tracks are read and analysed to confirm an expected layout.
->>
->> For CDL (Compatible Disk Layout) only count area data of the first track
->> is evaluated and checked against expected key and data lengths. For LDL
->> (Linux Disk Layout) the first and third track is evaluated. However,
->> an LDL formatted volume is expected to be in the same format across all
->> tracks. Checking the third track therefore doesn't have any more value
->> than checking any other track at random.
->>
->> Now, an Extent Space Efficient (ESE) DASD is initialised by only
->> formatting the first two tracks, as those tracks always contain all
->> information necessarry.
->>
->> Checking the third track on an ESE volume will therefore most likely
->> fail with a record not found error, as the third track will be empty.
->> This in turn leads to the device being recognised with a volume size of
->> 0. Attempts to write volume information on the first two tracks then
->> fail with "no space left on device" errors.
->>
->> Initialising the first three tracks for an ESE volume is not a viable
->> solution, because the third track is already a regular track and could
->> contain user data. With that there is potential for data corruption.
->>
->> Instead, always only analyse the first two tracks, as it is sufficiant
->> for both CDL and LDL, and allow ESE volumes to be recognised as well.
->>
->> Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
->> Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
->> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  drivers/s390/block/dasd_eckd.c | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
->> index c09039eea707..c7aec1b44b7c 100644
->> --- a/drivers/s390/block/dasd_eckd.c
->> +++ b/drivers/s390/block/dasd_eckd.c
->> @@ -157,7 +157,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
->>  #define LABEL_SIZE 140
->>  
->>  /* head and record addresses of count_area read in analysis ccw */
->> -static const int count_area_head[] = { 0, 0, 0, 0, 2 };
->> +static const int count_area_head[] = { 0, 0, 0, 0, 1 };
->>  static const int count_area_rec[] = { 1, 2, 3, 4, 1 };
->>  
->>  static inline unsigned int
->> @@ -1823,8 +1823,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
->>  	if (IS_ERR(cqr))
->>  		return cqr;
->>  	ccw = cqr->cpaddr;
->> -	/* Define extent for the first 3 tracks. */
->> -	define_extent(ccw++, cqr->data, 0, 2,
->> +	/* Define extent for the first 2 tracks. */
->> +	define_extent(ccw++, cqr->data, 0, 1,
->>  		      DASD_ECKD_CCW_READ_COUNT, device, 0);
->>  	LO_data = cqr->data + sizeof(struct DE_eckd_data);
->>  	/* Locate record for the first 4 records on track 0. */
->> @@ -1843,9 +1843,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
->>  		count_data++;
->>  	}
->>  
->> -	/* Locate record for the first record on track 2. */
->> +	/* Locate record for the first record on track 1. */
->>  	ccw[-1].flags |= CCW_FLAG_CC;
->> -	locate_record(ccw++, LO_data++, 2, 0, 1,
->> +	locate_record(ccw++, LO_data++, 1, 0, 1,
->>  		      DASD_ECKD_CCW_READ_COUNT, device, 0);
->>  	/* Read count ccw. */
->>  	ccw[-1].flags |= CCW_FLAG_CC;
->> @@ -1967,7 +1967,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
->>  		}
->>  	}
->>  	if (i == 3)
->> -		count_area = &private->count_area[4];
->> +		count_area = &private->count_area[3];
->>  
->>  	if (private->uses_cdl == 0) {
->>  		for (i = 0; i < 5; i++) {
->>
+I'm really posting this just for posterity/provenance purposes. I'm fine with 
+dropping the patch. 
+
+
+ fs/btrfs/locking.h           |  1 +
+ kernel/locking/locktorture.c | 77 +++++++++++++++++++++++++++++++++++-
+ 2 files changed, 77 insertions(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/locking.h b/fs/btrfs/locking.h
+index 44378c65f843..27627d4fd3a9 100644
+--- a/fs/btrfs/locking.h
++++ b/fs/btrfs/locking.h
+@@ -9,6 +9,7 @@
+ #include <linux/atomic.h>
+ #include <linux/wait.h>
+ #include <linux/percpu_counter.h>
++#include "extent_io.h"
+ 
+ #define BTRFS_WRITE_LOCK 1
+ #define BTRFS_READ_LOCK 2
+diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+index 80a463d31a8d..774e10a25876 100644
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -30,6 +30,8 @@
+ #include <linux/slab.h>
+ #include <linux/percpu-rwsem.h>
+ #include <linux/torture.h>
++#include "../../fs/btrfs/ctree.h"
++#include "../../fs/btrfs/locking.h"
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com>");
+@@ -85,6 +87,7 @@ struct lock_torture_ops {
+ 
+ 	unsigned long flags; /* for irq spinlocks */
+ 	const char *name;
++	bool multiple;
+ };
+ 
+ struct lock_torture_cxt {
+@@ -600,6 +603,7 @@ static void torture_percpu_rwsem_up_read(void) __releases(pcpu_rwsem)
+ 	percpu_up_read(&pcpu_rwsem);
+ }
+ 
++
+ static struct lock_torture_ops percpu_rwsem_lock_ops = {
+ 	.init		= torture_percpu_rwsem_init,
+ 	.writelock	= torture_percpu_rwsem_down_write,
+@@ -612,6 +616,76 @@ static struct lock_torture_ops percpu_rwsem_lock_ops = {
+ 	.name		= "percpu_rwsem_lock"
+ };
+ 
++static struct btrfs_drw_lock torture_drw_lock;
++
++void torture_drw_init(void)
++{
++	BUG_ON(btrfs_drw_lock_init(&torture_drw_lock));
++}
++
++static int torture_drw_write_lock(void) __acquires(torture_drw_lock)
++{
++	btrfs_drw_write_lock(&torture_drw_lock);
++	return 0;
++}
++
++static void torture_drw_write_unlock(void) __releases(torture_drw_lock)
++{
++	btrfs_drw_write_unlock(&torture_drw_lock);
++}
++
++static int torture_drw_read_lock(void) __acquires(torture_drw_lock)
++{
++	btrfs_drw_read_lock(&torture_drw_lock);
++	return 0;
++}
++
++static void torture_drw_read_unlock(void) __releases(torture_drw_lock)
++{
++	btrfs_drw_read_unlock(&torture_drw_lock);
++}
++
++static void torture_drw_write_delay(struct torture_random_state *trsp)
++{
++	const unsigned long longdelay_ms = 100;
++
++	/* We want a long delay occasionally to force massive contention.  */
++	if (!(torture_random(trsp) %
++	      (cxt.nrealwriters_stress * 2000 * longdelay_ms)))
++		mdelay(longdelay_ms * 10);
++	else
++		mdelay(longdelay_ms / 10);
++	if (!(torture_random(trsp) % (cxt.nrealwriters_stress * 20000)))
++		torture_preempt_schedule();  /* Allow test to be preempted. */
++}
++
++static void torture_drw_read_delay(struct torture_random_state *trsp)
++{
++	const unsigned long longdelay_ms = 100;
++
++	/* We want a long delay occasionally to force massive contention.  */
++	if (!(torture_random(trsp) %
++	      (cxt.nrealreaders_stress * 2000 * longdelay_ms)))
++		mdelay(longdelay_ms * 2);
++	else
++		mdelay(longdelay_ms / 2);
++	if (!(torture_random(trsp) % (cxt.nrealreaders_stress * 20000)))
++		torture_preempt_schedule();  /* Allow test to be preempted. */
++}
++
++static struct lock_torture_ops btrfs_drw_lock_ops = {
++	.init		= torture_drw_init,
++	.writelock	= torture_drw_write_lock,
++	.write_delay	= torture_drw_write_delay,
++	.task_boost     = torture_boost_dummy,
++	.writeunlock	= torture_drw_write_unlock,
++	.readlock       = torture_drw_read_lock,
++	.read_delay     = torture_drw_read_delay, /* figure what to do with this */
++	.readunlock     = torture_drw_read_unlock,
++	.multiple = true,
++	.name		= "btrfs_drw_lock"
++};
++
+ /*
+  * Lock torture writer kthread.  Repeatedly acquires and releases
+  * the lock, checking for duplicate acquisitions.
+@@ -630,7 +704,7 @@ static int lock_torture_writer(void *arg)
+ 
+ 		cxt.cur_ops->task_boost(&rand);
+ 		cxt.cur_ops->writelock();
+-		if (WARN_ON_ONCE(lock_is_write_held))
++		if (!cxt.cur_ops->multiple && WARN_ON_ONCE(lock_is_write_held))
+ 			lwsp->n_lock_fail++;
+ 		lock_is_write_held = 1;
+ 		if (WARN_ON_ONCE(lock_is_read_held))
+@@ -852,6 +926,7 @@ static int __init lock_torture_init(void)
+ #endif
+ 		&rwsem_lock_ops,
+ 		&percpu_rwsem_lock_ops,
++		&btrfs_drw_lock_ops
+ 	};
+ 
+ 	if (!torture_init_begin(torture_type, verbose))
+-- 
+2.17.1
 
