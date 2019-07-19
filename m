@@ -2,137 +2,122 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C48C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF9DC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9442077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C8C2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGRCvWxw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PIBTVtTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfGSAgu (ORCPT
+        id S1726425AbfGSAg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:36:50 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41730 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGSAgu (ORCPT
+        Thu, 18 Jul 2019 20:36:59 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44949 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfGSAg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:36:50 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 62so15613188lfa.8;
-        Thu, 18 Jul 2019 17:36:48 -0700 (PDT)
+        Thu, 18 Jul 2019 20:36:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t14so14692365plr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d6XRGsphvO5VwyeOTd5IMW9yead4IXNTP6aR3kKM4EQ=;
-        b=aGRCvWxwn2WzSEgd1n1l8Vh27OT1zQaA5s6nZ0E3niteyofVZwJbOiJkiwO9PH+W98
-         BCsjJgAxfzHgPzTWuL5/6VVspWNLRWxgcbl2Z9rxk1D97rZNHW62qCPRBKRUOCIWCld+
-         fMxrnxNKiZtq29pjy0XRve1dKRtouBSnDtz7HNox4gPea4maBlM735SaG3SLxp/3Jcqc
-         2g0M3ClnAnjV+QIa0nMzYxJqHOycDJp9YecdN8wbOyAuK/zqmmlW089BciNm5vsNG+TV
-         jSr3HGVWZYp+VwsKSEdn+yk/Yoa2dNTxegKi8NsQefGDOtU5ZU7VBCkzNXD5YMMtzafb
-         UWOA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OnU2jQx1H+2VCBHEGo1995LVw57aSop7IIeZNBH89nc=;
+        b=PIBTVtTqR6+ev2CTE/DKLURMWifMrFafD1Q/T4svlXBkiVuxjUkHCnMG1lfswD8T5o
+         SgX5fQFN3SxryUwTHj74wUzFhGQ40vKyiFtztJTX7ZpRVQ8NC3wNSUUhYHSB5LpPv/kn
+         zkCO5VB1D2Jbem/fs7JWp0gL+rpoTsp8TsJSEQvoOaBgrKd9oSJuvDg3q2bbbJpfNcT1
+         1Jsr6KcydEMbUD0wO5fliFID/VjPvBFec+xMzAl1JpYwvngWXGClZ4pztq8Ot2oAO6p7
+         g300dx6bwoNHVv6bq/1oq4pooVSrXDJzv/hvMSv0TAOOn31teG9WAuJs1KTQ9/UFaqg+
+         MroQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d6XRGsphvO5VwyeOTd5IMW9yead4IXNTP6aR3kKM4EQ=;
-        b=BkrB6p7m8+Cklk9Sw5lrU+FwaeD3wR0+CUxawqHEtOIWMd1N4F797qud7xrm+Cb0Z1
-         HQHTM/uAdo+AneCSfEAx1ABlcRsUidvl+pKhMtYBkk/ZrFFmh4MYkWdtyI0SAO5EF+rI
-         Re/LzH3+pljTdriu8N/KCe1ejDNf29U2pR0cqJcCzN0Jd+uTpIzLkvkkwGkHye3qDixa
-         K+NlMm/0JdChJqcfCRASNbCMTiOtEO6Go/fmACxm86ES/n5JrwpQnxM0GWL0ima7pGGF
-         zoMFAOnPtGWLvLH5raSZXFZJTD0xWkOKmWWRxH7Jj7F4exagL0OivQDajWE73deulf0b
-         yEHQ==
-X-Gm-Message-State: APjAAAWpBlRVK/5UIedRj5ktQqQONiqzvNU9wyjvFNvAVMslTwtgzNx3
-        zR9i4tziSMpDOj3WNZXiUnE=
-X-Google-Smtp-Source: APXvYqx6kxUTxgleSYbBtQCAXESEe/JwOtRHpq7xJ1C3VU3OCfBetFuk2jnZGapCuV9p18o+wZQ98w==
-X-Received: by 2002:a19:9111:: with SMTP id t17mr22440659lfd.113.1563496608296;
-        Thu, 18 Jul 2019 17:36:48 -0700 (PDT)
-Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id z83sm5368566ljb.73.2019.07.18.17.36.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OnU2jQx1H+2VCBHEGo1995LVw57aSop7IIeZNBH89nc=;
+        b=ZTGIsQ9tsIUjCsOx4Nnu2g6BVwp/iZr+bEf2U/imq5+DeVNZGO6NpejoOhrIWq9VKN
+         YEynk1z4yAh19dBnBzrBOd8hDAxPXIGoW0WfJxLDQCXqey6ECmmDG4QzwbnEimwuQ1PI
+         VQJYE2QtEEs2laYgna585LLzoQRuiuCWOHZ3Y2OSRsSIB5hxAbuS/VjRebz+MCVrL2F+
+         VPXp3eNwrL8nXNImR8DagKr1r03/YT6L0Vzj+7+hkimKlIMwhI8QEWZAvEGKQGAsUoZ+
+         iVSn1W79JcrcND6B1ujysLVnqipkfO1zsmQr4tWwiV0hkzgy29Gf0zruaz2m/wOXP9ac
+         7bog==
+X-Gm-Message-State: APjAAAWqYDQq5EYP/LUKQepXdbXbTDuQ4bjyODzuGrq5y2CkN04UNcw0
+        wxWRYloLux6avdqmWICg04lU0w==
+X-Google-Smtp-Source: APXvYqxCMvNQL956cnE+p4k3mnSVCs+/HR7epvTt3H3ohlGcfLW7nf/6SFkkyRx2IsDwIHxlAocz9A==
+X-Received: by 2002:a17:902:9688:: with SMTP id n8mr52272137plp.227.1563496617905;
+        Thu, 18 Jul 2019 17:36:57 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r6sm53800797pjb.22.2019.07.18.17.36.56
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 17:36:48 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 03:40:25 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 19/24] PM / devfreq: tegra30: Optimize upper
- consecutive watermark selection
-Message-ID: <20190719034025.67c82123@dimatab>
-In-Reply-To: <17fabbaf-ceca-7551-0a58-9c8a0e7027ed@samsung.com>
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223622epcas4p48ec0d7e6fa26bc2397fa4351c0bd0c2d@epcas4p4.samsung.com>
-        <20190707223303.6755-20-digetx@gmail.com>
-        <17fabbaf-ceca-7551-0a58-9c8a0e7027ed@samsung.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        Thu, 18 Jul 2019 17:36:57 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 17:36:55 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Benjamin LaHaise <ben@communityfibre.ca>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] aio: Support read/write with non-iter file-ops
+Message-ID: <20190719003655.GO30636@minitux>
+References: <20190718231054.8175-1-bjorn.andersson@linaro.org>
+ <20190718231751.GV17978@ZenIV.linux.org.uk>
+ <20190718234352.GN30636@minitux>
+ <20190718235616.GM29731@kvack.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718235616.GM29731@kvack.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=92 Thu, 18 Jul 2019 18:51:02 +0900
-Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On Thu 18 Jul 16:56 PDT 2019, Benjamin LaHaise wrote:
 
-> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote:
-> > The memory activity counter may get a bit higher than a watermark
-> > which is selected based on OPP that corresponds to a highest EMC
-> > rate, in this case watermark is lower than the actual memory
-> > activity is and thus results in unwanted "upper" interrupts.
-> >=20
-> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> > ---
-> >  drivers/devfreq/tegra30-devfreq.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-) =20
->=20
-> It seems that you can combine patch19 with patch20.
+> On Thu, Jul 18, 2019 at 04:43:52PM -0700, Bjorn Andersson wrote:
+> > On Thu 18 Jul 16:17 PDT 2019, Al Viro wrote:
+> > 
+> > > On Thu, Jul 18, 2019 at 04:10:54PM -0700, Bjorn Andersson wrote:
+> > > > Implement a wrapper for aio_read()/write() to allow async IO on files
+> > > > not implementing the iter version of read/write, such as sysfs. This
+> > > > mimics how readv/writev uses non-iter ops in do_loop_readv_writev().
+> > > 
+> > > IDGI.  How would that IO manage to be async?  And what's the point
+> > > using aio in such situations in the first place?
+> > 
+> > The point is that an application using aio to submit io operations on a
+> > set of files, can use the same mechanism to read/write files that
+> > happens to be implemented by driver only implementing read/write (not
+> > read_iter/write_iter) in the registered file_operations struct, such as
+> > kernfs.
+> > 
+> > In this particular case I have a sysfs file that is accessing hardware
+> > and hence will block for a while and using this patch I can io_submit()
+> > a write and handle the completion of this in my normal event loop.
+> > 
+> > 
+> > Each individual io operation will be just as synchronous as the current
+> > iter-based mechanism - for the drivers that implement that.
+> 
+> Just adding the fops is not enough.  I have patches floating around at
+> Solace that add thread based fallbacks for files that don't have an aio
+> read / write implementation, but I'm not working on that code any more.
 
-No, consecutive and average watermarks are different things that have
-different purposes. Consecutive are used for boosting, while average
-are for significant memory bandwidth changes.
+My bad. Took another look and now I see the bigger picture of how this
+is currently implemented and why just adding the fops would defeat the
+purpose of the api.
 
-> >=20
-> > diff --git a/drivers/devfreq/tegra30-devfreq.c
-> > b/drivers/devfreq/tegra30-devfreq.c index
-> > 8d6bf6e9f1ae..c3cf87231d25 100644 ---
-> > a/drivers/devfreq/tegra30-devfreq.c +++
-> > b/drivers/devfreq/tegra30-devfreq.c @@ -363,7 +363,18 @@ static
-> > void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
-> > tegra_actmon_get_lower_upper(tegra, dev, freq - 1, &lower, &upper);=20
-> >  	delta =3D do_percent(upper - lower,
-> > dev->config->boost_up_threshold);
-> > -	device_writel(dev, lower + delta, ACTMON_DEV_UPPER_WMARK);
-> > +
-> > +	/*
-> > +	 * The memory events count could go a bit higher than the
-> > maximum
-> > +	 * defined by the OPPs, hence make the upper watermark
-> > infinitely
-> > +	 * high to avoid unnecessary upper interrupts in that case.
-> > +	 */
-> > +	if (freq =3D=3D tegra->max_freq)
-> > +		upper =3D ULONG_MAX;
-> > +	else
-> > +		upper =3D lower + delta;
-> > +
-> > +	device_writel(dev, upper, ACTMON_DEV_UPPER_WMARK);
-> > =20
-> >  	/*
-> >  	 * Meanwhile the lower mark is based on the average value
-> >  =20
->=20
->=20
+Sorry for the noise.
 
+> The thread based methods were quite useful in applications that had a need
+> for using other kernel infrastructure in their main event loops.
+> 
+
+Yes indeed.
+
+Regards,
+Bjorn
