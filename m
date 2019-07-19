@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC3BC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFA0C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3992082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3226A2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509996;
-	bh=4oix9x7A/tqf3jdGjWpv3BVILSw+e5mGGDNcbkJd5vQ=;
+	s=default; t=1563510000;
+	bh=uDexvjbjNcUsM9NywNHmASlS28zuNCaffm46xWjs7TI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0PNMsPxqPVqwvc7cxXsGFn7i2O7AhAYk6wB02QYIh0xAy78tu+gKs73Z1FMJnXU+
-	 ptlzv7H2n+OxZOne4v9TRHDsMykBs9nSVQMt+ThC8t9aLYIwx7Xd1XAZ3VFxim6vf5
-	 WqFmN9/Y8fslUw1LnobHivbKCGqczBYLKO0Dki+c=
+	b=XKHR39CD/0U3xT1qsA7DOg5CxKRy1le5xUgK6oDDTd8IadUrw7Z9wDZ/O/LrGMlar
+	 CxrGPP177iPCRDfykDT/2p6jS2Y978YCFIx2imtvUX8IMSxiEK07fe39KMkWy/8k/O
+	 +jFkmXIb1C5/+uHLXui3wc07c83jKW3NoQvpHpmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbfGSEMw (ORCPT
+        id S2388953AbfGSET6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388933AbfGSEMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:44 -0400
+        id S2388223AbfGSEMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA94F218E0;
-        Fri, 19 Jul 2019 04:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6606218D4;
+        Fri, 19 Jul 2019 04:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509563;
-        bh=4oix9x7A/tqf3jdGjWpv3BVILSw+e5mGGDNcbkJd5vQ=;
+        s=default; t=1563509571;
+        bh=uDexvjbjNcUsM9NywNHmASlS28zuNCaffm46xWjs7TI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7NZJncvgUQ4enC81DZJy7mVsYCnFkt25Zcu4yZJZVECWKBXFijiie/UtKm+VU+0M
-         xUnFJxIoL2XlZsRVWl1N3vWD6JKPWfd+4y/S/IuBBJ+328hgmxq6oj6i2a0eDtfkTK
-         XLQmoN4gfkNiH5B9mB/qEIf4UESibKUdCgYqLbn0=
+        b=GwqaWFunhKPQ3e0s8ZO3L6qZA9fAzBSVtjOfa097Fe0xDhHObC7RInnYeEyDHIbLZ
+         zZ+zaudYbNbDvzsSyG9C6eHK6H/UmOidPZTVPMWmX7LD4Ufhp7zNSznBsVYjyotpHe
+         NkJ8mg7WXSmlfu4Z4UUJx4LsjsDvrIyMxDIXu4FM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ocean Chen <oceanchen@google.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 49/60] f2fs: avoid out-of-range memory access
-Date:   Fri, 19 Jul 2019 00:10:58 -0400
-Message-Id: <20190719041109.18262-49-sashal@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 54/60] sh: prevent warnings when using iounmap
+Date:   Fri, 19 Jul 2019 00:11:03 -0400
+Message-Id: <20190719041109.18262-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -60,39 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ocean Chen <oceanchen@google.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
 
-blkoff_off might over 512 due to fs corrupt or security
-vulnerability. That should be checked before being using.
+When building drm/exynos for sh, as part of an allmodconfig build, the
+following warning triggered:
 
-Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+  exynos7_drm_decon.c: In function `decon_remove':
+  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
+    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
 
-Signed-off-by: Ocean Chen <oceanchen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+The ctx variable is only used as argument to iounmap().
+
+In sh - allmodconfig CONFIG_MMU is not defined
+so it ended up in:
+
+\#define __iounmap(addr)	do { } while (0)
+\#define iounmap		__iounmap
+
+Fix the warning by introducing a static inline function for iounmap.
+
+This is similar to several other architectures.
+
+Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/sh/include/asm/io.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 70bd15cadb44..18d51c36a5e3 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2612,6 +2612,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-+		if (blk_off > ENTRIES_IN_SUM) {
-+			f2fs_bug_on(sbi, 1);
-+			f2fs_put_page(page, 1);
-+			return -EFAULT;
-+		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 98cb8c802b1a..0ae60d680000 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -371,7 +371,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+ 
+ #define ioremap_nocache	ioremap
+ #define ioremap_uc	ioremap
+-#define iounmap		__iounmap
++
++static inline void iounmap(void __iomem *addr)
++{
++	__iounmap(addr);
++}
+ 
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
 -- 
 2.20.1
 
