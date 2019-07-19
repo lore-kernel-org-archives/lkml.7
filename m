@@ -2,105 +2,88 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EFFC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701C5C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B3521849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4528421849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfGSUOh (ORCPT
+        id S1731529AbfGSUPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:14:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52506 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbfGSUOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:14:36 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 48E4530C1E2F;
-        Fri, 19 Jul 2019 20:14:36 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 79EB451DE6;
-        Fri, 19 Jul 2019 20:14:34 +0000 (UTC)
-Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an
- atomic_long_t
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Will Deacon <will.deacon@arm.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-References: <20190520205918.22251-1-longman@redhat.com>
- <20190520205918.22251-14-longman@redhat.com>
- <20190719184538.GA20324@hermes.olymp>
- <2ed44afa-4528-a785-f188-2daf24343f97@redhat.com> <87lfwtlsf7.fsf@suse.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <da3d3b39-ede2-1e0c-e7f6-ea918d20d0f9@redhat.com>
-Date:   Fri, 19 Jul 2019 16:14:33 -0400
+        Fri, 19 Jul 2019 16:15:54 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41793 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728636AbfGSUPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:15:54 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o101so34018728ota.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 13:15:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kkpL/Yq6hsmshdWJXQRmWbef4HDFrUIMo3dW6QtsBOU=;
+        b=qtEBrz5rJqg6a0y6Zle/o/zf0XEWuNrhoSgZE9AHDSRDkIkF5Y+JRDmQwMWjyJcv6w
+         0O41IlSKQd3aUL2gr4M4/dAjf2vuz4GZbbUxiRLznvMwn25RPnxuOhZmp5Ykl/nnXz6M
+         dZEIezuQdAttX+w//oLiMSgHdvDKFDaF/KhqfFHmPDFdDcy7l2/gcof8T6zCKf+pJl9G
+         Jh+0p/Y8hXLnOc0spIr68tIS6wOPLPHYIOTkAKVaouKiRf6WF4WXZIQjU3NaHWV/3MnC
+         XZjtjIq/6iow/W9QlcaVQkcqWULxDdxvLL2tOYf/eIlE5GgZiJPc+mpHEwMOsku5Cgxn
+         MYog==
+X-Gm-Message-State: APjAAAVlPZhxye/csvpFLuIzWvhPYkdldeT9BwWeHDooBhM8Ifjy8dqP
+        vhHBkdPjrr0bYtsKB7TlIxU=
+X-Google-Smtp-Source: APXvYqz7EYdCm82iMo376gSzheRtPm1ARvAvJv85wvLvZKPbuwQ1NT8A7vSMqRZGif0NVaoqIQe5Ng==
+X-Received: by 2002:a05:6830:c9:: with SMTP id x9mr33170188oto.332.1563567353487;
+        Fri, 19 Jul 2019 13:15:53 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id f125sm10938514oia.44.2019.07.19.13.15.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 13:15:52 -0700 (PDT)
+Subject: Re: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while
+ scanning
+From:   Sagi Grimberg <sagi@grimberg.me>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190718225132.5865-1-logang@deltatee.com>
+ <20190718225132.5865-2-logang@deltatee.com>
+ <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
+ <ba6d1a56-8f86-4060-a167-6d67435e1a88@grimberg.me>
+Message-ID: <e516395c-7741-af1a-42a9-2bd528b3976c@grimberg.me>
+Date:   Fri, 19 Jul 2019 13:15:50 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <87lfwtlsf7.fsf@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba6d1a56-8f86-4060-a167-6d67435e1a88@grimberg.me>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 19 Jul 2019 20:14:36 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/19 3:45 PM, Luis Henriques wrote:
-> Waiman Long <longman@redhat.com> writes:
->
->> On 7/19/19 2:45 PM, Luis Henriques wrote:
->>> On Mon, May 20, 2019 at 04:59:12PM -0400, Waiman Long wrote:
->>>> The rwsem->owner contains not just the task structure pointer, it also
->>>> holds some flags for storing the current state of the rwsem. Some of
->>>> the flags may have to be atomically updated. To reflect the new reality,
->>>> the owner is now changed to an atomic_long_t type.
->>>>
->>>> New helper functions are added to properly separate out the task
->>>> structure pointer and the embedded flags.
->>> I started seeing KASAN use-after-free with current master, and a bisect
->>> showed me that this commit 94a9717b3c40 ("locking/rwsem: Make
->>> rwsem->owner an atomic_long_t") was the problem.  Does it ring any
->>> bells?  I can easily reproduce it with xfstests (generic/464).
->>>
->>> Cheers,
->>> --
->>> Luís
->> This patch shouldn't change the behavior of the rwsem code. The code
->> only access data within the rw_semaphore structures. I don't know why it
->> will cause a KASAN error. I will have to reproduce it and figure out
->> exactly which statement is doing the invalid access.
-> Yeah, screwing the bisection is something I've done in the past so I may
-> have got the wrong commit.  Another detail is that I was running
-> xfstests against CephFS, I didn't tried with any other filesystem.  I
-> can try to reproduce with btrfs or xfs next week.
->
-> Cheers,
 
-Oh, I don't have a CephFS setup. Will you use the
-scripts/decode_stacktrace.sh to find what line number is the offending
-statement? That will help in figuring out what has gone wrong.
+>> [1]:
+> Or actually:
+> -- 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index 76cd3dd8736a..a0e2072fe73e 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -3576,6 +3576,12 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
+>          struct nvme_ns *ns, *next;
+>          LIST_HEAD(ns_list);
+> 
+> +       mutex_lock(&ctrl->scan_lock);
+> +       list_for_each_entry(ns, &ctrl->namespaces, list)
+> +               if (nvme_mpath_clear_current_path(ns))
+> +                       kblockd_schedule_work(&ns->head->requeue_work);
+> +       mutex_lock(&ctrl->scan_lock);
 
-Anyway, it seems like a structure that include a rwsem is freed while
-another cpu is still waiting to acquire the lock. It is probably a
-hidden bug in the filesystem code somewhere that the recent changes in
-rwsem behavior make it easier for  the problem to show up.
-
-Cheers,
-Longman
-
+This should be mutex_unlock of course...
