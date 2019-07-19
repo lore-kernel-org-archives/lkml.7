@@ -2,111 +2,137 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50262C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C48C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEB52077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9442077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="exsrLHOk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGRCvWxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfGSAgI (ORCPT
+        id S1726351AbfGSAgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:36:08 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54667 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfGSAgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:36:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qX9d58p6z9s3Z;
-        Fri, 19 Jul 2019 10:36:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563496565;
-        bh=A+TA+2R+siqm/hZzdzM+n47UXTwyBo0+6SZwnCK3ldU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=exsrLHOk4/j+LH0kK1phxyWNQDVN2ShZz3o6sfxhjGrfJGYy/AtnN7oWTFAnGjGNz
-         pdB1v94JZKzv/9N4KJingJ3MQEeaWU0Vgi/Yn8aVSyPhlFoRl+LRboC3rhB+VZNz6L
-         ZZaRP89R1IKh6wFN3FOWzNwGUOubYLrH2TK9myeZyGZfINY00eHlYRNI9bVX2BpjKQ
-         x/aOHb0mkeVFmRJxiscHN9eLF/WyoLtcIWdx3HO07+wSjwTNhZ6vKZ4wxKa33BcqsO
-         zqn/qiH0uT554GHjOjYapmm6ATgvAEZT0EhIzG1lzyAzgNuyGWmpv8iHzxTicrKzX0
-         7Ig7Vb2Jh0Q4g==
-Date:   Fri, 19 Jul 2019 10:36:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: Re: linux-next: Tree for Jul 18 (header build error)
-Message-ID: <20190719103605.5ee9198a@canb.auug.org.au>
-In-Reply-To: <20190719100557.3ead3285@canb.auug.org.au>
-References: <20190718133751.3cf036be@canb.auug.org.au>
-        <127d228c-322d-6349-382b-d304974df148@infradead.org>
-        <20190719100557.3ead3285@canb.auug.org.au>
+        Thu, 18 Jul 2019 20:36:50 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41730 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfGSAgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:36:50 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 62so15613188lfa.8;
+        Thu, 18 Jul 2019 17:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=d6XRGsphvO5VwyeOTd5IMW9yead4IXNTP6aR3kKM4EQ=;
+        b=aGRCvWxwn2WzSEgd1n1l8Vh27OT1zQaA5s6nZ0E3niteyofVZwJbOiJkiwO9PH+W98
+         BCsjJgAxfzHgPzTWuL5/6VVspWNLRWxgcbl2Z9rxk1D97rZNHW62qCPRBKRUOCIWCld+
+         fMxrnxNKiZtq29pjy0XRve1dKRtouBSnDtz7HNox4gPea4maBlM735SaG3SLxp/3Jcqc
+         2g0M3ClnAnjV+QIa0nMzYxJqHOycDJp9YecdN8wbOyAuK/zqmmlW089BciNm5vsNG+TV
+         jSr3HGVWZYp+VwsKSEdn+yk/Yoa2dNTxegKi8NsQefGDOtU5ZU7VBCkzNXD5YMMtzafb
+         UWOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=d6XRGsphvO5VwyeOTd5IMW9yead4IXNTP6aR3kKM4EQ=;
+        b=BkrB6p7m8+Cklk9Sw5lrU+FwaeD3wR0+CUxawqHEtOIWMd1N4F797qud7xrm+Cb0Z1
+         HQHTM/uAdo+AneCSfEAx1ABlcRsUidvl+pKhMtYBkk/ZrFFmh4MYkWdtyI0SAO5EF+rI
+         Re/LzH3+pljTdriu8N/KCe1ejDNf29U2pR0cqJcCzN0Jd+uTpIzLkvkkwGkHye3qDixa
+         K+NlMm/0JdChJqcfCRASNbCMTiOtEO6Go/fmACxm86ES/n5JrwpQnxM0GWL0ima7pGGF
+         zoMFAOnPtGWLvLH5raSZXFZJTD0xWkOKmWWRxH7Jj7F4exagL0OivQDajWE73deulf0b
+         yEHQ==
+X-Gm-Message-State: APjAAAWpBlRVK/5UIedRj5ktQqQONiqzvNU9wyjvFNvAVMslTwtgzNx3
+        zR9i4tziSMpDOj3WNZXiUnE=
+X-Google-Smtp-Source: APXvYqx6kxUTxgleSYbBtQCAXESEe/JwOtRHpq7xJ1C3VU3OCfBetFuk2jnZGapCuV9p18o+wZQ98w==
+X-Received: by 2002:a19:9111:: with SMTP id t17mr22440659lfd.113.1563496608296;
+        Thu, 18 Jul 2019 17:36:48 -0700 (PDT)
+Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id z83sm5368566ljb.73.2019.07.18.17.36.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 17:36:48 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 03:40:25 +0300
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 19/24] PM / devfreq: tegra30: Optimize upper
+ consecutive watermark selection
+Message-ID: <20190719034025.67c82123@dimatab>
+In-Reply-To: <17fabbaf-ceca-7551-0a58-9c8a0e7027ed@samsung.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223622epcas4p48ec0d7e6fa26bc2397fa4351c0bd0c2d@epcas4p4.samsung.com>
+        <20190707223303.6755-20-digetx@gmail.com>
+        <17fabbaf-ceca-7551-0a58-9c8a0e7027ed@samsung.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bCrC30V_16tyleeOcNzjhRQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bCrC30V_16tyleeOcNzjhRQ
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+=D0=92 Thu, 18 Jul 2019 18:51:02 +0900
+Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-Hi all,
-
-On Fri, 19 Jul 2019 10:05:57 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Thu, 18 Jul 2019 10:00:22 -0700 Randy Dunlap <rdunlap@infradead.org> w=
-rote:
-> >
-> > on x86_64, when CONFIG_BLOCK is not set:
+> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote:
+> > The memory activity counter may get a bit higher than a watermark
+> > which is selected based on OPP that corresponds to a highest EMC
+> > rate, in this case watermark is lower than the actual memory
+> > activity is and thus results in unwanted "upper" interrupts.
 > >=20
-> >   CC      include/linux/iomap.h.s
-> > In file included from <command-line>:0:0:
-> > ./../include/linux/iomap.h: In function =E2=80=98iomap_sector=E2=80=99:
-> > ./../include/linux/iomap.h:76:48: error: =E2=80=98SECTOR_SHIFT=E2=80=99=
- undeclared (first use in this function); did you mean =E2=80=98SECTIONS_SH=
-IFT=E2=80=99?
-> >   return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
-> >                                                 ^~~~~~~~~~~~ =20
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+> >  drivers/devfreq/tegra30-devfreq.c | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-) =20
 >=20
-> include/linux/iomap.h should only be used when CONFIG_BLOCK is set (if
-> you follow the Kconfig trail).  So maybe this header should only be
-> compile tested if CONFIG_BLOCK is set.
+> It seems that you can combine patch19 with patch20.
 
-Or maybe fs/iomap/ needs to grow a private header file for stuff like
-iomap_sector() ?
+No, consecutive and average watermarks are different things that have
+different purposes. Consecutive are used for boosting, while average
+are for significant memory bandwidth changes.
 
---=20
-Cheers,
-Stephen Rothwell
+> >=20
+> > diff --git a/drivers/devfreq/tegra30-devfreq.c
+> > b/drivers/devfreq/tegra30-devfreq.c index
+> > 8d6bf6e9f1ae..c3cf87231d25 100644 ---
+> > a/drivers/devfreq/tegra30-devfreq.c +++
+> > b/drivers/devfreq/tegra30-devfreq.c @@ -363,7 +363,18 @@ static
+> > void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
+> > tegra_actmon_get_lower_upper(tegra, dev, freq - 1, &lower, &upper);=20
+> >  	delta =3D do_percent(upper - lower,
+> > dev->config->boost_up_threshold);
+> > -	device_writel(dev, lower + delta, ACTMON_DEV_UPPER_WMARK);
+> > +
+> > +	/*
+> > +	 * The memory events count could go a bit higher than the
+> > maximum
+> > +	 * defined by the OPPs, hence make the upper watermark
+> > infinitely
+> > +	 * high to avoid unnecessary upper interrupts in that case.
+> > +	 */
+> > +	if (freq =3D=3D tegra->max_freq)
+> > +		upper =3D ULONG_MAX;
+> > +	else
+> > +		upper =3D lower + delta;
+> > +
+> > +	device_writel(dev, upper, ACTMON_DEV_UPPER_WMARK);
+> > =20
+> >  	/*
+> >  	 * Meanwhile the lower mark is based on the average value
+> >  =20
+>=20
+>=20
 
---Sig_/bCrC30V_16tyleeOcNzjhRQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0xEHUACgkQAVBC80lX
-0GzBlAgAi0HSYElWpG7qvU6y21A8vri4QTUVA0mIE8DqRqX2pjgUOPmQaaGge2u+
-Q58vKppAl1Dzt8qbUI9B6xBR4TrbXjqTTRhZHTuWwO0UbHB8rBW4amAVqZMFlXx6
-iJq8CdnB/Cdltv434Nilsk5R9PIn3ePDgvyxuc9xgEJ3ZIckceT/zntjqNiJJUBs
-egV9XQokaGfQRFKnVK6sqrRgZV0k7YU+Yb396N8I8+Zy3PKMCvj1WERFlp+BOmJ5
-TTAii5R0hjA5cCLnYia6f4LCO+bNWduuuiv0/oUv32iv0yWpgFLKbqO+astE09f4
-3JMCCpjfRvlGLUbZZTneZdp+h4AHlQ==
-=+bDW
------END PGP SIGNATURE-----
-
---Sig_/bCrC30V_16tyleeOcNzjhRQ--
