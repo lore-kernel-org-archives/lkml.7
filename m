@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5CFC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750B2C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92E9206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4268F2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510852;
-	bh=fyLQrmMQLInm4NczQvVlEaI7afIW3DlZkxyO6PK9s3w=;
+	s=default; t=1563510861;
+	bh=LuC0CZgJqwGJfnyVzc/N2ZoFrXBTl4AyfQvI6e5COAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCwpCwGLl9QaAvggmo+21TopAxV0p7v82rUwgNWvexF1xmoXcbifkXN6YGWQbrhs6
-	 CuBmZsWb4CnBqCMc7MLxSI7Pv08apM5Yc993IXraUQrfhJcV8RXe1dhF/OfaVvU5aN
-	 TpDcJ/0oek4cT4S9i+sqCKOunpx++AWlWkoX7UvA=
+	b=PMFRLpeUvlYfcHISRMkSVI8nBlYdRjCcI+xf12Af4rRUoIzooDQl0nV0SNKLYGasO
+	 FHfZjeDk3q500Wf7oextbKc3Oz9b2Bya3QabBOAizyVAq0Cax7kfmkPzqJdx66pg1o
+	 HwkNfDH+gNYDGYgdsQm7XijUftwy7N5lln1At3xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfGSEeK (ORCPT
+        id S1729749AbfGSEB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729818AbfGSECH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:02:07 -0400
+        id S1729596AbfGSEBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC819218A5;
-        Fri, 19 Jul 2019 04:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B37218A5;
+        Fri, 19 Jul 2019 04:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508926;
-        bh=fyLQrmMQLInm4NczQvVlEaI7afIW3DlZkxyO6PK9s3w=;
+        s=default; t=1563508899;
+        bh=LuC0CZgJqwGJfnyVzc/N2ZoFrXBTl4AyfQvI6e5COAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsX1gdTY/UQ6NEPWlAoKUPO1Rt+KPhLbRFrHXNFF0STGhvRQr+7yKIBwnqBUy8G98
-         0r1C71PrvkUurz/2GQomexX5j4xIW+vtK0GZB5uDyu8p9/LcGy0pGoNpZXLd/KO6PT
-         EyYJBFnfyBJPURkbyUqOufpz6X0aSn+fqAIjpNKQ=
+        b=IlttinHq8bNU6YJkFbsOMo+3W5Fan0lB+uWP3higS34unL4/jhHQke7Eg3pvSAUiD
+         ScLsXqxdUPCKrRMTynlZNSV0cg6Ms/Cdcp2La2VeRaDaW+6aFw8ht6PX54uiYjfpCW
+         BoMtbFRZJHfNh8u0EodTXy9G2XZ7XYZEDDSDUgY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shakeel Butt <shakeelb@google.com>, Roman Gushchin <guro@fb.com>,
-        Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 161/171] memcg, fsnotify: no oom-kill for remote memcg charging
-Date:   Thu, 18 Jul 2019 23:56:32 -0400
-Message-Id: <20190719035643.14300-161-sashal@kernel.org>
+Cc:     David Windsor <dwindsor@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.2 147/171] dlm: check if workqueues are NULL before flushing/destroying
+Date:   Thu, 18 Jul 2019 23:56:18 -0400
+Message-Id: <20190719035643.14300-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -64,77 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: David Windsor <dwindsor@redhat.com>
 
-[ Upstream commit ec165450968b26298bd1c373de37b0ab6d826b33 ]
+[ Upstream commit b355516f450703c9015316e429b66a93dfff0e6f ]
 
-Commit d46eb14b735b ("fs: fsnotify: account fsnotify metadata to
-kmemcg") added remote memcg charging for fanotify and inotify event
-objects.  The aim was to charge the memory to the listener who is
-interested in the events but without triggering the OOM killer.
-Otherwise there would be security concerns for the listener.
+If the DLM lowcomms stack is shut down before any DLM
+traffic can be generated, flush_workqueue() and
+destroy_workqueue() can be called on empty send and/or recv
+workqueues.
 
-At the time, oom-kill trigger was not in the charging path.  A parallel
-work added the oom-kill back to charging path i.e.  commit 29ef680ae7c2
-("memcg, oom: move out_of_memory back to the charge path").  So to not
-trigger oom-killer in the remote memcg, explicitly add
-__GFP_RETRY_MAYFAIL to the fanotigy and inotify event allocations.
+Insert guard conditionals to only call flush_workqueue()
+and destroy_workqueue() on workqueues that are not NULL.
 
-Link: http://lkml.kernel.org/r/20190514212259.156585-2-shakeelb@google.com
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Jan Kara <jack@suse.cz>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Windsor <dwindsor@redhat.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/notify/fanotify/fanotify.c        | 5 ++++-
- fs/notify/inotify/inotify_fsnotify.c | 8 ++++++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ fs/dlm/lowcomms.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index b428c295d13f..5778d1347b35 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -288,10 +288,13 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
- 	/*
- 	 * For queues with unlimited length lost events are not expected and
- 	 * can possibly have security implications. Avoid losing events when
--	 * memory is short.
-+	 * memory is short. For the limited size queues, avoid OOM killer in the
-+	 * target monitoring memcg as it may have security repercussion.
- 	 */
- 	if (group->max_events == UINT_MAX)
- 		gfp |= __GFP_NOFAIL;
-+	else
-+		gfp |= __GFP_RETRY_MAYFAIL;
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index 114ebfe30929..3951d39b9b75 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1628,8 +1628,10 @@ static void clean_writequeues(void)
  
- 	/* Whoever is interested in the event, pays for the allocation. */
- 	memalloc_use_memcg(group->memcg);
-diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
-index 2fda08b2b885..d510223d302c 100644
---- a/fs/notify/inotify/inotify_fsnotify.c
-+++ b/fs/notify/inotify/inotify_fsnotify.c
-@@ -90,9 +90,13 @@ int inotify_handle_event(struct fsnotify_group *group,
- 	i_mark = container_of(inode_mark, struct inotify_inode_mark,
- 			      fsn_mark);
+ static void work_stop(void)
+ {
+-	destroy_workqueue(recv_workqueue);
+-	destroy_workqueue(send_workqueue);
++	if (recv_workqueue)
++		destroy_workqueue(recv_workqueue);
++	if (send_workqueue)
++		destroy_workqueue(send_workqueue);
+ }
  
--	/* Whoever is interested in the event, pays for the allocation. */
-+	/*
-+	 * Whoever is interested in the event, pays for the allocation. Do not
-+	 * trigger OOM killer in the target monitoring memcg as it may have
-+	 * security repercussion.
-+	 */
- 	memalloc_use_memcg(group->memcg);
--	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT);
-+	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
- 	memalloc_unuse_memcg();
+ static int work_start(void)
+@@ -1689,13 +1691,17 @@ static void work_flush(void)
+ 	struct hlist_node *n;
+ 	struct connection *con;
  
- 	if (unlikely(!event)) {
+-	flush_workqueue(recv_workqueue);
+-	flush_workqueue(send_workqueue);
++	if (recv_workqueue)
++		flush_workqueue(recv_workqueue);
++	if (send_workqueue)
++		flush_workqueue(send_workqueue);
+ 	do {
+ 		ok = 1;
+ 		foreach_conn(stop_conn);
+-		flush_workqueue(recv_workqueue);
+-		flush_workqueue(send_workqueue);
++		if (recv_workqueue)
++			flush_workqueue(recv_workqueue);
++		if (send_workqueue)
++			flush_workqueue(send_workqueue);
+ 		for (i = 0; i < CONN_HASH_SIZE && ok; i++) {
+ 			hlist_for_each_entry_safe(con, n,
+ 						  &connection_hash[i], list) {
 -- 
 2.20.1
 
