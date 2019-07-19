@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECCCC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8774C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B972077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8907E2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511167;
-	bh=iBNWIBHZgGTe5Q+jdZRd+ngLa9VpaLIgZwj92vwqXyE=;
+	s=default; t=1563511174;
+	bh=dCMCrBXXrlPWsuWbPGNG1JXo6HFZCM3Qn+fUwg5WFGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OEyGDtj3t8b6Xl5j1idEgkLNaj3uQMRW9mQp55WjCDa9qhx3RE/SSNZODw/Ope//N
-	 0ZNh9g+HVLoqP4wn4820+7wnPya0M+YHAuMbkEMLOEqtUFqk44jZCe2iD+NO/xkfEU
-	 8yIAZpWnKpHBHzbkROTV5DFITQpEYh77QrejhQLs=
+	b=sMUnlwAR4Cp5+VV7HPrc+/Lqgw8stcE6RYbZTizzKSvuwajV43N9kGBAa4IWO9Jxs
+	 yJRzdbaLSZzBfhPjQV05+kHWv2fpOz7Meghubqyaxf3+4WoS9OVRTunlZYy3Qlv/vc
+	 ds1H9M5DGPbwe9NumSM4iQYeBwEFtMIMphArOies=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfGSEj0 (ORCPT
+        id S1728176AbfGSD6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:39:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:58:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbfGSD6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:49 -0400
+        id S1728084AbfGSD6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20E5021850;
-        Fri, 19 Jul 2019 03:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB82521851;
+        Fri, 19 Jul 2019 03:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508729;
-        bh=iBNWIBHZgGTe5Q+jdZRd+ngLa9VpaLIgZwj92vwqXyE=;
+        s=default; t=1563508713;
+        bh=dCMCrBXXrlPWsuWbPGNG1JXo6HFZCM3Qn+fUwg5WFGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxorIxo+cqLMrPMWZfPF0TxLhvDMEk/xqLJascO2VQRbtzGGqvy0lMKuVHaWFSqhJ
-         KkIxN3PI5Ku7e2BTu6v7auoQ2/3kDSqZ/sqfRqtN2LvuOWIUywCbFwbqsOalQhz68v
-         /8z2Yoo2O88Dq1MCSmWYPDRuSi09ECn708NHOx9s=
+        b=TFeVrIG9wvZAteg+X1U5murjuhOnT0N2qLn5gRNs9gcQJYb9S7FA05t9KlwAHBhCG
+         m/5kUkROXNZ9aXa2U73GrGEV/tch9zjBb8H7c7m3WxniidUTxlwPWW7ZiH7jAF1jhm
+         LCIIsqRFL7Clo4ARvijJMYGvVy2doMDkDWprcmek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Samson Tam <Samson.Tam@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 055/171] drm/amd/display: set link->dongle_max_pix_clk to 0 on a disconnect
-Date:   Thu, 18 Jul 2019 23:54:46 -0400
-Message-Id: <20190719035643.14300-55-sashal@kernel.org>
+Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 049/171] tty: serial: msm_serial: avoid system lockup condition
+Date:   Thu, 18 Jul 2019 23:54:40 -0400
+Message-Id: <20190719035643.14300-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,48 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samson Tam <Samson.Tam@amd.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-[ Upstream commit 233d87a579b8adcc6da5823fa507ecb6675e7562 ]
+[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
 
-[Why]
-Found issue in EDID Emulation where if we connect a display using
- a passive HDMI-DP dongle, disconnect it and then try to emulate
- a display using DP, we could not see 4K modes.  This was because
- on a disconnect, dongle_max_pix_clk was still set so when we
- emulate using DP, in dc_link_validate_mode_timing(), it would
- think we were still using a dongle and limit the modes we support.
+The function msm_wait_for_xmitr can be taken with interrupts
+disabled. In order to avoid a potential system lockup - demonstrated
+under stress testing conditions on SoC QCS404/5 - make sure we wait
+for a bounded amount of time.
 
-[How]
-In dc_link_detect(), set dongle_max_pix_clk to 0 when we detect
- a hotplug out ( if new_connection_type = dc_connection_none ).
+Tested on SoC QCS404.
 
-Signed-off-by: Samson Tam <Samson.Tam@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/tty/serial/msm_serial.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index b37ecc3ede61..a3ff33ff6da1 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -960,6 +960,12 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index 23833ad952ba..3657a24913fc 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -383,10 +383,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
  
- 		link->type = dc_connection_none;
- 		sink_caps.signal = SIGNAL_TYPE_NONE;
-+		/* When we unplug a passive DP-HDMI dongle connection, dongle_max_pix_clk
-+		 *  is not cleared. If we emulate a DP signal on this connection, it thinks
-+		 *  the dongle is still there and limits the number of modes we can emulate.
-+		 *  Clear dongle_max_pix_clk on disconnect to fix this
-+		 */
-+		link->dongle_max_pix_clk = 0;
+ static inline void msm_wait_for_xmitr(struct uart_port *port)
+ {
++	unsigned int timeout = 500000;
++
+ 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
+ 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
+ 			break;
+ 		udelay(1);
++		if (!timeout--)
++			break;
  	}
- 
- 	LINK_INFO("link=%d, dc_sink_in=%p is now %s prev_sink=%p dpcd same=%d edid same=%d\n",
+ 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
+ }
 -- 
 2.20.1
 
