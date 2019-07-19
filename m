@@ -2,125 +2,116 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA6C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEACC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B182184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD372084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfGSKKe (ORCPT
+        id S1727528AbfGSKLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:10:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:41380 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSKKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:10:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41564337;
-        Fri, 19 Jul 2019 03:10:33 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9C823F59C;
-        Fri, 19 Jul 2019 03:10:30 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
-        linux@armlinux.org.uk, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, salyzyn@android.com, pcc@google.com,
-        0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
-        huw@codeweavers.com, sthotton@marvell.com, andre.przywara@arm.com,
-        luto@kernel.org, john.stultz@linaro.org, naohiro.aota@wdc.com,
-        yamada.masahiro@socionext.com, Will Deacon <will@kernel.org>
-Subject: [PATCH v2] arm64: vdso: Cleanup Makefiles
-Date:   Fri, 19 Jul 2019 11:10:18 +0100
-Message-Id: <20190719101018.1984-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190712153746.5dwwptgrle3z25m7@willie-the-truck>
-References: <20190712153746.5dwwptgrle3z25m7@willie-the-truck>
+        Fri, 19 Jul 2019 06:11:45 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:32827 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfGSKLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:11:45 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 0CA3780302; Fri, 19 Jul 2019 12:11:30 +0200 (CEST)
+Date:   Fri, 19 Jul 2019 12:11:41 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Pavel Machek <pavel@denx.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, johan@kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
+Subject: Re: USB Modem support for Droid 4
+Message-ID: <20190719101141.GA18760@amd>
+References: <20190718201713.GA25103@amd>
+ <20190719052205.GK5447@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <20190719052205.GK5447@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent changes to the vdso library for arm64 and the introduction of
-the compat vdso library have generated some misalignment in the
-Makefiles.
 
-Cleanup the Makefiles for vdso and vdso32 libraries:
-  * Removing unused rules.
-  * Unifying the displayed compilation messages.
-  * Simplifying the generic library inclusion path for
-    arm64 vdso.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- arch/arm64/kernel/vdso/Makefile   |  9 +++------
- arch/arm64/kernel/vdso32/Makefile | 10 +++++-----
- 2 files changed, 8 insertions(+), 11 deletions(-)
+Hi!
 
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index 75d25679d879..dd2514bb1511 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -32,10 +32,10 @@ UBSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- KCOV_INSTRUMENT			:= n
- 
--ifeq ($(c-gettimeofday-y),)
- CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny
--else
--CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -include $(c-gettimeofday-y)
-+
-+ifneq ($(c-gettimeofday-y),)
-+  CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
- endif
- 
- # Clang versions less than 8 do not support -mcmodel=tiny
-@@ -73,9 +73,6 @@ include/generated/vdso-offsets.h: $(obj)/vdso.so.dbg FORCE
- 	$(call if_changed,vdsosym)
- 
- # Actual build commands
--quiet_cmd_vdsocc = VDSOCC   $@
--      cmd_vdsocc = $(CC) $(a_flags) $(c_flags) -c -o $@ $<
--
- quiet_cmd_vdsold_and_vdso_check = LD      $@
-       cmd_vdsold_and_vdso_check = $(cmd_ld); $(cmd_vdso_check)
- 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 21009ed5a755..154767d60001 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -155,17 +155,17 @@ $(asm-obj-vdso): %.o: %.S FORCE
- 	$(call if_changed_dep,vdsoas)
- 
- # Actual build commands
--quiet_cmd_vdsold_and_vdso_check = LD      $@
-+quiet_cmd_vdsold_and_vdso_check = LD32    $@
-       cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
- 
--quiet_cmd_vdsold = VDSOL   $@
-+quiet_cmd_vdsold = LD32    $@
-       cmd_vdsold = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
-                    -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
--quiet_cmd_vdsocc = VDSOC   $@
-+quiet_cmd_vdsocc = CC32    $@
-       cmd_vdsocc = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_CFLAGS) -c -o $@ $<
--quiet_cmd_vdsocc_gettimeofday = VDSOC_GTD   $@
-+quiet_cmd_vdsocc_gettimeofday = CC32    $@
-       cmd_vdsocc_gettimeofday = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_CFLAGS) $(VDSO_CFLAGS_gettimeofday_o) -c -o $@ $<
--quiet_cmd_vdsoas = VDSOA   $@
-+quiet_cmd_vdsoas = AS32    $@
-       cmd_vdsoas = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_AFLAGS) -c -o $@ $<
- 
- quiet_cmd_vdsomunge = MUNGE   $@
--- 
-2.22.0
+> * Pavel Machek <pavel@denx.de> [190718 20:17]:
+> > From: Tony Lindgren <tony@atomide.com>
+> >=20
+> > Droid starts to have useful support in linux-next. Modem is tricky to
+> > play with, but this is enough to get basic support.
+>=20
+> Below is a better patch using option driver adding support for all
+> the ports. I'll send it out with a proper description after -rc1.
 
+Thanks!
+
+It works for me, too.
+
+Tested-by: Pavel Machek <pavel@ucw.cz>
+
+> @@ -83,6 +83,12 @@ static void option_instat_callback(struct urb *urb);
+>  #define HUAWEI_PRODUCT_K4605			0x14C6
+>  #define HUAWEI_PRODUCT_E173S6			0x1C07
+> =20
+> +#define MOTOROLA_VENDOR_ID			0x22b8
+> +#define MOTOROLA_PRODUCT_MDM6600		0x2a70
+> +#define MOTOROLA_PRODUCT_MDM9600		0x2e0a
+> +#define MOTOROLA_PRODUCT_MDM_RAM_DL		0x4281
+> +#define MOTOROLA_PRODUCT_MDM_QC_DL		0x900e
+> +
+>  #define QUANTA_VENDOR_ID			0x0408
+>  #define QUANTA_PRODUCT_Q101			0xEA02
+>  #define QUANTA_PRODUCT_Q111			0xEA03
+> @@ -968,6 +974,10 @@ static const struct usb_device_id option_ids[] =3D {
+>  	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7B) },
+>  	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7C) },
+> =20
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
+M6600, 0xff, 0xff, 0xff) },
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
+M9600, 0xff, 0xff, 0xff) },
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
+M_RAM_DL, 0x0a, 0x00, 0xfc) },
+> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
+M_QC_DL, 0xff, 0xff, 0xff) },
+> =20
+>  	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V640) },
+>  	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V620) },
+
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0xl10ACgkQMOfwapXb+vLrVACfXkgc5UNVTqP4Cs6nTFriszl9
+quwAmwWLaqYxjvrh50FxYi5/99eL4kxh
+=GSbE
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
