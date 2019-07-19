@@ -2,161 +2,185 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2499EC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5992FC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051832173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239BA2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfGSNBT (ORCPT
+        id S1728677AbfGSND0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:01:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59422 "EHLO mx1.suse.de"
+        Fri, 19 Jul 2019 09:03:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37794 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726239AbfGSNBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:01:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2A731AF8F;
-        Fri, 19 Jul 2019 13:01:18 +0000 (UTC)
-Subject: Re: [v3 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
- mapped correctly in mbind
-To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@kernel.org,
-        mgorman@techsingularity.net, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-References: <1563470274-52126-1-git-send-email-yang.shi@linux.alibaba.com>
- <1563470274-52126-3-git-send-email-yang.shi@linux.alibaba.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <6ba72e56-9f62-36bf-ded7-f337522715d5@suse.cz>
-Date:   Fri, 19 Jul 2019 15:01:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726239AbfGSND0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:03:26 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 337BB58917896E0CF7E2;
+        Fri, 19 Jul 2019 21:03:24 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 19 Jul 2019
+ 21:03:13 +0800
+From:   Zhihao@vger.kernel.org, Cheng@vger.kernel.org
+To:     <richard@nod.at>, <s.hauer@pengutronix.de>, <dedekind1@gmail.com>,
+        <yi.zhang@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH] ubifs: ubifs_tnc_start_commit: Fix OOB in layout_in_gaps
+Date:   Fri, 19 Jul 2019 21:09:00 +0800
+Message-ID: <1563541740-16726-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1563470274-52126-3-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/19 7:17 PM, Yang Shi wrote:
-> When running syzkaller internally, we ran into the below bug on 4.9.x
-> kernel:
-> 
-> kernel BUG at mm/huge_memory.c:2124!
-> invalid opcode: 0000 [#1] SMP KASAN
-> Dumping ftrace buffer:
->    (ftrace buffer empty)
-> Modules linked in:
-> CPU: 0 PID: 1518 Comm: syz-executor107 Not tainted 4.9.168+ #2
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
-> task: ffff880067b34900 task.stack: ffff880068998000
-> RIP: 0010:[<ffffffff81895d6b>]  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
-> RSP: 0018:ffff88006899f980  EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: ffffea00018f1700 RCX: 0000000000000000
-> RDX: 1ffffd400031e2e7 RSI: 0000000000000001 RDI: ffffea00018f1738
-> RBP: ffff88006899f9e8 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: fffffbfff0d8b13e R12: ffffea00018f1400
-> R13: ffffea00018f1400 R14: ffffea00018f1720 R15: ffffea00018f1401
-> FS:  00007fa333996740(0000) GS:ffff88006c600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000040 CR3: 0000000066b9c000 CR4: 00000000000606f0
-> Stack:
->  0000000000000246 ffff880067b34900 0000000000000000 ffff88007ffdc000
->  0000000000000000 ffff88006899f9e8 ffffffff812b4015 ffff880064c64e18
->  ffffea00018f1401 dffffc0000000000 ffffea00018f1700 0000000020ffd000
-> Call Trace:
->  [<ffffffff818490f1>] split_huge_page include/linux/huge_mm.h:100 [inline]
->  [<ffffffff818490f1>] queue_pages_pte_range+0x7e1/0x1480 mm/mempolicy.c:538
->  [<ffffffff817ed0da>] walk_pmd_range mm/pagewalk.c:50 [inline]
->  [<ffffffff817ed0da>] walk_pud_range mm/pagewalk.c:90 [inline]
->  [<ffffffff817ed0da>] walk_pgd_range mm/pagewalk.c:116 [inline]
->  [<ffffffff817ed0da>] __walk_page_range+0x44a/0xdb0 mm/pagewalk.c:208
->  [<ffffffff817edb94>] walk_page_range+0x154/0x370 mm/pagewalk.c:285
->  [<ffffffff81844515>] queue_pages_range+0x115/0x150 mm/mempolicy.c:694
->  [<ffffffff8184f493>] do_mbind mm/mempolicy.c:1241 [inline]
->  [<ffffffff8184f493>] SYSC_mbind+0x3c3/0x1030 mm/mempolicy.c:1370
->  [<ffffffff81850146>] SyS_mbind+0x46/0x60 mm/mempolicy.c:1352
->  [<ffffffff810097e2>] do_syscall_64+0x1d2/0x600 arch/x86/entry/common.c:282
->  [<ffffffff82ff6f93>] entry_SYSCALL_64_after_swapgs+0x5d/0xdb
-> Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
-> RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
->  RSP <ffff88006899f980>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-...
+Running stress-test test_2 in mtd-utils on ubi device, sometimes we can
+get follwing oops message:
 
-> @@ -532,7 +531,14 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  				has_unmovable |= true;
->  				break;
->  			}
-> -			migrate_page_add(page, qp->pagelist, flags);
-> +
-> +			/*
-> +			 * Do not abort immediately since there may be
-> +			 * temporary off LRU pages in the range.  Still
-> +			 * need migrate other LRU pages.
-> +			 */
-> +			if (migrate_page_add(page, qp->pagelist, flags))
-> +				has_unmovable |= true;
+  BUG: unable to handle page fault for address: ffffffff00000140
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 280a067 P4D 280a067 PUD 0
+  Oops: 0000 [#1] SMP
+  CPU: 0 PID: 60 Comm: kworker/u16:1 Kdump: loaded Not tainted 5.2.0 #13
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
+  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  Workqueue: writeback wb_workfn (flush-ubifs_0_0)
+  RIP: 0010:rb_next_postorder+0x2e/0xb0
+  Code: 80 db 03 01 48 85 ff 0f 84 97 00 00 00 48 8b 17 48 83 05 bc 80 db
+  03 01 48 83 e2 fc 0f 84 82 00 00 00 48 83 05 b2 80 db 03 01 <48> 3b 7a
+  10 48 89 d0 74 02 f3 c3 48 8b 52 08 48 83 05 a3 80 db 03
+  RSP: 0018:ffffc90000887758 EFLAGS: 00010202
+  RAX: ffff888129ae4700 RBX: ffff888138b08400 RCX: 0000000080800001
+  RDX: ffffffff00000130 RSI: 0000000080800024 RDI: ffff888138b08400
+  RBP: ffff888138b08400 R08: ffffea0004a6b920 R09: 0000000000000000
+  R10: ffffc90000887740 R11: 0000000000000001 R12: ffff888128d48000
+  R13: 0000000000000800 R14: 000000000000011e R15: 00000000000007c8
+  FS:  0000000000000000(0000) GS:ffff88813ba00000(0000)
+  knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffffffff00000140 CR3: 000000013789d000 CR4: 00000000000006f0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+    destroy_old_idx+0x5d/0xa0 [ubifs]
+    ubifs_tnc_start_commit+0x4fe/0x1380 [ubifs]
+    do_commit+0x3eb/0x830 [ubifs]
+    ubifs_run_commit+0xdc/0x1c0 [ubifs]
 
-Also = instead of |=
+Above Oops are due to the slab-out-of-bounds happened in do-while of
+function layout_in_gaps indirectly called by ubifs_tnc_start_commit. In
+function layout_in_gaps, there is a do-while loop placing index nodes
+into the gaps created by obsolete index nodes in non-empty index LEBs
+until rest index nodes can totally be placed into pre-allocated empty
+LEBs. @c->gap_lebs points to a memory area(integer array) which records
+LEB numbers used by 'in-the-gaps' method. Whenever a fitable index LEB
+is found, corresponding lnum will be incrementally written into the
+memory area pointed by @c->gap_lebs. The size
+((@c->lst.idx_lebs + 1) * sizeof(int)) of memory area is allocated before
+do-while loop and can not be changed in the loop. But @c->lst.idx_lebs
+could be increased by function ubifs_change_lp (called by
+layout_leb_in_gaps->ubifs_find_dirty_idx_leb->get_idx_gc_leb) during the
+loop. So, sometimes oob happens when number of cycles in do-while loop
+exceeds the original value of @c->lst.idx_lebs. See detail in
+https://bugzilla.kernel.org/show_bug.cgi?id=204229.
+This patch fixes oob in layout_in_gaps.
 
->  		} else
->  			break;
->  	}
-> @@ -961,10 +967,21 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
->  /*
->   * page migration, thp tail pages can be passed.
->   */
-> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
-> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->  				unsigned long flags)
->  {
->  	struct page *head = compound_head(page);
-> +
-> +	/*
-> +	 * Non-movable page may reach here.  And, there may be
-> +	 * temporary off LRU pages or non-LRU movable pages.
-> +	 * Treat them as unmovable pages since they can't be
-> +	 * isolated, so they can't be moved at the moment.  It
-> +	 * should return -EIO for this case too.
-> +	 */
-> +	if (!PageLRU(head) && (flags & MPOL_MF_STRICT))
-> +		return -EIO;
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ fs/ubifs/tnc_commit.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-As this test is racy, why not just use the result of isolate_lru_page().
-
-> +
->  	/*
->  	 * Avoid migrating a page that is shared with others.
->  	 */
-> @@ -976,6 +993,8 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
->  				hpage_nr_pages(head));
->  		}
->  	}
-> +
-> +	return 0;
->  }
->  
->  /* page allocation callback for NUMA node migration */
-> @@ -1178,9 +1197,10 @@ static struct page *new_page(struct page *page, unsigned long start)
->  }
->  #else
->  
-> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
-> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->  				unsigned long flags)
->  {
-> +	return -EIO;
->  }
->  
->  int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
-> 
+diff --git a/fs/ubifs/tnc_commit.c b/fs/ubifs/tnc_commit.c
+index a384a0f..9fc6b8e 100644
+--- a/fs/ubifs/tnc_commit.c
++++ b/fs/ubifs/tnc_commit.c
+@@ -212,7 +212,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
+ /**
+  * layout_leb_in_gaps - layout index nodes using in-the-gaps method.
+  * @c: UBIFS file-system description object
+- * @p: return LEB number here
++ * @p: return LEB number in @c->gap_lebs[p]
+  *
+  * This function lays out new index nodes for dirty znodes using in-the-gaps
+  * method of TNC commit.
+@@ -221,7 +221,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
+  * This function returns the number of index nodes written into the gaps, or a
+  * negative error code on failure.
+  */
+-static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
++static int layout_leb_in_gaps(struct ubifs_info *c, int p)
+ {
+ 	struct ubifs_scan_leb *sleb;
+ 	struct ubifs_scan_node *snod;
+@@ -236,7 +236,7 @@ static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
+ 		 * filled, however we do not check there at present.
+ 		 */
+ 		return lnum; /* Error code */
+-	*p = lnum;
++	c->gap_lebs[p] = lnum;
+ 	dbg_gc("LEB %d", lnum);
+ 	/*
+ 	 * Scan the index LEB.  We use the generic scan for this even though
+@@ -355,7 +355,8 @@ static int get_leb_cnt(struct ubifs_info *c, int cnt)
+  */
+ static int layout_in_gaps(struct ubifs_info *c, int cnt)
+ {
+-	int err, leb_needed_cnt, written, *p;
++	int err, leb_needed_cnt, written, p = 0, old_idx_lebs;
++	old_idx_lebs = c->lst.idx_lebs;
+ 
+ 	dbg_gc("%d znodes to write", cnt);
+ 
+@@ -364,9 +365,8 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
+ 	if (!c->gap_lebs)
+ 		return -ENOMEM;
+ 
+-	p = c->gap_lebs;
+ 	do {
+-		ubifs_assert(c, p < c->gap_lebs + c->lst.idx_lebs);
++		ubifs_assert(c, p < c->lst.idx_lebs);
+ 		written = layout_leb_in_gaps(c, p);
+ 		if (written < 0) {
+ 			err = written;
+@@ -392,9 +392,25 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
+ 		leb_needed_cnt = get_leb_cnt(c, cnt);
+ 		dbg_gc("%d znodes remaining, need %d LEBs, have %d", cnt,
+ 		       leb_needed_cnt, c->ileb_cnt);
++		/*
++		 * Dynamically change the size of @c->gap_lebs to prevent
++		 * oob, because @c->lst.idx_lebs could be increased by
++		 * function @get_idx_gc_leb (called by layout_leb_in_gaps->
++		 * ubifs_find_dirty_idx_leb) during loop. Only enlarge
++		 * @c->gap_lebs when needed.
++		 *
++		 */
++		if (leb_needed_cnt > c->ileb_cnt && p >= old_idx_lebs &&
++		    old_idx_lebs < c->lst.idx_lebs) {
++			old_idx_lebs = c->lst.idx_lebs;
++			c->gap_lebs = krealloc(c->gap_lebs, sizeof(int) *
++					       (old_idx_lebs + 1), GFP_NOFS);
++			if (!c->gap_lebs)
++			      return -ENOMEM;
++		}
+ 	} while (leb_needed_cnt > c->ileb_cnt);
+ 
+-	*p = -1;
++	c->gap_lebs[p] = -1;
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
