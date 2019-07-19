@@ -2,95 +2,113 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54007C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370EBC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238A12186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:42:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vTEXtvEH"
+	by mail.kernel.org (Postfix) with ESMTP id 080FA2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563554560;
+	bh=69wuicQ5CsCViI+eHXKz7/ao8WiLRTmfskIHLWsEZsk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GZ7DBGuIvadogTc+TNuF6c+UYAw2zAEzO9sxjh6gK/Nc+15fvrmFREgActYYqEeUe
+	 EVvwh4h9noMpVmT4864OEQxkA1zReblyKzwOIa8WCMv4zF0/he9vGgRw0us6KBRyU5
+	 m5JpRCiIwi5TWJNIZLpXYyqdxm9c57cZtF8altLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731321AbfGSQm1 (ORCPT
+        id S1731348AbfGSQmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:42:27 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54082 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfGSQmV (ORCPT
+        Fri, 19 Jul 2019 12:42:39 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33720 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731328AbfGSQmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:42:21 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so29412192wmj.3;
-        Fri, 19 Jul 2019 09:42:20 -0700 (PDT)
+        Fri, 19 Jul 2019 12:42:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h10so31408809ljg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=SyuzXM1UA0r411S68OsfdkYKutqC9A46TddWlatyHsQ=;
-        b=vTEXtvEHhSuArsy9QXt3XHQbJbvp781op8ZBwDYw39LvNyfC/ICdcmHqY+/BCErSIs
-         5TgpjeHzeQrXXPycz2Sff3/1oFsCV0fy3a3W6GCrHdqLHR4bYHMCiNUiWYavNGUfxLqM
-         h14Fw/nWo4HtVHTGRy1ElIsU9/AFJBuYcvY69DRa/V0cJP74WDmugxyCOIy9tNfTB6Z0
-         vr+OPw3OtSdjGN4kpxe532H8GyztrYsC2VOlTosqF05Y8MDMtt9L5ZIozYxhIjjUIUu4
-         jBe6usBUSBWiQjdCQ4a5WemFS6eJzY6kGs0MDXvoDA7n095RUkuTmNYzDJxjMUsNczxU
-         kBdw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u0ZWCWCrD1EFOB7UnBsKGuO4b/n1G74yTuVNDwCT6vg=;
+        b=J+WV1wDq179VrL+xkonxiO60FCa6W2z3DKjq0Ff8NRaL2j0yFKh1AZgX0iRccPI+tg
+         KT4F608xdwGkxd3urDMUr97PcFZ8m/TTGHmjU+RV0XuJWJKVTsqNDqSHZdMzs810RaNK
+         dB3FnqTeRpZT6rRj4VXBjQUavcT9dZLUFSGS8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=SyuzXM1UA0r411S68OsfdkYKutqC9A46TddWlatyHsQ=;
-        b=nAEEkchpHxOEhNg6HsFdPngjlKQYqxHrWe8WV8b1tRsD/FDuoKTi2l3nTvvw4lX3Vu
-         XyqT5ohyzOy+P9xfE7M3kzyBSM7V/zi10Ot3+zEyhtP/7uU53r1qaD+aglDNfmHg1GBQ
-         tidKXaAgK1HqfzaJsdxruwv6Nb78/f8LuPBSFudVNgZT/wlx8dLdd34AOHH/RoZ0YuS0
-         JD0mj11uGUEdlw8woHClRTPhlR4BiM+jxobNDqQhJU+Rvp8pAdwRtZbFTrc4Gq/gG3eW
-         B89xgwzFhugUgaQLYARQkuum/v/Wcp667XqNIjFSlBGQ8B3k+EUcR6o2TVrUk3OWHC/y
-         v6fA==
-X-Gm-Message-State: APjAAAU7OZlwNBodPnSyaBIMR8vBTgHcY7U2iNOAFSGJoAo6HFndyCSP
-        Gb2lDGZi6pwdFNlsIfhbsbpoMK171SY=
-X-Google-Smtp-Source: APXvYqzWYqZbqCkuugTsLZdVV4wmZfFs6xj6yP8zSZeAXjYDXg/BpLT2hCqiQZgocDM/xwIAKfjpDA==
-X-Received: by 2002:a7b:c310:: with SMTP id k16mr11083048wmj.133.1563554539165;
-        Fri, 19 Jul 2019 09:42:19 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id g19sm32764233wmg.10.2019.07.19.09.42.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 09:42:18 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] KVM: nVMX: do not use dangling shadow VMCS after guest reset
-Date:   Fri, 19 Jul 2019 18:42:14 +0200
-Message-Id: <1563554534-46556-3-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u0ZWCWCrD1EFOB7UnBsKGuO4b/n1G74yTuVNDwCT6vg=;
+        b=MV3poEZPzpa591dBFqAFEuR2QSl3/uDszgm9J6AnPf+vHtYQrGP83bpInZ7N0hh56I
+         rcUl34BR+GOk72DCxKR/faZaCSGS8j/3CWShcnEI8n70BvGQdUO5RS3YHNupaf3/rPO9
+         AvRKuwFWc8fPro/M6gDJgiDC2pJfAJJx6D27iZMuARETr97X8fApoTnoT/i5xKIG+8hm
+         7XPHEgQMbqI/+RJYjzDHE+g4NcXZW5FXnF/6phexfKQ6ofk6mmsyJ6K6SiOt8VHdi+2T
+         339tGRbhSBuwJES1xYq8xS4nCHImjzJfEy+W/kh88EhjxH3vaUQtG8xgRGYUroqkfcgB
+         qGGg==
+X-Gm-Message-State: APjAAAVKVNy6S8HDisPe/Mf/hg4lSiDtHM70YBaOW/+vVV5j5C35e7hr
+        qnfuoCZgYQDfaS8gH1KAX8y6kvksLMY=
+X-Google-Smtp-Source: APXvYqxaktrp+Q9FY+vDaT/oHEQJbvTo+SpMLgzzW2bT7JsI7rZ5eORNtEOFKD2eSD0uAwpcCGw/sA==
+X-Received: by 2002:a2e:8591:: with SMTP id b17mr2628607lji.71.1563554555827;
+        Fri, 19 Jul 2019 09:42:35 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id t23sm5773186ljd.98.2019.07.19.09.42.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 09:42:34 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id t28so31379273lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:42:34 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr907481lji.84.1563554554207;
+ Fri, 19 Jul 2019 09:42:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190718225757.ndUBg%akpm@linux-foundation.org> <20190719061313.GI30461@dhcp22.suse.cz>
+In-Reply-To: <20190719061313.GI30461@dhcp22.suse.cz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 19 Jul 2019 09:42:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgtcNxV8ueTk5r9aXZFSpXjb22dMUxfDojPA=O4QtMFFQ@mail.gmail.com>
+Message-ID: <CAHk-=wgtcNxV8ueTk5r9aXZFSpXjb22dMUxfDojPA=O4QtMFFQ@mail.gmail.com>
+Subject: Re: [patch 23/38] mm/sparsemem: introduce struct mem_section_usage
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, toshi.kani@hpe.com,
+        rppt@linux.ibm.com, richardw.yang@linux.intel.com,
+        pasha.tatashin@soleen.com, osalvador@suse.de, logang@deltatee.com,
+        jmoyer@redhat.com, Jerome Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>, jane.chu@oracle.com,
+        Christoph Hellwig <hch@lst.de>,
+        David Hildenbrand <david@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, Qian Cai <cai@lca.pw>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        mm-commits@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a KVM guest is reset while running a nested guest, free_nested will
-disable the shadow VMCS execution control in the vmcs01.  However,
-on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
-the VMCS12 to the shadow VMCS which has since been freed.
+On Thu, Jul 18, 2019 at 11:13 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> Has this been properly reviewed after the last rebase and is this
+> actually ready for merging? I have seen some follow up fixes
+> http://lkml.kernel.org/r/20190715081549.32577-1-osalvador@suse.de
+> and do not see those patches being in the pipe line. Or have they been
+> merged?
 
-This causes a vmptrld of a NULL pointer on my machime, but Jan reports
-the host to hang altogether.  Let's see how much this trivial patch fixes.
+It looks to me from the patches that Andrew updated them with
 
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 1 +
- 1 file changed, 1 insertion(+)
+  https://lore.kernel.org/linux-mm/20190715081549.32577-2-osalvador@suse.de/
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 6e88f459b323..6119b30347c6 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -194,6 +194,7 @@ static void vmx_disable_shadow_vmcs(struct vcpu_vmx *vmx)
- {
- 	secondary_exec_controls_clearbit(vmx, SECONDARY_EXEC_SHADOW_VMCS);
- 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
-+	vmx->nested.need_vmcs12_to_shadow_sync = false;
- }
- 
- static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
--- 
-1.8.3.1
+and
 
+  https://lore.kernel.org/linux-mm/20190718120543.GA8500@linux/
+
+so it looks good to me.
+
+But that's just from reading the patches, I might have missed
+something and I don't see the history.
+
+               Linus
