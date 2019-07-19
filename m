@@ -2,201 +2,98 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D7AC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D420C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C43B2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABAC20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SoJAOSLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfGSIkG (ORCPT
+        id S1726399AbfGSIlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:40:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35718 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726402AbfGSIj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:39:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D2771ACD1;
-        Fri, 19 Jul 2019 08:39:55 +0000 (UTC)
-From:   Nikolay Borisov <nborisov@suse.com>
-To:     linux-btrfs@vger.kernel.org
-Cc:     paulmck@linux.ibm.com, andrea.parri@amarulasolutions.com,
-        linux-kernel@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH v2 1/2] btrfs: Implement DRW lock
-Date:   Fri, 19 Jul 2019 11:39:48 +0300
-Message-Id: <20190719083949.5351-2-nborisov@suse.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190719083949.5351-1-nborisov@suse.com>
-References: <20190719083949.5351-1-nborisov@suse.com>
+        Fri, 19 Jul 2019 04:41:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50587 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfGSIlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 04:41:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qkxS29Drz9s3l;
+        Fri, 19 Jul 2019 18:41:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563525678;
+        bh=AfUDJOPkyWvFlrjo9LOtQTi3KuQ2jyPwaXYtid1vbUA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SoJAOSLvodpm3XsS0DYUx4yRIOBTR/CfEYkJCpmFjpVrHwpoPpzz0d5Jlw9J5+kg5
+         ZfrULMMvxaOXD1qs1g/Si+NVk+TRuWa/RpnnZ5XT9oXp2mcBNXhLvUcORDooJKwYHb
+         EA7hGHWEWGLL++vy+pFJnDiknZHU9JAvQTvVFZoj4yMsWaWioZPUgvpqgxIuzaGSf+
+         pE3nt0V2YpzvmlNOmNyKV8cU69LlZ6w+2/GQmnTO5zmyQF4ZFXNeGJVKD9f/JFFzli
+         hi/ZxUy/5M15dobvhqZFKBa7LoT7fV9picb3x50dm5nXwypFbv2nXaOHOvYX2SIGsi
+         EQIV7A1I8k8sA==
+Date:   Fri, 19 Jul 2019 18:41:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the drm tree
+Message-ID: <20190719184112.6bae9eb0@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/G9MxQIo.QHoane_qfAxQ+/p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
-to have multiple readers or multiple writers but not multiple readers
-and writers holding it concurrently. The code is factored out from
-the existing open-coded locking scheme used to exclude pending
-snapshots from nocow writers and vice-versa. Current implementation
-actually favors Readers (that is snapshot creaters) to writers (nocow
-writers of the filesystem).
+--Sig_/G9MxQIo.QHoane_qfAxQ+/p
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
----
- fs/btrfs/ctree.h   |  1 +
- fs/btrfs/locking.c | 88 ++++++++++++++++++++++++++++++++++++++++++++++
- fs/btrfs/locking.h | 20 +++++++++++
- 3 files changed, 109 insertions(+)
+Hi all,
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index da97ff10f421..b7c9359b24a0 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -33,6 +33,7 @@
- #include "extent_map.h"
- #include "async-thread.h"
- #include "block-rsv.h"
-+#include "locking.h"
- 
- struct btrfs_trans_handle;
- struct btrfs_transaction;
-diff --git a/fs/btrfs/locking.c b/fs/btrfs/locking.c
-index 98fccce4208c..702c956ed028 100644
---- a/fs/btrfs/locking.c
-+++ b/fs/btrfs/locking.c
-@@ -354,3 +354,91 @@ void btrfs_tree_unlock(struct extent_buffer *eb)
- 		write_unlock(&eb->lock);
- 	}
- }
-+
-+
-+int btrfs_drw_lock_init(struct btrfs_drw_lock *lock)
-+{
-+	int ret;
-+
-+	ret = percpu_counter_init(&lock->writers, 0, GFP_KERNEL);
-+	if (ret)
-+		return ret;
-+
-+	atomic_set(&lock->readers, 0);
-+	init_waitqueue_head(&lock->pending_readers);
-+	init_waitqueue_head(&lock->pending_writers);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(btrfs_drw_lock_init);
-+
-+void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock)
-+{
-+	percpu_counter_destroy(&lock->writers);
-+}
-+
-+bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock)
-+{
-+	if (atomic_read(&lock->readers))
-+		return false;
-+
-+	percpu_counter_inc(&lock->writers);
-+
-+	/*
-+	 * Ensure writers count is updated before we check for
-+	 * pending readers
-+	 */
-+	smp_mb();
-+	if (atomic_read(&lock->readers)) {
-+		btrfs_drw_write_unlock(lock);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+EXPORT_SYMBOL(btrfs_drw_try_write_lock);
-+
-+void btrfs_drw_write_lock(struct btrfs_drw_lock *lock)
-+{
-+	while (true) {
-+		if (btrfs_drw_try_write_lock(lock))
-+			return;
-+		wait_event(lock->pending_writers, !atomic_read(&lock->readers));
-+	}
-+}
-+EXPORT_SYMBOL(btrfs_drw_write_lock);
-+
-+void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock)
-+{
-+	percpu_counter_dec(&lock->writers);
-+	cond_wake_up(&lock->pending_readers);
-+}
-+EXPORT_SYMBOL(btrfs_drw_write_unlock);
-+
-+void btrfs_drw_read_lock(struct btrfs_drw_lock *lock)
-+{
-+	atomic_inc(&lock->readers);
-+
-+	/*
-+	 * Ensure the pending reader count is perceieved BEFORE this reader
-+	 * goes to sleep in case of active writers. This guarantees new writers
-+	 * won't be allowed and that the current reader will be woken up when
-+	 * the last active writer finishes its jobs.
-+	 */
-+	smp_mb__after_atomic();
-+
-+	wait_event(lock->pending_readers,
-+		   percpu_counter_sum(&lock->writers) == 0);
-+}
-+EXPORT_SYMBOL(btrfs_drw_read_lock);
-+
-+void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
-+{
-+	/*
-+	 * Atomic RMW operations imply full barrier, so woken up writers
-+	 * are guaranteed to see the decrement
-+	 */
-+	if (atomic_dec_and_test(&lock->readers))
-+		wake_up(&lock->pending_writers);
-+}
-+EXPORT_SYMBOL(btrfs_drw_read_unlock);
-diff --git a/fs/btrfs/locking.h b/fs/btrfs/locking.h
-index 595014f64830..44378c65f843 100644
---- a/fs/btrfs/locking.h
-+++ b/fs/btrfs/locking.h
-@@ -6,6 +6,10 @@
- #ifndef BTRFS_LOCKING_H
- #define BTRFS_LOCKING_H
- 
-+#include <linux/atomic.h>
-+#include <linux/wait.h>
-+#include <linux/percpu_counter.h>
-+
- #define BTRFS_WRITE_LOCK 1
- #define BTRFS_READ_LOCK 2
- #define BTRFS_WRITE_LOCK_BLOCKING 3
-@@ -39,4 +43,20 @@ static inline void btrfs_tree_unlock_rw(struct extent_buffer *eb, int rw)
- 		BUG();
- }
- 
-+
-+struct btrfs_drw_lock {
-+	atomic_t readers;
-+	struct percpu_counter writers;
-+	wait_queue_head_t pending_writers;
-+	wait_queue_head_t pending_readers;
-+};
-+
-+int btrfs_drw_lock_init(struct btrfs_drw_lock *lock);
-+void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock);
-+void btrfs_drw_write_lock(struct btrfs_drw_lock *lock);
-+bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock);
-+void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock);
-+void btrfs_drw_read_lock(struct btrfs_drw_lock *lock);
-+void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock);
-+
- #endif
--- 
-2.17.1
+In commit
 
+  b7019ac550eb ("drm/nouveau: fix bogus GPL-2 license header")
+
+Fixes tag
+
+  Fixes: b24413180f5 (License cleanup: add SPDX GPL-2.0 license identifier =
+to files with no license)
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/G9MxQIo.QHoane_qfAxQ+/p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0xgigACgkQAVBC80lX
+0GzKoAgAh+uW21gJ4l2i2YQ2jCrg6wg09OmYZVZ94eOrBiO4mTaArQaQlWxijWKQ
+9UIGzkGuWuoAy9PbfmYC/TJ4xkQO8gvzaS5paJjnXnsWzUrtJDRsyby7pHSq0536
+PzQXXcgCo4ZNQXyJZBlxgNm2YhtO/4u8SVQ9042JvBAaD7zXItdpqwZF+oC2+0nY
+7IPzOOs3QkpEPZ8XEgQJx2eg4DlbVDU+BhSezlttp25yAZsEIUo5Rtpe+ZyIzxAd
+8xh/3IGgZaoLsCjWT+AaazKmEK9FwWbBjV1IGIg1xUosj8WqrCnOeen8qeO48T35
+HAJu5h6cV9xHli2JsKcj78X1z9qEuQ==
+=TSzi
+-----END PGP SIGNATURE-----
+
+--Sig_/G9MxQIo.QHoane_qfAxQ+/p--
