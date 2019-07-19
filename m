@@ -2,118 +2,180 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF01C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B67C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F7B2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoHem9fI"
+	by mail.kernel.org (Postfix) with ESMTP id 8D2642077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfGSAay (ORCPT
+        id S1726374AbfGSAbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:30:54 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37629 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfGSAay (ORCPT
+        Thu, 18 Jul 2019 20:31:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40544 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSAbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:30:54 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c9so20468135lfh.4;
-        Thu, 18 Jul 2019 17:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xho2od4dR/ejVEmeXeRJDJbW0RNQVIpYbWcGXZpI5jM=;
-        b=PoHem9fIGg4wqnF8Um03wzb4+ec8lw19QRIsHE0kkWaoW0EwCYviUNXR1lrMMwA+Ba
-         m3uvT53qQsn3wXhFqHcNCowE4x/i8TSecJudbdfi1Wyx1qqvJMtv4hyuN3B8S/oRd2WS
-         sMubF8qEUvi0zbL0ZWlCL3JXEvnYcI/cwocdysQkE4UskPWCid48GlTDk4Gg89A1IUs+
-         wH21K9oSmAwaYfCzNFexSrkeSujL2mfwUtvFhGOIqrzPS/8w4nPxJuGMcfiB5qh3kOYa
-         GjAsX18ac0QjEmCEHQ67IxJRP9pivBgrB3cRUEA3/3WtM3j+gqfOe7qyYK03ERB1LxAJ
-         Zg9Q==
+        Thu, 18 Jul 2019 20:31:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id y20so15046821otk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:31:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xho2od4dR/ejVEmeXeRJDJbW0RNQVIpYbWcGXZpI5jM=;
-        b=U9Jz1WWOhTa6z26TUwqtTi3A76AMITSQwlbp0McPyb65QFMrp/rDK7NbFw3bjt+98x
-         GJIypHm0vPAdIkdtMsCSfY9dGloP8hsBXArtmSDar8OUq2viLNznZzyWzSs0ZEisYbTd
-         kvALm2E4LuJWpYeKPBnvBh/dAEpqvf1lJuNrOnEEG4CWg+VDepZoUoiNeqJDYTqpmdAf
-         6z9ZIAn0055znszEtsUjNPAlkyqC3wsJE7D8+O/R8/DWDa52TwPBgjOd+T8aAsOR2khe
-         4ZzpwN5eSwzUuUucFNk6MUDRPB4ra1bjvHlawQDsztmz8qYpv4BRvvgwqIiobRicBuE5
-         yZUA==
-X-Gm-Message-State: APjAAAV4imHFtoOV9uqoC3zaBGoDSh3LhASKDgFiXFeg0CocAr8WvSwP
-        m3kwPM1gGJqahJzahLR0d0E=
-X-Google-Smtp-Source: APXvYqzj15bv7yXHFwe28D14xB3MBwm0/yF+lel2HERvYQjD0qd4+CP7nds3FkKe4Q4+F1R27WkkXg==
-X-Received: by 2002:a19:2297:: with SMTP id i145mr22187789lfi.97.1563496251701;
-        Thu, 18 Jul 2019 17:30:51 -0700 (PDT)
-Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id z30sm4726328lfj.63.2019.07.18.17.30.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 17:30:51 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 03:34:29 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 22/24] PM / devfreq: tegra30: Include appropriate
- header
-Message-ID: <20190719033429.47985963@dimatab>
-In-Reply-To: <2f317faf-8de0-2717-cda7-b15374039493@samsung.com>
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223620epcas4p16538beeb317e2ed0cbecb64147f32b71@epcas4p1.samsung.com>
-        <20190707223303.6755-23-digetx@gmail.com>
-        <2f317faf-8de0-2717-cda7-b15374039493@samsung.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oa7NZ9SHHSZyZ+ddNT7cMnWruRPCnZIWB1sl8B9uIas=;
+        b=WdvRW0PMrhB6RMzREnS3slR62ipzaXOikvYVa6atW4o1R/USkkUSZ1qp4tVcAvh8SK
+         UspBZy9GHSt7MuF0Q/drc3vfNCIyR1jvoMavfiG767BS7ImP40DRMxUr4C67dtao5b4W
+         U5KhwEARYJEYjpYFEacaq2WgsT2kSB3hSXN1fnk2bWjOsY2ZxFjFafk5DVVj/DB1JQvW
+         UHbHsiZWNOVoAEso7rBciMQGYX3XT+XwE4sMLEVl+sDjNOfN7PzHsJbGo5K6NRwlpcGn
+         j0cIHA+fNcOeQsYe7Penbw7hmkN95cTqengTYxxySo+GdIQrOyYC7F04t95POCSjlCV/
+         VfLQ==
+X-Gm-Message-State: APjAAAUyLZuTdzYN8jU81ZBnAEtDMn4jXJBt9e02++RhwIjckH84sL/7
+        2Yuz3pZ0L3EQ+KFVl1y/ugQ=
+X-Google-Smtp-Source: APXvYqyodarpFohjC/vmQsLFzwYhPQwgI8CfqGRscHkMtLQVaShFYJBsJquA/U7ucH0aiJLTjlXmJw==
+X-Received: by 2002:a05:6830:1197:: with SMTP id u23mr35966663otq.36.1563496263108;
+        Thu, 18 Jul 2019 17:31:03 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id w9sm9790587otk.16.2019.07.18.17.31.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 17:31:02 -0700 (PDT)
+Subject: Re: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while
+ scanning
+From:   Sagi Grimberg <sagi@grimberg.me>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190718225132.5865-1-logang@deltatee.com>
+ <20190718225132.5865-2-logang@deltatee.com>
+ <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
+Message-ID: <ba6d1a56-8f86-4060-a167-6d67435e1a88@grimberg.me>
+Date:   Thu, 18 Jul 2019 17:31:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=92 Thu, 18 Jul 2019 18:58:50 +0900
-Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> [1]:
+Or actually:
+--
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 76cd3dd8736a..a0e2072fe73e 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3576,6 +3576,12 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
+         struct nvme_ns *ns, *next;
+         LIST_HEAD(ns_list);
 
-> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:33, Dmitry Osipenko wrote:
-> > It's not very correct to include mod_devicetable.h for the OF device
-> > drivers and of_device.h should be included instead.
-> >=20
-> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> > ---
-> >  drivers/devfreq/tegra30-devfreq.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/devfreq/tegra30-devfreq.c
-> > b/drivers/devfreq/tegra30-devfreq.c index
-> > 8a674fad26be..19e872a64148 100644 ---
-> > a/drivers/devfreq/tegra30-devfreq.c +++
-> > b/drivers/devfreq/tegra30-devfreq.c @@ -13,7 +13,7 @@
-> >  #include <linux/io.h>
-> >  #include <linux/irq.h>
-> >  #include <linux/module.h>
-> > -#include <linux/mod_devicetable.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_opp.h>
-> >  #include <linux/reset.h>
-> >  =20
->=20
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->=20
-> Is not there other unused header file anymore?
->=20
++       mutex_lock(&ctrl->scan_lock);
++       list_for_each_entry(ns, &ctrl->namespaces, list)
++               if (nvme_mpath_clear_current_path(ns))
++                       kblockd_schedule_work(&ns->head->requeue_work);
++       mutex_lock(&ctrl->scan_lock);
++
+         /* prevent racing with ns scanning */
+         flush_work(&ctrl->scan_work);
 
-The rest looks good to me.
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index a9a927677970..0e7e41381388 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -109,18 +109,22 @@ static const char *nvme_ana_state_names[] = {
+         [NVME_ANA_CHANGE]               = "change",
+  };
+
+-void nvme_mpath_clear_current_path(struct nvme_ns *ns)
++bool nvme_mpath_clear_current_path(struct nvme_ns *ns)
+  {
+         struct nvme_ns_head *head = ns->head;
++       bool changed = false;
+         int node;
+
+         if (!head)
+-               return;
++               return changed;
+
+         for_each_node(node) {
+-               if (ns == rcu_access_pointer(head->current_path[node]))
++               if (ns == rcu_access_pointer(head->current_path[node])) {
+                         rcu_assign_pointer(head->current_path[node], NULL);
++                       changed = true;
++               }
+         }
++       return changed;
+  }
+
+  static bool nvme_path_is_disabled(struct nvme_ns *ns)
+@@ -231,6 +235,24 @@ inline struct nvme_ns *nvme_find_path(struct 
+nvme_ns_head *head)
+         return ns;
+  }
+
++static bool nvme_available_path(struct nvme_ns_head *head)
++{
++       struct nvme_ns *ns;
++
++       list_for_each_entry_rcu(ns, &head->list, siblings) {
++               switch (ns->ctrl->state) {
++               case NVME_CTRL_LIVE:
++               case NVME_CTRL_RESETTING:
++               case NVME_CTRL_CONNECTING:
++                       /* fallthru */
++                       return true;
++               default:
++                       break;
++               }
++       }
++       return false;
++}
++
+  static blk_qc_t nvme_ns_head_make_request(struct request_queue *q,
+                 struct bio *bio)
+  {
+@@ -257,14 +279,14 @@ static blk_qc_t nvme_ns_head_make_request(struct 
+request_queue *q,
+                                       disk_devt(ns->head->disk),
+                                       bio->bi_iter.bi_sector);
+                 ret = direct_make_request(bio);
+-       } else if (!list_empty_careful(&head->list)) {
+-               dev_warn_ratelimited(dev, "no path available - requeuing 
+I/O\n");
++       } else if (nvme_available_path(head)) {
++               dev_warn_ratelimited(dev, "no usable path - requeuing 
+I/O\n");
+
+                 spin_lock_irq(&head->requeue_lock);
+                 bio_list_add(&head->requeue_list, bio);
+                 spin_unlock_irq(&head->requeue_lock);
+         } else {
+-               dev_warn_ratelimited(dev, "no path - failing I/O\n");
++               dev_warn_ratelimited(dev, "no available path - failing 
+I/O\n");
+
+                 bio->bi_status = BLK_STS_IOERR;
+                 bio_endio(bio);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 716a876119c8..915179368d30 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -496,7 +496,7 @@ void nvme_mpath_remove_disk(struct nvme_ns_head *head);
+  int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id);
+  void nvme_mpath_uninit(struct nvme_ctrl *ctrl);
+  void nvme_mpath_stop(struct nvme_ctrl *ctrl);
+-void nvme_mpath_clear_current_path(struct nvme_ns *ns);
++bool nvme_mpath_clear_current_path(struct nvme_ns *ns);
+  struct nvme_ns *nvme_find_path(struct nvme_ns_head *head);
+
+  static inline void nvme_mpath_check_last_path(struct nvme_ns *ns)
+--
