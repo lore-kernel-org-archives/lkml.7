@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080B4C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A1AC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D652421882
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D7D21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508828;
-	bh=1sTBx+nVYEYy5Fk2KfWlMcNkjbOoZeRjEIvyULIGil4=;
+	s=default; t=1563508836;
+	bh=RnpYIfsmVQzw+RTCY/meZ6Kjw8GaVvaz5MFpeWecvx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s35Sx0PGOCgV2rB7VReqfvLk8vEWus+YApvPsnZfZB4hsGPdGGMV8nYxnNtJaIjKX
-	 xWWSPYJ6WWFxC8KhCV38LDwMwS9QlIm5D13pVJYvXLRjv7I/4pb9mC0lMVcyekfXCc
-	 94juEyJgUb/+HWbegZUCFHtc26l6P7k4AFdDB0T0=
+	b=imSGoPOBV0xK6QsLDt/W1zrMbe7R8jce+QHULiDyHxGaHmqrzL5/sPG3x5NpIOPRg
+	 P+yEc4GydBYQDwdh4WUNFg33H9EdvjAVRzDNrP6JgCbi3tfIhEds+bvvsjT55Vh5Sc
+	 OoH4VArTV3s10ZLPTDt++5i5PhdOoU6GE7Tw8rZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfGSEA1 (ORCPT
+        id S1729103AbfGSEAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60124 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbfGSEAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:00:16 -0400
+        id S1729017AbfGSEA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42AA821882;
-        Fri, 19 Jul 2019 04:00:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4A2221852;
+        Fri, 19 Jul 2019 04:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508815;
-        bh=1sTBx+nVYEYy5Fk2KfWlMcNkjbOoZeRjEIvyULIGil4=;
+        s=default; t=1563508825;
+        bh=RnpYIfsmVQzw+RTCY/meZ6Kjw8GaVvaz5MFpeWecvx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJ61WwOzPpYINwe8EeezNyKj64l0w3nWhrxIY5ZiKIEpOLMoILc9QVsvClBBG9ueW
-         c5wnrEryTpqg3su/g9f0qRaJ/Dq+BZUPhz7f/9DKQHfmUVm+UQJVkxfxa004I/5RR9
-         iSDHiSdzZwNHwtnYE+l+shKVzIqVxcJVln8pVKKs=
+        b=x8WL9HdGrjVualWQH/9wSZiUvx2aWSvjeQSErlQxCgdXlKCuP3PffNZOy4YzbqEN9
+         k9pSJ/rUGO9Azfi03e875A5reEbXDW3TbulbP9rErY0aUAcDAnC8Abpa8Kp3Dp5HRK
+         Egzgj9ereYnh1MNy7PLag1Orpwad4CFyX6Cn6ZWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 105/171] powerpc: silence a -Wcast-function-type warning in dawr_write_file_bool
-Date:   Thu, 18 Jul 2019 23:55:36 -0400
-Message-Id: <20190719035643.14300-105-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 111/171] IB/mlx5: Fixed reporting counters on 2nd port for Dual port RoCE
+Date:   Thu, 18 Jul 2019 23:55:42 -0400
+Message-Id: <20190719035643.14300-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,58 +61,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Malaterre <malat@debian.org>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 548c54acba5bd1388d50727a9a126a42d0cd4ad0 ]
+[ Upstream commit 2f40cf30c8644360d37287861d5288f00eab35e5 ]
 
-In commit c1fe190c0672 ("powerpc: Add force enable of DAWR on P9
-option") the following piece of code was added:
+Currently during dual port IB device registration in below code flow,
 
-   smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
+ib_register_device()
+  ib_device_register_sysfs()
+    ib_setup_port_attrs()
+      add_port()
+        get_counter_table()
+          get_perf_mad()
+            process_mad()
+              mlx5_ib_process_mad()
 
-Since GCC 8 this triggers the following warning about incompatible
-function types:
+mlx5_ib_process_mad() fails on 2nd port when both the ports are not fully
+setup at the device level (because 2nd port is unaffiliated).
 
-  arch/powerpc/kernel/hw_breakpoint.c:408:21: error: cast between incompatible function types from 'int (*)(struct arch_hw_breakpoint *)' to 'void (*)(void *)' [-Werror=cast-function-type]
+As a result, get_perf_mad() registers different PMA counter group for 1st
+and 2nd port, namely pma_counter_ext and pma_counter. However both ports
+have the same capability and counter offsets.
 
-Since the warning is there for a reason, and should not be hidden behind
-a cast, provide an intermediate callback function to avoid the warning.
+Due to this when counters are read by the user via sysfs in below code
+flow, counters are queried from wrong location from the device mainly from
+PPCNT instead of VPORT counters.
 
-Fixes: c1fe190c0672 ("powerpc: Add force enable of DAWR on P9 option")
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+show_pma_counter()
+  get_perf_mad()
+    process_mad()
+      mlx5_ib_process_mad()
+        process_pma_cmd()
+
+This shows all zero counters for 2nd port.
+
+To overcome this, process_pma_cmd() is invoked, and when unaffiliated port
+is not yet setup during device registration phase, make the query on the
+first port.  while at it, only process_pma_cmd() needs to work on the
+native port number and underlying mdev, so shift the get, put calls to
+where its needed inside process_pma_cmd().
+
+Fixes: 212f2a87b74f ("IB/mlx5: Route MADs for dual port RoCE")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/hw_breakpoint.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/mad.c | 60 +++++++++++++++++++-------------
+ 1 file changed, 36 insertions(+), 24 deletions(-)
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index a293a53b4365..50262597c222 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -370,6 +370,11 @@ void hw_breakpoint_pmu_read(struct perf_event *bp)
- bool dawr_force_enable;
- EXPORT_SYMBOL_GPL(dawr_force_enable);
- 
-+static void set_dawr_cb(void *info)
-+{
-+	set_dawr(info);
-+}
-+
- static ssize_t dawr_write_file_bool(struct file *file,
- 				    const char __user *user_buf,
- 				    size_t count, loff_t *ppos)
-@@ -389,7 +394,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
- 
- 	/* If we are clearing, make sure all CPUs have the DAWR cleared */
- 	if (!dawr_force_enable)
--		smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
-+		smp_call_function(set_dawr_cb, &null_brk, 0);
- 
- 	return rc;
+diff --git a/drivers/infiniband/hw/mlx5/mad.c b/drivers/infiniband/hw/mlx5/mad.c
+index 6c529e6f3a01..348c1df69cdc 100644
+--- a/drivers/infiniband/hw/mlx5/mad.c
++++ b/drivers/infiniband/hw/mlx5/mad.c
+@@ -200,19 +200,33 @@ static void pma_cnt_assign(struct ib_pma_portcounters *pma_cnt,
+ 			     vl_15_dropped);
  }
+ 
+-static int process_pma_cmd(struct mlx5_core_dev *mdev, u8 port_num,
++static int process_pma_cmd(struct mlx5_ib_dev *dev, u8 port_num,
+ 			   const struct ib_mad *in_mad, struct ib_mad *out_mad)
+ {
+-	int err;
++	struct mlx5_core_dev *mdev;
++	bool native_port = true;
++	u8 mdev_port_num;
+ 	void *out_cnt;
++	int err;
+ 
++	mdev = mlx5_ib_get_native_port_mdev(dev, port_num, &mdev_port_num);
++	if (!mdev) {
++		/* Fail to get the native port, likely due to 2nd port is still
++		 * unaffiliated. In such case default to 1st port and attached
++		 * PF device.
++		 */
++		native_port = false;
++		mdev = dev->mdev;
++		mdev_port_num = 1;
++	}
+ 	/* Declaring support of extended counters */
+ 	if (in_mad->mad_hdr.attr_id == IB_PMA_CLASS_PORT_INFO) {
+ 		struct ib_class_port_info cpi = {};
+ 
+ 		cpi.capability_mask = IB_PMA_CLASS_CAP_EXT_WIDTH;
+ 		memcpy((out_mad->data + 40), &cpi, sizeof(cpi));
+-		return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
++		err = IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
++		goto done;
+ 	}
+ 
+ 	if (in_mad->mad_hdr.attr_id == IB_PMA_PORT_COUNTERS_EXT) {
+@@ -221,11 +235,13 @@ static int process_pma_cmd(struct mlx5_core_dev *mdev, u8 port_num,
+ 		int sz = MLX5_ST_SZ_BYTES(query_vport_counter_out);
+ 
+ 		out_cnt = kvzalloc(sz, GFP_KERNEL);
+-		if (!out_cnt)
+-			return IB_MAD_RESULT_FAILURE;
++		if (!out_cnt) {
++			err = IB_MAD_RESULT_FAILURE;
++			goto done;
++		}
+ 
+ 		err = mlx5_core_query_vport_counter(mdev, 0, 0,
+-						    port_num, out_cnt, sz);
++						    mdev_port_num, out_cnt, sz);
+ 		if (!err)
+ 			pma_cnt_ext_assign(pma_cnt_ext, out_cnt);
+ 	} else {
+@@ -234,20 +250,23 @@ static int process_pma_cmd(struct mlx5_core_dev *mdev, u8 port_num,
+ 		int sz = MLX5_ST_SZ_BYTES(ppcnt_reg);
+ 
+ 		out_cnt = kvzalloc(sz, GFP_KERNEL);
+-		if (!out_cnt)
+-			return IB_MAD_RESULT_FAILURE;
++		if (!out_cnt) {
++			err = IB_MAD_RESULT_FAILURE;
++			goto done;
++		}
+ 
+-		err = mlx5_core_query_ib_ppcnt(mdev, port_num,
++		err = mlx5_core_query_ib_ppcnt(mdev, mdev_port_num,
+ 					       out_cnt, sz);
+ 		if (!err)
+ 			pma_cnt_assign(pma_cnt, out_cnt);
+-		}
+-
++	}
+ 	kvfree(out_cnt);
+-	if (err)
+-		return IB_MAD_RESULT_FAILURE;
+-
+-	return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
++	err = err ? IB_MAD_RESULT_FAILURE :
++		    IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
++done:
++	if (native_port)
++		mlx5_ib_put_native_port_mdev(dev, port_num);
++	return err;
+ }
+ 
+ int mlx5_ib_process_mad(struct ib_device *ibdev, int mad_flags, u8 port_num,
+@@ -259,8 +278,6 @@ int mlx5_ib_process_mad(struct ib_device *ibdev, int mad_flags, u8 port_num,
+ 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
+ 	const struct ib_mad *in_mad = (const struct ib_mad *)in;
+ 	struct ib_mad *out_mad = (struct ib_mad *)out;
+-	struct mlx5_core_dev *mdev;
+-	u8 mdev_port_num;
+ 	int ret;
+ 
+ 	if (WARN_ON_ONCE(in_mad_size != sizeof(*in_mad) ||
+@@ -269,19 +286,14 @@ int mlx5_ib_process_mad(struct ib_device *ibdev, int mad_flags, u8 port_num,
+ 
+ 	memset(out_mad->data, 0, sizeof(out_mad->data));
+ 
+-	mdev = mlx5_ib_get_native_port_mdev(dev, port_num, &mdev_port_num);
+-	if (!mdev)
+-		return IB_MAD_RESULT_FAILURE;
+-
+-	if (MLX5_CAP_GEN(mdev, vport_counters) &&
++	if (MLX5_CAP_GEN(dev->mdev, vport_counters) &&
+ 	    in_mad->mad_hdr.mgmt_class == IB_MGMT_CLASS_PERF_MGMT &&
+ 	    in_mad->mad_hdr.method == IB_MGMT_METHOD_GET) {
+-		ret = process_pma_cmd(mdev, mdev_port_num, in_mad, out_mad);
++		ret = process_pma_cmd(dev, port_num, in_mad, out_mad);
+ 	} else {
+ 		ret =  process_mad(ibdev, mad_flags, port_num, in_wc, in_grh,
+ 				   in_mad, out_mad);
+ 	}
+-	mlx5_ib_put_native_port_mdev(dev, port_num);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
