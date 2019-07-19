@@ -7,53 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF0BC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A80C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296972082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F25206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510941;
-	bh=KvJVT3OxbW7ZfxoOeAj1LriJxnXXyQaXFDAw6GDtAw4=;
+	s=default; t=1563510948;
+	bh=VZYhGO+wZgOgOOzXf5CsdNH7PZ6O3JbGnuCqN9yB02I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uasPGWGO2obpL3YClwBqdzPYtHNPysAWmoIkepPwooLvI4oRHVuGdX/iwRc5IwSKp
-	 23qOs/grl97hu+0kr9uyTu2Dp0tP09GCVxJmIT7pWeyDUig8udNwmMrONr1oaEBTor
-	 HFyH2gO/RWSHmU4Yksg4Sy+DfkZSUAEQcOBByddM=
+	b=qHakJ8l1dhqjo5tvLZ2BXAnmD8A4KdZ+nUm0/raibKG0wSDc46FUrAHULPJKfJqPI
+	 7XC1A7FyA/zSjL2GWfNYRg6+r1RBeHK/Bw3HdE+8oBchhRxdppSjBBhXNJf2tRMyxk
+	 mExVhIyQSnir6HCPCtGyUmXF+MC7fKcKHLnHryz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388630AbfGSEfk (ORCPT
+        id S1729339AbfGSEBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33034 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbfGSEBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:20 -0400
+        id S1729301AbfGSEBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC2F218BA;
-        Fri, 19 Jul 2019 04:01:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D80421850;
+        Fri, 19 Jul 2019 04:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508879;
-        bh=KvJVT3OxbW7ZfxoOeAj1LriJxnXXyQaXFDAw6GDtAw4=;
+        s=default; t=1563508861;
+        bh=VZYhGO+wZgOgOOzXf5CsdNH7PZ6O3JbGnuCqN9yB02I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktqjFaQaWmZaDRYTXFVLDw7CKX4EgxcJacJjbJMGO04YuGqzYig5DgYgX0nv///Kl
-         zTHEPC/ioVgf3e4vCNIXuKt5vTToTfLUDEEng4vEHhDFAuHv5dxRcNBeR12Pk9rxO9
-         Z8HIyVh9ci6y0pEbdi/+CrrZFwHM/oTOV7tJTbSc=
+        b=0/ZDM53LLB52WVgdmEBiXHGDNc4YiNa1BWQ4K+BHQz0SESePHKTgybVOIflOTGhi7
+         PoeQFOw4BI+StAsUbxJtA8FIaqj1v2USRRqm3J3UvhhA+Tcu1dcmNi51absy+IFPmE
+         WnaMApvBHDt8vY1GHUVSCe5NVtgiz5hqAbowcR6A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
+Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Song Liu <songliubraving@fb.com>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 133/171] perf intel-bts: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Thu, 18 Jul 2019 23:56:04 -0400
-Message-Id: <20190719035643.14300-133-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 127/171] perf session: Fix potential NULL pointer dereference found by the smatch tool
+Date:   Thu, 18 Jul 2019 23:55:58 -0400
+Message-Id: <20190719035643.14300-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -68,72 +81,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 1d481458816d9424c8a05833ce0ebe72194a350e ]
+[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+Based on the following report from Smatch, fix the potential
+NULL pointer dereference check.
 
-  tools/perf/util/intel-bts.c:898
-  intel_bts_process_auxtrace_info() error: we previously assumed
-  'session->itrace_synth_opts' could be null (see line 894)
+  tools/perf/util/session.c:1252
+  dump_read() error: we previously assumed 'evsel' could be null
+  (see line 1249)
 
-  tools/perf/util/intel-bts.c:899
-  intel_bts_process_auxtrace_info() warn: variable dereferenced before
-  check 'session->itrace_synth_opts' (see line 898)
+  tools/perf/util/session.c
+  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+  1241 {
+  1242         struct read_event *read_event = &event->read;
+  1243         u64 read_format;
+  1244
+  1245         if (!dump_trace)
+  1246                 return;
+  1247
+  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
+  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
+  1250                event->read.value);
+  1251
+  1252         read_format = evsel->attr.read_format;
+                             ^^^^^^^
 
-  tools/perf/util/intel-bts.c
-  894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-  895                 bts->synth_opts = *session->itrace_synth_opts;
-  896         } else {
-  897                 itrace_synth_opts__set_default(&bts->synth_opts,
-  898                                 session->itrace_synth_opts->default_no_sample);
-                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  899                 if (session->itrace_synth_opts)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  900                         bts->synth_opts.thread_stack =
-  901                                 session->itrace_synth_opts->thread_stack;
-  902         }
-
-'session->itrace_synth_opts' is impossible to be a NULL pointer in
-intel_bts_process_auxtrace_info(), thus this patch removes the NULL test
-for 'session->itrace_synth_opts'.
+'evsel' could be NULL pointer, for this case this patch directly bails
+out without dumping read_event.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Changbin Du <changbin.du@intel.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Song Liu <songliubraving@fb.com>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190708143937.7722-3-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/intel-bts.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/util/session.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index e32dbffebb2f..625ad3639a7e 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -891,13 +891,12 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 	if (dump_trace)
- 		return 0;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 54cf163347f7..2e61dd6a3574 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1249,6 +1249,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+ 	       evsel ? perf_evsel__name(evsel) : "FAIL",
+ 	       event->read.value);
  
--	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-+	if (session->itrace_synth_opts->set) {
- 		bts->synth_opts = *session->itrace_synth_opts;
- 	} else {
- 		itrace_synth_opts__set_default(&bts->synth_opts,
- 				session->itrace_synth_opts->default_no_sample);
--		if (session->itrace_synth_opts)
--			bts->synth_opts.thread_stack =
-+		bts->synth_opts.thread_stack =
- 				session->itrace_synth_opts->thread_stack;
- 	}
++	if (!evsel)
++		return;
++
+ 	read_format = evsel->attr.read_format;
  
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
 -- 
 2.20.1
 
