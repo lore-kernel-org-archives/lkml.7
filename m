@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61039C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC0FC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3017021873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBB821882
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508920;
-	bh=V4huZNzy8HgUqUG9Hs18Y4DPLc1zQdIPvTrO6il0Jp0=;
+	s=default; t=1563508923;
+	bh=nMJglynZyLcYk9zCBzECY9j3OAE04HiIgAINB5zkQ5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CGQ4JU8QpJKrVdm/KYPviHhX4XkuVq6pe7kZtSUO6l7111H38ytFmzYAzH6dscYP
-	 QznOuwnw4/hDUu4PcsPqQMgH/G/M6fGV0wH/9Ckhci+oqSn1Dhm/M+p6l3AqL3YcEM
-	 YwKa2YGbcHrHxlnROGwrMeA2A19V/M94JDuUiTnY=
+	b=SQWhrydMnUf1f0iKagFHBPh5PgpFWgKX83i9TVqlnoTwBSjhIzLa7pIUMJu10+yfJ
+	 cM5Q6XuQjUuWYPfWza9x9Vkq2cx9DII/triZNvH/C5Cw0rARz/FvHkLfGw4lUasbpp
+	 sHZJMPvuJzpzm/pijmnKEQKDc5NedX27uABMbxlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfGSEB7 (ORCPT
+        id S1729791AbfGSECC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33488 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfGSEBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:45 -0400
+        id S1729659AbfGSEBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291BB21851;
-        Fri, 19 Jul 2019 04:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB4721873;
+        Fri, 19 Jul 2019 04:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508905;
-        bh=V4huZNzy8HgUqUG9Hs18Y4DPLc1zQdIPvTrO6il0Jp0=;
+        s=default; t=1563508907;
+        bh=nMJglynZyLcYk9zCBzECY9j3OAE04HiIgAINB5zkQ5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCVa+NvSuDYvSIZZItDuyhIp90cmgKhxrHouR9TwJvrujabTZ2BqW0ICBIaYl7iZ+
-         wtVuAH61AdhNJVnOHqf/FAUVSiImqrIRyGF1LyvchP/ipBWzGXqP1g+Dl6gl6gV2l2
-         zI8XRnwOMWOuOClduApluTEQY6ilRon3N+Ps+ndA=
+        b=cDJ7rwrsvyEikFpzH964XvPV6286BOJyYL3xn8IWiTG3XTB0V4Lb2JtzEGAfS8DOd
+         670k1jWzxP9WDp2+fIiC9Yf/HhrlGeEce3QOeKa/fjlNaXLqvfpoR5tbummoIzhRT2
+         dsS8qM2Kgg55axbNpDOENZDwz5pJryBhs9LztxCw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aya Levin <ayal@mellanox.com>, Feras Daoud <ferasda@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 150/171] net/mlx5e: IPoIB, Add error path in mlx5_rdma_setup_rn
-Date:   Thu, 18 Jul 2019 23:56:21 -0400
-Message-Id: <20190719035643.14300-150-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Ming Lei <ming.lei@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 152/171] block/bio-integrity: fix a memory leak bug
+Date:   Thu, 18 Jul 2019 23:56:23 -0400
+Message-Id: <20190719035643.14300-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,48 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit ef1ce7d7b67b46661091c7ccc0396186b7a247ef ]
+[ Upstream commit e7bf90e5afe3aa1d1282c1635a49e17a32c4ecec ]
 
-Check return value from mlx5e_attach_netdev, add error path on failure.
+In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
+hold integrity metadata. Later on, the buffer will be attached to the bio
+structure through bio_integrity_add_page(), which returns the number of
+bytes of integrity metadata attached. Due to unexpected situations,
+bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
+needs to be terminated with 'false' returned to indicate this error.
+However, the allocated kernel buffer is not freed on this execution path,
+leading to a memory leak.
 
-Fixes: 48935bbb7ae8 ("net/mlx5e: IPoIB, Add netdevice profile skeleton")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+To fix this issue, free the allocated buffer before returning from
+bio_integrity_prep().
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ block/bio-integrity.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-index 9ca492b430d8..603d294757b4 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-@@ -698,7 +698,9 @@ static int mlx5_rdma_setup_rn(struct ib_device *ibdev, u8 port_num,
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 4db620849515..fb95dbb21dd8 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -276,8 +276,12 @@ bool bio_integrity_prep(struct bio *bio)
+ 		ret = bio_integrity_add_page(bio, virt_to_page(buf),
+ 					     bytes, offset);
  
- 	prof->init(mdev, netdev, prof, ipriv);
+-		if (ret == 0)
+-			return false;
++		if (ret == 0) {
++			printk(KERN_ERR "could not attach integrity payload\n");
++			kfree(buf);
++			status = BLK_STS_RESOURCE;
++			goto err_end_io;
++		}
  
--	mlx5e_attach_netdev(epriv);
-+	err = mlx5e_attach_netdev(epriv);
-+	if (err)
-+		goto detach;
- 	netif_carrier_off(netdev);
- 
- 	/* set rdma_netdev func pointers */
-@@ -714,6 +716,11 @@ static int mlx5_rdma_setup_rn(struct ib_device *ibdev, u8 port_num,
- 
- 	return 0;
- 
-+detach:
-+	prof->cleanup(epriv);
-+	if (ipriv->sub_interface)
-+		return err;
-+	mlx5e_destroy_mdev_resources(mdev);
- destroy_ht:
- 	mlx5i_pkey_qpn_ht_cleanup(netdev);
- 	return err;
+ 		if (ret < bytes)
+ 			break;
 -- 
 2.20.1
 
