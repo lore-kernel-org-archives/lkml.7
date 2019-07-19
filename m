@@ -2,54 +2,51 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BD3C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DF8C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F58421850
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DE821851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508787;
-	bh=vGc6FxhYPYV+Cpup7jSMVNC69MvH/z5xwnXfVdaz2QM=;
+	s=default; t=1563508789;
+	bh=pocZzY6HKbyA/R5cRbnDBsEmJmNaf6ik5va4ZL9jQCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AaQNClwDwgfLBTQFvbNlEDEheyG599Z6P/oiCkuwuKGOLGoZHT5IV2zhvycxrYT8c
-	 alHRh6ylNNzw6lBF6KcQv04AOIvj8B5F+fLz2lUmVPDGq5LiIWrtj5gZ+vde0Gz/Iz
-	 znUagtEpm61bTbMVhzQ/3OivJlx0H/06TauSVrnU=
+	b=ATAb4khZ4vo4C6DZoFGb9sgK7oVvn9kQq7QNQuG1Z5cZXhsfGpZh1LY/aicn7B0tU
+	 EBusjVKwF9FPDoARrUzjdWJAg5LnJq/KQSs75OAm8a10czC4x3coccSXpIO0cFZSbZ
+	 hAhWgUCzR0O59BHtyiL9LlYCLnHajZT9marJAyFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfGSD7q (ORCPT
+        id S1728886AbfGSD7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:59:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:59:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbfGSD7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:40 -0400
+        id S1727619AbfGSD7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13181218B8;
-        Fri, 19 Jul 2019 03:59:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9782121873;
+        Fri, 19 Jul 2019 03:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508780;
-        bh=vGc6FxhYPYV+Cpup7jSMVNC69MvH/z5xwnXfVdaz2QM=;
+        s=default; t=1563508783;
+        bh=pocZzY6HKbyA/R5cRbnDBsEmJmNaf6ik5va4ZL9jQCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lfzGVIiFdABokw3tatksEm6fBcIUwRNBs/o8pCeNvLIrINsJxXGB7vkduFkWq2ZBq
-         y/h7sJmdHPgqzjRMjewT3eEdG2DVKKJp7hoV30Q9inPWKUQ9reVWgeuwKAh9kGvTls
-         5GQloD75n/+Zuif5+f7AsFQTN+TZBskk7oYV33H8=
+        b=qd7CcAZH+vHqP+P1r3/3Izc4fpMxcjnbFw/k7bEvkVMLkF2uqAmcdpV0QCS+IBY8Q
+         fmND8vSMwd6gFXFchf3KYrdtfjvyGiztpj9wezBRSVE62u9hlN+kZv0g4uYldxkMKF
+         StV16+UfI+vrs/JU31FqYXhwbf52/yH1NPSLedAg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+Cc:     Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 086/171] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
-Date:   Thu, 18 Jul 2019 23:55:17 -0400
-Message-Id: <20190719035643.14300-86-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 087/171] genksyms: Teach parser about 128-bit built-in types
+Date:   Thu, 18 Jul 2019 23:55:18 -0400
+Message-Id: <20190719035643.14300-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -62,63 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
+[ Upstream commit a222061b85234d8a44486a46bd4df7e2cda52385 ]
 
-In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
-drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
-a GCC only option so clang rightfully complains:
+__uint128_t crops up in a few files that export symbols to modules, so
+teach genksyms about it and the other GCC built-in 128-bit integer types
+so that we don't end up skipping the CRC generation for some symbols due
+to the parser failing to spot them:
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+  | WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version
+  |          generation failed, symbol will not be versioned.
+  | ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against
+  |     `__crc_kernel_neon_begin' can not be used when making a shared
+  |     object
+  | ld: arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation:
+  |     unsupported relocation
 
-https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-
-However, by default, this is merely a warning so the build happily goes
-on with a slew of these warnings in the process.
-
-Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
-support clang") worked around this behavior in cc-option by adding
--Werror so that unknown flags cause an error. However, this all happens
-silently and when an unknown flag is added to the build unconditionally
-like -Wno-psabi, cc-option will always fail because there is always an
-unknown flag in the list of flags. This manifested as link time failures
-in the arm64 libstub because -fno-stack-protector didn't get added to
-KBUILD_CFLAGS.
-
-To avoid these weird cryptic failures in the future, make clang behave
-like gcc and immediately error when it encounters an unknown flag by
-adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
-unconditionally for clang because it is supported by at least 3.0.0,
-according to godbolt [1] and 4.0.0, according to its documentation [2],
-which is far earlier than we typically support.
-
-[1]: https://godbolt.org/z/7F7rm3
-[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Link: https://github.com/ClangBuiltLinux/linux/issues/517
-Suggested-by: Peter Smith <peter.smith@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/genksyms/keywords.c | 4 ++++
+ scripts/genksyms/parse.y    | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index d8f5dbfd6b76..f02079b98e7e 100644
---- a/Makefile
-+++ b/Makefile
-@@ -528,6 +528,7 @@ ifneq ($(GCC_TOOLCHAIN),)
- CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
- endif
- CLANG_FLAGS	+= -no-integrated-as
-+CLANG_FLAGS	+= -Werror=unknown-warning-option
- KBUILD_CFLAGS	+= $(CLANG_FLAGS)
- KBUILD_AFLAGS	+= $(CLANG_FLAGS)
- export CLANG_FLAGS
+diff --git a/scripts/genksyms/keywords.c b/scripts/genksyms/keywords.c
+index e93336baaaed..c586d32dd2c3 100644
+--- a/scripts/genksyms/keywords.c
++++ b/scripts/genksyms/keywords.c
+@@ -25,6 +25,10 @@ static struct resword {
+ 	{ "__volatile__", VOLATILE_KEYW },
+ 	{ "__builtin_va_list", VA_LIST_KEYW },
+ 
++	{ "__int128", BUILTIN_INT_KEYW },
++	{ "__int128_t", BUILTIN_INT_KEYW },
++	{ "__uint128_t", BUILTIN_INT_KEYW },
++
+ 	// According to rth, c99 defines "_Bool", __restrict", __restrict__", "restrict".  KAO
+ 	{ "_Bool", BOOL_KEYW },
+ 	{ "_restrict", RESTRICT_KEYW },
+diff --git a/scripts/genksyms/parse.y b/scripts/genksyms/parse.y
+index 00a6d7e54971..1ebcf52cd0f9 100644
+--- a/scripts/genksyms/parse.y
++++ b/scripts/genksyms/parse.y
+@@ -76,6 +76,7 @@ static void record_compound(struct string_list **keyw,
+ %token ATTRIBUTE_KEYW
+ %token AUTO_KEYW
+ %token BOOL_KEYW
++%token BUILTIN_INT_KEYW
+ %token CHAR_KEYW
+ %token CONST_KEYW
+ %token DOUBLE_KEYW
+@@ -263,6 +264,7 @@ simple_type_specifier:
+ 	| VOID_KEYW
+ 	| BOOL_KEYW
+ 	| VA_LIST_KEYW
++	| BUILTIN_INT_KEYW
+ 	| TYPE			{ (*$1)->tag = SYM_TYPEDEF; $$ = $1; }
+ 	;
+ 
 -- 
 2.20.1
 
