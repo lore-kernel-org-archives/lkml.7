@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92F4C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2779C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECEB2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A292084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511110;
-	bh=IgqLmc9gab5vB2kgwbuIUQkckeqHIN4ozj7XkneYH2c=;
+	s=default; t=1563511113;
+	bh=hfrOMNGru6MRvPL8gHx4Np2UIlH/+WAWHHwgLRG+3S4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRQk0tgRKEuV3Krc9XtDHwDOvyBwwEJzyk1u+hEk2KpLeTwNJX1hT8UsAwdZkMz5f
-	 IaqEB7gXXCQrf8KNO/ZTsM8lVWumvEkTiVtxp9TDw013y/Y63pPybtDTwBqgpi0BZf
-	 l8VOQwR4tS2sM91RHbzLWI4USKSRuWxYCAQf0rf8=
+	b=vaPVtn2AIu62d8Hxs2hvPEtFhHmVpsXGaGjWmnG3Qr75/awPJnragyIp9y8TyzsOO
+	 1Cx3iqU6yVsnb+Khe3LdjzskjlUXNnFNWtmxYc+dTX5nRlKqrfJYQuNiWujyiMX8Qc
+	 XtvbhO9VLhVQM2Z+MGKtJlRIgQE+ZyFL0l+7aDoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbfGSD7T (ORCPT
+        id S2389742AbfGSEic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbfGSD7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:11 -0400
+        id S1728610AbfGSD7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3AA921851;
-        Fri, 19 Jul 2019 03:59:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BA62189F;
+        Fri, 19 Jul 2019 03:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508750;
-        bh=IgqLmc9gab5vB2kgwbuIUQkckeqHIN4ozj7XkneYH2c=;
+        s=default; t=1563508757;
+        bh=hfrOMNGru6MRvPL8gHx4Np2UIlH/+WAWHHwgLRG+3S4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BgcXDqXfRY8R85dPekvsMWFBRXe1oxhHqyjg1ldzAYxhM49C6PPcDSHGuFa7yld+Y
-         yYh9YOqNISmUebB78uNWrf4UPbwN2L53hQ8z0O5C3xRSk55cU33pKir6jfy5jIs+5+
-         iAHjOZ3T1pjQWQvhqSk3/aJag4GrTIuaWINQYKs4=
+        b=vXA6Y69d2S1WAT9KN0O/dp+JDXALnY1YKuEELADI+tK8t/18R+ibsp6+cH8wLVTAF
+         ofrc+Tt+Pqtw+08cwZgBY9tus/lJ/i13Rw9F5gkhAVAfB/M/916xL/rBioKM5blPLh
+         /PAfvgRnq/9EME02CANtfpXYIIrfhc7AEQqM8p9o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 069/171] usb: gadget: Zero ffs_io_data
-Date:   Thu, 18 Jul 2019 23:55:00 -0400
-Message-Id: <20190719035643.14300-69-sashal@kernel.org>
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 073/171] mmc: sdhci: sdhci-pci-o2micro: Check if controller supports 8-bit width
+Date:   Thu, 18 Jul 2019 23:55:04 -0400
+Message-Id: <20190719035643.14300-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,57 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+From: Raul E Rangel <rrangel@chromium.org>
 
-[ Upstream commit 508595515f4bcfe36246e4a565cf280937aeaade ]
+[ Upstream commit de23f0b757766d9fae59df97da6e8bdc5b231351 ]
 
-In some cases the "Allocate & copy" block in ffs_epfile_io() is not
-executed. Consequently, in such a case ffs_alloc_buffer() is never called
-and struct ffs_io_data is not initialized properly. This in turn leads to
-problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
+The O2 controller supports 8-bit EMMC access.
 
-This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
-in non-aio case to properly initialize struct ffs_io_data.
+JESD84-B51 section A.6.3.a defines the bus testing procedure that
+`mmc_select_bus_width()` implements. This is used to determine the actual
+bus width of the eMMC.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_fs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-pci-o2micro.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index c7ed90084d1a..213ff03c8a9f 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1183,11 +1183,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb *kiocb, struct iov_iter *from)
- 	ENTER();
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+index dd21315922c8..9dc4548271b4 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -395,11 +395,21 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+ {
+ 	struct sdhci_pci_chip *chip;
+ 	struct sdhci_host *host;
+-	u32 reg;
++	u32 reg, caps;
+ 	int ret;
  
- 	if (!is_sync_kiocb(kiocb)) {
--		p = kmalloc(sizeof(io_data), GFP_KERNEL);
-+		p = kzalloc(sizeof(io_data), GFP_KERNEL);
- 		if (unlikely(!p))
- 			return -ENOMEM;
- 		p->aio = true;
- 	} else {
-+		memset(p, 0, sizeof(*p));
- 		p->aio = false;
- 	}
- 
-@@ -1219,11 +1220,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, struct iov_iter *to)
- 	ENTER();
- 
- 	if (!is_sync_kiocb(kiocb)) {
--		p = kmalloc(sizeof(io_data), GFP_KERNEL);
-+		p = kzalloc(sizeof(io_data), GFP_KERNEL);
- 		if (unlikely(!p))
- 			return -ENOMEM;
- 		p->aio = true;
- 	} else {
-+		memset(p, 0, sizeof(*p));
- 		p->aio = false;
- 	}
- 
+ 	chip = slot->chip;
+ 	host = slot->host;
++
++	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
++
++	/*
++	 * mmc_select_bus_width() will test the bus to determine the actual bus
++	 * width.
++	 */
++	if (caps & SDHCI_CAN_DO_8BIT)
++		host->mmc->caps |= MMC_CAP_8_BIT_DATA;
++
+ 	switch (chip->pdev->device) {
+ 	case PCI_DEVICE_ID_O2_SDS0:
+ 	case PCI_DEVICE_ID_O2_SEABIRD0:
 -- 
 2.20.1
 
