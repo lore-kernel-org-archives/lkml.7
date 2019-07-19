@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5087DC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD80C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B2420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF6920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510385;
-	bh=9HLLdbZ8ShZ3G6w+fG9xmdaFeWkpP1oPw+qdqufeN4k=;
+	s=default; t=1563510390;
+	bh=UTvo9Sip3pIPTNRmp/G7kAkj9Nzu1ZZvWv4UA4uEA4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bU3jflujfibkyTC3+jJvm9h+Cjr0RmKpQBxci4BTa8GJSjqKJczfXGoJhnr4yv90K
-	 mTCHteWrn2HX4k9ExT9Pw/+mnf4siw//w63WkOOHAP+uYbCIwggQM+wwmdvuq3ltWg
-	 OMR/zcG92JNj8KJ9JK9UwbsNoWYlccNKcvzMSydI=
+	b=OFZnwTX7yzXJxMRWYOw2Yz5McWSirEyT9PJF9WZl+RxWoWWnyXoXbnRahZHcthRwy
+	 g7zkTuKfElkhkXR7hE5ceEOn3RY2efZtjN0ga3ymwn9pXQY8Y+iMVz6raswVPeQT1o
+	 bHtGXkyjQdm1TNhZDYCl72U/hwEqFx25KKTd8Qtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388622AbfGSE0Y (ORCPT
+        id S1733005AbfGSEIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42666 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733046AbfGSEIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:22 -0400
+        id S1731392AbfGSEIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D76218A0;
-        Fri, 19 Jul 2019 04:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77A4321871;
+        Fri, 19 Jul 2019 04:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509301;
-        bh=9HLLdbZ8ShZ3G6w+fG9xmdaFeWkpP1oPw+qdqufeN4k=;
+        s=default; t=1563509292;
+        bh=UTvo9Sip3pIPTNRmp/G7kAkj9Nzu1ZZvWv4UA4uEA4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6rorNUz72GSl3iEAdUkaefK2xSO8g5luNujcGcDsucpeQSRbdF5ZzdCtiZurWspX
-         X+hWwBZuNTV5nmkJVx2qpHS53TGeNdpnLp66a5ln0tQV/ffP9ShVRXXsCGCZC3Hude
-         W8UOYubjv69Og+ImwJmhcIrBZyrp72Vu0ncUZVDU=
+        b=p+tsgOYDXCC3SuqNHSJo1OlkFqGz/fZC/3CMJxNr05xXsCuM7d0ck3gpOXQ5ULu5V
+         WtqIuRpwxax17kFaPLiO2olquGpPhNM8mCr8MjK2dz6dlRYUAn3yhikcvnOoQunKRL
+         WXe+PZyDPKkHofaWpkdyPTdxGKiqPReiCLWbfycY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/101] tty: serial: msm_serial: avoid system lockup condition
-Date:   Fri, 19 Jul 2019 00:06:15 -0400
-Message-Id: <20190719040732.17285-24-sashal@kernel.org>
+Cc:     Jyri Sarha <jsarha@ti.com>, Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 018/101] drm/bridge: sii902x: pixel clock unit is 10kHz instead of 1kHz
+Date:   Fri, 19 Jul 2019 00:06:09 -0400
+Message-Id: <20190719040732.17285-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -60,43 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Jyri Sarha <jsarha@ti.com>
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit 8dbfc5b65023b67397aca28e8adb25c819f6398c ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+The pixel clock unit in the first two registers (0x00 and 0x01) of
+sii9022 is 10kHz, not 1kHz as in struct drm_display_mode. Division by
+10 fixes the issue.
 
-Tested on SoC QCS404.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1a2a8eae0b9d6333e7a5841026bf7fd65c9ccd09.1558964241.git.jsarha@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/bridge/sii902x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 0f41b936da03..310bbae515b0 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -383,10 +383,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index e59a13542333..0cc6dbbcddcf 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -261,10 +261,11 @@ static void sii902x_bridge_mode_set(struct drm_bridge *bridge,
+ 	struct regmap *regmap = sii902x->regmap;
+ 	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
+ 	struct hdmi_avi_infoframe frame;
++	u16 pixel_clock_10kHz = adj->clock / 10;
+ 	int ret;
  
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
-+
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
- 	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
- }
+-	buf[0] = adj->clock;
+-	buf[1] = adj->clock >> 8;
++	buf[0] = pixel_clock_10kHz & 0xff;
++	buf[1] = pixel_clock_10kHz >> 8;
+ 	buf[2] = adj->vrefresh;
+ 	buf[3] = 0x00;
+ 	buf[4] = adj->hdisplay;
 -- 
 2.20.1
 
