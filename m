@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BE5C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC3BC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD2F2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3992082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509991;
-	bh=TkYheni2xfJvsGBlP1JFbOMtexiEifIb5r9vkPjiB5c=;
+	s=default; t=1563509996;
+	bh=4oix9x7A/tqf3jdGjWpv3BVILSw+e5mGGDNcbkJd5vQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJ2+pOpDp0u48lQkQ7p9InntdGn1CeU3iDHIvNs0GsVqyV9GUgGV+Xf1i+sEIFTM9
-	 3NvLc6vXIDxSUS3ReQLmNkfOGKG8/BLIQHicsspRgpZWGyA1MF0NCV8LLr9W2+ipHR
-	 CrCkwGhRbM0hOlWgKov2DRKwTCyogZ7B7rZF5xms=
+	b=Y0PNMsPxqPVqwvc7cxXsGFn7i2O7AhAYk6wB02QYIh0xAy78tu+gKs73Z1FMJnXU+
+	 ptlzv7H2n+OxZOne4v9TRHDsMykBs9nSVQMt+ThC8t9aLYIwx7Xd1XAZ3VFxim6vf5
+	 WqFmN9/Y8fslUw1LnobHivbKCGqczBYLKO0Dki+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389425AbfGSETq (ORCPT
+        id S2388243AbfGSEMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:19:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388043AbfGSEMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:54 -0400
+        id S2388933AbfGSEMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3F5021872;
-        Fri, 19 Jul 2019 04:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA94F218E0;
+        Fri, 19 Jul 2019 04:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509573;
-        bh=TkYheni2xfJvsGBlP1JFbOMtexiEifIb5r9vkPjiB5c=;
+        s=default; t=1563509563;
+        bh=4oix9x7A/tqf3jdGjWpv3BVILSw+e5mGGDNcbkJd5vQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOg0WwivSrsi0EZ+HOJji/suq07hgmuwrYYymJOqgz3f/dA7mZKmetytOHyCVIIS1
-         z0fCd4Fawnp4nnIH6LzoDDjNuNo807sSGvsCtaxvQopuUDfgaaMVCHj/NSae5AYwdQ
-         XAA679YjkCRDljwuVxc488990peKhByBCS28mv38=
+        b=a7NZJncvgUQ4enC81DZJy7mVsYCnFkt25Zcu4yZJZVECWKBXFijiie/UtKm+VU+0M
+         xUnFJxIoL2XlZsRVWl1N3vWD6JKPWfd+4y/S/IuBBJ+328hgmxq6oj6i2a0eDtfkTK
+         XLQmoN4gfkNiH5B9mB/qEIf4UESibKUdCgYqLbn0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Ocean Chen <oceanchen@google.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 56/60] 9p: pass the correct prototype to read_cache_page
-Date:   Fri, 19 Jul 2019 00:11:05 -0400
-Message-Id: <20190719041109.18262-56-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 49/60] f2fs: avoid out-of-range memory access
+Date:   Fri, 19 Jul 2019 00:10:58 -0400
+Message-Id: <20190719041109.18262-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -63,51 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Ocean Chen <oceanchen@google.com>
 
-[ Upstream commit f053cbd4366051d7eb6ba1b8d529d20f719c2963 ]
+[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
 
-Fix the callback 9p passes to read_cache_page to actually have the
-proper type expected.  Casting around function pointers can easily
-hide typing bugs, and defeats control flow protection.
+blkoff_off might over 512 due to fs corrupt or security
+vulnerability. That should be checked before being using.
 
-Link: http://lkml.kernel.org/r/20190520055731.24538-5-hch@lst.de
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+
+Signed-off-by: Ocean Chen <oceanchen@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_addr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/f2fs/segment.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index e1cbdfdb7c68..197069303510 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -50,8 +50,9 @@
-  * @page: structure to page
-  *
-  */
--static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
-+static int v9fs_fid_readpage(void *data, struct page *page)
- {
-+	struct p9_fid *fid = data;
- 	struct inode *inode = page->mapping->host;
- 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
- 	struct iov_iter to;
-@@ -122,7 +123,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
- 	if (ret == 0)
- 		return ret;
- 
--	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
-+	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
-+			filp->private_data);
- 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
- 	return ret;
- }
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 70bd15cadb44..18d51c36a5e3 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2612,6 +2612,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+ 		seg_i = CURSEG_I(sbi, i);
+ 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+ 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
++		if (blk_off > ENTRIES_IN_SUM) {
++			f2fs_bug_on(sbi, 1);
++			f2fs_put_page(page, 1);
++			return -EFAULT;
++		}
+ 		seg_i->next_segno = segno;
+ 		reset_curseg(sbi, i, 0);
+ 		seg_i->alloc_type = ckpt->alloc_type[i];
 -- 
 2.20.1
 
