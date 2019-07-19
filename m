@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA97C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA4CC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5103F21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E5A218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509164;
-	bh=DMiXV2Y3bxC3tjEsHuHMAMM5Zn2EY1lsfePC4T8uFNQ=;
+	s=default; t=1563509169;
+	bh=k7QAffQXw553EroqdjJ8tEfUCJgxUsz07l+cr6WL5jA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkEUiollkQGUSdYtQHFvcm2T8rG0mREfMM7MwehgXqw2pOHPcZfMFmbifUar51VAT
-	 mzqLuXmBF3h0jdxi+Zof2c3ZcT0GcbSNjdQ+Z8XVOV0ollJp1HPya7qIWd1x4Y0M+m
-	 YbMrb5QZ+BR3rr1AfL7D45Py5plpAVIMu/xZiXYQ=
+	b=FztV3FFVWKNrQp0U9anLHu/fJWSTvKxhq3wWwKjIwiXyYzGbg/dgY5GX1LXS9lVWq
+	 NBYWkxo86/qmspP98LUcvQ2/puuxholhWt8dwpOWlZqVBjgOG7j9MZCnMn2DlIMdLo
+	 E9eizE79xJvY2/KiB3ucLBu+nzrlcqBj+R667Mi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfGSEGC (ORCPT
+        id S1732007AbfGSEGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38652 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbfGSEFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:55 -0400
+        id S1731887AbfGSEF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74594218D1;
-        Fri, 19 Jul 2019 04:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC94218CD;
+        Fri, 19 Jul 2019 04:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509154;
-        bh=DMiXV2Y3bxC3tjEsHuHMAMM5Zn2EY1lsfePC4T8uFNQ=;
+        s=default; t=1563509158;
+        bh=k7QAffQXw553EroqdjJ8tEfUCJgxUsz07l+cr6WL5jA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OW0nsqpFPUIlTYES4t+MLnvIzFOQHnxSGtkSsdaFhu1L3vehgRosiznK0HdIgB1fm
-         sUsgF+kouIM9G6QWcRVRGi4ah8OpF+CGi+vWRP0bNsLWWeWsm9ADgJiKlEONX8NL29
-         oQ+LfqsBwX7zYvySkMGs0lLP2p673vxXN/ChnY9E=
+        b=B4/B6oP4opcjwsbwC9WPIN9xVCUrKOzO4FBPR/lfN+qBopI13NLeJeGTTscYpsUiD
+         +OkH+Initwl78nPweWOd4Xy8DGe4Bm27eScMLzArPYg6Hgjg191cYcaXoteS/V3aFS
+         zcTPLyeA+9K7mwmpTbWuKFg1q+Lz/eE7+IEVSlpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 099/141] perf trace: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Fri, 19 Jul 2019 00:02:04 -0400
-Message-Id: <20190719040246.15945-99-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 100/141] perf session: Fix potential NULL pointer dereference found by the smatch tool
+Date:   Fri, 19 Jul 2019 00:02:05 -0400
+Message-Id: <20190719040246.15945-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -81,28 +81,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 7a6d49dc8cad8fa1f3d63994102af8f9ae9c859f ]
+[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+Based on the following report from Smatch, fix the potential
+NULL pointer dereference check.
 
-  tools/perf/builtin-trace.c:1044
-  thread_trace__new() error: we previously assumed 'ttrace' could be
-  null (see line 1041).
+  tools/perf/util/session.c:1252
+  dump_read() error: we previously assumed 'evsel' could be null
+  (see line 1249)
 
-  tools/perf/builtin-trace.c
-  1037 static struct thread_trace *thread_trace__new(void)
-  1038 {
-  1039         struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
-  1040
-  1041         if (ttrace)
-  1042                 ttrace->files.max = -1;
-  1043
-  1044         ttrace->syscall_stats = intlist__new(NULL);
-               ^^^^^^^^
-  1045
-  1046         return ttrace;
-  1047 }
+  tools/perf/util/session.c
+  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+  1241 {
+  1242         struct read_event *read_event = &event->read;
+  1243         u64 read_format;
+  1244
+  1245         if (!dump_trace)
+  1246                 return;
+  1247
+  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
+  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
+  1250                event->read.value);
+  1251
+  1252         read_format = evsel->attr.read_format;
+                             ^^^^^^^
+
+'evsel' could be NULL pointer, for this case this patch directly bails
+out without dumping read_event.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -126,32 +131,27 @@ Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-6-leo.yan@linaro.org
-[ Just made it look like other tools/perf constructors, same end result ]
+Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-trace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/session.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index f5b3a1e9c1dd..aca22e8f6947 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -998,10 +998,10 @@ static struct thread_trace *thread_trace__new(void)
- {
- 	struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index bad5f87ae001..656ef536b3ab 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1147,6 +1147,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+ 	       evsel ? perf_evsel__name(evsel) : "FAIL",
+ 	       event->read.value);
  
--	if (ttrace)
-+	if (ttrace) {
- 		ttrace->files.max = -1;
--
--	ttrace->syscall_stats = intlist__new(NULL);
-+		ttrace->syscall_stats = intlist__new(NULL);
-+	}
++	if (!evsel)
++		return;
++
+ 	read_format = evsel->attr.read_format;
  
- 	return ttrace;
- }
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
 -- 
 2.20.1
 
