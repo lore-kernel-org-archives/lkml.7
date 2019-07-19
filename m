@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A83C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E108C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060572186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2BC2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbfGSUli (ORCPT
+        id S2388332AbfGSUlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:41:38 -0400
+        Fri, 19 Jul 2019 16:41:45 -0400
 Received: from mga12.intel.com ([192.55.52.136]:46747 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388134AbfGSUlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:41:22 -0400
+        id S1728346AbfGSUlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:41:20 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:41:22 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:41:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="168655841"
+   d="scan'208";a="168655827"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.165])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:21 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:20 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -37,9 +37,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] KVM: x86: Don't check kvm_rebooting in __kvm_handle_fault_on_reboot()
-Date:   Fri, 19 Jul 2019 13:41:10 -0700
-Message-Id: <20190719204110.18306-6-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 1/5] objtool: KVM: x86: Check kvm_rebooting in kvm_spurious_fault()
+Date:   Fri, 19 Jul 2019 13:41:06 -0700
+Message-Id: <20190719204110.18306-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190719204110.18306-1-sean.j.christopherson@intel.com>
 References: <20190719204110.18306-1-sean.j.christopherson@intel.com>
@@ -50,39 +50,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the kvm_rebooting check from VMX/SVM instruction exception fixup
-now that kvm_spurious_fault() conditions its BUG() on !kvm_rebooting.
-Because the 'cleanup_insn' functionally is also gone, deferring to
-kvm_spurious_fault() means __kvm_handle_fault_on_reboot() can eliminate
-its .fixup code entirely and have its exception table entry branch
-directly to the call to kvm_spurious_fault().
+Explicitly check kvm_reboot in kvm_spurious_fault() prior to invoking
+BUG(), as opposed to assuming the caller has already done so.  Letting
+kvm_spurious_fault() be called "directly" will allow VMX to better
+optimize its low level assembly flows.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
+As a happy side effect, kvm_spurious_fault() no longer needs to be
+marked as a dead end since it doesn't unconditionally BUG().
+
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/x86.c              | 3 ++-
+ tools/objtool/check.c           | 1 -
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 92c59cd923b6..a5ae5562ce0a 100644
+index 8282b8d41209..9739ed615faf 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1511,13 +1511,7 @@ asmlinkage void kvm_spurious_fault(void);
- 	"667: \n\t"							\
- 	"call	kvm_spurious_fault \n\t"				\
- 	"668: \n\t"							\
--	".pushsection .fixup, \"ax\" \n\t"				\
--	"700: \n\t"							\
--	"cmpb	$0, kvm_rebooting\n\t"					\
--	"je	667b \n\t"						\
--	"jmp	668b \n\t"						\
--	".popsection \n\t"						\
--	_ASM_EXTABLE(666b, 700b)
-+	_ASM_EXTABLE(666b, 667b)
+@@ -1496,7 +1496,7 @@ enum {
+ #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
+ #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
  
- #define KVM_ARCH_WANT_MMU_NOTIFIER
- int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end);
+-asmlinkage void __noreturn kvm_spurious_fault(void);
++asmlinkage void kvm_spurious_fault(void);
+ 
+ /*
+  * Hardware virtualization extension instructions may fault if a
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 4a0b74ecd1de..6bc012afb86a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -356,7 +356,8 @@ EXPORT_SYMBOL_GPL(kvm_set_apic_base);
+ asmlinkage __visible void kvm_spurious_fault(void)
+ {
+ 	/* Fault while not rebooting.  We want the trace. */
+-	BUG();
++	if (!kvm_rebooting)
++		BUG();
+ }
+ EXPORT_SYMBOL_GPL(kvm_spurious_fault);
+ 
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5f26620f13f5..688a9af8124d 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -138,7 +138,6 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"do_task_dead",
+ 		"__module_put_and_exit",
+ 		"complete_and_exit",
+-		"kvm_spurious_fault",
+ 		"__reiserfs_panic",
+ 		"lbug_with_loc",
+ 		"fortify_panic",
 -- 
 2.22.0
 
