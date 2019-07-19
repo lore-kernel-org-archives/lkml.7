@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABD2C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7A0C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B9920873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CF420873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510323;
-	bh=y97AcTRBO0RVgeIzN/Kd2w8EHpyOWVoMOK5DCG4hqgU=;
+	s=default; t=1563510328;
+	bh=g1aZ4JrAlHomXDPOUIfxslUK0vu76zBQDXA4tIOo6q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e13mbLXgp1R9zKdEMCaaCmbwPqM6f1pYnGDhcQxAav8WIvG+ijOHHlr89PK20m26/
-	 rxj7zzSxZgxdOdTH4x4g1UmHaBPIycp7DNjeB2yHMRYtbMyOC5yFILM6KopaJr79Zk
-	 ALZTaaIJmjuCS+qVnfoT2c5Oel2Vd7vmaOjPzWUA=
+	b=xYl2V1uK0UrD5Ez8EbzseNErx+uhwbHCW63QNPbMuzwQOpMzJV81MggqsJIf8lSyZ
+	 ViJPdivXfKmhRg359tMxQpgHGrF6tmOGdjopcqHQq9oRDVtUOU5YcW35/YZMMQJvpt
+	 EIwNNqKg1NkY0LFZBGs6lciBydXmMhtdChw+jIvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387394AbfGSEJB (ORCPT
+        id S2388453AbfGSEZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbfGSEI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:56 -0400
+        id S1733297AbfGSEI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDD59218BB;
-        Fri, 19 Jul 2019 04:08:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA2F2189E;
+        Fri, 19 Jul 2019 04:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509335;
-        bh=y97AcTRBO0RVgeIzN/Kd2w8EHpyOWVoMOK5DCG4hqgU=;
+        s=default; t=1563509338;
+        bh=g1aZ4JrAlHomXDPOUIfxslUK0vu76zBQDXA4tIOo6q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=onO+taH25JDSz3HucYBgwRj7bx5tJp1dhCBtDRi1rGNKmOX2DPg94Com3gApU8VpN
-         dIiZa+fMNZ5Hi6aTK+KYVI0va1QjIpFp/mJX7kbaz3IdLWmolSGeYY+/qXD2RstwFi
-         JKv0EYlhVn04AppCSvdnB79LcqpF9tdFWv8OqYWE=
+        b=S//wcwTZUz7Cu191qU47Edxuk8JPFCFHZnBlt/xmZA4w+lyUMunVBRSQY6C2BxLr+
+         AWxaoSRzSWhpiAHAoFtlZu9K6+yGwWWxlG5eMF9r1yYE0ZIXwPqR5JvuJ73E48x5JS
+         tv3RJdlmmApsqLTRaSEoC4wobXL6VGY028ctwd+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Roese <sr@denx.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 040/101] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
-Date:   Fri, 19 Jul 2019 00:06:31 -0400
-Message-Id: <20190719040732.17285-40-sashal@kernel.org>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 042/101] i2c: stm32f7: fix the get_irq error cases
+Date:   Fri, 19 Jul 2019 00:06:33 -0400
+Message-Id: <20190719040732.17285-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -63,110 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit d99482673f950817b30caf3fcdfb31179b050ce1 ]
+[ Upstream commit 79b4499524ed659fb76323efc30f3dc03967c88f ]
 
-This patch adds a check for the GPIOs property existence, before the
-GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
-support is added (2nd patch in this patch series) on x86 platforms using
-ACPI.
+During probe, return the "get_irq" error value instead of -EINVAL which
+allows the driver to be deferred probed if needed.
+Fix also the case where of_irq_get() returns a negative value.
+Note :
+On failure of_irq_get() returns 0 or a negative value while
+platform_get_irq() returns a negative value.
 
-Here Mika's comments from 2016-08-09:
-
-"
-I noticed that with v4.8-rc1 serial console of some of our Broxton
-systems does not work properly anymore. I'm able to see output but input
-does not work.
-
-I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
-("tty/serial/8250: use mctrl_gpio helpers").
-
-The reason why it fails is that in ACPI we do not have names for GPIOs
-(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
-resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
-calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
-UART device in Broxton has following (simplified) ACPI description:
-
-    Device (URT4)
-    {
-        ...
-        Name (_CRS, ResourceTemplate () {
-            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-                    "\\_SB.GPO0", 0x00, ResourceConsumer)
-            {
-                0x003A
-            }
-            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
-                    "\\_SB.GPO0", 0x00, ResourceConsumer)
-            {
-                0x003D
-            }
-        })
-
-In this case it finds the first GPIO (0x003A which happens to be RX pin
-for that UART), turns it into GPIO which then breaks input for the UART
-device. This also breaks systems with bluetooth connected to UART (those
-typically have some GPIOs in their _CRS).
-
-Any ideas how to fix this?
-
-We cannot just drop the _CRS index lookup fallback because that would
-break many existing machines out there so maybe we can limit this to
-only DT enabled machines. Or alternatively probe if the property first
-exists before trying to acquire the GPIOs (using
-device_property_present()).
-"
-
-This patch implements the fix suggested by Mika in his statement above.
-
-Signed-off-by: Stefan Roese <sr@denx.de>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yegor Yefremov <yegorslists@googlemail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/i2c/busses/i2c-stm32f7.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-index 1c06325beaca..07f318603e74 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.c
-+++ b/drivers/tty/serial/serial_mctrl_gpio.c
-@@ -12,6 +12,7 @@
- #include <linux/termios.h>
- #include <linux/serial_core.h>
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index a492da9fd0d3..ac9c9486b834 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -24,7 +24,6 @@
  #include <linux/module.h>
-+#include <linux/property.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+@@ -1782,15 +1781,14 @@ static struct i2c_algorithm stm32f7_i2c_algo = {
  
- #include "serial_mctrl_gpio.h"
+ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct stm32f7_i2c_dev *i2c_dev;
+ 	const struct stm32f7_i2c_setup *setup;
+ 	struct resource *res;
+-	u32 irq_error, irq_event, clk_rate, rise_time, fall_time;
++	u32 clk_rate, rise_time, fall_time;
+ 	struct i2c_adapter *adap;
+ 	struct reset_control *rst;
+ 	dma_addr_t phy_addr;
+-	int ret;
++	int irq_error, irq_event, ret;
  
-@@ -115,6 +116,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+ 	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
+ 	if (!i2c_dev)
+@@ -1802,16 +1800,20 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->base);
+ 	phy_addr = (dma_addr_t)res->start;
  
- 	for (i = 0; i < UART_GPIO_MAX; i++) {
- 		enum gpiod_flags flags;
-+		char *gpio_str;
-+		bool present;
-+
-+		/* Check if GPIO property exists and continue if not */
-+		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
-+				     mctrl_gpios_desc[i].name);
-+		if (!gpio_str)
-+			continue;
-+
-+		present = device_property_present(dev, gpio_str);
-+		kfree(gpio_str);
-+		if (!present)
-+			continue;
+-	irq_event = irq_of_parse_and_map(np, 0);
+-	if (!irq_event) {
+-		dev_err(&pdev->dev, "IRQ event missing or invalid\n");
+-		return -EINVAL;
++	irq_event = platform_get_irq(pdev, 0);
++	if (irq_event <= 0) {
++		if (irq_event != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ event: %d\n",
++				irq_event);
++		return irq_event ? : -ENOENT;
+ 	}
  
- 		if (mctrl_gpios_desc[i].dir_out)
- 			flags = GPIOD_OUT_LOW;
+-	irq_error = irq_of_parse_and_map(np, 1);
+-	if (!irq_error) {
+-		dev_err(&pdev->dev, "IRQ error missing or invalid\n");
+-		return -EINVAL;
++	irq_error = platform_get_irq(pdev, 1);
++	if (irq_error <= 0) {
++		if (irq_error != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ error: %d\n",
++				irq_error);
++		return irq_error ? : -ENOENT;
+ 	}
+ 
+ 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
 -- 
 2.20.1
 
