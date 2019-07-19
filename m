@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCE6C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BBAC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A6621852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC5721851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508728;
-	bh=R3UxDjgTbacNgKcJvMdnsgwwpj7qgbnHxLcI0sBnYsw=;
+	s=default; t=1563508733;
+	bh=TI0TPOQn5WRhgeZCy07aXRVhI2CGOzL2HZJKi35gJgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVHgWay37SjQpXEIJ2tbtVWJBV8CWmOFyyt6+rUGVPRzSXmDw3xPejnJyO13PpSdK
-	 O6zXQKrZ+6qEF+9h6a+FTDckulj/+Hb2vl8NodvRePubDtcFhfpUocu2T4jYpJ1toN
-	 m4P6sFvOkSTzzI/5Gi4BNDQmZ1qxaSdDM1AVdL2Q=
+	b=WdcTfBbmFbZu6WK2qVfGgPeb7t9XMXOLPYjmPTSuQZwjh0qUZZzQapk0bxZ9Leq0s
+	 f6ytB/yjbF6rI0Iqk6fzy7ueZEdOZC4mug+J/ai84B9q2N7I72O1S/+MoEkVrbLCAK
+	 cvs7BYXVmjLqupO6RZH6TaVwkLnuX7RocdxVxCxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfGSD6o (ORCPT
+        id S1728340AbfGSD6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:58:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58036 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728206AbfGSD6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:39 -0400
+        id S1728216AbfGSD6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E03D21851;
-        Fri, 19 Jul 2019 03:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2139421851;
+        Fri, 19 Jul 2019 03:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508718;
-        bh=R3UxDjgTbacNgKcJvMdnsgwwpj7qgbnHxLcI0sBnYsw=;
+        s=default; t=1563508725;
+        bh=TI0TPOQn5WRhgeZCy07aXRVhI2CGOzL2HZJKi35gJgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrOBPF4hHcblIC7sFQ8nOU6D6vcoSc/uKhMk6R8CO5/fG/zSkPpoNgJaOFXb8IUP3
-         hg4ysYyoyMXyDm15GpiKvTkfzrJ75x7Ew/Z7P4KjkJPJ7PVFeAM2BuMdhqBCE1+a89
-         mfKvcBMTvkErVR7qL+CUV2F8uNrTBslrMscO/Xvk=
+        b=vFaxJwwb7fXtwQHwdbk1B6i3tWGP5Afa1MJCq/IEIXTKl73lltp9GZVCX41j1q+Up
+         SPL8rlnJyOWJ2p81DjPoNdWFXyXeDqVS9QMTTO6pK+OTtSVKXt0Kti1Km+HmJ48TsC
+         jSNNiAcwrfGyJRGnsMi6O+wr/YW9hf9fyBtcFZoM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 051/171] PCI: endpoint: Allocate enough space for fixed size BAR
-Date:   Thu, 18 Jul 2019 23:54:42 -0400
-Message-Id: <20190719035643.14300-51-sashal@kernel.org>
+Cc:     Wesley Chalmers <Wesley.Chalmers@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 053/171] drm/amd/display: Update link rate from DPCD 10
+Date:   Thu, 18 Jul 2019 23:54:44 -0400
+Message-Id: <20190719035643.14300-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,47 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+From: Wesley Chalmers <Wesley.Chalmers@amd.com>
 
-[ Upstream commit f16fb16ed16c7f561e9c41c9ae4107c7f6aa553c ]
+[ Upstream commit 53c81fc7875bc2dca358485dac3999e14ec91a00 ]
 
-PCI endpoint test function code should honor the .bar_fixed_size parameter
-from underlying endpoint controller drivers or results may be unexpected.
+[WHY]
+Some panels return a link rate of 0 (unknown) in DPCD 0. In this case,
+an appropriate mode cannot be set, and certain panels will show
+corruption as they are forced to use a mode they do not support.
 
-In pci_epf_test_alloc_space(), check if BAR being used for test
-register space is a fixed size BAR. If so, allocate the required fixed
-size.
+[HOW]
+Read DPCD 10 in the case where supported link rate from DPCD 0 is
+unknown, and pass that value on to the reported link rate.
+This re-introduces behaviour present in previous versions that appears
+to have been accidentally removed.
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Wesley Chalmers <Wesley.Chalmers@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 27806987e93b..7d41e6684b87 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	int bar;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	const struct pci_epc_features *epc_features;
-+	size_t test_reg_size;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 1ee544a32ebb..253311864cdd 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -1624,8 +1624,7 @@ static bool decide_edp_link_settings(struct dc_link *link, struct dc_link_settin
+ 	uint32_t link_bw;
  
- 	epc_features = epf_test->epc_features;
+ 	if (link->dpcd_caps.dpcd_rev.raw < DPCD_REV_14 ||
+-			link->dpcd_caps.edp_supported_link_rates_count == 0 ||
+-			link->dc->config.optimize_edp_link_rate == false) {
++			link->dpcd_caps.edp_supported_link_rates_count == 0) {
+ 		*link_setting = link->verified_link_cap;
+ 		return true;
+ 	}
+@@ -2597,7 +2596,8 @@ void detect_edp_sink_caps(struct dc_link *link)
+ 	memset(supported_link_rates, 0, sizeof(supported_link_rates));
  
--	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
-+	if (epc_features->bar_fixed_size[test_reg_bar])
-+		test_reg_size = bar_size[test_reg_bar];
-+	else
-+		test_reg_size = sizeof(struct pci_epf_test_reg);
+ 	if (link->dpcd_caps.dpcd_rev.raw >= DPCD_REV_14 &&
+-			link->dc->config.optimize_edp_link_rate) {
++			(link->dc->config.optimize_edp_link_rate ||
++			link->reported_link_cap.link_rate == LINK_RATE_UNKNOWN)) {
+ 		// Read DPCD 00010h - 0001Fh 16 bytes at one shot
+ 		core_link_read_dpcd(link, DP_SUPPORTED_LINK_RATES,
+ 							supported_link_rates, sizeof(supported_link_rates));
+@@ -2612,6 +2612,9 @@ void detect_edp_sink_caps(struct dc_link *link)
+ 				link_rate = linkRateInKHzToLinkRateMultiplier(link_rate_in_khz);
+ 				link->dpcd_caps.edp_supported_link_rates[link->dpcd_caps.edp_supported_link_rates_count] = link_rate;
+ 				link->dpcd_caps.edp_supported_link_rates_count++;
 +
-+	base = pci_epf_alloc_space(epf, test_reg_size,
- 				   test_reg_bar, epc_features->align);
- 	if (!base) {
- 		dev_err(dev, "Failed to allocated register space\n");
++				if (link->reported_link_cap.link_rate < link_rate)
++					link->reported_link_cap.link_rate = link_rate;
+ 			}
+ 		}
+ 	}
 -- 
 2.20.1
 
