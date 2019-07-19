@@ -2,94 +2,81 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF85C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77687C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907F520873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5844E2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfGSM1c (ORCPT
+        id S1728334AbfGSM2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 08:27:32 -0400
-Received: from shell.v3.sk ([90.176.6.54]:41313 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727552AbfGSM1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 08:27:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id AEECC49112;
-        Fri, 19 Jul 2019 14:27:28 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 34WDe8hZMmYk; Fri, 19 Jul 2019 14:27:21 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E31AE4911E;
-        Fri, 19 Jul 2019 14:27:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 8Ji-UDjYCTN7; Fri, 19 Jul 2019 14:27:20 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id CC7FA49112;
-        Fri, 19 Jul 2019 14:27:19 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] spi: pxa2xx: Balance runtime PM enable/disable on error
-Date:   Fri, 19 Jul 2019 14:27:13 +0200
-Message-Id: <20190719122713.3444318-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
+        Fri, 19 Jul 2019 08:28:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49110 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727552AbfGSM2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 08:28:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8591BAF37;
+        Fri, 19 Jul 2019 12:28:42 +0000 (UTC)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     jikos@kernel.org, jpoimboe@redhat.com, pmladek@suse.com
+Cc:     joe.lawrence@redhat.com, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: [RFC PATCH 0/2] livepatch: Clear relocation targets on a module removal
+Date:   Fri, 19 Jul 2019 14:28:38 +0200
+Message-Id: <20190719122840.15353-1-mbenes@suse.cz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't undo the PM initialization if we error out before we managed to
-initialize it. The call to pm_runtime_disable() without being preceded
-by pm_runtime_enable() would disturb the balance of the Force.
+The second attempt to resolve the issue reported by Josh last year [1]
+and also reported earlier this year again [2]. The first attempt [3]
+tried to deny the patched modules to be removed. It did not solve the
+issue completely. It would be possible, but we decided to try the
+arch-specific approach first, which I am sending now.
 
-In practice, this happens if we fail to allocate any of the GPIOS ("cs",
-"ready") due to -EPROBE_DEFER because we're getting probled before the
-GPIO driver.
+Sending early as RFC, because I am leaving on holiday tomorrow and it
+would be great if you took a look meanwhile.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/spi/spi-pxa2xx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+- I decided not to CC the arch maintainers yet. If we decide that the
+  approach is feasible first on our livepatch side, I will split the
+  second patch and resend properly.
+- the first patch could go in regardless the rest, I guess.
+- I am not sure about the placement in
+  klp_cleanup_module_patches_limited(). I think it is the best possible,
+  but I would really appreciate double-checking.
+- I am also not sure about the naming, so ideas also welcome
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index fc7ab4b268802..22513caf20006 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1831,14 +1831,16 @@ static int pxa2xx_spi_probe(struct platform_devic=
-e *pdev)
- 	status =3D devm_spi_register_controller(&pdev->dev, controller);
- 	if (status !=3D 0) {
- 		dev_err(&pdev->dev, "problem registering spi controller\n");
--		goto out_error_clock_enabled;
-+		goto out_error_pm_runtime_enabled;
- 	}
-=20
- 	return status;
-=20
--out_error_clock_enabled:
-+out_error_pm_runtime_enabled:
- 	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+
-+out_error_clock_enabled:
- 	clk_disable_unprepare(ssp->clk);
-=20
- out_error_dma_irq_alloc:
---=20
-2.21.0
+Lightly tested on both x86_64 and ppc64le and it looked ok.
+
+[1] 20180602161151.apuhs2dygsexmcg2@treble
+[2] 1561019068-132672-1-git-send-email-cj.chengjian@huawei.com
+[3] 20180607092949.1706-1-mbenes@suse.cz
+
+Miroslav Benes (2):
+  livepatch: Nullify obj->mod in klp_module_coming()'s error path
+  livepatch: Clear relocation targets on a module removal
+
+ arch/powerpc/kernel/Makefile    |  1 +
+ arch/powerpc/kernel/livepatch.c | 75 +++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/module.h    | 15 +++++++
+ arch/powerpc/kernel/module_64.c |  7 +--
+ arch/x86/kernel/livepatch.c     | 67 +++++++++++++++++++++++++++++
+ include/linux/livepatch.h       |  5 +++
+ kernel/livepatch/core.c         | 18 +++++---
+ 7 files changed, 177 insertions(+), 11 deletions(-)
+ create mode 100644 arch/powerpc/kernel/livepatch.c
+ create mode 100644 arch/powerpc/kernel/module.h
+
+-- 
+2.22.0
 
