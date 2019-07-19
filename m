@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F31C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB31C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2D5218C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577BD218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509420;
-	bh=KQXRWLpvg3f6u5eNc9Y06iXg7JBR/qR+veOkWDudE40=;
+	s=default; t=1563509423;
+	bh=KNA44Npbk0vVSlX8aGVUouMDsSJL//53U5Tye9H+ZR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcwbNTbFyk+OCH3txvFfVxVkAZO6cU5Oefwe91Qdrsbcchcm+yxVoeL4JOQEL/3p9
-	 nT7UUh6TaBQbcBhRwXKScc30K9LY6fTy89/YbOIBQkJMgRVDhJ3EN8SsM2Ymjay7FW
-	 RH1aug99EoUO1Ahi9HjcMi5Wvtr7bfeaCnIhXJ/c=
+	b=iKO27apV3WfXyJ/GXij3QgH6qt150QS9hp61pWHyrQmyZqLf19+UPWv/Rr+SuRPCs
+	 EJK+ydyfFB3YRQifrhgG2/4tUo2jjI8F4V29VS5YEZ8At7bTaIuKL6oHOUO5BznJqo
+	 d02TgKdleTanMY//YtizvmldiZxqg4iUG4UUFKLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387981AbfGSEKT (ORCPT
+        id S2388036AbfGSEKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44900 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731546AbfGSEKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:12 -0400
+        id S2387960AbfGSEKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D4421873;
-        Fri, 19 Jul 2019 04:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE10E218D9;
+        Fri, 19 Jul 2019 04:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509411;
-        bh=KQXRWLpvg3f6u5eNc9Y06iXg7JBR/qR+veOkWDudE40=;
+        s=default; t=1563509418;
+        bh=KNA44Npbk0vVSlX8aGVUouMDsSJL//53U5Tye9H+ZR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4jMA0/8p9H9dDLrpl2QpIAsvcfqaNzslrowqY7P5CrkvLlz7hDEOIvjaZTtenIVv
-         IpvW7AYNlLFZ1t7VgJlzc7cHIn4mHsuAsq+LnhQSYJgUPG185Ad0xDmHskGTVScdJv
-         Fj7gc7a90xLSS45Wy5SPXg0zk4BQ8o6Keop1L4Wc=
+        b=L9yrruf0lg08gycLF0dftXA7BMyE6X2fjv1YU5GhIRswDRb2ARr0j1WhbTHedvEQj
+         GC1L6qzC7YMPMMrJnC0Y84Ser6GppJgoPK4jOJ3csthnndoYsM0sYTxjPv0sCnOBCM
+         QilLbUiXedSYkG29HKFRjVDSgYbM9LN+Lkwn5tNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 076/101] perf hists browser: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Fri, 19 Jul 2019 00:07:07 -0400
-Message-Id: <20190719040732.17285-76-sashal@kernel.org>
+Cc:     Ocean Chen <oceanchen@google.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 081/101] f2fs: avoid out-of-range memory access
+Date:   Fri, 19 Jul 2019 00:07:12 -0400
+Message-Id: <20190719040732.17285-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -66,91 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Ocean Chen <oceanchen@google.com>
 
-[ Upstream commit ceb75476db1617a88cc29b09839acacb69aa076e ]
+[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
 
-Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+blkoff_off might over 512 due to fs corrupt or security
+vulnerability. That should be checked before being using.
 
-  tools/perf/ui/browsers/hists.c:641
-  hist_browser__run() error: we previously assumed 'hbt' could be
-  null (see line 625)
+Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
 
-  tools/perf/ui/browsers/hists.c:3088
-  perf_evsel__hists_browse() error: we previously assumed
-  'browser->he_selection' could be null (see line 2902)
-
-  tools/perf/ui/browsers/hists.c:3272
-  perf_evsel_menu__run() error: we previously assumed 'hbt' could be
-  null (see line 3260)
-
-This patch firstly validating the pointers before access them, so can
-fix potential NULL pointer dereference.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190708143937.7722-2-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ocean Chen <oceanchen@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/hists.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/f2fs/segment.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index a96f62ca984a..692d2fa31c35 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -633,7 +633,11 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
- 		switch (key) {
- 		case K_TIMER: {
- 			u64 nr_entries;
--			hbt->timer(hbt->arg);
-+
-+			WARN_ON_ONCE(!hbt);
-+
-+			if (hbt)
-+				hbt->timer(hbt->arg);
- 
- 			if (hist_browser__has_filter(browser) ||
- 			    symbol_conf.report_hierarchy)
-@@ -2707,7 +2711,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- {
- 	struct hists *hists = evsel__hists(evsel);
- 	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env, annotation_opts);
--	struct branch_info *bi;
-+	struct branch_info *bi = NULL;
- #define MAX_OPTIONS  16
- 	char *options[MAX_OPTIONS];
- 	struct popup_action actions[MAX_OPTIONS];
-@@ -2973,7 +2977,9 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- 			goto skip_annotation;
- 
- 		if (sort__mode == SORT_MODE__BRANCH) {
--			bi = browser->he_selection->branch_info;
-+
-+			if (browser->he_selection)
-+				bi = browser->he_selection->branch_info;
- 
- 			if (bi == NULL)
- 				goto skip_annotation;
-@@ -3144,7 +3150,8 @@ static int perf_evsel_menu__run(struct perf_evsel_menu *menu,
- 
- 		switch (key) {
- 		case K_TIMER:
--			hbt->timer(hbt->arg);
-+			if (hbt)
-+				hbt->timer(hbt->arg);
- 
- 			if (!menu->lost_events_warned &&
- 			    menu->lost_events &&
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 8fc3edb6760c..92f72bb5aff4 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3261,6 +3261,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+ 		seg_i = CURSEG_I(sbi, i);
+ 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+ 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
++		if (blk_off > ENTRIES_IN_SUM) {
++			f2fs_bug_on(sbi, 1);
++			f2fs_put_page(page, 1);
++			return -EFAULT;
++		}
+ 		seg_i->next_segno = segno;
+ 		reset_curseg(sbi, i, 0);
+ 		seg_i->alloc_type = ckpt->alloc_type[i];
 -- 
 2.20.1
 
