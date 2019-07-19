@@ -2,122 +2,144 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC0BC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B32C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B39C2085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB0920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RMdPRofs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfGSCZp (ORCPT
+        id S1726462AbfGSCdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:25:45 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:9650 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726015AbfGSCZp (ORCPT
+        Thu, 18 Jul 2019 22:33:16 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:61955 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfGSCdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:25:45 -0400
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6J2Ks5G001476;
-        Fri, 19 Jul 2019 02:25:23 GMT
-Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2tu3mm0h9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jul 2019 02:25:23 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5009.houston.hpe.com (Postfix) with ESMTP id A588B6D;
-        Fri, 19 Jul 2019 02:25:22 +0000 (UTC)
-Received: from [16.116.130.82] (unknown [16.116.130.82])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 5ED6A4C;
-        Fri, 19 Jul 2019 02:25:21 +0000 (UTC)
-Subject: Re: [PATCH v3 8/9] x86/mm/tlb: Remove UV special case
-To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>
-References: <20190719005837.4150-1-namit@vmware.com>
- <20190719005837.4150-9-namit@vmware.com>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <54c082c5-ebee-8fd7-cf69-b8c15b60a329@hpe.com>
-Date:   Thu, 18 Jul 2019 19:25:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 18 Jul 2019 22:33:16 -0400
+X-Greylist: delayed 780 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jul 2019 22:33:14 EDT
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x6J2WrVH023138;
+        Fri, 19 Jul 2019 11:32:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6J2WrVH023138
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563503574;
+        bh=o4kDIEiOXzUdJ+Z8z6JPgMvwKPIQSozYhtOJGTXOPH8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RMdPRofs+7OaQN9HtrCnCFAbbr9cR/BuVUFbXazR8UQ/vLxR7isJfq/QUtwv/l22y
+         kMFUZSeZOeokFzN4X1Ot11J+oA9En+gXvuwz78TQcOq/kcTr7yLkcCPL7wbqa+VdyU
+         ApL4MFmHqEHZN5aKo8fEpD9JGa/VhucgBtrTIvO0ZuA5LFaJNliYCr4WHz3YennSKr
+         pNYT2nH3pqlS6NJHJNtxu2hkkTNQ6S8A9ylLSfr/MmHSgaK6y8ebQEzQRYj6CczEVd
+         2tYbo5d6nXDuAMuPZCub65GwET1H1cTaScnooWEwb1zm4DvSct27hCOaudHeXolUP6
+         4GXdQu9zmD8+Q==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id g11so11977832uak.0;
+        Thu, 18 Jul 2019 19:32:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAUSSvWvWlCb7ZVVsPmUQv7m8xlcrlV382AjPCvXSMnIMHTflPxh
+        iViEuBv3faK3c2DQdR/GTEbGYB4cl+FsYVWNSrw=
+X-Google-Smtp-Source: APXvYqwJmFaw0ttu0Pk2N9UVkHCPbJkVCU9BI9jrIXysKgBPsfG9hnw2XaoBBKOEWE6BPwJXpxMQBBMke6pbEo87Ym0=
+X-Received: by 2002:a9f:2265:: with SMTP id 92mr17211400uad.121.1563503572441;
+ Thu, 18 Jul 2019 19:32:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190719005837.4150-9-namit@vmware.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-19_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907190027
+References: <20190718125509.775525-1-arnd@arndb.de> <20190718125703.GA28332@lst.de>
+ <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com>
+ <20190718130835.GA28520@lst.de> <20190718142525.GE7116@magnolia>
+ <CAK7LNASN5d_ppx6wJSm+fcf9HiX9i6zX4fxiR5_WuF6QUOExXQ@mail.gmail.com> <d63adfdf-7ac2-bc42-38c6-db1404a87d47@infradead.org>
+In-Reply-To: <d63adfdf-7ac2-bc42-38c6-db1404a87d47@infradead.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 19 Jul 2019 11:32:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT-E-2j-kDJ9qSjydRrW__PrCMy4D3GSw-+PP20Ax3zyA@mail.gmail.com>
+Message-ID: <CAK7LNAT-E-2j-kDJ9qSjydRrW__PrCMy4D3GSw-+PP20Ax3zyA@mail.gmail.com>
+Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is a fact that the UV is still the UV and SGI is now part of HPE. 
-The current external product is known as SuperDome Flex.  It is both up 
-to date as well as very well maintained.  The ACK I provided was an okay 
-to change the code, but please make the description accurate.
+On Fri, Jul 19, 2019 at 11:24 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 7/18/19 7:19 PM, Masahiro Yamada wrote:
+> > Hi.
+> >
+> > On Thu, Jul 18, 2019 at 11:28 PM Darrick J. Wong
+> > <darrick.wong@oracle.com> wrote:
+> >>
+> >> On Thu, Jul 18, 2019 at 03:08:35PM +0200, Christoph Hellwig wrote:
+> >>> On Thu, Jul 18, 2019 at 03:03:15PM +0200, Arnd Bergmann wrote:
+> >>>> The inclusion comes from the recently added header check in commit
+> >>>> c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
+> >>>>
+> >>>> This just tries to include every header by itself to see if there are build
+> >>>> failures from missing indirect includes. We probably don't want to
+> >>>> add an exception for iomap.h there.
+> >>>
+> >>> I very much disagree with that check.  We don't need to make every
+> >>> header compilable with a setup where it should not be included.
+> >>
+> >> Seconded, unless there's some scenario where someone needs iomap when
+> >> CONFIG_BLOCK=n (???)
+> >
+> > I agree.
+> >
+> > There is no situation that iomap.h is included when CONFIG_BLOCK=n.
+> > So, it is pointless to surround offending code with #ifdef
+> > just for the purpose of satisfying the header-test.
+> >
+> >
+> > I started to think
+> > compiling all headers is more painful than useful.
+> >
+> >
+> > MW is closing, so I am thinking of disabling it for now
+> > to take time to re-think.
+> >
+> >
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index bd7d650d4a99..cbb31d134f7e 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -111,6 +111,7 @@ config HEADER_TEST
+> >  config KERNEL_HEADER_TEST
+> >         bool "Compile test kernel headers"
+> >         depends on HEADER_TEST
+> > +       depends on BROKEN
+> >         help
+> >           Headers in include/ are used to build external moduls.
+> >           Compile test them to ensure they are self-contained, i.e.
+> >
+> >
+> >
+> > Maybe, we should compile-test headers
+> > only when it is reasonable to do so.
+>
+> Maybe.  But I would find it easier to use if it were a make target
+> instead of a Kconfig symbol, so someone could do
+> $ make compile_test_headers
 
-On 7/18/2019 5:58 PM, Nadav Amit wrote:
-> SGI UV support is outdated and not maintained, and it is not clear how
-> it performs relatively to non-UV. Remove the code to simplify the code.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Acked-by: Mike Travis <mike.travis@hpe.com>
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> ---
->   arch/x86/mm/tlb.c | 25 -------------------------
->   1 file changed, 25 deletions(-)
-> 
-> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> index 89f83ad19507..40daad52ec7d 100644
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@ -684,31 +684,6 @@ void native_flush_tlb_multi(const struct cpumask *cpumask,
->   		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
->   				(info->end - info->start) >> PAGE_SHIFT);
->   
-> -	if (is_uv_system()) {
-> -		/*
-> -		 * This whole special case is confused.  UV has a "Broadcast
-> -		 * Assist Unit", which seems to be a fancy way to send IPIs.
-> -		 * Back when x86 used an explicit TLB flush IPI, UV was
-> -		 * optimized to use its own mechanism.  These days, x86 uses
-> -		 * smp_call_function_many(), but UV still uses a manual IPI,
-> -		 * and that IPI's action is out of date -- it does a manual
-> -		 * flush instead of calling flush_tlb_func_remote().  This
-> -		 * means that the percpu tlb_gen variables won't be updated
-> -		 * and we'll do pointless flushes on future context switches.
-> -		 *
-> -		 * Rather than hooking native_flush_tlb_multi() here, I think
-> -		 * that UV should be updated so that smp_call_function_many(),
-> -		 * etc, are optimal on UV.
-> -		 */
-> -		flush_tlb_func_local((void *)info);
-> -
-> -		cpumask = uv_flush_tlb_others(cpumask, info);
-> -		if (cpumask)
-> -			smp_call_function_many(cpumask, flush_tlb_func_remote,
-> -					       (void *)info, 1);
-> -		return;
-> -	}
-> -
->   	/*
->   	 * If no page tables were freed, we can skip sending IPIs to
->   	 * CPUs in lazy TLB mode. They will flush the CPU themselves
-> 
+
+You can do equivalent with this:
+
+$ ./scripts/config -e HEADER_TEST
+$ make include/
+
+
+-- 
+Best Regards
+Masahiro Yamada
