@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2DDC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67908C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDA42082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F072082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509609;
-	bh=Le25GrtF3G6bxZechcB+0t8lQQjNgYfnXpsHeSwnMoE=;
+	s=default; t=1563509614;
+	bh=vqQwjsyXatyGelWezBxGJt5LrvjbIVovafrzOFTMhrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfJCNMd2acDGBqCVKN8xmDDltY4Eio88yOect1ySTFTwY5PRCBe29rf7NheuPaoOp
-	 7mhYhLg2KrJ/X/3Qsc529rN1wYi/GzFsP09c9WidtO7N2EZS1aFdUnrVmAQ5OGRpah
-	 7upKWBkePfRBnXLFV5/yC8QiN29jbo5+dQHl1GbU=
+	b=eKW++QJcW/36WmILnhlkO4xEvCnQ8DRDgCZ9SVc2XMrSBR7WCawdU2chtdHcOr1dW
+	 YmSgr46DNCCFpTv//4EWEanh6dk5TV0L+qM5KABK27TrQzxYQZSck6ar6bstMFSAoC
+	 JSq3T93Z516CFOFArMRGWLynJNILRqKbyqeNgncQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389230AbfGSEN1 (ORCPT
+        id S2389273AbfGSENd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389162AbfGSENW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:22 -0400
+        id S2389204AbfGSEN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07AAB21873;
-        Fri, 19 Jul 2019 04:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF1CE21872;
+        Fri, 19 Jul 2019 04:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509601;
-        bh=Le25GrtF3G6bxZechcB+0t8lQQjNgYfnXpsHeSwnMoE=;
+        s=default; t=1563509605;
+        bh=vqQwjsyXatyGelWezBxGJt5LrvjbIVovafrzOFTMhrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J74bg0uG8hnrr3uml8DadU9kJOdbm7CPbXHYa5IGQCLmLTn4OvMFxQmZv9SDKMtvH
-         JfO/Y0u/8Q09Bd8fISmNGzIhUKh/jHs3kkwdW7P76aqGcZVHARfRqKVyyp3nIvRz5+
-         +XROi4OkoEVw/6sn99y8CWNeyv5CAZqFpXLgUeh8=
+        b=cIkPunHYtf0B+pt/w9AvYMyKNXsiFYd8RLrvnCjXRhVaESXzYH/240p2uwyN3RD4M
+         1Ndf0pwdlBkwQk9RBDs81lXErxhkCjkjiPZgzmaZ49AffZYZPC2SfGDkpQEEi9ZY/5
+         jHYfRuJd0IbsGxLx5BV+tbbmR2uhaFKwJC7jGOFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/45] tty: serial: msm_serial: avoid system lockup condition
-Date:   Fri, 19 Jul 2019 00:12:30 -0400
-Message-Id: <20190719041304.18849-11-sashal@kernel.org>
+Cc:     David Riley <davidriley@chromium.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 13/45] drm/virtio: Add memory barriers for capset cache.
+Date:   Fri, 19 Jul 2019 00:12:32 -0400
+Message-Id: <20190719041304.18849-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -60,43 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: David Riley <davidriley@chromium.org>
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+After data is copied to the cache entry, atomic_set is used indicate
+that the data is the entry is valid without appropriate memory barriers.
+Similarly the read side was missing the corresponding memory barriers.
 
-Tested on SoC QCS404.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David Riley <davidriley@chromium.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 7dc8272c6b15..9027455c6be1 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -391,10 +391,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 54639395aba0..a3559b1a3a0f 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -521,6 +521,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+ 	ret = wait_event_timeout(vgdev->resp_wq,
+ 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
  
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
++	/* is_valid check must proceed before copy of the cache entry. */
++	smp_rmb();
 +
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
+ 	ptr = cache_ent->caps_cache;
+ 
+ copy_exit:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 52436b3c01bb..a1b3ea1ccb65 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -618,6 +618,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
+ 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
+ 			memcpy(cache_ent->caps_cache, resp->capset_data,
+ 			       cache_ent->size);
++			/* Copy must occur before is_valid is signalled. */
++			smp_wmb();
+ 			atomic_set(&cache_ent->is_valid, 1);
  			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
- 	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
- }
+ 		}
 -- 
 2.20.1
 
