@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF232C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9524C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A2E218B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AF5218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509663;
-	bh=p0zBARAMRGsB7iLA/OPS80em/wFhjQRa+VklgXTSAXY=;
+	s=default; t=1563509668;
+	bh=uVcLrusjSfxWYdiusVJ5VcWYyl6XYeIyuSFUIwhDr5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVFBA3HrLmu1AbA3f8zmDCw6Vf1YhRkQpibArLP9BNID8Tv0kmXSxXf1EoIttDzmm
-	 thJalleoJH4sToGsZi5a7ub0qWRO7IVLrDP86WkFojjwkuHkEnntUPc4IfO+MVBkGW
-	 E1O3Bo0uai8nzlzz6qGQ+EB483eQE61vY+F4nSss=
+	b=sA5GMBHpT3mS7jCCka0NN4m4qlr1OusEOwAsy6ORlPbBP4cSHhTgKp2KpvR8xj1X8
+	 K+S0zcgArh31+K5OqYJKBl7dwos3oCQ97bwKFy5I4oW3GKSUYlP10WnnSffVyKM4+w
+	 Alr2jVJtKEoqfSMOvV7O5YnyUrwewGXj55IvJ6BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388854AbfGSEOW (ORCPT
+        id S2389713AbfGSEO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389593AbfGSEOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:14 -0400
+        id S2387459AbfGSEOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B1C2189E;
-        Fri, 19 Jul 2019 04:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9939B218A5;
+        Fri, 19 Jul 2019 04:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509653;
-        bh=p0zBARAMRGsB7iLA/OPS80em/wFhjQRa+VklgXTSAXY=;
+        s=default; t=1563509658;
+        bh=uVcLrusjSfxWYdiusVJ5VcWYyl6XYeIyuSFUIwhDr5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c66W+CH2alX0wSY1LPbpU+brfsdM0BRJ9bw1hebwIbELAGInjWjY8dncjEzeqKozr
-         Y5RXLNpUiOH9BAeOdbxJaBP/SHKAaMC71kFdznpBMVXSiR5yKHr6g9OiZhFq0VXXSX
-         CZNM56TDRXFQJuiySdISY+eZS7I2vdszYJp39Q1o=
+        b=CGgoKayHgcKQgNHFa7xzfThoJWQ1Sx3rSCcNMKx3cNc7NXJvuFITHUzh6okTchYbU
+         oHEYPXg6lupEwMiVwsfGV+VgeFNmOe7LpJatG4GwVHTDIDNx1VJaH7nK7pUNSTpjhu
+         BkCKUinRie5S4QUrBZ3Bpa797E64i2UxcCB/ZZaw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 40/45] powerpc/eeh: Handle hugepages in ioremap space
-Date:   Fri, 19 Jul 2019 00:12:59 -0400
-Message-Id: <20190719041304.18849-40-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 43/45] 9p: pass the correct prototype to read_cache_page
+Date:   Fri, 19 Jul 2019 00:13:02 -0400
+Message-Id: <20190719041304.18849-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -60,68 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
+[ Upstream commit f053cbd4366051d7eb6ba1b8d529d20f719c2963 ]
 
-In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
-space") support for using hugepages in the vmalloc and ioremap areas was
-enabled for radix. Unfortunately this broke EEH MMIO error checking.
+Fix the callback 9p passes to read_cache_page to actually have the
+proper type expected.  Casting around function pointers can easily
+hide typing bugs, and defeats control flow protection.
 
-Detection works by inserting a hook which checks the results of the
-ioreadXX() set of functions.  When a read returns a 0xFFs response we
-need to check for an error which we do by mapping the (virtual) MMIO
-address back to a physical address, then mapping physical address to a
-PCI device via an interval tree.
-
-When translating virt -> phys we currently assume the ioremap space is
-only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
-emit a WARN_ON(), but otherwise handles the check as though a normal
-page was found. In pathalogical cases such as copying a buffer
-containing a lot of 0xFFs from BAR memory this can result in the system
-not booting because it's too busy printing WARN_ON()s.
-
-There's no real reason to assume huge pages can't be present and we're
-prefectly capable of handling them, so do that.
-
-Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
+Link: http://lkml.kernel.org/r/20190520055731.24538-5-hch@lst.de
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ fs/9p/vfs_addr.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-index 8336b9016ca9..a7f229e59892 100644
---- a/arch/powerpc/kernel/eeh.c
-+++ b/arch/powerpc/kernel/eeh.c
-@@ -362,10 +362,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
- 					   NULL, &hugepage_shift);
- 	if (!ptep)
- 		return token;
--	WARN_ON(hugepage_shift);
--	pa = pte_pfn(*ptep) << PAGE_SHIFT;
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index 6181ad79e1a5..e45b1a0dd513 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -49,8 +49,9 @@
+  * @page: structure to page
+  *
+  */
+-static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
++static int v9fs_fid_readpage(void *data, struct page *page)
+ {
++	struct p9_fid *fid = data;
+ 	struct inode *inode = page->mapping->host;
+ 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
+ 	struct iov_iter to;
+@@ -121,7 +122,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
+ 	if (ret == 0)
+ 		return ret;
  
--	return pa | (token & (PAGE_SIZE-1));
-+	pa = pte_pfn(*ptep);
-+
-+	/* On radix we can do hugepage mappings for io, so handle that */
-+	if (hugepage_shift) {
-+		pa <<= hugepage_shift;
-+		pa |= token & ((1ul << hugepage_shift) - 1);
-+	} else {
-+		pa <<= PAGE_SHIFT;
-+		pa |= token & (PAGE_SIZE - 1);
-+	}
-+
-+	return pa;
+-	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
++	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
++			filp->private_data);
+ 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
+ 	return ret;
  }
- 
- /*
 -- 
 2.20.1
 
