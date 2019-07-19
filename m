@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADBC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B85C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE092084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F862084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509890;
-	bh=8ZI5KHIikTg8AUBhIZ0V00NlYlYYAULFOpP7aV3KTBM=;
+	s=default; t=1563509894;
+	bh=CVtwTCLGPdKrlJ/UFSuA+mdkaxGnIx745tbHqGbPFJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWPfnzQNlHQYYyyRH1cg+355Vj6O0MARrgxevUWOpqjbq0T8kmb1avKvpAWYnLmdh
-	 41pH1e3onS8CYX5FL/Nk4SaNTJ8vXaPUvGQ831vLyIrX9HCISvgq1/xL5wgVgHjfnW
-	 ftmAiX5KnuGrPvE683wM5OhiE89BZFnCAona75IY=
+	b=PkADGbsndkSNOUojM8CTdranmwPD+UM0FojjHxXgBy63BDf4quj9m2QcbG7vYeJsi
+	 /o3LujpYThz3e9EdtSx5Zjm0bccf6xpEVWVlCOIGe/nhfGGuoWif3TLAv4odWyMJF2
+	 0re4jmx3gqTdazyvqR1XNx8hQ3kBnqR592F4URBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389421AbfGSENw (ORCPT
+        id S2389507AbfGSESN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389375AbfGSENt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:49 -0400
+        id S2389413AbfGSENw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25FFD21872;
-        Fri, 19 Jul 2019 04:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4B521851;
+        Fri, 19 Jul 2019 04:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509628;
-        bh=8ZI5KHIikTg8AUBhIZ0V00NlYlYYAULFOpP7aV3KTBM=;
+        s=default; t=1563509631;
+        bh=CVtwTCLGPdKrlJ/UFSuA+mdkaxGnIx745tbHqGbPFJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjqbAk0hy+qlG+8lFQEs4ZstNV1Km+Ne5Yyp0ehWeRFjZhndW5jl49wl6tz74f2l0
-         qCa6K3pZ6uQOwKA94IEml8Y4eh9h5V6vUNNoZltDuGzKOar9bf7uykRoIgxNuonVoz
-         b15enSRALng9sLzAa0NPPRZJMgUh2M3BM/U88Kro=
+        b=mJ3wsjxm7flGnqYCZZJG1a6xVozQibm07m+z4ojpy/IXRQ2fHmONkWC6FWZzoBTD8
+         mKj3dZDUExHVKW3P/maKwefF4+kXMqWFgJQh/cuBDQ+6MqUm345xhQ0UwN9413jS0y
+         Up48+CZX0qXn2kf0jqT6QQ+vq0kWVRD21kw2bDXo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 26/45] mfd: arizona: Fix undefined behavior
-Date:   Fri, 19 Jul 2019 00:12:45 -0400
-Message-Id: <20190719041304.18849-26-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 28/45] um: Silence lockdep complaint about mmap_sem
+Date:   Fri, 19 Jul 2019 00:12:47 -0400
+Message-Id: <20190719041304.18849-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -62,52 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
+[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
 
-When the driver is used with a subdevice that is disabled in the
-kernel configuration, clang gets a little confused about the
-control flow and fails to notice that n_subdevs is only
-uninitialized when subdevs is NULL, and we check for that,
-leading to a false-positive warning:
+When we get into activate_mm(), lockdep complains that we're doing
+something strange:
 
-drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                              subdevs, n_subdevs, NULL, 0, NULL);
-                                       ^~~~~~~~~
-drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
-        int n_subdevs, ret, i;
-                     ^
-                      = 0
+    WARNING: possible circular locking dependency detected
+    5.1.0-10252-gb00152307319-dirty #121 Not tainted
+    ------------------------------------------------------
+    inside.sh/366 is trying to acquire lock:
+    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
 
-Ideally, we would rearrange the code to avoid all those early
-initializations and have an explicit exit in each disabled case,
-but it's much easier to chicken out and add one more initialization
-here to shut up the warning.
+    but task is already holding lock:
+    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+    which lock already depends on the new lock.
+
+    the existing dependency chain (in reverse order) is:
+
+    -> #1 (&mm->mmap_sem){++++}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           down_write+0x3f/0x98
+           flush_old_exec+0x748/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
+           [...]
+           __lock_acquire+0x12ab/0x139f
+           lock_acquire+0x155/0x18e
+           _raw_spin_lock+0x30/0x83
+           flush_old_exec+0x703/0x8d7
+           load_elf_binary+0x2ca/0xddb
+           [...]
+
+    other info that might help us debug this:
+
+     Possible unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(&mm->mmap_sem);
+                                   lock(&(&p->alloc_lock)->rlock);
+                                   lock(&mm->mmap_sem);
+      lock(&(&p->alloc_lock)->rlock);
+
+     *** DEADLOCK ***
+
+    2 locks held by inside.sh/366:
+     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
+     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+
+    stack backtrace:
+    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
+    Stack:
+     [...]
+    Call Trace:
+     [<600420de>] show_stack+0x13b/0x155
+     [<6048906b>] dump_stack+0x2a/0x2c
+     [<6009ae64>] print_circular_bug+0x332/0x343
+     [<6009c5c6>] check_prev_add+0x669/0xdad
+     [<600a06b4>] __lock_acquire+0x12ab/0x139f
+     [<6009f3d0>] lock_acquire+0x155/0x18e
+     [<604a07e0>] _raw_spin_lock+0x30/0x83
+     [<60151e6a>] flush_old_exec+0x703/0x8d7
+     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
+     [...]
+
+I think it's because in exec_mmap() we have
+
+	down_read(&old_mm->mmap_sem);
+...
+        task_lock(tsk);
+...
+	activate_mm(active_mm, mm);
+	(which does down_write(&mm->mmap_sem))
+
+I'm not really sure why lockdep throws in the whole knowledge
+about the task lock, but it seems that old_mm and mm shouldn't
+ever be the same (and it doesn't deadlock) so tell lockdep that
+they're different.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 2 +-
+ arch/um/include/asm/mmu_context.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 41767f7239bb..0556a9749dbe 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -1038,7 +1038,7 @@ int arizona_dev_init(struct arizona *arizona)
- 	unsigned int reg, val, mask;
- 	int (*apply_patch)(struct arizona *) = NULL;
- 	const struct mfd_cell *subdevs = NULL;
--	int n_subdevs, ret, i;
-+	int n_subdevs = 0, ret, i;
- 
- 	dev_set_drvdata(arizona->dev, arizona);
- 	mutex_init(&arizona->clk_lock);
+diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
+index 1a60e1328e2f..6aca4c90aa1a 100644
+--- a/arch/um/include/asm/mmu_context.h
++++ b/arch/um/include/asm/mmu_context.h
+@@ -56,7 +56,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+ 	 * when the new ->mm is used for the first time.
+ 	 */
+ 	__switch_mm(&new->context.id);
+-	down_write(&new->mmap_sem);
++	down_write_nested(&new->mmap_sem, 1);
+ 	uml_setup_stubs(new);
+ 	up_write(&new->mmap_sem);
+ }
 -- 
 2.20.1
 
