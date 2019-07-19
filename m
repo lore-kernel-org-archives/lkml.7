@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12C8C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A73C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7142D206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAA0206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511013;
-	bh=Bgd0Bw6dCsfqG18nCU1TXezh7rwvgVoQ1pq5kShUpig=;
+	s=default; t=1563511022;
+	bh=XRfZBIvwwvJEotxUX79ZQHqiqmY7KdKnFRGsQhI4u9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcFSTIbPKLVwyWYJuwpHraKDNkumNWIkvvm5AOmm7tw+Kd8Asz4+w0sRKXnzjyuup
-	 RBQwN73XXNzXj/JP5r3Py46Sy3vu5KJJWlvXuYJ9AwgriLz5MMN6MT1R/dMq64WaNJ
-	 erKZpm66H+ytgBSVdAQ/4kguzCtRh0he+22bIE8A=
+	b=xfWRPeLymkY//gVUpH+oX7cHZRDB93GvD8uA7XsMFnO/HMrc8pCsSHQAYDCMO+bcA
+	 7oXiMi+mPFyZY4KIJJ8qMxvG6jPvWlOhHIJPkUZEw5BqmaMsRnmgdhfl4plHQuCoM9
+	 KvKcXPhbMt8k0Dqm3nwqISsY9i4XLWTjRcqurUfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbfGSEgw (ORCPT
+        id S1731624AbfGSEhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727228AbfGSEA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:00:28 -0400
+        id S1728191AbfGSEAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C5462189F;
-        Fri, 19 Jul 2019 04:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DD70218B8;
+        Fri, 19 Jul 2019 04:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508827;
-        bh=Bgd0Bw6dCsfqG18nCU1TXezh7rwvgVoQ1pq5kShUpig=;
+        s=default; t=1563508823;
+        bh=XRfZBIvwwvJEotxUX79ZQHqiqmY7KdKnFRGsQhI4u9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFespdZfk4ajjYEZG76H9K9t1aX/GiI+XInOIZUBWXmHRrWSHqbQOv4bnAJEfy4Gz
-         OhwjtWXkLm7Xz3i9qV9xMXWTX8RysO8+Xh64IBjTLwWltFCbKeEhEVc4t0dhPs7HK9
-         Gn94Ol6VglOkf2cDrCMyOVEefYx1GTw2/GSQhZ2U=
+        b=qzJ5t31wSuOhes6pIgro4a1THCj/BBMYOrQEB9Pd1QR5O1tPefzc1pfo+/uh+nfVH
+         8QIBYFynMV27vDf35vLWF5Y41rTfGxXIWZduzhUGDllkfLSc1YGVbZvWTGpcruFWGU
+         /nZQGoPqPZtDFLQjvkxjFDZr7UV7F+7pZCA5ljc4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 112/171] powerpc/mm: Handle page table allocation failures
-Date:   Thu, 18 Jul 2019 23:55:43 -0400
-Message-Id: <20190719035643.14300-112-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 109/171] serial: sh-sci: Terminate TX DMA during buffer flushing
+Date:   Thu, 18 Jul 2019 23:55:40 -0400
+Message-Id: <20190719035643.14300-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,60 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 2230ebf6e6dd0b7751e2921b40f6cfe34f09bb16 ]
+[ Upstream commit 775b7ffd7d6d5db320d99b0a485c51e04dfcf9f1 ]
 
-This fixes kernel crash that arises due to not handling page table allocation
-failures while allocating hugetlb page table.
+While the .flush_buffer() callback clears sci_port.tx_dma_len since
+commit 1cf4a7efdc71cab8 ("serial: sh-sci: Fix race condition causing
+garbage during shutdown"), it does not terminate a transmit DMA
+operation that may be in progress.
 
-Fixes: e2b3d202d1db ("powerpc: Switch 16GB and 16MB explicit hugepages to a different page table format")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fix this by terminating any pending DMA operations, and resetting the
+corresponding cookie.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+Link: https://lore.kernel.org/r/20190624123540.20629-3-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hugetlbpage.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/tty/serial/sh-sci.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index b5d92dc32844..1de0f43a68e5 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -130,6 +130,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 	} else {
- 		pdshift = PUD_SHIFT;
- 		pu = pud_alloc(mm, pg, addr);
-+		if (!pu)
-+			return NULL;
- 		if (pshift == PUD_SHIFT)
- 			return (pte_t *)pu;
- 		else if (pshift > PMD_SHIFT) {
-@@ -138,6 +140,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 		} else {
- 			pdshift = PMD_SHIFT;
- 			pm = pmd_alloc(mm, pu, addr);
-+			if (!pm)
-+				return NULL;
- 			if (pshift == PMD_SHIFT)
- 				/* 16MB hugepage */
- 				return (pte_t *)pm;
-@@ -154,12 +158,16 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
- 	} else {
- 		pdshift = PUD_SHIFT;
- 		pu = pud_alloc(mm, pg, addr);
-+		if (!pu)
-+			return NULL;
- 		if (pshift >= PUD_SHIFT) {
- 			ptl = pud_lockptr(mm, pu);
- 			hpdp = (hugepd_t *)pu;
- 		} else {
- 			pdshift = PMD_SHIFT;
- 			pm = pmd_alloc(mm, pu, addr);
-+			if (!pm)
-+				return NULL;
- 			ptl = pmd_lockptr(mm, pm);
- 			hpdp = (hugepd_t *)pm;
- 		}
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index abc705716aa0..1d25c4e2d0d2 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1648,11 +1648,18 @@ static void sci_free_dma(struct uart_port *port)
+ 
+ static void sci_flush_buffer(struct uart_port *port)
+ {
++	struct sci_port *s = to_sci_port(port);
++
+ 	/*
+ 	 * In uart_flush_buffer(), the xmit circular buffer has just been
+-	 * cleared, so we have to reset tx_dma_len accordingly.
++	 * cleared, so we have to reset tx_dma_len accordingly, and stop any
++	 * pending transfers
+ 	 */
+-	to_sci_port(port)->tx_dma_len = 0;
++	s->tx_dma_len = 0;
++	if (s->chan_tx) {
++		dmaengine_terminate_async(s->chan_tx);
++		s->cookie_tx = -EINVAL;
++	}
+ }
+ #else /* !CONFIG_SERIAL_SH_SCI_DMA */
+ static inline void sci_request_dma(struct uart_port *port)
 -- 
 2.20.1
 
