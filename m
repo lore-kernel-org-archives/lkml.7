@@ -4,363 +4,282 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4B4C76197
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20811C7619A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68FAE2082C
+	by mail.kernel.org (Postfix) with ESMTP id E96D62082C
 	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="v8cOBHhM"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="sf5FBJU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbfGSXyw (ORCPT
+        id S1733159AbfGSXy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 19:54:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42796 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728247AbfGSXyv (ORCPT
+        Fri, 19 Jul 2019 19:54:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36564 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733100AbfGSXyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 19:54:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so14808773pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 16:54:51 -0700 (PDT)
+        Fri, 19 Jul 2019 19:54:55 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so16347565plt.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 16:54:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ufhL4yHfqoXd/Lsuj3L+wDyuVwa9Hu5CekOmZYpj4Co=;
-        b=v8cOBHhMnK387AweH5DFMd0ckR/tnKEKEJFVqCgrKXGxjAbJnlm6f96vj249izU+Aq
-         cmp1qlH7wl8MoMvV8yzVpDFmRceHOOPKNuSKIZeYw2h4MEFzhDKoGBDYK+hCKKj0A2mB
-         VcsADVvvnkMNCzU98UNg65h6QccWeH/KOm4VuxkgacRQByMranC2u7xL+zHawi+kbtzZ
-         ENUIjW6GB3G7Ytdy+355RB1GbwkEaG8pMbIWWbfCeSpQCp2thchrRUc1kt08PSRMXPfE
-         fYKLa0aFaMmqdUsctODXSNnydJQfXZAlihkcHZ1GhPNBN1OkO1shVcUGFAufl+6vo1OL
-         HMcw==
+        bh=eDK4XQDNzQuAFT5PiIQ0FZ6rfOoKMe0qUz8cTiu+oC0=;
+        b=sf5FBJU0SV415VBP6/yvIwJ6FP/VNmw/ES+/XOf8L0MPe0Mh/g4uJV3Jh8VM7j7SsF
+         C9V8j3EXbG+gV8Pq6kFs7J+AAJar/wslV5JuDJ9s2x0ZcT8Wx14DTJ0BqdgEBWy1Jabx
+         /nYRHiPWLyOs5Zf4rSbkGbM8zc4z3HvxFdZIio5ieD+B7WuBHDpWZA6cOuTCvIqYbe+m
+         h+cl2tHsqmyk5efCxt7/+bKhKeoMxGVfXbbhYrTACgARWX5C+0Ynac8kPq3btLPEtu3F
+         t3f2ukg6M1+kLtThLddkVxpEvN3BQcPcaBE+25vgoU7/K0FDnLghKzza42WDmW5tse2x
+         DVVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ufhL4yHfqoXd/Lsuj3L+wDyuVwa9Hu5CekOmZYpj4Co=;
-        b=lhnqyMWjRLKokDZnlgoQlJp2BAGhGKgRhRThUh2Q5+ZZIt1no9er+hFFTuV8mQZ3OW
-         Ekxx2orkH6nCBzmirz7RZC+WA9FGgdz4FRoR9EoPfqmaJ4XyCbnr9tXOJ08U9wE6GwSU
-         rkVpXWRPp7FZm/GIOlc54IIIi9ypPnPsVGpkbVR/O+olWBRfuLNN30raxII1pDlY1Bqw
-         Erx8Osl3Fq22dJA4Ith/uBLEEiCyQlCMK29YPq++ToorMs7huIC0s1P+7pQN7DC2WMym
-         zvhODhamlv4Pjq1Uvc1z6HWP4OL9GMRcPtuiD3K0S/UdWdLrxcA10BSptUxrI6pRxkxy
-         at1Q==
-X-Gm-Message-State: APjAAAXl0pAWpyaEpXJCYWusODTrDzHAW0yvGXgd0UI8cZGwNltihTL/
-        T1Ze+Za7mPCCPOqIQ4kTuI0=
-X-Google-Smtp-Source: APXvYqxRGagdfjRddfQVUzAjoZJ5Qf93NrGFvaYD2FJ1XHB/E+OuchMteM+gWWzROqYDlFnnqWpsSQ==
-X-Received: by 2002:a65:6288:: with SMTP id f8mr51849631pgv.292.1563580490566;
-        Fri, 19 Jul 2019 16:54:50 -0700 (PDT)
+        bh=eDK4XQDNzQuAFT5PiIQ0FZ6rfOoKMe0qUz8cTiu+oC0=;
+        b=I/n6rnAwnXRmQ9QoukHaBr9jqAgN3sxL+sShuZk+ViDRTBhWC4jw6HXw5lWFtK3kV3
+         UBYvIqiE8lcEo1BJDnwckeaOCSdZXAHr1kDwBIDXttj+ApyGMq5QFqo+v7123Eicawr3
+         9raxGpRRkFd3MlsmpAtzy61Tnv3R4Exn5Xju7h0/nvXYbhbxIWyJb9kV1F9wV4iunuxf
+         V7DJv5J9dwO59I7ubyv+bB9AUFCjNkgKFESaZg6heJYNFpJArapLk4GgEcZEn9MYT/dm
+         0o6d24ZVMwg7Aa8Z44fJfCSE40/omV0uLi+Rphzy+JWqNAOxNG1eBp/ga4c4QOvSzR4d
+         qh/g==
+X-Gm-Message-State: APjAAAX+WS9/UBbOesiO9fF/ANI0dY3ty21E+WcbSDCQ9Cf9go8xGNWv
+        dmwypwn3B5Pp9NMtItx/A9g=
+X-Google-Smtp-Source: APXvYqwn1Wi8Ve+fIBxilEtZjKBZCl8AlSec2ge0I+dmsV7JXUuD12g89H1CqymH3mzz6GGJzqVmQg==
+X-Received: by 2002:a17:902:8509:: with SMTP id bj9mr60243542plb.79.1563580494833;
+        Fri, 19 Jul 2019 16:54:54 -0700 (PDT)
 Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id v184sm31975215pfb.82.2019.07.19.16.54.48
+        by smtp.gmail.com with ESMTPSA id v184sm31975215pfb.82.2019.07.19.16.54.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 16:54:48 -0700 (PDT)
+        Fri, 19 Jul 2019 16:54:53 -0700 (PDT)
 From:   Olof Johansson <olof@lixom.net>
 To:     torvalds@linux-foundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         soc@kernel.org, arm@kernel.org, Olof Johansson <olof@lixom.net>
-Subject: [GIT PULL 2/4] ARM: SoC-related driver updates
-Date:   Fri, 19 Jul 2019 16:54:32 -0700
-Message-Id: <20190719235434.13214-3-olof@lixom.net>
+Subject: [GIT PULL 4/4] ARM: SoC defconfig updates
+Date:   Fri, 19 Jul 2019 16:54:34 -0700
+Message-Id: <20190719235434.13214-5-olof@lixom.net>
 X-Mailer: git-send-email 2.22.GIT
 In-Reply-To: <20190719235434.13214-1-olof@lixom.net>
 References: <20190719235434.13214-1-olof@lixom.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various driver updates for platforms and a couple of the small driver
-subsystems we merge through our tree:
+We keep this in a separate branch to avoid cross-branch conflicts, but
+most of the material here is fairly boring -- some new drivers turned on
+for hardware since they were merged, and some refreshed files due to
+time having moved a lot of entries around.
 
-- A driver for SCU (system control) on NXP i.MX8QXP
-- Qualcomm Always-on Subsystem messaging driver (AOSS QMP)
-- Qualcomm PM support for MSM8998
-- Support for a newer version of DRAM PHY driver for Broadcom (DPFE)
-- Reset controller support for Bitmain BM1880
-- TI SCI (System Control Interface) support for CPU control on AM654
-processors
-- More TI sysc refactoring and rework
+Merge conflicts:
+
+arch/arm/configs/exynos_defconfig: Add/remove conflict w/ Russell's tree
+	Remove CONFIG_ARCH_EXYNOS3=y
+	Keep CONFIG_CPU_ICACHE_MISMATCH_WORKAROUND=y
 
 ----------------------------------------------------------------
 
-The following changes since commit ae8f8e20bb698788a3a124b4916f3f3f9a4f216c:
+The following changes since commit 77e071a5638b7d1a6a63fde99f1d23608539ce49:
 
-  Merge tag 'armsoc-soc' into HEAD
+  Merge tag 'armsoc-dt' into HEAD
 
 are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-drivers
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-defconfig
 
-for you to fetch changes up to 8c0993621c3e5fa52e5425ef2a0f67a0cde07092:
+for you to fetch changes up to a151f27537250cf869c8d1c2549ccbb77dcbec2f:
 
-  Merge tag 'reset-for-v5.3' of git://git.pengutronix.de/git/pza/linux into arm/drivers
+  Merge tag 'samsung-defconfig-5.3' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into arm/defconfig
 
 ----------------------------------------------------------------
 
-Amit Kucheria (1):
-      MAINTAINERS: fix typo in file name
+Abel Vesa (1):
+      arm64: defconfig: Enable RTC_DRV_SNVS
 
-Andrew F. Davis (1):
-      firmware: ti_sci: Always request response from firmware
+Adam Ford (1):
+      ARM: imx_v6_v7_defconfig: Add GPIO_PCF857X
+
+Amelie Delaunay (1):
+      ARM: multi_v7_defconfig: enable STMFX pinctrl support
 
 Anson Huang (6):
-      soc: imx: Add SCU SoC info driver support
-      soc: imx: soc-imx8: Avoid unnecessary of_node_put() in error handling
-      soc: imx: soc-imx8: Correct return value of error handle
-      soc: imx8: Fix potential kernel dump in error path
-      soc: imx8: Use existing of_root directly
-      soc: imx: Add i.MX8MN SoC driver support
+      arm64: defconfig: add support for i.MX system controller watchdog
+      ARM: imx_v6_v7_defconfig: Enable CONFIG_THERMAL_STATISTICS
+      ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+      arm64: defconfig: Enable CONFIG_QORIQ_THERMAL
+      arm64: defconfig: Add i.MX SCU SoC info driver
+      arm64: defconfig: Enable CONFIG_KEYBOARD_SNVS_PWRKEY as module
 
-Arnd Bergmann (1):
-      soc: rockchip: work around clang warning
+Biju Das (2):
+      ARM: shmobile: Remove GENERIC_PHY from shmobile_defconfig
+      arm64: defconfig: enable TYPEC_HD3SS3220 config option
 
-Bitan Biswas (1):
-      firmware: tegra: Early resume BPMP
+Brian Masney (2):
+      ARM: qcom_defconfig: add display-related options
+      ARM: qcom_defconfig: add support for USB networking
 
-Bjorn Andersson (6):
-      soc: qcom: rpmpd: Modify corner defining macros
-      dt-bindings: power: Add rpm power domain bindings for qcs404
-      soc: qcom: rpmpd: Add QCS404 power-domains
-      dt-bindings: soc: qcom: Add AOSS QMP binding
-      soc: qcom: Add AOSS QMP driver
-      soc: qcom: apr: Don't use reg for domain id
+Clément Péron (2):
+      arm64: defconfig: enable sunxi watchdog
+      arm64: defconfig: enable Allwinner DMA drivers
 
-Colin Ian King (1):
-      reset: remove redundant null check on pointer dev
+Fabio Estevam (3):
+      arm64: defconfig: Enable CONFIG_SPI_IMX
+      ARM: imx_v6_v7_defconfig: Enable the OV2680 camera driver
+      ARM: imx_v6_v7_defconfig: Select CONFIG_NVMEM_SNVS_LPGPR
 
-David Brown (1):
-      MAINTAINERS: Remove myself as qcom maintainer
+Fabrizio Castro (1):
+      arm64: defconfig: Enable TDA19988
 
-Fabio Estevam (1):
-      dt-bindings: reset: imx7: Fix the spelling of 'indices'
+Joel Stanley (3):
+      ARM: configs: aspeed: Add new drivers
+      ARM: configs: multi_v5: Add more ASPEED devices
+      ARM: configs: multi_v5: Remove duplicate ASPEED options
 
-Florian Fainelli (3):
-      bus: brcmstb_gisb: Remove print of base address
-      firmware: arm_scmi: fetch and store sensor scale
-      hwmon: scmi: Scale values to target desired HWMON units
+Krzysztof Kozlowski (7):
+      ARM: exynos_defconfig: Trim and reorganize with savedefconfig
+      ARM: defconfig: samsung: Cleanup with savedefconfig
+      ARM: config: Remove left-over BACKLIGHT_LCD_SUPPORT
+      arm64: configs: Remove useless UEVENT_HELPER_PATH
+      ARM: configs: Remove useless UEVENT_HELPER_PATH
+      ARM: multi_v7_defconfig: Enable Panfrost and Lima drivers
+      ARM: exynos_defconfig: Enable Panfrost and Lima drivers
 
-Ioana Ciornei (2):
-      Documentation: DT: Add entry for DPAA2 console
-      soc: fsl: add DPAA2 console support
+Leonard Crestez (6):
+      arm64: defconfig: Enable imx8mm clk/pinctrl
+      arm64: defconfig: Enable lpi2c for imx8qxp and sensors
+      arm64: defconfig: Enable ROHM_BD718XX PMIC for imx8mm-evk
+      arm64: defconfig: NVMEM_IMX_OCOTP=y for imx8m
+      arm64: defconfig: ARM_IMX_CPUFREQ_DT=m
+      ARM: imx_v6_v7_defconfig: Enable CONFIG_ARM_IMX_CPUFREQ_DT
 
-Jean-Philippe Brucker (1):
-      firmware/psci: psci_checker: Park kthreads before stopping them
+Marcin Juszkiewicz (3):
+      arm64 defconfig: enable MPT3 SAS and BNX2X drivers
+      arm64 defconfig: enable Mellanox cards
+      arm64 defconfig: enable LVM support
 
-Joel Stanley (1):
-      soc: aspeed: lpc-ctrl: Fix probe error handling
+Neil Armstrong (2):
+      arm64: defconfig: enable Lima driver
+      ARM: multi_v7_defconfig: enable Lima driver
 
-Krishna Yarlagadda (1):
-      soc/tegra: Select pinctrl for Tegra194
+Nicolin Chen (1):
+      arm64: defconfig: Add HWMON INA3221 support
 
-Laurentiu Tudor (2):
-      soc: fsl: qman: fixup liodns only on ppc targets
-      soc: fsl: qbman_portals: add APIs to retrieve the probing status
-
-Lee Jones (1):
-      soc: qcom: geni: Add support for ACPI
-
-Leonard Crestez (1):
-      soc: imx: Read imx8mm soc revision from anatop
-
-Manivannan Sadhasivam (2):
-      dt-bindings: reset: Add devicetree binding for BM1880 reset controller
-      reset: Add reset controller support for BM1880 SoC
-
-Markus Mayer (9):
-      memory: brcmstb: dpfe: use msleep() over udelay()
-      memory: brcmstb: dpfe: optimize generic_show()
-      memory: brcmstb: dpfe: use byte 3 of registers MR4-MR8
-      memory: brcmstb: dpfe: remove unused code and fix formatting
-      memory: brcmstb: dpfe: report firmware loading error
-      memory: brcmstb: dpfe: wait for DCPU to be ready
-      memory: brcmstb: dpfe: prepare support for multiple API versions
-      memory: brcmstb: dpfe: prepare for API-dependent sysfs attributes
-      memory: brcmstb: dpfe: introduce DPFE API v3
-
-Martin Blumenstingl (2):
-      dt-bindings: soc: amlogic: canvas: document support for Meson8/8b/8m2
-      soc: amlogic: canvas: add support for Meson8, Meson8b and Meson8m2
-
-Masahiro Yamada (2):
-      memory: move jedec_ddr_data.c from lib/ to drivers/memory/
-      memory: move jedec_ddr.h from include/memory to drivers/memory/
-
-Nathan Huckleberry (1):
-      memory: tegra: Fix -Wunused-const-variable
-
-Nishad Kamdar (1):
-      firmware: ti_sci: Use the correct style for SPDX License Identifier
-
-Olof Johansson (15):
-      Merge tag 'soc-fsl-next-v5.3' of git://git.kernel.org/.../leo/linux into arm/drivers
-      Merge tag 'tee-maint-for-5.3' of https://git.linaro.org/people/jens.wiklander/linux-tee into arm/drivers
-      Merge tag 'arm-soc/for-5.3/drivers' of https://github.com/Broadcom/stblinux into arm/drivers
-      Merge tag 'omap-for-v5.3/ti-sysc-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/drivers
-      Merge tag 'scmi-updates-5.3' of git://git.kernel.org/.../sudeep.holla/linux into arm/drivers
-      Merge tag 'drivers_soc_for_5.3' of git://git.kernel.org/.../ssantosh/linux-keystone into arm/drivers
-      Merge tag 'qcom-drivers-for-5.3' of git://git.kernel.org/.../qcom/linux into arm/drivers
-      Merge tag 'amlogic-drivers' of https://git.kernel.org/.../khilman/linux-amlogic into arm/drivers
-      Merge tag 'tegra-for-5.3-firmware' of git://git.kernel.org/.../tegra/linux into arm/drivers
-      Merge tag 'tegra-for-5.3-memory' of git://git.kernel.org/.../tegra/linux into arm/drivers
-      Merge tag 'tegra-for-5.3-soc' of git://git.kernel.org/.../tegra/linux into arm/drivers
-      Merge tag 'aspeed-5.3-soc' of git://git.kernel.org/.../joel/aspeed into arm/drivers
-      Merge tag 'imx-drivers-5.3' of git://git.kernel.org/.../shawnguo/linux into arm/drivers
-      Merge tag 'reset-fixes-for-v5.2' of git://git.pengutronix.de/git/pza/linux into arm/drivers
-      Merge tag 'reset-for-v5.3' of git://git.pengutronix.de/git/pza/linux into arm/drivers
+Olof Johansson (8):
+      Merge tag 'qcom-defconfig-for-5.3' of git://git.kernel.org/.../qcom/linux into arm/defconfig
+      Merge tag 'renesas-arm-defconfig-for-v5.3' of https://git.kernel.org/.../horms/renesas into arm/defconfig
+      Merge tag 'renesas-arm64-defconfig-for-v5.3' of https://git.kernel.org/.../horms/renesas into arm/defconfig
+      Merge tag 'tegra-for-5.3-arm64-defconfig' of git://git.kernel.org/.../tegra/linux into arm/defconfig
+      Merge tag 'aspeed-5.3-defconfig' of git://git.kernel.org/.../joel/aspeed into arm/defconfig
+      Merge tag 'sunxi-config64-for-5.3-201906210813' of https://git.kernel.org/.../sunxi/linux into arm/defconfig
+      Merge tag 'imx-defconfig-5.3' of git://git.kernel.org/.../shawnguo/linux into arm/defconfig
+      Merge tag 'samsung-defconfig-5.3' of https://git.kernel.org/.../krzk/linux into arm/defconfig
 
 Peng Fan (1):
-      firmware: arm_scmi: update rate_discrete in clock_describe_rates_get
+      defconfig: arm64: enable i.MX8 SCU octop driver
 
-Peter Ujfalusi (2):
-      firmware: ti_sci: Add resource management APIs for ringacc, psi-l and udma
-      firmware: ti_sci: Parse all resource ranges even if some is not available
+Tomeu Vizoso (2):
+      ARM: multi_v7_defconfig: add Panfrost driver
+      arm64: defconfig: add Panfrost driver
 
-Randy Dunlap (1):
-      soc: qcom: fix QCOM_AOSS_QMP dependency and build errors
+Uwe Kleine-König (1):
+      ARM: imx_v6_v7_defconfig: Enable SIOX bus
 
-Roy Pledge (2):
-      bus: mc-bus: Add support for mapping shareable portals
-      soc: fsl: dpio: Add support for memory backed QBMan portals
+Vidya Sagar (1):
+      arm64: defconfig: Add Tegra194 PCIe driver
 
-Sibi Sankar (4):
-      soc: qcom: rpmpd: fixup rpmpd set performance state
-      soc: qcom: rpmpd: Add support to set rpmpd state to max
-      dt-bindings: power: Add rpm power domain bindings for msm8998
-      soc: qcom: rpmpd: Add MSM8998 power-domains
-
-Srinivas Kandagatla (1):
-      qcom: apr: Make apr callbacks in non-atomic context
-
-Sudeep Holla (1):
-      firmware: arm_scmi: fix bitfield definitions for SENSOR_DESC attributes
-
-Suman Anna (1):
-      firmware: ti_sci: Add support for processor control
-
-Sumit Garg (1):
-      MAINTAINERS: Add mailing list for the TEE subsystem
-
-Thierry Reding (4):
-      soc/tegra: pmc: Fail to allocate more than one wake IRQ
-      soc/tegra: pmc: Avoid crash for non-wake IRQs
-      soc/tegra: pmc: Add comments clarifying wake events
-      soc/tegra: fuse: Do not log error message on deferred probe
-
-Tony Lindgren (12):
-      bus: ti-sysc: Add support for missing clockdomain handling
-      bus: ti-sysc: Support 16-bit writes too
-      bus: ti-sysc: Make OCP reset work for sysstatus and sysconfig reset bits
-      bus: ti-sysc: Allow QUIRK_LEGACY_IDLE even if legacy_mode is not set
-      bus: ti-sysc: Enable interconnect target module autoidle bit on enable
-      bus: ti-sysc: Handle clockactivity for enable and disable
-      bus: ti-sysc: Handle swsup idle mode quirks
-      bus: ti-sysc: Set ENAWAKEUP if available
-      bus: ti-sysc: Add support for disabling module without legacy mode
-      bus: ti-sysc: Do rstctrl reset handling in two phases
-      bus: ti-sysc: Detect uarts also on omap34xx
-      bus: ti-sysc: Add support for module specific reset quirks
-
-Vabhav Sharma (1):
-      soc: fsl: guts: Add definition for LX2160A
-
-Vijay Khemka (1):
-      soc: aspeed: lpc-ctrl: make parameter optional
-
-Vinod Koul (1):
-      MAINTAINER: Fix Qualcomm ETHQOS ethernet DT file
-
-Volodymyr Babchuk (1):
-      dt-bindings: arm: fix the document ID for SCMI protocol documentation
-
-Youri Querry (1):
-      soc: fsl: dpio: Increase timeout for QBMan Management Commands
-
-YueHaibing (1):
-      firmware: ti_sci: Fix gcc unused-but-set-variable warning
+Yangtao Li (1):
+      arm64: defconfig: add allwinner sid support
 
 
- .../devicetree/bindings/arm/arm,scmi.txt        |    2 +-
- .../bindings/misc/fsl,dpaa2-console.txt         |   11 +
- .../devicetree/bindings/power/qcom,rpmpd.txt    |    2 +
- .../bindings/reset/bitmain,bm1880-reset.txt     |   18 +
- .../devicetree/bindings/reset/fsl,imx7-src.txt  |    2 +-
- .../bindings/soc/amlogic/amlogic,canvas.txt     |   10 +-
- .../bindings/soc/qcom/qcom,aoss-qmp.txt         |   81 ++
- .../devicetree/bindings/soc/qcom/qcom,apr.txt   |    6 +-
- MAINTAINERS                                     |    9 +-
- arch/arm/mach-omap2/omap_hwmod.c                |   39 +-
- arch/arm/mach-omap2/pdata-quirks.c              |   60 +
- drivers/bus/brcmstb_gisb.c                      |    4 +-
- drivers/bus/fsl-mc/dprc.c                       |   30 +-
- drivers/bus/fsl-mc/fsl-mc-bus.c                 |   15 +-
- drivers/bus/fsl-mc/fsl-mc-private.h             |   17 +-
- drivers/bus/ti-sysc.c                           |  454 +++++--
- drivers/firmware/arm_scmi/clock.c               |    2 +
- drivers/firmware/arm_scmi/sensors.c             |   10 +-
- drivers/firmware/psci/psci_checker.c            |   10 +-
- drivers/firmware/tegra/bpmp.c                   |    4 +-
- drivers/firmware/ti_sci.c                       | 1143 +++++++++++++++---
- drivers/firmware/ti_sci.h                       |  810 +++++++++++++
- drivers/hwmon/scmi-hwmon.c                      |   48 +
- drivers/memory/Kconfig                          |    8 +
- drivers/memory/Makefile                         |    1 +
- drivers/memory/brcmstb_dpfe.c                   |  317 +++--
- drivers/memory/emif.c                           |    3 +-
- {include => drivers}/memory/jedec_ddr.h         |    6 +-
- {lib => drivers/memory}/jedec_ddr_data.c        |    5 +-
- drivers/memory/of_memory.c                      |    3 +-
- drivers/memory/tegra/tegra124.c                 |   44 +-
- drivers/reset/Kconfig                           |    3 +-
- drivers/reset/core.c                            |    3 -
- drivers/reset/reset-simple.c                    |    2 +
- drivers/soc/amlogic/meson-canvas.c              |   14 +-
- drivers/soc/aspeed/aspeed-lpc-ctrl.c            |   61 +-
- drivers/soc/fsl/Kconfig                         |   10 +
- drivers/soc/fsl/Makefile                        |    1 +
- drivers/soc/fsl/dpaa2-console.c                 |  329 +++++
- drivers/soc/fsl/dpio/dpio-driver.c              |   23 +-
- drivers/soc/fsl/dpio/qbman-portal.c             |  148 ++-
- drivers/soc/fsl/dpio/qbman-portal.h             |    9 +-
- drivers/soc/fsl/guts.c                          |    6 +
- drivers/soc/fsl/qbman/bman_portal.c             |   20 +-
- drivers/soc/fsl/qbman/qman_ccsr.c               |    2 +-
- drivers/soc/fsl/qbman/qman_portal.c             |   21 +-
- drivers/soc/fsl/qbman/qman_priv.h               |    9 +-
- drivers/soc/imx/Kconfig                         |    9 +
- drivers/soc/imx/Makefile                        |    1 +
- drivers/soc/imx/soc-imx-scu.c                   |  144 +++
- drivers/soc/imx/soc-imx8.c                      |   63 +-
- drivers/soc/qcom/Kconfig                        |   12 +
- drivers/soc/qcom/Makefile                       |    1 +
- drivers/soc/qcom/apr.c                          |   76 +-
- drivers/soc/qcom/qcom_aoss.c                    |  480 ++++++++
- drivers/soc/qcom/rpmpd.c                        |  134 +-
- drivers/soc/rockchip/pm_domains.c               |  230 ++--
- drivers/soc/tegra/Kconfig                       |    1 +
- drivers/soc/tegra/fuse/fuse-tegra.c             |    6 +-
- drivers/soc/tegra/pmc.c                         |   18 +
- include/dt-bindings/power/qcom-aoss-qmp.h       |   14 +
- include/dt-bindings/power/qcom-rpmpd.h          |   34 +
- .../dt-bindings/reset/bitmain,bm1880-reset.h    |   51 +
- include/linux/platform_data/ti-sysc.h           |   12 +
- include/linux/scmi_protocol.h                   |    1 +
- include/linux/soc/ti/ti_sci_protocol.h          |  246 ++++
- include/soc/fsl/bman.h                          |    8 +
- include/soc/fsl/qman.h                          |    9 +
- lib/Kconfig                                     |    8 -
- lib/Makefile                                    |    2 -
- 70 files changed, 4760 insertions(+), 635 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt
- create mode 100644 Documentation/devicetree/bindings/reset/bitmain,bm1880-reset.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
- rename {include => drivers}/memory/jedec_ddr.h (97%)
- rename {lib => drivers/memory}/jedec_ddr_data.c (98%)
- create mode 100644 drivers/soc/fsl/dpaa2-console.c
- create mode 100644 drivers/soc/imx/soc-imx-scu.c
- create mode 100644 drivers/soc/qcom/qcom_aoss.c
- create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
- create mode 100644 include/dt-bindings/reset/bitmain,bm1880-reset.h
+ arch/arm/configs/acs5k_defconfig          |  1 -
+ arch/arm/configs/acs5k_tiny_defconfig     |  1 -
+ arch/arm/configs/am200epdkit_defconfig    |  1 -
+ arch/arm/configs/aspeed_g4_defconfig      | 11 +++--
+ arch/arm/configs/aspeed_g5_defconfig      | 15 ++++--
+ arch/arm/configs/at91_dt_defconfig        |  1 -
+ arch/arm/configs/axm55xx_defconfig        |  1 -
+ arch/arm/configs/cm_x2xx_defconfig        |  2 -
+ arch/arm/configs/cm_x300_defconfig        |  2 -
+ arch/arm/configs/cns3420vb_defconfig      |  1 -
+ arch/arm/configs/colibri_pxa270_defconfig |  2 -
+ arch/arm/configs/colibri_pxa300_defconfig |  2 -
+ arch/arm/configs/collie_defconfig         |  1 -
+ arch/arm/configs/corgi_defconfig          |  2 -
+ arch/arm/configs/dove_defconfig           |  1 -
+ arch/arm/configs/em_x270_defconfig        |  2 -
+ arch/arm/configs/ep93xx_defconfig         |  1 -
+ arch/arm/configs/eseries_pxa_defconfig    |  2 -
+ arch/arm/configs/exynos_defconfig         | 66 +++++++++++---------------
+ arch/arm/configs/ezx_defconfig            |  2 -
+ arch/arm/configs/gemini_defconfig         |  1 -
+ arch/arm/configs/h3600_defconfig          |  1 -
+ arch/arm/configs/h5000_defconfig          |  1 -
+ arch/arm/configs/imote2_defconfig         |  2 -
+ arch/arm/configs/imx_v4_v5_defconfig      |  1 -
+ arch/arm/configs/imx_v6_v7_defconfig      |  9 ++++
+ arch/arm/configs/integrator_defconfig     |  1 -
+ arch/arm/configs/iop13xx_defconfig        |  1 -
+ arch/arm/configs/iop32x_defconfig         |  1 -
+ arch/arm/configs/iop33x_defconfig         |  1 -
+ arch/arm/configs/ixp4xx_defconfig         |  1 -
+ arch/arm/configs/jornada720_defconfig     |  2 -
+ arch/arm/configs/keystone_defconfig       |  1 -
+ arch/arm/configs/ks8695_defconfig         |  1 -
+ arch/arm/configs/lpc18xx_defconfig        |  1 -
+ arch/arm/configs/lpc32xx_defconfig        |  2 -
+ arch/arm/configs/magician_defconfig       |  2 -
+ arch/arm/configs/mini2440_defconfig       | 45 +++++++-----------
+ arch/arm/configs/mmp2_defconfig           |  1 -
+ arch/arm/configs/moxart_defconfig         |  1 -
+ arch/arm/configs/multi_v5_defconfig       | 11 +++--
+ arch/arm/configs/multi_v7_defconfig       |  4 +-
+ arch/arm/configs/mv78xx0_defconfig        |  1 -
+ arch/arm/configs/mvebu_v5_defconfig       |  1 -
+ arch/arm/configs/mvebu_v7_defconfig       |  1 -
+ arch/arm/configs/mxs_defconfig            |  1 -
+ arch/arm/configs/nhk8815_defconfig        |  2 -
+ arch/arm/configs/nuc910_defconfig         |  1 -
+ arch/arm/configs/nuc950_defconfig         |  1 -
+ arch/arm/configs/nuc960_defconfig         |  1 -
+ arch/arm/configs/omap1_defconfig          |  2 -
+ arch/arm/configs/orion5x_defconfig        |  1 -
+ arch/arm/configs/palmz72_defconfig        |  2 -
+ arch/arm/configs/pcm027_defconfig         |  1 -
+ arch/arm/configs/prima2_defconfig         |  1 -
+ arch/arm/configs/pxa168_defconfig         |  1 -
+ arch/arm/configs/pxa3xx_defconfig         |  2 -
+ arch/arm/configs/pxa910_defconfig         |  1 -
+ arch/arm/configs/pxa_defconfig            |  2 -
+ arch/arm/configs/qcom_defconfig           |  7 ++-
+ arch/arm/configs/realview_defconfig       |  2 -
+ arch/arm/configs/s3c2410_defconfig        | 25 ++++------
+ arch/arm/configs/s3c6400_defconfig        | 13 ++---
+ arch/arm/configs/s5pv210_defconfig        |  1 -
+ arch/arm/configs/sama5_defconfig          |  2 -
+ arch/arm/configs/shmobile_defconfig       |  1 -
+ arch/arm/configs/socfpga_defconfig        |  1 -
+ arch/arm/configs/spear13xx_defconfig      |  1 -
+ arch/arm/configs/spear3xx_defconfig       |  2 -
+ arch/arm/configs/spear6xx_defconfig       |  1 -
+ arch/arm/configs/spitz_defconfig          |  2 -
+ arch/arm/configs/tango4_defconfig         |  1 -
+ arch/arm/configs/tct_hammer_defconfig     |  1 -
+ arch/arm/configs/trizeps4_defconfig       |  1 -
+ arch/arm/configs/u300_defconfig           |  2 -
+ arch/arm/configs/u8500_defconfig          |  1 -
+ arch/arm/configs/versatile_defconfig      |  1 -
+ arch/arm/configs/vexpress_defconfig       |  2 -
+ arch/arm/configs/viper_defconfig          |  2 -
+ arch/arm/configs/xcep_defconfig           |  1 -
+ arch/arm/configs/zeus_defconfig           |  2 -
+ arch/arm/configs/zx_defconfig             |  1 -
+ arch/arm64/configs/defconfig              | 44 ++++++++++++++++-
+ 83 files changed, 149 insertions(+), 198 deletions(-)
