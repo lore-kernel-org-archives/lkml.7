@@ -2,82 +2,100 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865E4C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3ACC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF2620873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563546550;
-	bh=Gqo7iyFdcgpyUJW4CelZOxi59jie+bJEzYoKT+/A010=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rliS/8emWd4gOM1AxEyDeGr39qNotglMFWOBeklwwij3flmNlP6EJFHMe8ZxmKzpZ
-	 u7cIWiOYWZGrP/B9ythE0aGOjCPmcBbUlxd2OfPYL0jmnw6TiyYE5s4YZGNMN2kSc7
-	 egq0XTP20CnrpoZRAvWgmKKRxy+6Jp6eKUkqMSz0=
+	by mail.kernel.org (Postfix) with ESMTP id 158A820873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbfGSO3J (ORCPT
+        id S1729659AbfGSObb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 10:29:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40510 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729465AbfGSO3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:29:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE41BB061;
-        Fri, 19 Jul 2019 14:29:07 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 16:29:06 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH v2 2/2] mm, slab: Show last shrink time in us when
- slab/shrink is read
-Message-ID: <20190719142906.GU30461@dhcp22.suse.cz>
-References: <20190717202413.13237-1-longman@redhat.com>
- <20190717202413.13237-3-longman@redhat.com>
- <20190719061410.GJ30461@dhcp22.suse.cz>
- <a0ea7cd2-d66c-f251-d14f-979e0913c7ef@redhat.com>
+        Fri, 19 Jul 2019 10:31:31 -0400
+Received: from smtprelay0249.hostedemail.com ([216.40.44.249]:59367 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727717AbfGSObb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 10:31:31 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id 2C55A18021C81
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 14:31:30 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 54241100E86C1;
+        Fri, 19 Jul 2019 14:31:29 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: goose72_6425d86262656
+X-Filterd-Recvd-Size: 2697
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 19 Jul 2019 14:31:28 +0000 (UTC)
+Message-ID: <dc45dc9c8af1f1a2073de5c49283ba3cf3a0a2f0.camel@perches.com>
+Subject: Re: get_maintainers.pl subsystem output
+From:   Joe Perches <joe@perches.com>
+To:     "Duda, Sebastian" <sebastian.duda@fau.de>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        ralf.ramsauer@oth-regensburg.de, wolfgang.mauerer@oth-regensburg.de
+Date:   Fri, 19 Jul 2019 07:31:16 -0700
+In-Reply-To: <6fa4aa44f343616459b17054197d0a22@fau.de>
+References: <2c912379f96f502080bfcc79884cdc35@fau.de>
+         <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
+         <6fa4aa44f343616459b17054197d0a22@fau.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a0ea7cd2-d66c-f251-d14f-979e0913c7ef@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 19-07-19 10:07:20, Waiman Long wrote:
-> On 7/19/19 2:14 AM, Michal Hocko wrote:
-> > On Wed 17-07-19 16:24:13, Waiman Long wrote:
-> >> The show method of /sys/kernel/slab/<slab>/shrink sysfs file currently
-> >> returns nothing. This is now modified to show the time of the last
-> >> cache shrink operation in us.
-> > Isn't this something that tracing can be used for without any kernel
-> > modifications?
+On Fri, 2019-07-19 at 09:54 +0000, Duda, Sebastian wrote:
+> On 2019-07-19 08:50, Joe Perches wrote:
+
+> > > My Questions are:
+> > > 1. How can I make get_maintainer's output to be more table-like?
+> > 
+> > I suggest adding --nogit --nogit-fallback --roles --norolestats
 > 
-> That is true, but it will be a bit more cumbersome to get the data.
+> Unfortunately, this doesn't change the output:
+>      $ scripts/get_maintainer.pl --subsystem --status --separator , 
+> drivers/media/i2c/adv748x/
+>      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
+> (maintainer:MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
+> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>      Maintained,Buried alive in reporters
+>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB),THE REST
 
-I have no say for this code but if there is a way to capture timing data
-I prefer to rely on the tracing infrastructure. If the current tooling
-makes it cumbersome to get then this is a good reason to ask for a less
-cumbersome way. On the other hand, if you somehow hardwire it to a user
-visible interface then you just establish ABI which might stand in way
-for potential/future development.
+It does change the output for files that do not
+have a specific maintainer.
 
-So take it as my 2c
--- 
-Michal Hocko
-SUSE Labs
+> > > 2. How can I make get_maintainer.pl to separate each file's output?
+> > 
+> > Run the script with multiple invocations. once for each file
+> > modified by the patch.
+> 
+> This is the way I'm doing it right now but this is very slow. I thought 
+> calling the script only once for many files could speed up the analysis.
+
+get_maintainer is effectively single threaded.
+
+Averaging 10 runs:
+
+A single file run time is ~0.135 seconds on my system.
+An invocation with two files on the command line has
+a run time of ~0.195 seconds.
+
+Using something like gnu parallel would allow multiple
+instances to run simulateously and would significantly
+reduce overall wall-clock runtime on most systems.
+
+https://www.gnu.org/software/parallel/
+
+
