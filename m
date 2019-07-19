@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD80C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0187C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6698C2189D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C18C2189E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509524;
-	bh=vL3AmHwHotQnShlqS79F0dQKm8AQqsbtutrbeGWT9OU=;
+	s=default; t=1563509529;
+	bh=zhlLWZ2Hxk6oSiOgWU6RwBxBIm9D6CH3aKTWrl5nj0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e04+5nFJU0gwNm4SNoemRCj+9gIr2SI0O0ngsAAzVCbDCI756YbDBi2NLNRChCA2I
-	 9tg0g9A0dAr9qPkWgVQv6/vMb0HzohqQOzywY//EXRBxan82Em92h6kJvRaSApbFaU
-	 wpj050PCjnmA1Mc6gVqACNjF7WPz1dQ7JBnBrsUk=
+	b=zuiPjza0yfyILh+VsVN/+0Jgi7amAaIww8cBD8wbGueUVJMYd07Cu1CNviWhsjkE8
+	 SD+tvzkM3MV26++5ax4zSSC7Va16Mhs1mdjB24QxA0jomMkoRZnXKa0Ul5R1fpeQd7
+	 SEU+rTJPP8dsDRFuRgwr0kJyYMnB0VoC2bLeppzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388640AbfGSEMD (ORCPT
+        id S2388693AbfGSEMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47150 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388618AbfGSEMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:00 -0400
+        id S2388647AbfGSEME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC31C21872;
-        Fri, 19 Jul 2019 04:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E89218B6;
+        Fri, 19 Jul 2019 04:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509519;
-        bh=vL3AmHwHotQnShlqS79F0dQKm8AQqsbtutrbeGWT9OU=;
+        s=default; t=1563509523;
+        bh=zhlLWZ2Hxk6oSiOgWU6RwBxBIm9D6CH3aKTWrl5nj0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBF6t+pckzIAvHHnLkw8j31Ohsglur8jztGNiAO+6/gLDQSBZGOgcoFWS0Tq+JNUc
-         X9/hYZ7aah6C9dyeHGAMrk0G6EDkBhegt2qI09Ds5dxb/tGyQuHSz5LcMyOPTM/OKu
-         Ffb9/XXcTJhm9YrXlkUraQLwbS7ixvVUVP4NBPZk=
+        b=xvSicy+tOk6USViDyGn8EPDo0nZUiGILbV9f+Q/SLIYgvwNkw6SZWHDpkDaQRNX1z
+         mr9Yr0k9quqnrqdbPuRB76MvFwzRH7qdFPWTRRGxxbTV2HL9hrvB+iGtO8KwiX0uc9
+         AqDBdGYaaRyqwfrULF7Qo0pyzpiWDmyGaV3HjlJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Denis Ciocca <denis.ciocca@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 27/60] iio: st_accel: fix iio_triggered_buffer_{pre,post}enable positions
-Date:   Fri, 19 Jul 2019 00:10:36 -0400
-Message-Id: <20190719041109.18262-27-sashal@kernel.org>
+Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 29/60] PCI: xilinx-nwl: Fix Multi MSI data programming
+Date:   Fri, 19 Jul 2019 00:10:38 -0400
+Message-Id: <20190719041109.18262-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -60,81 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 
-[ Upstream commit 05b8bcc96278c9ef927a6f25a98e233e55de42e1 ]
+[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+According to the PCI Local Bus specification Revision 3.0,
+section 6.8.1.3 (Message Control for MSI), endpoints that
+are Multiple Message Capable as defined by bits [3:1] in
+the Message Control for MSI can request a number of vectors
+that is power of two aligned.
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+As specified in section 6.8.1.6 "Message data for MSI", the Multiple
+Message Enable field (bits [6:4] of the Message Control register)
+defines the number of low order message data bits the function is
+permitted to modify to generate its system software allocated
+vectors.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Acked-by: Denis Ciocca <denis.ciocca@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The MSI controller in the Xilinx NWL PCIe controller supports a number
+of MSI vectors specified through a bitmap and the hwirq number for an
+MSI, that is the value written in the MSI data TLP is determined by
+the bitmap allocation.
+
+For instance, in a situation where two endpoints sitting on
+the PCI bus request the following MSI configuration, with
+the current PCI Xilinx bitmap allocation code (that does not
+align MSI vector allocation on a power of two boundary):
+
+Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
+Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
+
+The bitmap value(s) corresponds to the hwirq number that is programmed
+into the Message Data for MSI field in the endpoint MSI capability
+and is detected by the root complex to fire the corresponding
+MSI irqs. The value written in Message Data for MSI field corresponds
+to the first bit allocated in the bitmap for Multi MSI vectors.
+
+The current Xilinx NWL MSI allocation code allows a bitmap allocation
+that is not a power of two boundaries, so endpoint #2, is allowed to
+toggle Message Data bit[0] to differentiate between its two vectors
+(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
+vectors allocated to endpoint #2).
+
+This clearly aliases with the Endpoint #1 vector allocation, resulting
+in a broken Multi MSI implementation.
+
+Update the code to allocate MSI bitmap ranges with a power of two
+alignment, fixing the bug.
+
+Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
+Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/st_accel_buffer.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/pci/host/pcie-xilinx-nwl.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/accel/st_accel_buffer.c b/drivers/iio/accel/st_accel_buffer.c
-index 7fddc137e91e..802ab7d2d93f 100644
---- a/drivers/iio/accel/st_accel_buffer.c
-+++ b/drivers/iio/accel/st_accel_buffer.c
-@@ -46,17 +46,19 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
- 		goto allocate_memory_error;
+diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
+index dd527ea558d7..981a5195686f 100644
+--- a/drivers/pci/host/pcie-xilinx-nwl.c
++++ b/drivers/pci/host/pcie-xilinx-nwl.c
+@@ -485,15 +485,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	int i;
+ 
+ 	mutex_lock(&msi->lock);
+-	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+-					 nr_irqs, 0);
+-	if (bit >= INT_PCI_MSI_NR) {
++	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
++				      get_count_order(nr_irqs));
++	if (bit < 0) {
+ 		mutex_unlock(&msi->lock);
+ 		return -ENOSPC;
  	}
  
--	err = st_sensors_set_axis_enable(indio_dev,
--					(u8)indio_dev->active_scan_mask[0]);
-+	err = iio_triggered_buffer_postenable(indio_dev);
- 	if (err < 0)
- 		goto st_accel_buffer_postenable_error;
- 
--	err = iio_triggered_buffer_postenable(indio_dev);
-+	err = st_sensors_set_axis_enable(indio_dev,
-+					(u8)indio_dev->active_scan_mask[0]);
- 	if (err < 0)
--		goto st_accel_buffer_postenable_error;
-+		goto st_sensors_set_axis_enable_error;
- 
- 	return err;
- 
-+st_sensors_set_axis_enable_error:
-+	iio_triggered_buffer_predisable(indio_dev);
- st_accel_buffer_postenable_error:
- 	kfree(adata->buffer_data);
- allocate_memory_error:
-@@ -65,20 +67,22 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
- 
- static int st_accel_buffer_predisable(struct iio_dev *indio_dev)
- {
--	int err;
-+	int err, err2;
- 	struct st_sensor_data *adata = iio_priv(indio_dev);
- 
--	err = iio_triggered_buffer_predisable(indio_dev);
--	if (err < 0)
--		goto st_accel_buffer_predisable_error;
+-	bitmap_set(msi->bitmap, bit, nr_irqs);
 -
- 	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
- 	if (err < 0)
- 		goto st_accel_buffer_predisable_error;
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+ 				domain->host_data, handle_simple_irq,
+@@ -511,7 +509,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct nwl_msi *msi = &pcie->msi;
  
- 	err = st_sensors_set_enable(indio_dev, false);
-+	if (err < 0)
-+		goto st_accel_buffer_predisable_error;
- 
- st_accel_buffer_predisable_error:
-+	err2 = iio_triggered_buffer_predisable(indio_dev);
-+	if (!err)
-+		err = err2;
-+
- 	kfree(adata->buffer_data);
- 	return err;
+ 	mutex_lock(&msi->lock);
+-	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
++	bitmap_release_region(msi->bitmap, data->hwirq,
++			      get_count_order(nr_irqs));
+ 	mutex_unlock(&msi->lock);
  }
+ 
 -- 
 2.20.1
 
