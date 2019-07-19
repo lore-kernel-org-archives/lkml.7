@@ -2,54 +2,55 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92164C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A361C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADB32084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FBC2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509912;
-	bh=fP4IzCslR1zeypehGIfOoj8lpAnEwhSQPZTzaGeEYBg=;
+	s=default; t=1563509918;
+	bh=Hx0H2OSnx0z8kzUUOim/iVZX60jjNHrVvE2IRlb8yyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IE5xGl9Xlmkd9BOLTXjstYA9rODdSut+QaCr776Kh7/utTBJb9E/QUP5eZcO6d0dG
-	 V0hlzLaqr8zyP/9jydN8QmlN/ub+Qi4E/uJheUfsvOjO4Jo3VPDdc3FtEfWlu8Rh9V
-	 VdCprbpVlemy8Tz6Q0ujn2bDbAgibUOm+tUQfnPE=
+	b=Uo6f+29rPGCA7oVms54WX/Em/YENP7ov3h6aVlTMwd9y7/ulfi95F8qX4/o7j09ig
+	 LqokDLMYxmdqgi0Fs2ewz+WFHthThaIm/kyOwJXzYyCUkPH6P8WHvCaJjBJLq92QTr
+	 OnIx0Y2YOOZP4b7D9URXOUpFzVuCiRL9FWwrkQvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389708AbfGSESb (ORCPT
+        id S2389775AbfGSESh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49730 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389233AbfGSENk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:40 -0400
+        id S2389297AbfGSENg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015C421872;
-        Fri, 19 Jul 2019 04:13:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 056B4218D3;
+        Fri, 19 Jul 2019 04:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509619;
-        bh=fP4IzCslR1zeypehGIfOoj8lpAnEwhSQPZTzaGeEYBg=;
+        s=default; t=1563509616;
+        bh=Hx0H2OSnx0z8kzUUOim/iVZX60jjNHrVvE2IRlb8yyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uIxEjyJSvXxJKQckel5kzXvO7SspGAaTLisj9mL0lE/so676Zfy6pjjvgMZlQ7RMb
-         15lWwV/ggUVsq06w86b8tu8mABa9IpvjyXN6q2K6QjeWiFI+Rte8u2SKMGGK5Na03Q
-         ioNfTniVunm0YizmMx6oFLpe37p8IkdfDUsoYU6Y=
+        b=I3cYsi+CAbFF08RStpKKAarcnTcz1mB0MM/0/QB6n7SL1/ctSJWtEOHfN3FPBmLPV
+         k0CBhnQMYfC/KTG1+d5r6CpRpCvvGqKRxKsW5KRC9AEC3h/K6sVLagwNVv24vlqlGI
+         VlNzzPgk6CKgau1zIe9HYae5xA6IQVcfGjed1fJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 21/45] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
-Date:   Fri, 19 Jul 2019 00:12:40 -0400
-Message-Id: <20190719041304.18849-21-sashal@kernel.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 19/45] PCI: sysfs: Ignore lockdep for remove attribute
+Date:   Fri, 19 Jul 2019 00:12:38 -0400
+Message-Id: <20190719041304.18849-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -62,63 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
+[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
 
-In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
-drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
-a GCC only option so clang rightfully complains:
+With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
+below it causes a lockdep warning, e.g.,
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
+  ============================================
+  WARNING: possible recursive locking detected
+  ...
+  pci_bus 0000:01: busn_res: [bus 01] is released
 
-https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+The remove recursively removes the subtree below the bridge.  Each call
+uses a different lock so there's no deadlock, but the locks were all
+created with the same lockdep key so the lockdep checker can't tell them
+apart.
 
-However, by default, this is merely a warning so the build happily goes
-on with a slew of these warnings in the process.
+Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
+safe to ignore the lockdep check between different "remove" kernfs
+instances.
 
-Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
-support clang") worked around this behavior in cc-option by adding
--Werror so that unknown flags cause an error. However, this all happens
-silently and when an unknown flag is added to the build unconditionally
-like -Wno-psabi, cc-option will always fail because there is always an
-unknown flag in the list of flags. This manifested as link time failures
-in the arm64 libstub because -fno-stack-protector didn't get added to
-KBUILD_CFLAGS.
+There's discussion about a similar issue in USB at [1], which resulted in
+356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
+e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
+basically the same thing for USB "remove" and i2c "delete_device" files.
 
-To avoid these weird cryptic failures in the future, make clang behave
-like gcc and immediately error when it encounters an unknown flag by
-adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
-unconditionally for clang because it is supported by at least 3.0.0,
-according to godbolt [1] and 4.0.0, according to its documentation [2],
-which is far earlier than we typically support.
-
-[1]: https://godbolt.org/z/7F7rm3
-[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Link: https://github.com/ClangBuiltLinux/linux/issues/517
-Suggested-by: Peter Smith <peter.smith@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
+Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+[bhelgaas: trim commit log, details at above links]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/pci-sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index c80dad45334e..60b562dbd97f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -515,6 +515,7 @@ ifneq ($(GCC_TOOLCHAIN),)
- CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
- endif
- CLANG_FLAGS	+= -no-integrated-as
-+CLANG_FLAGS	+= -Werror=unknown-warning-option
- KBUILD_CFLAGS	+= $(CLANG_FLAGS)
- KBUILD_AFLAGS	+= $(CLANG_FLAGS)
- endif
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index e5d8e2e2bd30..717540161223 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -371,7 +371,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+ 	return count;
+ }
+-static struct device_attribute dev_remove_attr = __ATTR(remove,
++static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+ 							(S_IWUSR|S_IWGRP),
+ 							NULL, remove_store);
+ 
 -- 
 2.20.1
 
