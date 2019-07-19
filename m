@@ -2,158 +2,192 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97885C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049EAC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6241B20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="R4ZgaIJ6";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="d2d00bMt"
+	by mail.kernel.org (Postfix) with ESMTP id CE27620665
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfGSIoo (ORCPT
+        id S1726339AbfGSIrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:44:44 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:44354 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726222AbfGSIon (ORCPT
+        Fri, 19 Jul 2019 04:47:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725794AbfGSIrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:44:43 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3C02CC11FC;
-        Fri, 19 Jul 2019 08:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563525883; bh=6TzLPV223NdVLTWkhC5Hi9PC1wFR3WXo/ukXsr9sHfs=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=R4ZgaIJ6nVBF4miqdN8/L5Pb0O6bIo8d3fO+L0AWjdrzNrQgvVF4226I62+Dgma20
-         HPreLrz3mIQWqUDFgEbgae4+TrzmGUg/Vd2zTXUHQYt8VzGG9kB5cP3nJexWCVXVoo
-         unLw3IqRdN9HDamYmiL3CFjHa+Pkvu0o8yg/t6aQL5RQBn+p/s/+HBcr+khIQrFBgD
-         W40NrmUsvd0S/2MoglrVty4opaUob7U0+HkOrdJBDsMRn71MV18gJ6D8Id6JfymwFG
-         IH3g4s5oA0OZ28AqVvymSZaWVKXAxm9E60EnrUPD13TeuefK5+RaNOwFGxCxxssvHN
-         wiD/DOtrQMhPw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 8FBCEA0067;
-        Fri, 19 Jul 2019 08:44:41 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 19 Jul 2019 01:44:24 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 19 Jul 2019 01:44:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nj0vEupm19U1PRDeHBBR3x54rkF4+TZccN2BqMTuXJz1syR+cxfUdB22euVp0nhZNqsd5HpvVNlZKfr6lUfWKrQK0v4es+12+FdhN4I7sU/WoWFa/2dFm4RwbN54TRGVHk63nfIBz3Vxp6+kIrcRy/iAnljEQgLm3isgiu04y/35gLr0ypSN6QrfDLN5hOCjcJid6xZnedi4Yt/krRrUHnpJ/Yc+BFJDErw78yr27F1WF0QxQtVPoXfJzaCJrpyBV01Lp6l5QRgGseZe1GLxgdxwO1ImOhlERzkC7FFvcKtHGN6PTZfgiD0W2vgR2Fj3zcHrSC9g1Xs3KksVDCo1ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6TzLPV223NdVLTWkhC5Hi9PC1wFR3WXo/ukXsr9sHfs=;
- b=JFU2RdELbpRFVygm7g7A/e8R5tWvrieKZvEVyNzIN3RP0NuEsTjf0dknAIrKLr+8/q870X9XwERR1okA02hxSgUqczDo748eH9OUbFjyG7ohxj2rkFp+a+7tqfE8CA7WXXg2IOdDQmw/xu7+avTzgMpzqtEAt2gmR5a9cl/Hjmc0bsWA6y76vSR9SoSqtTXM25DainrOv/VKoJfe/nYqrlA/sGAGxYRMBX7bYR5wkUihfuqVsNAXkBgaFs6N0fKXhTkKGmUBe/7KoFk4cpLG95mFDy+gV8seUxexMKTrXe12Z5L0M+VgwCZzjlo9+MpcHz8IlNqnVTUp9MDJbBxpng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6TzLPV223NdVLTWkhC5Hi9PC1wFR3WXo/ukXsr9sHfs=;
- b=d2d00bMtRDErYm3kUPXIZhLQ3nObkW6J9U7DTOGaIJAc2uxoDzs5kJsWcx2e32CsuX6ZMc92jqOuxF+xYAEpA75QQNkQMS5AtLnrOCT9UKWCdy6KRyMcb5Fwsy+PhuwJgkDgNEKvNleSXwKl5dsrfC0Op3cy+tEWpzZdSikiu0Y=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB2897.namprd12.prod.outlook.com (20.179.64.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.11; Fri, 19 Jul 2019 08:44:23 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
- 08:44:23 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/abPQEOAgADTx+CAABvLAIABeX5ggAAOFICAAAG4AA==
-Date:   Fri, 19 Jul 2019 08:44:23 +0000
-Message-ID: <BN8PR12MB3266989D15E017A789E14282D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <6a6bac84-1d29-2740-1636-d3adb26b6bcc@nvidia.com>
- <BN8PR12MB3266960A104A7CDBB4E59192D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <bc9ab3c5-b1b9-26d4-7b73-01474328eafa@nvidia.com>
-In-Reply-To: <bc9ab3c5-b1b9-26d4-7b73-01474328eafa@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f53f61b9-3e4a-486c-1f88-08d70c254c76
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB2897;
-x-ms-traffictypediagnostic: BN8PR12MB2897:
-x-microsoft-antispam-prvs: <BN8PR12MB28975A26EAC16B12C496C221D3CB0@BN8PR12MB2897.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(136003)(366004)(396003)(199004)(189003)(229853002)(53546011)(4326008)(8676002)(54906003)(2906002)(110136005)(6506007)(14454004)(316002)(74316002)(66066001)(478600001)(7696005)(55016002)(76176011)(33656002)(14444005)(256004)(8936002)(71200400001)(9686003)(2501003)(71190400001)(7416002)(53936002)(486006)(7736002)(68736007)(81156014)(81166006)(2201001)(4744005)(52536014)(6246003)(446003)(6436002)(11346002)(305945005)(476003)(3846002)(6116002)(86362001)(26005)(76116006)(5660300002)(66476007)(66556008)(64756008)(66446008)(66946007)(25786009)(99286004)(102836004)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2897;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZpzvEAJTYFnthMJXV/LyliOMM0qgQq1nJOti0RFL+FL5EQMU4x03cM99KT67T+8t0ttmSbqZJLWYDYimZD3smFRYZEJPXKXy7wKKpn572W759TMgIP5kRGN5bsmwLC232B5Gre7xd0NnHgpIxmW9k+HyiEthP1725b5i+FKkZ1pAyVxp0j2xsm+1HCy6frSWfwZ3VMOS9zSBVgYXVYyzfSR8F9QdO4ulQwk7TZliPyCieE4DYAEnNS1tEqBLSwcMnKzePQVvtgbfSpkrpcqR+HlzajJqOqJqubgT/bcoYOr5Yh96OM4iI/DVtOU+p9XztpKVO5RCpFjQq8X/HQq0pwSeE9GN0Md60Yis3CM0z3IOX9HWCiO01K4oOverLTy+7rgpKCVcDf5TRBgnzzoASNG+9oyXPu+ncxsCjp48Nnk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 19 Jul 2019 04:47:52 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6J8l5o7093576
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:47:51 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tu95dkgqb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:47:51 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <hoeppner@linux.ibm.com>;
+        Fri, 19 Jul 2019 09:47:48 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 19 Jul 2019 09:47:45 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6J8lid351577020
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 08:47:44 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 335114203F;
+        Fri, 19 Jul 2019 08:47:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A52D42049;
+        Fri, 19 Jul 2019 08:47:43 +0000 (GMT)
+Received: from [9.145.166.247] (unknown [9.145.166.247])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Jul 2019 08:47:43 +0000 (GMT)
+Subject: Re: [PATCH AUTOSEL 5.2 149/171] s390/dasd: Make layout analysis ESE
+ compatible
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Stefan Haberland <sth@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+References: <20190719035643.14300-1-sashal@kernel.org>
+ <20190719035643.14300-149-sashal@kernel.org>
+ <a8ad62c7-383a-a890-ca20-4348d8ab9dec@de.ibm.com>
+From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
+Date:   Fri, 19 Jul 2019 10:47:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f53f61b9-3e4a-486c-1f88-08d70c254c76
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 08:44:23.0368
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2897
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <a8ad62c7-383a-a890-ca20-4348d8ab9dec@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071908-4275-0000-0000-0000034EB5CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071908-4276-0000-0000-0000385ED14F
+Message-Id: <018f17c4-07c9-7fcf-1f22-0a712b452b25@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-19_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907190102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQpEYXRlOiBKdWwvMTkvMjAx
-OSwgMDk6Mzc6NDkgKFVUQyswMDowMCkNCg0KPiANCj4gT24gMTkvMDcvMjAxOSAwODo1MSwgSm9z
-ZSBBYnJldSB3cm90ZToNCj4gPiBGcm9tOiBKb24gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNv
-bT4NCj4gPiBEYXRlOiBKdWwvMTgvMjAxOSwgMTA6MTY6MjAgKFVUQyswMDowMCkNCj4gPiANCj4g
-Pj4gSGF2ZSB5b3UgdHJpZWQgdXNpbmcgTkZTIG9uIGEgYm9hcmQgd2l0aCB0aGlzIGV0aGVybmV0
-IGNvbnRyb2xsZXI/DQo+ID4gDQo+ID4gSSdtIGhhdmluZyBzb21lIGlzc3VlcyBzZXR0aW5nIHVw
-IHRoZSBORlMgc2VydmVyIGluIG9yZGVyIHRvIHJlcGxpY2F0ZSANCj4gPiBzbyB0aGlzIG1heSB0
-YWtlIHNvbWUgdGltZS4NCj4gDQo+IElmIHRoYXQncyB0aGUgY2FzZSwgd2UgbWF5IHdpc2ggdG8g
-Y29uc2lkZXIgcmV2ZXJ0aW5nIHRoaXMgZm9yIG5vdyBhcyBpdA0KPiBpcyBwcmV2ZW50aW5nIG91
-ciBib2FyZCBmcm9tIGJvb3RpbmcuIEFwcGVhcnMgdG8gcmV2ZXJ0IGNsZWFubHkgb24gdG9wDQo+
-IG9mIG1haW5saW5lLg0KPiANCj4gPiBBcmUgeW91IGFibGUgdG8gYWRkIHNvbWUgZGVidWcgaW4g
-c3RtbWFjX2luaXRfcnhfYnVmZmVycygpIHRvIHNlZSB3aGF0J3MgDQo+ID4gdGhlIGJ1ZmZlciBh
-ZGRyZXNzID8NCj4gDQo+IElmIHlvdSBoYXZlIGEgZGVidWcgcGF0Y2ggeW91IHdvdWxkIGxpa2Ug
-bWUgdG8gYXBwbHkgYW5kIHRlc3Qgd2l0aCBJDQo+IGNhbi4gSG93ZXZlciwgaXQgaXMgYmVzdCB5
-b3UgcHJlcGFyZSB0aGUgcGF0Y2ggYXMgbWF5YmUgSSB3aWxsIG5vdCBkdW1wDQo+IHRoZSBhcHBy
-b3ByaWF0ZSBhZGRyZXNzZXMuDQo+IA0KPiBDaGVlcnMNCj4gSm9uDQo+IA0KPiAtLSANCj4gbnZw
-dWJsaWMNCg0KU2VuZCBtZSBmdWxsIGJvb3QgbG9nIHBsZWFzZS4NCg0KLS0tDQpUaGFua3MsDQpK
-b3NlIE1pZ3VlbCBBYnJldQ0K
+On 19.07.19 09:47, Christian Borntraeger wrote:
+> The comment is true for all stable versions.
+> 
+> This patch is part of a larger series that enables ESE volumes.
+> I think it should not go alone as other patches like 
+> 5e2b17e712cf s390/dasd: Add dynamic formatting support for ESE volumes
+> are needed to actually work with ESE volumes.
+> So I suggest to drop this patch.
+> Jan, Stefan, do you agree?
+> 
+
+This patch is a requirement for ESE volumes to work and doesn't
+add any value alone. I suggest to drop this patch as well.
+
+Jan
+
+> 
+> 
+> On 19.07.19 05:56, Sasha Levin wrote:
+>> From: Jan Höppner <hoeppner@linux.ibm.com>
+>>
+>> [ Upstream commit ce6915f5343f5f2a2a937b683d8ffbf12dab3ad4 ]
+>>
+>> The disk layout and volume information of a DASD reside in the first two
+>> tracks of cylinder 0. When a DASD is set online, currently the first
+>> three tracks are read and analysed to confirm an expected layout.
+>>
+>> For CDL (Compatible Disk Layout) only count area data of the first track
+>> is evaluated and checked against expected key and data lengths. For LDL
+>> (Linux Disk Layout) the first and third track is evaluated. However,
+>> an LDL formatted volume is expected to be in the same format across all
+>> tracks. Checking the third track therefore doesn't have any more value
+>> than checking any other track at random.
+>>
+>> Now, an Extent Space Efficient (ESE) DASD is initialised by only
+>> formatting the first two tracks, as those tracks always contain all
+>> information necessarry.
+>>
+>> Checking the third track on an ESE volume will therefore most likely
+>> fail with a record not found error, as the third track will be empty.
+>> This in turn leads to the device being recognised with a volume size of
+>> 0. Attempts to write volume information on the first two tracks then
+>> fail with "no space left on device" errors.
+>>
+>> Initialising the first three tracks for an ESE volume is not a viable
+>> solution, because the third track is already a regular track and could
+>> contain user data. With that there is potential for data corruption.
+>>
+>> Instead, always only analyse the first two tracks, as it is sufficiant
+>> for both CDL and LDL, and allow ESE volumes to be recognised as well.
+>>
+>> Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+>> Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+>> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/s390/block/dasd_eckd.c | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+>> index c09039eea707..c7aec1b44b7c 100644
+>> --- a/drivers/s390/block/dasd_eckd.c
+>> +++ b/drivers/s390/block/dasd_eckd.c
+>> @@ -157,7 +157,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
+>>  #define LABEL_SIZE 140
+>>  
+>>  /* head and record addresses of count_area read in analysis ccw */
+>> -static const int count_area_head[] = { 0, 0, 0, 0, 2 };
+>> +static const int count_area_head[] = { 0, 0, 0, 0, 1 };
+>>  static const int count_area_rec[] = { 1, 2, 3, 4, 1 };
+>>  
+>>  static inline unsigned int
+>> @@ -1823,8 +1823,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
+>>  	if (IS_ERR(cqr))
+>>  		return cqr;
+>>  	ccw = cqr->cpaddr;
+>> -	/* Define extent for the first 3 tracks. */
+>> -	define_extent(ccw++, cqr->data, 0, 2,
+>> +	/* Define extent for the first 2 tracks. */
+>> +	define_extent(ccw++, cqr->data, 0, 1,
+>>  		      DASD_ECKD_CCW_READ_COUNT, device, 0);
+>>  	LO_data = cqr->data + sizeof(struct DE_eckd_data);
+>>  	/* Locate record for the first 4 records on track 0. */
+>> @@ -1843,9 +1843,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
+>>  		count_data++;
+>>  	}
+>>  
+>> -	/* Locate record for the first record on track 2. */
+>> +	/* Locate record for the first record on track 1. */
+>>  	ccw[-1].flags |= CCW_FLAG_CC;
+>> -	locate_record(ccw++, LO_data++, 2, 0, 1,
+>> +	locate_record(ccw++, LO_data++, 1, 0, 1,
+>>  		      DASD_ECKD_CCW_READ_COUNT, device, 0);
+>>  	/* Read count ccw. */
+>>  	ccw[-1].flags |= CCW_FLAG_CC;
+>> @@ -1967,7 +1967,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+>>  		}
+>>  	}
+>>  	if (i == 3)
+>> -		count_area = &private->count_area[4];
+>> +		count_area = &private->count_area[3];
+>>  
+>>  	if (private->uses_cdl == 0) {
+>>  		for (i = 0; i < 5; i++) {
+>>
+
