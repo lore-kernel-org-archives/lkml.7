@@ -2,103 +2,126 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231F8C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05703C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BAC20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C900E21855
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WV7GmmB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfGSKwn (ORCPT
+        id S1727577AbfGSK5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:52:43 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33920 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfGSKwn (ORCPT
+        Fri, 19 Jul 2019 06:57:44 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34332 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfGSK5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:52:43 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id AEBEB802EE; Fri, 19 Jul 2019 12:52:28 +0200 (CEST)
-Date:   Fri, 19 Jul 2019 12:52:39 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     john.hubbard@gmail.com, SCheung@nvidia.com,
-        akpm@linux-foundation.org, aneesh.kumar@linux.vnet.ibm.com,
-        benh@kernel.crashing.org, bsingharora@gmail.com,
-        dan.j.williams@intel.com, dnellans@nvidia.com,
-        ebaskakov@nvidia.com, hannes@cmpxchg.org, jglisse@redhat.com,
-        jhubbard@nvidia.com, kirill.shutemov@linux.intel.com,
-        linux-kernel@vger.kernel.org, liubo95@huawei.com,
-        mhairgrove@nvidia.com, mhocko@kernel.org,
-        paulmck@linux.vnet.ibm.com, ross.zwisler@linux.intel.com,
-        sgutti@nvidia.com, torvalds@linux-foundation.org,
-        vdavydov.dev@gmail.com, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH] mm/Kconfig: additional help text for HMM_MIRROR option
-Message-ID: <20190719105239.GA10627@amd>
-References: <20190717074124.GA21617@amd>
- <20190719013253.17642-1-jhubbard@nvidia.com>
- <20190719055748.GA29082@infradead.org>
+        Fri, 19 Jul 2019 06:57:44 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6JAvNAx059571;
+        Fri, 19 Jul 2019 05:57:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563533843;
+        bh=e9BGRW2+AOOjzCcl3h71zGtY2pYY0ecnAlgV2kvpSCc=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=WV7GmmB2tn+MyIA2xtlbs49BX1bLYllkU/9wBq75rO+4M1bphWMbv+v6UrRvaoGkL
+         bLZTqoIOnXz9vKXqExq0oDfVYRT/zDlMD0xGfG/OK1+zOZUvq629+2oUSgpctwyoi0
+         J+QWJRYxbD2lPOqto+JGPHcaDtJEuTYUSZzVr/VM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6JAvNco063487
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jul 2019 05:57:23 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 19
+ Jul 2019 05:57:22 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 19 Jul 2019 05:57:22 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6JAvGr8021490;
+        Fri, 19 Jul 2019 05:57:17 -0500
+Subject: Re: [RFC PATCH 23/30] of/platform: Export
+ of_platform_device_create_pdata()
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190604131516.13596-1-kishon@ti.com>
+ <20190604131516.13596-24-kishon@ti.com>
+ <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw@mail.gmail.com>
+ <a80c7c33-7091-70d9-cd86-a19fe43d3bc6@ti.com>
+Message-ID: <f9034a1d-1906-54e8-62f0-cdacf95c42ab@ti.com>
+Date:   Fri, 19 Jul 2019 16:25:37 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Content-Disposition: inline
-In-Reply-To: <20190719055748.GA29082@infradead.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <a80c7c33-7091-70d9-cd86-a19fe43d3bc6@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Lorenzo,
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/06/19 10:08 AM, Kishon Vijay Abraham I wrote:
+> Hi Rob,
+> 
+> On 10/06/19 11:13 PM, Rob Herring wrote:
+>> On Tue, Jun 4, 2019 at 7:19 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>
+>>> Export of_platform_device_create_pdata() to be used by drivers to
+>>> create child devices with the given platform data. This can be used
+>>> by platform specific driver to send platform data core driver. For e.g.,
+>>> this will be used by TI's J721E SoC specific PCIe driver to send
+>>> ->start_link() ops and ->is_link_up() ops to Cadence core PCIe driver.
+>>
+>> NAK
+>>
+>> of_platform_device_create_pdata() is purely for legacy handling of
+>> auxdata which is something I hope to get rid of someday. Or to put it
+>> another way, auxdata use is a sign of platforms not fully converted to
+>> DT.
+> 
+> All right. Thanks for letting me know your thoughts.
+> 
+> Lorenzo,
+> 
+> We've modeled Cadence PCIe core as a separate driver and for some of the
+> functionalities (for example starting LTSSM or checking link status) it has to
+> invoke the wrapper driver functions (The registers for these are present in
+> wrapper and not in Cadence Core). In the case of Designware, we modeled DWC
+> core as a library which provided APIs to be used by wrapper driver. Now that
+> Rob is not inclined for passing platform data from one driver to another (in
+> this case TI specific J721E driver to Cadence PCIe driver), should we model
+> Cadence core also as a library? If you agree, I can prepare patches for making
+> Cadence PCIe core as a library. Please let me know your thoughts.
 
-On Thu 2019-07-18 22:57:48, Christoph Hellwig wrote:
-> On Thu, Jul 18, 2019 at 06:32:53PM -0700, john.hubbard@gmail.com wrote:
-> > +	  HMM_MIRROR provides a way to mirror ranges of the CPU page tables
-> > +	  of a process into a device page table. Here, mirror means "keep
-> > +	  synchronized". Prerequisites: the device must provide the ability
-> > +	  to write-protect its page tables (at PAGE_SIZE granularity), and
-> > +	  must be able to recover from the resulting potential page faults.
-> > +
-> > +	  Select HMM_MIRROR if you have hardware that meets the above
-> > +	  description. An early, partial list of such hardware is:
-> > +	  an NVIDIA GPU >=3D Pascal, Mellanox IB >=3D mlx5, or an AMD GPU.
->=20
-> Nevermind that the Nvidia support is stagaging and looks rather broken,
-> there is no Mellanox user of this either at this point.
->=20
-> But either way this has no business in a common kconfig help.  Just
-> drop the fine grained details and leave it to the overview.
+Can you share your thoughts on this?
 
-I disagree here. This explains what kind of hardware this is for (very
-new). Partial list does not hurt, and I know that I probably don't
-need to enable this.
-
-How else am I supposed to know if my computer needs page tables
-synchronized?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0xoPcACgkQMOfwapXb+vIiygCgpZIgxcueA5lGweI7pvQKR6l2
-oNQAn2gePbpEnABaDspF4wN2+WKGu1GH
-=y1s7
------END PGP SIGNATURE-----
-
---liOOAslEiF7prFVr--
+Thanks
+Kishon
