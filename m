@@ -2,63 +2,129 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47349C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA5C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DF421849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1315B21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="JAjsDhcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfGSK32 (ORCPT
+        id S1727680AbfGSK3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:29:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:41606 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSK32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:29:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5850337;
-        Fri, 19 Jul 2019 03:29:27 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 080BC3F59C;
-        Fri, 19 Jul 2019 03:29:26 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 11:29:24 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: Re: [PATCH 05/11] firmware: arm_scmi: Add receive buffer support for
- notifications
-Message-ID: <20190719102924.GB18022@e107155-lin>
-References: <20190708154730.16643-1-sudeep.holla@arm.com>
- <20190708154730.16643-6-sudeep.holla@arm.com>
- <CA+-6iNz26xUyrzVSbWA+jwEfj3BC8k8KNCg2SreDK7mfWsbAWg@mail.gmail.com>
+        Fri, 19 Jul 2019 06:29:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50487 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbfGSK3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:29:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so28317368wml.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 03:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/54Z+i2NAAKKYqTyaHCknB2yONX433P+mrrcxDIdMKQ=;
+        b=JAjsDhcTKFikvYch2sdYf3M1YIU4lD8gtr6ULD+m66RVXVuqlNpAWJ5aCmwhzsJqfu
+         NYMs/ngfnZnIR8qK+5gnlfw/LTN1DoKaojW4kG3ixmkDG7tw9PX3Gi1H6Z3rJyqaYFRY
+         gtdhUxjOR3aQahCtFDINrBG/OSP8pnsgZFupRZsDuzUdLCVJo0FcPvznY5c5cU461qY8
+         z6fVQ/+Mbzs3h37QWljm/AYaqqO87pyj8pyd6RorqrMiW7iIeyvakf6A7A7GAM2bH4rw
+         cbSgv5bCTz5aSE0toZ8ZOUCkVQ0c1BjSzCzQ1F1IbaB+eNv/4FBgS3Np35nlQBPDWp48
+         Qe+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/54Z+i2NAAKKYqTyaHCknB2yONX433P+mrrcxDIdMKQ=;
+        b=J72iJxhMCLbH1SlSOKu77LoViiB3sz7dw91jff+YDyhJyfGwKQXIDPbHxLxxaadZGT
+         v17P9cJ/tNgmpsop61pm2V03Dczx3mt1xNuABIRE/WrcetezxVbWqGbbO1bkATbGsxkN
+         cGXVYnHJjcdNY8CKatML1jFhkn9NFPbI1685ThSNpJoKpZH2nCdMyONSw8nDDqMUSsE4
+         Ch75Xw3p9BXSLyiuEBrR9P74LTp2D5llVZuW1n4vfAXHfio91qAYsZkDDjNS9CyX8HFl
+         mAWO8yw8aECayHAYWi5MdAuesrlegQUzg72HAwyoI59rpmU30wBGlEAAp74qVvjda7VN
+         Hf/g==
+X-Gm-Message-State: APjAAAX4cnCowIqFepbURaGhiHFcuvMRP1kNAJbLp2xJYdtljd0H/vzB
+        hZSU0cDafbIBr6NnmsgwukE=
+X-Google-Smtp-Source: APXvYqynzSxRaiMvY03x+MCUOq/ut+wmSYg6CTggvreuOHjcm6imyyhYbJGXSWZ87v9KsAJECqBb6Q==
+X-Received: by 2002:a1c:c145:: with SMTP id r66mr47654238wmf.139.1563532189209;
+        Fri, 19 Jul 2019 03:29:49 -0700 (PDT)
+Received: from brauner.io ([81.92.17.140])
+        by smtp.gmail.com with ESMTPSA id v4sm25167633wmg.22.2019.07.19.03.29.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 03:29:49 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 12:29:41 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        sparclinux <sparclinux@vger.kernel.org>
+Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
+Message-ID: <20190719102932.274pvmxnrbjcc6gu@brauner.io>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-9-cyphar@cyphar.com>
+ <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com>
+ <20190718161231.xcno272nvqpln3wj@yavin>
+ <CAK8P3a3MiYK4bJiA3G_m5H-TpfN5__--b+=szsJBhG7_it+NQg@mail.gmail.com>
+ <20190719021218.GB18022@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+-6iNz26xUyrzVSbWA+jwEfj3BC8k8KNCg2SreDK7mfWsbAWg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190719021218.GB18022@altlinux.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 05:14:55PM -0400, Jim Quinlan wrote:
-> Hi Sudeep,
->
-> I'm not sure why you are adding code for notifications when this commit-set
-> does not support notifications.  Why not save this commit for when you add
-> notifications?
->
+On Fri, Jul 19, 2019 at 05:12:18AM +0300, Dmitry V. Levin wrote:
+> On Thu, Jul 18, 2019 at 11:29:50PM +0200, Arnd Bergmann wrote:
+> [...]
+> > 5. you get the same problem with seccomp and strace that
+> >    clone3() has -- these and others only track the register
+> >    arguments by default.
+> 
+> Just for the record, this is definitely not the case for strace:
+> it decodes arrays, structures, netlink messages, and so on by default.
 
-Right, I missed this patch and sent. Yes we just need Rx channels and not
-Rx buffers to implement asynchronous commands. I will drop it from this set.
+There sure is value in trying to design syscalls that can be handled
+nicely by seccomp but that shouldn't become a burden on designing
+extensible syscalls.
+I suggested a session for Ksummit where we can discuss if and how we can
+make seccomp more compatible with pointer-args in syscalls.
 
---
-Regards,
-Sudeep
+Christian
