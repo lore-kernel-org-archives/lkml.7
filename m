@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A1AC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170C2C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D7D21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57CE21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508836;
-	bh=RnpYIfsmVQzw+RTCY/meZ6Kjw8GaVvaz5MFpeWecvx8=;
+	s=default; t=1563508837;
+	bh=i8vDtX8H1jNWjo3F8vyc4Zbjb3Va1+eIlNAOC/ICPNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imSGoPOBV0xK6QsLDt/W1zrMbe7R8jce+QHULiDyHxGaHmqrzL5/sPG3x5NpIOPRg
-	 P+yEc4GydBYQDwdh4WUNFg33H9EdvjAVRzDNrP6JgCbi3tfIhEds+bvvsjT55Vh5Sc
-	 OoH4VArTV3s10ZLPTDt++5i5PhdOoU6GE7Tw8rZA=
+	b=XPdFOQMwV0I0PCHgNqYxV8AIviqc3MXW7dzCXuN1Cmlnqa2k/qULaUE5u0136QRSj
+	 hrC1RRCj1ZQWs6g5kpNDhyNj0JAn8/eZQbfZ8iqQ4n47WRmnC93cRn9dzx8aBYVBVI
+	 M/E7gHIZig0wIR1YG2hTkLski7CEOmTYVhkbxat8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfGSEAe (ORCPT
+        id S1729123AbfGSEAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60320 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbfGSEA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:00:26 -0400
+        id S1728181AbfGSEAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A2221852;
-        Fri, 19 Jul 2019 04:00:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEE821882;
+        Fri, 19 Jul 2019 04:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508825;
-        bh=RnpYIfsmVQzw+RTCY/meZ6Kjw8GaVvaz5MFpeWecvx8=;
+        s=default; t=1563508824;
+        bh=i8vDtX8H1jNWjo3F8vyc4Zbjb3Va1+eIlNAOC/ICPNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8WL9HdGrjVualWQH/9wSZiUvx2aWSvjeQSErlQxCgdXlKCuP3PffNZOy4YzbqEN9
-         k9pSJ/rUGO9Azfi03e875A5reEbXDW3TbulbP9rErY0aUAcDAnC8Abpa8Kp3Dp5HRK
-         Egzgj9ereYnh1MNy7PLag1Orpwad4CFyX6Cn6ZWI=
+        b=LbbLBtzomR3VvBGY51DUcb1Oc7Pqa5GE2jrNgPhce/eodPR/4PnhXfrYiJYG42BKa
+         RlDTfyYEP0EKCdU761cTfW9M18e+YST3m6h4YFkcN7GLr2lsDRvLTbWg/tVnsNzw3h
+         J6CUsAp4UqfmaIxFD+P0d4J9XBb28zl+aUENBD/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 111/171] IB/mlx5: Fixed reporting counters on 2nd port for Dual port RoCE
-Date:   Thu, 18 Jul 2019 23:55:42 -0400
-Message-Id: <20190719035643.14300-111-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 110/171] serial: sh-sci: Fix TX DMA buffer flushing and workqueue races
+Date:   Thu, 18 Jul 2019 23:55:41 -0400
+Message-Id: <20190719035643.14300-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,178 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 2f40cf30c8644360d37287861d5288f00eab35e5 ]
+[ Upstream commit 8493eab02608b0e82f67b892aa72882e510c31d0 ]
 
-Currently during dual port IB device registration in below code flow,
+When uart_flush_buffer() is called, the .flush_buffer() callback zeroes
+the tx_dma_len field.  This may race with the work queue function
+handling transmit DMA requests:
 
-ib_register_device()
-  ib_device_register_sysfs()
-    ib_setup_port_attrs()
-      add_port()
-        get_counter_table()
-          get_perf_mad()
-            process_mad()
-              mlx5_ib_process_mad()
+  1. If the buffer is flushed before the first DMA API call,
+     dmaengine_prep_slave_single() may be called with a zero length,
+     causing the DMA request to never complete, leading to messages
+     like:
 
-mlx5_ib_process_mad() fails on 2nd port when both the ports are not fully
-setup at the device level (because 2nd port is unaffiliated).
+        rcar-dmac e7300000.dma-controller: Channel Address Error happen
 
-As a result, get_perf_mad() registers different PMA counter group for 1st
-and 2nd port, namely pma_counter_ext and pma_counter. However both ports
-have the same capability and counter offsets.
+     and, with debug enabled:
 
-Due to this when counters are read by the user via sysfs in below code
-flow, counters are queried from wrong location from the device mainly from
-PPCNT instead of VPORT counters.
+	sh-sci e6e88000.serial: sci_dma_tx_work_fn: ffff800639b55000: 0...0, cookie 126
 
-show_pma_counter()
-  get_perf_mad()
-    process_mad()
-      mlx5_ib_process_mad()
-        process_pma_cmd()
+     and DMA timeouts.
 
-This shows all zero counters for 2nd port.
+  2. If the buffer is flushed after the first DMA API call, but before
+     the second, dma_sync_single_for_device() may be called with a zero
+     length, causing the transmit data not to be flushed to RAM, and
+     leading to stale data being output.
 
-To overcome this, process_pma_cmd() is invoked, and when unaffiliated port
-is not yet setup during device registration phase, make the query on the
-first port.  while at it, only process_pma_cmd() needs to work on the
-native port number and underlying mdev, so shift the get, put calls to
-where its needed inside process_pma_cmd().
+Fix this by:
+  1. Letting sci_dma_tx_work_fn() return immediately if the transmit
+     buffer is empty,
+  2. Extending the critical section to cover all DMA preparational work,
+     so tx_dma_len stays consistent for all of it,
+  3. Using local copies of circ_buf.head and circ_buf.tail, to make sure
+     they match the actual operation above.
 
-Fixes: 212f2a87b74f ("IB/mlx5: Route MADs for dual port RoCE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Suggested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Link: https://lore.kernel.org/r/20190624123540.20629-2-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/mad.c | 60 +++++++++++++++++++-------------
- 1 file changed, 36 insertions(+), 24 deletions(-)
+ drivers/tty/serial/sh-sci.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/mad.c b/drivers/infiniband/hw/mlx5/mad.c
-index 6c529e6f3a01..348c1df69cdc 100644
---- a/drivers/infiniband/hw/mlx5/mad.c
-+++ b/drivers/infiniband/hw/mlx5/mad.c
-@@ -200,19 +200,33 @@ static void pma_cnt_assign(struct ib_pma_portcounters *pma_cnt,
- 			     vl_15_dropped);
- }
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 1d25c4e2d0d2..d18c680aa64b 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1398,6 +1398,7 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
+ 	struct circ_buf *xmit = &port->state->xmit;
+ 	unsigned long flags;
+ 	dma_addr_t buf;
++	int head, tail;
  
--static int process_pma_cmd(struct mlx5_core_dev *mdev, u8 port_num,
-+static int process_pma_cmd(struct mlx5_ib_dev *dev, u8 port_num,
- 			   const struct ib_mad *in_mad, struct ib_mad *out_mad)
- {
--	int err;
-+	struct mlx5_core_dev *mdev;
-+	bool native_port = true;
-+	u8 mdev_port_num;
- 	void *out_cnt;
-+	int err;
- 
-+	mdev = mlx5_ib_get_native_port_mdev(dev, port_num, &mdev_port_num);
-+	if (!mdev) {
-+		/* Fail to get the native port, likely due to 2nd port is still
-+		 * unaffiliated. In such case default to 1st port and attached
-+		 * PF device.
-+		 */
-+		native_port = false;
-+		mdev = dev->mdev;
-+		mdev_port_num = 1;
+ 	/*
+ 	 * DMA is idle now.
+@@ -1407,16 +1408,23 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
+ 	 * consistent xmit buffer state.
+ 	 */
+ 	spin_lock_irq(&port->lock);
+-	buf = s->tx_dma_addr + (xmit->tail & (UART_XMIT_SIZE - 1));
++	head = xmit->head;
++	tail = xmit->tail;
++	buf = s->tx_dma_addr + (tail & (UART_XMIT_SIZE - 1));
+ 	s->tx_dma_len = min_t(unsigned int,
+-		CIRC_CNT(xmit->head, xmit->tail, UART_XMIT_SIZE),
+-		CIRC_CNT_TO_END(xmit->head, xmit->tail, UART_XMIT_SIZE));
+-	spin_unlock_irq(&port->lock);
++		CIRC_CNT(head, tail, UART_XMIT_SIZE),
++		CIRC_CNT_TO_END(head, tail, UART_XMIT_SIZE));
++	if (!s->tx_dma_len) {
++		/* Transmit buffer has been flushed */
++		spin_unlock_irq(&port->lock);
++		return;
 +	}
- 	/* Declaring support of extended counters */
- 	if (in_mad->mad_hdr.attr_id == IB_PMA_CLASS_PORT_INFO) {
- 		struct ib_class_port_info cpi = {};
  
- 		cpi.capability_mask = IB_PMA_CLASS_CAP_EXT_WIDTH;
- 		memcpy((out_mad->data + 40), &cpi, sizeof(cpi));
--		return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
-+		err = IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
-+		goto done;
+ 	desc = dmaengine_prep_slave_single(chan, buf, s->tx_dma_len,
+ 					   DMA_MEM_TO_DEV,
+ 					   DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc) {
++		spin_unlock_irq(&port->lock);
+ 		dev_warn(port->dev, "Failed preparing Tx DMA descriptor\n");
+ 		goto switch_to_pio;
+ 	}
+@@ -1424,18 +1432,18 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
+ 	dma_sync_single_for_device(chan->device->dev, buf, s->tx_dma_len,
+ 				   DMA_TO_DEVICE);
+ 
+-	spin_lock_irq(&port->lock);
+ 	desc->callback = sci_dma_tx_complete;
+ 	desc->callback_param = s;
+-	spin_unlock_irq(&port->lock);
+ 	s->cookie_tx = dmaengine_submit(desc);
+ 	if (dma_submit_error(s->cookie_tx)) {
++		spin_unlock_irq(&port->lock);
+ 		dev_warn(port->dev, "Failed submitting Tx DMA descriptor\n");
+ 		goto switch_to_pio;
  	}
  
- 	if (in_mad->mad_hdr.attr_id == IB_PMA_PORT_COUNTERS_EXT) {
-@@ -221,11 +235,13 @@ static int process_pma_cmd(struct mlx5_core_dev *mdev, u8 port_num,
- 		int sz = MLX5_ST_SZ_BYTES(query_vport_counter_out);
++	spin_unlock_irq(&port->lock);
+ 	dev_dbg(port->dev, "%s: %p: %d...%d, cookie %d\n",
+-		__func__, xmit->buf, xmit->tail, xmit->head, s->cookie_tx);
++		__func__, xmit->buf, tail, head, s->cookie_tx);
  
- 		out_cnt = kvzalloc(sz, GFP_KERNEL);
--		if (!out_cnt)
--			return IB_MAD_RESULT_FAILURE;
-+		if (!out_cnt) {
-+			err = IB_MAD_RESULT_FAILURE;
-+			goto done;
-+		}
- 
- 		err = mlx5_core_query_vport_counter(mdev, 0, 0,
--						    port_num, out_cnt, sz);
-+						    mdev_port_num, out_cnt, sz);
- 		if (!err)
- 			pma_cnt_ext_assign(pma_cnt_ext, out_cnt);
- 	} else {
-@@ -234,20 +250,23 @@ static int process_pma_cmd(struct mlx5_core_dev *mdev, u8 port_num,
- 		int sz = MLX5_ST_SZ_BYTES(ppcnt_reg);
- 
- 		out_cnt = kvzalloc(sz, GFP_KERNEL);
--		if (!out_cnt)
--			return IB_MAD_RESULT_FAILURE;
-+		if (!out_cnt) {
-+			err = IB_MAD_RESULT_FAILURE;
-+			goto done;
-+		}
- 
--		err = mlx5_core_query_ib_ppcnt(mdev, port_num,
-+		err = mlx5_core_query_ib_ppcnt(mdev, mdev_port_num,
- 					       out_cnt, sz);
- 		if (!err)
- 			pma_cnt_assign(pma_cnt, out_cnt);
--		}
--
-+	}
- 	kvfree(out_cnt);
--	if (err)
--		return IB_MAD_RESULT_FAILURE;
--
--	return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
-+	err = err ? IB_MAD_RESULT_FAILURE :
-+		    IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_REPLY;
-+done:
-+	if (native_port)
-+		mlx5_ib_put_native_port_mdev(dev, port_num);
-+	return err;
- }
- 
- int mlx5_ib_process_mad(struct ib_device *ibdev, int mad_flags, u8 port_num,
-@@ -259,8 +278,6 @@ int mlx5_ib_process_mad(struct ib_device *ibdev, int mad_flags, u8 port_num,
- 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
- 	const struct ib_mad *in_mad = (const struct ib_mad *)in;
- 	struct ib_mad *out_mad = (struct ib_mad *)out;
--	struct mlx5_core_dev *mdev;
--	u8 mdev_port_num;
- 	int ret;
- 
- 	if (WARN_ON_ONCE(in_mad_size != sizeof(*in_mad) ||
-@@ -269,19 +286,14 @@ int mlx5_ib_process_mad(struct ib_device *ibdev, int mad_flags, u8 port_num,
- 
- 	memset(out_mad->data, 0, sizeof(out_mad->data));
- 
--	mdev = mlx5_ib_get_native_port_mdev(dev, port_num, &mdev_port_num);
--	if (!mdev)
--		return IB_MAD_RESULT_FAILURE;
--
--	if (MLX5_CAP_GEN(mdev, vport_counters) &&
-+	if (MLX5_CAP_GEN(dev->mdev, vport_counters) &&
- 	    in_mad->mad_hdr.mgmt_class == IB_MGMT_CLASS_PERF_MGMT &&
- 	    in_mad->mad_hdr.method == IB_MGMT_METHOD_GET) {
--		ret = process_pma_cmd(mdev, mdev_port_num, in_mad, out_mad);
-+		ret = process_pma_cmd(dev, port_num, in_mad, out_mad);
- 	} else {
- 		ret =  process_mad(ibdev, mad_flags, port_num, in_wc, in_grh,
- 				   in_mad, out_mad);
- 	}
--	mlx5_ib_put_native_port_mdev(dev, port_num);
- 	return ret;
- }
- 
+ 	dma_async_issue_pending(chan);
+ 	return;
 -- 
 2.20.1
 
