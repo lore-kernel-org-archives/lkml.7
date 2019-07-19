@@ -2,165 +2,390 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E632C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CFEC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC73E2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:17:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dx8cfGss"
+	by mail.kernel.org (Postfix) with ESMTP id 4BD4C2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfGSCRh (ORCPT
+        id S1726606AbfGSCT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:17:37 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45812 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGSCRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:17:36 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so20590809lfm.12;
-        Thu, 18 Jul 2019 19:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HNMhY1ykx0GnlF6JKggl8sLwPS/j8cg780i6U3Mhwco=;
-        b=Dx8cfGssBH0NKhAMWIEB7HWEf805sROrkX6S5J/H28OWuwBMRRU3XkAr5eAmVFT9Mw
-         xxtr+j/rXikat90qken+vFjFhMwaBUnzOe8dRPPpvN+SWFTxK+CYvm1ksW69kEQ7BPa8
-         E6iLZjIXomLfUMqUMgTHWAFmS8GmuhpQZXKHomw1K/R2yMQJ1sLcTYpEjyWGWl1dPURU
-         WxudHnp625GFMMhE0rthRa/X1xc3gCisghB0Y2115/uoylalkqkhZI44mtgJ8g6zrVzZ
-         wsJ3sExsi2j1zRFpiOYu8rEIC2d75wgFRX0mh56YRO/lcBPQpaI9OnSmZSJaczdpYcnz
-         wz/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HNMhY1ykx0GnlF6JKggl8sLwPS/j8cg780i6U3Mhwco=;
-        b=psjT1Y8DrvcB14ik8583sizHJqHMvbwgE59m5YGbv8wjPAhdD54BEHeJe5lwGbgleM
-         0P7bSfxVdX2b6sD/ZNhHKWaWIgqwcL11kqzflT52cvZx6rwSlvPlPv28GdmIBChAW1LX
-         vMI0nB+lElzP1k49GRxbT52d+EY+PHbvIYfkTb1RUJ9wWRwuR9o4BXSrQlIsIICpSwhJ
-         PqoqbtPO/ZC23Uo0iCRe4sIb08LorXVy/Oj2awV3rJb5h3symq/NmrL1+iytBvfJkdX3
-         60SbPgVGHZ+TmXvn4pM3xmDC6nXCsbxW8eZh1GtZE4xXzgzjKuDq1EjniniPqvmWoWz5
-         g+KA==
-X-Gm-Message-State: APjAAAX7mt3OArFrUOjNTfyqCcrG6LHcRTJe/YpdQOVHcKzsi5OMtYVT
-        t/hPB0TQJelQM9gSri2d3IM=
-X-Google-Smtp-Source: APXvYqzAKEmTBGQd15nuGMd3QY1+47/Z33uRupMg//JatM2+dT3yIeJw6o+KZj2LFG0FNsvByPG07g==
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr22530555lfu.141.1563502654101;
-        Thu, 18 Jul 2019 19:17:34 -0700 (PDT)
-Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id i62sm5317413lji.14.2019.07.18.19.17.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 19:17:33 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 05:21:11 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
- watermark selection
-Message-ID: <20190719052111.6641285d@dimatab>
-In-Reply-To: <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
-        <20190707223303.6755-21-digetx@gmail.com>
-        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
-        <20190719045943.73b53e31@dimatab>
-        <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        Thu, 18 Jul 2019 22:19:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51956 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726015AbfGSCT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 22:19:29 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9DD765DFA18E4065733B;
+        Fri, 19 Jul 2019 10:03:53 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 19 Jul
+ 2019 10:03:48 +0800
+Subject: Re: [PATCH v3 1/2] f2fs: include charset encoding information in the
+ superblock
+To:     Daniel Rosenberg <drosen@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <kernel-team@android.com>
+References: <20190719000322.106163-1-drosen@google.com>
+ <20190719000322.106163-2-drosen@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <fd3b1cf1-54a9-6131-0912-9ce1c2dba837@huawei.com>
+Date:   Fri, 19 Jul 2019 10:03:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190719000322.106163-2-drosen@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=92 Fri, 19 Jul 2019 11:06:05 +0900
-Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On 2019/7/19 8:03, Daniel Rosenberg wrote:
+> Add charset encoding to f2fs to support casefolding. It is modeled after
+> the same feature introduced in commit c83ad55eaa91 ("ext4: include charset
+> encoding information in the superblock")
+> 
+> Currently this is not compatible with encryption, similar to the current
+> ext4 imlpementation. This will change in the future.
+> 
+>>From the ext4 patch:
+> """
+> The s_encoding field stores a magic number indicating the encoding
+> format and version used globally by file and directory names in the
+> filesystem.  The s_encoding_flags defines policies for using the charset
+> encoding, like how to handle invalid sequences.  The magic number is
+> mapped to the exact charset table, but the mapping is specific to ext4.
+> Since we don't have any commitment to support old encodings, the only
+> encoding I am supporting right now is utf8-12.1.0.
+> 
+> The current implementation prevents the user from enabling encoding and
+> per-directory encryption on the same filesystem at the same time.  The
+> incompatibility between these features lies in how we do efficient
+> directory searches when we cannot be sure the encryption of the user
+> provided fname will match the actual hash stored in the disk without
+> decrypting every directory entry, because of normalization cases.  My
+> quickest solution is to simply block the concurrent use of these
+> features for now, and enable it later, once we have a better solution.
+> """
+> 
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/f2fs/f2fs.h          |  6 +++
+>  fs/f2fs/super.c         | 94 +++++++++++++++++++++++++++++++++++++++++
+>  fs/f2fs/sysfs.c         | 23 ++++++++++
+>  include/linux/f2fs_fs.h |  9 +++-
+>  4 files changed, 131 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 17382da7f0bd9..c6c7904572d0d 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -153,6 +153,7 @@ struct f2fs_mount_info {
+>  #define F2FS_FEATURE_LOST_FOUND		0x0200
+>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+> +#define F2FS_FEATURE_CASEFOLD		0x1000
+>  
+>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+> @@ -1169,6 +1170,10 @@ struct f2fs_sb_info {
+>  	int valid_super_block;			/* valid super block no */
+>  	unsigned long s_flag;				/* flags for sbi */
+>  	struct mutex writepages;		/* mutex for writepages() */
+> +#ifdef CONFIG_UNICODE
+> +	struct unicode_map *s_encoding;
+> +	__u16 s_encoding_flags;
+> +#endif
+>  
+>  #ifdef CONFIG_BLK_DEV_ZONED
+>  	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
+> @@ -3562,6 +3567,7 @@ F2FS_FEATURE_FUNCS(quota_ino, QUOTA_INO);
+>  F2FS_FEATURE_FUNCS(inode_crtime, INODE_CRTIME);
+>  F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+> +F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+>  
+>  #ifdef CONFIG_BLK_DEV_ZONED
+>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 6de6cda440315..82f7da93c3ed1 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/f2fs_fs.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/quota.h>
+> +#include <linux/unicode.h>
+>  
+>  #include "f2fs.h"
+>  #include "node.h"
+> @@ -222,6 +223,36 @@ void f2fs_printk(struct f2fs_sb_info *sbi, const char *fmt, ...)
+>  	va_end(args);
+>  }
+>  
+> +#ifdef CONFIG_UNICODE
+> +static const struct f2fs_sb_encodings {
+> +	__u16 magic;
+> +	char *name;
+> +	char *version;
+> +} f2fs_sb_encoding_map[] = {
+> +	{F2FS_ENC_UTF8_12_1, "utf8", "12.1.0"},
+> +};
+> +
+> +static int f2fs_sb_read_encoding(const struct f2fs_super_block *sb,
+> +				 const struct f2fs_sb_encodings **encoding,
+> +				 __u16 *flags)
+> +{
+> +	__u16 magic = le16_to_cpu(sb->s_encoding);
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(f2fs_sb_encoding_map); i++)
+> +		if (magic == f2fs_sb_encoding_map[i].magic)
+> +			break;
+> +
+> +	if (i >= ARRAY_SIZE(f2fs_sb_encoding_map))
+> +		return -EINVAL;
+> +
+> +	*encoding = &f2fs_sb_encoding_map[i];
+> +	*flags = le16_to_cpu(sb->s_encoding_flags);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static inline void limit_reserve_root(struct f2fs_sb_info *sbi)
+>  {
+>  	block_t limit = min((sbi->user_block_count << 1) / 1000,
+> @@ -798,6 +829,13 @@ static int parse_options(struct super_block *sb, char *options)
+>  		return -EINVAL;
+>  	}
+>  #endif
+> +#ifndef CONFIG_UNICODE
+> +	if (f2fs_sb_has_casefold(sbi)) {
+> +		f2fs_err(sbi,
+> +			"Filesystem with casefold feature cannot be mounted without CONFIG_UNICODE");
+> +		return -EINVAL;
+> +	}
+> +#endif
+>  
+>  	if (F2FS_IO_SIZE_BITS(sbi) && !test_opt(sbi, LFS)) {
+>  		f2fs_err(sbi, "Should set mode=lfs with %uKB-sized IO",
+> @@ -1089,6 +1127,9 @@ static void f2fs_put_super(struct super_block *sb)
+>  	destroy_percpu_info(sbi);
+>  	for (i = 0; i < NR_PAGE_TYPE; i++)
+>  		kvfree(sbi->write_io[i]);
+> +#ifdef CONFIG_UNICODE
+> +	utf8_unload(sbi->s_encoding);
+> +#endif
+>  	kvfree(sbi);
+>  }
+>  
+> @@ -3031,6 +3072,51 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+>  	return 0;
+>  }
+>  
+> +static int f2fs_setup_casefold(struct f2fs_sb_info *sbi)
+> +{
+> +#ifdef CONFIG_UNICODE
+> +	if (f2fs_sb_has_casefold(sbi) && !sbi->s_encoding) {
+> +		const struct f2fs_sb_encodings *encoding_info;
+> +		struct unicode_map *encoding;
+> +		__u16 encoding_flags;
+> +
+> +		if (f2fs_sb_has_encrypt(sbi)) {
+> +			f2fs_err(sbi,
+> +				"Can't mount with encoding and encryption");
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (f2fs_sb_read_encoding(sbi->raw_super, &encoding_info,
+> +					  &encoding_flags)) {
+> +			f2fs_err(sbi,
+> +				 "Encoding requested by superblock is unknown");
+> +			return -EINVAL;
+> +		}
+> +
+> +		encoding = utf8_load(encoding_info->version);
+> +		if (IS_ERR(encoding)) {
+> +			f2fs_err(sbi,
+> +				 "can't mount with superblock charset: %s-%s "
+> +				 "not supported by the kernel. flags: 0x%x.",
+> +				 encoding_info->name, encoding_info->version,
+> +				 encoding_flags);
+> +			return PTR_ERR(encoding);
+> +		}
+> +		f2fs_info(sbi, "Using encoding defined by superblock: "
+> +			 "%s-%s with flags 0x%hx", encoding_info->name,
+> +			 encoding_info->version?:"\b", encoding_flags);
+> +
+> +		sbi->s_encoding = encoding;
+> +		sbi->s_encoding_flags = encoding_flags;
+> +	}
+> +#else
+> +	if (f2fs_sb_has_casefold(sbi)) {
+> +		f2fs_err(sbi, "Filesystem with casefold feature cannot be mounted without CONFIG_UNICODE");
+> +		return -EINVAL;
+> +	}
+> +#endif
+> +}
+> +
+>  static void f2fs_tuning_parameters(struct f2fs_sb_info *sbi)
+>  {
+>  	struct f2fs_sm_info *sm_i = SM_I(sbi);
+> @@ -3127,6 +3213,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  				le32_to_cpu(raw_super->log_blocksize);
+>  	sb->s_max_links = F2FS_LINK_MAX;
+>  
+> +	err = f2fs_setup_casefold(sbi);
+> +	if (err)
+> +		goto free_options;
+> +
+>  #ifdef CONFIG_QUOTA
+>  	sb->dq_op = &f2fs_quota_operations;
+>  	sb->s_qcop = &f2fs_quotactl_ops;
+> @@ -3477,6 +3567,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  free_bio_info:
+>  	for (i = 0; i < NR_PAGE_TYPE; i++)
+>  		kvfree(sbi->write_io[i]);
+> +
+> +#ifdef CONFIG_UNICODE
+> +	utf8_unload(sbi->s_encoding);
+> +#endif
+>  free_options:
+>  #ifdef CONFIG_QUOTA
+>  	for (i = 0; i < MAXQUOTAS; i++)
+> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> index 3aeacd0aacfd2..f9fcca695db9f 100644
+> --- a/fs/f2fs/sysfs.c
+> +++ b/fs/f2fs/sysfs.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/proc_fs.h>
+>  #include <linux/f2fs_fs.h>
+>  #include <linux/seq_file.h>
+> +#include <linux/unicode.h>
+>  
+>  #include "f2fs.h"
+>  #include "segment.h"
+> @@ -81,6 +82,19 @@ static ssize_t unusable_show(struct f2fs_attr *a,
+>  		(unsigned long long)unusable);
+>  }
+>  
+> +static ssize_t encoding_show(struct f2fs_attr *a,
+> +		struct f2fs_sb_info *sbi, char *buf)
+> +{
+> +#ifdef CONFIG_UNICODE
+> +	if (f2fs_sb_has_casefold(sbi))
+> +		return snprintf(buf, PAGE_SIZE, "%s (%d.%d.%d)\n",
+> +			sbi->s_encoding->charset,
+> +			(sbi->s_encoding->version >> 16) & 0xff,
+> +			(sbi->s_encoding->version >> 8) & 0xff,
+> +			sbi->s_encoding->version & 0xff);
+> +#endif
+> +	return snprintf(buf, PAGE_SIZE, "(none)");
+> +}
+>  
+>  static ssize_t lifetime_write_kbytes_show(struct f2fs_attr *a,
+>  		struct f2fs_sb_info *sbi, char *buf)
+> @@ -134,6 +148,9 @@ static ssize_t features_show(struct f2fs_attr *a,
+>  	if (f2fs_sb_has_sb_chksum(sbi))
+>  		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+>  				len ? ", " : "", "sb_checksum");
+> +	if (f2fs_sb_has_casefold(sbi))
+> +		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+> +				len ? ", " : "", "casefold");
+>  	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
+>  	return len;
+>  }
+> @@ -365,6 +382,7 @@ enum feat_id {
+>  	FEAT_INODE_CRTIME,
+>  	FEAT_LOST_FOUND,
+>  	FEAT_SB_CHECKSUM,
+> +	FEAT_CASEFOLD,
+>  };
+>  
+>  static ssize_t f2fs_feature_show(struct f2fs_attr *a,
+> @@ -382,6 +400,7 @@ static ssize_t f2fs_feature_show(struct f2fs_attr *a,
+>  	case FEAT_INODE_CRTIME:
+>  	case FEAT_LOST_FOUND:
+>  	case FEAT_SB_CHECKSUM:
+> +	case FEAT_CASEFOLD:
+>  		return snprintf(buf, PAGE_SIZE, "supported\n");
+>  	}
+>  	return 0;
+> @@ -455,6 +474,7 @@ F2FS_GENERAL_RO_ATTR(lifetime_write_kbytes);
+>  F2FS_GENERAL_RO_ATTR(features);
+>  F2FS_GENERAL_RO_ATTR(current_reserved_blocks);
+>  F2FS_GENERAL_RO_ATTR(unusable);
+> +F2FS_GENERAL_RO_ATTR(encoding);
+>  
+>  #ifdef CONFIG_FS_ENCRYPTION
+>  F2FS_FEATURE_RO_ATTR(encryption, FEAT_CRYPTO);
+> @@ -471,6 +491,7 @@ F2FS_FEATURE_RO_ATTR(quota_ino, FEAT_QUOTA_INO);
+>  F2FS_FEATURE_RO_ATTR(inode_crtime, FEAT_INODE_CRTIME);
+>  F2FS_FEATURE_RO_ATTR(lost_found, FEAT_LOST_FOUND);
+>  F2FS_FEATURE_RO_ATTR(sb_checksum, FEAT_SB_CHECKSUM);
+> +F2FS_FEATURE_RO_ATTR(casefold, FEAT_CASEFOLD);
+>  
+>  #define ATTR_LIST(name) (&f2fs_attr_##name.attr)
+>  static struct attribute *f2fs_attrs[] = {
+> @@ -515,6 +536,7 @@ static struct attribute *f2fs_attrs[] = {
+>  	ATTR_LIST(features),
+>  	ATTR_LIST(reserved_blocks),
+>  	ATTR_LIST(current_reserved_blocks),
+> +	ATTR_LIST(encoding),
 
-> On 19. 7. 19. =EC=98=A4=EC=A0=84 10:59, Dmitry Osipenko wrote:
-> > =D0=92 Fri, 19 Jul 2019 10:36:30 +0900
-> > Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >  =20
-> >> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote: =20
-> >>> I noticed that CPU may be crossing the dependency threshold very
-> >>> frequently for some workloads and this results in a lot of
-> >>> interrupts which could be avoided if MCALL client is keeping
-> >>> actual EMC frequency at a higher rate.
-> >>>
-> >>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >>> ---
-> >>>  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
-> >>>  1 file changed, 18 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/devfreq/tegra30-devfreq.c
-> >>> b/drivers/devfreq/tegra30-devfreq.c index
-> >>> c3cf87231d25..4d582809acb6 100644 ---
-> >>> a/drivers/devfreq/tegra30-devfreq.c +++
-> >>> b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static
-> >>> void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
-> >>> =20
-> >>>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
-> >>> *tegra,
-> >>> -					   struct
-> >>> tegra_devfreq_device *dev)
-> >>> +					   struct
-> >>> tegra_devfreq_device *dev,
-> >>> +					   unsigned long freq)
-> >>>  {
-> >>>  	unsigned long avg_threshold, lower, upper;
-> >>> =20
-> >>> @@ -323,6 +324,15 @@ static void
-> >>> tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
-> >>> avg_threshold =3D dev->config->avg_dependency_threshold;
-> >>> avg_threshold =3D avg_threshold * ACTMON_SAMPLING_PERIOD;=20
-> >>> +	/*
-> >>> +	 * If cumulative EMC frequency selection is higher than
-> >>> the
-> >>> +	 * device's, then there is no need to set upper watermark
-> >>> to
-> >>> +	 * a lower value because it will result in unnecessary
-> >>> upper
-> >>> +	 * interrupts.
-> >>> +	 */
-> >>> +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
-> >>> +		upper =3D freq * ACTMON_SAMPLING_PERIOD;   =20
-> >>
-> >> Also, 'upper value is used on the patch5. You can combine this code
-> >> to patch5 or if this patch depends on the cpu notifier, you can
-> >> combine it to the patch of adding cpu notifier without separate
-> >> patch. =20
-> >=20
-> > Well okay, I'll try to squash some of the patches in the next
-> > revision. Usually I'm receiving comments in the other direction,
-> > asking to separate patches into smaller changes ;) So that's more a
-> > personal preference of each maintainer, I'd say.
-> >  =20
->=20
-> Right. We have to make the patch with atomic attribute.
-> But, if there are patches which touch the same code
-> in the same patchset. We can squash or do refactorig
-> of this code.
+Let's document this entry in f2fs.txt and sysfs-fs-f2fs.
 
-The main benefit of having smaller logical changes is that when there is
-a bug, it's easier to narrow down the offending change using bisection.
-And it's just easier to review smaller patches, of course.
+Thanks,
 
-> And also, if possible, I'd like you to make the patch
-> list according to the role of patch. For example,
-> the patches related to the 'watermark' could be sequentially
-> listed. But, it is not forced opinion. If just possible.
-
-Okay, will take this into account.
-
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(f2fs);
+> @@ -535,6 +557,7 @@ static struct attribute *f2fs_feat_attrs[] = {
+>  	ATTR_LIST(inode_crtime),
+>  	ATTR_LIST(lost_found),
+>  	ATTR_LIST(sb_checksum),
+> +	ATTR_LIST(casefold),
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(f2fs_feat);
+> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+> index 65559900d4d76..b7c9c7f721339 100644
+> --- a/include/linux/f2fs_fs.h
+> +++ b/include/linux/f2fs_fs.h
+> @@ -36,6 +36,11 @@
+>  
+>  #define F2FS_MAX_QUOTAS		3
+>  
+> +#define F2FS_ENC_UTF8_12_1	1
+> +#define F2FS_ENC_STRICT_MODE_FL	(1 << 0)
+> +#define f2fs_has_strict_mode(sbi) \
+> +	(sbi->s_encoding_flags & F2FS_ENC_STRICT_MODE_FL)
+> +
+>  #define F2FS_IO_SIZE(sbi)	(1 << F2FS_OPTION(sbi).write_io_size_bits) /* Blocks */
+>  #define F2FS_IO_SIZE_KB(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 2)) /* KB */
+>  #define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
+> @@ -109,7 +114,9 @@ struct f2fs_super_block {
+>  	struct f2fs_device devs[MAX_DEVICES];	/* device list */
+>  	__le32 qf_ino[F2FS_MAX_QUOTAS];	/* quota inode numbers */
+>  	__u8 hot_ext_count;		/* # of hot file extension */
+> -	__u8 reserved[310];		/* valid reserved region */
+> +	__le16  s_encoding;		/* Filename charset encoding */
+> +	__le16  s_encoding_flags;	/* Filename charset encoding flags */
+> +	__u8 reserved[306];		/* valid reserved region */
+>  	__le32 crc;			/* checksum of superblock */
+>  } __packed;
+>  
+> 
