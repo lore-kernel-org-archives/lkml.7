@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EEDC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFDFC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1CF218A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444E3218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508957;
-	bh=jcUkRjwMhQ/ORG8sZHca2w3d73uThSyyH5niWnxwa2Q=;
+	s=default; t=1563508964;
+	bh=AsWeCu7Nx+RB8vYcUFehf/VOmlzRRWN98qdGTaeI180=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQHi4Liuf9BvEra43mmAv8owNSb11fkSTksu/JAJjoECfJIaFkfshoHWA1oscdAR/
-	 5jH5DfJKj6oT/grQjS6hM/lrJni6PeD38sFhakX7MgrvxMBaheQMHPulKvjdqs4RGG
-	 ENecf4/RReyxG9XvDYOjvmJ6SFKtJV7oMe7gR2Xs=
+	b=TZXNFmPg/A5DhbMtpCj9cOV+qK67dHA3/UlZOJgCr1nfPKLS1WeQNBfGUyKHDKhDL
+	 8OirVmJ1HsO/TBM+G4Q5qZiewjpuuayI7FsXOBxdR/28buo02CU/waAfvyHmExJXxb
+	 zuu3NHd9+hnIPlpMSYUXF7aGsMAneYP7N9ro9lCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGSECg (ORCPT
+        id S1729998AbfGSECY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:02:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbfGSECd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:02:33 -0400
+        id S1729926AbfGSECT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:02:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841E021852;
-        Fri, 19 Jul 2019 04:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B79421851;
+        Fri, 19 Jul 2019 04:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508953;
-        bh=jcUkRjwMhQ/ORG8sZHca2w3d73uThSyyH5niWnxwa2Q=;
+        s=default; t=1563508938;
+        bh=AsWeCu7Nx+RB8vYcUFehf/VOmlzRRWN98qdGTaeI180=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ew44vIQZSxDbfCGU+ruk3+waCnyK239Uipco9VjE/OAaa8MvLBM1IOi3urtHlUsId
-         yoUMHC7gNt+rrJ3jUvQg7gxuSk6fc+RFpPBPhumy4XSuuqCObrTQkrS7j6nh18XcI3
-         rL0zQvJDE8IRkCcByvFgWaJZVz1WqvIwNs+eXw38=
+        b=QdKGf8EQldXu2w+Ahhtf3gB0DSh4c19pJx3VLNrxwYDiZdsgY7+K8ruHA8J/sASpW
+         dou3qAaNDhc8jQU3VpRNo0h+WYOn+q62gE4SQvkAXy7+9khAMIGl7rBKDg5YmOm5aO
+         gpV/7UPvJrCN0cq48ZdA/fcFWBNfCLoRSXcH71yA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
         Cyrill Gorcunov <gorcunov@gmail.com>,
         Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Roman Gushchin <guro@fb.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.2 170/171] mm: use down_read_killable for locking mmap_sem in access_remote_vm
-Date:   Thu, 18 Jul 2019 23:56:41 -0400
-Message-Id: <20190719035643.14300-170-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 165/171] proc: use down_read_killable mmap_sem for /proc/pid/clear_refs
+Date:   Thu, 18 Jul 2019 23:56:36 -0400
+Message-Id: <20190719035643.14300-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -72,67 +72,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 1e426fe28261b03f297992e89da3320b42816f4e ]
+[ Upstream commit c46038017fbdcac627b670c9d4176f1d0c2f5fa3 ]
 
-This function is used by ptrace and proc files like /proc/pid/cmdline and
-/proc/pid/environ.
+Do not remain stuck forever if something goes wrong.  Using a killable
+lock permits cleanup of stuck tasks and simplifies investigation.
 
-Access_remote_vm never returns error codes, all errors are ignored and
-only size of successfully read data is returned.  So, if current task was
-killed we'll simply return 0 (bytes read).
+Replace the only unkillable mmap_sem lock in clear_refs_write().
 
-Mmap_sem could be locked for a long time or forever if something goes
-wrong.  Using a killable lock permits cleanup of stuck tasks and
-simplifies investigation.
-
-Link: http://lkml.kernel.org/r/156007494202.3335.16782303099589302087.stgit@buzz
+Link: http://lkml.kernel.org/r/156007493826.3335.5424884725467456239.stgit@buzz
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
 Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Cyrill Gorcunov <gorcunov@gmail.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Roman Gushchin <guro@fb.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory.c | 4 +++-
- mm/nommu.c  | 3 ++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ fs/proc/task_mmu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index ddf20bd0c317..9a4401d21e94 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4349,7 +4349,9 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
- 	void *old_buf = buf;
- 	int write = gup_flags & FOLL_WRITE;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 1d9c63cd8a3c..abcd9513efff 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1136,7 +1136,10 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
+ 			goto out_mm;
+ 		}
  
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem))
-+		return 0;
-+
- 	/* ignore errors, just check how much was successfully transferred */
- 	while (len) {
- 		int bytes, ret, offset;
-diff --git a/mm/nommu.c b/mm/nommu.c
-index d8c02fbe03b5..b2823519f8cd 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -1792,7 +1792,8 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
- 	struct vm_area_struct *vma;
- 	int write = gup_flags & FOLL_WRITE;
- 
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem))
-+		return 0;
- 
- 	/* the access must start within one of the target process's mappings */
- 	vma = find_vma(mm, addr);
+-		down_read(&mm->mmap_sem);
++		if (down_read_killable(&mm->mmap_sem)) {
++			count = -EINTR;
++			goto out_mm;
++		}
+ 		tlb_gather_mmu(&tlb, mm, 0, -1);
+ 		if (type == CLEAR_REFS_SOFT_DIRTY) {
+ 			for (vma = mm->mmap; vma; vma = vma->vm_next) {
 -- 
 2.20.1
 
