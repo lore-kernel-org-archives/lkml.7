@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104E8C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB95C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D952320873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380EF2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510664;
-	bh=dozGJpyLuR+/7wW4VPK5UUM5ImaAQ/K0982wrhAPpQI=;
+	s=default; t=1563510667;
+	bh=qceo+/TEZVRgGCiRPA/chu92E1luGtQgGGimokaAYQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYLnnwF/QjnI0JAKVMaFT0UNWDSkjqZsB3i/rSkd/iJw6hr5ogjkLKAFZOLsbt8GM
-	 dOVx8AA1R8OJx+ylVFqdvJS4LpolCo7ZTk8v5C4Fr0lf47yV8FRIMbZ4yp7B5vZj8B
-	 P+EfbkAaQESFRKSJ/YhbrXlpi69yP8QxnBHJ8azQ=
+	b=DjmXRyvjwkpLasd/rUSKnYjTr2llKOqPnuSMVmjx1/vL5Ufl0TAQxzxQnXpuNduvL
+	 cTGm+6WnAZdIekPFz3dzEodorVu+sJay4nZvnDlZ4p/ySh5F0s+8AdaPujc0UB3Idf
+	 nGCUYCu6v13i2nxmFmaOlphxGYCF++23xS6vyX8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbfGSEEr (ORCPT
+        id S1731217AbfGSEEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731145AbfGSEEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:04:39 -0400
+        id S1728444AbfGSEEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:04:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CF69218A6;
-        Fri, 19 Jul 2019 04:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D665721852;
+        Fri, 19 Jul 2019 04:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509078;
-        bh=dozGJpyLuR+/7wW4VPK5UUM5ImaAQ/K0982wrhAPpQI=;
+        s=default; t=1563509075;
+        bh=qceo+/TEZVRgGCiRPA/chu92E1luGtQgGGimokaAYQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsEOKYm62pq0LxVZknIn5Qw8NA/9nnNseEe/yzLvgHK4dEKwfDOJ9rWeiH0IyZG10
-         cQ9A7ZByVBKr/ztOE6zVXjpqHeEHPMXR6XEL2Ui5U5savoAdgzWVuomkSllxtJi9z3
-         iNNLWGR6VeO0apznKWKgt+Q4s+Glll8cfXPT0Ylw=
+        b=VXxZE2wf3D9qECqHEL9/VzA1m2PVZf/PehME29z8XV9czUk9XGzlJxYl+amQ8Pu08
+         87uiR5Z4WaJgo2bLL38LO7ihCjGMoV3w+oL1yxFNjlRrLuGfd3XUK62v/aEWdQyI7a
+         8Nyfl7fNPMFzT2O41mNpkFROVkazuxyK0ccWP1eY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 056/141] KVM: nVMX: Intercept VMWRITEs to GUEST_{CS,SS}_AR_BYTES
-Date:   Fri, 19 Jul 2019 00:01:21 -0400
-Message-Id: <20190719040246.15945-56-sashal@kernel.org>
+Cc:     EJ Hsu <ejh@nvidia.com>, Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 054/141] usb: gadget: storage: Remove warning message
+Date:   Fri, 19 Jul 2019 00:01:19 -0400
+Message-Id: <20190719040246.15945-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -61,106 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: EJ Hsu <ejh@nvidia.com>
 
-[ Upstream commit b643780562af5378ef7fe731c65b8f93e49c59c6 ]
+[ Upstream commit e70b3f5da00119e057b7faa557753fee7f786f17 ]
 
-VMMs frequently read the guest's CS and SS AR bytes to detect 64-bit
-mode and CPL respectively, but effectively never write said fields once
-the VM is initialized.  Intercepting VMWRITEs for the two fields saves
-~55 cycles in copy_shadow_to_vmcs12().
+This change is to fix below warning message in following scenario:
+usb_composite_setup_continue: Unexpected call
 
-Because some Intel CPUs, e.g. Haswell, drop the reserved bits of the
-guest access rights fields on VMWRITE, exposing the fields to L1 for
-VMREAD but not VMWRITE leads to inconsistent behavior between L1 and L2.
-On hardware that drops the bits, L1 will see the stripped down value due
-to reading the value from hardware, while L2 will see the full original
-value as stored by KVM.  To avoid such an inconsistency, emulate the
-behavior on all CPUS, but only for intercepted VMWRITEs so as to avoid
-introducing pointless latency into copy_shadow_to_vmcs12(), e.g. if the
-emulation were added to vmcs12_write_any().
+When system tried to enter suspend, the fsg_disable() will be called to
+disable fsg driver and send a signal to fsg_main_thread. However, at
+this point, the fsg_main_thread has already been frozen and can not
+respond to this signal. So, this signal will be pended until
+fsg_main_thread wakes up.
 
-Since the AR_BYTES emulation is done only for intercepted VMWRITE, if a
-future patch (re)exposed AR_BYTES for both VMWRITE and VMREAD, then KVM
-would end up with incosistent behavior on pre-Haswell hardware, e.g. KVM
-would drop the reserved bits on intercepted VMWRITE, but direct VMWRITE
-to the shadow VMCS would not drop the bits.  Add a WARN in the shadow
-field initialization to detect any attempt to expose an AR_BYTES field
-without updating vmcs12_write_any().
+Once system resumes from suspend, fsg_main_thread will detect a signal
+pended and do some corresponding action (in handle_exception()). Then,
+host will send some setup requests (get descriptor, set configuration...)
+to UDC driver trying to enumerate this device. During the handling of "set
+configuration" request, it will try to sync up with fsg_main_thread by
+sending a signal (which is the same as the signal sent by fsg_disable)
+to it. In a similar manner, once the fsg_main_thread receives this
+signal, it will call handle_exception() to handle the request.
 
-Note, emulation of the AR_BYTES reserved bit behavior is based on a
-patch[1] from Jim Mattson that applied the emulation to all writes to
-vmcs12 so that live migration across different generations of hardware
-would not introduce divergent behavior.  But given that live migration
-of nested state has already been enabled, that ship has sailed (not to
-mention that no sane VMM will be affected by this behavior).
+However, if the fsg_main_thread wakes up from suspend a little late and
+"set configuration" request from Host arrives a little earlier,
+fsg_main_thread might come across the request from "set configuration"
+when it handles the signal from fsg_disable(). In this case, it will
+handle this request as well. So, when fsg_main_thread tries to handle
+the signal sent from "set configuration" later, there will nothing left
+to do and warning message "Unexpected call" is printed.
 
-[1] https://patchwork.kernel.org/patch/10483321/
-
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: EJ Hsu <ejh@nvidia.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx/nested.c             | 15 +++++++++++++++
- arch/x86/kvm/vmx/vmcs_shadow_fields.h |  4 ++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/f_mass_storage.c | 21 ++++++++++++++------
+ drivers/usb/gadget/function/storage_common.h |  1 +
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 897ae4b62980..79c76318bcb8 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -91,6 +91,10 @@ static void init_vmcs_shadow_fields(void)
- 			pr_err("Missing field from shadow_read_write_field %x\n",
- 			       field + 1);
+diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
+index 043f97ad8f22..982c3e89eb0d 100644
+--- a/drivers/usb/gadget/function/f_mass_storage.c
++++ b/drivers/usb/gadget/function/f_mass_storage.c
+@@ -2293,8 +2293,7 @@ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+ static void fsg_disable(struct usb_function *f)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = NULL;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++	raise_exception(fsg->common, FSG_STATE_DISCONNECT);
+ }
  
-+		WARN_ONCE(field >= GUEST_ES_AR_BYTES &&
-+			  field <= GUEST_TR_AR_BYTES,
-+			  "Update vmcs12_write_any() to expose AR_BYTES RW");
+ 
+@@ -2307,6 +2306,7 @@ static void handle_exception(struct fsg_common *common)
+ 	enum fsg_state		old_state;
+ 	struct fsg_lun		*curlun;
+ 	unsigned int		exception_req_tag;
++	struct fsg_dev		*fsg;
+ 
+ 	/*
+ 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
+@@ -2413,9 +2413,19 @@ static void handle_exception(struct fsg_common *common)
+ 		break;
+ 
+ 	case FSG_STATE_CONFIG_CHANGE:
+-		do_set_interface(common, common->new_fsg);
+-		if (common->new_fsg)
++		fsg = common->new_fsg;
++		/*
++		 * Add a check here to double confirm if a disconnect event
++		 * occurs and common->new_fsg has been cleared.
++		 */
++		if (fsg) {
++			do_set_interface(common, fsg);
+ 			usb_composite_setup_continue(common->cdev);
++		}
++		break;
 +
- 		/*
- 		 * PML and the preemption timer can be emulated, but the
- 		 * processor cannot vmwrite to fields that don't exist
-@@ -4532,6 +4536,17 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 		vmcs12 = get_shadow_vmcs12(vcpu);
++	case FSG_STATE_DISCONNECT:
++		do_set_interface(common, NULL);
+ 		break;
+ 
+ 	case FSG_STATE_EXIT:
+@@ -2989,8 +2999,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
+ 
+ 	DBG(fsg, "unbind\n");
+ 	if (fsg->common->fsg == fsg) {
+-		fsg->common->new_fsg = NULL;
+-		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++		raise_exception(fsg->common, FSG_STATE_DISCONNECT);
+ 		/* FIXME: make interruptible or killable somehow? */
+ 		wait_event(common->fsg_wait, common->fsg != fsg);
  	}
- 
-+	/*
-+	 * Some Intel CPUs intentionally drop the reserved bits of the AR byte
-+	 * fields on VMWRITE.  Emulate this behavior to ensure consistent KVM
-+	 * behavior regardless of the underlying hardware, e.g. if an AR_BYTE
-+	 * field is intercepted for VMWRITE but not VMREAD (in L1), then VMREAD
-+	 * from L1 will return a different value than VMREAD from L2 (L1 sees
-+	 * the stripped down value, L2 sees the full value as stored by KVM).
-+	 */
-+	if (field >= GUEST_ES_AR_BYTES && field <= GUEST_TR_AR_BYTES)
-+		field_value &= 0x1f0ff;
-+
- 	if (vmcs12_write_any(vmcs12, field, field_value) < 0)
- 		return nested_vmx_failValid(vcpu,
- 			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
-diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-index 132432f375c2..97dd5295be31 100644
---- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-+++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-@@ -40,14 +40,14 @@ SHADOW_FIELD_RO(VM_EXIT_INSTRUCTION_LEN)
- SHADOW_FIELD_RO(IDT_VECTORING_INFO_FIELD)
- SHADOW_FIELD_RO(IDT_VECTORING_ERROR_CODE)
- SHADOW_FIELD_RO(VM_EXIT_INTR_ERROR_CODE)
-+SHADOW_FIELD_RO(GUEST_CS_AR_BYTES)
-+SHADOW_FIELD_RO(GUEST_SS_AR_BYTES)
- SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL)
- SHADOW_FIELD_RW(EXCEPTION_BITMAP)
- SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE)
- SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD)
- SHADOW_FIELD_RW(VM_ENTRY_INSTRUCTION_LEN)
- SHADOW_FIELD_RW(TPR_THRESHOLD)
--SHADOW_FIELD_RW(GUEST_CS_AR_BYTES)
--SHADOW_FIELD_RW(GUEST_SS_AR_BYTES)
- SHADOW_FIELD_RW(GUEST_INTERRUPTIBILITY_INFO)
- SHADOW_FIELD_RW(VMX_PREEMPTION_TIMER_VALUE)
- 
+diff --git a/drivers/usb/gadget/function/storage_common.h b/drivers/usb/gadget/function/storage_common.h
+index e5e3a2553aaa..12687f7e3de9 100644
+--- a/drivers/usb/gadget/function/storage_common.h
++++ b/drivers/usb/gadget/function/storage_common.h
+@@ -161,6 +161,7 @@ enum fsg_state {
+ 	FSG_STATE_ABORT_BULK_OUT,
+ 	FSG_STATE_PROTOCOL_RESET,
+ 	FSG_STATE_CONFIG_CHANGE,
++	FSG_STATE_DISCONNECT,
+ 	FSG_STATE_EXIT,
+ 	FSG_STATE_TERMINATED
+ };
 -- 
 2.20.1
 
