@@ -2,123 +2,204 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB47C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD10C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B4120665
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A182184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfGSAzK (ORCPT
+        id S1726188AbfGSA67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:55:10 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:58056 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726243AbfGSAzK (ORCPT
+        Thu, 18 Jul 2019 20:58:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39867 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSA66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:55:10 -0400
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-        by 156.147.23.52 with ESMTP; 19 Jul 2019 09:55:07 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.126 with ESMTP; 19 Jul 2019 09:55:07 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 19 Jul 2019 09:54:03 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Byungchul Park <max.byungchul.park@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@lge.com
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-Message-ID: <20190719005403.GB28226@X58A-UD3R>
-References: <20190711195839.GA163275@google.com>
- <20190712063240.GD7702@X58A-UD3R>
- <20190712125116.GB92297@google.com>
- <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
- <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
- <20190713151330.GE26519@linux.ibm.com>
- <20190713154257.GE133650@google.com>
- <20190713174111.GG26519@linux.ibm.com>
- <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
- <20190718213419.GV14271@linux.ibm.com>
+        Thu, 18 Jul 2019 20:58:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so13655318pgi.6;
+        Thu, 18 Jul 2019 17:58:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RWWNgv0WcWjfE9wWYHQhoeNKyBfGxLtvDshgZHYc1vE=;
+        b=TI80sLTaRhpFMe8tn7BS5nXuhpKYxs7wmEnANGJMyCFvkvEteuEhqCEtgO0ziIu0rf
+         kEy9Gtv+msFRMIANvUU/oimdps2d2hnYX2IJJFKm/jM1Vfy4c60u8wy2o52mfyyvCmYb
+         dKkQrHZU2RaZQ/41n1L2jj8El/rsasHr2hOnJKG0HOW2gZ9w535y0tv4hV3geHY3dKtn
+         U5ac4XnCiGMY/gTJTTgc/vF2u7pbq5M4ITjv4rPKi+MVyAZfZSeC8FuFkQv8hA2Y5rYw
+         gESZNpyAmd5tyMhxRLQRH7XXgye29x82D4QfoIgonBwQ1oizdLloA1uaSsRVLD6/Vaxz
+         SJZQ==
+X-Gm-Message-State: APjAAAWj6Tt+Yf5WtByAGrl8JvcjFmbKinrZqT/kY5ux7+vUR6NwdWzT
+        MrcLJln5kPBAKvp4daMHvG8=
+X-Google-Smtp-Source: APXvYqxZoIKjz9ViGfUIEExjwwIbnjfGtWb7w9xiUnCbHyVRrBrLCxFCFJP5cS9IAYKOxxdelYaABg==
+X-Received: by 2002:a63:a346:: with SMTP id v6mr4814748pgn.57.1563497937499;
+        Thu, 18 Jul 2019 17:58:57 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id j128sm14025166pfg.28.2019.07.18.17.58.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 17:58:56 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v3 0/9] x86: Concurrent TLB flushes
+Date:   Thu, 18 Jul 2019 17:58:28 -0700
+Message-Id: <20190719005837.4150-1-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718213419.GV14271@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 02:34:19PM -0700, Paul E. McKenney wrote:
-> On Thu, Jul 18, 2019 at 12:14:22PM -0400, Joel Fernandes wrote:
-> > Trimming the list a bit to keep my noise level low,
-> > 
-> > On Sat, Jul 13, 2019 at 1:41 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > [snip]
-> > > > It still feels like you guys are hyperfocusing on this one particular
-> > > > > knob.  I instead need you to look at the interrelating knobs as a group.
-> > > >
-> > > > Thanks for the hints, we'll do that.
-> > > >
-> > > > > On the debugging side, suppose someone gives you an RCU bug report.
-> > > > > What information will you need?  How can you best get that information
-> > > > > without excessive numbers of over-and-back interactions with the guy
-> > > > > reporting the bug?  As part of this last question, what information is
-> > > > > normally supplied with the bug?  Alternatively, what information are
-> > > > > bug reporters normally expected to provide when asked?
-> > > >
-> > > > I suppose I could dig out some of our Android bug reports of the past where
-> > > > there were RCU issues but if there's any fires you are currently fighting do
-> > > > send it our way as debugging homework ;-)
-> > >
-> > >   Suppose that you were getting RCU CPU stall
-> > > warnings featuring multi_cpu_stop() called from cpu_stopper_thread().
-> > > Of course, this really means that some other CPU/task is holding up
-> > > multi_cpu_stop() without also blocking the current grace period.
-> > >
-> > 
-> > So I took a shot at this trying to learn how CPU stoppers work in
-> > relation to this problem.
-> > 
-> > I am assuming here say CPU X has entered MULTI_STOP_DISABLE_IRQ state
-> > in multi_cpu_stop() but another CPU Y has not yet entered this state.
-> > So CPU X is stalling RCU but it is really because of CPU Y. Now in the
-> > problem statement, you mentioned CPU Y is not holding up the grace
-> > period, which means Y doesn't have any of IRQ, BH or preemption
-> > disabled ; but is still somehow stalling RCU indirectly by troubling
-> > X.
-> > 
-> > This can only happen if :
-> > - CPU Y has a thread executing on it that is higher priority than CPU
-> > X's stopper thread which prevents it from getting scheduled. - but the
-> > CPU stopper thread (migration/..) is highest priority RT so this would
-> > be some kind of an odd scheduler bug.
-> > - There is a bug in the CPU stopper machinery itself preventing it
-> > from scheduling the stopper on Y. Even though Y is not holding up the
-> > grace period.
-> 
-> - CPU Y might have already passed through its quiescent state for
->   the current grace period, then disabled IRQs indefinitely.
+[ Cover-letter is identical to v2, including benchmark results,
+  excluding the change log. ] 
 
-Or for a longer time than the period that rcu considers as a stall. Or
-preemption disabled for that long time. Or the stopper on Y even has yet
-to be woken up inside scheduler because of any reasons but maybe locks.
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each INVLPG can take 100s of
+cycles. This patch-set allows TLB flushes to be run concurrently: first
+request the remote CPUs to initiate the flush, then run it locally, and
+finally wait for the remote CPUs to finish their work.
 
->   Now, CPU Y would block a later grace period, but CPU X is
->   preventing the current grace period from ending, so no such
->   later grace period can start.
-> 
-> > Did I get that right? Would be exciting to run the rcutorture test
-> > once Paul has it available to reproduce this problem.
-> 
-> Working on it!  Slow, I know!
-> 
-> 							Thanx, Paul
+In addition, there are various small optimizations to avoid unwarranted
+false-sharing and atomic operations.
+
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on this
+behavior of on_each_cpu() that invoked functions first remotely and only
+then locally [Peter says he remembers someone might do so, but without
+further information it is hard to know how to address it].
+
+Running sysbench on dax/ext4 w/emulated-pmem, write-cache disabled on
+2-socket, 48-logical-cores (24+SMT) Haswell-X, 5 repetitions:
+
+ sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+  --file-io-mode=mmap --threads=X --file-fsync-mode=fdatasync run
+
+  Th.   tip-jun28 avg (stdev)   +patch-set avg (stdev)  change
+  ---   ---------------------   ----------------------  ------
+  1     1267765 (14146)         1299253 (5715)          +2.4%
+  2     1734644 (11936)         1799225 (19577)         +3.7%
+  4     2821268 (41184)         2919132 (40149)         +3.4%
+  8     4171652 (31243)         4376925 (65416)         +4.9%
+  16    5590729 (24160)         5829866 (8127)          +4.2%
+  24    6250212 (24481)         6522303 (28044)         +4.3%
+  32    3994314 (26606)         4077543 (10685)         +2.0%
+  48    4345177 (28091)         4417821 (41337)         +1.6%
+
+(Note that on configurations with up to 24 threads numactl was used to
+set all threads on socket 1, which explains the drop in performance when
+going to 32 threads).
+
+Running the same benchmark with security mitigations disabled (PTI,
+Spectre, MDS):
+
+  Th.   tip-jun28 avg (stdev)   +patch-set avg (stdev)  change
+  ---   ---------------------   ----------------------  ------
+  1     1598896 (5174)          1607903 (4091)          +0.5%
+  2     2109472 (17827)         2224726 (4372)          +5.4%
+  4     3448587 (11952)         3668551 (30219)         +6.3%
+  8     5425778 (29641)         5606266 (33519)         +3.3%
+  16    6931232 (34677)         7054052 (27873)         +1.7%
+  24    7612473 (23482)         7783138 (13871)         +2.2%
+  32    4296274 (18029)         4283279 (32323)         -0.3%
+  48    4770029 (35541)         4764760 (13575)         -0.1%
+
+Presumably, PTI requires two invalidations of each mapping, which allows
+to get higher benefits from concurrency when PTI is on. At the same
+time, when mitigations are on, other overheads reduce the potential
+speedup.
+
+I tried to reduce the size of the code of the main patch, which required
+restructuring of the series.
+
+v2 -> v3:
+* Open-code the remote/local-flush decision code [Andy]
+* Fix hyper-v, Xen implementations [Andrew]
+* Fix redundant TLB flushes.
+
+v1 -> v2:
+* Removing the patches that Thomas took [tglx]
+* Adding hyper-v, Xen compile-tested implementations [Dave]
+* Removing UV [Andy]
+* Adding lazy optimization, removing inline keyword [Dave]
+* Restructuring patch-set
+
+RFCv2 -> v1:
+* Fix comment on flush_tlb_multi [Juergen]
+* Removing async invalidation optimizations [Andy]
+* Adding KVM support [Paolo]
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: x86@kernel.org
+Cc: xen-devel@lists.xenproject.org
+
+Nadav Amit (9):
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Remove reason as argument for flush_tlb_func_local()
+  x86/mm/tlb: Open-code on_each_cpu_cond_mask() for tlb_is_not_lazy()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Privatize cpu_tlbstate
+  x86/mm/tlb: Do not make is_lazy dirty for no reason
+  cpumask: Mark functions as pure
+  x86/mm/tlb: Remove UV special case
+  x86/mm/tlb: Remove unnecessary uses of the inline keyword
+
+ arch/x86/hyperv/mmu.c                 |  10 +-
+ arch/x86/include/asm/paravirt.h       |   6 +-
+ arch/x86/include/asm/paravirt_types.h |   4 +-
+ arch/x86/include/asm/tlbflush.h       |  47 ++++-----
+ arch/x86/include/asm/trace/hyperv.h   |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 ++-
+ arch/x86/kernel/paravirt.c            |   2 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 133 ++++++++++++++++----------
+ arch/x86/xen/mmu_pv.c                 |  11 +--
+ include/linux/cpumask.h               |   6 +-
+ include/linux/smp.h                   |  27 ++++--
+ include/trace/events/xen.h            |   2 +-
+ kernel/smp.c                          | 133 ++++++++++++--------------
+ 14 files changed, 218 insertions(+), 178 deletions(-)
+
+-- 
+2.20.1
+
