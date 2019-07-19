@@ -2,152 +2,109 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E23C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5A3C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A102084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421942084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="MzWExJYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfGSRjj (ORCPT
+        id S1729299AbfGSRkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 13:39:39 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40978 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbfGSRjj (ORCPT
+        Fri, 19 Jul 2019 13:40:16 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36083 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfGSRkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 13:39:39 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 73B8E28C74F
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, dianders@chromium.org,
-        cychiang@chromium.org, Jaroslav Kysela <perex@perex.cz>,
-        alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] SoC: rockchip: rockchip_max98090: Enable MICBIAS for headset keypress detection
-Date:   Fri, 19 Jul 2019 19:39:29 +0200
-Message-Id: <20190719173929.24065-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 19 Jul 2019 13:40:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id o9so60139798iom.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 10:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PdRVJYMKZyuR04Jtd0bhLu62MengDRxfpO0Ujclc4Yc=;
+        b=MzWExJYAEzzbpyMApm296Qq5Hxox5HHH9vzMtgdxFwpIs8cMfZNXP+CKk1xGirwqxc
+         b5hqpuO6R5U6h626xnidcBcgIRC+bV4FQxfbfAicUNqsZ0IrIgQMC8BdfokeYkXnYl3V
+         kU2Dj26gLYG07Gl7NVFPCAjgSBMtec40vr6RZyNiLp37BqBxQdKMRXKElhLMgyJppxeH
+         0A9oMcHOuvKR4r7a2tG/jlqPlSXtqTbOp+FaBq2c5Z0J4qEE4PBucy8vEWj/XcrVA3oD
+         lCBTwEiPnuQ0IvyaQvk8M2HNvbE4k0bYP3eDEwhcXQr0CUhfxrJEuXeoNsTn+d9T9GNj
+         aGyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PdRVJYMKZyuR04Jtd0bhLu62MengDRxfpO0Ujclc4Yc=;
+        b=ZbILM/xcs2p2wuNQNK4Cv9RGNS/Oa+f9bnpl/O2WiX/C5LZbXYQK8uR8m85KQQ5LcB
+         uvWmV4WGzB+uHUxekDHRA96e9hDtoSsciLWDjzc1VPlq5Ru0wTD/+PzSgaiGkkEWEx0O
+         3za1qTfIt3Rt1nFKYbZgM4Qq76pBWcR4iY6E+LUgys7XJ/jxeOEVzMcZfq+aUXg7zwQx
+         ThAcbdc9UlqJKZxT2Wclj7FTEqMTfAj2ISQ8WOiDw8Xdha8ifl0/KZhViuUobUwKkych
+         rJ2q4qjZikTtthHi46pkOvlWiiGuqcY5duajqiEql3Mli9TwRpjEAvv6rSCvuNbaLeu+
+         oRtw==
+X-Gm-Message-State: APjAAAUhaZ1qylWwfnNozHWBwAB8rKVTgk15dc4mSEJl2L3CG25kOiBE
+        gz6mCE3UkJ+2FTsECEKwxVzsYs1uIWg=
+X-Google-Smtp-Source: APXvYqzw3zsnmFepW9bFPFgBHcfLpQZri7oh1XqrLswjAXtPhVt+sv5PwJwNgAVeFdkNkfQxGYXCxQ==
+X-Received: by 2002:a02:13c3:: with SMTP id 186mr55698264jaz.30.1563558015488;
+        Fri, 19 Jul 2019 10:40:15 -0700 (PDT)
+Received: from ?IPv6:2600:1007:b101:1239:e89f:3ba2:18ab:b874? ([2600:1007:b101:1239:e89f:3ba2:18ab:b874])
+        by smtp.gmail.com with ESMTPSA id s24sm27177022ioc.58.2019.07.19.10.40.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 10:40:14 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace on i386
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <20190719170343.GA13680@linux.intel.com>
+Date:   Fri, 19 Jul 2019 13:40:13 -0400
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
+References: <20190719170343.GA13680@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        keescook@chromium.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TS3A227E says that the headset keypress detection needs the MICBIAS
-power in order to report the key events to ensure proper operation
-The headset keypress detection needs the MICBIAS power in order to report
-the key events all the time as long as MIC is present. So MICBIAS pin
-is forced on when a MICROPHONE is detected.
 
-On Veyron Minnie I observed that if the MICBIAS power is not present and
-the key press detection is activated (just because it is enabled when you
-insert a headset), it randomly reports a keypress on insert.
-E.g. (KEY_PLAYPAUSE)
 
- Event: (SW_HEADPHONE_INSERT), value 1
- Event: (SW_MICROPHONE_INSERT), value 1
- Event: -------------- SYN_REPORT ------------
- Event: (KEY_PLAYPAUSE), value 1
+> On Jul 19, 2019, at 1:03 PM, Sean Christopherson <sean.j.christopherson@in=
+tel.com> wrote:
+>=20
+> The generic vDSO implementation, starting with commit
+>=20
+>   7ac870747988 ("x86/vdso: Switch to generic vDSO implementation")
+>=20
+> breaks seccomp-enabled userspace on 32-bit x86 (i386) kernels.  Prior to
+> the generic implementation, the x86 vDSO used identical code for both
+> x86_64 and i386 kernels, which worked because it did all calcuations using=
 
-Userspace thinks that KEY_PLAYPAUSE is pressed and produces the annoying
-effect that the media player starts a play/pause loop.
+> structs with naturally sized variables, i.e. didn't use __kernel_timespec.=
 
-Note that, although most of the time the key reported is the one
-associated with BTN_0, not always this is true. On my tests I also saw
-different keys reported
+>=20
+> The generic vDSO does its internal calculations using __kernel_timespec,
+> which in turn requires the i386 fallback syscall to use the 64-bit
+> variation, __NR_clock_gettime64.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Some notes about the patch
+This is basically doomed to break eventually, right?
 
-Steps to test (userspace GNOME3):
-1. Play audio using a media player
-2. Make sure the Internal MIC is selected as audio input device and
-doesn't switches when you insert the headset.
-3. Insert a headset (with buttons)
+I=E2=80=99ve occasionally considered adding a concept of =E2=80=9Cseccomp al=
+iases=E2=80=9D.  The idea is that, if a filter returns anything other than A=
+LLOW, we re-run it with a different nr that we dig out it a small list of su=
+ch cases. This would be limited to cases where the new syscall does the same=
+ thing with the same arguments.
 
-Audio switches to headphones and you can hear that enters on a loop
-play/pause if the KEY_PLAYPAUSE was reported. Also you can check that
-press to any headset button doesn't work.
+I want this for restart_syscall: I want to renumber it.
 
-The part where the datasheet says that power must be supplied in order
-to have keypress detection work is in page 44 of [1]
-
-"
-The TS3A227E can monitor the microphone line of a 4-pole headset to
-detect up to 4 key presses/releases and report the key press events
-back to the host. The key press detection must be activated manually
-by setting the KP Enable bit of the Device Settings 2 register. To
-ensure proper operation the MICBIAS voltage must be applied to MICP
-before enabling key press detection.
-"
-
-[1]  http://www.ti.com/lit/ds/symlink/ts3a227e.pdf
-
- sound/soc/rockchip/rockchip_max98090.c | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index c5fc24675a33..782e534d4c0d 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -61,6 +61,37 @@ static const struct snd_kcontrol_new rk_mc_controls[] = {
- 	SOC_DAPM_PIN_SWITCH("Speaker"),
- };
- 
-+static int rk_jack_event(struct notifier_block *nb, unsigned long event,
-+			 void *data)
-+{
-+	struct snd_soc_jack *jack = (struct snd_soc_jack *)data;
-+	struct snd_soc_dapm_context *dapm = &jack->card->dapm;
-+
-+	if (event & SND_JACK_MICROPHONE)
-+		snd_soc_dapm_force_enable_pin(dapm, "MICBIAS");
-+	else
-+		snd_soc_dapm_disable_pin(dapm, "MICBIAS");
-+
-+	snd_soc_dapm_sync(dapm);
-+
-+	return 0;
-+}
-+
-+static struct notifier_block rk_jack_nb = {
-+	.notifier_call = rk_jack_event,
-+};
-+
-+static int rk_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	/*
-+	 * The jack has already been created in the rk_98090_headset_init()
-+	 * function.
-+	 */
-+	snd_soc_jack_notifier_register(&headset_jack, &rk_jack_nb);
-+
-+	return 0;
-+}
-+
- static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
- 			     struct snd_pcm_hw_params *params)
- {
-@@ -119,6 +150,7 @@ SND_SOC_DAILINK_DEFS(hifi,
- static struct snd_soc_dai_link rk_dailink = {
- 	.name = "max98090",
- 	.stream_name = "Audio",
-+	.init = rk_init,
- 	.ops = &rk_aif1_ops,
- 	/* set max98090 as slave */
- 	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
--- 
-2.20.1
-
+Kees?
