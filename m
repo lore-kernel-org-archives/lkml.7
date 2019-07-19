@@ -2,110 +2,288 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCB9C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C864DC76197
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307B921849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOJKnzDx"
+	by mail.kernel.org (Postfix) with ESMTP id A1F482173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfGSLWE (ORCPT
+        id S1727552AbfGSLaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:22:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43224 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGSLWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:22:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so14053526pfg.10;
-        Fri, 19 Jul 2019 04:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ieRA0ATlD9ptZAEwZvM9IvsAcQiwaPnKguGMs+HECQQ=;
-        b=fOJKnzDxOpqOstOZtgHjAo71WcHTkC0xuFG8DLt9KjGHQHESnuRFzp2G3xm84OFyuA
-         Be1b+2a4ruhEcNLKStmWPJXUMkyCJWZBX2/u/X4aWr6Imm2fT7SDfeCQq4frDvhnCIjD
-         D63ACqrjjub03Mfzz8XTB4CEgP26cIAigtqp41GjXDhmeNr0LHUSjpDZl7C4VZRnrixD
-         A/zW+6UU5HEew75V2UnnH1jGIewxFascvE2ATObqp/UQjZuDtoqccEXwOczqZccO08IO
-         rmZtwWSrEzuSV5JXilYFhGYongChhM2MZcgdEDZpmcrLc89vTbZWmF5bGgjDpOApFs51
-         Lklw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ieRA0ATlD9ptZAEwZvM9IvsAcQiwaPnKguGMs+HECQQ=;
-        b=i2B7lc16UOqQCcINthUq9AFoZP8O2KTlODS6lwwh4JNIL+s3qnbv0x/5VDiJntHHKx
-         /vA5lzMQSwso3uHC+k5VVCtWiipgA1YTSBoo+Ppo57Sh55oSwBMytPTQwotQBCp6Tlsm
-         jC+zEf6Ji0y5u9yl4RUQBCY8YmMr1WROmR95YZ2292KUZG2B+tk3vaDMu8IJ219c7Vy6
-         fgbHB0TzZl8c5jaFRnuvkrJAIlMVNsFxY/ppNDGFevgFBJlnpcUlJfHKElq+pLVzBirg
-         +nY+RSPGthVrplULCpjIHVb6Lm6YMihlQsMS5D/SNPKllhAWk1mGGeOuijFn3ab4ru/m
-         ZnSQ==
-X-Gm-Message-State: APjAAAWoEHU3+IY71T+6Z623Qr/kefwC+KH+Nm3Pd/VZRr5OIA1XQhcp
-        OEcZpS2LA0jX+u3eskWO3EJ6k4Hqem8=
-X-Google-Smtp-Source: APXvYqzpXnNJs8iKpl1g8HQP0BOEt5zexq/EV9Wm8+Q4UEmOiQY+ILq6saomJIBTIpdQXV8xlgoOrA==
-X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr56826398pjp.47.1563535322986;
-        Fri, 19 Jul 2019 04:22:02 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id g92sm36002504pje.11.2019.07.19.04.22.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 04:22:02 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] Input: mouse: Use dev_get_drvdata
-Date:   Fri, 19 Jul 2019 19:21:44 +0800
-Message-Id: <20190719112143.21694-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 19 Jul 2019 07:30:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:42160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfGSLaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 07:30:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B46D0337;
+        Fri, 19 Jul 2019 04:30:07 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F245C3F71A;
+        Fri, 19 Jul 2019 04:30:04 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 12:29:56 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH 01/18] dt: psci: Update DT bindings to support
+ hierarchical PSCI states
+Message-ID: <20190719112947.GA22746@e121166-lin.cambridge.arm.com>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-2-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513192300.653-2-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_get_drvdata is a simpler implementation comparing
-to to_platform_device + platform_get_drvdata.
-This makes the code simpler.
+On Mon, May 13, 2019 at 09:22:43PM +0200, Ulf Hansson wrote:
+> From: Lina Iyer <lina.iyer@linaro.org>
+> 
+> Update DT bindings to represent hierarchical CPU and CPU PM domain idle
+> states for PSCI. Also update the PSCI examples to clearly show how
+> flattened and hierarchical idle states can be represented in DT.
+> 
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Co-developed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+> 
+> Changes:
+> 	- None.
+> 
+> ---
+>  .../devicetree/bindings/arm/psci.txt          | 166 ++++++++++++++++++
+>  1 file changed, 166 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+> index a2c4f1d52492..e6d3553c8df8 100644
+> --- a/Documentation/devicetree/bindings/arm/psci.txt
+> +++ b/Documentation/devicetree/bindings/arm/psci.txt
+> @@ -105,7 +105,173 @@ Case 3: PSCI v0.2 and PSCI v0.1.
+>  		...
+>  	};
+>  
+> +ARM systems can have multiple cores sometimes in hierarchical arrangement.
+> +This often, but not always, maps directly to the processor power topology of
+> +the system. Individual nodes in a topology have their own specific power states
+> +and can be better represented in DT hierarchically.
+> +
+> +For these cases, the definitions of the idle states for the CPUs and the CPU
+> +topology, must conform to the domain idle state specification [3]. The domain
+> +idle states themselves, must be compatible with the defined 'domain-idle-state'
+> +binding [1], and also need to specify the arm,psci-suspend-param property for
+> +each idle state.
+> +
+> +DT allows representing CPUs and CPU idle states in two different ways -
+> +
+> +The flattened model as given in Example 1, lists CPU's idle states followed by
+> +the domain idle state that the CPUs may choose. Note that the idle states are
+> +all compatible with "arm,idle-state". Additionally, for the domain idle state
+> +the "arm,psci-suspend-param" represents a superset of the CPU's idle state.
+> +
+> +Example 2 represents the hierarchical model of CPUs and domain idle states.
+> +CPUs define their domain provider in their psci DT node. The domain controls
+> +the power to the CPU and possibly other h/w blocks that would enter an idle
+> +state along with the CPU. The CPU's idle states may therefore be considered as
+> +the domain's idle states and have the compatible "arm,idle-state". Such domains
+> +may also be embedded within another domain that may represent common h/w blocks
+> +between these CPUs. The idle states of the CPU topology shall be represented as
+> +the domain's idle states. Note that for the domain idle state, the
+> +"arm,psci-suspend-param" represents idle states hierarchically.
+> +
+> +In PSCI firmware v1.0, the OS-Initiated mode is introduced. However, the
+> +flattened vs hierarchical DT representation is orthogonal to the OS-Initiated
+> +vs the platform-coordinated PSCI CPU suspend modes, thus should be considered
+> +independent of each other.
+> +
+> +The hierarchical representation helps and makes it easy to implement OSI mode
+> +and OS implementations may choose to mandate it. For the default platform-
+> +coordinated mode, both representations are viable options.
+> +
+> +Example 1: Flattened representation of CPU and domain idle states
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
+> +					  <&CLUSTER_PWRDN>;
+> +		};
+> +
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57", "arm,armv8";
+> +			reg = <0x100>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
+> +					  <&CLUSTER_PWRDN>;
+> +		};
+> +
+> +		idle-states {
+> +			CPU_PWRDN: cpu-power-down {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x0000001>;
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/input/mouse/navpoint.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+This value is wrong, StateType must be 1 for CPU power down states.
 
-diff --git a/drivers/input/mouse/navpoint.c b/drivers/input/mouse/navpoint.c
-index 0b75248c8380..f47d278c2657 100644
---- a/drivers/input/mouse/navpoint.c
-+++ b/drivers/input/mouse/navpoint.c
-@@ -317,8 +317,7 @@ static int navpoint_remove(struct platform_device *pdev)
- 
- static int __maybe_unused navpoint_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct navpoint *navpoint = platform_get_drvdata(pdev);
-+	struct navpoint *navpoint = dev_get_drvdata(dev);
- 	struct input_dev *input = navpoint->input;
- 
- 	mutex_lock(&input->mutex);
-@@ -331,8 +330,7 @@ static int __maybe_unused navpoint_suspend(struct device *dev)
- 
- static int __maybe_unused navpoint_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct navpoint *navpoint = platform_get_drvdata(pdev);
-+	struct navpoint *navpoint = dev_get_drvdata(dev);
- 	struct input_dev *input = navpoint->input;
- 
- 	mutex_lock(&input->mutex);
--- 
-2.20.1
+> +				entry-latency-us = <10>;
+> +				exit-latency-us = <10>;
+> +				min-residency-us = <100>;
+> +			};
+> +
+> +			CLUSTER_RET: cluster-retention {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x1000011>;
 
+It must be made crystal clear that this is the *full* power_state
+that is passed to the CPU_SUSPEND call. It is already specified
+in the bindings.
+
+As Sudeep pointed out already, OR'ing the power_state parameters values
+across power domains is wrong, in that there is nothing in the PSCI
+specifications that enforces a power_state parameter scheme whereby
+different "levels" are assigned different bitfields, in particular with
+the extended format a power_state parameter for eg "system" level is not
+necessarily OR'ed value of cluster|cpu|system values.
+
+So, to sum it up, arm,psci-suspend-param must be the full power_state
+parameter to be passed to CPU_SUSPEND and must be specified in full for
+every CPU and power domain idle state.
+
+Thanks,
+Lorenzo
+
+> +				entry-latency-us = <500>;
+> +				exit-latency-us = <500>;
+> +				min-residency-us = <2000>;
+> +			};
+> +
+> +			CLUSTER_PWRDN: cluster-power-down {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x1000031>;
+> +				entry-latency-us = <2000>;
+> +				exit-latency-us = <2000>;
+> +				min-residency-us = <6000>;
+> +			};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +Example 2: Hierarchical representation of CPU and domain idle states
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +			power-domains = <&CPU_PD0>;
+> +			power-domain-names = "psci";
+> +		};
+> +
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57", "arm,armv8";
+> +			reg = <0x100>;
+> +			enable-method = "psci";
+> +			power-domains = <&CPU_PD1>;
+> +			power-domain-names = "psci";
+> +		};
+> +
+> +		idle-states {
+> +			CPU_PWRDN: cpu-power-down {
+> +				compatible = "arm,idle-state";
+> +				arm,psci-suspend-param = <0x0000001>;
+> +				entry-latency-us = <10>;
+> +				exit-latency-us = <10>;
+> +				min-residency-us = <100>;
+> +			};
+> +
+> +			CLUSTER_RET: cluster-retention {
+> +				compatible = "domain-idle-state";
+> +				arm,psci-suspend-param = <0x1000010>;
+> +				entry-latency-us = <500>;
+> +				exit-latency-us = <500>;
+> +				min-residency-us = <2000>;
+> +			};
+> +
+> +			CLUSTER_PWRDN: cluster-power-down {
+> +				compatible = "domain-idle-state";
+> +				arm,psci-suspend-param = <0x1000030>;
+> +				entry-latency-us = <2000>;
+> +				exit-latency-us = <2000>;
+> +				min-residency-us = <6000>;
+> +			};
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +
+> +		CPU_PD0: cpu-pd0 {
+> +			#power-domain-cells = <0>;
+> +			domain-idle-states = <&CPU_PWRDN>;
+> +			power-domains = <&CLUSTER_PD>;
+> +		};
+> +
+> +		CPU_PD1: cpu-pd1 {
+> +			#power-domain-cells = <0>;
+> +			domain-idle-states =  <&CPU_PWRDN>;
+> +			power-domains = <&CLUSTER_PD>;
+> +		};
+> +
+> +		CLUSTER_PD: cluster-pd {
+> +			#power-domain-cells = <0>;
+> +			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWRDN>;
+> +		};
+> +	};
+> +
+>  [1] Kernel documentation - ARM idle states bindings
+>      Documentation/devicetree/bindings/arm/idle-states.txt
+>  [2] Power State Coordination Interface (PSCI) specification
+>      http://infocenter.arm.com/help/topic/com.arm.doc.den0022c/DEN0022C_Power_State_Coordination_Interface.pdf
+> +[3]. PM Domains description
+> +    Documentation/devicetree/bindings/power/power_domain.txt
+> -- 
+> 2.17.1
+> 
