@@ -2,142 +2,201 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCC6C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66096C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9461A2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2637E2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A5Gv9zEa"
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="U+KC5WsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfGSJw5 (ORCPT
+        id S1727109AbfGSJyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 05:52:57 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39832 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfGSJw5 (ORCPT
+        Fri, 19 Jul 2019 05:54:36 -0400
+Received: from mx-rz-1.rrze.uni-erlangen.de ([131.188.11.20]:36045 "EHLO
+        mx-rz-1.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725853AbfGSJyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 05:52:57 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190719095255euoutp01b9933b23a3a6c3878e0d298759624048~yxjqGMkCh1719117191euoutp01W
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:52:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190719095255euoutp01b9933b23a3a6c3878e0d298759624048~yxjqGMkCh1719117191euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563529975;
-        bh=24T3A28SosJC8MyaHhiGeUg1hqsvNYUj7VMLtMfMHOE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=A5Gv9zEa+JO5PDr45Ro2GRJqBtFHUR3Q3UhiOLtRv/hReJzqPcB2O+LOIkY6e/oAI
-         f+3dUYJidsFkg2fgYaMBajHIUawzClPeHdsMs9Q2ihlVAkY8WuscfHpBlq4tSaBfWw
-         KtoyBhKEB4xj+aTT88OeFVKalenHMHIElrePt0PA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190719095254eucas1p2b2bb9a402bbce8e847370dc9b6317957~yxjpvEnZE2084820848eucas1p2i;
-        Fri, 19 Jul 2019 09:52:54 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id AB.55.04377.6F2913D5; Fri, 19
-        Jul 2019 10:52:54 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190719095254eucas1p29c9e6c7aac20cf89b589fd2f2036c485~yxjo_5ELw2084820848eucas1p2h;
-        Fri, 19 Jul 2019 09:52:54 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190719095254eusmtrp23e635a321dba676a9fe289638cd3e1ce~yxjo_Tu-C2986729867eusmtrp2T;
-        Fri, 19 Jul 2019 09:52:54 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-e0-5d3192f6facf
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3A.04.04140.5F2913D5; Fri, 19
-        Jul 2019 10:52:54 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190719095253eusmtip1fd8598824a9077f63724d3157d3d42db~yxjonc0TH2663426634eusmtip1G;
-        Fri, 19 Jul 2019 09:52:53 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] phy: core: document calibrate() method
-Date:   Fri, 19 Jul 2019 11:52:45 +0200
-Message-Id: <20190719095245.17401-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsWy7djP87rfJhnGGtz4qmSxccZ6VosLT3vY
-        LC7vmsNmMeP8PiaLRctamS3WHrnL7sDm0bdlFaPH8RvbmTw+b5ILYI7isklJzcksSy3St0vg
-        ymia95m14CtnxdJXIQ2MjRxdjJwcEgImEi+m32TsYuTiEBJYwSjx+GEfM4TzhVHi5aFHLBDO
-        Z0aJll8n2WFaZhw4wQZiCwksB0psM4fr+LNwJzNIgk3AUKLrbRdYkYiAg8SSpXfYQIqYBdYz
-        Sqxc/B1oEgeHsIC5xNNtCSA1LAKqEts3LmEFsXkFbCW29P1ihVgmL7F6wwGwkyQEDrBJrH93
-        lBki4SLRvGcLI4QtLPHq+Bao62Qk/u+czwTR0Mwo8fDcWnYIp4dR4nLTDKgOa4nDxy+yglzB
-        LKApsX6XPkTYUWL7xDYWkLCEAJ/EjbeCIGFmIHPStunMEGFeiY42IYhqNYlZx9fBrT144RLU
-        aR4Stzs/M0ECKFaifddqpgmMcrMQdi1gZFzFKJ5aWpybnlpslJdarlecmFtcmpeul5yfu4kR
-        GO2n/x3/soNx15+kQ4wCHIxKPLwBuQaxQqyJZcWVuYcYJTiYlUR4b7/UjxXiTUmsrEotyo8v
-        Ks1JLT7EKM3BoiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAKJEmzr8+nmuvYmFluo3JrjXe
-        7L2mPCULni1YOvHUm332ohG1MspxRwL7W1rzA7aye7dekLPXZ9dwfrZ588O4TQa/RVjenjgl
-        f2jT90midhI28y+u16wvv7Cp+0PW9LJVe3TSXmfPetObbOeYpft61Q527tRZFd2S9SZX2x5v
-        jgs5nfehSP+AEktxRqKhFnNRcSIAFWpAuvICAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsVy+t/xu7rfJhnGGny9yWSxccZ6VosLT3vY
-        LC7vmsNmMeP8PiaLRctamS3WHrnL7sDm0bdlFaPH8RvbmTw+b5ILYI7SsynKLy1JVcjILy6x
-        VYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy2ia95m14CtnxdJXIQ2MjRxd
-        jJwcEgImEjMOnGDrYuTiEBJYyijx8vU6ZoiEjMTJaQ2sELawxJ9rXVBFnxglriz6zwSSYBMw
-        lOh6C5Lg5BARcJLoXHsarIhZYCOjxNOdVxm7GDk4hAXMJZ5uSwCpYRFQldi+cQnYUF4BW4kt
-        fb+gFshLrN5wgHkCI88CRoZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgUG27djPLTsYu94F
-        H2IU4GBU4uENyDWIFWJNLCuuzD3EKMHBrCTCe/ulfqwQb0piZVVqUX58UWlOavEhRlOg5ROZ
-        pUST84ERkFcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgbFgjRc/
-        +86Fh9eWW1b++dO77fjcuwKrVkhrfnNvt/VZafYgw3HGidM3fef9KFc0mJapuz/lStK22NlP
-        d7wR3LDJRT7k5UGnBZuEJacX3Kzpm8X1aXJ6ec9SViHTJKEUo/JfhWy8hY8PXJbZenRuVFDy
-        bF9etc3nol/8nh/KwFK3bsu3eceUb6xTYinOSDTUYi4qTgQAcVtSdUgCAAA=
-X-CMS-MailID: 20190719095254eucas1p29c9e6c7aac20cf89b589fd2f2036c485
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190719095254eucas1p29c9e6c7aac20cf89b589fd2f2036c485
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190719095254eucas1p29c9e6c7aac20cf89b589fd2f2036c485
-References: <CGME20190719095254eucas1p29c9e6c7aac20cf89b589fd2f2036c485@eucas1p2.samsung.com>
+        Fri, 19 Jul 2019 05:54:36 -0400
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 45qmZ22cmTz8tyn;
+        Fri, 19 Jul 2019 11:54:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1563530074; bh=vjzwfrsZLlSIbtd5eSy2DYay8uWmG1SrcA5Ds2pFh5k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From:To:CC:
+         Subject;
+        b=U+KC5WsMgwEaXEuOtbiQi73BOsaAaxIXs87idiZAvVOS40IZ/ps5RYbxA/S973MqW
+         4Miov5zVvCtfVSgGMiQ+paaQcKhw6g1Fdt4GtsK5K3onHpJ3zS69tkGTxzXVJ9ksLD
+         W6CP7Nev4K61KqTPp3a0SwYdpsxGcuR5d2mXTM9VQX5u7XWk48YappZdTLNK/kysjH
+         5NknyoJzVIIkbuvdxr+oWwU2FTT4fCbee+jQ6fhYBplzDEXFRjdHG269NOgYopZZZi
+         daROjWo12n3hTfosZtTao5gJPP6Jkd7gs45p8THDLZEDnIQyrnb2BeMU1Muoi9pNul
+         SRvpl2msAGBYQ==
+X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 131.188.11.37
+Received: from faumail.fau.de (smtp-auth.uni-erlangen.de [131.188.11.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX1+o9vEh2Jou6TkmBuoRZQ9o6xSeip4AJoc=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 45qmYz61rHz8vVf;
+        Fri, 19 Jul 2019 11:54:31 +0200 (CEST)
+Received: from a9s8n9g3ZvFv9dr7Wf3V4Af4x10BG5ViOwLef9n3hxU=
+ by faumail.uni-erlangen.de
+ with HTTP (HTTP/1.1 POST); Fri, 19 Jul 2019 11:54:31 +0200
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 19 Jul 2019 09:54:31 +0000
+From:   "Duda, Sebastian" <sebastian.duda@fau.de>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        ralf.ramsauer@oth-regensburg.de, wolfgang.mauerer@oth-regensburg.de
+Subject: Re: get_maintainers.pl subsystem output
+In-Reply-To: <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
+References: <2c912379f96f502080bfcc79884cdc35@fau.de>
+ <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
+Message-ID: <6fa4aa44f343616459b17054197d0a22@fau.de>
+X-Sender: sebastian.duda@fau.de
+User-Agent: Roundcube Webmail/1.2.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 36914111e682 ("drivers: phy: add calibrate method") added support
-for generic phy_calibrate() method, but it didn't explain in detail when
-such method is supposed to be called. Add some more documentation directly
-to the phy.h to make it clean that it is intended to be called after every
-host controller reset.
+On 2019-07-19 08:50, Joe Perches wrote:
+> On Fri, 2019-07-19 at 07:35 +0000, Duda, Sebastian wrote:
+>> Hi Joe,
+>> 
+>> I'm conducting a large-scale patch analysis of the LKML with 1.8 
+>> million
+>> patch emails. I'm using the `get_maintainer.pl` script to know which
+>> patch is related to which subsystem.
+> 
+> The MAINTAINERS file is updated frequently.
+> 
+> Are you also using the MAINTAINERS file used
+> at the time each patch was submitted?
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- include/linux/phy/phy.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yes, for each patch we use the MAINTAINERS file from the current (by the 
+time the patch was submitted) release (candidate).
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 15032f145063..46775e8b0ed9 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -101,6 +101,18 @@ struct phy_ops {
- 	int	(*validate)(struct phy *phy, enum phy_mode mode, int submode,
- 			    union phy_configure_opts *opts);
- 	int	(*reset)(struct phy *phy);
-+
-+	/**
-+	 * @calibrate:
-+	 *
-+	 * Optional.
-+	 *
-+	 * Used to calibrate phy, typically by adjusting some parameters
-+	 * in runtime, which are otherwise lost after host controller
-+	 * reset and cannot be set in phy_init() and phy_power_on().
-+	 *
-+	 * Returns: 0 if successful, an negative error code otherwise
-+	 */
- 	int	(*calibrate)(struct phy *phy);
- 	void	(*release)(struct phy *phy);
- 	struct module *owner;
--- 
-2.17.1
+>> I ran into two issues while using the script:
+>> 
+>> 1. When I use the script the trivial way
+>> 
+>>      $ scripts/get_maintainer.pl --subsystem --status --separator ,
+>> drivers/media/i2c/adv748x/
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org>
+>> (maintainer:MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC
+>> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>>      Maintained,Buried alive in reporters
+>>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),THE REST
+>> 
+>> the output is hard to parse because the status `Maintained` is 
+>> displayed
+>> only once but related to two subsystems.
+>> 
+>> I'd prefer a more table like representation, like this:
+>> 
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),linux-media@vger.kernel.org (open
+>> list:ANALOG DEVICES INC ADV748X DRIVER),ANALOG DEVICES INC ADV748X
+>> DRIVER,Maintained
+>>      Mauro Carvalho Chehab <mchehab@kernel.org> (maintainer:MEDIA 
+>> INPUT
+>> INFRASTRUCTURE (V4L/DVB)),MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),Maintained
+>>      linux-kernel@vger.kernel.org (open list),THE REST,Buried alive in
+>> reporters
+>> 
+>> 
+>> 2. I want to analyze multiple patches, currently I am calling the 
+>> script
+>> once per patch. When calling the script with multiple files the files
+>> output is merged
+>> 
+>>      $ scripts/get_maintainer.pl --subsystem --status --separator ','
+>> drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org>
+>> (maintainer:MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC
+>> ADV748X DRIVER),linux-kernel@vger.kernel.org (open
+>> list),platform-driver-x86@vger.kernel.org (open list:ACPI WMI DRIVER)
+>>      Maintained,Buried alive in reporters,Orphan
+>>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),THE REST,ACPI WMI DRIVER
+>> 
+>> I'd like to run the script with all files but separated output, like
+>> this:
+>> 
+>>      $ scripts/get_maintainer.pl --subsystem --status --separator ','
+>> --separate-files drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org>
+>> (maintainer:MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC
+>> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>>      Maintained,Buried alive in reporters
+>>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),THE REST
+>> 
+>>      platform-driver-x86@vger.kernel.org (open list:ACPI WMI
+>> DRIVER),linux-kernel@vger.kernel.org (open list)
+>>      Orphan,Buried alive in reporters
+>>      ACPI WMI DRIVER,THE REST
+>> 
+>> 
+>> My Questions are:
+>> 1. How can I make get_maintainer's output to be more table-like?
+> 
+> I suggest adding --nogit --nogit-fallback --roles --norolestats
 
+Unfortunately, this doesn't change the output:
+     $ scripts/get_maintainer.pl --subsystem --status --separator , 
+drivers/media/i2c/adv748x/
+     Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
+(maintainer:MEDIA INPUT INFRASTRUCTURE 
+(V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
+ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+     Maintained,Buried alive in reporters
+     ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
+(V4L/DVB),THE REST
+
+     $ scripts/get_maintainer.pl --subsystem --status --separator , 
+--nogit --nogit-fallback --roles --norolestats 
+drivers/media/i2c/adv748x/
+     Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
+(maintainer:MEDIA INPUT INFRASTRUCTURE 
+(V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
+ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+     Maintained,Buried alive in reporters
+     ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
+(V4L/DVB),THE REST
+
+>> 2. How can I make get_maintainer.pl to separate each file's output?
+> 
+> Run the script with multiple invocations. once for each file
+> modified by the patch.
+
+This is the way I'm doing it right now but this is very slow. I thought 
+calling the script only once for many files could speed up the analysis.
+
+Thank you
+Sebastian
