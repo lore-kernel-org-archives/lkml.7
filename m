@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52200C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FBAC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4262184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2382189E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508698;
-	bh=z+8JcC18Jtyh8uyT6UA2/SC24y/hq7VVcY9YA+weTuk=;
+	s=default; t=1563508704;
+	bh=aJRvDu9YvM33JggDAoN3fy/XtFIU7MiopLHT5SlzMcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBIB38zitmwDwe3lZ1ryzhAXJyA0yJRH+JBowTak1HHWqCbcO0dbAry55xr0TAWR+
-	 V6FyKIB/CFJufjkI8lQPUk0xxazqk9wZZtj1lf76dW4ZGVds3wP3ndh84P8PKu6PPG
-	 Up9FpqCmTKrBFRGTJpTm1PDkvXK4DlwEkSGcnjaw=
+	b=J0PETBBQNfGrvhlzBow17Js+olt+dohfk4Sz+b4KqghjikncddUxsovV4kWRNT8kw
+	 5v/2XwlEVDMKFq3U4dJ0ETiaXk3JOWSEF9WZa8f7nehgL3kfR4vMMJ/umr/g2OwMzS
+	 CcMhRdcF6O5Y7MUVL9yGeUxdM8Oi6g8GPOfdifcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfGSD6R (ORCPT
+        id S1728006AbfGSD6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfGSD6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:14 -0400
+        id S1727927AbfGSD6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9FD32184E;
-        Fri, 19 Jul 2019 03:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B08621851;
+        Fri, 19 Jul 2019 03:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508693;
-        bh=z+8JcC18Jtyh8uyT6UA2/SC24y/hq7VVcY9YA+weTuk=;
+        s=default; t=1563508700;
+        bh=aJRvDu9YvM33JggDAoN3fy/XtFIU7MiopLHT5SlzMcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1lNXnI+nXdooUfTkRfB1jDqaUZXgNl2kvRsTiJDHEXXe0M+JcNvL9PoxjTclzl27
-         QgJwJkQsFwNPXl/oS7LwA03zjFnEmXl1zwsxOGmY8ENxvNEbJiAvX2HnaDYe4iYAal
-         TDVCPP+mpJwWrLZgc8/e/KJVc8dVX1vGfowN/uWo=
+        b=lddfjHPDE2LR9VYNgI2X3oHkz4vTs/Vdb6OQVYRZALdOdeZ9BFbY1584f/eVro4R/
+         jrbnYtzq2GEf2GKOuMM17z5KVvuLyfvjd3No94wzVTRvT3+i4yVAiRvsED/LaThZ77
+         8YvUIULfTGwJ/RSftF3guV1z8v9ww732dA1o9dX8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 036/171] drm/amd/display: CS_TFM_1D only applied post EOTF
-Date:   Thu, 18 Jul 2019 23:54:27 -0400
-Message-Id: <20190719035643.14300-36-sashal@kernel.org>
+Cc:     Daniel Rosenberg <drosen@google.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.2 039/171] f2fs: Lower threshold for disable_cp_again
+Date:   Thu, 18 Jul 2019 23:54:30 -0400
+Message-Id: <20190719035643.14300-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,42 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+From: Daniel Rosenberg <drosen@google.com>
 
-[ Upstream commit 6ad34adeaec5b56a5ba90e90099cabf1c1fe9dd2 ]
+[ Upstream commit ae4ad7ea09d32ff1b6fb908ff12f8c1bd5241b29 ]
 
-[Why]
-There's some unnecessary mem allocation for CS_TFM_ID. What's worse, it
-depends on LUT size and since it's 4K for CS_TFM_1D, it is 16x bigger
-than in regular case when it's actually needed. This leads to some
-crashes in stress conditions.
+The existing threshold for allowable holes at checkpoint=disable time is
+too high. The OVP space contains reserved segments, which are always in
+the form of free segments. These must be subtracted from the OVP value.
 
-[How]
-Skip ramp combining designed for RGB256 and DXGI gamma with CS_TFM_1D.
+The current threshold is meant to be the maximum value of holes of a
+single type we can have and still guarantee that we can fill the disk
+without failing to find space for a block of a given type.
 
-Signed-off-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+If the disk is full, ignoring current reserved, which only helps us,
+the amount of unused blocks is equal to the OVP area. Of that, there
+are reserved segments, which must be free segments, and the rest of the
+ovp area, which can come from either free segments or holes. The maximum
+possible amount of holes is OVP-reserved.
+
+Now, consider the disk when mounting with checkpoint=disable.
+We must be able to fill all available free space with either data or
+node blocks. When we start with checkpoint=disable, holes are locked to
+their current type. Say we have H of one type of hole, and H+X of the
+other. We can fill H of that space with arbitrary typed blocks via SSR.
+For the remaining H+X blocks, we may not have any of a given block type
+left at all. For instance, if we were to fill the disk entirely with
+blocks of the type with fewer holes, the H+X blocks of the opposite type
+would not be used. If H+X > OVP-reserved, there would be more holes than
+could possibly exist, and we would have failed to find a suitable block
+earlier on, leading to a crash in update_sit_entry.
+
+If H+X <= OVP-reserved, then the holes end up effectively masked by the OVP
+region in this case.
+
+Signed-off-by: Daniel Rosenberg <drosen@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/segment.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-index a1055413bade..31f867bb5afe 100644
---- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-+++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-@@ -1564,7 +1564,8 @@ bool mod_color_calculate_regamma_params(struct dc_transfer_func *output_tf,
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index a96b9e964733..8903b61457e7 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -876,7 +876,9 @@ void f2fs_dirty_to_prefree(struct f2fs_sb_info *sbi)
+ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi)
+ {
+ 	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
+-	block_t ovp = overprovision_segments(sbi) << sbi->log_blocks_per_seg;
++	int ovp_hole_segs =
++		(overprovision_segments(sbi) - reserved_segments(sbi));
++	block_t ovp_holes = ovp_hole_segs << sbi->log_blocks_per_seg;
+ 	block_t holes[2] = {0, 0};	/* DATA and NODE */
+ 	struct seg_entry *se;
+ 	unsigned int segno;
+@@ -891,10 +893,10 @@ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi)
+ 	}
+ 	mutex_unlock(&dirty_i->seglist_lock);
  
- 	output_tf->type = TF_TYPE_DISTRIBUTED_POINTS;
- 
--	if (ramp && (mapUserRamp || ramp->type != GAMMA_RGB_256)) {
-+	if (ramp && ramp->type != GAMMA_CS_TFM_1D &&
-+			(mapUserRamp || ramp->type != GAMMA_RGB_256)) {
- 		rgb_user = kvcalloc(ramp->num_entries + _EXTRA_POINTS,
- 			    sizeof(*rgb_user),
- 			    GFP_KERNEL);
+-	if (holes[DATA] > ovp || holes[NODE] > ovp)
++	if (holes[DATA] > ovp_holes || holes[NODE] > ovp_holes)
+ 		return -EAGAIN;
+ 	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED_QUICK) &&
+-		dirty_segments(sbi) > overprovision_segments(sbi))
++		dirty_segments(sbi) > ovp_hole_segs)
+ 		return -EAGAIN;
+ 	return 0;
+ }
 -- 
 2.20.1
 
