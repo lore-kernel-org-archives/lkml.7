@@ -2,112 +2,172 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D233C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2035FC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2028921849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="UovNcYRJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0027521849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfGSI7u (ORCPT
+        id S1726773AbfGSJCi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:59:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36468 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfGSI7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:59:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g67so24138473wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r+mZG8DpAsPgWT5sar/21/BjX4up+4WpKJWqDr5y+XE=;
-        b=UovNcYRJpNCwUpWYyK80hMB+LmsasMk/b+zRnOMrEiqyWDbVXt28ZRGBCmPPcZUN0Q
-         /7jz/DscGGQ7KK1NVhsYrrZmsyJ1wT1ynx4YUOcbWknTuTYIitiIhSJYSjfxO7NDoc6A
-         cYTtdySKxzcVDcyjoGRWTNZh5axkeqLWNaFU3JH3CGLkOMa8TXXFqu/1bhPnrwEP690/
-         j7DnqohaO9uqFP/XnDXVak9aGhsnxhZrKERoM4ZBlXxPF8LvDVS/mfZ+LZ+SnCvaDFOj
-         OBJIhRPnkIjaY5vjk8XEn2AqEibXwCokadCTrFNtJLDod4kk6C3EMdkFR9PqkEePJCcG
-         HoOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r+mZG8DpAsPgWT5sar/21/BjX4up+4WpKJWqDr5y+XE=;
-        b=GZ8gzU0cs+EWcZssGBu9zTOjaJO87q3C/efuExpOmnCRP4vUGGaKTzdWQiAj/tiN3w
-         2L0WbemqFE+AzH1gev88ll35NnjIDxH6aKsHnj79P/zE0KyB479UbRdS9eNwHeQzyWDo
-         hLF7Y4EeQFsBjFNKKL9rhOtCEfN8r9SX4QcjgmTmR65rTOggBZqt+ku1GwqbCyA2f2YP
-         nNJQLh4wM5G6u/OmB/rz8U2PX6jILcytSQjWw1Ofz7AzvYDt4da6jnwCJhT6VYpZrZaF
-         i6d6ODmPVCfOFQCmAEcwWO+JLS4ErDuLUzLHepOK+FJrGKLv+V7ZpYYY6F1sFUCg8IYb
-         q/xw==
-X-Gm-Message-State: APjAAAXMQHjZbMRfKGeMgZJ0aXEoJ3YpVMoFMe5vP/Ubtgpex0sSnkwf
-        LBUYEAeTttB3PtguLRevQTs=
-X-Google-Smtp-Source: APXvYqwNeo4Lm2KsUkZw2PBIJv7c22XTMebEqmZ6IGLFDVHBMaZWzxlIxEOLZBcK+t8KjqIA8Sw8Mg==
-X-Received: by 2002:a1c:6555:: with SMTP id z82mr48409335wmb.129.1563526787404;
-        Fri, 19 Jul 2019 01:59:47 -0700 (PDT)
-Received: from brauner.io ([81.92.17.140])
-        by smtp.gmail.com with ESMTPSA id j17sm39177701wrb.35.2019.07.19.01.59.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 01:59:46 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 10:59:45 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH] riscv: enable sys_clone3 syscall for rv64
-Message-ID: <20190719085944.n4ypavxdlf6go4tl@brauner.io>
-References: <alpine.DEB.2.21.9999.1907182118500.7083@viisi.sifive.com>
+        Fri, 19 Jul 2019 05:02:38 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19218 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfGSJCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 05:02:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 02:02:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="scan'208";a="195888255"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Jul 2019 02:02:36 -0700
+Received: from fmsmsx155.amr.corp.intel.com (10.18.116.71) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 19 Jul 2019 02:02:36 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX155.amr.corp.intel.com (10.18.116.71) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 19 Jul 2019 02:02:36 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.3]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.60]) with mapi id 14.03.0439.000;
+ Fri, 19 Jul 2019 17:02:34 +0800
+From:   "Lu, Kechen" <kechen.lu@intel.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        "Zhang, Tina" <tina.zhang@intel.com>
+CC:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [RFC PATCH v4 1/6] vfio: Define device specific irq type
+ capability
+Thread-Topic: [RFC PATCH v4 1/6] vfio: Define device specific irq type
+ capability
+Thread-Index: AQHVPfh+laa+mTOUHUqdBIkmECCN6KbRmVnQ
+Date:   Fri, 19 Jul 2019 09:02:33 +0000
+Message-ID: <31185F57AF7C4B4F87C41E735C23A6FE64DFC7@shsmsx102.ccr.corp.intel.com>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+ <20190718155640.25928-2-kechen.lu@intel.com>
+ <20190719060540.GC28809@zhen-hp.sh.intel.com>
+In-Reply-To: <20190719060540.GC28809@zhen-hp.sh.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOTA2Nzc3ZWUtZDM0Ny00MDhmLTk3OWYtMjRlYWExMjQwYjEyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicEVwaUZEbVBtSzBnYUpWMnY4clwvV201N2c0MlNWQlZZOTlSM0FlN2NNMElKb1g2VzVFUGVtVlNxSEp4MWJcL0JTIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1907182118500.7083@viisi.sifive.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 09:20:01PM -0700, Paul Walmsley wrote:
-> 
-> Enable the sys_clone3 syscall for RV64.  We simply include the generic
-> version.
-> 
-> Tested by running the program from
-> 
->    https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
-> 
-> and verifying that it completes successfully.
-> 
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Christian Brauner <christian@brauner.io>
+Hi,
 
-Thank you!
-
-Acked-by: Christian Brauner <christian@brauner.io>
-
-> ---
->  arch/riscv/include/uapi/asm/unistd.h | 1 +
->  1 file changed, 1 insertion(+)
+> -----Original Message-----
+> From: Zhenyu Wang [mailto:zhenyuw@linux.intel.com]
+> Sent: Friday, July 19, 2019 2:06 PM
+> To: Lu, Kechen <kechen.lu@intel.com>
+> Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux- 
+> kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>; 
+> kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan 
+> <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian, 
+> Kevin <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>; 
+> alex.williamson@redhat.com; Eric Auger <eric.auger@redhat.com>
+> Subject: Re: [RFC PATCH v4 1/6] vfio: Define device specific irq type 
+> capability
 > 
-> diff --git a/arch/riscv/include/uapi/asm/unistd.h b/arch/riscv/include/uapi/asm/unistd.h
-> index 0e2eeeb1fd27..13ce76cc5aff 100644
-> --- a/arch/riscv/include/uapi/asm/unistd.h
-> +++ b/arch/riscv/include/uapi/asm/unistd.h
-> @@ -18,6 +18,7 @@
->  #ifdef __LP64__
->  #define __ARCH_WANT_NEW_STAT
->  #define __ARCH_WANT_SET_GET_RLIMIT
-> +#define __ARCH_WANT_SYS_CLONE3
->  #endif /* __LP64__ */
->  
->  #include <asm-generic/unistd.h>
-> -- 
-> 2.22.0
+> On 2019.07.18 23:56:35 +0800, Kechen Lu wrote:
+> > From: Tina Zhang <tina.zhang@intel.com>
+> >
+> > Cap the number of irqs with fixed indexes and use capability chains 
+> > to chain device specific irqs.
+> >
+> > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> > ---
+> >  include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
+> >  1 file changed, 18 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h 
+> > index 8f10748dac79..be6adab4f759 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -448,11 +448,27 @@ struct vfio_irq_info {
+> >  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
+> >  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
+> >  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
+> > +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps
+> */
+> >  	__u32	index;		/* IRQ index */
+> >  	__u32	count;		/* Number of IRQs within this index */
+> > +	__u32	cap_offset;	/* Offset within info struct of first cap */
 > 
+> This still breaks ABI as argsz would be updated with this new field, 
+> so it would cause compat issue. I think my last suggestion was to 
+> assume cap list starts after vfio_irq_info.
+>
+ 
+In the common practice, the general logic is first use the "count" as the "minsz" boundary to perform copy from user, and then perform following logic, so that the incompatibility issue would not happen. BTW, this patch has been double checked by Eric Auger before included in his patch-set. 
+
+Best Regards,
+Kechen
+
+> >  };
+> >  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
+> >
+> > +/*
+> > + * The irq type capability allows irqs unique to a specific device 
+> > +or
+> > + * class of devices to be exposed.
+> > + *
+> > + * The structures below define version 1 of this capability.
+> > + */
+> > +#define VFIO_IRQ_INFO_CAP_TYPE      3
+> > +
+> > +struct vfio_irq_info_cap_type {
+> > +	struct vfio_info_cap_header header;
+> > +	__u32 type;     /* global per bus driver */
+> > +	__u32 subtype;  /* type specific */ };
+> > +
+> >  /**
+> >   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct
+> vfio_irq_set)
+> >   *
+> > @@ -554,7 +570,8 @@ enum {
+> >  	VFIO_PCI_MSIX_IRQ_INDEX,
+> >  	VFIO_PCI_ERR_IRQ_INDEX,
+> >  	VFIO_PCI_REQ_IRQ_INDEX,
+> > -	VFIO_PCI_NUM_IRQS
+> > +	VFIO_PCI_NUM_IRQS = 5	/* Fixed user ABI, IRQ indexes >=5 use
+> */
+> > +				/* device specific cap to define content */
+> >  };
+> >
+> >  /*
+> > --
+> > 2.17.1
+> >
+> 
+> --
+> Open Source Technology Center, Intel ltd.
+> 
+> $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
