@@ -2,195 +2,70 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3DDC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E991C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A722186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVq51blN"
+	by mail.kernel.org (Postfix) with ESMTP id 5458A2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732106AbfGSQqY (ORCPT
+        id S1731847AbfGSQrP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:46:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45320 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfGSQqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:46:23 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so22161054lfm.12;
-        Fri, 19 Jul 2019 09:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BC+wMl1J+1a3vYFsMgUzwTvvzp8GNJcOPDZyzys4fN8=;
-        b=GVq51blNfC+1H5bqBS8Kd+n0zbPrzypkhsYA2uISQ1O7/L5ACRECJcdVj8+AKJrg5I
-         6SwF9FB/WZnW5488UpP4jo/UVAUpky+GQ5zBHtUt0ZQDnxrKUVAlWptjyJ2GQDWRz6i7
-         WorunaqZJnAAGL5jgdrRnOx/TtAg5o+XTldbJeUUy6XzMHPxnRavGInf3BYj1xxT7HTd
-         2HaVkB8jCCSvUs+Sm+OSsniSJ1pNmmAexrRIfDeUBCCTaRasOGdnZuOuQoT7aUoFyIqw
-         Unc5KZW3PeJqTVl5ygUcxqhAPSUFb0VERXdCnhMa/kCSkeI4yKZIutrvfE50jyBcEsph
-         s0AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BC+wMl1J+1a3vYFsMgUzwTvvzp8GNJcOPDZyzys4fN8=;
-        b=Q16XyImXeWviB0fa/h2iTCSI942IU0J0EfqqeM0TV6l8GFxB2g1X3XLs4qjP0gzfvu
-         JXRHDZNcUW2qKkcvLqrCgtShXhpb5FRxsVXhLx6KnkmzT2Hr9Yjj2xvv5QlASar/rFPD
-         btlncTdc75uHzOVm6atgCEwZRbfCCmc5fnj5n+fpWh9OooniIw/I7wqQ6U3s1clvt7sc
-         uJtI0j+GJ4jefjIQ8PQl7U363M+EwmSF87yxcbr1AmCqutSLg13pOPgaEfEc8oEk6lJK
-         7mK17Ltkv4/U1WloE1C6SBuS2+OZALK9ZHDZF9OsPeSPvKKZBtdoayXb9M3gniRCZHSm
-         odxA==
-X-Gm-Message-State: APjAAAV6JzM5t57IfXkLPBjD2mY3AgDSeerQYpdW8L3EedDqM/Y1JUV/
-        aFXNwlKAHMXILkZ3/BiaX1WWMhm5
-X-Google-Smtp-Source: APXvYqyFc2gfPTarelhEQEUXeuELGCcDPUMpuvXxifyeE3PxIMsHWXW0o1ytuduHaDPIASGE4HWm6g==
-X-Received: by 2002:a19:750b:: with SMTP id y11mr24628098lfe.16.1563554780341;
-        Fri, 19 Jul 2019 09:46:20 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id 63sm5886552ljs.84.2019.07.19.09.46.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 09:46:19 -0700 (PDT)
-Subject: Re: [PATCH v4 21/24] PM / devfreq: tegra30: Synchronize average count
- on target's update
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223619epcas4p3dea48e3e09983cd2a76af39fbf7bf99b@epcas4p3.samsung.com>
- <20190707223303.6755-22-digetx@gmail.com>
- <f83fb873-9214-9649-9435-9f211c4cba9e@samsung.com>
- <20190719033152.1d4c3003@dimatab>
- <eed89254-9960-7572-635c-12b114821e85@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fc9cacc8-aa89-803a-dd82-7506965f987a@gmail.com>
-Date:   Fri, 19 Jul 2019 19:46:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 19 Jul 2019 12:47:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43608 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727528AbfGSQrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:47:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 80171AF9C;
+        Fri, 19 Jul 2019 16:47:13 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 18:47:11 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     keescook@chromium.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>, mcgrof@kernel.org,
+        mhocko@kernel.org, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>, riel@surriel.com,
+        Mel Gorman <mgorman@suse.de>, cgroups@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
+ statistic
+Message-ID: <20190719164711.GB854@blackbody.suse.cz>
+References: <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
+ <20190711134754.GD3402@hirez.programming.kicks-ass.net>
+ <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
+ <20190712075815.GN3402@hirez.programming.kicks-ass.net>
+ <37474414-1a54-8e3a-60df-eb7e5e1cc1ed@linux.alibaba.com>
+ <20190712094214.GR3402@hirez.programming.kicks-ass.net>
+ <f8020f92-045e-d515-360b-faf9a149ab80@linux.alibaba.com>
+ <20190715121025.GN9035@blackbody.suse.cz>
+ <ecd21563-539c-06b1-92f2-26a111163174@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <eed89254-9960-7572-635c-12b114821e85@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <ecd21563-539c-06b1-92f2-26a111163174@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.07.2019 4:40, Chanwoo Choi пишет:
-> On 19. 7. 19. 오전 9:31, Dmitry Osipenko wrote:
->> В Thu, 18 Jul 2019 19:15:54 +0900
->> Chanwoo Choi <cw00.choi@samsung.com> пишет:
->>
->>> On 19. 7. 8. 오전 7:33, Dmitry Osipenko wrote:
->>>> The average count may get out of sync if interrupt was disabled /
->>>> avoided for a long time due to upper watermark optimization, hence
->>>> it should be re-synced on each target's update to ensure that
->>>> watermarks are set up correctly on EMC rate-change notification and
->>>> that a correct frequency is selected for device.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/devfreq/tegra30-devfreq.c | 30
->>>> ++++++++++++++++++++++++++++++ 1 file changed, 30 insertions(+)
->>>>
->>>> diff --git a/drivers/devfreq/tegra30-devfreq.c
->>>> b/drivers/devfreq/tegra30-devfreq.c index
->>>> 4d582809acb6..8a674fad26be 100644 ---
->>>> a/drivers/devfreq/tegra30-devfreq.c +++
->>>> b/drivers/devfreq/tegra30-devfreq.c @@ -466,11 +466,41 @@ static
->>>> void actmon_isr_device(struct tegra_devfreq *tegra,
->>>> dev->boost_freq, cpufreq_get(0)); }
->>>>  
->>>> +static void tegra_devfreq_sync_avg_count(struct tegra_devfreq
->>>> *tegra,
->>>> +					 struct
->>>> tegra_devfreq_device *dev) +{
->>>> +	u32 avg_count, avg_freq, old_upper, new_upper;
->>>> +
->>>> +	avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
->>>> +	avg_freq = avg_count / ACTMON_SAMPLING_PERIOD;
->>>> +
->>>> +	old_upper = tegra_actmon_upper_freq(tegra, dev->avg_freq);
->>>> +	new_upper = tegra_actmon_upper_freq(tegra, avg_freq);
->>>> +
->>>> +	/* similar to ISR, see comments in actmon_isr_device() */
->>>> +	if (old_upper != new_upper) {
->>>> +		dev->avg_freq = avg_freq;
->>>> +		dev->boost_freq = 0;
->>>> +	}
->>>> +}
->>>> +
->>>>  static unsigned long actmon_update_target(struct tegra_devfreq
->>>> *tegra, struct tegra_devfreq_device *dev)
->>>>  {
->>>>  	unsigned long target_freq;
->>>>  
->>>> +	/*
->>>> +	 * The avg_count / avg_freq is getting snapshoted on
->>>> device's
->>>> +	 * interrupt, but there are cases where actual value need
->>>> to
->>>> +	 * be utilized on target's update, like CPUFreq boosting
->>>> and
->>>> +	 * overriding the min freq
->>>> via /sys/class/devfreq/devfreq0/min_freq
->>>> +	 * because we're optimizing the upper watermark based on
->>>> the
->>>> +	 * actual EMC frequency. This means that interrupt may be
->>>> +	 * inactive for a long time and thus making snapshoted
->>>> value
->>>> +	 * outdated.
->>>> +	 */
->>>> +	tegra_devfreq_sync_avg_count(tegra, dev);  
->>>
->>> I think that you don't need to add the separate function to calculate
->>> the 'dev->avg_freq'. It is enough with your detailed comment to add
->>> this code in this function.
->>
->> The separate function is indeed not mandatory here, but I'm finding that
->> it usually makes easier to read and follow the code when it is properly
->> split up into logical blocks. Don't you agree?
-> 
-> It is right to make the separate function if function is too long or 
-> function is called on the multiple points.
-> 
-> But, in this case, I think that it is enough to add this code
-> to the actmon_update_target() because you already added the detailed comment. 
-> 
-> It is enough to understand the role of this code with your comment.
+On Tue, Jul 16, 2019 at 10:41:36AM +0800, 王贇  <yun.wang@linux.alibaba.com> wrote:
+> Actually whatever the memory node sets or cpu allow sets is, it will
+> take effect on task's behavior regarding memory location and cpu
+> location, while the locality only care about the results rather than
+> the sets.
+My previous response missed much of the context, so it was a bit off.
 
-That's another personal preference, but I'm fine with yours variant as
-well. Will change this in the next version.
+I see what you mean by the locality now. Alas, I can't assess whether
+it's the right thing to do regarding NUMA behavior that you try to
+optimize (i.e. you need an answer from someone more familiar with NUMA
+balancing).
 
->>
->>>> +
->>>>  	target_freq = min(dev->avg_freq + dev->boost_freq,
->>>> KHZ_MAX); target_freq = tegra_actmon_account_cpu_freq(tegra, dev,
->>>> target_freq); 
->>>>   
->>>
->>> And also, is it impossible to squash this patch with patch19/patch20?
->>>
->>
->> It should be possible to squash this patch with #20, but wouldn't
->> be better to keep changes in the chronological order? It's also better
->> to keep changes separate simply to aid bisection in case of a problem.
->>
->>
->>
-> 
-> 
-
+Michal
