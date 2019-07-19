@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21260C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07199C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C9A21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BCE2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510207;
-	bh=Squpm5wiFhJ7jYX3tobIsYEcUfe7On3sn+I53JoOGrY=;
+	s=default; t=1563510214;
+	bh=060eIfpEB+f74q9pNX05e8yxkOVwnNWSfoQPTh9JyNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tbyp7D4wFoWFmcVoZsFdfHmY9iC8ZLBBf/dnJGSpcJr3QlRKfGIKP3ajNM+z4vUut
-	 JA4O0pB2AvyUD5DL3DiROGAxZyyNlVvb5alQNFgh0Jnx+SjfdNo9Hq4x5r90322oY+
-	 Tpav4swYy3MbzvmlqUfycoKgEG4XUyuWsYZ1t6ZY=
+	b=PKViGjA8LRjf2bdvNS+xXqT5aaVB7ghKYzTzmp4Tg9ns+PyaxowGbebnFL6PLf3kZ
+	 VTzysjAbY00k6gaAA1QRutsdPZv+6nAWAdaYAtMszZTxbIGkWRLAz/bJwnFl+4/z7+
+	 E02KuhH6DrtghzzEwm/guBotJvDAxvnVSU1vhVQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfGSEXZ (ORCPT
+        id S2388699AbfGSEXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388044AbfGSEKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:24 -0400
+        id S2388024AbfGSEKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 438CC218B6;
-        Fri, 19 Jul 2019 04:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E583F218BB;
+        Fri, 19 Jul 2019 04:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509424;
-        bh=Squpm5wiFhJ7jYX3tobIsYEcUfe7On3sn+I53JoOGrY=;
+        s=default; t=1563509421;
+        bh=060eIfpEB+f74q9pNX05e8yxkOVwnNWSfoQPTh9JyNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UQJzw86fxWVI85OcqdNdbY67V6uZZmqcw5uqIPs320oyG0F3TKuL+dlV4eGT0sw4
-         HGlyz3ObNOlq2V8EVNOffiDgyMdZjuJq/J4WbSlLrN7vxic9ZJYbkKVyA0kPISPiGk
-         b2RQVa8GRiOaCGuBhL9amJ/pVaYIij/wStcvMPfg=
+        b=QBSC0Quya2SrZAuDYZTsgjFEuekhp43qzElnAkr5KCLE0qIh7vG7xl/oGjp4j2g3/
+         JjSktDfYsOOrrVt8rPr4/40cf/ElpoVMRwZNsoMLMDoJUAFA8EL7ykId9lAHNzmjaz
+         AAhBVmv41hd2YqflLaVVE8lwyIkdnCjxY6cN9c4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Ming Lei <ming.lei@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 086/101] block/bio-integrity: fix a memory leak bug
-Date:   Fri, 19 Jul 2019 00:07:17 -0400
-Message-Id: <20190719040732.17285-86-sashal@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 084/101] powerpc/eeh: Handle hugepages in ioremap space
+Date:   Fri, 19 Jul 2019 00:07:15 -0400
+Message-Id: <20190719040732.17285-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -60,50 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit e7bf90e5afe3aa1d1282c1635a49e17a32c4ecec ]
+[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
 
-In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-hold integrity metadata. Later on, the buffer will be attached to the bio
-structure through bio_integrity_add_page(), which returns the number of
-bytes of integrity metadata attached. Due to unexpected situations,
-bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-needs to be terminated with 'false' returned to indicate this error.
-However, the allocated kernel buffer is not freed on this execution path,
-leading to a memory leak.
+In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
+space") support for using hugepages in the vmalloc and ioremap areas was
+enabled for radix. Unfortunately this broke EEH MMIO error checking.
 
-To fix this issue, free the allocated buffer before returning from
-bio_integrity_prep().
+Detection works by inserting a hook which checks the results of the
+ioreadXX() set of functions.  When a read returns a 0xFFs response we
+need to check for an error which we do by mapping the (virtual) MMIO
+address back to a physical address, then mapping physical address to a
+PCI device via an interval tree.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When translating virt -> phys we currently assume the ioremap space is
+only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
+emit a WARN_ON(), but otherwise handles the check as though a normal
+page was found. In pathalogical cases such as copying a buffer
+containing a lot of 0xFFs from BAR memory this can result in the system
+not booting because it's too busy printing WARN_ON()s.
+
+There's no real reason to assume huge pages can't be present and we're
+prefectly capable of handling them, so do that.
+
+Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 67b5fb861a51..5bd90cd4b51e 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -291,8 +291,12 @@ bool bio_integrity_prep(struct bio *bio)
- 		ret = bio_integrity_add_page(bio, virt_to_page(buf),
- 					     bytes, offset);
+diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
+index c72767a5327a..fe3c6f3bd3b6 100644
+--- a/arch/powerpc/kernel/eeh.c
++++ b/arch/powerpc/kernel/eeh.c
+@@ -360,10 +360,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
+ 	ptep = find_init_mm_pte(token, &hugepage_shift);
+ 	if (!ptep)
+ 		return token;
+-	WARN_ON(hugepage_shift);
+-	pa = pte_pfn(*ptep) << PAGE_SHIFT;
  
--		if (ret == 0)
--			return false;
-+		if (ret == 0) {
-+			printk(KERN_ERR "could not attach integrity payload\n");
-+			kfree(buf);
-+			status = BLK_STS_RESOURCE;
-+			goto err_end_io;
-+		}
+-	return pa | (token & (PAGE_SIZE-1));
++	pa = pte_pfn(*ptep);
++
++	/* On radix we can do hugepage mappings for io, so handle that */
++	if (hugepage_shift) {
++		pa <<= hugepage_shift;
++		pa |= token & ((1ul << hugepage_shift) - 1);
++	} else {
++		pa <<= PAGE_SHIFT;
++		pa |= token & (PAGE_SIZE - 1);
++	}
++
++	return pa;
+ }
  
- 		if (ret < bytes)
- 			break;
+ /*
 -- 
 2.20.1
 
