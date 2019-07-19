@@ -2,51 +2,54 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B270C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E61FC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D7C21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D939D21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509693;
-	bh=IEF1LdFO0lsEDY5izpHaSoWsPNzGWaESwl4/XcUzRHc=;
+	s=default; t=1563509696;
+	bh=7U2BUEeK4uB+If/d2qldWdCukizqe1BKbHpDcqSTgQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzvsEYDLz8fweXlgIb7a4IiOLDFoyTFtCjBh+rGQMhtU8PlR/CbkywMDGg8J09+Fc
-	 UAuE5wrSOG5RlOA7JVmVUWh2GnwixmnZW48J3MOQ6BAS5f8du7MAUTCff6nzTvOU07
-	 dqK9lUKAM98Tvkjkri0NS9F7h/F0a64Tqj5lLSwc=
+	b=ZXS9Q8SagICvRURhf1ItkfBdKz+c11nbS/nS4RcK2r+Z/8RAZphKjzTiHurmwRIM5
+	 iR8KI7oi6irnlVzaVIv554cnxqKhf0G8tDNfBxZdu+zK7subpB8ZpCuqivRh3F1nX4
+	 0T5g91Sibr/APnskjk/T0z8IZXAG5fbjO5RELy8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389896AbfGSEOw (ORCPT
+        id S2389919AbfGSEOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:14:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388515AbfGSEOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:50 -0400
+        id S2388511AbfGSEOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B9E2082F;
-        Fri, 19 Jul 2019 04:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC7342082F;
+        Fri, 19 Jul 2019 04:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509689;
-        bh=IEF1LdFO0lsEDY5izpHaSoWsPNzGWaESwl4/XcUzRHc=;
+        s=default; t=1563509692;
+        bh=7U2BUEeK4uB+If/d2qldWdCukizqe1BKbHpDcqSTgQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jgJ7/Kgp5fd3RJft/Au8FCXXCZ1kJR4CdX3szNsj3ntOAb4meJoqm+0LJoqLSjQIf
-         qom7ZinGlscixXo5b702fxiqI6IUuqRjxKimFjRillk3oPeFNXJXBi4ca1gRVJAf7y
-         AYz2cxuWuS2E+iYtyWtO7L5SWeMA+doe9ZOo+NAY=
+        b=X4QomDFQVNOco1N0Ns5s7L4OwX/kec3i9LPtRxFO21Ri7/G/W9IN0DSvv4sqLqRqo
+         MU+sZyj+iP7YMNgvNGuJvVGM7N+zSfN+KcRxYbrNBmkKOKt6WlibR45LCV63D4afVB
+         gkswAOwfnYUeINUsaxeUcb5hLsMUC/JC4785pfVw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/35] usb: gadget: Zero ffs_io_data
-Date:   Fri, 19 Jul 2019 00:14:02 -0400
-Message-Id: <20190719041423.19322-14-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 15/35] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
+Date:   Fri, 19 Jul 2019 00:14:03 -0400
+Message-Id: <20190719041423.19322-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -59,57 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 508595515f4bcfe36246e4a565cf280937aeaade ]
+[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
 
-In some cases the "Allocate & copy" block in ffs_epfile_io() is not
-executed. Consequently, in such a case ffs_alloc_buffer() is never called
-and struct ffs_io_data is not initialized properly. This in turn leads to
-problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
+When the firmware does PCI BAR resource allocation, it passes the assigned
+addresses and flags (prefetch/64bit/...) via the "reg" property of
+a PCI device device tree node so the kernel does not need to do
+resource allocation.
 
-This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
-in non-aio case to properly initialize struct ffs_io_data.
+The flags are stored in resource::flags - the lower byte stores
+PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
+Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
+such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
+When parsing the "reg" property, we copy the prefetch flag but we skip
+on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
+1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
+or by passing "/chosen/linux,pci-probe-only");
+2. we request resource alignment (by passing pci=resource_alignment=
+via the kernel cmd line to request PAGE_SIZE alignment or defining
+ppc_md.pcibios_default_alignment which returns anything but 0). Note that
+the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
+
+With 1) and 2), the generic PCI code in the kernel unconditionally
+decides to:
+- reassign the BARs in pci_specified_resource_alignment() (works fine)
+- write new BARs to the device - this fails for 64bit BARs as the generic
+code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
+of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
+in the hypervisor.
+
+This fixes the issue by copying the flag. This is useful if we want to
+enforce certain BAR alignment per platform as handling subpage sized BARs
+is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Shawn Anastasio <shawn@anastas.io>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_fs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/pci_of_scan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 4800bb22cdd6..4cb1355271ec 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -912,11 +912,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb *kiocb, struct iov_iter *from)
- 	ENTER();
- 
- 	if (!is_sync_kiocb(kiocb)) {
--		p = kmalloc(sizeof(io_data), GFP_KERNEL);
-+		p = kzalloc(sizeof(io_data), GFP_KERNEL);
- 		if (unlikely(!p))
- 			return -ENOMEM;
- 		p->aio = true;
- 	} else {
-+		memset(p, 0, sizeof(*p));
- 		p->aio = false;
- 	}
- 
-@@ -948,11 +949,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, struct iov_iter *to)
- 	ENTER();
- 
- 	if (!is_sync_kiocb(kiocb)) {
--		p = kmalloc(sizeof(io_data), GFP_KERNEL);
-+		p = kzalloc(sizeof(io_data), GFP_KERNEL);
- 		if (unlikely(!p))
- 			return -ENOMEM;
- 		p->aio = true;
- 	} else {
-+		memset(p, 0, sizeof(*p));
- 		p->aio = false;
- 	}
- 
+diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
+index 2e710c15893f..a38d7293460d 100644
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -45,6 +45,8 @@ static unsigned int pci_parse_of_flags(u32 addr0, int bridge)
+ 	if (addr0 & 0x02000000) {
+ 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
+ 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
++		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
++			flags |= IORESOURCE_MEM_64;
+ 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
+ 		if (addr0 & 0x40000000)
+ 			flags |= IORESOURCE_PREFETCH
 -- 
 2.20.1
 
