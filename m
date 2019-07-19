@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4323DC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484CAC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F622173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2222A2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510362;
-	bh=248KId4oJ/UXTy259lxG0UgQmqYIht55telL23IqvEE=;
+	s=default; t=1563510365;
+	bh=BOwvCVviHuS1yi7wXAMbRF92DV7o6/7cxfw9HudwqSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pehhET0WhDjOxdu/UBcD5hDhi84KPF3P6O+yiiEQAssWkc3nGKEJGaGjsu/4eRcod
-	 DBIbkO4ZxLDU2NX8oAFqA0K835NRiA4JEg5vVvzAsrA8ZgAxyxrnVyxszoX7yY9cDB
-	 gJS3MEKjIvIyfQlTPrVi8QA3HPzVyy972aalL9a8=
+	b=utB+NTKxlR/kqwzqQ2lvF5UrCtk43sKqYWdKSB6A7ZirhT7Q1k9IB5eyyMl1ZiTId
+	 NSEaAZeD3yTY6axxjWVR2qPuIpXFE8ukNLkRsK5r9Z0ndHIdlFp7w6HtC+Fl9oShR6
+	 NX27ei8j26Jxr/TehYeAA2MJXEDagYEywqzYM0QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfGSE0B (ORCPT
+        id S1733153AbfGSEIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:26:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43038 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731619AbfGSEIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:40 -0400
+        id S1733105AbfGSEId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56E7F218D2;
-        Fri, 19 Jul 2019 04:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB40021872;
+        Fri, 19 Jul 2019 04:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509320;
-        bh=248KId4oJ/UXTy259lxG0UgQmqYIht55telL23IqvEE=;
+        s=default; t=1563509312;
+        bh=BOwvCVviHuS1yi7wXAMbRF92DV7o6/7cxfw9HudwqSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdTD+cHIAgJQQDDQHmTmpBqKdicfLxeJDYs9yx+fOO+0osZx/x92k+87rz4WPtMKJ
-         q5EdZ4/4+xwUq4CAL7KKP4cLdglC3Uq1Nyf8ZpVxxO7V6gQbwCQRKz5xR4rKAPDTzt
-         4Z5yzoxgnvsAZsIPM0cxYxPTvKcWEmDhjBQVZC5M=
+        b=JrlZaDpfkSMgF0j+QA7FisRrU4zRSe3XJMux3PlCwtOFJ2TgX6tQSzaOAVAjkSlJX
+         i1J74jC3XjHFfFy1/ML0nOoMMsk/WKqWfsx9ZoxjseuR0pLf6xvZkFEd3x5YdWCkmw
+         8BZ6zxDVHTw2rKbg30YTTjXQECJcb+8Z/eypZh7I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 032/101] iio:core: Fix bug in length of event info_mask and catch unhandled bits set in masks.
-Date:   Fri, 19 Jul 2019 00:06:23 -0400
-Message-Id: <20190719040732.17285-32-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 028/101] phy: renesas: rcar-gen2: Fix memory leak at error paths
+Date:   Fri, 19 Jul 2019 00:06:19 -0400
+Message-Id: <20190719040732.17285-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -60,39 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 936d3e536dcf88ce80d27bdb637009b13dba6d8c ]
+[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
 
-The incorrect limit for the for_each_set_bit loop was noticed whilst fixing
-this other case.  Note that as we only have 3 possible entries a the moment
-and the value was set to 4, the bug would not have any effect currently.
-It will bite fairly soon though, so best fix it now.
+This patch fixes memory leak at error paths of the probe function.
+In for_each_child_of_node, if the loop returns, the driver should
+call of_put_node() before returns.
 
-See commit ef4b4856593f ("iio:core: Fix bug in length of event info_mask and
-catch unhandled bits set in masks.") for details.
-
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/industrialio-core.c | 2 ++
+ drivers/phy/renesas/phy-rcar-gen2.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 49d4b4f1a457..4bc9ea48da07 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1112,6 +1112,8 @@ static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
- 	char *avail_postfix;
- 
- 	for_each_set_bit(i, infomask, sizeof(*infomask) * 8) {
-+		if (i >= ARRAY_SIZE(iio_chan_info_postfix))
-+			return -EINVAL;
- 		avail_postfix = kasprintf(GFP_KERNEL,
- 					  "%s_available",
- 					  iio_chan_info_postfix[i]);
+diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
+index 97d4dd6ea924..aa02b19b7e0e 100644
+--- a/drivers/phy/renesas/phy-rcar-gen2.c
++++ b/drivers/phy/renesas/phy-rcar-gen2.c
+@@ -288,6 +288,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+ 		if (error || channel_num > 2) {
+ 			dev_err(dev, "Invalid \"reg\" property\n");
++			of_node_put(np);
+ 			return error;
+ 		}
+ 		channel->select_mask = select_mask[channel_num];
+@@ -303,6 +304,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 						   &rcar_gen2_phy_ops);
+ 			if (IS_ERR(phy->phy)) {
+ 				dev_err(dev, "Failed to create PHY\n");
++				of_node_put(np);
+ 				return PTR_ERR(phy->phy);
+ 			}
+ 			phy_set_drvdata(phy->phy, phy);
 -- 
 2.20.1
 
