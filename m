@@ -2,59 +2,56 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A617C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6724DC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE909218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3782C21882
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509015;
-	bh=9HX4IC0E7NejaMwTLOIzvx6pL5uy+2m6J2g1RWligUI=;
+	s=default; t=1563509018;
+	bh=teggvQp7PWhRrkJMsK/tso+6YAghi15Fw5s2In74K+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XekWQlxYgFtNXb+awCMCoUfrRUY4Yf/PJjMDe6R+cMDopVwohmUDW2WN223NbbwEA
-	 ENLZwVOUBqSi7Ife7FCiRubqCRzB+fA5r7AuAZ/kmD2+cgi3q/19w6H7F10ccKSwCk
-	 EYlmcojwUeAwB1vx1s6zMbZQ1hiEIj43U7t24nZs=
+	b=dbycvPN3pOrsokQXhjStc3Uocc/V2ArV/D+n+YXwCwqnF8ymUH0iQJb/ok0Go12HZ
+	 zZyPKUbJEzOSenGVNf3cP7YA8Js85v6K5XEKeKI7CDt5NSZxOcW3jhsBDeCoToU3EU
+	 f+j79w1VbIwzGJ2Jxjy6gP5x+h3Ghl1zfK63rRdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfGSEDd (ORCPT
+        id S1730542AbfGSEDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbfGSED3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:03:29 -0400
+        id S1730473AbfGSEDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828562189F;
-        Fri, 19 Jul 2019 04:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BB4B21852;
+        Fri, 19 Jul 2019 04:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509008;
-        bh=9HX4IC0E7NejaMwTLOIzvx6pL5uy+2m6J2g1RWligUI=;
+        s=default; t=1563509012;
+        bh=teggvQp7PWhRrkJMsK/tso+6YAghi15Fw5s2In74K+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QTXcR5usyOuPP7qvIhSkenqCR1qCF1wemIvz21TNTgUJT1Nx2CSGH5POT2E/VcL4P
-         9fcrEzDnxHeoQtgfe+NPKOIU+oqazU9MbdJztDOYE+BV0TONN//bUz+RcKZqvYPi6h
-         256ZJHE81gjZDVhkqyWfdpnMjuAWr0Y8DwTHjmrM=
+        b=L0kDrebqX3o31eAbSFzi/0rWzFtGsJGwNUcLmBD10XQEay1S7BrJL9JzXMAvPUUED
+         /teiGHDe6VqZtDqtyy1tU1rlYfJ+RjnuSBBpzT1KULwLM820qum1E2eCwdMGDFToQb
+         SSedl4V2ezzk5h0zP8sLEldc12F3T9MgNuOICpf8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
-        Emily Deng <Emily.Deng@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+Cc:     Oak Zeng <ozeng@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 017/141] drm/amdgpu/sriov: Need to initialize the HDP_NONSURFACE_BAStE
-Date:   Fri, 19 Jul 2019 00:00:42 -0400
-Message-Id: <20190719040246.15945-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 019/141] drm/amdkfd: Fix a potential memory leak
+Date:   Fri, 19 Jul 2019 00:00:44 -0400
+Message-Id: <20190719040246.15945-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+From: Oak Zeng <ozeng@amd.com>
 
-[ Upstream commit fe2b5323d2c3cedaa3bf943dc7a0d233c853c914 ]
+[ Upstream commit e73390d181103a19e1111ec2f25559a0570e9fe0 ]
 
-it requires to initialize HDP_NONSURFACE_BASE, so as to avoid
-using the value left by a previous VM under sriov scenario.
+Free mqd_mem_obj it GTT buffer allocation for MQD+control stack fails.
 
-v2: it should not hurt baremetal, generalize it for both sriov
-and baremetal
-
-Signed-off-by: Emily Deng <Emily.Deng@amd.com>
-Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Oak Zeng <ozeng@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-index 1611bef19a2c..c0446af00cdd 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -1135,6 +1135,9 @@ static int gmc_v9_0_gart_enable(struct amdgpu_device *adev)
- 	tmp = RREG32_SOC15(HDP, 0, mmHDP_HOST_PATH_CNTL);
- 	WREG32_SOC15(HDP, 0, mmHDP_HOST_PATH_CNTL, tmp);
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
+index 9dbba609450e..8fe74b821b32 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
+@@ -76,6 +76,7 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
+ 	struct v9_mqd *m;
+ 	struct kfd_dev *kfd = mm->dev;
  
-+	WREG32_SOC15(HDP, 0, mmHDP_NONSURFACE_BASE, (adev->gmc.vram_start >> 8));
-+	WREG32_SOC15(HDP, 0, mmHDP_NONSURFACE_BASE_HI, (adev->gmc.vram_start >> 40));
-+
- 	/* After HDP is initialized, flush HDP.*/
- 	adev->nbio_funcs->hdp_flush(adev, NULL);
++	*mqd_mem_obj = NULL;
+ 	/* From V9,  for CWSR, the control stack is located on the next page
+ 	 * boundary after the mqd, we will use the gtt allocation function
+ 	 * instead of sub-allocation function.
+@@ -93,8 +94,10 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
+ 	} else
+ 		retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct v9_mqd),
+ 				mqd_mem_obj);
+-	if (retval != 0)
++	if (retval) {
++		kfree(*mqd_mem_obj);
+ 		return -ENOMEM;
++	}
  
+ 	m = (struct v9_mqd *) (*mqd_mem_obj)->cpu_ptr;
+ 	addr = (*mqd_mem_obj)->gpu_addr;
 -- 
 2.20.1
 
