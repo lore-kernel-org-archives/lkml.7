@@ -7,66 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EE7C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFA6C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174C02173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882D02082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510550;
-	bh=DFafnbAHopfkugyR/u2EBGYtfhirSvbWGoa3dRt0uaQ=;
+	s=default; t=1563510555;
+	bh=ItxFliTD6WeA+ql+n36UYHQERTf9F0u/4k5yMPa57MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAxOua9/u8qiTWvPLefs61CkfIwONk5SgC8TbW4jPDXDMBFI7yQYWc5GT9VnQ3CSZ
-	 65KADrBXAMIrJuZ1W6vYLWiLB6KB6EUunp6GDAsrylfITRVta5HsNL+8aokRKThUSu
-	 JZiK0RmMraiC5ti3DRvDvBjGZOVAySI7DAe6Ls/I=
+	b=pCTN40nEx994PWnDRbLpq2uDyRDFfkK563Ufp9sPxktlBvR+4992vRtJIGtjPpwNb
+	 JpDL3YwCGYdltqTOweLrBc/zx4sM1QQZaShLC27BuOdf9hVRFxvQ95e/TMqGlVDQ41
+	 jEaWnDWV+B+ArmoNVUinHFU+ONop5UF52e+LfJS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388117AbfGSE3F (ORCPT
+        id S2388435AbfGSE3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38874 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731989AbfGSEGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:04 -0400
+        id S1730603AbfGSEFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531C2218D4;
-        Fri, 19 Jul 2019 04:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDD7B21873;
+        Fri, 19 Jul 2019 04:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509162;
-        bh=DFafnbAHopfkugyR/u2EBGYtfhirSvbWGoa3dRt0uaQ=;
+        s=default; t=1563509143;
+        bh=ItxFliTD6WeA+ql+n36UYHQERTf9F0u/4k5yMPa57MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XsceGgDRoFLDs/c1bSVfVJBmaMjL0Xk9DK0K+ov6AVEMq1V+KYt9LMO/aUG3Gl3pD
-         pIvd/6RI+22uA2QKTArbK/wK7EUURYevWGpDJQE+IoQCGM7Y//FA3QXEk6fWLby1tI
-         EToH2uC0AvEcAe0MxskWB0aH2OEmaD3XZqzLkvzU=
+        b=QVH3uwIyovMqL7WvabH8GEOnXO7Ej3zpKXYTkn5eWDDn+/SQcP7ctlkp6UJZ5uZTr
+         CQwGRxETQYhUHiViEz19RLCllatjghEWgYAsANvb2zqRyyYO8U75XuAIa6HzSzsbFs
+         CKg8gXAqVadmSMxKTGu9+Mic+c91KPYP+dA74hQk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 101/141] perf map: Fix potential NULL pointer dereference found by smatch tool
-Date:   Fri, 19 Jul 2019 00:02:06 -0400
-Message-Id: <20190719040246.15945-101-sashal@kernel.org>
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 095/141] PCI: mobiveil: Use the 1st inbound window for MEM inbound transactions
+Date:   Fri, 19 Jul 2019 00:02:00 -0400
+Message-Id: <20190719040246.15945-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -79,87 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 363bbaef63ffebcc745239fe80a953ebb5ac9ec9 ]
+[ Upstream commit f7fee1b42fe4f8171a4b1cad05c61907c33c53f6 ]
 
-Based on the following report from Smatch, fix the potential NULL
-pointer dereference check.
+The inbound and outbound windows have completely separate control
+registers sets in the host controller MMIO space. Windows control
+register are accessed through an MMIO base address and an offset
+that depends on the window index.
 
-  tools/perf/util/map.c:479
-  map__fprintf_srccode() error: we previously assumed 'state' could be
-  null (see line 466)
+Since inbound and outbound windows control registers are completely
+separate there is no real need to use different window indexes in the
+inbound/outbound windows initialization routines to prevent clashing.
 
-  tools/perf/util/map.c
-  465         /* Avoid redundant printing */
-  466         if (state &&
-  467             state->srcfile &&
-  468             !strcmp(state->srcfile, srcfile) &&
-  469             state->line == line) {
-  470                 free(srcfile);
-  471                 return 0;
-  472         }
-  473
-  474         srccode = find_sourceline(srcfile, line, &len);
-  475         if (!srccode)
-  476                 goto out_free_line;
-  477
-  478         ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
-  479         state->srcfile = srcfile;
-              ^^^^^^^
-  480         state->line = line;
-              ^^^^^^^
+To fix this inconsistency, change the MEM inbound window index to 0,
+mirroring the outbound window set-up.
 
-This patch validates 'state' pointer before access its elements.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Fixes: dd2e18e9ac20 ("perf tools: Support 'srccode' output")
-Link: http://lkml.kernel.org/r/20190702103420.27540-8-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+[lorenzo.pieralisi@arm.com: update commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/map.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index ee71efb9db62..9c81ee092784 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -470,8 +470,11 @@ int map__fprintf_srccode(struct map *map, u64 addr,
- 		goto out_free_line;
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index e4a1964e1b43..387a20f3c240 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -546,7 +546,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 			resource_size(pcie->ob_io_res));
  
- 	ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
--	state->srcfile = srcfile;
--	state->line = line;
-+
-+	if (state) {
-+		state->srcfile = srcfile;
-+		state->line = line;
-+	}
- 	return ret;
+ 	/* memory inbound translation window */
+-	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
++	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
  
- out_free_line:
+ 	/* Get the I/O and memory ranges from DT */
+ 	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
 -- 
 2.20.1
 
