@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F2BC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11942C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906D8218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEC121872
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509620;
-	bh=p6UHpgjwO37at5y0gpM2mNj68J9UQcIXBrNvevoVx4g=;
+	s=default; t=1563509624;
+	bh=vL3AmHwHotQnShlqS79F0dQKm8AQqsbtutrbeGWT9OU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKTvYCVVRAb27U7SmXUdAS3nBVNeTOR2w+NAnAGLGb1QYDubPZRdsqpLS+HBCKF4/
-	 F6jYsmL9zAo2TxVRCoHH2bbSkXrGXApaQ4yVT16zlE3yz/t1IF+hQJqWpIxzqJYbVY
-	 1dP0oCQODzRZquwehXoXAwKlZbogKVQEoiCTW4D0=
+	b=Rjdzy3SMINF8rNW1D98sc6A7E9lMnCWviolTc64eofljYAgY3zHZoUZlP/3YN7HsR
+	 Nf1DKyz/QTsOe/aQAEpntZzkvYhJ2DupURCLZlyHyoAh44b3sd81xLBryVyLEqYHKC
+	 eGS+6jGeKs4IeEvKfogTgE+IBzqGxMEah818yjWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbfGSENj (ORCPT
+        id S2388135AbfGSENn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49448 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389233AbfGSENa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:30 -0400
+        id S2388073AbfGSENj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A012D21850;
-        Fri, 19 Jul 2019 04:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB60218BB;
+        Fri, 19 Jul 2019 04:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509609;
-        bh=p6UHpgjwO37at5y0gpM2mNj68J9UQcIXBrNvevoVx4g=;
+        s=default; t=1563509618;
+        bh=vL3AmHwHotQnShlqS79F0dQKm8AQqsbtutrbeGWT9OU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XXrUnPkGXt2uYNhUrUoLzhZebZE9kYX8My2tKHBcCjCS7COFoLHiD1AzkGZpVzTUt
-         YYhUkF18lER2kuSN39LLMWVmkw+e6D8aSt+UkBjF2nRzvpaYGKWvkJDyKaXIaPkMc6
-         6xLpooJn+SjxKnLNXuZSYIIdexQESj2tYh6Wownk=
+        b=ICX3Jw2DbmcbvkB4ixgipozbVlMSsB7Q8mCxxo8h3DLtGIeRVh+5i2lqC/sf/0393
+         5vevq9fQ7WdapNS78Q/vxcGfILJSdLCYwDtomtOfuCKKHCnTUCkijC78ZrOX/U847e
+         H8e5ampcg3a0FzZeYcuVmx54spYzOTXxRnYMSkg8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/45] tty: serial_core: Set port active bit in uart_port_activate
-Date:   Fri, 19 Jul 2019 00:12:35 -0400
-Message-Id: <20190719041304.18849-16-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Denis Ciocca <denis.ciocca@st.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 20/45] iio: st_accel: fix iio_triggered_buffer_{pre,post}enable positions
+Date:   Fri, 19 Jul 2019 00:12:39 -0400
+Message-Id: <20190719041304.18849-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -59,71 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 13b18d35909707571af9539f7731389fbf0feb31 ]
+[ Upstream commit 05b8bcc96278c9ef927a6f25a98e233e55de42e1 ]
 
-A bug was introduced by commit b3b576461864 ("tty: serial_core: convert
-uart_open to use tty_port_open"). It caused a constant warning printed
-into the system log regarding the tty and port counter mismatch:
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-[   21.644197] ttyS ttySx: tty_port_close_start: tty->count = 1 port count = 2
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-in case if session hangup was detected so the warning is printed starting
-from the second open-close iteration.
-
-Particularly the problem was discovered in situation when there is a
-serial tty device without hardware back-end being setup. It is considered
-by the tty-serial subsystems as a hardware problem with session hang up.
-In this case uart_startup() will return a positive value with TTY_IO_ERROR
-flag set in corresponding tty_struct instance. The same value will get
-passed to be returned from the activate() callback and then being returned
-from tty_port_open(). But since in this case tty_port_block_til_ready()
-isn't called the TTY_PORT_ACTIVE flag isn't set (while the method had been
-called before tty_port_open conversion was introduced and the rest of the
-subsystem code expected the bit being set in this case), which prevents the
-uart_hangup() method to perform any cleanups including the tty port
-counter setting to zero. So the next attempt to open/close the tty device
-will discover the counters mismatch.
-
-In order to fix the problem we need to manually set the TTY_PORT_ACTIVE
-flag in case if uart_startup() returned a positive value. In this case
-the hang up procedure will perform a full set of cleanup actions including
-the port ref-counter resetting.
-
-Fixes: b3b576461864 "tty: serial_core: convert uart_open to use tty_port_open"
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Acked-by: Denis Ciocca <denis.ciocca@st.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/iio/accel/st_accel_buffer.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 680fb3f9be2d..04c023f7f633 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1725,6 +1725,7 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
+diff --git a/drivers/iio/accel/st_accel_buffer.c b/drivers/iio/accel/st_accel_buffer.c
+index 7fddc137e91e..802ab7d2d93f 100644
+--- a/drivers/iio/accel/st_accel_buffer.c
++++ b/drivers/iio/accel/st_accel_buffer.c
+@@ -46,17 +46,19 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
+ 		goto allocate_memory_error;
+ 	}
+ 
+-	err = st_sensors_set_axis_enable(indio_dev,
+-					(u8)indio_dev->active_scan_mask[0]);
++	err = iio_triggered_buffer_postenable(indio_dev);
+ 	if (err < 0)
+ 		goto st_accel_buffer_postenable_error;
+ 
+-	err = iio_triggered_buffer_postenable(indio_dev);
++	err = st_sensors_set_axis_enable(indio_dev,
++					(u8)indio_dev->active_scan_mask[0]);
+ 	if (err < 0)
+-		goto st_accel_buffer_postenable_error;
++		goto st_sensors_set_axis_enable_error;
+ 
+ 	return err;
+ 
++st_sensors_set_axis_enable_error:
++	iio_triggered_buffer_predisable(indio_dev);
+ st_accel_buffer_postenable_error:
+ 	kfree(adata->buffer_data);
+ allocate_memory_error:
+@@ -65,20 +67,22 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
+ 
+ static int st_accel_buffer_predisable(struct iio_dev *indio_dev)
  {
- 	struct uart_state *state = container_of(port, struct uart_state, port);
- 	struct uart_port *uport;
-+	int ret;
+-	int err;
++	int err, err2;
+ 	struct st_sensor_data *adata = iio_priv(indio_dev);
  
- 	uport = uart_port_check(state);
- 	if (!uport || uport->flags & UPF_DEAD)
-@@ -1735,7 +1736,11 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
- 	/*
- 	 * Start up the serial port.
- 	 */
--	return uart_startup(tty, state, 0);
-+	ret = uart_startup(tty, state, 0);
-+	if (ret > 0)
-+		tty_port_set_active(port, 1);
+-	err = iio_triggered_buffer_predisable(indio_dev);
+-	if (err < 0)
+-		goto st_accel_buffer_predisable_error;
+-
+ 	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+ 	if (err < 0)
+ 		goto st_accel_buffer_predisable_error;
+ 
+ 	err = st_sensors_set_enable(indio_dev, false);
++	if (err < 0)
++		goto st_accel_buffer_predisable_error;
+ 
+ st_accel_buffer_predisable_error:
++	err2 = iio_triggered_buffer_predisable(indio_dev);
++	if (!err)
++		err = err2;
 +
-+	return ret;
+ 	kfree(adata->buffer_data);
+ 	return err;
  }
- 
- static const char *uart_type(struct uart_port *port)
 -- 
 2.20.1
 
