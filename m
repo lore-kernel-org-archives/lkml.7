@@ -2,133 +2,155 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EDFC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C57EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBDB21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647CD21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A+mO3rln"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzQUCbzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfGSI6M (ORCPT
+        id S1727012AbfGSI7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:58:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59250 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGSI6M (ORCPT
+        Fri, 19 Jul 2019 04:59:38 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46833 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfGSI7h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:58:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6J8vdEj013636;
-        Fri, 19 Jul 2019 03:57:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563526659;
-        bh=7X+kR445JFm1cYpnohKCnbuAIZMZuiFWVELpywmoSV0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=A+mO3rlnNAl91B8Nq9UoSTvln9pWGTqdsXa5JfkOK3UjxPnPUq1RLJisCHSxeuTSQ
-         ldVbeh8gYtrPICER+dmG97ryg1rNn54BogFQ+atZ9+OtbtNA21noNcS/y1+O2APNin
-         hwcJ6Z7piMkN2cCFEiYVHbmufC+hAzQFtqsgoFpA=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6J8vdHm045399
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jul 2019 03:57:39 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 19
- Jul 2019 03:57:39 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 19 Jul 2019 03:57:38 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6J8vZFd089409;
-        Fri, 19 Jul 2019 03:57:36 -0500
-Subject: Re: [PATCH -next] mtd: hyperbus: fix build error about CONFIG_REGMAP
-To:     Mao Wenan <maowenan@huawei.com>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190719010703.63815-1-maowenan@huawei.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <a4c534c3-4105-08cd-874b-91d82f5a9199@ti.com>
-Date:   Fri, 19 Jul 2019 14:28:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 04:59:37 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 65so23702547oid.13;
+        Fri, 19 Jul 2019 01:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gBusBZhQcLKBWDanQAGbHMALYypzWJ4WXbnd8gqcE3w=;
+        b=hzQUCbzumVp7OrDT0mxpxR3wMx4ptyZYpa6YUNaWZPMrRycx8xtDDqJXyYTTAGhRoQ
+         mka1Z7qRSaSNvxu9QSd3RzxuZclNptcC6dYCbJBvRYk6RB/K9v7lKHYZ+dPy2t204zDG
+         8N8aV6KlPlWZoj607hSatkWfw5L2pTyTxUXmFOWPNhqGdLZYpnQpzAwIgvvAzLfrC1JI
+         eqiZxe/3w3ZF+rYttmsr3JQhPutJmcdGhZrWWjFL8aTLYCN+dHTlx5MU4AN4XhQWFlJv
+         snwD0vfxkiSuL+//2Wh85TxuU7E8dkMJIV4+a91zaiLdcz3S6JMMsYJh97qjyx0ciDHJ
+         I21g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gBusBZhQcLKBWDanQAGbHMALYypzWJ4WXbnd8gqcE3w=;
+        b=WfLT+ga7JYV4BIEDmpGdqoHJleYQTKOfnKtHq6g0wQi3yihNb+VEhB9ErP3pxrRutY
+         pablp5GCh9R4rkVPp6vOY3FvsdCqfgVuJSyuINUBMIBziZw8gqjyW4g+rKMTiQ+7iAn3
+         joyDzZv9JxrMnZQqY1fR30IY+/Cjn7FKqEjxmChi9Z0xDEdpq8vNjnoMOkSaILAHtoXj
+         VUx8wl9/N0KuTCgKISTqoxTp+qL+82LN036aoGedR/9jg9Dmyadkhc4gltoeykyf5n8t
+         Zrgl2QnbHrfEExdQL8Gv7/R1kg4XOPUuv8gkFB6to7V63JpnvLSVpo4lcUlLETcQL6Un
+         6Vvg==
+X-Gm-Message-State: APjAAAX+HDauyeBvs62Lmg6r1h0ApkrcBPcRYQAeMmcOUatgh3soxBx6
+        VvVinBMQ2V7lzmwXXFmvk8Q9N9ydchdJv3gMDVgW8bS+ces=
+X-Google-Smtp-Source: APXvYqxkeToemgSjhvUX7UQTyztvFqqM2CAb21z3wyp+gF2R8lPYi/gkwN79NQrxS+EPPCdNYXXQg9mhLqXK9xHzGBw=
+X-Received: by 2002:aca:b9d4:: with SMTP id j203mr25350397oif.5.1563526776730;
+ Fri, 19 Jul 2019 01:59:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190719010703.63815-1-maowenan@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de>
+In-Reply-To: <217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 19 Jul 2019 16:59:25 +0800
+Message-ID: <CANRm+CxWbkr0=DB7DBdaQOsTTt0XS5vSk_BRL2iFeAAm81H8Bg@mail.gmail.com>
+Subject: Re: [5.2 regression] x86/fpu changes cause crashes in KVM guest
+To:     Thomas Lambertz <mail@thomaslambertz.de>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>, kvm <kvm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cc kvm ml,
+On Thu, 18 Jul 2019 at 08:08, Thomas Lambertz <mail@thomaslambertz.de> wrote:
+>
+> Since kernel 5.2, I've been experiencing strange issues in my Windows 10
+> QEMU/KVM guest.
+> Via bisection, I have tracked down that the issue lies in the FPU state
+> handling changes.
+> Kernels before 8ff468c29e9a9c3afe9152c10c7b141343270bf3 work great, the
+> ones afterwards are affected.
+> Sometimes the state seems to be restored incorrectly in the guest.
+>
+> I have managed to reproduce it relatively cleanly, on a linux guest.
+> (ubuntu-server 18.04, but that should not matter, since it occured on
+> windows aswell)
+>
+> To reproduce the issue, you need prime95 (or mprime), from
+> https://www.mersenne.org/download/ .
+> This is just a stress test for the FPU, which helps reproduce the error
+> much quicker.
+>
+> - Run it in the guest as 'Benchmark Only', and choose the '(2) Small
+> FFTs' torture test. Give it the maximum amount of cores (for me 10).
+> - On the host, run the same test. To keep my pc usable, I limited it to
+> 5 cores. I do this to put some pressure on the system.
+> - repeatedly focus and unfocus the qemu window
+>
+> With this config, errors in the guest usually occur within 30 seconds.
+> Without the refocusing, takes ~5min on average, but the variance of this
+> time is quite large.
+>
+> The error messages are either
+>      "FATAL ERROR: Rounding was ......., expected less than 0.4"
+> or
+>      "FATAL ERROR: Resulting sum was ....., expexted: ......",
+> suggesting that something in the calculation has gone wrong.
+>
+> On the host, no errors are ever observed!
 
+I found it is offended by commit 5f409e20b (x86/fpu: Defer FPU state
+load until return to userspace) and can only be reproduced when
+CONFIG_PREEMPT is enabled. Why restore qemu userspace fpu context to
+hardware before vmentry in the commit?
+https://lkml.org/lkml/2017/11/14/945 Actually I suspect the commit
+f775b13eedee2 (x86,kvm: move qemu/guest FPU switching out to vcpu_run)
+inaccurately save guest fpu state which in xsave area into the qemu
+userspace fpu buffer. However, Rik replied in
+https://lkml.org/lkml/2017/11/14/891, "The scheduler will save the
+guest fpu context when a vCPU thread is preempted, and restore it when
+it is scheduled back in." But I can't find any scheduler codes do
+this. In addition, below codes can fix the mprime error warning.
+(Still not sure it is correct)
 
-On 19/07/19 6:37 AM, Mao Wenan wrote:
-> When CONFIG_MUX_MMIO and CONFIG_HBMC_AM654 are both 'm', there are
-> some building error as below:
-> 
-> drivers/mux/mmio.c: In function mux_mmio_probe:
-> drivers/mux/mmio.c:76:20: error: storage size of field isnt known
->    struct reg_field field;
->                     ^~~~~
-> drivers/mux/mmio.c:102:15: error: implicit declaration of function devm_regmap_field_alloc; did you mean devm_mux_chip_alloc? [-Werror=implicit-function-declaration]
->    fields[i] = devm_regmap_field_alloc(dev, regmap, field);
->                ^~~~~~~~~~~~~~~~~~~~~~~
->                devm_mux_chip_alloc
-> drivers/mux/mmio.c:76:20: warning: unused variable field [-Wunused-variable]
->    struct reg_field field;
->                     ^~~~~
-> cc1: some warnings being treated as errors
-> make[2]: *** [drivers/mux/mmio.o] Error 1
-> make[1]: *** [drivers/mux] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [drivers] Error 2
-> 
-> This because CONFIG_REGMAP is not enable, so change the Kconfig for HBMC_AM654.
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 58305cf..18f928e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3306,6 +3306,9 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 
-Since, hbmc-am654.c does not use regmap APIs directly we don't need to
-select REGMAP here. MUX_MMIO is optional for this driver, therefore I
-have converted that to an imply clause and posted a fix here:
-https://patchwork.ozlabs.org/patch/1133946/
+     kvm_x86_ops->vcpu_load(vcpu, cpu);
 
-Let me know if that fixes the issue. Thanks for the report!
++    if (test_thread_flag(TIF_NEED_FPU_LOAD))
++        switch_fpu_return();
++
+     /* Apply any externally detected TSC adjustments (due to suspend) */
+     if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
+         adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
+@@ -7990,10 +7993,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+     trace_kvm_entry(vcpu->vcpu_id);
+     guest_enter_irqoff();
 
-Regards
-Vignesh
-
-> 
-> Fixes: b07079f1642c("mtd: hyperbus: Add driver for TI's HyperBus memory controller")
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/mtd/hyperbus/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-> index cff6bbd..f324fa6 100644
-> --- a/drivers/mtd/hyperbus/Kconfig
-> +++ b/drivers/mtd/hyperbus/Kconfig
-> @@ -14,6 +14,8 @@ if MTD_HYPERBUS
->  
->  config HBMC_AM654
->  	tristate "HyperBus controller driver for AM65x SoC"
-> +	select OF
-> +	select REGMAP
->  	select MULTIPLEXER
->  	select MUX_MMIO
->  	help
-> 
-
--- 
-Regards
-Vignesh
+-    fpregs_assert_state_consistent();
+-    if (test_thread_flag(TIF_NEED_FPU_LOAD))
+-        switch_fpu_return();
+-
+     if (unlikely(vcpu->arch.switch_db_regs)) {
+         set_debugreg(0, 7);
+         set_debugreg(vcpu->arch.eff_db[0], 0);
