@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E8CC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4044EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30EA20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C4320873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510186;
-	bh=rEOxhVje41GtsRNcgA834B2vdF8qdzCHLjggyEcMFM8=;
+	s=default; t=1563510191;
+	bh=ZLZF1GOGCquEb3H2tilbHJUMYNibC+LJb122UsyE6Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XT1oG+F9zBmRY5LpwJWYiF5HHMqViwp0Ofmzd2mJydPEqWMNpSTUi2ytixA877yu5
-	 TPQf7gKiiYHQGfJ+kfZQxf17XFQBoP779fEw/5Bm2my3lX3yM5p6URanxhbYD6Cnvm
-	 kExqBHQ64QlzdV3SpLT3LNNXwj/YQjtNlr2fvFrw=
+	b=aXfl7k+MQck+RC4i9uCsr0d13BHHkrfQz/tqBvK6Rwk1u9GquEMR7S/2eYyKQdkpY
+	 AxD7DGSYwLF3WpgfvVTcrTb9XlNNjt60Bszd4d0fygIlL6O3qu0dSSnBhaZOPJ8CJj
+	 SKeuRLW4fA1fC95kju6liClBJhLust3hsbqmBxeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfGSEKl (ORCPT
+        id S2388143AbfGSEXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388098AbfGSEKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:33 -0400
+        id S1733146AbfGSEKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D55218B6;
-        Fri, 19 Jul 2019 04:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F1AD218BB;
+        Fri, 19 Jul 2019 04:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509432;
-        bh=rEOxhVje41GtsRNcgA834B2vdF8qdzCHLjggyEcMFM8=;
+        s=default; t=1563509437;
+        bh=ZLZF1GOGCquEb3H2tilbHJUMYNibC+LJb122UsyE6Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T+aMUavrXnh81sXlmspXJ+9K/U9W4Q3/cvhL/RIF9FDCCVE39iy70dJFC/YSYy7R2
-         9W22NXzO95FNIveejdgjlJOm5PvKNZ5eI3H7xYIABMhVjw3JvEmCsK12tJ6CbR8qki
-         gJ4XtSAXKmC0onyvicApzIRCbL9QUffGax/HAPKw=
+        b=U4F/FJ7RvjLqdQ4bUtFKN/QBEeVuGVRzQHjyaXrSEO3sTnv7JOI3++jS/mERRIcwm
+         UCYj0Z9MOK6wSpGAC4ZotDGn9l16RfVFVCtvk3onyrsYp/BPIZMP0fQahN5TVzuGdm
+         0IxoX9JyAG41PTm0RYCQU5uDHZDDUTDdCp/oGvoc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
+Cc:     Shakeel Butt <shakeelb@google.com>, Roman Gushchin <guro@fb.com>,
+        Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Amir Goldstein <amir73il@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 090/101] mm/gup.c: mark undo_dev_pagemap as __maybe_unused
-Date:   Fri, 19 Jul 2019 00:07:21 -0400
-Message-Id: <20190719040732.17285-90-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/101] memcg, fsnotify: no oom-kill for remote memcg charging
+Date:   Fri, 19 Jul 2019 00:07:23 -0400
+Message-Id: <20190719040732.17285-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -63,44 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Shakeel Butt <shakeelb@google.com>
 
-[ Upstream commit 790c73690c2bbecb3f6f8becbdb11ddc9bcff8cc ]
+[ Upstream commit ec165450968b26298bd1c373de37b0ab6d826b33 ]
 
-Several mips builds generate the following build warning.
+Commit d46eb14b735b ("fs: fsnotify: account fsnotify metadata to
+kmemcg") added remote memcg charging for fanotify and inotify event
+objects.  The aim was to charge the memory to the listener who is
+interested in the events but without triggering the OOM killer.
+Otherwise there would be security concerns for the listener.
 
-  mm/gup.c:1788:13: warning: 'undo_dev_pagemap' defined but not used
+At the time, oom-kill trigger was not in the charging path.  A parallel
+work added the oom-kill back to charging path i.e.  commit 29ef680ae7c2
+("memcg, oom: move out_of_memory back to the charge path").  So to not
+trigger oom-killer in the remote memcg, explicitly add
+__GFP_RETRY_MAYFAIL to the fanotigy and inotify event allocations.
 
-The function is declared unconditionally but only called from behind
-various ifdefs. Mark it __maybe_unused.
-
-Link: http://lkml.kernel.org/r/1562072523-22311-1-git-send-email-linux@roeck-us.net
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190514212259.156585-2-shakeelb@google.com
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Jan Kara <jack@suse.cz>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/gup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/notify/fanotify/fanotify.c        | 5 ++++-
+ fs/notify/inotify/inotify_fsnotify.c | 8 ++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index caadd31714a5..43c71397c7ca 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1367,7 +1367,8 @@ static inline pte_t gup_get_pte(pte_t *ptep)
- }
- #endif
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index 29dee9630eec..a18b8d7a3075 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -148,10 +148,13 @@ struct fanotify_event_info *fanotify_alloc_event(struct fsnotify_group *group,
+ 	/*
+ 	 * For queues with unlimited length lost events are not expected and
+ 	 * can possibly have security implications. Avoid losing events when
+-	 * memory is short.
++	 * memory is short. For the limited size queues, avoid OOM killer in the
++	 * target monitoring memcg as it may have security repercussion.
+ 	 */
+ 	if (group->max_events == UINT_MAX)
+ 		gfp |= __GFP_NOFAIL;
++	else
++		gfp |= __GFP_RETRY_MAYFAIL;
  
--static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
-+static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
-+					    struct page **pages)
- {
- 	while ((*nr) - nr_start) {
- 		struct page *page = pages[--(*nr)];
+ 	/* Whoever is interested in the event, pays for the allocation. */
+ 	memalloc_use_memcg(group->memcg);
+diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
+index f4184b4f3815..16b8702af0e7 100644
+--- a/fs/notify/inotify/inotify_fsnotify.c
++++ b/fs/notify/inotify/inotify_fsnotify.c
+@@ -99,9 +99,13 @@ int inotify_handle_event(struct fsnotify_group *group,
+ 	i_mark = container_of(inode_mark, struct inotify_inode_mark,
+ 			      fsn_mark);
+ 
+-	/* Whoever is interested in the event, pays for the allocation. */
++	/*
++	 * Whoever is interested in the event, pays for the allocation. Do not
++	 * trigger OOM killer in the target monitoring memcg as it may have
++	 * security repercussion.
++	 */
+ 	memalloc_use_memcg(group->memcg);
+-	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT);
++	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+ 	memalloc_unuse_memcg();
+ 
+ 	if (unlikely(!event)) {
 -- 
 2.20.1
 
