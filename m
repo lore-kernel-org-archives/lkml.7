@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEAAC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C89C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E9B20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B278320873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510915;
-	bh=I17DrcFi7+urAICnpGho+Udc/SRWzTgx9Ys7b2roMz8=;
+	s=default; t=1563510919;
+	bh=WnRs12+q0ocPyqCZ7djJyleRZcDXafyOhPyDCWFslTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qvUbks1/MnPKP4yzQ83oZJD5CyuvoEvN4kiYC7lQHmhMIAUhODOufDp1y/dCeIUus
-	 y+6yLqYQzL0nhIF3aG+XxkpOA+pTqxCLOsc+R0PD3uVuZAtF7vPTPAsxA6ZmeXgThp
-	 CFOXI9YRFUyRa7/DemadoIaNn1Y4V9WoHF/5Bw7s=
+	b=NdUuO5zHjCLtmcHPtiwOJCa0V9Js5MsZvqwwG3kR/Fx+dpwdq0DIojf07+UDC/oDI
+	 VqXqGC0jf1ZW/bHhXzbE0Ypz5pbdNIknuhFiZfyr8eW1i7e6xVRVPBoE659NF6YqaY
+	 Se/zeBODnKo6IY3Bb8O6tWLl9wHElNqrhoMjHYHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfGSEBe (ORCPT
+        id S1731157AbfGSEfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:35:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729409AbfGSEBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:25 -0400
+        id S1728552AbfGSEB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 579B921873;
-        Fri, 19 Jul 2019 04:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88E92189F;
+        Fri, 19 Jul 2019 04:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508884;
-        bh=I17DrcFi7+urAICnpGho+Udc/SRWzTgx9Ys7b2roMz8=;
+        s=default; t=1563508888;
+        bh=WnRs12+q0ocPyqCZ7djJyleRZcDXafyOhPyDCWFslTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tI87Xu24wtfN0JlayL0WoI+Ox7SvC9i+8npqGZ47T9MHdRQTf9+UJSQZZr7WUwP76
-         7sSGMN5WQYwOtLym0WtD7GKZAeujPFvHpbk9oGnHrGwfSFJ3tREMmWrVmaUsoSjSuP
-         WONVyeY94r9yPT20eV9yGEgj+6jdVMY8WbkjL4o4=
+        b=WJpuQHAJQPkPG5e4+hOGDIDvhYht1re4p1nSNn/alAGC3+PuB0X2lvxhTJzagqYJA
+         WfpIkrVWnqYay1/ovHSS1vKmOhO6rv7o43fTeDylJx63YqCihlsvH1H7rlQj9wwoVd
+         zZHH2tJ9PJmjnbre7bGm9Du2Y9XDzHGxOAoCMr+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>,
+Cc:     Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Mike Playle <mplayle@solarflare.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-nvme@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 135/171] nvme-pci: check for NULL return from pci_alloc_p2pmem()
-Date:   Thu, 18 Jul 2019 23:56:06 -0400
-Message-Id: <20190719035643.14300-135-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 139/171] nvme-tcp: set the STABLE_WRITES flag when data digests are enabled
+Date:   Thu, 18 Jul 2019 23:56:10 -0400
+Message-Id: <20190719035643.14300-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,54 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+From: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
 
-[ Upstream commit bfac8e9f55cf62a000b643a0081488badbe92d96 ]
+[ Upstream commit 958f2a0f8121ae36a5cbff383ab94fadf1fba5eb ]
 
-Modify nvme_alloc_sq_cmds() to call pci_free_p2pmem() to free the memory
-it allocated using pci_alloc_p2pmem() in case pci_p2pmem_virt_to_bus()
-returns null.
+There was a few false alarms sighted on target side about wrong data
+digest while performing high throughput load to XFS filesystem shared
+through NVMoF TCP.
 
-Makes sure not to call pci_free_p2pmem() if pci_alloc_p2pmem() returned
-NULL, which can happen if CONFIG_PCI_P2PDMA is not configured.
+This flag tells the rest of the kernel to ensure that the data buffer
+does not change while the write is in flight.  It incurs a performance
+penalty, so only enable it when it is actually needed, i.e. when we are
+calculating data digests.
 
-The current implementation is not expected to leak since
-pci_p2pmem_virt_to_bus() is expected to fail only if pci_alloc_p2pmem()
-returns null. However, checking the return value of pci_alloc_p2pmem()
-is more explicit.
+Although even with this change in place, ext2 users can steel experience
+false positives, as ext2 is not respecting this flag. This may be apply
+to vfat as well.
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Signed-off-by: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+Signed-off-by: Mike Playle <mplayle@solarflare.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/nvme/host/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 524d6bd6d095..5dfa067f6506 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1456,11 +1456,15 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
- 
- 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
- 		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
--		nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
--						nvmeq->sq_cmds);
--		if (nvmeq->sq_dma_addr) {
--			set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
--			return 0; 
-+		if (nvmeq->sq_cmds) {
-+			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
-+							nvmeq->sq_cmds);
-+			if (nvmeq->sq_dma_addr) {
-+				set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
-+				return 0;
-+			}
-+
-+			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
- 		}
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 120fb593d1da..b4048748551e 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -11,6 +11,7 @@
+ #include <linux/hdreg.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/backing-dev.h>
+ #include <linux/list_sort.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+@@ -3256,6 +3257,10 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+ 		goto out_free_ns;
  	}
  
++	if (ctrl->opts->data_digest)
++		ns->queue->backing_dev_info->capabilities
++			|= BDI_CAP_STABLE_WRITES;
++
+ 	blk_queue_flag_set(QUEUE_FLAG_NONROT, ns->queue);
+ 	if (ctrl->ops->flags & NVME_F_PCI_P2PDMA)
+ 		blk_queue_flag_set(QUEUE_FLAG_PCI_P2PDMA, ns->queue);
 -- 
 2.20.1
 
