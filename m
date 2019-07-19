@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2368AC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF50B2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7FC21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B/dZ2wts"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NwQnaJJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732304AbfGSSs1 (ORCPT
+        id S1732315AbfGSSuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 14:48:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36558 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbfGSSs1 (ORCPT
+        Fri, 19 Jul 2019 14:50:25 -0400
+Received: from mail-pl1-f177.google.com ([209.85.214.177]:45381 "EHLO
+        mail-pl1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbfGSSuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 14:48:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so16049503plt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 11:48:26 -0700 (PDT)
+        Fri, 19 Jul 2019 14:50:24 -0400
+Received: by mail-pl1-f177.google.com with SMTP id y8so16033965plr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 11:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3nwlthOc7MxXovC0OJU24IiiEzL2wO7sN9o+o7pxsw0=;
-        b=B/dZ2wtsaMcGalesXYBvtHwgQMZ7lnhNvOX1BzaTrB92sA6KtFE/I0obBAuHt+AaLi
-         TWxptAD1B/RLJ4Sh+5r9cqGev2IkuDARKJfwOPMrVUbVsh+eaZXLjTcnzPgOp0tezk5d
-         Q0kbMJ8TuH1Mq4CJx1KM8lr9abtG24IzI2vKu1Uh0hvQiOkufKMigoLbZzZSUwG2X3U6
-         Lsu2McLdCf49PV/JsHZxDgovaUTQL+cXct+/GMZFBP5knElIycUMRCZxiDog/Xo6Gi4H
-         JqtDqhVn5l0ECL1NKTp6XQ060F/pbJLmCSia/LBtFN1Z/XLZBdccccnFXChJv1UCo9l0
-         VDTA==
+        bh=VtwstdfuOaP3ic+p5sbmiS56sJs1k20ZJhy+jU3nX1A=;
+        b=NwQnaJJqh1no71dcwe6eYmLHuk5hvuAG347R+J3n1Zqc863TawqHSFyoA0w5VWDDVN
+         iB8E6GxXQpsTEe75V24F8zXWpKGONnWccqOMJqhsYEufmer9MADKDQ1pH3nqvT/Zzys7
+         cXmFkA2Ld1zn9dYjRx950TgM7T5eLR0YvFRFu3UskhUL0aQMHSEeBjKceokwpsA6pcTE
+         JyeVhshMcJu69aO7Lgvy9k0zPjmAqPgJruVbY7f/2/htetzyKPc2yw+vuwjOCh0FXMYr
+         3iiPAwH0I4qW/NWXZX57g70EwEOTUxrNO2+IaGWH/i0uojapoFXRU9K6eyHju3Ffinwk
+         G5rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3nwlthOc7MxXovC0OJU24IiiEzL2wO7sN9o+o7pxsw0=;
-        b=Kwzqjl/azg+Ph60Ddtx88JCmLdCFhh5DyXrJiAEkr1JPHo9c4tgrDg41R99ER2Ppi0
-         E7rZX9cuwQbiF9hd4r6FOn2MbaruPnrULDwI7b94smbWuwYfF2rol3VEFBzf8WD3vURg
-         PORdreSwz8LSm8nxW0RWN9X6ejjTK6fCdg0a7re5z4IfPVsMCMrGtIQNG7dB/AbNY4Wx
-         0dUL9BSRTVfxIzKnv9keL57bcFItocstRdglnfM4mx2NKvCmG11Wd4HRaKwLswKqbnCl
-         1lmOHLWpPSqX0cPhFM8CZou+pVlud4do7FZXv8VyYcevh/cYLV050mwFjQkf6Va4jtOJ
-         1DZQ==
-X-Gm-Message-State: APjAAAUAHIolq5RPSpxPQ18cIFdtWnQGU0fdEy7xvesfZt/nOGXifi+m
-        kddFIBUwS9eq0CoaCYNJ7lCl6u2gFAXJgLRUDs9RoA==
-X-Google-Smtp-Source: APXvYqzKJpnA0uk6K/f+tNSs6gctk9nWuQUzZeIp3W2U+ph0xl09hMnOkl0RQxmOn0tNtsuWLsIUseI8sZ7kLnsQsss=
-X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr57916456plq.223.1563562105892;
- Fri, 19 Jul 2019 11:48:25 -0700 (PDT)
+        bh=VtwstdfuOaP3ic+p5sbmiS56sJs1k20ZJhy+jU3nX1A=;
+        b=gRZwbOuQgUuJ5jew8XFeuv+gJ/UjUvHMdfa2BFW9xD5HnuX3ANMyp8e7RoN/teGQDO
+         dQJRqyK7sHUxHvEmrusTDh1mZcmGRHadBlUbNR7KAWqNFKIlT6YTuDuALp93m6M9W9Ml
+         jodc5aSl20m7L4h4IwAUHQqSsoZR5neOhU+nKdjGvQuyZQzHwSFSnQSA8buew8D/QdZK
+         ggAh2HzOZqxJmoIJ4r2qUGt3JuDrw1z+sLETypoZb+cEh0nPQXVCaLBXQ9IjipDf4jx+
+         c6WXytMUpjxuDP12UzEAgPQz+HZxVf7khIGRkuVQTluFZPAl1VoJY4QguNanmQIScQpy
+         HiXQ==
+X-Gm-Message-State: APjAAAU+XoZerJspJ4SGvI+T+LSJQrUwXafkXDEdR58Vjxj1yh5w3GQh
+        GBJVZhEhILhqbzzcr+CNO2IQq1Wwy8khiShflCEsHg==
+X-Google-Smtp-Source: APXvYqy81tQUqLY17zVAnUIAragXq7Z0+BEvckRlb52NZBEZZaMtWz9tjBf8yl6mWr11duxmGhIDLiAA8kbhLv/APCM=
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr56112960pld.119.1563562223586;
+ Fri, 19 Jul 2019 11:50:23 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAK8P3a12cVdrEXdgWkHGHP6O04mz5khaB7WgQ1nvOptaUTu_SA@mail.gmail.com>
  <CAKwvOdmoD1wVFLdWRXTA=c-p4oc6HDxsfhXq5wQpD-8oFUfNNQ@mail.gmail.com>
  <20190719183125.2tuhcch2rtanxvyn@treble> <CAK8P3a1hxEAnuqt=ajUf4ETCOY9ckEEVZVrG1c+SV=bn2_Ga-Q@mail.gmail.com>
 In-Reply-To: <CAK8P3a1hxEAnuqt=ajUf4ETCOY9ckEEVZVrG1c+SV=bn2_Ga-Q@mail.gmail.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 19 Jul 2019 11:48:14 -0700
-Message-ID: <CAKwvOdkC16irbGpP=cA8eEPvBWj+6mSgVgo+rs1ofDLNufWWzw@mail.gmail.com>
+Date:   Fri, 19 Jul 2019 11:50:12 -0700
+Message-ID: <CAKwvOd=jc06YyF2YsAfHWCR9qtB8oOeR5oQMpJe69TTfG3s2RA@mail.gmail.com>
 Subject: Re: warning: objtool: fn1 uses BP as a scratch register
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -132,11 +132,14 @@ On Fri, Jul 19, 2019 at 11:44 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
 > I get the same thing with clang-8, but godbolt.org shows it only
 > with clang-8 (see https://godbolt.org/z/g1lZO0) , not with trunk.
->
->        Arnd
 
-
-
+(Sorry for sending a blank email just now)
++ Craig and Simon, in case they recall this being a recent fix in
+LLVM's x86 backend.
+Sounds like this is fixing in upstream LLVM.  Guessing this could
+result in improper unwinding w/ clang-8, but that's kind of irrelevant
+for x86 as there's no asm goto (though we don't need CONFIG_JUMP_LABEL
+in LTS branches :P)
 -- 
 Thanks,
 ~Nick Desaulniers
