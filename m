@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D5CC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE39C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3A4218D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10D72189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509517;
-	bh=sacn3cJ+R1kePnKDNwAsaeKzn1gYRQe/keIiGUCKDbg=;
+	s=default; t=1563509521;
+	bh=jz7sHNyKe7PMf5YhqpKzdxcf8dmmt7SrhaGPJaDmwDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HyEEENsvR2OlbYtxGf+jK6mf9owzx59Rilu8zI3FGfig0c04717lDaAzyYV1nFy0s
-	 NwODJk009HAwDTbrF0Fl20har0IitWp6RY4sUuvcBdlyDYMyDjgVoxmxDmwUkH5hs0
-	 F8v1fPn7KwqVwTL90JrhHCR/4NWsr5ZRVw0Vel2w=
+	b=W9MfQZYJrbBh5YPmiSTH/qXNS7R5GpXErXdFPXfQxRLERxIYnb8pchDjLX24/wu12
+	 JxkZcgNmEPtUeiGDCe+o08VsnegemmpWAq+3GVx1lD6rcfLj/oajM/ifPd/VNB3kDQ
+	 klp53HbDntPJWYI5k5eSKwHiB2Zw9gGikGGEPr3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388586AbfGSELz (ORCPT
+        id S2388616AbfGSEL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46858 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388508AbfGSELv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:51 -0400
+        id S1731159AbfGSELy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6629121873;
-        Fri, 19 Jul 2019 04:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404AF2189E;
+        Fri, 19 Jul 2019 04:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509510;
-        bh=sacn3cJ+R1kePnKDNwAsaeKzn1gYRQe/keIiGUCKDbg=;
+        s=default; t=1563509514;
+        bh=jz7sHNyKe7PMf5YhqpKzdxcf8dmmt7SrhaGPJaDmwDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tENu29knR0I0/Z2ckylTzUic5JYHiQkMCui/B9BEuFD05Pqsl2rDIbg9ZiyDO6we6
-         LuBNSXxCu5iWB7GAzmADSdpqxjIw7VKGAy9zTXKaedEAr0m/yTy8QONvc5or7I4ZSy
-         q0G6QBOWdWnk77SHpj74wdCcCgJt6R7tLgpOSaaQ=
+        b=YKvyE5MQKrUU+jmlEidfNQzZsH5ssoSo5VBYq1E7duANfYb2RD8jMRjgwRw3zMg+P
+         TeZ124R2CH2UJgreMB5O3RqPvWfD6QFWc6uPrEqdliOcX4UH9HTGctMSszlcu9ZZvy
+         mwadB5fM6L1wNwFlTP49ec66U9bV6uBwHfEemETA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     EJ Hsu <ejh@nvidia.com>, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 22/60] usb: gadget: storage: Remove warning message
-Date:   Fri, 19 Jul 2019 00:10:31 -0400
-Message-Id: <20190719041109.18262-22-sashal@kernel.org>
+Cc:     Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 24/60] drm/msm: Depopulate platform on probe failure
+Date:   Fri, 19 Jul 2019 00:10:33 -0400
+Message-Id: <20190719041109.18262-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -59,111 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit e70b3f5da00119e057b7faa557753fee7f786f17 ]
+[ Upstream commit 4368a1539c6b41ac3cddc06f5a5117952998804c ]
 
-This change is to fix below warning message in following scenario:
-usb_composite_setup_continue: Unexpected call
+add_display_components() calls of_platform_populate, and we depopluate
+on pdev remove, but not when probe fails. So if we get a probe deferral
+in one of the components, we won't depopulate the platform. This causes
+the core to keep references to devices which should be destroyed, which
+causes issues when those same devices try to re-initialize on the next
+probe attempt.
 
-When system tried to enter suspend, the fsg_disable() will be called to
-disable fsg driver and send a signal to fsg_main_thread. However, at
-this point, the fsg_main_thread has already been frozen and can not
-respond to this signal. So, this signal will be pended until
-fsg_main_thread wakes up.
+I think this is the reason we had issues with the gmu's device-managed
+resources on deferral (worked around in commit 94e3a17f33a5).
 
-Once system resumes from suspend, fsg_main_thread will detect a signal
-pended and do some corresponding action (in handle_exception()). Then,
-host will send some setup requests (get descriptor, set configuration...)
-to UDC driver trying to enumerate this device. During the handling of "set
-configuration" request, it will try to sync up with fsg_main_thread by
-sending a signal (which is the same as the signal sent by fsg_disable)
-to it. In a similar manner, once the fsg_main_thread receives this
-signal, it will call handle_exception() to handle the request.
-
-However, if the fsg_main_thread wakes up from suspend a little late and
-"set configuration" request from Host arrives a little earlier,
-fsg_main_thread might come across the request from "set configuration"
-when it handles the signal from fsg_disable(). In this case, it will
-handle this request as well. So, when fsg_main_thread tries to handle
-the signal sent from "set configuration" later, there will nothing left
-to do and warning message "Unexpected call" is printed.
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Reviewed-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190617201301.133275-3-sean@poorly.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_mass_storage.c | 21 ++++++++++++++------
- drivers/usb/gadget/function/storage_common.h |  1 +
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
-index 25ba30329533..a74639289760 100644
---- a/drivers/usb/gadget/function/f_mass_storage.c
-+++ b/drivers/usb/gadget/function/f_mass_storage.c
-@@ -2295,8 +2295,7 @@ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- static void fsg_disable(struct usb_function *f)
- {
- 	struct fsg_dev *fsg = fsg_from_func(f);
--	fsg->common->new_fsg = NULL;
--	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+	raise_exception(fsg->common, FSG_STATE_DISCONNECT);
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 606df7bea97b..b970427e53a7 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1097,16 +1097,24 @@ static int msm_pdev_probe(struct platform_device *pdev)
+ 
+ 	ret = add_gpu_components(&pdev->dev, &match);
+ 	if (ret)
+-		return ret;
++		goto fail;
+ 
+ 	/* on all devices that I am aware of, iommu's which can map
+ 	 * any address the cpu can see are used:
+ 	 */
+ 	ret = dma_set_mask_and_coherent(&pdev->dev, ~0);
+ 	if (ret)
+-		return ret;
++		goto fail;
++
++	ret = component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
++	if (ret)
++		goto fail;
++
++	return 0;
+ 
+-	return component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
++fail:
++	of_platform_depopulate(&pdev->dev);
++	return ret;
  }
  
- 
-@@ -2309,6 +2308,7 @@ static void handle_exception(struct fsg_common *common)
- 	enum fsg_state		old_state;
- 	struct fsg_lun		*curlun;
- 	unsigned int		exception_req_tag;
-+	struct fsg_dev		*fsg;
- 
- 	/*
- 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
-@@ -2415,9 +2415,19 @@ static void handle_exception(struct fsg_common *common)
- 		break;
- 
- 	case FSG_STATE_CONFIG_CHANGE:
--		do_set_interface(common, common->new_fsg);
--		if (common->new_fsg)
-+		fsg = common->new_fsg;
-+		/*
-+		 * Add a check here to double confirm if a disconnect event
-+		 * occurs and common->new_fsg has been cleared.
-+		 */
-+		if (fsg) {
-+			do_set_interface(common, fsg);
- 			usb_composite_setup_continue(common->cdev);
-+		}
-+		break;
-+
-+	case FSG_STATE_DISCONNECT:
-+		do_set_interface(common, NULL);
- 		break;
- 
- 	case FSG_STATE_EXIT:
-@@ -3007,8 +3017,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
- 
- 	DBG(fsg, "unbind\n");
- 	if (fsg->common->fsg == fsg) {
--		fsg->common->new_fsg = NULL;
--		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+		raise_exception(fsg->common, FSG_STATE_DISCONNECT);
- 		/* FIXME: make interruptible or killable somehow? */
- 		wait_event(common->fsg_wait, common->fsg != fsg);
- 	}
-diff --git a/drivers/usb/gadget/function/storage_common.h b/drivers/usb/gadget/function/storage_common.h
-index e5e3a2553aaa..12687f7e3de9 100644
---- a/drivers/usb/gadget/function/storage_common.h
-+++ b/drivers/usb/gadget/function/storage_common.h
-@@ -161,6 +161,7 @@ enum fsg_state {
- 	FSG_STATE_ABORT_BULK_OUT,
- 	FSG_STATE_PROTOCOL_RESET,
- 	FSG_STATE_CONFIG_CHANGE,
-+	FSG_STATE_DISCONNECT,
- 	FSG_STATE_EXIT,
- 	FSG_STATE_TERMINATED
- };
+ static int msm_pdev_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
