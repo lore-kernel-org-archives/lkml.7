@@ -3,81 +3,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3259CC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E96AC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110532184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD0E2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfGSQOJ (ORCPT
+        id S1729078AbfGSQRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:14:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54430 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbfGSQOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:14:08 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3E636300B916;
-        Fri, 19 Jul 2019 16:14:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 35F40646CF;
-        Fri, 19 Jul 2019 16:14:05 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 19 Jul 2019 18:14:07 +0200 (CEST)
-Date:   Fri, 19 Jul 2019 18:14:05 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        kernel-team@android.com, Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH RFC v1] pidfd: fix a race in setting exit_state for pidfd
- polling
-Message-ID: <20190719161404.GA24170@redhat.com>
-References: <20190717172100.261204-1-joel@joelfernandes.org>
+        Fri, 19 Jul 2019 12:17:46 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:36965 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728346AbfGSQRq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:17:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TXIWw-t_1563553057;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TXIWw-t_1563553057)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 20 Jul 2019 00:17:39 +0800
+Subject: Re: [v3 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
+ mapped correctly in mbind
+To:     Vlastimil Babka <vbabka@suse.cz>, mhocko@kernel.org,
+        mgorman@techsingularity.net, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <1563470274-52126-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1563470274-52126-3-git-send-email-yang.shi@linux.alibaba.com>
+ <6ba72e56-9f62-36bf-ded7-f337522715d5@suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <2a753062-a6bd-d767-085a-0bf9847ea067@linux.alibaba.com>
+Date:   Fri, 19 Jul 2019 09:17:35 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717172100.261204-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 19 Jul 2019 16:14:08 +0000 (UTC)
+In-Reply-To: <6ba72e56-9f62-36bf-ded7-f337522715d5@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-it seems that I missed something else...
 
-On 07/17, Joel Fernandes (Google) wrote:
+
+On 7/19/19 6:01 AM, Vlastimil Babka wrote:
+> On 7/18/19 7:17 PM, Yang Shi wrote:
+>> When running syzkaller internally, we ran into the below bug on 4.9.x
+>> kernel:
+>>
+>> kernel BUG at mm/huge_memory.c:2124!
+>> invalid opcode: 0000 [#1] SMP KASAN
+>> Dumping ftrace buffer:
+>>     (ftrace buffer empty)
+>> Modules linked in:
+>> CPU: 0 PID: 1518 Comm: syz-executor107 Not tainted 4.9.168+ #2
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
+>> task: ffff880067b34900 task.stack: ffff880068998000
+>> RIP: 0010:[<ffffffff81895d6b>]  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
+>> RSP: 0018:ffff88006899f980  EFLAGS: 00010286
+>> RAX: 0000000000000000 RBX: ffffea00018f1700 RCX: 0000000000000000
+>> RDX: 1ffffd400031e2e7 RSI: 0000000000000001 RDI: ffffea00018f1738
+>> RBP: ffff88006899f9e8 R08: 0000000000000001 R09: 0000000000000000
+>> R10: 0000000000000000 R11: fffffbfff0d8b13e R12: ffffea00018f1400
+>> R13: ffffea00018f1400 R14: ffffea00018f1720 R15: ffffea00018f1401
+>> FS:  00007fa333996740(0000) GS:ffff88006c600000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 0000000020000040 CR3: 0000000066b9c000 CR4: 00000000000606f0
+>> Stack:
+>>   0000000000000246 ffff880067b34900 0000000000000000 ffff88007ffdc000
+>>   0000000000000000 ffff88006899f9e8 ffffffff812b4015 ffff880064c64e18
+>>   ffffea00018f1401 dffffc0000000000 ffffea00018f1700 0000000020ffd000
+>> Call Trace:
+>>   [<ffffffff818490f1>] split_huge_page include/linux/huge_mm.h:100 [inline]
+>>   [<ffffffff818490f1>] queue_pages_pte_range+0x7e1/0x1480 mm/mempolicy.c:538
+>>   [<ffffffff817ed0da>] walk_pmd_range mm/pagewalk.c:50 [inline]
+>>   [<ffffffff817ed0da>] walk_pud_range mm/pagewalk.c:90 [inline]
+>>   [<ffffffff817ed0da>] walk_pgd_range mm/pagewalk.c:116 [inline]
+>>   [<ffffffff817ed0da>] __walk_page_range+0x44a/0xdb0 mm/pagewalk.c:208
+>>   [<ffffffff817edb94>] walk_page_range+0x154/0x370 mm/pagewalk.c:285
+>>   [<ffffffff81844515>] queue_pages_range+0x115/0x150 mm/mempolicy.c:694
+>>   [<ffffffff8184f493>] do_mbind mm/mempolicy.c:1241 [inline]
+>>   [<ffffffff8184f493>] SYSC_mbind+0x3c3/0x1030 mm/mempolicy.c:1370
+>>   [<ffffffff81850146>] SyS_mbind+0x46/0x60 mm/mempolicy.c:1352
+>>   [<ffffffff810097e2>] do_syscall_64+0x1d2/0x600 arch/x86/entry/common.c:282
+>>   [<ffffffff82ff6f93>] entry_SYSCALL_64_after_swapgs+0x5d/0xdb
+>> Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
+>> RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
+>>   RSP <ffff88006899f980>
+> ...
 >
-> @@ -1156,10 +1157,11 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
->  		ptrace_unlink(p);
->  
->  		/* If parent wants a zombie, don't release it now */
-> -		state = EXIT_ZOMBIE;
-> +		p->exit_state = EXIT_ZOMBIE;
->  		if (do_notify_parent(p, p->exit_signal))
-> -			state = EXIT_DEAD;
-> -		p->exit_state = state;
-> +			p->exit_state = EXIT_DEAD;
-> +
-> +		state = p->exit_state;
->  		write_unlock_irq(&tasklist_lock);
+>> @@ -532,7 +531,14 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>>   				has_unmovable |= true;
+>>   				break;
+>>   			}
+>> -			migrate_page_add(page, qp->pagelist, flags);
+>> +
+>> +			/*
+>> +			 * Do not abort immediately since there may be
+>> +			 * temporary off LRU pages in the range.  Still
+>> +			 * need migrate other LRU pages.
+>> +			 */
+>> +			if (migrate_page_add(page, qp->pagelist, flags))
+>> +				has_unmovable |= true;
+> Also = instead of |=
 
-why do you think we also need to change wait_task_zombie() ?
+OK
 
-pidfd_poll() only needs the exit_state != 0 check, we know that it
-is not zero at this point. Why do we need to change exit_state before
-do_notify_parent() ?
+>
+>>   		} else
+>>   			break;
+>>   	}
+>> @@ -961,10 +967,21 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
+>>   /*
+>>    * page migration, thp tail pages can be passed.
+>>    */
+>> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
+>> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
+>>   				unsigned long flags)
+>>   {
+>>   	struct page *head = compound_head(page);
+>> +
+>> +	/*
+>> +	 * Non-movable page may reach here.  And, there may be
+>> +	 * temporary off LRU pages or non-LRU movable pages.
+>> +	 * Treat them as unmovable pages since they can't be
+>> +	 * isolated, so they can't be moved at the moment.  It
+>> +	 * should return -EIO for this case too.
+>> +	 */
+>> +	if (!PageLRU(head) && (flags & MPOL_MF_STRICT))
+>> +		return -EIO;
+> As this test is racy, why not just use the result of isolate_lru_page().
 
-Oleg.
+Sounds good to me. Will fix in v4.
+
+Thanks,
+Yang
+
+>
+>> +
+>>   	/*
+>>   	 * Avoid migrating a page that is shared with others.
+>>   	 */
+>> @@ -976,6 +993,8 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
+>>   				hpage_nr_pages(head));
+>>   		}
+>>   	}
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   /* page allocation callback for NUMA node migration */
+>> @@ -1178,9 +1197,10 @@ static struct page *new_page(struct page *page, unsigned long start)
+>>   }
+>>   #else
+>>   
+>> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
+>> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
+>>   				unsigned long flags)
+>>   {
+>> +	return -EIO;
+>>   }
+>>   
+>>   int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
+>>
 
