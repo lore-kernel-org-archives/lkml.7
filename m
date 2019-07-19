@@ -2,150 +2,175 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B50C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC24C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D879621849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:13:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b2PGbYAb"
+	by mail.kernel.org (Postfix) with ESMTP id 41DFB21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfGSINi (ORCPT
+        id S1727150AbfGSIOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:13:38 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52190 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfGSINh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:13:37 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190719081336euoutp02e9facefda862cd602bfd539844f15f72~ywM8aiPNH2054620546euoutp02d
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 08:13:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190719081336euoutp02e9facefda862cd602bfd539844f15f72~ywM8aiPNH2054620546euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563524016;
-        bh=drg5AOx0OUTEFNPddGl8KS3mvIQGIebASAgTyhQFOYY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2PGbYAbRFFvpouRZpOauHV+NF7L+jEx7ktGC68JZq6rY6coYbGma7nAnSzEWm7DQ
-         IuTczRrD+KuWE4p+8h1CkUVG2RivaILppSXASMH7PiWZmFAMdvPGrOg6SOFeNVHJlj
-         lt0rd28GCQw7vgxJTy+2U9H4sspIxL4tyrtD3bhc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190719081335eucas1p1870db09343e0104a6690a0a246c78e2e~ywM7qcup42868428684eucas1p1X;
-        Fri, 19 Jul 2019 08:13:35 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id C6.D8.04298.FAB713D5; Fri, 19
-        Jul 2019 09:13:35 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190719081334eucas1p1fd614e56c1ec0dfa654d0bb77f17ba5d~ywM6tFXO82473624736eucas1p1u;
-        Fri, 19 Jul 2019 08:13:34 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190719081334eusmtrp2e4ca084ef0679af6a6f0c14cec324c81~ywM6jDSiK3201232012eusmtrp2H;
-        Fri, 19 Jul 2019 08:13:34 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-25-5d317baff1c7
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id EE.EE.04146.EAB713D5; Fri, 19
-        Jul 2019 09:13:34 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190719081333eusmtip2e227f34779f0b92d208bf023e8e626ce~ywM6DCQNQ3189331893eusmtip20;
-        Fri, 19 Jul 2019 08:13:33 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
+        Fri, 19 Jul 2019 04:14:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33338 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbfGSIOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 04:14:10 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AFC3E309264C;
+        Fri, 19 Jul 2019 08:14:09 +0000 (UTC)
+Received: from [10.36.117.221] (ovpn-117-221.ams2.redhat.com [10.36.117.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C9A260126;
+        Fri, 19 Jul 2019 08:14:07 +0000 (UTC)
+Subject: Re: [PATCH v1] drivers/base/node.c: Simplify
+ unregister_memory_block_under_nodes()
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jochen Sprickerhof <jochen@sprickerhof.de>,
-        Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v2 2/2] usb: dwc3: remove generic PHY calibrate() calls
-Date:   Fri, 19 Jul 2019 10:13:26 +0200
-Message-Id: <20190719081326.9347-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190719081212.9249-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTYRjG/Xa2c85Wk+O0/LBIWFYUeYOIQy0xCjrhPxIklUquPKnkpuyo
-        af4jSlJmoeJlLdPhrZy56Royl2VauNJ0XnHOCxZlaJmULopM2/Es++/3Pe/zfC88vDgi0Qj8
-        8CRlGq1SypOlqIjf1vNrINCQHRobUmjeRraqDQKyJ/8DRubVGlCy/s8MIG22FowcsVSipNr2
-        nEfWNNxASH2rAyObX027fMZSQfgWql0zjVG1HfM8yqi7hVKdDx5j1F2TDlAtpjU+tWzcFYld
-        EMni6eSkDFoVHBYnSrxXd0eQqhVl/qjJRXNAL14AcBwSh+CnRhcKcQnxCMD3o7sLgMjFKwCW
-        fJ4G3GMZQOfSbYx1sYFxfZWAGzwEcEZt4m1GptrZiRBHiVBYsFiAsuxDhMO6+imUNSHEOg9W
-        2F9vmLyJU9BR3rXBfGIP7Bwq57EsJmRwtanWvc4fNrW8QFgWEsdgUY4DYz+CRBUGtf1at+kk
-        1I/aUI694YLV5NZ3wvX2ah4XyAPw3UCzO10I4EiuGnCuo/CldUjA1oEQ+6HBEszJx+GTLh3g
-        WvKE9kUvVkZcWNJWgXCyGN7Ml3DuvVBj1W+u7RocRjimoN4y5W6oyNWjpg8rAv6a/8u0AOiA
-        L53OKBJoJlRJXwti5AomXZkQdDlFYQSui+lbs343A+fwpW5A4EC6VRypCImVCOQZTJaiG0Ac
-        kfqIJ+eDYyXieHnWdVqVclGVnkwz3WAHzpf6irM9ZqMlRII8jb5K06m06t+Uhwv9csCJr5bA
-        5Mr+rrPfAibnYyoPSqMqmn7zTWM8Kj6iQjY3UGz2Or8cEz3rNbbq3zF4uNi5nf8xLpgfwUhz
-        GpHqZ+nm8SXBlfCwCQQmlSpRjwDnwpEz5gZVFGLXLKjLnCfQn44vvvv6EU9dmj1ztSx1buV+
-        79OJt3jkudOyxiHTGymfSZSHHkBUjPwvmYcCGS0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsVy+t/xe7rrqg1jDbZfELHYOGM9q8Wxtifs
-        Fs2L17NZLP17j9Hi/PkN7BaXd81hs5hxfh+TxaJlrcwW6zbeYrdYe+QuUN2mKawO3B47Z91l
-        91i85yWTx6ZVnWwe++euYffo27KK0WPDln8sHp83yQWwR+nZFOWXlqQqZOQXl9gqRRtaGOkZ
-        WlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlzFzSy1qwgKvi26ImtgbGUxxdjJwcEgIm
-        EtfXzWPtYuTiEBJYyihxaN9hFoiEjMTJaQ2sELawxJ9rXWwQRZ8YJbpudDCCJNgEDCW63oIk
-        ODlEBJwkOteeBitiFmhllujecYMZJCEs4C5xa9pBsEksAqoS+y9OYwKxeQVsJP6sXswOsUFe
-        YvWGA2D1nAK2EhMaboHFhYBq1j46xziBkW8BI8MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2M
-        wJDfduzn5h2MlzYGH2IU4GBU4uENyDWIFWJNLCuuzD3EKMHBrCTCe/ulfqwQb0piZVVqUX58
-        UWlOavEhRlOgoyYyS4km5wPjMa8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoR
-        TB8TB6dUA2P/Oz0ZnbWNF76+OeYW8eGCmeLeQBuhezwh/txHxZ//e2N9VT3JLa/8wX1O7s0h
-        J9PfBk9oW1l5ImtVt+W5v+ybbz++xa6z/rT8IhfhJzzy3gdmfBDSvjhRp6VxDldZnOMTkb0S
-        Fn3eku8VDU+Hq9l69HBkf+Pdb78jP7v75SbnuHuLLVd91lJiKc5INNRiLipOBAA7sX+QjwIA
-        AA==
-X-CMS-MailID: 20190719081334eucas1p1fd614e56c1ec0dfa654d0bb77f17ba5d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190719081334eucas1p1fd614e56c1ec0dfa654d0bb77f17ba5d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190719081334eucas1p1fd614e56c1ec0dfa654d0bb77f17ba5d
-References: <20190719081212.9249-1-m.szyprowski@samsung.com>
-        <CGME20190719081334eucas1p1fd614e56c1ec0dfa654d0bb77f17ba5d@eucas1p1.samsung.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20190718142239.7205-1-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <334e0392-54d3-648b-f441-20359343d845@redhat.com>
+Date:   Fri, 19 Jul 2019 10:14:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190718142239.7205-1-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 19 Jul 2019 08:14:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calls to USB2 generic PHY calibrate() method has been moved to HCD core,
-which now successfully handles generic PHYs and their calibration after
-every HCD reset. This fixes all the timing issues related to PHY
-calibration done directly from DWC3 driver: incorrect operation after
-system suspend/resume or USB3.0 detection failure when XHCI-plat driver
-compiled as separate module.
+On 18.07.19 16:22, David Hildenbrand wrote:
+> We don't allow to offline memory block devices that belong to multiple
+> numa nodes. Therefore, such devices can never get removed. It is
+> sufficient to process a single node when removing the memory block.
+> 
+> Remember for each memory block if it belongs to no, a single, or mixed
+> nodes, so we can use that information to skip unregistering or print a
+> warning (essentially a safety net to catch BUGs).
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c  |  1 +
+>  drivers/base/node.c    | 40 ++++++++++++++++------------------------
+>  include/linux/memory.h |  4 +++-
+>  3 files changed, 20 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 20c39d1bcef8..154d5d4a0779 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -674,6 +674,7 @@ static int init_memory_block(struct memory_block **memory,
+>  	mem->state = state;
+>  	start_pfn = section_nr_to_pfn(mem->start_section_nr);
+>  	mem->phys_device = arch_get_memory_phys_device(start_pfn);
+> +	mem->nid = NUMA_NO_NODE;
+>  
+>  	ret = register_memory(mem);
+>  
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 75b7e6f6535b..29d27b8d5fda 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -759,8 +759,6 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  	int ret, nid = *(int *)arg;
+>  	unsigned long pfn, sect_start_pfn, sect_end_pfn;
+>  
+> -	mem_blk->nid = nid;
+> -
+>  	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
+>  	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
+>  	sect_end_pfn += PAGES_PER_SECTION - 1;
+> @@ -789,6 +787,13 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  			if (page_nid != nid)
+>  				continue;
+>  		}
+> +
+> +		/* this memory block spans this node */
+> +		if (mem_blk->nid == NUMA_NO_NODE)
+> +			mem_blk->nid = nid;
+> +		else
+> +			mem_blk->nid = NUMA_NO_NODE - 1;
+> +
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/usb/dwc3/core.c | 2 --
- 1 file changed, 2 deletions(-)
+Although I am not sure if it can happen, I think it is better to have
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index c9bb93a2c81e..7dd6d419254d 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -168,7 +168,6 @@ static void __dwc3_set_mode(struct work_struct *work)
- 				otg_set_vbus(dwc->usb2_phy->otg, true);
- 			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
--			phy_calibrate(dwc->usb2_generic_phy);
- 		}
- 		break;
- 	case DWC3_GCTL_PRTCAP_DEVICE:
-@@ -1166,7 +1165,6 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 				dev_err(dev, "failed to initialize host\n");
- 			return ret;
- 		}
--		phy_calibrate(dwc->usb2_generic_phy);
- 		break;
- 	case USB_DR_MODE_OTG:
- 		INIT_WORK(&dwc->drd_work, __dwc3_set_mode);
+if (mem_blk->nid == NUMA_NO_NODE)
+	mem_blk->nid = nid;
+else if (mem_blk->nid != nid)
+	mem_blk->nid = NUMA_NO_NODE - 1;
+
 -- 
-2.17.1
 
+Thanks,
+
+David / dhildenb
