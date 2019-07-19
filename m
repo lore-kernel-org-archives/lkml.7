@@ -2,122 +2,308 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE6BC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48282C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7040420693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HO8zPHQL"
+	by mail.kernel.org (Postfix) with ESMTP id 1500420693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfGSHg6 (ORCPT
+        id S1727149AbfGSHhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:36:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36802 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbfGSHg5 (ORCPT
+        Fri, 19 Jul 2019 03:37:02 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52418 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726036AbfGSHhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:36:57 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r7so13798757pfl.3;
-        Fri, 19 Jul 2019 00:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7+fNM12/nljLUHg+OWnuw+9Qm4IaKfoKesEI410bL8g=;
-        b=HO8zPHQL1iASaJUNxgEeHKBCHWNwgbpSook1NIo35yhm5Jbyi013Exkt2AkRoq6tyr
-         RMuDwCkMJmgamWuDVGEslmeNCzRG9mSn8vVw47pk+6mgdsor9XF7HnTs9BgQ5y5HrQRK
-         U1s3FgEeqnOmqyT1DcFwHuGcnRKkwfCXM/1S1SnmwlebCac1O/7WumlfbBL4+Rl9nSip
-         74GyT/TL53a5qFwp7N4KFGEoJ+iFTfjJ06JMj86W4uDy731wtWJEfhzZwdM8gMWD0lvI
-         uLkZ99EiDvtHrZaDeSd8S2YZb+/vfKZEJmB8lPWL2dI1oT/7vk1cvCp8VMR6Vh4Isk2o
-         xS9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7+fNM12/nljLUHg+OWnuw+9Qm4IaKfoKesEI410bL8g=;
-        b=hB9u4DccS8kyb7bDxp1B4P6efw20yfnpIeWW4lo7mN7TQHo++NJXHxFWmB1qmKyfCj
-         SB+5mLv0LHqSEa3hO4sHDGPQx+CXJr/mPCvGBKwfgnByartJlOpQwlOVZSxlO8PTjQbX
-         /IvqtdBJmgcIewTmSBK/LDRDcI+fnk39GdbgC8oTKKQMm6Wp6WnusWiJb6/JTS1n3GoU
-         VL1gvswA3BVsFmRFY4cMuS/1vOZqL+C4x+buHeyYZ7T6XIT8Ws233D6gZLHKeL8WyDng
-         gsHAoRHjUaNXW3S35bHjVRGrvoO0GkjxbY12QGQPWNN3H5QqT1V/KtVN0EvNZl8vurar
-         s//A==
-X-Gm-Message-State: APjAAAXqPWQMU3tXPEvo4bAF0tu/iTpVgkVylj6NMd83wJUdAOF8rs9l
-        gnnOpaGrIPlkQgohsXghsFA=
-X-Google-Smtp-Source: APXvYqyJP1loJXy3J8DMh9em8LSA2Gqoo6xLOWUhOPOXJp3sso3+MNFrDf2reEr93tW0jl++UOFiiQ==
-X-Received: by 2002:a65:6815:: with SMTP id l21mr6135736pgt.146.1563521817101;
-        Fri, 19 Jul 2019 00:36:57 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id x9sm8929978pgp.75.2019.07.19.00.36.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 00:36:56 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] net: lan78xx: Merge memcpy + lexx_to_cpus to get_unaligned_lexx
-Date:   Fri, 19 Jul 2019 15:36:15 +0800
-Message-Id: <20190719073614.1850-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 19 Jul 2019 03:37:00 -0400
+X-UUID: 7273c3cb0d474fd1aa6b0e4a94ef9eaf-20190719
+X-UUID: 7273c3cb0d474fd1aa6b0e4a94ef9eaf-20190719
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 636699458; Fri, 19 Jul 2019 15:36:51 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 19 Jul 2019 15:36:50 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 19 Jul 2019 15:36:50 +0800
+Message-ID: <1563521810.8881.3.camel@mtkswgap22>
+Subject: Re: [PATCH v3] checkpatch: add several Kconfig default value tests
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Andy Whitcroft <apw@canonical.com>
+CC:     Joe Perches <joe@perches.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Date:   Fri, 19 Jul 2019 15:36:50 +0800
+In-Reply-To: <20190705031626.13859-1-miles.chen@mediatek.com>
+References: <20190705031626.13859-1-miles.chen@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the combo use of memcpy and lexx_to_cpus.
-Use get_unaligned_lexx instead.
-This simplifies the code.
+On Fri, 2019-07-05 at 11:16 +0800, Miles Chen wrote:
+> This change adds 3 Kconfig default value tests.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/net/usb/lan78xx.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+Hi Joe,
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 3d92ea6fcc02..9c33b35bd155 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1258,8 +1258,7 @@ static void lan78xx_status(struct lan78xx_net *dev, struct urb *urb)
- 		return;
- 	}
- 
--	memcpy(&intdata, urb->transfer_buffer, 4);
--	le32_to_cpus(&intdata);
-+	intdata = get_unaligned_le32(urb->transfer_buffer);
- 
- 	if (intdata & INT_ENP_PHY_INT) {
- 		netif_dbg(dev, link, dev->net, "PHY INTR: 0x%08x\n", intdata);
-@@ -3105,16 +3104,13 @@ static int lan78xx_rx(struct lan78xx_net *dev, struct sk_buff *skb)
- 		struct sk_buff *skb2;
- 		unsigned char *packet;
- 
--		memcpy(&rx_cmd_a, skb->data, sizeof(rx_cmd_a));
--		le32_to_cpus(&rx_cmd_a);
-+		rx_cmd_a = get_unaligned_le32(skb->data);
- 		skb_pull(skb, sizeof(rx_cmd_a));
- 
--		memcpy(&rx_cmd_b, skb->data, sizeof(rx_cmd_b));
--		le32_to_cpus(&rx_cmd_b);
-+		rx_cmd_b = get_unaligned_le32(skb->data);
- 		skb_pull(skb, sizeof(rx_cmd_b));
- 
--		memcpy(&rx_cmd_c, skb->data, sizeof(rx_cmd_c));
--		le16_to_cpus(&rx_cmd_c);
-+		rx_cmd_c = get_unaligned_le16(skb->data);
- 		skb_pull(skb, sizeof(rx_cmd_c));
- 
- 		packet = skb->data;
--- 
-2.20.1
+I was wondering if this patch looks good to you?
+
+Miles
+> 
+> 1. discourage default n cases:
+> e.g.,
+> default n
+> 
+> 2. discourage default "[ynm]" cases:
+> e.g.,
+> arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+> arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+> arch/powerpc/Kconfig:   default "n"
+> drivers/auxdisplay/Kconfig:     default "n"
+> drivers/crypto/Kconfig: default "m"
+> drivers/rapidio/devices/Kconfig:        default "n"
+> 
+> 3. discourage default EXPERT or default !EXPERT cases:
+> e.g.,
+> drivers/hid/Kconfig:    default !EXPERT
+> 
+> tested cases:
+> default m
+> default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
+> default y if ALPHA_QEMU
+> default n if PPC_POWERNV
+> default n
+> default EXPERT
+> default !EXPERT
+> default "m"
+> default "n"
+> default "y" if EXPERT
+> default "y" if PPC_POWERNV
+> 
+> test result:
+> WARNING: 'default n' is the default value, no need to write it explicitly
+> +       default n
+> 
+> WARNING: Avoid using default EXPERT
+> +       default EXPERT
+> 
+> WARNING: Avoid using default EXPERT
+> +       default !EXPERT
+> 
+> WARNING: Use 'default m' not 'default "m"'
+> +       default "m"
+> 
+> WARNING: Use 'default n' not 'default "n"'
+> +       default "n"
+> 
+> WARNING: Use 'default y' not 'default "y"'
+> +       default "y" if EXPERT
+> 
+> WARNING: Use 'default y' not 'default "y"'
+> +       default "y" if PPC_POWERNV
+> 
+> test --fix capability:
+> default n => delete line
+> default "m" => default m
+> default "n" => default n
+> default "y" if EXPERT => default y if EXPERT
+> default "y" if PPC_POWERNV => default y if PPC_POWERNV
+> default !EXPERT => no change
+> default EXPERT => no change
+> 
+> Change since v1:
+> discourage default n$
+> discourage default "[ynm]"
+> discourage default \!?EXPERT
+> 
+> Change since v2:
+> (Joe has provided the whole patch and I just post it)
+> test Kconfig in a single block
+> print precise message such as 'default "m"', not 'default "[ynm]"'
+> provide --fix capability
+> 
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> ---
+>  scripts/checkpatch.pl | 139 ++++++++++++++++++++++++++----------------
+>  1 file changed, 85 insertions(+), 54 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 342c7c781ba5..94799f23339c 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2932,60 +2932,98 @@ sub process {
+>  				      "Do not include the paragraph about writing to the Free Software Foundation's mailing address from the sample GPL notice. The FSF has changed addresses in the past, and may do so again. Linux already includes a copy of the GPL.\n" . $herevet)
+>  		}
+>  
+> -# check for Kconfig help text having a real description
+> -# Only applies when adding the entry originally, after that we do not have
+> -# sufficient context to determine whether it is indeed long enough.
+> -		if ($realfile =~ /Kconfig/ &&
+> -		    # 'choice' is usually the last thing on the line (though
+> -		    # Kconfig supports named choices), so use a word boundary
+> -		    # (\b) rather than a whitespace character (\s)
+> -		    $line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
+> -			my $length = 0;
+> -			my $cnt = $realcnt;
+> -			my $ln = $linenr + 1;
+> -			my $f;
+> -			my $is_start = 0;
+> -			my $is_end = 0;
+> -			for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
+> -				$f = $lines[$ln - 1];
+> -				$cnt-- if ($lines[$ln - 1] !~ /^-/);
+> -				$is_end = $lines[$ln - 1] =~ /^\+/;
+> -
+> -				next if ($f =~ /^-/);
+> -				last if (!$file && $f =~ /^\@\@/);
+> -
+> -				if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
+> -					$is_start = 1;
+> -				} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
+> -					if ($lines[$ln - 1] =~ "---help---") {
+> -						WARN("CONFIG_DESCRIPTION",
+> -						     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
+> +# Kconfig tests
+> +		if ($realfile =~ /Kconfig/) {
+> +			# check for Kconfig help text having a real description
+> +			# Only applies when adding the entry originally, after
+> +			# that we do not have sufficient context to determine
+> +			# whether it is indeed long enough.
+> +			# 'choice' is usually the last thing on the line (though
+> +			# Kconfig supports named choices), so use a word
+> +			# boundary (\b) rather than a whitespace character (\s)
+> +			if ($line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
+> +				my $length = 0;
+> +				my $cnt = $realcnt;
+> +				my $ln = $linenr + 1;
+> +				my $f;
+> +				my $is_start = 0;
+> +				my $is_end = 0;
+> +				for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
+> +					$f = $lines[$ln - 1];
+> +					$cnt-- if ($lines[$ln - 1] !~ /^-/);
+> +					$is_end = $lines[$ln - 1] =~ /^\+/;
+> +
+> +					next if ($f =~ /^-/);
+> +					last if (!$file && $f =~ /^\@\@/);
+> +
+> +					if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
+> +						$is_start = 1;
+> +					} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
+> +						if ($lines[$ln - 1] =~ "---help---") {
+> +							WARN("CONFIG_DESCRIPTION",
+> +							     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
+> +						}
+> +						$length = -1;
+> +					}
+> +
+> +					$f =~ s/^.//;
+> +					$f =~ s/#.*//;
+> +					$f =~ s/^\s+//;
+> +					next if ($f =~ /^$/);
+> +
+> +					# This only checks context lines in the patch
+> +					# and so hopefully shouldn't trigger false
+> +					# positives, even though some of these are
+> +					# common words in help texts
+> +					if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
+> +							   if|endif|menu|endmenu|source)\b/x) {
+> +						$is_end = 1;
+> +						last;
+>  					}
+> -					$length = -1;
+> +					$length++;
+> +				}
+> +				if ($is_start && $is_end && $length < $min_conf_desc_length) {
+> +					WARN("CONFIG_DESCRIPTION",
+> +					     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
+>  				}
+> +				#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
+> +			}
+>  
+> -				$f =~ s/^.//;
+> -				$f =~ s/#.*//;
+> -				$f =~ s/^\s+//;
+> -				next if ($f =~ /^$/);
+> -
+> -				# This only checks context lines in the patch
+> -				# and so hopefully shouldn't trigger false
+> -				# positives, even though some of these are
+> -				# common words in help texts
+> -				if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
+> -						  if|endif|menu|endmenu|source)\b/x) {
+> -					$is_end = 1;
+> -					last;
+> +# discourage the use of boolean for type definition attributes
+> +			if ($line =~ /^\+\s*\bboolean\b/) {
+> +				if (WARN("CONFIG_TYPE_BOOLEAN",
+> +					 "Use of boolean is deprecated, please use bool instead\n" . $herecurr) &&
+> +				    $fix) {
+> +					$fixed[$fixlinenr] =~ s/\bboolean\b/bool/;
+> +				}
+> +			}
+> +
+> +# Kconfig: discourage redundant 'default n'
+> +			if ($line =~ /^\+\s*default\s+n$/) {
+> +				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
+> +					 "'default n' is the default value, no need to write it explicitly\n" . $herecurr) &&
+> +				    $fix) {
+> +					fix_delete_line($fixlinenr, $rawline);
+>  				}
+> -				$length++;
+>  			}
+> -			if ($is_start && $is_end && $length < $min_conf_desc_length) {
+> -				WARN("CONFIG_DESCRIPTION",
+> -				     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
+> +
+> +# Kconfig: discourage quoted defaults: use default [ynm], not default "[ynm]"
+> +			if ($rawline =~ /^\+\s*default\s+"([ynm])"/) {
+> +				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
+> +					 "Use 'default $1' not 'default \"$1\"'\n" . $herecurr) &&
+> +				    $fix) {
+> +					$fixed[$fixlinenr] =~ s/\b(default\s+)"(.)"/$1$2/;
+> +				}
+> +			}
+> +
+> +# Kconfig: discourage using default EXPERT or !EXPERT
+> +			if ($line =~ /^\+\s*default\s+\!?\s*EXPERT\b/) {
+> +				WARN("CONFIG_DEFAULT_VALUE_STYLE",
+> +				     "Avoid using default EXPERT\n" . $herecurr);
+>  			}
+> -			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
+>  		}
+> +# End of Kconfig tests
+> +
+>  
+>  # check for MAINTAINERS entries that don't have the right form
+>  		if ($realfile =~ /^MAINTAINERS$/ &&
+> @@ -2998,13 +3036,6 @@ sub process {
+>  			}
+>  		}
+>  
+> -# discourage the use of boolean for type definition attributes of Kconfig options
+> -		if ($realfile =~ /Kconfig/ &&
+> -		    $line =~ /^\+\s*\bboolean\b/) {
+> -			WARN("CONFIG_TYPE_BOOLEAN",
+> -			     "Use of boolean is deprecated, please use bool instead.\n" . $herecurr);
+> -		}
+> -
+>  		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
+>  		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
+>  			my $flag = $1;
+
 
