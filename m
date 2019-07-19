@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F36AC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36FDC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189EF21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7F72082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509788;
-	bh=j5vQegVgi3iwZOVRM1vroQFrzFJwIS+a7HHKZiasCoM=;
+	s=default; t=1563509805;
+	bh=syZZBnjfBtK3ocT+pRFG7PdrCHkYbqDxpfD65lhU3zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUiA2qJKvaaace96ldP5zKd5ugCxx+x7DkGEoUhdBy2EKXbcFC5V6dSRuy9Yk/Ky+
-	 oe4HTitdPpmjKQpbkjK8oRq31jxopR4GZ/ZyMrwprEY3TrFwRMIJBwvTFO5YK4OjSX
-	 hzLSpNsrwu+JPGzVwsyr77fyGFA+162dSWe9Yscs=
+	b=rFM/XbnI01PdfX4ZPXN+jcOlGfayGSMJveATObWv12t4SvB9jKIp0IxjFYrXRUMLS
+	 3WFQqYgiPVxsbc75lL1ifJpSHNDWanxGgFu9OR45hQ0el7PlYoKnloHzC/bnvFCQne
+	 9OqIPoONfpeFKJlvo+wYBluGkV/+gS1bazVc+1/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388597AbfGSEQ1 (ORCPT
+        id S2388845AbfGSEQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51368 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388970AbfGSEPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:15:03 -0400
+        id S2389821AbfGSEOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0BA218B6;
-        Fri, 19 Jul 2019 04:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7DC21851;
+        Fri, 19 Jul 2019 04:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509702;
-        bh=j5vQegVgi3iwZOVRM1vroQFrzFJwIS+a7HHKZiasCoM=;
+        s=default; t=1563509681;
+        bh=syZZBnjfBtK3ocT+pRFG7PdrCHkYbqDxpfD65lhU3zc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kH8ykJEklOCRVl3UXEStP1b9DN6eOgtkIbl6bCHLj5JO/tgXluX2KLhY7SjLcXhnn
-         neq5et3mCV79ZbA4plzwF7BRrkv/lkZvcO+/NRuk924jdM/UkdpsDl5JdO9uRT8pnf
-         xSExHuTqJA/rJVsu9g1VUyei5YyVbyRiwAEnbxXk=
+        b=EwGXEEtteIwaRFaBqpmDozlzEHF7aTRQ9nTdqio14TmCI/faB/3FHOTpQKxMIv4zk
+         GemrfPVICPazCIG68K+jYB/Pr5bjPzhVqERRJp8zvqqMuB5ubv8yhisqGS7FBl3We6
+         CqXblZCFRq2KbAe5/4opVtxgTblEZEU1jB/V9YmM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 21/35] mfd: arizona: Fix undefined behavior
-Date:   Fri, 19 Jul 2019 00:14:09 -0400
-Message-Id: <20190719041423.19322-21-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 11/35] phy: renesas: rcar-gen2: Fix memory leak at error paths
+Date:   Fri, 19 Jul 2019 00:13:59 -0400
+Message-Id: <20190719041423.19322-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -62,52 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
+[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
 
-When the driver is used with a subdevice that is disabled in the
-kernel configuration, clang gets a little confused about the
-control flow and fails to notice that n_subdevs is only
-uninitialized when subdevs is NULL, and we check for that,
-leading to a false-positive warning:
+This patch fixes memory leak at error paths of the probe function.
+In for_each_child_of_node, if the loop returns, the driver should
+call of_put_node() before returns.
 
-drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                              subdevs, n_subdevs, NULL, 0, NULL);
-                                       ^~~~~~~~~
-drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
-        int n_subdevs, ret, i;
-                     ^
-                      = 0
-
-Ideally, we would rearrange the code to avoid all those early
-initializations and have an explicit exit in each disabled case,
-but it's much easier to chicken out and add one more initialization
-here to shut up the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/phy-rcar-gen2.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index d474732cc65c..fb54de5c1aba 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -967,7 +967,7 @@ int arizona_dev_init(struct arizona *arizona)
- 	unsigned int reg, val, mask;
- 	int (*apply_patch)(struct arizona *) = NULL;
- 	const struct mfd_cell *subdevs = NULL;
--	int n_subdevs, ret, i;
-+	int n_subdevs = 0, ret, i;
- 
- 	dev_set_drvdata(arizona->dev, arizona);
- 	mutex_init(&arizona->clk_lock);
+diff --git a/drivers/phy/phy-rcar-gen2.c b/drivers/phy/phy-rcar-gen2.c
+index c7a05996d5c1..99d2b73654f4 100644
+--- a/drivers/phy/phy-rcar-gen2.c
++++ b/drivers/phy/phy-rcar-gen2.c
+@@ -287,6 +287,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+ 		if (error || channel_num > 2) {
+ 			dev_err(dev, "Invalid \"reg\" property\n");
++			of_node_put(np);
+ 			return error;
+ 		}
+ 		channel->select_mask = select_mask[channel_num];
+@@ -302,6 +303,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 						   &rcar_gen2_phy_ops);
+ 			if (IS_ERR(phy->phy)) {
+ 				dev_err(dev, "Failed to create PHY\n");
++				of_node_put(np);
+ 				return PTR_ERR(phy->phy);
+ 			}
+ 			phy_set_drvdata(phy->phy, phy);
 -- 
 2.20.1
 
