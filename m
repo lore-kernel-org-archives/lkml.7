@@ -2,53 +2,52 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA09CC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B8BC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F2021849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C2421849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510466;
-	bh=1nHh8SFrJ01OwEDsTl3E0H9rA79aDtJZjXrvYKxUibc=;
+	s=default; t=1563510469;
+	bh=C01deIHBgUUAMSDiFoD/SDUjhvuMp1NrhNXvo+DVYYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y18ur7lRyneB00MkkGBnNO+qTz1AL6wfjjBVvyV/hezFgspJ+XfuAYgh71blttGar
-	 sanMxSQofqVEG8XwTyccg7Sn8e2ZyzqTb9DHiazXV+hurH92kUCG/GWcF3DI6SeWai
-	 WE5pCZvX7AV/rfMzsi0tya3x+B2us1atLn5snfB0=
+	b=V2KooIa29H0qa48CeJDHIQooCX47wY63Mh7NNjbBXpWpMF42eVYtEeSRy5SN663zw
+	 py7QmuhmEzwv1CADmeMUTuCCz1UFt2pz1KlPX4sWXKKxwLuXXyoaX/ApKo/c8GsVq3
+	 J/cOfxzDeNyrj5T5Z6e73iVfTAUN8+4oX+7ofyag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732365AbfGSEGu (ORCPT
+        id S1731932AbfGSEGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39850 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:06:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732264AbfGSEGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:41 -0400
+        id S1730325AbfGSEGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A55FF218BA;
-        Fri, 19 Jul 2019 04:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4523221873;
+        Fri, 19 Jul 2019 04:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509199;
-        bh=1nHh8SFrJ01OwEDsTl3E0H9rA79aDtJZjXrvYKxUibc=;
+        s=default; t=1563509197;
+        bh=C01deIHBgUUAMSDiFoD/SDUjhvuMp1NrhNXvo+DVYYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKRPgvxj9Fcq8TYyhrmAnRHuuFD2mcH/p4msgTKhmZCPAiQfEaP8paENCqGbJQwJo
-         JPu4dX4295xHo9HhqO24i98o6Jignu6ksgIPCrFy7WhKWOMm5mItZtIWqlrX6J5EZ3
-         s8CGSpqrSzuZ3IzZpUebZoobuQU0qeU8J/3oUY0M=
+        b=okrupwOdJfiSb8Ibfrw8UUKNj9+Mc/hQ5bsevGo/5FZXr3VPZfG/bUg1j4yCaeiOm
+         x0Hp6VYszU/f690YUOobc6d6FyuBRLxMstk9q2H1NkGbJMJdHsMTv390YM+h5uSSTt
+         B7uLWIpL9KFIUGpiRbEJySamSrox2M4QDb8Zl0Mo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 124/141] nvme: fix NULL deref for fabrics options
-Date:   Fri, 19 Jul 2019 00:02:29 -0400
-Message-Id: <20190719040246.15945-124-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 122/141] platform/x86: Fix PCENGINES_APU2 Kconfig warning
+Date:   Fri, 19 Jul 2019 00:02:27 -0400
+Message-Id: <20190719040246.15945-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -61,86 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minwoo Im <minwoo.im.dev@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7d30c81b80ea9b0812d27030a46a5bf4c4e328f5 ]
+[ Upstream commit 7d67c8ac25fbc66ee254aa3e33329d1c9bc152ce ]
 
-git://git.infradead.org/nvme.git nvme-5.3 branch now causes the
-following NULL deref oops.  Check the ctrl->opts first before the deref.
+Fix Kconfig warning for PCENGINES_APU2 symbol:
 
-[   16.337581] BUG: kernel NULL pointer dereference, address: 0000000000000056
-[   16.338551] #PF: supervisor read access in kernel mode
-[   16.338551] #PF: error_code(0x0000) - not-present page
-[   16.338551] PGD 0 P4D 0
-[   16.338551] Oops: 0000 [#1] SMP PTI
-[   16.338551] CPU: 2 PID: 1035 Comm: kworker/u16:5 Not tainted 5.2.0-rc6+ #1
-[   16.338551] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-[   16.338551] Workqueue: nvme-wq nvme_scan_work [nvme_core]
-[   16.338551] RIP: 0010:nvme_validate_ns+0xc9/0x7e0 [nvme_core]
-[   16.338551] Code: c0 49 89 c5 0f 84 00 07 00 00 48 8b 7b 58 e8 be 48 39 c1 48 3d 00 f0 ff ff 49 89 45 18 0f 87 a4 06 00 00 48 8b 93 70 0a 00 00 <80> 7a 56 00 74 0c 48 8b 40 68 83 48 3c 08 49 8b 45 18 48 89 c6 bf
-[   16.338551] RSP: 0018:ffffc900024c7d10 EFLAGS: 00010283
-[   16.338551] RAX: ffff888135a30720 RBX: ffff88813a4fd1f8 RCX: 0000000000000007
-[   16.338551] RDX: 0000000000000000 RSI: ffffffff8256dd38 RDI: ffff888135a30720
-[   16.338551] RBP: 0000000000000001 R08: 0000000000000007 R09: ffff88813aa6a840
-[   16.338551] R10: 0000000000000001 R11: 000000000002d060 R12: ffff88813a4fd1f8
-[   16.338551] R13: ffff88813a77f800 R14: ffff88813aa35180 R15: 0000000000000001
-[   16.338551] FS:  0000000000000000(0000) GS:ffff88813ba80000(0000) knlGS:0000000000000000
-[   16.338551] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   16.338551] CR2: 0000000000000056 CR3: 000000000240a002 CR4: 0000000000360ee0
-[   16.338551] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   16.338551] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   16.338551] Call Trace:
-[   16.338551]  nvme_scan_work+0x2c0/0x340 [nvme_core]
-[   16.338551]  ? __switch_to_asm+0x40/0x70
-[   16.338551]  ? _raw_spin_unlock_irqrestore+0x18/0x30
-[   16.338551]  ? try_to_wake_up+0x408/0x450
-[   16.338551]  process_one_work+0x20b/0x3e0
-[   16.338551]  worker_thread+0x1f9/0x3d0
-[   16.338551]  ? cancel_delayed_work+0xa0/0xa0
-[   16.338551]  kthread+0x117/0x120
-[   16.338551]  ? kthread_stop+0xf0/0xf0
-[   16.338551]  ret_from_fork+0x3a/0x50
-[   16.338551] Modules linked in: nvme nvme_core
-[   16.338551] CR2: 0000000000000056
-[   16.338551] ---[ end trace b9bf761a93e62d84 ]---
-[   16.338551] RIP: 0010:nvme_validate_ns+0xc9/0x7e0 [nvme_core]
-[   16.338551] Code: c0 49 89 c5 0f 84 00 07 00 00 48 8b 7b 58 e8 be 48 39 c1 48 3d 00 f0 ff ff 49 89 45 18 0f 87 a4 06 00 00 48 8b 93 70 0a 00 00 <80> 7a 56 00 74 0c 48 8b 40 68 83 48 3c 08 49 8b 45 18 48 89 c6 bf
-[   16.338551] RSP: 0018:ffffc900024c7d10 EFLAGS: 00010283
-[   16.338551] RAX: ffff888135a30720 RBX: ffff88813a4fd1f8 RCX: 0000000000000007
-[   16.338551] RDX: 0000000000000000 RSI: ffffffff8256dd38 RDI: ffff888135a30720
-[   16.338551] RBP: 0000000000000001 R08: 0000000000000007 R09: ffff88813aa6a840
-[   16.338551] R10: 0000000000000001 R11: 000000000002d060 R12: ffff88813a4fd1f8
-[   16.338551] R13: ffff88813a77f800 R14: ffff88813aa35180 R15: 0000000000000001
-[   16.338551] FS:  0000000000000000(0000) GS:ffff88813ba80000(0000) knlGS:0000000000000000
-[   16.338551] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   16.338551] CR2: 0000000000000056 CR3: 000000000240a002 CR4: 0000000000360ee0
-[   16.338551] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   16.338551] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
+  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
 
-Fixes: 958f2a0f8121 ("nvme-tcp: set the STABLE_WRITES flag when data digests are enabled")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
+  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+
+Add GPIOLIB dependency to fix it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 2 +-
+ drivers/platform/x86/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index d4c0bc88dd1e..491922bd8b65 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3254,7 +3254,7 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
- 		goto out_free_ns;
- 	}
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index a1ed13183559..74df4d183755 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1305,7 +1305,7 @@ config HUAWEI_WMI
  
--	if (ctrl->opts->data_digest)
-+	if (ctrl->opts && ctrl->opts->data_digest)
- 		ns->queue->backing_dev_info->capabilities
- 			|= BDI_CAP_STABLE_WRITES;
- 
+ config PCENGINES_APU2
+ 	tristate "PC Engines APUv2/3 front button and LEDs driver"
+-	depends on INPUT && INPUT_KEYBOARD
++	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
+ 	depends on LEDS_CLASS
+ 	select GPIO_AMD_FCH
+ 	select KEYBOARD_GPIO_POLLED
 -- 
 2.20.1
 
