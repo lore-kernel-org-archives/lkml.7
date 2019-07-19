@@ -2,123 +2,143 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7847C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C541EC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C0B20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9586A21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731806AbfGSSiI (ORCPT
+        id S1731898AbfGSSlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 14:38:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55983 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfGSSiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 14:38:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 11:38:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="179701306"
-Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
-  by orsmga002.jf.intel.com with ESMTP; 19 Jul 2019 11:38:07 -0700
-Subject: Re: [PATCH v3 5/9] x86/mm/tlb: Privatize cpu_tlbstate
-To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20190719005837.4150-1-namit@vmware.com>
- <20190719005837.4150-6-namit@vmware.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <052e9e57-8f72-d005-f0f7-4060bc665ba4@intel.com>
-Date:   Fri, 19 Jul 2019 11:38:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 14:41:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:44996 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728356AbfGSSlG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 14:41:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id s9so35502550iob.11
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 11:41:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7mFdXMLBoQKNDPF4SvbgB3lS+daOlhuCux1fzIJOXVg=;
+        b=sqZb4waVKQ4OMRwONR54BfNmmBsBXdj2Zx5vp7w8410OjPXLIJt5uyFsjHmstkIB1b
+         KWB/Z4TSVhndSSh+tuPZgcXwbnLPNHYys7ep00ujp1vT/MjrnSowzaMoKp0XGVgSE/Xo
+         u/oRidQLuZtGRo5PLbHQWYKYDabfMMvA2r5fLIrRPRhAUmL84Cv2griLGkt+FGiHDord
+         VHn5RAe7jL1FTjCG3vLLZN+vBeGchstVCFyy13ZbahUNsQyKxnWE3io72Ixr4G9MHfs1
+         3xZsjvGiSWbBVqnT9JpHS9O8v9toxlGH8iWIxOigxkIIItlA8NbW4VMYmnLcREbJJu59
+         +llw==
+X-Gm-Message-State: APjAAAVGL++Xs8Th9uONjvyphzQ6V8BOIC26US79cBJEBbo0GBM/2FzY
+        feQRJtfjDS+Q0toAquS0Y/SR6L25Ry6Gliv9eOIiHAF8AFLj
+X-Google-Smtp-Source: APXvYqwIEC1emZ2/yBZpVkXd6teZhX3lfYVplN/omvTxKl4yUhwzGYaknqWCJQbkUxg3abOkaZFT7Yd5geMt0ecSKZkIb9i2XpLu
 MIME-Version: 1.0
-In-Reply-To: <20190719005837.4150-6-namit@vmware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:3f1d:: with SMTP id d29mr59971661jaa.116.1563561665791;
+ Fri, 19 Jul 2019 11:41:05 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 11:41:05 -0700
+In-Reply-To: <000000000000acb99a058b0d5741@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ac8f77058e0d11e9@google.com>
+Subject: Re: WARNING in snd_usb_motu_microbookii_communicate/usb_submit_urb
+From:   syzbot <syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/19 5:58 PM, Nadav Amit wrote:
-> +struct tlb_state_shared {
-> +	/*
-> +	 * We can be in one of several states:
-> +	 *
-> +	 *  - Actively using an mm.  Our CPU's bit will be set in
-> +	 *    mm_cpumask(loaded_mm) and is_lazy == false;
-> +	 *
-> +	 *  - Not using a real mm.  loaded_mm == &init_mm.  Our CPU's bit
-> +	 *    will not be set in mm_cpumask(&init_mm) and is_lazy == false.
-> +	 *
-> +	 *  - Lazily using a real mm.  loaded_mm != &init_mm, our bit
-> +	 *    is set in mm_cpumask(loaded_mm), but is_lazy == true.
-> +	 *    We're heuristically guessing that the CR3 load we
-> +	 *    skipped more than makes up for the overhead added by
-> +	 *    lazy mode.
-> +	 */
-> +	bool is_lazy;
-> +};
-> +DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
+syzbot has found a reproducer for the following crash on:
 
-Could we get a comment about what "shared" means and why we need shared
-state?
+HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=149006d0600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+dashboard link: https://syzkaller.appspot.com/bug?extid=d952e5e28f5fb7718d23
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1710cd48600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17650a34600000
 
-Should we change 'tlb_state' to 'tlb_state_private'?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
+
+usb 1-1: string descriptor 0 read error: -22
+usb 1-1: New USB device found, idVendor=07fd, idProduct=0004,  
+bcdDevice=59.23
+usb 1-1: New USB device strings: Mfr=5, Product=75, SerialNumber=0
+usb 1-1: Waiting for MOTU Microbook II to boot up...
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 /drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack /lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e /lib/dump_stack.c:113
+  panic+0x292/0x6c9 /kernel/panic.c:219
+  __warn.cold+0x20/0x4b /kernel/panic.c:576
+  report_bug+0x262/0x2a0 /lib/bug.c:186
+  fixup_bug /arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug /arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 /arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 /arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 /arch/x86/entry/entry_64.S:986
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 /drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 f8 d3 f4 fd 4c 89 f7 e8 a0 51 1c ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 00 0e f7 85 e8 83 98 ca fd <0f> 0b e9 20 f4  
+ff ff e8 cc d3 f4 fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881d9efee68 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfdbf
+RBP: ffff8881cfd97b70 R08: ffff8881d9e36000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff8881cfcdea98 R14: ffff8881d0f511a0 R15: ffff8881d4b46200
+  usb_start_wait_urb+0x108/0x2b0 /drivers/usb/core/message.c:57
+  usb_bulk_msg+0x228/0x550 /drivers/usb/core/message.c:253
+  snd_usb_motu_microbookii_communicate.constprop.0+0xe3/0x240  
+/sound/usb/quirks.c:999
+  snd_usb_motu_microbookii_boot_quirk /sound/usb/quirks.c:1039 [inline]
+  snd_usb_apply_boot_quirk.cold+0x140/0x36b /sound/usb/quirks.c:1268
+  usb_audio_probe+0x2ec/0x2010 /sound/usb/card.c:576
+  usb_probe_interface+0x305/0x7a0 /drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 /drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 /drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 /drivers/base/bus.c:454
+  __device_attach+0x217/0x360 /drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 /drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 /drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 /drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 /drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 /drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 /drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 /drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 /drivers/base/bus.c:454
+  __device_attach+0x217/0x360 /drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 /drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 /drivers/base/core.c:2111
+  usb_new_device.cold+0x6a4/0xe61 /drivers/usb/core/hub.c:2536
+  hub_port_connect /drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change /drivers/usb/core/hub.c:5213 [inline]
+  port_event /drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1abd/0x3550 /drivers/usb/core/hub.c:5441
+  process_one_work+0x905/0x1570 /kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 /kernel/workqueue.c:2415
+  kthread+0x30b/0x410 /kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
