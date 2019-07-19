@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F61C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F422EC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FAD2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE25D2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510470;
-	bh=jfItoQGzZ9Q/lmuzO+wU4JzzLhRe2zgd3/tbSLJUNXI=;
+	s=default; t=1563510476;
+	bh=U/GBf7j/Uede6weueNuWmo6ChEUdacNxhr9e3KCVK38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJB2PaaahkX/Mf17ar8pcuMvNl2KTBxA769OltDUJ2/Mq9KYvChbG41cfnKQlGQmO
-	 69VnZa9j+sCZ/9wCwygnmFNNl/P7O/FJ/XhGqQXw4/sXx1jCXoYKB7UW//67mASTeD
-	 Yh7g2u5P9FdhaIm1TsK+iTzM1iF2JvPieqqnXK0Q=
+	b=UqjDMnHvimLoTuqy87zPa9RsV5R4lJtGy2ok4O+LlRZe2wjNPb2qSvHdVDHSHpWK1
+	 k0YJY98YXZMM6NbEi7qRj0UGD1U+7xy59GRgnHc98pthQByI5cxkt8r4vLy+jbBrTm
+	 vJZaJsCNJris+CAqagfDayME6xMZQaQXbE9tQ60w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbfGSEGr (ORCPT
+        id S2387679AbfGSE1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39742 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732215AbfGSEGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:37 -0400
+        id S1732317AbfGSEGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E53218BC;
-        Fri, 19 Jul 2019 04:06:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0973521873;
+        Fri, 19 Jul 2019 04:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509195;
-        bh=jfItoQGzZ9Q/lmuzO+wU4JzzLhRe2zgd3/tbSLJUNXI=;
+        s=default; t=1563509202;
+        bh=U/GBf7j/Uede6weueNuWmo6ChEUdacNxhr9e3KCVK38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lL52lsDukMYYVoJXbT7J0EzLX/KladXZdlA8jYN1xmTTGaZOV4582pYrUkIsxJ9nj
-         EYilC80bvk3ZuHXoQzNACSvF7ciQX33aDlaIQC1yGht7cFcGoYaHBj8CohtklqMe76
-         NARdIgRjQArryIJ6YoeUzjuAQFnrgLJ2GGfvTp3g=
+        b=NVyp2EBx2a0my6SL1ma8u9hQcW9YzRBEwtgqpDikRrtYbCbMJR+RL1YYEZZ/eq8eT
+         3GrTT+Qb0JefrrQk0w/KvNZIhzhfVKMMvwgAKKIX6kEYCseNucY7YLfADn3QaxcRp6
+         SlcuYwzMCLdOgUJdN8ctjgy9AIRpejUQSsAl1V8Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aya Levin <ayal@mellanox.com>, Feras Daoud <ferasda@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 121/141] net/mlx5e: IPoIB, Add error path in mlx5_rdma_setup_rn
-Date:   Fri, 19 Jul 2019 00:02:26 -0400
-Message-Id: <20190719040246.15945-121-sashal@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 125/141] sh: prevent warnings when using iounmap
+Date:   Fri, 19 Jul 2019 00:02:30 -0400
+Message-Id: <20190719040246.15945-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,48 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit ef1ce7d7b67b46661091c7ccc0396186b7a247ef ]
+[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
 
-Check return value from mlx5e_attach_netdev, add error path on failure.
+When building drm/exynos for sh, as part of an allmodconfig build, the
+following warning triggered:
 
-Fixes: 48935bbb7ae8 ("net/mlx5e: IPoIB, Add netdevice profile skeleton")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+  exynos7_drm_decon.c: In function `decon_remove':
+  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
+    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
+
+The ctx variable is only used as argument to iounmap().
+
+In sh - allmodconfig CONFIG_MMU is not defined
+so it ended up in:
+
+\#define __iounmap(addr)	do { } while (0)
+\#define iounmap		__iounmap
+
+Fix the warning by introducing a static inline function for iounmap.
+
+This is similar to several other architectures.
+
+Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/sh/include/asm/io.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-index 4eac42555c7d..5d0783e55f42 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-@@ -698,7 +698,9 @@ static int mlx5_rdma_setup_rn(struct ib_device *ibdev, u8 port_num,
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 4f7f235f15f8..e01fbfdbc78c 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -372,7 +372,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
  
- 	prof->init(mdev, netdev, prof, ipriv);
+ #define ioremap_nocache	ioremap
+ #define ioremap_uc	ioremap
+-#define iounmap		__iounmap
++
++static inline void iounmap(void __iomem *addr)
++{
++	__iounmap(addr);
++}
  
--	mlx5e_attach_netdev(epriv);
-+	err = mlx5e_attach_netdev(epriv);
-+	if (err)
-+		goto detach;
- 	netif_carrier_off(netdev);
- 
- 	/* set rdma_netdev func pointers */
-@@ -714,6 +716,11 @@ static int mlx5_rdma_setup_rn(struct ib_device *ibdev, u8 port_num,
- 
- 	return 0;
- 
-+detach:
-+	prof->cleanup(epriv);
-+	if (ipriv->sub_interface)
-+		return err;
-+	mlx5e_destroy_mdev_resources(mdev);
- destroy_ht:
- 	mlx5i_pkey_qpn_ht_cleanup(netdev);
- 	return err;
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
 -- 
 2.20.1
 
