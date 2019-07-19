@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA65AC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B58C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53422082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93ABC2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510002;
-	bh=5objRnYHCmulPFW07H0iD2s+QME+63EI23t7tqFFspE=;
+	s=default; t=1563510008;
+	bh=h6vyEgOAt91ilNFETqHclV73kLzKMq/VD9cGUMby9Ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPUy/UGNEbRPyvTbPDt/WXNT8Kf1g6XJv+uxNZXQ9ojj0HlxLOm1r94ayIV6YbrEs
-	 lAmJkA1jjEUXcyBysbcUDwkciw909KTY1bBzgOcTpCwU3WvsmvtlM7gxG9Jvifz2Sr
-	 1TKeMnVSe2V+xqZyFqkuHhB/Ovxtb0rRqmcnc+0I=
+	b=g5CCf5PNLw6/kX920BrarR//035trZy+1umbJCQ5yJyLic/rYOMrSnHSDs5+8nufs
+	 oubkKOs+8o82YYwpDqGRzTvrZY5VjzVZBiT0uPtOsC105Cx0qGs+VsJjDC9Eqq2T1b
+	 fxhapGFp9+fGElfTm6M55YkElp7xkj50gArwDuS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388985AbfGSEMt (ORCPT
+        id S2389434AbfGSEUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48216 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731043AbfGSEMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:43 -0400
+        id S2388967AbfGSEMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD65E218D9;
-        Fri, 19 Jul 2019 04:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331BB218C3;
+        Fri, 19 Jul 2019 04:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509562;
-        bh=5objRnYHCmulPFW07H0iD2s+QME+63EI23t7tqFFspE=;
+        s=default; t=1563509567;
+        bh=h6vyEgOAt91ilNFETqHclV73kLzKMq/VD9cGUMby9Ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OE5tx/zNrXz+LzwRtU6UW0pTALVsl2TvZ2i/laUtcJcOsBumuHg09A+YkxvbBO6Fe
-         PXC1ZO4PlvRICuKUT7Xtzms6H/g87j33Z1QDz5/A9+4hVCqG2eYyXRMYdqsvtMplud
-         G3uUH0sLtXSG8VRrTwYBopH0TwDwXtyOYG6g6aVA=
+        b=hxEeK61/y4/gBvi0J1D1FM3wHoQF637xyLa3PWW0JV9sOaevBxughrV0VXp7elIzx
+         OXvIzxk9ARHuVXT2cBWfhzGTZ3UQJHxelO8YXMM0zXl3nQzi2Ws95kT17H1ME+b/Yp
+         awYx1LzUwYDubZLo19J6caDsSkCSX/OTCfUyhuFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 48/60] powerpc/boot: add {get, put}_unaligned_be32 to xz_config.h
-Date:   Fri, 19 Jul 2019 00:10:57 -0400
-Message-Id: <20190719041109.18262-48-sashal@kernel.org>
+Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 52/60] s390/dasd: Make layout analysis ESE compatible
+Date:   Fri, 19 Jul 2019 00:11:01 -0400
+Message-Id: <20190719041109.18262-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,102 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Jan Höppner <hoeppner@linux.ibm.com>
 
-[ Upstream commit 9e005b761e7ad153dcf40a6cba1d681fe0830ac6 ]
+[ Upstream commit ce6915f5343f5f2a2a937b683d8ffbf12dab3ad4 ]
 
-The next commit will make the way of passing CONFIG options more robust.
-Unfortunately, it would uncover another hidden issue; without this
-commit, skiroot_defconfig would be broken like this:
+The disk layout and volume information of a DASD reside in the first two
+tracks of cylinder 0. When a DASD is set online, currently the first
+three tracks are read and analysed to confirm an expected layout.
 
-|   WRAP    arch/powerpc/boot/zImage.pseries
-| arch/powerpc/boot/wrapper.a(decompress.o): In function `bcj_powerpc.isra.10':
-| decompress.c:(.text+0x720): undefined reference to `get_unaligned_be32'
-| decompress.c:(.text+0x7a8): undefined reference to `put_unaligned_be32'
-| make[1]: *** [arch/powerpc/boot/Makefile;383: arch/powerpc/boot/zImage.pseries] Error 1
-| make: *** [arch/powerpc/Makefile;295: zImage] Error 2
+For CDL (Compatible Disk Layout) only count area data of the first track
+is evaluated and checked against expected key and data lengths. For LDL
+(Linux Disk Layout) the first and third track is evaluated. However,
+an LDL formatted volume is expected to be in the same format across all
+tracks. Checking the third track therefore doesn't have any more value
+than checking any other track at random.
 
-skiroot_defconfig is the only defconfig that enables CONFIG_KERNEL_XZ
-for ppc, which has never been correctly built before.
+Now, an Extent Space Efficient (ESE) DASD is initialised by only
+formatting the first two tracks, as those tracks always contain all
+information necessarry.
 
-I figured out the root cause in lib/decompress_unxz.c:
+Checking the third track on an ESE volume will therefore most likely
+fail with a record not found error, as the third track will be empty.
+This in turn leads to the device being recognised with a volume size of
+0. Attempts to write volume information on the first two tracks then
+fail with "no space left on device" errors.
 
-| #ifdef CONFIG_PPC
-| #      define XZ_DEC_POWERPC
-| #endif
+Initialising the first three tracks for an ESE volume is not a viable
+solution, because the third track is already a regular track and could
+contain user data. With that there is potential for data corruption.
 
-CONFIG_PPC is undefined here in the ppc bootwrapper because autoconf.h
-is not included except by arch/powerpc/boot/serial.c
+Instead, always only analyse the first two tracks, as it is sufficiant
+for both CDL and LDL, and allow ESE volumes to be recognised as well.
 
-XZ_DEC_POWERPC is not defined, therefore, bcj_powerpc() is not compiled
-for the bootwrapper.
-
-With the next commit passing CONFIG_PPC correctly, we would realize that
-{get,put}_unaligned_be32 was missing.
-
-Unlike the other decompressors, the ppc bootwrapper duplicates all the
-necessary helpers in arch/powerpc/boot/.
-
-The other architectures define __KERNEL__ and pull in helpers for
-building the decompressors.
-
-If ppc bootwrapper had defined __KERNEL__, lib/xz/xz_private.h would
-have included <asm/unaligned.h>:
-
-| #ifdef __KERNEL__
-| #       include <linux/xz.h>
-| #       include <linux/kernel.h>
-| #       include <asm/unaligned.h>
-
-However, doing so would cause tons of definition conflicts since the
-bootwrapper has duplicated everything.
-
-I just added copies of {get,put}_unaligned_be32, following the
-bootwrapper coding convention.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190705100144.28785-1-yamada.masahiro@socionext.com
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/xz_config.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/s390/block/dasd_eckd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/boot/xz_config.h b/arch/powerpc/boot/xz_config.h
-index e22e5b3770dd..ebfadd39e192 100644
---- a/arch/powerpc/boot/xz_config.h
-+++ b/arch/powerpc/boot/xz_config.h
-@@ -20,10 +20,30 @@ static inline uint32_t swab32p(void *p)
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 0d5e2d92e05b..090c312eae32 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -156,7 +156,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
+ #define LABEL_SIZE 140
  
- #ifdef __LITTLE_ENDIAN__
- #define get_le32(p) (*((uint32_t *) (p)))
-+#define cpu_to_be32(x) swab32(x)
-+static inline u32 be32_to_cpup(const u32 *p)
-+{
-+	return swab32p((u32 *)p);
-+}
- #else
- #define get_le32(p) swab32p(p)
-+#define cpu_to_be32(x) (x)
-+static inline u32 be32_to_cpup(const u32 *p)
-+{
-+	return *p;
-+}
- #endif
+ /* head and record addresses of count_area read in analysis ccw */
+-static const int count_area_head[] = { 0, 0, 0, 0, 2 };
++static const int count_area_head[] = { 0, 0, 0, 0, 1 };
+ static const int count_area_rec[] = { 1, 2, 3, 4, 1 };
  
-+static inline uint32_t get_unaligned_be32(const void *p)
-+{
-+	return be32_to_cpup(p);
-+}
-+
-+static inline void put_unaligned_be32(u32 val, void *p)
-+{
-+	*((u32 *)p) = cpu_to_be32(val);
-+}
-+
- #define memeq(a, b, size) (memcmp(a, b, size) == 0)
- #define memzero(buf, size) memset(buf, 0, size)
+ static inline unsigned int
+@@ -1820,8 +1820,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
+ 	if (IS_ERR(cqr))
+ 		return cqr;
+ 	ccw = cqr->cpaddr;
+-	/* Define extent for the first 3 tracks. */
+-	define_extent(ccw++, cqr->data, 0, 2,
++	/* Define extent for the first 2 tracks. */
++	define_extent(ccw++, cqr->data, 0, 1,
+ 		      DASD_ECKD_CCW_READ_COUNT, device, 0);
+ 	LO_data = cqr->data + sizeof(struct DE_eckd_data);
+ 	/* Locate record for the first 4 records on track 0. */
+@@ -1840,9 +1840,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
+ 		count_data++;
+ 	}
  
+-	/* Locate record for the first record on track 2. */
++	/* Locate record for the first record on track 1. */
+ 	ccw[-1].flags |= CCW_FLAG_CC;
+-	locate_record(ccw++, LO_data++, 2, 0, 1,
++	locate_record(ccw++, LO_data++, 1, 0, 1,
+ 		      DASD_ECKD_CCW_READ_COUNT, device, 0);
+ 	/* Read count ccw. */
+ 	ccw[-1].flags |= CCW_FLAG_CC;
+@@ -1964,7 +1964,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+ 		}
+ 	}
+ 	if (i == 3)
+-		count_area = &private->count_area[4];
++		count_area = &private->count_area[3];
+ 
+ 	if (private->uses_cdl == 0) {
+ 		for (i = 0; i < 5; i++) {
 -- 
 2.20.1
 
