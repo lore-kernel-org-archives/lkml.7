@@ -2,139 +2,123 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3842C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C11C76197
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDA12184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6DLlrH2"
+	by mail.kernel.org (Postfix) with ESMTP id F3B92208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfGSB4I (ORCPT
+        id S1726542AbfGSB7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:56:08 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34009 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfGSB4I (ORCPT
+        Thu, 18 Jul 2019 21:59:40 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:55986 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSB7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:56:08 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so13351471lfq.1;
-        Thu, 18 Jul 2019 18:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UO8btVVL/IFrG50cwCtu/sUBh+QFd3XXfzfNm+smt1U=;
-        b=I6DLlrH2qXLZ8dYYWhYMjtjqWPy9phRY/H/xdpYgnKRp3y2vSSLmrQAwydlNe8RPaJ
-         Ib0kOZK2DVtYAGEP3evhg2epnUr24mWBUZM1rzqBvBWJmnoI37Wz8fxwkDi8HRRkMPgv
-         7MohbZI7ySNDx7m3wzAtGJpyE7iicruP4hyOZ2tkOKepPg10Blv2weJoDe4F/rZOSkRG
-         I+oIrsGfMow9P8xnknTz++fgC2SfFkJPpB8C0nWzBMLDUsPkL5fBTwFSLDbSIKuxZYkD
-         WM6Wxuzx0Gxq3CpAVU4SHMkjzWfAUhcJdRfambwlfyZnQEXa/djrQAmRPiTmg3FLTwjZ
-         JlGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UO8btVVL/IFrG50cwCtu/sUBh+QFd3XXfzfNm+smt1U=;
-        b=FrDcgzLfZJ+NA8f7RkR8mRtIGmztCwKNVKD4OlMzX0eNV2EbHB+OaKDcfq8vzHR+u5
-         pXdQWFD9SJuQRGIfZ/IpUoTco4GbG3v5E2LfyWTsrgV+v3uIukC1K546Fc3WEa5Fa2PB
-         3mgy/amH9zk4qZUR9/9gAo9p5cmUFDkfWlI60xNVr+krtouwLA5d338SSQfBIvCa5juG
-         4P5Vqe5jbAA0eenNNzE1yACoECiRN9jWwpl067wGDV7AV3Z9fM/UEN0/V3qIeuf9Mdgy
-         u+ujF7sSl+1jRJ/vGCMGaYlMmjd5q/CBoGZXwCchDytQaIWG/Jxs543fv39zIkRKaDpD
-         0i0Q==
-X-Gm-Message-State: APjAAAV3G3G1oG0DSed177HI4c9Rgx9Y2Lkoy6u38r4nhivjL19Pkout
-        yQCUAn93p8kyDytKliXicvk=
-X-Google-Smtp-Source: APXvYqw80ciSAc2Vs0Cibu7leQl8v3dj+nAs+2bkcaDWxZm3m+uaesL5gnuLrFhCcrV860i7v1Kg5g==
-X-Received: by 2002:ac2:418f:: with SMTP id z15mr21418515lfh.177.1563501366148;
-        Thu, 18 Jul 2019 18:56:06 -0700 (PDT)
-Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id g4sm4245127lfb.31.2019.07.18.18.56.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 18:56:05 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 04:59:43 +0300
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
- watermark selection
-Message-ID: <20190719045943.73b53e31@dimatab>
-In-Reply-To: <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
-        <20190707223303.6755-21-digetx@gmail.com>
-        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+        Thu, 18 Jul 2019 21:59:39 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 492A272CA65;
+        Fri, 19 Jul 2019 04:59:34 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 3B39E7CC774; Fri, 19 Jul 2019 04:59:34 +0300 (MSK)
+Date:   Fri, 19 Jul 2019 04:59:34 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
+Message-ID: <20190719015933.GA18022@altlinux.org>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-9-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Content-Disposition: inline
+In-Reply-To: <20190706145737.5299-9-cyphar@cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=92 Fri, 19 Jul 2019 10:36:30 +0900
-Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote:
-> > I noticed that CPU may be crossing the dependency threshold very
-> > frequently for some workloads and this results in a lot of
-> > interrupts which could be avoided if MCALL client is keeping actual
-> > EMC frequency at a higher rate.
-> >=20
-> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> > ---
-> >  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
-> >  1 file changed, 18 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/drivers/devfreq/tegra30-devfreq.c
-> > b/drivers/devfreq/tegra30-devfreq.c index
-> > c3cf87231d25..4d582809acb6 100644 ---
-> > a/drivers/devfreq/tegra30-devfreq.c +++
-> > b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static void
-> > tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
-> > =20
-> >  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
-> > *tegra,
-> > -					   struct
-> > tegra_devfreq_device *dev)
-> > +					   struct
-> > tegra_devfreq_device *dev,
-> > +					   unsigned long freq)
-> >  {
-> >  	unsigned long avg_threshold, lower, upper;
-> > =20
-> > @@ -323,6 +324,15 @@ static void
-> > tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
-> > avg_threshold =3D dev->config->avg_dependency_threshold;
-> > avg_threshold =3D avg_threshold * ACTMON_SAMPLING_PERIOD;=20
-> > +	/*
-> > +	 * If cumulative EMC frequency selection is higher than the
-> > +	 * device's, then there is no need to set upper watermark
-> > to
-> > +	 * a lower value because it will result in unnecessary
-> > upper
-> > +	 * interrupts.
-> > +	 */
-> > +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
-> > +		upper =3D freq * ACTMON_SAMPLING_PERIOD; =20
->=20
-> Also, 'upper value is used on the patch5. You can combine this code
-> to patch5 or if this patch depends on the cpu notifier, you can
-> combine it to the patch of adding cpu notifier without separate patch.
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well okay, I'll try to squash some of the patches in the next revision.
-Usually I'm receiving comments in the other direction, asking to
-separate patches into smaller changes ;) So that's more a personal
-preference of each maintainer, I'd say.
+On Sun, Jul 07, 2019 at 12:57:35AM +1000, Aleksa Sarai wrote:
+[...]
+> +/**
+> + * Arguments for how openat2(2) should open the target path. If @extra i=
+s zero,
+> + * then openat2(2) is identical to openat(2).
+> + *
+> + * @flags: O_* flags (unknown flags ignored).
+
+What was the rationale for implementing this semantics?
+Ignoring unknown flags makes potential extension of this new interface
+problematic.  This has bitten us many times already, so ...
+
+> + * @mode: O_CREAT file mode (ignored otherwise).
+> + * @upgrade_mask: restrict how the O_PATH may be re-opened (ignored othe=
+rwise).
+> + * @resolve: RESOLVE_* flags (-EINVAL on unknown flags).
+
+=2E.. could you consider implementing this (-EINVAL on unknown flags) seman=
+tics
+for @flags as well, please?
+
+
+--=20
+ldv
+
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJdMSQFAAoJEAVFT+BVnCUIuaAP/3pgUoQA466F6S8jYN6F/icf
+oiQHExdeO3ruxRdNl1gi7af0RxQCiprfNIoD7KQyWSnyUyUm0Cdd7PzpEKXuumQi
+pN6ZTEO2bQeSs7AjCNpLrTgKcuOo/pZbNN7InAHKLB7k2xKKeBbdaVypgGiAEDjT
+JK+4s+8JcJoSg+d69G428QP2qpoHyIZJ5437gYv5rJbL9BRihwwvWF2OQ4TXrd6I
+YnyxPFRRZnfiN3HNbNlJjtMgt5g0AisLuahpJaDMq0NaXnBOosDm9jBAhVOX0CSB
+LUNByCygXeBKv9VuyrO4KnLXS3ORGfK38SDGqz3kFYy1quNRAGKgOXPnGXfb2xbZ
+bRCqyuxkSUOIfLKA6q9jnqO9RoUeOtLglFUT/5JpixTaoxSFN3Y6GlJFcnw+cVm+
+oWH4A/IoST68FCfbOMff976O36pakuWbsVGVsdv384OEHfWaf7c10P9EQc3fhgF3
+JoeY5ht9R1k8HWNOlCuCeHfTwSyLG3T/TROuZYtz65RdPemuuPSPERr+GzOtO9Fn
++wQmK99JlE3nhoyv5CmtqCmMQWhYZedqjbjs5wIq7tjalerg6TakNMmhzTGz5l8T
+i+3EfyMHhEtwq+2YNhdaPEmjfdBzyI3stxtEkURya0BnCgbYsP2mTIP8UbLGDqsY
+EJZiRtPRFfVoePwqT8Ux
+=zLLc
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
