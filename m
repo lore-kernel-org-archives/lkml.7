@@ -2,110 +2,115 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51EEC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E8C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6392084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B87B2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJ8Zlv4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbfGSWdX (ORCPT
+        id S1732054AbfGSWgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 18:33:23 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49863 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfGSWdX (ORCPT
+        Fri, 19 Jul 2019 18:36:04 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42724 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfGSWgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 18:33:23 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id CCCF08032D; Sat, 20 Jul 2019 00:33:08 +0200 (CEST)
-Date:   Sat, 20 Jul 2019 00:33:19 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 13/47] afs: Fix uninitialised spinlock
- afs_volume::cb_break_lock
-Message-ID: <20190719223319.GA32199@amd>
-References: <20190718030045.780672747@linuxfoundation.org>
- <20190718030049.759890872@linuxfoundation.org>
+        Fri, 19 Jul 2019 18:36:03 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so15038225pgb.9;
+        Fri, 19 Jul 2019 15:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ypddKFUJPSx+g8aH7xVUBGH+0NoLzqnJbZasoMteu7U=;
+        b=qJ8Zlv4Hrl9/b7uaDbUr4OAD/R96SKPaLPkTd/1o47NioB/CIQ4JKObmKomUG1+4eR
+         8cVdJbKImmezfyrZDxalFqvEwC/JuA+pJffbxnUcQ9E1w6J81XFzZiYbDAo571n0dQgg
+         rzVDXraDnQT6CfJdXRvHeyTnwkfX8YFdfXWg29bch16nvGtaQYXviFX/rvlQ1JNRrvm8
+         KCyQVe6or92iARGhSun/rKK7IhkVyW1WGITOb2kWNU/x0Umr8sRlFqO64KhikAsC18P9
+         Oy8h2HUas7ZM9ql7Fu+N/XvXTOZC6o1US8DTaf4MNUkWlH805gCwYPzIbWRnNhdYV+Ph
+         Nc4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ypddKFUJPSx+g8aH7xVUBGH+0NoLzqnJbZasoMteu7U=;
+        b=XD9i4I/bs6k1OnMq7+O7jcF7u76OsnkQZyyDoSJrPGaIid+ODXEePT+75xMYxLpujB
+         edbZdrBzJx3Z2cbdQYy9zeLIwNEYA8F/lr0RegTgCRbQ31gpGC4L2ZXX/oJnZ3Q+l4PZ
+         0JVG0gLWCY1E9zt7vfzfd9zm3pTDBiRPDYtSFz/QnWtCe8AZtDEWkg4M8edv/NuaI6Y0
+         g+bE5sD4dUFX0YspS/rstWBn5BFOYeZwMSogZ+rcDuKKlTWFOUuzpZnh9wqhtq9dBGYK
+         yOrnue3LQO28BZ/AlvV0Z4twJJhtDpPiaoBEdRXUdaX62LMutkbs+oA2tFVxHKh/pAQ9
+         L6CA==
+X-Gm-Message-State: APjAAAXFC+wgmTe3b2YeFGXJLMAS53Lt7eUCEkNxgV7dmlfbQnrPv/jK
+        SfFrbauzaXziGxD1tkdMfaUhLEMi8/Y+qX9WL8c=
+X-Google-Smtp-Source: APXvYqxG0c8/OtW4UytwNDFpf0p+JNeQE1OrFwx/7BkugCdrg3Y+tXmYmjrdSfwVStmHWRRPUiE5KzUnoxwPdBr+NPk=
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr56417018pgj.4.1563575763050;
+ Fri, 19 Jul 2019 15:36:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Content-Disposition: inline
-In-Reply-To: <20190718030049.759890872@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190719181200.25607-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20190719181200.25607-1-navid.emamdoost@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 20 Jul 2019 01:35:51 +0300
+Message-ID: <CAHp75VcRC0XA87N=cSFJnSZ31max1UxyB=tJmE++A_+-TxGX2Q@mail.gmail.com>
+Subject: Re: [PATCH] lpss8250_dma_setup: there is memory leak when second
+ allocation fails
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, Kangjie Lu <kjlu@umn.edu>, smccaman@umn.edu,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 20, 2019 at 1:23 AM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
+>
+> in lpss8250_dma_setup, we need to release the first dma slave object
+> allocated in case of the second allocation failure.
+>
 
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This will bring a double free instead of fixing anything.
 
-Hi!
+NAK.
 
-> Without this, the following trace may be observed when a volume-break
-> callback is received:
->=20
->   INFO: trying to register non-static key.
->   the code is fine but needs lockdep annotation.
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/tty/serial/8250/8250_lpss.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+> index d07e431110d9..6e1f86db88b2 100644
+> --- a/drivers/tty/serial/8250/8250_lpss.c
+> +++ b/drivers/tty/serial/8250/8250_lpss.c
+> @@ -259,8 +259,10 @@ static int lpss8250_dma_setup(struct lpss8250 *lpss, struct uart_8250_port *port
+>                 return -ENOMEM;
+>
+>         tx_param = devm_kzalloc(dev, sizeof(*tx_param), GFP_KERNEL);
+> -       if (!tx_param)
+> +       if (!tx_param) {
+> +               kfree(rx_param);
+>                 return -ENOMEM;
+> +       }
+>
+>         *rx_param = lpss->dma_param;
+>         dma->rxconf.src_maxburst = lpss->dma_maxburst;
+> --
+> 2.17.1
+>
 
-I'm sure this fixes the warning...
 
-> diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-> index 5f261fbf2182..4ad701250299 100644
-> --- a/fs/afs/callback.c
-> +++ b/fs/afs/callback.c
-> @@ -276,9 +276,9 @@ static void afs_break_one_callback(struct afs_server =
-*server,
->  			struct afs_super_info *as =3D AFS_FS_S(cbi->sb);
->  			struct afs_volume *volume =3D as->volume;
-> =20
-> -			write_lock(&volume->cb_break_lock);
-> +			write_lock(&volume->cb_v_break_lock);
->  			volume->cb_v_break++;
-> -			write_unlock(&volume->cb_break_lock);
-> +			write_unlock(&volume->cb_v_break_lock);
->  		} else {
->  			data.volume =3D NULL;
->  			data.fid =3D *fid;
-
-But this is the only use of the lock.
-
-Which is strange: we have read/write lock, but we only use the write
-side. Readers don't take the lock, so it does not offer any protection
-for them.
-
-Is that correct? Does this need to be rwlock, or would plain spinlock
-be enough? atomic_t?
-
-(Problem exists in the mainline, nothing stable specific here).
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0yRS8ACgkQMOfwapXb+vI1ZwCeLs/jEeAzqUrYgS0zSusJliCY
-MrkAn2aVDKgfaTmyBERlnzdpcQOHnOGL
-=bvsH
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
+-- 
+With Best Regards,
+Andy Shevchenko
