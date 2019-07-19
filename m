@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D6CC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B0EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EF9218E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB17218BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509322;
-	bh=wkULyQRXP14aeC86+dGvNKwqYMCKi3U5/yIPxp27Dnk=;
+	s=default; t=1563509329;
+	bh=Kv4dAL8DwB38AMp1Ja0QC7CQHWK0A5JvIj+UwchxZbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=reUiAVvt9KpiiT6eOFKrCd88jHnGSuT5O/LTO11NHMQFffo977TuyvqQrJ5nI9uZ5
-	 PgVd66KfsjmCZBOnN64HjS0kMO90XWChi0gguxQWFStg6g5sVkYwW1LbprZaboK39H
-	 bNRW7W9nT6hDgP+4cTvfFYf7ijmLjBu9TKQH6LFo=
+	b=1StcJXrgipVbxOMn4UKtwbj6b/RLNg+aaFkzmiBT4ffUNjUMoXPFu98DoNc6yGSu3
+	 b8+Tqza6Ar5U7ptPhdtk6ZrHTUZ+b3mLUcGl3f2CgAojGCMVE7N1Z4nDFVhLCOKXdK
+	 CY8Ycqwjrplt5scYnsRofcCy6Yexkzp7Qoc2UiDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbfGSEIl (ORCPT
+        id S1733232AbfGSEIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:08:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbfGSEIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:36 -0400
+        id S1731912AbfGSEIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9DA218BB;
-        Fri, 19 Jul 2019 04:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32073218BB;
+        Fri, 19 Jul 2019 04:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509315;
-        bh=wkULyQRXP14aeC86+dGvNKwqYMCKi3U5/yIPxp27Dnk=;
+        s=default; t=1563509324;
+        bh=Kv4dAL8DwB38AMp1Ja0QC7CQHWK0A5JvIj+UwchxZbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6USihHqa99FS9VOVKiBn2213ggTjStitWGlQdweiQOQGidycv19/8ca7B3BhePmg
-         9C+LyF1yAQYVmwE3JIP5Tcw4WJFaeBIeslFF7irF84WAPR+yIk/SjUIJkMhrsiF/C7
-         +0sVT1YzYGbywyW0OdOsASvJ/jTEA14BUMoSZ3aM=
+        b=l4sWlzB+nhV1gApmPpGgAHnz4PN0Zw+aFWTqueq9CdoowSAKx3ymAKc+wmTHNCtYI
+         QbW/BhP0+AwH2EGTbC23jZiLpcJxlr8SAjzdyePoZrGyI84kPrlLYH/qC67V1WlOvb
+         UoAO/U4sn42nxcDmgeWDyUh3lOMuYJaJnUbcGhxU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 029/101] drm/amd/display: fix compilation error
-Date:   Fri, 19 Jul 2019 00:06:20 -0400
-Message-Id: <20190719040732.17285-29-sashal@kernel.org>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 035/101] usb: gadget: Zero ffs_io_data
+Date:   Fri, 19 Jul 2019 00:06:26 -0400
+Message-Id: <20190719040732.17285-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,38 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 
-[ Upstream commit 88099f53cc3717437f5fc9cf84205c5b65118377 ]
+[ Upstream commit 508595515f4bcfe36246e4a565cf280937aeaade ]
 
-this patch fixes below compilation error
+In some cases the "Allocate & copy" block in ffs_epfile_io() is not
+executed. Consequently, in such a case ffs_alloc_buffer() is never called
+and struct ffs_io_data is not initialized properly. This in turn leads to
+problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: In
-function ‘dcn10_apply_ctx_for_surface’:
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2378:3:
-error: implicit declaration of function ‘udelay’
-[-Werror=implicit-function-declaration]
-   udelay(underflow_check_delay_us);
+This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
+in non-aio case to properly initialize struct ffs_io_data.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/function/f_fs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 7736ef123e9b..ead221ccb93e 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -23,6 +23,7 @@
-  *
-  */
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index aa15593a3ac4..2050993fb58b 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1101,11 +1101,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb *kiocb, struct iov_iter *from)
+ 	ENTER();
  
-+#include <linux/delay.h>
- #include "dm_services.h"
- #include "core_types.h"
- #include "resource.h"
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
+ 
+@@ -1137,11 +1138,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, struct iov_iter *to)
+ 	ENTER();
+ 
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
+ 
 -- 
 2.20.1
 
