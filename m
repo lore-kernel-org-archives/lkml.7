@@ -2,299 +2,131 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFF4C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA46C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4503621849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53D221849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=daktronics.com header.i=@daktronics.com header.b="m51Aatno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388251AbfGSU5f (ORCPT
+        id S2388351AbfGSU7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:57:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43288 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbfGSU5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:57:35 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 150374F655;
-        Fri, 19 Jul 2019 20:57:34 +0000 (UTC)
-Received: from x1.home (ovpn-116-35.phx2.redhat.com [10.3.116.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54CB419C68;
-        Fri, 19 Jul 2019 20:57:33 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 14:57:32 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
+        Fri, 19 Jul 2019 16:59:05 -0400
+Received: from mail-eopbgr720044.outbound.protection.outlook.com ([40.107.72.44]:59469
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731911AbfGSU7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:59:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GUNyRFIn32TIDjOkny8pVt19Vlz5SCLlzmtqDnp8fWuBX9S4DcaUhNkcYs3lXy+aaa/qA3b7beqJqtXL+Mr/rv9t2RF5QTRj2lwRfWVR2DmcYtweXiEPaQjDUbUyUg8N4KF1IulDVUFn8LcPuD+Y276F9uITFf0iK1ZwzFJ1OQX9jxT7nHsKLYX8kYC87VryErZmdZQUYn2IJ5UBF8JwzeyAiE0ywJE40Oh2DVU1HVzrC+vaouDiGsMIWyeQeUR+oAzwk46gyOWIKztEnyyomu2e9gyUNpgidB4Y0NLolYrzzjdpM5EULPHj4KKPqMN7YAoeVowN/UWFepm4/5Z4Yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EhHQ4CTsTsRyy1oZ0PfL6Sp5PESwl/7Ga9fqMoM6Kjg=;
+ b=A+sKLo08w3XTw60/YulFRqMjFFj2E/BQIHA0Jrxk/op5SF0+I1e2Q8Fa2v4Sb2BkN2AOU/cpyK3pMXq9CrgkQLKHyy3S0F30pXQUuf070uEZCDLY/yhoKrNhzFmHYR4/+ik1SdCzTy0wEckUKRSS7kH4c3Tz2baIpL6FFb7aqNKYGAKwpxd27+JCsS6i83wqeDUNGcYW05ugfJs7X3fnv3ytCmNF8ouTO1CWgLXnCWHnzY/JoQkc/Uo54cQ+3GMAd+f6Nsw/Vw1YdIecdXvN/w0QkGkll1BO466S/K1lskLt5s9qD7iiAhxNRq6Wk4sb1+RAl75oPdIFsr7srmM3Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=daktronics.com;dmarc=pass action=none
+ header.from=daktronics.com;dkim=pass header.d=daktronics.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=daktronics.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EhHQ4CTsTsRyy1oZ0PfL6Sp5PESwl/7Ga9fqMoM6Kjg=;
+ b=m51AatnoonPAaqF1b16ZxnNnhPvydbrDCKP5xTLFSgKLJbLzU96S4ANJuStAlIL5S7iBMY6bXqQnj4S2rvv1cWqEKxIyv7wvteNRMugqinEkl1JzAiJQtDhTq+yfhAdFiqrVXxSGglx3caX+TJPleR7mLoI64CkQCTHa87uy9jM=
+Received: from SN6PR02MB4016.namprd02.prod.outlook.com (52.135.69.145) by
+ SN6PR02MB4191.namprd02.prod.outlook.com (52.135.70.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Fri, 19 Jul 2019 20:59:02 +0000
+Received: from SN6PR02MB4016.namprd02.prod.outlook.com
+ ([fe80::3dba:454:9025:c1d0]) by SN6PR02MB4016.namprd02.prod.outlook.com
+ ([fe80::3dba:454:9025:c1d0%7]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
+ 20:59:02 +0000
+From:   Matt Sickler <Matt.Sickler@daktronics.com>
+To:     Bharath Vedartham <linux.bhar@gmail.com>,
+        "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-Message-ID: <20190719145732.169fc4ba@x1.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439FD665D@SHSMSX104.ccr.corp.intel.com>
-References: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
-        <1560000071-3543-10-git-send-email-yi.l.liu@intel.com>
-        <20190619222647.72efc76a@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F0164E@SHSMSX104.ccr.corp.intel.com>
-        <20190620150757.7b2fa405@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F02663@SHSMSX104.ccr.corp.intel.com>
-        <20190621095740.41e6e98e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
-        <20190628090741.51e8d18e@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F1E9EC@SHSMSX104.ccr.corp.intel.com>
-        <20190703112212.146ac71c@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F1FF4E@SHSMSX104.ccr.corp.intel.com>
-        <20190705095520.548331c2@x1.home>
-        <A2975661238FB949B60364EF0F2C257439F931F8@SHSMSX104.ccr.corp.intel.com>
-        <20190711130811.4e51437d@x1.home>
-        <A2975661238FB949B60364EF0F2C257439FD665D@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+Subject: RE: [PATCH v3] staging: kpc2000: Convert put_page to put_user_page*()
+Thread-Topic: [PATCH v3] staging: kpc2000: Convert put_page to
+ put_user_page*()
+Thread-Index: AQHVPmzwE09u8sDYuEmu2VoulZlSaKbSax/w
+Date:   Fri, 19 Jul 2019 20:59:02 +0000
+Message-ID: <SN6PR02MB4016754FE1BB6200746281A2EECB0@SN6PR02MB4016.namprd02.prod.outlook.com>
+References: <20190719200235.GA16122@bharath12345-Inspiron-5559>
+In-Reply-To: <20190719200235.GA16122@bharath12345-Inspiron-5559>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Matt.Sickler@daktronics.com; 
+x-originating-ip: [2620:9b:8000:6046:2d0d:49c4:33aa:6af4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b09fe611-239c-4c46-f80e-08d70c8bed98
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR02MB4191;
+x-ms-traffictypediagnostic: SN6PR02MB4191:
+x-microsoft-antispam-prvs: <SN6PR02MB4191BFF69A81601D2A153FF9EECB0@SN6PR02MB4191.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01039C93E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(189003)(199004)(478600001)(110136005)(99286004)(54906003)(6506007)(2906002)(46003)(102836004)(476003)(11346002)(256004)(8676002)(446003)(7736002)(316002)(229853002)(74316002)(305945005)(76176011)(6116002)(7696005)(486006)(53936002)(14454004)(86362001)(6246003)(55016002)(8936002)(2201001)(68736007)(81156014)(81166006)(25786009)(33656002)(4326008)(2501003)(66946007)(66476007)(66556008)(64756008)(66446008)(71200400001)(76116006)(71190400001)(9686003)(6436002)(5660300002)(52536014)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4191;H:SN6PR02MB4016.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: daktronics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CEkRMd4RGN2q2Q9I2GACh75eW9sk/l7ej0w33Jq45Ld8A2OafT10oD4/QL93yZ+XLyyEQ/6/wCqsp+7KKgWR/OesWbI5ewItzLDdTTtGqJBCm6t1Fpm9zmjMh0Hc1VPDKl/YOQIQfBW96z2BAaxruhK4Tyu1TW/uJh92zE9dt2x69J67+GndbUj/BVfljXQ50e22TVUT06sZoAiP9Cjmdh8Zkd1VIUSBZF4ZrqSzME1ZS7JHvLqlVqmiiHxfRWC+5vkNPmmqri1UYj1+TOtvVCIJiTdcoM4Qzek9YsASbe2z00Xbud528lwj44aHMe82w+bYr7kz3wQojG4PsXNcpFldlG/BWPqv3eV03KxSeLai7ploZfMWuHxenCcMjReEhteWtOtxIuwonpL1qGAQ621EiMprHXzzydP/HKR2oH0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 19 Jul 2019 20:57:34 +0000 (UTC)
+X-OriginatorOrg: daktronics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b09fe611-239c-4c46-f80e-08d70c8bed98
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 20:59:02.1607
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: be88af81-0945-42aa-a3d2-b122777351a2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: matt.sickler@daktronics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 12:55:27 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+>From: Bharath Vedartham <linux.bhar@gmail.com>
+>Changes since v2
+>        - Added back PageResevered check as suggested by John Hubbard.
+>
+>The PageReserved check needs a closer look and is not worth messing
+>around with for now.
+>
+>Matt, Could you give any suggestions for testing this patch?
 
-> Hi Alex,
-> 
-> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > Sent: Friday, July 12, 2019 3:08 AM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
-> > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > 
-> > On Thu, 11 Jul 2019 12:27:26 +0000
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > Hi Alex,
-> > >  
-> > > > From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On  
-> > Behalf  
-> > > > Of Alex Williamson
-> > > > Sent: Friday, July 5, 2019 11:55 PM
-> > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
-> > > >
-> > > > On Thu, 4 Jul 2019 09:11:02 +0000
-> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > > >  
-> > > > > Hi Alex,
-> > > > >  
-> > > > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > > > Sent: Thursday, July 4, 2019 1:22 AM
-> > > > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver  
-> > > [...]  
-> > > > >  
-> > > > > > It's really unfortunate that we don't have the mdev inheriting the
-> > > > > > iommu group of the iommu_device so that userspace can really understand
-> > > > > > this relationship.  A separate group makes sense for the aux-domain
-> > > > > > case, and is (I guess) not a significant issue in the case of a
-> > > > > > singleton iommu_device group, but it's pretty awkward here.  Perhaps
-> > > > > > this is something we should correct in design of iommu backed mdevs.  
-> > > > >
-> > > > > Yeah, for aux-domain case, it is not significant issue as aux-domain essentially
-> > > > > means singleton iommu_devie group. And in early time, when designing the  
-> > > > support  
-> > > > > for wrap pci as a mdev, we also considered to let vfio-mdev-pci to reuse
-> > > > > iommu_device group. But this results in an iommu backed group includes mdev  
-> > and  
-> > > > > physical devices, which might also be strange. Do you think it is valuable to  
-> > > > reconsider  
-> > > > > it?  
-> > > >
-> > > > From a group perspective, the cleanest solution would seem to be that
-> > > > IOMMU backed mdevs w/o aux domain support should inherit the IOMMU
-> > > > group of the iommu_device,  
-> > >
-> > > A confirm here. Regards to inherit the IOMMU group of iommu_device, do
-> > > you mean mdev device should be added to the IOMMU group of iommu_device
-> > > or maintain a parent and inheritor relationship within vfio? I guess you mean the
-> > > later one? :-)  
-> > 
-> > I was thinking the former, I'm not sure what the latter implies.  There
-> > is no hierarchy within or between IOMMU groups, it's simply a set of
-> > devices.  
-> 
-> I have a concern on adding the mdev device to the iommu_group of
-> iommu_device. In such configuration, a iommu backed group includes
-> mdev devices and physical devices. Then it might be necessary to advertise
-> the mdev info to the in-kernel software which want to loop all devices within
-> such an iommu_group. An example I can see is the virtual SVA threads in
-> community. e.g. for a guest pasid bind, the changes below loops all the
-> devices within an iommu_group, and each loop will call into vendor iommu
-> driver with a device structure passed in. It is quite possible that vendor
-> iommu driver need to get something behind a physical device (e.g.
-> intel_iommu structure). For a physical device, it is fine. While for mdev
-> device, it would be a problem if no mdev info advertised to iommu driver. :-(
-> Although we have agreement that PASID support should be disabled for
-> devices which are from non-singleton group. But I don't feel like to rely on
-> such assumptions when designing software flows. Also, it's just an example,
-> we have no idea if there will be more similar flows which require to loop all
-> devices in an iommu group in future. May be we want to avoid adding a mdev
-> to an iommu backed group. :-) More replies to you response below.
-> 
-> +static long vfio_iommu_type1_bind_gpasid(struct vfio_iommu *iommu,
-> +					    void __user *arg,
-> +					    struct vfio_iommu_type1_bind *bind)
-> + ...
-> +	list_for_each_entry(domain, &iommu->domain_list, next) {
-> +		list_for_each_entry(group, &domain->group_list, next) {
-> +			ret = iommu_group_for_each_dev(group->iommu_group,
-> +			   &guest_bind, vfio_bind_gpasid_fn);
-> +			if (ret)
-> +				goto out_unbind;
-> +		}
-> +	}
-> + ...
-> +}
+Myself or someone else from Daktronics would have to do the testing since t=
+he
+hardware isn't really commercially available.  I've been toying with the id=
+ea
+of asking for a volunteer from the mailing list to help me out with this - =
+I'd
+send them some hardware and they'd do all the development and testing. :)
+I still have to run that idea by Management though.
 
-Sorry for the delayed response.
+>If in-case, you are willing to pick this up to test. Could you
+>apply this patch to this tree and test it with your devices?
 
-I think you're right, making the IOMMU code understand virtual devices
-in an IOMMU group makes traversing the group difficult for any layer
-that doesn't understand the relationship of these virtual devices.  I
-guess we can't go that route.
-
-> > Maybe what you're getting at is that vfio needs to understand
-> > that the mdev is a child of the endpoint device in its determination of
-> > whether the group is viable.  
-> 
-> Is the group here the group of iommu_device or a group of a mdev device?
-> :-) Actually, I think the group of a mdev device is always viable since
-> it has only a device and mdev_driver will add the mdev device to vfio
-> controlled scope to make the mdev group viable. Per my understanding,
-> VFIO guarantees the isolation by two major arts. First is checking if
-> group is viable before adding it to a container, second is preventing
-> multiple opens to /dev/vfio/group_id by the vfio_group->opened field
-> maintained in vfio.c.
-
-Yes, minor nit, an mdev needs to be bound to vfio-mdev for the group to
-be vfio "viable", we expect that there will eventually be non-vfio
-drivers for mdev devices.
-
-> Back to the configuration we are talking here (For example a group where
-> one devices is bound to a native host driver and the other device bound
-> to a vfio driver[1].), we have two groups( iommu backed one and mdev group).
-> I think for iommu_device which wants to "donate" its iommu_group, the
-> host driver should explicitly call vfio_add_group_dev() to add itself
-> to the vfio controlled scope. And thus make its iommu backed group be
-> viable. So that we can have two viable iommu groups. iommu backed group
-> is viable by the host driver's vfio_add_group_dev() calling, and mdev
-> group is naturally viable. Until now, we can passthru the devices
-> (vfio-pci device and a mdev device) under this configuration to VM well.
-> But we cannot prevent user to passthru the devices to different VMs since
-> the two iommu groups are both viable. If I'm still understanding vfio
-> correct until this line, I think we need to fail the attempt of passthru
-> to multiple VMs in vfio_iommu_type1_attach_group() by checking the
-> vfio_group->opened field which is maintained in vfio.c. e.g. let's say
-> for iommu backed group, we have vfio_group#1 and mdev group, we have
-> vfio_group#2 in vfio.c, then opening vfio_group#1 requires to inc the
-> vfio_group#2->opened. And vice versa.
-> 
-> [1] the example from the previous reply of you.
-
-I think there's a problem with incrementing the group, the user still
-needs to be able to open the group for devices within the group that
-may be bound to vfio-pci, so I don't think this plan really works.
-Also, who would be responsible for calling vfio_add_group_dev(), the
-vendor driver is just registering an mdev parent device, it doesn't
-know that those devices will be used by vfio-mdev or some other mdev
-bus driver.  I think that means that vfio-mdev would need to call this
-for mdevs with an iommu_device after it registers the mdev itself.  The
-vfio_device_ops it registers would need to essentially be stubbed out
-too, in order to prevent direct vfio access to the backing device.
-
-I wonder if the "inheritance" of a group could be isolated to vfio in
-such a case.  The vfio group file for the mdev must exist for
-userspace compatibility, but I wonder if we could manage to make that be
-effectively an alias for the iommu device.  Using a device from a group
-without actually opening the group still seems problematic too.  I'm
-also wondering how much effort we want to go to in supporting this
-versus mdev could essentially fail the call to register an iommu device
-for an mdev if that iommu device is not in a singleton group.  It would
-limit the application of vfio-mdev-pci, but already being proposed as a
-proof of concept sample driver anyway.
-
-
-> > That's true, but we can also have IOMMU
-> > groups composed of SR-IOV VFs along with their parent PF if the root of
-> > the IOMMU group is (for example) a downstream switch port above the PF.
-> > So we can't simply look at the parent/child relationship within the
-> > group, we somehow need to know that the parent device sharing the IOMMU
-> > group is operating in host kernel space on behalf of the mdev.  
-> 
-> I think for such hardware configuration, we still have only two iommu
-> group, a iommu backed one and a mdev group. May the idea above still
-> applicable. :-)
-> 
-> > > > but I think the barrier here is that we have
-> > > > a difficult time determining if the group is "viable" in that case.
-> > > > For example a group where one devices is bound to a native host driver
-> > > > and the other device bound to a vfio driver would typically be
-> > > > considered non-viable as it breaks the isolation guarantees.  However  
-> > >
-> > > yes, this is how vfio guarantee the isolation before allowing user to further
-> > > add a group to a vfio container and so on.
-> > >  
-> > > > I think in this configuration, the parent device is effectively
-> > > > participating in the isolation and "donating" its iommu group on behalf
-> > > > of the mdev device.  I don't think we can simultaneously use that iommu
-> > > > group for any other purpose.  
-> > >
-> > > Agree. At least host cannot make use of the iommu group any more in such
-> > > configuration.
-> > >  
-> > > > I'm sure we could come up with a way for
-> > > > vifo-core to understand this relationship and add it to the white list,  
-> > >
-> > > The configuration is host driver still exists while we want to let mdev device
-> > > to somehow "own" the iommu backed DMA isolation capability. So one possible
-> > > way may be calling vfio_add_group_dev() which will creates a vfio_device instance
-> > > for the iommu_device in vfio.c when creating a iommu backed mdev. Then the
-> > > iommu group is fairly viable.  
-> > 
-> > "fairly viable" ;)  It's a correct use of the term, it's a little funny
-> > though as "fairly" can also mean reasonably/sufficiently/adequately as
-> > well as I think the intended use here equivalent to justly. </tangent>  
-> 
-> Aha, a nice "lesson" for me. Honestly, I have no idea how it came to me
-> when trying to describe my idea with a moderate term either. Luckily,
-> it made me well understood. :-)
-> 
-> > That's an interesting idea to do an implicit vfio_add_group_dev() on
-> > the iommu_device in this case, if you've worked through how that could
-> > play out, it'd be interesting to see.  
-> 
-> I've tried it in my vfio-mdev-pci driver probe() phase, it works well.
-> And this is an explicit calling. And I guess we may really want host driver
-> to do it explicitly instead of implicitly as host driver owns the choice
-> of whether "donating" group or not. While for failing the
-> vfio_iommu_type1_attach_group() to prevent user passthru the vfio-pci device
-> and vfio-mdev-pci device (share iommu backed group) to different VMs, I'm
-> doing some changes. If it's a correct way, I'll try to send out a new version
-> for your further review. :-)
-
-I'm interested to see it, but as above, I have some reservations.  And
-as I mention, and mdev vendor driver cannot assume the device is used
-by vfio-mdev.  I know Intel vGPUs not only assume vfio-mdev, but also
-KVM and fail the device open if the constraints aren't met, but I don't
-think we can start introducing that sort of vfio specific dependencies
-on the mdev bus interface.  Thanks,
-
-Alex
+I've been meaning to get to testing the changes to the drivers since upstre=
+aming
+them, but I've been swamped with other development.  I'm keeping an eye on =
+the
+mailing lists, so I'm at least aware of what is coming down the pipe.
+I'm not too worried about this specific change, even though I don't really =
+know
+if the reserved check and the dirtying are even necessary.
+It sounded like John's suggestion was to not do the PageReserved() check an=
+d just
+use put_user_pges_dirty() all the time.  John, is that incorrect?
