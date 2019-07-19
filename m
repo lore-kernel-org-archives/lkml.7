@@ -2,134 +2,138 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76A0C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2F1C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2E72084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3417B2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563522391;
+	bh=iS5Gcs9pag52S8jnb0L9hoE1awodLzeCGsoHidwBNP4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OJJKrC/7+cFgPYy7CFMoa7A5lOT/+ZDtQ+lEO9elzx+4dyc+njK3/qj2TyZz4Swc5
+	 iAUDiU4qJ0ca/uo/evO3XM2hY7dUnyuQ7UU1HZODiIVLnVVEEP77JSznlKozMacsQa
+	 avfEtL0Or/d4tiTtIkk5WoJ5DTHUaOxr+jrS6O1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGSHnh (ORCPT
+        id S1726769AbfGSHqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:43:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726075AbfGSHng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:43:36 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6J7gAo6062870;
-        Fri, 19 Jul 2019 03:43:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tu7556h9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jul 2019 03:43:32 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6J7hVV0066586;
-        Fri, 19 Jul 2019 03:43:31 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tu7556h9g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jul 2019 03:43:31 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6J7dS5C029022;
-        Fri, 19 Jul 2019 07:43:31 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x6nbbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jul 2019 07:43:31 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6J7hUkX53477766
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 07:43:30 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CD7BB2066;
-        Fri, 19 Jul 2019 07:43:30 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 662E1B206B;
-        Fri, 19 Jul 2019 07:43:30 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.204.62])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Jul 2019 07:43:30 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id F053816C99C1; Fri, 19 Jul 2019 00:43:29 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 00:43:29 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        Byungchul Park <max.byungchul.park@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@lge.com
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-Message-ID: <20190719074329.GY14271@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190712063240.GD7702@X58A-UD3R>
- <20190712125116.GB92297@google.com>
- <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
- <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
- <20190713151330.GE26519@linux.ibm.com>
- <20190713154257.GE133650@google.com>
- <20190713174111.GG26519@linux.ibm.com>
- <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
- <20190719003942.GA28226@X58A-UD3R>
- <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907190087
+        Fri, 19 Jul 2019 03:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfGSHq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:46:29 -0400
+Received: from guoren-Inspiron-7460.lan (unknown [115.193.173.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B0F2084C;
+        Fri, 19 Jul 2019 07:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563522388;
+        bh=iS5Gcs9pag52S8jnb0L9hoE1awodLzeCGsoHidwBNP4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AITcbkVffd4Xb0QO7pN7uPS0Qge7mdnc9O7a15SKfHBYo6sucawk2elfYZ41NBzgf
+         gIMe3wpftynxWVZKGnique4Qv6MyYsiKCgmWfNbbGvuCVDCyItCMrjR6GpsYV266AB
+         uBxNDycvLO8MLXGbM4wEVf8aUpbTPq9sExVyDoic=
+From:   guoren@kernel.org
+To:     torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
+Subject: [GIT PULL] csky changes for v5.3-rc1
+Date:   Fri, 19 Jul 2019 15:46:20 +0800
+Message-Id: <1563522380-9180-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
-> On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
-> [snip]
-> > > - There is a bug in the CPU stopper machinery itself preventing it
-> > > from scheduling the stopper on Y. Even though Y is not holding up the
-> > > grace period.
-> >
-> > Or any thread on Y is busy with preemption/irq disabled preventing the
-> > stopper from being scheduled on Y.
-> >
-> > Or something is stuck in ttwu() to wake up the stopper on Y due to any
-> > scheduler locks such as pi_lock or rq->lock or something.
-> >
-> > I think what you mentioned can happen easily.
-> >
-> > Basically we would need information about preemption/irq disabled
-> > sections on Y and scheduler's current activity on every cpu at that time.
-> 
-> I think all that's needed is an NMI backtrace on all CPUs. An ARM we
-> don't have NMI solutions and only IPI or interrupt based backtrace
-> works which should at least catch and the preempt disable and softirq
-> disable cases.
+Hi Linus,
 
-True, though people with systems having hundreds of CPUs might not
-thank you for forcing an NMI backtrace on each of them.  Is it possible
-to NMI only the ones that are holding up the CPU stopper?
+The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
 
-							Thanx, Paul
+  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
 
-> But yeah I don't see why just the stacks of those CPUs that are
-> blocking the CPU X would not suffice for the trivial cases where a
-> piece of misbehaving code disable interrupts / preemption and
-> prevented the stopper thread from executing.
-> 
-> May be once the test case is ready (no rush!) , then it will be more
-> clear what can help.
-> 
-> J.
-> 
+are available in the git repository at:
+
+  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.3-rc1
+
+for you to fetch changes up to bdfeb0ccea1a12b58299b95eb0f28e2aa26de4c2:
+
+  csky: Fixup abiv1 memset error (2019-07-19 14:21:36 +0800)
+
+----------------------------------------------------------------
+arch/csky patches for 5.3-rc1
+
+This round of csky subsystem gives two features (ASID algorithm update,
+Perf pmu record support) and some fixups.
+
+Feature:
+ - csky: Revert mmu ASID mechanism
+ - csky: Add new asid lib code from arm
+ - csky: Use generic asid algorithm to implement switch_mm
+ - csky: Improve tlb operation with help of asid
+
+ - csky: Init pmu as a device
+ - csky: Add count-width property for csky pmu
+ - csky: Add pmu interrupt support
+ - csky: Fix perf record in kernel/user space
+ - dt-bindings: csky: Add csky PMU bindings
+
+Fixup:
+ - csky: Fixup no panic in kernel for some traps
+ - csky: Fixup some error count in 810 & 860.
+ - csky: Fixup abiv1 memset error
+
+CI-Tested: https://gitlab.com/c-sky/buildroot/pipelines/68656845
+
+----------------------------------------------------------------
+Guo Ren (9):
+      csky: Select intc & timer drivers
+      csky: Fixup no panic in kernel for some traps
+      csky: Fixup some error count in 810 & 860.
+      dt-bindings: interrupt-controller: Update csky mpintc
+      csky: Revert mmu ASID mechanism
+      csky: Add new asid lib code from arm
+      csky: Use generic asid algorithm to implement switch_mm
+      csky: Improve tlb operation with help of asid
+      csky: Fixup abiv1 memset error
+
+Mao Han (5):
+      csky: Init pmu as a device
+      csky: Add count-width property for csky pmu
+      csky: Add pmu interrupt support
+      csky: Fix perf record in kernel/user space
+      dt-bindings: csky: Add csky PMU bindings
+
+ Documentation/devicetree/bindings/csky/pmu.txt     |  38 ++
+ .../bindings/interrupt-controller/csky,mpintc.txt  |  20 +-
+ arch/csky/Kconfig                                  |   4 +
+ arch/csky/abiv1/Makefile                           |   1 -
+ arch/csky/abiv1/inc/abi/ckmmu.h                    |   6 +
+ arch/csky/abiv1/inc/abi/string.h                   |   3 -
+ arch/csky/abiv1/memset.c                           |  37 --
+ arch/csky/abiv1/strksyms.c                         |   1 -
+ arch/csky/abiv2/inc/abi/ckmmu.h                    |  10 +
+ arch/csky/include/asm/asid.h                       |  78 ++++
+ arch/csky/include/asm/mmu.h                        |   2 +-
+ arch/csky/include/asm/mmu_context.h                | 114 +-----
+ arch/csky/include/asm/pgtable.h                    |   2 -
+ arch/csky/kernel/perf_event.c                      | 410 +++++++++++++++++++--
+ arch/csky/kernel/smp.c                             |   2 -
+ arch/csky/kernel/traps.c                           |   5 +
+ arch/csky/mm/Makefile                              |   2 +
+ arch/csky/mm/asid.c                                | 189 ++++++++++
+ arch/csky/mm/context.c                             |  46 +++
+ arch/csky/mm/init.c                                |   2 -
+ arch/csky/mm/tlb.c                                 | 238 +++++-------
+ 21 files changed, 877 insertions(+), 333 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/csky/pmu.txt
+ delete mode 100644 arch/csky/abiv1/memset.c
+ create mode 100644 arch/csky/include/asm/asid.h
+ create mode 100644 arch/csky/mm/asid.c
+ create mode 100644 arch/csky/mm/context.c
