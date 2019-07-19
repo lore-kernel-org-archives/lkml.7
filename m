@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960C0C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B156C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F71D21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178412189E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509356;
-	bh=aAk+2A7tt/swtuGa4KlOSimbzurzdifB11klYHhIE5g=;
+	s=default; t=1563509362;
+	bh=L/zTDr17ridG+WrpvY+xueXwG1RdFupWPmRMDrbkZhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLpAK9kIl2PAdBjpKh+sG4mttvDGw7cpik7TGn0W1lNYXvE7/246Z2t1HZ9hv6HkV
-	 1EzC7Q6uUVqtcUP1Mtw0pQcAeF211kbqDG3RoBub+EFZVvopxOk5NQbdadmefJNTaN
-	 cBY9PdcSQ9NWzd7kRNjsiEQ3vdJw3DgVBKI9go2A=
+	b=pqTCA5UVemlj3fKmFKjeXtXfmatXG7U8uhQamdVSuKz3ZzzBmFMhxdtJb95hScrpl
+	 hhCQvjEz7B1/1GxWedJWvB4iFEu1VpuGmKkfDcRiJfQFfBBulEfTZ1nk3uKYplHEYm
+	 c7P4SaDn46iRaEtORcI3t/V2pxlOqvqFh+c/MFXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfGSEJP (ORCPT
+        id S2387510AbfGSEJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731985AbfGSEJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:09:08 -0400
+        id S1732538AbfGSEJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:09:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36A73218C3;
-        Fri, 19 Jul 2019 04:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144F021872;
+        Fri, 19 Jul 2019 04:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509348;
-        bh=aAk+2A7tt/swtuGa4KlOSimbzurzdifB11klYHhIE5g=;
+        s=default; t=1563509351;
+        bh=L/zTDr17ridG+WrpvY+xueXwG1RdFupWPmRMDrbkZhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxoQ4ZQVzW4h2DKFosLrNHQMoSIiM59W6Qvhi3StuhduCp/2rJlCJRM6ZWivWHcmz
-         /eIb0H3XxNkwtRXpmPvI3iJ7qaP0lbhrXeyHre5X/UJWrhTAirSRZ+VTf7SuSin4as
-         4nit8OTPqw86RQWd8/Tssv5fBUuI9wHQ/IflwfEU=
+        b=gKdzmek2hXZ+zUMyOr/5h46kTGluGXe3L3dhRHkFRJ4XqtMXxp+kBGdonZm26bdL0
+         3bz/ANzlotJMKeSWJDhbu9p+cVgvdeW4Az6iKj/YFV6Xl+g7LV7GRS4MeueLyxTZ02
+         muEtn2Dye84VkSWiFp0xwzAZ/X4TtcDUxDjCGJ2I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/101] PCI: xilinx-nwl: Fix Multi MSI data programming
-Date:   Fri, 19 Jul 2019 00:06:37 -0400
-Message-Id: <20190719040732.17285-46-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 048/101] powerpc/cacheflush: fix variable set but not used
+Date:   Fri, 19 Jul 2019 00:06:39 -0400
+Message-Id: <20190719040732.17285-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -60,97 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
+[ Upstream commit 04db3ede40ae4fc23a5c4237254c4a53bbe4c1f2 ]
 
-According to the PCI Local Bus specification Revision 3.0,
-section 6.8.1.3 (Message Control for MSI), endpoints that
-are Multiple Message Capable as defined by bits [3:1] in
-the Message Control for MSI can request a number of vectors
-that is power of two aligned.
+The powerpc's flush_cache_vmap() is defined as a macro and never use
+both of its arguments, so it will generate a compilation warning,
 
-As specified in section 6.8.1.6 "Message data for MSI", the Multiple
-Message Enable field (bits [6:4] of the Message Control register)
-defines the number of low order message data bits the function is
-permitted to modify to generate its system software allocated
-vectors.
+lib/ioremap.c: In function 'ioremap_page_range':
+lib/ioremap.c:203:16: warning: variable 'start' set but not used
+[-Wunused-but-set-variable]
 
-The MSI controller in the Xilinx NWL PCIe controller supports a number
-of MSI vectors specified through a bitmap and the hwirq number for an
-MSI, that is the value written in the MSI data TLP is determined by
-the bitmap allocation.
+Fix it by making it an inline function.
 
-For instance, in a situation where two endpoints sitting on
-the PCI bus request the following MSI configuration, with
-the current PCI Xilinx bitmap allocation code (that does not
-align MSI vector allocation on a power of two boundary):
-
-Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
-Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
-
-The bitmap value(s) corresponds to the hwirq number that is programmed
-into the Message Data for MSI field in the endpoint MSI capability
-and is detected by the root complex to fire the corresponding
-MSI irqs. The value written in Message Data for MSI field corresponds
-to the first bit allocated in the bitmap for Multi MSI vectors.
-
-The current Xilinx NWL MSI allocation code allows a bitmap allocation
-that is not a power of two boundaries, so endpoint #2, is allowed to
-toggle Message Data bit[0] to differentiate between its two vectors
-(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
-vectors allocated to endpoint #2).
-
-This clearly aliases with the Endpoint #1 vector allocation, resulting
-in a broken Multi MSI implementation.
-
-Update the code to allocate MSI bitmap ranges with a power of two
-alignment, fixing the bug.
-
-Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/cacheflush.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index fb32840ce8e6..4850a1b8eec1 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
+diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+index d5a8d7bf0759..b189f7aee222 100644
+--- a/arch/powerpc/include/asm/cacheflush.h
++++ b/arch/powerpc/include/asm/cacheflush.h
+@@ -32,9 +32,12 @@
+  * not expect this type of fault. flush_cache_vmap is not exactly the right
+  * place to put this, but it seems to work well enough.
+  */
+-#define flush_cache_vmap(start, end)		do { asm volatile("ptesync" ::: "memory"); } while (0)
++static inline void flush_cache_vmap(unsigned long start, unsigned long end)
++{
++	asm volatile("ptesync" ::: "memory");
++}
+ #else
+-#define flush_cache_vmap(start, end)		do { } while (0)
++static inline void flush_cache_vmap(unsigned long start, unsigned long end) { }
+ #endif
  
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -509,7 +507,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq,
-+			      get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
- }
- 
+ #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
 -- 
 2.20.1
 
