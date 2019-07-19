@@ -2,143 +2,107 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DDAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E706EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2076F2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A6321849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfGSGI6 (ORCPT
+        id S1727482AbfGSGJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:08:58 -0400
-Received: from mga17.intel.com ([192.55.52.151]:28944 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbfGSGI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:08:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 23:08:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="asc'?scan'208";a="170814276"
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
-  by orsmga003.jf.intel.com with ESMTP; 18 Jul 2019 23:08:53 -0700
-Date:   Fri, 19 Jul 2019 14:05:40 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     Kechen Lu <kechen.lu@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
-        kraxel@redhat.com, zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        alex.williamson@redhat.com, Eric Auger <eric.auger@redhat.com>
-Subject: Re: [RFC PATCH v4 1/6] vfio: Define device specific irq type
- capability
-Message-ID: <20190719060540.GC28809@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20190718155640.25928-1-kechen.lu@intel.com>
- <20190718155640.25928-2-kechen.lu@intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
-Content-Disposition: inline
-In-Reply-To: <20190718155640.25928-2-kechen.lu@intel.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+        Fri, 19 Jul 2019 02:09:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60150 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726688AbfGSGJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:09:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 40A02B07D;
+        Fri, 19 Jul 2019 06:09:26 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        boris.ostrovsky@oracle.com
+Subject: [GIT PULL] xen: fixes and features for 5.3-rc1
+Date:   Fri, 19 Jul 2019 08:09:25 +0200
+Message-Id: <20190719060925.10614-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---1ccMZA6j1vT5UqiK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please git pull the following tag:
 
-On 2019.07.18 23:56:35 +0800, Kechen Lu wrote:
-> From: Tina Zhang <tina.zhang@intel.com>
->=20
-> Cap the number of irqs with fixed indexes and use capability chains
-> to chain device specific irqs.
->=20
-> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> ---
->  include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 8f10748dac79..be6adab4f759 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -448,11 +448,27 @@ struct vfio_irq_info {
->  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
->  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
->  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
-> +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps */
->  	__u32	index;		/* IRQ index */
->  	__u32	count;		/* Number of IRQs within this index */
-> +	__u32	cap_offset;	/* Offset within info struct of first cap */
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.3a-rc1-tag
 
-This still breaks ABI as argsz would be updated with this new field, so it =
-would
-cause compat issue. I think my last suggestion was to assume cap list start=
-s after
-vfio_irq_info.
+xen: fixes and features for 5.3-rc1
 
->  };
->  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
-> =20
-> +/*
-> + * The irq type capability allows irqs unique to a specific device or
-> + * class of devices to be exposed.
-> + *
-> + * The structures below define version 1 of this capability.
-> + */
-> +#define VFIO_IRQ_INFO_CAP_TYPE      3
-> +
-> +struct vfio_irq_info_cap_type {
-> +	struct vfio_info_cap_header header;
-> +	__u32 type;     /* global per bus driver */
-> +	__u32 subtype;  /* type specific */
-> +};
-> +
->  /**
->   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_ir=
-q_set)
->   *
-> @@ -554,7 +570,8 @@ enum {
->  	VFIO_PCI_MSIX_IRQ_INDEX,
->  	VFIO_PCI_ERR_IRQ_INDEX,
->  	VFIO_PCI_REQ_IRQ_INDEX,
-> -	VFIO_PCI_NUM_IRQS
-> +	VFIO_PCI_NUM_IRQS =3D 5	/* Fixed user ABI, IRQ indexes >=3D5 use   */
-> +				/* device specific cap to define content */
->  };
-> =20
->  /*
-> --=20
-> 2.17.1
->=20
+It contains:
 
---=20
-Open Source Technology Center, Intel ltd.
+- A series to introduce a common command line parameter for disabling
+  paravirtual extensions when running as a guest in virtualized
+  environment
 
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+- A fix for int3 handling in Xen pv guests
 
---1ccMZA6j1vT5UqiK
-Content-Type: application/pgp-signature; name="signature.asc"
+- Removal of the Xen-specific tmem driver as support of tmem in Xen
+  has been dropped (and it was experimental only)
 
------BEGIN PGP SIGNATURE-----
+- A security fix for running as Xen dom0 (XSA-300)
 
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXTFdtAAKCRCxBBozTXgY
-J+A6AKCdu+X82qvxu8+c+G7Xf2KT4EPb+QCcDuu89yudz4pTfaN3llmqJsIf1LQ=
-=mAF2
------END PGP SIGNATURE-----
+- A fix for IRQ handling when offlining cpus in Xen guests
 
---1ccMZA6j1vT5UqiK--
+- Some small cleanups
+
+
+Thanks.
+
+Juergen
+
+ Documentation/admin-guide/kernel-parameters.txt |  28 +-
+ arch/x86/entry/entry_64.S                       |   1 -
+ arch/x86/include/asm/hypervisor.h               |  12 +
+ arch/x86/include/asm/traps.h                    |   2 +-
+ arch/x86/include/asm/x86_init.h                 |   2 +
+ arch/x86/include/asm/xen/hypervisor.h           |   6 +-
+ arch/x86/kernel/cpu/hypervisor.c                |  19 +-
+ arch/x86/kernel/jailhouse.c                     |   1 +
+ arch/x86/kernel/smpboot.c                       |   3 +-
+ arch/x86/kernel/x86_init.c                      |   4 +-
+ arch/x86/xen/enlighten_hvm.c                    |  58 ++-
+ arch/x86/xen/enlighten_pv.c                     |   3 +-
+ arch/x86/xen/spinlock.c                         |   6 +-
+ arch/x86/xen/xen-asm_64.S                       |   1 -
+ drivers/xen/Kconfig                             |  23 -
+ drivers/xen/Makefile                            |   2 -
+ drivers/xen/balloon.c                           |  16 +-
+ drivers/xen/events/events_base.c                |  12 +-
+ drivers/xen/evtchn.c                            |   2 +-
+ drivers/xen/tmem.c                              | 419 -----------------
+ drivers/xen/xen-balloon.c                       |   2 -
+ drivers/xen/xen-selfballoon.c                   | 579 ------------------------
+ include/xen/balloon.h                           |  10 -
+ include/xen/events.h                            |   3 +-
+ include/xen/tmem.h                              |  18 -
+ 25 files changed, 112 insertions(+), 1120 deletions(-)
+
+Juergen Gross (3):
+      xen/events: fix binding user event channels to cpus
+      xen: remove tmem driver
+      xen: let alloc_xenballooned_pages() fail if not enough memory free
+
+Zhenzhong Duan (7):
+      Revert "x86/paravirt: Set up the virt_spin_lock_key after static keys get initialized"
+      x86/xen: Mark xen_hvm_need_lapic() and xen_x2apic_para_available() as __init
+      x86: Add "nopv" parameter to disable PV extensions
+      xen: Map "xen_nopv" parameter to "nopv" and mark it obsolete
+      x86/paravirt: Remove const mark from x86_hyper_xen_hvm variable
+      x86/xen: Add "nopv" support for HVM guest
+      xen/pv: Fix a boot up hang revealed by int3 self test
