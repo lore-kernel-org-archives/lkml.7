@@ -2,119 +2,79 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCA1C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66271C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A41A2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361312173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sI6liOEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfGSGbl (ORCPT
+        id S1727054AbfGSGcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:31:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:8305 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfGSGbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:31:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 23:31:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="scan'208";a="168469654"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.198.19]) ([10.239.198.19])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Jul 2019 23:31:37 -0700
-Subject: Re: [PATCH v8 0/3] KVM: x86: Enable user wait instructions
-To:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-References: <20190716065551.27264-1-tao3.xu@intel.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <d01e6b8b-279c-84da-1f08-7b01baf9fdbf@intel.com>
-Date:   Fri, 19 Jul 2019 14:31:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 02:32:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfGSGcz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:32:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WybkyjUrQ9N6AtNgh2oW7UCNiPMoPSi8Rfxq1jvS6sI=; b=sI6liOEo5b8ADps8vl/o0Syy8
+        IRtsJigw1mZ3TGwzhV3Mo4+PobAMJn7BFG4kNw8ZR/Utn9hfCbsnA0jjZJK0gmhlE9mUveuN38czV
+        lr+4yt3vvdA1F4U5Q8ExE+56LsR7ZwbWE4yJZ7lmUqNWMpKSdwUYeKdrmNRZlLmTRPmqhMO5HX+Hy
+        7HEW6dqLsqsULcNg9vxrXf9Kw5cNVY+cD0PJiExlMmthL+QB8S1UcWZj05QjHp9PVYdNv/6uoSYF9
+        w+LL9eBor/WycwceVOUeOu75klzOTzDwYMlDHW5gSVExKmz2b8UiUsal6AhCJDZwT8zrhKtZDt5ZG
+        g9tnU/6nw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoMRm-0002gn-Ql; Fri, 19 Jul 2019 06:32:50 +0000
+Date:   Thu, 18 Jul 2019 23:32:50 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Loic PALLARDY <loic.pallardy@st.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Clement Leger <cleger@kalray.eu>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
+Message-ID: <20190719063250.GA9545@infradead.org>
+References: <20190612095521.4703-1-cleger@kalray.eu>
+ <20190701070245.32083-1-cleger@kalray.eu>
+ <20190702132229.GA8100@infradead.org>
+ <58c8b8bd30a949678c027eb42a1b1bbb@SFHDAG7NODE2.st.com>
+ <20190708184546.GA20670@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190716065551.27264-1-tao3.xu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708184546.GA20670@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping for comments :)
+On Mon, Jul 08, 2019 at 11:45:46AM -0700, Christoph Hellwig wrote:
+> > But that's breaking legacy as all platforms will have to add a virtio device node in
+> > their DT file...
+> > 
+> > Is it aligned with your view ?
+> 
+> Yes, that is how I'd assume it works.  But given that until recently
+> you did now have these subdevices for dma coherent purposes we can't
+> really break anything older than that, so I might still be missing
+> something.
 
-On 7/16/2019 2:55 PM, Tao Xu wrote:
-> UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
-> 
-> UMONITOR arms address monitoring hardware using an address. A store
-> to an address within the specified address range triggers the
-> monitoring hardware to wake up the processor waiting in umwait.
-> 
-> UMWAIT instructs the processor to enter an implementation-dependent
-> optimized state while monitoring a range of addresses. The optimized
-> state may be either a light-weight power/performance optimized state
-> (c0.1 state) or an improved power/performance optimized state
-> (c0.2 state).
-> 
-> TPAUSE instructs the processor to enter an implementation-dependent
-> optimized state c0.1 or c0.2 state and wake up when time-stamp counter
-> reaches specified timeout.
-> 
-> Availability of the user wait instructions is indicated by the presence
-> of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
-> 
-> The patches enable the umonitor, umwait and tpause features in KVM.
-> Because umwait and tpause can put a (psysical) CPU into a power saving
-> state, by default we dont't expose it to kvm and enable it only when
-> guest CPUID has it. If the instruction causes a delay, the amount
-> of time delayed is called here the physical delay. The physical delay is
-> first computed by determining the virtual delay (the time to delay
-> relative to the VM’s timestamp counter).
-> 
-> The release document ref below link:
-> Intel 64 and IA-32 Architectures Software Developer's Manual,
-> https://software.intel.com/sites/default/files/\
-> managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
-> 
-> Changelog:
-> v8:
-> 	Add vmx_waitpkg_supported() helper (Sean)
-> 	Add an accessor to expose umwait_control_cached (Sean)
-> 	Set msr_ia32_umwait_control in vcpu_vmx u32 and raise #GP when
-> 	[63:32] is set when rdmsr. (Sean)
-> 	Introduce a common exit helper handle_unexpected_vmexit (Sean)
-> v7:
-> 	Add nested support for user wait instructions (Paolo)
-> 	Use the test on vmx->secondary_exec_control to replace
-> 	guest_cpuid_has (Paolo)
-> v6:
-> 	add check msr_info->host_initiated in get/set msr(Xiaoyao)
-> 	restore the atomic_switch_umwait_control_msr()(Xiaoyao)
-> 
-> Tao Xu (3):
->    KVM: x86: Add support for user wait instructions
->    KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
->    KVM: vmx: Introduce handle_unexpected_vmexit and handle WAITPKG vmexit
-> 
->   arch/x86/include/asm/vmx.h      |  1 +
->   arch/x86/include/uapi/asm/vmx.h |  6 ++-
->   arch/x86/kernel/cpu/umwait.c    |  6 +++
->   arch/x86/kvm/cpuid.c            |  2 +-
->   arch/x86/kvm/vmx/capabilities.h |  6 +++
->   arch/x86/kvm/vmx/nested.c       |  5 ++
->   arch/x86/kvm/vmx/vmx.c          | 83 ++++++++++++++++++++++++++-------
->   arch/x86/kvm/vmx/vmx.h          |  9 ++++
->   arch/x86/kvm/x86.c              |  1 +
->   9 files changed, 101 insertions(+), 18 deletions(-)
-> 
-
+Any chance we could expedite this?  remoteproc is the only driver
+inheriting dma ops to subdevices, and the only one using
+dma_declare_coherent_memory.  I'd really like to clean this mess up
+rather sooner than later.
