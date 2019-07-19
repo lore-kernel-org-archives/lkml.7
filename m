@@ -2,121 +2,181 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E2C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620EFC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A633A2089C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iOcnUsUO"
+	by mail.kernel.org (Postfix) with ESMTP id 3A8832186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbfGSUeK (ORCPT
+        id S1731307AbfGSUi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:34:10 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35505 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbfGSUeK (ORCPT
+        Fri, 19 Jul 2019 16:38:26 -0400
+Received: from atlmailgw1.ami.com ([63.147.10.40]:44733 "EHLO
+        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbfGSUi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:34:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so31986966ljh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 13:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YWoLcIWo45da57QgaYno7VI6Op8uVj/Cqdt+Sn9VmY0=;
-        b=iOcnUsUOUmUDjUPd2RB7piycSYuRa0AXleJVgdN2h7YSBPG3416E5nC6hOnjd+wwLj
-         Ggo0iU/RRwL6CXCbxKfsxQoSLuMiCW1vGnCQyhaTUt4tV3nx9uTJr2CpIGB8xyPZCfMy
-         VLJL5zyEFPoIpF/pFAmQzdew8l7ALpgpyKrt4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YWoLcIWo45da57QgaYno7VI6Op8uVj/Cqdt+Sn9VmY0=;
-        b=he1XBejCt3OyjLExSi7Uwebrc68GxnIx6h2AxwFrJoEeaE8tMupKSByEIe/2oPce8n
-         P16vE5bOb0jaIqE1l6aKx58M3Bw70Qn8h9bQl1z6plSQsfE0KbU/EjlolAMoBuXGlGWJ
-         QvssXSO7Mnoz6XeQcyWQeXjNZcvlfn1h4hmbiTRyPH/Msl4XixhSlsDva8p7GVzcXwOH
-         cy11MxZ8RBicxda+nhXMoZihNMZzYMOnB1jDd3/lhaNy4sxyv2res8V9X8zCtuV7lPo7
-         qs4kfbOL1WX5S0PRTn5uHjtoAfJUUu4fLlHjNnMbiYqXtTAcluiQktS+7OImtof4mQbY
-         C5Iw==
-X-Gm-Message-State: APjAAAWRRU31LH3saabB2BcOaQFv/Pb7ZqxNkravatV+pVigSvmmPGUx
-        cF3xw0m9BB7e0IqbMx1Kyo9CUSE2hr4zQC3/7Hg=
-X-Google-Smtp-Source: APXvYqxJIT/ulpm6D6M1/aGWkcJqVmFa6Pfr0jgRty160DDMnx2/Xlv3f7J7ThMzu8xCHC17SRMRSvZJyZSJy8P3R5o=
-X-Received: by 2002:a2e:3602:: with SMTP id d2mr28981129lja.112.1563568448218;
- Fri, 19 Jul 2019 13:34:08 -0700 (PDT)
+        Fri, 19 Jul 2019 16:38:26 -0400
+X-AuditID: ac1060b2-3fdff70000003a7d-d3-5d322a4365dd
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id AD.8C.14973.34A223D5; Fri, 19 Jul 2019 16:38:27 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 19 Jul 2019 16:38:24 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     <hongweiz@ami.com>, Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Joel Stanley <joel@jms.id.au>, <devicetree@vger.kernel.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: dt-bindings: gpio: aspeed: Add SGPIO support 
+Date:   Fri, 19 Jul 2019 16:37:24 -0400
+Message-ID: <1563568644-10392-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
+References: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
 MIME-Version: 1.0
-References: <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
- <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
- <20190713151330.GE26519@linux.ibm.com> <20190713154257.GE133650@google.com>
- <20190713174111.GG26519@linux.ibm.com> <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
- <20190719003942.GA28226@X58A-UD3R> <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
- <20190719074329.GY14271@linux.ibm.com> <CANrsvRM7ehvqcPtKMV7RyRCiXwe_R_TsLZiNtxBPY_qnSg2LNQ@mail.gmail.com>
- <20190719195728.GF14271@linux.ibm.com>
-In-Reply-To: <20190719195728.GF14271@linux.ibm.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Fri, 19 Jul 2019 16:33:56 -0400
-Message-ID: <CAEXW_YQADrPRtJW7yJZyROH1_d2yOA7_1HVgm50wxpOC80+=Wg@mail.gmail.com>
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Byungchul Park <max.byungchul.park@gmail.com>,
-        Byungchul Park <byungchul.park@lge.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@lge.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWyRiBhgq6zllGswdyFsha7LnNYfJl7isVi
+        /pFzrBa/z/9ltpjyZzmTxabH11gtmlefY7bYPP8Po8XlXXPYLJZev8hk0br3CLsDt8fV9l3s
+        HmvmrWH0eH+jld3j4sdjzB6bVnWyedy5tofNY/OSeo/zMxYyenzeJBfAGcVlk5Kak1mWWqRv
+        l8CVcWw9S8ENuYqVz24yNjDOluhi5OSQEDCReLr4J2sXIxeHkMAuJonuExeZIJzDjBKr755i
+        BKliE1CT2Lt5DlhCRKCJUeJt02cwh1lgBZNE87Q37CBVwgJmEm8mnGQDsVkEVCXOrF7JCmLz
+        CjhIdJ5rZYbYJydx81wnmM0p4Cgx+eU8MFsIqObN02NMEPWCEidnPmEBsZkFJCQOvngBVSMr
+        cevQYyaIOQoSz/ses0xgFJiFpGUWkpYFjEyrGIUSS3JyEzNz0ssN9RJzM/WS83M3MULiYtMO
+        xpaL5ocYmTgYDzFKcDArifDefqkfK8SbklhZlVqUH19UmpNafIhRmoNFSZx35ZpvMUIC6Ykl
+        qdmpqQWpRTBZJg5OqQZGYXNpDvuN5RdiYoOenjvHVrb9X7Fv8IzT82acjtSboHD2/Jmzsra5
+        r3p7P1SvnKPE4hwU9vTjRdtPFWzX/QoF/fr3mUen9YhYzlyzs3fK5NczPa9/O/Kr7d5UZv62
+        DwrX7TidK9Qa91xjMO/8X8Pk8nWN2vurX/jSXqfo/E37yCryvX/eun4dJZbijERDLeai4kQA
+        krwKtHkCAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 3:57 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
->
-> On Fri, Jul 19, 2019 at 06:57:58PM +0900, Byungchul Park wrote:
-> > On Fri, Jul 19, 2019 at 4:43 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > >
-> > > On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
-> > > > On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
-> > > > [snip]
-> > > > > > - There is a bug in the CPU stopper machinery itself preventing it
-> > > > > > from scheduling the stopper on Y. Even though Y is not holding up the
-> > > > > > grace period.
-> > > > >
-> > > > > Or any thread on Y is busy with preemption/irq disabled preventing the
-> > > > > stopper from being scheduled on Y.
-> > > > >
-> > > > > Or something is stuck in ttwu() to wake up the stopper on Y due to any
-> > > > > scheduler locks such as pi_lock or rq->lock or something.
-> > > > >
-> > > > > I think what you mentioned can happen easily.
-> > > > >
-> > > > > Basically we would need information about preemption/irq disabled
-> > > > > sections on Y and scheduler's current activity on every cpu at that time.
-> > > >
-> > > > I think all that's needed is an NMI backtrace on all CPUs. An ARM we
-> > > > don't have NMI solutions and only IPI or interrupt based backtrace
-> > > > works which should at least catch and the preempt disable and softirq
-> > > > disable cases.
-> > >
-> > > True, though people with systems having hundreds of CPUs might not
-> > > thank you for forcing an NMI backtrace on each of them.  Is it possible
-> > > to NMI only the ones that are holding up the CPU stopper?
-> >
-> > What a good idea! I think it's possible!
-> >
-> > But we need to think about the case NMI doesn't work when the
-> > holding-up was caused by IRQ disabled.
-> >
-> > Though it's just around the corner of weekend, I will keep thinking
-> > on it during weekend!
->
-> Very good!
+Hello Andrew,
 
-Me too will think more about it ;-) Agreed with point about 100s of
-CPUs usecase,
+Thanks for reviewing and please see my inline comments.
 
-Thanks, have a great weekend,
+--Hongwei
 
- - Joel
+> From:	Andrew Jeffery <andrew@aj.id.au>
+> Sent:	Wednesday, July 17, 2019 9:48 PM
+> To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
+> Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
+> Subject:	Re: [PATCH 2/3 v4] dt-bindings: gpio: aspeed: Add SGPIO support
+> 
+> The subject is largely correct, but please see the discussion on the driver patch about how to clean up 
+> the [PATCH ...] prefix.
+> 
+> On Thu, 18 Jul 2019, at 05:42, Hongwei Zhang wrote:
+> > Add bindings to support SGPIO on AST2400 or AST2500.
+> > 
+> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> > ---
+> >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> >  create mode 100644 
+> > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > new file mode 100644
+> > index 0000000..2d6305e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > @@ -0,0 +1,55 @@
+> > +Aspeed SGPIO controller Device Tree Bindings
+> > +-------------------------------------------
+> > +
+> > +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80
+> > full
+> > +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed
+> > to
+> > +support the following options:
+> > +- Support interrupt option for each input port and various interrupt
+> > +  sensitivity option (level-high, level-low, edge-high, edge-low)
+> > +- Support reset tolerance option for each output port
+> > +- Directly connected to APB bus and its shift clock is from APB bus
+> > clock
+> > +  divided by a programmable value.
+> > +- Co-work with external signal-chained TTL components 
+> > +(74LV165/74LV595)
+> > +
+> > +
+> > +Required properties:
+> > +
+> > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> > +
+> > +- #gpio-cells 		: Should be two
+> > +			  - First cell is the GPIO line number
+> > +			  - Second cell is used to specify optional
+> > +			    parameters (unused)
+> > +
+> > +- reg			: Address and length of the register set for the device
+> > +- gpio-controller	: Marks the device node as a GPIO controller
+> > +- interrupts		: Interrupt specifier (see interrupt bindings for
+> > +			  details)
+> > +
+> > +- interrupt-controller	: Mark the GPIO controller as an 
+> > interrupt-controller
+> > +
+> > +- nr-gpios		: number of GPIO pins to serialise. 
+> > +			  (should be multiple of 8, up to 80 pins)
+> 
+> Please change the property name to "ngpios", as per the generic GPIO bindings[1].
+> 
+> [1] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindi
+> ngs/gpio/gpio.txt?h=v5.2#n141
+
+done
+
+> 
+> Cheers,
+> 
+> Andrew
+> 
+> > +
+> > +- clocks                : A phandle to the APB clock for SGPM clock 
+> > division
+> > +
+> > +- bus-frequency		: SGPM CLK frequency
+> > +
+> > +
+> > +The sgpio and interrupt properties are further described in their
+> > respective bindings documentation:
+> > +
+> > +- Documentation/devicetree/bindings/sgpio/gpio.txt
+> > +- 
+> > +Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > +
+> > +  Example:
+> > +	sgpio: sgpio@1e780200 {
+> > +		#gpio-cells = <2>;
+> > +		compatible = "aspeed,ast2500-sgpio";
+> > +		gpio-controller;
+> > +		interrupts = <40>;
+> > +		reg = <0x1e780200 0x0100>;
+> > +		clocks = <&syscon ASPEED_CLK_APB>;
+> > +		interrupt-controller;
+> > +		nr-gpios = <8>;
+> > +		bus-frequency = <12000000>;
+> > +	};
+> > --
+> > 2.7.4
+> > 
+> >
