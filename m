@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736EAC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA97C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDFA21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5103F21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509160;
-	bh=EsMMTzGQ/T0y1lfUqw0D1vbC/kOq/6SXh/z3XB0eis4=;
+	s=default; t=1563509164;
+	bh=DMiXV2Y3bxC3tjEsHuHMAMM5Zn2EY1lsfePC4T8uFNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nKrC0k0vVNU/UKQ2t5Oyr9gqQPovNWD5kZNNDJ8DetRc7XO98t3/Ya+EqNp16+739
-	 BLFOqDu4y6KZpzQJZN6Ma1qqBQhj18BywmXdeuT5liPTe/2ELo6eq3hi/PIiEK22xN
-	 zQht9oDPmMD0K6Apb2gTx7Djf6sZryGV7CStY8Sc=
+	b=FkEUiollkQGUSdYtQHFvcm2T8rG0mREfMM7MwehgXqw2pOHPcZfMFmbifUar51VAT
+	 mzqLuXmBF3h0jdxi+Zof2c3ZcT0GcbSNjdQ+Z8XVOV0ollJp1HPya7qIWd1x4Y0M+m
+	 YbMrb5QZ+BR3rr1AfL7D45Py5plpAVIMu/xZiXYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731884AbfGSEFy (ORCPT
+        id S1730777AbfGSEGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731988AbfGSEFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:50 -0400
+        id S1729136AbfGSEFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEBFF21873;
-        Fri, 19 Jul 2019 04:05:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74594218D1;
+        Fri, 19 Jul 2019 04:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509149;
-        bh=EsMMTzGQ/T0y1lfUqw0D1vbC/kOq/6SXh/z3XB0eis4=;
+        s=default; t=1563509154;
+        bh=DMiXV2Y3bxC3tjEsHuHMAMM5Zn2EY1lsfePC4T8uFNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbmn6mi0979J5ru94dPNn0lGML21j8C/P0qJPk16kb+aJTD8HJse5G/D+MIRJUNex
-         VnbiS1RMFMxpZhUs7Ut1DRU2smc2Z+8BPbmdVbc+QXvqC8GMYPGOqKmm9vIqq9VP+X
-         3XMmqzPDIO001arO4DrRrxS2euP+CkpxjO18lhCY=
+        b=OW0nsqpFPUIlTYES4t+MLnvIzFOQHnxSGtkSsdaFhu1L3vehgRosiznK0HdIgB1fm
+         sUsgF+kouIM9G6QWcRVRGi4ah8OpF+CGi+vWRP0bNsLWWeWsm9ADgJiKlEONX8NL29
+         oQ+LfqsBwX7zYvySkMGs0lLP2p673vxXN/ChnY9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
@@ -48,12 +48,11 @@ Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
         Alexios Zavras <alexios.zavras@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Changbin Du <changbin.du@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
         "David S . Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
         Jin Yao <yao.jin@linux.intel.com>,
         Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-arm-kernel@lists.infradead.org,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -62,11 +61,12 @@ Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Thomas Richter <tmricht@linux.ibm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 097/141] perf stat: Fix use-after-freed pointer detected by the smatch tool
-Date:   Fri, 19 Jul 2019 00:02:02 -0400
-Message-Id: <20190719040246.15945-97-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 099/141] perf trace: Fix potential NULL pointer dereference found by the smatch tool
+Date:   Fri, 19 Jul 2019 00:02:04 -0400
+Message-Id: <20190719040246.15945-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -81,17 +81,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit c74b05030edb3b52f4208d8415b8c933bc509a29 ]
+[ Upstream commit 7a6d49dc8cad8fa1f3d63994102af8f9ae9c859f ]
 
-Based on the following report from Smatch, fix the use-after-freed
-pointer.
+Based on the following report from Smatch, fix the potential NULL
+pointer dereference check.
 
-  tools/perf/builtin-stat.c:1353
-  add_default_attributes() warn: passing freed memory 'str'.
+  tools/perf/builtin-trace.c:1044
+  thread_trace__new() error: we previously assumed 'ttrace' could be
+  null (see line 1041).
 
-The pointer 'str' has been freed but later it is still passed into the
-function parse_events_print_error().  This patch fixes this
-use-after-freed issue.
+  tools/perf/builtin-trace.c
+  1037 static struct thread_trace *thread_trace__new(void)
+  1038 {
+  1039         struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
+  1040
+  1041         if (ttrace)
+  1042                 ttrace->files.max = -1;
+  1043
+  1044         ttrace->syscall_stats = intlist__new(NULL);
+               ^^^^^^^^
+  1045
+  1046         return ttrace;
+  1047 }
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -101,12 +112,11 @@ Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Alexios Zavras <alexios.zavras@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Changbin Du <changbin.du@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: David S. Miller <davem@davemloft.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: linux-arm-kernel@lists.infradead.org
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -115,27 +125,33 @@ Cc: Song Liu <songliubraving@fb.com>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20190702103420.27540-3-leo.yan@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190702103420.27540-6-leo.yan@linaro.org
+[ Just made it look like other tools/perf constructors, same end result ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c3625ec374e0..e1eebe522262 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1242,8 +1242,8 @@ static int add_default_attributes(void)
- 				fprintf(stderr,
- 					"Cannot set up top down events %s: %d\n",
- 					str, err);
--				free(str);
- 				parse_events_print_error(&errinfo, str);
-+				free(str);
- 				return -1;
- 			}
- 		} else {
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index f5b3a1e9c1dd..aca22e8f6947 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -998,10 +998,10 @@ static struct thread_trace *thread_trace__new(void)
+ {
+ 	struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
+ 
+-	if (ttrace)
++	if (ttrace) {
+ 		ttrace->files.max = -1;
+-
+-	ttrace->syscall_stats = intlist__new(NULL);
++		ttrace->syscall_stats = intlist__new(NULL);
++	}
+ 
+ 	return ttrace;
+ }
 -- 
 2.20.1
 
