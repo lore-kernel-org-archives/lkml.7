@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FF3C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC2C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D4B206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD372206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510905;
-	bh=GCEAQWSdvul4O5OJv7f1vX7r5c8nnHE3tQdguRfUK9I=;
+	s=default; t=1563510912;
+	bh=CH3O2LPFoEMwAWzghnExfL2XH60fUknYpeXbotU+tPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G6foaB/9O/sw2GkayJz4VNa84yP3BjbbrXworRnbFraXPt4xC5WfVUrnakxgsy4Of
-	 asr9dX8iCD+88TDduC0B7cjnvV63uE0YO+5rxbyoPqwvn7tm4mCWd5eijV2cJlrNF/
-	 ml2oQPm9OrKyfsgWpnpMmME1R/HW6+e1WqoKVtVs=
+	b=INv+DZ/8DtKnO23KRt0VVXbEu/PYVeZ7x6DqZxNcauXzeuuGy7lRzl+yzEOp0AEzx
+	 e7qyMwJ9OgIgV0oQwaInmN4klUCFfbiNeKVmufzTFusyAb+e2dTlU5Q45iHMFxAQj7
+	 WECZ/egQmSwl0tTxgoxFeIEa0WoNtft5AbiTQSZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387878AbfGSEfE (ORCPT
+        id S1729549AbfGSEBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:35:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33414 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbfGSEBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:41 -0400
+        id S1729435AbfGSEB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D123E218B8;
-        Fri, 19 Jul 2019 04:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91B0B21852;
+        Fri, 19 Jul 2019 04:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508900;
-        bh=GCEAQWSdvul4O5OJv7f1vX7r5c8nnHE3tQdguRfUK9I=;
+        s=default; t=1563508886;
+        bh=CH3O2LPFoEMwAWzghnExfL2XH60fUknYpeXbotU+tPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHgHoeEd7U+YzBEM5yXzq/z3VA6qrTEzdOVhYdpHUaqdk0AwMp60ZgvNFMsCHPiD2
-         KkibhJ6yB12UxHhaPOCKZAO4fzDJPSysFWri8kvLMoAbFzlGCMJ0Z3jq+v3LSFktgm
-         GCKcoIw7+4SNcNreg26Sm1xDSjk0iGnVZKFG1FHk=
+        b=vF3iHJ8XAu869BlR4jRn/iu6KYViP56hR6tmSyI+ZYGYZmbC656AyOVCtW4Al/xW/
+         sV8hM0j22Xej1i0/1VPdw80U6DClRPYBhmAdR5G1+mwvIdhrdLQ2P75ualQAYQXOSe
+         VOWxCi6+1QcWG8+xfOED3kRbMd6Q+yok35E2KsN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 148/171] powerpc/eeh: Handle hugepages in ioremap space
-Date:   Thu, 18 Jul 2019 23:56:19 -0400
-Message-Id: <20190719035643.14300-148-sashal@kernel.org>
+Cc:     Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 137/171] nvme-tcp: don't use sendpage for SLAB pages
+Date:   Thu, 18 Jul 2019 23:56:08 -0400
+Message-Id: <20190719035643.14300-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,68 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
 
-[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
+[ Upstream commit 37c15219599f7a4baa73f6e3432afc69ba7cc530 ]
 
-In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
-space") support for using hugepages in the vmalloc and ioremap areas was
-enabled for radix. Unfortunately this broke EEH MMIO error checking.
+According to commit a10674bf2406 ("tcp: detecting the misuse of
+.sendpage for Slab objects") and previous discussion, tcp_sendpage
+should not be used for pages that is managed by SLAB, as SLAB is not
+taking page reference counters into consideration.
 
-Detection works by inserting a hook which checks the results of the
-ioreadXX() set of functions.  When a read returns a 0xFFs response we
-need to check for an error which we do by mapping the (virtual) MMIO
-address back to a physical address, then mapping physical address to a
-PCI device via an interval tree.
-
-When translating virt -> phys we currently assume the ioremap space is
-only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
-emit a WARN_ON(), but otherwise handles the check as though a normal
-page was found. In pathalogical cases such as copying a buffer
-containing a lot of 0xFFs from BAR memory this can result in the system
-not booting because it's too busy printing WARN_ON()s.
-
-There's no real reason to assume huge pages can't be present and we're
-prefectly capable of handling them, so do that.
-
-Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
+Signed-off-by: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/nvme/host/tcp.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-index f192d57db47d..c0e4b73191f3 100644
---- a/arch/powerpc/kernel/eeh.c
-+++ b/arch/powerpc/kernel/eeh.c
-@@ -354,10 +354,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
- 	ptep = find_init_mm_pte(token, &hugepage_shift);
- 	if (!ptep)
- 		return token;
--	WARN_ON(hugepage_shift);
--	pa = pte_pfn(*ptep) << PAGE_SHIFT;
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 08a2501b9357..606b13d35d16 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -860,7 +860,14 @@ static int nvme_tcp_try_send_data(struct nvme_tcp_request *req)
+ 		else
+ 			flags |= MSG_MORE;
  
--	return pa | (token & (PAGE_SIZE-1));
-+	pa = pte_pfn(*ptep);
-+
-+	/* On radix we can do hugepage mappings for io, so handle that */
-+	if (hugepage_shift) {
-+		pa <<= hugepage_shift;
-+		pa |= token & ((1ul << hugepage_shift) - 1);
-+	} else {
-+		pa <<= PAGE_SHIFT;
-+		pa |= token & (PAGE_SIZE - 1);
-+	}
-+
-+	return pa;
- }
+-		ret = kernel_sendpage(queue->sock, page, offset, len, flags);
++		/* can't zcopy slab pages */
++		if (unlikely(PageSlab(page))) {
++			ret = sock_no_sendpage(queue->sock, page, offset, len,
++					flags);
++		} else {
++			ret = kernel_sendpage(queue->sock, page, offset, len,
++					flags);
++		}
+ 		if (ret <= 0)
+ 			return ret;
  
- /*
 -- 
 2.20.1
 
