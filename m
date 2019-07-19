@@ -2,51 +2,54 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB83C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845A7C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5502082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576A02082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510070;
-	bh=NKN2kMwDMv/CtJoT/kNNSdoQYzqkb1OZN7iL5M3DnOc=;
+	s=default; t=1563510075;
+	bh=xfCU53WlHTAlJW2/uhkH1BKmeggsOheUfndwnFGFaQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTaOJmvmi3r+//YcW5prHNo8Cq2wfif4LWyP/1avvc0ZY36m7125t9CGRzwyVchxL
-	 bK66ufRIOnLUqQq+UAP8pX/i1KXpboGWaZURjLMaCF4opCyikJgNoHZXZAzxjinIOX
-	 C/08fbrr2Tao3VFeiRcy9aKjLqoAvcvCllI23LOw=
+	b=db5lB4VpvFy+HClqemfJLMvbBEqkBt8A7NM4efE0ZBkK64J9jhY0lMZKSmlTpWtHo
+	 +qbZxlG9dAIl4SL8nBeHJXKmTxJM2LgG4irklIEYu43ucMHgJXvt7kZgMdHlEy54Cp
+	 vlXWrNNrFvVz1O5yclCuw1RED+w4pVS5Blqk0d+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfGSEVJ (ORCPT
+        id S2387903AbfGSEMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:21:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732862AbfGSEMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:10 -0400
+        id S1731159AbfGSEMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DC7B21872;
-        Fri, 19 Jul 2019 04:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB7D2189E;
+        Fri, 19 Jul 2019 04:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509530;
-        bh=NKN2kMwDMv/CtJoT/kNNSdoQYzqkb1OZN7iL5M3DnOc=;
+        s=default; t=1563509520;
+        bh=xfCU53WlHTAlJW2/uhkH1BKmeggsOheUfndwnFGFaQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PoAwjjCp+Io96ivyMf/In1cpjbSBl9JM8biYDlVJXdv/AYQ2MkRQBh6mEI0j5MwLM
-         0WDWFyc6PMKXFYWr1Pqe+1xFX7lgcQGhsm7pH8ifspXuoWKTbHtJku4nVgN1R+3DEY
-         xUrHI39+b9Rc0KlxzLGahiExdzyi2W4+cKtSW0NY=
+        b=mPCY0YUcNo98A8ss2RK1IRm1HX8tu42yOITCjLF+aIs3NvBKeBEV8xwihrnBP2fGr
+         VnV6k9PHC3/KhiCa+meS2+IIpsElS1Li2wiqjgf76dIR6x2D4H+17ZxI+AuXxN7vxD
+         OAjsPDYnGvrqAi/+RMen37DVxt418bVeemtWdgSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Hancock <hancock@sedsystems.ca>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 33/60] mfd: core: Set fwnode for created devices
-Date:   Fri, 19 Jul 2019 00:10:42 -0400
-Message-Id: <20190719041109.18262-33-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Peter Smith <peter.smith@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 28/60] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
+Date:   Fri, 19 Jul 2019 00:10:37 -0400
+Message-Id: <20190719041109.18262-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -59,34 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancock@sedsystems.ca>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
+[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
 
-The logic for setting the of_node on devices created by mfd did not set
-the fwnode pointer to match, which caused fwnode-based APIs to
-malfunction on these devices since the fwnode pointer was null. Fix
-this.
+In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
+drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
+a GCC only option so clang rightfully complains:
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+
+https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+
+However, by default, this is merely a warning so the build happily goes
+on with a slew of these warnings in the process.
+
+Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
+support clang") worked around this behavior in cc-option by adding
+-Werror so that unknown flags cause an error. However, this all happens
+silently and when an unknown flag is added to the build unconditionally
+like -Wno-psabi, cc-option will always fail because there is always an
+unknown flag in the list of flags. This manifested as link time failures
+in the arm64 libstub because -fno-stack-protector didn't get added to
+KBUILD_CFLAGS.
+
+To avoid these weird cryptic failures in the future, make clang behave
+like gcc and immediately error when it encounters an unknown flag by
+adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
+unconditionally for clang because it is supported by at least 3.0.0,
+according to godbolt [1] and 4.0.0, according to its documentation [2],
+which is far earlier than we typically support.
+
+[1]: https://godbolt.org/z/7F7rm3
+[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/511
+Link: https://github.com/ClangBuiltLinux/linux/issues/517
+Suggested-by: Peter Smith <peter.smith@linaro.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mfd-core.c | 1 +
+ Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index c57e407020f1..5c8ed2150c8b 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -179,6 +179,7 @@ static int mfd_add_device(struct device *parent, int id,
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
- 				pdev->dev.of_node = np;
-+				pdev->dev.fwnode = &np->fwnode;
- 				break;
- 			}
- 		}
+diff --git a/Makefile b/Makefile
+index c36e64bd9ae7..3d43f922953f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -488,6 +488,7 @@ ifneq ($(GCC_TOOLCHAIN),)
+ CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
+ endif
+ CLANG_FLAGS	+= -no-integrated-as
++CLANG_FLAGS	+= -Werror=unknown-warning-option
+ KBUILD_CFLAGS	+= $(CLANG_FLAGS)
+ KBUILD_AFLAGS	+= $(CLANG_FLAGS)
+ export CLANG_FLAGS
 -- 
 2.20.1
 
