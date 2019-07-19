@@ -2,153 +2,85 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B242CC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8E4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8619E20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xg96+YfK"
+	by mail.kernel.org (Postfix) with ESMTP id B8C2821849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563545667;
+	bh=kF4C0rLKo/+VHRKsgi27GKIkFYRreK1n2xTBXnIo9gc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qdr2SAqZl1v0ZFyrjNvNqamvqYRO/ZgIX1LKR/2rWovbtIhyG+OOBDgFmtZRkApf/
+	 Xe+KOpmvkN7teAj3fOsw2CVd5HApbzY5xwAkL9RO0ljA7wNqWd5Up5NoQiovO+sVIM
+	 eSEqE7MsUId4H6QlCJnhjvyGNCKRQwHcBSZGPGbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfGSONv (ORCPT
+        id S1729354AbfGSOO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 10:13:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33560 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbfGSONv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:13:51 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x3so21939095lfc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 07:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5CPzb137jbBN8kUQrMU0xxiOnMb9J48iFwx8DzRI+ms=;
-        b=xg96+YfKcXrgzX8Dj2Z2vJOfvF707j/Vr6GqOYNRe2JqL3B8HjZ2MJw0R63wzMH0ty
-         qxZh+L6/4S21YrjtpvnRlYmv7Vvz8lWR0Z8AKTS/NvWwZAKwzcPtCaHYITlZZ966G8fp
-         MdJkuw1N9hVQY9misdPMlhAtlceJFb3KTEDIQ/6p0JGpe/wbmB+FhhISmKe+6wbPzQK3
-         C4Rvhnizme88QNvubuKQkzgZ83igQK7tBCzhazRuNhgXZH9+T1zAiBRW0f+HLujT11HJ
-         Gk+uOsyOn9ut/hZ7k/2clkEIRnuVNttSZ4794BKKsY3Z3aqres7W/3rk2reWfRq4/pU7
-         w93g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5CPzb137jbBN8kUQrMU0xxiOnMb9J48iFwx8DzRI+ms=;
-        b=UeOPY0mT3HHGJeUH5qJicoqqzS7UJJzN7X9dn+gHUnPMmTs2+QReC8DEH8EPMpb659
-         9Jt/tnNUJ5vSj6zQcn2WdQDQ27uWsVSywRaSq2jxkckCxKkVEvK1x8TacotYxxLVIyev
-         74iiyHb1NoBj4tyq9AFnRKUiJeCTlfLuG9TOPDn5qreEvwK+ZwAx0yWhpoSeX7mel5p5
-         d9I9TQYhjJFQC3fcRvuMG6zFfXOQxhCo7H2WUgJin1wh9Nzy9/3LD++rh1MwRdei50SO
-         tKbx7ynSbo9HDWerd4jWOX5hzwKVvkDFlx8QmTs802kY49o+XtwE+WMoODM/0Lt/YFbF
-         gnYw==
-X-Gm-Message-State: APjAAAUUhN4v6rTMDyuaz9mCdT/mOu0i1OzvRk79P863FAllHF/Djgt/
-        PF+AvBdwCaaFr8TqJH9ZFtpmh/MvrFfVWDUXfuN+vvqGULM=
-X-Google-Smtp-Source: APXvYqx7EB6IEx23PT6ul03UtGFFgXNVwuuYt+FzoCItyGztduCZKRbBzSTFt0pLROzBo8DZ6MAQx00voCl6A/GTnK4=
-X-Received: by 2002:a19:ec15:: with SMTP id b21mr26250593lfa.32.1563545628931;
- Fri, 19 Jul 2019 07:13:48 -0700 (PDT)
+        Fri, 19 Jul 2019 10:14:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727717AbfGSOO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 10:14:26 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC5521849;
+        Fri, 19 Jul 2019 14:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563545665;
+        bh=kF4C0rLKo/+VHRKsgi27GKIkFYRreK1n2xTBXnIo9gc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ykkNOiFKx4G8uPPplOyDIFgxgyOL3Cn4pEeXQNdvrx1SuECY1T4+kl7+1erZBMHit
+         4poC0dcozMMWNRTjBHHois+rhADbfvnCixa/sQ0EVEoWgmXBPRVznhT2I9lHVSML5P
+         UoY/wyNyp9FywRjNuib4aaaN/6vPQpCtocnq+7Yg=
+Received: by mail-qt1-f181.google.com with SMTP id 44so72721qtg.11;
+        Fri, 19 Jul 2019 07:14:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAX6Qr11PAPXK554ISj9TneX/hJFt3n0zqCNKENG/pL9aDaXAzdl
+        368fU4cRfEvHUfsOXZvX0AoHdvY0iXy57wwlGQ==
+X-Google-Smtp-Source: APXvYqwdoLGbezC/uAf+2Ab30hXChXI///34VWXLnkSvpI9C8M/7R1bDtxX97JliY9U+1ZkAm89c18Jmjzp24uxAW7M=
+X-Received: by 2002:aed:3f10:: with SMTP id p16mr37222244qtf.110.1563545664593;
+ Fri, 19 Jul 2019 07:14:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
- <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org> <20190719131255.GL3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190719131255.GL3419@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 19 Jul 2019 16:13:38 +0200
-Message-ID: <CAKfTPtAbA7aowCZOHAqaeHSH09osrq62zE+fEKcAZMw3fRiTMQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Phil Auld <pauld@redhat.com>
+References: <20190719070926.29114-1-manivannan.sadhasivam@linaro.org> <20190719070926.29114-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190719070926.29114-2-manivannan.sadhasivam@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 19 Jul 2019 08:14:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL5_czQVQbFiiDCEbJH1L0Ov0Jf7WuWSNjJTKdgF5mA+A@mail.gmail.com>
+Message-ID: <CAL_JsqL5_czQVQbFiiDCEbJH1L0Ov0Jf7WuWSNjJTKdgF5mA+A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add Vendor prefix for Einfochips
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Darshak.Patel@einfochips.com, kinjan.patel@einfochips.com,
+        prajose.john@einfochips.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jul 2019 at 15:12, Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Jul 19, 2019 at 1:09 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 >
-> On Fri, Jul 19, 2019 at 09:58:23AM +0200, Vincent Guittot wrote:
+> Add devicetree vendor prefix for Einfochips.
+> https://www.einfochips.com/
 >
-> > @@ -8029,17 +8063,24 @@ static inline void update_sg_lb_stats(struct lb_env *env,
-> >               }
-> >       }
-> >
-> > -     /* Adjust by relative CPU capacity of the group */
-> > -     sgs->group_capacity = group->sgc->capacity;
-> > -     sgs->avg_load = (sgs->group_load*SCHED_CAPACITY_SCALE) / sgs->group_capacity;
-> > +     /* Check if dst cpu is idle and preferred to this group */
-> > +     if (env->sd->flags & SD_ASYM_PACKING &&
-> > +         env->idle != CPU_NOT_IDLE &&
-> > +         sgs->sum_h_nr_running &&
-> > +         sched_asym_prefer(env->dst_cpu, group->asym_prefer_cpu)) {
-> > +             sgs->group_asym_capacity = 1;
-> > +     }
-> >
-> > -     if (sgs->sum_h_nr_running)
-> > -             sgs->load_per_task = sgs->group_load / sgs->sum_h_nr_running;
-> > +     sgs->group_capacity = group->sgc->capacity;
-> >
-> >       sgs->group_weight = group->group_weight;
-> >
-> > -     sgs->group_no_capacity = group_is_overloaded(env, sgs);
-> > -     sgs->group_type = group_classify(group, sgs);
-> > +     sgs->group_type = group_classify(env, group, sgs);
-> > +
-> > +     /* Computing avg_load makes sense only when group is overloaded */
-> > +     if (sgs->group_type != group_overloaded)
->
-> The comment seems to suggest you meant: ==
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-yes looks like you're right :-(
-
->
-> > +             sgs->avg_load = (sgs->group_load*SCHED_CAPACITY_SCALE) /
-> > +                             sgs->group_capacity;
-> >  }
-> >
-> >  /**
-> > @@ -8070,7 +8111,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
-> >        */
-> >       if (sgs->group_type == group_misfit_task &&
-> >           (!group_smaller_max_cpu_capacity(sg, sds->local) ||
-> > -          !group_has_capacity(env, &sds->local_stat)))
-> > +          sds->local_stat.group_type != group_has_spare))
-> >               return false;
-> >
-> >       if (sgs->group_type > busiest->group_type)
-> > @@ -8079,11 +8120,18 @@ static bool update_sd_pick_busiest(struct lb_env *env,
-> >       if (sgs->group_type < busiest->group_type)
-> >               return false;
-> >
-> > -     if (sgs->avg_load <= busiest->avg_load)
-> > +     /* Select the overloaded group with highest avg_load */
-> > +     if (sgs->group_type == group_overloaded &&
-> > +         sgs->avg_load <= busiest->avg_load)
->
-> And this code does too; because with the above '!=', you're comparing
-> uninitialized data here, no?
-
-avg_load is always 0
-and the load_balance was quite conservative when system was overloaded
-
->
-> > +             return false;
-> > +
-> > +     /* Prefer to move from lowest priority CPU's work */
-> > +     if (sgs->group_type == group_asym_capacity && sds->busiest &&
-> > +         sched_asym_prefer(sg->asym_prefer_cpu, sds->busiest->asym_prefer_cpu))
-> >               return false;
-> >
-> >       if (!(env->sd->flags & SD_ASYM_CPUCAPACITY))
-> > -             goto asym_packing;
-> > +             goto spare_capacity;
-> >
-> >       /*
-> >        * Candidate sg has no more than one task per CPU and
+Reviewed-by: Rob Herring <robh@kernel.org>
