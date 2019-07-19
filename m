@@ -2,96 +2,228 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB35C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2FEC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00CE2085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563516308;
-	bh=n3CZev3O1v6RoQnaenGtvgjTod4iK+wLjwOBdqmGIo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t41jC5JYLzDDHD2AvjnQ6Xmb6dMuuuXDxgDA9o+i5vIigZs/IoDFPhW+BB7TADB8+
-	 KQ9zscDtJzaM8KONtQImKI497wsJ41XM2a3dUCE4ivX2Ug/+/OTHjL2y4BUUX6QWsS
-	 Hw5f2IWieNnKK+uzzllTsY6va8jCEeMdfvp6krvs=
+	by mail.kernel.org (Postfix) with ESMTP id A162121850
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dPMJUjEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfGSGFG (ORCPT
+        id S1727233AbfGSGGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:05:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59594 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726072AbfGSGFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:05:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6FB6CB0B3;
-        Fri, 19 Jul 2019 06:05:04 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 08:05:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
- unregister_memory_block_under_nodes() never fail
-Message-ID: <20190719060502.GG30461@dhcp22.suse.cz>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-11-david@redhat.com>
- <20190701085144.GJ6376@dhcp22.suse.cz>
- <20190701093640.GA17349@linux>
- <20190701102756.GO6376@dhcp22.suse.cz>
- <d450488d-7a82-f7a9-c8d3-b69a0bca48c6@redhat.com>
+        Fri, 19 Jul 2019 02:06:36 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:63273 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfGSGGf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:06:35 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190719060633epoutp019c1a3e7af4f3405565ba140801928b11~yueAp49QO1627716277epoutp011
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:06:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190719060633epoutp019c1a3e7af4f3405565ba140801928b11~yueAp49QO1627716277epoutp011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563516393;
+        bh=4PKDuMRdZXsZY/A8Stw2Oa1AaKHI6FYNZBBnzTlN8NA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dPMJUjEp9nlIOG2nWHrCbH9rF6s6o/89ZkfpHewYGpQ6W6rIsVD4V9vdwN1/Qspjd
+         SJ9DE9EP6FAJWGvQOje0yCTsSpR/oa7BtEco+z8oX0F9mQwXborppYhEKSKYq0p23w
+         hbAVHp2Z8b99g4NxEgMbPLUzjZRHuCa5uZRRCCRI=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190719060632epcas1p4b20c395b31af38398ec73ece60d7517d~yueAYQHjE1472514725epcas1p4Z;
+        Fri, 19 Jul 2019 06:06:32 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 45qgVt20rczMqYkh; Fri, 19 Jul
+        2019 06:06:30 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E8.16.04075.5ED513D5; Fri, 19 Jul 2019 15:06:30 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190719060629epcas1p33ed4a6918bed09f34fff8b287b049757~yud9WXLLb2069020690epcas1p3U;
+        Fri, 19 Jul 2019 06:06:29 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190719060629epsmtrp25f33e1f4935aceb5c76aba3b1d3ef85a~yud9VbD3G0848208482epsmtrp2-;
+        Fri, 19 Jul 2019 06:06:29 +0000 (GMT)
+X-AuditID: b6c32a36-b61ff70000000feb-99-5d315de527e3
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        52.20.03638.5ED513D5; Fri, 19 Jul 2019 15:06:29 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190719060629epsmtip23d2c0bfd4bd87a1440055135801b368c~yud9FRz6S1724617246epsmtip2N;
+        Fri, 19 Jul 2019 06:06:29 +0000 (GMT)
+Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
+ watermark selection
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <3c9c6a3a-8bce-d304-8472-029e6e673a99@samsung.com>
+Date:   Fri, 19 Jul 2019 15:09:39 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d450488d-7a82-f7a9-c8d3-b69a0bca48c6@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190719052111.6641285d@dimatab>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXd2jsdq9bqsnoxyni6kMbejzU6l0o1a2AcjggiGHd3BmdvZ
+        2JmRBmVpZaZWRFCzLHTR/SYauhDJLMkulmZlJkiTLiJa2sUwom2nyG//5//8Xp7L+9CE+joV
+        QWeJLsEp8laGmqC8fS9ap31vYk366reIu/LFh7hCd6WSe7JvIITr8J6muJHSZsQd+uqmuO69
+        Fynup7dCyZVda6dWhBrrejzIWO/uCTGWFgxSxrKay8g4Uj0nldyanWgReLPg1Ahiht2cJWYm
+        MSmb0lanGRL0rJZdyi1hNCJvE5KYNRtStWuzrP6GGM0O3prjt1J5SWJ0yYlOe45L0FjskiuJ
+        ERxmq2OpI1bibVKOmBmbYbctY/X6OIMf3JZtGbrzXen4PHvnQPcJMh8VQjEKpQEvhuL8NqoY
+        TaDVuA7BUH8vIQfDCC7tvaCQg+8IvC+aiX9PTpQMkwGtxg0I7j4WZWgIQdG7VkUgMRXz8PzI
+        hyAUjhfAhfu/yABE4FsKaLl5NQhROAYaP76mAnoKjoLOUR8KaBVOhrdjJ4O+Es+Hjk/lwcrT
+        8BYY7r1HykwYPDzVpyxGNB2KY+FD/56ATeAZ8KbvrELWkVBQW/636YIQaLgTKes18HigjZL1
+        VOhvqQmRdQSMDDb89XfBpYfNwb0ALkJQ0/iMlBPx0Hj+uCJQl8DRcMOrk+0oqB87g+S6k2Hw
+        WwkZQACroOiAWkbmQkdvj0LWM6Hq4CHqKGLc44Zxj5vAPW4C9/9i55DyMpouOCRbpiCxjrjx
+        n12Ngrcak1CHKp9uaEKYRswk1eh2vUlN8jukXFsTAppgwlXdn3QmtcrM5+YJTnuaM8cqSE3I
+        4N/1MSJiWobdf/miK401xMXHx3OL2QQDyzIzVBW/ok1qnMm7hGxBcAjOf+8UdGhEPppYxdw9
+        Wjh5q07l3XRs0bNtVVGT0l9tHFruY9YTb8Z0gxpfa61+tNTStuhrZIuHNK9M+biutH3hbu32
+        l6802lVdiPc84qbsfxCbfKZTYWxPz+0KEyrqzhGdTo/nwY/0332v8+b9gPCSRDGlNjzsKb95
+        1mEy+UBXZauvjEmk6vMYpWTh2RjCKfF/AAbOEjfBAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSvO7TWMNYg5nbZS1Wf3zMaNEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
+        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgy3u/+xlLwQbbize2prA2MLRJdjJwcEgImElN7
+        PrGC2EICuxklbuzWgYhLSky7eJS5i5EDyBaWOHy4uIuRC6jkLaPE291PmUFqhAUSJS72Pwfr
+        FRFQk1h+9A8rSBGzwGYmibOnVrNBdDxjkpjccp0RpIpNQEti/4sbbCA2v4CixNUfj8HivAJ2
+        End+zwCLswioSlx+ORtsg6hAhMThHbOgagQlTs58wgJyEaeAnsTzV/UgYWYBdYk/8y4xQ9ji
+        EreezGeCsOUlmrfOZp7AKDwLSfcsJC2zkLTMQtKygJFlFaNkakFxbnpusWGBUV5quV5xYm5x
+        aV66XnJ+7iZGcIRpae1gPHEi/hCjAAejEg9vQK5BrBBrYllxZe4hRgkOZiUR3tsv9WOFeFMS
+        K6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1MPZYrZ2suez6c8V0
+        hlvi/54tk5l0o+ud7LvVb5pqmuYu/BRw7f+T3zoixkaZvYI9d2e/qNY2XFp80/Nnv6dAQlDQ
+        5lcHps68zGzN115wY/eNUy9Feycv5JDb/1vz1oGNpzJez7fzWpK9NWmnp6jeuwAf/5LlzY1a
+        ftnilom3/Cf2Jm9rdq0OFVdiKc5INNRiLipOBABfyQ5SrAIAAA==
+X-CMS-MailID: 20190719060629epcas1p33ed4a6918bed09f34fff8b287b049757
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
+        <20190707223303.6755-21-digetx@gmail.com>
+        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
+        <20190719045943.73b53e31@dimatab>
+        <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
+        <20190719052111.6641285d@dimatab>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 15-07-19 13:10:33, David Hildenbrand wrote:
-> On 01.07.19 12:27, Michal Hocko wrote:
-> > On Mon 01-07-19 11:36:44, Oscar Salvador wrote:
-> >> On Mon, Jul 01, 2019 at 10:51:44AM +0200, Michal Hocko wrote:
-> >>> Yeah, we do not allow to offline multi zone (node) ranges so the current
-> >>> code seems to be over engineered.
-> >>>
-> >>> Anyway, I am wondering why do we have to strictly check for already
-> >>> removed nodes links. Is the sysfs code going to complain we we try to
-> >>> remove again?
-> >>
-> >> No, sysfs will silently "fail" if the symlink has already been removed.
-> >> At least that is what I saw last time I played with it.
-> >>
-> >> I guess the question is what if sysfs handling changes in the future
-> >> and starts dropping warnings when trying to remove a symlink is not there.
-> >> Maybe that is unlikely to happen?
-> > 
-> > And maybe we handle it then rather than have a static allocation that
-> > everybody with hotremove configured has to pay for.
-> > 
+On 19. 7. 19. 오전 11:21, Dmitry Osipenko wrote:
+> В Fri, 19 Jul 2019 11:06:05 +0900
+> Chanwoo Choi <cw00.choi@samsung.com> пишет:
 > 
-> So what's the suggestion? Dropping the nodemask_t completely and calling
-> sysfs_remove_link() on already potentially removed links?
+>> On 19. 7. 19. 오전 10:59, Dmitry Osipenko wrote:
+>>> В Fri, 19 Jul 2019 10:36:30 +0900
+>>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
+>>>   
+>>>> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:  
+>>>>> I noticed that CPU may be crossing the dependency threshold very
+>>>>> frequently for some workloads and this results in a lot of
+>>>>> interrupts which could be avoided if MCALL client is keeping
+>>>>> actual EMC frequency at a higher rate.
+>>>>>
+>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
+>>>>>  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
+>>>>>  1 file changed, 18 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/tegra30-devfreq.c
+>>>>> b/drivers/devfreq/tegra30-devfreq.c index
+>>>>> c3cf87231d25..4d582809acb6 100644 ---
+>>>>> a/drivers/devfreq/tegra30-devfreq.c +++
+>>>>> b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static
+>>>>> void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
+>>>>>  
+>>>>>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
+>>>>> *tegra,
+>>>>> -					   struct
+>>>>> tegra_devfreq_device *dev)
+>>>>> +					   struct
+>>>>> tegra_devfreq_device *dev,
+>>>>> +					   unsigned long freq)
+>>>>>  {
+>>>>>  	unsigned long avg_threshold, lower, upper;
+>>>>>  
+>>>>> @@ -323,6 +324,15 @@ static void
+>>>>> tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
+>>>>> avg_threshold = dev->config->avg_dependency_threshold;
+>>>>> avg_threshold = avg_threshold * ACTMON_SAMPLING_PERIOD; 
+>>>>> +	/*
+>>>>> +	 * If cumulative EMC frequency selection is higher than
+>>>>> the
+>>>>> +	 * device's, then there is no need to set upper watermark
+>>>>> to
+>>>>> +	 * a lower value because it will result in unnecessary
+>>>>> upper
+>>>>> +	 * interrupts.
+>>>>> +	 */
+>>>>> +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
+>>>>> +		upper = freq * ACTMON_SAMPLING_PERIOD;    
+>>>>
+>>>> Also, 'upper value is used on the patch5. You can combine this code
+>>>> to patch5 or if this patch depends on the cpu notifier, you can
+>>>> combine it to the patch of adding cpu notifier without separate
+>>>> patch.  
+>>>
+>>> Well okay, I'll try to squash some of the patches in the next
+>>> revision. Usually I'm receiving comments in the other direction,
+>>> asking to separate patches into smaller changes ;) So that's more a
+>>> personal preference of each maintainer, I'd say.
+>>>   
+>>
+>> Right. We have to make the patch with atomic attribute.
+>> But, if there are patches which touch the same code
+>> in the same patchset. We can squash or do refactorig
+>> of this code.
+> 
+> The main benefit of having smaller logical changes is that when there is
+> a bug, it's easier to narrow down the offending change using bisection.
+> And it's just easier to review smaller patches, of course.
 
-Yes. In a follow up patch.
+I agree that the patch should contain the atomic feature.
+To remove the some communication confusion between us,
+I don't mean that you have to merge patches to only one patch.
+
+It is important to remove the following two cases on the same patchset.
+
+1. the front patch adds the code and then later patch remove the added code.
+2. the front patch changes the code and the later patch again modified
+   the changed code of the front patch
+
+
+> 
+>> And also, if possible, I'd like you to make the patch
+>> list according to the role of patch. For example,
+>> the patches related to the 'watermark' could be sequentially
+>> listed. But, it is not forced opinion. If just possible.
+> 
+> Okay, will take this into account.
+> 
+> 
+> 
+
+
 -- 
-Michal Hocko
-SUSE Labs
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
