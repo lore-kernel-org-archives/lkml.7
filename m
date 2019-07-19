@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845A7C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7EFC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576A02082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8462082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510075;
-	bh=xfCU53WlHTAlJW2/uhkH1BKmeggsOheUfndwnFGFaQg=;
+	s=default; t=1563510079;
+	bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=db5lB4VpvFy+HClqemfJLMvbBEqkBt8A7NM4efE0ZBkK64J9jhY0lMZKSmlTpWtHo
-	 +qbZxlG9dAIl4SL8nBeHJXKmTxJM2LgG4irklIEYu43ucMHgJXvt7kZgMdHlEy54Cp
-	 vlXWrNNrFvVz1O5yclCuw1RED+w4pVS5Blqk0d+k=
+	b=lGmtq4u+Ptm8jVe9pcREUOkETlIvROrQwiLLpYnttll0G0GQeERpEw+nCPLpDYVH/
+	 9DNbK7PwzawvaoKqdUaaIjb7IdRU7G1CxmsPGYxg9Ba0N4AeDSlcy5xGWXFQbOcfU0
+	 mC/JaPaxBDApq8uFUx+8j44Uq8v2dt8zOdG524uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfGSEMG (ORCPT
+        id S2389188AbfGSEVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731159AbfGSEMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:01 -0400
+        id S2388653AbfGSEMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBB7D2189E;
-        Fri, 19 Jul 2019 04:11:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD19E21873;
+        Fri, 19 Jul 2019 04:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509520;
-        bh=xfCU53WlHTAlJW2/uhkH1BKmeggsOheUfndwnFGFaQg=;
+        s=default; t=1563509524;
+        bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPCY0YUcNo98A8ss2RK1IRm1HX8tu42yOITCjLF+aIs3NvBKeBEV8xwihrnBP2fGr
-         VnV6k9PHC3/KhiCa+meS2+IIpsElS1Li2wiqjgf76dIR6x2D4H+17ZxI+AuXxN7vxD
-         OAjsPDYnGvrqAi/+RMen37DVxt418bVeemtWdgSQ=
+        b=FqqvpKgB5fkuNSFugf/VFASx2vTNBrFsKqC1rLceKNxss8OIGFs74MtJut7k5ER/h
+         Ye3KWTZe1mAHnzjRG+tR+MeBwFmI7NFS+BtLAH/aOUF8UhGf0ZYW2/jaqWr9fwnIVQ
+         ZGeb8uADpPt4RUgnCA/OKvwPx3dWQxU9EUl+DadY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 28/60] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
-Date:   Fri, 19 Jul 2019 00:10:37 -0400
-Message-Id: <20190719041109.18262-28-sashal@kernel.org>
+Cc:     Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 30/60] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Fri, 19 Jul 2019 00:10:39 -0400
+Message-Id: <20190719041109.18262-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -62,63 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Bastien Nocera <hadess@hadess.net>
 
-[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
-drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
-a GCC only option so clang rightfully complains:
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+*mask = (1 << 32) - 1;
 
-https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
 
-However, by default, this is merely a warning so the build happily goes
-on with a slew of these warnings in the process.
+*mask = (1) - 1;
 
-Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
-support clang") worked around this behavior in cc-option by adding
--Werror so that unknown flags cause an error. However, this all happens
-silently and when an unknown flag is added to the build unconditionally
-like -Wno-psabi, cc-option will always fail because there is always an
-unknown flag in the list of flags. This manifested as link time failures
-in the arm64 libstub because -fno-stack-protector didn't get added to
-KBUILD_CFLAGS.
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
 
-To avoid these weird cryptic failures in the future, make clang behave
-like gcc and immediately error when it encounters an unknown flag by
-adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
-unconditionally for clang because it is supported by at least 3.0.0,
-according to godbolt [1] and 4.0.0, according to its documentation [2],
-which is far earlier than we typically support.
+Avoid incorrect 0 values caused by compiler optimization.
 
-[1]: https://godbolt.org/z/7F7rm3
-[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Link: https://github.com/ClangBuiltLinux/linux/issues/517
-Suggested-by: Peter Smith <peter.smith@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index c36e64bd9ae7..3d43f922953f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -488,6 +488,7 @@ ifneq ($(GCC_TOOLCHAIN),)
- CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
- endif
- CLANG_FLAGS	+= -no-integrated-as
-+CLANG_FLAGS	+= -Werror=unknown-warning-option
- KBUILD_CFLAGS	+= $(CLANG_FLAGS)
- KBUILD_AFLAGS	+= $(CLANG_FLAGS)
- export CLANG_FLAGS
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 7a6d61c6c012..55272fef3b50 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
+ 
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
