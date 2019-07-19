@@ -2,179 +2,147 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F10C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780A0C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B3E2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522772184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKiijk8E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtzbaHE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfGSCHs (ORCPT
+        id S1726431AbfGSCKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:07:48 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43199 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfGSCHr (ORCPT
+        Thu, 18 Jul 2019 22:10:53 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39557 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfGSCKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:07:47 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so13715709pgv.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 19:07:47 -0700 (PDT)
+        Thu, 18 Jul 2019 22:10:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v18so29209060ljh.6;
+        Thu, 18 Jul 2019 19:10:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Cn6HpCqocofcTiM1Gleeu1RdMvR6xgTxVinOm89T4fE=;
-        b=vKiijk8E2GYJLmXCSqisDXKNeVkOdK0i96hFcY3sJE7srh2/Vj0RX1QkFlZN+RZIRo
-         nENub6q4UVws0K+D84WGMBkqQh+V6PbFYUTtthmE+GwfVHqDxpkY8zrofMtEGIdVEyxn
-         Zs1bP/PB5idBKt4D8GK/w+Sp1I2o7cT0Ihbb5NNstyj2rv2oNNYeL9AXIRXgpexhWzmF
-         HlWQJqLV7H7II0Xt9LoyCqnOz8t4gxQ6OqluB9RNuW4gWwtadxmw4XNGFb23te97BQmc
-         ge9o6JKyBrJF+GoUNOch29h5SJKfv9TSwwLAq6C0P9YfbRgGqAGuARQeIAWGDqZETKn6
-         sGig==
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=j1C21+f0ZZxOBtFVDj1L3bfAXqnNfJEOByZtlSHJOoE=;
+        b=UtzbaHE5hMkyyAKW6u5Fe90gnYzBM7jVsWKogTM+FcpVVAjA1X1+2QgclM/qVVCner
+         nSo8A3MFJ9CQ1O0MlAdlUSaNH52Ma1/uaBFQzDBy8/Clu2rov6G3QYGPtRZD1NESxuQb
+         b9bxVtlrz1Psxxui9661qETk26i93/j+puksRceUkzNk43EDhDSAYRncKuEbx0cE9Yqz
+         XqLMyN1lQkaMHbHibjkiz8X+vtZ+OXq2ySTZBuU1XNZH/Y1QBRY3773qnVkK5dGZ2dWP
+         WAHdjcbBsy+J6FNJRjZKP+ge7rc1lEiIGJMgnOr+2Pz2c/KJWApwUYbqWLit4WsoQy7+
+         X1+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Cn6HpCqocofcTiM1Gleeu1RdMvR6xgTxVinOm89T4fE=;
-        b=Wpqawy6KbyvPTRrJ5WNymPYJFXRau+0GxK3O5GFzpCM2UzUMMNzpQLgLe91aBY5ijS
-         ZgsQqtN4ausldIdvJU/EzcbUArIlZzy0hAw2S3KY2lQ1+S7U204jDcRJ7UjLJVaUogBj
-         RRavBH6x7Bk3MLrrYQ1lmvLBkLcDJkJraiFmu3FGkCbbj3hQASL11OC/RBfcV7dxBghU
-         aOWXtbntRYF1/H8pkgOlsxtWBIrga9QBh7hYC2jlwi4QR0pTgRGhYLlt9IkZ9N+lPel7
-         EkhaE41qQ4svrV6GZOqnV8bJwJDHGgkv+5pGIhJEYPGdeGyHaI4iagWgB5ixdtmxyxkx
-         9ogw==
-X-Gm-Message-State: APjAAAWNUGw1rCvdK4Tx5db1TVkWT51Q+36bETpz0vXiD+xkpwoY52p1
-        a5MEiA00gE9Tx/PyLLikKUI=
-X-Google-Smtp-Source: APXvYqywOrUiB4kg7/DmwawT/8/A7EhERe2Wb4P1JJ4zXNsXJkbgA6JDlshugGSGnAR+inPbHyVdTA==
-X-Received: by 2002:a17:90b:94:: with SMTP id bb20mr55478290pjb.16.1563502067163;
-        Thu, 18 Jul 2019 19:07:47 -0700 (PDT)
-Received: from huyue2.ccdomain.com ([218.189.10.173])
-        by smtp.gmail.com with ESMTPSA id d6sm25139253pgf.55.2019.07.18.19.07.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 19:07:46 -0700 (PDT)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     phillip@squashfs.org.uk
-Cc:     squashfs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        huyue2@yulong.com
-Subject: [PATCH RESEND v2] squashfs: avoid to allocate page actor when to read into the page cache
-Date:   Fri, 19 Jul 2019 10:06:53 +0800
-Message-Id: <20190719020653.8396-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1.windows.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=j1C21+f0ZZxOBtFVDj1L3bfAXqnNfJEOByZtlSHJOoE=;
+        b=M1g580XXo4c956ARy6hNh3ES70TXrEXsfX7grlxLSId7oX3WbcyY6b1ITIwBxkeT7i
+         xUAjaqDoJwt92pK2apWXujYifXxSofXDCXlaLEx1IYYvKA6c5AumGWELi9Jk8pQcw2V2
+         N/o1FUItO+vIi70JHUbmif4D50iz22afgrXXy5UuZFt4g5z7AuCDQNNmmx3SjBi5jygb
+         3lzJRZk7b6vC2Z+80TrVo7MhNkJ+WTkjMpJIsGYIihAXq8usKbcdw28CA3WQzvVb+BLu
+         wer9w+Pm/yE8uuT/lxwewPTkvS8p1mTzvOXSeNTT43mcDb9NQVRiKMjdv0gsBwXyybOU
+         NFlA==
+X-Gm-Message-State: APjAAAV5EVezFi9GnMNuS2rf9qV8Bnwc4/r7bpnNYm83o4xNP6UJrV+c
+        KPDkRj3q2CByoSXuMehyIno=
+X-Google-Smtp-Source: APXvYqy/0frX3l9f3g/yrC98yEx9Qc8AtNmbR+vX8KqhVRxSh9CeEuw0YNszCXwsCT5cqVXJlW0CEw==
+X-Received: by 2002:a2e:85d4:: with SMTP id h20mr26239716ljj.142.1563502250737;
+        Thu, 18 Jul 2019 19:10:50 -0700 (PDT)
+Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id u9sm4280278lfk.64.2019.07.18.19.10.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 19:10:50 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 05:14:26 +0300
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
+ functions
+Message-ID: <20190719051426.4e4145d8@dimatab>
+In-Reply-To: <97f2a317-989a-bcad-dd45-ccf00ba18cca@samsung.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
+        <20190707223303.6755-13-digetx@gmail.com>
+        <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
+        <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
+        <45621f73-2f86-cde7-a92e-2a34810b9c05@samsung.com>
+        <20190719042251.37cc9cda@dimatab>
+        <92f82420-5c50-468f-a403-7b4c36958076@samsung.com>
+        <97f2a317-989a-bcad-dd45-ccf00ba18cca@samsung.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+=D0=92 Fri, 19 Jul 2019 10:27:16 +0900
+Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-Currently, we will allocate page actor in squashfs_readpage_block() via
-kmalloc() if enable SQUASHFS_FILE_DIRECT option. However, the actor size
-is small and it will be freed finally in this function. So, use stack
-memory will be better for that case to avoid out of memory.
+> On 19. 7. 19. =EC=98=A4=EC=A0=84 10:24, Chanwoo Choi wrote:
+> > On 19. 7. 19. =EC=98=A4=EC=A0=84 10:22, Dmitry Osipenko wrote: =20
+> >> =D0=92 Thu, 18 Jul 2019 18:09:05 +0900
+> >> Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >> =20
+> >>> On 19. 7. 16. =EC=98=A4=ED=9B=84 10:35, Dmitry Osipenko wrote: =20
+> >>>> 16.07.2019 15:26, Chanwoo Choi =D0=BF=D0=B8=D1=88=D0=B5=D1=82:   =20
+> >>>>> Hi Dmitry,
+> >>>>>
+> >>>>> I'm not sure that it is necessary.
+> >>>>> As I knew, usally, the 'inline' is used on header file
+> >>>>> to define the empty functions.
+> >>>>>
+> >>>>> Do we have to change it with 'inline' keyword?   =20
+> >>>>
+> >>>> The 'inline' attribute tells compiler that instead of jumping
+> >>>> into the function, it should take the function's code and
+> >>>> replace the function's invocation with that code. This is done
+> >>>> in order to help compiler optimize code properly, please see
+> >>>> [1]. There is absolutely no need to create a function call into
+> >>>> a function that consists of a single instruction.
+> >>>>
+> >>>> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Inline.html
+> >>>>    =20
+> >>>
+> >>> If you want to add 'inline' keyword, I recommend that=20
+> >>> you better to remove the modified function in this patch
+> >>> and then just call the 'write_relaxed or read_relaxed' function
+> >>> directly. It is same result when using inline keyword. =20
+> >>
+> >> That could be done, but it makes code less readable.
+> >>
+> >> See the difference:
+> >>
+> >> device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
+> >> ACTMON_DEV_INTR_STATUS);
+> >>
+> >> writel_relaxed(ACTMON_INTR_STATUS_CLEAR,
+> >> 	       dev->regs + ACTMON_DEV_INTR_STATUS); =20
+> >=20
+> > No problem if you add the detailed comment and you want to use
+> > the 'inline' keyword. =20
+>=20
+> Basically, I think that 'inline' keyword is not necessary.
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
----
-v2: fix commit message
+Sure, but I'm finding that it's always nicer to explicitly inline a very
+simple functions because compiler may not do it properly itself in some
+cases.
 
- fs/squashfs/file_direct.c | 10 +++-------
- fs/squashfs/page_actor.c  | 10 ++--------
- fs/squashfs/page_actor.h  |  4 ++--
- 3 files changed, 7 insertions(+), 17 deletions(-)
+> But if you want to use 'inline' keyword, I recommend
+> that call the 'write_relaxed or read_relaxed' function directly
+> with detailed description.=20
 
-diff --git a/fs/squashfs/file_direct.c b/fs/squashfs/file_direct.c
-index a4894cc..98c2dd1 100644
---- a/fs/squashfs/file_direct.c
-+++ b/fs/squashfs/file_direct.c
-@@ -35,7 +35,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
- 	int end_index = start_index | mask;
- 	int i, n, pages, missing_pages, bytes, res = -ENOMEM;
- 	struct page **page;
--	struct squashfs_page_actor *actor;
-+	struct squashfs_page_actor actor;
- 	void *pageaddr;
- 
- 	if (end_index > file_end)
-@@ -51,9 +51,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
- 	 * Create a "page actor" which will kmap and kunmap the
- 	 * page cache pages appropriately within the decompressor
- 	 */
--	actor = squashfs_page_actor_init_special(page, pages, 0);
--	if (actor == NULL)
--		goto out;
-+	squashfs_page_actor_init_special(&actor, page, pages, 0);
- 
- 	/* Try to grab all the pages covered by the Squashfs block */
- 	for (missing_pages = 0, i = 0, n = start_index; i < pages; i++, n++) {
-@@ -90,7 +88,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
- 	}
- 
- 	/* Decompress directly into the page cache buffers */
--	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
-+	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, &actor);
- 	if (res < 0)
- 		goto mark_errored;
- 
-@@ -116,7 +114,6 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
- 			put_page(page[i]);
- 	}
- 
--	kfree(actor);
- 	kfree(page);
- 
- 	return 0;
-@@ -135,7 +132,6 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
- 	}
- 
- out:
--	kfree(actor);
- 	kfree(page);
- 	return res;
- }
-diff --git a/fs/squashfs/page_actor.c b/fs/squashfs/page_actor.c
-index 520d323..0344806 100644
---- a/fs/squashfs/page_actor.c
-+++ b/fs/squashfs/page_actor.c
-@@ -78,14 +78,9 @@ static void direct_finish_page(struct squashfs_page_actor *actor)
- 		kunmap_atomic(actor->pageaddr);
- }
- 
--struct squashfs_page_actor *squashfs_page_actor_init_special(struct page **page,
--	int pages, int length)
-+void squashfs_page_actor_init_special(struct squashfs_page_actor *actor,
-+	struct page **page, int pages, int length)
- {
--	struct squashfs_page_actor *actor = kmalloc(sizeof(*actor), GFP_KERNEL);
--
--	if (actor == NULL)
--		return NULL;
--
- 	actor->length = length ? : pages * PAGE_SIZE;
- 	actor->page = page;
- 	actor->pages = pages;
-@@ -94,5 +89,4 @@ struct squashfs_page_actor *squashfs_page_actor_init_special(struct page **page,
- 	actor->squashfs_first_page = direct_first_page;
- 	actor->squashfs_next_page = direct_next_page;
- 	actor->squashfs_finish_page = direct_finish_page;
--	return actor;
- }
-diff --git a/fs/squashfs/page_actor.h b/fs/squashfs/page_actor.h
-index 2e3073a..ab9d381 100644
---- a/fs/squashfs/page_actor.h
-+++ b/fs/squashfs/page_actor.h
-@@ -61,8 +61,8 @@ struct squashfs_page_actor {
- };
- 
- extern struct squashfs_page_actor *squashfs_page_actor_init(void **, int, int);
--extern struct squashfs_page_actor *squashfs_page_actor_init_special(struct page
--							 **, int, int);
-+extern void squashfs_page_actor_init_special(struct squashfs_page_actor *actor,
-+				struct page **page, int pages, int length);
- static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
- {
- 	return actor->squashfs_first_page(actor);
--- 
-1.9.1
-
+Could you please reword this sentence? Not sure that I'm understanding
+it correctly.
