@@ -2,107 +2,141 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3939C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A32C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8880821882
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6j+mJCA"
+	by mail.kernel.org (Postfix) with ESMTP id AA22B2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfGSKse (ORCPT
+        id S1727486AbfGSKvL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:48:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38158 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfGSKsc (ORCPT
+        Fri, 19 Jul 2019 06:51:11 -0400
+Received: from mail.savoirfairelinux.com ([208.88.110.44]:42378 "EHLO
+        mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfGSKvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:48:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g17so31809145wrr.5;
-        Fri, 19 Jul 2019 03:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=F6zESjJw5gi9GyaRx05z2263B816bds++z6rEjY7GBY=;
-        b=l6j+mJCAz/Hq7txaixfW57z5tP/Fjc3rd3mO+HrlOcYTMDonZ85id2k6kJjdWEOWDj
-         Kpb2d7VxiHEcMwMpvJb5vgs2hYS7JzF8Nl6Hsteai5V7OF30pYbhNCq1oqguV1Bs2XNu
-         88a0qlj9n7B4i7lIGNilgCfjSMzpwEcphxzI+F+g/3EKKxZZDdBkD6R+IxYTDK8hBKOY
-         awKcvk01K2XSn2BaPubU6LVOFbpjIgvRT4dl3VmJRd5XOu8crMv4R51+xRX9teO9K2jU
-         8rfylWxESifRldvD8ntYAvZ7VGciXThd1at09LoMdAF3JcMgrLXPpwfAKBuiVI0GdwLC
-         98UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=F6zESjJw5gi9GyaRx05z2263B816bds++z6rEjY7GBY=;
-        b=H1Ybr6RmuFmjZAfGR/kp3BQNFDuAJFJQ/f4VZcfuPHyPi+5+nQiEmp/s3nsrMfJdgP
-         b+W6s+czj2TWMl1QyPQ0PT7feNT+QJ0KEckWsp1C/16KNN7fuIWf2S0aK/jJ6hqQw6aS
-         sRqOqmiwilWUJ8NyffrKmA232bvq5WjWOPy6BCDR/XQmoBGJEptRCwaB1QQx499cZm9i
-         AYgoXLsskqOtCO3XpGUbUY3cp7jUFLW4/V2ZnU2t6N5BQhEMDZynKzQzhdwvj2dSBIvp
-         iCzQvkMdUtOMFxQG/EjXh2H5BfIY/fSUHAfMOgy/17g8jALsyqHn54I1kpvG9M1prNCg
-         DhfA==
-X-Gm-Message-State: APjAAAXTj8Zzj+CDoG/mdfwIHscUQo4qS+Ioq6mkk4ixLTlKN72lotfw
-        YovADDqlelrtiS1FBEIrSIA=
-X-Google-Smtp-Source: APXvYqwm3q+6YT5lTT4nSCebmWLhcqNDHTsIASkXoH/IBVw+8AisfnaQieVklfWjF0xDcdQlrvzj5w==
-X-Received: by 2002:adf:8364:: with SMTP id 91mr55545015wrd.13.1563533309849;
-        Fri, 19 Jul 2019 03:48:29 -0700 (PDT)
-Received: from localhost.localdomain ([212.146.100.6])
-        by smtp.gmail.com with ESMTPSA id j17sm39635565wrb.35.2019.07.19.03.48.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 03:48:29 -0700 (PDT)
-From:   andradanciu1997 <andradanciu1997@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        ping.bai@nxp.com, Michal.Vokac@ysoft.com, leoyang.li@nxp.com,
-        sriram.dash@nxp.com, l.stach@pengutronix.de, vabhav.sharma@nxp.com,
-        bhaskar.upadhaya@nxp.com, pramod.kumar_1@nxp.com,
-        pankaj.bansal@nxp.com, aisheng.dong@nxp.com, angus@akkea.ca,
-        richard.hu@technexion.com, andradanciu1997@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 2/2] dt-bindings: arm: fsl: Add the pico-pi-imx8m board
-Date:   Fri, 19 Jul 2019 13:48:02 +0300
-Message-Id: <20190719104802.18070-3-andradanciu1997@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190719104802.18070-1-andradanciu1997@gmail.com>
-References: <20190719104802.18070-1-andradanciu1997@gmail.com>
+        Fri, 19 Jul 2019 06:51:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id AB1B89C01AF;
+        Fri, 19 Jul 2019 06:51:09 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id UITvdYQh0lmp; Fri, 19 Jul 2019 06:51:08 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id CD8AD9C0279;
+        Fri, 19 Jul 2019 06:51:08 -0400 (EDT)
+X-Virus-Scanned: amavisd-new at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+        by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id DuBALd-RrgDk; Fri, 19 Jul 2019 06:51:08 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+        by mail.savoirfairelinux.com (Postfix) with ESMTP id 9CA4D9C01AF;
+        Fri, 19 Jul 2019 06:51:08 -0400 (EDT)
+Date:   Fri, 19 Jul 2019 06:51:08 -0400 (EDT)
+From:   Gilles Doffe <gilles.doffe@savoirfairelinux.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, mark rutland <mark.rutland@arm.com>,
+        festevam@gmail.com, s hauer <s.hauer@pengutronix.de>,
+        robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
+        shawnguo@kernel.org
+Message-ID: <405527661.6507550.1563533468485.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <20190712135541.55fgchvyp33cl3uv@pengutronix.de>
+References: <20190712124522.571-1-gilles.doffe@savoirfairelinux.com> <20190712135541.55fgchvyp33cl3uv@pengutronix.de>
+Subject: Re: [PATCH] arm: dts: imx6qdl: add gpio expander pca9535
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Zimbra 8.8.11_GA_3737 (ZimbraWebClient - GC75 (Linux)/8.8.11_GA_3737)
+Thread-Topic: imx6qdl: add gpio expander pca9535
+Thread-Index: vpg0c/hPAh+Ul1ZzEvqvEtVCDcLJKQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andra Danciu <andradanciu1997@gmail.com>
+Hello Marco,
 
-Add an entry for TechNexion PICO-PI-IMX8M board based on i.MX8MQ SoC
-Datasheet can be found at:
-https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
+Thanks for your review.
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Corrected in v2.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 7294ac36f4c0..54c094341121 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -219,6 +219,7 @@ properties:
-           - enum:
-               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-               - purism,librem5-devkit     # Purism Librem5 devkit
-+              - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
-           - const: fsl,imx8mq
- 
-       - description: i.MX8QXP based Boards
+Regards,
+Gilles
+
+----- Le 12 Juil 19, à 15:55, Marco Felsch m.felsch@pengutronix.de a écrit :
+
+Hi,
+
+On 19-07-12 14:45, Gilles DOFFE wrote:
+> The pca9535 gpio expander is present on the Rex baseboard, but missing
+> from the dtsi.
+> 
+> Add the new gpio controller and the associated interrupt line
+> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
+> 
+> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+> index 97f1659144ea..d5324c6761c1 100644
+> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+> @@ -136,6 +136,19 @@
+>  		compatible = "atmel,24c02";
+>  		reg = <0x57>;
+>  	};
+> +
+> +	gpio8: pca9535@27 {
+
+Just a nitpick, I would change that to
+
+	pca9535: gpio8@27 {
+
+Regards,
+  Marco
+
+> +		compatible = "nxp,pca9535";
+> +		reg = <0x27>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pca9535>;
+> +		interrupt-parent = <&gpio6>;
+> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+>  };
+>  
+>  &i2c3 {
+> @@ -237,6 +250,12 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_pca9535: pca9535 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
+> +		   >;
+> +		};
+> +
+>  		pinctrl_uart1: uart1grp {
+>  			fsl,pins = <
+>  				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+> -- 
+> 2.19.1
+> 
+> 
+> 
+
 -- 
-2.11.0
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
