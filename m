@@ -2,99 +2,127 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC479C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EA2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4C42173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nGMv6pXA"
+	by mail.kernel.org (Postfix) with ESMTP id 34D8A21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfGSAkm (ORCPT
+        id S1726542AbfGSAkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:40:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35307 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfGSAkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:40:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qXGt728nz9s00;
-        Fri, 19 Jul 2019 10:40:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563496839;
-        bh=vWIpdAMZ+vT46Akc4v9NZRJYvyZiozmtJ4+w96anCLY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nGMv6pXAW7TJF2qcbITorX4qbqUA3xOaSbqxDkbX3NwHSKz63W9s8s12/tzLqBJjd
-         Au9HjPjusyb5DNMkmvajn1p7G7C+Wy/+vIdsVyChvneLmrxkJfJs9rgNUmTG8QMZ2V
-         TyODt7ACzQnDFxx3XKzhgXw87sbI1mbkark4o4CRky0L9xSBPkl3D5G26o6ahzFifa
-         CwhdQ6oXc/YdM5hx/cJgGY5s9R022geenaX9VZ0FVCOHbt5V+4vk/XwT41r/kPAeh4
-         9+Ygnu1a0N2uTxrrO+KtmjdqmUCv9TQ56r0H3jM4+YJ8cWiubaLQ5PVofJww97slSY
-         Br0/LJ9Fpv1EQ==
-Date:   Fri, 19 Jul 2019 10:40:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: linux-next: Tree for Jul 18 (header build error)
-Message-ID: <20190719104038.1d1f9a15@canb.auug.org.au>
-In-Reply-To: <20190719003045.GF692234@magnolia>
-References: <20190718133751.3cf036be@canb.auug.org.au>
-        <127d228c-322d-6349-382b-d304974df148@infradead.org>
-        <20190719100557.3ead3285@canb.auug.org.au>
-        <20190719003045.GF692234@magnolia>
+        Thu, 18 Jul 2019 20:40:47 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:40020 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfGSAkr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:40:47 -0400
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.51 with ESMTP; 19 Jul 2019 09:40:45 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.121 with ESMTP; 19 Jul 2019 09:40:45 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Fri, 19 Jul 2019 09:39:42 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190719003942.GA28226@X58A-UD3R>
+References: <20190711164818.GA260447@google.com>
+ <20190711195839.GA163275@google.com>
+ <20190712063240.GD7702@X58A-UD3R>
+ <20190712125116.GB92297@google.com>
+ <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
+ <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
+ <20190713151330.GE26519@linux.ibm.com>
+ <20190713154257.GE133650@google.com>
+ <20190713174111.GG26519@linux.ibm.com>
+ <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nX4Jeu6sxuCZYl9N82CPIAF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nX4Jeu6sxuCZYl9N82CPIAF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 18, 2019 at 12:14:22PM -0400, Joel Fernandes wrote:
+> Trimming the list a bit to keep my noise level low,
+> 
+> On Sat, Jul 13, 2019 at 1:41 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> [snip]
+> > > It still feels like you guys are hyperfocusing on this one particular
+> > > > knob.  I instead need you to look at the interrelating knobs as a group.
+> > >
+> > > Thanks for the hints, we'll do that.
+> > >
+> > > > On the debugging side, suppose someone gives you an RCU bug report.
+> > > > What information will you need?  How can you best get that information
+> > > > without excessive numbers of over-and-back interactions with the guy
+> > > > reporting the bug?  As part of this last question, what information is
+> > > > normally supplied with the bug?  Alternatively, what information are
+> > > > bug reporters normally expected to provide when asked?
+> > >
+> > > I suppose I could dig out some of our Android bug reports of the past where
+> > > there were RCU issues but if there's any fires you are currently fighting do
+> > > send it our way as debugging homework ;-)
+> >
+> >   Suppose that you were getting RCU CPU stall
+> > warnings featuring multi_cpu_stop() called from cpu_stopper_thread().
+> > Of course, this really means that some other CPU/task is holding up
+> > multi_cpu_stop() without also blocking the current grace period.
+> >
+> 
+> So I took a shot at this trying to learn how CPU stoppers work in
+> relation to this problem.
+> 
+> I am assuming here say CPU X has entered MULTI_STOP_DISABLE_IRQ state
+> in multi_cpu_stop() but another CPU Y has not yet entered this state.
+> So CPU X is stalling RCU but it is really because of CPU Y. Now in the
+> problem statement, you mentioned CPU Y is not holding up the grace
+> period, which means Y doesn't have any of IRQ, BH or preemption
+> disabled ; but is still somehow stalling RCU indirectly by troubling
+> X.
+> 
+> This can only happen if :
+> - CPU Y has a thread executing on it that is higher priority than CPU
+> X's stopper thread which prevents it from getting scheduled. - but the
+> CPU stopper thread (migration/..) is highest priority RT so this would
+> be some kind of an odd scheduler bug.
 
-Hi Darrick,
+I think this bug hardly can happen.
 
-On Thu, 18 Jul 2019 17:30:45 -0700 "Darrick J. Wong" <darrick.wong@oracle.c=
-om> wrote:
->
-> ... oh, this is some weird "mash all the kernel headers together and see
-> if they compile" thing, isn't it?  Um, yes, iomap.h should only be
-> tested if CONFIG_IOMAP=3Dy (which in turn requires CONFIG_BLOCK=3Dy)
+> - There is a bug in the CPU stopper machinery itself preventing it
+> from scheduling the stopper on Y. Even though Y is not holding up the
+> grace period.
 
-Actually it tries to build each header file on its own to see if it
-include all its dependencies.
+Or any thread on Y is busy with preemption/irq disabled preventing the
+stopper from being scheduled on Y.
 
---=20
-Cheers,
-Stephen Rothwell
+Or something is stuck in ttwu() to wake up the stopper on Y due to any
+scheduler locks such as pi_lock or rq->lock or something.
 
---Sig_/nX4Jeu6sxuCZYl9N82CPIAF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I think what you mentioned can happen easily.
 
------BEGIN PGP SIGNATURE-----
+Basically we would need information about preemption/irq disabled
+sections on Y and scheduler's current activity on every cpu at that time.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0xEYYACgkQAVBC80lX
-0Gwjnwf/cpxl9GjFax+XTHpFksObgF3XDfOvv7FrK++PfETXXai/cL9CmG4r0KSY
-m/s7MXlV83ONX4PmSB3LdMjMcPjYZFtuv5ZQ5LsAyupecwuJNDH7MEfH6F5pmx05
-h4DEWwQTSauxRA9GXqUGApYNrzbXcauaUMy1kWyKO95owuNdQWFS5mGq0n3jL2dN
-ClrPQuZZwPjvBRfrlJfJVe4/P8YluO5xJSGDCcFGmjiMc/zB71DoOHjWpP4ttS9J
-/9J7EiaibV7dKQz6fl0uF5HnAyi2i0aD3/HCx4drT+kbMUWiohHlmxXJLyr5BW7j
-tQAdbePufT0htEO3/XVLcm3+3PDyLg==
-=GzlS
------END PGP SIGNATURE-----
+Am I missing something?
 
---Sig_/nX4Jeu6sxuCZYl9N82CPIAF--
+> Did I get that right? Would be exciting to run the rcutorture test
+> once Paul has it available to reproduce this problem.
+
+Thanks,
+Byungchul
+
