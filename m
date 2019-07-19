@@ -2,150 +2,98 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E56CC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D09C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250062173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Moc19lNh"
+	by mail.kernel.org (Postfix) with ESMTP id 83C192173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGSIdS (ORCPT
+        id S1727132AbfGSIeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:33:18 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12640 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGSIdR (ORCPT
+        Fri, 19 Jul 2019 04:34:18 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40244 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGSIeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:33:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d31804a0000>; Fri, 19 Jul 2019 01:33:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 01:33:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 01:33:16 -0700
-Received: from [10.26.11.13] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 08:33:13 +0000
-Subject: Re: [PATCH AUTOSEL 4.14 41/60] PCI: tegra: Enable Relaxed Ordering
- only for Tegra20 & Tegra30
-To:     Sasha Levin <sashal@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-References: <20190719041109.18262-1-sashal@kernel.org>
- <20190719041109.18262-41-sashal@kernel.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <838a6940-2a37-b91b-d522-8b154f3c71d7@nvidia.com>
-Date:   Fri, 19 Jul 2019 09:33:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 04:34:17 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s145so22675367qke.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:34:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t40DO/X7sJQ9uYQ+vcbmJFxeNmL+Zvgj4hLPmtUltGU=;
+        b=op0CG5iybY/fpMCUhWemQmapw6BuruCiCswT56cyTJkYJrJWdAx6pav6oi3jJXCSBg
+         uWDrB53ViHVuxNIX8lWtOtutQ2cu5uSz4YbCXtibITcNk+MtnfOZMpsvTXoBtp+dsE5u
+         oI6RP/S5V4DolrhB6rC6gbB2QyEXoSZ681iQzraQM6AEkfCtIKFdNt9cmkztxDCioXyv
+         SZ8gsSaQuvD6HxE6LDbKPCyHhJD4Ie1BJO6HOrXmhxS0xSB+uNdr9HPL2dlID4v0mouE
+         qPmyp4JG/fugX6pvYpbopt6UGEEvq0i5u/c7yAtZ4s1QSTOscB/N64ZSo9CO+c1D0SQv
+         /r0g==
+X-Gm-Message-State: APjAAAWG9xNmA9r1cbJhDQaYcRQUB/IRBWImJinu8VmeK0qA0IOP4jdY
+        kep+D6+EPRRz89n7N0wekTFTqJGPw1NrTIatIdY=
+X-Google-Smtp-Source: APXvYqzLBYBJfvV/xjeS7wyaBBemab3RFfVOUtSyHzF7pehxyxR0cNpK6EPy9RAOht/iLf/RIFx1Owo2gClrrMbcQ4A=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr32994894qka.138.1563525256510;
+ Fri, 19 Jul 2019 01:34:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190719041109.18262-41-sashal@kernel.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563525194; bh=CwkJNwo9JGuYCI5aA8JqxIET9EXeyG9j+gpHZm57R/Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Moc19lNh5h03nmEuBY4iFSpNAAb9lFPjmBNJWY6kFQH23j7JMSDjGnzkRDnsp96bO
-         VLc3xNAPIL+qrfep3McCdqnH6vwfkGN6pPn6eJ74VKbBzx32dsGw8WV8uB6shz9IfB
-         Z/5XcHfDK7bfYdJOibXEjM8GZE0OsBO+pzLr2Vw+DGcO6nRy/ff2PgEzQa7rWJjRGL
-         fTckfVfajLlxAFwM5vS0T2kPB13gXA5kpH7TsfcVWxqCss1z8VDKznPOdyfVKFQKCj
-         W+Ttx5syfoHl5jth/0hyiilWOCRSzlgkpTloeeoM9KPdYYSWQ/Cpy9EPVBJl7BOlFR
-         2t2r07zlFsLNQ==
+References: <CGME20190718134253epcas3p32a5afece52c47aaac0cd5795ff4cf022@epcas3p3.samsung.com>
+ <20190718134240.2265724-1-arnd@arndb.de> <763005f0-fc66-51bc-fcfe-3ae4942a9c07@samsung.com>
+In-Reply-To: <763005f0-fc66-51bc-fcfe-3ae4942a9c07@samsung.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 19 Jul 2019 10:33:59 +0200
+Message-ID: <CAK8P3a2rJ1WqWZ8VtOZZ5YwFrg5bpVve_kS4utL0MjeBUzrLew@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: fix RC_CORE dependency
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?Q?Ronald_Tschal=C3=A4r?= <ronald@innovation.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+On Fri, Jul 19, 2019 at 9:01 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> On 18.07.2019 15:42, Arnd Bergmann wrote:
+> > Using 'imply' causes a new problem, as it allows the case of
+> > CONFIG_INPUT=m with RC_CORE=y, which fails to link:
+>
+>
+> I have reviewed dependencies and I wonder how such configuration is
+> possible at all.
+>
+> RC_CORE depends on INPUT (at least on today's next branch) so if INPUT=m
+> then RC_CORE should be either n either m, am I right?
 
-We have not requested that this is added to stable yet, however, has
-been picked up. Do we wish to let it soak in mainline for a release
-first? If so maybe we can ask Sasha to drop this for now.
+Right.
 
-Cheers
-Jon
+> Arnd, are there unknown to me changes in RC/INPUT dependencies?
 
-On 19/07/2019 05:10, Sasha Levin wrote:
-> From: Vidya Sagar <vidyas@nvidia.com>
-> 
-> [ Upstream commit 7be142caabc4780b13a522c485abc806de5c4114 ]
-> 
-> The PCI Tegra controller conversion to a device tree configurable
-> driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
-> to drivers/pci/host") implied that code for the driver can be
-> compiled in for a kernel supporting multiple platforms.
-> 
-> Unfortunately, a blind move of the code did not check that some of the
-> quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
-> all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
-> for both Vendor-ID and Device-ID) are now applied in all kernels that
-> compile the PCI Tegra controlled driver, DT and ACPI alike.
-> 
-> This is completely wrong, in that enablement of Relaxed Ordering is only
-> required by default in Tegra20 platforms as described in the Tegra20
-> Technical Reference Manual (available at
-> https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
-> Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
-> be enabled in its root ports to avoid deadlock in hardware) and in the
-> Tegra30 platforms for the same reasons (unfortunately not documented
-> in the TRM).
-> 
-> There is no other strict requirement on PCI devices Relaxed Ordering
-> enablement on any other Tegra platforms or PCI host bridge driver.
-> 
-> Fix this quite upsetting situation by limiting the vendor and device IDs
-> to which the Relaxed Ordering quirk applies to the root ports in
-> question, reported above.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> [lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/pci/host/pci-tegra.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> index 1987fec1f126..d2ad76ef3e83 100644
-> --- a/drivers/pci/host/pci-tegra.c
-> +++ b/drivers/pci/host/pci-tegra.c
-> @@ -607,12 +607,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
->  
-> -/* Tegra PCIE requires relaxed ordering */
-> +/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
->  static void tegra_pcie_relax_enable(struct pci_dev *dev)
->  {
->  	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
->  }
-> -DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
->  
->  static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
->  {
-> 
+I think this is 'imply' behaving oddly when we have conflicting requirements:
 
--- 
-nvpublic
+- INPUT=m forces RC_CORE to be =m or =n
+- DRM_SIL_SII8620=y asks RC_CORE to be =y unless it cannot be enabled
+
+Kconfig decided to make this RC_CORE=y, which caused the link
+failure. Making it RC_CORE=m however would not work either because
+then we'd get a link failure from the sii8620 driver to rc_core.
+
+so a pure 'imply' cannot work here, and we need a dependency, one of:
+
+a)
+   depends on INPUT || !INPUT
+   select RC_CORE if INPUT
+
+b) depends on RC_CORE || !RC_CORE
+
+b) is what othe drivers use, e.g. SMS_SDIO_DRV
+
+       Arnd
