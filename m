@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE39C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD80C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10D72189D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6698C2189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509521;
-	bh=jz7sHNyKe7PMf5YhqpKzdxcf8dmmt7SrhaGPJaDmwDw=;
+	s=default; t=1563509524;
+	bh=vL3AmHwHotQnShlqS79F0dQKm8AQqsbtutrbeGWT9OU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9MfQZYJrbBh5YPmiSTH/qXNS7R5GpXErXdFPXfQxRLERxIYnb8pchDjLX24/wu12
-	 JxkZcgNmEPtUeiGDCe+o08VsnegemmpWAq+3GVx1lD6rcfLj/oajM/ifPd/VNB3kDQ
-	 klp53HbDntPJWYI5k5eSKwHiB2Zw9gGikGGEPr3Q=
+	b=e04+5nFJU0gwNm4SNoemRCj+9gIr2SI0O0ngsAAzVCbDCI756YbDBi2NLNRChCA2I
+	 9tg0g9A0dAr9qPkWgVQv6/vMb0HzohqQOzywY//EXRBxan82Em92h6kJvRaSApbFaU
+	 wpj050PCjnmA1Mc6gVqACNjF7WPz1dQ7JBnBrsUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfGSEL7 (ORCPT
+        id S2388640AbfGSEMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731159AbfGSELy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:54 -0400
+        id S2388618AbfGSEMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 404AF2189E;
-        Fri, 19 Jul 2019 04:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC31C21872;
+        Fri, 19 Jul 2019 04:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509514;
-        bh=jz7sHNyKe7PMf5YhqpKzdxcf8dmmt7SrhaGPJaDmwDw=;
+        s=default; t=1563509519;
+        bh=vL3AmHwHotQnShlqS79F0dQKm8AQqsbtutrbeGWT9OU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YKvyE5MQKrUU+jmlEidfNQzZsH5ssoSo5VBYq1E7duANfYb2RD8jMRjgwRw3zMg+P
-         TeZ124R2CH2UJgreMB5O3RqPvWfD6QFWc6uPrEqdliOcX4UH9HTGctMSszlcu9ZZvy
-         mwadB5fM6L1wNwFlTP49ec66U9bV6uBwHfEemETA=
+        b=FBF6t+pckzIAvHHnLkw8j31Ohsglur8jztGNiAO+6/gLDQSBZGOgcoFWS0Tq+JNUc
+         X9/hYZ7aah6C9dyeHGAMrk0G6EDkBhegt2qI09Ds5dxb/tGyQuHSz5LcMyOPTM/OKu
+         Ffb9/XXcTJhm9YrXlkUraQLwbS7ixvVUVP4NBPZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 24/60] drm/msm: Depopulate platform on probe failure
-Date:   Fri, 19 Jul 2019 00:10:33 -0400
-Message-Id: <20190719041109.18262-24-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Denis Ciocca <denis.ciocca@st.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 27/60] iio: st_accel: fix iio_triggered_buffer_{pre,post}enable positions
+Date:   Fri, 19 Jul 2019 00:10:36 -0400
+Message-Id: <20190719041109.18262-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -60,60 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 4368a1539c6b41ac3cddc06f5a5117952998804c ]
+[ Upstream commit 05b8bcc96278c9ef927a6f25a98e233e55de42e1 ]
 
-add_display_components() calls of_platform_populate, and we depopluate
-on pdev remove, but not when probe fails. So if we get a probe deferral
-in one of the components, we won't depopulate the platform. This causes
-the core to keep references to devices which should be destroyed, which
-causes issues when those same devices try to re-initialize on the next
-probe attempt.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-I think this is the reason we had issues with the gmu's device-managed
-resources on deferral (worked around in commit 94e3a17f33a5).
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-Reviewed-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190617201301.133275-3-sean@poorly.run
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Acked-by: Denis Ciocca <denis.ciocca@st.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/iio/accel/st_accel_buffer.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 606df7bea97b..b970427e53a7 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1097,16 +1097,24 @@ static int msm_pdev_probe(struct platform_device *pdev)
+diff --git a/drivers/iio/accel/st_accel_buffer.c b/drivers/iio/accel/st_accel_buffer.c
+index 7fddc137e91e..802ab7d2d93f 100644
+--- a/drivers/iio/accel/st_accel_buffer.c
++++ b/drivers/iio/accel/st_accel_buffer.c
+@@ -46,17 +46,19 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
+ 		goto allocate_memory_error;
+ 	}
  
- 	ret = add_gpu_components(&pdev->dev, &match);
- 	if (ret)
--		return ret;
-+		goto fail;
+-	err = st_sensors_set_axis_enable(indio_dev,
+-					(u8)indio_dev->active_scan_mask[0]);
++	err = iio_triggered_buffer_postenable(indio_dev);
+ 	if (err < 0)
+ 		goto st_accel_buffer_postenable_error;
  
- 	/* on all devices that I am aware of, iommu's which can map
- 	 * any address the cpu can see are used:
- 	 */
- 	ret = dma_set_mask_and_coherent(&pdev->dev, ~0);
- 	if (ret)
--		return ret;
-+		goto fail;
+-	err = iio_triggered_buffer_postenable(indio_dev);
++	err = st_sensors_set_axis_enable(indio_dev,
++					(u8)indio_dev->active_scan_mask[0]);
+ 	if (err < 0)
+-		goto st_accel_buffer_postenable_error;
++		goto st_sensors_set_axis_enable_error;
+ 
+ 	return err;
+ 
++st_sensors_set_axis_enable_error:
++	iio_triggered_buffer_predisable(indio_dev);
+ st_accel_buffer_postenable_error:
+ 	kfree(adata->buffer_data);
+ allocate_memory_error:
+@@ -65,20 +67,22 @@ static int st_accel_buffer_postenable(struct iio_dev *indio_dev)
+ 
+ static int st_accel_buffer_predisable(struct iio_dev *indio_dev)
+ {
+-	int err;
++	int err, err2;
+ 	struct st_sensor_data *adata = iio_priv(indio_dev);
+ 
+-	err = iio_triggered_buffer_predisable(indio_dev);
+-	if (err < 0)
+-		goto st_accel_buffer_predisable_error;
+-
+ 	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
+ 	if (err < 0)
+ 		goto st_accel_buffer_predisable_error;
+ 
+ 	err = st_sensors_set_enable(indio_dev, false);
++	if (err < 0)
++		goto st_accel_buffer_predisable_error;
+ 
+ st_accel_buffer_predisable_error:
++	err2 = iio_triggered_buffer_predisable(indio_dev);
++	if (!err)
++		err = err2;
 +
-+	ret = component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
-+	if (ret)
-+		goto fail;
-+
-+	return 0;
- 
--	return component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
-+fail:
-+	of_platform_depopulate(&pdev->dev);
-+	return ret;
+ 	kfree(adata->buffer_data);
+ 	return err;
  }
- 
- static int msm_pdev_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
