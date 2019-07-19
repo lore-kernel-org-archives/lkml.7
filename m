@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52897C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242DDC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD15218A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAEC021850
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508819;
-	bh=NGAEa7nxCla6yeOxFjos63IrCBcidctWmzU3WpluPhM=;
+	s=default; t=1563508822;
+	bh=LQdY3nh7+3V5/CjhVYbG4HiDks5DVAZNmWucKy8b1j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnZ6IH3B3Xp+GOTSgo1ArhHRQ7X2H+1XwdlL0bL0xQCmmbrbfaEwGvw2Dq6y7/nJF
-	 CeOnqKEJptg4M864OX21VKKj9DjNqpZEL8+MNa25QsIPjGUwA3oYUzcO8gmb+ERI3Q
-	 hIw+XxySrAzPMlyWwAa6TX7Gw8bOK5p0MOd3QzKc=
+	b=HwhFuzQ35XS9XeJJeapWPQaGXNhdIhVtI2mfkkqYKxEdhQnzlchPEIF/WAUMhpwV2
+	 8MzbFkeiDwVtKop96xyhfsFEYaTYekIN+rGU7C9bnhns5/6siK1y4x3N3nIfyNoi7Q
+	 2iHPSuIXY7lyA2+F4EkeDIohn6wxbhbo+K9e4/Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfGSEAR (ORCPT
+        id S1727322AbfGSEAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfGSEAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:00:09 -0400
+        id S1727577AbfGSEAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65DD821852;
-        Fri, 19 Jul 2019 04:00:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF48321852;
+        Fri, 19 Jul 2019 04:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508809;
-        bh=NGAEa7nxCla6yeOxFjos63IrCBcidctWmzU3WpluPhM=;
+        s=default; t=1563508812;
+        bh=LQdY3nh7+3V5/CjhVYbG4HiDks5DVAZNmWucKy8b1j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXKrDihp/S1cVan7L4zfjmAgAIzXlz6fMWnxvGRTLBM8R1Dk3lWkTAvYLkcXDUbvS
-         llI5C0scOH1cTUGYr8VC+JvcJHNLtbVmDeq/2JOUHnx/UwhuPELJgHtDPXdKpzRPpa
-         9cFOvOfWe+SrDKyVuEwpMHFmr7ukTzxcgb2ssKjs=
+        b=B/aHluIowNUs7Ap4i2FNEsqdAHCAbg30lq0Nfw9O/G1zqLiZEILZnQ++EoAcauL57
+         bg2nqdHjiHzqB0pdJNQXVDAwrT2azkWOPAuV+RDohFQp0QxjXk3wa9DD7Q90V0HRgh
+         C8ZMf+Muleic1ikDAjOVUlRcENQ3bOlqEJfw5cbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.2 102/171] mm/swap: fix release_pages() when releasing devmap pages
-Date:   Thu, 18 Jul 2019 23:55:33 -0400
-Message-Id: <20190719035643.14300-102-sashal@kernel.org>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.2 104/171] f2fs: fix is_idle() check for discard type
+Date:   Thu, 18 Jul 2019 23:55:35 -0400
+Message-Id: <20190719035643.14300-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,74 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
+[ Upstream commit 56659ce838456c6f2315ce8a4bd686ac4b23e9d1 ]
 
-release_pages() is an optimized version of a loop around put_page().
-Unfortunately for devmap pages the logic is not entirely correct in
-release_pages().  This is because device pages can be more than type
-MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
-and PCI P2PDMA.  Some of these have specific needs to "put" the page while
-others do not.
+The discard thread should issue upto dpolicy->max_requests at once
+and wait for all those discard requests at once it reaches
+dpolicy->max_requests. It should then sleep for dpolicy->min_interval
+timeout before issuing the next batch of discard requests. But in the
+current code of is_idle(), it checks for dcc_info->queued_discard and
+aborts issuing the discard batch of max_requests. This
+dcc_info->queued_discard will be true always once one discard command
+is issued.
 
-This logic to handle any special needs is contained in
-put_devmap_managed_page().  Therefore all devmap pages should be processed
-by this function where we can contain the correct logic for a page put.
+It is thus resulting into this type of discard request pattern -
 
-Handle all device type pages within release_pages() by calling
-put_devmap_managed_page() on all devmap pages.  If
-put_devmap_managed_page() returns true the page has been put and we
-continue with the next page.  A false return of put_devmap_managed_page()
-means the page did not require special processing and should fall to
-"normal" processing.
+- Issue discard request#1
+- is_idle() returns false, discard thread waits for request#1 and then
+  sleeps for min_interval 50ms.
+- Issue discard request#2
+- is_idle() returns false, discard thread waits for request#2 and then
+  sleeps for min_interval 50ms.
+- and so on for all other discard requests, assuming f2fs is idle w.r.t
+  other conditions.
 
-This was found via code inspection while determining if release_pages()
-and the new put_user_pages() could be interchangeable.[1]
+With this fix, the pattern will look like this -
 
-[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
+- Issue discard request#1
+- Issue discard request#2
+  and so on upto max_requests of 8
+- Issue discard request#8
+- wait for min_interval 50ms.
 
-Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/f2fs/f2fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 7ede3eddc12a..607c48229a1d 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
- 		if (is_huge_zero_page(page))
- 			continue;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9e6721e15b24..cbdc2f88a98c 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2204,7 +2204,7 @@ static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
+ 		get_pages(sbi, F2FS_DIO_WRITE))
+ 		return false;
  
--		/* Device public page can not be huge page */
--		if (is_device_public_page(page)) {
-+		if (is_zone_device_page(page)) {
- 			if (locked_pgdat) {
- 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
- 						       flags);
- 				locked_pgdat = NULL;
- 			}
--			put_devmap_managed_page(page);
--			continue;
-+			/*
-+			 * ZONE_DEVICE pages that return 'false' from
-+			 * put_devmap_managed_page() do not require special
-+			 * processing, and instead, expect a call to
-+			 * put_page_testzero().
-+			 */
-+			if (put_devmap_managed_page(page))
-+				continue;
- 		}
+-	if (SM_I(sbi) && SM_I(sbi)->dcc_info &&
++	if (type != DISCARD_TIME && SM_I(sbi) && SM_I(sbi)->dcc_info &&
+ 			atomic_read(&SM_I(sbi)->dcc_info->queued_discard))
+ 		return false;
  
- 		page = compound_head(page);
 -- 
 2.20.1
 
