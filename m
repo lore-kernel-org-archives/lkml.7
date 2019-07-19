@@ -4,53 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DA1C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AA4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F6420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895F120873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510422;
-	bh=1W+TY8utlKR4FTo2wheU1XJ8L3jQVEgtH+OWAPkZi1o=;
+	s=default; t=1563510430;
+	bh=pvOxhDqtGcKs16GXyf+Zh5cO4EuoFT+rjdggFnEruMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUq7ov7w2kguhrFwhi7yloiSWuwvF3Zdrn4r0eOG9vOqShT2eOZtkeWOdMxxjb9La
-	 jJC8qeY7AC23VTgCo2QnhGYEtInFvO9tAWPOj/AVmUfXdvTbfkgHUZBg8cr5E0zx9X
-	 3LSLdWjxFjo80cDzl6jFxcWjZjSbD6syx4S4GnWo=
+	b=b1A0S/RbN7pC8Vk8F9FrvYKeRkSG11tcJo1yrSZbFXNYjzjXMduJ4Ai4w6EE+2Qh1
+	 fL3p/qMsJVvUjArvyTtyMv3ErAncuWn4RAk3KqgKT02l7NnerJq4U63nZVI/RbX8dz
+	 EH1QdgjXnJVhmw5i8NZJBMHnhavwnKf7q6NJ431A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbfGSE1B (ORCPT
+        id S1732602AbfGSEHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730493AbfGSEHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:07:47 -0400
+        id S1731435AbfGSEHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:07:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42F1218D0;
-        Fri, 19 Jul 2019 04:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8960D218A6;
+        Fri, 19 Jul 2019 04:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509266;
-        bh=1W+TY8utlKR4FTo2wheU1XJ8L3jQVEgtH+OWAPkZi1o=;
+        s=default; t=1563509230;
+        bh=pvOxhDqtGcKs16GXyf+Zh5cO4EuoFT+rjdggFnEruMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBs9cfxXhWnxacEw9xAa2iJk1sTWCg2pCPad8NID7TiTkD4nKEigdK56L4Lp6OvZH
-         FpCNt/tgFbf3by/dVbPdjlGSdGMtTRB21U+DpYrunkKQMIk1OKM6qnVq4zLwmORvW2
-         4w/IgyxsnlxFi0Vv4wA/kn+ZL/DK7k6Q+RJDe2s0=
+        b=lpDbOD1FF8jiD5pNWuPah1OHvPm+y67SIg49MOSyEXVDlaKXlroUILtFv5fDHBzre
+         X8YBwcqI3MalnNgdJupggdeOH+M00C0Talyr+98Jg1RO2PeHQ7Y1lszL1PlqZCAQ+m
+         HSKW8fyo27bPlLrCQbC15FXsHqIgxaJiYvBw0xGY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 006/101] tty: max310x: Fix invalid baudrate divisors calculator
-Date:   Fri, 19 Jul 2019 00:05:57 -0400
-Message-Id: <20190719040732.17285-6-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Roman Gushchin <guro@fb.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 136/141] proc: use down_read_killable mmap_sem for /proc/pid/map_files
+Date:   Fri, 19 Jul 2019 00:02:41 -0400
+Message-Id: <20190719040246.15945-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
-References: <20190719040732.17285-1-sashal@kernel.org>
+In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
+References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,112 +70,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 35240ba26a932b279a513f66fa4cabfd7af55221 ]
+[ Upstream commit cd9e2bb8271c971d9f37c722be2616c7f8ba0664 ]
 
-Current calculator doesn't do it' job quite correct. First of all the
-max310x baud-rates generator supports the divisor being less than 16.
-In this case the x2/x4 modes can be used to double or quadruple
-the reference frequency. But the current baud-rate setter function
-just filters all these modes out by the first condition and setups
-these modes only if there is a clocks-baud division remainder. The former
-doesn't seem right at all, since enabling the x2/x4 modes causes the line
-noise tolerance reduction and should be only used as a last resort to
-enable a requested too high baud-rate.
+Do not remain stuck forever if something goes wrong.  Using a killable
+lock permits cleanup of stuck tasks and simplifies investigation.
 
-Finally the fraction is supposed to be calculated from D = Fref/(c*baud)
-formulae, but not from D % 16, which causes the precision loss. So to speak
-the current baud-rate calculator code works well only if the baud perfectly
-fits to the uart reference input frequency.
+It seems ->d_revalidate() could return any error (except ECHILD) to abort
+validation and pass error as result of lookup sequence.
 
-Lets fix the calculator by implementing the algo fully compliant with
-the fractional baud-rate generator described in the datasheet:
-D = Fref / (c*baud), where c={16,8,4} is the x1/x2/x4 rate mode
-respectively, Fref - reference input frequency. The divisor fraction is
-calculated from the same formulae, but making sure it is found with a
-resolution of 0.0625 (four bits).
-
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[akpm@linux-foundation.org: fix proc_map_files_lookup() return value, per Andrei]
+Link: http://lkml.kernel.org/r/156007493995.3335.9595044802115356911.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 51 ++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
+ fs/proc/base.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index 38c48a02b920..bd3e6cf81af5 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -491,37 +491,48 @@ static bool max310x_reg_precious(struct device *dev, unsigned int reg)
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 0c9bef89ac43..0325906aec27 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1967,9 +1967,12 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 		goto out;
  
- static int max310x_set_baud(struct uart_port *port, int baud)
- {
--	unsigned int mode = 0, clk = port->uartclk, div = clk / baud;
-+	unsigned int mode = 0, div = 0, frac = 0, c = 0, F = 0;
- 
--	/* Check for minimal value for divider */
--	if (div < 16)
--		div = 16;
--
--	if (clk % baud && (div / 16) < 0x8000) {
-+	/*
-+	 * Calculate the integer divisor first. Select a proper mode
-+	 * in case if the requested baud is too high for the pre-defined
-+	 * clocks frequency.
-+	 */
-+	div = port->uartclk / baud;
-+	if (div < 8) {
-+		/* Mode x4 */
-+		c = 4;
-+		mode = MAX310X_BRGCFG_4XMODE_BIT;
-+	} else if (div < 16) {
- 		/* Mode x2 */
-+		c = 8;
- 		mode = MAX310X_BRGCFG_2XMODE_BIT;
--		clk = port->uartclk * 2;
--		div = clk / baud;
--
--		if (clk % baud && (div / 16) < 0x8000) {
--			/* Mode x4 */
--			mode = MAX310X_BRGCFG_4XMODE_BIT;
--			clk = port->uartclk * 4;
--			div = clk / baud;
--		}
-+	} else {
-+		c = 16;
+ 	if (!dname_to_vma_addr(dentry, &vm_start, &vm_end)) {
+-		down_read(&mm->mmap_sem);
+-		exact_vma_exists = !!find_exact_vma(mm, vm_start, vm_end);
+-		up_read(&mm->mmap_sem);
++		status = down_read_killable(&mm->mmap_sem);
++		if (!status) {
++			exact_vma_exists = !!find_exact_vma(mm, vm_start,
++							    vm_end);
++			up_read(&mm->mmap_sem);
++		}
  	}
  
--	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, (div / 16) >> 8);
--	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div / 16);
--	max310x_port_write(port, MAX310X_BRGCFG_REG, (div % 16) | mode);
-+	/* Calculate the divisor in accordance with the fraction coefficient */
-+	div /= c;
-+	F = c*baud;
+ 	mmput(mm);
+@@ -2015,8 +2018,11 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
+ 	if (rc)
+ 		goto out_mmput;
+ 
++	rc = down_read_killable(&mm->mmap_sem);
++	if (rc)
++		goto out_mmput;
 +
-+	/* Calculate the baud rate fraction */
-+	if (div > 0)
-+		frac = (16*(port->uartclk % F)) / F;
-+	else
-+		div = 1;
+ 	rc = -ENOENT;
+-	down_read(&mm->mmap_sem);
+ 	vma = find_exact_vma(mm, vm_start, vm_end);
+ 	if (vma && vma->vm_file) {
+ 		*path = vma->vm_file->f_path;
+@@ -2112,7 +2118,11 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
+ 	if (!mm)
+ 		goto out_put_task;
+ 
+-	down_read(&mm->mmap_sem);
++	result = ERR_PTR(-EINTR);
++	if (down_read_killable(&mm->mmap_sem))
++		goto out_put_mm;
 +
-+	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, div >> 8);
-+	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div);
-+	max310x_port_write(port, MAX310X_BRGCFG_REG, frac | mode);
++	result = ERR_PTR(-ENOENT);
+ 	vma = find_exact_vma(mm, vm_start, vm_end);
+ 	if (!vma)
+ 		goto out_no_vma;
+@@ -2123,6 +2133,7 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
  
--	return DIV_ROUND_CLOSEST(clk, div);
-+	/* Return the actual baud rate we just programmed */
-+	return (16*port->uartclk) / (c*(16*div + frac));
- }
+ out_no_vma:
+ 	up_read(&mm->mmap_sem);
++out_put_mm:
+ 	mmput(mm);
+ out_put_task:
+ 	put_task_struct(task);
+@@ -2165,7 +2176,12 @@ proc_map_files_readdir(struct file *file, struct dir_context *ctx)
+ 	mm = get_task_mm(task);
+ 	if (!mm)
+ 		goto out_put_task;
+-	down_read(&mm->mmap_sem);
++
++	ret = down_read_killable(&mm->mmap_sem);
++	if (ret) {
++		mmput(mm);
++		goto out_put_task;
++	}
  
- static int max310x_update_best_err(unsigned long f, long *besterr)
- {
- 	/* Use baudrate 115200 for calculate error */
--	long err = f % (115200 * 16);
-+	long err = f % (460800 * 16);
+ 	nr_files = 0;
  
- 	if ((*besterr < 0) || (*besterr > err)) {
- 		*besterr = err;
 -- 
 2.20.1
 
