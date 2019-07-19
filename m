@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFA0C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA65AC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3226A2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53422082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510000;
-	bh=uDexvjbjNcUsM9NywNHmASlS28zuNCaffm46xWjs7TI=;
+	s=default; t=1563510002;
+	bh=5objRnYHCmulPFW07H0iD2s+QME+63EI23t7tqFFspE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XKHR39CD/0U3xT1qsA7DOg5CxKRy1le5xUgK6oDDTd8IadUrw7Z9wDZ/O/LrGMlar
-	 CxrGPP177iPCRDfykDT/2p6jS2Y978YCFIx2imtvUX8IMSxiEK07fe39KMkWy/8k/O
-	 +jFkmXIb1C5/+uHLXui3wc07c83jKW3NoQvpHpmA=
+	b=wPUy/UGNEbRPyvTbPDt/WXNT8Kf1g6XJv+uxNZXQ9ojj0HlxLOm1r94ayIV6YbrEs
+	 lAmJkA1jjEUXcyBysbcUDwkciw909KTY1bBzgOcTpCwU3WvsmvtlM7gxG9Jvifz2Sr
+	 1TKeMnVSe2V+xqZyFqkuHhB/Ovxtb0rRqmcnc+0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388953AbfGSET6 (ORCPT
+        id S2388985AbfGSEMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48394 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388223AbfGSEMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:51 -0400
+        id S1731043AbfGSEMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6606218D4;
-        Fri, 19 Jul 2019 04:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD65E218D9;
+        Fri, 19 Jul 2019 04:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509571;
-        bh=uDexvjbjNcUsM9NywNHmASlS28zuNCaffm46xWjs7TI=;
+        s=default; t=1563509562;
+        bh=5objRnYHCmulPFW07H0iD2s+QME+63EI23t7tqFFspE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwqaWFunhKPQ3e0s8ZO3L6qZA9fAzBSVtjOfa097Fe0xDhHObC7RInnYeEyDHIbLZ
-         zZ+zaudYbNbDvzsSyG9C6eHK6H/UmOidPZTVPMWmX7LD4Ufhp7zNSznBsVYjyotpHe
-         NkJ8mg7WXSmlfu4Z4UUJx4LsjsDvrIyMxDIXu4FM=
+        b=OE5tx/zNrXz+LzwRtU6UW0pTALVsl2TvZ2i/laUtcJcOsBumuHg09A+YkxvbBO6Fe
+         PXC1ZO4PlvRICuKUT7Xtzms6H/g87j33Z1QDz5/A9+4hVCqG2eYyXRMYdqsvtMplud
+         G3uUH0sLtXSG8VRrTwYBopH0TwDwXtyOYG6g6aVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 54/60] sh: prevent warnings when using iounmap
-Date:   Fri, 19 Jul 2019 00:11:03 -0400
-Message-Id: <20190719041109.18262-54-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 48/60] powerpc/boot: add {get, put}_unaligned_be32 to xz_config.h
+Date:   Fri, 19 Jul 2019 00:10:57 -0400
+Message-Id: <20190719041109.18262-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -67,62 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
+[ Upstream commit 9e005b761e7ad153dcf40a6cba1d681fe0830ac6 ]
 
-When building drm/exynos for sh, as part of an allmodconfig build, the
-following warning triggered:
+The next commit will make the way of passing CONFIG options more robust.
+Unfortunately, it would uncover another hidden issue; without this
+commit, skiroot_defconfig would be broken like this:
 
-  exynos7_drm_decon.c: In function `decon_remove':
-  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
-    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
+|   WRAP    arch/powerpc/boot/zImage.pseries
+| arch/powerpc/boot/wrapper.a(decompress.o): In function `bcj_powerpc.isra.10':
+| decompress.c:(.text+0x720): undefined reference to `get_unaligned_be32'
+| decompress.c:(.text+0x7a8): undefined reference to `put_unaligned_be32'
+| make[1]: *** [arch/powerpc/boot/Makefile;383: arch/powerpc/boot/zImage.pseries] Error 1
+| make: *** [arch/powerpc/Makefile;295: zImage] Error 2
 
-The ctx variable is only used as argument to iounmap().
+skiroot_defconfig is the only defconfig that enables CONFIG_KERNEL_XZ
+for ppc, which has never been correctly built before.
 
-In sh - allmodconfig CONFIG_MMU is not defined
-so it ended up in:
+I figured out the root cause in lib/decompress_unxz.c:
 
-\#define __iounmap(addr)	do { } while (0)
-\#define iounmap		__iounmap
+| #ifdef CONFIG_PPC
+| #      define XZ_DEC_POWERPC
+| #endif
 
-Fix the warning by introducing a static inline function for iounmap.
+CONFIG_PPC is undefined here in the ppc bootwrapper because autoconf.h
+is not included except by arch/powerpc/boot/serial.c
 
-This is similar to several other architectures.
+XZ_DEC_POWERPC is not defined, therefore, bcj_powerpc() is not compiled
+for the bootwrapper.
 
-Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Inki Dae <inki.dae@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+With the next commit passing CONFIG_PPC correctly, we would realize that
+{get,put}_unaligned_be32 was missing.
+
+Unlike the other decompressors, the ppc bootwrapper duplicates all the
+necessary helpers in arch/powerpc/boot/.
+
+The other architectures define __KERNEL__ and pull in helpers for
+building the decompressors.
+
+If ppc bootwrapper had defined __KERNEL__, lib/xz/xz_private.h would
+have included <asm/unaligned.h>:
+
+| #ifdef __KERNEL__
+| #       include <linux/xz.h>
+| #       include <linux/kernel.h>
+| #       include <asm/unaligned.h>
+
+However, doing so would cause tons of definition conflicts since the
+bootwrapper has duplicated everything.
+
+I just added copies of {get,put}_unaligned_be32, following the
+bootwrapper coding convention.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190705100144.28785-1-yamada.masahiro@socionext.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/asm/io.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/boot/xz_config.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 98cb8c802b1a..0ae60d680000 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -371,7 +371,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+diff --git a/arch/powerpc/boot/xz_config.h b/arch/powerpc/boot/xz_config.h
+index e22e5b3770dd..ebfadd39e192 100644
+--- a/arch/powerpc/boot/xz_config.h
++++ b/arch/powerpc/boot/xz_config.h
+@@ -20,10 +20,30 @@ static inline uint32_t swab32p(void *p)
  
- #define ioremap_nocache	ioremap
- #define ioremap_uc	ioremap
--#define iounmap		__iounmap
-+
-+static inline void iounmap(void __iomem *addr)
+ #ifdef __LITTLE_ENDIAN__
+ #define get_le32(p) (*((uint32_t *) (p)))
++#define cpu_to_be32(x) swab32(x)
++static inline u32 be32_to_cpup(const u32 *p)
 +{
-+	__iounmap(addr);
++	return swab32p((u32 *)p);
 +}
+ #else
+ #define get_le32(p) swab32p(p)
++#define cpu_to_be32(x) (x)
++static inline u32 be32_to_cpup(const u32 *p)
++{
++	return *p;
++}
+ #endif
  
- /*
-  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
++static inline uint32_t get_unaligned_be32(const void *p)
++{
++	return be32_to_cpup(p);
++}
++
++static inline void put_unaligned_be32(u32 val, void *p)
++{
++	*((u32 *)p) = cpu_to_be32(val);
++}
++
+ #define memeq(a, b, size) (memcmp(a, b, size) == 0)
+ #define memzero(buf, size) memset(buf, 0, size)
+ 
 -- 
 2.20.1
 
