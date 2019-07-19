@@ -2,174 +2,130 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28144C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8D0C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D032184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E85521849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:04:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="f8l16urF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/bj0S4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfGSMCe (ORCPT
+        id S1728193AbfGSMEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 08:02:34 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:58976 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfGSMCe (ORCPT
+        Fri, 19 Jul 2019 08:04:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46816 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfGSMET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 08:02:34 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: hhSV7vdT/xgJZPhGXy0G9V7ZGej3qs4f36g0OTva6tWKDgq21ZLikgcGiaG3YNP0i2MqnvCZ7u
- 4ny+vyQA2Ygy5AgUHNMhHURqYQap12nwJjqXO/LxOp0f/BYvGdFRRbtL85bceV0JFjQ7t+gtFt
- yEAHQnCv28gY/qJKsM7ELB2vs/xfZuOX3ZJKWpdvrb3qNtAwxHwerAjZyXmwnHsnv7B8NYp8fY
- /TCcuwAgYWbFp5s3rzzq6Di3NhzJLLZuD8GCVzhxrjF4uTL+YCH5ijFWt99rUTOw2WicUBi8Y7
- aIQ=
-X-IronPort-AV: E=Sophos;i="5.64,282,1559545200"; 
-   d="scan'208";a="38940474"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jul 2019 05:02:32 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 19 Jul 2019 05:02:28 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 19 Jul 2019 05:02:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Se9fsUH9xmiGFQB03qMb71NGcjI1BoDGwgI0BZOiNVFGqAF7jYLGuFumJdJkWq6rXkOqP0PQOf0OUQO0p+grsWaS1wVVBBH5ZGKNIIuOS8BnGsWCIFLbHP5Xpir3Q8tKXdHzfWa9pKH5sordFHTN1tTi7OEeAHRNFFBCRinbx0F0rM2G/OOUzX7BHYnZUKPiUMA17LgI+QDdenH0uOVGw0ag6lFGMrZ/PqIwegjgySxgmtD4AeU9H3MqjtF90Y/Ejr0x8gteVhv6ZbKJiTEPpf61Gmvq0nj99Mks/vwC8lq7m9L2t8C4qkFbueYi4VSY3UsrtNPfi2LwErIkGOUtYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FLgSdNheLBYoV3cZmJMyKa3Av1xxH32HlakjFSalh+Q=;
- b=H6vJvNXTabgcUvtdDLAzlyFea16pkIlj7rCggnLkH5iH9//SWMVlFlqYEzSKXyvODCfEdrAMzxQ8j4Y2o5XzPGO+OxueZRb9IOC/3GKHoOi7vdC4739At2lDzpPCUa2Lt7jZD+2Q3d/+DuQNa9UgJb0jYoeVA/PwqCdqmUcM5zORiZ0cboDBr1Shc2B2naod1LmUZkyHB2RdrqvbemaN+5iBs962K4RZLdkciJQv26HEI917+uyqgl09cz7GvmQGIDeY5gm6VMBLWAkx4/+NnyNS6Xv62u5ql0AM4RG0C8iDWGj/fMn7E6huVfAvbVII8zBLcPB2h4jCPbh99539fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microchip.com;dmarc=pass action=none
- header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
+        Fri, 19 Jul 2019 08:04:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so31986337wru.13;
+        Fri, 19 Jul 2019 05:04:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FLgSdNheLBYoV3cZmJMyKa3Av1xxH32HlakjFSalh+Q=;
- b=f8l16urF7kdiqKR2LnuAIel4q7+JWlo0Mhaz26eOhABceCex/Q5aB93RZYwJIdosN5AbP5A0Z9WWliGlQWAFfzqtA3skFy/Q+BzuHtIEMi7UeYZ2UCG7f7rWdhuYAPo9OoHYfGuQcCJKZXxzKqrqtSetw5pY+Qm+CkQll0V/TIM=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1998.namprd11.prod.outlook.com (10.169.231.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.12; Fri, 19 Jul 2019 12:02:27 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::558b:94f:fdae:3af6]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::558b:94f:fdae:3af6%8]) with mapi id 15.20.2094.011; Fri, 19 Jul 2019
- 12:02:27 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <yash.shah@sifive.com>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <paul.walmsley@sifive.com>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <palmer@sifive.com>,
-        <aou@eecs.berkeley.edu>, <ynezz@true.cz>, <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH 1/3] macb: bindings doc: update sifive fu540-c000 binding
-Thread-Topic: [PATCH 1/3] macb: bindings doc: update sifive fu540-c000 binding
-Thread-Index: AQHVPiK7bneqVw6vtU6/SDl9i+uEO6bR11wA
-Date:   Fri, 19 Jul 2019 12:02:27 +0000
-Message-ID: <443fd93a-ff6f-1641-89ec-f35f39de3688@microchip.com>
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR04CA0028.namprd04.prod.outlook.com
- (2603:10b6:a03:40::41) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5af331b2-9e24-4250-dc59-08d70c40f7e3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1998;
-x-ms-traffictypediagnostic: MWHPR11MB1998:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MWHPR11MB1998F508E9F3E3DC04A229BAE0CB0@MWHPR11MB1998.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(136003)(376002)(346002)(199004)(189003)(256004)(316002)(186003)(7736002)(305945005)(110136005)(486006)(52116002)(76176011)(99286004)(68736007)(2201001)(36756003)(229853002)(7416002)(25786009)(54906003)(2501003)(102836004)(26005)(31686004)(6116002)(3846002)(6506007)(53546011)(6436002)(6486002)(386003)(476003)(11346002)(86362001)(2616005)(14454004)(446003)(6306002)(6512007)(64756008)(66476007)(66556008)(66946007)(4326008)(2906002)(478600001)(81166006)(966005)(8936002)(81156014)(71200400001)(8676002)(71190400001)(5660300002)(31696002)(6246003)(66066001)(53936002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1998;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NpnGsfApiMFCuWUxAJRkfcAmIm0cArJDy61GtovnqPBqI45wdayHfIcWA7fIKLX5W9sLp/bwZobZCF9EaTI1nBhBHOB2pvdBgmuWv00wOpz0/EDjBcMVGI4qj5VcVopHvOGIgoxLOf5KmDrJ+VZ/JTzEoNnUkQFDjbRK3scVRVIaApJblUXs9hPyo0Vvj89lGlfa4bF/SM3nHdaNNkBG3SZCvy7+kd1gQND9yq8LfSOeKKS22VxsTaPXxRIX5hRF4/p5QbZVXhunjKEfu8kDJxSLCpJOnt3aoFDlVnfRG7SC4RjT/PSTUtZCdwLq3t+I6++IYI1yHiT+vPpWk6o/MGWY38Rh5E/jcfEld/z5uxuWsnJQdWuOJR4cWxmAATsEId8kqzWbyfELGKjsZQ+jZbsByk+orVczJahn4SlrgEk=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <165F3368D1BE9941BA62F18B715B2CA7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d8IFcivDoTqK2Ev9EUILZscktm0lR7SvblA9hq9LNWg=;
+        b=j/bj0S4PAnoMQzdMr/jqG6zHX3uvlVV4jQWKFchLU2VUyGh6TOQ7NZK/qEEv9WMMMt
+         mFolvVmLLT0Tiu04cvEdBVhpHbv2VKKvtzHbVl0jAexSvVIjQgXRMo6dz4pl9JlRQAgC
+         Kz91969RlF85z7Hidel82qDRb6mdahXnAcvckGD6nMBOWfK5bMRuk30/I1EjocxaJlbe
+         MwKxdqEHN5Mbpo+Fx5Xh00dnlS+f8GT18YRQo39Zd9NIFOqWadxyLySllGPcRsuS4nVG
+         s28HKmZw7xMGb8K9Om2DN+nsp54I1cnKsJets1anYAbfvCATzz89M8sEf0sFSneJzAzE
+         cZdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d8IFcivDoTqK2Ev9EUILZscktm0lR7SvblA9hq9LNWg=;
+        b=RBtDhNFvWfGueYUEFMQPwz9a8joLwCbFpCkSx98hnRUOj7RaS/zWvxPKTt0ZM1zFHd
+         QZDut12T+a1NWBpEqnY5EWNfWDbCQbxlUqBpGYj03HDHQHuI1TR8AbV9Rv4eV8RSTH/7
+         4xtHUI9dIDqS8ZZCrGWqO/ZOdT4aaz3khuT1ngsWxmz/ULICcoHbO0sycxz+cvrJa7/b
+         RBf+0fy2yRRJjFKvmXhj49eymH+ZiId95Icmfc2O0TbmFJSrHLvOvkPs6gBUZiD3NBTx
+         O1IhTjxSxHTtAhleX3lyf5pWbr55WzNQtD4oWyjEI0LYQs7hSXYyuL7VQdeK9DehSFWE
+         8CYw==
+X-Gm-Message-State: APjAAAXqRWgM3gBesBCJcvJbhRYlXJx6bD3GluiEs16s/R/jQNoK5yAM
+        D+cQC+ylVkonXZ4dcBH7Cq/Ep+eYKwIYy250tBnZHy8mIUg=
+X-Google-Smtp-Source: APXvYqwBxjlxJegOY2UTKf4DLSgACoj1+MUtFGTXOMcJBBbqQCcN6MmCZg9QAv307R1lFOoMUph5BNq9+6hcKREQlao=
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr58332007wrs.93.1563537857525;
+ Fri, 19 Jul 2019 05:04:17 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5af331b2-9e24-4250-dc59-08d70c40f7e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 12:02:27.4321
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1998
+References: <20190719104802.18070-1-andradanciu1997@gmail.com>
+ <20190719104802.18070-2-andradanciu1997@gmail.com> <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+In-Reply-To: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Fri, 19 Jul 2019 15:04:05 +0300
+Message-ID: <CAEnQRZByhULeq14BLbH4JzJwgL2+5hUaPn8=osZqVWrEMpCN6g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
+ the PICO-PI-IMX8M
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     andradanciu1997 <andradanciu1997@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Ping Bai <ping.bai@nxp.com>,
+        =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>,
+        Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Richard Hu <richard.hu@technexion.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/07/2019 at 13:10, Yash Shah wrote:
-> As per the discussion with Nicolas Ferre, rename the compatible property
-> to a more appropriate and specific string.
-> LINK: https://lkml.org/lkml/2019/7/17/200
->=20
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+On Fri, Jul 19, 2019 at 2:22 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Andra,
+>
+> On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
+> <andradanciu1997@gmail.com> wrote:
+>
+> > +       pmic: pmic@4b {
+> > +               reg = <0x4b>;
+> > +               compatible = "rohm,bd71837";
+> > +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_pmic>;
+> > +               clocks = <&pmic_osc>;
+> > +               clock-names = "osc";
+> > +               clock-output-names = "pmic_clk";
+> > +               interrupt-parent = <&gpio1>;
+> > +               interrupts = <3 GPIO_ACTIVE_LOW>;
+> > +               interrupt-names = "irq";
+> > +
+> > +               regulators {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+>
+> #address-cells and  #size-cells are not needed and they cause warnings with W=1:
+>
+>   DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
+> arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
+> (avoid_unnecessary_addr_size):
+> /soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
+> #address-cells/#size-cells without "ranges" or child "reg" property
+>
+> Please remove them.
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Thanks Fabio for review, we learned something new today :).
 
-> ---
->   Documentation/devicetree/bindings/net/macb.txt | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentati=
-on/devicetree/bindings/net/macb.txt
-> index 63c73fa..0b61a90 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -15,10 +15,10 @@ Required properties:
->     Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel sa=
-ma5d4 SoCs.
->     Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
->     Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
-> -  Use "sifive,fu540-macb" for SiFive FU540-C000 SoC.
-> +  Use "sifive,fu540-c000-gem" for SiFive FU540-C000 SoC.
->     Or the generic form: "cdns,emac".
->   - reg: Address and length of the register set for the device
-> -	For "sifive,fu540-macb", second range is required to specify the
-> +	For "sifive,fu540-c000-gem", second range is required to specify the
->   	address and length of the registers for GEMGXL Management block.
->   - interrupts: Should contain macb interrupt
->   - phy-mode: See ethernet.txt file in the same directory.
->=20
-
-
---=20
-Nicolas Ferre
+Daniel.
