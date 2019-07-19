@@ -2,320 +2,248 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C69C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2690C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72B32184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:22:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DLyAkFoU"
+	by mail.kernel.org (Postfix) with ESMTP id 78C9720880
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfGSJV7 (ORCPT
+        id S1726354AbfGSJ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 05:21:59 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41113 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfGSJV7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 05:21:59 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p15so33853926eds.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 02:21:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t6Vr53TBuqQPSOZiTakSkRzPl1CvH4APrgjyKpN8jxU=;
-        b=DLyAkFoUEqSlHcyZ/PDvKIT+W0+GcBI470U9pgBbem6e3boYprAsOb5Q+/v6yspukQ
-         HiE0fGIbpDWwazpRCGAFBuN6FKKfo9kjm8+eOfs+CcFtiDgLLaNVwDoASZtjq24cPSyN
-         uflchF6cVKA88pnLRNd5FtcnQVrSHfksdN/WY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=t6Vr53TBuqQPSOZiTakSkRzPl1CvH4APrgjyKpN8jxU=;
-        b=LmBPUTYFXNQhmNTr4MvlAhrVvsir0kbpnqP0vExYrN3wr/86GFMepIZGjsm++HBx9+
-         JGfP4JntX/L3n9xnhxz83RJAdHjdWVnubWJ3pldhEbnYFWcfkf4vVbN7f4BEK2BTZtrJ
-         1SW2TOqW6AXB9UxXP+M/oBoGBB/BeHOiNg2sevnSolrCH4MJHwe8yBD33e2m/rS1mXS7
-         oq8Bz8JPs8K2vdlGyuoqvvKIHj4XGVvYfsmKPaTh9H0+r5+62eH0/odfremJrdSYcgkE
-         7JOxL6NxLqJBhE5RDi7C4u9Gyhc+boJdVWdlb37hOu/qs5lnEKkza+YyYl9HYp+exA4Y
-         w+wg==
-X-Gm-Message-State: APjAAAUJjuyV9+7zfgG6CEtsincfApRpPJfJAz47zgNhad+OFC6K6jxp
-        /ky+VTRnYCswJ3Blov68Wng=
-X-Google-Smtp-Source: APXvYqy+JmFMnnKNpkwpu7j/tXbUYLoOqitanwUsQzcawAcHzXt4P9DZ1CP9Gi1i6oivLhqNMrXLvw==
-X-Received: by 2002:a17:906:d052:: with SMTP id bo18mr34785968ejb.311.1563528116453;
-        Fri, 19 Jul 2019 02:21:56 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j7sm8697661eda.97.2019.07.19.02.21.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 02:21:55 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 11:21:53 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Eric Anholt <eric@anholt.net>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Imre Deak <imre.deak@intel.com>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        Eric Biggers <ebiggers@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/vgem: fix cache synchronization on arm/arm64
-Message-ID: <20190719092153.GJ15868@phenom.ffwll.local>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Eric Anholt <eric@anholt.net>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Imre Deak <imre.deak@intel.com>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        Eric Biggers <ebiggers@google.com>, linux-kernel@vger.kernel.org
-References: <20190717211542.30482-1-robdclark@gmail.com>
+        Fri, 19 Jul 2019 05:27:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41901 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfGSJ1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 05:27:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 02:27:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="scan'208";a="179575053"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 19 Jul 2019 02:27:18 -0700
+Cc:     baolu.lu@linux.intel.com, Dmitry Safonov <0x7f454c46@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] iommu/vt-d: Don't queue_iova() if there is no flush
+ queue
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+References: <20190716213806.20456-1-dima@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <d22175ca-817a-fa20-cd23-9f8a5ea9b642@linux.intel.com>
+Date:   Fri, 19 Jul 2019 17:26:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717211542.30482-1-robdclark@gmail.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716213806.20456-1-dima@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 02:15:37PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+Hi,
+
+On 7/17/19 5:38 AM, Dmitry Safonov wrote:
+> Intel VT-d driver was reworked to use common deferred flushing
+> implementation. Previously there was one global per-cpu flush queue,
+> afterwards - one per domain.
 > 
-> drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
-> dma_sync API.
+> Before deferring a flush, the queue should be allocated and initialized.
 > 
-> Fixes failures w/ vgem_test.
+> Currently only domains with IOMMU_DOMAIN_DMA type initialize their flush
+> queue. It's probably worth to init it for static or unmanaged domains
+> too, but it may be arguable - I'm leaving it to iommu folks.
+
+We will submit per-device dma ops soon. Then we don't need to call
+intel_unmap() for the identity (static) domain. For unmanaged domains,
+the map/unmap happen only during VM startup/shutdown, I am not sure
+whether it's worth a flush queue.
+
+This fix looks good to me anyway. We should always avoid deferring a
+flush if there's no flush queue there.
+
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+Baolu
+
 > 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Prevent queuing an iova flush if the domain doesn't have a queue.
+> The defensive check seems to be worth to keep even if queue would be
+> initialized for all kinds of domains. And is easy backportable.
+> 
+> On 4.19.43 stable kernel it has a user-visible effect: previously for
+> devices in si domain there were crashes, on sata devices:
+> 
+>   BUG: spinlock bad magic on CPU#6, swapper/0/1
+>    lock: 0xffff88844f582008, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+>   CPU: 6 PID: 1 Comm: swapper/0 Not tainted 4.19.43 #1
+>   Call Trace:
+>    <IRQ>
+>    dump_stack+0x61/0x7e
+>    spin_bug+0x9d/0xa3
+>    do_raw_spin_lock+0x22/0x8e
+>    _raw_spin_lock_irqsave+0x32/0x3a
+>    queue_iova+0x45/0x115
+>    intel_unmap+0x107/0x113
+>    intel_unmap_sg+0x6b/0x76
+>    __ata_qc_complete+0x7f/0x103
+>    ata_qc_complete+0x9b/0x26a
+>    ata_qc_complete_multiple+0xd0/0xe3
+>    ahci_handle_port_interrupt+0x3ee/0x48a
+>    ahci_handle_port_intr+0x73/0xa9
+>    ahci_single_level_irq_intr+0x40/0x60
+>    __handle_irq_event_percpu+0x7f/0x19a
+>    handle_irq_event_percpu+0x32/0x72
+>    handle_irq_event+0x38/0x56
+>    handle_edge_irq+0x102/0x121
+>    handle_irq+0x147/0x15c
+>    do_IRQ+0x66/0xf2
+>    common_interrupt+0xf/0xf
+>   RIP: 0010:__do_softirq+0x8c/0x2df
+> 
+> The same for usb devices that use ehci-pci:
+>   BUG: spinlock bad magic on CPU#0, swapper/0/1
+>    lock: 0xffff88844f402008, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+>   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.19.43 #4
+>   Call Trace:
+>    <IRQ>
+>    dump_stack+0x61/0x7e
+>    spin_bug+0x9d/0xa3
+>    do_raw_spin_lock+0x22/0x8e
+>    _raw_spin_lock_irqsave+0x32/0x3a
+>    queue_iova+0x77/0x145
+>    intel_unmap+0x107/0x113
+>    intel_unmap_page+0xe/0x10
+>    usb_hcd_unmap_urb_setup_for_dma+0x53/0x9d
+>    usb_hcd_unmap_urb_for_dma+0x17/0x100
+>    unmap_urb_for_dma+0x22/0x24
+>    __usb_hcd_giveback_urb+0x51/0xc3
+>    usb_giveback_urb_bh+0x97/0xde
+>    tasklet_action_common.isra.4+0x5f/0xa1
+>    tasklet_action+0x2d/0x30
+>    __do_softirq+0x138/0x2df
+>    irq_exit+0x7d/0x8b
+>    smp_apic_timer_interrupt+0x10f/0x151
+>    apic_timer_interrupt+0xf/0x20
+>    </IRQ>
+>   RIP: 0010:_raw_spin_unlock_irqrestore+0x17/0x39
+> 
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Cc: iommu@lists.linux-foundation.org
+> Cc: <stable@vger.kernel.org> # 4.14+
+> Fixes: 13cf01744608 ("iommu/vt-d: Make use of iova deferred flushing")
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 > ---
-> An alternative approach to the series[1] I sent yesterday
+>   drivers/iommu/intel-iommu.c |  3 ++-
+>   drivers/iommu/iova.c        | 18 ++++++++++++++----
+>   include/linux/iova.h        |  6 ++++++
+>   3 files changed, 22 insertions(+), 5 deletions(-)
 > 
-> On the plus side, it keeps the WC buffers and avoids any drm core
-> changes.  On the minus side, I don't think it will work (at least
-> on arm64) prior to v5.0[2], so the fix can't be backported very
-> far.
-
-Yeah seems a lot more reasonable.
-
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> [1] https://patchwork.freedesktop.org/series/63771/
-> [2] depends on 356da6d0cde3323236977fce54c1f9612a742036
-> 
->  drivers/gpu/drm/vgem/vgem_drv.c | 130 ++++++++++++++++++++------------
->  1 file changed, 83 insertions(+), 47 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-> index 76d95b5e289c..6c9b5e20b3d4 100644
-> --- a/drivers/gpu/drm/vgem/vgem_drv.c
-> +++ b/drivers/gpu/drm/vgem/vgem_drv.c
-> @@ -47,10 +47,16 @@ static struct vgem_device {
->  	struct platform_device *platform;
->  } *vgem_device;
->  
-> +static void sync_and_unpin(struct drm_vgem_gem_object *bo);
-> +static struct page **pin_and_sync(struct drm_vgem_gem_object *bo);
-> +
->  static void vgem_gem_free_object(struct drm_gem_object *obj)
->  {
->  	struct drm_vgem_gem_object *vgem_obj = to_vgem_bo(obj);
->  
-> +	if (!obj->import_attach)
-> +		sync_and_unpin(vgem_obj);
-> +
->  	kvfree(vgem_obj->pages);
->  	mutex_destroy(&vgem_obj->pages_lock);
->  
-> @@ -78,40 +84,15 @@ static vm_fault_t vgem_gem_fault(struct vm_fault *vmf)
->  		return VM_FAULT_SIGBUS;
->  
->  	mutex_lock(&obj->pages_lock);
-> +	if (!obj->pages)
-> +		pin_and_sync(obj);
->  	if (obj->pages) {
->  		get_page(obj->pages[page_offset]);
->  		vmf->page = obj->pages[page_offset];
->  		ret = 0;
->  	}
->  	mutex_unlock(&obj->pages_lock);
-> -	if (ret) {
-> -		struct page *page;
-> -
-> -		page = shmem_read_mapping_page(
-> -					file_inode(obj->base.filp)->i_mapping,
-> -					page_offset);
-> -		if (!IS_ERR(page)) {
-> -			vmf->page = page;
-> -			ret = 0;
-> -		} else switch (PTR_ERR(page)) {
-> -			case -ENOSPC:
-> -			case -ENOMEM:
-> -				ret = VM_FAULT_OOM;
-> -				break;
-> -			case -EBUSY:
-> -				ret = VM_FAULT_RETRY;
-> -				break;
-> -			case -EFAULT:
-> -			case -EINVAL:
-> -				ret = VM_FAULT_SIGBUS;
-> -				break;
-> -			default:
-> -				WARN_ON(PTR_ERR(page));
-> -				ret = VM_FAULT_SIGBUS;
-> -				break;
-> -		}
->  
-> -	}
->  	return ret;
->  }
->  
-> @@ -277,32 +258,93 @@ static const struct file_operations vgem_driver_fops = {
->  	.release	= drm_release,
->  };
->  
-> -static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
-> +/* Called under pages_lock, except in free path (where it can't race): */
-> +static void sync_and_unpin(struct drm_vgem_gem_object *bo)
->  {
-> -	mutex_lock(&bo->pages_lock);
-> -	if (bo->pages_pin_count++ == 0) {
-> -		struct page **pages;
-> +	struct drm_device *dev = bo->base.dev;
-> +
-> +	if (bo->table) {
-> +		dma_sync_sg_for_cpu(dev->dev, bo->table->sgl,
-> +				bo->table->nents, DMA_BIDIRECTIONAL);
-> +		sg_free_table(bo->table);
-> +		kfree(bo->table);
-> +		bo->table = NULL;
-> +	}
-> +
-> +	if (bo->pages) {
-> +		drm_gem_put_pages(&bo->base, bo->pages, true, true);
-> +		bo->pages = NULL;
-> +	}
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index ac4172c02244..6d1510284d21 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -3564,7 +3564,8 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
+>   
+>   	freelist = domain_unmap(domain, start_pfn, last_pfn);
+>   
+> -	if (intel_iommu_strict || (pdev && pdev->untrusted)) {
+> +	if (intel_iommu_strict || (pdev && pdev->untrusted) ||
+> +			!has_iova_flush_queue(&domain->iovad)) {
+>   		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
+>   				      nrpages, !freelist, 0);
+>   		/* free iova */
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index d499b2621239..8413ae54904a 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -54,9 +54,14 @@ init_iova_domain(struct iova_domain *iovad, unsigned long granule,
+>   }
+>   EXPORT_SYMBOL_GPL(init_iova_domain);
+>   
+> +bool has_iova_flush_queue(struct iova_domain *iovad)
+> +{
+> +	return !!iovad->fq;
 > +}
 > +
-> +static struct page **pin_and_sync(struct drm_vgem_gem_object *bo)
+>   static void free_iova_flush_queue(struct iova_domain *iovad)
+>   {
+> -	if (!iovad->fq)
+> +	if (!has_iova_flush_queue(iovad))
+>   		return;
+>   
+>   	if (timer_pending(&iovad->fq_timer))
+> @@ -74,13 +79,14 @@ static void free_iova_flush_queue(struct iova_domain *iovad)
+>   int init_iova_flush_queue(struct iova_domain *iovad,
+>   			  iova_flush_cb flush_cb, iova_entry_dtor entry_dtor)
+>   {
+> +	struct iova_fq __percpu *queue;
+>   	int cpu;
+>   
+>   	atomic64_set(&iovad->fq_flush_start_cnt,  0);
+>   	atomic64_set(&iovad->fq_flush_finish_cnt, 0);
+>   
+> -	iovad->fq = alloc_percpu(struct iova_fq);
+> -	if (!iovad->fq)
+> +	queue = alloc_percpu(struct iova_fq);
+> +	if (!queue)
+>   		return -ENOMEM;
+>   
+>   	iovad->flush_cb   = flush_cb;
+> @@ -89,13 +95,17 @@ int init_iova_flush_queue(struct iova_domain *iovad,
+>   	for_each_possible_cpu(cpu) {
+>   		struct iova_fq *fq;
+>   
+> -		fq = per_cpu_ptr(iovad->fq, cpu);
+> +		fq = per_cpu_ptr(queue, cpu);
+>   		fq->head = 0;
+>   		fq->tail = 0;
+>   
+>   		spin_lock_init(&fq->lock);
+>   	}
+>   
+> +	smp_wmb();
+> +
+> +	iovad->fq = queue;
+> +
+>   	timer_setup(&iovad->fq_timer, fq_flush_timeout, 0);
+>   	atomic_set(&iovad->fq_timer_on, 0);
+>   
+> diff --git a/include/linux/iova.h b/include/linux/iova.h
+> index 781b96ac706f..cd0f1de901a8 100644
+> --- a/include/linux/iova.h
+> +++ b/include/linux/iova.h
+> @@ -155,6 +155,7 @@ struct iova *reserve_iova(struct iova_domain *iovad, unsigned long pfn_lo,
+>   void copy_reserved_iova(struct iova_domain *from, struct iova_domain *to);
+>   void init_iova_domain(struct iova_domain *iovad, unsigned long granule,
+>   	unsigned long start_pfn);
+> +bool has_iova_flush_queue(struct iova_domain *iovad);
+>   int init_iova_flush_queue(struct iova_domain *iovad,
+>   			  iova_flush_cb flush_cb, iova_entry_dtor entry_dtor);
+>   struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn);
+> @@ -235,6 +236,11 @@ static inline void init_iova_domain(struct iova_domain *iovad,
+>   {
+>   }
+>   
+> +bool has_iova_flush_queue(struct iova_domain *iovad)
 > +{
-> +	struct drm_device *dev = bo->base.dev;
-> +	int npages = bo->base.size >> PAGE_SHIFT;
-> +	struct page **pages;
-> +	struct sg_table *sgt;
-> +
-> +	WARN_ON(!mutex_is_locked(&bo->pages_lock));
-> +
-> +	pages = drm_gem_get_pages(&bo->base);
-> +	if (IS_ERR(pages)) {
-> +		bo->pages_pin_count--;
-> +		mutex_unlock(&bo->pages_lock);
-> +		return pages;
-> +	}
->  
-> -		pages = drm_gem_get_pages(&bo->base);
-> -		if (IS_ERR(pages)) {
-> -			bo->pages_pin_count--;
-> -			mutex_unlock(&bo->pages_lock);
-> -			return pages;
-> -		}
-> +	sgt = drm_prime_pages_to_sg(pages, npages);
-> +	if (IS_ERR(sgt)) {
-> +		dev_err(dev->dev,
-> +			"failed to allocate sgt: %ld\n",
-> +			PTR_ERR(bo->table));
-> +		drm_gem_put_pages(&bo->base, pages, false, false);
-> +		mutex_unlock(&bo->pages_lock);
-> +		return ERR_CAST(bo->table);
-> +	}
-> +
-> +	/*
-> +	 * Flush the object from the CPU cache so that importers
-> +	 * can rely on coherent indirect access via the exported
-> +	 * dma-address.
-> +	 */
-> +	dma_sync_sg_for_device(dev->dev, sgt->sgl,
-> +			sgt->nents, DMA_BIDIRECTIONAL);
-> +
-> +	bo->pages = pages;
-> +	bo->table = sgt;
-> +
-> +	return pages;
+> +	return false;
 > +}
 > +
-> +static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
-> +{
-> +	struct page **pages;
->  
-> -		bo->pages = pages;
-> +	mutex_lock(&bo->pages_lock);
-> +	if (bo->pages_pin_count++ == 0 && !bo->pages) {
-> +		pages = pin_and_sync(bo);
-> +	} else {
-> +		WARN_ON(!bo->pages);
-> +		pages = bo->pages;
->  	}
->  	mutex_unlock(&bo->pages_lock);
->  
-> -	return bo->pages;
-> +	return pages;
->  }
->  
->  static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
->  {
-> +	/*
-> +	 * We shouldn't hit this for imported bo's.. in the import
-> +	 * case we don't own the scatter-table
-> +	 */
-> +	WARN_ON(bo->base.import_attach);
-> +
->  	mutex_lock(&bo->pages_lock);
->  	if (--bo->pages_pin_count == 0) {
-> -		drm_gem_put_pages(&bo->base, bo->pages, true, true);
-> -		bo->pages = NULL;
-> +		WARN_ON(!bo->table);
-> +		sync_and_unpin(bo);
->  	}
->  	mutex_unlock(&bo->pages_lock);
->  }
-> @@ -310,18 +352,12 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
->  static int vgem_prime_pin(struct drm_gem_object *obj)
->  {
->  	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
-> -	long n_pages = obj->size >> PAGE_SHIFT;
->  	struct page **pages;
->  
->  	pages = vgem_pin_pages(bo);
->  	if (IS_ERR(pages))
->  		return PTR_ERR(pages);
->  
-> -	/* Flush the object from the CPU cache so that importers can rely
-> -	 * on coherent indirect access via the exported dma-address.
-> -	 */
-> -	drm_clflush_pages(pages, n_pages);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.21.0
+>   static inline int init_iova_flush_queue(struct iova_domain *iovad,
+>   					iova_flush_cb flush_cb,
+>   					iova_entry_dtor entry_dtor)
 > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
