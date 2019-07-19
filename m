@@ -2,51 +2,51 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1346AC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D5FC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB1C2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466182173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BF48iUBT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bxa2y/bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfGSMwj (ORCPT
+        id S1728600AbfGSMyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 08:52:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46654 "EHLO
+        Fri, 19 Jul 2019 08:54:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47124 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfGSMwj (ORCPT
+        with ESMTP id S1726239AbfGSMyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 08:52:39 -0400
+        Fri, 19 Jul 2019 08:54:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4Jmn29wGoXT9QdGkDNlV+i5/j/BkpR5s03WdJB+pl+A=; b=BF48iUBT/5RwmJv10nnTLt7vj
-        uI9mH/pEALobTJcA9bIJLpjwv7Cp77vuXTxoI8mwKvFzacsGFZ9M4peCCICog7JWBgxM3XPntRSqf
-        jLSEHS9GiBdx+k1/su6a0wJtatBtR73gUzu/86qnTF+KkO+9Ijn+hPqasAB+vlSEPY2vd23YCsklZ
-        vFYMLnKfsFhq3Cts7KGhlbFLU5LBIJBfS3O43XFfzHzMD6zQLxppcirHDQx9nttqDv06W9GCRd5Ow
-        WmZGb54FWuSZBCwLb+gz3nC5d4YquHJx4lHptd61R4n4uoBW+XPpFVXGgPip0u3cVl781Hr/i7c6Q
-        VomlRJ1pg==;
+         bh=DXNQpemO0s6ZsdmuvuRkNsU08/I80Gd0lDDMS6hkaN4=; b=Bxa2y/bwwmwLJPnfrbl1yNUEv
+        iBsE+R6+O9n9b4xwdOmD1Sk5sPD36F/tdoUsAnxiEzJlUg7Lk2r0HnId0CYrStVN616QEfJEJ2zWC
+        hvwNNaJlp1kQOn2IQca9TKeudQcjOAuf14ojHtNljp9g3me4ew1DPsQPm3tnmpmwbDKgeJ96jHx9D
+        q4eXXk0m5E0dgZCzB0jGxbmAlLdSSkFwLXHGN5HpPMfNwIuNLMcpHQ5eVKkMd3bkqJ6YoxVBE55vJ
+        wS7WJa8AGgeycaVcmlYpz+m1SOBinupoTpUxY+CW4Am48vPYyjISuy7p6dmDpdcng+WkipjZleLfv
+        FjDjQVfxA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hoSNJ-0007dU-0g; Fri, 19 Jul 2019 12:52:37 +0000
+        id 1hoSPM-00089Z-W0; Fri, 19 Jul 2019 12:54:47 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 733A120B9799F; Fri, 19 Jul 2019 14:52:35 +0200 (CEST)
-Date:   Fri, 19 Jul 2019 14:52:35 +0200
+        id 5F1122059A401; Fri, 19 Jul 2019 14:54:43 +0200 (CEST)
+Date:   Fri, 19 Jul 2019 14:54:43 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Vincent Guittot <vincent.guittot@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
         quentin.perret@arm.com, dietmar.eggemann@arm.com,
         Morten.Rasmussen@arm.com, pauld@redhat.com
 Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
-Message-ID: <20190719125235.GI3419@hirez.programming.kicks-ass.net>
+Message-ID: <20190719125443.GJ3419@hirez.programming.kicks-ass.net>
 References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
  <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org>
 MIME-Version: 1.0
@@ -60,270 +60,117 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jul 19, 2019 at 09:58:23AM +0200, Vincent Guittot wrote:
-> @@ -7060,12 +7048,21 @@ static unsigned long __read_mostly max_load_balance_interval = HZ/10;
->  enum fbq_type { regular, remote, all };
+
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 67f0acd..472959df 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5376,18 +5376,6 @@ static unsigned long capacity_of(int cpu)
+>  	return cpu_rq(cpu)->cpu_capacity;
+>  }
 >  
->  enum group_type {
-> -	group_other = 0,
-> +	group_has_spare = 0,
-> +	group_fully_busy,
->  	group_misfit_task,
-> +	group_asym_capacity,
->  	group_imbalanced,
->  	group_overloaded,
->  };
->  
-> +enum group_migration {
-> +	migrate_task = 0,
-> +	migrate_util,
-> +	migrate_load,
-> +	migrate_misfit,
-> +};
-> +
->  #define LBF_ALL_PINNED	0x01
->  #define LBF_NEED_BREAK	0x02
->  #define LBF_DST_PINNED  0x04
-> @@ -7096,7 +7093,7 @@ struct lb_env {
->  	unsigned int		loop_max;
->  
->  	enum fbq_type		fbq_type;
-> -	enum group_type		src_grp_type;
-> +	enum group_migration	src_grp_type;
->  	struct list_head	tasks;
->  };
->  
-> @@ -7328,7 +7325,6 @@ static int detach_tasks(struct lb_env *env)
+> -static unsigned long cpu_avg_load_per_task(int cpu)
+> -{
+> -	struct rq *rq = cpu_rq(cpu);
+> -	unsigned long nr_running = READ_ONCE(rq->cfs.h_nr_running);
+> -	unsigned long load_avg = cpu_runnable_load(rq);
+> -
+> -	if (nr_running)
+> -		return load_avg / nr_running;
+> -
+> -	return 0;
+> -}
+> -
+>  static void record_wakee(struct task_struct *p)
 >  {
->  	struct list_head *tasks = &env->src_rq->cfs_tasks;
->  	struct task_struct *p;
-> -	unsigned long load;
->  	int detached = 0;
->  
->  	lockdep_assert_held(&env->src_rq->lock);
-> @@ -7361,19 +7357,46 @@ static int detach_tasks(struct lb_env *env)
->  		if (!can_migrate_task(p, env))
->  			goto next;
->  
-> -		load = task_h_load(p);
-> +		if (env->src_grp_type == migrate_load) {
-> +			unsigned long load = task_h_load(p);
->  
-> -		if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
-> -			goto next;
-> +			if (sched_feat(LB_MIN) &&
-> +			    load < 16 && !env->sd->nr_balance_failed)
-> +				goto next;
-> +
-> +			if ((load / 2) > env->imbalance)
-> +				goto next;
-> +
-> +			env->imbalance -= load;
-> +		} else	if (env->src_grp_type == migrate_util) {
-> +			unsigned long util = task_util_est(p);
-> +
-> +			if (util > env->imbalance)
-> +				goto next;
-> +
-> +			env->imbalance -= util;
-> +		} else if (env->src_grp_type == migrate_misfit) {
-> +			unsigned long util = task_util_est(p);
-> +
-> +			/*
-> +			 * utilization of misfit task might decrease a bit
-> +			 * since it has been recorded. Be conservative in the
-> +			 * condition.
-> +			 */
-> +			if (2*util < env->imbalance)
-> +				goto next;
-> +
-> +			env->imbalance = 0;
-> +		} else {
-> +			/* Migrate task */
-> +			env->imbalance--;
-> +		}
->  
-> -		if ((load / 2) > env->imbalance)
-> -			goto next;
->  
->  		detach_task(p, env);
->  		list_add(&p->se.group_node, &env->tasks);
->  
->  		detached++;
-> -		env->imbalance -= load;
->  
->  #ifdef CONFIG_PREEMPT
->  		/*
+>  	/*
 
-Still reading through this; maybe something like so instead?
+> @@ -7646,7 +7669,6 @@ static unsigned long task_h_load(struct task_struct *p)
+>  struct sg_lb_stats {
+>  	unsigned long avg_load; /*Avg load across the CPUs of the group */
+>  	unsigned long group_load; /* Total load over the CPUs of the group */
+> -	unsigned long load_per_task;
+>  	unsigned long group_capacity;
+>  	unsigned long group_util; /* Total utilization of the group */
+>  	unsigned int sum_nr_running; /* Nr tasks running in the group */
 
----
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7057,7 +7057,7 @@ enum group_type {
- 	group_overloaded,
- };
- 
--enum group_migration {
-+enum migration_type {
- 	migrate_task = 0,
- 	migrate_util,
- 	migrate_load,
-@@ -7094,7 +7094,7 @@ struct lb_env {
- 	unsigned int		loop_max;
- 
- 	enum fbq_type		fbq_type;
--	enum group_migration	src_grp_type;
-+	enum migration_type	balance_type;
- 	struct list_head	tasks;
- };
- 
-@@ -7325,6 +7325,7 @@ static const unsigned int sched_nr_migra
- static int detach_tasks(struct lb_env *env)
- {
- 	struct list_head *tasks = &env->src_rq->cfs_tasks;
-+	unsigned long load, util;
- 	struct task_struct *p;
- 	int detached = 0;
- 
-@@ -7358,8 +7359,14 @@ static int detach_tasks(struct lb_env *e
- 		if (!can_migrate_task(p, env))
- 			goto next;
- 
--		if (env->src_grp_type == migrate_load) {
--			unsigned long load = task_h_load(p);
-+		switch (env->balance_type) {
-+		case migrate_task:
-+			/* Migrate task */
-+			env->imbalance--;
-+			break;
-+
-+		case migrate_load:
-+			load = task_h_load(p);
- 
- 			if (sched_feat(LB_MIN) &&
- 			    load < 16 && !env->sd->nr_balance_failed)
-@@ -7369,15 +7376,20 @@ static int detach_tasks(struct lb_env *e
- 				goto next;
- 
- 			env->imbalance -= load;
--		} else	if (env->src_grp_type == migrate_util) {
--			unsigned long util = task_util_est(p);
-+			break;
-+
-+		case migrate_util:
-+			util = task_util_est(p);
- 
- 			if (util > env->imbalance)
- 				goto next;
- 
- 			env->imbalance -= util;
--		} else if (env->src_grp_type == migrate_misfit) {
--			unsigned long util = task_util_est(p);
-+			break;
-+
-+
-+		case migrate_misfit:
-+			util = task_util_est(p);
- 
- 			/*
- 			 * utilization of misfit task might decrease a bit
-@@ -7388,9 +7400,7 @@ static int detach_tasks(struct lb_env *e
- 				goto next;
- 
- 			env->imbalance = 0;
--		} else {
--			/* Migrate task */
--			env->imbalance--;
-+			break;
- 		}
- 
- 
-@@ -8311,7 +8321,7 @@ static inline void calculate_imbalance(s
- 		 * In case of asym capacity, we will try to migrate all load
- 		 * to the preferred CPU
- 		 */
--		env->src_grp_type = migrate_load;
-+		env->balance_type = migrate_load;
- 		env->imbalance = busiest->group_load;
- 		return;
- 	}
-@@ -8323,14 +8333,14 @@ static inline void calculate_imbalance(s
- 		 * the imbalance. The next load balance will take care of
- 		 * balancing back the system.
- 		 */
--		env->src_grp_type = migrate_task;
-+		env->balance_type = migrate_task;
- 		env->imbalance = 1;
- 		return;
- 	}
- 
- 	if (busiest->group_type == group_misfit_task) {
- 		/* Set imbalance to allow misfit task to be balanced. */
--		env->src_grp_type = migrate_misfit;
-+		env->balance_type = migrate_misfit;
- 		env->imbalance = busiest->group_misfit_task_load;
- 		return;
- 	}
-@@ -8346,7 +8356,7 @@ static inline void calculate_imbalance(s
- 		 * If there is no overload, we just want to even the number of
- 		 * idle cpus.
- 		 */
--		env->src_grp_type = migrate_task;
-+		env->balance_type = migrate_task;
- 		imbalance = max_t(long, 0, (local->idle_cpus - busiest->idle_cpus) >> 1);
- 
- 		if (sds->prefer_sibling)
-@@ -8365,7 +8375,7 @@ static inline void calculate_imbalance(s
- 			 * amount of load to migrate in order to balance the
- 			 * system.
- 			 */
--			env->src_grp_type = migrate_util;
-+			env->balance_type = migrate_util;
- 			imbalance = max(local->group_capacity, local->group_util) -
- 				    local->group_util;
- 		}
-@@ -8399,7 +8409,7 @@ static inline void calculate_imbalance(s
- 	 * don't want to reduce the group load below the group capacity.
- 	 * Thus we look for the minimum possible imbalance.
- 	 */
--	env->src_grp_type = migrate_load;
-+	env->balance_type = migrate_load;
- 	env->imbalance = min(
- 		(busiest->avg_load - sds->avg_load) * busiest->group_capacity,
- 		(sds->avg_load - local->avg_load) * local->group_capacity
-@@ -8597,7 +8607,7 @@ static struct rq *find_busiest_queue(str
- 		 * For ASYM_CPUCAPACITY domains with misfit tasks we simply
- 		 * seek the "biggest" misfit task.
- 		 */
--		if (env->src_grp_type == migrate_misfit) {
-+		if (env->balance_type == migrate_misfit) {
- 			if (rq->misfit_task_load > busiest_load) {
- 				busiest_load = rq->misfit_task_load;
- 				busiest = rq;
-@@ -8619,7 +8629,7 @@ static struct rq *find_busiest_queue(str
- 		    rq->nr_running == 1)
- 			continue;
- 
--		if (env->src_grp_type == migrate_task) {
-+		if (env->balance_type == migrate_task) {
- 			nr_running = rq->cfs.h_nr_running;
- 
- 			if (busiest_nr < nr_running) {
-@@ -8630,7 +8640,7 @@ static struct rq *find_busiest_queue(str
- 			continue;
- 		}
- 
--		if (env->src_grp_type == migrate_util) {
-+		if (env->balance_type == migrate_util) {
- 			util = cpu_util(cpu_of(rq));
- 
- 			if (busiest_util < util) {
-@@ -8711,7 +8721,7 @@ voluntary_active_balance(struct lb_env *
- 			return 1;
- 	}
- 
--	if (env->src_grp_type == migrate_misfit)
-+	if (env->balance_type == migrate_misfit)
- 		return 1;
- 
- 	return 0;
+
+> @@ -8266,76 +8293,6 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+>  }
+>  
+>  /**
+> - * fix_small_imbalance - Calculate the minor imbalance that exists
+> - *			amongst the groups of a sched_domain, during
+> - *			load balancing.
+> - * @env: The load balancing environment.
+> - * @sds: Statistics of the sched_domain whose imbalance is to be calculated.
+> - */
+> -static inline
+> -void fix_small_imbalance(struct lb_env *env, struct sd_lb_stats *sds)
+> -{
+> -	unsigned long tmp, capa_now = 0, capa_move = 0;
+> -	unsigned int imbn = 2;
+> -	unsigned long scaled_busy_load_per_task;
+> -	struct sg_lb_stats *local, *busiest;
+> -
+> -	local = &sds->local_stat;
+> -	busiest = &sds->busiest_stat;
+> -
+> -	if (!local->sum_h_nr_running)
+> -		local->load_per_task = cpu_avg_load_per_task(env->dst_cpu);
+> -	else if (busiest->load_per_task > local->load_per_task)
+> -		imbn = 1;
+> -
+> -	scaled_busy_load_per_task =
+> -		(busiest->load_per_task * SCHED_CAPACITY_SCALE) /
+> -		busiest->group_capacity;
+> -
+> -	if (busiest->avg_load + scaled_busy_load_per_task >=
+> -	    local->avg_load + (scaled_busy_load_per_task * imbn)) {
+> -		env->imbalance = busiest->load_per_task;
+> -		return;
+> -	}
+> -
+> -	/*
+> -	 * OK, we don't have enough imbalance to justify moving tasks,
+> -	 * however we may be able to increase total CPU capacity used by
+> -	 * moving them.
+> -	 */
+> -
+> -	capa_now += busiest->group_capacity *
+> -			min(busiest->load_per_task, busiest->avg_load);
+> -	capa_now += local->group_capacity *
+> -			min(local->load_per_task, local->avg_load);
+> -	capa_now /= SCHED_CAPACITY_SCALE;
+> -
+> -	/* Amount of load we'd subtract */
+> -	if (busiest->avg_load > scaled_busy_load_per_task) {
+> -		capa_move += busiest->group_capacity *
+> -			    min(busiest->load_per_task,
+> -				busiest->avg_load - scaled_busy_load_per_task);
+> -	}
+> -
+> -	/* Amount of load we'd add */
+> -	if (busiest->avg_load * busiest->group_capacity <
+> -	    busiest->load_per_task * SCHED_CAPACITY_SCALE) {
+> -		tmp = (busiest->avg_load * busiest->group_capacity) /
+> -		      local->group_capacity;
+> -	} else {
+> -		tmp = (busiest->load_per_task * SCHED_CAPACITY_SCALE) /
+> -		      local->group_capacity;
+> -	}
+> -	capa_move += local->group_capacity *
+> -		    min(local->load_per_task, local->avg_load + tmp);
+> -	capa_move /= SCHED_CAPACITY_SCALE;
+> -
+> -	/* Move if we gain throughput */
+> -	if (capa_move > capa_now)
+> -		env->imbalance = busiest->load_per_task;
+> -}
+> -
+> -/**
+>   * calculate_imbalance - Calculate the amount of imbalance present within the
+>   *			 groups of a given sched_domain during load balance.
+>   * @env: load balance environment
+
+Maybe strip this out first, in a separate patch. It's all magic doo-doo.
