@@ -2,104 +2,71 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25DBC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D96C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4BB20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A849120873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfGSGtz (ORCPT
+        id S1727173AbfGSGvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:49:55 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33629 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGSGty (ORCPT
+        Fri, 19 Jul 2019 02:51:52 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40148 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfGSGvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:49:54 -0400
-Received: by mail-qt1-f194.google.com with SMTP id r6so25710925qtt.0;
-        Thu, 18 Jul 2019 23:49:53 -0700 (PDT)
+        Fri, 19 Jul 2019 02:51:51 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a15so29893604qtn.7;
+        Thu, 18 Jul 2019 23:51:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zfGToBds18suaPosWKE/2T3izyW6zSmNZU6D/7RAmgE=;
-        b=dRlMdD6mtIvR0/lIBO7qZ8eZanxbmLa9LS2pl3Gk2gRHle7GnFA9x8Ufdu80b+Bbzo
-         qOWVmyEMaIBhUTSSO1WpQ6KPP/2QwjjNaAJDcrGCisdBwfrZqJtur+qLDZ9j/Roe/eqR
-         kk7k3sVm/NEOkCkeBzijehXxwH0H84URbgl5yC0n/x8v5YPWruBTsjVvFUQJ3z7fJFsu
-         zVnTxBHJqbZfCunETl7C/pFS8HTsoBBje3kPnkPioTLEP3BsGettdIwC0fyV4A4F93Mg
-         GriaJ0nSVs9Al8Y6EhspnSbThYjrLWgD98KwG9gkDDTRBgwQzVR9r4D0BMaSoJnQAVkP
-         6J9g==
-X-Gm-Message-State: APjAAAVduD1myj4y0lCl/BYHzITkCbSYixglICsUZRY0TYBJek3R8pTm
-        aiL/sMP8Fm66Bmee924+5nBE+F3nZivItCIAli8=
-X-Google-Smtp-Source: APXvYqyNjTc42pQ1sKjehQS1untTD4duEeurrsI/kTdOBEK71qAdbybFsNiZBlVojBbGxe4c1/U/qrE8abUEnZ12d+8=
-X-Received: by 2002:a0c:ba2c:: with SMTP id w44mr35836449qvf.62.1563518993465;
- Thu, 18 Jul 2019 23:49:53 -0700 (PDT)
+        bh=B6pVkHoM9zYOJWO3sG9HTZxpM7QAoYB/MD0csvlC6pM=;
+        b=T7JAkSM39gH68585/3qWmn++25iUFXk9chPbH/jc3Vrpdx1nWcemi5z89RC5LVBBSu
+         ES2qVsobDwCR8ABAf0+XcqlBaABI1QnyHILgVh/z9HLW/uy+30jeyFus0xvJNhGZwpNh
+         PsFkoSZy53JHnjdaHUhAGutcraF+iiODuYpl77ePYyOrUWMjK9rqwbRV9B6zcwmWB+qQ
+         2ctWTiFYvVy+pOHp185FmqzeYIwcAA4/EIXBCsb04O/cJS8/29IpMEcD9/UaM30VogZl
+         fttHqH86JlmvrGfqdtf9V02PAYPu6dVPWyzjMZIbaJSpuvdOG/BK3VtHLsocKoOsrsDm
+         isNw==
+X-Gm-Message-State: APjAAAXV82AjnCQ4dJ2AICNgh7Dz3f2VLBE2fEgIuqp+PCrmx3Ee3+u/
+        8sI47ULzkJ1vIo0Z8DfqkbcUpojjpI6kwON8ksmKEbOh
+X-Google-Smtp-Source: APXvYqw0TyPKAz3bnZYB03kiIZxHNAdt0cNgEJ4uL/TFU4FLHUfRsbCjK0Jy4aD5N6o27WowLlF5susEFCyyHEVpttw=
+X-Received: by 2002:a0c:dd86:: with SMTP id v6mr36463964qvk.176.1563519109822;
+ Thu, 18 Jul 2019 23:51:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190710080835.296696-1-arnd@arndb.de> <20190718190110.akn54iwb2mui72cd@salvia>
- <20190719063749.45io5pxcxrlmrqqn@salvia>
-In-Reply-To: <20190719063749.45io5pxcxrlmrqqn@salvia>
+References: <20190718134928.2472465-1-arnd@arndb.de> <cedfd2fb31d943564e19c1652bc8983a18de45d4.camel@perches.com>
+In-Reply-To: <cedfd2fb31d943564e19c1652bc8983a18de45d4.camel@perches.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 19 Jul 2019 08:49:37 +0200
-Message-ID: <CAK8P3a0XzP3Oj9rZGBbcj8=na94QgUJiLNsNPxCBC_xK7O6AoQ@mail.gmail.com>
-Subject: Re: [PATCH] [net-next] netfilter: bridge: make NF_TABLES_BRIDGE tristate
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>, wenxu <wenxu@ucloud.cn>,
-        netfilter-devel <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org, bridge@lists.linux-foundation.org,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 19 Jul 2019 08:51:33 +0200
+Message-ID: <CAK8P3a2nL0Ji2NmDvVcqyO4Rp_N9FN0OSZHRnUb+BpTdneuVMQ@mail.gmail.com>
+Subject: Re: [PATCH] reiserfs: fix code unwinding with clang
+To:     Joe Perches <joe@perches.com>
+Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        reiserfs-devel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 8:37 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+On Thu, Jul 18, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
+> On Thu, 2019-07-18 at 15:49 +0200, Arnd Bergmann wrote:
+> > This will likely get fixed in a future clang release, but in the meantime
+> > the workaround helps us build cleanly with existing releases.
 >
-> On Thu, Jul 18, 2019 at 09:01:10PM +0200, Pablo Neira Ayuso wrote:
-> > On Wed, Jul 10, 2019 at 10:08:20AM +0200, Arnd Bergmann wrote:
-> > > The new nft_meta_bridge code fails to link as built-in when NF_TABLES
-> > > is a loadable module.
-> > >
-> > > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_eval':
-> > > nft_meta_bridge.c:(.text+0x1e8): undefined reference to `nft_meta_get_eval'
-> > > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_init':
-> > > nft_meta_bridge.c:(.text+0x468): undefined reference to `nft_meta_get_init'
-> > > nft_meta_bridge.c:(.text+0x49c): undefined reference to `nft_parse_register'
-> > > nft_meta_bridge.c:(.text+0x4cc): undefined reference to `nft_validate_register_store'
-> > > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_exit':
-> > > nft_meta_bridge.c:(.exit.text+0x14): undefined reference to `nft_unregister_expr'
-> > > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_init':
-> > > nft_meta_bridge.c:(.init.text+0x14): undefined reference to `nft_register_expr'
-> > > net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x60): undefined reference to `nft_meta_get_dump'
-> > > net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x88): undefined reference to `nft_meta_set_eval'
-> > >
-> > > This can happen because the NF_TABLES_BRIDGE dependency itself is just a
-> > > 'bool'.  Make the symbol a 'tristate' instead so Kconfig can propagate the
-> > > dependencies correctly.
-> >
-> > Hm. Something breaks here. Investigating. Looks like bridge support is
-> > gone after this, nft fails to register the filter chain type:
-> >
-> > # nft add table bridge x
-> > # nft add chain bridge x y { type filter hook input priority 0\; }
-> > Error: Could not process rule: No such file or directory
+> The original code read better.
 >
-> Found it. It seems this patch is needed, on top of your patch.
+> This is kinda a gross solution that should probably be
+> commented on in the code rather than just the commit message.
 
-Right, makes sense.
-
-> I can just squash this chunk into your original patch and push it out
-> if you're OK witht this.
-
-Yes, please do.
+I'll just wait for the fix in llvm then and filter out the objtool warnings
+from my build logs.
 
       Arnd
