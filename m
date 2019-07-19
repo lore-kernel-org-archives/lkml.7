@@ -2,94 +2,92 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CA1C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FC3C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14922173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBDB2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfGSPOd (ORCPT
+        id S1728404AbfGSPPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 11:14:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39262 "EHLO mx1.redhat.com"
+        Fri, 19 Jul 2019 11:15:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59214 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfGSPOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 11:14:32 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 42B3FB2DDB;
-        Fri, 19 Jul 2019 15:14:32 +0000 (UTC)
-Received: from redhat.com (ovpn-124-174.rdu2.redhat.com [10.10.124.174])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D80FB63F66;
-        Fri, 19 Jul 2019 15:14:29 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 11:14:28 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Fei Li <lifei.shirley@bytedance.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Fam Zheng <zhengfeiran@bytedance.com>
-Subject: Re: [PATCH v1 0/2] virtio-mmio: support multiple interrupt vectors
-Message-ID: <20190719110852-mutt-send-email-mst@kernel.org>
-References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
+        id S1726711AbfGSPPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 11:15:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 08:15:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,282,1559545200"; 
+   d="scan'208";a="168581270"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 08:15:20 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hoUbP-0005PW-IC; Fri, 19 Jul 2019 18:15:19 +0300
+Date:   Fri, 19 Jul 2019 18:15:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>, Aditya Pakki <pakki001@umn.edu>
+Cc:     emamd001@umn.edu, smccaman@umn.edu,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 8250_lpss: check null return when calling pci_ioremap_bar
+Message-ID: <20190719151519.GO9224@smile.fi.intel.com>
+References: <20190719025443.2368-1-navid.emamdoost@gmail.com>
+ <20190719133735.GM9224@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190719133135.32418-1-lifei.shirley@bytedance.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 19 Jul 2019 15:14:32 +0000 (UTC)
+In-Reply-To: <20190719133735.GM9224@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 09:31:33PM +0800, Fei Li wrote:
-> Hi,
-> 
-> This patch series implements multiple interrupt vectors support for
-> virtio-mmio device. This is especially useful for multiqueue vhost-net
-> device when using firecracker micro-vms as the guest.
-> 
-> Test result:
-> With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs can
-> receive 9 times more pps comparing with only one irq:
-> - 564830.38 rxpck/s for 8 irqs on
-> - 67665.06 rxpck/s for 1 irq on
-> 
-> Please help to review, thanks!
-> 
-> Have a nice day
-> Fei
+On Fri, Jul 19, 2019 at 04:37:35PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 18, 2019 at 09:54:42PM -0500, Navid Emamdoost wrote:
+
+> Thus, please, collaborate guys, and send one compiling solution  based on [1].
+
+> [1]: https://www.spinics.net/lists/linux-serial/msg33965.html
+
+For your convenience (what has to be applied to v4):
+
+diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+index 53ca9ba6ab4b..6214da67e9b3 100644
+--- a/drivers/tty/serial/8250/8250_lpss.c
++++ b/drivers/tty/serial/8250/8250_lpss.c
+@@ -195,11 +195,15 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
+ 
+ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
+ {
++	struct dw_dma_chip *chip = &lpss->dma_chip;
+ 	struct dw_dma_slave *param = &lpss->dma_param;
+ 
+ 	if (!param->dma_dev)
+ 		return;
+-	dw_dma_remove(&lpss->dma_chip);
++
++	dw_dma_remove(chip);
++
++	pci_iounmap(to_pci_dev(chip->dev), chip->regs);
+ }
+ #else	/* CONFIG_SERIAL_8250_DMA */
+ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Interesting. The spec says though:
-
-	4.2.3.4
-	Notifications From The Device
-	The memory mapped virtio device is using a single, dedicated interrupt signal, which is asserted when at
-	least one of the bits described in the description of InterruptStatus is set. This is how the device sends a
-	used buffer notification or a configuration change notification to the device.
-
-
-So I'm guessing we need to change the host/guest interface?
-If true pls cc virtio-dev.
-
-Also, do we need to update dt bindings documentation?
-
-> 
-> Fam Zheng (1):
->   virtio-mmio: Process vrings more proactively
-> 
-> Fei Li (1):
->   virtio-mmio: support multiple interrupt vectors
-> 
->  drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++++++--------
->  1 file changed, 196 insertions(+), 42 deletions(-)
-> 
-> -- 
-> 2.11.0
