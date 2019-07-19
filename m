@@ -2,51 +2,54 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7EFC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B44C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8462082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5122082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510079;
-	bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
+	s=default; t=1563510085;
+	bh=O0acjIEzOTkzJ4n+DQiyTLyIy0PMHVWOYJvMSOJAtzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGmtq4u+Ptm8jVe9pcREUOkETlIvROrQwiLLpYnttll0G0GQeERpEw+nCPLpDYVH/
-	 9DNbK7PwzawvaoKqdUaaIjb7IdRU7G1CxmsPGYxg9Ba0N4AeDSlcy5xGWXFQbOcfU0
-	 mC/JaPaxBDApq8uFUx+8j44Uq8v2dt8zOdG524uk=
+	b=S7Vq4IiyYEdHCr+6HAY7NWcMYkLidpH7eTZGXPnOkSWJA8oAJr/KBDqfxK6UAwvD5
+	 tZVswB8d7i7Ka+4Xgh/JOgJNRLUHx2ytt6HKFKg5VhEXu9lXS20QXdz/X/ZOEzmIXS
+	 p8eAJcEEZmE9GcB4B46Wnofe4MuhDQ26hWWG+F2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389188AbfGSEVS (ORCPT
+        id S2388607AbfGSEL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47262 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388653AbfGSEMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:05 -0400
+        id S2387435AbfGSELy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD19E21873;
-        Fri, 19 Jul 2019 04:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE342189D;
+        Fri, 19 Jul 2019 04:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509524;
-        bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
+        s=default; t=1563509512;
+        bh=O0acjIEzOTkzJ4n+DQiyTLyIy0PMHVWOYJvMSOJAtzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqqvpKgB5fkuNSFugf/VFASx2vTNBrFsKqC1rLceKNxss8OIGFs74MtJut7k5ER/h
-         Ye3KWTZe1mAHnzjRG+tR+MeBwFmI7NFS+BtLAH/aOUF8UhGf0ZYW2/jaqWr9fwnIVQ
-         ZGeb8uADpPt4RUgnCA/OKvwPx3dWQxU9EUl+DadY=
+        b=b+SaHDogIjX5FHbZiByPWD/FjQMEWOjYatpcJw8mUj0JuOdlnX3rXHWkZtG1ikrPX
+         NJMZ+TSSAB1ZsEe8UqcLYPkIuW7U0m6WANAWI9FYWQTTvo6URhkC/+Ons6gRCwdJos
+         uz/UOmUYc1t06qIg4LQW7AH/478yESiZKeY+HLbM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bastien Nocera <hadess@hadess.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 30/60] iio: iio-utils: Fix possible incorrect mask calculation
-Date:   Fri, 19 Jul 2019 00:10:39 -0400
-Message-Id: <20190719041109.18262-30-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 23/60] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
+Date:   Fri, 19 Jul 2019 00:10:32 -0400
+Message-Id: <20190719041109.18262-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -59,53 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bastien Nocera <hadess@hadess.net>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
+[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
 
-On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
-values. It turns out that the bits_used for this sensor is 32, which makes
-the mask calculation:
+When the firmware does PCI BAR resource allocation, it passes the assigned
+addresses and flags (prefetch/64bit/...) via the "reg" property of
+a PCI device device tree node so the kernel does not need to do
+resource allocation.
 
-*mask = (1 << 32) - 1;
+The flags are stored in resource::flags - the lower byte stores
+PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
+Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
+such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
+When parsing the "reg" property, we copy the prefetch flag but we skip
+on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
 
-If the compiler interprets the 1 literals as 32-bit ints, it generates
-undefined behavior depending on compiler version and optimization level.
-On my system, it optimizes out the shift, so the mask value becomes
+The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
+1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
+or by passing "/chosen/linux,pci-probe-only");
+2. we request resource alignment (by passing pci=resource_alignment=
+via the kernel cmd line to request PAGE_SIZE alignment or defining
+ppc_md.pcibios_default_alignment which returns anything but 0). Note that
+the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
 
-*mask = (1) - 1;
+With 1) and 2), the generic PCI code in the kernel unconditionally
+decides to:
+- reassign the BARs in pci_specified_resource_alignment() (works fine)
+- write new BARs to the device - this fails for 64bit BARs as the generic
+code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
+of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
+in the hypervisor.
 
-With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
+This fixes the issue by copying the flag. This is useful if we want to
+enforce certain BAR alignment per platform as handling subpage sized BARs
+is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
 
-Avoid incorrect 0 values caused by compiler optimization.
-
-See original fix by Brett Dutro <brett.dutro@gmail.com> in
-iio-sensor-proxy:
-https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
-
-Signed-off-by: Bastien Nocera <hadess@hadess.net>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Shawn Anastasio <shawn@anastas.io>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/iio/iio_utils.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/pci_of_scan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
-index 7a6d61c6c012..55272fef3b50 100644
---- a/tools/iio/iio_utils.c
-+++ b/tools/iio/iio_utils.c
-@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
- 			*be = (endianchar == 'b');
- 			*bytes = padint / 8;
- 			if (*bits_used == 64)
--				*mask = ~0;
-+				*mask = ~(0ULL);
- 			else
--				*mask = (1ULL << *bits_used) - 1;
-+				*mask = (1ULL << *bits_used) - 1ULL;
- 
- 			*is_signed = (signchar == 's');
- 			if (fclose(sysfsfp)) {
+diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
+index 0d790f8432d2..6ca1b3a1e196 100644
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -45,6 +45,8 @@ static unsigned int pci_parse_of_flags(u32 addr0, int bridge)
+ 	if (addr0 & 0x02000000) {
+ 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
+ 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
++		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
++			flags |= IORESOURCE_MEM_64;
+ 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
+ 		if (addr0 & 0x40000000)
+ 			flags |= IORESOURCE_PREFETCH
 -- 
 2.20.1
 
