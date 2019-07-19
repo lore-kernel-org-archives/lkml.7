@@ -2,174 +2,88 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC9FC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7BDC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7830121849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B+e5qGRX"
+	by mail.kernel.org (Postfix) with ESMTP id 249AD21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732788AbfGSTaQ (ORCPT
+        id S1730339AbfGSTcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 15:30:16 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8323 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730259AbfGSTaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 15:30:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d321a430002>; Fri, 19 Jul 2019 12:30:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 12:30:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 19 Jul 2019 12:30:14 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 19:30:13 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL102.nvidia.com
- (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 19:30:05 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 19 Jul 2019 19:30:05 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d321a3c000b>; Fri, 19 Jul 2019 12:30:04 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        <stable@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Mel Gorman" <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
-Subject: [PATCH v2 2/3] mm/hmm: fix ZONE_DEVICE anon page mapping reuse
-Date:   Fri, 19 Jul 2019 12:29:54 -0700
-Message-ID: <20190719192955.30462-3-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719192955.30462-1-rcampbell@nvidia.com>
-References: <20190719192955.30462-1-rcampbell@nvidia.com>
+        Fri, 19 Jul 2019 15:32:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56928 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727953AbfGSTcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 15:32:13 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1157330A7C5D;
+        Fri, 19 Jul 2019 19:32:13 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97B1F5D961;
+        Fri, 19 Jul 2019 19:32:10 +0000 (UTC)
+Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an
+ atomic_long_t
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-14-longman@redhat.com>
+ <20190719184538.GA20324@hermes.olymp>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2ed44afa-4528-a785-f188-2daf24343f97@redhat.com>
+Date:   Fri, 19 Jul 2019 15:32:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563564612; bh=VRtcfh5WiSupUP5Y8ZWeqEYjlWzsti4A1ZaXu55dh6o=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=B+e5qGRXNq78hbYvK0jR2F1wmPW858/Up0dRZbJZpsibttglgzYKMDTaY5O0kkqDn
-         9XStOpiEipTaCyrs4/YYKvqn2ukRw1bC2K1taS/8pvAIiY5YV1wRR1eZoCnOQyd2Xm
-         m8p3EG0tNoc8Hi1wKkrvHwCYFl+s6QyG9NN5XoFPT1hOlps3WClf1HEndKYJynvkoB
-         7guzLd8DbBpE457bUieNeGtI+dYXN1BKmnMKX6qTVcztr8EfCgk3TDriLPmNtXcix9
-         kqzuQVVFUoTFFU3ejMuQmfd6x0wh8YqS+TGYByo/+1bsLybirEeYo7rFI7MX3Ad/Mz
-         DlD4XaHKKTrAw==
+In-Reply-To: <20190719184538.GA20324@hermes.olymp>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 19 Jul 2019 19:32:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a ZONE_DEVICE private page is freed, the page->mapping field can be
-set. If this page is reused as an anonymous page, the previous value can
-prevent the page from being inserted into the CPU's anon rmap table.
-For example, when migrating a pte_none() page to device memory:
-  migrate_vma(ops, vma, start, end, src, dst, private)
-    migrate_vma_collect()
-      src[] =3D MIGRATE_PFN_MIGRATE
-    migrate_vma_prepare()
-      /* no page to lock or isolate so OK */
-    migrate_vma_unmap()
-      /* no page to unmap so OK */
-    ops->alloc_and_copy()
-      /* driver allocates ZONE_DEVICE page for dst[] */
-    migrate_vma_pages()
-      migrate_vma_insert_page()
-        page_add_new_anon_rmap()
-          __page_set_anon_rmap()
-            /* This check sees the page's stale mapping field */
-            if (PageAnon(page))
-              return
-            /* page->mapping is not updated */
+On 7/19/19 2:45 PM, Luis Henriques wrote:
+> On Mon, May 20, 2019 at 04:59:12PM -0400, Waiman Long wrote:
+>> The rwsem->owner contains not just the task structure pointer, it also
+>> holds some flags for storing the current state of the rwsem. Some of
+>> the flags may have to be atomically updated. To reflect the new reality,
+>> the owner is now changed to an atomic_long_t type.
+>>
+>> New helper functions are added to properly separate out the task
+>> structure pointer and the embedded flags.
+> I started seeing KASAN use-after-free with current master, and a bisect
+> showed me that this commit 94a9717b3c40 ("locking/rwsem: Make
+> rwsem->owner an atomic_long_t") was the problem.  Does it ring any
+> bells?  I can easily reproduce it with xfstests (generic/464).
+>
+> Cheers,
+> --
+> Luís
 
-The result is that the migration appears to succeed but a subsequent CPU
-fault will be unable to migrate the page back to system memory or worse.
+This patch shouldn't change the behavior of the rwsem code. The code
+only access data within the rw_semaphore structures. I don't know why it
+will cause a KASAN error. I will have to reproduce it and figure out
+exactly which statement is doing the invalid access.
 
-Clear the page->mapping field when freeing the ZONE_DEVICE page so stale
-pointer data doesn't affect future page use.
-
-Fixes: b7a523109fb5c9d2d6dd ("mm: don't clear ->mapping in hmm_devmem_free"=
-)
-Cc: stable@vger.kernel.org
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Jan Kara <jack@suse.cz>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
----
- kernel/memremap.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index bea6f887adad..98d04466dcde 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -408,6 +408,30 @@ void __put_devmap_managed_page(struct page *page)
-=20
- 		mem_cgroup_uncharge(page);
-=20
-+		/*
-+		 * When a device_private page is freed, the page->mapping field
-+		 * may still contain a (stale) mapping value. For example, the
-+		 * lower bits of page->mapping may still identify the page as
-+		 * an anonymous page. Ultimately, this entire field is just
-+		 * stale and wrong, and it will cause errors if not cleared.
-+		 * One example is:
-+		 *
-+		 *  migrate_vma_pages()
-+		 *    migrate_vma_insert_page()
-+		 *      page_add_new_anon_rmap()
-+		 *        __page_set_anon_rmap()
-+		 *          ...checks page->mapping, via PageAnon(page) call,
-+		 *            and incorrectly concludes that the page is an
-+		 *            anonymous page. Therefore, it incorrectly,
-+		 *            silently fails to set up the new anon rmap.
-+		 *
-+		 * For other types of ZONE_DEVICE pages, migration is either
-+		 * handled differently or not done at all, so there is no need
-+		 * to clear page->mapping.
-+		 */
-+		if (is_device_private_page(page))
-+			page->mapping =3D NULL;
-+
- 		page->pgmap->ops->page_free(page);
- 	} else if (!count)
- 		__put_page(page);
---=20
-2.20.1
+Thanks,
+Longman
 
