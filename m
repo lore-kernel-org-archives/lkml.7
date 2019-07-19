@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B953DC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21464C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882E721850
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04E021851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508981;
-	bh=loio7EbnPyE2U2r+HyGRrKSUH0ysEvubFWprXBu+1MA=;
+	s=default; t=1563508988;
+	bh=X4vd8OK4yXQ0AbEdR++MYAR4NsXHtv+u2lPVXgjJSTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4SwEeg2aVNStpGqlStBCago1n7kAh9UltJet6qXlGoMQQJPAas8tgZUEd1bJMU3t
-	 yF0dC1a3Tklv4Ctgjqzs79hRm4SMtopeS+BI03lNHCHbHgCUcCnODtLSfFhXj+Px7d
-	 IjQO4z0KocfF/KUPsqGdi/dpY8fVMwaHV3a1ciP8=
+	b=Bs/dcSolBC1Q2cQkokioyla1ZAJ3QmvudXEorjSNXpSJpzLhvz71IEn8Inb7laT1t
+	 DysMh9ShbVgcKiWbLHZIotJmdASe50sCHA5yOLbkX4dhIcvVJqW5AnA5w/5VkSHuyM
+	 DzxVgjQVk3b9PhJ4M9DYE6IBoZX+FyGrpv63ySBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfGSEDA (ORCPT
+        id S1730265AbfGSEDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:03:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:03:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730185AbfGSEC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:02:57 -0400
+        id S1730195AbfGSEDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77F1A21882;
-        Fri, 19 Jul 2019 04:02:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 234E521850;
+        Fri, 19 Jul 2019 04:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508976;
-        bh=loio7EbnPyE2U2r+HyGRrKSUH0ysEvubFWprXBu+1MA=;
+        s=default; t=1563508978;
+        bh=X4vd8OK4yXQ0AbEdR++MYAR4NsXHtv+u2lPVXgjJSTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5ODP+2WccjNEqIim8rKr2M3Ucknu6bqDoWDBqwwd78R0wtVFwSdHUlrkZvw7ouKM
-         rOO45oHHq2EigF1g8bFnzWn60nFwHWWXwUFDf2O76ACkWEPHH+1ThDhtcrsCRKLb2o
-         aKSQjbAFBYh0LpqFv4iX376OQjkshnsC4yKrJZjw=
+        b=Gfn9YEiGHhWx+//lC6mrIWYeSc0w6cW7nPkYfAs6N/lh9dLIGlmh6WycYgzRdPJXf
+         0bBSZfobDME0TPKcYvKeUDZJcn0AfTvYBzxUslM3QSX6aMT8/POQTbIujbWI/blCxJ
+         6KUIvXEKULz6F9M3iKeUZwzGRaf0NHMEa3o+nJq4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 005/141] ipmi_si: fix unexpected driver unregister warning
-Date:   Fri, 19 Jul 2019 00:00:30 -0400
-Message-Id: <20190719040246.15945-5-sashal@kernel.org>
+Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.1 006/141] staging: vt6656: use meaningful error code during buffer allocation
+Date:   Fri, 19 Jul 2019 00:00:31 -0400
+Message-Id: <20190719040246.15945-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,58 +59,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
 
-[ Upstream commit 2f66353963043e1d8dfacfbdf509acc5d3be7698 ]
+[ Upstream commit d8c2869300ab5f7a19bf6f5a04fe473c5c9887e3 ]
 
-If ipmi_si_platform_init()->platform_driver_register() fails,
-platform_driver_unregister() called unconditionally will trigger
-following warning,
+Check on called function's returned value for error and return 0 on
+success or a negative errno value on error instead of a boolean value.
 
-ipmi_platform: Unable to register driver: -12
-------------[ cut here ]------------
-Unexpected driver unregister!
-WARNING: CPU: 1 PID: 7210 at drivers/base/driver.c:193 driver_unregister+0x60/0x70 drivers/base/driver.c:193
-
-Fix it by adding platform_registered variable, only unregister platform
-driver when it is already successfully registered.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-Id: <20190517101245.4341-1-wangkefeng.wang@huawei.com>
-
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_platform.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/staging/vt6656/main_usb.c | 42 ++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
-index 54c7ded2a1ff..859c78de1d4a 100644
---- a/drivers/char/ipmi/ipmi_si_platform.c
-+++ b/drivers/char/ipmi/ipmi_si_platform.c
-@@ -19,6 +19,7 @@
- #include "ipmi_si.h"
- #include "ipmi_dmi.h"
- 
-+static bool platform_registered;
- static bool si_tryplatform = true;
- #ifdef CONFIG_ACPI
- static bool          si_tryacpi = true;
-@@ -471,9 +472,12 @@ void ipmi_si_platform_init(void)
- 	int rv = platform_driver_register(&ipmi_platform_driver);
- 	if (rv)
- 		pr_err("Unable to register driver: %d\n", rv);
-+	else
-+		platform_registered = true;
+diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
+index ccafcc2c87ac..70433f756d8e 100644
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -402,16 +402,19 @@ static void vnt_free_int_bufs(struct vnt_private *priv)
+ 	kfree(priv->int_buf.data_buf);
  }
  
- void ipmi_si_platform_shutdown(void)
+-static bool vnt_alloc_bufs(struct vnt_private *priv)
++static int vnt_alloc_bufs(struct vnt_private *priv)
  {
--	platform_driver_unregister(&ipmi_platform_driver);
-+	if (platform_registered)
-+		platform_driver_unregister(&ipmi_platform_driver);
++	int ret = 0;
+ 	struct vnt_usb_send_context *tx_context;
+ 	struct vnt_rcb *rcb;
+ 	int ii;
+ 
+ 	for (ii = 0; ii < priv->num_tx_context; ii++) {
+ 		tx_context = kmalloc(sizeof(*tx_context), GFP_KERNEL);
+-		if (!tx_context)
++		if (!tx_context) {
++			ret = -ENOMEM;
+ 			goto free_tx;
++		}
+ 
+ 		priv->tx_context[ii] = tx_context;
+ 		tx_context->priv = priv;
+@@ -419,16 +422,20 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
+ 
+ 		/* allocate URBs */
+ 		tx_context->urb = usb_alloc_urb(0, GFP_KERNEL);
+-		if (!tx_context->urb)
++		if (!tx_context->urb) {
++			ret = -ENOMEM;
+ 			goto free_tx;
++		}
+ 
+ 		tx_context->in_use = false;
+ 	}
+ 
+ 	for (ii = 0; ii < priv->num_rcb; ii++) {
+ 		priv->rcb[ii] = kzalloc(sizeof(*priv->rcb[ii]), GFP_KERNEL);
+-		if (!priv->rcb[ii])
++		if (!priv->rcb[ii]) {
++			ret = -ENOMEM;
+ 			goto free_rx_tx;
++		}
+ 
+ 		rcb = priv->rcb[ii];
+ 
+@@ -436,39 +443,46 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
+ 
+ 		/* allocate URBs */
+ 		rcb->urb = usb_alloc_urb(0, GFP_KERNEL);
+-		if (!rcb->urb)
++		if (!rcb->urb) {
++			ret = -ENOMEM;
+ 			goto free_rx_tx;
++		}
+ 
+ 		rcb->skb = dev_alloc_skb(priv->rx_buf_sz);
+-		if (!rcb->skb)
++		if (!rcb->skb) {
++			ret = -ENOMEM;
+ 			goto free_rx_tx;
++		}
+ 
+ 		rcb->in_use = false;
+ 
+ 		/* submit rx urb */
+-		if (vnt_submit_rx_urb(priv, rcb))
++		ret = vnt_submit_rx_urb(priv, rcb);
++		if (ret)
+ 			goto free_rx_tx;
+ 	}
+ 
+ 	priv->interrupt_urb = usb_alloc_urb(0, GFP_KERNEL);
+-	if (!priv->interrupt_urb)
++	if (!priv->interrupt_urb) {
++		ret = -ENOMEM;
+ 		goto free_rx_tx;
++	}
+ 
+ 	priv->int_buf.data_buf = kmalloc(MAX_INTERRUPT_SIZE, GFP_KERNEL);
+ 	if (!priv->int_buf.data_buf) {
+-		usb_free_urb(priv->interrupt_urb);
+-		goto free_rx_tx;
++		ret = -ENOMEM;
++		goto free_rx_tx_urb;
+ 	}
+ 
+-	return true;
++	return 0;
+ 
++free_rx_tx_urb:
++	usb_free_urb(priv->interrupt_urb);
+ free_rx_tx:
+ 	vnt_free_rx_bufs(priv);
+-
+ free_tx:
+ 	vnt_free_tx_bufs(priv);
+-
+-	return false;
++	return ret;
  }
+ 
+ static void vnt_tx_80211(struct ieee80211_hw *hw,
 -- 
 2.20.1
 
