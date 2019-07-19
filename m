@@ -2,87 +2,68 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F63C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F7C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC8721872
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3FF21880
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbfGSQg5 (ORCPT
+        id S1731195AbfGSQjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:36:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24763 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfGSQg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:36:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 09:36:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="195998381"
-Received: from mzoranov-mobl.amr.corp.intel.com ([10.252.2.145])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Jul 2019 09:36:54 -0700
-Message-ID: <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
-Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     dor.shaish@intel.com, Josh Boyer <jwboyer@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 19 Jul 2019 19:36:53 +0300
-In-Reply-To: <s5hr26m9gvc.wl-tiwai@suse.de>
-References: <s5hr26m9gvc.wl-tiwai@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 19 Jul 2019 12:39:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41974 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727577AbfGSQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:39:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8D338AF9C;
+        Fri, 19 Jul 2019 16:39:37 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 18:39:31 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>, mhocko@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, keescook@chromium.org,
+        mcgrof@kernel.org, linux-mm@kvack.org,
+        Hillf Danton <hdanton@sina.com>, cgroups@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] numa: append per-node execution time in
+ cpu.numa_stat
+Message-ID: <20190719163930.GA854@blackbody.suse.cz>
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
+ <6973a1bf-88f2-b54e-726d-8b7d95d80197@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6973a1bf-88f2-b54e-726d-8b7d95d80197@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Dor.
-
-Hi Takashi,
-
-Do you have full logs of the crash? We can't see much from the log
-snippet pasted in the bug report.
-
-In any case, today or tomorrow, I'll release a new FW version for 9260,
-hopefully it will solve the problem.  I'll send you a link so you can
-test it when I push it to our tree (which feeds linux-firmware.git).
-
-Thanks for reporting!
-
---
-Cheers,
-Luca.
-
-
-On Fri, 2019-07-19 at 17:35 +0200, Takashi Iwai wrote:
-> Hi,
+On Tue, Jul 16, 2019 at 11:40:35AM +0800, 王贇  <yun.wang@linux.alibaba.com> wrote:
+> By doing 'cat /sys/fs/cgroup/cpu/CGROUP_PATH/cpu.numa_stat', we see new
+> output line heading with 'exectime', like:
 > 
-> we've got a report about the regression with the latest iwlwifi 9260
-> *-46.ucode that landed recently in linux-firmware tree.  WiFi doesn't
-> work any longer on some Dell machines with that firmware.  See details
-> in:
->   https://bugzilla.opensuse.org/show_bug.cgi?id=1142128
-> 
-> Currently we're reverting to the previously released firmware files.
-> 
-> Is it a known problem that has been already addressed?
-> If not, shall we revert the changes as a tentative workaround?
-> 
-> 
-> Thanks!
-> 
-> Takashi
+>   exectime 311900 407166
+What you present are times aggregated over CPUs in the NUMA nodes, this
+seems a bit lossy interface. 
+
+Despite you the aggregated information is sufficient for your
+monitoring, I think it's worth providing the information with the
+original granularity.
+
+Note that cpuacct v1 controller used to report such percpu runtime
+stats. The v2 implementation would rather build upon the rstat API.
+
+Michal
 
