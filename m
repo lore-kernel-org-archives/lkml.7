@@ -7,118 +7,127 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF73C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BE1C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446092184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B30720873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKJdENoz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd4qes53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfGSLs7 (ORCPT
+        id S1728148AbfGSLuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:48:59 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33576 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbfGSLs4 (ORCPT
+        Fri, 19 Jul 2019 07:50:06 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45932 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfGSLuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:48:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x3so21622082lfc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:48:54 -0700 (PDT)
+        Fri, 19 Jul 2019 07:50:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m206so24035885oib.12;
+        Fri, 19 Jul 2019 04:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iticw4tcihZ+07VhgZfVUmt5G5vuNCB2orcBTVaQzy4=;
-        b=YKJdENozcfSHfpIPcIFN0eEP24xcLJYRBr/2HswHgNsQlSymIPeXI5Z915L1C+CfvC
-         paovF7vRic2NHO7c0B0UxbxOpyMnt8ZU/VIoGUdvRT6AANFuKIxNpJ3qQ4dxeiBHnhBt
-         9pK7UPxgzQyfc5e0UgbeEqK7B0whaRG7axOtSx8FVaOhqatQIbzX7iACeDa/49ovYDGA
-         vpnJdPVWG6qqL+w2GIo/2FNWcMgD8NMFPdB3yMTalmYMxA0DnpP7X2OY/1Nz4yiJLNHv
-         j9//ZC78nlVdmiC1pWjEGRsXv02AxckZZ6Mf+tHEjrv6RXgpxgriG23Y6udyUS43OjQF
-         VUTw==
+         :cc:content-transfer-encoding;
+        bh=sqpTcP76z8L1qAX6ZIXz8oQ1xDJvx6eMGKj4s5NJ4n4=;
+        b=bd4qes53GBobFCQjiSauq8kko/7lDoscPritfqpd7h/NfzroV52tvn57Qt4nLg/MDZ
+         gnNOw0YQmSxdV2YLiKfb7LLmgz8iHznTxZAACh/IPiIdIMsqfN28Z3RO3tGYlR9ob+Sr
+         XlnAux65a7xlSAaPyepAcJCfmIcS/uc7Ix3qoSzepLhj4qXywdHrTVU1TVWvs0C5GUQG
+         If3PkDVd/xE/RzS2AExYFWIW7+Kyhx3MEk2Xhu6E1HMJWcwnomQukWTaiepmlvFnOS/u
+         A3DeCZIuf4Yg4Oqjy1pDtWwASCaznZkERw4FqyY8AZMYCJUACciqXfHr2rV4cw1U6aWE
+         1tmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iticw4tcihZ+07VhgZfVUmt5G5vuNCB2orcBTVaQzy4=;
-        b=AIkQzYZJSp55oB/R0Pe9omWH21iEQmwPzw9y6Q+ycvww4zTYo8VD7iJ+HvzIBHJ/bO
-         BNYJWdZGqdE9m9BC3fMudB5EQ0bfErskWW+VNlJg+QRFK4JakOwWckdtvD+MJhb+jCvU
-         cHeTA9HWqq3nDao/7lOuFfnCOvg3lYQ6gwTMfpiOGjoB2AIEAAEjGw21KdJ652TqQUln
-         iw9yJ9Er+ovxm3QrBvVOZax1Oh8g+kIU4T27nEtk/hs8Gp5vgGZ6ID3d7/gzEegHzDWp
-         cckfJFwrJ5fkOQJFY79JTB2xaLY6V7Bj4sEbaNOdddh/xvFYN+8DYi1o3M9JdooCOLsQ
-         gi9g==
-X-Gm-Message-State: APjAAAXiV0Dn2lOc2NmYYafETax8/aeO07cWlVXPvV60nVphcSAUG5OS
-        HuIqyrwyM/5XRgWzcDNnt3WZ/8dRh1UN/TV97NU=
-X-Google-Smtp-Source: APXvYqymGrgw/089/6XHyfPjYaYN56y+q7KROCrfg2jRO2RI0Apr6JtYx/vQK86SnBbeDOEPn8jWWJ5v7DUPCuznrHM=
-X-Received: by 2002:a05:6512:146:: with SMTP id m6mr23731306lfo.90.1563536934097;
- Fri, 19 Jul 2019 04:48:54 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sqpTcP76z8L1qAX6ZIXz8oQ1xDJvx6eMGKj4s5NJ4n4=;
+        b=HYkAnrd14WEsUXIjZGSSoaXRZ3nskAvp3n23JCPooX+PV0WdRm3E0/FAL6/RErzjFz
+         p3Vpv8yjK8V1CQjkzIerWOYRiGBVr5FaJE6+57sa1P/nHkIYU/cFDYOdE5KFfEofhUIR
+         yHJpw/kJ/CSR3lLbvJXiRMAEzxlPv0kAuGGLiiLObxvKlHYNlV1f4X/i15CPT0wSr5b0
+         mnDHTRqOcnDD70/3MFMuTYl9EoWCatz8hpi8R3VdXeahGznj0SNO9Q+UleGyBftXapce
+         x3t52Oi+rOfwkSGqCFe6BhiAqNLi+0Tyy8lwvm0z4biwmRQyNVIdicL6ZC8wgcXSkBmg
+         N1cw==
+X-Gm-Message-State: APjAAAUKqoR2R8C1vk8qc4DMBuRvbolg5lpl0PdUZOCThvEIVGvDIHfq
+        7J/gjefCc8s8BMKAENjTvcso5ChskCelHW/VqeA=
+X-Google-Smtp-Source: APXvYqzTzot0TaouNF6K1z/L7Hs8zJ+9SFAcylB1aJuoJDSPAmqyWlbMSaqn+piwy+TqxrQfg7WIaGyMlSocp0wU8CM=
+X-Received: by 2002:aca:2303:: with SMTP id e3mr23263015oie.112.1563537004914;
+ Fri, 19 Jul 2019 04:50:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
- <20190531210816.GA24027@sinkpad> <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad> <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
- <20190613032246.GA17752@sinkpad> <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
- <5f869512-3336-d9f0-6fff-e1150673a924@linux.intel.com> <20190719055238.GA536@aaronlu>
-In-Reply-To: <20190719055238.GA536@aaronlu>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Fri, 19 Jul 2019 19:48:42 +0800
-Message-ID: <CAERHkruB82OT7giLh+yCA8igqN8H=HE+RkK7_qbXNKJGCQRpqg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190719104802.18070-1-andradanciu1997@gmail.com>
+ <20190719104802.18070-2-andradanciu1997@gmail.com> <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+In-Reply-To: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+From:   Andra Danciu <andradanciu1997@gmail.com>
+Date:   Fri, 19 Jul 2019 14:49:54 +0300
+Message-ID: <CAJNLGswXF8XtZKnFtzaK+7Xvs0Ygwwh4WP5PiO8Csc7pDG1vNA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
+ the PICO-PI-IMX8M
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Ping Bai <ping.bai@nxp.com>,
+        =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>,
+        Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Richard Hu <richard.hu@technexion.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 1:53 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
->
-> On Thu, Jul 18, 2019 at 04:27:19PM -0700, Tim Chen wrote:
-> >
-> >
-> > On 7/18/19 3:07 AM, Aaron Lu wrote:
-> > > On Wed, Jun 19, 2019 at 02:33:02PM -0400, Julien Desfossez wrote:
-> >
-> > >
-> > > With the below patch on top of v3 that makes use of util_avg to decide
-> > > which task win, I can do all 8 steps and the final scores of the 2
-> > > workloads are: 1796191 and 2199586. The score number are not close,
-> > > suggesting some unfairness, but I can finish the test now...
-> >
-> > Aaron,
-> >
-> > Do you still see high variance in terms of workload throughput that
-> > was a problem with the previous version?
->
-> Any suggestion how to measure this?
-> It's not clear how Aubrey did his test, will need to take a look at
-> sysbench.
->
+Hi Fabio,
 
-Well, thanks to post this at the end of my vacation, ;)
-I'll go back to the office next week and give a shot.
-I actually have a new setup of co-locating AVX512 tasks with
-sysbench MYSQL. Both throughput and latency was unacceptable
-on the top of V3, Looking forward to seeing the difference of
-patch.
+I compiled with W=3D1 and you are right, they cause warning. I will remove =
+them.
 
-Thanks,
--Aubrey
+=C3=8En vin., 19 iul. 2019 la 14:19, Fabio Estevam <festevam@gmail.com> a s=
+cris:
+>
+> Hi Andra,
+>
+> On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
+> <andradanciu1997@gmail.com> wrote:
+>
+> > +       pmic: pmic@4b {
+> > +               reg =3D <0x4b>;
+> > +               compatible =3D "rohm,bd71837";
+> > +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+> > +               pinctrl-names =3D "default";
+> > +               pinctrl-0 =3D <&pinctrl_pmic>;
+> > +               clocks =3D <&pmic_osc>;
+> > +               clock-names =3D "osc";
+> > +               clock-output-names =3D "pmic_clk";
+> > +               interrupt-parent =3D <&gpio1>;
+> > +               interrupts =3D <3 GPIO_ACTIVE_LOW>;
+> > +               interrupt-names =3D "irq";
+> > +
+> > +               regulators {
+> > +                       #address-cells =3D <1>;
+> > +                       #size-cells =3D <0>;
+>
+> #address-cells and  #size-cells are not needed and they cause warnings wi=
+th W=3D1:
+>
+>   DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
+> arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
+> (avoid_unnecessary_addr_size):
+> /soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
+> #address-cells/#size-cells without "ranges" or child "reg" property
+>
+> Please remove them.
