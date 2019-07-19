@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CA4C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936AEC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34DA21880
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA7521849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509291;
-	bh=IfB97Bn5uzpoLRSH6ClsAiqyxggvd+YTlvZlopvmv7A=;
+	s=default; t=1563509294;
+	bh=s6J8kpScTZYmUeqElVCDWGVOIZvOAOUoW/iWGc7aPZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SgVlGb4Rb4w1Bz+A7VsU5zFY25uYXr96ECLzLjj2BJQAW37IN+Cw24INxYXwpNDaW
-	 yoTF0ZZh7TN2UsrRK/K1uroODLtCNfvTU+1brVmHUE0yy7von69trkUoL3SocITZVe
-	 07/ts/nWqVNqMbSnqc+bCiL/KqzxN9oy/1I/gMtU=
+	b=eIbWlxUbD1XjUAp7UZqIq9BvNAiZ6VhjZEn/puEfXTCdrGr6kF43YL0O01hor+89R
+	 VlhE/Diy+QdX1Vot4Y/JPbrFG+3SzN3fmyLomhuJQKV4SOI/AxLHXZb9EP/XPeLZov
+	 yN327gD/Nfc86LfYd9qx1BPi2APoO8UzGjitmnJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732933AbfGSEIK (ORCPT
+        id S1732952AbfGSEIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42194 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731309AbfGSEIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:07 -0400
+        id S1732930AbfGSEIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42E72184E;
-        Fri, 19 Jul 2019 04:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F00D21872;
+        Fri, 19 Jul 2019 04:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509286;
-        bh=IfB97Bn5uzpoLRSH6ClsAiqyxggvd+YTlvZlopvmv7A=;
+        s=default; t=1563509290;
+        bh=s6J8kpScTZYmUeqElVCDWGVOIZvOAOUoW/iWGc7aPZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8/uqkai8qnKP7bh8Xuch6IZuqQON642mY1UiLwrS7a00U2N527L796wu7JT26lIb
-         ebNsXi/3i/4ot51z/H7xWZdQm7SpXOsf4vebjIGrOv8fG2FUq4cj3/LybVOwbxEPV/
-         8cXIadA2/RxEdBPcjtismYs7RZGCAXsdoo8bZO2M=
+        b=tadJeoNj9GUyfQsFt3S32Sb2ihbbw+dgbv6p1UXx9MAaePZypzPYlGB50pa9dmdlU
+         OTOvB9TX6EvpP7T7nFeLBc6rYXTfRdfjb1a+S81x62HLz/N3qBq9RF+VDfTm6mcIv3
+         1+ggoUA/6VtTWOLIBU/dHx5F9yylOVvKcIRTd4WY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oak Zeng <ozeng@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 013/101] drm/amdkfd: Fix a potential memory leak
-Date:   Fri, 19 Jul 2019 00:06:04 -0400
-Message-Id: <20190719040732.17285-13-sashal@kernel.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 016/101] PCI: Return error if cannot probe VF
+Date:   Fri, 19 Jul 2019 00:06:07 -0400
+Message-Id: <20190719040732.17285-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -60,45 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oak Zeng <ozeng@amd.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit e73390d181103a19e1111ec2f25559a0570e9fe0 ]
+[ Upstream commit 76002d8b48c4b08c9bd414517dd295e132ad910b ]
 
-Free mqd_mem_obj it GTT buffer allocation for MQD+control stack fails.
+Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+VF driver binding") allows the user to specify that drivers for VFs of
+a PF should not be probed, but it actually causes pci_device_probe() to
+return success back to the driver core in this case.  Therefore by all
+sysfs appearances the device is bound to a driver, the driver link from
+the device exists as does the device link back from the driver, yet the
+driver's probe function is never called on the device.  We also fail to
+do any sort of cleanup when we're prohibited from probing the device,
+the IRQ setup remains in place and we even hold a device reference.
 
-Signed-off-by: Oak Zeng <ozeng@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Instead, abort with errno before any setup or references are taken when
+pci_device_can_probe() prevents us from trying to probe the device.
+
+Link: https://lore.kernel.org/lkml/155672991496.20698.4279330795743262888.stgit@gimli.home
+Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/pci-driver.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
-index 0cedb37cf513..985bebde5a34 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
-@@ -75,6 +75,7 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
- 	struct v9_mqd *m;
- 	struct kfd_dev *kfd = mm->dev;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 33f3f475e5c6..956ee7527d2c 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -414,6 +414,9 @@ static int pci_device_probe(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	struct pci_driver *drv = to_pci_driver(dev->driver);
  
-+	*mqd_mem_obj = NULL;
- 	/* From V9,  for CWSR, the control stack is located on the next page
- 	 * boundary after the mqd, we will use the gtt allocation function
- 	 * instead of sub-allocation function.
-@@ -92,8 +93,10 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
- 	} else
- 		retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct v9_mqd),
- 				mqd_mem_obj);
--	if (retval != 0)
-+	if (retval) {
-+		kfree(*mqd_mem_obj);
- 		return -ENOMEM;
-+	}
++	if (!pci_device_can_probe(pci_dev))
++		return -ENODEV;
++
+ 	pci_assign_irq(pci_dev);
  
- 	m = (struct v9_mqd *) (*mqd_mem_obj)->cpu_ptr;
- 	addr = (*mqd_mem_obj)->gpu_addr;
+ 	error = pcibios_alloc_irq(pci_dev);
+@@ -421,12 +424,10 @@ static int pci_device_probe(struct device *dev)
+ 		return error;
+ 
+ 	pci_dev_get(pci_dev);
+-	if (pci_device_can_probe(pci_dev)) {
+-		error = __pci_device_probe(drv, pci_dev);
+-		if (error) {
+-			pcibios_free_irq(pci_dev);
+-			pci_dev_put(pci_dev);
+-		}
++	error = __pci_device_probe(drv, pci_dev);
++	if (error) {
++		pcibios_free_irq(pci_dev);
++		pci_dev_put(pci_dev);
+ 	}
+ 
+ 	return error;
 -- 
 2.20.1
 
