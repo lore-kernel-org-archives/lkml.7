@@ -7,51 +7,61 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71747C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF50C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5D12184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E6721851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510162;
-	bh=B5BaCrDkd16abE/dgvJMTx+7Q+mR4c/bTrOyE51wWn0=;
+	s=default; t=1563510171;
+	bh=ayNMgFyXiftuip0Uxel5UmXwcABdBHOMaIPv9xzWQSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Id/se3Z7FATskpLzqFyRCjgnMzHl2U9cUk+z0LFoZVaWvg4BnqLjm3KMHv6+ZZG8y
-	 cZ427E46SKJ3Jy5FqBuG7Lz/shJPctIIx1WrkZttMIwAunut6XvIQurULndWz5X+fr
-	 3PKRepdCJ1Yv3znHoEjSL2OY4ipR2Zshc4o3yz18=
+	b=KVYmhMj2D/WeUAhFtx6xdAtaqAekOlBYXi6O9LdjHpQ9rjjlSxSUsTn2lATzHy1YA
+	 vakZP8GvfkKH0TjlwIcchGXDhQXjEXBdn95JgHa71pB3R7KaRzHQ99O7mLzbw3nxHB
+	 Z60pq/9F/Uiox0ds6ENP8guEm4LzrZLPobY0u9OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbfGSEMW (ORCPT
+        id S2390003AbfGSEWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47618 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388000AbfGSEMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:20 -0400
+        id S2388297AbfGSELJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72FE62189E;
-        Fri, 19 Jul 2019 04:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D682121872;
+        Fri, 19 Jul 2019 04:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509539;
-        bh=B5BaCrDkd16abE/dgvJMTx+7Q+mR4c/bTrOyE51wWn0=;
+        s=default; t=1563509468;
+        bh=ayNMgFyXiftuip0Uxel5UmXwcABdBHOMaIPv9xzWQSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Vc2rF3cpHy/TBEEbhUFl0FM+0iOkwQXqDXzHme/dVqUwjFLbtK0CVuireabqGitg
-         Ptne8qAxL50+MsCuEpCj/KjWVmLn+aL2q1hRkF7EKCjsrZKT1psL+knu5HL7JYVHGK
-         UI/d7Az9kbEAz9HSkIlQgzhDeOr/6m3grgYO/dwQ=
+        b=Qo6+nRkjkjO/LNYSE9MHCDPglUMV4XD4WsEMR7jOFp5/KIycU6JFUAUqCBgG+Yptz
+         5oakQhx9R8Ka2GSyIAjZSNqBbKuQIOHoNckgtoCfGnnEFAPrpk2msTUpKQ8CVDOWTZ
+         oR2n9SPwYbXu+l4OrWK4OOHNC7j4RTNfLZCNbM68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 39/60] serial: sh-sci: Terminate TX DMA during buffer flushing
-Date:   Fri, 19 Jul 2019 00:10:48 -0400
-Message-Id: <20190719041109.18262-39-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 101/101] mm: use down_read_killable for locking mmap_sem in access_remote_vm
+Date:   Fri, 19 Jul 2019 00:07:32 -0400
+Message-Id: <20190719040732.17285-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
-References: <20190719041109.18262-1-sashal@kernel.org>
+In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
+References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,54 +70,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 775b7ffd7d6d5db320d99b0a485c51e04dfcf9f1 ]
+[ Upstream commit 1e426fe28261b03f297992e89da3320b42816f4e ]
 
-While the .flush_buffer() callback clears sci_port.tx_dma_len since
-commit 1cf4a7efdc71cab8 ("serial: sh-sci: Fix race condition causing
-garbage during shutdown"), it does not terminate a transmit DMA
-operation that may be in progress.
+This function is used by ptrace and proc files like /proc/pid/cmdline and
+/proc/pid/environ.
 
-Fix this by terminating any pending DMA operations, and resetting the
-corresponding cookie.
+Access_remote_vm never returns error codes, all errors are ignored and
+only size of successfully read data is returned.  So, if current task was
+killed we'll simply return 0 (bytes read).
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Mmap_sem could be locked for a long time or forever if something goes
+wrong.  Using a killable lock permits cleanup of stuck tasks and
+simplifies investigation.
 
-Link: https://lore.kernel.org/r/20190624123540.20629-3-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/156007494202.3335.16782303099589302087.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Michal Koutný <mkoutny@suse.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Roman Gushchin <guro@fb.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/sh-sci.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ mm/memory.c | 4 +++-
+ mm/nommu.c  | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 66c8bbea06c4..dc0b36ab999a 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1571,11 +1571,18 @@ static void sci_free_dma(struct uart_port *port)
+diff --git a/mm/memory.c b/mm/memory.c
+index e0010cb870e0..fb5655b518c9 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4491,7 +4491,9 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	void *old_buf = buf;
+ 	int write = gup_flags & FOLL_WRITE;
  
- static void sci_flush_buffer(struct uart_port *port)
- {
-+	struct sci_port *s = to_sci_port(port);
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
 +
- 	/*
- 	 * In uart_flush_buffer(), the xmit circular buffer has just been
--	 * cleared, so we have to reset tx_dma_len accordingly.
-+	 * cleared, so we have to reset tx_dma_len accordingly, and stop any
-+	 * pending transfers
- 	 */
--	to_sci_port(port)->tx_dma_len = 0;
-+	s->tx_dma_len = 0;
-+	if (s->chan_tx) {
-+		dmaengine_terminate_async(s->chan_tx);
-+		s->cookie_tx = -EINVAL;
-+	}
- }
- #else /* !CONFIG_SERIAL_SH_SCI_DMA */
- static inline void sci_request_dma(struct uart_port *port)
+ 	/* ignore errors, just check how much was successfully transferred */
+ 	while (len) {
+ 		int bytes, ret, offset;
+diff --git a/mm/nommu.c b/mm/nommu.c
+index e4aac33216ae..1d63ecfc98c5 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1779,7 +1779,8 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	struct vm_area_struct *vma;
+ 	int write = gup_flags & FOLL_WRITE;
+ 
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
+ 
+ 	/* the access must start within one of the target process's mappings */
+ 	vma = find_vma(mm, addr);
 -- 
 2.20.1
 
