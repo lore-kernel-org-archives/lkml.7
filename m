@@ -2,66 +2,57 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC5C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45EDC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C746206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B31C206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510841;
-	bh=4kF8aE9+GyZNrdsTzSnlchfK+Vq0JcwV6RWssaUwyDQ=;
+	s=default; t=1563510850;
+	bh=Sa2/51Z6qR6YnpSIFqrqfzBUcq3VEdtQQgHmAsLWhMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fS39Fbbsg76lDwSVuSMy8h4SrWZRg9clctBG5rDozSfM3e2YRTbQHuaXb9Kfn37WN
-	 a2z2bb+NunMI1CNHiTvhEM0yPiyBu8ALyd2PNIOnRPsUr089z7TZ/b0pvID4bTP7Yq
-	 gBArlZNSY4XghYejENd2M37HvljAshIOgph7xAnA=
+	b=Bc8tiY2W0JfElYzYOyuhA/kzmfla9hm1xethpBZKzpBqNu75W8knUVwYawvEyCltj
+	 wPDyHpjO0y4/wVAccBczznCpZ8B94d71+CfPTxm+ztZxVhTKfASqOcnW/UbjHsLx+W
+	 nEjQ6iwK6Did6g9zeaTCDUiRXvMO7F4O79TPpSto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfGSEeA (ORCPT
+        id S1729810AbfGSECF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34186 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbfGSECP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:02:15 -0400
+        id S1727665AbfGSEBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75D7721850;
-        Fri, 19 Jul 2019 04:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B440B21882;
+        Fri, 19 Jul 2019 04:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508935;
-        bh=4kF8aE9+GyZNrdsTzSnlchfK+Vq0JcwV6RWssaUwyDQ=;
+        s=default; t=1563508908;
+        bh=Sa2/51Z6qR6YnpSIFqrqfzBUcq3VEdtQQgHmAsLWhMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Le+oK1+vozfFhPkAWMvYLa1xgKILvZarL/RaMJahQh0/S/lUgF+k7JpiUi0SBYTTM
-         JUkPBzEs8yAPwMcUzSy07XH8PloSCkyjtjJa2uYhQzFoNMA9AST7C9Ckzv8udJgeok
-         btbd3pBMJ6ayNTx/k+S7ctIHTg9wOtjKrnkRSZCs=
+        b=bw4VMMPm9IG/P+OOwXL0Mu5yA+AWTsVsM9hh4I8UnkDA5n/qb+mLXXMpA54k6qP8z
+         9aJepyTWOlt+YnBz83GayDFL+459HoN3yP4tD6VNUKKaczwsCNahcf077LXEaCA13T
+         z4puqImr3cx3ff720/ldoSq3Jd6Ws+y1k2RC+NvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Roman Gushchin <guro@fb.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 164/171] proc: use down_read_killable mmap_sem for /proc/pid/pagemap
-Date:   Thu, 18 Jul 2019 23:56:35 -0400
-Message-Id: <20190719035643.14300-164-sashal@kernel.org>
+Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 153/171] nvme: fix NULL deref for fabrics options
+Date:   Thu, 18 Jul 2019 23:56:24 -0400
+Message-Id: <20190719035643.14300-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -70,46 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Minwoo Im <minwoo.im.dev@gmail.com>
 
-[ Upstream commit ad80b932c57d85fd6377f97f359b025baf179a87 ]
+[ Upstream commit 7d30c81b80ea9b0812d27030a46a5bf4c4e328f5 ]
 
-Do not remain stuck forever if something goes wrong.  Using a killable
-lock permits cleanup of stuck tasks and simplifies investigation.
+git://git.infradead.org/nvme.git nvme-5.3 branch now causes the
+following NULL deref oops.  Check the ctrl->opts first before the deref.
 
-Link: http://lkml.kernel.org/r/156007493638.3335.4872164955523928492.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Koutný <mkoutny@suse.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[   16.337581] BUG: kernel NULL pointer dereference, address: 0000000000000056
+[   16.338551] #PF: supervisor read access in kernel mode
+[   16.338551] #PF: error_code(0x0000) - not-present page
+[   16.338551] PGD 0 P4D 0
+[   16.338551] Oops: 0000 [#1] SMP PTI
+[   16.338551] CPU: 2 PID: 1035 Comm: kworker/u16:5 Not tainted 5.2.0-rc6+ #1
+[   16.338551] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+[   16.338551] Workqueue: nvme-wq nvme_scan_work [nvme_core]
+[   16.338551] RIP: 0010:nvme_validate_ns+0xc9/0x7e0 [nvme_core]
+[   16.338551] Code: c0 49 89 c5 0f 84 00 07 00 00 48 8b 7b 58 e8 be 48 39 c1 48 3d 00 f0 ff ff 49 89 45 18 0f 87 a4 06 00 00 48 8b 93 70 0a 00 00 <80> 7a 56 00 74 0c 48 8b 40 68 83 48 3c 08 49 8b 45 18 48 89 c6 bf
+[   16.338551] RSP: 0018:ffffc900024c7d10 EFLAGS: 00010283
+[   16.338551] RAX: ffff888135a30720 RBX: ffff88813a4fd1f8 RCX: 0000000000000007
+[   16.338551] RDX: 0000000000000000 RSI: ffffffff8256dd38 RDI: ffff888135a30720
+[   16.338551] RBP: 0000000000000001 R08: 0000000000000007 R09: ffff88813aa6a840
+[   16.338551] R10: 0000000000000001 R11: 000000000002d060 R12: ffff88813a4fd1f8
+[   16.338551] R13: ffff88813a77f800 R14: ffff88813aa35180 R15: 0000000000000001
+[   16.338551] FS:  0000000000000000(0000) GS:ffff88813ba80000(0000) knlGS:0000000000000000
+[   16.338551] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   16.338551] CR2: 0000000000000056 CR3: 000000000240a002 CR4: 0000000000360ee0
+[   16.338551] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   16.338551] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   16.338551] Call Trace:
+[   16.338551]  nvme_scan_work+0x2c0/0x340 [nvme_core]
+[   16.338551]  ? __switch_to_asm+0x40/0x70
+[   16.338551]  ? _raw_spin_unlock_irqrestore+0x18/0x30
+[   16.338551]  ? try_to_wake_up+0x408/0x450
+[   16.338551]  process_one_work+0x20b/0x3e0
+[   16.338551]  worker_thread+0x1f9/0x3d0
+[   16.338551]  ? cancel_delayed_work+0xa0/0xa0
+[   16.338551]  kthread+0x117/0x120
+[   16.338551]  ? kthread_stop+0xf0/0xf0
+[   16.338551]  ret_from_fork+0x3a/0x50
+[   16.338551] Modules linked in: nvme nvme_core
+[   16.338551] CR2: 0000000000000056
+[   16.338551] ---[ end trace b9bf761a93e62d84 ]---
+[   16.338551] RIP: 0010:nvme_validate_ns+0xc9/0x7e0 [nvme_core]
+[   16.338551] Code: c0 49 89 c5 0f 84 00 07 00 00 48 8b 7b 58 e8 be 48 39 c1 48 3d 00 f0 ff ff 49 89 45 18 0f 87 a4 06 00 00 48 8b 93 70 0a 00 00 <80> 7a 56 00 74 0c 48 8b 40 68 83 48 3c 08 49 8b 45 18 48 89 c6 bf
+[   16.338551] RSP: 0018:ffffc900024c7d10 EFLAGS: 00010283
+[   16.338551] RAX: ffff888135a30720 RBX: ffff88813a4fd1f8 RCX: 0000000000000007
+[   16.338551] RDX: 0000000000000000 RSI: ffffffff8256dd38 RDI: ffff888135a30720
+[   16.338551] RBP: 0000000000000001 R08: 0000000000000007 R09: ffff88813aa6a840
+[   16.338551] R10: 0000000000000001 R11: 000000000002d060 R12: ffff88813a4fd1f8
+[   16.338551] R13: ffff88813a77f800 R14: ffff88813aa35180 R15: 0000000000000001
+[   16.338551] FS:  0000000000000000(0000) GS:ffff88813ba80000(0000) knlGS:0000000000000000
+[   16.338551] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   16.338551] CR2: 0000000000000056 CR3: 000000000240a002 CR4: 0000000000360ee0
+[   16.338551] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   16.338551] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fixes: 958f2a0f8121 ("nvme-tcp: set the STABLE_WRITES flag when data digests are enabled")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/task_mmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 4d9a8e72d91f..1d9c63cd8a3c 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1543,7 +1543,9 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
- 		/* overflow ? */
- 		if (end < start_vaddr || end > end_vaddr)
- 			end = end_vaddr;
--		down_read(&mm->mmap_sem);
-+		ret = down_read_killable(&mm->mmap_sem);
-+		if (ret)
-+			goto out_free;
- 		ret = walk_page_range(start_vaddr, end, &pagemap_walk);
- 		up_read(&mm->mmap_sem);
- 		start_vaddr = end;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index b4048748551e..db5731657529 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3257,7 +3257,7 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+ 		goto out_free_ns;
+ 	}
+ 
+-	if (ctrl->opts->data_digest)
++	if (ctrl->opts && ctrl->opts->data_digest)
+ 		ns->queue->backing_dev_info->capabilities
+ 			|= BDI_CAP_STABLE_WRITES;
+ 
 -- 
 2.20.1
 
