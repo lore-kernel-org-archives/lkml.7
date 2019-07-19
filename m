@@ -7,58 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905DAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED951C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650C42173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD91D2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510376;
-	bh=OwPkD1ZxcC/tQtUPnQiKK8evUVR/5Xj1GmEdTgy3UsU=;
+	s=default; t=1563510378;
+	bh=LZs241TmqQKk1XRktVEc3oe7vFsgqsPuD2FiKW8uBpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sfqo88zO0WwNFmMFwmM84unObIlzHJnCm3G9h2+LDeqw2i9HECUI5ZUXjILFyQGkP
-	 F7rRjuEVs5mAkQ7JZI1ubLStqzLeH8HsqpzZiE3yHzsgwW/h+Y6/PZeNWisMIxEXcV
-	 ec/Z07a8p16U0FR2f4UVnO7rbokt69YFERWOZJnE=
+	b=0fGnQCwWPjYK8Ekmb+BiL3rrckDFbz/xgyufQLyQtZcH2ajb1B/g3rZ+3uEs770BQ
+	 /ArHxickyxSxFgIjUCKjgTgusbY6f/F80QHRdv2ehRkNxljRkqdt0/T4Ri/b9+VUq7
+	 bp2Gi9nCbu74UaF3ukN2C9LcgYO7glqEwmpe7HFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733075AbfGSEIZ (ORCPT
+        id S2388147AbfGSE0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:08:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42492 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:26:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732983AbfGSEIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:16 -0400
+        id S1733066AbfGSEIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475AE21872;
-        Fri, 19 Jul 2019 04:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E96A8218A4;
+        Fri, 19 Jul 2019 04:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509296;
-        bh=OwPkD1ZxcC/tQtUPnQiKK8evUVR/5Xj1GmEdTgy3UsU=;
+        s=default; t=1563509304;
+        bh=LZs241TmqQKk1XRktVEc3oe7vFsgqsPuD2FiKW8uBpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJF/XsxxVVgn2Chfj0EFri2eBfKy7fkWi7cIYI+e6axfhVkqIgLoV6VYcXLPAsXhn
-         q9Y7/3y4/vjSAMxj88Jmpvu4UxrAjfWZoAIwAZkwIlIYXm4LRg8N2P8vBiZO6NxQsy
-         /3KD9ABI3humJq6mBgiyIeZhjni0pvzq+n5Nh3Kk=
+        b=xiDgPLxNg7GahQUXl8XFucl6YCfBYAftuz2lL47QW1fdBLWxiHipspYf2Cr8I5tn3
+         T2LMe4WKVqpwx2iFE/SctMMCU1KFUfKAXWwdR0HX0cspfjKZOM1hxBIEfnM6u6BoIo
+         5rkc1JfTpZpVqjgadtOcUwROdVcEZpMY7s7PF71E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 021/101] drm/crc-debugfs: Also sprinkle irqrestore over early exits
-Date:   Fri, 19 Jul 2019 00:06:12 -0400
-Message-Id: <20190719040732.17285-21-sashal@kernel.org>
+Cc:     Rautkoski Kimmo EXT <ext-kimmo.rautkoski@vaisala.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 025/101] serial: 8250: Fix TX interrupt handling condition
+Date:   Fri, 19 Jul 2019 00:06:16 -0400
+Message-Id: <20190719040732.17285-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,51 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Rautkoski Kimmo EXT <ext-kimmo.rautkoski@vaisala.com>
 
-[ Upstream commit d99004d7201aa653658ff2390d6e516567c96ebc ]
+[ Upstream commit db1b5bc047b3cadaedab3826bba82c3d9e023c4b ]
 
-I. was. blind.
+Interrupt handler checked THRE bit (transmitter holding register
+empty) in LSR to detect if TX fifo is empty.
+In case when there is only receive interrupts the TX handling
+got called because THRE bit in LSR is set when there is no
+transmission (FIFO empty). TX handling caused TX stop, which in
+RS-485 half-duplex mode actually resets receiver FIFO. This is not
+desired during reception because of possible data loss.
 
-Caught with vkms, which has some really slow crc computation function.
+The fix is to check if THRI is set in IER in addition of the TX
+fifo status. THRI in IER is set when TX is started and cleared
+when TX is stopped.
+This ensures that TX handling is only called when there is really
+transmission on going and an interrupt for THRE and not when there
+are only RX interrupts.
 
-Fixes: 1882018a70e0 ("drm/crc-debugfs: User irqsafe spinlock in drm_crtc_add_crc_entry")
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Emil Velikov <emil.velikov@collabora.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190606211544.5389-1-daniel.vetter@ffwll.ch
+Signed-off-by: Kimmo Rautkoski <ext-kimmo.rautkoski@vaisala.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/8250/8250_port.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-index a334a82fcb36..c88e5ff41add 100644
---- a/drivers/gpu/drm/drm_debugfs_crc.c
-+++ b/drivers/gpu/drm/drm_debugfs_crc.c
-@@ -385,7 +385,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
- 
- 	/* Caller may not have noticed yet that userspace has stopped reading */
- 	if (!crc->entries) {
--		spin_unlock(&crc->lock);
-+		spin_unlock_irqrestore(&crc->lock, flags);
- 		return -EINVAL;
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index e26d87b6ffc5..aa4de6907f77 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1874,7 +1874,8 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
+ 			status = serial8250_rx_chars(up, status);
  	}
+ 	serial8250_modem_status(up);
+-	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE))
++	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE) &&
++		(up->ier & UART_IER_THRI))
+ 		serial8250_tx_chars(up);
  
-@@ -396,7 +396,7 @@ int drm_crtc_add_crc_entry(struct drm_crtc *crtc, bool has_frame,
- 		bool was_overflow = crc->overflow;
- 
- 		crc->overflow = true;
--		spin_unlock(&crc->lock);
-+		spin_unlock_irqrestore(&crc->lock, flags);
- 
- 		if (!was_overflow)
- 			DRM_ERROR("Overflow of CRC buffer, userspace reads too slow.\n");
+ 	spin_unlock_irqrestore(&port->lock, flags);
 -- 
 2.20.1
 
