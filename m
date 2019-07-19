@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F2AC76197
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5ACC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719C721852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C632189E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508755;
-	bh=B2ai79gdCChTdskBL7ujMCTfm0Vf3Gs/2lF1bhLaAa8=;
+	s=default; t=1563508758;
+	bh=cMkGSY6nHF8MaSprRbBJnM+U9bxKfqQFy7K21qB/h2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOFlCEU4v/oztXNP3MQUEUtEU/2AFFFLusZnaC3a87kVIL3jnjmGnQC3dx8oWtF5m
-	 FeUgdJtMbojT8aE1KFdiT9WLgd8krJvVc9HjeM47fjRfO5JTDOxUoYG4a6m8rKr+YX
-	 Oh33z0zgepclqv1TNUE+7Ayatc8jDAufURRxMu2A=
+	b=fZY2b2vp6zhVGL5FeE/I6VSGkkIjWp7vdWa2BR75U5XTDRKJIbWUQ3JqRf2l4fa5e
+	 lIqwKMpJuUbXFbNoA98C3q6myUtoUtnhroWHI2Bhv47baTEuBBwQxDNr3i+d2elf/G
+	 03nDQaWawaKYL1yZZaB8XO5roAbr/f6AixWZWqu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfGSD7O (ORCPT
+        id S1727390AbfGSD7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:59:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58516 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:59:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728441AbfGSD7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:04 -0400
+        id S1728509AbfGSD7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C605821851;
-        Fri, 19 Jul 2019 03:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3379121852;
+        Fri, 19 Jul 2019 03:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508743;
-        bh=B2ai79gdCChTdskBL7ujMCTfm0Vf3Gs/2lF1bhLaAa8=;
+        s=default; t=1563508747;
+        bh=cMkGSY6nHF8MaSprRbBJnM+U9bxKfqQFy7K21qB/h2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOfgoOxOdZg87U8nRC/ixQ/LSyyUi6Bynb7/4use0BRxlF7eHWUSKMFlHKHU7nUoR
-         uRlIqWZyINa/9TmOj0TD0bihWAvPyKIS2wRMTvBe/IlTmNbDZwrlHtO4zTDlhtYi/x
-         Qf7rS/SyhJhwBKh+Em3fKGDOIGjI/Rwvp5Ex+1O8=
+        b=gvRWJGJRaHxZOVv1Yxsb3KyiL7wG5b4WuCvypfanRv+MIJu5my2FKOJjem8FYIg1h
+         R06XMZXI5jqjbV3i6vI4q175dZNOYnX1tlfvx34ctqlaAT870ha5xVxgTxcf3srM8Z
+         mHVuKwPs8xdG640hZs3eWsiRmKTAJVIUsbO/YKJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 064/171] iio:core: Fix bug in length of event info_mask and catch unhandled bits set in masks.
-Date:   Thu, 18 Jul 2019 23:54:55 -0400
-Message-Id: <20190719035643.14300-64-sashal@kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 068/171] tty: serial_core: Set port active bit in uart_port_activate
+Date:   Thu, 18 Jul 2019 23:54:59 -0400
+Message-Id: <20190719035643.14300-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,39 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
+From: Serge Semin <fancer.lancer@gmail.com>
 
-[ Upstream commit 936d3e536dcf88ce80d27bdb637009b13dba6d8c ]
+[ Upstream commit 13b18d35909707571af9539f7731389fbf0feb31 ]
 
-The incorrect limit for the for_each_set_bit loop was noticed whilst fixing
-this other case.  Note that as we only have 3 possible entries a the moment
-and the value was set to 4, the bug would not have any effect currently.
-It will bite fairly soon though, so best fix it now.
+A bug was introduced by commit b3b576461864 ("tty: serial_core: convert
+uart_open to use tty_port_open"). It caused a constant warning printed
+into the system log regarding the tty and port counter mismatch:
 
-See commit ef4b4856593f ("iio:core: Fix bug in length of event info_mask and
-catch unhandled bits set in masks.") for details.
+[   21.644197] ttyS ttySx: tty_port_close_start: tty->count = 1 port count = 2
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+in case if session hangup was detected so the warning is printed starting
+from the second open-close iteration.
+
+Particularly the problem was discovered in situation when there is a
+serial tty device without hardware back-end being setup. It is considered
+by the tty-serial subsystems as a hardware problem with session hang up.
+In this case uart_startup() will return a positive value with TTY_IO_ERROR
+flag set in corresponding tty_struct instance. The same value will get
+passed to be returned from the activate() callback and then being returned
+from tty_port_open(). But since in this case tty_port_block_til_ready()
+isn't called the TTY_PORT_ACTIVE flag isn't set (while the method had been
+called before tty_port_open conversion was introduced and the rest of the
+subsystem code expected the bit being set in this case), which prevents the
+uart_hangup() method to perform any cleanups including the tty port
+counter setting to zero. So the next attempt to open/close the tty device
+will discover the counters mismatch.
+
+In order to fix the problem we need to manually set the TTY_PORT_ACTIVE
+flag in case if uart_startup() returned a positive value. In this case
+the hang up procedure will perform a full set of cleanup actions including
+the port ref-counter resetting.
+
+Fixes: b3b576461864 "tty: serial_core: convert uart_open to use tty_port_open"
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/industrialio-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/serial_core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 245b5844028d..2da099badce6 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1104,6 +1104,8 @@ static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
- 	char *avail_postfix;
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 83f4dd0bfd74..4223cb496764 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1777,6 +1777,7 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
+ {
+ 	struct uart_state *state = container_of(port, struct uart_state, port);
+ 	struct uart_port *uport;
++	int ret;
  
- 	for_each_set_bit(i, infomask, sizeof(*infomask) * 8) {
-+		if (i >= ARRAY_SIZE(iio_chan_info_postfix))
-+			return -EINVAL;
- 		avail_postfix = kasprintf(GFP_KERNEL,
- 					  "%s_available",
- 					  iio_chan_info_postfix[i]);
+ 	uport = uart_port_check(state);
+ 	if (!uport || uport->flags & UPF_DEAD)
+@@ -1787,7 +1788,11 @@ static int uart_port_activate(struct tty_port *port, struct tty_struct *tty)
+ 	/*
+ 	 * Start up the serial port.
+ 	 */
+-	return uart_startup(tty, state, 0);
++	ret = uart_startup(tty, state, 0);
++	if (ret > 0)
++		tty_port_set_active(port, 1);
++
++	return ret;
+ }
+ 
+ static const char *uart_type(struct uart_port *port)
 -- 
 2.20.1
 
