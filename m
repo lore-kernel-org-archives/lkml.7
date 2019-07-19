@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B92C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52AEC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632C5218C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93487218D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509387;
-	bh=KlTkwHCVaS0kL1uz2CRs61DJvawhdf7Km2s1wciG94g=;
+	s=default; t=1563509390;
+	bh=RSM7vXECc3co5GwoFjDVR5jLznfcYnuQ2CSHW2TlSLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dCS1n6AzzKLeke1wzqFKY0P4Ecu9PN8QDw6KmaURv0mTuuH/4fUWVdisDsP2uA4XH
-	 hpEL8LA2CiHNhakYOQZSdD3Ey1Fk4rd9ALfgE8PcjaY1+FFIGNoQD8tp/FgrfkuGFs
-	 IVX5Sm/PMzflyYKvWsv9ge5Den5ZnjUiqxwIgC9w=
+	b=XXHRx0Fz0SYpvqnnpL+cJDri51mZ9IFOi/UGka0C31v9FtoPO/sbEdE1wXHu9rc9d
+	 OtIwxuUBcmKqOIWds2gXmMQ2to6x2Mrp4tu0jTxqKmb0/f0yerW+1g4HI+ymn+UCMJ
+	 x3EAkw/cVob18EkmOcqvtEzIA9A6NRoF9lYkM7yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbfGSEJq (ORCPT
+        id S1732536AbfGSEJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44334 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387749AbfGSEJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:09:44 -0400
+        id S2387779AbfGSEJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:09:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC77218D9;
-        Fri, 19 Jul 2019 04:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3D2218B6;
+        Fri, 19 Jul 2019 04:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509383;
-        bh=KlTkwHCVaS0kL1uz2CRs61DJvawhdf7Km2s1wciG94g=;
+        s=default; t=1563509386;
+        bh=RSM7vXECc3co5GwoFjDVR5jLznfcYnuQ2CSHW2TlSLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YgXjqfOdZ/eUAD5Uwnpi2+ksgJU/LyOsEpOGOt54VFdbEg93FaHOuYbqNXHVVFUww
-         b+fY8yzD55NfyIxj5HVGh6+FVjK/WXOrZvk/nLbR/KvngSEmHoCe9Ow+eQf0On3I9d
-         2yOnLSF+/zabBb9hMStkGRo434H+85iSiJiJDYc0=
+        b=PINbm30Sh7MFfUo2HfR1eiZLG0KroVRSZSro9lj5vQxNeVmPXjiFT5hdb01e3gTqC
+         G2U38H57+AXrFquP5Qh0MG5W11QAETWMKfJKW88z0nVaTSe49eFww+w8DYAcwXMYf/
+         WWrMpc3r6iveAazk+2k3TCtSrJYrOvBbRhCqYs9w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 065/101] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
-Date:   Fri, 19 Jul 2019 00:06:56 -0400
-Message-Id: <20190719040732.17285-65-sashal@kernel.org>
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 067/101] PCI: mobiveil: Fix the Class Code field
+Date:   Fri, 19 Jul 2019 00:06:58 -0400
+Message-Id: <20190719040732.17285-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -61,68 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 7be142caabc4780b13a522c485abc806de5c4114 ]
+[ Upstream commit 0122af0a08243f344a438f924e5c2486486555b3 ]
 
-The PCI Tegra controller conversion to a device tree configurable
-driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
-to drivers/pci/host") implied that code for the driver can be
-compiled in for a kernel supporting multiple platforms.
+Fix up the Class Code field in PCI configuration space and set it to
+PCI_CLASS_BRIDGE_PCI.
 
-Unfortunately, a blind move of the code did not check that some of the
-quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
-all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
-for both Vendor-ID and Device-ID) are now applied in all kernels that
-compile the PCI Tegra controlled driver, DT and ACPI alike.
+Move the Class Code fixup to function mobiveil_host_init() where
+it belongs.
 
-This is completely wrong, in that enablement of Relaxed Ordering is only
-required by default in Tegra20 platforms as described in the Tegra20
-Technical Reference Manual (available at
-https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
-Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
-be enabled in its root ports to avoid deadlock in hardware) and in the
-Tegra30 platforms for the same reasons (unfortunately not documented
-in the TRM).
-
-There is no other strict requirement on PCI devices Relaxed Ordering
-enablement on any other Tegra platforms or PCI host bridge driver.
-
-Fix this quite upsetting situation by limiting the vendor and device IDs
-to which the Relaxed Ordering quirk applies to the root ports in
-question, reported above.
-
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-tegra.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index f4f53d092e00..2e1fd0c07cf1 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -545,12 +545,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index d9f2d0f2d602..3e81e68b5ce0 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -565,6 +565,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 		}
+ 	}
  
--/* Tegra PCIE requires relaxed ordering */
-+/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
- static void tegra_pcie_relax_enable(struct pci_dev *dev)
- {
- 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
++	/* fixup for PCIe class register */
++	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
++	value &= 0xff;
++	value |= (PCI_CLASS_BRIDGE_PCI << 16);
++	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
  
- static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
- {
+@@ -805,9 +811,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+ 		goto error;
+ 	}
+ 
+-	/* fixup for PCIe class register */
+-	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
+-
+ 	/* initialize the IRQ domains */
+ 	ret = mobiveil_pcie_init_irq_domain(pcie);
+ 	if (ret) {
 -- 
 2.20.1
 
