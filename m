@@ -2,156 +2,118 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47F7C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CB2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FA62186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB402186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qmoQqm+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfGSQDy (ORCPT
+        id S1730645AbfGSQFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:03:54 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:53669 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfGSQDx (ORCPT
+        Fri, 19 Jul 2019 12:05:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34791 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfGSQE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:03:53 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hoVMN-000653-Rm; Fri, 19 Jul 2019 10:03:51 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hoVMM-0002r7-VQ; Fri, 19 Jul 2019 10:03:51 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, nhorman@tuxdriver.com
-References: <cover.1554732921.git.rgb@redhat.com>
-        <cover.1554732921.git.rgb@redhat.com>
-        <846df5e5bf5a49094fede082a2ace135ab6f5772.1554732921.git.rgb@redhat.com>
-Date:   Fri, 19 Jul 2019 11:03:35 -0500
-In-Reply-To: <846df5e5bf5a49094fede082a2ace135ab6f5772.1554732921.git.rgb@redhat.com>
-        (Richard Guy Briggs's message of "Mon, 8 Apr 2019 23:39:10 -0400")
-Message-ID: <87d0i6dnag.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Fri, 19 Jul 2019 12:04:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so32831738wrm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dFBxfHIIkZj/vVsiAN1B0GaZv4SmAdgmjXZzJQqEU9A=;
+        b=qmoQqm+cm8JfhVK79rrK6WKEFVwdHw5UMzQlgGas2DvO+CQh+qaY1lTjbUZU1NdNQ4
+         FCpmcyM9xNz1HPnLZ4+xP7ohF8nB2LYRg7FTY2XRs9EbNsZ0An77ewLdygagKZ3wUVPc
+         RiIj6qSNa7xXNiwu9sqea7JakIQpg6BrpR95hI4Mj3hnogY6a0TjHASmZ/L5hT25CYT2
+         lVfXRK1f/iqX1s6ca9/Xo3lWb8Ju3N3evwKoHm+CybJS1oKxl7NqO/XaaA3An5B9CyKI
+         xCZwUKkUojZRzqKwlA/KnihZMio2IO9lZWWbZvzalJvAwIvXSi2XQtA/6GynByXLk19G
+         hmSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dFBxfHIIkZj/vVsiAN1B0GaZv4SmAdgmjXZzJQqEU9A=;
+        b=NnFgaNesKLTiD3psxEgh9BdAsTMKOrC5IfcIggT5Co2CHrjJJe3V3DWUq9SHyT6tsP
+         pMye03JHVd3U0K8W1CvG3t0ixk86pPM0w+DbxCFnWe7YppZRwpYGJUuwWNhtAZCyrROh
+         fnDgdwyLyfdUiiCdNO24NNMBUmiW1AM44NtY7LblPZtTK0eYuequ3EP62NKXW2Z1efFT
+         ZelUIQrLv9T63V9K14L+458QbwPf4HME3NkDb0Ztrs1C+qG+D9+on7/AlW60DSWSFRO8
+         ZRNgnQ5C1lNDmxK3kOrJsjuXNWFv3B5Z6wTh0lpJbuu+woQGRqjhTYCgGBgXps7J8m6S
+         KQPQ==
+X-Gm-Message-State: APjAAAUINUtJEdWk/qw63YZN3xPWDy+mEMaEP2QI8SjfjT9g+Q3WgE6C
+        xUu6xwnlm1IGvw2tmNmVtsA=
+X-Google-Smtp-Source: APXvYqxu5WOesyzz5zUnwrOhjaRHG/mzN5sPCvIO9i605E3qpYbn5r5l0Q6NmAQCIxHKCne2lg4wTA==
+X-Received: by 2002:adf:f005:: with SMTP id j5mr12593107wro.251.1563552297446;
+        Fri, 19 Jul 2019 09:04:57 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id y24sm22398788wmi.10.2019.07.19.09.04.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 09:04:56 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 09:04:55 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
+Message-ID: <20190719160455.GA12420@archlinux-threadripper>
+References: <c6ff2faba7fbb56a7f5b5f08cd3453f89fc0aaf4.1557480165.git.christophe.leroy@c-s.fr>
+ <45hnfp6SlLz9sP0@ozlabs.org>
+ <20190708191416.GA21442@archlinux-threadripper>
+ <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr>
+ <20190709064952.GA40851@archlinux-threadripper>
+ <20190719032456.GA14108@archlinux-threadripper>
+ <20190719152303.GA20882@gate.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hoVMM-0002r7-VQ;;;mid=<87d0i6dnag.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+ZObZxtYj3Ingkk2j6NVLV9B+vGA99pls=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V6 03/10] audit: read container ID of a process
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719152303.GA20882@gate.crashing.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Richard Guy Briggs <rgb@redhat.com> writes:
+On Fri, Jul 19, 2019 at 10:23:03AM -0500, Segher Boessenkool wrote:
+> On Thu, Jul 18, 2019 at 08:24:56PM -0700, Nathan Chancellor wrote:
+> > On Mon, Jul 08, 2019 at 11:49:52PM -0700, Nathan Chancellor wrote:
+> > > On Tue, Jul 09, 2019 at 07:04:43AM +0200, Christophe Leroy wrote:
+> > > > Is that a Clang bug ?
+> > > 
+> > > No idea, it happens with clang-8 and clang-9 though (pretty sure there
+> > > were fixes for PowerPC in clang-8 so something before it probably won't
+> > > work but I haven't tried).
+> > > 
+> > > > 
+> > > > Do you have a disassembly of the code both with and without this patch in
+> > > > order to compare ?
+> > > 
+> > > I can give you whatever disassembly you want (or I can upload the raw
+> > > files if that is easier).
+> > 
+> > What disassembly/files did you need to start taking a look at this? I
+> > can upload/send whatever you need.
+> 
+> A before and after of *only this patch*.  And then look at what changed;
+> it maybe be obvious what is the problem to you, as well, so look at it
+> yourself first?
+> 
+> 
+> Segher
 
-> Add support for reading the audit container identifier from the proc
-> filesystem.
->
-> This is a read from the proc entry of the form
-> /proc/PID/audit_containerid where PID is the process ID of the task
-> whose audit container identifier is sought.
->
-> The read expects up to a u64 value (unset: 18446744073709551615).
->
-> This read requires CAP_AUDIT_CONTROL.
+Thanks, I will go ahead and disassemble the full kernel given that those
+helpers are everywhere and see what I can find. I'll reach out again if
+I can't come up with anything.
 
-This scares me.    As this seems to make it easy to reuse an audit
-containerid for non-audit purporses.
-
-I would think it would be safer and easier to poke audit and ask it to
-log a message with your audit container id.
-
-Eric
-
-
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->  fs/proc/base.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 43fd0c4b87de..acc70239d0cb 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1211,7 +1211,7 @@ static ssize_t oom_score_adj_write(struct file *file, const char __user *buf,
->  };
->  
->  #ifdef CONFIG_AUDIT
-> -#define TMPBUFLEN 11
-> +#define TMPBUFLEN 21
->  static ssize_t proc_loginuid_read(struct file * file, char __user * buf,
->  				  size_t count, loff_t *ppos)
->  {
-> @@ -1295,6 +1295,24 @@ static ssize_t proc_sessionid_read(struct file * file, char __user * buf,
->  	.llseek		= generic_file_llseek,
->  };
->  
-> +static ssize_t proc_contid_read(struct file *file, char __user *buf,
-> +				  size_t count, loff_t *ppos)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	struct task_struct *task = get_proc_task(inode);
-> +	ssize_t length;
-> +	char tmpbuf[TMPBUFLEN];
-> +
-> +	if (!task)
-> +		return -ESRCH;
-> +	/* if we don't have caps, reject */
-> +	if (!capable(CAP_AUDIT_CONTROL))
-> +		return -EPERM;
-> +	length = scnprintf(tmpbuf, TMPBUFLEN, "%llu", audit_get_contid(task));
-> +	put_task_struct(task);
-> +	return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
-> +}
-> +
->  static ssize_t proc_contid_write(struct file *file, const char __user *buf,
->  				   size_t count, loff_t *ppos)
->  {
-> @@ -1325,6 +1343,7 @@ static ssize_t proc_contid_write(struct file *file, const char __user *buf,
->  }
->  
->  static const struct file_operations proc_contid_operations = {
-> +	.read		= proc_contid_read,
->  	.write		= proc_contid_write,
->  	.llseek		= generic_file_llseek,
->  };
-> @@ -3067,7 +3086,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
->  #ifdef CONFIG_AUDIT
->  	REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
->  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
-> +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
->  #endif
->  #ifdef CONFIG_FAULT_INJECTION
->  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-> @@ -3466,7 +3485,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
->  #ifdef CONFIG_AUDIT
->  	REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
->  	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
-> -	REG("audit_containerid", S_IWUSR, proc_contid_operations),
-> +	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
->  #endif
->  #ifdef CONFIG_FAULT_INJECTION
->  	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+Thanks for the advice!
+Nathan
