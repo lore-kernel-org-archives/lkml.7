@@ -2,175 +2,139 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512C4C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3842C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2683A2085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDA12184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XoO09VHs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6DLlrH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfGSBvL (ORCPT
+        id S1726352AbfGSB4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:51:11 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38703 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfGSBvK (ORCPT
+        Thu, 18 Jul 2019 21:56:08 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34009 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSB4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:51:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f5so4878101pgu.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 18:51:10 -0700 (PDT)
+        Thu, 18 Jul 2019 21:56:08 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b29so13351471lfq.1;
+        Thu, 18 Jul 2019 18:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bM1qPXQ6CfVnEn3vvRy+9HqmrOIsqvvQngomqNMnrWk=;
-        b=XoO09VHsUOiyoqC1hxSshQ5pzepYo4VADK/vAtt6XAEixB+KpBSbA7+7c9pRSidhBY
-         3stikz00gxTehYr2mkuXXr1YTgqN75mM/XN2pdZRybxoXrzeLh3s200cI/ZyUZpyPdtn
-         PYp6gX756L18o31tEe1HqkISrF7Ku98WVpNVk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UO8btVVL/IFrG50cwCtu/sUBh+QFd3XXfzfNm+smt1U=;
+        b=I6DLlrH2qXLZ8dYYWhYMjtjqWPy9phRY/H/xdpYgnKRp3y2vSSLmrQAwydlNe8RPaJ
+         Ib0kOZK2DVtYAGEP3evhg2epnUr24mWBUZM1rzqBvBWJmnoI37Wz8fxwkDi8HRRkMPgv
+         7MohbZI7ySNDx7m3wzAtGJpyE7iicruP4hyOZ2tkOKepPg10Blv2weJoDe4F/rZOSkRG
+         I+oIrsGfMow9P8xnknTz++fgC2SfFkJPpB8C0nWzBMLDUsPkL5fBTwFSLDbSIKuxZYkD
+         WM6Wxuzx0Gxq3CpAVU4SHMkjzWfAUhcJdRfambwlfyZnQEXa/djrQAmRPiTmg3FLTwjZ
+         JlGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bM1qPXQ6CfVnEn3vvRy+9HqmrOIsqvvQngomqNMnrWk=;
-        b=gCsyPNddkq3f8GlUsvtR+tAkjO+FirdosvdPkA0GgUWhQvZV+jD9GR2EH2fjuXvx35
-         PVyoxgDz35dORo0FktI9+zuJh2gwMV/cgf7C45f8dRFC6idcOzSvp4BywnQGESygun4z
-         MUbBYOZbbWop2owMCL3qiO5rk9H3FAL4Zg4PwW8z1lzhVfoavrtNDNOjpMtJVElo9J8/
-         m5OFrAXdmpSGUs1asMa2a+Zc8FHIFFZHIHq1iykfJi8B6oCC3bKClNXskkxjDr48YcG8
-         MYU8MvlM066+FyhH9Wt686/yLF1kcDM+p+kWUWcfYweAZS6bI9orR796gmi3dRknR4QO
-         fEUg==
-X-Gm-Message-State: APjAAAXYfwmeMMD6NSf3SOWm1KWKOUdEgmtfbXZvSAK1CL8UhtgDB6Q6
-        4R6XvMi/tByw6rjn57XcE66frQ==
-X-Google-Smtp-Source: APXvYqxpfT2jLVHsNB0Lnykz1fcfrhTIyUgCLIOl/5FtTh2jioiUC7eBHXYrjErptll9twIwC8R9UA==
-X-Received: by 2002:a63:6f41:: with SMTP id k62mr5055937pgc.32.1563501069756;
-        Thu, 18 Jul 2019 18:51:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h129sm27209190pfb.110.2019.07.18.18.51.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Jul 2019 18:51:08 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 18:51:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     corbet@lwn.net, solar@openwall.com, will@kernel.org,
-        peterz@infradead.org, gregkh@linuxfoundation.org,
-        tyhicks@canonical.com, linux-doc@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UO8btVVL/IFrG50cwCtu/sUBh+QFd3XXfzfNm+smt1U=;
+        b=FrDcgzLfZJ+NA8f7RkR8mRtIGmztCwKNVKD4OlMzX0eNV2EbHB+OaKDcfq8vzHR+u5
+         pXdQWFD9SJuQRGIfZ/IpUoTco4GbG3v5E2LfyWTsrgV+v3uIukC1K546Fc3WEa5Fa2PB
+         3mgy/amH9zk4qZUR9/9gAo9p5cmUFDkfWlI60xNVr+krtouwLA5d338SSQfBIvCa5juG
+         4P5Vqe5jbAA0eenNNzE1yACoECiRN9jWwpl067wGDV7AV3Z9fM/UEN0/V3qIeuf9Mdgy
+         u+ujF7sSl+1jRJ/vGCMGaYlMmjd5q/CBoGZXwCchDytQaIWG/Jxs543fv39zIkRKaDpD
+         0i0Q==
+X-Gm-Message-State: APjAAAV3G3G1oG0DSed177HI4c9Rgx9Y2Lkoy6u38r4nhivjL19Pkout
+        yQCUAn93p8kyDytKliXicvk=
+X-Google-Smtp-Source: APXvYqw80ciSAc2Vs0Cibu7leQl8v3dj+nAs+2bkcaDWxZm3m+uaesL5gnuLrFhCcrV860i7v1Kg5g==
+X-Received: by 2002:ac2:418f:: with SMTP id z15mr21418515lfh.177.1563501366148;
+        Thu, 18 Jul 2019 18:56:06 -0700 (PDT)
+Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id g4sm4245127lfb.31.2019.07.18.18.56.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 18:56:05 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 04:59:43 +0300
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation/security-bugs: provide more information
- about linux-distros
-Message-ID: <201907181833.EF0D93C@keescook>
-References: <20190717231103.13949-1-sashal@kernel.org>
- <201907181457.D61AC061C@keescook>
- <20190719003919.GC4240@sasha-vm>
+Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
+ watermark selection
+Message-ID: <20190719045943.73b53e31@dimatab>
+In-Reply-To: <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
+        <20190707223303.6755-21-digetx@gmail.com>
+        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719003919.GC4240@sasha-vm>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:39:19PM -0400, Sasha Levin wrote:
-> On Thu, Jul 18, 2019 at 03:00:55PM -0700, Kees Cook wrote:
-> > On Wed, Jul 17, 2019 at 07:11:03PM -0400, Sasha Levin wrote:
-> > > Provide more information about how to interact with the linux-distros
-> > > mailing list for disclosing security bugs.
-> > > 
-> > > Reference the linux-distros list policy and clarify that the reporter
-> > > must read and understand those policies as they differ from
-> > > security@kernel.org's policy.
-> > > 
-> > > Suggested-by: Solar Designer <solar@openwall.com>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > 
-> > Sorry, but NACK, see below...
-> > 
-> > > ---
-> > > 
-> > > Changes in v2:
-> > >  - Focus more on pointing to the linux-distros wiki and policies.
-> > 
-> > I think this is already happening in the text. What specifically do you
-> > want described differently?
-> 
-> The main issue was that there isn't anything pointing to the
-> linux-distros policies. The current text outlines a few of them ("add
-> [vs]", and "there should be an embargo period"), but it effectively just
-> gives out the linux-distros mailing address and tells the reporter to
-> contact it.
+=D0=92 Fri, 19 Jul 2019 10:36:30 +0900
+Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-The current text includes the wiki link, but yes, the anchor tag is not
-present at the wiki anymore. I would agree that's due for updating.
+> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote:
+> > I noticed that CPU may be crossing the dependency threshold very
+> > frequently for some workloads and this results in a lot of
+> > interrupts which could be avoided if MCALL client is keeping actual
+> > EMC frequency at a higher rate.
+> >=20
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+> >  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
+> >  1 file changed, 18 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/drivers/devfreq/tegra30-devfreq.c
+> > b/drivers/devfreq/tegra30-devfreq.c index
+> > c3cf87231d25..4d582809acb6 100644 ---
+> > a/drivers/devfreq/tegra30-devfreq.c +++
+> > b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static void
+> > tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
+> > =20
+> >  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
+> > *tegra,
+> > -					   struct
+> > tegra_devfreq_device *dev)
+> > +					   struct
+> > tegra_devfreq_device *dev,
+> > +					   unsigned long freq)
+> >  {
+> >  	unsigned long avg_threshold, lower, upper;
+> > =20
+> > @@ -323,6 +324,15 @@ static void
+> > tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
+> > avg_threshold =3D dev->config->avg_dependency_threshold;
+> > avg_threshold =3D avg_threshold * ACTMON_SAMPLING_PERIOD;=20
+> > +	/*
+> > +	 * If cumulative EMC frequency selection is higher than the
+> > +	 * device's, then there is no need to set upper watermark
+> > to
+> > +	 * a lower value because it will result in unnecessary
+> > upper
+> > +	 * interrupts.
+> > +	 */
+> > +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
+> > +		upper =3D freq * ACTMON_SAMPLING_PERIOD; =20
+>=20
+> Also, 'upper value is used on the patch5. You can combine this code
+> to patch5 or if this patch depends on the cpu notifier, you can
+> combine it to the patch of adding cpu notifier without separate patch.
 
-I think reinforcing information to avoid past mistakes is appropriate
-here. Reports have regularly missed the "[vs]" detail or suggested
-embargoes that ended on Fridays, etc.
-
-> > >  - Remove explicit linux-distros email.
-> > 
-> > I don't like this because we had past trouble with notifications going
-> > to the distros@ list and leaking Linux-only flaws to the BSDs. As there
-> > isn't a separate linux-distros wiki, the clarification of WHICH list is
-> > needed.
-> 
-> Why would removing the explicit linux-distros email encourage people to
-> send reports to it?
-
-What? No, I'm saying we should _keep_ linux-distros@... in our text so
-that people don't send to the wrong list.
-
-> I also don't understand what you mean by "there isn't a separate
-> linux-distros wiki"? There is one, and I want to point the reporter
-> there.
-
-That URL is a combined page for two lists. The very fact that it's
-not obvious that there are two lists described there is exactly why I
-think we need to keep an explicit mention of which to use. There are
-two mailing lists described at the wiki URL:
-
-	      distros@lists.openwall.com
-	linux-distros@lists.openwall.com
-
-Sending to the distros@ list risks exposing Linux-only flaws to non-Linux
-distros. This has caused leaks in the past, and we do not want people
-guessing at which list they should use.
-
-Also note that nowhere on the openwall wiki is the email address
-actually spelled out; this is another reason to spell it out in our
-documentation: no misunderstanding.
-
-(And historically there WAS a specific linux-distros wiki:
-https://oss-security.openwall.org/wiki/mailing-lists/linux-distros
-but it redirects to the combined one now...)
-
-> > >  - Remove various explanations of linux-distros policies.
-> > 
-> > I don't think there's value in removing the Tue-Thu comment, nor
-> > providing context for why distros need time. This has been a regular
-> > thing we've had to explain to researchers that aren't familiar with
-> > update procedures and publication timing.
-> 
-> To be fair, the Tue-Thu comment is listed in the section describing how
-> to do coordination with linux-distros, and linux-distros don't have a
-> Tue-Thu policy. If it's a security@kernel.org policy then let's list it
-> elsewhere.
-
-It's a distro preference. Many researchers aren't thinking about the
-larger Linux ecosystem that has to consume fixes. It's not a _policy_,
-but it makes the researchers understand how to construct better embargoes.
-
-> If you feel that there is a consensus around Tue-Thu let's just add it
-> to the linux-distros policy wiki, there's no point in listing random
-> policies from that wiki.
-
-I think it'd be a good idea to add that note also to the wiki, but I
-don't want it removed from our text because I have had to repeat that
-information regularly in the past.
-
--- 
-Kees Cook
+Well okay, I'll try to squash some of the patches in the next revision.
+Usually I'm receiving comments in the other direction, asking to
+separate patches into smaller changes ;) So that's more a personal
+preference of each maintainer, I'd say.
