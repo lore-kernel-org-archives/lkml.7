@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314A4C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38408C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0261B218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CA121873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509581;
-	bh=o2CmxtnO3fr6rs0CJpzZuz1kwev2BrwHqvGqigfTsNc=;
+	s=default; t=1563509584;
+	bh=x8AKJLvmaofzajFpXXOgSMt3oKinJpXRzauS1ds9IuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hcXsbmcESQkwZxzlzo8x0iH6TyxhXy+2PyyTtIOcej/GKeJQx4XCcHdvo0xYVn3Iy
-	 M7fyTvOtVmoxbxtPaTfnyU22NIa1o5moMKuQNC/k2fB6HtsusDZ0EVNavsaxHdMmDP
-	 sX7zi1hYxooKs5NNO2GQ+VFD9lxMGklNabncRe6E=
+	b=udRRGp3UvYNZlCyHFkStj2q9dvywcH8KXhkO0m+S/3MPsxcHo3KAPluQdribEcjd5
+	 p6CoKRaDMVV9SqHLoO5KRNZBTznFSXict1/RDaW0zGASGTkiNLg5ZCSjeKOyLlIPIb
+	 w0OG3eUI0ZrgxClikNWeROOi4Fi7X3KzYVjhdw3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbfGSEM7 (ORCPT
+        id S2389005AbfGSENC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388017AbfGSEM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:57 -0400
+        id S2388087AbfGSEM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43831218C3;
-        Fri, 19 Jul 2019 04:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CABF2218D9;
+        Fri, 19 Jul 2019 04:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509576;
-        bh=o2CmxtnO3fr6rs0CJpzZuz1kwev2BrwHqvGqigfTsNc=;
+        s=default; t=1563509578;
+        bh=x8AKJLvmaofzajFpXXOgSMt3oKinJpXRzauS1ds9IuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n2m5ud1rRGw/B01/Jxmb91tPTdEeJUBwfYd0ae3btN2dY4TA6rG/WVdudRv9mfrwy
-         itj3E7Vl4FTC5r0d46UwsSbBkS8lRZnbHIlOby2N0j0mpc/PtE/VGxY54C7wCaK6bc
-         pKERvNs+VBerZIlwU+5zpcKbdxdAainAR4bwBz7Q=
+        b=1Mw5q8ziNm0ExuYixXYiDPe86VXjdnFEdVJWfbJLGEvs3biL01WA5ip6G58Xre41U
+         2poxe/ydv4UnethyIkFC43ftYvmGwA7xlEXOBMuM2A8Tra5P4JCPzEe+cH/aOUkd/q
+         wlmbYe1LvfdSvXte8RFT8S0dcYr0qUv/pqSAnNBA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 57/60] mm/gup.c: mark undo_dev_pagemap as __maybe_unused
-Date:   Fri, 19 Jul 2019 00:11:06 -0400
-Message-Id: <20190719041109.18262-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 58/60] mm/gup.c: remove some BUG_ONs from get_gate_page()
+Date:   Fri, 19 Jul 2019 00:11:07 -0400
+Message-Id: <20190719041109.18262-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -63,44 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Andy Lutomirski <luto@kernel.org>
 
-[ Upstream commit 790c73690c2bbecb3f6f8becbdb11ddc9bcff8cc ]
+[ Upstream commit b5d1c39f34d1c9bca0c4b9ae2e339fbbe264a9c7 ]
 
-Several mips builds generate the following build warning.
+If we end up without a PGD or PUD entry backing the gate area, don't BUG
+-- just fail gracefully.
 
-  mm/gup.c:1788:13: warning: 'undo_dev_pagemap' defined but not used
+It's not entirely implausible that this could happen some day on x86.  It
+doesn't right now even with an execute-only emulated vsyscall page because
+the fixmap shares the PUD, but the core mm code shouldn't rely on that
+particular detail to avoid OOPSing.
 
-The function is declared unconditionally but only called from behind
-various ifdefs. Mark it __maybe_unused.
-
-Link: http://lkml.kernel.org/r/1562072523-22311-1-git-send-email-linux@roeck-us.net
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Link: http://lkml.kernel.org/r/a1d9f4efb75b9d464e59fd6af00104b21c58f6f7.1561610798.git.luto@kernel.org
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Jann Horn <jannh@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/gup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/gup.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index babcbd6d99c3..cee599d1692c 100644
+index cee599d1692c..12b9626b1a9e 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -1364,7 +1364,8 @@ static inline pte_t gup_get_pte(pte_t *ptep)
- }
- #endif
- 
--static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
-+static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
-+					    struct page **pages)
- {
- 	while ((*nr) - nr_start) {
- 		struct page *page = pages[--(*nr)];
+@@ -442,11 +442,14 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 		pgd = pgd_offset_k(address);
+ 	else
+ 		pgd = pgd_offset_gate(mm, address);
+-	BUG_ON(pgd_none(*pgd));
++	if (pgd_none(*pgd))
++		return -EFAULT;
+ 	p4d = p4d_offset(pgd, address);
+-	BUG_ON(p4d_none(*p4d));
++	if (p4d_none(*p4d))
++		return -EFAULT;
+ 	pud = pud_offset(p4d, address);
+-	BUG_ON(pud_none(*pud));
++	if (pud_none(*pud))
++		return -EFAULT;
+ 	pmd = pmd_offset(pud, address);
+ 	if (!pmd_present(*pmd))
+ 		return -EFAULT;
 -- 
 2.20.1
 
