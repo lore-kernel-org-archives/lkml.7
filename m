@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C963C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9995CC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDEC2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685A120873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510864;
-	bh=U8pxwKUR8lFaTq3mQqf/ccRDfesiLsyvkbKgW/aXvvM=;
+	s=default; t=1563510868;
+	bh=AX73ikEry2voD9wFvV2u+EohCETcn1SCunXvxQ1Q/iM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yuR1Ij8OyKf+gGNjOvwkm6pU/uUUVDRt5qAWq8LrSdRgBZi+6BUzCd+yDBxvistDI
-	 iZG/MfODdk4NUKvg8Bb8Su6eXrdRKk7uEhm1JbXYt78C3JGkp8wK4Y/oSWK9DP6bP8
-	 Vl5do7Uw46N6JrtSwsxtkjQkf4FPLYxUBNpw1vmw=
+	b=MvLgRkQfJkczRErZbgFoitbCwzDFPoXZIBtFjRy1KpVjoAEoAjcZC6c9OvpwpxobP
+	 FmYdOqUn/BcQM/e11c/rd32XIVvBVYZVE3qmulbw8lnLlLu0ey9YbEu8H1hqfysVLO
+	 icX72kWv8a/97eLxUScpH+Wpqzz2B63Kz6oAfgKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfGSEB4 (ORCPT
+        id S1730853AbfGSEe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33374 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729582AbfGSEBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:39 -0400
+        id S1729723AbfGSEB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D221E21851;
-        Fri, 19 Jul 2019 04:01:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7748E218B8;
+        Fri, 19 Jul 2019 04:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508898;
-        bh=U8pxwKUR8lFaTq3mQqf/ccRDfesiLsyvkbKgW/aXvvM=;
+        s=default; t=1563508915;
+        bh=AX73ikEry2voD9wFvV2u+EohCETcn1SCunXvxQ1Q/iM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLfTMYSLi77PG62l0eYCLVMcLdul5ae2O0bXOQiEUgqlgHfJdJnl4zRr8CMQq59IE
-         zVVCm3t8lJbvdCoXFJcH487kqXl/bC35wkiW30l2I+tgE6qMzwH+PQy/VOBgVPmohM
-         A3jiOTsirAP5/csZUkWQkkyGHJHXvio9yLtWHdbU=
+        b=JQSKNuJLYiTUdttgbHjCFM57pro8CPqICgCCnxH9IsrXsC8gM2/0Z1+su6lJi9x/s
+         1OQD4qMO6UtWGoccmF/v5pQAbk0TJz55BLXeSDAhykuTXGyBSY7eGH4s9cXSfSnJw/
+         vZypyNkYu5NEjTixxmmW5LsFAcX5U2yfOCEKNayw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     morten petersen <morten_bp@live.dk>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 146/171] mailbox: handle failed named mailbox channel request
-Date:   Thu, 18 Jul 2019 23:56:17 -0400
-Message-Id: <20190719035643.14300-146-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.2 157/171] 9p: pass the correct prototype to read_cache_page
+Date:   Thu, 18 Jul 2019 23:56:28 -0400
+Message-Id: <20190719035643.14300-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,44 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: morten petersen <morten_bp@live.dk>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
+[ Upstream commit f053cbd4366051d7eb6ba1b8d529d20f719c2963 ]
 
-Previously, if mbox_request_channel_byname was used with a name
-which did not exist in the "mbox-names" property of a mailbox
-client, the mailbox corresponding to the last entry in the
-"mbox-names" list would be incorrectly selected.
-With this patch, -EINVAL is returned if the named mailbox is
-not found.
+Fix the callback 9p passes to read_cache_page to actually have the
+proper type expected.  Casting around function pointers can easily
+hide typing bugs, and defeats control flow protection.
 
-Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Link: http://lkml.kernel.org/r/20190520055731.24538-5-hch@lst.de
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mailbox.c | 6 ++++--
+ fs/9p/vfs_addr.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index f4b1950d35f3..0b821a5b2db8 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -418,11 +418,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index bc57ae9e2963..cce9ace651a2 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -35,8 +35,9 @@
+  * @page: structure to page
+  *
+  */
+-static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
++static int v9fs_fid_readpage(void *data, struct page *page)
+ {
++	struct p9_fid *fid = data;
+ 	struct inode *inode = page->mapping->host;
+ 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
+ 	struct iov_iter to;
+@@ -107,7 +108,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
+ 	if (ret == 0)
+ 		return ret;
  
- 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
- 		if (!strncmp(name, mbox_name, strlen(name)))
--			break;
-+			return mbox_request_channel(cl, index);
- 		index++;
- 	}
- 
--	return mbox_request_channel(cl, index);
-+	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
-+		__func__, name);
-+	return ERR_PTR(-EINVAL);
+-	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
++	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
++			filp->private_data);
+ 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
- 
 -- 
 2.20.1
 
