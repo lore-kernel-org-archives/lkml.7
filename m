@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE65DC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD34C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0ED2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8606B21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508683;
-	bh=uQA2gpES8zyRLAP8LaB1TaiMSzsmJOa2FGTLM7RHEWo=;
+	s=default; t=1563508686;
+	bh=nxYKYXfveCqtb0rO+c1any+jTsC8a+P3hYgpDWMJbSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xeQk77nT9XZd6zMWDN1n1IQyhekBG4qqXCwE+yQ98sf4vkM/NjyY627Hp9zw/kCYD
-	 Y9HlS+ALpvYagJTOfBO7nlOLSggJOoiCMHlvlA5pnqnXHiWpErNjHXp18hIFCTlkJf
-	 cNCxufpBJjzem1eAiXtJRA70ehRLSHfL5BobizMA=
+	b=x+TlPK0PgN/tayXJMNieeYywvmYUhbhKY75xsZirmTEyAnxrZwPS8b9ZHDLEGUyLB
+	 fqYyQZkQbVr/iUIAvTxdi6ta8vLMAr7fCLBTfTo2P3+xTZL0on2Ru11gOM4Nvxtcy6
+	 Byov+FOKJ8qVPNVaO3cl8C4Tuwwh2DMJTRrweEvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfGSD6C (ORCPT
+        id S1727717AbfGSD6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57226 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfGSD57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:59 -0400
+        id S1727580AbfGSD55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:57:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 338052184E;
-        Fri, 19 Jul 2019 03:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E652C21851;
+        Fri, 19 Jul 2019 03:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508679;
-        bh=uQA2gpES8zyRLAP8LaB1TaiMSzsmJOa2FGTLM7RHEWo=;
+        s=default; t=1563508676;
+        bh=nxYKYXfveCqtb0rO+c1any+jTsC8a+P3hYgpDWMJbSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4s27w0JehJYlpiAOyHEXAIGV6lXqKm2psD5QD3hxqFMPMsZ+ZbR41Q0bYEMo9xAB
-         rqYc5xpLeVLLNl8CHyPmx8T95DAhndabCtvptvjbdAnvgthFX9pe9xrUv5UR2kV/+N
-         FSmHFWCyvNESfF2z+JvkDqFj6pEeVZT7KJ7kpOqU=
+        b=ppzYVLhhxtiAzF9JKFSdl9ZK2tATbBZYylqKBJnCLwjJzQo5pCz4Uo3OyGl0oQY8i
+         wjeANxXNiXjN2vz42q27JX+vr5w8HQ5ZZ+A9hiT2h5doIbD632kCbc0wOFIYtVc5rt
+         vdGYK4UhcEhUDX7SvuGMDlJDPV90xhaAf5gGpZaM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 030/171] tools: PCI: Fix broken pcitest compilation
-Date:   Thu, 18 Jul 2019 23:54:21 -0400
-Message-Id: <20190719035643.14300-30-sashal@kernel.org>
+Cc:     Oak Zeng <Oak.Zeng@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 028/171] drm/amdkfd: Fix sdma queue map issue
+Date:   Thu, 18 Jul 2019 23:54:19 -0400
+Message-Id: <20190719035643.14300-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,55 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+From: Oak Zeng <Oak.Zeng@amd.com>
 
-[ Upstream commit 8a5e0af240e07dd3d4897eb8ff52aab757da7fab ]
+[ Upstream commit 065e4bdfa1f3ab2884c110394d8b7e7ebe3b988c ]
 
-pcitest is currently broken due to the following compiler error
-and related warning. Fix by changing the run_test() function
-signature to return an integer result.
+Previous codes assumes there are two sdma engines.
+This is not true e.g., Raven only has 1 SDMA engine.
+Fix the issue by using sdma engine number info in
+device_info.
 
-pcitest.c: In function run_test:
-pcitest.c:143:9: warning: return with a value, in function
-returning void
-  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
-
-pcitest.c: In function main:
-pcitest.c:232:9: error: void value not ignored as it ought to be
-  return run_test(test);
-
-Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Oak Zeng <Oak.Zeng@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/pci/pcitest.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../drm/amd/amdkfd/kfd_device_queue_manager.c | 21 +++++++++++--------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index cb7a47dfd8b6..49ddfa6f5a8c 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -36,15 +36,15 @@ struct pci_test {
- 	unsigned long	size;
- };
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+index ae381450601c..afbaf6f5131e 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+@@ -1268,12 +1268,17 @@ int amdkfd_fence_wait_timeout(unsigned int *fence_addr,
+ 	return 0;
+ }
  
--static void run_test(struct pci_test *test)
-+static int run_test(struct pci_test *test)
+-static int unmap_sdma_queues(struct device_queue_manager *dqm,
+-				unsigned int sdma_engine)
++static int unmap_sdma_queues(struct device_queue_manager *dqm)
  {
--	long ret;
-+	int ret = -EINVAL;
- 	int fd;
+-	return pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_SDMA,
+-			KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0, false,
+-			sdma_engine);
++	int i, retval = 0;
++
++	for (i = 0; i < dqm->dev->device_info->num_sdma_engines; i++) {
++		retval = pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_SDMA,
++			KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0, false, i);
++		if (retval)
++			return retval;
++	}
++	return retval;
+ }
  
- 	fd = open(test->device, O_RDWR);
- 	if (fd < 0) {
- 		perror("can't open PCI Endpoint Test device");
--		return;
-+		return -ENODEV;
- 	}
+ /* dqm->lock mutex has to be locked before calling this function */
+@@ -1312,10 +1317,8 @@ static int unmap_queues_cpsch(struct device_queue_manager *dqm,
+ 	pr_debug("Before destroying queues, sdma queue count is : %u\n",
+ 		dqm->sdma_queue_count);
  
- 	if (test->barnum >= 0 && test->barnum <= 5) {
+-	if (dqm->sdma_queue_count > 0) {
+-		unmap_sdma_queues(dqm, 0);
+-		unmap_sdma_queues(dqm, 1);
+-	}
++	if (dqm->sdma_queue_count > 0)
++		unmap_sdma_queues(dqm);
+ 
+ 	retval = pm_send_unmap_queue(&dqm->packets, KFD_QUEUE_TYPE_COMPUTE,
+ 			filter, filter_param, false, 0);
 -- 
 2.20.1
 
