@@ -2,54 +2,51 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E7BC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F228C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85D02077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0D82077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511094;
-	bh=k9Z0PZaDpi4CULLhNh5P7Ql5oV//CD2Fz8mJtLtweNE=;
+	s=default; t=1563511103;
+	bh=ZLD/6oXwXrwXS+p6tzTSQVROw5J+QQp5MCGuuv7TYkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xqrUiEW/W8daXH7/wvF3NVQOXE1LvtLL19x9d3FF/SoXEY8YfhD9sNXY0NdpIFYp9
-	 6doN51L/Cw2b2IybB1juHpQ2ielNCuWi1mvEOS59IHugPcBtY5yidki0t+dHK0KRZK
-	 iv8YfEb3g0fGr+QyzR1bbMgbbD9Rkm3Yena98Muw=
+	b=XyloVKVYpUteYCbYOPHqkmKthjbLcH7ryUyo1UDB7qsBJygjG5u6H+N8i9zMQq7S7
+	 Rnk7Rj/WckKnEnuFrkjF7+shYdjJKsw7I/RkYnd1GqkMcf5cathF3f1RKduRQ22bf/
+	 guz6ar3FUp4cIZj9rkvX63rpC892U/Q0FF1o45e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbfGSEiN (ORCPT
+        id S1730495AbfGSEiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:38:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:38:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbfGSD70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:26 -0400
+        id S1727389AbfGSD7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BFFF21855;
-        Fri, 19 Jul 2019 03:59:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A42A21855;
+        Fri, 19 Jul 2019 03:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508765;
-        bh=k9Z0PZaDpi4CULLhNh5P7Ql5oV//CD2Fz8mJtLtweNE=;
+        s=default; t=1563508760;
+        bh=ZLD/6oXwXrwXS+p6tzTSQVROw5J+QQp5MCGuuv7TYkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mxFbYoJlkACLRZ11kDdb+ONdYm+uMWqv8K7QwwND3k/kt3t4aIf4nmFGcSZkd9Q2E
-         vZvtwvWjPxoWFzTdC+ZmV1k1Zq7Apx6lj2SW1ykZFgOC+BLKwFEm9Gmhggi1quh+xI
-         fEJwzR7gM40c0ceKfYYjM1uBFP+cIa2Uxk57XCsA=
+        b=oLXxjsXHeqTSvKM9VNaeF9F1ySekNibUuB3dNyykfH1z6a8XUFXSTl2dOwTdpeek0
+         UdTDnNaNQDSH5Qf5tXlcmdYGSuGz5LTIfcSXQfEq+gbHFQ+3X0F1qmi4IwMcq9eh0r
+         /8LZcLR0OqpSdLJwSN3WHQCImLrTd4WJ6ChIZsks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 077/171] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
-Date:   Thu, 18 Jul 2019 23:55:08 -0400
-Message-Id: <20190719035643.14300-77-sashal@kernel.org>
+Cc:     Eugene Korenevsky <ekorenevsky@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 075/171] kvm: vmx: segment limit check: use access length
+Date:   Thu, 18 Jul 2019 23:55:06 -0400
+Message-Id: <20190719035643.14300-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -62,65 +59,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Eugene Korenevsky <ekorenevsky@gmail.com>
 
-[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
+[ Upstream commit fdb28619a8f033c13f5d9b9e8b5536bb6e68a2c3 ]
 
-When the firmware does PCI BAR resource allocation, it passes the assigned
-addresses and flags (prefetch/64bit/...) via the "reg" property of
-a PCI device device tree node so the kernel does not need to do
-resource allocation.
+There is an imperfection in get_vmx_mem_address(): access length is ignored
+when checking the limit. To fix this, pass access length as a function argument.
+The access length is usually obvious since it is used by callers after
+get_vmx_mem_address() call, but for vmread/vmwrite it depends on the
+state of 64-bit mode.
 
-The flags are stored in resource::flags - the lower byte stores
-PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
-Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
-such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
-When parsing the "reg" property, we copy the prefetch flag but we skip
-on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
-
-The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
-1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
-or by passing "/chosen/linux,pci-probe-only");
-2. we request resource alignment (by passing pci=resource_alignment=
-via the kernel cmd line to request PAGE_SIZE alignment or defining
-ppc_md.pcibios_default_alignment which returns anything but 0). Note that
-the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
-
-With 1) and 2), the generic PCI code in the kernel unconditionally
-decides to:
-- reassign the BARs in pci_specified_resource_alignment() (works fine)
-- write new BARs to the device - this fails for 64bit BARs as the generic
-code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
-of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
-in the hypervisor.
-
-This fixes the issue by copying the flag. This is useful if we want to
-enforce certain BAR alignment per platform as handling subpage sized BARs
-is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Shawn Anastasio <shawn@anastas.io>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Eugene Korenevsky <ekorenevsky@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/pci_of_scan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/vmx/nested.c | 28 ++++++++++++++++------------
+ arch/x86/kvm/vmx/nested.h |  2 +-
+ arch/x86/kvm/vmx/vmx.c    |  3 ++-
+ 3 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-index 24522aa37665..c63c53b37e8e 100644
---- a/arch/powerpc/kernel/pci_of_scan.c
-+++ b/arch/powerpc/kernel/pci_of_scan.c
-@@ -42,6 +42,8 @@ unsigned int pci_parse_of_flags(u32 addr0, int bridge)
- 	if (addr0 & 0x02000000) {
- 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
- 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
-+		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-+			flags |= IORESOURCE_MEM_64;
- 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
- 		if (addr0 & 0x40000000)
- 			flags |= IORESOURCE_PREFETCH
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 4c0aa676f843..749125a3539e 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4012,7 +4012,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+  * #UD or #GP.
+  */
+ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+-			u32 vmx_instruction_info, bool wr, gva_t *ret)
++			u32 vmx_instruction_info, bool wr, int len, gva_t *ret)
+ {
+ 	gva_t off;
+ 	bool exn;
+@@ -4119,7 +4119,7 @@ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+ 		 */
+ 		if (!(s.base == 0 && s.limit == 0xffffffff &&
+ 		     ((s.type & 8) || !(s.type & 4))))
+-			exn = exn || ((u64)off + sizeof(u64) - 1 > s.limit);
++			exn = exn || ((u64)off + len - 1 > s.limit);
+ 	}
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
+@@ -4138,7 +4138,8 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+ 	struct x86_exception e;
+ 
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-			vmcs_read32(VMX_INSTRUCTION_INFO), false, &gva))
++				vmcs_read32(VMX_INSTRUCTION_INFO), false,
++				sizeof(*vmpointer), &gva))
+ 		return 1;
+ 
+ 	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
+@@ -4390,6 +4391,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 	u64 field_value;
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
++	int len;
+ 	gva_t gva = 0;
+ 	struct vmcs12 *vmcs12;
+ 
+@@ -4427,12 +4429,12 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 		kvm_register_writel(vcpu, (((vmx_instruction_info) >> 3) & 0xf),
+ 			field_value);
+ 	} else {
++		len = is_64_bit_mode(vcpu) ? 8 : 4;
+ 		if (get_vmx_mem_address(vcpu, exit_qualification,
+-				vmx_instruction_info, true, &gva))
++				vmx_instruction_info, true, len, &gva))
+ 			return 1;
+ 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
+-		kvm_write_guest_virt_system(vcpu, gva, &field_value,
+-					    (is_long_mode(vcpu) ? 8 : 4), NULL);
++		kvm_write_guest_virt_system(vcpu, gva, &field_value, len, NULL);
+ 	}
+ 
+ 	return nested_vmx_succeed(vcpu);
+@@ -4442,6 +4444,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long field;
++	int len;
+ 	gva_t gva;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+@@ -4467,11 +4470,11 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ 		field_value = kvm_register_readl(vcpu,
+ 			(((vmx_instruction_info) >> 3) & 0xf));
+ 	else {
++		len = is_64_bit_mode(vcpu) ? 8 : 4;
+ 		if (get_vmx_mem_address(vcpu, exit_qualification,
+-				vmx_instruction_info, false, &gva))
++				vmx_instruction_info, false, len, &gva))
+ 			return 1;
+-		if (kvm_read_guest_virt(vcpu, gva, &field_value,
+-					(is_64_bit_mode(vcpu) ? 8 : 4), &e)) {
++		if (kvm_read_guest_virt(vcpu, gva, &field_value, len, &e)) {
+ 			kvm_inject_page_fault(vcpu, &e);
+ 			return 1;
+ 		}
+@@ -4630,7 +4633,8 @@ static int handle_vmptrst(struct kvm_vcpu *vcpu)
+ 	if (unlikely(to_vmx(vcpu)->nested.hv_evmcs))
+ 		return 1;
+ 
+-	if (get_vmx_mem_address(vcpu, exit_qual, instr_info, true, &gva))
++	if (get_vmx_mem_address(vcpu, exit_qual, instr_info,
++				true, sizeof(gpa_t), &gva))
+ 		return 1;
+ 	/* *_system ok, nested_vmx_check_permission has verified cpl=0 */
+ 	if (kvm_write_guest_virt_system(vcpu, gva, (void *)&current_vmptr,
+@@ -4676,7 +4680,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+ 	 * operand is read even if it isn't needed (e.g., for type==global)
+ 	 */
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-			vmx_instruction_info, false, &gva))
++			vmx_instruction_info, false, sizeof(operand), &gva))
+ 		return 1;
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+ 		kvm_inject_page_fault(vcpu, &e);
+@@ -4738,7 +4742,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+ 	 * operand is read even if it isn't needed (e.g., for type==global)
+ 	 */
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-			vmx_instruction_info, false, &gva))
++			vmx_instruction_info, false, sizeof(operand), &gva))
+ 		return 1;
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+ 		kvm_inject_page_fault(vcpu, &e);
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index e847ff1019a2..29d205bb4e4f 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -21,7 +21,7 @@ void nested_sync_from_vmcs12(struct kvm_vcpu *vcpu);
+ int vmx_set_vmx_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 data);
+ int vmx_get_vmx_msr(struct nested_vmx_msrs *msrs, u32 msr_index, u64 *pdata);
+ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+-			u32 vmx_instruction_info, bool wr, gva_t *ret);
++			u32 vmx_instruction_info, bool wr, int len, gva_t *ret);
+ 
+ static inline struct vmcs12 *get_vmcs12(struct kvm_vcpu *vcpu)
+ {
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d98eac371c0a..f7cf15a9a94f 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5342,7 +5342,8 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+ 	 * is read even if it isn't needed (e.g., for type==all)
+ 	 */
+ 	if (get_vmx_mem_address(vcpu, vmcs_readl(EXIT_QUALIFICATION),
+-				vmx_instruction_info, false, &gva))
++				vmx_instruction_info, false,
++				sizeof(operand), &gva))
+ 		return 1;
+ 
+ 	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
 -- 
 2.20.1
 
