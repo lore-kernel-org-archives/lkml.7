@@ -2,112 +2,148 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192BDC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23973C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E549B21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:24:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qECwcshm"
+	by mail.kernel.org (Postfix) with ESMTP id F3C2B21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfGSHYE (ORCPT
+        id S1726694AbfGSH1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:24:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46712 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfGSHYD (ORCPT
+        Fri, 19 Jul 2019 03:27:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:4147 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726036AbfGSH1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:24:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6J7Itmf100116;
-        Fri, 19 Jul 2019 07:23:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=87OIeSK1sKiVNRTyJCB3x8F8M7//ifJ6aAgQH0sNrRw=;
- b=qECwcshmJd9jAAhPFEhwo5ilQFHYWfpV7v3ax5bpkxbUbTNoYV+NeDep95NkU74EHbbN
- 19tVZu1hoGfkG2lqWtK+ukTdjidIpRRp5+c5Z8patXqVtEV2qb1v8Vqy3MqtsvcIcySz
- 1zgyTk+kXOmsQqMo5wUZURdYO2LEVnJNYI0MbILovqIVtKDimInA16kXQ3pivoWThD6b
- 6GKkAomZ9yNwfz9+/zjf+ljaDLp/vkf+Y2kfZKFk7RIWqqg4S9qN1oBx7W8uYSM4lRmq
- fWrUQXu6XDYMgOYBN5THyiomwZDXx/ovGWT+AiWhLpsrmXnb5TZWwvQ36bkvhFmIP/3B dw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tq78q4wdg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 07:23:34 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6J7MZns049621;
-        Fri, 19 Jul 2019 07:23:33 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tt77j5mnk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 07:23:33 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6J7NQYH009729;
-        Fri, 19 Jul 2019 07:23:31 GMT
-Received: from Subhras-MacBook-Pro.local (/103.217.243.4)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Jul 2019 07:23:26 +0000
-Subject: Re: [RFC PATCH 3/3] sched: introduce tunables to control soft
- affinity
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, tglx@linutronix.de, prakash.sangappa@oracle.com,
-        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        tim.c.chen@linux.intel.com, mgorman@techsingularity.net
-References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
- <20190626224718.21973-4-subhra.mazumdar@oracle.com>
- <20190718100816.GA19218@linux.vnet.ibm.com>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <81034dd8-4074-e716-c3e8-5a23cbb6bb8d@oracle.com>
-Date:   Fri, 19 Jul 2019 12:53:19 +0530
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190718100816.GA19218@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 19 Jul 2019 03:27:23 -0400
+X-UUID: a69de542ced147f3a1a4b1ceb27efe2f-20190719
+X-UUID: a69de542ced147f3a1a4b1ceb27efe2f-20190719
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 160776184; Fri, 19 Jul 2019 15:27:18 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 19 Jul 2019 15:27:14 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 19 Jul 2019 15:27:14 +0800
+Message-ID: <1563521234.8090.4.camel@mtkswgap22>
+Subject: Re: [PATCH 2/3] mt76: mt7615: add 4 WMM sets support
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Roy Luo <royluo@google.com>
+CC:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 19 Jul 2019 15:27:14 +0800
+In-Reply-To: <CA+zupgwyz2hdVRmnGr+4vzeEfvTfxYkLmu6jD_jFNjrPAdbvCQ@mail.gmail.com>
+References: <50d28c9b0f9e7d6b277d36fc93f55142d7535259.1563518381.git.ryder.lee@mediatek.com>
+         <1dc3cbc32729be40d0e1f2ef831377f2cddf3df3.1563518381.git.ryder.lee@mediatek.com>
+         <CA+zupgwyz2hdVRmnGr+4vzeEfvTfxYkLmu6jD_jFNjrPAdbvCQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907190083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907190082
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: D61FDE6DCE5E490ED94D7E171FF4DB4510347F1D7F8F881410629479B1536F882000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-07-19 at 15:05 +0800, Roy Luo wrote:
+> 
+> 
+> 
+> On Fri, Jul 19, 2019 at 2:55 PM Ryder Lee <ryder.lee@mediatek.com>
+> wrote:
+> 
+>         MT7615 hardware supoorts 4 WMM sets, so this patch adds them
+>         accordingly.
+>         Also remove incorrect queue mapping in .conf_tx
+>         
+>         Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+>         ---
+>          drivers/net/wireless/mediatek/mt76/mt7615/mac.c  |  5 +++--
+>          drivers/net/wireless/mediatek/mt76/mt7615/main.c | 16
+>         ++++++----------
+>          .../net/wireless/mediatek/mt76/mt7615/mt7615.h   |  1 +
+>          3 files changed, 10 insertions(+), 12 deletions(-)
+>         
+>         diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+>         b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+>         index 8f9a2bb68ded..d85b3904f33a 100644
+>         --- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+>         +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+>         @@ -314,7 +314,7 @@ int mt7615_mac_write_txwi(struct
+>         mt7615_dev *dev, __le32 *txwi,
+>                 struct ieee80211_hdr *hdr = (struct ieee80211_hdr
+>         *)skb->data;
+>                 struct ieee80211_vif *vif = info->control.vif;
+>                 int tx_count = 8;
+>         -       u8 fc_type, fc_stype, p_fmt, q_idx, omac_idx = 0;
+>         +       u8 fc_type, fc_stype, p_fmt, q_idx, omac_idx = 0,
+>         wmm_idx = 0;
+>                 __le16 fc = hdr->frame_control;
+>                 u16 seqno = 0;
+>                 u32 val;
+>         @@ -323,6 +323,7 @@ int mt7615_mac_write_txwi(struct
+>         mt7615_dev *dev, __le32 *txwi,
+>                         struct mt7615_vif *mvif = (struct mt7615_vif
+>         *)vif->drv_priv;
+>         
+>                         omac_idx = mvif->omac_idx;
+>         +               wmm_idx = mvif->wmm_idx;
+>                 }
+>         
+>                 if (sta) {
+>         @@ -335,7 +336,7 @@ int mt7615_mac_write_txwi(struct
+>         mt7615_dev *dev, __le32 *txwi,
+>                 fc_stype = (le16_to_cpu(fc) & IEEE80211_FCTL_STYPE) >>
+>         4;
+>         
+>                 if (ieee80211_is_data(fc) ||
+>         ieee80211_is_bufferable_mmpdu(fc)) {
+>         -               q_idx = skb_get_queue_mapping(skb);
+>         +               q_idx = skb_get_queue_mapping(skb) + wmm_idx *
+>         MT7615_MAX_WMM_SETS;
+>                         p_fmt = MT_TX_TYPE_CT;
+>                 } else if (ieee80211_is_beacon(fc)) {
+>                         q_idx = MT_LMAC_BCN0;
+>         diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>         b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>         index 2c702b31d55f..ea48dcdb65c0 100644
+>         --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>         +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>         @@ -85,9 +85,9 @@ static int mt7615_add_interface(struct
+>         ieee80211_hw *hw,
+>                 }
+>                 mvif->omac_idx = idx;
+>         
+>         -       /* TODO: DBDC support. Use band 0 and wmm 0 for now */
+>         +       /* TODO: DBDC support. Use band 0 for now */
+>                 mvif->band_idx = 0;
+>         -       mvif->wmm_idx = 0;
+>         +       mvif->wmm_idx = mvif->idx % MT7615_MAX_WMM_SETS;
+>         
+> 
+> 
+> IIUC, vifs with the same wmm_idx will share the same WMM HW, thus the
+> same WMM parameter.
+> Shouldn't we assign wmm_idx based on that?
 
-On 7/18/19 3:38 PM, Srikar Dronamraju wrote:
-> * subhra mazumdar <subhra.mazumdar@oracle.com> [2019-06-26 15:47:18]:
->
->> For different workloads the optimal "softness" of soft affinity can be
->> different. Introduce tunables sched_allowed and sched_preferred that can
->> be tuned via /proc. This allows to chose at what utilization difference
->> the scheduler will chose cpus_allowed over cpus_preferred in the first
->> level of search. Depending on the extent of data sharing, cache coherency
->> overhead of the system etc. the optimal point may vary.
->>
->> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
->> ---
-> Correct me but this patchset only seems to be concentrated on the wakeup
-> path, I don't see any changes in the regular load balancer or the
-> numa-balancer. If system is loaded or tasks are CPU intensive, then wouldn't
-> these tasks be moved to cpus_allowed instead of cpus_preferred and hence
-> breaking this soft affinity.
->
-The new idle is purposefully unchanged, if threads get stolen to the allowed
-set from the preferred set that's intended, together with the enqueue side
-it will achieve softness of affinity.
+I think that's what I did here. vif0 <-> wmm0, vif1 <->wmm1 ...
+
+> 
+> 
+
