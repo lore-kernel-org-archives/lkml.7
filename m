@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A994BC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E8CC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837FF20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30EA20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510183;
-	bh=ijB9av6DrhXc91gE0CblfZ+XGFXvzBrHZFhDPDU0TSY=;
+	s=default; t=1563510186;
+	bh=rEOxhVje41GtsRNcgA834B2vdF8qdzCHLjggyEcMFM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1JKP4uGsF7J1yJek3z9yuM1At0o4jL07hKNtVpDN/T/7lpRabuNscG9eENZ6OEQPx
-	 uONteffXno/zFWFwlfQY5VZ1l879WI+7wyf7c3GOnI6EXue9hRkPyqJ/51RBg+WZKZ
-	 F98cMIpv8I0rZtjamMhS/qlOU6L90uax8q5IXr7s=
+	b=XT1oG+F9zBmRY5LpwJWYiF5HHMqViwp0Ofmzd2mJydPEqWMNpSTUi2ytixA877yu5
+	 TPQf7gKiiYHQGfJ+kfZQxf17XFQBoP779fEw/5Bm2my3lX3yM5p6URanxhbYD6Cnvm
+	 kExqBHQ64QlzdV3SpLT3LNNXwj/YQjtNlr2fvFrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbfGSEKt (ORCPT
+        id S2388123AbfGSEKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733178AbfGSEKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:40 -0400
+        id S2388098AbfGSEKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40A812189D;
-        Fri, 19 Jul 2019 04:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D55218B6;
+        Fri, 19 Jul 2019 04:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509440;
-        bh=ijB9av6DrhXc91gE0CblfZ+XGFXvzBrHZFhDPDU0TSY=;
+        s=default; t=1563509432;
+        bh=rEOxhVje41GtsRNcgA834B2vdF8qdzCHLjggyEcMFM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fa2mh0NBTzgVUViCTt0xQn7pOM6ks0nfM1KlK6YYkd3jCX006jol5FWGGUUoN/1ZU
-         i4TSEriVd2qsgg+rnmzn/L30Osc19Os+IJLXqGPgNZD/IhCa1glfrVHHbY8JVJy+ol
-         SjUzsGdr/YzimEGg8id3aurvwnTVnglZfPlFZCzU=
+        b=T+aMUavrXnh81sXlmspXJ+9K/U9W4Q3/cvhL/RIF9FDCCVE39iy70dJFC/YSYy7R2
+         9W22NXzO95FNIveejdgjlJOm5PvKNZ5eI3H7xYIABMhVjw3JvEmCsK12tJ6CbR8qki
+         gJ4XtSAXKmC0onyvicApzIRCbL9QUffGax/HAPKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
+Cc:     Guenter Roeck <linux@roeck-us.net>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 093/101] mm/mmu_notifier: use hlist_add_head_rcu()
-Date:   Fri, 19 Jul 2019 00:07:24 -0400
-Message-Id: <20190719040732.17285-93-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 090/101] mm/gup.c: mark undo_dev_pagemap as __maybe_unused
+Date:   Fri, 19 Jul 2019 00:07:21 -0400
+Message-Id: <20190719040732.17285-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,66 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
+[ Upstream commit 790c73690c2bbecb3f6f8becbdb11ddc9bcff8cc ]
 
-Make mmu_notifier_register() safer by issuing a memory barrier before
-registering a new notifier.  This fixes a theoretical bug on weakly
-ordered CPUs.  For example, take this simplified use of notifiers by a
-driver:
+Several mips builds generate the following build warning.
 
-	my_struct->mn.ops = &my_ops; /* (1) */
-	mmu_notifier_register(&my_struct->mn, mm)
-		...
-		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
-		...
+  mm/gup.c:1788:13: warning: 'undo_dev_pagemap' defined but not used
 
-Once mmu_notifier_register() releases the mm locks, another thread can
-invalidate a range:
+The function is declared unconditionally but only called from behind
+various ifdefs. Mark it __maybe_unused.
 
-	mmu_notifier_invalidate_range()
-		...
-		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
-			if (mn->ops->invalidate_range)
-
-The read side relies on the data dependency between mn and ops to ensure
-that the pointer is properly initialized.  But the write side doesn't have
-any dependency between (1) and (2), so they could be reordered and the
-readers could dereference an invalid mn->ops.  mmu_notifier_register()
-does take all the mm locks before adding to the hlist, but those have
-acquire semantics which isn't sufficient.
-
-By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
-hlist using a store-release, ensuring that readers see prior
-initialization of my_struct.  This situation is better illustated by
-litmus test MP+onceassign+derefonce.
-
-Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
-Fixes: cddb8a5c14aa ("mmu-notifiers: core")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
+Link: http://lkml.kernel.org/r/1562072523-22311-1-git-send-email-linux@roeck-us.net
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmu_notifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 82bb1a939c0e..06dedb175572 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -316,7 +316,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
- 	 * thanks to mm_take_all_locks().
- 	 */
- 	spin_lock(&mm->mmu_notifier_mm->lock);
--	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
-+	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
- 	spin_unlock(&mm->mmu_notifier_mm->lock);
+diff --git a/mm/gup.c b/mm/gup.c
+index caadd31714a5..43c71397c7ca 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1367,7 +1367,8 @@ static inline pte_t gup_get_pte(pte_t *ptep)
+ }
+ #endif
  
- 	mm_drop_all_locks(mm);
+-static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
++static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
++					    struct page **pages)
+ {
+ 	while ((*nr) - nr_start) {
+ 		struct page *page = pages[--(*nr)];
 -- 
 2.20.1
 
