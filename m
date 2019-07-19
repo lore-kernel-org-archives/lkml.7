@@ -2,116 +2,150 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E9AC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E56CC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0945D2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250062173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TA7Ls/ZE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Moc19lNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfGSIcg (ORCPT
+        id S1727116AbfGSIdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:32:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43364 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGSIcg (ORCPT
+        Fri, 19 Jul 2019 04:33:18 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12640 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGSIdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:32:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6J8WALd020368;
-        Fri, 19 Jul 2019 03:32:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563525130;
-        bh=IVqQ1ovk/uB5I3+HYY88jIzu+tAVMCodVGet/Jwe4Qw=;
-        h=Subject:To:References:CC:From:Date:In-Reply-To;
-        b=TA7Ls/ZEkH2MbrRXeYpK/I5F6jqRsO9SrdHYTKsvbb8YV35on1KfFQeB8SYPnL6re
-         6NnLvVEyQ/sNskzSNhGBpXoW24Vu3AOGMPKwtXzVy9rmIuySPxWTc7hbTUkKRxRZh0
-         RK1pIyAePXpb4zqaFDDjRbt9YttbGuTaI9GGpXn4=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6J8WAor097464
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jul 2019 03:32:10 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 19
- Jul 2019 03:32:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 19 Jul 2019 03:32:10 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6J8W6xV081189;
-        Fri, 19 Jul 2019 03:32:07 -0500
-Subject: Re: mmotm 2019-07-17-16-05 uploaded (MTD_HYPERBUS, HBMC_AM654)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190717230610.zvRfipNL4%akpm@linux-foundation.org>
- <4b510069-5f5d-d079-1a98-de190321a97a@infradead.org>
-CC:     <akpm@linux-foundation.org>, <broonie@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
-        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
-        <linux-mtd@lists.infradead.org>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <c3b93f7a-5861-475f-faeb-3ec7e8e9b728@ti.com>
-Date:   Fri, 19 Jul 2019 14:02:47 +0530
+        Fri, 19 Jul 2019 04:33:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d31804a0000>; Fri, 19 Jul 2019 01:33:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jul 2019 01:33:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 01:33:16 -0700
+Received: from [10.26.11.13] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 08:33:13 +0000
+Subject: Re: [PATCH AUTOSEL 4.14 41/60] PCI: tegra: Enable Relaxed Ordering
+ only for Tegra20 & Tegra30
+To:     Sasha Levin <sashal@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+References: <20190719041109.18262-1-sashal@kernel.org>
+ <20190719041109.18262-41-sashal@kernel.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <838a6940-2a37-b91b-d522-8b154f3c71d7@nvidia.com>
+Date:   Fri, 19 Jul 2019 09:33:11 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <4b510069-5f5d-d079-1a98-de190321a97a@infradead.org>
+In-Reply-To: <20190719041109.18262-41-sashal@kernel.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563525194; bh=CwkJNwo9JGuYCI5aA8JqxIET9EXeyG9j+gpHZm57R/Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Moc19lNh5h03nmEuBY4iFSpNAAb9lFPjmBNJWY6kFQH23j7JMSDjGnzkRDnsp96bO
+         VLc3xNAPIL+qrfep3McCdqnH6vwfkGN6pPn6eJ74VKbBzx32dsGw8WV8uB6shz9IfB
+         Z/5XcHfDK7bfYdJOibXEjM8GZE0OsBO+pzLr2Vw+DGcO6nRy/ff2PgEzQa7rWJjRGL
+         fTckfVfajLlxAFwM5vS0T2kPB13gXA5kpH7TsfcVWxqCss1z8VDKznPOdyfVKFQKCj
+         W+Ttx5syfoHl5jth/0hyiilWOCRSzlgkpTloeeoM9KPdYYSWQ/Cpy9EPVBJl7BOlFR
+         2t2r07zlFsLNQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Lorenzo,
 
-On 18/07/19 9:15 PM, Randy Dunlap wrote:
-> On 7/17/19 4:06 PM, akpm@linux-foundation.org wrote:
->> The mm-of-the-moment snapshot 2019-07-17-16-05 has been uploaded to
->>
->>    http://www.ozlabs.org/~akpm/mmotm/
->>
->> mmotm-readme.txt says
->>
->> README for mm-of-the-moment:
->>
->> http://www.ozlabs.org/~akpm/mmotm/
->>
->> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->> more than once a week.
->>
-> 
-> on x86_64, when CONFIG_OF is not set/enabled:
-> 
-> WARNING: unmet direct dependencies detected for MUX_MMIO
->   Depends on [n]: MULTIPLEXER [=y] && (OF [=n] || COMPILE_TEST [=n])
->   Selected by [y]:
->   - HBMC_AM654 [=y] && MTD [=y] && MTD_HYPERBUS [=y]
-> 
-> due to
-> config HBMC_AM654
-> 	tristate "HyperBus controller driver for AM65x SoC"
-> 	select MULTIPLEXER
-> 	select MUX_MMIO
-> 
-> Those unprotected selects are lacking something.
-> 
+We have not requested that this is added to stable yet, however, has
+been picked up. Do we wish to let it soak in mainline for a release
+first? If so maybe we can ask Sasha to drop this for now.
 
-Sorry for that! I have posted a fix here. Let me know if that works. Thanks!
+Cheers
+Jon
 
-https://patchwork.ozlabs.org/patch/1133946/
+On 19/07/2019 05:10, Sasha Levin wrote:
+> From: Vidya Sagar <vidyas@nvidia.com>
+> 
+> [ Upstream commit 7be142caabc4780b13a522c485abc806de5c4114 ]
+> 
+> The PCI Tegra controller conversion to a device tree configurable
+> driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
+> to drivers/pci/host") implied that code for the driver can be
+> compiled in for a kernel supporting multiple platforms.
+> 
+> Unfortunately, a blind move of the code did not check that some of the
+> quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
+> all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
+> for both Vendor-ID and Device-ID) are now applied in all kernels that
+> compile the PCI Tegra controlled driver, DT and ACPI alike.
+> 
+> This is completely wrong, in that enablement of Relaxed Ordering is only
+> required by default in Tegra20 platforms as described in the Tegra20
+> Technical Reference Manual (available at
+> https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
+> Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
+> be enabled in its root ports to avoid deadlock in hardware) and in the
+> Tegra30 platforms for the same reasons (unfortunately not documented
+> in the TRM).
+> 
+> There is no other strict requirement on PCI devices Relaxed Ordering
+> enablement on any other Tegra platforms or PCI host bridge driver.
+> 
+> Fix this quite upsetting situation by limiting the vendor and device IDs
+> to which the Relaxed Ordering quirk applies to the root ports in
+> question, reported above.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> [lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/pci/host/pci-tegra.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> index 1987fec1f126..d2ad76ef3e83 100644
+> --- a/drivers/pci/host/pci-tegra.c
+> +++ b/drivers/pci/host/pci-tegra.c
+> @@ -607,12 +607,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+>  
+> -/* Tegra PCIE requires relaxed ordering */
+> +/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
+>  static void tegra_pcie_relax_enable(struct pci_dev *dev)
+>  {
+>  	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
+>  }
+> -DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
+>  
+>  static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
+>  {
+> 
 
 -- 
-Regards
-Vignesh
+nvpublic
