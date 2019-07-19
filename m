@@ -2,80 +2,99 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD13C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29927C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B6921849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PVB/5sDt"
+	by mail.kernel.org (Postfix) with ESMTP id 0D4002077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfGSN1G (ORCPT
+        id S1728871AbfGSN20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:27:06 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52154 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727344AbfGSN1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:27:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Pky9viuD0oMDaJSoHdvUAeTOz0jBwYPwJje4fFabTHU=; b=PVB/5sDt8JO1QPzJBKxZ8mraPo
-        F/njzXIy4mL2QNrBSOcPF5R9AhwgOgMGaDXTMT2tsinFyHLTqU0c8nC5u6ClaCqG0mE330J+R0SlS
-        lCzgjEz167T6Wj5iAT7pFI39Hc0tYOToCZVn8xH7TpVEyfO3bYfXCELlIUMHbAtza3pg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hoSuX-0006qO-Iq; Fri, 19 Jul 2019 15:26:57 +0200
-Date:   Fri, 19 Jul 2019 15:26:57 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sagar Kadam <sagar.kadam@sifive.com>
-Cc:     Yash Shah <yash.shah@sifive.com>, davem@davemloft.net,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        nicolas.ferre@microchip.com,
-        Sachin Ghadi <sachin.ghadi@sifive.com>, ynezz@true.cz
-Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
- controller driver
-Message-ID: <20190719132657.GD24930@lunn.ch>
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
- <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
- <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
+        Fri, 19 Jul 2019 09:28:26 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39523 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfGSN20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:28:26 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l9so30881790qtu.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:28:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nnlqw3Kv3CZrLr1tsvetYOC12fuM5jTa5rjogKHkRHk=;
+        b=CdCOn4eN95qYaAAXTVaS0hetaAGhQkvC6+5We5TY07HJL5cKq03ExoFsoe6i/BCmBX
+         cWwmR8Cphhu1eU4fk5W4H6ji9gq2RDhayD4GLgpeFvVfr6yFlk44M70mf8tRae4sIXxh
+         jLBa5iBtVy09f3R/VEaL6A+9IZhvm6zTt3/wIZpLFweCurfwJh+Qlas9dv0ssYH5v4UM
+         8WYkms5QIqcERKqQ5McK0MKsQb54TD3nxGrYCWksj//ApCSTOiCrygVe3tlP6tUuIVj+
+         d6CCzNNlu3uXT3amQAVBmBir54aO4+IOSRYS089X/DZT3t8YQBf+oTAW2NKHUV7+oZY/
+         kccw==
+X-Gm-Message-State: APjAAAV+9/CuqjZTbGQx9K+zGFLeSBvxxszGbse6hihF1bz6sNChfAvd
+        /TeAtOhuma++593tZOn+MUeAeyf4nUwmSBwe0j95/b8AXmQ=
+X-Google-Smtp-Source: APXvYqzIwTHiEwMwhv1NzYtpQLA08KLiR7lPaTytc76htDKB/elNqRfFHnkfCtdEriDcN13yVJr6Gnq/O6CD1t2BIR4=
+X-Received: by 2002:a0c:e952:: with SMTP id n18mr35962248qvo.63.1563542905500;
+ Fri, 19 Jul 2019 06:28:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190719113139.4005262-1-arnd@arndb.de> <20190719121336.GB28960@lst.de>
+ <CAK8P3a09YuLbQrfC61VMg_v3h+pA-QZBnW7i45AG6asPgMuoGg@mail.gmail.com>
+In-Reply-To: <CAK8P3a09YuLbQrfC61VMg_v3h+pA-QZBnW7i45AG6asPgMuoGg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 19 Jul 2019 15:28:09 +0200
+Message-ID: <CAK8P3a3j0opg-1yUt4sAU+fxCvk0bKBoJKc16jyPUPmyHEr0hg@mail.gmail.com>
+Subject: Re: [PATCH] [v2] blkdev: always export SECTOR_SHIFT
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 05:23:45PM +0530, Sagar Kadam wrote:
-> > +&eth0 {
-> > +       status = "okay";
-> > +       phy-mode = "gmii";
-> > +       phy-handle = <&phy1>;
-> > +       phy1: ethernet-phy@0 {
-> > +               reg = <0>;
-> > +       };
+On Fri, Jul 19, 2019 at 3:14 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Jul 19, 2019 at 2:13 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > > +/*
+> > > + * The basic unit of block I/O is a sector. It is used in a number of contexts
+> > > + * in Linux (blk, bio, genhd). The size of one sector is 512 = 2**9
+> > > + * bytes. Variables of type sector_t represent an offset or size that is a
+> > > + * multiple of 512 bytes. Hence these two constants.
+> > > + */
+> > > +#ifndef SECTOR_SHIFT
+> > > +#define SECTOR_SHIFT 9
+> > > +#endif
+> > > +#ifndef SECTOR_SIZE
+> > > +#define SECTOR_SIZE (1 << SECTOR_SHIFT)
+> > > +#endif
+> >
+> > While we're at it we really should drop the ifndefs.
+>
+> Good idea. Needs some more build testing then.
 
-Hi Sagar
+Did not take long:
 
-Is there a good reason to call it phy1? Is there a phy0?
+In file included from block/partitions/msdos.c:24:
+In file included from block/partitions/check.h:3:
+include/linux/blkdev.h:15:9: error: 'SECTOR_SIZE' macro redefined
+[-Werror,-Wmacro-redefined]
+#define SECTOR_SIZE (1 << SECTOR_SHIFT)
+        ^
+include/uapi/linux/msdos_fs.h:14:9: note: previous definition is here
+#define SECTOR_SIZE     512             /* sector size (bytes) */
+        ^
 
-Thanks
+This could clearly be fixed as well, but I suspect we're better off not touching
+it any further than necessary.
 
-   Andrew
+       Arnd
