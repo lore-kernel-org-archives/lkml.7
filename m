@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8258DC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFCCC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5366C2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F572082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509868;
-	bh=1CvoN+h5knBQsTuZMssi6vI9Bfs1CIK2ruyTPUJUTpM=;
+	s=default; t=1563509874;
+	bh=CtIMGofK6vbJ/UInNQ4hzSV0mDxjUM13tvSfz5FMHeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIKI+STEEP8ufiLL5HPO2d4NDeaDKJobqGomlAFPQOIrmYmm4+JzrkcD+EGXgym3X
-	 Jx55Qi8ayIcLSkp+Oay9qGDKo2S2axAmlOwfOEiAr9xDwes7qENVgIf7niU3T4AtHE
-	 wvijTuRBP2HjoZCWQl0umTOiu4Ohm+U0b93NM05s=
+	b=bRffRFLSsUDK7oHSWfJXo6LwLh94IlRk48Af8xzTW0ge55fOx+LtDRQM0Lk8HNl/H
+	 dqnDhAkF7JSt+ZxtfGN0Qib97UEJr+LRHCr4AR9aug5o4RjpDQgE9jqAdYzfyL66Ba
+	 yMVip3AFhr2jjF2NJGpqTC7XnkFwkb0dTJpQX2So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389669AbfGSERr (ORCPT
+        id S2388759AbfGSEOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:17:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388346AbfGSEOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:12 -0400
+        id S2388688AbfGSEOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A6E621873;
-        Fri, 19 Jul 2019 04:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AB2221872;
+        Fri, 19 Jul 2019 04:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509651;
-        bh=1CvoN+h5knBQsTuZMssi6vI9Bfs1CIK2ruyTPUJUTpM=;
+        s=default; t=1563509640;
+        bh=CtIMGofK6vbJ/UInNQ4hzSV0mDxjUM13tvSfz5FMHeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FA9VR+UCLt72oIp0AS9dWPQaRQA65XbHIWi0BTQDMK1A9pU05RKq/mATVnPFH/5TP
-         Ggxfv7TqBPasykDYwV2iABAyF91ScCZQVD3/eLSKu8DP3gD7FS4aAA1kDYuDCSXKg6
-         0pYsEuqXHbzzD+/JudHhJ3tqE5Zx7dgJzTtul1vE=
+        b=RdW+HhUtAGSu/4YRN2EJcfxeiy9tXmQEhSgS8V0W6GP+OOKWOrib+uJ0PdCi4OeZZ
+         PXr5bcc1/zdD8Hti0Yk8VtF7u6YaXht83on2GFD9CPJL6m3gdbrfeDy+dqYh0bkeV8
+         11Z4LzrzqJ1yl1FKhKI5xzTAvmdXR0MIbA67ISgw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ocean Chen <oceanchen@google.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 38/45] f2fs: avoid out-of-range memory access
-Date:   Fri, 19 Jul 2019 00:12:57 -0400
-Message-Id: <20190719041304.18849-38-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 33/45] PCI: tegra: Enable Relaxed Ordering only for Tegra20 & Tegra30
+Date:   Fri, 19 Jul 2019 00:12:52 -0400
+Message-Id: <20190719041304.18849-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -60,39 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ocean Chen <oceanchen@google.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+[ Upstream commit 7be142caabc4780b13a522c485abc806de5c4114 ]
 
-blkoff_off might over 512 due to fs corrupt or security
-vulnerability. That should be checked before being using.
+The PCI Tegra controller conversion to a device tree configurable
+driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
+to drivers/pci/host") implied that code for the driver can be
+compiled in for a kernel supporting multiple platforms.
 
-Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+Unfortunately, a blind move of the code did not check that some of the
+quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
+all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
+for both Vendor-ID and Device-ID) are now applied in all kernels that
+compile the PCI Tegra controlled driver, DT and ACPI alike.
 
-Signed-off-by: Ocean Chen <oceanchen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+This is completely wrong, in that enablement of Relaxed Ordering is only
+required by default in Tegra20 platforms as described in the Tegra20
+Technical Reference Manual (available at
+https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
+Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
+be enabled in its root ports to avoid deadlock in hardware) and in the
+Tegra30 platforms for the same reasons (unfortunately not documented
+in the TRM).
+
+There is no other strict requirement on PCI devices Relaxed Ordering
+enablement on any other Tegra platforms or PCI host bridge driver.
+
+Fix this quite upsetting situation by limiting the vendor and device IDs
+to which the Relaxed Ordering quirk applies to the root ports in
+question, reported above.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/host/pci-tegra.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 2fb99a081de8..c983f7d28f03 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1709,6 +1709,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-+		if (blk_off > ENTRIES_IN_SUM) {
-+			f2fs_bug_on(sbi, 1);
-+			f2fs_put_page(page, 1);
-+			return -EFAULT;
-+		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+index 8dfccf733241..6985102a4ae3 100644
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -603,12 +603,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+ 
+-/* Tegra PCIE requires relaxed ordering */
++/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
+ static void tegra_pcie_relax_enable(struct pci_dev *dev)
+ {
+ 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
+ 
+ static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+ {
 -- 
 2.20.1
 
