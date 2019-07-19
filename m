@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB95C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC64C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380EF2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8535A2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510667;
-	bh=qceo+/TEZVRgGCiRPA/chu92E1luGtQgGGimokaAYQA=;
+	s=default; t=1563510671;
+	bh=ZQ3WWzSDhz3Qb1WmYN7C9YZY6kD2OJayrXx0bEgbiUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DjmXRyvjwkpLasd/rUSKnYjTr2llKOqPnuSMVmjx1/vL5Ufl0TAQxzxQnXpuNduvL
-	 cTGm+6WnAZdIekPFz3dzEodorVu+sJay4nZvnDlZ4p/ySh5F0s+8AdaPujc0UB3Idf
-	 nGCUYCu6v13i2nxmFmaOlphxGYCF++23xS6vyX8U=
+	b=0dd50DgSa932rBq4KVM8vrsqLUDYlzEv0MooWjPvr4uv4fHTSunTESyYe8pu2YQdf
+	 +6HAQlNSTaD2m0K1KqqxvuMW1GL7FVeot2m3O2+5zxB23nh4+FKxVWWoNT+sPKCIwB
+	 BWojThd/B50udmbGqGcqvNUMj7W2PlJE6iB0yLJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfGSEEq (ORCPT
+        id S1732217AbfGSEbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36892 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:31:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbfGSEEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:04:36 -0400
+        id S1729532AbfGSEEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:04:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D665721852;
-        Fri, 19 Jul 2019 04:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A8C218BC;
+        Fri, 19 Jul 2019 04:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509075;
-        bh=qceo+/TEZVRgGCiRPA/chu92E1luGtQgGGimokaAYQA=;
+        s=default; t=1563509084;
+        bh=ZQ3WWzSDhz3Qb1WmYN7C9YZY6kD2OJayrXx0bEgbiUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXxZE2wf3D9qECqHEL9/VzA1m2PVZf/PehME29z8XV9czUk9XGzlJxYl+amQ8Pu08
-         87uiR5Z4WaJgo2bLL38LO7ihCjGMoV3w+oL1yxFNjlRrLuGfd3XUK62v/aEWdQyI7a
-         8Nyfl7fNPMFzT2O41mNpkFROVkazuxyK0ccWP1eY=
+        b=B6ytaXsI76boPRA0oQsDjznJEuqoFkTLXojdg6Fb7tAGqmhZ36M0tfhFvEQl2XeAf
+         TGdJjBQHA2jtuPKGp7NgP723JN+OwUkGdE21xcq1/5rJXPagJYygKMjQtL6cjtyh6b
+         P5VYV3RHS8W3AA90gf01M2fVcaluvUanKH/gRSp0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     EJ Hsu <ejh@nvidia.com>, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 054/141] usb: gadget: storage: Remove warning message
-Date:   Fri, 19 Jul 2019 00:01:19 -0400
-Message-Id: <20190719040246.15945-54-sashal@kernel.org>
+Cc:     Stefan Roese <sr@denx.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 060/141] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
+Date:   Fri, 19 Jul 2019 00:01:25 -0400
+Message-Id: <20190719040246.15945-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -59,111 +63,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Stefan Roese <sr@denx.de>
 
-[ Upstream commit e70b3f5da00119e057b7faa557753fee7f786f17 ]
+[ Upstream commit d99482673f950817b30caf3fcdfb31179b050ce1 ]
 
-This change is to fix below warning message in following scenario:
-usb_composite_setup_continue: Unexpected call
+This patch adds a check for the GPIOs property existence, before the
+GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+support is added (2nd patch in this patch series) on x86 platforms using
+ACPI.
 
-When system tried to enter suspend, the fsg_disable() will be called to
-disable fsg driver and send a signal to fsg_main_thread. However, at
-this point, the fsg_main_thread has already been frozen and can not
-respond to this signal. So, this signal will be pended until
-fsg_main_thread wakes up.
+Here Mika's comments from 2016-08-09:
 
-Once system resumes from suspend, fsg_main_thread will detect a signal
-pended and do some corresponding action (in handle_exception()). Then,
-host will send some setup requests (get descriptor, set configuration...)
-to UDC driver trying to enumerate this device. During the handling of "set
-configuration" request, it will try to sync up with fsg_main_thread by
-sending a signal (which is the same as the signal sent by fsg_disable)
-to it. In a similar manner, once the fsg_main_thread receives this
-signal, it will call handle_exception() to handle the request.
+"
+I noticed that with v4.8-rc1 serial console of some of our Broxton
+systems does not work properly anymore. I'm able to see output but input
+does not work.
 
-However, if the fsg_main_thread wakes up from suspend a little late and
-"set configuration" request from Host arrives a little earlier,
-fsg_main_thread might come across the request from "set configuration"
-when it handles the signal from fsg_disable(). In this case, it will
-handle this request as well. So, when fsg_main_thread tries to handle
-the signal sent from "set configuration" later, there will nothing left
-to do and warning message "Unexpected call" is printed.
+I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+("tty/serial/8250: use mctrl_gpio helpers").
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+The reason why it fails is that in ACPI we do not have names for GPIOs
+(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+UART device in Broxton has following (simplified) ACPI description:
+
+    Device (URT4)
+    {
+        ...
+        Name (_CRS, ResourceTemplate () {
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003A
+            }
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003D
+            }
+        })
+
+In this case it finds the first GPIO (0x003A which happens to be RX pin
+for that UART), turns it into GPIO which then breaks input for the UART
+device. This also breaks systems with bluetooth connected to UART (those
+typically have some GPIOs in their _CRS).
+
+Any ideas how to fix this?
+
+We cannot just drop the _CRS index lookup fallback because that would
+break many existing machines out there so maybe we can limit this to
+only DT enabled machines. Or alternatively probe if the property first
+exists before trying to acquire the GPIOs (using
+device_property_present()).
+"
+
+This patch implements the fix suggested by Mika in his statement above.
+
+Signed-off-by: Stefan Roese <sr@denx.de>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yegor Yefremov <yegorslists@googlemail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_mass_storage.c | 21 ++++++++++++++------
- drivers/usb/gadget/function/storage_common.h |  1 +
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
-index 043f97ad8f22..982c3e89eb0d 100644
---- a/drivers/usb/gadget/function/f_mass_storage.c
-+++ b/drivers/usb/gadget/function/f_mass_storage.c
-@@ -2293,8 +2293,7 @@ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- static void fsg_disable(struct usb_function *f)
- {
- 	struct fsg_dev *fsg = fsg_from_func(f);
--	fsg->common->new_fsg = NULL;
--	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+	raise_exception(fsg->common, FSG_STATE_DISCONNECT);
- }
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 39ed56214cd3..2b400189be91 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -12,6 +12,7 @@
+ #include <linux/termios.h>
+ #include <linux/serial_core.h>
+ #include <linux/module.h>
++#include <linux/property.h>
  
+ #include "serial_mctrl_gpio.h"
  
-@@ -2307,6 +2306,7 @@ static void handle_exception(struct fsg_common *common)
- 	enum fsg_state		old_state;
- 	struct fsg_lun		*curlun;
- 	unsigned int		exception_req_tag;
-+	struct fsg_dev		*fsg;
+@@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
  
- 	/*
- 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
-@@ -2413,9 +2413,19 @@ static void handle_exception(struct fsg_common *common)
- 		break;
- 
- 	case FSG_STATE_CONFIG_CHANGE:
--		do_set_interface(common, common->new_fsg);
--		if (common->new_fsg)
-+		fsg = common->new_fsg;
-+		/*
-+		 * Add a check here to double confirm if a disconnect event
-+		 * occurs and common->new_fsg has been cleared.
-+		 */
-+		if (fsg) {
-+			do_set_interface(common, fsg);
- 			usb_composite_setup_continue(common->cdev);
-+		}
-+		break;
+ 	for (i = 0; i < UART_GPIO_MAX; i++) {
+ 		enum gpiod_flags flags;
++		char *gpio_str;
++		bool present;
 +
-+	case FSG_STATE_DISCONNECT:
-+		do_set_interface(common, NULL);
- 		break;
++		/* Check if GPIO property exists and continue if not */
++		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
++				     mctrl_gpios_desc[i].name);
++		if (!gpio_str)
++			continue;
++
++		present = device_property_present(dev, gpio_str);
++		kfree(gpio_str);
++		if (!present)
++			continue;
  
- 	case FSG_STATE_EXIT:
-@@ -2989,8 +2999,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
- 
- 	DBG(fsg, "unbind\n");
- 	if (fsg->common->fsg == fsg) {
--		fsg->common->new_fsg = NULL;
--		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+		raise_exception(fsg->common, FSG_STATE_DISCONNECT);
- 		/* FIXME: make interruptible or killable somehow? */
- 		wait_event(common->fsg_wait, common->fsg != fsg);
- 	}
-diff --git a/drivers/usb/gadget/function/storage_common.h b/drivers/usb/gadget/function/storage_common.h
-index e5e3a2553aaa..12687f7e3de9 100644
---- a/drivers/usb/gadget/function/storage_common.h
-+++ b/drivers/usb/gadget/function/storage_common.h
-@@ -161,6 +161,7 @@ enum fsg_state {
- 	FSG_STATE_ABORT_BULK_OUT,
- 	FSG_STATE_PROTOCOL_RESET,
- 	FSG_STATE_CONFIG_CHANGE,
-+	FSG_STATE_DISCONNECT,
- 	FSG_STATE_EXIT,
- 	FSG_STATE_TERMINATED
- };
+ 		if (mctrl_gpios_desc[i].dir_out)
+ 			flags = GPIOD_OUT_LOW;
 -- 
 2.20.1
 
