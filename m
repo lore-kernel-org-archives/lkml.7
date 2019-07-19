@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C47C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7347DC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF1921849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2BF2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509954;
-	bh=GQ05ZiD1XF47UysruM1GHFihZ4IcyG9Em/YzAk21Fbs=;
+	s=default; t=1563509963;
+	bh=jE+treAGzMSGgbgCi6ABb4d2WadhpnEm6Z+POfskfws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUnp8U0ZZUssZGw8e7jTsq3RXMuiD9t7ojYNuYxDH3B38/GAVYyIFV8E6gyxdimCG
-	 YbM6siNoVJxmV4bwNqkVTQyHaHRjdZ1o+qoJ96M3QzlLKdHnkIq+tkSULgVgv6d025
-	 dpVQsp+f42aO7/KbdqrzIEjG9qNuu+75oGpw1s8Y=
+	b=0XPOJ1J6O2tU9zHCjszfBeOHtUy7+ckOA7I9x7knz5wrK3WeVkqe2cqexqjhxC+9l
+	 /dA7i6zAk1OvvvRkjwU1s1OJEgTAl4VLzhMJR40kpavQqs0fm3JWSnBZUNeiFzQ6tN
+	 YwjNn+SiHPbgSScniLMuFbnQRlVYR+4sPhWj2amU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389218AbfGSETJ (ORCPT
+        id S2389836AbfGSETW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:19:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49106 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387887AbfGSENR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:17 -0400
+        id S2389094AbfGSENO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1655321850;
-        Fri, 19 Jul 2019 04:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E097C2082F;
+        Fri, 19 Jul 2019 04:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509596;
-        bh=GQ05ZiD1XF47UysruM1GHFihZ4IcyG9Em/YzAk21Fbs=;
+        s=default; t=1563509593;
+        bh=jE+treAGzMSGgbgCi6ABb4d2WadhpnEm6Z+POfskfws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzXfEOXx1abiWIa+9pLZKfk67EdAdvpFaQsor+Ms/qS25n3sSTARpscIK4puwSFze
-         cAdDEgahYUaD88cr9p8j736un1A0+L1vhMr7nZnlQsaNIcBLCNvcudIh7fSWV4eRcT
-         eqNoivdgj77S2Fjmx8dsbPuEmR2noJHa/bCvd6U4=
+        b=Hmb370+ObwJk0uOnGd1b59Tg4SOJaP3TV5ZAzx40gPR5LCs+WaKi7+JqF0a3bJYWn
+         cOD52xzQ3jNGOQrA9UT3lVrfF50t4dyrGZdpSkHxUDncxCMtlrNXKr6Zs9EfCQzCFk
+         13H6MVgvVxpDAw3YePYlqelbncjKmROEy+mitZRs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jyri Sarha <jsarha@ti.com>, Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 08/45] drm/bridge: sii902x: pixel clock unit is 10kHz instead of 1kHz
-Date:   Fri, 19 Jul 2019 00:12:27 -0400
-Message-Id: <20190719041304.18849-8-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/45] tty: serial: cpm_uart - fix init when SMC is relocated
+Date:   Fri, 19 Jul 2019 00:12:24 -0400
+Message-Id: <20190719041304.18849-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -60,42 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jyri Sarha <jsarha@ti.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 8dbfc5b65023b67397aca28e8adb25c819f6398c ]
+[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
 
-The pixel clock unit in the first two registers (0x00 and 0x01) of
-sii9022 is 10kHz, not 1kHz as in struct drm_display_mode. Division by
-10 fixes the issue.
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1a2a8eae0b9d6333e7a5841026bf7fd65c9ccd09.1558964241.git.jsarha@ti.com
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sii902x.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 9126d0306ab5..51e2d03995a1 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -250,10 +250,11 @@ static void sii902x_bridge_mode_set(struct drm_bridge *bridge,
- 	struct regmap *regmap = sii902x->regmap;
- 	u8 buf[HDMI_INFOFRAME_SIZE(AVI)];
- 	struct hdmi_avi_infoframe frame;
-+	u16 pixel_clock_10kHz = adj->clock / 10;
- 	int ret;
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index 0040c29f651a..b9e137c03fe3 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -421,7 +421,16 @@ static int cpm_uart_startup(struct uart_port *port)
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
+ 		}
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
+ 	}
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -875,16 +884,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
  
--	buf[0] = adj->clock;
--	buf[1] = adj->clock >> 8;
-+	buf[0] = pixel_clock_10kHz & 0xff;
-+	buf[1] = pixel_clock_10kHz >> 8;
- 	buf[2] = adj->vrefresh;
- 	buf[3] = 0x00;
- 	buf[4] = adj->hdisplay;
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
+  */
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
+ 
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -898,8 +905,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
+ 
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
+ 	 */
 -- 
 2.20.1
 
