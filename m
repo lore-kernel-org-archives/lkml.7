@@ -2,84 +2,61 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061DC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A096C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651A921851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxnNx+Zx"
+	by mail.kernel.org (Postfix) with ESMTP id 15BB220873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfGSNtC (ORCPT
+        id S1728319AbfGSNwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:49:02 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52819 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfGSNtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:49:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so28887845wms.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=smQrXP7fwTxA46Gpk0cUyjwxtkHs1F6EO+T3/TBVils=;
-        b=pxnNx+ZxdcuUMn0NtVbfef0Vuu56KnXksI27SUUh5BHVNIbS6fDTjk4NFbivrHrFGU
-         xlOQWuNhymyxYBxnfhgYLBeU7DYcDE2kVRzkTWT4+Ok9hfYKFvFCdijgK7TwPKOr3ZZh
-         /WpGXY+iRzcYY3/pkhDH98ENcLxmBFr1Oiee9QoE6VqfTCWfCNWKoRoRutz9NDVTX46i
-         euVA+8hALb4kWLGLG/X60xQ1PYkdf3cSd/FKQ7/7u2+pYC4fak96WfbyN8IHdiSkGREh
-         tVxJv5MkWx9+sSg46E5HmkWgOqDGIqDl1C8lIZIF3+Faf/tVnlWf49RqqMmKWflV0nAi
-         gycw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=smQrXP7fwTxA46Gpk0cUyjwxtkHs1F6EO+T3/TBVils=;
-        b=b8rYCm0GYn8EzDdxFsjfii2Qqv059es6PJzVIy8FBfiXz4mYc1yxL9jJdNk+ny//Re
-         lM2ROPjmMu33WpHGAqJuWCdWGLpUY4lQ25WNOMWG0lcSZJPE6qU3xWFejlA216zT9dYS
-         pUI/ZbsylqnMkUOB2HFhubEM6LHsUNKzon/1aLD4B/+0nc6uCSutZJY1PQ725NCnqziH
-         Qf8n+SlDEwynSSLZteluAuEcuCvxkhzJVTKR/l+KFsImFqE4bcSoiGTdJknzZ0+tm2gs
-         0jTKlvfUA0/0b8Q1gez8v0BaqrwnquIE0g+TTWzHsF5TdPE3eX3ZaVIQubMFp6BnPNqW
-         vWLA==
-X-Gm-Message-State: APjAAAUqztZ49cHIIEGAMbxOe8+U9MZ5mcTO+EzVOHX4so8OyrDZxPKK
-        sNNh8I+yA2rXeMHrCxuOPZMIGVrop62P01/PZVQ=
-X-Google-Smtp-Source: APXvYqzDaYY9rYKHKDGCwiLwi65ngNe/ST9pocKyF9LYbS7nmk7ou7kxpOekW2VDCTMI1n4rLwN03/IXpSWtL/epsWs=
-X-Received: by 2002:a1c:3cc4:: with SMTP id j187mr46214806wma.36.1563544139506;
- Fri, 19 Jul 2019 06:48:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de> <CA+icZUW5jNJY3L5EcxrtOttwpbdAWQ7=U_bZaLHcTogOdNuTcQ@mail.gmail.com>
-In-Reply-To: <CA+icZUW5jNJY3L5EcxrtOttwpbdAWQ7=U_bZaLHcTogOdNuTcQ@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 19 Jul 2019 15:48:46 +0200
-Message-ID: <CA+icZUUtNibYGbHEt+cqsu6cuKYF7=MobvPQ9mkXU1pJZhFw9w@mail.gmail.com>
-Subject: Re: x86 - clang / objtool status
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        x86@kernel.org
+        Fri, 19 Jul 2019 09:52:17 -0400
+Received: from gate.crashing.org ([63.228.1.57]:42974 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfGSNwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:52:17 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6JDpvjO023083;
+        Fri, 19 Jul 2019 08:51:58 -0500
+Message-ID: <91ef44522140bf83720f6c377648b307964d34e4.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for
+ Apple 2018 controllers
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Date:   Fri, 19 Jul 2019 23:51:56 +1000
+In-Reply-To: <20190719122859.GA30193@lst.de>
+References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
+         <20190719122859.GA30193@lst.de>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> First of all I find out that it is possible to download and apply the
-> series (here: v2) from patchwork (see [1]).
-> I highly appreciate to have this in Josh's Git [2].
->
+On Fri, 2019-07-19 at 14:28 +0200, Christoph Hellwig wrote:
+> Yikes, that things looks worse and worse.  I think at this point
+> we'll
+> have to defer the support to 5.4 unfortunately as it is getting more
+> and more involved..
 
-There it is.
+Well, at least v3 of that patch, thanks to Damien's idea, isn't
+particularly invasive and I've hammered the SSD with it over night with
+a combination of IOs and smart commands, it's solid.
 
-- sed@ -
+But if you prefer waiting for 5.4, no worries.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=objtool-many-fixes-v2
+Cheers,
+Ben.
+
