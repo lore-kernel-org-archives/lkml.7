@@ -4,189 +4,294 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0C8C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD6BC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE6B2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C5E2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfGSE75 (ORCPT
+        id S1727348AbfGSFAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:59:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55242 "EHLO mx1.redhat.com"
+        Fri, 19 Jul 2019 01:00:25 -0400
+Received: from gate.crashing.org ([63.228.1.57]:35859 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725853AbfGSE75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:59:57 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A8707C024AF6;
-        Fri, 19 Jul 2019 04:59:55 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-123.pek2.redhat.com [10.72.12.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C94C363633;
-        Fri, 19 Jul 2019 04:59:45 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>, Baoquan He <bhe@redhat.com>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com>
- <20190718032858.28744-6-bauerman@linux.ibm.com>
- <4a07bf75-b516-c81b-da7a-4b323e6d7e52@amd.com>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <c85ae8ff-3b7b-88bf-6b6a-c41b159c9cc2@redhat.com>
-Date:   Fri, 19 Jul 2019 12:59:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <4a07bf75-b516-c81b-da7a-4b323e6d7e52@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 19 Jul 2019 04:59:56 +0000 (UTC)
+        id S1725853AbfGSFAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 01:00:25 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6J505Df031818;
+        Fri, 19 Jul 2019 00:00:06 -0500
+Message-ID: <ccffe4661cf1d1e0478426ebe1347bb8f7b87a6b.camel@kernel.crashing.org>
+Subject: Re: [PATCH v2] nvme-pci: Support shared tags across queues for
+ Apple 2018 controllers
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Date:   Fri, 19 Jul 2019 15:00:05 +1000
+In-Reply-To: <bc856389e6b09f7c545144be0f370f7ad3b05784.camel@kernel.crashing.org>
+References: <f19ac710b4dc28fb3b59ef11bd06d341bc939f3d.camel@kernel.crashing.org>
+         <BYAPR04MB58168C42A68712287F734242E7CB0@BYAPR04MB5816.namprd04.prod.outlook.com>
+         <bc856389e6b09f7c545144be0f370f7ad3b05784.camel@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年07月19日 01:47, Lendacky, Thomas 写道:
-> On 7/17/19 10:28 PM, Thiago Jung Bauermann wrote:
->> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
->> appear in generic kernel code because it forces non-x86 architectures to
->> define the sev_active() function, which doesn't make a lot of sense.
->>
->> To solve this problem, add an x86 elfcorehdr_read() function to override
->> the generic weak implementation. To do that, it's necessary to make
->> read_from_oldmem() public so that it can be used outside of vmcore.c.
->>
->> Also, remove the export for sev_active() since it's only used in files that
->> won't be built as modules.
->>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+On Fri, 2019-07-19 at 14:49 +1000, Benjamin Herrenschmidt wrote:
+> On Fri, 2019-07-19 at 04:43 +0000, Damien Le Moal wrote:
+> > On 2019/07/19 13:37, Benjamin Herrenschmidt wrote:
+> > > Another issue with the Apple T2 based 2018 controllers seem to be
+> > > that they blow up (and shut the machine down) if there's a tag
+> > > collision between the IO queue and the Admin queue.
+> > > 
+> > > My suspicion is that they use our tags for their internal
+> > > tracking
+> > > and don't mix them with the queue id. They also seem to not like
+> > > when tags go beyond the IO queue depth, ie 128 tags.
+> > > 
+> > > This adds a quirk that offsets all the tags in the IO queue by 32
+> > > to avoid those collisions. It also limits the number of IO queues
+> > > to 1 since the code wouldn't otherwise make sense (the device
+> > > supports only one queue anyway but better safe than sorry) and
+> > > reduces the size of the IO queue
+> > 
+> > What about keeping the IO queue QD at 128, but marking the first 32
+> > tags as
+> > "allocated" when the device is initialized ? This way, these tags
+> > numbers are
+> > never used for regular IOs and you can avoid the entire tag +/-
+> > offset dance at
+> > runtime. The admin queue uses tags 0-31 and the IO queue uses tags
+> > 32-127. No ?
 > 
-> Adding Lianbo and Baoquan, who recently worked on this, for their review.
+> I suppose that would work and be simpler. I honestly don't know much
+> about the block layer and tag allocation so I stayed away from it :-)
 > 
+> I'll dig, but a hint would be welcome :)
 
-This change looks good to me.
+Hrm .. tagset->reserved_tags ?
 
-Reviewed-by: Lianbo Jiang <lijiang@redhat.com>
-
-Thanks.
-Lianbo
-
-> Thanks,
-> Tom
+> Cheers,
+> Ben.
 > 
->> ---
->>  arch/x86/kernel/crash_dump_64.c |  5 +++++
->>  arch/x86/mm/mem_encrypt.c       |  1 -
->>  fs/proc/vmcore.c                |  8 ++++----
->>  include/linux/crash_dump.h      | 14 ++++++++++++++
->>  include/linux/mem_encrypt.h     |  1 -
->>  5 files changed, 23 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
->> index 22369dd5de3b..045e82e8945b 100644
->> --- a/arch/x86/kernel/crash_dump_64.c
->> +++ b/arch/x86/kernel/crash_dump_64.c
->> @@ -70,3 +70,8 @@ ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
->>  {
->>  	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
->>  }
->> +
->> +ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->> +{
->> +	return read_from_oldmem(buf, count, ppos, 0, sev_active());
->> +}
->> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->> index 7139f2f43955..b1e823441093 100644
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -349,7 +349,6 @@ bool sev_active(void)
->>  {
->>  	return sme_me_mask && sev_enabled;
->>  }
->> -EXPORT_SYMBOL(sev_active);
->>  
->>  /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
->>  bool force_dma_unencrypted(struct device *dev)
->> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
->> index 57957c91c6df..ca1f20bedd8c 100644
->> --- a/fs/proc/vmcore.c
->> +++ b/fs/proc/vmcore.c
->> @@ -100,9 +100,9 @@ static int pfn_is_ram(unsigned long pfn)
->>  }
->>  
->>  /* Reads a page from the oldmem device from given offset. */
->> -static ssize_t read_from_oldmem(char *buf, size_t count,
->> -				u64 *ppos, int userbuf,
->> -				bool encrypted)
->> +ssize_t read_from_oldmem(char *buf, size_t count,
->> +			 u64 *ppos, int userbuf,
->> +			 bool encrypted)
->>  {
->>  	unsigned long pfn, offset;
->>  	size_t nr_bytes;
->> @@ -166,7 +166,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
->>   */
->>  ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->>  {
->> -	return read_from_oldmem(buf, count, ppos, 0, sev_active());
->> +	return read_from_oldmem(buf, count, ppos, 0, false);
->>  }
->>  
->>  /*
->> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
->> index f774c5eb9e3c..4664fc1871de 100644
->> --- a/include/linux/crash_dump.h
->> +++ b/include/linux/crash_dump.h
->> @@ -115,4 +115,18 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
->>  	return -EOPNOTSUPP;
->>  }
->>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->> +
->> +#ifdef CONFIG_PROC_VMCORE
->> +ssize_t read_from_oldmem(char *buf, size_t count,
->> +			 u64 *ppos, int userbuf,
->> +			 bool encrypted);
->> +#else
->> +static inline ssize_t read_from_oldmem(char *buf, size_t count,
->> +				       u64 *ppos, int userbuf,
->> +				       bool encrypted)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +#endif /* CONFIG_PROC_VMCORE */
->> +
->>  #endif /* LINUX_CRASHDUMP_H */
->> diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
->> index 0c5b0ff9eb29..5c4a18a91f89 100644
->> --- a/include/linux/mem_encrypt.h
->> +++ b/include/linux/mem_encrypt.h
->> @@ -19,7 +19,6 @@
->>  #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
->>  
->>  static inline bool mem_encrypt_active(void) { return false; }
->> -static inline bool sev_active(void) { return false; }
->>  
->>  #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
->>  
->>
+> > > 
+> > > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > ---
+> > > 
+> > > Note: One thing I noticed is how we have nvme_completion as
+> > > volatile.
+> > > 
+> > > I don't think we really need that, it's forcing the compiler to
+> > > constantly
+> > > reload things which makes no sense once we have established that
+> > > an
+> > > entry is valid.
+> > > 
+> > > And since we have a data & control dependency from
+> > > nvme_cqe_pending(),
+> > > we know that reading the CQE is going to depend on it being
+> > > valid. I
+> > > don't really see what volatile is buying us here other than cargo
+> > > culting.
+> > > 
+> > > Cheers,
+> > > Ben.
+> > > 
+> > >  drivers/nvme/host/nvme.h |  5 ++++
+> > >  drivers/nvme/host/pci.c  | 52 +++++++++++++++++++++++++++++++++-
+> > > ------
+> > >  2 files changed, 49 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+> > > index ced0e0a7e039..7c6de398de7d 100644
+> > > --- a/drivers/nvme/host/nvme.h
+> > > +++ b/drivers/nvme/host/nvme.h
+> > > @@ -102,6 +102,11 @@ enum nvme_quirks {
+> > >  	 * Use non-standard 128 bytes SQEs.
+> > >  	 */
+> > >  	NVME_QUIRK_128_BYTES_SQES		= (1 << 11),
+> > > +
+> > > +	/*
+> > > +	 * Prevent tag overlap between queues
+> > > +	 */
+> > > +	NVME_QUIRK_SHARED_TAGS			= (1 << 12),
+> > >  };
+> > >  
+> > >  /*
+> > > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > > index 7088971d4c42..c38e946ad8ca 100644
+> > > --- a/drivers/nvme/host/pci.c
+> > > +++ b/drivers/nvme/host/pci.c
+> > > @@ -178,6 +178,7 @@ struct nvme_queue {
+> > >  	u16 cq_head;
+> > >  	u16 last_cq_head;
+> > >  	u16 qid;
+> > > +	u16 tag_offset;
+> > >  	u8 cq_phase;
+> > >  	u8 sqes;
+> > >  	unsigned long flags;
+> > > @@ -490,6 +491,7 @@ static void nvme_submit_cmd(struct nvme_queue
+> > > *nvmeq, struct nvme_command *cmd,
+> > >  			    bool write_sq)
+> > >  {
+> > >  	spin_lock(&nvmeq->sq_lock);
+> > > +	cmd->common.command_id += nvmeq->tag_offset;
+> > >  	memcpy(nvmeq->sq_cmds + (nvmeq->sq_tail << nvmeq->sqes),
+> > >  	       cmd, sizeof(*cmd));
+> > >  	if (++nvmeq->sq_tail == nvmeq->q_depth)
+> > > @@ -951,9 +953,10 @@ static inline void
+> > > nvme_ring_cq_doorbell(struct nvme_queue *nvmeq)
+> > >  static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16
+> > > idx)
+> > >  {
+> > >  	volatile struct nvme_completion *cqe = &nvmeq->cqes[idx];
+> > > +	u16 ctag = cqe->command_id - nvmeq->tag_offset;
+> > >  	struct request *req;
+> > >  
+> > > -	if (unlikely(cqe->command_id >= nvmeq->q_depth)) {
+> > > +	if (unlikely(ctag >= nvmeq->q_depth)) {
+> > >  		dev_warn(nvmeq->dev->ctrl.device,
+> > >  			"invalid id %d completed on queue %d\n",
+> > >  			cqe->command_id, le16_to_cpu(cqe->sq_id));
+> > > @@ -966,14 +969,13 @@ static inline void nvme_handle_cqe(struct
+> > > nvme_queue *nvmeq, u16 idx)
+> > >  	 * aborts.  We don't even bother to allocate a struct request
+> > >  	 * for them but rather special case them here.
+> > >  	 */
+> > > -	if (unlikely(nvmeq->qid == 0 &&
+> > > -			cqe->command_id >= NVME_AQ_BLK_MQ_DEPTH)) {
+> > > +	if (unlikely(nvmeq->qid == 0 && ctag >= NVME_AQ_BLK_MQ_DEPTH))
+> > > {
+> > >  		nvme_complete_async_event(&nvmeq->dev->ctrl,
+> > >  				cqe->status, &cqe->result);
+> > >  		return;
+> > >  	}
+> > >  
+> > > -	req = blk_mq_tag_to_rq(*nvmeq->tags, cqe->command_id);
+> > > +	req = blk_mq_tag_to_rq(*nvmeq->tags, ctag);
+> > >  	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
+> > >  	nvme_end_request(req, cqe->status, cqe->result);
+> > >  }
+> > > @@ -1004,7 +1006,10 @@ static inline int nvme_process_cq(struct
+> > > nvme_queue *nvmeq, u16 *start,
+> > >  
+> > >  	*start = nvmeq->cq_head;
+> > >  	while (nvme_cqe_pending(nvmeq)) {
+> > > -		if (tag == -1U || nvmeq->cqes[nvmeq-
+> > > >cq_head].command_id == tag)
+> > > +		u16 ctag = nvmeq->cqes[nvmeq->cq_head].command_id;
+> > > +
+> > > +		ctag -= nvmeq->tag_offset;
+> > > +		if (tag == -1U || ctag == tag)
+> > >  			found++;
+> > >  		nvme_update_cq_head(nvmeq);
+> > >  	}
+> > > @@ -1487,6 +1492,10 @@ static int nvme_alloc_queue(struct
+> > > nvme_dev *dev, int qid, int depth)
+> > >  	nvmeq->qid = qid;
+> > >  	dev->ctrl.queue_count++;
+> > >  
+> > > +	if (qid && (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS))
+> > > +		nvmeq->tag_offset = NVME_AQ_DEPTH;
+> > > +	else
+> > > +		nvmeq->tag_offset = 0;
+> > >  	return 0;
+> > >  
+> > >   free_cqdma:
+> > > @@ -2106,6 +2115,14 @@ static int nvme_setup_io_queues(struct
+> > > nvme_dev *dev)
+> > >  	unsigned long size;
+> > >  
+> > >  	nr_io_queues = max_io_queues();
+> > > +
+> > > +	/*
+> > > +	 * If tags are shared with admin queue (Apple bug), then
+> > > +	 * make sure we only use one queue.
+> > > +	 */
+> > > +	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
+> > > +		nr_io_queues = 1;
+> > > +
+> > >  	result = nvme_set_queue_count(&dev->ctrl, &nr_io_queues);
+> > >  	if (result < 0)
+> > >  		return result;
+> > > @@ -2300,6 +2317,7 @@ static int nvme_pci_enable(struct nvme_dev
+> > > *dev)
+> > >  {
+> > >  	int result = -ENOMEM;
+> > >  	struct pci_dev *pdev = to_pci_dev(dev->dev);
+> > > +	unsigned int mqes;
+> > >  
+> > >  	if (pci_enable_device_mem(pdev))
+> > >  		return result;
+> > > @@ -2325,8 +2343,8 @@ static int nvme_pci_enable(struct nvme_dev
+> > > *dev)
+> > >  
+> > >  	dev->ctrl.cap = lo_hi_readq(dev->bar + NVME_REG_CAP);
+> > >  
+> > > -	dev->q_depth = min_t(int, NVME_CAP_MQES(dev->ctrl.cap) + 1,
+> > > -				io_queue_depth);
+> > > +	mqes = NVME_CAP_MQES(dev->ctrl.cap);
+> > > +	dev->q_depth = min_t(int, mqes + 1, io_queue_depth);
+> > >  	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
+> > >  	dev->dbs = dev->bar + 4096;
+> > >  
+> > > @@ -2340,6 +2358,23 @@ static int nvme_pci_enable(struct nvme_dev
+> > > *dev)
+> > >  	else
+> > >  		dev->io_sqes = NVME_NVM_IOSQES;
+> > >  
+> > > +	/*
+> > > +	 * Another Apple one: If we're going to offset the IO queue
+> > > tags,
+> > > +	 * we still want to make sure they are no bigger than MQES,
+> > > +	 * it *looks* like otherwise, bad things happen (I suspect some
+> > > +	 * of the tag tracking in that device is limited).
+> > > +	 */
+> > > +	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS) {
+> > > +		if (mqes <= NVME_AQ_DEPTH) {
+> > > +			dev_err(dev->ctrl.device, "Apple shared tags
+> > > quirk"
+> > > +				" not compatible with device mqes
+> > > %d\n", mqes);
+> > > +			result = -ENODEV;
+> > > +			goto disable;
+> > > +		}
+> > > +		dev->q_depth = min_t(int, dev->q_depth,
+> > > +				     mqes - NVME_AQ_DEPTH + 1);
+> > > +	}
+> > > +
+> > >  	/*
+> > >  	 * Temporary fix for the Apple controller found in the
+> > > MacBook8,1 and
+> > >  	 * some MacBook7,1 to avoid controller resets and data loss.
+> > > @@ -3057,7 +3092,8 @@ static const struct pci_device_id
+> > > nvme_id_table[] = {
+> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
+> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
+> > >  		.driver_data = NVME_QUIRK_SINGLE_VECTOR |
+> > > -				NVME_QUIRK_128_BYTES_SQES },
+> > > +				NVME_QUIRK_128_BYTES_SQES |
+> > > +				NVME_QUIRK_SHARED_TAGS },
+> > >  	{ 0, }
+> > >  };
+> > >  MODULE_DEVICE_TABLE(pci, nvme_id_table);
+> > > 
+> > > 
+> > > 
+> > > _______________________________________________
+> > > Linux-nvme mailing list
+> > > Linux-nvme@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-nvme
+> > > 
+> > 
+> > 
+
