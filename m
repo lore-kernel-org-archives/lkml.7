@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F422EC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFDC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE25D2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F562173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510476;
-	bh=U/GBf7j/Uede6weueNuWmo6ChEUdacNxhr9e3KCVK38=;
+	s=default; t=1563510481;
+	bh=sInZRDAzcu3qDg3rdtC9NUEMxSLGzL2xT7nPf06MNjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UqjDMnHvimLoTuqy87zPa9RsV5R4lJtGy2ok4O+LlRZe2wjNPb2qSvHdVDHSHpWK1
-	 k0YJY98YXZMM6NbEi7qRj0UGD1U+7xy59GRgnHc98pthQByI5cxkt8r4vLy+jbBrTm
-	 vJZaJsCNJris+CAqagfDayME6xMZQaQXbE9tQ60w=
+	b=C3hAjBTduja4cHv/GDT/Tj3d+YowpGBN9HxNzSrUF047XLfNV9xqo6R+VdeFUTAk2
+	 5eQxSWlFb8rVHtLYckRZ8gFavXdm0oZUzBH4rO1ogPdlSk9KWxrA5lcj0nrvdI8HL9
+	 gRi/BLpGrxMh/mfRtJRwOXozyuHBygY7AIuB55kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387679AbfGSE1z (ORCPT
+        id S1732291AbfGSEGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:27:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732317AbfGSEGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:43 -0400
+        id S1732176AbfGSEGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0973521873;
-        Fri, 19 Jul 2019 04:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30518218BB;
+        Fri, 19 Jul 2019 04:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509202;
-        bh=U/GBf7j/Uede6weueNuWmo6ChEUdacNxhr9e3KCVK38=;
+        s=default; t=1563509190;
+        bh=sInZRDAzcu3qDg3rdtC9NUEMxSLGzL2xT7nPf06MNjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVyp2EBx2a0my6SL1ma8u9hQcW9YzRBEwtgqpDikRrtYbCbMJR+RL1YYEZZ/eq8eT
-         3GrTT+Qb0JefrrQk0w/KvNZIhzhfVKMMvwgAKKIX6kEYCseNucY7YLfADn3QaxcRp6
-         SlcuYwzMCLdOgUJdN8ctjgy9AIRpejUQSsAl1V8Y=
+        b=e1bXcGCZrV/w5KugqEROdb28LVnov0L9zXoOCbTvpKef8mMFuuhn8Wdgo0NrVcrN4
+         LmOUUo1UYOuKrrmaYXyF4IU2LEiiEy50io+YEbxoNFbrEZmfzIV11GKr8Rj7k8uuP0
+         1aMZDphTM1R1k9pxcDEex4FZFKsjnp2bfYnhsFIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 125/141] sh: prevent warnings when using iounmap
-Date:   Fri, 19 Jul 2019 00:02:30 -0400
-Message-Id: <20190719040246.15945-125-sashal@kernel.org>
+Cc:     David Windsor <dwindsor@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.1 118/141] dlm: check if workqueues are NULL before flushing/destroying
+Date:   Fri, 19 Jul 2019 00:02:23 -0400
+Message-Id: <20190719040246.15945-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -67,62 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: David Windsor <dwindsor@redhat.com>
 
-[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
+[ Upstream commit b355516f450703c9015316e429b66a93dfff0e6f ]
 
-When building drm/exynos for sh, as part of an allmodconfig build, the
-following warning triggered:
+If the DLM lowcomms stack is shut down before any DLM
+traffic can be generated, flush_workqueue() and
+destroy_workqueue() can be called on empty send and/or recv
+workqueues.
 
-  exynos7_drm_decon.c: In function `decon_remove':
-  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
-    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
+Insert guard conditionals to only call flush_workqueue()
+and destroy_workqueue() on workqueues that are not NULL.
 
-The ctx variable is only used as argument to iounmap().
-
-In sh - allmodconfig CONFIG_MMU is not defined
-so it ended up in:
-
-\#define __iounmap(addr)	do { } while (0)
-\#define iounmap		__iounmap
-
-Fix the warning by introducing a static inline function for iounmap.
-
-This is similar to several other architectures.
-
-Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Inki Dae <inki.dae@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Windsor <dwindsor@redhat.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/asm/io.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/dlm/lowcomms.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 4f7f235f15f8..e01fbfdbc78c 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -372,7 +372,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index c98ad9777ad9..88d7ec76f669 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1630,8 +1630,10 @@ static void clean_writequeues(void)
  
- #define ioremap_nocache	ioremap
- #define ioremap_uc	ioremap
--#define iounmap		__iounmap
-+
-+static inline void iounmap(void __iomem *addr)
-+{
-+	__iounmap(addr);
-+}
+ static void work_stop(void)
+ {
+-	destroy_workqueue(recv_workqueue);
+-	destroy_workqueue(send_workqueue);
++	if (recv_workqueue)
++		destroy_workqueue(recv_workqueue);
++	if (send_workqueue)
++		destroy_workqueue(send_workqueue);
+ }
  
- /*
-  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
+ static int work_start(void)
+@@ -1691,13 +1693,17 @@ static void work_flush(void)
+ 	struct hlist_node *n;
+ 	struct connection *con;
+ 
+-	flush_workqueue(recv_workqueue);
+-	flush_workqueue(send_workqueue);
++	if (recv_workqueue)
++		flush_workqueue(recv_workqueue);
++	if (send_workqueue)
++		flush_workqueue(send_workqueue);
+ 	do {
+ 		ok = 1;
+ 		foreach_conn(stop_conn);
+-		flush_workqueue(recv_workqueue);
+-		flush_workqueue(send_workqueue);
++		if (recv_workqueue)
++			flush_workqueue(recv_workqueue);
++		if (send_workqueue)
++			flush_workqueue(send_workqueue);
+ 		for (i = 0; i < CONN_HASH_SIZE && ok; i++) {
+ 			hlist_for_each_entry_safe(con, n,
+ 						  &connection_hash[i], list) {
 -- 
 2.20.1
 
