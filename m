@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A39EC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA863C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7484F21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8F421851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510503;
-	bh=85WetMsxMRpZcfNMBz29cDCFeMiP1qHlRMMJCarKnCg=;
+	s=default; t=1563510509;
+	bh=VGy6lFesie5Y2wks7bI2KLQoH8zZh2Rm3W0CgeLR/6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5/smKD/Cml5AK8ewyjwxTv3fx1fCteRxnOB8pUU6CiWM5A87wDe2kNIkZ9THRzm/
-	 4LA0riMisSYpEwawYc+pLyQF7TSsdCiQvIoOUIaO2oGzhp2lygSlMuz210PwRyLRnr
-	 gCuaxMYDkwEK+rrVbNygdYuOVTA5cGhMPbgr7pqg=
+	b=YxoeVoNp7oRWcXQbw2itao8Yp5zMjXKHZrhKX9ENLgE9XlzZ2yOIYDoVrS+XTd3gv
+	 TOrTHDLMjp9fb2E0TGdnrET6F7pEjiBblAD97rBqlw4VjujdzrIMOy/6Zi11zWvwQk
+	 Gnl9mVfaV3VqHc0+Efuqr7E+nIXmp1rXIpdcfyW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbfGSE2W (ORCPT
+        id S2387757AbfGSE22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39602 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732148AbfGSEG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:29 -0400
+        id S1730230AbfGSEG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F9D218B8;
-        Fri, 19 Jul 2019 04:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93D921873;
+        Fri, 19 Jul 2019 04:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509188;
-        bh=85WetMsxMRpZcfNMBz29cDCFeMiP1qHlRMMJCarKnCg=;
+        s=default; t=1563509187;
+        bh=VGy6lFesie5Y2wks7bI2KLQoH8zZh2Rm3W0CgeLR/6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KCw7OngrNZ5wDz/yIIqXw3GQoI4ib1fBM7buyIiYaxPBJEiXS7b3AsFuTvtkd1KR7
-         nXgRE6M+uFRCSKoMAzFqtfTEv05f3enUCQl8s/EyRRu1q7xYG46kl98DD8PnrWtM3q
-         zc85PKPBaMhmFGFVVIDNUJrKQ+Mm7bRaeAj2IbLM=
+        b=2Ket/Juho05GQWXx7KuKFjHAXmdFXFHAn29y931GimmurdIwF3GT1TeeV5WbqTI8E
+         ruo3RYImATVM8mjxkhkhQICER/1/OUxPyweOucasEGEoA1RosDmiCc/tlCK2M0nRgZ
+         +VQ3G4h1+bNjGf9Pi3n58zQpLjYKJZZ96EH78W8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ocean Chen <oceanchen@google.com>, Chao Yu <yuchao0@huawei.com>,
+Cc:     Heng Xiao <heng.xiao@unisoc.com>, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.1 116/141] f2fs: avoid out-of-range memory access
-Date:   Fri, 19 Jul 2019 00:02:21 -0400
-Message-Id: <20190719040246.15945-116-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 115/141] f2fs: fix to avoid long latency during umount
+Date:   Fri, 19 Jul 2019 00:02:20 -0400
+Message-Id: <20190719040246.15945-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,39 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ocean Chen <oceanchen@google.com>
+From: Heng Xiao <heng.xiao@unisoc.com>
 
-[ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+[ Upstream commit 6e0cd4a9dd4df1a0afcb454f1e654b5c80685913 ]
 
-blkoff_off might over 512 due to fs corrupt or security
-vulnerability. That should be checked before being using.
+In umount, we give an constand time to handle pending discard, previously,
+in __issue_discard_cmd() we missed to check timeout condition in loop,
+result in delaying long time, fix it.
 
-Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
-
-Signed-off-by: Ocean Chen <oceanchen@google.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Heng Xiao <heng.xiao@unisoc.com>
+[Chao Yu: add commit message]
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/f2fs/segment.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index c7ed3022c4e7..798e33720c74 100644
+index 60373930b1b7..c7ed3022c4e7 100644
 --- a/fs/f2fs/segment.c
 +++ b/fs/f2fs/segment.c
-@@ -3404,6 +3404,11 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
- 		seg_i = CURSEG_I(sbi, i);
- 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
- 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-+		if (blk_off > ENTRIES_IN_SUM) {
-+			f2fs_bug_on(sbi, 1);
-+			f2fs_put_page(page, 1);
-+			return -EFAULT;
-+		}
- 		seg_i->next_segno = segno;
- 		reset_curseg(sbi, i, 0);
- 		seg_i->alloc_type = ckpt->alloc_type[i];
+@@ -1483,6 +1483,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 		list_for_each_entry_safe(dc, tmp, pend_list, list) {
+ 			f2fs_bug_on(sbi, dc->state != D_PREP);
+ 
++			if (dpolicy->timeout != 0 &&
++				f2fs_time_over(sbi, dpolicy->timeout))
++				break;
++
+ 			if (dpolicy->io_aware && i < dpolicy->io_aware_gran &&
+ 						!is_idle(sbi, DISCARD_TIME)) {
+ 				io_interrupted = true;
 -- 
 2.20.1
 
