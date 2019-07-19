@@ -2,124 +2,129 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD1BC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562F9C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8962173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1989E2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfGSGfG (ORCPT
+        id S1726726AbfGSGh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:35:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40163 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfGSGfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:35:06 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so31028727wrl.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 23:35:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dKIcroJ5c146Me5/UckyA9wonTzrtGOSvsfKceZzZUg=;
-        b=PBfTDXKjStB399nC0BMR5GWEXQiIbMdq1O7ViiDRYgYqL49cJv5sbIzArhD4We1lOw
-         ZV3uo2ZR4JrGQOQCdz1OAPWkxZdl/W9/AFGeoDOlNuF3bvKOsDLW4Zw30CzoIGK5k+6B
-         k+gkeYABd2/bFCNd4fNArPUb7KrnBTvcCoD3udzt4Ia91fuZvSCxKTQOFfeT1G4Ubdk/
-         bwAObYNN+wnR/rVcDXARTohNLGsWeh4wMZGUKLGRRsJsvMAwC7+kDg4p81RVdtkrhxP8
-         6F1jqqQwCD9K3+UIlbaX7pLIAB7fcgDmuJYdvPakIlELOEvoaq+WKDl9ZPcocVmXvGMM
-         Lvcw==
-X-Gm-Message-State: APjAAAUAZ4S02y2qD4lbNHuXJ1h9y1KhPZ61rMaiOjxRdUw4SGBUWKa8
-        qJHNQvOHk9U8etKqOYJL14rQWw==
-X-Google-Smtp-Source: APXvYqwPp6u9X83T0UyTAWZVqFzzT9UvJpG8nGbWUl4quIxB6L49QUU3mCiU6LiumUTuHYkDE/VvuA==
-X-Received: by 2002:adf:d081:: with SMTP id y1mr56442538wrh.34.1563518104787;
-        Thu, 18 Jul 2019 23:35:04 -0700 (PDT)
-Received: from localhost.localdomain.com ([151.15.230.231])
-        by smtp.gmail.com with ESMTPSA id 32sm24181517wrh.76.2019.07.18.23.35.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Jul 2019 23:35:03 -0700 (PDT)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     peterz@infradead.org, mingo@redhat.com, tj@kernel.org
-Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, bristot@redhat.com, lizefan@huawei.com,
-        longman@redhat.com, cgroups@vger.kernel.org,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v2] sched/core: Fix cpu controller for !RT_GROUP_SCHED
-Date:   Fri, 19 Jul 2019 08:34:55 +0200
-Message-Id: <20190719063455.27328-1-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
+        Fri, 19 Jul 2019 02:37:58 -0400
+Received: from mail.us.es ([193.147.175.20]:49718 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbfGSGh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:37:58 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id B4AEEC41BC
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 08:37:54 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A4D91115104
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 08:37:54 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 86CA71150DA; Fri, 19 Jul 2019 08:37:54 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 3FEACDA732;
+        Fri, 19 Jul 2019 08:37:52 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 19 Jul 2019 08:37:52 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [31.4.193.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 065A64265A31;
+        Fri, 19 Jul 2019 08:37:51 +0200 (CEST)
+Date:   Fri, 19 Jul 2019 08:37:49 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>, wenxu <wenxu@ucloud.cn>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [net-next] netfilter: bridge: make NF_TABLES_BRIDGE
+ tristate
+Message-ID: <20190719063749.45io5pxcxrlmrqqn@salvia>
+References: <20190710080835.296696-1-arnd@arndb.de>
+ <20190718190110.akn54iwb2mui72cd@salvia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="vq4lqf2by25ymvpi"
+Content-Disposition: inline
+In-Reply-To: <20190718190110.akn54iwb2mui72cd@salvia>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-move RT tasks between cgroups to which cpu controller has been attached;
-but it is oddly possible to first move tasks around and then make them
-RT (setschedule to FIFO/RR).
 
-E.g.:
+--vq4lqf2by25ymvpi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
-  # chrt -fp 10 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  bash: echo: write error: Invalid argument
-  # chrt -op 0 $$
-  # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  # chrt -fp 10 $$
-  # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
-  2345
-  2598
-  # chrt -p 2345
-  pid 2345's current scheduling policy: SCHED_FIFO
-  pid 2345's current scheduling priority: 10
+On Thu, Jul 18, 2019 at 09:01:10PM +0200, Pablo Neira Ayuso wrote:
+> On Wed, Jul 10, 2019 at 10:08:20AM +0200, Arnd Bergmann wrote:
+> > The new nft_meta_bridge code fails to link as built-in when NF_TABLES
+> > is a loadable module.
+> > 
+> > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_eval':
+> > nft_meta_bridge.c:(.text+0x1e8): undefined reference to `nft_meta_get_eval'
+> > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_init':
+> > nft_meta_bridge.c:(.text+0x468): undefined reference to `nft_meta_get_init'
+> > nft_meta_bridge.c:(.text+0x49c): undefined reference to `nft_parse_register'
+> > nft_meta_bridge.c:(.text+0x4cc): undefined reference to `nft_validate_register_store'
+> > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_exit':
+> > nft_meta_bridge.c:(.exit.text+0x14): undefined reference to `nft_unregister_expr'
+> > net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_module_init':
+> > nft_meta_bridge.c:(.init.text+0x14): undefined reference to `nft_register_expr'
+> > net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x60): undefined reference to `nft_meta_get_dump'
+> > net/bridge/netfilter/nft_meta_bridge.o:(.rodata+0x88): undefined reference to `nft_meta_set_eval'
+> > 
+> > This can happen because the NF_TABLES_BRIDGE dependency itself is just a
+> > 'bool'.  Make the symbol a 'tristate' instead so Kconfig can propagate the
+> > dependencies correctly.
+> 
+> Hm. Something breaks here. Investigating. Looks like bridge support is
+> gone after this, nft fails to register the filter chain type:
+> 
+> # nft add table bridge x
+> # nft add chain bridge x y { type filter hook input priority 0\; }
+> Error: Could not process rule: No such file or directory
 
-Also, as Michal noted, it is currently not possible to enable cpu
-controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
-are any kernel RT threads in root cgroup, they can't be migrated to the
-newly created cpu controller's root in cgroup_update_dfl_csses()).
+Found it. It seems this patch is needed, on top of your patch.
 
-Existing code comes with a comment saying the "we don't support RT-tasks
-being in separate groups". Such comment is however stale and belongs to
-pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-!RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-are not performed at all in these cases.
+I can just squash this chunk into your original patch and push it out
+if you're OK witht this.
 
-Make moving RT tasks between cpu controller groups viable by removing
-special case check for RT (and DEADLINE) tasks.
+Thanks.
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Acked-by: Tejun Heo <tj@kernel.org>
----
-v1 -> v2: added comment about unified hierachy in changelog (Michal)
-          collected acks/reviews
----
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
+--vq4lqf2by25ymvpi
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="x.patch"
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fa43ce3962e7..be041dc7d313 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6934,10 +6934,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
- #ifdef CONFIG_RT_GROUP_SCHED
- 		if (!sched_rt_can_attach(css_tg(css), task))
- 			return -EINVAL;
--#else
--		/* We don't support RT-tasks being in separate groups */
--		if (task->sched_class != &fair_sched_class)
--			return -EINVAL;
- #endif
- 		/*
- 		 * Serialize against wake_up_new_task() such that if its
--- 
-2.17.2
+diff --git a/net/netfilter/nft_chain_filter.c b/net/netfilter/nft_chain_filter.c
+index 3fd540b2c6ba..b5d5d071d765 100644
+--- a/net/netfilter/nft_chain_filter.c
++++ b/net/netfilter/nft_chain_filter.c
+@@ -193,7 +193,7 @@ static inline void nft_chain_filter_inet_init(void) {}
+ static inline void nft_chain_filter_inet_fini(void) {}
+ #endif /* CONFIG_NF_TABLES_IPV6 */
+ 
+-#ifdef CONFIG_NF_TABLES_BRIDGE
++#if IS_ENABLED(CONFIG_NF_TABLES_BRIDGE)
+ static unsigned int
+ nft_do_chain_bridge(void *priv,
+ 		    struct sk_buff *skb,
 
+--vq4lqf2by25ymvpi--
