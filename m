@@ -2,89 +2,154 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB9C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2D8C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D407A2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9532A2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:46:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzdZ1Oi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfGSBqI (ORCPT
+        id S1726636AbfGSBq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:46:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2287 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726042AbfGSBqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:46:08 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CF09970995D2006834BB;
-        Fri, 19 Jul 2019 09:46:05 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 19 Jul 2019 09:45:55 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <imre.deak@intel.com>, <madhav.chauhan@intel.com>,
-        <vandita.kulkarni@intel.com>, <chris@chris-wilson.co.uk>,
-        <ville.syrjala@linux.intel.com>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next] drm/i915/dsi: remove set but not used variable 'hfront_porch'
-Date:   Fri, 19 Jul 2019 01:51:36 +0000
-Message-ID: <20190719015136.103988-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 18 Jul 2019 21:46:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41847 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSBqz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 21:46:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id d24so29197075ljg.8;
+        Thu, 18 Jul 2019 18:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sI36ppd+4vw5yRr/qfzItcT9H0vm+FouNUT+YAtFRhA=;
+        b=lzdZ1Oi5yg4sVrJCQd6t3akMOvV8mAvnj/eqv/p1EJ4d6oUHu48Ayn5WP3L//G2PG+
+         RR0ksx7MODmNrZePHoSy9xizXU+5UXlZwY9OG4lms4Gp2pSKznqaykiTQH846oaemTGa
+         LwyfKsMcaEBoOY5BU7YIkVqljouuWMw4YTMu7jGS53uwZBCK49IW3RM4LZwvD8UEmlKd
+         qtq8fGQfG6d8K4pRtIqSMvpXMd8CY9wFtjfcxQVpMD2s8SKdLco6oQ6gqykW7Lg9li++
+         kTSDe6a4is3yBQ6kV3iXH33jz+xPrqKFSPkf6k/KC1NxRhZVTn015kD+4SZzEYeb31HF
+         yvuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sI36ppd+4vw5yRr/qfzItcT9H0vm+FouNUT+YAtFRhA=;
+        b=ExsRV9fHywZ6B57KTJ1QcUzJmZCkaLLFcJ0h9m7SsU6RyJjWy3CZtiy50Hw1byGVD8
+         sq4AJeJ6n1fJS4Zz9SmRasOPBBaTcGKDfkomGWeVEc0DWlWCz1XXZaEVJBEodNUMxE1R
+         pS6pIlbEHuVUUzpXRUz9zuX7Tp9xmoe3Ov5iBO89fzmHbWLl70Z42r1CqHutswoVcuoG
+         xQzE0QgpKzgRbgtd9uKuVMwllfjo0mRQolwge+xRnvqmIdE9DowCTVuCCKwUc19cx3tF
+         VKLRqQYEReAMKyvhBmGT9DRKHDb7dPTPB4Q9gePq7e7ZAZSDJV8mLqDVdSSfvk5ZtglQ
+         eRhw==
+X-Gm-Message-State: APjAAAXg4njfAaPWmnRRPPM2asi8mzBj9ijxqlhiakw1q8VmrhTcia+s
+        DAKsjEQG6xtSGt04bm1WcHA=
+X-Google-Smtp-Source: APXvYqwImUugk0jDMae8IQv65b2Tpe/0EHgSiCj9SFg88aHscenKpCiuxOcK+TArjQ3mBzKfHe5a3Q==
+X-Received: by 2002:a2e:8e83:: with SMTP id z3mr25651232ljk.98.1563500813319;
+        Thu, 18 Jul 2019 18:46:53 -0700 (PDT)
+Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id z85sm5352918ljb.101.2019.07.18.18.46.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 18:46:53 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 04:50:30 +0300
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 17/24] PM / devfreq: tegra30: Use tracepoints for
+ debugging
+Message-ID: <20190719045030.30b2fe67@dimatab>
+In-Reply-To: <ffa24275-4499-c27a-8c60-a5f4d738913c@samsung.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223623epcas4p13d01a60ae2b88dde4c4f7fdba04da170@epcas4p1.samsung.com>
+        <20190707223303.6755-18-digetx@gmail.com>
+        <209220ec-b677-3500-0e55-6cad57e97f88@samsung.com>
+        <20190719034938.6382f989@dimatab>
+        <ffa24275-4499-c27a-8c60-a5f4d738913c@samsung.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+=D0=92 Fri, 19 Jul 2019 10:01:55 +0900
+Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-drivers/gpu/drm/i915/display/icl_dsi.c: In function 'gen11_dsi_set_transcoder_timings':
-drivers/gpu/drm/i915/display/icl_dsi.c:768:6: warning:
- variable 'hfront_porch' set but not used [-Wunused-but-set-variable]
+> On 19. 7. 19. =EC=98=A4=EC=A0=84 9:49, Dmitry Osipenko wrote:
+> > =D0=92 Thu, 18 Jul 2019 18:47:09 +0900
+> > Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >  =20
+> >> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote: =20
+> >>> Debug messages create too much CPU and memory activity by
+> >>> themselves, so it's difficult to debug lower rates and catch
+> >>> unwanted interrupts that happen rarely. Tracepoints are ideal in
+> >>> that regards because they do not contribute to the sampled date at
+> >>> all. This allowed me to catch few problems which are fixed by the
+> >>> followup patches, without tracepoints it would be much harder to
+> >>> do.
+> >>>
+> >>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>> ---
+> >>>  drivers/devfreq/tegra30-devfreq.c      |  43 +++-------
+> >>>  include/trace/events/tegra30_devfreq.h | 105
+> >>> +++++++++++++++++++++++++ 2 files changed, 117 insertions(+), 31
+> >>> deletions(-) create mode 100644
+> >>> include/trace/events/tegra30_devfreq.h   =20
+> >>
+> >> As I knew, 'include/trace/events' don't include the header file
+> >> for only one device driver. Usually, the trace event is provided
+> >> by framework instead of each devic driver. =20
+> >=20
+> > There are at least trace headers there for the tegra-apbdma,
+> > tegra-host1x, intel-sst and intel-ish devices. I don't think that
+> > there is a strict rule for the trace headers placement. =20
+>=20
+> OK.
+>=20
+> But, As I already replied on patch4, if you want to show the register
+> dump, you better to add the debugfs feature to devfreq framework for
+> showing the register dump instead of printing the register dump with
+> debug level and this trace event.=20
+>=20
+> As I said, just register dump is not useful for all developers.
+> Almost developer cannot understand the meaning of debug log for
+> register dump.
 
-It is never used and can be removed.
+I think there is some disconnect here. I'm finding that the raw
+register values are essential for debugging of this driver. The
+registers tracing is very trivial and self-explanatory, just can't see
+any better variant.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/i915/display/icl_dsi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+The registers documentation is available for everyone, you can go to
+NVIDIA website and download it (after registration).
 
-diff --git a/drivers/gpu/drm/i915/display/icl_dsi.c b/drivers/gpu/drm/i915/display/icl_dsi.c
-index 4d952accfaaa..a42348be0438 100644
---- a/drivers/gpu/drm/i915/display/icl_dsi.c
-+++ b/drivers/gpu/drm/i915/display/icl_dsi.c
-@@ -763,7 +763,7 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
- 	enum transcoder dsi_trans;
- 	/* horizontal timings */
- 	u16 htotal, hactive, hsync_start, hsync_end, hsync_size;
--	u16 hfront_porch, hback_porch;
-+	u16 hback_porch;
- 	/* vertical timings */
- 	u16 vtotal, vactive, vsync_start, vsync_end, vsync_shift;
- 
-@@ -772,8 +772,6 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
- 	hsync_start = adjusted_mode->crtc_hsync_start;
- 	hsync_end = adjusted_mode->crtc_hsync_end;
- 	hsync_size  = hsync_end - hsync_start;
--	hfront_porch = (adjusted_mode->crtc_hsync_start -
--			adjusted_mode->crtc_hdisplay);
- 	hback_porch = (adjusted_mode->crtc_htotal -
- 		       adjusted_mode->crtc_hsync_end);
- 	vactive = adjusted_mode->crtc_vdisplay;
+We have registers tracing in other Tegra drivers, please see for the
+quick example:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/dr=
+ivers/staging/media/tegra-vde/trace.h
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/dr=
+ivers/gpu/drm/tegra/trace.h
 
+It's the first time I'm seeing complains about debug tracing and
+currently having hard time trying to understand yours point.
 
+> Also, it is not proper way that front patch adds the some code
+> and then later patch removes the additional code in the same series.
+> Before sending the patches, you can renew them.
+
+Okay.
