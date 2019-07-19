@@ -2,32 +2,32 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC18C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD71C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C7421883
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A878621874
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388257AbfGSUl1 (ORCPT
+        id S2388196AbfGSUlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:41:27 -0400
+        Fri, 19 Jul 2019 16:41:23 -0400
 Received: from mga12.intel.com ([192.55.52.136]:46747 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbfGSUlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:41:21 -0400
+        id S2388132AbfGSUlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:41:22 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:41:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="168655830"
+   d="scan'208";a="168655837"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.165])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:20 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jul 2019 13:41:21 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -37,9 +37,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] KVM: VMX: Optimize VMX instruction error and fault handling
-Date:   Fri, 19 Jul 2019 13:41:07 -0700
-Message-Id: <20190719204110.18306-3-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 4/5] KVM: x86: Drop ____kvm_handle_fault_on_reboot()
+Date:   Fri, 19 Jul 2019 13:41:09 -0700
+Message-Id: <20190719204110.18306-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190719204110.18306-1-sean.j.christopherson@intel.com>
 References: <20190719204110.18306-1-sean.j.christopherson@intel.com>
@@ -50,203 +50,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework the VMX instruction helpers using asm-goto to branch directly
-to error/fault "handlers" in lieu of using __ex(), i.e. the generic
-____kvm_handle_fault_on_reboot().  Branching directly to fault handling
-code during fixup avoids the extra JMP that is inserted after every VMX
-instruction when using the generic "fault on reboot" (see commit
-3901336ed9887, "x86/kvm: Don't call kvm_spurious_fault() from .fixup").
-
-Opportunistically clean up the helpers so that they all have consistent
-error handling and messages.
-
-Leave the usage of ____kvm_handle_fault_on_reboot() (via __ex()) in
-kvm_cpu_vmxoff() and nested_vmx_check_vmentry_hw() as is.  The VMXOFF
-case is not a fast path, i.e. the cleanliness of __ex() is worth the
-JMP, and the extra JMP in nested_vmx_check_vmentry_hw() is unavoidable.
-
-Note, VMREAD cannot get the asm-goto treatment as output operands aren't
-compatible with GCC's asm-goto due to internal compiler restrictions.
+Remove the variation of __kvm_handle_fault_on_reboot() that accepts a
+post-fault cleanup instruction now that its sole user (VMREAD) uses
+a different method for handling faults.
 
 Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/ops.h | 72 +++++++++++++++++++++++-------------------
- arch/x86/kvm/vmx/vmx.c | 34 ++++++++++++++++++++
- 2 files changed, 74 insertions(+), 32 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
-index 2200fb698dd0..79e25d49d4d9 100644
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -14,6 +14,12 @@
- #define __ex_clear(x, reg) \
- 	____kvm_handle_fault_on_reboot(x, "xor " reg ", " reg)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9739ed615faf..92c59cd923b6 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1504,7 +1504,7 @@ asmlinkage void kvm_spurious_fault(void);
+  * Usually after catching the fault we just panic; during reboot
+  * instead the instruction is ignored.
+  */
+-#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
++#define __kvm_handle_fault_on_reboot(insn)				\
+ 	"666: \n\t"							\
+ 	insn "\n\t"							\
+ 	"jmp	668f \n\t"						\
+@@ -1513,16 +1513,12 @@ asmlinkage void kvm_spurious_fault(void);
+ 	"668: \n\t"							\
+ 	".pushsection .fixup, \"ax\" \n\t"				\
+ 	"700: \n\t"							\
+-	cleanup_insn "\n\t"						\
+ 	"cmpb	$0, kvm_rebooting\n\t"					\
+ 	"je	667b \n\t"						\
+ 	"jmp	668b \n\t"						\
+ 	".popsection \n\t"						\
+ 	_ASM_EXTABLE(666b, 700b)
  
-+void vmwrite_error(unsigned long field, unsigned long value);
-+void vmclear_error(struct vmcs *vmcs, u64 phys_addr);
-+void vmptrld_error(struct vmcs *vmcs, u64 phys_addr);
-+void invvpid_error(unsigned long ext, u16 vpid, gva_t gva);
-+void invept_error(unsigned long ext, u64 eptp, gpa_t gpa);
-+
- static __always_inline void vmcs_check16(unsigned long field)
- {
- 	BUILD_BUG_ON_MSG(__builtin_constant_p(field) && ((field) & 0x6001) == 0x2000,
-@@ -103,21 +109,39 @@ static __always_inline unsigned long vmcs_readl(unsigned long field)
- 	return __vmcs_readl(field);
- }
- 
--static noinline void vmwrite_error(unsigned long field, unsigned long value)
--{
--	printk(KERN_ERR "vmwrite error: reg %lx value %lx (err %d)\n",
--	       field, value, vmcs_read32(VM_INSTRUCTION_ERROR));
--	dump_stack();
--}
-+#define vmx_asm1(insn, op1, error_args...)				\
-+do {									\
-+	asm_volatile_goto("1: " __stringify(insn) " %0\n\t"		\
-+			  ".byte 0x2e\n\t" /* branch not taken hint */	\
-+			  "jna %l[error]\n\t"				\
-+			  _ASM_EXTABLE(1b, %l[fault])			\
-+			  : : op1 : "cc" : error, fault);		\
-+	return;								\
-+error:									\
-+	insn##_error(error_args);					\
-+	return;								\
-+fault:									\
-+	kvm_spurious_fault();						\
-+} while (0)
-+
-+#define vmx_asm2(insn, op1, op2, error_args...)				\
-+do {									\
-+	asm_volatile_goto("1: "  __stringify(insn) " %1, %0\n\t"	\
-+			  ".byte 0x2e\n\t" /* branch not taken hint */	\
-+			  "jna %l[error]\n\t"				\
-+			  _ASM_EXTABLE(1b, %l[fault])			\
-+			  : : op1, op2 : "cc" : error, fault);		\
-+	return;								\
-+error:									\
-+	insn##_error(error_args);					\
-+	return;								\
-+fault:									\
-+	kvm_spurious_fault();						\
-+} while (0)
- 
- static __always_inline void __vmcs_writel(unsigned long field, unsigned long value)
- {
--	bool error;
+-#define __kvm_handle_fault_on_reboot(insn)		\
+-	____kvm_handle_fault_on_reboot(insn, "")
 -
--	asm volatile (__ex("vmwrite %2, %1") CC_SET(na)
--		      : CC_OUT(na) (error) : "r"(field), "rm"(value));
--	if (unlikely(error))
--		vmwrite_error(field, value);
-+	vmx_asm2(vmwrite, "r"(field), "rm"(value), field, value);
- }
- 
- static __always_inline void vmcs_write16(unsigned long field, u16 value)
-@@ -182,28 +206,18 @@ static __always_inline void vmcs_set_bits(unsigned long field, u32 mask)
- static inline void vmcs_clear(struct vmcs *vmcs)
- {
- 	u64 phys_addr = __pa(vmcs);
--	bool error;
- 
--	asm volatile (__ex("vmclear %1") CC_SET(na)
--		      : CC_OUT(na) (error) : "m"(phys_addr));
--	if (unlikely(error))
--		printk(KERN_ERR "kvm: vmclear fail: %p/%llx\n",
--		       vmcs, phys_addr);
-+	vmx_asm1(vmclear, "m"(phys_addr), vmcs, phys_addr);
- }
- 
- static inline void vmcs_load(struct vmcs *vmcs)
- {
- 	u64 phys_addr = __pa(vmcs);
--	bool error;
- 
- 	if (static_branch_unlikely(&enable_evmcs))
- 		return evmcs_load(phys_addr);
- 
--	asm volatile (__ex("vmptrld %1") CC_SET(na)
--		      : CC_OUT(na) (error) : "m"(phys_addr));
--	if (unlikely(error))
--		printk(KERN_ERR "kvm: vmptrld %p/%llx failed\n",
--		       vmcs, phys_addr);
-+	vmx_asm1(vmptrld, "m"(phys_addr), vmcs, phys_addr);
- }
- 
- static inline void __invvpid(unsigned long ext, u16 vpid, gva_t gva)
-@@ -213,11 +227,8 @@ static inline void __invvpid(unsigned long ext, u16 vpid, gva_t gva)
- 		u64 rsvd : 48;
- 		u64 gva;
- 	} operand = { vpid, 0, gva };
--	bool error;
- 
--	asm volatile (__ex("invvpid %2, %1") CC_SET(na)
--		      : CC_OUT(na) (error) : "r"(ext), "m"(operand));
--	BUG_ON(error);
-+	vmx_asm2(invvpid, "r"(ext), "m"(operand), ext, vpid, gva);
- }
- 
- static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
-@@ -225,11 +236,8 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
- 	struct {
- 		u64 eptp, gpa;
- 	} operand = {eptp, gpa};
--	bool error;
- 
--	asm volatile (__ex("invept %2, %1") CC_SET(na)
--		      : CC_OUT(na) (error) : "r"(ext), "m"(operand));
--	BUG_ON(error);
-+	vmx_asm2(invept, "r"(ext), "m"(operand), ext, eptp, gpa);
- }
- 
- static inline bool vpid_sync_vcpu_addr(int vpid, gva_t addr)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 69536553446d..46689019ebf7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -343,6 +343,40 @@ static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bit
- 
- void vmx_vmexit(void);
- 
-+#define vmx_insn_failed(fmt...)		\
-+do {					\
-+	WARN_ONCE(1, fmt);		\
-+	pr_warn_ratelimited(fmt);	\
-+} while (0)
-+
-+noinline void vmwrite_error(unsigned long field, unsigned long value)
-+{
-+	vmx_insn_failed("kvm: vmwrite failed: field=%lx val=%lx err=%d\n",
-+			field, value, vmcs_read32(VM_INSTRUCTION_ERROR));
-+}
-+
-+noinline void vmclear_error(struct vmcs *vmcs, u64 phys_addr)
-+{
-+	vmx_insn_failed("kvm: vmclear failed: %p/%llx\n", vmcs, phys_addr);
-+}
-+
-+noinline void vmptrld_error(struct vmcs *vmcs, u64 phys_addr)
-+{
-+	vmx_insn_failed("kvm: vmptrld failed: %p/%llx\n", vmcs, phys_addr);
-+}
-+
-+noinline void invvpid_error(unsigned long ext, u16 vpid, gva_t gva)
-+{
-+	vmx_insn_failed("kvm: invvpid failed: ext=0x%lx vpid=%u gva=0x%lx\n",
-+			ext, vpid, gva);
-+}
-+
-+noinline void invept_error(unsigned long ext, u64 eptp, gpa_t gpa)
-+{
-+	vmx_insn_failed("kvm: invept failed: ext=0x%lx eptp=%llx gpa=0x%llx\n",
-+			ext, eptp, gpa);
-+}
-+
- static DEFINE_PER_CPU(struct vmcs *, vmxarea);
- DEFINE_PER_CPU(struct vmcs *, current_vmcs);
- /*
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
 -- 
 2.22.0
 
