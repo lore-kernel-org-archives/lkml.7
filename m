@@ -4,57 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF82C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F335BC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29F52189D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D2321873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509437;
-	bh=TkYheni2xfJvsGBlP1JFbOMtexiEifIb5r9vkPjiB5c=;
+	s=default; t=1563509452;
+	bh=EzPUVEC/oFT42yy6j6XbqollbJFdknDHxSMxt1qNWZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXb4xV2rDhxH0BvCWB/sntm2eqnKfe0BYg56t6fEIqCkEo08/jAwyw8KCW7E2i9Hg
-	 O3GA430+pelStA4SdjoqQHMwGxm7h8c4aovCYqe3bH466ZNFYjcJhonDHL+J5AHHye
-	 hjRnRRlYYJTqbn0VL6Zx8IyakbK5bOhBM+umgVOI=
+	b=kb2BhGFFPzm+JwaY0pG/FAKcBxhrEFGoNYZKS6fnCtB0b7AeKmKaifqD8zChFRDV8
+	 Zsm0swytFdTXlyph1pc0fDAS5y88K4Q7pmiEiKog6ByQPo0kKhau3oKK9CTvJAoYKf
+	 kAX2IZZ1Z3RBaTGa3Yffn1GJ5HOOD1G+zmp8653M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733135AbfGSEKg (ORCPT
+        id S2388330AbfGSEKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733098AbfGSEKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:30 -0400
+        id S1733222AbfGSEKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAE042189D;
-        Fri, 19 Jul 2019 04:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4711121872;
+        Fri, 19 Jul 2019 04:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509429;
-        bh=TkYheni2xfJvsGBlP1JFbOMtexiEifIb5r9vkPjiB5c=;
+        s=default; t=1563509447;
+        bh=EzPUVEC/oFT42yy6j6XbqollbJFdknDHxSMxt1qNWZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBlfxoSnK4szJFvhbuM4vxOlsHizD+Me5+uLnfhuvdOuar7Ol2pTY+tiaU17/f42Q
-         +Sl1jhD4WGX5bylEQrzaVEvU0Larbm+r1pbFE+W2asp1SMCkKnO9JjgFWD1IKhVjL+
-         tm2sx9ENjqJKqnMGZuqJsp+Yk0pLWWOJ1m9RuCWA=
+        b=UDF40KjVhPMT3xfkRsNQb7zzLbtjAO7r+u9qoiGVT4v5ZNqgiL+KzRmYD6f99gkyP
+         FmjKP71it1il+KSe9wfGpkm+0/Rl89QdOACD6J5/RW0Nz/m5T7pHRQkkyq/fco5w8j
+         pEdPCTcw3xroGCp4ETpvsOEPO9l+rLl1hM8vM6Gk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Roman Gushchin <guro@fb.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 089/101] 9p: pass the correct prototype to read_cache_page
-Date:   Fri, 19 Jul 2019 00:07:20 -0400
-Message-Id: <20190719040732.17285-89-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 095/101] proc: use down_read_killable mmap_sem for /proc/pid/pagemap
+Date:   Fri, 19 Jul 2019 00:07:26 -0400
+Message-Id: <20190719040732.17285-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,51 +70,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit f053cbd4366051d7eb6ba1b8d529d20f719c2963 ]
+[ Upstream commit ad80b932c57d85fd6377f97f359b025baf179a87 ]
 
-Fix the callback 9p passes to read_cache_page to actually have the
-proper type expected.  Casting around function pointers can easily
-hide typing bugs, and defeats control flow protection.
+Do not remain stuck forever if something goes wrong.  Using a killable
+lock permits cleanup of stuck tasks and simplifies investigation.
 
-Link: http://lkml.kernel.org/r/20190520055731.24538-5-hch@lst.de
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
+Link: http://lkml.kernel.org/r/156007493638.3335.4872164955523928492.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_addr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/proc/task_mmu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index e1cbdfdb7c68..197069303510 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -50,8 +50,9 @@
-  * @page: structure to page
-  *
-  */
--static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
-+static int v9fs_fid_readpage(void *data, struct page *page)
- {
-+	struct p9_fid *fid = data;
- 	struct inode *inode = page->mapping->host;
- 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
- 	struct iov_iter to;
-@@ -122,7 +123,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
- 	if (ret == 0)
- 		return ret;
- 
--	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
-+	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
-+			filp->private_data);
- 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
- 	return ret;
- }
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index b2010055180e..74965e17ffd5 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1535,7 +1535,9 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
+ 		/* overflow ? */
+ 		if (end < start_vaddr || end > end_vaddr)
+ 			end = end_vaddr;
+-		down_read(&mm->mmap_sem);
++		ret = down_read_killable(&mm->mmap_sem);
++		if (ret)
++			goto out_free;
+ 		ret = walk_page_range(start_vaddr, end, &pagemap_walk);
+ 		up_read(&mm->mmap_sem);
+ 		start_vaddr = end;
 -- 
 2.20.1
 
