@@ -2,129 +2,116 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E606FC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A872BC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C941A21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8742D21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfGSH2E (ORCPT
+        id S1727401AbfGSH2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:28:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58150 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfGSH2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:28:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:28:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="asc'?scan'208";a="187944515"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jul 2019 00:28:01 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     "Yang\, Fei" <fei.yang@intel.com>,
-        "john.stultz\@linaro.org" <john.stultz@linaro.org>,
-        "andrzej.p\@collabora.com" <andrzej.p@collabora.com>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated properly
-In-Reply-To: <02E7334B1630744CBDC55DA8586225837F8DD883@ORSMSX102.amr.corp.intel.com>
-References: <1563396788-126034-1-git-send-email-fei.yang@intel.com> <87o91riux9.fsf@linux.intel.com> <02E7334B1630744CBDC55DA8586225837F8DD883@ORSMSX102.amr.corp.intel.com>
-Date:   Fri, 19 Jul 2019 10:27:57 +0300
-Message-ID: <87muhascua.fsf@linux.intel.com>
+        Fri, 19 Jul 2019 03:28:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:45822 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbfGSH2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:28:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id e20so33496957ioe.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 00:28:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZOKptcEQOKWGsH6kGRMFGwq91Xnv2C9B1wmV09hcJ5c=;
+        b=ZvWG0DiH5x2qMDHpzFtp1701Uua5w0ju1pupsizBDkY/j8gST/WT14Eq348x24wI5s
+         sDjZhlv8+fU0eSOjs2ufxJcx4d0nDp46WKHi5QnHVkfF9UH9BtIgO7Prph8SaSBgJgiK
+         +27Xx2v3SZicdLX0QvSDzHo82jve6VrqkWAeWcLK9B5fIEkKqYHZHsjqHI47QeMTYwEa
+         ekDBJLx+CY2/ly0dt3MKgKXAvX89newRhv7WMICubGbFUoKT8P8rCw/OGI/mE39KbGC0
+         WCptzSCLxMo42QLhXzkdx53zGcpJSEmL/FP3yR8jFiQLIzYxYnhzU+Z72p3HAmUbi5kQ
+         YULw==
+X-Gm-Message-State: APjAAAVHidsBdb5b4TyC9g9C8wKthB/UrBLyfgu/WxBWtRzMPmuZOFr9
+        B4UitiezYt/Ne6ecxjrYY4hCd18ZyV7EBRDujXMGtI9bcb4e
+X-Google-Smtp-Source: APXvYqwq1aitWQEim6lQXQr33Kk51C3EOokbRynQEU6MrgfMrNRrXpweFrRMsyfcmQvBV6/b6gCQupDYuZMxFC/ee0R0bXMv0cj+
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Received: by 2002:a5d:9e48:: with SMTP id i8mr46417366ioi.51.1563521285924;
+ Fri, 19 Jul 2019 00:28:05 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 00:28:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d8b010058e03aaf8@google.com>
+Subject: BUG: unable to handle kernel paging request in corrupted (2)
+From:   syzbot <syzbot+08b7a2c58acdfa12c82d@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-"Yang, Fei" <fei.yang@intel.com> writes:
+syzbot found the following crash on:
 
-Hi,
+HEAD commit:    49d05fe2 ipv6: rt6_check should return NULL if 'from' is N..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=104b5f70600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87305c3ca9c25c70
+dashboard link: https://syzkaller.appspot.com/bug?extid=08b7a2c58acdfa12c82d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143a78f4600000
 
->> Can only be true for last TRB
->>
-> | 	if (event->status & DEPEVT_STATUS_IOC)
-> | 		return 1;
->
-> This is the problem. The whole USB request gets only one interrupt
-> when the last TRB completes, so dwc3_gadget_ep_reclaim_trb_sg() gets
-> called with event->status =3D 0x6 which has DEPEVT_STATUS_IOC bit
-> set. Thus dwc3_gadget_ep_reclaim_completed_trb() returns 1 for the
-> first TRB and the for-loop ends without having a chance to iterate
-> through the sg list.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+08b7a2c58acdfa12c82d@syzkaller.appspotmail.com
 
-IOC is only set for the last TRB, so this will iterate over and over
-again until it reaches the last TRB. Please collect tracepoints of the
-failure case.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+BUG: unable to handle page fault for address: 00000000ffffffff
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 9ad32067 P4D 9ad32067 PUD 0
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9920 Comm: syz-executor.1 Not tainted 5.2.0+ #91
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+BUG: kernel NULL pointer dereference, address: 0000000000000002
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 9ad32067 P4D 9ad32067 PUD 9ad33067 PMD 0
+Oops: 0010 [#2] PREEMPT SMP KASAN
+CPU: 0 PID: 9920 Comm: syz-executor.1 Not tainted 5.2.0+ #91
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:0x2
+Code: Bad RIP value.
+RSP: 0000:ffff888092932a20 EFLAGS: 00010086
+RAX: 000000000000002d RBX: ffff888092932a40 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c1016 RDI: ffffed1012526536
+RBP: ffffffff81724d28 R08: 000000000000002d R09: ffffed1015d044fa
+R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffffff81b3e334
+R13: 0000000000000010 R14: 0000000000000000 R15: 1ffff1101252654b
+FS:  000055555572a940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd8 CR3: 000000009c4d1000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
 
->> If we have a short packet, then we may fall here. Is that the case?
->
-> No need for a short packet to make it fail. In my case below, a 16384
-> byte request got slipt into 4 TRBs of 4096 bytes. All TRBs were
-> completed normally, but the for-loop in
-> dwc3_gadget_ep_reclaim_trb_sg() was terminated right after handling
-> the first TRB. After that the trb_dequeue is messed up.
 
-I need tracepoints to se what's going on, please collect tracepoints.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> buffer_addr,size,type,ioc,isp_imi,csp,chn,lst,hwo
-> 0000000077849000, 4096,normal,0,0,1,1,0,0
-> 000000007784a000, 4096,normal,0,0,1,1,0,0
-> 000000007784b000, 4096,normal,0,0,1,1,0,0
-> 000000007784c000, 4096,normal,1,0,1,0,0,0
-> 000000007784d000, 512,normal,1,0,1,0,0,0
->
-> My first version of the patch was trying to address the issue in
-> dwc3_gadget_ep_reclaim_completed_trb(), but then I thought it's a bad
-> idea to touch this function because that is also called from non
-> scatter_gather list case, and I was not sure if returning 1 for the
-> linear case is correct or not.
-
-That function *must* be called for all cases. We want to reduce the
-amount of special cases so code is more straight forward and easier to
-maintain. Again, please collect tracepoints of the failure case with the
-latest tag from Linus, otherwise you won't be able to convince me we
-need your patch.
-
-I also think your version is the wrong way to sort it out.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0xcP0ACgkQzL64meEa
-mQa+BRAApybjl0kw74kvUCbgq5JoZMjTCG8mNVR2WL2+gE9qRwGiJ00aSJakl06A
-EH2CUWRGDNzuGyQCajC/GHLl8ZC+yLK5Qu5OSXelZU6k4Ghd9kAfqN57zLbuH6fa
-I2nVdhAehADII/57+s1E86s5d3BctlNd4qZi72dK9GvH55IukzeZWotWiIxUH1F7
-zO5NxKvFV1EIOa/PezcE2bdnbsrzCs6uCySYGlWYDTP2fEfm9XK7/L5/kQGJYpVJ
-0yORd/HLvNPq3bjBPCNOkCkQ3TTv2uc9ybKwlTlPufRET7uTtQD0F8ZRqoGxWZ0j
-8OiSwYcEnzOWhA+o4RpX1XfIkMug75hlsV2BKrTsR9z7e/+isNro6tFqAu/xp/k0
-pRHIHnmDFmkHX9OmwbUQZbBAZGsxm2WB6yh3sqVW0eWQnzlS4TelUu568Nk9La6y
-Jdv6BocpfZ0C3VvvTAxQMncqA4zRiFQZ4ZcFxcJBZzloMn3dBW2bKycpJZkoX1bG
-jyaIKvANmbKjdtdYFWmOsgMNaFCYQvTWHHCBwybskX6lI/0lgmgYx5z72GJ0VTQ9
-THlw7VRPF6u4HXwWd0cSfQFnL5kPRLOzj6i82mhOXZLRQFEHWIMhz8ayKzcQPqh3
-pafP951OscsQdOvOc2tT6lRaItN9j4fIoSuPy7iKlJSOYKWrqyc=
-=YdDN
------END PGP SIGNATURE-----
---=-=-=--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
