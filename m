@@ -4,73 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6873C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865AFC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD997218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCDB218D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509564;
-	bh=RHZ6b2Jzz+8JZbsEUZXAGl+ziVEvVIz3Qs3//1mqvsc=;
+	s=default; t=1563509568;
+	bh=Fd/iL7k9ygEDKTPyKwsLZ60pZjcdmHPKdB8B+q4aVFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VDpXPDClsEkEWghkMJ6fHEnCP0vX37AKkxjWIcByth8FvMVUU6LySb2B6tG0XLfWC
-	 luvn4S+9a9+q5XZsuuwu/4PsGtcX29ga9uXLtZsYP+CLCwvuHirc7G2GVzsKw2DZ6o
-	 7azry0njFxyo17ViqXuJMCSs30lyyDEuFKklY9IM=
+	b=LEiIWoRcI03h7tP58iUf9u1BnqA5bAhdUkonLnBpVfWIfXnHgoQTs0wcWGanUkLzN
+	 hQtuvVXfX2lf6DJSf5TubkH8Kmo96NSPwCf2NWJoEqY9/O3D4LjUKsEmNH3pW0Dpnf
+	 gOi+qUyxJ1rimKIaXx3jDlko6qMXSKfAcLunlfPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388919AbfGSEMn (ORCPT
+        id S2388965AbfGSEMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48036 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388157AbfGSEMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:37 -0400
+        id S2388249AbfGSEKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 334B4218B6;
-        Fri, 19 Jul 2019 04:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B1B421873;
+        Fri, 19 Jul 2019 04:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509556;
-        bh=RHZ6b2Jzz+8JZbsEUZXAGl+ziVEvVIz3Qs3//1mqvsc=;
+        s=default; t=1563509444;
+        bh=Fd/iL7k9ygEDKTPyKwsLZ60pZjcdmHPKdB8B+q4aVFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nX4L9k5niEtTMZTuX2iRTabP4xpQkcdTqMneb/l689PhUmQjGWoslBInbj3ZqlGDh
-         xnRq3gTNkV2p7kinMM0ZoreXAnPFSWbCN8s1ZKkPFbcI563dkG5eB1KjDWC+u9zNaN
-         sxNiYI0VZ4Ogs2wx6Gs0pyX+1UhKLifMie3gMisM=
+        b=sTozd/R7hY/A7Edx9cFkZMuWZdvJhoDLPUYpbmJ50TRAl1aHSdQHNdzBSV4sE7I14
+         z/AzK2O9VixSD5JhtRiACuJcHGnbJ/1hImxhxjKRo5sNOlabvjrYxTRJM0hAYZKsRs
+         YE3YDXWqJIslh1sF82JDWj7RWXWsyuUNdgn1BFw0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 45/60] perf annotate: Fix dereferencing freed memory found by the smatch tool
-Date:   Fri, 19 Jul 2019 00:10:54 -0400
-Message-Id: <20190719041109.18262-45-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Roman Gushchin <guro@fb.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 094/101] proc: use down_read_killable mmap_sem for /proc/pid/smaps_rollup
+Date:   Fri, 19 Jul 2019 00:07:25 -0400
+Message-Id: <20190719040732.17285-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
-References: <20190719041109.18262-1-sashal@kernel.org>
+In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
+References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -79,102 +70,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 600c787dbf6521d8d07ee717ab7606d5070103ea ]
+[ Upstream commit a26a97815548574213fd37f29b4b78ccc6d9ed20 ]
 
-Based on the following report from Smatch, fix the potential
-dereferencing freed memory check.
+Do not remain stuck forever if something goes wrong.  Using a killable
+lock permits cleanup of stuck tasks and simplifies investigation.
 
-  tools/perf/util/annotate.c:1125
-  disasm_line__parse() error: dereferencing freed memory 'namep'
-
-  tools/perf/util/annotate.c
-  1100 static int disasm_line__parse(char *line, const char **namep, char **rawp)
-  1101 {
-  1102         char tmp, *name = ltrim(line);
-
-  [...]
-
-  1114         *namep = strdup(name);
-  1115
-  1116         if (*namep == NULL)
-  1117                 goto out_free_name;
-
-  [...]
-
-  1124 out_free_name:
-  1125         free((void *)namep);
-                            ^^^^^
-  1126         *namep = NULL;
-               ^^^^^^
-  1127         return -1;
-  1128 }
-
-If strdup() fails to allocate memory space for *namep, we don't need to
-free memory with pointer 'namep', which is resident in data structure
-disasm_line::ins::name; and *namep is NULL pointer for this failure, so
-it's pointless to assign NULL to *namep again.
-
-Committer note:
-
-Freeing namep, which is the address of the first entry of the 'struct
-ins' that is the first member of struct disasm_line would in fact free
-that disasm_line instance, if it was allocated via malloc/calloc, which,
-later, would a dereference of freed memory.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-5-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/156007493429.3335.14666825072272692455.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Koutný <mkoutny@suse.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/proc/task_mmu.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 398d4cc2f0e4..2a8d2a6723f6 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -868,16 +868,14 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- 	*namep = strdup(name);
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index c5819baee35c..b2010055180e 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -826,7 +826,10 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
  
- 	if (*namep == NULL)
--		goto out_free_name;
-+		goto out;
+ 	memset(&mss, 0, sizeof(mss));
  
- 	(*rawp)[0] = tmp;
- 	*rawp = ltrim(*rawp);
+-	down_read(&mm->mmap_sem);
++	ret = down_read_killable(&mm->mmap_sem);
++	if (ret)
++		goto out_put_mm;
++
+ 	hold_task_mempolicy(priv);
  
- 	return 0;
+ 	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
+@@ -843,8 +846,9 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
  
--out_free_name:
--	free((void *)namep);
--	*namep = NULL;
-+out:
- 	return -1;
- }
+ 	release_task_mempolicy(priv);
+ 	up_read(&mm->mmap_sem);
+-	mmput(mm);
  
++out_put_mm:
++	mmput(mm);
+ out_put_task:
+ 	put_task_struct(priv->task);
+ 	priv->task = NULL;
 -- 
 2.20.1
 
