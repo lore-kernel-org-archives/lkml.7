@@ -2,166 +2,94 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7B1C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23F9C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A1920693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8A120693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a70ZBH4E";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bfZWMo7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbfGSU2h (ORCPT
+        id S2388005AbfGSUcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:28:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6702 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbfGSU2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:28:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:28:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="170998185"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by orsmga003.jf.intel.com with ESMTP; 19 Jul 2019 13:28:36 -0700
-Date:   Fri, 19 Jul 2019 13:28:36 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
- unnecessarily
-Message-ID: <20190719202836.GB13680@linux.intel.com>
-References: <20190702053151.26922-1-devel@etsukata.com>
- <20190702072821.GX3419@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
- <20190702113355.5be9ebfe@gandalf.local.home>
- <20190702133905.1482b87e@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702133905.1482b87e@gandalf.local.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 19 Jul 2019 16:32:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56414 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbfGSUcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:32:35 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3A065611D1; Fri, 19 Jul 2019 20:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563568354;
+        bh=nOzlrnBEamhN2JgiNCP88vDUSaUd5wB7eTA/ysgT7+Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=a70ZBH4EIBVxceERFjClWJxCJWOzK9nnbr1rAd7bNYiAQqPNW+NzZGnndqU5ZDTDb
+         pXIMvUAYHrr/x2yih7yPPVOQcjT0zKJmKYEmkiDyQECiLiJt1yPfNQNmgwuOIFtM2H
+         PTfRrCJw6WlmKwJlx5h5dyU5KEO23GVn+GxAS7U4=
+Received: from davidai-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: daidavid1@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C18060ACA;
+        Fri, 19 Jul 2019 20:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563568353;
+        bh=nOzlrnBEamhN2JgiNCP88vDUSaUd5wB7eTA/ysgT7+Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bfZWMo7/uLhZ5X3/fbuEjCzGmhOqeKzaKIkp37wmbcNKGHmCDMAhPPh9ndEORWLsZ
+         VH7XfUlyVR2l4z7Ab+GNbScfUqP4IyXbTsC/aDf+RwkAscPXispicbGgihr/JtbjB8
+         pIvJdFVNJcMkFV+cofopcAMQzFJbeckHjhHSKKnI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C18060ACA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
+From:   David Dai <daidavid1@codeaurora.org>
+To:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org
+Cc:     David Dai <daidavid1@codeaurora.org>, evgreen@google.com,
+        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH 0/2] Redefine interconnect provider DT nodes for SDM845
+Date:   Fri, 19 Jul 2019 13:32:22 -0700
+Message-Id: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 01:39:05PM -0400, Steven Rostedt wrote:
-> On Tue, 2 Jul 2019 11:33:55 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
-> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> > 
-> > > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
-> > >   
-> > > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:    
-> > > > > Put the boundary check before it accesses user space to prevent unnecessary
-> > > > > access which might crash the machine.
-> > > > > 
-> > > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
-> > > > > option can trigger SEGV in pid 1 which leads to panic.    
-> > 
-> > Note, I'm only able to trigger this crash with the irq_disable event.
-> > The irq_enable and preempt_disable/enable events work just fine. This
-> > leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
-> > trampoline) may have some issues and is probably the place to look at.
-> 
-> I figured it out.
-> 
-> It's another "corruption of the cr2" register issue. The following
-> patch makes the issue go away. I'm not suggesting that we use this
-> patch, but it shows where the bug lies.
-> 
-> IIRC, there was patches posted before that fixed this issue. I'll go
-> look to see if I can dig them up. Was it Joel that sent them?
-> 
-> -- Steve
-> 
-> diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-> index be36bf4e0957..dd79256badb2 100644
-> --- a/arch/x86/entry/thunk_64.S
-> +++ b/arch/x86/entry/thunk_64.S
-> @@ -40,7 +40,7 @@
->  
->  #ifdef CONFIG_TRACE_IRQFLAGS
->  	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
-> -	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
-> +	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller_cr2,1
->  #endif
->  
->  #ifdef CONFIG_DEBUG_LOCK_ALLOC
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 46df4c6aae46..b42ca3fc569d 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -1555,3 +1555,13 @@ do_page_fault(struct pt_regs *regs, unsigned long error_code)
->  	exception_exit(prev_state);
->  }
->  NOKPROBE_SYMBOL(do_page_fault);
-> +
-> +void trace_hardirqs_off_caller(unsigned long addr);
-> +
-> +void notrace trace_hardirqs_off_caller_cr2(unsigned long addr)
-> +{
-> +	unsigned long address = read_cr2(); /* Get the faulting address */
-> +
-> +	trace_hardirqs_off_caller(addr);
-> +	write_cr2(address);
-> +}
+Redefine the SDM845 interconnect device nodes as the previous definitions
+of using a single child node under the apps_rsc device did not accurately
+capture the description of the hardware. The Network-On-Chip (NoC) interconnect
+devices should be represented in a manner akin to QCS404 platforms[1]
+where there is a separation of NoC devices and its RPM/RPMh counterparts.
 
-I'm hitting a similar panic that bisects to commit
+The bcm-voter devices are representing the RPMh devices that the interconnect
+providers need to communicate with and there can be more than one instance of
+the Bus Clock Manager (BCM) which can live under different instances of Resource
+State Coordinators (RSC). There are display use cases where consumers may need
+to target a different bcm-voter (Some display specific RSC) than the default,
+and there needs to be a way to represent this connection in devicetree.
 
-  a0d14b8909de ("x86/mm, tracing: Fix CR2 corruption")
+[1]: https://lkml.org/lkml/2019/6/13/143
 
-except I'm experiencing death immediately after starting init.
+David Dai (2):
+  dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
+  arm64: dts: sdm845: Redefine interconnect provider DT nodes
 
-Through sheer dumb luck, I tracked (pun intended) this down to forcing
-context tracking:
+ .../bindings/interconnect/qcom,bcm-voter.txt       | 32 ++++++++++++
+ .../bindings/interconnect/qcom,sdm845.txt          | 40 ++++++++++----
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 61 ++++++++++++++++++++--
+ 3 files changed, 121 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.txt
 
-  CONFIG_CONTEXT_TRACKING=y
-  CONFIG_CONTEXT_TRACKING_FORCE=y
-  CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-I haven't attempted to debug further and I'll be offline for most of the
-next few days.  Hopefully this is enough to root cause the badness.
-
-[    0.680477] Run /sbin/init as init process
-[    0.682116] init[1]: segfault at 2926a7ef ip 00007f98a49d9c30 sp 00007fffd83e6af0 error 14 in ld-2.23.so[7f98a49d9000+26000]
-[    0.683427] Code: Bad RIP value.
-[    0.683844] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-[    0.684710] CPU: 0 PID: 1 Comm: init Not tainted 5.2.0+ #18
-[    0.685352] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    0.686239] Call Trace:
-[    0.686542]  dump_stack+0x46/0x5b
-[    0.686915]  panic+0xf8/0x2d2
-[    0.687252]  do_exit+0xb68/0xb70
-[    0.687616]  do_group_exit+0x3a/0xa0
-[    0.688088]  get_signal+0x184/0x880
-[    0.688483]  do_signal+0x30/0x690
-[    0.688857]  ? signal_wake_up_state+0x15/0x30
-[    0.689433]  ? __send_signal+0x139/0x380
-[    0.689908]  exit_to_usermode_loop+0x6a/0xc0
-[    0.690397]  ? async_page_fault+0x8/0x40
-[    0.690850]  prepare_exit_to_usermode+0x78/0xb0
-[    0.691355]  retint_user+0x8/0x8
-[    0.691722] RIP: 0033:0x7f98a49d9c30
-[    0.692122] Code: Bad RIP value.
-[    0.692484] RSP: 002b:00007fffd83e6af0 EFLAGS: 00010202
-[    0.693060] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[    0.693907] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-[    0.694739] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-[    0.695538] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[    0.696322] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    0.697195] Kernel Offset: disabled
-[    0.697600] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
