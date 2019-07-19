@@ -2,160 +2,121 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A127BC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E10320693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A633A2089C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:34:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MuKW9PO3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KsvKiwi3"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iOcnUsUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388085AbfGSUco (ORCPT
+        id S1731023AbfGSUeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:32:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56646 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388011AbfGSUcj (ORCPT
+        Fri, 19 Jul 2019 16:34:10 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35505 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbfGSUeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:32:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5A11661836; Fri, 19 Jul 2019 20:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563568358;
-        bh=4lOKewWx4DPDxGEDzYunri8E48SbXykONHMaszyMNJk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MuKW9PO3LhK8Z0Il7yDSpaw+SAFXMWLK9VM5ohg7L1e3qYimW3QZYGlkmN7fbnkQl
-         6rdx1SUOiblEWCH2sxBT5O9PBfzWtALT8nsK9dhi4DrmyJPmbMefBO76zPs3sFKL+L
-         TVZ7bS0kliC1Gm3GauDyLne6v08zogMADkD/HGbQ=
-Received: from davidai-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: daidavid1@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 187386182E;
-        Fri, 19 Jul 2019 20:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563568357;
-        bh=4lOKewWx4DPDxGEDzYunri8E48SbXykONHMaszyMNJk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KsvKiwi3lTIfJjgyxHQ2OXd0AU64RWvMQiGAmdvWj/qF1ZR1371E3HrgNRh3vuopV
-         rI7wcjQ4F8ddQk7xTKUsCb++p2Hq+/O3EQVBNMP3fgmPQwvwjPitC+gxmsH0XEgLQu
-         t9EiVcHVKXgz7/H700x4pNWdQilF+T0MmuOTqa0o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 187386182E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
-From:   David Dai <daidavid1@codeaurora.org>
-To:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org
-Cc:     David Dai <daidavid1@codeaurora.org>, evgreen@google.com,
-        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: sdm845: Redefine interconnect provider DT nodes
-Date:   Fri, 19 Jul 2019 13:32:24 -0700
-Message-Id: <1563568344-1274-3-git-send-email-daidavid1@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
-References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
+        Fri, 19 Jul 2019 16:34:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x25so31986966ljh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 13:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YWoLcIWo45da57QgaYno7VI6Op8uVj/Cqdt+Sn9VmY0=;
+        b=iOcnUsUOUmUDjUPd2RB7piycSYuRa0AXleJVgdN2h7YSBPG3416E5nC6hOnjd+wwLj
+         Ggo0iU/RRwL6CXCbxKfsxQoSLuMiCW1vGnCQyhaTUt4tV3nx9uTJr2CpIGB8xyPZCfMy
+         VLJL5zyEFPoIpF/pFAmQzdew8l7ALpgpyKrt4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YWoLcIWo45da57QgaYno7VI6Op8uVj/Cqdt+Sn9VmY0=;
+        b=he1XBejCt3OyjLExSi7Uwebrc68GxnIx6h2AxwFrJoEeaE8tMupKSByEIe/2oPce8n
+         P16vE5bOb0jaIqE1l6aKx58M3Bw70Qn8h9bQl1z6plSQsfE0KbU/EjlolAMoBuXGlGWJ
+         QvssXSO7Mnoz6XeQcyWQeXjNZcvlfn1h4hmbiTRyPH/Msl4XixhSlsDva8p7GVzcXwOH
+         cy11MxZ8RBicxda+nhXMoZihNMZzYMOnB1jDd3/lhaNy4sxyv2res8V9X8zCtuV7lPo7
+         qs4kfbOL1WX5S0PRTn5uHjtoAfJUUu4fLlHjNnMbiYqXtTAcluiQktS+7OImtof4mQbY
+         C5Iw==
+X-Gm-Message-State: APjAAAWRRU31LH3saabB2BcOaQFv/Pb7ZqxNkravatV+pVigSvmmPGUx
+        cF3xw0m9BB7e0IqbMx1Kyo9CUSE2hr4zQC3/7Hg=
+X-Google-Smtp-Source: APXvYqxJIT/ulpm6D6M1/aGWkcJqVmFa6Pfr0jgRty160DDMnx2/Xlv3f7J7ThMzu8xCHC17SRMRSvZJyZSJy8P3R5o=
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr28981129lja.112.1563568448218;
+ Fri, 19 Jul 2019 13:34:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
+ <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
+ <20190713151330.GE26519@linux.ibm.com> <20190713154257.GE133650@google.com>
+ <20190713174111.GG26519@linux.ibm.com> <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
+ <20190719003942.GA28226@X58A-UD3R> <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
+ <20190719074329.GY14271@linux.ibm.com> <CANrsvRM7ehvqcPtKMV7RyRCiXwe_R_TsLZiNtxBPY_qnSg2LNQ@mail.gmail.com>
+ <20190719195728.GF14271@linux.ibm.com>
+In-Reply-To: <20190719195728.GF14271@linux.ibm.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 19 Jul 2019 16:33:56 -0400
+Message-ID: <CAEXW_YQADrPRtJW7yJZyROH1_d2yOA7_1HVgm50wxpOC80+=Wg@mail.gmail.com>
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Byungchul Park <max.byungchul.park@gmail.com>,
+        Byungchul Park <byungchul.park@lge.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@lge.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT nodes for each of the Network-On-Chip interconnect
-buses found on SDM845 based platform and redefine the rsc_hlos
-child node as a bcm-voter device to better represent the hardware.
+On Fri, Jul 19, 2019 at 3:57 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+>
+> On Fri, Jul 19, 2019 at 06:57:58PM +0900, Byungchul Park wrote:
+> > On Fri, Jul 19, 2019 at 4:43 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > >
+> > > On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
+> > > > On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
+> > > > [snip]
+> > > > > > - There is a bug in the CPU stopper machinery itself preventing it
+> > > > > > from scheduling the stopper on Y. Even though Y is not holding up the
+> > > > > > grace period.
+> > > > >
+> > > > > Or any thread on Y is busy with preemption/irq disabled preventing the
+> > > > > stopper from being scheduled on Y.
+> > > > >
+> > > > > Or something is stuck in ttwu() to wake up the stopper on Y due to any
+> > > > > scheduler locks such as pi_lock or rq->lock or something.
+> > > > >
+> > > > > I think what you mentioned can happen easily.
+> > > > >
+> > > > > Basically we would need information about preemption/irq disabled
+> > > > > sections on Y and scheduler's current activity on every cpu at that time.
+> > > >
+> > > > I think all that's needed is an NMI backtrace on all CPUs. An ARM we
+> > > > don't have NMI solutions and only IPI or interrupt based backtrace
+> > > > works which should at least catch and the preempt disable and softirq
+> > > > disable cases.
+> > >
+> > > True, though people with systems having hundreds of CPUs might not
+> > > thank you for forcing an NMI backtrace on each of them.  Is it possible
+> > > to NMI only the ones that are holding up the CPU stopper?
+> >
+> > What a good idea! I think it's possible!
+> >
+> > But we need to think about the case NMI doesn't work when the
+> > holding-up was caused by IRQ disabled.
+> >
+> > Though it's just around the corner of weekend, I will keep thinking
+> > on it during weekend!
+>
+> Very good!
 
-Signed-off-by: David Dai <daidavid1@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 58 insertions(+), 3 deletions(-)
+Me too will think more about it ;-) Agreed with point about 100s of
+CPUs usecase,
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index e7d78bc..204222e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -610,6 +610,62 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		aggre1_noc: interconnect@16e0000 {
-+			compatible = "qcom,sdm845-aggre1_noc";
-+			reg = <0 0x16e0000 0 0xd080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		aggre2_noc: interconnect@1700000 {
-+			compatible = "qcom,sdm845-aggre2_noc";
-+			reg = <0 0x1700000 0 0x3b100>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		config_noc: interconnect@1500000 {
-+			compatible = "qcom,sdm845-config_noc";
-+			reg = <0 0x1500000 0 0x5080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		dc_noc: interconnect@14e0000 {
-+			compatible = "qcom,sdm845-dc_noc";
-+			reg = <0 0x14e0000 0 0x400>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		gladiator_noc: interconnect@17900000 {
-+			compatible = "qcom,sdm845-gladiator_noc";
-+			reg = <0 0x17900000 0 0xd080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		mem_noc: interconnect@1380000 {
-+			compatible = "qcom,sdm845-mem_noc";
-+			reg = <0 0x1380000 0 0x27200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		mmss_noc: interconnect@1740000 {
-+			compatible = "qcom,sdm845-mmss_noc";
-+			reg = <0 0x1740000 0 0x1c1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		system_noc: interconnect@1620000 {
-+			compatible = "qcom,sdm845-system_noc";
-+			reg = <0 0x1620000 0 0x18080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
- 		qfprom@784000 {
- 			compatible = "qcom,qfprom";
- 			reg = <0 0x00784000 0 0x8ff>;
-@@ -2801,9 +2857,8 @@
- 				};
- 			};
- 
--			rsc_hlos: interconnect {
--				compatible = "qcom,sdm845-rsc-hlos";
--				#interconnect-cells = <1>;
-+			apps_bcm_voter: bcm_voter {
-+				compatible = "qcom,sdm845-bcm-voter";
- 			};
- 		};
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks, have a great weekend,
 
+ - Joel
