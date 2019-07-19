@@ -2,146 +2,169 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7049FC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83691C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CB621851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E7620873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfGSLmL (ORCPT
+        id S1727976AbfGSLq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:42:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37290 "EHLO mx1.redhat.com"
+        Fri, 19 Jul 2019 07:46:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:42304 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfGSLmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:42:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9D6DEC057E29;
-        Fri, 19 Jul 2019 11:42:10 +0000 (UTC)
-Received: from [10.36.116.220] (ovpn-116-220.ams2.redhat.com [10.36.116.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 98DD55B6A5;
-        Fri, 19 Jul 2019 11:42:08 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/base/node.c: Simplify
- unregister_memory_block_under_nodes()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20190718142239.7205-1-david@redhat.com>
- <20190719084239.GO30461@dhcp22.suse.cz>
- <eff19965-f280-6124-8fc5-56e3101f67cb@redhat.com>
- <20190719091313.GR30461@dhcp22.suse.cz>
- <48ea1d5d-ce40-aaad-b9fe-006488ed71dc@redhat.com>
- <20190719113647.GS30461@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <c203ae99-e47f-a7dd-83f0-93196125db70@redhat.com>
-Date:   Fri, 19 Jul 2019 13:42:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726072AbfGSLq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 07:46:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 497DD337;
+        Fri, 19 Jul 2019 04:46:26 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02ACC3F71A;
+        Fri, 19 Jul 2019 04:46:26 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id AF78168065E; Fri, 19 Jul 2019 12:46:24 +0100 (BST)
+Date:   Fri, 19 Jul 2019 12:46:24 +0100
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        brian.starkey@arm.com, airlied@linux.ie, daniel@ffwll.ch,
+        leoyang.li@nxp.com
+Subject: Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
+ configuration for Mali DP500
+Message-ID: <20190719114624.GB16673@e110455-lin.cambridge.arm.com>
+References: <20190719095445.11575-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190719113647.GS30461@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 19 Jul 2019 11:42:10 +0000 (UTC)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190719095445.11575-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.07.19 13:36, Michal Hocko wrote:
-> On Fri 19-07-19 11:20:43, David Hildenbrand wrote:
->> On 19.07.19 11:13, Michal Hocko wrote:
->>> On Fri 19-07-19 11:05:51, David Hildenbrand wrote:
->>>> On 19.07.19 10:42, Michal Hocko wrote:
->>>>> On Thu 18-07-19 16:22:39, David Hildenbrand wrote:
->>>>>> We don't allow to offline memory block devices that belong to multiple
->>>>>> numa nodes. Therefore, such devices can never get removed. It is
->>>>>> sufficient to process a single node when removing the memory block.
->>>>>>
->>>>>> Remember for each memory block if it belongs to no, a single, or mixed
->>>>>> nodes, so we can use that information to skip unregistering or print a
->>>>>> warning (essentially a safety net to catch BUGs).
->>>>>
->>>>> I do not really like NUMA_NO_NODE - 1 thing. This is yet another invalid
->>>>> node that is magic. Why should we even care? In other words why is this
->>>>> patch an improvement?
->>>>
->>>> Oh, and to answer that part of the question:
->>>>
->>>> We no longer have to iterate over each pfn of a memory block to be removed.
->>>
->>> Is it possible that we are overzealous when unregistering syfs files and
->>> we should simply skip the pfn walk even without this change?
->>>
->>
->> I assume you mean something like v1 without the warning/"NUMA_NO_NODE -1"?
->>
->> See what I have right now below.
+On Fri, Jul 19, 2019 at 05:54:45PM +0800, Wen He wrote:
+> Configure the display Quality of service (QoS) levels priority if the
+> optional property node "arm,malidp-aqros-value" is defined in DTS file.
 > 
-> Yes. I didn'g get to look closely but you caught the idea. Thanks!
+> QoS signaling using AQROS and AWQOS AXI interface signals, the AQROS is
+> driven from the "RQOS" register, so needed to program the RQOS register
+> to avoid the 4k resolution flicker issue on the LS1028A platform.
 > 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+> change in v2:
+>         - modify some content based on feedback from maintainers
+> 
+>  drivers/gpu/drm/arm/malidp_drv.c  |  6 ++++++
+>  drivers/gpu/drm/arm/malidp_hw.c   | 13 +++++++++++++
+>  drivers/gpu/drm/arm/malidp_hw.h   |  3 +++
+>  drivers/gpu/drm/arm/malidp_regs.h | 10 ++++++++++
+>  4 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
+> index f25ec4382277..61c49a0668a7 100644
+> --- a/drivers/gpu/drm/arm/malidp_drv.c
+> +++ b/drivers/gpu/drm/arm/malidp_drv.c
+> @@ -818,6 +818,12 @@ static int malidp_bind(struct device *dev)
+>  
+>  	malidp->core_id = version;
+>  
+> +	ret = of_property_read_u32(dev->of_node,
+> +					"arm,malidp-arqos-value",
+> +					&hwdev->arqos_value);
+> +	if (ret)
+> +		hwdev->arqos_value = 0x0;
 
-Will do a quick test and resent later this day, thanks for having a look!
+Is zero the default value that you want? I thought it was 0x00010001.
+
+> +
+>  	/* set the number of lines used for output of RGB data */
+>  	ret = of_property_read_u8_array(dev->of_node,
+>  					"arm,malidp-output-port-lines",
+> diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
+> index 50af399d7f6f..323683b1e9f7 100644
+> --- a/drivers/gpu/drm/arm/malidp_hw.c
+> +++ b/drivers/gpu/drm/arm/malidp_hw.c
+> @@ -374,6 +374,19 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
+>  		malidp_hw_setbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
+>  	else
+>  		malidp_hw_clearbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
+> +
+> +	/*
+> +	 * Program the RQoS register to avoid 4k resolution flicker
+> +	 * on the LS1028A.
+> +	 */
+> +	if (hwdev->arqos_value) {
+> +		val = hwdev->arqos_value;
+> +
+> +		if (mode->pixelclock == 594000000)
+
+If I remember correctly, you declare the pixelclocks in the device tree, so I
+wonder if this is needed here. We should just set what value was in the DT
+regardless of the pixelclock, and then you manipulate the DT to choose one of
+your fixed resolutions and also set the QoS value.
+
+Best regards,
+Liviu
+
+> +			malidp_hw_setbits(hwdev, val, MALIDP500_RQOS_QUALITY);
+> +		else
+> +			malidp_hw_clearbits(hwdev, val, MALIDP500_RQOS_QUALITY);
+> +	}
+>  }
+>  
+>  int malidp_format_get_bpp(u32 fmt)
+> diff --git a/drivers/gpu/drm/arm/malidp_hw.h b/drivers/gpu/drm/arm/malidp_hw.h
+> index 968a65eed371..e4c36bc90bda 100644
+> --- a/drivers/gpu/drm/arm/malidp_hw.h
+> +++ b/drivers/gpu/drm/arm/malidp_hw.h
+> @@ -251,6 +251,9 @@ struct malidp_hw_device {
+>  
+>  	/* size of memory used for rotating layers, up to two banks available */
+>  	u32 rotation_memory[2];
+> +
+> +	/* priority level of RQOS register used for driven the ARQOS signal */
+> +	u32 arqos_value;
+>  };
+>  
+>  static inline u32 malidp_hw_read(struct malidp_hw_device *hwdev, u32 reg)
+> diff --git a/drivers/gpu/drm/arm/malidp_regs.h b/drivers/gpu/drm/arm/malidp_regs.h
+> index 993031542fa1..514c50dcb74d 100644
+> --- a/drivers/gpu/drm/arm/malidp_regs.h
+> +++ b/drivers/gpu/drm/arm/malidp_regs.h
+> @@ -210,6 +210,16 @@
+>  #define MALIDP500_CONFIG_VALID		0x00f00
+>  #define MALIDP500_CONFIG_ID		0x00fd4
+>  
+> +/*
+> + * The quality of service (QoS) register on the DP500. RQOS register values
+> + * are driven by the ARQOS signal, using AXI transacations, dependent on the
+> + * FIFO input level.
+> + * The RQOS register can also set QoS levels for:
+> + *    - RED_ARQOS   @ A 4-bit signal value for close to underflow conditions
+> + *    - GREEN_ARQOS @ A 4-bit signal value for normal conditions
+> + */
+> +#define MALIDP500_RQOS_QUALITY          0x00500
+> +
+>  /* register offsets and bits specific to DP550/DP650 */
+>  #define MALIDP550_ADDR_SPACE_SIZE	0x10000
+>  #define MALIDP550_DE_CONTROL		0x00010
+> -- 
+> 2.17.1
+> 
 
 -- 
-
-Thanks,
-
-David / dhildenb
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
