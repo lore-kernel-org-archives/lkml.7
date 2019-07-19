@@ -2,79 +2,111 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA236C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F1AC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1CA2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563543120;
-	bh=rJNsY6WFBMfUMhkdZP87ZW6Yf+2uj2nXGax5chzQhC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LBuo2h6NMrVQ83B2N1lBxKkmE4hlT8s70mXEpWPOqCVhn4agg0NiInbRL0QpdBE8k
-	 RgR///KrKjiT35uojARG1pP7rOfCehLGSrg42Lu0jbrz6UjuFWpfaOvX/MERKn+RMY
-	 60uacXb7kTc+T7EKGYYDJe1FzqF4r0TcpvfYVtN8=
+	by mail.kernel.org (Postfix) with ESMTP id 58AE92082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lH+C3Ybo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbfGSNb7 (ORCPT
+        id S1728618AbfGSNdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbfGSNbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:31:47 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E594D2184E;
-        Fri, 19 Jul 2019 13:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563543106;
-        bh=rJNsY6WFBMfUMhkdZP87ZW6Yf+2uj2nXGax5chzQhC4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ucoj0coKxe0PGz9qcRNIpLr6jpv6W5s/eNvbRoOGfXNVrwDg+npRcn1U/oMlbuRQc
-         dGeJPKdj9Ul7ojYr0Ran7FlT3CB/al6tOxnpRbWBZV4I9nr/JdVcKXB85jS63Nme4a
-         A3u46lKf7LGDPJXgSAEBFNrLwXwUL25MhuNulIU4=
-Date:   Fri, 19 Jul 2019 09:31:44 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 41/60] PCI: tegra: Enable Relaxed Ordering
- only for Tegra20 & Tegra30
-Message-ID: <20190719133144.GE4240@sasha-vm>
-References: <20190719041109.18262-1-sashal@kernel.org>
- <20190719041109.18262-41-sashal@kernel.org>
- <838a6940-2a37-b91b-d522-8b154f3c71d7@nvidia.com>
+        Fri, 19 Jul 2019 09:33:10 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14506 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbfGSNdJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:33:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d31c69b0000>; Fri, 19 Jul 2019 06:33:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jul 2019 06:33:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 06:33:08 -0700
+Received: from [10.26.11.13] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 13:33:05 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+ <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <6a6bac84-1d29-2740-1636-d3adb26b6bcc@nvidia.com>
+ <BN8PR12MB3266960A104A7CDBB4E59192D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <bc9ab3c5-b1b9-26d4-7b73-01474328eafa@nvidia.com>
+ <BN8PR12MB3266989D15E017A789E14282D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <4db855e4-1d59-d30b-154c-e7a2aa1c9047@nvidia.com>
+ <BN8PR12MB3266FD9CF18691EDEF05A4B8D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <BN8PR12MB32669EDE5784FDBEA90D022FD3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <ad37f1f0-421d-9038-9200-96b137f72b4d@nvidia.com>
+Date:   Fri, 19 Jul 2019 14:33:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <838a6940-2a37-b91b-d522-8b154f3c71d7@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BN8PR12MB32669EDE5784FDBEA90D022FD3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563543195; bh=tuRNal0qoWvjaqkxu4u2m3rwznQIGl+erS3fOMRlguA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lH+C3YboX0/0f8CVaRQHuslY4cM6GY1G+8WwpwlxyDcRsrKyd1o32Mxh/m+biCd88
+         2ooA5gTT2a+XcLmFVvuwQy3hIkTFUWrx/imBetO6NMyppItNvi1Z/nvFtmI5VZVnGE
+         WyPy6p/p+f6+1YKh34vd+ZMyxcvlVOcB9kY5Y1wcUlQLala3S1Lp3jVEAOPXKEErF6
+         8EiqEwYwqG4x5CZpLaCtxBl9WrSzV3iQgGLoBMhW92uSvnRI4snHQIW9s4+q0loko7
+         xIAAf9PJ7IEVksOQLUZr5aLY2ACd90RX+P2Or0bNHFzoBZZU/7yxgWyAqL4MDr1yXL
+         8Cfc39cJB2lGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 09:33:11AM +0100, Jon Hunter wrote:
->Hi Lorenzo,
->
->We have not requested that this is added to stable yet, however, has
->been picked up. Do we wish to let it soak in mainline for a release
->first? If so maybe we can ask Sasha to drop this for now.
 
-Note that there are about two weeks between this mail and the point
-where it actually appears in a stable tree.
+On 19/07/2019 13:28, Jose Abreu wrote:
+> From: Jose Abreu <joabreu@synopsys.com>
+> Date: Jul/19/2019, 11:25:41 (UTC+00:00)
+> 
+>> Thanks. Can you add attached patch and check if WARN is triggered ? 
+> 
+> BTW, also add the attached one in this mail. The WARN will probably 
+> never get triggered without it.
+> 
+> Can you also print "buf->addr" after the WARN_ON ?
 
-AUTOSEL patches follow a much slower pace than ones marked for stable
-exactly for the reason you've mentioned.
+I added this patch, but still no warning.
 
---
-Thanks,
-Sasha
+Cheers
+Jon
+
+-- 
+nvpublic
