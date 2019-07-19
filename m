@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA1C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9953CC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96E221855
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F7D2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfGSA7C (ORCPT
+        id S1726520AbfGSA7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:59:02 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34018 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbfGSA7A (ORCPT
+        Thu, 18 Jul 2019 20:59:05 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46756 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfGSA7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:59:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so13392405pfo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:59:00 -0700 (PDT)
+        Thu, 18 Jul 2019 20:59:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c2so14712168plz.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:59:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jt/4G8v1HdKg7XebStUBBKrInUNhm2/o3YQkoCg6Lcc=;
-        b=OzoqPnzqG2NxDrj7Ja8THkuhHlSwlvffbyhupU0WHYkHt4/b6yvEasSgsBLdiTne7t
-         xLewDpXAFVfXAc4z7o9GRlmrYtzZn+PG+0HdGr63G/BpFw3NwnQOXPflKk+tZh3xk2HX
-         usabHaeMi9KfBtTH0E4jj17EKgYKcIPF/zsC2DFkRaR96+gdYtVn/Dinu0ROCjHNvO7Z
-         3ql1qUQhatl9hChavTioEVbWMRFCWjuySwaM8tWp6HlY2BelYj0BLRC4GVi5bowOIJWi
-         XRCgDl0/xU5qKx0bJLYwphxjw5dD9Eqeev+JSOnJvYH5Bmn79wR2CCzEmxrATgn8ATWa
-         fyog==
-X-Gm-Message-State: APjAAAVQleHDzRl7wlCkB5bugECwO1La2a7tbSQ/Nl7+d6DCp5lS9Yea
-        KxkJzEKIVzBzkNjkvrbmkVI=
-X-Google-Smtp-Source: APXvYqyR2w0w5oyNoPlLSiOKlPKUOINfDM9cLVgAXZKE6DsQa37KFk5wT5ZPI8XawFFqJGIAdfCO+g==
-X-Received: by 2002:a17:90a:3ac2:: with SMTP id b60mr54997640pjc.74.1563497939452;
-        Thu, 18 Jul 2019 17:58:59 -0700 (PDT)
+        bh=vhCXbFBZdBSYAVTLnQXQCobyPbDeP1lcGb6SP8K3wTw=;
+        b=MW4kDk+tejqTt2NvoGLlc25Z+oLsDnV+2KWZ97KFq06iRfk5a21ZZnGdInxe5O2c8z
+         x4otHAJrhLPcNWGWW1+cpg1Mr5Xj+xuuFf41GkqADQgOJwlOBM4oXATi6lJPr1UizN38
+         1lbgqJu+3CZTvvPVq6M+gfnBUJFRnpZ4HCTYdnnPoSzj3Jhh2XcSwrGAxF3CzaY9xKcb
+         N8sg4EBcT5dW1/QMmpB6u/HAaDk4loEvjjnjbnV+FBwcbg4PnMRIQsTkjoHighQEVsCI
+         qyqAUskOx9wgvPPCV6vY2DqvA+XGpL+mIM52B3SO8UIiup2IE/n4UbW+4Vg8Av38UOLI
+         sblQ==
+X-Gm-Message-State: APjAAAVPNZTR11hyzm1aQd2mWCVGsUpI4ZJbUB10KaWxylW8ZR/vEevy
+        M7M2V/+W7bdjlaIv5lY51Ms=
+X-Google-Smtp-Source: APXvYqwrf8krBM7nXmynpUOr9TKiVEiBQmvapeepEP5bDOaGNBv8d4oHjhWTsfuIabIwcjPHG4NxeQ==
+X-Received: by 2002:a17:902:6ac6:: with SMTP id i6mr53757985plt.233.1563497942056;
+        Thu, 18 Jul 2019 17:59:02 -0700 (PDT)
 Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j128sm14025166pfg.28.2019.07.18.17.58.57
+        by smtp.gmail.com with ESMTPSA id j128sm14025166pfg.28.2019.07.18.17.59.00
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 17:58:58 -0700 (PDT)
+        Thu, 18 Jul 2019 17:59:01 -0700 (PDT)
 From:   Nadav Amit <namit@vmware.com>
 To:     Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>
@@ -51,9 +51,9 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
         Rik van Riel <riel@surriel.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH v3 1/9] smp: Run functions concurrently in smp_call_function_many()
-Date:   Thu, 18 Jul 2019 17:58:29 -0700
-Message-Id: <20190719005837.4150-2-namit@vmware.com>
+Subject: [PATCH v3 3/9] x86/mm/tlb: Open-code on_each_cpu_cond_mask() for tlb_is_not_lazy()
+Date:   Thu, 18 Jul 2019 17:58:31 -0700
+Message-Id: <20190719005837.4150-4-namit@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719005837.4150-1-namit@vmware.com>
 References: <20190719005837.4150-1-namit@vmware.com>
@@ -64,33 +64,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, on_each_cpu() and similar functions do not exploit the
-potential of concurrency: the function is first executed remotely and
-only then it is executed locally. Functions such as TLB flush can take
-considerable time, so this provides an opportunity for performance
-optimization.
+Open-code on_each_cpu_cond_mask() in native_flush_tlb_others() to
+optimize the code. Open-coding eliminates the need for the indirect branch
+that is used to call is_lazy(), and in CPUs that are vulnerable to
+Spectre v2, it eliminates the retpoline. In addition, it allows to use a
+preallocated cpumask to compute the CPUs that should be.
 
-To do so, introduce __smp_call_function_many(), which allows the callers
-to provide local and remote functions that should be executed, and run
-them concurrently. Keep smp_call_function_many() semantic as it is today
-for backward compatibility: the called function is not executed in this
-case locally.
+This would later allow us not to adapt on_each_cpu_cond_mask() to
+support local and remote functions.
 
-__smp_call_function_many() does not use the optimized version for a
-single remote target that smp_call_function_single() implements. For
-synchronous function call, smp_call_function_single() keeps a
-call_single_data (which is used for synchronization) on the stack.
-Interestingly, it seems that not using this optimization provides
-greater performance improvements (greater speedup with a single remote
-target than with multiple ones). Presumably, holding data structures
-that are intended for synchronization on the stack can introduce
-overheads due to TLB misses and false-sharing when the stack is used for
-other purposes.
-
-Adding support to run the functions concurrently required to remove a
-micro-optimization in on_each_cpu() that disabled/enabled IRQs instead
-of saving/restoring them. The benefit of running the local and remote
-code concurrently is expected to be greater.
+Note that calling tlb_is_not_lazy() for every CPU that needs to be
+flushed, as done in native_flush_tlb_multi() might look ugly, but it is
+equivalent to what is currently done in on_each_cpu_cond_mask().
+Actually, native_flush_tlb_multi() does it more efficiently since it
+avoids using an indirect branch for the matter.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
@@ -100,256 +87,79 @@ Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Nadav Amit <namit@vmware.com>
 ---
- include/linux/smp.h |  27 ++++++---
- kernel/smp.c        | 133 +++++++++++++++++++++-----------------------
- 2 files changed, 83 insertions(+), 77 deletions(-)
+ arch/x86/mm/tlb.c | 40 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index 6fc856c9eda5..c31c7cde0f77 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -32,11 +32,6 @@ extern unsigned int total_cpus;
- int smp_call_function_single(int cpuid, smp_call_func_t func, void *info,
- 			     int wait);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 233f3d8308db..abbf55fa8b81 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -658,11 +658,13 @@ static void flush_tlb_func_remote(void *info)
+ 	flush_tlb_func_common(f, false, TLB_REMOTE_SHOOTDOWN);
+ }
  
--/*
-- * Call a function on all processors
-- */
--void on_each_cpu(smp_call_func_t func, void *info, int wait);
--
- /*
-  * Call a function on processors specified by mask, which might include
-  * the local one.
-@@ -44,6 +39,15 @@ void on_each_cpu(smp_call_func_t func, void *info, int wait);
- void on_each_cpu_mask(const struct cpumask *mask, smp_call_func_t func,
- 		void *info, bool wait);
- 
-+/*
-+ * Call a function on all processors.  May be used during early boot while
-+ * early_boot_irqs_disabled is set.
-+ */
-+static inline void on_each_cpu(smp_call_func_t func, void *info, int wait)
-+{
-+	on_each_cpu_mask(cpu_online_mask, func, info, wait);
-+}
-+
- /*
-  * Call a function on each processor for which the supplied function
-  * cond_func returns a positive value. This may include the local
-@@ -102,8 +106,17 @@ extern void smp_cpus_done(unsigned int max_cpus);
-  * Call a function on all other processors
-  */
- void smp_call_function(smp_call_func_t func, void *info, int wait);
--void smp_call_function_many(const struct cpumask *mask,
--			    smp_call_func_t func, void *info, bool wait);
-+
-+void __smp_call_function_many(const struct cpumask *mask,
-+			      smp_call_func_t remote_func,
-+			      smp_call_func_t local_func,
-+			      void *info, bool wait);
-+
-+static inline void smp_call_function_many(const struct cpumask *mask,
-+				smp_call_func_t func, void *info, bool wait)
-+{
-+	__smp_call_function_many(mask, func, NULL, info, wait);
-+}
- 
- int smp_call_function_any(const struct cpumask *mask,
- 			  smp_call_func_t func, void *info, int wait);
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 616d4d114847..d5d8dee8e3f3 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -388,9 +388,13 @@ int smp_call_function_any(const struct cpumask *mask,
- EXPORT_SYMBOL_GPL(smp_call_function_any);
- 
- /**
-- * smp_call_function_many(): Run a function on a set of other CPUs.
-+ * __smp_call_function_many(): Run a function on a set of CPUs.
-  * @mask: The set of cpus to run on (only runs on online subset).
-- * @func: The function to run. This must be fast and non-blocking.
-+ * @remote_func: The function to run on remote cores. This must be fast and
-+ *		 non-blocking.
-+ * @local_func: The function that should be run on this CPU. This must be
-+ *		fast and non-blocking. If NULL is provided, no function will
-+ *		be executed on this CPU.
-  * @info: An arbitrary pointer to pass to the function.
-  * @wait: If true, wait (atomically) until function has completed
-  *        on other CPUs.
-@@ -401,11 +405,16 @@ EXPORT_SYMBOL_GPL(smp_call_function_any);
-  * hardware interrupt handler or from a bottom half handler. Preemption
-  * must be disabled when calling this function.
-  */
--void smp_call_function_many(const struct cpumask *mask,
--			    smp_call_func_t func, void *info, bool wait)
-+void __smp_call_function_many(const struct cpumask *mask,
-+			      smp_call_func_t remote_func,
-+			      smp_call_func_t local_func,
-+			      void *info, bool wait)
+-static bool tlb_is_not_lazy(int cpu, void *data)
++static bool tlb_is_not_lazy(int cpu)
  {
-+	int cpu, last_cpu, this_cpu = smp_processor_id();
- 	struct call_function_data *cfd;
--	int cpu, next_cpu, this_cpu = smp_processor_id();
-+	bool run_remote = false;
-+	bool run_local = false;
-+	int nr_cpus = 0;
+ 	return !per_cpu(cpu_tlbstate.is_lazy, cpu);
+ }
  
- 	/*
- 	 * Can deadlock when called with interrupts disabled.
-@@ -413,55 +422,62 @@ void smp_call_function_many(const struct cpumask *mask,
- 	 * send smp call function interrupt to this cpu and as such deadlocks
- 	 * can't happen.
++static DEFINE_PER_CPU(cpumask_t, flush_tlb_mask);
++
+ void native_flush_tlb_others(const struct cpumask *cpumask,
+ 			     const struct flush_tlb_info *info)
+ {
+@@ -706,12 +708,38 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+ 	 * up on the new contents of what used to be page tables, while
+ 	 * doing a speculative memory access.
  	 */
--	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
--		     && !oops_in_progress && !early_boot_irqs_disabled);
-+	if (cpu_online(this_cpu) && !oops_in_progress && !early_boot_irqs_disabled)
-+		lockdep_assert_irqs_enabled();
-+
-+	/* Check if we need local execution. */
-+	if (local_func && cpumask_test_cpu(this_cpu, mask))
-+		run_local = true;
- 
--	/* Try to fastpath.  So, what's a CPU they want? Ignoring this one. */
-+	/* Check if we need remote execution, i.e., any CPU excluding this one. */
- 	cpu = cpumask_first_and(mask, cpu_online_mask);
- 	if (cpu == this_cpu)
- 		cpu = cpumask_next_and(cpu, mask, cpu_online_mask);
-+	if (cpu < nr_cpu_ids)
-+		run_remote = true;
- 
--	/* No online cpus?  We're done. */
--	if (cpu >= nr_cpu_ids)
--		return;
-+	if (run_remote) {
-+		cfd = this_cpu_ptr(&cfd_data);
- 
--	/* Do we have another CPU which isn't us? */
--	next_cpu = cpumask_next_and(cpu, mask, cpu_online_mask);
--	if (next_cpu == this_cpu)
--		next_cpu = cpumask_next_and(next_cpu, mask, cpu_online_mask);
--
--	/* Fastpath: do that cpu by itself. */
--	if (next_cpu >= nr_cpu_ids) {
--		smp_call_function_single(cpu, func, info, wait);
--		return;
--	}
-+		cpumask_and(cfd->cpumask, mask, cpu_online_mask);
-+		__cpumask_clear_cpu(this_cpu, cfd->cpumask);
- 
--	cfd = this_cpu_ptr(&cfd_data);
--
--	cpumask_and(cfd->cpumask, mask, cpu_online_mask);
--	__cpumask_clear_cpu(this_cpu, cfd->cpumask);
-+		cpumask_clear(cfd->cpumask_ipi);
-+		for_each_cpu(cpu, cfd->cpumask) {
-+			call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
-+
-+			nr_cpus++;
-+			last_cpu = cpu;
-+
-+			csd_lock(csd);
-+			if (wait)
-+				csd->flags |= CSD_FLAG_SYNCHRONOUS;
-+			csd->func = remote_func;
-+			csd->info = info;
-+			if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
-+				__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
-+		}
- 
--	/* Some callers race with other cpus changing the passed mask */
--	if (unlikely(!cpumask_weight(cfd->cpumask)))
--		return;
+-	if (info->freed_tables)
++	if (info->freed_tables) {
+ 		smp_call_function_many(cpumask, flush_tlb_func_remote,
+ 			       (void *)info, 1);
+-	else
+-		on_each_cpu_cond_mask(tlb_is_not_lazy, flush_tlb_func_remote,
+-				(void *)info, 1, GFP_ATOMIC, cpumask);
++	} else {
 +		/*
-+		 * Choose the most efficient way to send an IPI. Note that the
-+		 * number of CPUs might be zero due to concurrent changes to the
-+		 * provided mask.
++		 * Although we could have used on_each_cpu_cond_mask(),
++		 * open-coding it has performance advantages, as it eliminates
++		 * the need for indirect calls or retpolines. In addition, it
++		 * allows to use a designated cpumask for evaluating the
++		 * condition, instead of allocating one.
++		 *
++		 * This code works under the assumption that there are no nested
++		 * TLB flushes, an assumption that is already made in
++		 * flush_tlb_mm_range().
++		 *
++		 * cond_cpumask is logically a stack-local variable, but it is
++		 * more efficient to have it off the stack and not to allocate
++		 * it on demand. Preemption is disabled and this code is
++		 * non-reentrant.
 +		 */
-+		if (nr_cpus == 1)
-+			arch_send_call_function_single_ipi(last_cpu);
-+		else if (likely(nr_cpus > 1))
-+			arch_send_call_function_ipi_mask(cfd->cpumask_ipi);
-+	}
- 
--	cpumask_clear(cfd->cpumask_ipi);
--	for_each_cpu(cpu, cfd->cpumask) {
--		call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
-+	if (run_local) {
-+		unsigned long flags;
- 
--		csd_lock(csd);
--		if (wait)
--			csd->flags |= CSD_FLAG_SYNCHRONOUS;
--		csd->func = func;
--		csd->info = info;
--		if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
--			__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
-+		local_irq_save(flags);
-+		local_func(info);
-+		local_irq_restore(flags);
- 	}
- 
--	/* Send a message to all CPUs in the map */
--	arch_send_call_function_ipi_mask(cfd->cpumask_ipi);
--
--	if (wait) {
-+	if (run_remote && wait) {
- 		for_each_cpu(cpu, cfd->cpumask) {
- 			call_single_data_t *csd;
- 
-@@ -470,7 +486,7 @@ void smp_call_function_many(const struct cpumask *mask,
- 		}
- 	}
- }
--EXPORT_SYMBOL(smp_call_function_many);
-+EXPORT_SYMBOL(__smp_call_function_many);
- 
- /**
-  * smp_call_function(): Run a function on all other CPUs.
-@@ -587,24 +603,6 @@ void __init smp_init(void)
- 	smp_cpus_done(setup_max_cpus);
- }
- 
--/*
-- * Call a function on all processors.  May be used during early boot while
-- * early_boot_irqs_disabled is set.  Use local_irq_save/restore() instead
-- * of local_irq_disable/enable().
-- */
--void on_each_cpu(void (*func) (void *info), void *info, int wait)
--{
--	unsigned long flags;
--
--	preempt_disable();
--	smp_call_function(func, info, wait);
--	local_irq_save(flags);
--	func(info);
--	local_irq_restore(flags);
--	preempt_enable();
--}
--EXPORT_SYMBOL(on_each_cpu);
--
- /**
-  * on_each_cpu_mask(): Run a function on processors specified by
-  * cpumask, which may include the local processor.
-@@ -624,16 +622,11 @@ EXPORT_SYMBOL(on_each_cpu);
- void on_each_cpu_mask(const struct cpumask *mask, smp_call_func_t func,
- 			void *info, bool wait)
- {
--	int cpu = get_cpu();
-+	preempt_disable();
- 
--	smp_call_function_many(mask, func, info, wait);
--	if (cpumask_test_cpu(cpu, mask)) {
--		unsigned long flags;
--		local_irq_save(flags);
--		func(info);
--		local_irq_restore(flags);
--	}
--	put_cpu();
-+	__smp_call_function_many(mask, func, func, info, wait);
++		struct cpumask *cond_cpumask = this_cpu_ptr(&flush_tlb_mask);
++		int cpu;
 +
-+	preempt_enable();
++		cpumask_clear(cond_cpumask);
++
++		for_each_cpu(cpu, cpumask) {
++			if (tlb_is_not_lazy(cpu))
++				__cpumask_set_cpu(cpu, cond_cpumask);
++		}
++		smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
++					 (void *)info, 1);
++	}
  }
- EXPORT_SYMBOL(on_each_cpu_mask);
+ 
+ /*
+@@ -865,7 +893,7 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ 	if (cpumask_test_cpu(cpu, &batch->cpumask)) {
+ 		lockdep_assert_irqs_enabled();
+ 		local_irq_disable();
+-		flush_tlb_func_local(&full_flush_tlb_info);
++		flush_tlb_func_local((void *)&full_flush_tlb_info);
+ 		local_irq_enable();
+ 	}
  
 -- 
 2.20.1
