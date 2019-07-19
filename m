@@ -2,177 +2,171 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3747C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A6BC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7723B2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126CC2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qk4HEFCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfGSAZS (ORCPT
+        id S1726222AbfGSA2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:25:18 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35226 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfGSAZR (ORCPT
+        Thu, 18 Jul 2019 20:28:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35749 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfGSA2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:25:17 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so31007605otq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:25:17 -0700 (PDT)
+        Thu, 18 Jul 2019 20:28:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so29119344ljh.2;
+        Thu, 18 Jul 2019 17:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QDCklTU3GEHCghylZNJC+0HTqpPYFCw6dU0X8f2K9Mk=;
+        b=qk4HEFCSK6779kAYyCI8qAOQ4Elk3aUk1KFUrI0gX1D4sEEuoorwzcrsB3kLzvsb7p
+         4Fm07T//ADsOCjt7kNTU5CKqMfKEtwWmoWOvoAkt4/MYav/aD0TAHAGQOV8ewTW2gp3r
+         V33ddRM77tkZB/yGp/Fr6r7eYcNYEM0INSTzIB7uQreCexhdbKvqyu26E6jcVHRB7zl6
+         hIfRRlgUIefPMo4JkOVedU5uY0mc/hbyKWqkSz2myITqbo794jwAsG+3UuOFDEG5kveB
+         tARtzoS7V/bLYhEXRRQRmr7S33UjpUfZtvwbYpE0CITFAmlqiT9I6fTlgbVFJVaRXoOY
+         VquQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3IoGFnjg00mt4dPax7bXZwTDcqISI79mUm9JDBcUrl0=;
-        b=fY7dSR7SRoTvZ+kFzuoILA5Ain53o9Sd2gnBjP6JTXAV4IE+Yw/sFi90/c9GysEHWf
-         j2qrO4J/7dCygJjiJgmuVU/s6+b/ZFEfST3ni2fOccFTxw+vH3WAxQtID9fj8R5PnXfc
-         +OKc+1ooBgiH6sndOb1u3NzeuR8+lf0RYaMF7WuRr+67TeIhL53W//jEnyHL/8I7yA9t
-         HhrEDVaEPlCx6swY1g6GLeWA8+z41HS+NkcsYYdI8IkMh+RwidiEwBBAwjSdjtXPgS4X
-         juspnqtpJ6+H3xCnL8chtoPvd6qoptWk+SttAg7beJsXP9RUsRfHT+mx4qAN+ox+iZBY
-         8Xvg==
-X-Gm-Message-State: APjAAAW17H1fdoUTt2qLoXT1jQ8yVCbUz3/Oe7k1+bZehN3OKHSHWmqQ
-        XEAmpdP/ErMMPGeKS9tIAwI=
-X-Google-Smtp-Source: APXvYqwp74SqZaZ1mzJLSJxZj8+X4BWzpJr1g+SgvGiqQMYYR6kf6/0vRmWhygxkZHndfxsl+jXSLA==
-X-Received: by 2002:a9d:6a0f:: with SMTP id g15mr6463309otn.135.1563495916926;
-        Thu, 18 Jul 2019 17:25:16 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id i1sm9510593oie.45.2019.07.18.17.25.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 17:25:16 -0700 (PDT)
-Subject: Re: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while
- scanning
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190718225132.5865-1-logang@deltatee.com>
- <20190718225132.5865-2-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
-Date:   Thu, 18 Jul 2019 17:25:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QDCklTU3GEHCghylZNJC+0HTqpPYFCw6dU0X8f2K9Mk=;
+        b=E4qpc3Eqs961saw58jxIR0umYs8qGBD/etXdjFlYEU1HOzWJbBMKE86d4zodo81ntU
+         hoClZkoOCHbkXc7sbICUtfSJEFS5mnOq91C0UHIhKZB3YTcad75teaFPnPI6dsEyNlcr
+         uFcVxiGKKq4GOpWZgeJQywhatPTCRVpBQH5aIqEG8izGTEvoOUueMqeuugNb7Z2zxPqu
+         4Gka42lwZV/h3WIK9QEpEZ5yFjNlFqIOilv7JJr9R5QYqI5Hi4wdDCcu1uFnY9rCIgR8
+         2v5aMBsTA3fT59GNVlEQsftcCPx4GwYwRbNALxTuULv3aC2cFZejwavp2/frn8l3uGBi
+         T/KQ==
+X-Gm-Message-State: APjAAAUo0T1kvi3J1Fd3SfTJPy12HrzAzqISitCdQ5gdOiquh6BLlSCQ
+        xA0536Rj3ubEoKvTFDPrj2+PSZcU
+X-Google-Smtp-Source: APXvYqwlhNjZkfuWdVQMmLesLjn8VpCX23VN/zWL1woUHR3hLbJfckTgQyQPQzlst/NFP1T501CK4w==
+X-Received: by 2002:a2e:8155:: with SMTP id t21mr25616607ljg.80.1563496095766;
+        Thu, 18 Jul 2019 17:28:15 -0700 (PDT)
+Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id r24sm6025944ljb.72.2019.07.18.17.28.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 17:28:15 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 03:31:52 +0300
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 21/24] PM / devfreq: tegra30: Synchronize average
+ count on target's update
+Message-ID: <20190719033152.1d4c3003@dimatab>
+In-Reply-To: <f83fb873-9214-9649-9435-9f211c4cba9e@samsung.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223619epcas4p3dea48e3e09983cd2a76af39fbf7bf99b@epcas4p3.samsung.com>
+        <20190707223303.6755-22-digetx@gmail.com>
+        <f83fb873-9214-9649-9435-9f211c4cba9e@samsung.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-In-Reply-To: <20190718225132.5865-2-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+=D0=92 Thu, 18 Jul 2019 19:15:54 +0900
+Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-> With multipath enabled, nvme_scan_work() can read from the
-> device (through nvme_mpath_add_disk()). However, with fabrics,
-> once ctrl->state is set to NVME_CTRL_DELETING, the reads will hang
-> (see nvmf_check_ready()).
-> 
-> After setting the state to deleting, nvme_remove_namespaces() will
-> hang waiting for scan_work to flush and these tasks will hang.
-> 
-> To fix this, ensure we take scan_lock before changing the ctrl-state.
-> Also, ensure the state is checked while the lock is held
-> in nvme_scan_lock_work().
+> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:33, Dmitry Osipenko wrote:
+> > The average count may get out of sync if interrupt was disabled /
+> > avoided for a long time due to upper watermark optimization, hence
+> > it should be re-synced on each target's update to ensure that
+> > watermarks are set up correctly on EMC rate-change notification and
+> > that a correct frequency is selected for device.
+> >=20
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+> >  drivers/devfreq/tegra30-devfreq.c | 30
+> > ++++++++++++++++++++++++++++++ 1 file changed, 30 insertions(+)
+> >=20
+> > diff --git a/drivers/devfreq/tegra30-devfreq.c
+> > b/drivers/devfreq/tegra30-devfreq.c index
+> > 4d582809acb6..8a674fad26be 100644 ---
+> > a/drivers/devfreq/tegra30-devfreq.c +++
+> > b/drivers/devfreq/tegra30-devfreq.c @@ -466,11 +466,41 @@ static
+> > void actmon_isr_device(struct tegra_devfreq *tegra,
+> > dev->boost_freq, cpufreq_get(0)); }
+> > =20
+> > +static void tegra_devfreq_sync_avg_count(struct tegra_devfreq
+> > *tegra,
+> > +					 struct
+> > tegra_devfreq_device *dev) +{
+> > +	u32 avg_count, avg_freq, old_upper, new_upper;
+> > +
+> > +	avg_count =3D device_readl(dev, ACTMON_DEV_AVG_COUNT);
+> > +	avg_freq =3D avg_count / ACTMON_SAMPLING_PERIOD;
+> > +
+> > +	old_upper =3D tegra_actmon_upper_freq(tegra, dev->avg_freq);
+> > +	new_upper =3D tegra_actmon_upper_freq(tegra, avg_freq);
+> > +
+> > +	/* similar to ISR, see comments in actmon_isr_device() */
+> > +	if (old_upper !=3D new_upper) {
+> > +		dev->avg_freq =3D avg_freq;
+> > +		dev->boost_freq =3D 0;
+> > +	}
+> > +}
+> > +
+> >  static unsigned long actmon_update_target(struct tegra_devfreq
+> > *tegra, struct tegra_devfreq_device *dev)
+> >  {
+> >  	unsigned long target_freq;
+> > =20
+> > +	/*
+> > +	 * The avg_count / avg_freq is getting snapshoted on
+> > device's
+> > +	 * interrupt, but there are cases where actual value need
+> > to
+> > +	 * be utilized on target's update, like CPUFreq boosting
+> > and
+> > +	 * overriding the min freq
+> > via /sys/class/devfreq/devfreq0/min_freq
+> > +	 * because we're optimizing the upper watermark based on
+> > the
+> > +	 * actual EMC frequency. This means that interrupt may be
+> > +	 * inactive for a long time and thus making snapshoted
+> > value
+> > +	 * outdated.
+> > +	 */
+> > +	tegra_devfreq_sync_avg_count(tegra, dev); =20
+>=20
+> I think that you don't need to add the separate function to calculate
+> the 'dev->avg_freq'. It is enough with your detailed comment to add
+> this code in this function.
 
-That's a big hammer...
+The separate function is indeed not mandatory here, but I'm finding that
+it usually makes easier to read and follow the code when it is properly
+split up into logical blocks. Don't you agree?
 
-But this is I/O that we cannot have queued until we have a path..
+> > +
+> >  	target_freq =3D min(dev->avg_freq + dev->boost_freq,
+> > KHZ_MAX); target_freq =3D tegra_actmon_account_cpu_freq(tegra, dev,
+> > target_freq);=20
+> >  =20
+>=20
+> And also, is it impossible to squash this patch with patch19/patch20?
+>=20
 
-I would rather have nvme_remove_namespaces() requeue all I/Os for
-namespaces that serve as the current_path and have the make_request
-routine to fail I/O if all controllers are deleting as well.
+It should be possible to squash this patch with #20, but wouldn't
+be better to keep changes in the chronological order? It's also better
+to keep changes separate simply to aid bisection in case of a problem.
 
-Would something like [1] (untested) make sense instead?
-
-
-> +	mutex_lock(&ctrl->scan_lock);
-> +
->   	if (ctrl->state != NVME_CTRL_LIVE)
->   		return;
-
-unlock
-
->   
-> @@ -3547,7 +3554,6 @@ static void nvme_scan_work(struct work_struct *work)
->   	if (nvme_identify_ctrl(ctrl, &id))
->   		return;
-
-unlock
-
-
-[1]:
---
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 76cd3dd8736a..627f5871858d 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3576,6 +3576,11 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
-         struct nvme_ns *ns, *next;
-         LIST_HEAD(ns_list);
-
-+       mutex_lock(&ctrl->scan_lock);
-+       list_for_each_entry(ns, &ctrl->namespaces, list)
-+               nvme_mpath_clear_current_path(ns);
-+       mutex_lock(&ctrl->scan_lock);
-+
-         /* prevent racing with ns scanning */
-         flush_work(&ctrl->scan_work);
-
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index a9a927677970..da1731266788 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -231,6 +231,24 @@ inline struct nvme_ns *nvme_find_path(struct 
-nvme_ns_head *head)
-         return ns;
-  }
-
-+static bool nvme_available_path(struct nvme_ns_head *head)
-+{
-+       struct nvme_ns *ns;
-+
-+       list_for_each_entry_rcu(ns, &head->list, siblings) {
-+               switch (ns->ctrl->state) {
-+               case NVME_CTRL_LIVE:
-+               case NVME_CTRL_RESETTING:
-+               case NVME_CTRL_CONNECTING:
-+                       /* fallthru */
-+                       return true;
-+               default:
-+                       break;
-+               }
-+       }
-+       return false;
-+}
-+
-  static blk_qc_t nvme_ns_head_make_request(struct request_queue *q,
-                 struct bio *bio)
-  {
-@@ -257,14 +275,14 @@ static blk_qc_t nvme_ns_head_make_request(struct 
-request_queue *q,
-                                       disk_devt(ns->head->disk),
-                                       bio->bi_iter.bi_sector);
-                 ret = direct_make_request(bio);
--       } else if (!list_empty_careful(&head->list)) {
--               dev_warn_ratelimited(dev, "no path available - requeuing 
-I/O\n");
-+       } else if (nvme_available_path(head)) {
-+               dev_warn_ratelimited(dev, "no usable path - requeuing 
-I/O\n");
-
-                 spin_lock_irq(&head->requeue_lock);
-                 bio_list_add(&head->requeue_list, bio);
-                 spin_unlock_irq(&head->requeue_lock);
-         } else {
--               dev_warn_ratelimited(dev, "no path - failing I/O\n");
-+               dev_warn_ratelimited(dev, "no available path - failing 
-I/O\n");
-
-                 bio->bi_status = BLK_STS_IOERR;
-                 bio_endio(bio);
---
