@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E9C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1638C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465D021851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861CE21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 03:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508658;
-	bh=yEuq9qmtwlQ6EVFE9yGT/ICC0dbzEFSnl182tenkVHo=;
+	s=default; t=1563508663;
+	bh=JRMsjUM6twyTvjz1WSwYCsB1tXVYUgsBy61Dm3RlWuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UmqSeqPuNbuHhPymY8Csu3/wTTTCOtvVMFmt1QsbfWoJKYVnfLKBoBk8K969yUB7I
-	 JO4OqSlvCAwfCu0ZFQr+xUT/T32wqx50LB3WPEFCkLdHWMA6eBw0mTk3uiaJ5bfwxL
-	 dHB8HsSPiwpxM2fBY7bMHbieIiO42hTlyBezuyzI=
+	b=s/bH5LxbJ+mDjVCPFyEl0edels6VS0epteMgl4Z1aKKy7kwFFZI24M1aOza9o3MrY
+	 fOL2w0NzJsRmgAwTsekXoD74cuEXQ/OddZhxAbzHp/qEJpPK/v15/47ERWVbxww6m7
+	 I7t12RHV+mvcdGPm8W7aWHitHXIz4FqUCnbpznic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfGSD5d (ORCPT
+        id S1727465AbfGSD5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56716 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbfGSD52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:28 -0400
+        id S1727356AbfGSD5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:57:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD60F2082E;
-        Fri, 19 Jul 2019 03:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 940EF2082E;
+        Fri, 19 Jul 2019 03:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508647;
-        bh=yEuq9qmtwlQ6EVFE9yGT/ICC0dbzEFSnl182tenkVHo=;
+        s=default; t=1563508659;
+        bh=JRMsjUM6twyTvjz1WSwYCsB1tXVYUgsBy61Dm3RlWuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQ5HxR2NCzkF2FnFF3WHVEpY/BmK3GTS4oxT1gjVF4bpXBWjxWNf77paiELhgchpz
-         6HNSOGB2Zp941KOD4iLflfWEi7EohtCIWpzDF83XJjxpskRXQIYPYhaL3q5MStUKoZ
-         C8TLTlSvIURW7AejpVItLIMg+B2EVMglNiuh1ilY=
+        b=lmb9RpqEmRDt7QRUQGQoeaJcBWpdWKX+oW8j189PXKY3t36pVMEqh47MbvnbQ1wUJ
+         pk0CL2nY12IroE5exOXkRZ0BmmJUuqd3AISCETihSzsgz3RJDLSLkyLL3ZKVsd6/pP
+         f2wZ2DABZDc3thbUsbTuWBVJthI9l43Fevyk/HJ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 018/171] drm/amd/display: Fill prescale_params->scale for RGB565
-Date:   Thu, 18 Jul 2019 23:54:09 -0400
-Message-Id: <20190719035643.14300-18-sashal@kernel.org>
+Cc:     Sean Paul <seanpaul@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 020/171] drm/msm/a6xx: Avoid freeing gmu resources multiple times
+Date:   Thu, 18 Jul 2019 23:54:11 -0400
+Message-Id: <20190719035643.14300-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -62,43 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit 1352c779cb74d427f4150cbe779a2f7886f70cae ]
+[ Upstream commit 606ec90fc2266284f584a96ebf7f874589f56251 ]
 
-[Why]
-An assertion is thrown when using SURFACE_PIXEL_FORMAT_GRPH_RGB565
-formats on DCE since the prescale_params->scale wasn't being filled.
+The driver checks for gmu->mmio as a sign that the device has been
+initialized, however there are failures in probe below the mmio init.
+If one of those is hit, mmio will be non-null but freed.
 
-Found by a dmesg-fail when running the
-igt@kms_plane@pixel-format-pipe-a-planes test on Baffin.
+In that case, a6xx_gmu_probe will return an error to a6xx_gpu_init which
+will in turn call a6xx_gmu_remove which checks gmu->mmio and tries to free
+resources for a second time. This causes a great boom.
 
-[How]
-Fill in the scale parameter.
+Fix this by adding an initialized member to gmu which is set on
+successful probe and cleared on removal.
 
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Changes in v2:
+- None
+
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190523171653.138678-1-sean@poorly.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 14 +++++++++-----
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h |  1 +
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index 7ac50ab1b762..7d7e93c87c28 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -242,6 +242,9 @@ static void build_prescale_params(struct ipp_prescale_params *prescale_params,
- 	prescale_params->mode = IPP_PRESCALE_MODE_FIXED_UNSIGNED;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 418bb08bbed7..6910d0468e3c 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -74,7 +74,7 @@ bool a6xx_gmu_sptprac_is_on(struct a6xx_gmu *gmu)
+ 	u32 val;
  
- 	switch (plane_state->format) {
-+	case SURFACE_PIXEL_FORMAT_GRPH_RGB565:
-+		prescale_params->scale = 0x2082;
-+		break;
- 	case SURFACE_PIXEL_FORMAT_GRPH_ARGB8888:
- 	case SURFACE_PIXEL_FORMAT_GRPH_ABGR8888:
- 		prescale_params->scale = 0x2020;
+ 	/* This can be called from gpu state code so make sure GMU is valid */
+-	if (IS_ERR_OR_NULL(gmu->mmio))
++	if (!gmu->initialized)
+ 		return false;
+ 
+ 	val = gmu_read(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS);
+@@ -90,7 +90,7 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
+ 	u32 val;
+ 
+ 	/* This can be called from gpu state code so make sure GMU is valid */
+-	if (IS_ERR_OR_NULL(gmu->mmio))
++	if (!gmu->initialized)
+ 		return false;
+ 
+ 	val = gmu_read(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS);
+@@ -697,7 +697,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
+ 	int status, ret;
+ 
+-	if (WARN(!gmu->mmio, "The GMU is not set up yet\n"))
++	if (WARN(!gmu->initialized, "The GMU is not set up yet\n"))
+ 		return 0;
+ 
+ 	gmu->hung = false;
+@@ -767,7 +767,7 @@ bool a6xx_gmu_isidle(struct a6xx_gmu *gmu)
+ {
+ 	u32 reg;
+ 
+-	if (!gmu->mmio)
++	if (!gmu->initialized)
+ 		return true;
+ 
+ 	reg = gmu_read(gmu, REG_A6XX_GPU_GMU_AO_GPU_CX_BUSY_STATUS);
+@@ -1229,7 +1229,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+ {
+ 	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
+ 
+-	if (IS_ERR_OR_NULL(gmu->mmio))
++	if (!gmu->initialized)
+ 		return;
+ 
+ 	a6xx_gmu_stop(a6xx_gpu);
+@@ -1247,6 +1247,8 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+ 	iommu_detach_device(gmu->domain, gmu->dev);
+ 
+ 	iommu_domain_free(gmu->domain);
++
++	gmu->initialized = false;
+ }
+ 
+ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+@@ -1311,6 +1313,8 @@ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	/* Set up the HFI queues */
+ 	a6xx_hfi_init(gmu);
+ 
++	gmu->initialized = true;
++
+ 	return 0;
+ err:
+ 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+index bedd8e6a63aa..39a26dd63674 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+@@ -75,6 +75,7 @@ struct a6xx_gmu {
+ 
+ 	struct a6xx_hfi_queue queues[2];
+ 
++	bool initialized;
+ 	bool hung;
+ };
+ 
 -- 
 2.20.1
 
