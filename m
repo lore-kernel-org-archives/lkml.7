@@ -2,112 +2,79 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF62C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C34C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F72520873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6061720873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGSKSC (ORCPT
+        id S1727679AbfGSKSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:18:02 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53594 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725794AbfGSKSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:18:02 -0400
-X-UUID: 263050394edc4ec59f48a13859d9414e-20190719
-X-UUID: 263050394edc4ec59f48a13859d9414e-20190719
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2101253499; Fri, 19 Jul 2019 18:17:57 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 19 Jul 2019 18:17:56 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 19 Jul 2019 18:17:56 +0800
-Message-ID: <1563531476.17970.2.camel@mtkswgap22>
-Subject: Re: [PATCH 3/3] mt76: mt7615: add cwmin/cwmax initial values
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>
-CC:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Fri, 19 Jul 2019 18:17:56 +0800
-In-Reply-To: <c83e14787bc86f8f8062e0aa44e03ef80c3fd38a.1563518381.git.ryder.lee@mediatek.com>
-References: <50d28c9b0f9e7d6b277d36fc93f55142d7535259.1563518381.git.ryder.lee@mediatek.com>
-         <c83e14787bc86f8f8062e0aa44e03ef80c3fd38a.1563518381.git.ryder.lee@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 06:18:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54409 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727477AbfGSKSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:18:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qn5722thz9s3Z;
+        Fri, 19 Jul 2019 20:18:03 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christian Brauner <christian@brauner.io>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
+In-Reply-To: <20190716130631.tohj4ub54md25dys@brauner.io>
+References: <20190714192205.27190-1-christian@brauner.io> <20190714192205.27190-2-christian@brauner.io> <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com> <20190716130631.tohj4ub54md25dys@brauner.io>
+Date:   Fri, 19 Jul 2019 20:18:02 +1000
+Message-ID: <874l3i8h0l.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 14:55 +0800, Ryder Lee wrote:
-> Add initial values in mt7615_mcu_set_wmm() to cleanup setup flow.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 17 ++++++-----------
->  1 file changed, 6 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> index 5fd162be3654..154c09428b69 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> @@ -622,10 +622,7 @@ int mt7615_mcu_set_rts_thresh(struct mt7615_dev *dev, u32 val)
->  int mt7615_mcu_set_wmm(struct mt7615_dev *dev, u8 queue,
->  		       const struct ieee80211_tx_queue_params *params)
->  {
-> -#define WMM_AIFS_SET	BIT(0)
-> -#define WMM_CW_MIN_SET	BIT(1)
-> -#define WMM_CW_MAX_SET	BIT(2)
-> -#define WMM_TXOP_SET	BIT(3)
-> +#define WMM_PARAM_SET	GENMASK(3, 0)
->  	struct req_data {
->  		u8 number;
->  		u8 rsv[3];
-> @@ -638,19 +635,17 @@ int mt7615_mcu_set_wmm(struct mt7615_dev *dev, u8 queue,
->  	} __packed req = {
->  		.number = 1,
->  		.queue = queue,
-> -		.valid = WMM_AIFS_SET | WMM_TXOP_SET,
-> +		.valid = WMM_PARAM_SET,
->  		.aifs = params->aifs,
-> +		.cw_min = BIT(5) - 1,
-> +		.cw_max = cpu_to_le16(BIT(10) - 1),
->  		.txop = cpu_to_le16(params->txop),
->  	};
->  
-> -	if (params->cw_min) {
-> -		req.valid |= WMM_CW_MIN_SET;
-> +	if (params->cw_min)
->  		req.cw_min = params->cw_min;
-> -	}
-> -	if (params->cw_max) {
-> -		req.valid |= WMM_CW_MAX_SET;
-> +	if (params->cw_max)
->  		req.cw_max = cpu_to_le16(params->cw_max);
-> -	}
+Christian Brauner <christian@brauner.io> writes:
+> On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
+>> I think Vasily already has a clone3 patch for s390x with 435. 
+>
+> A quick follow-up on this. Helge and Michael have asked whether there
+> are any tests for clone3. Yes, there will be and I try to have them
+> ready by the end of the this or next week for review. In the meantime I
+> hope the following minimalistic test program that just verifies very
+> very basic functionality (It's not pretty.) will help you test:
 
-I should use fls() here and will send a v2
+Hi Christian,
 
->  	return __mt76_mcu_send_msg(&dev->mt76, MCU_EXT_CMD_EDCA_UPDATE,
->  				   &req, sizeof(req), true);
+Thanks for the test.
+
+This actually oopses on powerpc, it hits the BUG_ON in CHECK_FULL_REGS
+in process.c around line 1633:
+
+	} else {
+		/* user thread */
+		struct pt_regs *regs = current_pt_regs();
+		CHECK_FULL_REGS(regs);
+		*childregs = *regs;
+		if (usp)
 
 
+So I'll have to dig into how we fix that before we wire up clone3.
+
+Turns out testing is good! :)
+
+cheers
