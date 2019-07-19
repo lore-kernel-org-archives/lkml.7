@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAEDC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C331DC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56A0218BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93021218BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509066;
-	bh=R8D/y3Ypq3CcEyxbVqjygTUGau6ejYuCCCQO8aVhrw4=;
+	s=default; t=1563509069;
+	bh=MmcrwRpUgGYKVtIgUaPjrLet5cghNhkgQ0QjijFbGNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ywh9KB/4S3H9i8URPPlwZ9CmqNn1KRD+TwRp6+yzytyBje9mi18dzaeuzwhTsgSSj
-	 u5oazrAfZD2ub2aGaXKY8WgDdp+1VROE3iVDouOFQN8Zb9QrsmBMI6L5tGhxkYkZ6n
-	 jdQiShTmhsre907gCyrOuB3bDPSVqq4IpXISxw70=
+	b=d9C0DjZ+qSW8R+vZaUW0Lt/m7viaiadepq/fTzvJV8BtaKL4yIE2cYvH1ffpZ0nL8
+	 Tl8NlLXt8s/1mWW8NtvONiVTK5aWBls4Dwmu0JrJYBWzd4tpretXgc7c94TWXJk0G8
+	 9VjL1OU6mhHDL9txhw1HjNyHhvYyhN6d4m3sxbP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfGSEE0 (ORCPT
+        id S1731059AbfGSEE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36628 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730978AbfGSEEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:04:22 -0400
+        id S1727437AbfGSEEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:04:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30AEB218C3;
-        Fri, 19 Jul 2019 04:04:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6685421873;
+        Fri, 19 Jul 2019 04:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509062;
-        bh=R8D/y3Ypq3CcEyxbVqjygTUGau6ejYuCCCQO8aVhrw4=;
+        s=default; t=1563509063;
+        bh=MmcrwRpUgGYKVtIgUaPjrLet5cghNhkgQ0QjijFbGNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=im0YdGqkdtOns02jBW/aiDbI/BRbtnzRINfJd/Rdi3gDPPVc/xZUqAu6E9/qmUdgg
-         C4rAq7S5qy//9HyrfOmGOfJ/WLFwpaQdktMUK5gIohf04QKAv8zMKqQb008/1CkAE/
-         4DhHXU/joQQhDmJQx3iUy8VY0mgvgRwy+RDMSsvY=
+        b=WxaGwTinTYwSbQrKC6rEoVVY7kgL163lINNFp9Q70WgsF+qxKOJLbPA0T+PrBXtOc
+         3fVF+R8s929ZwlVWjaJ6dJ4S88mvhme3ha+TWjvUhx12SExX8m56yy4RXOahchHR/c
+         Xuh56h/qFhC2rebH+WGfWVQSq7Hh7ywc7iBNH1mI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 046/141] platform/x86: asus-wmi: Increase input buffer size of WMI methods
-Date:   Fri, 19 Jul 2019 00:01:11 -0400
-Message-Id: <20190719040246.15945-46-sashal@kernel.org>
+Cc:     Young Xiao <92siuyang@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 047/141] iio:core: Fix bug in length of event info_mask and catch unhandled bits set in masks.
+Date:   Fri, 19 Jul 2019 00:01:12 -0400
+Message-Id: <20190719040246.15945-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -62,89 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit 98e865a522983f2afde075648ec9d15ea4bb9194 ]
+[ Upstream commit 936d3e536dcf88ce80d27bdb637009b13dba6d8c ]
 
-The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
-Gaming series laptops producing multiple ACPI errors in the kernel log.
+The incorrect limit for the for_each_set_bit loop was noticed whilst fixing
+this other case.  Note that as we only have 3 possible entries a the moment
+and the value was set to 4, the bug would not have any effect currently.
+It will bite fairly soon though, so best fix it now.
 
-The input buffer for WMI method invocation size is 2 dwords, whereas
-3 are expected by this model.
+See commit ef4b4856593f ("iio:core: Fix bug in length of event info_mask and
+catch unhandled bits set in masks.") for details.
 
-FX505GM:
-..
-Method (WMNB, 3, Serialized)
-{
-    P8XH (Zero, 0x11)
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    ...
-
-Compare with older K54C:
-...
-Method (WMNB, 3, NotSerialized)
-{
-    CreateDWordField (Arg2, 0x00, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    ...
-
-Increase buffer size to 3 dwords. No negative consequences of this change
-are expected, as the input buffer size is not verified. The original
-function is replaced by a wrapper for a new method passing value 0 for the
-last parameter. The new function will be used to control RGB keyboard
-backlight.
-
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/iio/industrialio-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a66e99500c12..79c9a3f98dce 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -95,6 +95,7 @@ static bool ashs_present(void)
- struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
-+	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
- } __packed;
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 9c4d92115504..00b6afde0f25 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1117,6 +1117,8 @@ static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
+ 	char *avail_postfix;
  
- /*
-@@ -219,11 +220,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
- 	asus->inputdev = NULL;
- }
- 
--int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+static int asus_wmi_evaluate_method3(u32 method_id,
-+		u32 arg0, u32 arg1, u32 arg2, u32 *retval)
- {
- 	struct bios_args args = {
- 		.arg0 = arg0,
- 		.arg1 = arg1,
-+		.arg2 = arg2,
- 	};
- 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -255,6 +258,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
- 
- 	return 0;
- }
-+
-+int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+{
-+	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
-+}
- EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
- 
- static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+ 	for_each_set_bit(i, infomask, sizeof(*infomask) * 8) {
++		if (i >= ARRAY_SIZE(iio_chan_info_postfix))
++			return -EINVAL;
+ 		avail_postfix = kasprintf(GFP_KERNEL,
+ 					  "%s_available",
+ 					  iio_chan_info_postfix[i]);
 -- 
 2.20.1
 
