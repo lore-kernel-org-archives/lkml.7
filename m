@@ -2,169 +2,110 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0164AC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF814C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65E92184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00742184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbfGSQS4 (ORCPT
+        id S1730466AbfGSQVa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:18:56 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:56178 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727910AbfGSQS4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:18:56 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TXIf.k8_1563553123;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TXIf.k8_1563553123)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 20 Jul 2019 00:18:45 +0800
-Subject: Re: [v3 PATCH 1/2] mm: mempolicy: make the behavior consistent when
- MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
-To:     Vlastimil Babka <vbabka@suse.cz>, mhocko@kernel.org,
-        mgorman@techsingularity.net, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-References: <1563470274-52126-1-git-send-email-yang.shi@linux.alibaba.com>
- <1563470274-52126-2-git-send-email-yang.shi@linux.alibaba.com>
- <c1e2b48a-972f-3944-bc17-598cb81a6658@suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <081eeac9-f7a3-a2e6-480a-9f527f378591@linux.alibaba.com>
-Date:   Fri, 19 Jul 2019 09:18:41 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <c1e2b48a-972f-3944-bc17-598cb81a6658@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 12:21:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28121 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728051AbfGSQVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:21:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 09:21:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
+   d="scan'208";a="320004439"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga004.jf.intel.com with ESMTP; 19 Jul 2019 09:21:29 -0700
+Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 19 Jul 2019 09:21:28 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.232]) by
+ ORSMSX123.amr.corp.intel.com ([169.254.1.245]) with mapi id 14.03.0439.000;
+ Fri, 19 Jul 2019 09:21:28 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+Subject: RE: [Intel-wired-lan] [PATCH] i40e: reduce stack usage in
+ i40e_set_fc
+Thread-Topic: [Intel-wired-lan] [PATCH] i40e: reduce stack usage in
+ i40e_set_fc
+Thread-Index: AQHVOwnVVFCI4V0hdECZPxc3EWAaEKbSJavw
+Date:   Fri, 19 Jul 2019 16:21:27 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D40C2EB@ORSMSX104.amr.corp.intel.com>
+References: <20190715123518.3510791-1-arnd@arndb.de>
+In-Reply-To: <20190715123518.3510791-1-arnd@arndb.de>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTljMGYyYzItYTEwYy00MzY5LThiNTctNTk5NTEwOTczOWVmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoia1FMaEpKT3NXbVhlZlY1Q2Z3dFhaaEp4TVV3WnZHNmpcL0hvU255eU9RcXZsQWpwZ2hMS0JDUWp6U2V0WXB1VVMifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of Arnd Bergmann
+> Sent: Monday, July 15, 2019 5:35 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
+> <davem@davemloft.net>
+> Cc: Catherine Sullivan <catherine.sullivan@intel.com>; Dziggel, Douglas A
+> <douglas.a.dziggel@intel.com>; Arnd Bergmann <arnd@arndb.de>;
+> netdev@vger.kernel.org; Patryk Ma³ek <patryk.malek@intel.com>; linux-
+> kernel@vger.kernel.org; Azarewicz, Piotr <piotr.azarewicz@intel.com>;
+> Loktionov, Aleksandr <aleksandr.loktionov@intel.com>; clang-built-
+> linux@googlegroups.com; intel-wired-lan@lists.osuosl.org; Marczak, Piotr
+> <piotr.marczak@intel.com>
+> Subject: [Intel-wired-lan] [PATCH] i40e: reduce stack usage in i40e_set_fc
+> 
+> The functions i40e_aq_get_phy_abilities_resp() and i40e_set_fc() both have
+> giant structure on the stack, which makes each one use stack frames larger
+> than 500 bytes.
+> 
+> As clang decides one function into the other, we get a warning for exceeding
+> the frame size limit on 32-bit architectures:
+> 
+> drivers/net/ethernet/intel/i40e/i40e_common.c:1654:23: error: stack frame
+> size of 1116 bytes in function 'i40e_set_fc' [-Werror,-Wframe-larger-than=]
+> 
+> When building with gcc, the inlining does not happen, but i40e_set_fc() calls
+> i40e_aq_get_phy_abilities_resp() anyway, so they add up on the kernel
+> stack just as much.
+> 
+> The parts that actually use large stacks don't overlap, so make sure each one
+> is a separate function, and mark them as noinline_for_stack to prevent the
+> compilers from combining them again.
+> 
+> Fixes: 0a862b43acc6 ("i40e/i40evf: Add module_types and
+> update_link_info")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_common.c | 91 +++++++++++--------
+>  1 file changed, 51 insertions(+), 40 deletions(-)
+
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
 
-On 7/19/19 5:48 AM, Vlastimil Babka wrote:
-> On 7/18/19 7:17 PM, Yang Shi wrote:
->> When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
->> try best to migrate misplaced pages, if some of the pages could not be
->> migrated, then return -EIO.
->>
->> There are three different sub-cases:
->> 1. vma is not migratable
->> 2. vma is migratable, but there are unmovable pages
->> 3. vma is migratable, pages are movable, but migrate_pages() fails
->>
->> If #1 happens, kernel would just abort immediately, then return -EIO,
->> after the commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 ("mm:
->> mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified").
->>
->> If #3 happens, kernel would set policy and migrate pages with best-effort,
->> but won't rollback the migrated pages and reset the policy back.
->>
->> Before that commit, they behaves in the same way.  It'd better to keep
->> their behavior consistent.  But, rolling back the migrated pages and
->> resetting the policy back sounds not feasible, so just make #1 behave as
->> same as #3.
->>
->> Userspace will know that not everything was successfully migrated (via
->> -EIO), and can take whatever steps it deems necessary - attempt rollback,
->> determine which exact page(s) are violating the policy, etc.
->>
->> Make queue_pages_range() return 1 to indicate there are unmovable pages
->> or vma is not migratable.
->>
->> The #2 is not handled correctly in the current kernel, the following
->> patch will fix it.
->>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->
-> Some nits below (I guess Andrew can incorporate them, no need to resend)
->
-> ...
->
->> @@ -488,15 +496,15 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->>   	struct queue_pages *qp = walk->private;
->>   	unsigned long flags = qp->flags;
->>   	int ret;
->> +	bool has_unmovable = false;
->>   	pte_t *pte;
->>   	spinlock_t *ptl;
->>   
->>   	ptl = pmd_trans_huge_lock(pmd, vma);
->>   	if (ptl) {
->>   		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
->> -		if (ret > 0)
->> -			return 0;
->> -		else if (ret < 0)
->> +		/* THP was split, fall through to pte walk */
->> +		if (ret != 2)
->>   			return ret;
-> The comment should better go here after the if, as that's where fall through
-> happens.
->
->>   	}
->>   
->> @@ -519,14 +527,21 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->>   		if (!queue_pages_required(page, qp))
->>   			continue;
->>   		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
->> -			if (!vma_migratable(vma))
->> +			/* MPOL_MF_STRICT must be specified if we get here */
->> +			if (!vma_migratable(vma)) {
->> +				has_unmovable |= true;
-> '|=' is weird, just use '='
->
->>   				break;
->> +			}
->>   			migrate_page_add(page, qp->pagelist, flags);
->>   		} else
->>   			break;
->>   	}
->>   	pte_unmap_unlock(pte - 1, ptl);
->>   	cond_resched();
->> +
->> +	if (has_unmovable)
->> +		return 1;
->> +
->>   	return addr != end ? -EIO : 0;
->>   }
->>   
-> ...
->> @@ -1259,11 +1286,12 @@ static long do_mbind(unsigned long start, unsigned long len,
->>   				putback_movable_pages(&pagelist);
->>   		}
->>   
->> -		if (nr_failed && (flags & MPOL_MF_STRICT))
->> +		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
->>   			err = -EIO;
->>   	} else
->>   		putback_movable_pages(&pagelist);
->>   
->> +up_out:
->>   	up_write(&mm->mmap_sem);
->>    mpol_out:
-> The new label made the wrong identation of this one stand out, so I'd just fix
-> it up while here.
-
-Thanks, will fix all of these. I will resend this patch along with patch 
-2/2 which has to be resent anyway.
-
-Yang
-
-> Thanks!
->
->>   	mpol_put(new);
->>
 
