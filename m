@@ -2,308 +2,148 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48282C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A220C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1500420693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084892082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfGSHhC (ORCPT
+        id S1726893AbfGSHjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:37:02 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52418 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726036AbfGSHhA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:37:00 -0400
-X-UUID: 7273c3cb0d474fd1aa6b0e4a94ef9eaf-20190719
-X-UUID: 7273c3cb0d474fd1aa6b0e4a94ef9eaf-20190719
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 636699458; Fri, 19 Jul 2019 15:36:51 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 19 Jul 2019 15:36:50 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 19 Jul 2019 15:36:50 +0800
-Message-ID: <1563521810.8881.3.camel@mtkswgap22>
-Subject: Re: [PATCH v3] checkpatch: add several Kconfig default value tests
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Andy Whitcroft <apw@canonical.com>
-CC:     Joe Perches <joe@perches.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
-Date:   Fri, 19 Jul 2019 15:36:50 +0800
-In-Reply-To: <20190705031626.13859-1-miles.chen@mediatek.com>
-References: <20190705031626.13859-1-miles.chen@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 03:39:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2290 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726271AbfGSHjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:39:15 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A2A08BFD0208CAD6C96A;
+        Fri, 19 Jul 2019 15:39:13 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 19 Jul 2019 15:39:05 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
+Date:   Fri, 19 Jul 2019 15:39:03 +0800
+Message-ID: <20190719073903.9138-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-05 at 11:16 +0800, Miles Chen wrote:
-> This change adds 3 Kconfig default value tests.
+Pinning a file is heavy, because skipping pinned files make GC
+running with heavy load or no effect.
 
-Hi Joe,
+So that this patch propose to separate nocow and pinfile semantics:
+- NOCoW flag can only be set on regular file.
+- NOCoW file will only trigger IPU at common writeback/flush.
+- NOCow file will do OPU during GC.
 
-I was wondering if this patch looks good to you?
+For the demand of 1) avoid fragment of file's physical block and
+2) userspace don't care about file's specific physical address,
+tagging file as NOCoW will be cheaper than pinned one.
 
-Miles
-> 
-> 1. discourage default n cases:
-> e.g.,
-> default n
-> 
-> 2. discourage default "[ynm]" cases:
-> e.g.,
-> arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
-> arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
-> arch/powerpc/Kconfig:   default "n"
-> drivers/auxdisplay/Kconfig:     default "n"
-> drivers/crypto/Kconfig: default "m"
-> drivers/rapidio/devices/Kconfig:        default "n"
-> 
-> 3. discourage default EXPERT or default !EXPERT cases:
-> e.g.,
-> drivers/hid/Kconfig:    default !EXPERT
-> 
-> tested cases:
-> default m
-> default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
-> default y if ALPHA_QEMU
-> default n if PPC_POWERNV
-> default n
-> default EXPERT
-> default !EXPERT
-> default "m"
-> default "n"
-> default "y" if EXPERT
-> default "y" if PPC_POWERNV
-> 
-> test result:
-> WARNING: 'default n' is the default value, no need to write it explicitly
-> +       default n
-> 
-> WARNING: Avoid using default EXPERT
-> +       default EXPERT
-> 
-> WARNING: Avoid using default EXPERT
-> +       default !EXPERT
-> 
-> WARNING: Use 'default m' not 'default "m"'
-> +       default "m"
-> 
-> WARNING: Use 'default n' not 'default "n"'
-> +       default "n"
-> 
-> WARNING: Use 'default y' not 'default "y"'
-> +       default "y" if EXPERT
-> 
-> WARNING: Use 'default y' not 'default "y"'
-> +       default "y" if PPC_POWERNV
-> 
-> test --fix capability:
-> default n => delete line
-> default "m" => default m
-> default "n" => default n
-> default "y" if EXPERT => default y if EXPERT
-> default "y" if PPC_POWERNV => default y if PPC_POWERNV
-> default !EXPERT => no change
-> default EXPERT => no change
-> 
-> Change since v1:
-> discourage default n$
-> discourage default "[ynm]"
-> discourage default \!?EXPERT
-> 
-> Change since v2:
-> (Joe has provided the whole patch and I just post it)
-> test Kconfig in a single block
-> print precise message such as 'default "m"', not 'default "[ynm]"'
-> provide --fix capability
-> 
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> ---
->  scripts/checkpatch.pl | 139 ++++++++++++++++++++++++++----------------
->  1 file changed, 85 insertions(+), 54 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 342c7c781ba5..94799f23339c 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2932,60 +2932,98 @@ sub process {
->  				      "Do not include the paragraph about writing to the Free Software Foundation's mailing address from the sample GPL notice. The FSF has changed addresses in the past, and may do so again. Linux already includes a copy of the GPL.\n" . $herevet)
->  		}
->  
-> -# check for Kconfig help text having a real description
-> -# Only applies when adding the entry originally, after that we do not have
-> -# sufficient context to determine whether it is indeed long enough.
-> -		if ($realfile =~ /Kconfig/ &&
-> -		    # 'choice' is usually the last thing on the line (though
-> -		    # Kconfig supports named choices), so use a word boundary
-> -		    # (\b) rather than a whitespace character (\s)
-> -		    $line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
-> -			my $length = 0;
-> -			my $cnt = $realcnt;
-> -			my $ln = $linenr + 1;
-> -			my $f;
-> -			my $is_start = 0;
-> -			my $is_end = 0;
-> -			for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
-> -				$f = $lines[$ln - 1];
-> -				$cnt-- if ($lines[$ln - 1] !~ /^-/);
-> -				$is_end = $lines[$ln - 1] =~ /^\+/;
-> -
-> -				next if ($f =~ /^-/);
-> -				last if (!$file && $f =~ /^\@\@/);
-> -
-> -				if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
-> -					$is_start = 1;
-> -				} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
-> -					if ($lines[$ln - 1] =~ "---help---") {
-> -						WARN("CONFIG_DESCRIPTION",
-> -						     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
-> +# Kconfig tests
-> +		if ($realfile =~ /Kconfig/) {
-> +			# check for Kconfig help text having a real description
-> +			# Only applies when adding the entry originally, after
-> +			# that we do not have sufficient context to determine
-> +			# whether it is indeed long enough.
-> +			# 'choice' is usually the last thing on the line (though
-> +			# Kconfig supports named choices), so use a word
-> +			# boundary (\b) rather than a whitespace character (\s)
-> +			if ($line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
-> +				my $length = 0;
-> +				my $cnt = $realcnt;
-> +				my $ln = $linenr + 1;
-> +				my $f;
-> +				my $is_start = 0;
-> +				my $is_end = 0;
-> +				for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
-> +					$f = $lines[$ln - 1];
-> +					$cnt-- if ($lines[$ln - 1] !~ /^-/);
-> +					$is_end = $lines[$ln - 1] =~ /^\+/;
-> +
-> +					next if ($f =~ /^-/);
-> +					last if (!$file && $f =~ /^\@\@/);
-> +
-> +					if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
-> +						$is_start = 1;
-> +					} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
-> +						if ($lines[$ln - 1] =~ "---help---") {
-> +							WARN("CONFIG_DESCRIPTION",
-> +							     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
-> +						}
-> +						$length = -1;
-> +					}
-> +
-> +					$f =~ s/^.//;
-> +					$f =~ s/#.*//;
-> +					$f =~ s/^\s+//;
-> +					next if ($f =~ /^$/);
-> +
-> +					# This only checks context lines in the patch
-> +					# and so hopefully shouldn't trigger false
-> +					# positives, even though some of these are
-> +					# common words in help texts
-> +					if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
-> +							   if|endif|menu|endmenu|source)\b/x) {
-> +						$is_end = 1;
-> +						last;
->  					}
-> -					$length = -1;
-> +					$length++;
-> +				}
-> +				if ($is_start && $is_end && $length < $min_conf_desc_length) {
-> +					WARN("CONFIG_DESCRIPTION",
-> +					     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
->  				}
-> +				#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
-> +			}
->  
-> -				$f =~ s/^.//;
-> -				$f =~ s/#.*//;
-> -				$f =~ s/^\s+//;
-> -				next if ($f =~ /^$/);
-> -
-> -				# This only checks context lines in the patch
-> -				# and so hopefully shouldn't trigger false
-> -				# positives, even though some of these are
-> -				# common words in help texts
-> -				if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
-> -						  if|endif|menu|endmenu|source)\b/x) {
-> -					$is_end = 1;
-> -					last;
-> +# discourage the use of boolean for type definition attributes
-> +			if ($line =~ /^\+\s*\bboolean\b/) {
-> +				if (WARN("CONFIG_TYPE_BOOLEAN",
-> +					 "Use of boolean is deprecated, please use bool instead\n" . $herecurr) &&
-> +				    $fix) {
-> +					$fixed[$fixlinenr] =~ s/\bboolean\b/bool/;
-> +				}
-> +			}
-> +
-> +# Kconfig: discourage redundant 'default n'
-> +			if ($line =~ /^\+\s*default\s+n$/) {
-> +				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
-> +					 "'default n' is the default value, no need to write it explicitly\n" . $herecurr) &&
-> +				    $fix) {
-> +					fix_delete_line($fixlinenr, $rawline);
->  				}
-> -				$length++;
->  			}
-> -			if ($is_start && $is_end && $length < $min_conf_desc_length) {
-> -				WARN("CONFIG_DESCRIPTION",
-> -				     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
-> +
-> +# Kconfig: discourage quoted defaults: use default [ynm], not default "[ynm]"
-> +			if ($rawline =~ /^\+\s*default\s+"([ynm])"/) {
-> +				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
-> +					 "Use 'default $1' not 'default \"$1\"'\n" . $herecurr) &&
-> +				    $fix) {
-> +					$fixed[$fixlinenr] =~ s/\b(default\s+)"(.)"/$1$2/;
-> +				}
-> +			}
-> +
-> +# Kconfig: discourage using default EXPERT or !EXPERT
-> +			if ($line =~ /^\+\s*default\s+\!?\s*EXPERT\b/) {
-> +				WARN("CONFIG_DEFAULT_VALUE_STYLE",
-> +				     "Avoid using default EXPERT\n" . $herecurr);
->  			}
-> -			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
->  		}
-> +# End of Kconfig tests
-> +
->  
->  # check for MAINTAINERS entries that don't have the right form
->  		if ($realfile =~ /^MAINTAINERS$/ &&
-> @@ -2998,13 +3036,6 @@ sub process {
->  			}
->  		}
->  
-> -# discourage the use of boolean for type definition attributes of Kconfig options
-> -		if ($realfile =~ /Kconfig/ &&
-> -		    $line =~ /^\+\s*\bboolean\b/) {
-> -			WARN("CONFIG_TYPE_BOOLEAN",
-> -			     "Use of boolean is deprecated, please use bool instead.\n" . $herecurr);
-> -		}
-> -
->  		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
->  		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
->  			my $flag = $1;
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v2:
+- rebase code to fix compile error.
+ fs/f2fs/data.c |  3 ++-
+ fs/f2fs/f2fs.h |  1 +
+ fs/f2fs/file.c | 22 +++++++++++++++++++---
+ 3 files changed, 22 insertions(+), 4 deletions(-)
 
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index a2a28bb269bf..15fb8954c363 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
+ 
+ bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
+ {
+-	if (f2fs_is_pinned_file(inode))
++	if (f2fs_is_pinned_file(inode) ||
++			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
+ 		return true;
+ 
+ 	/* if this is cold file, we should overwrite to avoid fragmentation */
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 596ab3e1dd7b..f6c5a3d2e659 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+ #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
+ #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+ #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
++#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
+ #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+ 
+ /* Flags that should be inherited by new inodes from their parent. */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 7ca545874060..ae0fec54cac6 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1692,6 +1692,7 @@ static const struct {
+ 	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+ 	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+ 	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
++	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
+ 	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+ };
+ 
+@@ -1715,7 +1716,8 @@ static const struct {
+ 		FS_NODUMP_FL |		\
+ 		FS_NOATIME_FL |		\
+ 		FS_DIRSYNC_FL |		\
+-		FS_PROJINHERIT_FL)
++		FS_PROJINHERIT_FL |	\
++		FS_NOCOW_FL)
+ 
+ /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+ static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+@@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+ 		fsflags |= FS_ENCRYPT_FL;
+ 	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+ 		fsflags |= FS_INLINE_DATA_FL;
+-	if (is_inode_flag_set(inode, FI_PIN_FILE))
+-		fsflags |= FS_NOCOW_FL;
+ 
+ 	fsflags &= F2FS_GETTABLE_FS_FL;
+ 
+@@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+ 	if (ret)
+ 		goto out;
+ 
++	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
++		if (!S_ISREG(inode->i_mode)) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		if (f2fs_should_update_outplace(inode, NULL)) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		ret = f2fs_convert_inline_inode(inode);
++		if (ret)
++			goto out;
++	}
++
+ 	ret = f2fs_setflags_common(inode, iflags,
+ 			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+ out:
+-- 
+2.18.0.rc1
 
