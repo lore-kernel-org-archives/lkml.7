@@ -2,116 +2,192 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A872BC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC9C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8742D21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D73E21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfGSH2I (ORCPT
+        id S1726967AbfGSHcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:28:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45822 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfGSH2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:28:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id e20so33496957ioe.12
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 00:28:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ZOKptcEQOKWGsH6kGRMFGwq91Xnv2C9B1wmV09hcJ5c=;
-        b=ZvWG0DiH5x2qMDHpzFtp1701Uua5w0ju1pupsizBDkY/j8gST/WT14Eq348x24wI5s
-         sDjZhlv8+fU0eSOjs2ufxJcx4d0nDp46WKHi5QnHVkfF9UH9BtIgO7Prph8SaSBgJgiK
-         +27Xx2v3SZicdLX0QvSDzHo82jve6VrqkWAeWcLK9B5fIEkKqYHZHsjqHI47QeMTYwEa
-         ekDBJLx+CY2/ly0dt3MKgKXAvX89newRhv7WMICubGbFUoKT8P8rCw/OGI/mE39KbGC0
-         WCptzSCLxMo42QLhXzkdx53zGcpJSEmL/FP3yR8jFiQLIzYxYnhzU+Z72p3HAmUbi5kQ
-         YULw==
-X-Gm-Message-State: APjAAAVHidsBdb5b4TyC9g9C8wKthB/UrBLyfgu/WxBWtRzMPmuZOFr9
-        B4UitiezYt/Ne6ecxjrYY4hCd18ZyV7EBRDujXMGtI9bcb4e
-X-Google-Smtp-Source: APXvYqwq1aitWQEim6lQXQr33Kk51C3EOokbRynQEU6MrgfMrNRrXpweFrRMsyfcmQvBV6/b6gCQupDYuZMxFC/ee0R0bXMv0cj+
+        Fri, 19 Jul 2019 03:32:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58441 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfGSHcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:32:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:32:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="asc'?scan'208";a="343619970"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga005.jf.intel.com with ESMTP; 19 Jul 2019 00:32:11 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     fei.yang@intel.com, john.stultz@linaro.org,
+        andrzej.p@collabora.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated properly
+In-Reply-To: <1563497183-7114-1-git-send-email-fei.yang@intel.com>
+References: <1563497183-7114-1-git-send-email-fei.yang@intel.com>
+Date:   Fri, 19 Jul 2019 10:32:07 +0300
+Message-ID: <87k1cescnc.fsf@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9e48:: with SMTP id i8mr46417366ioi.51.1563521285924;
- Fri, 19 Jul 2019 00:28:05 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 00:28:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d8b010058e03aaf8@google.com>
-Subject: BUG: unable to handle kernel paging request in corrupted (2)
-From:   syzbot <syzbot+08b7a2c58acdfa12c82d@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    49d05fe2 ipv6: rt6_check should return NULL if 'from' is N..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=104b5f70600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87305c3ca9c25c70
-dashboard link: https://syzkaller.appspot.com/bug?extid=08b7a2c58acdfa12c82d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143a78f4600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+08b7a2c58acdfa12c82d@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-BUG: unable to handle page fault for address: 00000000ffffffff
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD 9ad32067 P4D 9ad32067 PUD 0
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9920 Comm: syz-executor.1 Not tainted 5.2.0+ #91
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-BUG: kernel NULL pointer dereference, address: 0000000000000002
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD 9ad32067 P4D 9ad32067 PUD 9ad33067 PMD 0
-Oops: 0010 [#2] PREEMPT SMP KASAN
-CPU: 0 PID: 9920 Comm: syz-executor.1 Not tainted 5.2.0+ #91
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:0x2
-Code: Bad RIP value.
-RSP: 0000:ffff888092932a20 EFLAGS: 00010086
-RAX: 000000000000002d RBX: ffff888092932a40 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815c1016 RDI: ffffed1012526536
-RBP: ffffffff81724d28 R08: 000000000000002d R09: ffffed1015d044fa
-R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffffff81b3e334
-R13: 0000000000000010 R14: 0000000000000000 R15: 1ffff1101252654b
-FS:  000055555572a940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd8 CR3: 000000009c4d1000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Hi,
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+fei.yang@intel.com writes:
+> From: Fei Yang <fei.yang@intel.com>
+>
+> If scatter-gather operation is allowed, a large USB request is split into
+> multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN bit
+> except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
+> Since only the last TRB has IOC set for the whole USB request, the
+> dwc3_gadget_ep_reclaim_trb_sg() gets called only once after the last TRB
+> completes and all the TRBs allocated for this request are supposed to be
+> reclaimed. However that is not what the current code does.
+>
+> dwc3_gadget_ep_reclaim_trb_sg() is trying to reclaim all the TRBs in the
+> following for-loop,
+> 	for_each_sg(sg, s, pending, i) {
+> 		trb =3D &dep->trb_pool[dep->trb_dequeue];
+>
+>                 if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+>                         break;
+>
+>                 req->sg =3D sg_next(s);
+>                 req->num_pending_sgs--;
+>
+>                 ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+>                                 trb, event, status, chain);
+>                 if (ret)
+>                         break;
+>         }
+> but since the interrupt comes only after the last TRB completes, the
+> event->status has DEPEVT_STATUS_IOC bit set, so that the for-loop ends for
+> the first TRB due to dwc3_gadget_ep_reclaim_completed_trb() returns 1.
+> 	if (event->status & DEPEVT_STATUS_IOC)
+> 		return 1;
+>
+> This patch addresses the issue by checking each TRB in function
+> dwc3_gadget_ep_reclaim_trb_sg() and maing sure the chained ones are prope=
+rly
+> reclaimed. dwc3_gadget_ep_reclaim_completed_trb() will return 1 Only for =
+the
+> last TRB.
+>
+> Signed-off-by: Fei Yang <fei.yang@intel.com>
+> Cc: stable <stable@vger.kernel.org>
+> ---
+> v2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_=
+trb_sg()
+>     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
+> v3: Checking DWC3_TRB_CTRL_CHN bit for each TRB instead, and making sure =
+that
+>     dwc3_gadget_ep_reclaim_completed_trb() returns 1 only for the last TR=
+B.
+> ---
+>  drivers/usb/dwc3/gadget.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 173f532..88eed49 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(str=
+uct dwc3_ep *dep,
+>  	if (event->status & DEPEVT_STATUS_SHORT && !chain)
+>  		return 1;
+>=20=20
+> -	if (event->status & DEPEVT_STATUS_IOC)
+> +	if (event->status & DEPEVT_STATUS_IOC && !chain)
+>  		return 1;
+
+This will break the situation when we have more SGs than available
+TRBs. In that case we set IOC before the last so we have time to update
+transfer to append more TRBs.
+
+Please, send me tracepoints
+
+> @@ -2404,11 +2404,12 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct d=
+wc3_ep *dep,
+>  		struct dwc3_request *req, const struct dwc3_event_depevt *event,
+>  		int status)
+>  {
+> -	struct dwc3_trb *trb =3D &dep->trb_pool[dep->trb_dequeue];
+> +	struct dwc3_trb *trb;
+
+should be part of another patch. This is a cleanup that has nothing to
+do with this fix.
+
+>  	struct scatterlist *sg =3D req->sg;
+>  	struct scatterlist *s;
+>  	unsigned int pending =3D req->num_pending_sgs;
+>  	unsigned int i;
+> +	int chain =3D false;
+
+this could be defined inside for_each_sg() loop like this:
+
+	int chain =3D trb->ctrl & DWC3_TRB_CTRL_CHN;
+
+> @@ -2419,9 +2420,13 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dw=
+c3_ep *dep,
+>=20=20
+>  		req->sg =3D sg_next(s);
+>  		req->num_pending_sgs--;
+> +		if (trb->ctrl & DWC3_TRB_CTRL_CHN)
+> +			chain =3D true;
+> +		else
+> +			chain =3D false;
+>=20=20
+>  		ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+> -				trb, event, status, true);
+> +				trb, event, status, chain);
+
+this is definitely a valid fix :-) I'm not convinced about that IOC &&
+!chain above, however. Also, if "chain" is always trb->ctrl &
+DWC3_TRB_CTRL_CHN, we can get rid of that argument altogether and have
+the callee handle it internally, but that's something else, subject to
+another patch.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0xcfcACgkQzL64meEa
+mQa6hBAAop4hAPq3S8lrAAbH7E6SxCiOg6QGUr0B4mWmj1gXXGZJhw5Ag2WAMD2C
+LuZBvbGvnKWT+lwgz5G6xmNw1ZPSrHivovQ2fG6Cc77EpEwCJULwSRlzfJgdL0bb
+AXDKGKOq57TZGkftniv8uAgNfHSwCCHC2iWzCfqjd79RPwo06gnf1JmoqpU1oroa
+gvY0KP0DXieOm4HHesKeo3Wu6kK6BdulpAd3v7v5fCZaIY7rpaFwawHJQ/KeCgfF
+s+SMO9wJiZmrOIZFfTM6JQYEAKTAERwSuK3eCSt0FRzPbiMmNVD0nWHmHaNS+dR5
+xnyx59zLT1+Lstx94tUz5aGMN8rTK6JmtkdZTple5NRkKIx97wQqG/7mjVTMc8Wd
+Qz2AMYFT/0Wg6Suz4NBNvoC3Ny8dIR9GhqSu3+YDRr/9fWqCkikaopG1vqLdvCPi
+thXi6gLGsPKVZ8yfQMe7lM3Xrrdp72R6QgY8DFLPiLa+rLZmwomCjduV2l4cc0wN
+bniH7CX93giYjIYxHos+LoL/zEAdt1Zr/WRw3Y6KJSdefJNJwuklYhe3gcKAjEyj
+bCU8Q2thd5YHlRCd05MtPQ9PrlS+3ZM/wexVn4wB/diPSgb14Cs+Ng3l+dtQc/AH
+JTPvOVJ8BReIB9DmoZ9RwcLDEt4KE9QShCnEtyDuGBfLXqv70m0=
+=kb6q
+-----END PGP SIGNATURE-----
+--=-=-=--
