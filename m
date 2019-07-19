@@ -2,80 +2,93 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264FEC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2169C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D5A20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F9C20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CM6jDDiX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbfGSNPk (ORCPT
+        id S1728733AbfGSNUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:15:40 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37486 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfGSNPk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:15:40 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y26so30866341qto.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:15:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FJudaL79bW4omgAyQw960J8nLutDsvWcYRNzSIrImJk=;
-        b=jCoqJNGJCWA+3P02O6zQLsWDtnumjqG1zR0hjSK/TPjPu35UAkb68o+BeodA/UKhXd
-         9va+mA6bF+fgBBoOOVDoZPhv6TSBOqEbmPRabjpAjKkmNWjnHMzdzL/9T67k6BHC831l
-         yZ8oAqsiu6pGL3G4+46yHm6lgxA8ixzS2PQ98Dv5hvjJWewdj7xAhcmicghszTg0s6xX
-         zHO8i2KnKWrlhXe1n3OyzDYKEuUZyNODxJWOH5RweP28Lb9EPCE1QAQ+Wm2AZpuwQisQ
-         qBmDT31TfIYgkSNP2kPtOwMjuQAovfr+SFrWK5Ghkp+gOjvhCIyQxOFDJGHDQgiiMv/F
-         Q0FA==
-X-Gm-Message-State: APjAAAVSMvU95isPt6nijyn0VczkuDFigUCo1Armx7Ipaze4fX26uxri
-        +ZVEPMqyz+7TDXz2PuVfsTB83ly0LhWeXLpAgig=
-X-Google-Smtp-Source: APXvYqzq39XuG4rtK+tyHE29oYxqImfovUD05fjkHiSfoGve5xyEVl+xDVf5xAeDYc0RTG70QnNeiTFYppx0Fl08CGk=
-X-Received: by 2002:aed:3e7c:: with SMTP id m57mr37177378qtf.204.1563542139401;
- Fri, 19 Jul 2019 06:15:39 -0700 (PDT)
+        Fri, 19 Jul 2019 09:20:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52142 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727984AbfGSNUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:20:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=fGhjbD/ZLaMc/EQxPrDyzowQW6tcfV37E12zWwbgM6s=; b=CM6jDDiXi2sJnGUhAsCmIDEblF
+        5TpzgPV/rrlWNatzmxJq5lDPUsMbeAbNPHvmBAPjLu3YAMDk39HmCkFNKkyZHXsfAEYwu3awMPcss
+        +1dY/VWVpodHJX9EinVcRvwYIEk7F4vhdHRicxYZiYocIESZPM4eh3qX1mAj2KnwXtGg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hoSo9-0006eT-9B; Fri, 19 Jul 2019 15:20:21 +0200
+Date:   Fri, 19 Jul 2019 15:20:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 0/5] PTP: add support for Intel's TGPIO controller
+Message-ID: <20190719132021.GC24930@lunn.ch>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com>
+ <20190718195040.GL25635@lunn.ch>
+ <87h87isci5.fsf@linux.intel.com>
 MIME-Version: 1.0
-References: <20190719113139.4005262-1-arnd@arndb.de> <CAK7LNAS49O=v8tJe+NauzsexVeg5hWNzFMFuWbCJbqc_qRv3dw@mail.gmail.com>
-In-Reply-To: <CAK7LNAS49O=v8tJe+NauzsexVeg5hWNzFMFuWbCJbqc_qRv3dw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 19 Jul 2019 15:15:23 +0200
-Message-ID: <CAK8P3a28026u1_x7K3kVsucUq47vL7n4_Q8dNeCNyzLpeZ9q8Q@mail.gmail.com>
-Subject: Re: [PATCH] [v2] blkdev: always export SECTOR_SHIFT
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h87isci5.fsf@linux.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 2:48 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Arnd,
->
-> On Fri, Jul 19, 2019 at 8:32 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Fri, Jul 19, 2019 at 10:35:14AM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Andrew Lunn <andrew@lunn.ch> writes:
+> > On Tue, Jul 16, 2019 at 10:20:33AM +0300, Felipe Balbi wrote:
+> >> TGPIO is a new IP which allows for time synchronization between systems
+> >> without any other means of synchronization such as PTP or NTP. The
+> >> driver is implemented as part of the PTP framework since its features
+> >> covered most of what this controller can do.
 > >
-> > When CONFIG_BLOCK is disabled, SECTOR_SHIFT is unknown, and this leads
-> > to a failure in the testing infrastructure added from commit c93a0368aaa2
-> > ("kbuild: do not create wrappers for header-test-y"):
->
-> I think this should be
->
-> commit 43c78d88036e ("kbuild: compile-test kernel headers to ensure
-> they are self-contained")
+> > Hi Felipe
+> >
+> > Given the name TGPIO, can it also be used for plain old boring GPIO?
+> 
+> not really, no. This is a misnomer, IMHO :-) We can only assert output
+> pulses at specified intervals or capture a timestamp of an external
+> signal.
 
-Ok, fixing that in the resend without the #ifndef.
+Hi Felipe
 
-       Arnd
+So i guess Intel Marketing wants to call it a GPIO, but between
+engineers can we give it a better name?
+
+> > Also, is this always embedded into a SoC? Or could it actually be in a
+> > discrete NIC?
+> 
+> Technically, this could be done as a discrete, but it isn't. In any
+> case, why does that matter? From a linux-point of view, we have a device
+> driver either way.
+
+I've seen a lot of i210 used with ARM SoCs. How necessary is the tsc
+patch? Is there an architecture independent alternative?
+
+       Andrew
