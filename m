@@ -2,109 +2,199 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44937C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82497C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207812184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F5320880
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S4D0txoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388630AbfGSVlY (ORCPT
+        id S2388634AbfGSVnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 17:41:24 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34100 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728658AbfGSVlY (ORCPT
+        Fri, 19 Jul 2019 17:43:22 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14072 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728564AbfGSVnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 17:41:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w9so24536889wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 14:41:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JPnD2on9MPes546wI5hB8iJA16OLHGs/RSJMTP+xE/g=;
-        b=nOg1DwOTFWIywA7i0YU19tPX1t6ScyvTomB5LfFAu6MWCPR/9D5d82XAqMEZKa76Uv
-         Ok0+wry/fw6uMYh1bQ6tWTqBf75EEpYOfCXbWvTK7ptv3n6mGuyllz8xg28bg4pvjqaw
-         ShOgPylIQMsMTm7Oz4DDQo0jln78kZeQY8Pv0YRTeEoIno/8E/mjPOx51bwhCBMRAIuQ
-         UTpP+B3NQ3r7HQtQE7ABYaQoniyDR/saYS/e3OwLG46qexG5myrD/Fiu+uBMHjNi/r8L
-         UawV6agTFNkb9oSg0wgFhLjCqW9AS/wuTZmZ1OHJty/9i7smjrvYnycklGFACsXBPpPr
-         y3Gg==
-X-Gm-Message-State: APjAAAUz7gzOx82yr4SKGweUZihHan0LisBntbuTrunoV2lXuIXeDrSb
-        rWNaS0P+n1bpO2ZwGEpPu/EBE7HSqZs=
-X-Google-Smtp-Source: APXvYqzWFOG1apvfJTpaD1HUhIGFOxEDFz5ZgU6gLi4SlZV7MzTBwfbH9+P+iHt7d6Pk/Val0bHt2g==
-X-Received: by 2002:a7b:c251:: with SMTP id b17mr51176977wmj.143.1563572481866;
-        Fri, 19 Jul 2019 14:41:21 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8501:6b03:f18c:74f8? ([2001:b07:6468:f312:8501:6b03:f18c:74f8])
-        by smtp.gmail.com with ESMTPSA id j10sm50967571wrd.26.2019.07.19.14.41.20
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 14:41:21 -0700 (PDT)
-Subject: Re: [PATCH v2 5/5] KVM: x86: Don't check kvm_rebooting in
- __kvm_handle_fault_on_reboot()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190719204110.18306-1-sean.j.christopherson@intel.com>
- <20190719204110.18306-6-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <2fe374ae-9611-1f29-32f0-e8fce126cd41@redhat.com>
-Date:   Fri, 19 Jul 2019 23:41:20 +0200
+        Fri, 19 Jul 2019 17:43:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3239760000>; Fri, 19 Jul 2019 14:43:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jul 2019 14:43:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 14:43:20 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 21:43:18 +0000
+Subject: Re: [PATCH v2 1/3] mm: document zone device struct page field usage
+To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190719192955.30462-1-rcampbell@nvidia.com>
+ <20190719192955.30462-2-rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <e9b6204f-9c80-e724-6ab6-6f32aa762c8c@nvidia.com>
+Date:   Fri, 19 Jul 2019 14:43:17 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190719204110.18306-6-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190719192955.30462-2-rcampbell@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563572598; bh=k+MfdY4VFZ+1G6NydT7z1KYzEUKt/3lM29KKNcFF7DE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=S4D0txoXh5ZlUY37eQf+2R6xEnAxjq7ugYhSFhHNeaZJc9gzt9AFqSTcqwxgF4ipI
+         OaPooSm3TY1Y/tCOgH4IQijSLZMX2+/CTLTxxnYrYVCT1Yd9vvXnBokWprsQCA0SBu
+         hFaFsXxrQ2orwUntRfq0/vwbW9AZnv6tZl6Z/QKbtny+xYzOMoTlK/jNOafxR/RuuN
+         OkUICjRl6gUjlig8xvZ/FwUkCxVyAe7+S9G64st1c0V2EQVHSwmZllERNtNjB8ynC0
+         +uZq4tzbY321dByCbFHF3UhYBdZPsV93HdC7nag52tX1rzhZGjdAo3WLONbyYZ5Bdy
+         Af+qRnzn1qvRw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/07/19 22:41, Sean Christopherson wrote:
-> Remove the kvm_rebooting check from VMX/SVM instruction exception fixup
-> now that kvm_spurious_fault() conditions its BUG() on !kvm_rebooting.
-> Because the 'cleanup_insn' functionally is also gone, deferring to
-> kvm_spurious_fault() means __kvm_handle_fault_on_reboot() can eliminate
-> its .fixup code entirely and have its exception table entry branch
-> directly to the call to kvm_spurious_fault().
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On 7/19/19 12:29 PM, Ralph Campbell wrote:
+> Struct page for ZONE_DEVICE private pages uses the page->mapping and
+> and page->index fields while the source anonymous pages are migrated to
+> device private memory. This is so rmap_walk() can find the page when
+> migrating the ZONE_DEVICE private page back to system memory.
+> ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
+> page->index fields when files are mapped into a process address space.
+>=20
+> Restructure struct page and add comments to make this more clear.
+>=20
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
 > ---
->  arch/x86/include/asm/kvm_host.h | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 92c59cd923b6..a5ae5562ce0a 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1511,13 +1511,7 @@ asmlinkage void kvm_spurious_fault(void);
->  	"667: \n\t"							\
->  	"call	kvm_spurious_fault \n\t"				\
->  	"668: \n\t"							\
-> -	".pushsection .fixup, \"ax\" \n\t"				\
-> -	"700: \n\t"							\
-> -	"cmpb	$0, kvm_rebooting\n\t"					\
-> -	"je	667b \n\t"						\
-> -	"jmp	668b \n\t"						\
-> -	".popsection \n\t"						\
-> -	_ASM_EXTABLE(666b, 700b)
-> +	_ASM_EXTABLE(666b, 667b)
->  
->  #define KVM_ARCH_WANT_MMU_NOTIFIER
->  int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end);
-> 
+>  include/linux/mm_types.h | 42 +++++++++++++++++++++++++++-------------
+>  1 file changed, 29 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 3a37a89eb7a7..f6c52e44d40c 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -76,13 +76,35 @@ struct page {
+>  	 * avoid collision and false-positive PageTail().
+>  	 */
+>  	union {
+> -		struct {	/* Page cache and anonymous pages */
+> -			/**
+> -			 * @lru: Pageout list, eg. active_list protected by
+> -			 * pgdat->lru_lock.  Sometimes used as a generic list
+> -			 * by the page owner.
+> -			 */
+> -			struct list_head lru;
+> +		struct {	/* Page cache, anonymous, ZONE_DEVICE pages */
+> +			union {
+> +				/**
+> +				 * @lru: Pageout list, e.g., active_list
+> +				 * protected by pgdat->lru_lock. Sometimes
+> +				 * used as a generic list by the page owner.
+> +				 */
+> +				struct list_head lru;
+> +				/**
+> +				 * ZONE_DEVICE pages are never on the lru
+> +				 * list so they reuse the list space.
+> +				 * ZONE_DEVICE private pages are counted as
+> +				 * being mapped so the @mapping and @index
+> +				 * fields are used while the page is migrated
+> +				 * to device private memory.
+> +				 * ZONE_DEVICE MEMORY_DEVICE_FS_DAX pages also
+> +				 * use the @mapping and @index fields when pmem
+> +				 * backed DAX files are mapped.
+> +				 */
+> +				struct {
+> +					/**
+> +					 * @pgmap: Points to the hosting
+> +					 * device page map.
+> +					 */
+> +					struct dev_pagemap *pgmap;
+> +					/** @zone_device_data: opaque data. */
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+This is nice, and I think it's a solid step forward in documentation via
+clearer code. I recall a number of email, and even face to face discussions=
+,
+in which the statement kept coming up: "remember, the ZONE_DEVICE pages use
+mapping and index, too. Actually, that reminds me: page->private is often
+in use in that case, too, so ZONE_DEVICE couldn't use that, either. I don't
+think we need to explicitly say that, though, with this new layout.
+
+nit: the above comment can be deleted, because it merely echoes the actual
+code that directly follows it.
+
+Either way, you can add:
+
+	Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
+
+> +					void *zone_device_data;
+> +				};
+> +			};
+>  			/* See page-flags.h for PAGE_MAPPING_FLAGS */
+>  			struct address_space *mapping;
+>  			pgoff_t index;		/* Our offset within mapping. */
+> @@ -155,12 +177,6 @@ struct page {
+>  			spinlock_t ptl;
+>  #endif
+>  		};
+> -		struct {	/* ZONE_DEVICE pages */
+> -			/** @pgmap: Points to the hosting device page map. */
+> -			struct dev_pagemap *pgmap;
+> -			void *zone_device_data;
+> -			unsigned long _zd_pad_1;	/* uses mapping */
+> -		};
+> =20
+>  		/** @rcu_head: You can use this to free a page by RCU. */
+>  		struct rcu_head rcu_head;
+>=20
