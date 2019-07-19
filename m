@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D488BC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EAC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F9621849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA7421849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510264;
-	bh=PGLNZtWYCT5FOAWjYufHYxNtrcdeB4QDl9TvYiV899k=;
+	s=default; t=1563510273;
+	bh=bmTFn2nUfqtn9lYCa79Sidrp3U1/aWjv5+bzonW2H6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMBLuOvxZxqcFgIdKbrv4TbfuNKIoZx6U6ZvOKzW/klwyFKOnCwEiGSmGqDRrBqvX
-	 CZPOHrpX8UeYOaBDHTsVE5Hppjbepcn6XH3HMkmYhIXm5oY/kg2/qbpX3oYahSnxtg
-	 apu6l70m+EGsyIyCCD7OtJUwBNIlgua/i62Pzljk=
+	b=lMBj4AzXQvkmzmr5ZGwPAR3YXETvzZ1iV5SzaqZNvBdVB0DRjcDGPNDK8/KEre/7O
+	 ptp979toR+bivHsFwleR+WPrV1s9oCPVIn0izWuJgKY9o+e3hnCcij7600mlLEW3+F
+	 +nvTBOaKZtdIcvAruTOU7zSAzOOB6T0YNiXsgfUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389061AbfGSEYX (ORCPT
+        id S2387649AbfGSEJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44288 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387679AbfGSEJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:09:41 -0400
+        id S2387551AbfGSEJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:09:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E86CA218C3;
-        Fri, 19 Jul 2019 04:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54D322189E;
+        Fri, 19 Jul 2019 04:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509379;
-        bh=PGLNZtWYCT5FOAWjYufHYxNtrcdeB4QDl9TvYiV899k=;
+        s=default; t=1563509364;
+        bh=bmTFn2nUfqtn9lYCa79Sidrp3U1/aWjv5+bzonW2H6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQ5DnZQ3pMJ2mu+l45tRIBq1iVlwuo/VX50U1vsOHh/6TZAub0/I4fqiMjz1JCTSb
-         3jMw67St3mDjLykGfCOu00/GNlm0H7zCGGxqJ9fSebK/upF/4T2JdExM/L+LWXQYiH
-         qFdqDddA5GaWx2WUq1/c8sARiVWFy7qqOzGDU3ac=
+        b=PV36iSu7F4NEZm28i4ue5LMDmNxsAJaLE8/A5y7NOh5uu563MqFWN3Szz4l8+oA5b
+         ZeQJ6eGoHu08XoRG8TEPudiZhPzhwWMN4Stwjk4/0PVqOJJag4xtd7wgjS9vyKLKuY
+         kUJVPKlNa/P2KjepsK8a73KLBHlLzxXmWPhvw8cY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentine Fatiev <valentinef@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/101] IB/ipoib: Add child to parent list only if device initialized
-Date:   Fri, 19 Jul 2019 00:06:54 -0400
-Message-Id: <20190719040732.17285-63-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 055/101] mm/swap: fix release_pages() when releasing devmap pages
+Date:   Fri, 19 Jul 2019 00:06:46 -0400
+Message-Id: <20190719040732.17285-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,95 +64,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentine Fatiev <valentinef@mellanox.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-[ Upstream commit 91b01061fef9c57d2f5b712a6322ef51061f4efd ]
+[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
 
-Despite failure in ipoib_dev_init() we continue with initialization flow
-and creation of child device. It causes to the situation where this child
-device is added too early to parent device list.
+release_pages() is an optimized version of a loop around put_page().
+Unfortunately for devmap pages the logic is not entirely correct in
+release_pages().  This is because device pages can be more than type
+MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
+and PCI P2PDMA.  Some of these have specific needs to "put" the page while
+others do not.
 
-Change the logic, so in case of failure we properly return error from
-ipoib_dev_init() and add child only in success path.
+This logic to handle any special needs is contained in
+put_devmap_managed_page().  Therefore all devmap pages should be processed
+by this function where we can contain the correct logic for a page put.
 
-Fixes: eaeb39842508 ("IB/ipoib: Move init code to ndo_init")
-Signed-off-by: Valentine Fatiev <valentinef@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Handle all device type pages within release_pages() by calling
+put_devmap_managed_page() on all devmap pages.  If
+put_devmap_managed_page() returns true the page has been put and we
+continue with the next page.  A false return of put_devmap_managed_page()
+means the page did not require special processing and should fall to
+"normal" processing.
+
+This was found via code inspection while determining if release_pages()
+and the new put_user_pages() could be interchangeable.[1]
+
+[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
+
+Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 34 +++++++++++++----------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ mm/swap.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 30f840f874b3..453695f7d457 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1892,12 +1892,6 @@ static void ipoib_child_init(struct net_device *ndev)
- 	struct ipoib_dev_priv *priv = ipoib_priv(ndev);
- 	struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
+diff --git a/mm/swap.c b/mm/swap.c
+index a3fc028e338e..45fdbfb6b2a6 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
+ 		if (is_huge_zero_page(page))
+ 			continue;
  
--	dev_hold(priv->parent);
--
--	down_write(&ppriv->vlan_rwsem);
--	list_add_tail(&priv->list, &ppriv->child_intfs);
--	up_write(&ppriv->vlan_rwsem);
--
- 	priv->max_ib_mtu = ppriv->max_ib_mtu;
- 	set_bit(IPOIB_FLAG_SUBINTERFACE, &priv->flags);
- 	memcpy(priv->dev->dev_addr, ppriv->dev->dev_addr, INFINIBAND_ALEN);
-@@ -1940,6 +1934,17 @@ static int ipoib_ndo_init(struct net_device *ndev)
- 	if (rc) {
- 		pr_warn("%s: failed to initialize device: %s port %d (ret = %d)\n",
- 			priv->ca->name, priv->dev->name, priv->port, rc);
-+		return rc;
-+	}
-+
-+	if (priv->parent) {
-+		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
-+
-+		dev_hold(priv->parent);
-+
-+		down_write(&ppriv->vlan_rwsem);
-+		list_add_tail(&priv->list, &ppriv->child_intfs);
-+		up_write(&ppriv->vlan_rwsem);
- 	}
+-		/* Device public page can not be huge page */
+-		if (is_device_public_page(page)) {
++		if (is_zone_device_page(page)) {
+ 			if (locked_pgdat) {
+ 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+ 						       flags);
+ 				locked_pgdat = NULL;
+ 			}
+-			put_devmap_managed_page(page);
+-			continue;
++			/*
++			 * ZONE_DEVICE pages that return 'false' from
++			 * put_devmap_managed_page() do not require special
++			 * processing, and instead, expect a call to
++			 * put_page_testzero().
++			 */
++			if (put_devmap_managed_page(page))
++				continue;
+ 		}
  
- 	return 0;
-@@ -1957,6 +1962,14 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 	 */
- 	WARN_ON(!list_empty(&priv->child_intfs));
- 
-+	if (priv->parent) {
-+		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
-+
-+		down_write(&ppriv->vlan_rwsem);
-+		list_del(&priv->list);
-+		up_write(&ppriv->vlan_rwsem);
-+	}
-+
- 	ipoib_neigh_hash_uninit(dev);
- 
- 	ipoib_ib_dev_cleanup(dev);
-@@ -1968,15 +1981,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 		priv->wq = NULL;
- 	}
- 
--	if (priv->parent) {
--		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
--
--		down_write(&ppriv->vlan_rwsem);
--		list_del(&priv->list);
--		up_write(&ppriv->vlan_rwsem);
--
-+	if (priv->parent)
- 		dev_put(priv->parent);
--	}
- }
- 
- static int ipoib_set_vf_link_state(struct net_device *dev, int vf, int link_state)
+ 		page = compound_head(page);
 -- 
 2.20.1
 
