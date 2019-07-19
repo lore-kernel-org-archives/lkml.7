@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B6FC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E966C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C3821873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0442189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509505;
-	bh=nK2jycfVWp/0ZD4MufIVjgtftS4Ozwdm8QErvRgIeAo=;
+	s=default; t=1563509511;
+	bh=Viy2qXEFT/IvW4X7PjaXaEImwC+eYylLCAV7sBJP3VQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e224Wqm00OCmxVJTHcl9ye1e2G+VdiViQcnEjDiUwxranmIeZZ+gXzmcPTYvOve9K
-	 cttHbXEM78OD6uR/oBkgUv4sUpJrPjbraXZT/VDVBdwhNW+Ct8MRYqDgEThItWUX/z
-	 vHGxEH/A783NLmFFyB+e+affJ/v8P7U/7kY0JjkM=
+	b=MZ6CJqd7JYkeTfniLzQdDJSARXi/2aRhN05p7o1d4mhpmSilIAiKue5Ron3ov7/nR
+	 umWGV07T7QVJEMb4W0N5nxx6kUWyAoC0Q4h4F/Xz68tHvYktVJDpNH6xLd9/St+AKf
+	 wmLwRhTATobl9GqqO6H//ddUSXVkuyjA7hc352ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388519AbfGSELo (ORCPT
+        id S2388561AbfGSELt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388492AbfGSELk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:40 -0400
+        id S2388508AbfGSELn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 837A62189D;
-        Fri, 19 Jul 2019 04:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174F721873;
+        Fri, 19 Jul 2019 04:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509499;
-        bh=nK2jycfVWp/0ZD4MufIVjgtftS4Ozwdm8QErvRgIeAo=;
+        s=default; t=1563509501;
+        bh=Viy2qXEFT/IvW4X7PjaXaEImwC+eYylLCAV7sBJP3VQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TI8X6VtrYRHFyX74/ilAxtQwSjXISnuvFA4M8vFqPEU3MJfHQOfSZiCkUMrf515GC
-         D9sch88MrxK5a556yvxBc3mWxKBdErHr0g9VkTaR6tNu8JoX6TMnZPNktcCKtopPBA
-         ZJCNJlTQ7sUz9FAqAv4NYrkdlj1TEYsVj4q36Nzc=
+        b=JhjFXSQMeL/jETX7yvWHQpB0W9TTgNl42X5lC3oQWQElGxrippnBro/EqrJNZ4wLt
+         B+D7zUFFStpbLwGKiBC75v7v2yvjHXYCTuWYgWrSBm1fDEGipmRk4MFpuVvldxVbkA
+         1NcyiuciccvV2xxy6bSTRLfiuDh8tmqCpT9oQJms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 17/60] powerpc/pseries/mobility: prevent cpu hotplug during DT update
-Date:   Fri, 19 Jul 2019 00:10:26 -0400
-Message-Id: <20190719041109.18262-17-sashal@kernel.org>
+Cc:     Young Xiao <92siuyang@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/60] iio:core: Fix bug in length of event info_mask and catch unhandled bits set in masks.
+Date:   Fri, 19 Jul 2019 00:10:28 -0400
+Message-Id: <20190719041109.18262-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -60,57 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit e59a175faa8df9d674247946f2a5a9c29c835725 ]
+[ Upstream commit 936d3e536dcf88ce80d27bdb637009b13dba6d8c ]
 
-CPU online/offline code paths are sensitive to parts of the device
-tree (various cpu node properties, cache nodes) that can be changed as
-a result of a migration.
+The incorrect limit for the for_each_set_bit loop was noticed whilst fixing
+this other case.  Note that as we only have 3 possible entries a the moment
+and the value was set to 4, the bug would not have any effect currently.
+It will bite fairly soon though, so best fix it now.
 
-Prevent CPU hotplug while the device tree potentially is inconsistent.
+See commit ef4b4856593f ("iio:core: Fix bug in length of event info_mask and
+catch unhandled bits set in masks.") for details.
 
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iio/industrialio-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index fbea7db043fa..4addc552eb33 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -9,6 +9,7 @@
-  * 2 as published by the Free Software Foundation.
-  */
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 97b7266ee0ff..b0f952984983 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1116,6 +1116,8 @@ static int iio_device_add_info_mask_type_avail(struct iio_dev *indio_dev,
+ 	char *avail_postfix;
  
-+#include <linux/cpu.h>
- #include <linux/kernel.h>
- #include <linux/kobject.h>
- #include <linux/smp.h>
-@@ -343,11 +344,19 @@ void post_mobility_fixup(void)
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility activate-fw failed: %d\n", rc);
- 
-+	/*
-+	 * We don't want CPUs to go online/offline while the device
-+	 * tree is being updated.
-+	 */
-+	cpus_read_lock();
-+
- 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility device tree update "
- 			"failed: %d\n", rc);
- 
-+	cpus_read_unlock();
-+
- 	/* Possibly switch to a new RFI flush type */
- 	pseries_setup_rfi_flush();
- 
+ 	for_each_set_bit(i, infomask, sizeof(*infomask) * 8) {
++		if (i >= ARRAY_SIZE(iio_chan_info_postfix))
++			return -EINVAL;
+ 		avail_postfix = kasprintf(GFP_KERNEL,
+ 					  "%s_available",
+ 					  iio_chan_info_postfix[i]);
 -- 
 2.20.1
 
