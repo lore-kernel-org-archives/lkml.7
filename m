@@ -2,143 +2,134 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22127C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B099C76191
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E686D2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46ECD2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QNeDwuAt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VokRmQk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfGSC50 (ORCPT
+        id S1726694AbfGSC5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:57:26 -0400
-Received: from mail-eopbgr10077.outbound.protection.outlook.com ([40.107.1.77]:55270
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726015AbfGSC50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:57:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dVxBa2WajzHcix4QotDaEkFj9JRDR/kkTqIkvilgZB9zNusHYdvHPMbSa7dCtJDLoBZb76IJhgQD9D3o+yg3u4yNJIYFfSW/Xdfb3byQ/itM07l825USU3frnviH3R3Rfq0ENzLgz6AaUsKRZuvfWMV64a7FEDJ5+Mvn7uptxolJ/bHTN+2QStfmIbUmR2o4jVITjf5A1GGQOIXcaFs+7Yl194BDob9sQj9//85wdlJKMWR63tD6qVNkt7fOg/JMFuBqa2Sw4g6Ffph7qTFXHr4AeIQxUSwCB3Jqk7F+fsJDh2/rIcqFKpZuE614v2h2bQS1ZLrwoolfXoyVFvfSbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xg25Odx5olzbIu9bBPs86cWuciJWim95pBDoddpkFa0=;
- b=MPYzTmvUcFQ4VvK6c9Z9R4Qr03HVgAhD8GkyR1P2Vsr9j0Cnl6MB/hlHMZYgijCm1xIxZDEw7DDfTObhUrgUt6vjrZqd5N5xiguMYklrWHlkfjuxwMC+jVyTnmYHc8LQfvH8GA/oiIv3sfqJyW3ZQRlisPilWIGXbna+OatVbRR9R+Qik+n8Z9twaUyoyoEM4kGeAkxR9A7QxYL0bnInMqyQqYPolBrdKy6+6Z61YvGRMj1gRFEbz+rig8dgplsiUCnC9mKDDegmLIK9XtBK1a5CMl9/NxHumGUi4Dn0xxrfgnM7WHd77VZpvtzo07p+A0hQ7foxzB5WfdHOSnsdXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xg25Odx5olzbIu9bBPs86cWuciJWim95pBDoddpkFa0=;
- b=QNeDwuAt4JHm1eqPG3La4923u2HNPpDuz73WUJ4qf9tUdTC2JcR1XqhBEZBRsb++MNU/mf6CurNMOX7SNpgEiRij+D0yOd171al5YqVtv20Eau2SsD5qfBFHPfMLOEU73C8Y4id8MaRPfIhK0l8ZdJqkkgUAWlQuidsQbCc4Kkk=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3740.eurprd04.prod.outlook.com (52.134.71.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.14; Fri, 19 Jul 2019 02:57:20 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2094.013; Fri, 19 Jul 2019
- 02:57:20 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Trent Piepho <tpiepho@impinj.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] rtc: snvs: fix possible race condition
-Thread-Topic: [PATCH] rtc: snvs: fix possible race condition
-Thread-Index: AQHVO6gHgDF/BlJMPUyX9VGe8rSFO6bOpJgAgAAyYBCAAN3WgIAA4I4AgACuAJA=
-Date:   Fri, 19 Jul 2019 02:57:20 +0000
-Message-ID: <DB3PR0402MB3916053E6344520416BC976BF5CB0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190716071858.36750-1-Anson.Huang@nxp.com>
-         <AM0PR04MB421167283C950557E231181480C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
-         <DB3PR0402MB39164D0022E25706D2B871C7F5C90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-         <AM0PR04MB421114F025F27AF2BC5FA21980C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <1563467526.2343.80.camel@impinj.com>
-In-Reply-To: <1563467526.2343.80.camel@impinj.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5736e7af-6646-4041-89e5-08d70bf4d144
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3740;
-x-ms-traffictypediagnostic: DB3PR0402MB3740:
-x-microsoft-antispam-prvs: <DB3PR0402MB374070AB378C9917D6000C96F5CB0@DB3PR0402MB3740.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(376002)(346002)(136003)(199004)(189003)(14454004)(229853002)(14444005)(256004)(66556008)(66476007)(64756008)(52536014)(66446008)(7736002)(9686003)(66946007)(44832011)(2201001)(99286004)(486006)(71190400001)(71200400001)(316002)(76116006)(6636002)(86362001)(110136005)(5660300002)(66066001)(26005)(6436002)(25786009)(2501003)(186003)(102836004)(7696005)(68736007)(4326008)(478600001)(76176011)(3846002)(2906002)(6506007)(53936002)(305945005)(33656002)(6116002)(55016002)(8936002)(11346002)(8676002)(81166006)(81156014)(476003)(74316002)(446003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3740;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ume8/c/ZmWurLwt9hXyns0aCJ/UJ/jfyu3w9ncMvNCWy3ijPNETVC8Ps37oHeHE+Qnaz+Z7HANKyp6FaBiZqQ1WmDPAZcRtYGyAhLgPMsVO+EG6833sQtixQs1PqG41UJc/S4TlZOsHAM1eTYiGWs0YKopT+FWi8fHGHylbwDO19AdxPh/sCb0cwJiONkpxTWyGHmBlaxeCAUlVfYO+rsFhdldmQAwe3X+vqnVbSE4KaZ7+nUvpC74WEFuvkiZ3cvACjqQ3I4/3MABszQVQuneQ8J6St5VrcDjKwZWnBO3RhU7c+TLesqFS0NLazIjyBKBTX/dVBYITuDtxtTbHSB8CIxqorhX3HrHA3Oxvigs2eegxWWGV0d+0UQS1PKruRGOga0JQlzMvjJz+malDNQHse36E2ZPONBWMDfQ0IdG8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 18 Jul 2019 22:57:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57806 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfGSC5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 22:57:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6J2rxKp113651;
+        Fri, 19 Jul 2019 02:57:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=1VoY01PKSy90HXxuK3RrXrwbc97dVgJ7w52K1v+rBB0=;
+ b=VokRmQk/XQQEQ21G9/DwmaIrRn6rk7SQFABaxLILpHxaf0ZLlBLUFGrkX0wxqCOW8LZq
+ L5dibcflcvcq/GSvZTnVgBs1cwYhPIc3QWL6KUjXwEd02fyxbKnSslQg/SsNwLeqHt7f
+ CHFRNzELowftmG+i6h+ZXC4rJtaLE2GanniQO21uwAJGYv6GigOzFozzj2VnfzCl2Nlf
+ PTMPoyum0t2U852jok3XWH63eUCR/XMjyX2Ij1bU9WogSo9pXahJCFtWrnyKlhe+QIJH
+ WP4nFIKjjFpCn4QwwqjeRLNh1JvEtPawptiujYT2pBbnhd7pScX569ZX6US0aWXGyupF VQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tq78q4505-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 02:57:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6J2rBQp015296;
+        Fri, 19 Jul 2019 02:55:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tsmcdbmsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 02:55:13 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6J2t75Z004407;
+        Fri, 19 Jul 2019 02:55:07 GMT
+Received: from Subhras-MacBook-Pro.local (/103.217.243.4)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jul 2019 02:55:07 +0000
+Subject: Re: [RFC PATCH 2/3] sched: change scheduler to give preference to
+ soft affinity CPUs
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        prakash.sangappa@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, Paul Turner <pjt@google.com>
+References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
+ <20190626224718.21973-3-subhra.mazumdar@oracle.com>
+ <20190702172851.GA3436@hirez.programming.kicks-ass.net>
+ <a91c09ce-aec1-eaa1-4daf-70024cebf360@oracle.com>
+ <20190718113758.GN3402@hirez.programming.kicks-ass.net>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <067f898a-3d3b-0ff5-724e-50ed2e989286@oracle.com>
+Date:   Fri, 19 Jul 2019 08:25:01 +0530
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5736e7af-6646-4041-89e5-08d70bf4d144
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 02:57:20.5780
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3740
+In-Reply-To: <20190718113758.GN3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=828
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907190031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=873 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907190031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFRyZW50DQoNCj4gT24gVGh1LCAyMDE5LTA3LTE4IGF0IDAzOjA4ICswMDAwLCBBaXNoZW5n
-IERvbmcgd3JvdGU6DQo+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiA+ID4gU2VudDogV2VkbmVz
-ZGF5LCBKdWx5IDE3LCAyMDE5IDk6NTggUE0+IEhpLCBBaXNoZW5nDQo+ID4gPg0KPiA+ID4gPiA+
-IEZyb206IEFuc29uLkh1YW5nQG54cC5jb20gPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiA+
-ID4gU2VudDogVHVlc2RheSwgSnVseSAxNiwgMjAxOSAzOjE5IFBNDQo+ID4gPiA+ID4NCj4gPiA+
-ID4gPiBUaGUgUlRDIElSUSBpcyByZXF1ZXN0ZWQgYmVmb3JlIHRoZSBzdHJ1Y3QgcnRjX2Rldmlj
-ZSBpcw0KPiA+ID4gPiA+IGFsbG9jYXRlZCwgdGhpcyBtYXkgbGVhZCB0byBhIE5VTEwgcG9pbnRl
-ciBkZXJlZmVyZW5jZSBpbiBJUlENCj4gPiA+ID4gPiBoYW5kbGVyLg0KPiA+ID4gPiA+DQo+ID4g
-PiA+ID4gVG8gZml4IHRoaXMgaXNzdWUsIGFsbG9jYXRpbmcgdGhlIHJ0Y19kZXZpY2Ugc3RydWN0
-IGJlZm9yZQ0KPiA+ID4gPiA+IHJlcXVlc3RpbmcgdGhlIFJUQyBJUlEgdXNpbmcgZGV2bV9ydGNf
-YWxsb2NhdGVfZGV2aWNlLCBhbmQgdXNlDQo+ID4gPiA+ID4gcnRjX3JlZ2lzdGVyX2RldmljZSB0
-byByZWdpc3RlciB0aGUgUlRDIGRldmljZS4NCj4gPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBJ
-IHNhdyBvdGhlciBydGMgZHJpdmVycyBkaWQgdGhlIHNhbWUgd2F5IGFzIHVzLCBzbyB0aGlzIGxv
-b2tzIGxpa2UNCj4gPiA+ID4gYSBjb21tb24gcHJvYmxlbS4NCj4gPiA+ID4gTXkgcXVlc3Rpb24g
-aXMgaWYgd2UgY2FuIGNsZWFyIGludGVycnVwdCBzdGF0dXMgYmVmb3JlIHJlZ2lzdGVyIHRvDQo+
-ID4gPiA+IGF2b2lkIHRoaXMgaXNzdWUgYXMgb3RoZXIgcnRjIGRyaXZlcnM/DQo+ID4gPg0KPiA+
-ID4gSSB0aGluayB3ZSBjYW4gTk9UIHByZWRpY3Qgd2hlbiB0aGUgSVJRIHdpbGwgYmUgcGVuZGlu
-ZywgSVJRIGNvdWxkDQo+ID4gPiBhcnJpdmUgYXQgYW55IHRpbWUsIHRoZSBtb3N0IHNhZmUgd2F5
-IGlzIHRvIHByZXBhcmUgZXZlcnl0aGluZw0KPiA+ID4gYmVmb3JlIHJlcXVlc3RpbmcvZW5hYmxp
-bmcgSVJRLg0KPiA+ID4gVGhlcmUgaXMgYWxzbyBwYXRjaCB0byBmaXggc2ltaWxhciBpc3N1ZToN
-Cj4gDQo+IEkgdGhpbmsgb25lIGNvdWxkIGF0dGVtcHQgdG8gZGlzYWJsZSBhbGwgaXJxIHNvdXJj
-ZXMgaW4gdGhlIGRldmljZSB2aWEgaXRzDQo+IHJlZ2lzdGVyIHNwYWNlLCB0aGVuIGVuYWJsZSB0
-aGUgaW50ZXJydXB0LiAgQnV0IHRoaXMgc2VlbXMgbW9yZSBzcGVjaWZpYyB0bw0KPiBlYWNoIGRl
-dmljZSB0aGFuIGNoYW5naW5nIHRoZSBwYXR0ZXJuIG9mIGRldmljZSByZWdpc3RyYXRpb24sIHNv
-IElNSE8sIGl0J3MNCj4gbm90IHJlYWxseSBiZXR0ZXIuDQo+IA0KPiBJIGRvIHdvcnJ5IHRoYXQg
-aGFuZGxpbmcgdGhlIGlycSBiZWZvcmUgdGhlIHJ0YyBkZXZpY2UgaXMgcmVnaXN0ZXJlZCBjb3Vs
-ZCBzdGlsbA0KPiByZXN1bHQgaW4gYSBjcmFzaC4gIEZyb20gd2hhdCBJIHNhdywgdGhlIGlycSBw
-YXRoIGluIHNudnMgb25seSB1c2VzIGRyaXZlciBzdGF0ZQ0KPiBtZW1iZXJzIHRoYXQgYXJlIGZ1
-bGx5IGluaXRpYWxpemVkIGZvciB0aGUgbW9zdCBwYXJ0LCBhbmQgdGhlIGFsbG9jYXRlZCBidXQN
-Cj4gdW5yZWdpc3RlcmVkIGRhdGEtPnJ0YyBpcyBvbmx5IHVzZWQgaW4gb25lIGNhbGwgdG8gcnRj
-X3VwZGF0ZV9pcnEoKSwgd2hpY2gNCj4gYXBwZWFycyB0byBiZSBvayB3aXRoIHRoaXMuDQo+IA0K
-PiBCdXQgaXQgaXMgbm90IHRoYXQgaGFyZCB0byBpbWFnaW5lIHRoYXQgc29tZXRoaW5nIGNvdWxk
-IGdvIGludG8gdGhlIHJ0YyBjb3JlDQo+IHRoYXQgYXNzdW1lcyBjYWxsIGxpa2UgcnRjX3VwZGF0
-ZV9pcnEoKSBhcmUgb25seSBtYWRlIG9uIHJlZ2lzdGVyZWQgZGV2aWNlcy4NCj4gDQo+IElmIHRo
-ZXJlIHdhcyBhIHdheSB0byBkbyBpdCwgSSB0aGluayBhbGxvY2F0aW5nIHRoZSBpcnEgaW4gYSBt
-YXNrZWQgc3RhdGUgYW5kDQo+IHRoZW4gdW5tYXNraW5nIGl0IGFzIHBhcnQgb2YgdGhlIGZpbmFs
-IHJlZ2lzdHJhdGlvbiBjYWxsIHRvIG1ha2UgdGhlIGRldmljZSBnbw0KPiBsaXZlIHdvdWxkIGJl
-IGEgc2FmZXIgYW5kIG1vcmUgZ2VuZXJhbCBwYXR0ZXJuLg0KDQpJdCBtYWtlcyBzZW5zZSwgSSB0
-aGluayB3ZSBjYW4ganVzdCBtb3ZlIHRoZSBkZXZtX3JlcXVlc3RfaXJxKCkgdG8gYWZ0ZXIgcnRj
-X3JlZ2lzdGVyX2RldmljZSgpLA0KSXQgd2lsbCBtYWtlIHN1cmUgZXZlcnl0aGluZyBpcyByZWFk
-eSBiZWZvcmUgSVJRIGlzIGVuYWJsZWQuIFdpbGwgc2VuZCBvdXQgYSBWMiBwYXRjaC4gDQoNClRo
-YW5rcywNCkFuc29uDQoNCg==
+
+On 7/18/19 5:07 PM, Peter Zijlstra wrote:
+> On Wed, Jul 17, 2019 at 08:31:25AM +0530, Subhra Mazumdar wrote:
+>> On 7/2/19 10:58 PM, Peter Zijlstra wrote:
+>>> On Wed, Jun 26, 2019 at 03:47:17PM -0700, subhra mazumdar wrote:
+>>>> The soft affinity CPUs present in the cpumask cpus_preferred is used by the
+>>>> scheduler in two levels of search. First is in determining wake affine
+>>>> which choses the LLC domain and secondly while searching for idle CPUs in
+>>>> LLC domain. In the first level it uses cpus_preferred to prune out the
+>>>> search space. In the second level it first searches the cpus_preferred and
+>>>> then cpus_allowed. Using affinity_unequal flag it breaks early to avoid
+>>>> any overhead in the scheduler fast path when soft affinity is not used.
+>>>> This only changes the wake up path of the scheduler, the idle balancing
+>>>> is unchanged; together they achieve the "softness" of scheduling.
+>>> I really dislike this implementation.
+>>>
+>>> I thought the idea was to remain work conserving (in so far as that
+>>> we're that anyway), so changing select_idle_sibling() doesn't make sense
+>>> to me. If there is idle, we use it.
+>>>
+>>> Same for newidle; which you already retained.
+>> The scheduler is already not work conserving in many ways. Soft affinity is
+>> only for those who want to use it and has no side effects when not used.
+>> Also the way scheduler is implemented in the first level of search it may
+>> not be possible to do it in a work conserving way, I am open to ideas.
+> I really don't understand the premise of this soft affinity stuff then.
+>
+> I understood it was to allow spreading if under-utilized, but group when
+> over-utilized, but you're arguing for the exact opposite, which doesn't
+> make sense.
+You are right on the premise. The whole knob thing came into existence
+because I couldn't make the first level of search work conserving. I am
+concerned that trying to make that work conserving can introduce
+significant latency in the code path when SA is used. I have made the
+second level of search work conserving when we search the LLC domain.
+
+Having said that, SA need not necessarily be binary i.e only spill over to
+the allowed set if the preferred set is 100% utilized (work conserving).
+The spill over can happen before that and SA can have a degree of softness.
+
+The above two points made me go down the knob path for the first level of
+search.
