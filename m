@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75929C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84120C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDA32082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B0321849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510124;
-	bh=k0hu+tXXzE/LMYjJCOsJt8L5xEk0a5uA+JRg9Pl1XyE=;
+	s=default; t=1563510130;
+	bh=N/baHv5FccMsejpscTTRCDSezMRcSj1IH53OyTadKEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x2233SgB5KVCN6b+y7xzP5OK/WRQ8/532Q72E6MjgQ84miC4AycH57jd5rj7qORwg
-	 FwUZhM7ubKD6KjxMOfUYRg0rjiwHBCng9+93Fgtim22xoAD/axMav6q5k48g7DJxqr
-	 HCzCUEJze+I4Izni/ykf1fXmXeXDioW6dD95Eh0w=
+	b=xNXYFSK5JsMUFf5a5H8ve/TrrbKT1I4LZqxw5H52Ai3OHRF5DwtoHAjtRk8Gafm78
+	 HQFgo5FeoPmyo76LIExuKe7A6X+dcsOv/EsWWL1EGDOqW+u6EHzpe9Mz/yrO8KJhfK
+	 mXvtb3HyuHml18JlzwWgQRSGDdSCJC8oy1Y/Md4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbfGSEWC (ORCPT
+        id S2389281AbfGSEWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46476 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbfGSELb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:11:31 -0400
+        id S1732454AbfGSEL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:11:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE65F2189E;
-        Fri, 19 Jul 2019 04:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D43121873;
+        Fri, 19 Jul 2019 04:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509490;
-        bh=k0hu+tXXzE/LMYjJCOsJt8L5xEk0a5uA+JRg9Pl1XyE=;
+        s=default; t=1563509488;
+        bh=N/baHv5FccMsejpscTTRCDSezMRcSj1IH53OyTadKEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvb/HNwibcW0H4CkQ+PeftXUpU9C1rQ0lN2LK09qDowqe0+gAemkGHOcV8ecqTqFu
-         lHsaZQu3AgIlWGrdPjEQDTPcZGLKxQKQ7Lc6oc8qqyAgS/KQmTR8SwLaucpAnh7h9F
-         MiRTEjTsl9We0reb10Wro0ttGYUZn37ZCEqRW2lI=
+        b=wzUTZ0791CVI3UDli3YY/2ZtkI6OIMH6SzWVCAm8MRx10vMJcd1MZuyZE2ofnaqiS
+         PyOV/Pnx7R13hqy8g4O7HyCZhmhp7+rB82x+YOy1ixnGOS3kk36ciaR8G8afvqp6A3
+         OYpWs7Bntk4J3T6G1b4Yizua8P6TH+3QamotczhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/60] tty: serial: msm_serial: avoid system lockup condition
-Date:   Fri, 19 Jul 2019 00:10:22 -0400
-Message-Id: <20190719041109.18262-13-sashal@kernel.org>
+Cc:     Wang Hai <wanghai26@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/60] memstick: Fix error cleanup path of memstick_init
+Date:   Fri, 19 Jul 2019 00:10:20 -0400
+Message-Id: <20190719041109.18262-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -60,43 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Wang Hai <wanghai26@huawei.com>
 
-[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
+[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+If bus_register fails. On its error handling path, it has cleaned up
+what it has done. There is no need to call bus_unregister again.
+Otherwise, if bus_unregister is called, issues such as null-ptr-deref
+will arise.
 
-Tested on SoC QCS404.
+Syzkaller report this:
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+kobject_add_internal failed for memstick (error: -12 parent: bus)
+BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
+
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ __kasan_report+0x171/0x18d mm/kasan/report.c:321
+ kasan_report+0xe/0x20 mm/kasan/common.c:614
+ sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+ sysfs_remove_file include/linux/sysfs.h:519 [inline]
+ bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
+ remove_probe_files drivers/base/bus.c:599 [inline]
+ bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
+ memstick_init+0x7a/0x1000 [memstick]
+ do_one_initcall+0xb9/0x3b5 init/main.c:914
+ do_init_module+0xe0/0x330 kernel/module.c:3468
+ load_module+0x38eb/0x4270 kernel/module.c:3819
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
+ do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai26@huawei.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/memstick/core/memstick.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 716aa76abdf9..0e0ccc132ab0 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -391,10 +391,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
+diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
+index 1246d69ba187..b1564cacd19e 100644
+--- a/drivers/memstick/core/memstick.c
++++ b/drivers/memstick/core/memstick.c
+@@ -629,13 +629,18 @@ static int __init memstick_init(void)
+ 		return -ENOMEM;
  
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
+ 	rc = bus_register(&memstick_bus_type);
+-	if (!rc)
+-		rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_destroy_workqueue;
+ 
+-	if (!rc)
+-		return 0;
++	rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_bus_unregister;
 +
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (!timeout--)
-+			break;
- 	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
- }
++	return 0;
+ 
++error_bus_unregister:
+ 	bus_unregister(&memstick_bus_type);
++error_destroy_workqueue:
+ 	destroy_workqueue(workqueue);
+ 
+ 	return rc;
 -- 
 2.20.1
 
