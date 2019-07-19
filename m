@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E3AC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5391C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34232082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC7F21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509818;
-	bh=cx3RbbFhMEmlYP+Us49tM2gMJSQLpigLGcqWonYQMWU=;
+	s=default; t=1563509823;
+	bh=jE+treAGzMSGgbgCi6ABb4d2WadhpnEm6Z+POfskfws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIbXTFLuNnmd7v/7g2APNz3p9r+k2POnsnkAqm56hYMjs8cZxZ7HB6ZmXu6t+cNWU
-	 mCUN6925Pf4H591BzGxodd63PcEELlGMeP8qjpnc7DxMxLQreDy9Rkzozjgme0sG7d
-	 cRZ57RcaI6UJbJEWiz+2/2ivlh2NG13PnrxMiTQE=
+	b=YUM3tQLH5cMSqEDBmlc3O4v5fmNI+5dx0z75bALtwjkutAwfjFk5RAFcCYodxTtht
+	 tOfHVKf3ToKwSfA3bre6oKK+bkcUUW02sRMD3i2xYAr9sal7ltqPCtkHcnZWZtg6dl
+	 oN4aaDHGTY8mfXrRQcpE15L96ug7ZjLgLEgHM+ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389284AbfGSEQ4 (ORCPT
+        id S2389779AbfGSEOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50864 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733197AbfGSEOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:38 -0400
+        id S2389725AbfGSEOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C99C21872;
-        Fri, 19 Jul 2019 04:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE7A21873;
+        Fri, 19 Jul 2019 04:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509678;
-        bh=cx3RbbFhMEmlYP+Us49tM2gMJSQLpigLGcqWonYQMWU=;
+        s=default; t=1563509673;
+        bh=jE+treAGzMSGgbgCi6ABb4d2WadhpnEm6Z+POfskfws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KrM6eV9WPVbK+RAc3RpSOI97XijotTqUyKS537kDSjNpKrgst7BYUpp7vJ522/X19
-         wmMhGweLPqg2QCnHVNx5JuwI1+9t57fS/qqJ1EMxONKa9At7BtUNPlb4AkVA9KKzgC
-         aL23OV2S3XTIQCZju5RVWllwv0dogsH/wfkUwZdo=
+        b=q/+2FjuvqXPFV9FjhJlJl+VqH/FWe09SpZ9QZfxdxeusrVNpIg7W0AMewCvHyFxws
+         eVQwVYA6ke8zkMri/fpaqlt6b6bBcwVldHrCJszv8rNdDaGj0YRSiQrR2I2jb5QupT
+         mTCaqpL/FBFozAQi6TpJH8I89fYvzi2yo8h293Rc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Baruch Siach <baruch@tkos.co.il>,
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/35] tty/serial: digicolor: Fix digicolor-usart already registered warning
-Date:   Fri, 19 Jul 2019 00:13:56 -0400
-Message-Id: <20190719041423.19322-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 05/35] tty: serial: cpm_uart - fix init when SMC is relocated
+Date:   Fri, 19 Jul 2019 00:13:53 -0400
+Message-Id: <20190719041423.19322-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -61,44 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
+[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
 
-When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
-the kernel complained,
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-  proc_dir_entry 'driver/digicolor-usart' already registered
-  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
 
-Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/digicolor-usart.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
-index a80cdad114f3..d8cb94997487 100644
---- a/drivers/tty/serial/digicolor-usart.c
-+++ b/drivers/tty/serial/digicolor-usart.c
-@@ -544,7 +544,11 @@ static int __init digicolor_uart_init(void)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index 0040c29f651a..b9e137c03fe3 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -421,7 +421,16 @@ static int cpm_uart_startup(struct uart_port *port)
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
+ 		}
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
+ 	}
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -875,16 +884,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
  
--	return platform_driver_register(&digicolor_uart_platform);
-+	ret = platform_driver_register(&digicolor_uart_platform);
-+	if (ret)
-+		uart_unregister_driver(&digicolor_uart);
-+
-+	return ret;
- }
- module_init(digicolor_uart_init);
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
+  */
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
  
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -898,8 +905,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
+ 
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
+ 	 */
 -- 
 2.20.1
 
