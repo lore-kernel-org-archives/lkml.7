@@ -2,104 +2,150 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BC3C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8143AC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B75218A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D003218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfGSHTD (ORCPT
+        id S1727116AbfGSHTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:19:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50636 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726135AbfGSHTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:19:03 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 64A8F54C5AA7980B1836;
-        Fri, 19 Jul 2019 15:18:58 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 19 Jul 2019 15:18:48 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to avoid discard command leak
-Date:   Fri, 19 Jul 2019 15:18:44 +0800
-Message-ID: <20190719071844.5690-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 19 Jul 2019 03:19:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9129 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726135AbfGSHTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:19:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:19:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="scan'208";a="343617583"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.81.172]) ([10.251.81.172])
+  by orsmga005.jf.intel.com with ESMTP; 19 Jul 2019 00:19:12 -0700
+Subject: Re: [PATCH v5 2/6] ASoC: sgtl5000: Improve VAG power and mute control
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Sasha Levin <sashal@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+References: <20190718090240.18432-1-oleksandr.suvorov@toradex.com>
+ <20190718090240.18432-3-oleksandr.suvorov@toradex.com>
+ <9c9ee47c-48bd-7109-9870-8f73be1f1cfa@intel.com>
+ <a86e4d6b-ed2c-d2f2-2974-6f00dc6ef68a@intel.com>
+ <CAGgjyvGboMPx5wKJ_1DaeYZazSHmQUGwDZHoCBt5vhpVq3Q_bA@mail.gmail.com>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <3c153dcc-e656-2959-6281-15cc895660e0@intel.com>
+Date:   Fri, 19 Jul 2019 09:19:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAGgjyvGboMPx5wKJ_1DaeYZazSHmQUGwDZHoCBt5vhpVq3Q_bA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- =============================================================================
- BUG discard_cmd (Tainted: G    B      OE  ): Objects remaining in discard_cmd on __kmem_cache_shutdown()
- -----------------------------------------------------------------------------
+On 2019-07-19 09:09, Oleksandr Suvorov wrote:
+> On Thu, 18 Jul 2019 at 21:49, Cezary Rojewski <cezary.rojewski@intel.com> wrote:
+>>
+>> On 2019-07-18 20:42, Cezary Rojewski wrote:
+>>> On 2019-07-18 11:02, Oleksandr Suvorov wrote:
+>>>> +enum {
+>>>> +    HP_POWER_EVENT,
+>>>> +    DAC_POWER_EVENT,
+>>>> +    ADC_POWER_EVENT,
+>>>> +    LAST_POWER_EVENT
+>>>> +};
+>>>> +
+>>>> +static u16 mute_mask[] = {
+>>>> +    SGTL5000_HP_MUTE,
+>>>> +    SGTL5000_OUTPUTS_MUTE,
+>>>> +    SGTL5000_OUTPUTS_MUTE
+>>>> +};
+>>>
+>>> If mute_mask[] is only used within common handler, you may consider
+>>> declaring const array within said handler instead (did not check that
+>>> myself).
+>>> Otherwise, simple comment for the second _OUTPUTS_MUTE should suffice -
+>>> its not self explanatory why you doubled that mask.
+> 
+> Ok, I'll add a comment to explain doubled mask.
+> 
+>>>
+>>>> +
+>>>>    /* sgtl5000 private structure in codec */
+>>>>    struct sgtl5000_priv {
+>>>>        int sysclk;    /* sysclk rate */
+>>>> @@ -137,8 +157,109 @@ struct sgtl5000_priv {
+>>>>        u8 micbias_voltage;
+>>>>        u8 lrclk_strength;
+>>>>        u8 sclk_strength;
+>>>> +    u16 mute_state[LAST_POWER_EVENT];
+>>>>    };
+>>>
+>>> When I spoke of LAST enum constant, I did not really had this specific
+>>> usage in mind.
+>>>
+>>>   From design perspective, _LAST_ does not exist and should never be
+>>> referred to as "the next option" i.e.: new enum constant.
+> 
+> By its nature, LAST_POWER_EVENT is actually a size of the array, but I
+> couldn't come up with a better name.
+> 
+>>> That is way preferred usage is:
+>>> u16 mute_state[ADC_POWER_EVENT+1;
+>>> -or-
+>>> u16 mute_state[LAST_POWER_EVENT+1];
+>>>
+>>> Maybe I'm just being radical here :)
+> 
+> Maybe :)  I don't like first variant (ADC_POWER_EVENT+1): somewhen in
+> future, someone can add a new event to this enum and we've got a
+> possible situation with "out of array indexing".
+> 
+>>>
+>>> Czarek
+>>
+>> Forgive me for double posting. Comment above is targeted towards:
+>>
+>>   >> +enum {
+>>   >> +    HP_POWER_EVENT,
+>>   >> +    DAC_POWER_EVENT,
+>>   >> +    ADC_POWER_EVENT,
+>>   >> +    LAST_POWER_EVENT
+>>   >> +};
+>>
+>> as LAST_POWER_EVENT is not assigned explicitly to ADC_POWER_EVENT and
+>> thus generates implicit "new option" of value 3.
+> 
+> So will you be happy with the following variant?
+> ...
+>      ADC_POWER_EVENT,
+>      LAST_POWER_EVENT =  ADC_POWER_EVENT,
+> ...
+>     u16 mute_state[LAST_POWER_EVENT+1];
+> ...
+> 
 
- INFO: Slab 0xffffe1ac481d22c0 objects=36 used=2 fp=0xffff936b4748bf50 flags=0x2ffff0000000100
- Call Trace:
-  dump_stack+0x63/0x87
-  slab_err+0xa1/0xb0
-  __kmem_cache_shutdown+0x183/0x390
-  shutdown_cache+0x14/0x110
-  kmem_cache_destroy+0x195/0x1c0
-  f2fs_destroy_segment_manager_caches+0x21/0x40 [f2fs]
-  exit_f2fs_fs+0x35/0x641 [f2fs]
-  SyS_delete_module+0x155/0x230
-  ? vtime_user_exit+0x29/0x70
-  do_syscall_64+0x6e/0x160
-  entry_SYSCALL64_slow_path+0x25/0x25
+It's not about being happy - I'm a happy man in general ;p
 
- INFO: Object 0xffff936b4748b000 @offset=0
- INFO: Object 0xffff936b4748b070 @offset=112
- kmem_cache_destroy discard_cmd: Slab cache still has objects
- Call Trace:
-  dump_stack+0x63/0x87
-  kmem_cache_destroy+0x1b4/0x1c0
-  f2fs_destroy_segment_manager_caches+0x21/0x40 [f2fs]
-  exit_f2fs_fs+0x35/0x641 [f2fs]
-  SyS_delete_module+0x155/0x230
-  do_syscall_64+0x6e/0x160
-  entry_SYSCALL64_slow_path+0x25/0x25
+As stated already, declaring _LAST_ as the "new option" is misleading 
+and not advised.
+And yeah, [_LAST_ + 1] is usually the one you should go with.
 
-Recovery can cache discard commands, so in error path of fill_super(),
-we need give a chance to handle them, otherwise it will lead to leak
-of discard_cmd slab cache.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/segment.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 57a83a68ae03..449ef70d99cc 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2084,6 +2084,13 @@ static void destroy_discard_cmd_control(struct f2fs_sb_info *sbi)
- 
- 	f2fs_stop_discard_thread(sbi);
- 
-+	/*
-+	 * Recovery can cache discard commands, so in error path of
-+	 * fill_super(), it needs to give a chance to handle them.
-+	 */
-+	if (unlikely(atomic_read(&dcc->discard_cmd_cnt)))
-+		f2fs_issue_discard_timeout(sbi);
-+
- 	kvfree(dcc);
- 	SM_I(sbi)->dcc_info = NULL;
- }
--- 
-2.18.0.rc1
-
+Czarek
