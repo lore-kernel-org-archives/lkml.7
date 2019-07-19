@@ -2,190 +2,105 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA83CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EFFC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3C12186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZ6pI29m"
+	by mail.kernel.org (Postfix) with ESMTP id B6B3521849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbfGSUFu (ORCPT
+        id S1730648AbfGSUOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:05:50 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40514 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfGSUFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:05:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so30082396wmj.5;
-        Fri, 19 Jul 2019 13:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LhwuEfAWfiEHK8h+/sGCMcZbf2WkYnCPlgk8A3vAekc=;
-        b=aZ6pI29mc8rQNUafXyq9rPme6gj6WIeWZv6e1FXQ6vnfDWO6baE3wG5YE09axX0NKT
-         vTc/Ct2llNDfKtZFgdIyWVgqviYmugoNZRTctJdCyekfHMm51zeNena++xU7CQ1qighk
-         QB7gOhZHTBKr84B3N4lZ6KXydpZpEayklJX0dBK1GyC9d6f9b76n2ls6dcgcDhBZQzZ5
-         kDE2510r8EeTHF6RA+p919Nqmzp7W0hgflMlysk4nx38WsUz5hlQrjXB1BgU0SNy4ebN
-         g1P04X99bFcT/KGmU52zjVSuGSRr5e5RS+uberbnakv4eP9a3VAcWpz71yuLUkgHKg28
-         ybAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LhwuEfAWfiEHK8h+/sGCMcZbf2WkYnCPlgk8A3vAekc=;
-        b=mkUHCNYw1VB6LLlgmACqLgOoRiGPi4A4Ika6uCkv5svs2/Brb7W3oSgLmYw1ygUj6q
-         4amtxODOBdZUycUKLJIWY6Wgz9NC8ofLVRonNtWaskPx/fYuew9/hWPuiNMvQgtNMcNt
-         +uCtpTVaQrz9js55P+YOzove3XxdpK1UY4bL4r5R+UyXm9JByCQfPCzSW2t0I4y/vrne
-         z0CStjMpNKBVC8z4MqNdQIG041I7n95HP3L1OjLlRtRNQjlsW2pAwVKvsWTp3iXbSm7c
-         uIzEKZ3fgBZayllHM+VlLo/ZGEnCxOy32wOObr03EAExy7MwtqCOqGjWbsZF7g+6CLV7
-         5q6g==
-X-Gm-Message-State: APjAAAUedcZ0bKJJ2z9XjMi992MXJg/V00YS1/yWRbMgcIGLIBFELQNH
-        pWav8ZEZcWeDtG7GQrTUmwQuhPt0
-X-Google-Smtp-Source: APXvYqwmzDlp81Z8OSCWa5VeLuVh1tSdAWMlvZ7w7wN10bNLCP9vJQt+Ja6w8/mC/EY2qPuV0Ko5OQ==
-X-Received: by 2002:a1c:c747:: with SMTP id x68mr49510714wmf.138.1563566747044;
-        Fri, 19 Jul 2019 13:05:47 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd6:c00:40e3:8fe6:4421:a541? ([2003:ea:8bd6:c00:40e3:8fe6:4421:a541])
-        by smtp.googlemail.com with ESMTPSA id o6sm57912418wra.27.2019.07.19.13.05.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 13:05:45 -0700 (PDT)
-Subject: Re: network problems with r8169
-To:     Thomas Voegtle <tv@lio96.de>
-References: <alpine.LSU.2.21.1907182032370.7080@er-systems.de>
-Cc:     linux-kernel@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <2eeedff5-4911-db6e-6bfd-99b591daa7ef@gmail.com>
-Date:   Fri, 19 Jul 2019 22:05:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 16:14:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52506 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728636AbfGSUOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:14:36 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 48E4530C1E2F;
+        Fri, 19 Jul 2019 20:14:36 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 79EB451DE6;
+        Fri, 19 Jul 2019 20:14:34 +0000 (UTC)
+Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an
+ atomic_long_t
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Will Deacon <will.deacon@arm.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-14-longman@redhat.com>
+ <20190719184538.GA20324@hermes.olymp>
+ <2ed44afa-4528-a785-f188-2daf24343f97@redhat.com> <87lfwtlsf7.fsf@suse.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <da3d3b39-ede2-1e0c-e7f6-ea918d20d0f9@redhat.com>
+Date:   Fri, 19 Jul 2019 16:14:33 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.1907182032370.7080@er-systems.de>
+In-Reply-To: <87lfwtlsf7.fsf@suse.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 19 Jul 2019 20:14:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.07.2019 20:50, Thomas Voegtle wrote:
-> 
-> Hello,
-> 
-> I'm having network problems with the commits on r8169 since v5.2. There are ping packet loss, sometimes 100%, sometimes 50%. In the end network is unusable.
-> 
-> v5.2 is fine, I bisected it down to:
-> 
-> a2928d28643e3c064ff41397281d20c445525032 is the first bad commit
-> commit a2928d28643e3c064ff41397281d20c445525032
-> Author: Heiner Kallweit <hkallweit1@gmail.com>
-> Date:   Sun Jun 2 10:53:49 2019 +0200
-> 
->     r8169: use paged versions of phylib MDIO access functions
-> 
->     Use paged versions of phylib MDIO access functions to simplify
->     the code.
-> 
->     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
-> 
-> 
-> Reverting that commit on top of v5.2-11564-g22051d9c4a57 fixes the problem
-> for me (had to adjust the renaming to r8169_main.c).
-> 
-> I have a:
-> 04:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
-> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev
-> 0c)
->         Subsystem: Biostar Microtech Int'l Corp Device [1565:2400]
->         Kernel driver in use: r8169
-> 
-> on a BIOSTAR H81MG motherboard.
-> 
-Interesting. I have the same chip version (RTL8168g) and can't reproduce
-the issue. Can you provide a full dmesg output and test the patch below
-on top of linux-next? I'd be interested in the WARN_ON stack traces
-(if any) and would like to know whether the experimental change to
-__phy_modify_changed helps.
+On 7/19/19 3:45 PM, Luis Henriques wrote:
+> Waiman Long <longman@redhat.com> writes:
+>
+>> On 7/19/19 2:45 PM, Luis Henriques wrote:
+>>> On Mon, May 20, 2019 at 04:59:12PM -0400, Waiman Long wrote:
+>>>> The rwsem->owner contains not just the task structure pointer, it also
+>>>> holds some flags for storing the current state of the rwsem. Some of
+>>>> the flags may have to be atomically updated. To reflect the new reality,
+>>>> the owner is now changed to an atomic_long_t type.
+>>>>
+>>>> New helper functions are added to properly separate out the task
+>>>> structure pointer and the embedded flags.
+>>> I started seeing KASAN use-after-free with current master, and a bisect
+>>> showed me that this commit 94a9717b3c40 ("locking/rwsem: Make
+>>> rwsem->owner an atomic_long_t") was the problem.  Does it ring any
+>>> bells?  I can easily reproduce it with xfstests (generic/464).
+>>>
+>>> Cheers,
+>>> --
+>>> Luís
+>> This patch shouldn't change the behavior of the rwsem code. The code
+>> only access data within the rw_semaphore structures. I don't know why it
+>> will cause a KASAN error. I will have to reproduce it and figure out
+>> exactly which statement is doing the invalid access.
+> Yeah, screwing the bisection is something I've done in the past so I may
+> have got the wrong commit.  Another detail is that I was running
+> xfstests against CephFS, I didn't tried with any other filesystem.  I
+> can try to reproduce with btrfs or xfs next week.
+>
+> Cheers,
 
-> 
-> greetings,
-> 
->   Thomas
-> 
-> 
-Heiner
+Oh, I don't have a CephFS setup. Will you use the
+scripts/decode_stacktrace.sh to find what line number is the offending
+statement? That will help in figuring out what has gone wrong.
 
+Anyway, it seems like a structure that include a rwsem is freed while
+another cpu is still waiting to acquire the lock. It is probably a
+hidden bug in the filesystem code somewhere that the recent changes in
+rwsem behavior make it easier for  the problem to show up.
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 8d7dd4c5f..26be73000 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -1934,6 +1934,8 @@ static int rtl_get_eee_supp(struct rtl8169_private *tp)
- 	struct phy_device *phydev = tp->phydev;
- 	int ret;
- 
-+	WARN_ON(phy_read(phydev, 0x1f));
-+
- 	switch (tp->mac_version) {
- 	case RTL_GIGA_MAC_VER_34:
- 	case RTL_GIGA_MAC_VER_35:
-@@ -1957,6 +1959,8 @@ static int rtl_get_eee_lpadv(struct rtl8169_private *tp)
- 	struct phy_device *phydev = tp->phydev;
- 	int ret;
- 
-+	WARN_ON(phy_read(phydev, 0x1f));
-+
- 	switch (tp->mac_version) {
- 	case RTL_GIGA_MAC_VER_34:
- 	case RTL_GIGA_MAC_VER_35:
-@@ -1980,6 +1984,8 @@ static int rtl_get_eee_adv(struct rtl8169_private *tp)
- 	struct phy_device *phydev = tp->phydev;
- 	int ret;
- 
-+	WARN_ON(phy_read(phydev, 0x1f));
-+
- 	switch (tp->mac_version) {
- 	case RTL_GIGA_MAC_VER_34:
- 	case RTL_GIGA_MAC_VER_35:
-@@ -2003,6 +2009,8 @@ static int rtl_set_eee_adv(struct rtl8169_private *tp, int val)
- 	struct phy_device *phydev = tp->phydev;
- 	int ret = 0;
- 
-+	WARN_ON(phy_read(phydev, 0x1f));
-+
- 	switch (tp->mac_version) {
- 	case RTL_GIGA_MAC_VER_34:
- 	case RTL_GIGA_MAC_VER_35:
-diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
-index 16667fbac..1aa1142b8 100644
---- a/drivers/net/phy/phy-core.c
-+++ b/drivers/net/phy/phy-core.c
-@@ -463,12 +463,10 @@ int __phy_modify_changed(struct phy_device *phydev, u32 regnum, u16 mask,
- 		return ret;
- 
- 	new = (ret & ~mask) | set;
--	if (new == ret)
--		return 0;
- 
--	ret = __phy_write(phydev, regnum, new);
-+	__phy_write(phydev, regnum, new);
- 
--	return ret < 0 ? ret : 1;
-+	return new != ret;
- }
- EXPORT_SYMBOL_GPL(__phy_modify_changed);
- 
--- 
-2.22.0
+Cheers,
+Longman
 
