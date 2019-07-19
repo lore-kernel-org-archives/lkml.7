@@ -2,112 +2,188 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B32C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4E4C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF432184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563530548;
-	bh=KvPLM1GNe5tFVjsJpLtAS+Cc5JSEL3ozQZTgGhM2Zj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cisfm9ExuzRRPwrmc9k3+2R8ZcV3hK6hf2czwUbN18ndJAWn2F8uwUS9HgPJ56hYo
-	 ZMvRCH6kzJjgJNBGZGjiTLKJckb5V4CEdbeaJFUKNHjx20FS8zdvMBQ92HjfQOqLtu
-	 9pxPD2mo+HS5aNdDD3Wpmutu1QbzLnxLdYhh2nOg=
+	by mail.kernel.org (Postfix) with ESMTP id E324E2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGSKC0 (ORCPT
+        id S1727330AbfGSKCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36390 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 06:02:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43793 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSKC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:02:26 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF302173B;
-        Fri, 19 Jul 2019 10:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563530545;
-        bh=KvPLM1GNe5tFVjsJpLtAS+Cc5JSEL3ozQZTgGhM2Zj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ngDBnyyvbzeDdeqaWe1yYZ14j969anbfifz4sULg2Y/9mfJfcN2ruBIKYgfHGrwXv
-         RK6jQPeP2tF0RC6ZW5ZWHe7piD8IkfoGr1N8FVpUiEllxkKqG6jvPfz5Eo+0qxU4FW
-         pwk+O2cge3NeLPhjy9rKqiqtFbFtbFxsxPikY1Nw=
-Date:   Fri, 19 Jul 2019 11:02:20 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        Frank Li <frank.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        id S1725853AbfGSKCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:02:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 03:02:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="asc'?scan'208";a="176257422"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Jul 2019 03:02:39 -0700
+Date:   Fri, 19 Jul 2019 17:59:27 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     "Lu, Kechen" <kechen.lu@intel.com>
+Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH] perf tool: arch: arm64: change the way for
- get_cpuid_str() function
-Message-ID: <20190719100219.b3bbrv4t4qcv2gid@willie-the-truck>
-References: <20190718061853.10403-1-qiangqing.zhang@nxp.com>
- <20190719075450.xcm4i4a5sfaxlfap@willie-the-truck>
- <DB7PR04MB4618EE69C2D8A664660C19C4E6CB0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [RFC PATCH v4 1/6] vfio: Define device specific irq type
+ capability
+Message-ID: <20190719095927.GG28809@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+ <20190718155640.25928-2-kechen.lu@intel.com>
+ <20190719060540.GC28809@zhen-hp.sh.intel.com>
+ <31185F57AF7C4B4F87C41E735C23A6FE64DFC7@shsmsx102.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HKEL+t8MFpg/ASTE"
 Content-Disposition: inline
-In-Reply-To: <DB7PR04MB4618EE69C2D8A664660C19C4E6CB0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <31185F57AF7C4B4F87C41E735C23A6FE64DFC7@shsmsx102.ccr.corp.intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 08:29:12AM +0000, Joakim Zhang wrote:
-> > On Thu, Jul 18, 2019 at 06:21:30AM +0000, Joakim Zhang wrote:
-> > > Now the get_cpuid__str function returns the MIDR string of the first
-> > > online cpu from the range of cpus asscociated with the PMU CORE device.
+
+--HKEL+t8MFpg/ASTE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019.07.19 09:02:33 +0000, Lu, Kechen wrote:
+> Hi,
+>=20
+> > -----Original Message-----
+> > From: Zhenyu Wang [mailto:zhenyuw@linux.intel.com]
+> > Sent: Friday, July 19, 2019 2:06 PM
+> > To: Lu, Kechen <kechen.lu@intel.com>
+> > Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-=20
+> > kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;=20
+> > kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan=20
+> > <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian,=20
+> > Kevin <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>;=20
+> > alex.williamson@redhat.com; Eric Auger <eric.auger@redhat.com>
+> > Subject: Re: [RFC PATCH v4 1/6] vfio: Define device specific irq type=
+=20
+> > capability
+> >=20
+> > On 2019.07.18 23:56:35 +0800, Kechen Lu wrote:
+> > > From: Tina Zhang <tina.zhang@intel.com>
 > > >
-> > > It can work when pass a perf_pmu entity to get_cpuid_str. However, it
-> > > will pass NULL via perf_pmu__find_map from metricgroup.c if we want to
-> > > add metric group for arm64. When pass NULL to get_cpuid_str, it can't
-> > > return the MIDR string.
-> > 
-> > Why is this code passing a NULL PMU? What information does it actually need?
-> > Other functions, such as print_pmu_events(), iterate over all PMUs.
-> 
-> tools/perf/utils/metricgroup.c:
-> metricgroup__add_metric()/metricgroup__has_metric()/metricgroup__print()---->perf_pmu__find_map(NULL)------>perf_pmu__getcpuid(NULL)----->get_cpuid_str(NULL)
-> So, it will eventually pass NULL to get_cpuid_str() function for arm64, and now get_cpuid_str() for arm64 need *struct perf_pmu* entity to return MIDR string.
-> 
-> And the declaration for get_cpuid_str() is char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused) in tools/perf/utils/header.h file.
-> So, it can return MIDR string without passing *struct perf_pmu* entity. Arch PowerPC/x86/s390 which implement metricgroup all add __maybe_unused.
-> 
-> > > There are three methods from userspace getting MIDR string for arm64:
-> > > 1. parse
-> > > sysfs(/sys/devices/system/cpu/cpu?/regs/identification/midr_el1)
-> > > 2. parse procfs(/proc/cpuinfo)
-> > > 3. read the hwcaps(MIDR register) with getauxval(AT_HWCAP)
+> > > Cap the number of irqs with fixed indexes and use capability chains=
+=20
+> > > to chain device specific irqs.
 > > >
-> > > Perfer to select #3 as it is more simple and direct.
-> > 
-> > That's probably terminally broken for heterogeneous systems, so I'm not at all
-> > happy with this patch.
-> 
-> The implement of get_cpuid_str() for arm64 now only can return the MIDR
-> string of the first online cpu. I think it is also broken for
-> heterogeneous systems.
+> > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > > Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> > > ---
+> > >  include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
+> > >  1 file changed, 18 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h=20
+> > > index 8f10748dac79..be6adab4f759 100644
+> > > --- a/include/uapi/linux/vfio.h
+> > > +++ b/include/uapi/linux/vfio.h
+> > > @@ -448,11 +448,27 @@ struct vfio_irq_info {
+> > >  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
+> > >  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
+> > >  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
+> > > +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps
+> > */
+> > >  	__u32	index;		/* IRQ index */
+> > >  	__u32	count;		/* Number of IRQs within this index */
+> > > +	__u32	cap_offset;	/* Offset within info struct of first cap */
+> >=20
+> > This still breaks ABI as argsz would be updated with this new field,=20
+> > so it would cause compat issue. I think my last suggestion was to=20
+> > assume cap list starts after vfio_irq_info.
+> >
+> =20
+> In the common practice, the general logic is first use the "count" as the=
+ "minsz" boundary to perform copy from user, and then perform following log=
+ic, so that the incompatibility issue would not happen. BTW, this patch has=
+ been double checked by Eric Auger before included in his patch-set.=20
+>=20
 
-I disagree: the current code returns the MIDR string for the first online
-CPU *corresponding to the PMU* (e.g. pmu->cpus) and therefore handles
-heterogeneous systems like that.
+yeah, sorry I was thinking vfio might fail in that case but it seems
+current code assume argsz should be larger than minsz for count here,
+so that's fine.
 
-> Will, do you know how to fix this issue more reasonable?
+>=20
+> > >  };
+> > >  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
+> > >
+> > > +/*
+> > > + * The irq type capability allows irqs unique to a specific device=
+=20
+> > > +or
+> > > + * class of devices to be exposed.
+> > > + *
+> > > + * The structures below define version 1 of this capability.
+> > > + */
+> > > +#define VFIO_IRQ_INFO_CAP_TYPE      3
+> > > +
+> > > +struct vfio_irq_info_cap_type {
+> > > +	struct vfio_info_cap_header header;
+> > > +	__u32 type;     /* global per bus driver */
+> > > +	__u32 subtype;  /* type specific */ };
+> > > +
+> > >  /**
+> > >   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct
+> > vfio_irq_set)
+> > >   *
+> > > @@ -554,7 +570,8 @@ enum {
+> > >  	VFIO_PCI_MSIX_IRQ_INDEX,
+> > >  	VFIO_PCI_ERR_IRQ_INDEX,
+> > >  	VFIO_PCI_REQ_IRQ_INDEX,
+> > > -	VFIO_PCI_NUM_IRQS
+> > > +	VFIO_PCI_NUM_IRQS =3D 5	/* Fixed user ABI, IRQ indexes >=3D5 use
+> > */
+> > > +				/* device specific cap to define content */
+> > >  };
+> > >
+> > >  /*
+> > > --
+> > > 2.17.1
+> > >
+> >=20
+> > --
+> > Open Source Technology Center, Intel ltd.
+> >=20
+> > $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
 
-I still don't know what the metricgroup coce is trying to achieve, but my
-previous suggestion about looking at print_pmu_events() is probably still a
-good place to start.
+--=20
+Open Source Technology Center, Intel ltd.
 
-Will
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--HKEL+t8MFpg/ASTE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXTGUfwAKCRCxBBozTXgY
+J/UoAJ44zsldWP7UQPboscULWpi5vt3WswCePRPUL9w/jjULfR02ApGsutPBcso=
+=0x0A
+-----END PGP SIGNATURE-----
+
+--HKEL+t8MFpg/ASTE--
