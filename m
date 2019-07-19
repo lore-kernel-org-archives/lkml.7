@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E397C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20513C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698CC206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8277206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511084;
-	bh=3GGrEOm9fazLA5eumls6MQ4xq/akDvOrKzvg5TbmCUM=;
+	s=default; t=1563511087;
+	bh=rQu1fthOwE3GJJSjLt530Jq0TgMDWOzmND3gXPhaF7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sndt1Q0WI54C4iNrY9wPOEtx1Nr5cXnaYBuOiwUkVbsrdoLh5M07L08GvdmMYfjhn
-	 +jwaIg0rlF6k0KozzmT5XMgrh+WP6bvFPaiEJ39hhXz1Ldiwb+rr2MGHB71OxODHzD
-	 /gACNtWYKiCkMaOCYNX5nrsZ7LX3cCHoR4Wbhyo8=
+	b=TCOF55M1uT+Md9ZiEEtgRIswJ34oa7wpPtIthcDl1fQTL7tn2G1+dfucVQN+Kjg3I
+	 aDJ2m//BMpyjEYtl7NZpLiIjgR8qMVWuPR8MvtJbucNrCuuTuNMvMuRS536Ywbrwuw
+	 wFZX7bc8dU+uKt0eAS+CYeZ7p8EuMD7tCrs98TfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389723AbfGSEiC (ORCPT
+        id S2389563AbfGSEiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbfGSD7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:31 -0400
+        id S1728773AbfGSD7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA8E2189F;
-        Fri, 19 Jul 2019 03:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC1CE21897;
+        Fri, 19 Jul 2019 03:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508770;
-        bh=3GGrEOm9fazLA5eumls6MQ4xq/akDvOrKzvg5TbmCUM=;
+        s=default; t=1563508774;
+        bh=rQu1fthOwE3GJJSjLt530Jq0TgMDWOzmND3gXPhaF7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sz4jSDsiyRMvVJvoyIeoqAq6kElmEzTaHO1nUwLs+sSBK5qKtiWN/+kAO1oz0Qo6K
-         Ie0sJSaEeTvzBMVBljwFqPt+3Lm0o2aGhjRbP+N+RuIUEDafk8zu0L2f8QSzDdNriQ
-         OhVMvRIoNxX2qOQUdQKEfCHQE+QIQdtxELVgmy34=
+        b=vopHwHRnrjJaObKmLNTHAV+oTykLinlFdOEW5n6bWxJUWe77Ok1Hd1Eu8J87i1DlA
+         N8XuLddUCJAzi6gttgkp7q8jZ0PxrK8RAF9QRWhfyWE3BOr/gwU746JEUaHE2NtR/J
+         lmmlMYdctoOFxFXJPkuBOqWMh7F2iUZOCB0BYFCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.2 080/171] staging: ks7010: Fix build error
-Date:   Thu, 18 Jul 2019 23:55:11 -0400
-Message-Id: <20190719035643.14300-80-sashal@kernel.org>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 083/171] i2c: stm32f7: fix the get_irq error cases
+Date:   Thu, 18 Jul 2019 23:55:14 -0400
+Message-Id: <20190719035643.14300-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,43 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit 3e5bc68fa596874500e8c718605aa44d5e42a34c ]
+[ Upstream commit 79b4499524ed659fb76323efc30f3dc03967c88f ]
 
-when CRYPTO is m and KS7010 is y, building fails:
+During probe, return the "get_irq" error value instead of -EINVAL which
+allows the driver to be deferred probed if needed.
+Fix also the case where of_irq_get() returns a negative value.
+Note :
+On failure of_irq_get() returns 0 or a negative value while
+platform_get_irq() returns a negative value.
 
-drivers/staging/ks7010/ks_hostif.o: In function `michael_mic.constprop.13':
-ks_hostif.c:(.text+0x560): undefined reference to `crypto_alloc_shash'
-ks_hostif.c:(.text+0x580): undefined reference to `crypto_shash_setkey'
-ks_hostif.c:(.text+0x5e0): undefined reference to `crypto_destroy_tfm'
-ks_hostif.c:(.text+0x614): undefined reference to `crypto_shash_update'
-ks_hostif.c:(.text+0x62c): undefined reference to `crypto_shash_update'
-ks_hostif.c:(.text+0x648): undefined reference to `crypto_shash_finup'
-
-Add CRYPTO and CRYPTO_HASH dependencies to fix this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 8b523f20417d ("staging: ks7010: removed custom Michael MIC implementation.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/ks7010/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-stm32f7.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/staging/ks7010/Kconfig b/drivers/staging/ks7010/Kconfig
-index 0987fdc2f70d..9d7cbc8b12df 100644
---- a/drivers/staging/ks7010/Kconfig
-+++ b/drivers/staging/ks7010/Kconfig
-@@ -5,6 +5,7 @@ config KS7010
- 	select WIRELESS_EXT
- 	select WEXT_PRIV
- 	select FW_LOADER
-+	depends on CRYPTO && CRYPTO_HASH
- 	help
- 	  This is a driver for KeyStream KS7010 based SDIO WIFI cards. It is
- 	  found on at least later Spectec SDW-821 (FCC-ID "S2Y-WLAN-11G-K" only,
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 48337bef5b87..3d90c0bb049e 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -25,7 +25,6 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pinctrl/consumer.h>
+@@ -1816,15 +1815,14 @@ static struct i2c_algorithm stm32f7_i2c_algo = {
+ 
+ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct stm32f7_i2c_dev *i2c_dev;
+ 	const struct stm32f7_i2c_setup *setup;
+ 	struct resource *res;
+-	u32 irq_error, irq_event, clk_rate, rise_time, fall_time;
++	u32 clk_rate, rise_time, fall_time;
+ 	struct i2c_adapter *adap;
+ 	struct reset_control *rst;
+ 	dma_addr_t phy_addr;
+-	int ret;
++	int irq_error, irq_event, ret;
+ 
+ 	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
+ 	if (!i2c_dev)
+@@ -1836,16 +1834,20 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->base);
+ 	phy_addr = (dma_addr_t)res->start;
+ 
+-	irq_event = irq_of_parse_and_map(np, 0);
+-	if (!irq_event) {
+-		dev_err(&pdev->dev, "IRQ event missing or invalid\n");
+-		return -EINVAL;
++	irq_event = platform_get_irq(pdev, 0);
++	if (irq_event <= 0) {
++		if (irq_event != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ event: %d\n",
++				irq_event);
++		return irq_event ? : -ENOENT;
+ 	}
+ 
+-	irq_error = irq_of_parse_and_map(np, 1);
+-	if (!irq_error) {
+-		dev_err(&pdev->dev, "IRQ error missing or invalid\n");
+-		return -EINVAL;
++	irq_error = platform_get_irq(pdev, 1);
++	if (irq_error <= 0) {
++		if (irq_error != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ error: %d\n",
++				irq_error);
++		return irq_error ? : -ENOENT;
+ 	}
+ 
+ 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
 -- 
 2.20.1
 
