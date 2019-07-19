@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB034C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF0BC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6182173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296972082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510934;
-	bh=GN/OsSNmdwC+UYwQNWTMkfKny8MRTFWFNFlzyHs3pjE=;
+	s=default; t=1563510941;
+	bh=KvJVT3OxbW7ZfxoOeAj1LriJxnXXyQaXFDAw6GDtAw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dDAd8EpK/Jdp00cnZ6e6wCyehRZJcvY7LcDfV9ZSCVhjta+Nhqgx35460Fhnxkk/y
-	 ePPN/K1goQCQxLXVVKzgsLxZ+/Z1EFWlTroWqBaGf8O6hnM6JxOgpHC3ADWElbVLR4
-	 7m7xylIDAbSxiNh5VqsqL7OjUKMnx1804QDPwVUo=
+	b=uasPGWGO2obpL3YClwBqdzPYtHNPysAWmoIkepPwooLvI4oRHVuGdX/iwRc5IwSKp
+	 23qOs/grl97hu+0kr9uyTu2Dp0tP09GCVxJmIT7pWeyDUig8udNwmMrONr1oaEBTor
+	 HFyH2gO/RWSHmU4Yksg4Sy+DfkZSUAEQcOBByddM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388584AbfGSEfd (ORCPT
+        id S2388630AbfGSEfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:35:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729420AbfGSEBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:25 -0400
+        id S1728581AbfGSEBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D4621897;
-        Fri, 19 Jul 2019 04:01:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FC2F218BA;
+        Fri, 19 Jul 2019 04:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508885;
-        bh=GN/OsSNmdwC+UYwQNWTMkfKny8MRTFWFNFlzyHs3pjE=;
+        s=default; t=1563508879;
+        bh=KvJVT3OxbW7ZfxoOeAj1LriJxnXXyQaXFDAw6GDtAw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMEAuy8V//91E5PQd2XeRLl4PVexfPXla+SWGqb5z7oK6TIVz3H1vpZkilABDcSNm
-         J61XkELg2knGNKgO9ST3JymR0md63u64QZ3x8+GsAqs1NWF3YPr4u7aGxGD+UmjAmr
-         RE/EQSxX8QtX9LLBWL2IgsRLqKp3F+xORmQA+djA=
+        b=ktqjFaQaWmZaDRYTXFVLDw7CKX4EgxcJacJjbJMGO04YuGqzYig5DgYgX0nv///Kl
+         zTHEPC/ioVgf3e4vCNIXuKt5vTToTfLUDEEng4vEHhDFAuHv5dxRcNBeR12Pk9rxO9
+         Z8HIyVh9ci6y0pEbdi/+CrrZFwHM/oTOV7tJTbSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Atish Patra <Atish.Patra@wdc.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 136/171] nvme-pci: limit max_hw_sectors based on the DMA max mapping size
-Date:   Thu, 18 Jul 2019 23:56:07 -0400
-Message-Id: <20190719035643.14300-136-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 133/171] perf intel-bts: Fix potential NULL pointer dereference found by the smatch tool
+Date:   Thu, 18 Jul 2019 23:56:04 -0400
+Message-Id: <20190719035643.14300-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,39 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 7637de311bd2124b298a072852448b940d8a34b9 ]
+[ Upstream commit 1d481458816d9424c8a05833ce0ebe72194a350e ]
 
-When running a NVMe device that is attached to a addressing
-challenged PCIe root port that requires bounce buffering, our
-request sizes can easily overflow the swiotlb bounce buffer
-size.  Limit the maximum I/O size to the limit exposed by
-the DMA mapping subsystem.
+Based on the following report from Smatch, fix the potential NULL
+pointer dereference check.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reported-by: Atish Patra <Atish.Patra@wdc.com>
-Tested-by: Atish Patra <Atish.Patra@wdc.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+  tools/perf/util/intel-bts.c:898
+  intel_bts_process_auxtrace_info() error: we previously assumed
+  'session->itrace_synth_opts' could be null (see line 894)
+
+  tools/perf/util/intel-bts.c:899
+  intel_bts_process_auxtrace_info() warn: variable dereferenced before
+  check 'session->itrace_synth_opts' (see line 898)
+
+  tools/perf/util/intel-bts.c
+  894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+  895                 bts->synth_opts = *session->itrace_synth_opts;
+  896         } else {
+  897                 itrace_synth_opts__set_default(&bts->synth_opts,
+  898                                 session->itrace_synth_opts->default_no_sample);
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  899                 if (session->itrace_synth_opts)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  900                         bts->synth_opts.thread_stack =
+  901                                 session->itrace_synth_opts->thread_stack;
+  902         }
+
+'session->itrace_synth_opts' is impossible to be a NULL pointer in
+intel_bts_process_auxtrace_info(), thus this patch removes the NULL test
+for 'session->itrace_synth_opts'.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190708143937.7722-3-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-bts.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 5dfa067f6506..5c45f4cab060 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2515,7 +2515,8 @@ static void nvme_reset_work(struct work_struct *work)
- 	 * Limit the max command size to prevent iod->sg allocations going
- 	 * over a single page.
- 	 */
--	dev->ctrl.max_hw_sectors = NVME_MAX_KB_SZ << 1;
-+	dev->ctrl.max_hw_sectors = min_t(u32,
-+		NVME_MAX_KB_SZ << 1, dma_max_mapping_size(dev->dev) >> 9);
- 	dev->ctrl.max_segments = NVME_MAX_SEGS;
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index e32dbffebb2f..625ad3639a7e 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -891,13 +891,12 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
+ 	if (dump_trace)
+ 		return 0;
  
- 	/*
+-	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
++	if (session->itrace_synth_opts->set) {
+ 		bts->synth_opts = *session->itrace_synth_opts;
+ 	} else {
+ 		itrace_synth_opts__set_default(&bts->synth_opts,
+ 				session->itrace_synth_opts->default_no_sample);
+-		if (session->itrace_synth_opts)
+-			bts->synth_opts.thread_stack =
++		bts->synth_opts.thread_stack =
+ 				session->itrace_synth_opts->thread_stack;
+ 	}
+ 
 -- 
 2.20.1
 
