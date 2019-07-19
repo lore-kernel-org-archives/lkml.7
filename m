@@ -2,243 +2,116 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70FAC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C383C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15C72184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5293D21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qN+wKk3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfGSI1e (ORCPT
+        id S1727206AbfGSI2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:27:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:59061 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfGSI1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:27:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 01:27:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="scan'208";a="179562077"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 19 Jul 2019 01:27:30 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
-        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, cai@lca.pw,
-        jacob.jun.pan@intel.com
-Subject: Re: [PATCH v2 7/7] iommu/vt-d: Consolidate domain_init() to avoid
- duplication
-To:     Alex Williamson <alex.williamson@redhat.com>
-References: <20190612002851.17103-1-baolu.lu@linux.intel.com>
- <20190612002851.17103-8-baolu.lu@linux.intel.com>
- <20190718171615.2ed56280@x1.home>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f56599a6-77ac-e1ef-4843-51167b1284b3@linux.intel.com>
-Date:   Fri, 19 Jul 2019 16:27:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 19 Jul 2019 04:28:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40025 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfGSI2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 04:28:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so13848828pfp.7;
+        Fri, 19 Jul 2019 01:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LVGzUddFUDDTd3XNu9CaLaSeJBDagIzKEuUQ6S8/s64=;
+        b=qN+wKk3BWFLjRh9ab2e6MyK9FKz8VnKuCBk/inm6CAhxWcF6tuiUlSD3Vw6ZSQWfih
+         +nOgLhtQp22wCw/LyvjpD93gPJNonWeMlCIk5zaf0VqxSFvpr6sj4ydfKHdVbeBFgeSV
+         GO0LzpkpnRa7iZ54liIdH2CtzkRkqF+iDyK9GLSD7suwEr06ER97sL7V37d6ElDNi1dG
+         ybtqo1YZlLg5aR2/SryKOmY5sI4UW29biCd5t3Zur+BsV3dFivwA57qAUXo8e2jvNpr+
+         T75HuSNFsCNgIqCvHp4PII4uU7fsrnqstRaP5TkoR8ibPFbgmcYOKKy2l6lJBeZHO2oG
+         uhfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LVGzUddFUDDTd3XNu9CaLaSeJBDagIzKEuUQ6S8/s64=;
+        b=ib4740gZ1c3vQ+XteXKvAozvxN11d9S8kJasPm7pSPW7vZDgMgJkJxQZbUuas+nVTq
+         P1zy9N5ZcciKM0pVPN4JG9iUzxh4b/6fqmbRWQXRBLzzage+Na8nWQVS6HpdTyIdOCMc
+         K28fCEX+GQdmF+oj9L3ecVfFWVjs52QdUR7+7wdzwjz/d8xFTPjjVT8YbcmsTzD70PJD
+         7Jytak4o+zvZyp30LRKeYKLZKW9Dn4atJItj89BtrCv/7BMMDzw0VnwoObkXmrGdl+hz
+         ohb3btFL79AB9YAtMXJnUfII6yr4gnYnBpBdP2KiKNN8T7RDtmP/yriZ5ShlLHc/o1/c
+         1JRA==
+X-Gm-Message-State: APjAAAU/mN/xRWb+RrhZ0us55ZLCkllnbeb1gvynhwKtGO0TYe2KvRfd
+        G4x4KqCI23MBLiNv2f44RB4joBSHWWg=
+X-Google-Smtp-Source: APXvYqwSJYJRDkiPvTx+U2mHyK7domPC9FfXywft7CFvpQJ7ZlWy5IN+8l64JYP/oblGlRkxzGAdUw==
+X-Received: by 2002:a63:5920:: with SMTP id n32mr51055663pgb.352.1563524928589;
+        Fri, 19 Jul 2019 01:28:48 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id f197sm30023348pfa.161.2019.07.19.01.28.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 01:28:47 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Steve Glendinning <steve.glendinning@shawell.net>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] usbnet: smsc75xx: Merge memcpy + le32_to_cpus to get_unaligned_le32
+Date:   Fri, 19 Jul 2019 16:27:31 +0800
+Message-Id: <20190719082730.6378-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190718171615.2ed56280@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Merge the combo use of memcpy and le32_to_cpus.
+Use get_unaligned_le32 instead.
+This simplifies the code.
 
-On 7/19/19 7:16 AM, Alex Williamson wrote:
-> On Wed, 12 Jun 2019 08:28:51 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
->> The domain_init() and md_domain_init() do almost the same job.
->> Consolidate them to avoid duplication.
->>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel-iommu.c | 123 +++++++++++-------------------------
->>   1 file changed, 36 insertions(+), 87 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 5215dcd535a1..b8c6cf1d5f90 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -1825,63 +1825,6 @@ static inline int guestwidth_to_adjustwidth(int gaw)
->>   	return agaw;
->>   }
->>   
->> -static int domain_init(struct dmar_domain *domain, struct intel_iommu *iommu,
->> -		       int guest_width)
->> -{
->> -	int adjust_width, agaw;
->> -	unsigned long sagaw;
->> -	int err;
->> -
->> -	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
->> -
->> -	err = init_iova_flush_queue(&domain->iovad,
->> -				    iommu_flush_iova, iova_entry_free);
->> -	if (err)
->> -		return err;
->> -
->> -	domain_reserve_special_ranges(domain);
->> -
->> -	/* calculate AGAW */
->> -	if (guest_width > cap_mgaw(iommu->cap))
->> -		guest_width = cap_mgaw(iommu->cap);
->> -	domain->gaw = guest_width;
->> -	adjust_width = guestwidth_to_adjustwidth(guest_width);
->> -	agaw = width_to_agaw(adjust_width);
->> -	sagaw = cap_sagaw(iommu->cap);
->> -	if (!test_bit(agaw, &sagaw)) {
->> -		/* hardware doesn't support it, choose a bigger one */
->> -		pr_debug("Hardware doesn't support agaw %d\n", agaw);
->> -		agaw = find_next_bit(&sagaw, 5, agaw);
->> -		if (agaw >= 5)
->> -			return -ENODEV;
->> -	}
->> -	domain->agaw = agaw;
->> -
->> -	if (ecap_coherent(iommu->ecap))
->> -		domain->iommu_coherency = 1;
->> -	else
->> -		domain->iommu_coherency = 0;
->> -
->> -	if (ecap_sc_support(iommu->ecap))
->> -		domain->iommu_snooping = 1;
->> -	else
->> -		domain->iommu_snooping = 0;
->> -
->> -	if (intel_iommu_superpage)
->> -		domain->iommu_superpage = fls(cap_super_page_val(iommu->cap));
->> -	else
->> -		domain->iommu_superpage = 0;
->> -
->> -	domain->nid = iommu->node;
->> -
->> -	/* always allocate the top pgd */
->> -	domain->pgd = (struct dma_pte *)alloc_pgtable_page(domain->nid);
->> -	if (!domain->pgd)
->> -		return -ENOMEM;
->> -	__iommu_flush_cache(iommu, domain->pgd, PAGE_SIZE);
->> -	return 0;
->> -}
->> -
->>   static void domain_exit(struct dmar_domain *domain)
->>   {
->>   	struct page *freelist;
->> @@ -2563,6 +2506,31 @@ static int get_last_alias(struct pci_dev *pdev, u16 alias, void *opaque)
->>   	return 0;
->>   }
->>   
->> +static int domain_init(struct dmar_domain *domain, int guest_width)
->> +{
->> +	int adjust_width;
->> +
->> +	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
->> +	domain_reserve_special_ranges(domain);
->> +
->> +	/* calculate AGAW */
->> +	domain->gaw = guest_width;
->> +	adjust_width = guestwidth_to_adjustwidth(guest_width);
->> +	domain->agaw = width_to_agaw(adjust_width);
-> 
-> 
-> How do we justify that domain->agaw is nothing like it was previously
-> here?  I spent some more time working on the failure to boot that I
-> thought was caused by 4ec066c7b147, but there are so many breakages and
-> fixes in Joerg's x86/vt-d branch that I think my bisect zero'd in on
-> the wrong one.  Instead I cherry-picked every commit from Joerg's tree
-> and matched Fixes patches to their original commit, which led me to
-> this patch, mainline commit 123b2ffc376e.  The issue I'm seeing is that
-> we call domain_context_mapping_one() and we are in this section:
-> 
->          struct dma_pte *pgd = domain->pgd;
->          int agaw;
-> 
->          context_set_domain_id(context, did);
-> 
->          if (translation != CONTEXT_TT_PASS_THROUGH) {
->                  /*
->                   * Skip top levels of page tables for iommu which has
->                   * less agaw than default. Unnecessary for PT mode.
->                   */
->                  for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
->                          ret = -ENOMEM;
->                          pgd = phys_to_virt(dma_pte_addr(pgd));
->                          if (!dma_pte_present(pgd))
->                                  goto out_unlock;
->                  }
-> 
-> Prior to this commit, we had domain->agaw=1 and iommu->agaw=1, so we
-> don't enter the loop.  With this commit, we have domain->agaw=3,
-> iommu->agaw=1 with pgd->val=0!
-> 
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/usb/smsc75xx.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-iommu->agaw presents the level of page table which is by default
-supported by the @iommu. domain->agaw presents the level of page
-table which is used by the @domain.
+diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
+index 1417a22962a1..7fac9db5380d 100644
+--- a/drivers/net/usb/smsc75xx.c
++++ b/drivers/net/usb/smsc75xx.c
+@@ -661,8 +661,7 @@ static void smsc75xx_status(struct usbnet *dev, struct urb *urb)
+ 		return;
+ 	}
+ 
+-	memcpy(&intdata, urb->transfer_buffer, 4);
+-	le32_to_cpus(&intdata);
++	intdata = get_unaligned_le32(urb->transfer_buffer);
+ 
+ 	netif_dbg(dev, link, dev->net, "intdata: 0x%08X\n", intdata);
+ 
+@@ -2181,12 +2180,10 @@ static int smsc75xx_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		struct sk_buff *ax_skb;
+ 		unsigned char *packet;
+ 
+-		memcpy(&rx_cmd_a, skb->data, sizeof(rx_cmd_a));
+-		le32_to_cpus(&rx_cmd_a);
++		rx_cmd_a = get_unaligned_le32(skb->data);
+ 		skb_pull(skb, 4);
+ 
+-		memcpy(&rx_cmd_b, skb->data, sizeof(rx_cmd_b));
+-		le32_to_cpus(&rx_cmd_b);
++		rx_cmd_b = get_unaligned_le32(skb->data);
+ 		skb_pull(skb, 4 + RXW_PADDING);
+ 
+ 		packet = skb->data;
+-- 
+2.20.1
 
-agaw = 1: 3-level page table
-agaw = 2: 4-level page table
-agaw = 3: 5-level page table
-
-The case here is that @iommu only supports 3-level page table, but the
-@domain was set to use 5-level page table. So we must skip level 4 and 5
-page tables of the @domain.
-
-This code in the loop looks odd to me. It will always goto to unlock and
-leave pgd->val==0. How about below change? (not tested yet!)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 412f18aba501..98d6878cd29d 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2020,11 +2020,15 @@ static int domain_context_mapping_one(struct 
-dmar_domain *domain,
-                          * Skip top levels of page tables for iommu 
-which has
-                          * less agaw than default. Unnecessary for PT mode.
-                          */
--                       for (agaw = domain->agaw; agaw > iommu->agaw; 
-agaw--) {
--                               ret = -ENOMEM;
--                               pgd = phys_to_virt(dma_pte_addr(pgd));
--                               if (!dma_pte_present(pgd))
--                                       goto out_unlock;
-+                       while (iommu->agaw < domain->agaw) {
-+                               struct dma_pte *pte;
-+
-+                               pte = domain->pgd;
-+                               if (dma_pte_present(pte)) {
-+                                       domain->pgd = 
-phys_to_virt(dma_pte_addr(pte));
-+                                       free_pgtable_page(pte);
-+                               }
-+                               domain->agaw--;
-                         }
-
-                         info = iommu_support_dev_iotlb(domain, iommu, 
-bus, devfn);
-
-> I don't really follow how the setting of these fields above is
-> equivalent to what they were previously or if they're supposed to be
-> updated lazily, but the current behavior is non-functional.  Commit
-> 123b2ffc376e can be reverted with only a bit of offset, which brings
-> Linus' tree back into working operation for me.  Should we revert or is
-> there an obvious fix here?  Thanks,
-
-This commit is not the root cause of this issue as far as I can see, it
-only triggers above loop to get entered.
-
-Best regards,
-Baolu
