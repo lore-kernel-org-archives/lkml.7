@@ -2,135 +2,127 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2E1C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69B8C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1600C2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rTW8MZ4x"
+	by mail.kernel.org (Postfix) with ESMTP id BB8F62173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfGSJ6L (ORCPT
+        id S1726916AbfGSKAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 05:58:11 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41924 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfGSJ6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 05:58:11 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p15so33941765eds.8;
-        Fri, 19 Jul 2019 02:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2gpYE+zJ6EXcLs21MOYZokgRLOUE5PGmGdhYUwcBgjU=;
-        b=rTW8MZ4xBHDd/sC6TSsfB+StXORNzg7HRiHx1YbH0m4LtNTF6MrW/HUhQbrtZ6DkIK
-         fkKCaXYur2JwBI1zyBUvUFcjMLrUqZWzcNGu//qOpVaRciPFjjG+AmeU84nNeuokIoRV
-         310WML2iuWQenrkUXWsMF4KfGBfJDyfROXTZld/U3aBo9clcWlPRuFjmmawow6r82L31
-         jfQCGR9rRt/G/hyx49P9BKHxJNANxhN/dfz/B3IuPlWTHElL3o1Yc8eBBYHRdFuoODDR
-         8iICTsBnuzLTXtrtaDn+F6oQydOp8Jy5+Z0eCRl7LAOLNrTVRF01VTWvS57YP1491P42
-         eDbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2gpYE+zJ6EXcLs21MOYZokgRLOUE5PGmGdhYUwcBgjU=;
-        b=cH24Ng4p7xxDlV3HyzpBXrvnLTe1yY+yMjcCPWfguU/tB/bmNtCumtDAWehP3grth9
-         1V7uS8w/NsVCBH5Dq0BzdqJ6t/SVEmeyuKMzlgE3apGZl4TQ7a74NwlJgIpXKAHYlYaJ
-         OVTazzkH5T9dai9uNre563O8L/eoTRKYZsaxu5PvdrCrZUueIstXE5KPT3F5Hn4jIXRo
-         TKBb+7VWQKITtjbdqAZ2VfyE98t8bpYPru5i8iSzOYp1a/fzDxyCUH4jdSwKZTUPKTQI
-         lICMa0e39QvDwsfLSFCMzUZZgtm10i74Rejt9hjIwONmp1ZMJXzdu6Uxkui0sDtqSqDJ
-         h4tw==
-X-Gm-Message-State: APjAAAUunGrDiXrZucz/S6psh5mK0Cz9stnZjLHzZNFF6ZXlW5DWZ9ox
-        WK1OtDhHCmQ5x83btQrFXGmxSv5Shyq87+OOQ9o=
-X-Google-Smtp-Source: APXvYqz8Fuu5vbQkb81iceuLPYVPUjam3GRqu4pmMWX89pXd5blNX5FXfiQKk4TyQyIIdE5HJRqfrTu6skrxqvM8GNQ=
-X-Received: by 2002:a17:906:9447:: with SMTP id z7mr40297534ejx.165.1563530289559;
- Fri, 19 Jul 2019 02:58:09 -0700 (PDT)
+        Fri, 19 Jul 2019 06:00:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:41202 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfGSKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:00:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF05337;
+        Fri, 19 Jul 2019 03:00:05 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AC3F3F59C;
+        Fri, 19 Jul 2019 03:00:04 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 10:59:59 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Dan Rue <dan.rue@linaro.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
+ exception
+Message-ID: <20190719095958.GA19605@lakrids.cambridge.arm.com>
+References: <156342860634.8565.14804606041960884732.stgit@devnote2>
+ <156342863822.8565.7624877983728871995.stgit@devnote2>
+ <20190718062215.GG14271@linux.ibm.com>
+ <20190718092022.GA3625@blommer>
+ <20190718233133.146065f668da6297e57e52ef@kernel.org>
 MIME-Version: 1.0
-References: <20190712063240.GD7702@X58A-UD3R> <20190712125116.GB92297@google.com>
- <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
- <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
- <20190713151330.GE26519@linux.ibm.com> <20190713154257.GE133650@google.com>
- <20190713174111.GG26519@linux.ibm.com> <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
- <20190719003942.GA28226@X58A-UD3R> <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
- <20190719074329.GY14271@linux.ibm.com>
-In-Reply-To: <20190719074329.GY14271@linux.ibm.com>
-From:   Byungchul Park <max.byungchul.park@gmail.com>
-Date:   Fri, 19 Jul 2019 18:57:58 +0900
-Message-ID: <CANrsvRM7ehvqcPtKMV7RyRCiXwe_R_TsLZiNtxBPY_qnSg2LNQ@mail.gmail.com>
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Byungchul Park <byungchul.park@lge.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@lge.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718233133.146065f668da6297e57e52ef@kernel.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 4:43 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
->
-> On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
-> > On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
-> > [snip]
-> > > > - There is a bug in the CPU stopper machinery itself preventing it
-> > > > from scheduling the stopper on Y. Even though Y is not holding up the
-> > > > grace period.
-> > >
-> > > Or any thread on Y is busy with preemption/irq disabled preventing the
-> > > stopper from being scheduled on Y.
-> > >
-> > > Or something is stuck in ttwu() to wake up the stopper on Y due to any
-> > > scheduler locks such as pi_lock or rq->lock or something.
-> > >
-> > > I think what you mentioned can happen easily.
-> > >
-> > > Basically we would need information about preemption/irq disabled
-> > > sections on Y and scheduler's current activity on every cpu at that time.
-> >
-> > I think all that's needed is an NMI backtrace on all CPUs. An ARM we
-> > don't have NMI solutions and only IPI or interrupt based backtrace
-> > works which should at least catch and the preempt disable and softirq
-> > disable cases.
->
-> True, though people with systems having hundreds of CPUs might not
-> thank you for forcing an NMI backtrace on each of them.  Is it possible
-> to NMI only the ones that are holding up the CPU stopper?
+On Thu, Jul 18, 2019 at 11:31:33PM +0900, Masami Hiramatsu wrote:
+> On Thu, 18 Jul 2019 10:20:23 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > On Wed, Jul 17, 2019 at 11:22:15PM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
+> > > > Remove rcu_read_lock()/rcu_read_unlock() from debug exception
+> > > > handlers since the software breakpoint can be hit on idle task.
+> > 
+> > Why precisely do we need to elide these? Are we seeing warnings today?
+> 
+> Yes, unfortunately, or fortunately. Naresh reported that warns when
+> ftracetest ran. I confirmed that happens if I probe on default_idle_call too.
+> 
+> /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events 
+> /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable 
+> /sys/kernel/debug/tracing # [  135.122237] 
+> [  135.125035] =============================
+> [  135.125310] WARNING: suspicious RCU usage
+> [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
+> [  135.125904] -----------------------------
+> [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
+> [  135.126839] 
+> [  135.126839] other info that might help us debug this:
+> [  135.126839] 
+> [  135.127410] 
+> [  135.127410] RCU used illegally from idle CPU!
+> [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
+> [  135.128114] RCU used illegally from extended quiescent state!
+> [  135.128555] 1 lock held by swapper/0/0:
+> [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
+> [  135.130499] 
+> [  135.130499] stack backtrace:
+> [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
+> [  135.131841] Hardware name: linux,dummy-virt (DT)
+> [  135.132224] Call trace:
+> [  135.132491]  dump_backtrace+0x0/0x140
+> [  135.132806]  show_stack+0x24/0x30
+> [  135.133133]  dump_stack+0xc4/0x10c
+> [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
+> [  135.134171]  call_break_hook+0x170/0x178
+> [  135.134486]  brk_handler+0x28/0x68
+> [  135.134792]  do_debug_exception+0x90/0x150
+> [  135.135051]  el1_dbg+0x18/0x8c
+> [  135.135260]  default_idle_call+0x0/0x44
+> [  135.135516]  cpu_startup_entry+0x2c/0x30
+> [  135.135815]  rest_init+0x1b0/0x280
+> [  135.136044]  arch_call_rest_init+0x14/0x1c
+> [  135.136305]  start_kernel+0x4d4/0x500
+> [  135.136597] 
+> 
+> > > The exception entry and exit use irq_enter() and irq_exit(), in this
+> > > case, correct?  Otherwise RCU will be ignoring this CPU.
+> > 
+> > This is missing today, which sounds like the underlying bug.
+> 
+> Agreed. I'm not so familier with how debug exception is handled on arm64,
+> would it be a kind of NMI or IRQ?
 
-What a good idea! I think it's possible!
+They're more like faults, in that they're synchronous exceptions.
 
-But we need to think about the case NMI doesn't work when the
-holding-up was caused by IRQ disabled.
+Given that, I think using irq_enter() / irq_exit() would be surprising
+here, but perhaps they're misnamed.
 
-Though it's just around the corner of weekend, I will keep thinking
-on it during weekend!
+What do other architectures do here? Having a kprobe on the critical
+path to idle doesn't sound specific to arm64, but perhaps it is (and we
+should rule it out).
 
 Thanks,
-Byungchul
-
->                                                         Thanx, Paul
->
-> > But yeah I don't see why just the stacks of those CPUs that are
-> > blocking the CPU X would not suffice for the trivial cases where a
-> > piece of misbehaving code disable interrupts / preemption and
-> > prevented the stopper thread from executing.
-> >
-> > May be once the test case is ready (no rush!) , then it will be more
-> > clear what can help.
-> >
-> > J.
-> >
-
-
-
--- 
-Thanks,
-Byungchul
+Mark.
