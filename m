@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B3DC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99201C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780112189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6445B2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509282;
-	bh=arA7fjr2br3k9tMmkoDAfWo2X0afvxP4vhylpYw2oPU=;
+	s=default; t=1563509285;
+	bh=ryHAMkpvySFnwAvOSwZoHnsoul6TqjxB1N4HpedNgZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaHClplSrVo7CeMc0kI2moDnJYyF8vqdlyWV3Raz8m+e+LBwg8VdXQ28EGkJe20x2
-	 sAVEP3QlsHlUBIAoaxjhYKalN3XMzdAvrwHAr2l4KpIRELaO6S3JtUemZsnUoW9IQH
-	 hQRQhnoMK1GpROaVskSr7AW6MTHb9XBVCgVfdMj4=
+	b=0ihcf66DHf3QPdlRhqIS3asiRCw4/AQYopvJvB6DkUwzO+sTA+GzYO2MKB9fABmWU
+	 8FtGTl5fs3Vv9ypahRe/cdIVSFF7HTwdKf0/bRZILf8y0QyADf3s4ICJXkHMbN60TU
+	 9sDS+F6RjMaR4N5JFLxNbfwHTkXfAgjrHSve9dMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732876AbfGSEIB (ORCPT
+        id S1732892AbfGSEIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41950 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729191AbfGSEH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:07:59 -0400
+        id S1726688AbfGSEID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A918C2189F;
-        Fri, 19 Jul 2019 04:07:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3763021849;
+        Fri, 19 Jul 2019 04:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509278;
-        bh=arA7fjr2br3k9tMmkoDAfWo2X0afvxP4vhylpYw2oPU=;
+        s=default; t=1563509282;
+        bh=ryHAMkpvySFnwAvOSwZoHnsoul6TqjxB1N4HpedNgZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tN6Y3qwagO6HWORwJOMABY8zIZuQW/1dUeVyWhRrkj6no32TlrEZWxMh39XKDOIiM
-         IY8MoPgaZL84u4lWwYK+gxaKhUEM4qlHVmyH1zconKtu0h7PsHcKcw3MTPFWvsXdRy
-         kMPDuj7cy3PfncUKhrBHtdKY4WXAXHapcBkzUYm0=
+        b=CRDIBXA6rAmGzcQiigrDGOsFRprK68ds6jc+CAqjpgA18vkkKqY514vsLwiCgtqq3
+         G9vm2R0VuK0u5+z/fwJBmfgTLKszin1fdPXJcuU0J6Xdw/wAP/0ZOC7fiLUpqOkEMJ
+         CFoya/avW0X1ztD9uHCbFzn62SYhf19/ei+vB2Xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+Cc:     Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
+        Emily Deng <Emily.Deng@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 010/101] drm/amd/display: Fill prescale_params->scale for RGB565
-Date:   Fri, 19 Jul 2019 00:06:01 -0400
-Message-Id: <20190719040732.17285-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 011/101] drm/amdgpu/sriov: Need to initialize the HDP_NONSURFACE_BAStE
+Date:   Fri, 19 Jul 2019 00:06:02 -0400
+Message-Id: <20190719040732.17285-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,43 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
 
-[ Upstream commit 1352c779cb74d427f4150cbe779a2f7886f70cae ]
+[ Upstream commit fe2b5323d2c3cedaa3bf943dc7a0d233c853c914 ]
 
-[Why]
-An assertion is thrown when using SURFACE_PIXEL_FORMAT_GRPH_RGB565
-formats on DCE since the prescale_params->scale wasn't being filled.
+it requires to initialize HDP_NONSURFACE_BASE, so as to avoid
+using the value left by a previous VM under sriov scenario.
 
-Found by a dmesg-fail when running the
-igt@kms_plane@pixel-format-pipe-a-planes test on Baffin.
+v2: it should not hurt baremetal, generalize it for both sriov
+and baremetal
 
-[How]
-Fill in the scale parameter.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c | 3 +++
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index 53ccacf99eca..c3ad2bbec1a5 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -242,6 +242,9 @@ static void build_prescale_params(struct ipp_prescale_params *prescale_params,
- 	prescale_params->mode = IPP_PRESCALE_MODE_FIXED_UNSIGNED;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index 72f8018fa2a8..ede27dab675f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -1037,6 +1037,9 @@ static int gmc_v9_0_gart_enable(struct amdgpu_device *adev)
+ 	tmp = RREG32_SOC15(HDP, 0, mmHDP_HOST_PATH_CNTL);
+ 	WREG32_SOC15(HDP, 0, mmHDP_HOST_PATH_CNTL, tmp);
  
- 	switch (plane_state->format) {
-+	case SURFACE_PIXEL_FORMAT_GRPH_RGB565:
-+		prescale_params->scale = 0x2082;
-+		break;
- 	case SURFACE_PIXEL_FORMAT_GRPH_ARGB8888:
- 	case SURFACE_PIXEL_FORMAT_GRPH_ABGR8888:
- 		prescale_params->scale = 0x2020;
++	WREG32_SOC15(HDP, 0, mmHDP_NONSURFACE_BASE, (adev->gmc.vram_start >> 8));
++	WREG32_SOC15(HDP, 0, mmHDP_NONSURFACE_BASE_HI, (adev->gmc.vram_start >> 40));
++
+ 	/* After HDP is initialized, flush HDP.*/
+ 	adev->nbio_funcs->hdp_flush(adev, NULL);
+ 
 -- 
 2.20.1
 
