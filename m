@@ -2,245 +2,205 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232B6C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA6BC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C433F2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84E3208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:14:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ZEhz8dZs";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="vJw3r6Cf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SnhJRa36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfGSBMy (ORCPT
+        id S1726529AbfGSBO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:12:54 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:41868 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725992AbfGSBMy (ORCPT
+        Thu, 18 Jul 2019 21:14:29 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:45778 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfGSBO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:12:54 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A9D0AC0BF4;
-        Fri, 19 Jul 2019 01:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563498773; bh=fnel+lDEPFN/oJpyePgR8DYCQkzmWiZniGM/ZZxD3dE=;
-        h=From:To:Subject:Date:References:From;
-        b=ZEhz8dZsGSEIlJMDb7mhhQIOU9cWPAurPaLITCZgpxdWvP3C9tPU439uBkqbe7bs2
-         k4Azl4ZBd2J/jkfVL4W8xfLNQlrukjlFGz6+K/3R/hfPm2s/JExeXbezGg5myXVWGx
-         yBKjwlwSl/BfxYaOVeZng1mKRjg2rnaaFGpALT2MR32V+ccmrcLAfECVj9o67Tv4Yu
-         1XYmYNRQlh6yEOs4RzQhzJMHtR6PwGOQ7AcYIVvUaTXIopG/q893Y94O3FVUxM7KJy
-         yR9kAo5Ro0to5WWP0qtLRHql0ZT8/n2e5O1SVeAuP1b2OtCojRs+Q2AkAB+OKLtWpO
-         rFGpF+t+Pdi7Q==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C67D4A0067;
-        Fri, 19 Jul 2019 01:12:41 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 18 Jul 2019 18:12:27 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 18 Jul 2019 18:12:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MPkjuDO0LASos7lNQ0LQRzW0bkZR1eF57DmIq159FprVpergPVE3x1nCT80k6gz+wPExZJ2Giup7w91nFZPteXvgYW3OyUPsu2OBWDmLsI3q9pYCk+y724/zm/VxU4OLVVwDHC0BVWv6AM9Blt3rEUwU3g6W9pK5Mqn4CtoBb8MVgkpThyL8eIhx1reThdA5xQMUDBcF7U1rm/lANWn7n1tPDdsxS305LbJc9dDCru5FSLAJ1kXsvSeUVZc3TjGIRHhqyUwfip1Pcdm/OBQ8oIOfCDgGs96yKzbWUPj6/ZhMbyHikFzY0VK34d8afb6TSTDyTIeu0qBPcU7oXs2JMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kcb/lyfE4ajOmgKbnd1bCGg+RjzdKNu8rIsqTRRG1C0=;
- b=kdMHFWU45XRPofdcq/j06wl+IJqBuZJrJSJ+HgCpQO+Z60eJ6ZF/KNrfC8p+wb27YOp4prPHaI7CnRLVVMnZjJnhgCCbUvlXsIH7IxKk1fCh/+QLG84CbxevqQDHsPJnP0W/v7EEf532mB0xCflNOC0TjyhqwX8Z9ysX9P0cg7Vzu+/NNW7XwRDNITj1PavD2lWL77Cbg0sboM4Pwnr2Z0cb5+an3RRtmMsBY7NEB4Mx5c/9VX4FNCm9YHsI0vfeGUgAshwePgMlDWAHfrhsfTZQ3AkKpZusBR0ONuvhOxRhusN7eL7ZmYqus/GHAWH2H4AX2aCui+N8RZolZXcCEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kcb/lyfE4ajOmgKbnd1bCGg+RjzdKNu8rIsqTRRG1C0=;
- b=vJw3r6CfLVcFIhlpHluoRBZzqTUGU9eAmjTm502aObT/qN/1Lo/DUFVGjU/6Tudcny5qd5FEYDSem/iSKmI6s5AjzJ93qDBF6iXODv+iCwaUO0MSPodPs/Mq4mrwvEFdNaysk68gyJaDBgVFWw64LARtNM4thdVzGPk7j/GYcgI=
-Received: from CY4PR1201MB0037.namprd12.prod.outlook.com (10.172.78.22) by
- CY4PR1201MB0022.namprd12.prod.outlook.com (10.172.79.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.11; Fri, 19 Jul 2019 01:12:25 +0000
-Received: from CY4PR1201MB0037.namprd12.prod.outlook.com
- ([fe80::8dd:b2af:d63f:c339]) by CY4PR1201MB0037.namprd12.prod.outlook.com
- ([fe80::8dd:b2af:d63f:c339%9]) with mapi id 15.20.2094.011; Fri, 19 Jul 2019
- 01:12:25 +0000
-From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To:     "fei.yang@intel.com" <fei.yang@intel.com>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated properly
-Thread-Topic: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated
- properly
-Thread-Index: AQHVPct5482iA1i8Sk2wptVdWd1tFw==
-Date:   Fri, 19 Jul 2019 01:12:24 +0000
-Message-ID: <CY4PR1201MB003708ADAD79BF4FD24D3445AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
-References: <1563497183-7114-1-git-send-email-fei.yang@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thinhn@synopsys.com; 
-x-originating-ip: [198.182.56.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 518887a1-60a7-4333-2b37-08d70be628c9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1201MB0022;
-x-ms-traffictypediagnostic: CY4PR1201MB0022:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY4PR1201MB0022B8F9455CD2259B7EA4EEAACB0@CY4PR1201MB0022.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(39860400002)(346002)(376002)(189003)(199004)(99286004)(81156014)(8936002)(256004)(6116002)(3846002)(81166006)(14444005)(2906002)(8676002)(68736007)(25786009)(33656002)(14454004)(316002)(110136005)(486006)(76176011)(102836004)(2501003)(6506007)(229853002)(7696005)(66556008)(26005)(71190400001)(71200400001)(66446008)(5660300002)(66066001)(66476007)(66946007)(64756008)(76116006)(91956017)(86362001)(476003)(446003)(186003)(2201001)(478600001)(6306002)(55016002)(9686003)(53936002)(7736002)(305945005)(6436002)(966005)(74316002)(6246003)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0022;H:CY4PR1201MB0037.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Uz0ujBzyUUwKck5oJb/b512s0AsgVga2cy5pjFiZkMFpDvi+HYJTYCZB1rvPBbhkaPAyEYl59VJtQ7RB58TeXGCcBMYTKSFBmsLM4ABTkrZW+TEDA3zYTzU9AW9aRsuEbvqQghk9KRDcIBB8aPKBbHdrqG++QvR51dJegyIGFQWJ8qn+eQdJ91NM4BxDb3OW5ueRlG4QoUh2sUJcvlw5zvDHItUVbrtwFE+/ERzVkgiAvyscV+IhguqdpIiXOKJthtsdd6k9mK/e/GUDeVMEGVBJghigu5aVPxr2n86k2fpUVuHmzRZoIEnDOJo6IekJDZt/kvse1WDbzjULxXlvH/tuubSJIroZB+S1IbxKox/hEmf3hf9YzUzCj+j05z2kvNzRkO+eM9WkGUdRq6vXlVZplvQUcWpy1c4R4gPa0yI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Jul 2019 21:14:29 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190719011427epoutp02339d2585e115c9e614f5213b48c5b382~yqe_QJl0y1474014740epoutp02f
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:14:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190719011427epoutp02339d2585e115c9e614f5213b48c5b382~yqe_QJl0y1474014740epoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563498867;
+        bh=GflqdW8XnLdWs0zAPgDV3l4T4ydPld5FQQyTPDtq2Gw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=SnhJRa36sh8nqaAezWbPKNVUjWFFPAH847RxgY3ztScyLNkTdZ7VN+PRxJ33ti7jL
+         W94VwGjUdzuHy6O5CBlaCwgGLwbJN0aXWElF4ZVMVelKdxHwTxCfmpuiHw7obG5wIG
+         t5IfVbAR0I8I2gTNMvA9QBh/pL7Ra2N8u88klZzE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190719011426epcas1p4de3d61433e5c742364dd1a498c0e6998~yqe91bOzZ1181111811epcas1p4N;
+        Fri, 19 Jul 2019 01:14:26 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 45qY1r286WzMqYkV; Fri, 19 Jul
+        2019 01:14:24 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.90.04160.D69113D5; Fri, 19 Jul 2019 10:14:22 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190719011421epcas1p45532a85aa315c8fac3e31438371c1904~yqe41TbR31181011810epcas1p45;
+        Fri, 19 Jul 2019 01:14:21 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190719011421epsmtrp2f576c1b0ce4877268e91e5b9a334ef22~yqe40XCoq0267402674epsmtrp2D;
+        Fri, 19 Jul 2019 01:14:21 +0000 (GMT)
+X-AuditID: b6c32a38-b33ff70000001040-0e-5d31196d08df
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        63.A1.03706.D69113D5; Fri, 19 Jul 2019 10:14:21 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190719011420epsmtip1130e41dfa8669d93726e3ffb7eb6b83c~yqe4lFnQK2008820088epsmtip1a;
+        Fri, 19 Jul 2019 01:14:20 +0000 (GMT)
+Subject: Re: [PATCH v4 19/24] PM / devfreq: tegra30: Optimize upper
+ consecutive watermark selection
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Organization: Samsung Electronics
+Message-ID: <657fc412-3fb7-5f6e-82b9-9458685b5dc5@samsung.com>
+Date:   Fri, 19 Jul 2019 10:17:31 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 518887a1-60a7-4333-2b37-08d70be628c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 01:12:24.9321
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: thinhn@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0022
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <e45a250c-1860-ca86-4b60-4896166752a8@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTURzHObvb3V00Oy2rn/uj7FaCgrrrnF1LKyhs9AArggjELnqa4h6X
+        3WlZ//Qwm5LSk2qVvcus6LVMLRnqQgqKUqLHsIQsVGxWppUVtesl8r/P7/E939/vnMNQhqu0
+        kSl0eojbKdhZeoK6vi0+KdEZw+WY6nsQf+XzO8SX+c6q+cc7B7R8Z9MJmh+qCiK+4quP5kM7
+        amn+R1ONmq++1kEv1lkbus4ja6OvS2ut2hWmrdX+OmQdujUjW7OhKKOACPnEHUucea78Qqct
+        k12xNndJriXNxCVy6fw8NtYpOEgmu3RldmJWoT0yEBtbItiLI6lsQZLY5IUZblexh8QWuCRP
+        JkvEfLuYLiZJgkMqdtqS8lyO+ZzJlGKJNG4sKqgcnCE2Rm954x9G21EAVyKGAZwKH2pJJZrA
+        GHADgtqaIFKCLwh2f+2jlWAEQfvbV/Q/xcWjBiXfjOBwXxelBIMIyryj2kqkY6ZgAm/768eY
+        xgkQ6H1JyxyN4+DSg18aWUDhmypov3FVJRcm4Vnw/Ps7JLMeL4SPtZ0a2U2N58K9R3lyeipe
+        D1+62zRKy2R4eKxHLbMOL4KRbyFKZgpPh9c9p1QKz4Rdd46PDQf4Dw2HDnUjZYOlEKyeI/cA
+        ngL97X6twkYYCjfTCm+Dyw+DtKL1IvAHnmqUghkCFw6q5HMoHA/Xm5KV9Cxo/HkSKb5REB7e
+        q1Gs9OAtNygts6Gzu0ulcAyc21NB70Osb9w2vnEb+MZt4Ptvdhqp69A0IkoOG5E4MXX8U99C
+        Yz81gW9A95+sbEWYQexEfbbDlGPQCCVSqaMVAUOx0fpQX3KOQZ8vlG4lbleuu9hOpFZkidz1
+        fso4Nc8V+fdOTy5nSTGbzXwql2bhOHa6vuZXfI4B2wQPKSJEJO5/OhWjM25HB24+Onb+wIvl
+        HcEydej9mnBcyXKvWfvsdKOord+R+jQJLaAyVmXV7d98w7bAfn+0+3P5ut/RFZuqxHvVHzpq
+        YgJ9GfbrL7JC3OXelsWeuKOrlqXfvljePPxdiNJEGVs+nRkc8Ipa97cH4bv++MNHVhvSuFFh
+        k25P3Y/VO/GpTI+JVUsFApdAuSXhLwUEYsm/AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnG6upGGswb8JLBarPz5mtGiZtYjF
+        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
+        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZXe/lCnaKVNzb8pWxgXG/QBcjB4eEgInEshlC
+        XYxcHEICuxkl1ky/xNLFyAkUl5SYdvEoM0SNsMThw8UQNW8ZJRZv/MsEUiMskCpx/9U2dhCb
+        TUBLYv+LG2wgtoiAmsTyo39YQRqYBTYzSZw9tZoNovsQk0TrxaVgHfwCihJXfzxmBLF5Bewk
+        3q64zAqyjUVAVWL3qWSQsKhAhMThHbOgSgQlTs58AnYcp4C9xLfvt5lBbGYBdYk/8y5B2eIS
+        t57MZ4Kw5SWat85mnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFhXmq5XnFibnFp
+        Xrpecn7uJkZwfGlp7mC8vCT+EKMAB6MSD29ArkGsEGtiWXFl7iFGCQ5mJRHe2y/1Y4V4UxIr
+        q1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLglGpg7I+8kyLW+pa57IDw
+        PdFXK3cdqVxzv5BzvfXRrWLLP5/79TbpbHe5tPVLbyk3Z3Ypqe7jm0NUP6T9fsdZp+xaOv2O
+        neLUY13JU+fFJs/Sd+HJfu//vmM3+9uyuXeKzVc/E692ucOiMqd004Wf4slvrZfndKtr828W
+        +TNnTozP5S91uu2Ba/t2KbEUZyQaajEXFScCAPrlt5yrAgAA
+X-CMS-MailID: 20190719011421epcas1p45532a85aa315c8fac3e31438371c1904
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223622epcas4p48ec0d7e6fa26bc2397fa4351c0bd0c2d
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223622epcas4p48ec0d7e6fa26bc2397fa4351c0bd0c2d@epcas4p4.samsung.com>
+        <20190707223303.6755-20-digetx@gmail.com>
+        <17fabbaf-ceca-7551-0a58-9c8a0e7027ed@samsung.com>
+        <20190719034025.67c82123@dimatab>
+        <e45a250c-1860-ca86-4b60-4896166752a8@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,=0A=
-=0A=
-fei.yang@intel.com wrote:=0A=
-> From: Fei Yang <fei.yang@intel.com>=0A=
->=0A=
-> If scatter-gather operation is allowed, a large USB request is split into=
-=0A=
-> multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN bit=
-=0A=
-> except the last one which has DWC3_TRB_CTRL_IOC bit set instead.=0A=
-> Since only the last TRB has IOC set for the whole USB request, the=0A=
-> dwc3_gadget_ep_reclaim_trb_sg() gets called only once after the last TRB=
-=0A=
-> completes and all the TRBs allocated for this request are supposed to be=
-=0A=
-> reclaimed. However that is not what the current code does.=0A=
->=0A=
-> dwc3_gadget_ep_reclaim_trb_sg() is trying to reclaim all the TRBs in the=
-=0A=
-> following for-loop,=0A=
-> 	for_each_sg(sg, s, pending, i) {=0A=
-> 		trb =3D &dep->trb_pool[dep->trb_dequeue];=0A=
->=0A=
->                 if (trb->ctrl & DWC3_TRB_CTRL_HWO)=0A=
->                         break;=0A=
->=0A=
->                 req->sg =3D sg_next(s);=0A=
->                 req->num_pending_sgs--;=0A=
->=0A=
->                 ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,=0A=
->                                 trb, event, status, chain);=0A=
->                 if (ret)=0A=
->                         break;=0A=
->         }=0A=
-> but since the interrupt comes only after the last TRB completes, the=0A=
-> event->status has DEPEVT_STATUS_IOC bit set, so that the for-loop ends fo=
-r=0A=
-> the first TRB due to dwc3_gadget_ep_reclaim_completed_trb() returns 1.=0A=
-> 	if (event->status & DEPEVT_STATUS_IOC)=0A=
-> 		return 1;=0A=
->=0A=
-> This patch addresses the issue by checking each TRB in function=0A=
-> dwc3_gadget_ep_reclaim_trb_sg() and maing sure the chained ones are prope=
-rly=0A=
-> reclaimed. dwc3_gadget_ep_reclaim_completed_trb() will return 1 Only for =
-the=0A=
-> last TRB.=0A=
->=0A=
-> Signed-off-by: Fei Yang <fei.yang@intel.com>=0A=
-> Cc: stable <stable@vger.kernel.org>=0A=
-> ---=0A=
-> v2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_=
-trb_sg()=0A=
->     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().=
-=0A=
-> v3: Checking DWC3_TRB_CTRL_CHN bit for each TRB instead, and making sure =
-that=0A=
->     dwc3_gadget_ep_reclaim_completed_trb() returns 1 only for the last TR=
-B.=0A=
-> ---=0A=
->  drivers/usb/dwc3/gadget.c | 11 ++++++++---=0A=
->  1 file changed, 8 insertions(+), 3 deletions(-)=0A=
->=0A=
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=0A=
-> index 173f532..88eed49 100644=0A=
-> --- a/drivers/usb/dwc3/gadget.c=0A=
-> +++ b/drivers/usb/dwc3/gadget.c=0A=
-> @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(str=
-uct dwc3_ep *dep,=0A=
->  	if (event->status & DEPEVT_STATUS_SHORT && !chain)=0A=
->  		return 1;=0A=
->  =0A=
-> -	if (event->status & DEPEVT_STATUS_IOC)=0A=
-> +	if (event->status & DEPEVT_STATUS_IOC && !chain)=0A=
->  		return 1;=0A=
->  =0A=
->  	return 0;=0A=
-> @@ -2404,11 +2404,12 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct d=
-wc3_ep *dep,=0A=
->  		struct dwc3_request *req, const struct dwc3_event_depevt *event,=0A=
->  		int status)=0A=
->  {=0A=
-> -	struct dwc3_trb *trb =3D &dep->trb_pool[dep->trb_dequeue];=0A=
-> +	struct dwc3_trb *trb;=0A=
->  	struct scatterlist *sg =3D req->sg;=0A=
->  	struct scatterlist *s;=0A=
->  	unsigned int pending =3D req->num_pending_sgs;=0A=
->  	unsigned int i;=0A=
-> +	int chain =3D false;=0A=
->  	int ret =3D 0;=0A=
->  =0A=
->  	for_each_sg(sg, s, pending, i) {=0A=
-> @@ -2419,9 +2420,13 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dw=
-c3_ep *dep,=0A=
->  =0A=
->  		req->sg =3D sg_next(s);=0A=
->  		req->num_pending_sgs--;=0A=
-> +		if (trb->ctrl & DWC3_TRB_CTRL_CHN)=0A=
-> +			chain =3D true;=0A=
-> +		else=0A=
-> +			chain =3D false;=0A=
->  =0A=
->  		ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,=0A=
-> -				trb, event, status, true);=0A=
-> +				trb, event, status, chain);=0A=
->  		if (ret)=0A=
->  			break;=0A=
->  	}=0A=
-=0A=
-There was already a fix a long time ago by Anurag. But it never made it=0A=
-to the kernel mainline. You can check this out:=0A=
-https://patchwork.kernel.org/patch/10640137/=0A=
-=0A=
-Hi Felipe,=0A=
-=0A=
-Maybe you can review and cherry-pick that patch?=0A=
-=0A=
-Thanks,=0A=
-Thinh=0A=
+On 19. 7. 19. 오전 10:15, Chanwoo Choi wrote:
+> On 19. 7. 19. 오전 9:40, Dmitry Osipenko wrote:
+>> В Thu, 18 Jul 2019 18:51:02 +0900
+>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
+>>
+>>> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+>>>> The memory activity counter may get a bit higher than a watermark
+>>>> which is selected based on OPP that corresponds to a highest EMC
+>>>> rate, in this case watermark is lower than the actual memory
+>>>> activity is and thus results in unwanted "upper" interrupts.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/devfreq/tegra30-devfreq.c | 13 ++++++++++++-
+>>>>  1 file changed, 12 insertions(+), 1 deletion(-)  
+>>>
+>>> It seems that you can combine patch19 with patch20.
+>>
+>> No, consecutive and average watermarks are different things that have
+>> different purposes. Consecutive are used for boosting, while average
+>> are for significant memory bandwidth changes.
+>>
+>>>>
+>>>> diff --git a/drivers/devfreq/tegra30-devfreq.c
+>>>> b/drivers/devfreq/tegra30-devfreq.c index
+>>>> 8d6bf6e9f1ae..c3cf87231d25 100644 ---
+>>>> a/drivers/devfreq/tegra30-devfreq.c +++
+>>>> b/drivers/devfreq/tegra30-devfreq.c @@ -363,7 +363,18 @@ static
+>>>> void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
+>>>> tegra_actmon_get_lower_upper(tegra, dev, freq - 1, &lower, &upper); 
+>>>>  	delta = do_percent(upper - lower,
+>>>> dev->config->boost_up_threshold);
+>>>> -	device_writel(dev, lower + delta, ACTMON_DEV_UPPER_WMARK);
+> 
+> This line was added on patch5 and then this line is removed on this patch.
+> It is wrong method to make the patch in the same patchset.
+> 
+> It is enough to reduce the inefficient add/remove code in the same patchset.
+
+I'm missing some expression. So, I update my comment as following:
+It is possible to reduce the inefficient add/remove code in the same patchset
+if you combine the patches.
+
+> 
+> Have to merge this patch to patch5.
+> 
+>>>> +
+>>>> +	/*
+>>>> +	 * The memory events count could go a bit higher than the
+>>>> maximum
+>>>> +	 * defined by the OPPs, hence make the upper watermark
+>>>> infinitely
+>>>> +	 * high to avoid unnecessary upper interrupts in that case.
+>>>> +	 */
+>>>> +	if (freq == tegra->max_freq)
+>>>> +		upper = ULONG_MAX;
+>>>> +	else
+>>>> +		upper = lower + delta;
+>>>> +
+>>>> +	device_writel(dev, upper, ACTMON_DEV_UPPER_WMARK);
+>>>>  
+>>>>  	/*
+>>>>  	 * Meanwhile the lower mark is based on the average value
+>>>>   
+>>>
+>>>
+>>
+>>
+>>
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
