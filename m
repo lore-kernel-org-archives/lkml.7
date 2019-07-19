@@ -2,131 +2,133 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA46C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA98FC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53D221849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E43721849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=daktronics.com header.i=@daktronics.com header.b="m51Aatno"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1/EZu5fQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388351AbfGSU7F (ORCPT
+        id S2388387AbfGSVBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:59:05 -0400
-Received: from mail-eopbgr720044.outbound.protection.outlook.com ([40.107.72.44]:59469
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731911AbfGSU7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:59:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GUNyRFIn32TIDjOkny8pVt19Vlz5SCLlzmtqDnp8fWuBX9S4DcaUhNkcYs3lXy+aaa/qA3b7beqJqtXL+Mr/rv9t2RF5QTRj2lwRfWVR2DmcYtweXiEPaQjDUbUyUg8N4KF1IulDVUFn8LcPuD+Y276F9uITFf0iK1ZwzFJ1OQX9jxT7nHsKLYX8kYC87VryErZmdZQUYn2IJ5UBF8JwzeyAiE0ywJE40Oh2DVU1HVzrC+vaouDiGsMIWyeQeUR+oAzwk46gyOWIKztEnyyomu2e9gyUNpgidB4Y0NLolYrzzjdpM5EULPHj4KKPqMN7YAoeVowN/UWFepm4/5Z4Yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EhHQ4CTsTsRyy1oZ0PfL6Sp5PESwl/7Ga9fqMoM6Kjg=;
- b=A+sKLo08w3XTw60/YulFRqMjFFj2E/BQIHA0Jrxk/op5SF0+I1e2Q8Fa2v4Sb2BkN2AOU/cpyK3pMXq9CrgkQLKHyy3S0F30pXQUuf070uEZCDLY/yhoKrNhzFmHYR4/+ik1SdCzTy0wEckUKRSS7kH4c3Tz2baIpL6FFb7aqNKYGAKwpxd27+JCsS6i83wqeDUNGcYW05ugfJs7X3fnv3ytCmNF8ouTO1CWgLXnCWHnzY/JoQkc/Uo54cQ+3GMAd+f6Nsw/Vw1YdIecdXvN/w0QkGkll1BO466S/K1lskLt5s9qD7iiAhxNRq6Wk4sb1+RAl75oPdIFsr7srmM3Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=daktronics.com;dmarc=pass action=none
- header.from=daktronics.com;dkim=pass header.d=daktronics.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=daktronics.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EhHQ4CTsTsRyy1oZ0PfL6Sp5PESwl/7Ga9fqMoM6Kjg=;
- b=m51AatnoonPAaqF1b16ZxnNnhPvydbrDCKP5xTLFSgKLJbLzU96S4ANJuStAlIL5S7iBMY6bXqQnj4S2rvv1cWqEKxIyv7wvteNRMugqinEkl1JzAiJQtDhTq+yfhAdFiqrVXxSGglx3caX+TJPleR7mLoI64CkQCTHa87uy9jM=
-Received: from SN6PR02MB4016.namprd02.prod.outlook.com (52.135.69.145) by
- SN6PR02MB4191.namprd02.prod.outlook.com (52.135.70.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Fri, 19 Jul 2019 20:59:02 +0000
-Received: from SN6PR02MB4016.namprd02.prod.outlook.com
- ([fe80::3dba:454:9025:c1d0]) by SN6PR02MB4016.namprd02.prod.outlook.com
- ([fe80::3dba:454:9025:c1d0%7]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
- 20:59:02 +0000
-From:   Matt Sickler <Matt.Sickler@daktronics.com>
-To:     Bharath Vedartham <linux.bhar@gmail.com>,
-        "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
-Subject: RE: [PATCH v3] staging: kpc2000: Convert put_page to put_user_page*()
-Thread-Topic: [PATCH v3] staging: kpc2000: Convert put_page to
- put_user_page*()
-Thread-Index: AQHVPmzwE09u8sDYuEmu2VoulZlSaKbSax/w
-Date:   Fri, 19 Jul 2019 20:59:02 +0000
-Message-ID: <SN6PR02MB4016754FE1BB6200746281A2EECB0@SN6PR02MB4016.namprd02.prod.outlook.com>
-References: <20190719200235.GA16122@bharath12345-Inspiron-5559>
-In-Reply-To: <20190719200235.GA16122@bharath12345-Inspiron-5559>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Matt.Sickler@daktronics.com; 
-x-originating-ip: [2620:9b:8000:6046:2d0d:49c4:33aa:6af4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b09fe611-239c-4c46-f80e-08d70c8bed98
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR02MB4191;
-x-ms-traffictypediagnostic: SN6PR02MB4191:
-x-microsoft-antispam-prvs: <SN6PR02MB4191BFF69A81601D2A153FF9EECB0@SN6PR02MB4191.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(189003)(199004)(478600001)(110136005)(99286004)(54906003)(6506007)(2906002)(46003)(102836004)(476003)(11346002)(256004)(8676002)(446003)(7736002)(316002)(229853002)(74316002)(305945005)(76176011)(6116002)(7696005)(486006)(53936002)(14454004)(86362001)(6246003)(55016002)(8936002)(2201001)(68736007)(81156014)(81166006)(25786009)(33656002)(4326008)(2501003)(66946007)(66476007)(66556008)(64756008)(66446008)(71200400001)(76116006)(71190400001)(9686003)(6436002)(5660300002)(52536014)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4191;H:SN6PR02MB4016.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: daktronics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CEkRMd4RGN2q2Q9I2GACh75eW9sk/l7ej0w33Jq45Ld8A2OafT10oD4/QL93yZ+XLyyEQ/6/wCqsp+7KKgWR/OesWbI5ewItzLDdTTtGqJBCm6t1Fpm9zmjMh0Hc1VPDKl/YOQIQfBW96z2BAaxruhK4Tyu1TW/uJh92zE9dt2x69J67+GndbUj/BVfljXQ50e22TVUT06sZoAiP9Cjmdh8Zkd1VIUSBZF4ZrqSzME1ZS7JHvLqlVqmiiHxfRWC+5vkNPmmqri1UYj1+TOtvVCIJiTdcoM4Qzek9YsASbe2z00Xbud528lwj44aHMe82w+bYr7kz3wQojG4PsXNcpFldlG/BWPqv3eV03KxSeLai7ploZfMWuHxenCcMjReEhteWtOtxIuwonpL1qGAQ621EiMprHXzzydP/HKR2oH0=
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 19 Jul 2019 17:01:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60704 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728816AbfGSVBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 17:01:54 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JKx1Fh180966;
+        Fri, 19 Jul 2019 21:01:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=w5M/y1YHYfWNHZpl6DNsS5mgG0YtlA+1vIp1/P0KTAY=;
+ b=1/EZu5fQLtGDBMWMlXGjuuW6zjeN2V+ZPpqU63Y2B6EQmbrCS8Pkcq2unPYtX4Ejwsyv
+ Uj/JpptsPFrgikqhb5wNS20aoHzy8TFAX0ktJDlGMg+erPYHQM8cxAQOX33h94OJY8Qr
+ gu8DdQL1LXnzumYt5ieWMBTxGjgIKuifvKSNZHKGxJ80QYcqXH0ROhWaAbbEe8cQORko
+ FGRgcumbZQSc1CDOHz9PM3d70KllUvCG7zAVb4i87uDyPSmBoWhQxgxtDMfdSbXROD4D
+ w+yP5e/idNdIcVp74xPXYcglAfqTgX8p+7Jisw3hELAFHcwFYFu8seP4i4yR592QK1ca yw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2tq78q8n5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 21:01:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JKwIE3095807;
+        Fri, 19 Jul 2019 21:01:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tt77jh316-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 21:01:47 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6JL1kKd022709;
+        Fri, 19 Jul 2019 21:01:46 GMT
+Received: from [10.0.0.13] (/79.182.108.162)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jul 2019 21:01:46 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH] KVM: nVMX: do not use dangling shadow VMCS after guest
+ reset
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <1563554534-46556-3-git-send-email-pbonzini@redhat.com>
+Date:   Sat, 20 Jul 2019 00:01:42 +0300
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: daktronics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b09fe611-239c-4c46-f80e-08d70c8bed98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 20:59:02.1607
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: be88af81-0945-42aa-a3d2-b122777351a2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: matt.sickler@daktronics.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4191
+Message-Id: <6D1C57BE-1A1B-4714-B4E5-E0569A60FD1F@oracle.com>
+References: <1563554534-46556-3-git-send-email-pbonzini@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9323 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907190221
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9323 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907190221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->From: Bharath Vedartham <linux.bhar@gmail.com>
->Changes since v2
->        - Added back PageResevered check as suggested by John Hubbard.
->
->The PageReserved check needs a closer look and is not worth messing
->around with for now.
->
->Matt, Could you give any suggestions for testing this patch?
 
-Myself or someone else from Daktronics would have to do the testing since t=
-he
-hardware isn't really commercially available.  I've been toying with the id=
-ea
-of asking for a volunteer from the mailing list to help me out with this - =
-I'd
-send them some hardware and they'd do all the development and testing. :)
-I still have to run that idea by Management though.
 
->If in-case, you are willing to pick this up to test. Could you
->apply this patch to this tree and test it with your devices?
+> On 19 Jul 2019, at 19:42, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> If a KVM guest is reset while running a nested guest, free_nested will
+> disable the shadow VMCS execution control in the vmcs01.  However,
+> on the next KVM_RUN vmx_vcpu_run would nevertheless try to sync
+> the VMCS12 to the shadow VMCS which has since been freed.
+>=20
+> This causes a vmptrld of a NULL pointer on my machime, but Jan reports
+> the host to hang altogether.  Let's see how much this trivial patch =
+fixes.
+>=20
+> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-I've been meaning to get to testing the changes to the drivers since upstre=
-aming
-them, but I've been swamped with other development.  I'm keeping an eye on =
-the
-mailing lists, so I'm at least aware of what is coming down the pipe.
-I'm not too worried about this specific change, even though I don't really =
-know
-if the reserved check and the dirtying are even necessary.
-It sounded like John's suggestion was to not do the PageReserved() check an=
-d just
-use put_user_pges_dirty() all the time.  John, is that incorrect?
+First, nested_release_vmcs12() also sets need_vmcs12_to_shadow_sync to =
+false explicitly. This can now be removed.
+
+Second, I suggest putting a WARN_ON_ONCE() on copy_vmcs12_to_shadow() in =
+case shadow_vmcs=3D=3DNULL.
+To assist catching these kind of errors more easily in the future.
+
+Besides that, the fix seems correct to me.
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+
+-Liran
+
+> ---
+> arch/x86/kvm/vmx/nested.c | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 6e88f459b323..6119b30347c6 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -194,6 +194,7 @@ static void vmx_disable_shadow_vmcs(struct =
+vcpu_vmx *vmx)
+> {
+> 	secondary_exec_controls_clearbit(vmx, =
+SECONDARY_EXEC_SHADOW_VMCS);
+> 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
+> +	vmx->nested.need_vmcs12_to_shadow_sync =3D false;
+> }
+>=20
+> static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
+> --=20
+> 1.8.3.1
+>=20
+
