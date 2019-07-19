@@ -2,102 +2,84 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E11C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045FCC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E03B21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563549639;
-	bh=8RmchD2l/bQKOy5engQ2eeDSOmx7TCxD1k24iaIMbZ8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=jo/KVuzzAN2M5uY5cPcZRm9I2SxlCi1iOopeFWvIU9FVUog3n1RXdmyEyV3OnXLvt
-	 CTV7RKfEmgnldYBD7gPOCrXKKoz7eOtZ3Kocc8z8oZT7RAoJpzX4olruP6FHPEAQJ9
-	 W/q07W8opK8isw1tiGws5gYUnfIUOI7gb/jY17cA=
+	by mail.kernel.org (Postfix) with ESMTP id CA3142184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfGSPUi (ORCPT
+        id S1728761AbfGSPXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 11:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43696 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 11:23:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40648 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfGSPUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 11:20:37 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726711AbfGSPXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 11:23:05 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37F4C2083B;
-        Fri, 19 Jul 2019 15:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563549636;
-        bh=8RmchD2l/bQKOy5engQ2eeDSOmx7TCxD1k24iaIMbZ8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KQLv5u08yyAKXzEUPKpbKlUHiHHPOt7/5VvYLjgbCzXCT9uiALvaGBrw5N/tqYH1T
-         ioGJNewKrHA6GNGdPdh5gQL3ZS/cmgIw46bWjT+XmDXVD/iJsaqJ4P/JN+wz6pi6ZV
-         h7nLu6bzmRR4LBwP4Xk1fC3LpOHWvkwmJRv4pUBQ=
-Message-ID: <ab5ccaa05994e2eef05bdb54510e6b017db2d807.camel@kernel.org>
-Subject: Re: [PATCH 0/4] Sleeping functions in invalid context bug fixes
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 19 Jul 2019 11:20:34 -0400
-In-Reply-To: <20190719143222.16058-1-lhenriques@suse.com>
-References: <20190719143222.16058-1-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        by mx1.redhat.com (Postfix) with ESMTPS id 77B7F30C1353;
+        Fri, 19 Jul 2019 15:23:05 +0000 (UTC)
+Received: from x1.home (ovpn-116-35.phx2.redhat.com [10.3.116.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 833C8101E253;
+        Fri, 19 Jul 2019 15:23:04 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 09:23:03 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, kevin.tian@intel.com,
+        ashok.raj@intel.com, dima@arista.com, tmurphy@arista.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        jacob.jun.pan@intel.com
+Subject: Re: [PATCH v4 12/15] iommu/vt-d: Cleanup get_valid_domain_for_dev()
+Message-ID: <20190719092303.751659a0@x1.home>
+In-Reply-To: <9957afdd-4075-e7ee-e1e6-97acb870e17a@linux.intel.com>
+References: <20190525054136.27810-1-baolu.lu@linux.intel.com>
+        <20190525054136.27810-13-baolu.lu@linux.intel.com>
+        <20190717211226.5ffbf524@x1.home>
+        <9957afdd-4075-e7ee-e1e6-97acb870e17a@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 19 Jul 2019 15:23:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 15:32 +0100, Luis Henriques wrote:
-> Hi,
-> 
-> I'm sending three "sleeping function called from invalid context" bug
-> fixes that I had on my TODO for a while.  All of them are ceph_buffer_put
-> related, and all the fixes follow the same pattern: delay the operation
-> until the ci->i_ceph_lock is released.
-> 
-> The first patch simply allows ceph_buffer_put to receive a NULL buffer so
-> that the NULL check doesn't need to be performed in all the other patches.
-> IOW, it's not really required, just convenient.
-> 
-> (Note: maybe these patches should all be tagged for stable.)
-> 
-> Luis Henriques (4):
->   libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
->   ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
->   ceph: fix buffer free while holding i_ceph_lock in
->     __ceph_build_xattrs_blob()
->   ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-> 
->  fs/ceph/caps.c              |  5 ++++-
->  fs/ceph/inode.c             |  7 ++++---
->  fs/ceph/snap.c              |  4 +++-
->  fs/ceph/super.h             |  2 +-
->  fs/ceph/xattr.c             | 19 ++++++++++++++-----
->  include/linux/ceph/buffer.h |  3 ++-
->  6 files changed, 28 insertions(+), 12 deletions(-)
+On Fri, 19 Jul 2019 17:04:26 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-This all looks good to me. I'll plan to merge these into the testing
-branch soon, and tag them for stable.
+> Hi Alex,
+> 
+> On 7/18/19 11:12 AM, Alex Williamson wrote:
+> > On Sat, 25 May 2019 13:41:33 +0800
+> > Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> >   
+> >> Previously, get_valid_domain_for_dev() is used to retrieve the
+> >> DMA domain which has been attached to the device or allocate one
+> >> if no domain has been attached yet. As we have delegated the DMA
+> >> domain management to upper layer, this function is used purely to
+> >> allocate a private DMA domain if the default domain doesn't work
+> >> for ths device. Cleanup the code for readability.
+> >>
+> >> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> >> ---
+> >>   drivers/iommu/intel-iommu.c | 18 ++++++++----------
+> >>   include/linux/intel-iommu.h |  1 -
+> >>   2 files changed, 8 insertions(+), 11 deletions(-)  
+> > 
+> > System fails to boot bisected to this commit:  
+> 
+> Is this the same issue as this https://lkml.org/lkml/2019/7/18/840?
 
-PS: On a related note (and more of a question for Ilya)...
+Yes, the above link is after bisecting with all the bugs and fixes
+squashed together to avoid landing in local bugs.  Thanks,
 
-I'm wondering if we get any benefit from having our own ceph_kvmalloc
-routine. Why are we not better off using the stock kvmalloc routine
-instead? Forcing a vmalloc just because we've gone above 32k allocation
-doesn't seem like the right thing to do.
-
-PPS: I also wonder if we ought to put a might_sleep() in kvfree(). I
-think that kfree generally doesn't, and I wonder how many uses of this
-end up using kfree until memory ends up fragmented.
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Alex
