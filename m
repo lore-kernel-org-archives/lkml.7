@@ -2,82 +2,202 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354EAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72926C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F1E206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB982184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ke7EMova"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L4nPWE41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfGSF6D (ORCPT
+        id S1727242AbfGSF6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 01:58:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58010 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGSF6D (ORCPT
+        Fri, 19 Jul 2019 01:58:48 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:45733 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGSF6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 01:58:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JkahPmPzl6XZ6PskjBrzfoX7QWUaVtcVienRoSXNBdU=; b=ke7EMova/E8ImCWNRwWDKVXZV
-        xgzr0GEZFXulmnT/l8uOv0wFrCN82MkrPTDYXlySUskl/EnLLsMNExFIyi8lgY1FSkSNl2KfQqdbp
-        eRidTmKZxSZMtCi4HrpM57RcSnNUXp4vMdpaik7CTHOXb1q42yApJ88phf1rposyrvlkt2zuDDAnz
-        uOL5PTQNv3/Kg3HHmxTZPUaHQ056M13IKsRm7/WouU8558AfnRgvaiSXsC28lz+OIJeHdNpfhJBG5
-        tsRGY+PvE8zlWUbzMU2iSeCCySgvs5HNhMACkege/wZaSaq4iRzsHorj3E8cPDBLScnFM+m2onD/4
-        vVRJxBGcg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hoLts-0007jh-7i; Fri, 19 Jul 2019 05:57:48 +0000
-Date:   Thu, 18 Jul 2019 22:57:48 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     john.hubbard@gmail.com
-Cc:     pavel@ucw.cz, SCheung@nvidia.com, akpm@linux-foundation.org,
-        aneesh.kumar@linux.vnet.ibm.com, benh@kernel.crashing.org,
-        bsingharora@gmail.com, dan.j.williams@intel.com,
-        dnellans@nvidia.com, ebaskakov@nvidia.com, hannes@cmpxchg.org,
-        jglisse@redhat.com, jhubbard@nvidia.com,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        liubo95@huawei.com, mhairgrove@nvidia.com, mhocko@kernel.org,
-        paulmck@linux.vnet.ibm.com, ross.zwisler@linux.intel.com,
-        sgutti@nvidia.com, torvalds@linux-foundation.org,
-        vdavydov.dev@gmail.com, Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] mm/Kconfig: additional help text for HMM_MIRROR option
-Message-ID: <20190719055748.GA29082@infradead.org>
-References: <20190717074124.GA21617@amd>
- <20190719013253.17642-1-jhubbard@nvidia.com>
+        Fri, 19 Jul 2019 01:58:47 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190719055844epoutp04903a8ce9613e15cab4f8091d29c04f5c~yuXMcvpLH1661216612epoutp04z
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 05:58:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190719055844epoutp04903a8ce9613e15cab4f8091d29c04f5c~yuXMcvpLH1661216612epoutp04z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563515924;
+        bh=szd6xmQj3SvU6GXSwtu/sUN30XFQ9i4FBtIjtp320H4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=L4nPWE41/wc4XUD+raj5XIKVlG5syKLGamDYuckNk2O6nlwbVZoSW39tzowcha9r/
+         vC/OgLzaIR2GGzEhsr9mYM7S1rrgEv5lSb/85wvRBUke2aR+cBjardRFJeeDeYGFWL
+         fQQBYmDFIVJZ8SoWvR+4qZYbSbib6BkflUGsTqYo=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190719055844epcas1p108a3520911b3a51f3cd81064ffa3c012~yuXMDFWoy1828118281epcas1p1P;
+        Fri, 19 Jul 2019 05:58:44 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 45qgKr4mkHzMqYm1; Fri, 19 Jul
+        2019 05:58:40 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.96.04066.01C513D5; Fri, 19 Jul 2019 14:58:40 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190719055840epcas1p2cdb7e95837a9884de09f8d750b821d88~yuXISQCDJ2912029120epcas1p27;
+        Fri, 19 Jul 2019 05:58:40 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190719055840epsmtrp252be86f41996fcb3cf6e08aaf388b3c2~yuXIRcOil0338603386epsmtrp2E;
+        Fri, 19 Jul 2019 05:58:40 +0000 (GMT)
+X-AuditID: b6c32a37-e27ff70000000fe2-ab-5d315c1039f5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.8F.03638.01C513D5; Fri, 19 Jul 2019 14:58:40 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190719055840epsmtip15a21710833739f20107f4d22a6ed4836~yuXIHEDtN2188921889epsmtip1Z;
+        Fri, 19 Jul 2019 05:58:40 +0000 (GMT)
+Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
+ functions
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <8e3de3b8-d3c6-fba3-0883-a2cd8d0c4c98@samsung.com>
+Date:   Fri, 19 Jul 2019 15:01:50 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719013253.17642-1-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190719051426.4e4145d8@dimatab>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUiTYRzHe/Zu76a5fFpWv6RSX6nQcu5tTV8jJehgkIR0QIVmL+5pmrva
+        OzuMIruV8qBLV62oLLtrTdGVCGaFQZcd2DGyjCgzI1fRBbXtLfK/z+9+vr/np6BUF+hoRYHF
+        QewW3sTQ4dKGawlJSTibzdHsuTqBO/OpG3FbnEel3O1NvXLugfcgzfl3tSGu9LOT5p6V1NHc
+        d69LypWf66Cnh+kbfceRvsnpk+t3be6j9eWe00jvd4/Nki0pnJZPeAOxxxJLntVQYDGmM3Pm
+        587I1aVo2CQ2jUtlYi28maQzMzOzkmYXmAIPYmJX8aaigCuLFwQmOWOa3VrkILH5VsGRzhCb
+        wWRLs6kF3iwUWYzqPKt5KqvRTNYFEpcV5l+piLd1Rq1pL6tEG5EPl6EwBeApcOuEX16GwhUq
+        3IigrbNSKhr9CGrqd1Oi8RVBb3l5IKIIlbx8pxX9zQge7etAovERQZW7iQr2HYYXQFfdD1mQ
+        o/B4OHn9lyyYROFLErh58awkGKBxIrS87aSDHInj4NG3bhRkJc6Avd2+UCMpHgd9bzzSIA/H
+        i6C/65pMzBkK7TWvQ/4wrIbKnppQHwqPhKevD0tEjoHN9QdCEgD/puHyK49MVD0THnd4kcjD
+        oOemRy5yNPj7mmmR18Gp9jZaLN6BwNNy72+xFlpqd0uCu6BwAlzwJovuOGj6eQiJg4dA35ed
+        MnFdStixTSWmxMODLp9E5FFwbHspXYkY5wA5zgESnAMkOP8PO4Kkp9EIYhPMRiKwNu3A33aj
+        0LEmpjaii3cyWxFWICZCmWXW5Khk/CphrbkVgYJiopTP3iXnqJQGfm0xsVtz7UUmIrQiXWDb
+        VVT08Dxr4PQtjlxWN1mr1XJT2BQdyzIjla5fCTkqbOQdpJAQG7H/q5MowqI3IpN/8QtjQ29p
+        ZJk7o/j9aMP2mJ4bE3/OyGurksVU6DWjxrh21lXcnxt+rqfDtX/ooPuzvc67yrFP58X5Hp4f
+        923pypQfnKuWOv5q69elH5avi0l9Hr9+oZrU92e/Jas3RZa8cUccGexasW1D2qRsNTmUers4
+        KqK2+klJY6R8ls++v/o5IxXyeTaRsgv8H9tFdJvCAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnK5AjGGsQfNtTovVHx8zWrTMWsRi
+        cbbpDbvF5V1z2Cw+9x5htOj8MovN4nbjCjaLn7vmsVj0rb3E5sDpsePuEkaPnbPusnv0Nr9j
+        8+jbsorR4/MmuQDWKC6blNSczLLUIn27BK6M3f3KBTdEKk52TWBsYLwr0MXIwSEhYCLx8KVx
+        FyMXh5DAbkaJz8uWsXcxcgLFJSWmXTzKDFEjLHH4cDFEzVtGiVWTOlhAaoQFQiQerPjFCmKL
+        CKhJLD/6hxWkiFlgM5PE2VOr2SA6mlkkJt96CDaVTUBLYv+LG2wgNr+AosTVH48ZQWxeATuJ
+        qY/vMoPYLAKqEu+ebQHbICoQIXF4xyyoGkGJkzOfgMU5BfQkJryaCTaHWUBd4s+8S8wQtrjE
+        rSfzmSBseYnmrbOZJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1ya
+        l66XnJ+7iREcYVpaOxhPnIg/xCjAwajEwxuQaxArxJpYVlyZe4hRgoNZSYT39kv9WCHelMTK
+        qtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTBycUg2MZS5fLtWbqceZXWV5
+        rbeY3dy/cqXNccZVinyxfb/74hKDbhwyeffzeU7lbrZDewWdftm9UnG8bn7mQuWcgtlBvo5K
+        uY/fzFzzdsUpx3WCkcKvBJo4bGut6ye5rnGsOv9EtHsv1zov6fAOltbOjblLPyfXecTefOky
+        SfPwZWbHRG7zT4ofn0grsRRnJBpqMRcVJwIAMZeBQawCAAA=
+X-CMS-MailID: 20190719055840epcas1p2cdb7e95837a9884de09f8d750b821d88
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
+        <20190707223303.6755-13-digetx@gmail.com>
+        <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
+        <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
+        <45621f73-2f86-cde7-a92e-2a34810b9c05@samsung.com>
+        <20190719042251.37cc9cda@dimatab>
+        <92f82420-5c50-468f-a403-7b4c36958076@samsung.com>
+        <97f2a317-989a-bcad-dd45-ccf00ba18cca@samsung.com>
+        <20190719051426.4e4145d8@dimatab>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 06:32:53PM -0700, john.hubbard@gmail.com wrote:
-> +	  HMM_MIRROR provides a way to mirror ranges of the CPU page tables
-> +	  of a process into a device page table. Here, mirror means "keep
-> +	  synchronized". Prerequisites: the device must provide the ability
-> +	  to write-protect its page tables (at PAGE_SIZE granularity), and
-> +	  must be able to recover from the resulting potential page faults.
-> +
-> +	  Select HMM_MIRROR if you have hardware that meets the above
-> +	  description. An early, partial list of such hardware is:
-> +	  an NVIDIA GPU >= Pascal, Mellanox IB >= mlx5, or an AMD GPU.
+On 19. 7. 19. 오전 11:14, Dmitry Osipenko wrote:
+> В Fri, 19 Jul 2019 10:27:16 +0900
+> Chanwoo Choi <cw00.choi@samsung.com> пишет:
+> 
+>> On 19. 7. 19. 오전 10:24, Chanwoo Choi wrote:
+>>> On 19. 7. 19. 오전 10:22, Dmitry Osipenko wrote:  
+>>>> В Thu, 18 Jul 2019 18:09:05 +0900
+>>>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
+>>>>  
+>>>>> On 19. 7. 16. 오후 10:35, Dmitry Osipenko wrote:  
+>>>>>> 16.07.2019 15:26, Chanwoo Choi пишет:    
+>>>>>>> Hi Dmitry,
+>>>>>>>
+>>>>>>> I'm not sure that it is necessary.
+>>>>>>> As I knew, usally, the 'inline' is used on header file
+>>>>>>> to define the empty functions.
+>>>>>>>
+>>>>>>> Do we have to change it with 'inline' keyword?    
+>>>>>>
+>>>>>> The 'inline' attribute tells compiler that instead of jumping
+>>>>>> into the function, it should take the function's code and
+>>>>>> replace the function's invocation with that code. This is done
+>>>>>> in order to help compiler optimize code properly, please see
+>>>>>> [1]. There is absolutely no need to create a function call into
+>>>>>> a function that consists of a single instruction.
+>>>>>>
+>>>>>> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Inline.html
+>>>>>>     
+>>>>>
+>>>>> If you want to add 'inline' keyword, I recommend that 
+>>>>> you better to remove the modified function in this patch
+>>>>> and then just call the 'write_relaxed or read_relaxed' function
+>>>>> directly. It is same result when using inline keyword.  
+>>>>
+>>>> That could be done, but it makes code less readable.
+>>>>
+>>>> See the difference:
+>>>>
+>>>> device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
+>>>> ACTMON_DEV_INTR_STATUS);
+>>>>
+>>>> writel_relaxed(ACTMON_INTR_STATUS_CLEAR,
+>>>> 	       dev->regs + ACTMON_DEV_INTR_STATUS);  
+>>>
+>>> No problem if you add the detailed comment and you want to use
+>>> the 'inline' keyword.  
+>>
+>> Basically, I think that 'inline' keyword is not necessary.
+> 
+> Sure, but I'm finding that it's always nicer to explicitly inline a very
+> simple functions because compiler may not do it properly itself in some
+> cases.
+> 
+>> But if you want to use 'inline' keyword, I recommend
+>> that call the 'write_relaxed or read_relaxed' function directly
+>> with detailed description. 
+> 
+> Could you please reword this sentence? Not sure that I'm understanding
+> it correctly.
+> 
 
-Nevermind that the Nvidia support is stagaging and looks rather broken,
-there is no Mellanox user of this either at this point.
+If you want to used 'inline' keyword,
+Instead, I recommend that remove 'actmon_readl/writel' wrapper functions
+and then you calls 'write_relaxed or read_relaxed' function directly
+with detailed description.
 
-But either way this has no business in a common kconfig help.  Just
-drop the fine grained details and leave it to the overview.
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
