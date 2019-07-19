@@ -2,58 +2,137 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24879C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D68C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3B420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FFB21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqw8Cx6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732694AbfGSXXQ (ORCPT
+        id S1732818AbfGSX2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 19:23:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41292 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbfGSXXP (ORCPT
+        Fri, 19 Jul 2019 19:28:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43979 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728909AbfGSX2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 19:23:15 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hocDU-0006cq-4i; Fri, 19 Jul 2019 23:23:08 +0000
-Date:   Sat, 20 Jul 2019 00:23:08 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ceph: fix buffer free while holding i_ceph_lock in
- __ceph_setxattr()
-Message-ID: <20190719232307.GA17978@ZenIV.linux.org.uk>
-References: <20190719143222.16058-1-lhenriques@suse.com>
- <20190719143222.16058-3-lhenriques@suse.com>
- <1dee14212043f12ef5b26e4aee0c3155e118abf3.camel@kernel.org>
+        Fri, 19 Jul 2019 19:28:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id 4so9334494pld.10;
+        Fri, 19 Jul 2019 16:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=W6t5FQEwMw0qpV9k7IMBbta6+NR+YMGgesuoH6YZmbk=;
+        b=fqw8Cx6LDnkMZb/sTC93KEdKOB+WPhFvjjco+JZBr5baVhpo6dWjxo6iAB7wDCfAuO
+         GLvJY7wmkuMXupBqiVFJ0++G0llqiNYClUQBbD0zOYURk75CVPwRBqJmIQ0I30bGSlSy
+         14y0OEYWK7zWcSn12Ac09I0BlnV7PEoT2KZGb8pWqb9LS00tsVkt6fNx1V/mInlICSgX
+         Px7dCtv3P9d2NjYaV//FzBFsO9ncc5OMQTJEcnBBGCtq/4stOu+gmVdAhJNwn8Qfzwju
+         DyGwcyAf0XGBCsubwrvVsuhglaMSDarfR6fHnekAPzWN4wz7AOPX94k0ljdabqVdRCtX
+         Kt+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W6t5FQEwMw0qpV9k7IMBbta6+NR+YMGgesuoH6YZmbk=;
+        b=IaKj81O9g2Jl5/PZWNVzugrxoL/pX3hMt/Ju7lTRrQeL2LRFphi5ojIglV3ZffLtpl
+         x/FJMOiodddMb/KFeo94rh4q8jlsSHHPmGPq5cTwVk8Qa1w2eyMYbxqE1A/3fhxoKLFN
+         B+JkBBE7QcTk5FZKeWIA/0KvT1x+osnUqjPoZK0MDGi0MTMsqeMTUUz8M29x8RCnhMTP
+         sv+92Tm+BJBXY+rCzRn+8yuOmVXvzyQ4IlSwlV/glszB7zy0AgUE69cnL78FZkd0ol+F
+         vWX+mHXjibMuOkfs8kd7H5QCjlBvO9XBnhFX5O3eWve0c9u0bOpXzyJa+6ukIqWk3RvU
+         c3qQ==
+X-Gm-Message-State: APjAAAW7y/4L4LVBUfrJqqseXxaBWZHa1PtUFVdzn3mwSODvL9z0K+JH
+        gMgzKWbi4irxXxrrpqpEZoo=
+X-Google-Smtp-Source: APXvYqznoe4QzmRafn0J1Oet0UpHQ+jjD+EgfsMMiOX93rDiAqeGrtEc9yiw6pRztZ/GLoPPRDfMYQ==
+X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr59392908plb.240.1563578913096;
+        Fri, 19 Jul 2019 16:28:33 -0700 (PDT)
+Received: from fyin-linux ([103.121.208.202])
+        by smtp.gmail.com with ESMTPSA id 2sm56046698pgm.39.2019.07.19.16.28.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Jul 2019 16:28:32 -0700 (PDT)
+From:   YinFengwei <nh26223.lmm@gmail.com>
+X-Google-Original-From: YinFengwei <fyin@fyin-linux>
+Date:   Sat, 20 Jul 2019 07:28:19 +0800
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Yin Fengwei <nh26223.lmm@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Subject: Re: [PATCH] fs: fs_parser: avoid NULL param->string to kstrtouint
+Message-ID: <20190719232819.GA27852@fyin-linux>
+References: <20190719124329.23207-1-nh26223.lmm@gmail.com>
+ <CACT4Y+aVS5nn0Pv31tAOujcAPvCAOuK_iPZ1CCNbgAOL=JDvvg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1dee14212043f12ef5b26e4aee0c3155e118abf3.camel@kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CACT4Y+aVS5nn0Pv31tAOujcAPvCAOuK_iPZ1CCNbgAOL=JDvvg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 07:07:49PM -0400, Jeff Layton wrote:
+On Fri, Jul 19, 2019 at 03:37:37PM +0200, Dmitry Vyukov wrote:
+> On Fri, Jul 19, 2019 at 2:44 PM Yin Fengwei <nh26223.lmm@gmail.com> wrote:
+> >
+> > syzbot reported general protection fault in kstrtouint:
+> > https://lkml.org/lkml/2019/7/18/328
+> >
+> > From the log, if the mount option is something like:
+> >    fd,XXXXXXXXXXXXXXXXXXXX
+> >
+> > The default parameter (which has NULL param->string) will be
+> > passed to vfs_parse_fs_param. Finally, this NULL param->string
+> > is passed to kstrtouint and trigger NULL pointer access.
+> >
+> > Reported-by: syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com
+> > Fixes: 71cbb7570a9a ("vfs: Move the subtype parameter into fuse")
+> >
+> > Signed-off-by: Yin Fengwei <nh26223.lmm@gmail.com>
+> > ---
+> >  fs/fs_parser.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+> > index d13fe7d797c2..578e6880ac67 100644
+> > --- a/fs/fs_parser.c
+> > +++ b/fs/fs_parser.c
+> > @@ -210,6 +210,10 @@ int fs_parse(struct fs_context *fc,
+> >         case fs_param_is_fd: {
+> >                 switch (param->type) {
+> >                 case fs_value_is_string:
+> > +                       if (result->has_value) {
+> 
+> !result->has_value ?
+Yes. Should have ! in condition for NULL param->string. Will fix in v2.
 
-> Al pointed out on IRC that vfree should be callable under spinlock.
+Regards
+Yin, Fengwei
 
-Al had been near-terminally low on caffeine at the time, posted
-a retraction a few minutes later and went to grab some coffee...
-
-> It
-> only sleeps if !in_interrupt(), and I think that should return true if
-> we're holding a spinlock.
-
-It can be used from RCU callbacks and all such; it *can't* be used from
-under spinlock - on non-preempt builds there's no way to recognize that.
+> 
+> > +                               goto bad_value;
+> > +                       }
+> > +
+> >                         ret = kstrtouint(param->string, 0, &result->uint_32);
+> >                         break;
+> >                 case fs_value_is_file:
+> > --
+> > 2.17.1
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20190719124329.23207-1-nh26223.lmm%40gmail.com.
