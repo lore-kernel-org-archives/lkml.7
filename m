@@ -2,119 +2,142 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65085C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C014DC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424AC2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BD22085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:37:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nc3vuAQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfGSOcm (ORCPT
+        id S1729714AbfGSOhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 10:32:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41232 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729723AbfGSOc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:32:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 17B57B061;
-        Fri, 19 Jul 2019 14:32:26 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 2/4] ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-Date:   Fri, 19 Jul 2019 15:32:20 +0100
-Message-Id: <20190719143222.16058-3-lhenriques@suse.com>
-In-Reply-To: <20190719143222.16058-1-lhenriques@suse.com>
-References: <20190719143222.16058-1-lhenriques@suse.com>
+        Fri, 19 Jul 2019 10:37:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46590 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfGSOhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 10:37:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JEJPOp174728;
+        Fri, 19 Jul 2019 14:37:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=Ea7YAj6aCsOltfu+jfPBwzRyC/igLXsJVch2fiMu4OQ=;
+ b=Nc3vuAQCpmSezUOfAD5aodlXEX8+XXr1jDfVvso0ldX2DXHlakZ/J1xpqhw27m9yoma3
+ i5rFPxHTnRo/WZ4SnHwJQXtR7g67e5E1jIfYdjtvYZsddu2JUphFxIxUdwrcqmQZu+bj
+ zTTrHrAj6q5mJKSIB/kWiHSdWVWQAFVX5rd1QUr13vO+kK1Zqqd+1nF9m8TcBIjtkrVN
+ 2N1ce658/fORcx4y6/BRjTib5eUK8FyRjlpbjcPnXbC57cUJrbTBFZHoZqF9aCxmB+rL
+ ryT+KGXIKOEnzdaOIT4SG650/5atByMcw4AfGHNYNWbAHYXKaKLotEnaGnq4Qf0uRMPr +A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2tq7xrf0gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 14:37:30 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JEHcM8066621;
+        Fri, 19 Jul 2019 14:37:30 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tsmcdmnqd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 14:37:30 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6JEbQV4005554;
+        Fri, 19 Jul 2019 14:37:27 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jul 2019 14:37:26 +0000
+Date:   Fri, 19 Jul 2019 10:37:21 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathias Krause <minipli@googlemail.com>
+Subject: Re: [v2 PATCH] padata: Replace delayed timer with immediate
+ workqueue in padata_reorder
+Message-ID: <20190719143721.awtvjf2pk37f5zsv@ca-dmjordan1.us.oracle.com>
+References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
+ <20190716163253.24377-1-daniel.m.jordan@oracle.com>
+ <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
+ <20190717183227.b3hqphukkndqumhw@ca-dmjordan1.us.oracle.com>
+ <20190718033131.4m4ypbq7tiucqcsl@gondor.apana.org.au>
+ <20190718142730.uhdkwx5onigdpxno@ca-dmjordan1.us.oracle.com>
+ <20190718145634.xagjemdqpoe44xxh@gondor.apana.org.au>
+ <20190718150146.bztw3uugd5sqhdvk@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718150146.bztw3uugd5sqhdvk@gondor.apana.org.au>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=702
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907190160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=744 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907190160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling ceph_buffer_put() in __ceph_setxattr() may end up freeing the
-i_xattrs.prealloc_blob buffer while holding the i_ceph_lock.  This can be
-fixed by postponing the call until later, when the lock is released.
+On Thu, Jul 18, 2019 at 11:01:46PM +0800, Herbert Xu wrote:
+> @@ -376,9 +325,8 @@ void padata_do_serial(struct padata_priv *padata)
+>  
+>  	cpu = get_cpu();
+>  
+> -	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
+> -	 * was called on -- or, at least, enqueue the padata object into the
+> -	 * correct per-cpu queue.
+> +	/* We need to enqueue the padata object into the correct
+> +	 * per-cpu queue.
+>  	 */
+>  	if (cpu != padata->cpu) {
+>  		reorder_via_wq = 1;
+> @@ -388,12 +336,12 @@ void padata_do_serial(struct padata_priv *padata)
+>  	pqueue = per_cpu_ptr(pd->pqueue, cpu);
+>  
+>  	spin_lock(&pqueue->reorder.lock);
+> -	atomic_inc(&pd->reorder_objects);
+>  	list_add_tail(&padata->list, &pqueue->reorder.list);
+> +	atomic_inc(&pd->reorder_objects);
+>  	spin_unlock(&pqueue->reorder.lock);
+>  
+>  	/*
+> -	 * Ensure the atomic_inc of reorder_objects above is ordered correctly
+> +	 * Ensure the addition to the reorder list is ordered correctly
+>  	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
+>  	 * in padata_reorder.
+>  	 */
+> @@ -401,13 +349,7 @@ void padata_do_serial(struct padata_priv *padata)
+>  
+>  	put_cpu();
+>  
+> -	/* If we're running on the wrong CPU, call padata_reorder() via a
+> -	 * kernel worker.
+> -	 */
+> -	if (reorder_via_wq)
+> -		queue_work_on(cpu, pd->pinst->wq, &pqueue->reorder_work);
+> -	else
+> -		padata_reorder(pd);
+> +	padata_reorder(pd);
+>  }
+>  EXPORT_SYMBOL(padata_do_serial);
 
-The following backtrace was triggered by fstests generic/117.
-
-  BUG: sleeping function called from invalid context at mm/vmalloc.c:2283
-  in_atomic(): 1, irqs_disabled(): 0, pid: 650, name: fsstress
-  3 locks held by fsstress/650:
-   #0: 00000000870a0fe8 (sb_writers#8){.+.+}, at: mnt_want_write+0x20/0x50
-   #1: 00000000ba0c4c74 (&type->i_mutex_dir_key#6){++++}, at: vfs_setxattr+0x55/0xa0
-   #2: 000000008dfbb3f2 (&(&ci->i_ceph_lock)->rlock){+.+.}, at: __ceph_setxattr+0x297/0x810
-  CPU: 1 PID: 650 Comm: fsstress Not tainted 5.2.0+ #437
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x67/0x90
-   ___might_sleep.cold+0x9f/0xb1
-   vfree+0x4b/0x60
-   ceph_buffer_release+0x1b/0x60
-   __ceph_setxattr+0x2b4/0x810
-   __vfs_setxattr+0x66/0x80
-   __vfs_setxattr_noperm+0x59/0xf0
-   vfs_setxattr+0x81/0xa0
-   setxattr+0x115/0x230
-   ? filename_lookup+0xc9/0x140
-   ? rcu_read_lock_sched_held+0x74/0x80
-   ? rcu_sync_lockdep_assert+0x2e/0x60
-   ? __sb_start_write+0x142/0x1a0
-   ? mnt_want_write+0x20/0x50
-   path_setxattr+0xba/0xd0
-   __x64_sys_lsetxattr+0x24/0x30
-   do_syscall_64+0x50/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7ff23514359a
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/xattr.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 37b458a9af3a..c083557b3657 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -1036,6 +1036,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(inode->i_sb)->mdsc;
- 	struct ceph_cap_flush *prealloc_cf = NULL;
-+	struct ceph_buffer *old_blob = NULL;
- 	int issued;
- 	int err;
- 	int dirty = 0;
-@@ -1109,13 +1110,15 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 		struct ceph_buffer *blob;
- 
- 		spin_unlock(&ci->i_ceph_lock);
--		dout(" preaallocating new blob size=%d\n", required_blob_size);
-+		ceph_buffer_put(old_blob); /* Shouldn't be required */
-+		dout(" pre-allocating new blob size=%d\n", required_blob_size);
- 		blob = ceph_buffer_new(required_blob_size, GFP_NOFS);
- 		if (!blob)
- 			goto do_sync_unlocked;
- 		spin_lock(&ci->i_ceph_lock);
-+		/* prealloc_blob can't be released while holding i_ceph_lock */
- 		if (ci->i_xattrs.prealloc_blob)
--			ceph_buffer_put(ci->i_xattrs.prealloc_blob);
-+			old_blob = ci->i_xattrs.prealloc_blob;
- 		ci->i_xattrs.prealloc_blob = blob;
- 		goto retry;
- 	}
-@@ -1131,6 +1134,7 @@ int __ceph_setxattr(struct inode *inode, const char *name,
- 	}
- 
- 	spin_unlock(&ci->i_ceph_lock);
-+	ceph_buffer_put(old_blob);
- 	if (lock_snap_rwsem)
- 		up_read(&mdsc->snap_rwsem);
- 	if (dirty)
+If I'm not missing anything, still looks like get_cpu() and reorder_via_wq no
+longer have an effect with this patch and can be removed.
