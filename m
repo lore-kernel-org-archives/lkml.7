@@ -2,237 +2,143 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC436C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DDAC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2002184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g1IJvpmr"
+	by mail.kernel.org (Postfix) with ESMTP id 2076F2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfGSGIm (ORCPT
+        id S1727408AbfGSGI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:08:42 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:51634 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfGSGIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:08:42 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190719060839epoutp04dc376d47b81ace5b3e03eff641b65e5d~yuf2KD_Fr2729627296epoutp04E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:08:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190719060839epoutp04dc376d47b81ace5b3e03eff641b65e5d~yuf2KD_Fr2729627296epoutp04E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563516519;
-        bh=NU+ul+l+BwlLq0RKOFf7PsXfqwtG25DMcSpVBs9CAXM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g1IJvpmrk32nBCmtbeeHs84/LkJWmT4u/m+dfJEvW+jBymkTyN3QaUnvfAYVRcv8d
-         w1B01FC+3atZbQaxNCZmzmGCuz1iVdXZqRG8x0oV8gR8Dajn+w93n+eEhhDzhMXmWH
-         LvlBR6Kn1wafPNlaGfjKQQomwHSVMg8OpWeIqTdU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190719060838epcas1p47f5871a30b5e53238b0b122876ef0e25~yuf1rdYO32304523045epcas1p4e;
-        Fri, 19 Jul 2019 06:08:38 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 45qgYH61xKzMqYlm; Fri, 19 Jul
-        2019 06:08:35 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        36.D8.04085.36E513D5; Fri, 19 Jul 2019 15:08:35 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190719060835epcas1p3e73e654c4f013dfcec3164b4d02c1ac2~yufyoJZpj3137431374epcas1p3n;
-        Fri, 19 Jul 2019 06:08:35 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190719060835epsmtrp22595b4ccaa1bb36e84ce82ea7cddaa83~yufynY3vx1058710587epsmtrp2D;
-        Fri, 19 Jul 2019 06:08:35 +0000 (GMT)
-X-AuditID: b6c32a39-cebff70000000ff5-eb-5d315e635faa
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C9.50.03638.36E513D5; Fri, 19 Jul 2019 15:08:35 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190719060835epsmtip2ce3815d72739fe949dc7f31a28f21422~yufyTdC9K1448114481epsmtip2j;
-        Fri, 19 Jul 2019 06:08:35 +0000 (GMT)
-Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
- watermark selection
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Organization: Samsung Electronics
-Message-ID: <c3e4330a-a96c-1ae9-761e-9eb1179e9b01@samsung.com>
-Date:   Fri, 19 Jul 2019 15:11:45 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 19 Jul 2019 02:08:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28944 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbfGSGI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:08:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 23:08:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="asc'?scan'208";a="170814276"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by orsmga003.jf.intel.com with ESMTP; 18 Jul 2019 23:08:53 -0700
+Date:   Fri, 19 Jul 2019 14:05:40 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Kechen Lu <kechen.lu@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        kraxel@redhat.com, zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
+        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
+        alex.williamson@redhat.com, Eric Auger <eric.auger@redhat.com>
+Subject: Re: [RFC PATCH v4 1/6] vfio: Define device specific irq type
+ capability
+Message-ID: <20190719060540.GC28809@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+ <20190718155640.25928-2-kechen.lu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <3c9c6a3a-8bce-d304-8472-029e6e673a99@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2zk726LV1+zytqjmiQIFdSdbHUMtqGSVP4T6YYWtg5422e20
-        s4UW3VzY1UwMymVm2bK7FWpqlLQsMSoyMSSRLosuZkZeKimwbafIf8/7vs/zPd/zfa+S0NRQ
-        WmWuw827HJyNpsaR9fdj9HHZG5ks/YuuePbytyBi9/rOkuyTgj4F29FUTrGDRS2IPTDko9ju
-        PRcodqSpgmSPXH1OLVUZG3rOIWOjr0dhLPL2U8YjtZeQcfDmrAz5emuyhedyeJeOd2Q7c3Id
-        5hR69RrTMpNhoZ6JY5LYRbTOwdn5FHp5ekZcWq4tdCFat5WzeUKtDE4U6YTUZJfT4+Z1Fqfo
-        TqF5IccmJAnxImcXPQ5zfLbTvpjR6+cbQsRNVsujex6hVZdXdaaU2I3KtQeRSgl4ATwY9hIH
-        0TilBjcgqK/0yqRiAMFQzyFKKr4jaPtSqvgnKSv3y8JYg+8g6G7ZIZG+IvDXtZPhQRTmoL34
-        gzyMKRwLzR+7qDCejOdB9YPf8rCAwDdk0Hr9SuSkiTgaOn8GURircSo8u3wrIibxXDh3tDfS
-        n4IzYeD1fbnEmQRtZe8iZiq8BEarTkYMCDwNXr47LZPwbPDWnYyEAzxKgd9/F0kRlkPd2QAh
-        4Sjoba39G00Lg/13KAlvh4ttLZQk3o+gtvmZXBokQrO/NOSgDDnEQE1TgtSOhsZfp5BkPAH6
-        hw/LwxTAathfqJEoc6DjdY9MwtOhat8B6iiifWPi+MZE8I2J4PtvVonIS2gqL4h2My8ygmHs
-        b99EkWWNTWpAD5+mBxBWInq8OsOuz9LIua1ivj2AQEnQk9XdnxKyNOocLn8b73KaXB4bLwaQ
-        IfTaJYR2SrYztPoOt4kxzE9MTGQXMAsNDENPU1f8jsnSYDPn5q08L/CufzqZUqXdjdYS1TNP
-        qZzXNs/Jt9+yZ45uf7Xhbebj4cpis3Xo80drn21lZVRJvftHYBfTW8i+T7s9obrCdHWAFKxD
-        3klBayyy3I7Kmy2vTc/fVBNdMtI5q7VvRfrxEx3B84WGguIZRRZ1wvgt6xSkJSi0aFdpC5qv
-        eKwdOz8cUzQmLfveNfMNTYoWjoklXCL3BwpHMXnCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvG5ynGGswcz9oharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZpw6WFhxXqFi8cDJzA+McqS5GTg4JAROJmXOW
-        MnUxcnEICexmlHjfP4UVIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBIHFs1hBqkRFkiUuNj/HKye
-        TUBLYv+LG2wgtoiAmsTyo39YQRqYBTYzSZw9tZoNons2s8TjxrVgHfwCihJXfzxmBLF5Bewk
-        LqzeDhZnEVCVWDLhFVhcVCBC4vCOWVA1ghInZz5hAbE5Bewl/i+eDbaNWUBd4s+8S8wQtrjE
-        rSfzmSBseYnmrbOZJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1ya
-        l66XnJ+7iREcY1paOxhPnIg/xCjAwajEwxuQaxArxJpYVlyZe4hRgoNZSYT39kv9WCHelMTK
-        qtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTBycUg2Mqz4yBmaXLTjuODdi
-        9crtG/wswwPLagqCl70pSTwp6Fousuz3UpfYoI7KTP5ev7235xbEBPUHbDkXr3Z110mNOKuk
-        SYtF9K7OmbVexH39DbegjJBfgkdquK3vFIq82V/FpDPxz+tlWlvd0vb+cyrllDd2kU0xnL0r
-        77BwEI/cn/LfC775rt2oxFKckWioxVxUnAgA1ngb6q0CAAA=
-X-CMS-MailID: 20190719060835epcas1p3e73e654c4f013dfcec3164b4d02c1ac2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
-        <20190707223303.6755-21-digetx@gmail.com>
-        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
-        <20190719045943.73b53e31@dimatab>
-        <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
-        <20190719052111.6641285d@dimatab>
-        <3c9c6a3a-8bce-d304-8472-029e6e673a99@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
+Content-Disposition: inline
+In-Reply-To: <20190718155640.25928-2-kechen.lu@intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 19. 오후 3:09, Chanwoo Choi wrote:
-> On 19. 7. 19. 오전 11:21, Dmitry Osipenko wrote:
->> В Fri, 19 Jul 2019 11:06:05 +0900
->> Chanwoo Choi <cw00.choi@samsung.com> пишет:
->>
->>> On 19. 7. 19. 오전 10:59, Dmitry Osipenko wrote:
->>>> В Fri, 19 Jul 2019 10:36:30 +0900
->>>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
->>>>   
->>>>> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:  
->>>>>> I noticed that CPU may be crossing the dependency threshold very
->>>>>> frequently for some workloads and this results in a lot of
->>>>>> interrupts which could be avoided if MCALL client is keeping
->>>>>> actual EMC frequency at a higher rate.
->>>>>>
->>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>> ---
->>>>>>  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
->>>>>>  1 file changed, 18 insertions(+), 5 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/devfreq/tegra30-devfreq.c
->>>>>> b/drivers/devfreq/tegra30-devfreq.c index
->>>>>> c3cf87231d25..4d582809acb6 100644 ---
->>>>>> a/drivers/devfreq/tegra30-devfreq.c +++
->>>>>> b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static
->>>>>> void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
->>>>>>  
->>>>>>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
->>>>>> *tegra,
->>>>>> -					   struct
->>>>>> tegra_devfreq_device *dev)
->>>>>> +					   struct
->>>>>> tegra_devfreq_device *dev,
->>>>>> +					   unsigned long freq)
->>>>>>  {
->>>>>>  	unsigned long avg_threshold, lower, upper;
->>>>>>  
->>>>>> @@ -323,6 +324,15 @@ static void
->>>>>> tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->>>>>> avg_threshold = dev->config->avg_dependency_threshold;
->>>>>> avg_threshold = avg_threshold * ACTMON_SAMPLING_PERIOD; 
->>>>>> +	/*
->>>>>> +	 * If cumulative EMC frequency selection is higher than
->>>>>> the
->>>>>> +	 * device's, then there is no need to set upper watermark
->>>>>> to
->>>>>> +	 * a lower value because it will result in unnecessary
->>>>>> upper
->>>>>> +	 * interrupts.
->>>>>> +	 */
->>>>>> +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
->>>>>> +		upper = freq * ACTMON_SAMPLING_PERIOD;    
->>>>>
->>>>> Also, 'upper value is used on the patch5. You can combine this code
->>>>> to patch5 or if this patch depends on the cpu notifier, you can
->>>>> combine it to the patch of adding cpu notifier without separate
->>>>> patch.  
->>>>
->>>> Well okay, I'll try to squash some of the patches in the next
->>>> revision. Usually I'm receiving comments in the other direction,
->>>> asking to separate patches into smaller changes ;) So that's more a
->>>> personal preference of each maintainer, I'd say.
->>>>   
->>>
->>> Right. We have to make the patch with atomic attribute.
->>> But, if there are patches which touch the same code
->>> in the same patchset. We can squash or do refactorig
->>> of this code.
->>
->> The main benefit of having smaller logical changes is that when there is
->> a bug, it's easier to narrow down the offending change using bisection.
->> And it's just easier to review smaller patches, of course.
-> 
-> I agree that the patch should contain the atomic feature.
-> To remove the some communication confusion between us,
-> I don't mean that you have to merge patches to only one patch.
 
-If each patch has the atomic attribute, it have to be made as the separate patch.
-But, if some patches are included in the the following two case,
-can combine patches to one patch.
+--1ccMZA6j1vT5UqiK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> It is important to remove the following two cases on the same patchset.
-> 
-> 1. the front patch adds the code and then later patch remove the added code.
-> 2. the front patch changes the code and the later patch again modified
->    the changed code of the front patch
-> 
-> 
->>
->>> And also, if possible, I'd like you to make the patch
->>> list according to the role of patch. For example,
->>> the patches related to the 'watermark' could be sequentially
->>> listed. But, it is not forced opinion. If just possible.
->>
->> Okay, will take this into account.
->>
->>
->>
-> 
-> 
+On 2019.07.18 23:56:35 +0800, Kechen Lu wrote:
+> From: Tina Zhang <tina.zhang@intel.com>
+>=20
+> Cap the number of irqs with fixed indexes and use capability chains
+> to chain device specific irqs.
+>=20
+> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>  include/uapi/linux/vfio.h | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 8f10748dac79..be6adab4f759 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -448,11 +448,27 @@ struct vfio_irq_info {
+>  #define VFIO_IRQ_INFO_MASKABLE		(1 << 1)
+>  #define VFIO_IRQ_INFO_AUTOMASKED	(1 << 2)
+>  #define VFIO_IRQ_INFO_NORESIZE		(1 << 3)
+> +#define VFIO_IRQ_INFO_FLAG_CAPS		(1 << 4) /* Info supports caps */
+>  	__u32	index;		/* IRQ index */
+>  	__u32	count;		/* Number of IRQs within this index */
+> +	__u32	cap_offset;	/* Offset within info struct of first cap */
 
+This still breaks ABI as argsz would be updated with this new field, so it =
+would
+cause compat issue. I think my last suggestion was to assume cap list start=
+s after
+vfio_irq_info.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>  };
+>  #define VFIO_DEVICE_GET_IRQ_INFO	_IO(VFIO_TYPE, VFIO_BASE + 9)
+> =20
+> +/*
+> + * The irq type capability allows irqs unique to a specific device or
+> + * class of devices to be exposed.
+> + *
+> + * The structures below define version 1 of this capability.
+> + */
+> +#define VFIO_IRQ_INFO_CAP_TYPE      3
+> +
+> +struct vfio_irq_info_cap_type {
+> +	struct vfio_info_cap_header header;
+> +	__u32 type;     /* global per bus driver */
+> +	__u32 subtype;  /* type specific */
+> +};
+> +
+>  /**
+>   * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_ir=
+q_set)
+>   *
+> @@ -554,7 +570,8 @@ enum {
+>  	VFIO_PCI_MSIX_IRQ_INDEX,
+>  	VFIO_PCI_ERR_IRQ_INDEX,
+>  	VFIO_PCI_REQ_IRQ_INDEX,
+> -	VFIO_PCI_NUM_IRQS
+> +	VFIO_PCI_NUM_IRQS =3D 5	/* Fixed user ABI, IRQ indexes >=3D5 use   */
+> +				/* device specific cap to define content */
+>  };
+> =20
+>  /*
+> --=20
+> 2.17.1
+>=20
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--1ccMZA6j1vT5UqiK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXTFdtAAKCRCxBBozTXgY
+J+A6AKCdu+X82qvxu8+c+G7Xf2KT4EPb+QCcDuu89yudz4pTfaN3llmqJsIf1LQ=
+=mAF2
+-----END PGP SIGNATURE-----
+
+--1ccMZA6j1vT5UqiK--
