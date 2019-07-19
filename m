@@ -2,130 +2,133 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A39C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EDFC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8F621849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBDB21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cwjj8OIm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A+mO3rln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfGSIzo (ORCPT
+        id S1726840AbfGSI6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:55:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45612 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfGSIzl (ORCPT
+        Fri, 19 Jul 2019 04:58:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59250 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGSI6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:55:41 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y8so15299051plr.12;
-        Fri, 19 Jul 2019 01:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lV5j+XUqWBJfA9H3lN3dIsabShwNTCRmUvxvYq2uiYc=;
-        b=Cwjj8OImi4J89USf/o0U1of0m4rjg+Hknu7KKXFkUNWnz2oxGkCPZq7Jh9CMeu/1C/
-         WLqzfQ5JfOXJ2feKjfBxKtT8yS/Y+LBr4w+Uq9WcVeslwrHcD6hq2q8WbHXGNWKhKFOp
-         etpCPYp+4oYoeqPBxWji7S++4UV9EGiECuYn6jPlv2xXt8g3zrP3SzxiQMBPQX9YXOkF
-         vv/skUelxjuOD4SS6yuY67DjiU7H2Lx/d/FUvh6VYSPIFt4aj2ek29qyopemDYPgqrKY
-         vPECVO209d4c9ExSulOD0OYsIsvKgGcNOl8Xdd3o/o1Iwd/bqEBB+FAoikOBxI1Fkp2L
-         g4iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lV5j+XUqWBJfA9H3lN3dIsabShwNTCRmUvxvYq2uiYc=;
-        b=g3R5wyNblRG91BgW3EiuXWz6dNJ7PX+oD18vvSW+AKGVAoRCU251/Kfc29iUb5R5YG
-         BvIGYMhH/EiBtH31a0XiYrR/qoY4zlXIGxIM1JUig0f8DGsxgS3HzN0lTZQCoExAIumy
-         Oz/GfXSP3M2bx+Z4bugmjyQyXVFBpAVp6cSca78hy1hyi3rv4KJfXNenv39KSS1us0l/
-         nu94VDr0OpXpmZMuafjEbbAk6oyR4+z0T/DOX53bS2UNyovnuoQX//d2URBDSWVt3FWy
-         kTcfGx5fnCJAnCAstAFxM47WtJ+4pLRXvBnejiEEkmGiDXFINjYnfRohL7kHwTXfwzzv
-         Mpog==
-X-Gm-Message-State: APjAAAWWVLmy9UXcx/etLiLoSN9x7fhqJC1rm1nPETESSgWG8zCWBz6J
-        28swaoPlkINSuy3pjnhbcFB4W1tAgL8=
-X-Google-Smtp-Source: APXvYqzr5/czZtUj4SwnWAsLsaUxE/e+JZt+xlsEffEtC2SwVU/HV6d1ADK3EWZLW2PIV9wO/RyP8g==
-X-Received: by 2002:a17:902:2a68:: with SMTP id i95mr56582918plb.167.1563526540523;
-        Fri, 19 Jul 2019 01:55:40 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id k3sm18202640pgq.92.2019.07.19.01.55.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 01:55:39 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] staging: wilc1000: Merge memcpy + le32_to_cpus to get_unaligned_le32
-Date:   Fri, 19 Jul 2019 16:55:08 +0800
-Message-Id: <20190719085507.10925-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 19 Jul 2019 04:58:12 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6J8vdEj013636;
+        Fri, 19 Jul 2019 03:57:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563526659;
+        bh=7X+kR445JFm1cYpnohKCnbuAIZMZuiFWVELpywmoSV0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=A+mO3rlnNAl91B8Nq9UoSTvln9pWGTqdsXa5JfkOK3UjxPnPUq1RLJisCHSxeuTSQ
+         ldVbeh8gYtrPICER+dmG97ryg1rNn54BogFQ+atZ9+OtbtNA21noNcS/y1+O2APNin
+         hwcJ6Z7piMkN2cCFEiYVHbmufC+hAzQFtqsgoFpA=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6J8vdHm045399
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jul 2019 03:57:39 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 19
+ Jul 2019 03:57:39 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 19 Jul 2019 03:57:38 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6J8vZFd089409;
+        Fri, 19 Jul 2019 03:57:36 -0500
+Subject: Re: [PATCH -next] mtd: hyperbus: fix build error about CONFIG_REGMAP
+To:     Mao Wenan <maowenan@huawei.com>, <dwmw2@infradead.org>,
+        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190719010703.63815-1-maowenan@huawei.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <a4c534c3-4105-08cd-874b-91d82f5a9199@ti.com>
+Date:   Fri, 19 Jul 2019 14:28:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190719010703.63815-1-maowenan@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the combo use of memcpy and le32_to_cpus.
-Use get_unaligned_le32 instead.
-This simplifies the code.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/staging/wilc1000/wilc_mon.c  | 3 +--
- drivers/staging/wilc1000/wilc_wlan.c | 9 +++------
- 2 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/wilc_mon.c b/drivers/staging/wilc1000/wilc_mon.c
-index 7d7933d40924..d6f14f69ad64 100644
---- a/drivers/staging/wilc1000/wilc_mon.c
-+++ b/drivers/staging/wilc1000/wilc_mon.c
-@@ -35,8 +35,7 @@ void wilc_wfi_monitor_rx(struct net_device *mon_dev, u8 *buff, u32 size)
- 		return;
- 
- 	/* Get WILC header */
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	/*
- 	 * The packet offset field contain info about what type of management
- 	 * the frame we are dealing with and ack status
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index d46876edcfeb..7d438ae90c3e 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -703,8 +703,7 @@ static void wilc_wlan_handle_rx_buff(struct wilc *wilc, u8 *buffer, int size)
- 
- 	do {
- 		buff_ptr = buffer + offset;
--		memcpy(&header, buff_ptr, 4);
--		le32_to_cpus(&header);
-+		header = get_unaligned_le32(buff_ptr);
- 
- 		is_cfg_packet = (header >> 31) & 0x1;
- 		pkt_offset = (header >> 22) & 0x1ff;
-@@ -874,10 +873,8 @@ int wilc_wlan_firmware_download(struct wilc *wilc, const u8 *buffer,
- 
- 	offset = 0;
- 	do {
--		memcpy(&addr, &buffer[offset], 4);
--		memcpy(&size, &buffer[offset + 4], 4);
--		le32_to_cpus(&addr);
--		le32_to_cpus(&size);
-+		addr = get_unaligned_le32(&buffer[offset]);
-+		size = get_unaligned_le32(&buffer[offset + 4]);
- 		acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
- 		offset += 8;
- 		while (((int)size) && (offset < buffer_size)) {
+On 19/07/19 6:37 AM, Mao Wenan wrote:
+> When CONFIG_MUX_MMIO and CONFIG_HBMC_AM654 are both 'm', there are
+> some building error as below:
+> 
+> drivers/mux/mmio.c: In function mux_mmio_probe:
+> drivers/mux/mmio.c:76:20: error: storage size of field isnt known
+>    struct reg_field field;
+>                     ^~~~~
+> drivers/mux/mmio.c:102:15: error: implicit declaration of function devm_regmap_field_alloc; did you mean devm_mux_chip_alloc? [-Werror=implicit-function-declaration]
+>    fields[i] = devm_regmap_field_alloc(dev, regmap, field);
+>                ^~~~~~~~~~~~~~~~~~~~~~~
+>                devm_mux_chip_alloc
+> drivers/mux/mmio.c:76:20: warning: unused variable field [-Wunused-variable]
+>    struct reg_field field;
+>                     ^~~~~
+> cc1: some warnings being treated as errors
+> make[2]: *** [drivers/mux/mmio.o] Error 1
+> make[1]: *** [drivers/mux] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [drivers] Error 2
+> 
+> This because CONFIG_REGMAP is not enable, so change the Kconfig for HBMC_AM654.
+
+Since, hbmc-am654.c does not use regmap APIs directly we don't need to
+select REGMAP here. MUX_MMIO is optional for this driver, therefore I
+have converted that to an imply clause and posted a fix here:
+https://patchwork.ozlabs.org/patch/1133946/
+
+Let me know if that fixes the issue. Thanks for the report!
+
+Regards
+Vignesh
+
+> 
+> Fixes: b07079f1642c("mtd: hyperbus: Add driver for TI's HyperBus memory controller")
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/mtd/hyperbus/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
+> index cff6bbd..f324fa6 100644
+> --- a/drivers/mtd/hyperbus/Kconfig
+> +++ b/drivers/mtd/hyperbus/Kconfig
+> @@ -14,6 +14,8 @@ if MTD_HYPERBUS
+>  
+>  config HBMC_AM654
+>  	tristate "HyperBus controller driver for AM65x SoC"
+> +	select OF
+> +	select REGMAP
+>  	select MULTIPLEXER
+>  	select MUX_MMIO
+>  	help
+> 
+
 -- 
-2.20.1
-
+Regards
+Vignesh
