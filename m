@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC0FC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2C3C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBB821882
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399AD21882
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508923;
-	bh=nMJglynZyLcYk9zCBzECY9j3OAE04HiIgAINB5zkQ5E=;
+	s=default; t=1563508929;
+	bh=K0GG2IuOpfdaRilolTBGAevqgH7EWAGqWYnh0hI0YHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQWhrydMnUf1f0iKagFHBPh5PgpFWgKX83i9TVqlnoTwBSjhIzLa7pIUMJu10+yfJ
-	 cM5Q6XuQjUuWYPfWza9x9Vkq2cx9DII/triZNvH/C5Cw0rARz/FvHkLfGw4lUasbpp
-	 sHZJMPvuJzpzm/pijmnKEQKDc5NedX27uABMbxlM=
+	b=IpAX8zQBemXO5vXIfuAFcnCe0GKmBJ0ZkDU8OWaE5Vf6+4zzY1Hx+HBRaHcWJ8AAp
+	 kkZDoDGjL2dQaMxK7DyjWYMyV/07dyvAUzRn+FbQGb6RIZj+2wFef6TE23QPAUz9TQ
+	 tJdaTCvDFKq/t99NLx1vny8yYcxYfPgg5MmcXtVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfGSECC (ORCPT
+        id S1729846AbfGSECH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:02:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbfGSEBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:48 -0400
+        id S1728906AbfGSEBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:01:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB4721873;
-        Fri, 19 Jul 2019 04:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CA321897;
+        Fri, 19 Jul 2019 04:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508907;
-        bh=nMJglynZyLcYk9zCBzECY9j3OAE04HiIgAINB5zkQ5E=;
+        s=default; t=1563508911;
+        bh=K0GG2IuOpfdaRilolTBGAevqgH7EWAGqWYnh0hI0YHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDJ7rwrsvyEikFpzH964XvPV6286BOJyYL3xn8IWiTG3XTB0V4Lb2JtzEGAfS8DOd
-         670k1jWzxP9WDp2+fIiC9Yf/HhrlGeEce3QOeKa/fjlNaXLqvfpoR5tbummoIzhRT2
-         dsS8qM2Kgg55axbNpDOENZDwz5pJryBhs9LztxCw=
+        b=qD7XomS3y+lkehS9jDSpKAIf0EfAs482F1D+HjFk80RuStRy13uts98B6uqZbLUMX
+         8AXjmZ86n+Bh8EfwxWVixNcY7+vGjE4UZvdkV9nHWtA8lszuofOpeNFoA/1fTuvICw
+         7taqovTh9LM2ulQTPWHHHFXaCzBIHDBnPRIPk+VE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Ming Lei <ming.lei@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 152/171] block/bio-integrity: fix a memory leak bug
-Date:   Thu, 18 Jul 2019 23:56:23 -0400
-Message-Id: <20190719035643.14300-152-sashal@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 154/171] sh: prevent warnings when using iounmap
+Date:   Thu, 18 Jul 2019 23:56:25 -0400
+Message-Id: <20190719035643.14300-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,50 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit e7bf90e5afe3aa1d1282c1635a49e17a32c4ecec ]
+[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
 
-In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-hold integrity metadata. Later on, the buffer will be attached to the bio
-structure through bio_integrity_add_page(), which returns the number of
-bytes of integrity metadata attached. Due to unexpected situations,
-bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-needs to be terminated with 'false' returned to indicate this error.
-However, the allocated kernel buffer is not freed on this execution path,
-leading to a memory leak.
+When building drm/exynos for sh, as part of an allmodconfig build, the
+following warning triggered:
 
-To fix this issue, free the allocated buffer before returning from
-bio_integrity_prep().
+  exynos7_drm_decon.c: In function `decon_remove':
+  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
+    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The ctx variable is only used as argument to iounmap().
+
+In sh - allmodconfig CONFIG_MMU is not defined
+so it ended up in:
+
+\#define __iounmap(addr)	do { } while (0)
+\#define iounmap		__iounmap
+
+Fix the warning by introducing a static inline function for iounmap.
+
+This is similar to several other architectures.
+
+Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/sh/include/asm/io.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 4db620849515..fb95dbb21dd8 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -276,8 +276,12 @@ bool bio_integrity_prep(struct bio *bio)
- 		ret = bio_integrity_add_page(bio, virt_to_page(buf),
- 					     bytes, offset);
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index c28e37a344ad..ac0561960c52 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -369,7 +369,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
  
--		if (ret == 0)
--			return false;
-+		if (ret == 0) {
-+			printk(KERN_ERR "could not attach integrity payload\n");
-+			kfree(buf);
-+			status = BLK_STS_RESOURCE;
-+			goto err_end_io;
-+		}
+ #define ioremap_nocache	ioremap
+ #define ioremap_uc	ioremap
+-#define iounmap		__iounmap
++
++static inline void iounmap(void __iomem *addr)
++{
++	__iounmap(addr);
++}
  
- 		if (ret < bytes)
- 			break;
+ /*
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
 -- 
 2.20.1
 
