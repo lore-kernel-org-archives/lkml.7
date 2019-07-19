@@ -2,139 +2,153 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0BAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E91C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F064F2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EA321850
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfGSIuy (ORCPT
+        id S1727484AbfGSIvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:50:54 -0400
-Received: from smtprelay0020.hostedemail.com ([216.40.44.20]:33174 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725798AbfGSIux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:50:53 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 35D7E802F978;
-        Fri, 19 Jul 2019 08:50:52 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: mass79_24896e85a7d44
-X-Filterd-Recvd-Size: 4684
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 19 Jul 2019 08:50:50 +0000 (UTC)
-Message-ID: <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
-Subject: Re: get_maintainers.pl subsystem output
-From:   Joe Perches <joe@perches.com>
-To:     "Duda, Sebastian" <sebastian.duda@fau.de>
-Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
-        ralf.ramsauer@oth-regensburg.de, wolfgang.mauerer@oth-regensburg.de
-Date:   Fri, 19 Jul 2019 01:50:44 -0700
-In-Reply-To: <2c912379f96f502080bfcc79884cdc35@fau.de>
-References: <2c912379f96f502080bfcc79884cdc35@fau.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 19 Jul 2019 04:51:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43532 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfGSIvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 04:51:17 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BEFDB2EED01;
+        Fri, 19 Jul 2019 08:51:16 +0000 (UTC)
+Received: from [10.72.12.179] (ovpn-12-179.pek2.redhat.com [10.72.12.179])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29D6C5C57A;
+        Fri, 19 Jul 2019 08:51:01 +0000 (UTC)
+Subject: Re: [PATCH v4 4/5] vhost/vsock: split packets to send using multiple
+ buffers
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-5-sgarzare@redhat.com>
+ <20190717105336-mutt-send-email-mst@kernel.org>
+ <CAGxU2F45v40qAOHkm1Hk2E69gCS0UwVgS5NS+tDXXuzdF4EixA@mail.gmail.com>
+ <20190718041234-mutt-send-email-mst@kernel.org>
+ <CAGxU2F6oo7Cou7t9o=gG2=wxHMKX9xYQXNxVtDYeHq5fyEhJWg@mail.gmail.com>
+ <20190718072741-mutt-send-email-mst@kernel.org>
+ <20190719080832.7hoeus23zjyrx3cc@steredhat>
+ <fcd19719-e5a9-adad-1e6c-c84487187088@redhat.com>
+ <20190719083920.67qo2umpthz454be@steredhat>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <53da84b9-184f-1377-0582-ab7cf42ebdb6@redhat.com>
+Date:   Fri, 19 Jul 2019 16:51:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190719083920.67qo2umpthz454be@steredhat>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 19 Jul 2019 08:51:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 07:35 +0000, Duda, Sebastian wrote:
-> Hi Joe,
-> 
-> I'm conducting a large-scale patch analysis of the LKML with 1.8 million 
-> patch emails. I'm using the `get_maintainer.pl` script to know which 
-> patch is related to which subsystem.
 
-The MAINTAINERS file is updated frequently.
-
-Are you also using the MAINTAINERS file used
-at the time each patch was submitted?
-
-> I ran into two issues while using the script:
-> 
-> 1. When I use the script the trivial way
-> 
->      $ scripts/get_maintainer.pl --subsystem --status --separator , 
-> drivers/media/i2c/adv748x/
->      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
-> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
-> (maintainer:MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
-> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
->      Maintained,Buried alive in reporters
->      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB),THE REST
-> 
-> the output is hard to parse because the status `Maintained` is displayed 
-> only once but related to two subsystems.
-> 
-> I'd prefer a more table like representation, like this:
-> 
->      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
-> DEVICES INC ADV748X DRIVER),linux-media@vger.kernel.org (open 
-> list:ANALOG DEVICES INC ADV748X DRIVER),ANALOG DEVICES INC ADV748X 
-> DRIVER,Maintained
->      Mauro Carvalho Chehab <mchehab@kernel.org> (maintainer:MEDIA INPUT 
-> INFRASTRUCTURE (V4L/DVB)),MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB),Maintained
->      linux-kernel@vger.kernel.org (open list),THE REST,Buried alive in 
-> reporters
-> 
-> 
-> 2. I want to analyze multiple patches, currently I am calling the script 
-> once per patch. When calling the script with multiple files the files 
-> output is merged
-> 
->      $ scripts/get_maintainer.pl --subsystem --status --separator ',' 
-> drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
->      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
-> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
-> (maintainer:MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
-> ADV748X DRIVER),linux-kernel@vger.kernel.org (open 
-> list),platform-driver-x86@vger.kernel.org (open list:ACPI WMI DRIVER)
->      Maintained,Buried alive in reporters,Orphan
->      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB),THE REST,ACPI WMI DRIVER
-> 
-> I'd like to run the script with all files but separated output, like 
-> this:
-> 
->      $ scripts/get_maintainer.pl --subsystem --status --separator ',' 
-> --separate-files drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
->      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
-> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
-> (maintainer:MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
-> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
->      Maintained,Buried alive in reporters
->      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
-> (V4L/DVB),THE REST
-> 
->      platform-driver-x86@vger.kernel.org (open list:ACPI WMI 
-> DRIVER),linux-kernel@vger.kernel.org (open list)
->      Orphan,Buried alive in reporters
->      ACPI WMI DRIVER,THE REST
-> 
-> 
-> My Questions are:
-> 1. How can I make get_maintainer's output to be more table-like?
-
-I suggest adding --nogit --nogit-fallback --roles --norolestats
-
-> 2. How can I make get_maintainer.pl to separate each file's output?
-
-Run the script with multiple invocations. once for each file
-modified by the patch.
+On 2019/7/19 下午4:39, Stefano Garzarella wrote:
+> On Fri, Jul 19, 2019 at 04:21:52PM +0800, Jason Wang wrote:
+>> On 2019/7/19 下午4:08, Stefano Garzarella wrote:
+>>> On Thu, Jul 18, 2019 at 07:35:46AM -0400, Michael S. Tsirkin wrote:
+>>>> On Thu, Jul 18, 2019 at 11:37:30AM +0200, Stefano Garzarella wrote:
+>>>>> On Thu, Jul 18, 2019 at 10:13 AM Michael S. Tsirkin<mst@redhat.com>  wrote:
+>>>>>> On Thu, Jul 18, 2019 at 09:50:14AM +0200, Stefano Garzarella wrote:
+>>>>>>> On Wed, Jul 17, 2019 at 4:55 PM Michael S. Tsirkin<mst@redhat.com>  wrote:
+>>>>>>>> On Wed, Jul 17, 2019 at 01:30:29PM +0200, Stefano Garzarella wrote:
+>>>>>>>>> If the packets to sent to the guest are bigger than the buffer
+>>>>>>>>> available, we can split them, using multiple buffers and fixing
+>>>>>>>>> the length in the packet header.
+>>>>>>>>> This is safe since virtio-vsock supports only stream sockets.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Stefano Garzarella<sgarzare@redhat.com>
+>>>>>>>> So how does it work right now? If an app
+>>>>>>>> does sendmsg with a 64K buffer and the other
+>>>>>>>> side publishes 4K buffers - does it just stall?
+>>>>>>> Before this series, the 64K (or bigger) user messages was split in 4K packets
+>>>>>>> (fixed in the code) and queued in an internal list for the TX worker.
+>>>>>>>
+>>>>>>> After this series, we will queue up to 64K packets and then it will be split in
+>>>>>>> the TX worker, depending on the size of the buffers available in the
+>>>>>>> vring. (The idea was to allow EWMA or a configuration of the buffers size, but
+>>>>>>> for now we postponed it)
+>>>>>> Got it. Using workers for xmit is IMHO a bad idea btw.
+>>>>>> Why is it done like this?
+>>>>> Honestly, I don't know the exact reasons for this design, but I suppose
+>>>>> that the idea was to have only one worker that uses the vring, and
+>>>>> multiple user threads that enqueue packets in the list.
+>>>>> This can simplify the code and we can put the user threads to sleep if
+>>>>> we don't have "credit" available (this means that the receiver doesn't
+>>>>> have space to receive the packet).
+>>>> I think you mean the reverse: even without credits you can copy from
+>>>> user and queue up data, then process it without waking up the user
+>>>> thread.
+>>> I checked the code better, but it doesn't seem to do that.
+>>> The .sendmsg callback of af_vsock, check if the transport has space
+>>> (virtio-vsock transport returns the credit available). If there is no
+>>> space, it put the thread to sleep on the 'sk_sleep(sk)' wait_queue.
+>>>
+>>> When the transport receives an update of credit available on the other
+>>> peer, it calls 'sk->sk_write_space(sk)' that wakes up the thread
+>>> sleeping, that will queue the new packet.
+>>>
+>>> So, in the current implementation, the TX worker doesn't check the
+>>> credit available, it only sends the packets.
+>>>
+>>>> Does it help though? It certainly adds up work outside of
+>>>> user thread context which means it's not accounted for
+>>>> correctly.
+>>> I can try to xmit the packet directly in the user thread context, to see
+>>> the improvements.
+>>
+>> It will then looks more like what virtio-net (and other networking device)
+>> did.
+> I'll try ASAP, the changes should not be too complicated... I hope :)
+>
+>>
+>>>> Maybe we want more VQs. Would help improve parallelism. The question
+>>>> would then become how to map sockets to VQs. With a simple hash
+>>>> it's easy to create collisions ...
+>>> Yes, more VQs can help but the map question is not simple to answer.
+>>> Maybe we can do an hash on the (cid, port) or do some kind of estimation
+>>> of queue utilization and try to balance.
+>>> Should the mapping be unique?
+>>
+>> It sounds to me you want some kind of fair queuing? We've already had
+>> several qdiscs that do this.
+> Thanks for pointing it out!
+>
+>> So if we use the kernel networking xmit path, all those issues could be
+>> addressed.
+> One more point to AF_VSOCK + net-stack, but we have to evaluate possible
+> drawbacks in using the net-stack. (e.g. more latency due to the complexity
+> of the net-stack?)
 
 
+Yes, we need benchmark the performance. But as we've noticed, current 
+vsock implementation is not efficient, and for stream socket, the 
+overhead should be minimal. The most important thing is to avoid 
+reinventing things that has already existed.
+
+Thanks
+
+
+>
+> Thanks,
+> Stefano
