@@ -2,87 +2,139 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11649C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0BAC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2BA2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ECe6NvFo"
+	by mail.kernel.org (Postfix) with ESMTP id F064F2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfGSIuF (ORCPT
+        id S1727290AbfGSIuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:50:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52717 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfGSIuF (ORCPT
+        Fri, 19 Jul 2019 04:50:54 -0400
+Received: from smtprelay0020.hostedemail.com ([216.40.44.20]:33174 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725798AbfGSIux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:50:05 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so27999029wms.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x2r2aQ0QfHY0nbhB8cKUFwTSscENmMp03cfv/kAtz7Y=;
-        b=ECe6NvFo9wxPW1KC/Bjj1V5Zw+hvSQIZC14D0c9t7qsZTaNWqBorE0RRdRjd9934XP
-         0WQBGEVDEE/bb+iIeZ2ue4n0IfJnstlHhCNdo1wVK/mX3ewodcNOk+d5AWKtmPKyzoZY
-         wDlVBnqCglJtKov9IN6I+jKadOGEV8OFsVvpI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x2r2aQ0QfHY0nbhB8cKUFwTSscENmMp03cfv/kAtz7Y=;
-        b=kSl65j4jNQe6GHz9yyE0Re8L3/Er3G9BQWo9kDfimC0MSjk0T8cxJk+v9RXE9BpSlW
-         AdUvDTh9DujAifHWO5VgpdOti7H4KkstjXS8rcwqyTcKF6YGAPTC2ySy0h+Zr368zRgu
-         a8sOab+4NOhEO9YF+em/gBb7Hu0196i1o4q82SzVibZ5ik23bVnQ8xppRLYd6B4+DL/H
-         R8uN3kDhRsi4doiLMzd0edeWlEBiOZF5DsBxoqrViMzhb5XWo2LyYNWRJcwYDXR5NNEY
-         G4me4WDI3I4D72ZUms9bnvWsafFSakRmechO+V9zDwN6x0E1j3m7ifQtwIQTVDRytflF
-         cvJA==
-X-Gm-Message-State: APjAAAXCvx9/i62mAkVNNJ2dSsCA15xAX3+pckL3FOFTFYHit76wql1u
-        gGa7PwjMVXwyaAXA1Pz4cncCaH2lxTqaVg==
-X-Google-Smtp-Source: APXvYqw1JoWpLmH3YD/r76UHhkPwn+eK0Lt86eaNgA2NYQx2iNZXlwVsI/0LQEeSDJqlXMXeLFi1Mg==
-X-Received: by 2002:a7b:cc81:: with SMTP id p1mr44941846wma.107.1563526203377;
-        Fri, 19 Jul 2019 01:50:03 -0700 (PDT)
-Received: from andrea (host234-214-static.12-87-b.business.telecomitalia.it. [87.12.214.234])
-        by smtp.gmail.com with ESMTPSA id e3sm26110515wrs.37.2019.07.19.01.50.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 01:50:02 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 10:49:56 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        Jan Stancek <jstancek@redhat.com>,
-        Waiman Long <longman@redhat.com>, dbueso@suse.de,
-        mingo@redhat.com, jade.alglave@arm.com, paulmck@linux.vnet.ibm.com
-Subject: Re: [PATCH 1/4] locking/rwsem: Add missing ACQUIRE to read_slowpath
- exit when queue is empty
-Message-ID: <20190719084956.GA6750@andrea>
-References: <20190718134954.496297975@infradead.org>
- <20190718135205.916241783@infradead.org>
+        Fri, 19 Jul 2019 04:50:53 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 35D7E802F978;
+        Fri, 19 Jul 2019 08:50:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: mass79_24896e85a7d44
+X-Filterd-Recvd-Size: 4684
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 19 Jul 2019 08:50:50 +0000 (UTC)
+Message-ID: <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
+Subject: Re: get_maintainers.pl subsystem output
+From:   Joe Perches <joe@perches.com>
+To:     "Duda, Sebastian" <sebastian.duda@fau.de>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        ralf.ramsauer@oth-regensburg.de, wolfgang.mauerer@oth-regensburg.de
+Date:   Fri, 19 Jul 2019 01:50:44 -0700
+In-Reply-To: <2c912379f96f502080bfcc79884cdc35@fau.de>
+References: <2c912379f96f502080bfcc79884cdc35@fau.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718135205.916241783@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -1032,6 +1032,8 @@ rwsem_down_read_slowpath(struct rw_semap
->  		 */
->  		if (adjustment && !(atomic_long_read(&sem->count) &
->  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
-> +			/* Provide lock ACQUIRE */
-> +			smp_acquire__after_ctrl_dep();
+On Fri, 2019-07-19 at 07:35 +0000, Duda, Sebastian wrote:
+> Hi Joe,
+> 
+> I'm conducting a large-scale patch analysis of the LKML with 1.8 million 
+> patch emails. I'm using the `get_maintainer.pl` script to know which 
+> patch is related to which subsystem.
 
-Does this also make the lock RCtso?  Or maybe RCtso was already
-guaranteed (and I'm failing to see why)?
+The MAINTAINERS file is updated frequently.
 
-Thanks,
-  Andrea
+Are you also using the MAINTAINERS file used
+at the time each patch was submitted?
+
+> I ran into two issues while using the script:
+> 
+> 1. When I use the script the trivial way
+> 
+>      $ scripts/get_maintainer.pl --subsystem --status --separator , 
+> drivers/media/i2c/adv748x/
+>      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
+> (maintainer:MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
+> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>      Maintained,Buried alive in reporters
+>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB),THE REST
+> 
+> the output is hard to parse because the status `Maintained` is displayed 
+> only once but related to two subsystems.
+> 
+> I'd prefer a more table like representation, like this:
+> 
+>      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+> DEVICES INC ADV748X DRIVER),linux-media@vger.kernel.org (open 
+> list:ANALOG DEVICES INC ADV748X DRIVER),ANALOG DEVICES INC ADV748X 
+> DRIVER,Maintained
+>      Mauro Carvalho Chehab <mchehab@kernel.org> (maintainer:MEDIA INPUT 
+> INFRASTRUCTURE (V4L/DVB)),MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB),Maintained
+>      linux-kernel@vger.kernel.org (open list),THE REST,Buried alive in 
+> reporters
+> 
+> 
+> 2. I want to analyze multiple patches, currently I am calling the script 
+> once per patch. When calling the script with multiple files the files 
+> output is merged
+> 
+>      $ scripts/get_maintainer.pl --subsystem --status --separator ',' 
+> drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
+>      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
+> (maintainer:MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
+> ADV748X DRIVER),linux-kernel@vger.kernel.org (open 
+> list),platform-driver-x86@vger.kernel.org (open list:ACPI WMI DRIVER)
+>      Maintained,Buried alive in reporters,Orphan
+>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB),THE REST,ACPI WMI DRIVER
+> 
+> I'd like to run the script with all files but separated output, like 
+> this:
+> 
+>      $ scripts/get_maintainer.pl --subsystem --status --separator ',' 
+> --separate-files drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
+>      Kieran Bingham <kieran.bingham@ideasonboard.com> (maintainer:ANALOG 
+> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org> 
+> (maintainer:MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC 
+> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>      Maintained,Buried alive in reporters
+>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE 
+> (V4L/DVB),THE REST
+> 
+>      platform-driver-x86@vger.kernel.org (open list:ACPI WMI 
+> DRIVER),linux-kernel@vger.kernel.org (open list)
+>      Orphan,Buried alive in reporters
+>      ACPI WMI DRIVER,THE REST
+> 
+> 
+> My Questions are:
+> 1. How can I make get_maintainer's output to be more table-like?
+
+I suggest adding --nogit --nogit-fallback --roles --norolestats
+
+> 2. How can I make get_maintainer.pl to separate each file's output?
+
+Run the script with multiple invocations. once for each file
+modified by the patch.
+
+
