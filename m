@@ -2,94 +2,81 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD26CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A138DC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F23B20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F86521873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 22:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563576592;
+	bh=Klt7CebjyXqGVRbXNF1U3wyGJqIWQOIIcRLJT93OQ+g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lAjUgSR2CLORNSVlCthrO9O9oBhw+4WrL11a9F+wmFj2/OJGio6LZ4M60GHqUH0q4
+	 0GJKhlUnm7jNn9wVLUNOluQ70wDnCpRg3PQE9oUU56F9l0BNNGFw1n9I/+NBgTAkHU
+	 b06LDINSovIs9UuXOOK6WByBejjlKGVsdwdRy0No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732255AbfGSWoQ (ORCPT
+        id S1732319AbfGSWtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 18:44:16 -0400
-Received: from smtprelay0055.hostedemail.com ([216.40.44.55]:60273 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727344AbfGSWoP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 18:44:15 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 15343180A68C8;
-        Fri, 19 Jul 2019 22:44:14 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rail92_24b7b27a6db47
-X-Filterd-Recvd-Size: 2601
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 19 Jul 2019 22:44:12 +0000 (UTC)
-Message-ID: <511eb129bc0a6c92e3547c69a6e55695241dfe4a.camel@perches.com>
-Subject: Re: [PATCH v3 3/9] x86/mm/tlb: Open-code on_each_cpu_cond_mask()
- for tlb_is_not_lazy()
-From:   Joe Perches <joe@perches.com>
-To:     Nadav Amit <namit@vmware.com>, Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Date:   Fri, 19 Jul 2019 15:44:10 -0700
-In-Reply-To: <6847D7A3-4618-4BC3-97B6-EC53F6985504@vmware.com>
-References: <20190719005837.4150-1-namit@vmware.com>
-         <20190719005837.4150-4-namit@vmware.com>
-         <8bf005e2-7ac7-f1cf-eca1-0e152dd912a7@intel.com>
-         <6847D7A3-4618-4BC3-97B6-EC53F6985504@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 19 Jul 2019 18:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727344AbfGSWtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 18:49:50 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42E721874;
+        Fri, 19 Jul 2019 22:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563576589;
+        bh=Klt7CebjyXqGVRbXNF1U3wyGJqIWQOIIcRLJT93OQ+g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wCy7eeadZZYg4XZBwCEH/aG4rCHd2X8+WQJiqZrXJ05hWYYDpJXaZWmRfgv4FvYEM
+         EuINtaeTGaWgTB9XR5asYzOpIZ7b9GSBb0mTWM1ZHC/jGKTReSTIOeTeqvrCh0vAU+
+         cVlTZzQsQGSlXlgZiHR8eBtYlTA1QwdjIODnYyj0=
+Received: by mail-qk1-f171.google.com with SMTP id d79so24435899qke.11;
+        Fri, 19 Jul 2019 15:49:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAV3xo+BhMweRPDC4rqsrvLxXr4Nw7WlqDWtAPj9/6Imc3E0QQYq
+        kJpn5wRCyQ57jyOfhK2pX8zCfiz1d6iHbuoBEQ==
+X-Google-Smtp-Source: APXvYqzTrjLNjpoGgXzQ/tPDhplfN9MU7nWEaESSUgvy6jdg+g0UISnO9ycXnTKR/7UlNhzEJDMiPYgAxXRtGPIff+g=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr37922560qke.223.1563576588892;
+ Fri, 19 Jul 2019 15:49:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190717115109.15168-1-alexandru.ardelean@analog.com> <20190717115109.15168-5-alexandru.ardelean@analog.com>
+In-Reply-To: <20190717115109.15168-5-alexandru.ardelean@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 19 Jul 2019 16:49:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZMoxdH_rpyD9kTEPtFZ=QxEV325wH=6qdhNX2nS=9ug@mail.gmail.com>
+Message-ID: <CAL_JsqKZMoxdH_rpyD9kTEPtFZ=QxEV325wH=6qdhNX2nS=9ug@mail.gmail.com>
+Subject: Re: [PATCH 4/4][V2] dt-bindings: iio: imu: add bindings for ADIS16460
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 18:41 +0000, Nadav Amit wrote:
-> > On Jul 19, 2019, at 11:36 AM, Dave Hansen <dave.hansen@intel.com> wrote:
-> > 
-> > On 7/18/19 5:58 PM, Nadav Amit wrote:
-> > > @@ -865,7 +893,7 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
-> > > 	if (cpumask_test_cpu(cpu, &batch->cpumask)) {
-> > > 		lockdep_assert_irqs_enabled();
-> > > 		local_irq_disable();
-> > > -		flush_tlb_func_local(&full_flush_tlb_info);
-> > > +		flush_tlb_func_local((void *)&full_flush_tlb_info);
-> > > 		local_irq_enable();
-> > > 	}
-> > 
-> > This looks like superfluous churn.  Is it?
-> 
-> Unfortunately not, since full_flush_tlb_info is defined as const. Without it
-> you would get:
-> 
-> warning: passing argument 1 of ‘flush_tlb_func_local’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
-> 
-> And flush_tlb_func_local() should get (void *) argument since it is also
-> used by the SMP infrastructure.
+On Wed, Jul 17, 2019 at 5:51 AM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> This change adds device-tree bindings for the ADIS16460.
+>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  .../bindings/iio/imu/adi,adis16460.yaml       | 53 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
 
-huh?
-
-commit 3db6d5a5ecaf0a778d721ccf9809248350d4bfaf
-Author: Nadav Amit <namit@vmware.com>
-Date:   Thu Apr 25 16:01:43 2019 -0700
-
-[]
-
--static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
-+static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
-
+Reviewed-by: Rob Herring <robh@kernel.org>
