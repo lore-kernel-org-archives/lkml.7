@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC103C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB83C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903782189F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5502082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510064;
-	bh=kEQjlOEt2oZGIfF5XOdkgup3m0Sl5OV4bBM8l5FmlZE=;
+	s=default; t=1563510070;
+	bh=NKN2kMwDMv/CtJoT/kNNSdoQYzqkb1OZN7iL5M3DnOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZPy1beHNOT9PjE8wTai7qbn9tCxHxqYfA9xEZQ8R0BDpVsdmqBiCjGgICohrFYTSs
-	 Q6N8rZNJ+0hZW/HuoKZsnj8CkNB5nqmGyI/J7vyzJNWKuRC/Aq3fH+PCzEZUehq063
-	 VfNDEr81O5+zPyeeU7+RVSHTgctFlOotaoPI3sdA=
+	b=NTaOJmvmi3r+//YcW5prHNo8Cq2wfif4LWyP/1avvc0ZY36m7125t9CGRzwyVchxL
+	 bK66ufRIOnLUqQq+UAP8pX/i1KXpboGWaZURjLMaCF4opCyikJgNoHZXZAzxjinIOX
+	 C/08fbrr2Tao3VFeiRcy9aKjLqoAvcvCllI23LOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbfGSEVD (ORCPT
+        id S2389442AbfGSEVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47532 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:21:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388733AbfGSEMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:15 -0400
+        id S1732862AbfGSEMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CDF21872;
-        Fri, 19 Jul 2019 04:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC7B21872;
+        Fri, 19 Jul 2019 04:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509534;
-        bh=kEQjlOEt2oZGIfF5XOdkgup3m0Sl5OV4bBM8l5FmlZE=;
+        s=default; t=1563509530;
+        bh=NKN2kMwDMv/CtJoT/kNNSdoQYzqkb1OZN7iL5M3DnOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HG5U8kLfJgyDM6KJYcjM9F4Eoi2i5aJr27S9OdJ/4gSgWqlMGLRbAYRL/D5Xtyd4p
-         RvZYzL4VferFjLN4BXgJDaBGlu+2Ve8v8WVTaorH4DznHLA0SL2FmPNBvHBe9tGlKi
-         ST0zcDXNCcGDwSfCG87EJKd9oFCsHEAoHIfw9aeo=
+        b=PoAwjjCp+Io96ivyMf/In1cpjbSBl9JM8biYDlVJXdv/AYQ2MkRQBh6mEI0j5MwLM
+         0WDWFyc6PMKXFYWr1Pqe+1xFX7lgcQGhsm7pH8ifspXuoWKTbHtJku4nVgN1R+3DEY
+         xUrHI39+b9Rc0KlxzLGahiExdzyi2W4+cKtSW0NY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 36/60] um: Silence lockdep complaint about mmap_sem
-Date:   Fri, 19 Jul 2019 00:10:45 -0400
-Message-Id: <20190719041109.18262-36-sashal@kernel.org>
+Cc:     Robert Hancock <hancock@sedsystems.ca>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 33/60] mfd: core: Set fwnode for created devices
+Date:   Fri, 19 Jul 2019 00:10:42 -0400
+Message-Id: <20190719041109.18262-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -59,111 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Robert Hancock <hancock@sedsystems.ca>
 
-[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
+[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
 
-When we get into activate_mm(), lockdep complains that we're doing
-something strange:
+The logic for setting the of_node on devices created by mfd did not set
+the fwnode pointer to match, which caused fwnode-based APIs to
+malfunction on these devices since the fwnode pointer was null. Fix
+this.
 
-    WARNING: possible circular locking dependency detected
-    5.1.0-10252-gb00152307319-dirty #121 Not tainted
-    ------------------------------------------------------
-    inside.sh/366 is trying to acquire lock:
-    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
-
-    but task is already holding lock:
-    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    which lock already depends on the new lock.
-
-    the existing dependency chain (in reverse order) is:
-
-    -> #1 (&mm->mmap_sem){++++}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           down_write+0x3f/0x98
-           flush_old_exec+0x748/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
-
-    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           _raw_spin_lock+0x30/0x83
-           flush_old_exec+0x703/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
-
-    other info that might help us debug this:
-
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(&mm->mmap_sem);
-                                   lock(&(&p->alloc_lock)->rlock);
-                                   lock(&mm->mmap_sem);
-      lock(&(&p->alloc_lock)->rlock);
-
-     *** DEADLOCK ***
-
-    2 locks held by inside.sh/366:
-     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
-     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    stack backtrace:
-    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
-    Stack:
-     [...]
-    Call Trace:
-     [<600420de>] show_stack+0x13b/0x155
-     [<6048906b>] dump_stack+0x2a/0x2c
-     [<6009ae64>] print_circular_bug+0x332/0x343
-     [<6009c5c6>] check_prev_add+0x669/0xdad
-     [<600a06b4>] __lock_acquire+0x12ab/0x139f
-     [<6009f3d0>] lock_acquire+0x155/0x18e
-     [<604a07e0>] _raw_spin_lock+0x30/0x83
-     [<60151e6a>] flush_old_exec+0x703/0x8d7
-     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
-     [...]
-
-I think it's because in exec_mmap() we have
-
-	down_read(&old_mm->mmap_sem);
-...
-        task_lock(tsk);
-...
-	activate_mm(active_mm, mm);
-	(which does down_write(&mm->mmap_sem))
-
-I'm not really sure why lockdep throws in the whole knowledge
-about the task lock, but it seems that old_mm and mm shouldn't
-ever be the same (and it doesn't deadlock) so tell lockdep that
-they're different.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/include/asm/mmu_context.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/mfd-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-index fca34b2177e2..129fb1d1f1c5 100644
---- a/arch/um/include/asm/mmu_context.h
-+++ b/arch/um/include/asm/mmu_context.h
-@@ -53,7 +53,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
- 	 * when the new ->mm is used for the first time.
- 	 */
- 	__switch_mm(&new->context.id);
--	down_write(&new->mmap_sem);
-+	down_write_nested(&new->mmap_sem, 1);
- 	uml_setup_stubs(new);
- 	up_write(&new->mmap_sem);
- }
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index c57e407020f1..5c8ed2150c8b 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -179,6 +179,7 @@ static int mfd_add_device(struct device *parent, int id,
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
+ 				pdev->dev.of_node = np;
++				pdev->dev.fwnode = &np->fwnode;
+ 				break;
+ 			}
+ 		}
 -- 
 2.20.1
 
