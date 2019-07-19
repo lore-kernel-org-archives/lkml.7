@@ -6,60 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE2DC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B18C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E0F21880
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1784E2189D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 19:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563565508;
-	bh=Ypz6jX1jEzGgR897Ju6gxmv2Qja2BQFov1h6buNFcPY=;
+	s=default; t=1563565511;
+	bh=AjkeX1/9njlH2GZEKu5i9tUHylTBdJ3HoQAtY022+5I=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=MsztjoISk/1yRVEXMu/u/e6Wf0eVn/H7+p+yEpDPQ5vWQoN1sXBuBetHmGgrHgbnS
-	 +auEbU/W+gKOz94vWxbf6j/TGBfp1wOyzPFvz5ZnRdLwaIqHqHKnPDBpF8ruM7rEiy
-	 Ksews8l2G63BzhYUNr72KfFaRycbtz1dfm/rpF4E=
+	b=NixUIcwQ5PDiuqeCtARX+ccNI8lp5n9tjYiGMux95fMD8h7LvqR3AvNyvDsKQMVIK
+	 vx1NDz2ggC8ce+Vpz7MJ53rkjhfwhbE5nFaQNvelN/bpXViUlp3TRMhCA0e6ivcPCV
+	 UDgLoOsSPFQzbcy7Cf/eHmz4grYMdYCajmWT+xBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733291AbfGSTpH (ORCPT
+        id S2387418AbfGSTpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 15:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 15:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733223AbfGSTpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 15:45:05 -0400
-Subject: Re: [git pull] vfs.git adfs patches
+        id S1733285AbfGSTpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 15:45:07 -0400
+Subject: Re: [GIT PULL] iomap: cleanups for 5.3 (part 2)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563565504;
-        bh=Ypz6jX1jEzGgR897Ju6gxmv2Qja2BQFov1h6buNFcPY=;
+        s=default; t=1563565506;
+        bh=AjkeX1/9njlH2GZEKu5i9tUHylTBdJ3HoQAtY022+5I=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Hy6JMGHoF/ViYGzu4kvYvt88mMSTnAB/4yr2CygBQgAgKnInOjpHfe5qNdXaG/VE/
-         gcXu3KpHsj2KXjiHtAri51sKi1xTxUmK3N5oKexpxhfPNHnUj2ATw9zhW5sqsFXXO1
-         91ezXLaskKP0M6xKNekT3BtAdeKnP8BZXLX8M2sI=
+        b=oNvioO0AyHC5kfH0Rx8UoFpkg3m8AWmabEj7fsNBS4XTtiD7yycdc8EjQU1W4Agp9
+         B9+KfmnyoM1RBs5BZmU7oWmicoQrxZpzJ7+0CYrdlk1+vT/sh7/2/VYO/hSoIP+Rrb
+         Wn0GzEjCH070ys+CgsoRqO2MmE8jssOHBsCvx8mg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190719034515.GY17978@ZenIV.linux.org.uk>
-References: <20190719034515.GY17978@ZenIV.linux.org.uk>
+In-Reply-To: <20190719162221.GF7093@magnolia>
+References: <20190719162221.GF7093@magnolia>
 X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190719034515.GY17978@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.adfs
-X-PR-Tracked-Commit-Id: b4ed8f75c82876342b3399942427392ba5f3bbb5
+X-PR-Tracked-Message-Id: <20190719162221.GF7093@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/iomap-5.3-merge-4
+X-PR-Tracked-Commit-Id: 5d907307adc14cd5148b07629c2b4535acd06062
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d2fbf4b6d585e40f2369675148777abce3abd0e7
-Message-Id: <156356550474.25668.5373874192594090281.pr-tracker-bot@kernel.org>
-Date:   Fri, 19 Jul 2019 19:45:04 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
+X-PR-Merge-Commit-Id: 26473f83703e6bc56114ce4b045000de6efcfff7
+Message-Id: <156356550679.25668.5508035864440295283.pr-tracker-bot@kernel.org>
+Date:   Fri, 19 Jul 2019 19:45:06 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 19 Jul 2019 04:45:15 +0100:
+The pull request you sent on Fri, 19 Jul 2019 09:22:21 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.adfs
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-merge-4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d2fbf4b6d585e40f2369675148777abce3abd0e7
+https://git.kernel.org/torvalds/c/26473f83703e6bc56114ce4b045000de6efcfff7
 
 Thank you!
 
