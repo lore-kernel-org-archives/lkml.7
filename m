@@ -2,116 +2,168 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEACC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9CDC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD372084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5AB2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfGSKLp (ORCPT
+        id S1727552AbfGSKMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:11:45 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:32827 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfGSKLp (ORCPT
+        Fri, 19 Jul 2019 06:12:46 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51416 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfGSKMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:11:45 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 0CA3780302; Fri, 19 Jul 2019 12:11:30 +0200 (CEST)
-Date:   Fri, 19 Jul 2019 12:11:41 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, johan@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Subject: Re: USB Modem support for Droid 4
-Message-ID: <20190719101141.GA18760@amd>
-References: <20190718201713.GA25103@amd>
- <20190719052205.GK5447@atomide.com>
+        Fri, 19 Jul 2019 06:12:45 -0400
+Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 20ad017dbcbabb9f; Fri, 19 Jul 2019 12:12:42 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Thomas Lindroth <thomas.lindroth@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH] cpuidle: teo: Allow tick to be stopped if PM QoS is used
+Date:   Fri, 19 Jul 2019 12:12:42 +0200
+Message-ID: <18401254.HIz9ZfPvbb@kreacher>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
-In-Reply-To: <20190719052205.GK5447@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The TEO goveror prevents the scheduler tick from being stopped (unless
+stopped already) if there is a PM QoS latency constraint for the given
+CPU and the target residency of the deepest idle state matching that
+constraint is below the tick boundary.
 
-Hi!
+However, that is problematic if CPUs with PM QoS latency constraints
+are idle for long times, because it effectively causes the tick to
+run on them all the time which is wasteful.  [It is also confusing
+and questionable if they are full dynticks CPUs.]
 
-> * Pavel Machek <pavel@denx.de> [190718 20:17]:
-> > From: Tony Lindgren <tony@atomide.com>
-> >=20
-> > Droid starts to have useful support in linux-next. Modem is tricky to
-> > play with, but this is enough to get basic support.
->=20
-> Below is a better patch using option driver adding support for all
-> the ports. I'll send it out with a proper description after -rc1.
+To address that issue, modify the TEO governor to carry out the
+entire search for the most suitable idle state (from the target
+residency perspective) even if a latency constraint is present,
+to allow it to determine the expected idle duration in all cases.
 
-Thanks!
+Also, when using the last several measured idle duration values
+to refine the idle state selection, make it compare those values
+with the current expected idle duration value (instead of
+comparing them with the target residency of the idle state
+selected so far) which should prevent the tick from being
+retained when it makes sense to stop it sometimes (especially
+in the presence of PM QoS latency constraints).
 
-It works for me, too.
+Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-Tested-by: Pavel Machek <pavel@ucw.cz>
+This corresponds to the following menu governor change:
 
-> @@ -83,6 +83,12 @@ static void option_instat_callback(struct urb *urb);
->  #define HUAWEI_PRODUCT_K4605			0x14C6
->  #define HUAWEI_PRODUCT_E173S6			0x1C07
-> =20
-> +#define MOTOROLA_VENDOR_ID			0x22b8
-> +#define MOTOROLA_PRODUCT_MDM6600		0x2a70
-> +#define MOTOROLA_PRODUCT_MDM9600		0x2e0a
-> +#define MOTOROLA_PRODUCT_MDM_RAM_DL		0x4281
-> +#define MOTOROLA_PRODUCT_MDM_QC_DL		0x900e
-> +
->  #define QUANTA_VENDOR_ID			0x0408
->  #define QUANTA_PRODUCT_Q101			0xEA02
->  #define QUANTA_PRODUCT_Q111			0xEA03
-> @@ -968,6 +974,10 @@ static const struct usb_device_id option_ids[] =3D {
->  	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7B) },
->  	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7C) },
-> =20
-> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
-M6600, 0xff, 0xff, 0xff) },
-> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
-M9600, 0xff, 0xff, 0xff) },
-> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
-M_RAM_DL, 0x0a, 0x00, 0xfc) },
-> +	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MD=
-M_QC_DL, 0xff, 0xff, 0xff) },
-> =20
->  	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V640) },
->  	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V620) },
+https://patchwork.kernel.org/patch/11048665/
 
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+It appears to improve idle power without any PM QoS constraints too, but
+that's hard to establish due to significant differences between runs with the
+same kernel.
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+---
+ drivers/cpuidle/governors/teo.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Index: linux-pm/drivers/cpuidle/governors/teo.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/governors/teo.c
++++ linux-pm/drivers/cpuidle/governors/teo.c
+@@ -242,7 +242,7 @@ static int teo_select(struct cpuidle_dri
+ 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
+ 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
+ 	unsigned int duration_us, count;
+-	int max_early_idx, idx, i;
++	int max_early_idx, constraint_idx, idx, i;
+ 	ktime_t delta_tick;
+ 
+ 	if (cpu_data->last_state >= 0) {
+@@ -257,6 +257,7 @@ static int teo_select(struct cpuidle_dri
+ 
+ 	count = 0;
+ 	max_early_idx = -1;
++	constraint_idx = drv->state_count;
+ 	idx = -1;
+ 
+ 	for (i = 0; i < drv->state_count; i++) {
+@@ -286,16 +287,8 @@ static int teo_select(struct cpuidle_dri
+ 		if (s->target_residency > duration_us)
+ 			break;
+ 
+-		if (s->exit_latency > latency_req) {
+-			/*
+-			 * If we break out of the loop for latency reasons, use
+-			 * the target residency of the selected state as the
+-			 * expected idle duration to avoid stopping the tick
+-			 * as long as that target residency is low enough.
+-			 */
+-			duration_us = drv->states[idx].target_residency;
+-			goto refine;
+-		}
++		if (s->exit_latency > latency_req && constraint_idx > i)
++			constraint_idx = i;
+ 
+ 		idx = i;
+ 
+@@ -321,7 +314,13 @@ static int teo_select(struct cpuidle_dri
+ 		duration_us = drv->states[idx].target_residency;
+ 	}
+ 
+-refine:
++	/*
++	 * If there is a latency constraint, it may be necessary to use a
++	 * shallower idle state than the one selected so far.
++	 */
++	if (constraint_idx < idx)
++		idx = constraint_idx;
++
+ 	if (idx < 0) {
+ 		idx = 0; /* No states enabled. Must use 0. */
+ 	} else if (idx > 0) {
+@@ -331,13 +330,12 @@ refine:
+ 
+ 		/*
+ 		 * Count and sum the most recent idle duration values less than
+-		 * the target residency of the state selected so far, find the
+-		 * max.
++		 * the current expected idle duration value.
+ 		 */
+ 		for (i = 0; i < INTERVALS; i++) {
+ 			unsigned int val = cpu_data->intervals[i];
+ 
+-			if (val >= drv->states[idx].target_residency)
++			if (val >= duration_us)
+ 				continue;
+ 
+ 			count++;
+@@ -356,8 +354,10 @@ refine:
+ 			 * would be too shallow.
+ 			 */
+ 			if (!(tick_nohz_tick_stopped() && avg_us < TICK_USEC)) {
+-				idx = teo_find_shallower_state(drv, dev, idx, avg_us);
+ 				duration_us = avg_us;
++				if (drv->states[idx].target_residency > avg_us)
++					idx = teo_find_shallower_state(drv, dev,
++								       idx, avg_us);
+ 			}
+ 		}
+ 	}
 
-iEYEARECAAYFAl0xl10ACgkQMOfwapXb+vLrVACfXkgc5UNVTqP4Cs6nTFriszl9
-quwAmwWLaqYxjvrh50FxYi5/99eL4kxh
-=GSbE
------END PGP SIGNATURE-----
 
---yrj/dFKFPuw6o+aM--
+
