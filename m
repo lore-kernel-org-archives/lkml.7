@@ -2,34 +2,34 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9492C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D27C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E857218BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B76218BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388747AbfGSVt6 (ORCPT
+        id S2388884AbfGSVuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 17:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 17:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728308AbfGSVt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 17:49:57 -0400
+        id S2388705AbfGSVt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 17:49:58 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E98A2184E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C3D121880;
         Fri, 19 Jul 2019 21:49:57 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hoalI-0007yk-3x; Fri, 19 Jul 2019 17:49:56 -0400
-Message-Id: <20190719214931.700049248@goodmis.org>
+        id 1hoalI-0007zl-Dl; Fri, 19 Jul 2019 17:49:56 -0400
+Message-Id: <20190719214956.312858047@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 19 Jul 2019 17:49:31 -0400
+Date:   Fri, 19 Jul 2019 17:49:33 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -40,104 +40,114 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com
-Subject: [PATCH RT 00/16] Linux 4.19.59-rt24-rc1
+Subject: [PATCH RT 02/16] genirq: Do not invoke the affinity callback via a workqueue on RT
+References: <20190719214931.700049248@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+4.19.59-rt24-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-Dear RT Folks,
+------------------
 
-This is the RT stable review cycle of patch 4.19.59-rt24-rc1.
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Please scream at me if I messed something up. Please test the patches too.
+[ Upstream commit 2122adbe011cdc0eb62ad62494e181005b23c76a ]
 
-The -rc release will be uploaded to kernel.org and will be deleted when
-the final release is out. This is just a review release (or release candidate).
+Joe Korty reported, that __irq_set_affinity_locked() schedules a
+workqueue while holding a rawlock which results in a might_sleep()
+warning.
+This patch uses swork_queue() instead.
 
-The pre-releases will not be pushed to the git repository, only the
-final release is.
-
-If all goes well, this patch will be converted to the next main release
-on 7/23/2019.
-
-Enjoy,
-
--- Steve
-
-
-To build 4.19.59-rt24-rc1 directly, the following patches should be applied:
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.59.xz
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.59-rt24-rc1.patch.xz
-
-You can also build from 4.19.59-rt23 by applying the incremental patch:
-
-http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.59-rt23-rt24-rc1.patch.xz
-
-
-Changes from 4.19.59-rt23:
-
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
+ include/linux/interrupt.h |  5 ++---
+ kernel/irq/manage.c       | 19 ++++---------------
+ 2 files changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 72333899f043..a9321f6429f2 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -13,7 +13,7 @@
+ #include <linux/hrtimer.h>
+ #include <linux/kref.h>
+ #include <linux/workqueue.h>
+-#include <linux/swork.h>
++#include <linux/kthread.h>
+ 
+ #include <linux/atomic.h>
+ #include <asm/ptrace.h>
+@@ -228,7 +228,6 @@ extern void resume_device_irqs(void);
+  * struct irq_affinity_notify - context for notification of IRQ affinity changes
+  * @irq:		Interrupt to which notification applies
+  * @kref:		Reference count, for internal use
+- * @swork:		Swork item, for internal use
+  * @work:		Work item, for internal use
+  * @notify:		Function to be called on change.  This will be
+  *			called in process context.
+@@ -241,7 +240,7 @@ struct irq_affinity_notify {
+ 	unsigned int irq;
+ 	struct kref kref;
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-	struct swork_event swork;
++	struct kthread_work work;
+ #else
+ 	struct work_struct work;
+ #endif
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 7f4041357d2f..381305c48a0a 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -261,7 +261,7 @@ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+ 		kref_get(&desc->affinity_notify->kref);
+ 
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-		swork_queue(&desc->affinity_notify->swork);
++		kthread_schedule_work(&desc->affinity_notify->work);
+ #else
+ 		schedule_work(&desc->affinity_notify->work);
+ #endif
+@@ -326,21 +326,11 @@ static void _irq_affinity_notify(struct irq_affinity_notify *notify)
+ }
+ 
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-static void init_helper_thread(void)
+-{
+-	static int init_sworker_once;
+-
+-	if (init_sworker_once)
+-		return;
+-	if (WARN_ON(swork_get()))
+-		return;
+-	init_sworker_once = 1;
+-}
+ 
+-static void irq_affinity_notify(struct swork_event *swork)
++static void irq_affinity_notify(struct kthread_work *work)
+ {
+ 	struct irq_affinity_notify *notify =
+-		container_of(swork, struct irq_affinity_notify, swork);
++		container_of(work, struct irq_affinity_notify, work);
+ 	_irq_affinity_notify(notify);
+ }
+ 
+@@ -383,8 +373,7 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
+ 		notify->irq = irq;
+ 		kref_init(&notify->kref);
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-		INIT_SWORK(&notify->swork, irq_affinity_notify);
+-		init_helper_thread();
++		kthread_init_work(&notify->work, irq_affinity_notify);
+ #else
+ 		INIT_WORK(&notify->work, irq_affinity_notify);
+ #endif
+-- 
+2.20.1
 
 
-Luis Claudio R. Goncalves (1):
-      mm/zswap: Do not disable preemption in zswap_frontswap_store()
-
-Sebastian Andrzej Siewior (12):
-      kthread: add a global worker thread.
-      genirq: Do not invoke the affinity callback via a workqueue on RT
-      genirq: Handle missing work_struct in irq_set_affinity_notifier()
-      arm: imx6: cpuidle: Use raw_spinlock_t
-      rcu: Don't allow to change rcu_normal_after_boot on RT
-      sched/core: Drop a preempt_disable_rt() statement
-      timers: Redo the notification of canceling timers on -RT
-      Revert "futex: Ensure lock/unlock symetry versus pi_lock and hash bucket lock"
-      Revert "futex: Fix bug on when a requeued RT task times out"
-      Revert "rtmutex: Handle the various new futex race conditions"
-      Revert "futex: workaround migrate_disable/enable in different context"
-      futex: Make the futex_hash_bucket lock raw
-
-Steven Rostedt (VMware) (1):
-      Linux 4.19.59-rt24-rc1
-
-Thomas Gleixner (1):
-      futex: Delay deallocation of pi_state
-
-kbuild test robot (1):
-      pci/switchtec: fix stream_open.cocci warnings
-
-----
- arch/arm/mach-imx/cpuidle-imx6q.c |  10 +-
- drivers/block/loop.c              |   2 +-
- drivers/pci/switch/switchtec.c    |   2 +-
- drivers/spi/spi-rockchip.c        |   1 +
- fs/timerfd.c                      |   5 +-
- include/linux/hrtimer.h           |  17 +--
- include/linux/interrupt.h         |   5 +-
- include/linux/kthread-cgroup.h    |  17 +++
- include/linux/kthread.h           |  17 ++-
- include/linux/posix-timers.h      |   1 +
- init/main.c                       |   1 +
- kernel/futex.c                    | 231 ++++++++++++++++----------------------
- kernel/irq/manage.c               |  24 ++--
- kernel/kthread.c                  |  14 +++
- kernel/locking/rtmutex.c          |  65 +----------
- kernel/locking/rtmutex_common.h   |   3 -
- kernel/rcu/update.c               |   2 +
- kernel/sched/core.c               |   9 +-
- kernel/time/alarmtimer.c          |   2 +-
- kernel/time/hrtimer.c             |  36 ++----
- kernel/time/itimer.c              |   2 +-
- kernel/time/posix-cpu-timers.c    |  23 ++++
- kernel/time/posix-timers.c        |  69 +++++-------
- kernel/time/posix-timers.h        |   2 +
- kernel/time/timer.c               |  96 ++++++++--------
- localversion-rt                   |   2 +-
- mm/zswap.c                        |  12 +-
- 27 files changed, 290 insertions(+), 380 deletions(-)
- create mode 100644 include/linux/kthread-cgroup.h
