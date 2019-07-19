@@ -2,183 +2,81 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F5FC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC3DC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7E42084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511270;
-	bh=X4vd8OK4yXQ0AbEdR++MYAR4NsXHtv+u2lPVXgjJSTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zdIzaelbt9Za/rsizmnDnxG4X9v+mBbFfgd+a3Nxnx6p4sZKKdr/guMFCsPHtnizO
-	 cQZ0Od86bu0u0JPdz84Bw10ulzZmz9Div9goGjrB4YL/O/EooeNsZKVibBbhwgLPH/
-	 XpFTIkOPre3s4jg7jjRNh7s0oltENEQy4YjGNaLw=
+	by mail.kernel.org (Postfix) with ESMTP id 7D232206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAdSLjIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732140AbfGSElJ (ORCPT
+        id S1728522AbfGSEl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbfGSD5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:05 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24B0A21852;
-        Fri, 19 Jul 2019 03:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508624;
-        bh=X4vd8OK4yXQ0AbEdR++MYAR4NsXHtv+u2lPVXgjJSTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sNko6ULoNw/Fnl3nm9xeBX3yoVu0BVO2n+Edfo1if4GTfGXvf5BCLs1iVzuGzS1mK
-         b4S7mUOavgp/RMYXDOkXqq7Qts9Tj2qMo3/Zo9sWSxznoSuP6kcmRfunfFjV7cL6DV
-         97R/hS+vYL4/Wa1uy7KzMpA6dgeGFFTomBC5HBfA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.2 008/171] staging: vt6656: use meaningful error code during buffer allocation
-Date:   Thu, 18 Jul 2019 23:53:59 -0400
-Message-Id: <20190719035643.14300-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
-References: <20190719035643.14300-1-sashal@kernel.org>
+        Fri, 19 Jul 2019 00:41:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37218 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727302AbfGSEl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:41:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b3so14992409plr.4;
+        Thu, 18 Jul 2019 21:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NEHS8k/p3RDHsc+q/bgnh4zu2SM5JS9isaHWZm17rWI=;
+        b=QAdSLjINm4TmjMpM5mBixic0nAq2EBCEJnftTGdCA+P7qerpHD/EtyH8/6w1xoEY7q
+         pFBscM48qyLwTJlidY5+L+IpCALn8BFoF25iuXULn4ZqZ/b0k18cvHKFfCrmwNAq6aAC
+         4mbEhIjUGfNVyi6/HcaC3IfVvBzZaxP/D/zR8Ej27gR9KwNxy7FhuI/w/M2obPIhBMiu
+         AFAFDvz0PH5AiOxULfKSgZckWtDZjAU4M0STcxueJMh6U7e0Q5BkOLPxpOitTWuMzkfg
+         nl21ng5Eg1VDp2xL9VyCNICrwAtNgj99f8DcAA9LQz9XIwUJ5Y6x+rwF59GxrxD8gfsh
+         MWCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NEHS8k/p3RDHsc+q/bgnh4zu2SM5JS9isaHWZm17rWI=;
+        b=qn8e8pzC21WCP1crkcxTYFVe3XCYiyJTJfMbrbJkvrZhZbdGI9tDS4W6fDFdoZMqog
+         d6CfZ96UQdEEgZcXPTWsH6aHgnoJl8d/WvqXCznsVIJGId4gRzoCZidtd1ndK5mS/Cxf
+         2GdTYuAgNMNHiDUzcKPOJQOdI41yWnYGOUD4N5y3ssOkN03wa/nnEesDodtasdC8jD0y
+         MuisM6NVWmAjFGmsU//lA9ztcAv1z+djD4O8glMEYYsM1VlPKrxLKLMdA1c2y/l9frY6
+         /vOm7FqsWCudweGaf9e14u6NATV91b9c+wHUI4+KFSCH5HjfsgNYAOam0qspefesawAQ
+         z/kg==
+X-Gm-Message-State: APjAAAUR5oDSmwiu/pTDEHFJ4c4I8YL/2M3SGRUPrQ3MV+zGDURqhHkt
+        +KO0kX+p8M46a77xUhr6sv4=
+X-Google-Smtp-Source: APXvYqxN2LEf4x8FxwNYHV1lNlbWEPs2TpBpl9j1BW2I7doXBURMUpDGC7kt8MvhIt4a/w13Dayi9w==
+X-Received: by 2002:a17:902:583:: with SMTP id f3mr54233919plf.137.1563511286495;
+        Thu, 18 Jul 2019 21:41:26 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id g1sm55358081pgg.27.2019.07.18.21.41.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 21:41:25 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 10:11:19 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/54] 4.9.186-stable review
+Message-ID: <20190719044118.GB3652@bharath12345-Inspiron-5559>
+References: <20190718030048.392549994@linuxfoundation.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Built and booted in my x86 test machine. No regressions found.
 
-[ Upstream commit d8c2869300ab5f7a19bf6f5a04fe473c5c9887e3 ]
-
-Check on called function's returned value for error and return 0 on
-success or a negative errno value on error instead of a boolean value.
-
-Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/vt6656/main_usb.c | 42 ++++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-index ccafcc2c87ac..70433f756d8e 100644
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -402,16 +402,19 @@ static void vnt_free_int_bufs(struct vnt_private *priv)
- 	kfree(priv->int_buf.data_buf);
- }
- 
--static bool vnt_alloc_bufs(struct vnt_private *priv)
-+static int vnt_alloc_bufs(struct vnt_private *priv)
- {
-+	int ret = 0;
- 	struct vnt_usb_send_context *tx_context;
- 	struct vnt_rcb *rcb;
- 	int ii;
- 
- 	for (ii = 0; ii < priv->num_tx_context; ii++) {
- 		tx_context = kmalloc(sizeof(*tx_context), GFP_KERNEL);
--		if (!tx_context)
-+		if (!tx_context) {
-+			ret = -ENOMEM;
- 			goto free_tx;
-+		}
- 
- 		priv->tx_context[ii] = tx_context;
- 		tx_context->priv = priv;
-@@ -419,16 +422,20 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
- 
- 		/* allocate URBs */
- 		tx_context->urb = usb_alloc_urb(0, GFP_KERNEL);
--		if (!tx_context->urb)
-+		if (!tx_context->urb) {
-+			ret = -ENOMEM;
- 			goto free_tx;
-+		}
- 
- 		tx_context->in_use = false;
- 	}
- 
- 	for (ii = 0; ii < priv->num_rcb; ii++) {
- 		priv->rcb[ii] = kzalloc(sizeof(*priv->rcb[ii]), GFP_KERNEL);
--		if (!priv->rcb[ii])
-+		if (!priv->rcb[ii]) {
-+			ret = -ENOMEM;
- 			goto free_rx_tx;
-+		}
- 
- 		rcb = priv->rcb[ii];
- 
-@@ -436,39 +443,46 @@ static bool vnt_alloc_bufs(struct vnt_private *priv)
- 
- 		/* allocate URBs */
- 		rcb->urb = usb_alloc_urb(0, GFP_KERNEL);
--		if (!rcb->urb)
-+		if (!rcb->urb) {
-+			ret = -ENOMEM;
- 			goto free_rx_tx;
-+		}
- 
- 		rcb->skb = dev_alloc_skb(priv->rx_buf_sz);
--		if (!rcb->skb)
-+		if (!rcb->skb) {
-+			ret = -ENOMEM;
- 			goto free_rx_tx;
-+		}
- 
- 		rcb->in_use = false;
- 
- 		/* submit rx urb */
--		if (vnt_submit_rx_urb(priv, rcb))
-+		ret = vnt_submit_rx_urb(priv, rcb);
-+		if (ret)
- 			goto free_rx_tx;
- 	}
- 
- 	priv->interrupt_urb = usb_alloc_urb(0, GFP_KERNEL);
--	if (!priv->interrupt_urb)
-+	if (!priv->interrupt_urb) {
-+		ret = -ENOMEM;
- 		goto free_rx_tx;
-+	}
- 
- 	priv->int_buf.data_buf = kmalloc(MAX_INTERRUPT_SIZE, GFP_KERNEL);
- 	if (!priv->int_buf.data_buf) {
--		usb_free_urb(priv->interrupt_urb);
--		goto free_rx_tx;
-+		ret = -ENOMEM;
-+		goto free_rx_tx_urb;
- 	}
- 
--	return true;
-+	return 0;
- 
-+free_rx_tx_urb:
-+	usb_free_urb(priv->interrupt_urb);
- free_rx_tx:
- 	vnt_free_rx_bufs(priv);
--
- free_tx:
- 	vnt_free_tx_bufs(priv);
--
--	return false;
-+	return ret;
- }
- 
- static void vnt_tx_80211(struct ieee80211_hw *hw,
--- 
-2.20.1
-
+Thank you
+Bharath
