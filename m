@@ -2,133 +2,131 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDFDC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6283C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1284421851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DB820873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZVFR7r7S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nYbIXYFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfGSNMi (ORCPT
+        id S1728786AbfGSNNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:12:38 -0400
-Received: from mail-eopbgr760043.outbound.protection.outlook.com ([40.107.76.43]:57604
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728152AbfGSNMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:12:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z+R4EvSfFC6oIOg0I57t2z+Xhzj+CCwoBxHdt+rsD9fjHnm5T4LwOs+3VZOvNdh+wlgvn/Ms+jx2afoMHU4gy2cD6amngRTsC4xyW9N9e8SsUGRssQSqCY7OQj5YrZ3XipDC+WRm7AAl60zuMjJH6ogD/1PzI30+4XE+QVAgVe42B7wup1WyXQ46ZB8NdqKpWcCQBFSa3tkb1bemtn6glYF8mKtwjicOeU3IvZ8JT4KieyFEexsspBZoG01KsRUC9nHTpFqSve8PGgbEhFiM/pvKjZzKXfvD65Sjd6jadJ5zqN5kwzMvCWJVooRF1HKU0en3B4Y/fMc2lA4sEcFsBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ggUqI1mtPCK2vMkfn/mmHXNkd5CgzlWib7SrLAVBYn4=;
- b=YsYmOwy+XGrf9f/u2ggKDbZK6oA9I/0x5F4oWIqig3UTRrN1TucnYbiZx582cO99yrUXWRTbXEkBjWRjmf18ird41I4iZ1FHlbtclb7r5ErLzSA0WcDtIVLkUz4IpGPilqVdSUmpAfz3gWEWZWd/AoX0VXKc2bMbvzpoIDAfqOIlqjskFS9LK4ySx7OVb8pnhfggiYBLSHSiYjjRbWxvrcbyy/hWIS2AWlDogEzzgTuM3O4pCuPHyfxNGgqPYqiW9J6GauKX8m5upvwnJJpOoUcW0NFh2ydp5sWYDJfXpH5Fz8E63suVxaI2j/FyLaeeV0djuiNfuOv0Ku49r3pKNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ggUqI1mtPCK2vMkfn/mmHXNkd5CgzlWib7SrLAVBYn4=;
- b=ZVFR7r7S6LbywOS+XXr/Kv6FMk4sAJRpvuIwl+1cAp8qzyk9s4PB9xZRGleFVB1JrdcHqKkCFiNw1uzTMheItotNXoaWuz5V79ki2QZ5fjLGpQOlMutMMGfCdRUD+YSOYt485wD9AHBzSJZpHp/YZWXatn3ohEvQOZylS1O5QVI=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3019.namprd12.prod.outlook.com (20.178.30.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.12; Fri, 19 Jul 2019 13:12:34 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
- 13:12:34 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 0/6] Remove x86-specific code from generic headers
-Thread-Topic: [PATCH v3 0/6] Remove x86-specific code from generic headers
-Thread-Index: AQHVPRj/oX9x6en7K0GjSSUSyjk8U6bQU/MAgAB0XYCAASS5gA==
-Date:   Fri, 19 Jul 2019 13:12:33 +0000
-Message-ID: <879a196a-1d92-931d-88f4-6ce17a09cf20@amd.com>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com>
- <680bb92e-66eb-8959-88a5-3447a6a282c8@amd.com>
- <87a7db3z68.fsf@morokweng.localdomain>
-In-Reply-To: <87a7db3z68.fsf@morokweng.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR04CA0004.namprd04.prod.outlook.com
- (2603:10b6:805:3e::17) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.84.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3b2d442-bed0-474d-cc2b-08d70c4ac2f6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3019;
-x-ms-traffictypediagnostic: DM6PR12MB3019:
-x-microsoft-antispam-prvs: <DM6PR12MB3019427DB838CD628D02CA71ECCB0@DM6PR12MB3019.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(366004)(39860400002)(346002)(189003)(199004)(102836004)(53936002)(52116002)(7736002)(229853002)(256004)(6436002)(31696002)(25786009)(7416002)(8936002)(68736007)(6506007)(53546011)(305945005)(6916009)(6486002)(386003)(186003)(31686004)(486006)(71200400001)(71190400001)(2906002)(478600001)(446003)(14454004)(5660300002)(6512007)(4326008)(76176011)(54906003)(81156014)(476003)(26005)(2616005)(66066001)(6246003)(36756003)(8676002)(3846002)(6116002)(316002)(64756008)(66446008)(81166006)(66946007)(11346002)(66556008)(99286004)(86362001)(66476007)(4744005)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3019;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: F+z10TAX7b2fjtuBQEJL/X8dKfTh3kpLJ9l2EFFTfGUpWQHv3pKi923NSa4WHX3bZUDw7uVBjpSbx5TWXFEMqHG85J5aQOhUfgGwLGGFUa5p0uTmHKFg2e7fQ1tLgzphhqT9M7A7P4Lbi6n7qpFOMh/91YWDTjI0TOJ2cTR+tsAAVNPOeyNH+SkzZnb7gzI/YwCi7X4PJy/k1QeFqUBtnxsi/prOkx6wcGurCvrIUusYqQGDuu9CUAI7jPK1mQzqrWjeIu5q9NF24AGyo03Uswm8UOS8Sjzk1eRLwW32/7PnqBBx1/zcZrPBZAEEVANxJaQqXz3JoLueq4RNAdMoXQrq+mjiDov0v1Un7n2z/LFvw8rakuUggZfcvDrQDch9lC0rmF+bSS8FnX1g7LY+vaOUs2o0/pKyEVkZUo+/dY0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E6763BDAFFDD7843AF08E64ECA218C71@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 19 Jul 2019 09:13:01 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51918 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728768AbfGSNNB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 09:13:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=R8CHtZotJfwBOkWhtpvqusr0kSsOrStTm7h1H2oxd18=; b=nYbIXYFXh6er0KuzU0gYkY6Y6
+        JsO4ajRSAHwcttM/f+bd9lAhE6vZYMHtN39SYwIC+8vgBdjrQZyDvBjLL8uOVZr2FgchLGHdRA79U
+        4y5i5GpSpRPvUgCw+dJoVcUJ5mrwxgCnPWSG6g/5F5WvKD5dYILkXXWDJ6ZWVgBbaCeeqipWtoA3P
+        sZcBG9b/f7ngxHd/CdAKkd3DkoyI+GEZHoiFQzEWDAii0nTMl2YNG0BOE68b+lR0ucSyVzVSxi3LS
+        JQmwqlNQ0gCKEv1G0rSgvCjV+3ELaIHvVSpcXx3a0Xq6ZkbRLpQPX3rhfAGqA+MdEc8sx2MPsX6qu
+        iHWqn3TyQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoSgy-0007vs-IC; Fri, 19 Jul 2019 13:12:56 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5158020B99A76; Fri, 19 Jul 2019 15:12:55 +0200 (CEST)
+Date:   Fri, 19 Jul 2019 15:12:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, pauld@redhat.com
+Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
+Message-ID: <20190719131255.GL3419@hirez.programming.kicks-ass.net>
+References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
+ <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3b2d442-bed0-474d-cc2b-08d70c4ac2f6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 13:12:34.0158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3019
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xOC8xOSAyOjQ0IFBNLCBUaGlhZ28gSnVuZyBCYXVlcm1hbm4gd3JvdGU6DQo+IA0KPiBM
-ZW5kYWNreSwgVGhvbWFzIDxUaG9tYXMuTGVuZGFja3lAYW1kLmNvbT4gd3JpdGVzOg0KPiANCj4+
-IE9uIDcvMTcvMTkgMTA6MjggUE0sIFRoaWFnbyBKdW5nIEJhdWVybWFubiB3cm90ZToNCj4+PiBI
-ZWxsbywNCj4+Pg0KPj4+IFRoaXMgdmVyc2lvbiBpcyBtb3N0bHkgYWJvdXQgc3BsaXR0aW5nIHVw
-IHBhdGNoIDIvMyBpbnRvIHRocmVlIHNlcGFyYXRlDQo+Pj4gcGF0Y2hlcywgYXMgc3VnZ2VzdGVk
-IGJ5IENocmlzdG9waCBIZWxsd2lnLiBUd28gb3RoZXIgY2hhbmdlcyBhcmUgYSBmaXggaW4NCj4+
-PiBwYXRjaCAxIHdoaWNoIHdhc24ndCBzZWxlY3RpbmcgQVJDSF9IQVNfTUVNX0VOQ1JZUFQgZm9y
-IHMzOTAgc3BvdHRlZCBieQ0KPj4+IEphbmFuaSBhbmQgcmVtb3ZhbCBvZiBzbWVfYWN0aXZlIGFu
-ZCBzZXZfYWN0aXZlIHN5bWJvbCBleHBvcnRzIGFzIHN1Z2dlc3RlZA0KPj4+IGJ5IENocmlzdG9w
-aCBIZWxsd2lnLg0KPj4+DQo+Pj4gVGhlc2UgcGF0Y2hlcyBhcmUgYXBwbGllZCBvbiB0b3Agb2Yg
-dG9kYXkncyBkbWEtbWFwcGluZy9mb3ItbmV4dC4NCj4+Pg0KPj4+IEkgZG9uJ3QgaGF2ZSBhIHdh
-eSB0byB0ZXN0IFNNRSwgU0VWLCBub3IgczM5MCdzIFBFRiBzbyB0aGUgcGF0Y2hlcyBoYXZlIG9u
-bHkNCj4+PiBiZWVuIGJ1aWxkIHRlc3RlZC4NCj4+DQo+PiBJJ2xsIHRyeSBhbmQgZ2V0IHRoaXMg
-dGVzdGVkIHF1aWNrbHkgdG8gYmUgc3VyZSBldmVyeXRoaW5nIHdvcmtzIGZvciBTTUUNCj4+IGFu
-ZCBTRVYuDQoNCkJ1aWx0IGFuZCB0ZXN0ZWQgYm90aCBTTUUgYW5kIFNFViBhbmQgZXZlcnl0aGlu
-ZyBhcHBlYXJzIHRvIGJlIHdvcmtpbmcNCndlbGwgKG5vdCBleHRlbnNpdmUgdGVzdGluZywgYnV0
-IHNob3VsZCBiZSBnb29kIGVub3VnaCkuDQoNClRoYW5rcywNClRvbQ0KDQo+IA0KPiBUaGFua3Mh
-IEFuZCB0aGFua3MgZm9yIHJldmlld2luZyB0aGUgcGF0Y2hlcy4NCj4gDQo=
+On Fri, Jul 19, 2019 at 09:58:23AM +0200, Vincent Guittot wrote:
+
+> @@ -8029,17 +8063,24 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+>  		}
+>  	}
+>  
+> -	/* Adjust by relative CPU capacity of the group */
+> -	sgs->group_capacity = group->sgc->capacity;
+> -	sgs->avg_load = (sgs->group_load*SCHED_CAPACITY_SCALE) / sgs->group_capacity;
+> +	/* Check if dst cpu is idle and preferred to this group */
+> +	if (env->sd->flags & SD_ASYM_PACKING &&
+> +	    env->idle != CPU_NOT_IDLE &&
+> +	    sgs->sum_h_nr_running &&
+> +	    sched_asym_prefer(env->dst_cpu, group->asym_prefer_cpu)) {
+> +		sgs->group_asym_capacity = 1;
+> +	}
+>  
+> -	if (sgs->sum_h_nr_running)
+> -		sgs->load_per_task = sgs->group_load / sgs->sum_h_nr_running;
+> +	sgs->group_capacity = group->sgc->capacity;
+>  
+>  	sgs->group_weight = group->group_weight;
+>  
+> -	sgs->group_no_capacity = group_is_overloaded(env, sgs);
+> -	sgs->group_type = group_classify(group, sgs);
+> +	sgs->group_type = group_classify(env, group, sgs);
+> +
+> +	/* Computing avg_load makes sense only when group is overloaded */
+> +	if (sgs->group_type != group_overloaded)
+
+The comment seems to suggest you meant: ==
+
+> +		sgs->avg_load = (sgs->group_load*SCHED_CAPACITY_SCALE) /
+> +				sgs->group_capacity;
+>  }
+>  
+>  /**
+> @@ -8070,7 +8111,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+>  	 */
+>  	if (sgs->group_type == group_misfit_task &&
+>  	    (!group_smaller_max_cpu_capacity(sg, sds->local) ||
+> -	     !group_has_capacity(env, &sds->local_stat)))
+> +	     sds->local_stat.group_type != group_has_spare))
+>  		return false;
+>  
+>  	if (sgs->group_type > busiest->group_type)
+> @@ -8079,11 +8120,18 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+>  	if (sgs->group_type < busiest->group_type)
+>  		return false;
+>  
+> -	if (sgs->avg_load <= busiest->avg_load)
+> +	/* Select the overloaded group with highest avg_load */
+> +	if (sgs->group_type == group_overloaded &&
+> +	    sgs->avg_load <= busiest->avg_load)
+
+And this code does too; because with the above '!=', you're comparing
+uninitialized data here, no?
+
+> +		return false;
+> +
+> +	/* Prefer to move from lowest priority CPU's work */
+> +	if (sgs->group_type == group_asym_capacity && sds->busiest &&
+> +	    sched_asym_prefer(sg->asym_prefer_cpu, sds->busiest->asym_prefer_cpu))
+>  		return false;
+>  
+>  	if (!(env->sd->flags & SD_ASYM_CPUCAPACITY))
+> -		goto asym_packing;
+> +		goto spare_capacity;
+>  
+>  	/*
+>  	 * Candidate sg has no more than one task per CPU and
