@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB6DC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A93EC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE461218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F66E21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509717;
-	bh=LVACnhueORH3zjjmzg2nOz7b8qyI63+dh483PbP04vA=;
+	s=default; t=1563509724;
+	bh=DXkaTUy1aC1SIQB/P87DYUa8G8l8zH//6I7t2Oy/xr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJgnwrneDS4UpJwZju98PQFzO1j4TecgAAyYYXKKZXmsQyw1jp8cP8bVx+wjjlsFB
-	 MDr4uCZVoBRQ6uPu7O78I0ISWST3/8p3EhgBGKYa4UQDAH5ZDbH827PVaOeITnFXqw
-	 m7JD3YA3ZQdmL/Zr7Mu8Zsz4pPilK71M+Wj7t/So=
+	b=kHUa+b+fGjorRi5xWREhJJaZQ+Ua1zM7NZ2QXh5e3c3bgs3leWcOdkHDHFnDDIRuu
+	 UbZ+JSVia8YBOANGyvPeGeFaBesqyIzp5hEar+YlFlV/8B/JOyw5Y3YQD8RPcycV/q
+	 CKtc3krdrlkpFpvJEO/VkdC7Qo5bGTcUku7qnGOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389001AbfGSEPP (ORCPT
+        id S2390083AbfGSEPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51394 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388943AbfGSEPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:15:05 -0400
+        id S2387449AbfGSEPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:15:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BCD2082F;
-        Fri, 19 Jul 2019 04:15:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 482D7218A5;
+        Fri, 19 Jul 2019 04:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509704;
-        bh=LVACnhueORH3zjjmzg2nOz7b8qyI63+dh483PbP04vA=;
+        s=default; t=1563509712;
+        bh=DXkaTUy1aC1SIQB/P87DYUa8G8l8zH//6I7t2Oy/xr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yAieML3ChzYXr75v2+v/0R+9Isblt90ELHjwXcYZc26nvRNUbV/aDcIhxHuAp5V1n
-         IXQlrRYTlJ4f+447D/W8vJiNY9eTzp1gSlGlMHH1VfkiDolK1vZcTX8vQNr0j5AxYB
-         HuMJcLHdEet9PLksAMAFRDf9UQMORG6qae1rQ35E=
+        b=DSVQe8D77p9gpYO7Q+AhlHRw8VMTQrzfx1Z1rrjPo6vUAogeloRjykCoUwvRW9dMI
+         QyeS1klhbHt7XnPB5O+HOMV6PwMXE/7nylFdWKc2IedApc/p7rFF8qyzASlnYOlNz/
+         ism+cwFLEIAd5TbhuXxi/uxKXpXxiIo6CMomgw2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 22/35] um: Silence lockdep complaint about mmap_sem
-Date:   Fri, 19 Jul 2019 00:14:10 -0400
-Message-Id: <20190719041423.19322-22-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 24/35] serial: sh-sci: Fix TX DMA buffer flushing and workqueue races
+Date:   Fri, 19 Jul 2019 00:14:12 -0400
+Message-Id: <20190719041423.19322-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -59,110 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
+[ Upstream commit 8493eab02608b0e82f67b892aa72882e510c31d0 ]
 
-When we get into activate_mm(), lockdep complains that we're doing
-something strange:
+When uart_flush_buffer() is called, the .flush_buffer() callback zeroes
+the tx_dma_len field.  This may race with the work queue function
+handling transmit DMA requests:
 
-    WARNING: possible circular locking dependency detected
-    5.1.0-10252-gb00152307319-dirty #121 Not tainted
-    ------------------------------------------------------
-    inside.sh/366 is trying to acquire lock:
-    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
+  1. If the buffer is flushed before the first DMA API call,
+     dmaengine_prep_slave_single() may be called with a zero length,
+     causing the DMA request to never complete, leading to messages
+     like:
 
-    but task is already holding lock:
-    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
+        rcar-dmac e7300000.dma-controller: Channel Address Error happen
 
-    which lock already depends on the new lock.
+     and, with debug enabled:
 
-    the existing dependency chain (in reverse order) is:
+	sh-sci e6e88000.serial: sci_dma_tx_work_fn: ffff800639b55000: 0...0, cookie 126
 
-    -> #1 (&mm->mmap_sem){++++}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           down_write+0x3f/0x98
-           flush_old_exec+0x748/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
+     and DMA timeouts.
 
-    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           _raw_spin_lock+0x30/0x83
-           flush_old_exec+0x703/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
+  2. If the buffer is flushed after the first DMA API call, but before
+     the second, dma_sync_single_for_device() may be called with a zero
+     length, causing the transmit data not to be flushed to RAM, and
+     leading to stale data being output.
 
-    other info that might help us debug this:
+Fix this by:
+  1. Letting sci_dma_tx_work_fn() return immediately if the transmit
+     buffer is empty,
+  2. Extending the critical section to cover all DMA preparational work,
+     so tx_dma_len stays consistent for all of it,
+  3. Using local copies of circ_buf.head and circ_buf.tail, to make sure
+     they match the actual operation above.
 
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(&mm->mmap_sem);
-                                   lock(&(&p->alloc_lock)->rlock);
-                                   lock(&mm->mmap_sem);
-      lock(&(&p->alloc_lock)->rlock);
-
-     *** DEADLOCK ***
-
-    2 locks held by inside.sh/366:
-     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
-     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    stack backtrace:
-    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
-    Stack:
-     [...]
-    Call Trace:
-     [<600420de>] show_stack+0x13b/0x155
-     [<6048906b>] dump_stack+0x2a/0x2c
-     [<6009ae64>] print_circular_bug+0x332/0x343
-     [<6009c5c6>] check_prev_add+0x669/0xdad
-     [<600a06b4>] __lock_acquire+0x12ab/0x139f
-     [<6009f3d0>] lock_acquire+0x155/0x18e
-     [<604a07e0>] _raw_spin_lock+0x30/0x83
-     [<60151e6a>] flush_old_exec+0x703/0x8d7
-     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
-     [...]
-
-I think it's because in exec_mmap() we have
-
-	down_read(&old_mm->mmap_sem);
-...
-        task_lock(tsk);
-...
-	activate_mm(active_mm, mm);
-	(which does down_write(&mm->mmap_sem))
-
-I'm not really sure why lockdep throws in the whole knowledge
-about the task lock, but it seems that old_mm and mm shouldn't
-ever be the same (and it doesn't deadlock) so tell lockdep that
-they're different.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Suggested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Link: https://lore.kernel.org/r/20190624123540.20629-2-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/include/asm/mmu_context.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/sh-sci.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-index 941527e507f7..f618f45fc8e9 100644
---- a/arch/um/include/asm/mmu_context.h
-+++ b/arch/um/include/asm/mmu_context.h
-@@ -42,7 +42,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
- 	 * when the new ->mm is used for the first time.
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 669134e27ed9..c450e32c153d 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1203,6 +1203,7 @@ static void work_fn_tx(struct work_struct *work)
+ 	struct uart_port *port = &s->port;
+ 	struct circ_buf *xmit = &port->state->xmit;
+ 	dma_addr_t buf;
++	int head, tail;
+ 
+ 	/*
+ 	 * DMA is idle now.
+@@ -1212,16 +1213,23 @@ static void work_fn_tx(struct work_struct *work)
+ 	 * consistent xmit buffer state.
  	 */
- 	__switch_mm(&new->context.id);
--	down_write(&new->mmap_sem);
-+	down_write_nested(&new->mmap_sem, 1);
- 	uml_setup_stubs(new);
- 	up_write(&new->mmap_sem);
+ 	spin_lock_irq(&port->lock);
+-	buf = s->tx_dma_addr + (xmit->tail & (UART_XMIT_SIZE - 1));
++	head = xmit->head;
++	tail = xmit->tail;
++	buf = s->tx_dma_addr + (tail & (UART_XMIT_SIZE - 1));
+ 	s->tx_dma_len = min_t(unsigned int,
+-		CIRC_CNT(xmit->head, xmit->tail, UART_XMIT_SIZE),
+-		CIRC_CNT_TO_END(xmit->head, xmit->tail, UART_XMIT_SIZE));
+-	spin_unlock_irq(&port->lock);
++		CIRC_CNT(head, tail, UART_XMIT_SIZE),
++		CIRC_CNT_TO_END(head, tail, UART_XMIT_SIZE));
++	if (!s->tx_dma_len) {
++		/* Transmit buffer has been flushed */
++		spin_unlock_irq(&port->lock);
++		return;
++	}
+ 
+ 	desc = dmaengine_prep_slave_single(chan, buf, s->tx_dma_len,
+ 					   DMA_MEM_TO_DEV,
+ 					   DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc) {
++		spin_unlock_irq(&port->lock);
+ 		dev_warn(port->dev, "Failed preparing Tx DMA descriptor\n");
+ 		/* switch to PIO */
+ 		sci_tx_dma_release(s, true);
+@@ -1231,20 +1239,20 @@ static void work_fn_tx(struct work_struct *work)
+ 	dma_sync_single_for_device(chan->device->dev, buf, s->tx_dma_len,
+ 				   DMA_TO_DEVICE);
+ 
+-	spin_lock_irq(&port->lock);
+ 	desc->callback = sci_dma_tx_complete;
+ 	desc->callback_param = s;
+-	spin_unlock_irq(&port->lock);
+ 	s->cookie_tx = dmaengine_submit(desc);
+ 	if (dma_submit_error(s->cookie_tx)) {
++		spin_unlock_irq(&port->lock);
+ 		dev_warn(port->dev, "Failed submitting Tx DMA descriptor\n");
+ 		/* switch to PIO */
+ 		sci_tx_dma_release(s, true);
+ 		return;
+ 	}
+ 
++	spin_unlock_irq(&port->lock);
+ 	dev_dbg(port->dev, "%s: %p: %d...%d, cookie %d\n",
+-		__func__, xmit->buf, xmit->tail, xmit->head, s->cookie_tx);
++		__func__, xmit->buf, tail, head, s->cookie_tx);
+ 
+ 	dma_async_issue_pending(chan);
  }
 -- 
 2.20.1
