@@ -2,179 +2,121 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ACFC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E7C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBBB2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0BB2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M3SU/d2c"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="S7NSIgws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388661AbfGSVpN (ORCPT
+        id S2388693AbfGSVrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 17:45:13 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17656 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfGSVpM (ORCPT
+        Fri, 19 Jul 2019 17:47:55 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40531 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728915AbfGSVrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 17:45:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3239e60001>; Fri, 19 Jul 2019 14:45:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 14:45:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 14:45:10 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 21:45:08 +0000
-Subject: Re: [PATCH v2 2/3] mm/hmm: fix ZONE_DEVICE anon page mapping reuse
-To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Logan Gunthorpe" <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Jan Kara" <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20190719192955.30462-1-rcampbell@nvidia.com>
- <20190719192955.30462-3-rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <5089cfa6-ba0c-efa8-6beb-6fb1881a57d4@nvidia.com>
-Date:   Fri, 19 Jul 2019 14:45:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190719192955.30462-3-rcampbell@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563572710; bh=EWMnpOanoTl9uOzSae5VUG9sJSSMfpgHu1hrHwdel1M=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=M3SU/d2cFHqeccbTX1WD+vjc0xuq2ALlX2QJVf5/Rs78JLBNyYft0uB6XGsFEMELg
-         EC3AIY3dhOAsmz/SlrI6BIkahQcfFSb32/kPwBUOhNxYwstDwhPHekaV7PLWs54x2P
-         A4zlnYYgc8fEJrnm+pUHwrAkBEzJqdltcWOYeQKu2rVRgFYx8GrmPh+ZQ9LNyQlgf8
-         y9iyaJJ5IzDwrSOsjdNyoKNKHpmEmGMHCiBeLc5lxhZt9X7xLmy3O69AVKYNLviqBN
-         9oWB2Tg3BKBF54n+TNpPp9luglQQm34rmXs9R6dt+zuj7Sf41rPQpKIIK+hwWnPj2K
-         2JhUTREHJ8Vyw==
+        Fri, 19 Jul 2019 17:47:55 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a15so32594851qtn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 14:47:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5HwGl0g54Inu2dbHSvUTjnjBXO/l4Rj8T8rMQLiptqQ=;
+        b=S7NSIgwsEeldpe7xNOPbAeT15AiLbQlHN5SkR4PFzKcUrnCuWgDYdIi6GFqO4QmLGa
+         O3p+XMs7pGfbtW2YdDsMea5DMxRqTA0bXKv+rqrhuC0PazCUwnTPKItm7cicOl6tC8b9
+         2QqkNbWkQoXW/Yhtza4WUxK82UPmCnyz5wZk/cUU5Dknmzxb5fM3F1KitYTurr36JSYp
+         NIfODJan61L2wwW69zYnwz0MTnkdPy6fPggNtG8vSFnXIyyv9z6P876+ZRoVBRFWeWOB
+         2lnMzlNyRswXmzb10WlEo7w5xTHFZPGwALYR0LUh6qVntZKzGMnS/8MhxrV0oAjyjNwB
+         3mhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5HwGl0g54Inu2dbHSvUTjnjBXO/l4Rj8T8rMQLiptqQ=;
+        b=F0rEZIvo8hoccuAdU/HxT8QRa/ptfg8ijG0nEOlNu+wuc/j5f33PM+sOk453GrtCBu
+         dfOethY2RDzbLWNSmuV/5hpkn1cTsf+LPph+S+mJt0BqOjgj0SiNnkLnCJQhX6yCX89v
+         UoXjVCuBgLT+NnkNA0zy1fc4I8SaN4Nypcy+rR9MVm35MFIXaWzmHGGiYEmIZlPA9hsn
+         occLx906Tbtm7i10F/rhWruc/bETMDDNQWaHr1mtjFmHF5Y9/MEw6JSIg0igP6jYMG5K
+         LxALBHVp9unwA+crnbzQAPKHPQ7F+h/ZMT2ZaLG1uzCfoUqRjuw7ac7AXjjzBGsrZiIy
+         r/XA==
+X-Gm-Message-State: APjAAAUBpaKv4PCgRxcunl6nqSDIWbhhzEiuDOlLIDq6PtQPjFFWj0vb
+        3O/MV7gMtzkdnoGjrZDRi7UX7w==
+X-Google-Smtp-Source: APXvYqw2RzqAIIsmVz3/U7pX3OR2QqfQEoLGKDqx/8DZeQgj2h2q3hME8vDfKuW76z7cPpa6BS23kA==
+X-Received: by 2002:ac8:394b:: with SMTP id t11mr38419556qtb.286.1563572874284;
+        Fri, 19 Jul 2019 14:47:54 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id z1sm15011603qke.122.2019.07.19.14.47.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 14:47:53 -0700 (PDT)
+Message-ID: <1563572871.11067.2.camel@lca.pw>
+Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
+From:   Qian Cai <cai@lca.pw>
+To:     David Miller <davem@davemloft.net>
+Cc:     morbo@google.com, ndesaulniers@google.com, jyknight@google.com,
+        sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        arnd@arndb.de, dhowells@redhat.com, hpa@zytor.com,
+        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, natechancellor@gmail.com
+Date:   Fri, 19 Jul 2019 17:47:51 -0400
+In-Reply-To: <20190718.162928.124906203979938369.davem@davemloft.net>
+References: <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
+         <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
+         <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
+         <20190718.162928.124906203979938369.davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/19 12:29 PM, Ralph Campbell wrote:
-> When a ZONE_DEVICE private page is freed, the page->mapping field can be
-> set. If this page is reused as an anonymous page, the previous value can
-> prevent the page from being inserted into the CPU's anon rmap table.
-> For example, when migrating a pte_none() page to device memory:
->   migrate_vma(ops, vma, start, end, src, dst, private)
->     migrate_vma_collect()
->       src[] =3D MIGRATE_PFN_MIGRATE
->     migrate_vma_prepare()
->       /* no page to lock or isolate so OK */
->     migrate_vma_unmap()
->       /* no page to unmap so OK */
->     ops->alloc_and_copy()
->       /* driver allocates ZONE_DEVICE page for dst[] */
->     migrate_vma_pages()
->       migrate_vma_insert_page()
->         page_add_new_anon_rmap()
->           __page_set_anon_rmap()
->             /* This check sees the page's stale mapping field */
->             if (PageAnon(page))
->               return
->             /* page->mapping is not updated */
->=20
-> The result is that the migration appears to succeed but a subsequent CPU
-> fault will be unable to migrate the page back to system memory or worse.
->=20
-> Clear the page->mapping field when freeing the ZONE_DEVICE page so stale
-> pointer data doesn't affect future page use.
+On Thu, 2019-07-18 at 16:29 -0700, David Miller wrote:
+> From: Qian Cai <cai@lca.pw>
+> Date: Thu, 18 Jul 2019 19:26:47 -0400
+> 
+> > 
+> > 
+> >> On Jul 18, 2019, at 5:21 PM, Bill Wendling <morbo@google.com> wrote:
+> >> 
+> >> [My previous response was marked as spam...]
+> >> 
+> >> Top-of-tree clang says that it's const:
+> >> 
+> >> $ gcc a.c -O2 && ./a.out
+> >> a is a const.
+> >> 
+> >> $ clang a.c -O2 && ./a.out
+> >> a is a const.
+> > 
+> > 
+> > I used clang-7.0.1. So, this is getting worse where both GCC and clang will
+> start to suffer the
+> > same problem.
+> 
+> Then rewrite the module parameter macros such that the non-constness
+> is evident to all compilers regardless of version.
+> 
+> That is the place to fix this, otherwise we will just be adding hacks
+> all over the place rather than in just one spot.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+The problem is that when the compiler is compiling be_main.o, it has no
+knowledge about what is going to happen in load_module().  The compiler can only
+see that a "const struct kernel_param_ops" "__param_ops_rx_frag_size" at the
+time with
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+__param_ops_rx_frag_size.arg = &rx_frag_size
 
->=20
-> Fixes: b7a523109fb5c9d2d6dd ("mm: don't clear ->mapping in hmm_devmem_fre=
-e")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-> ---
->  kernel/memremap.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> diff --git a/kernel/memremap.c b/kernel/memremap.c
-> index bea6f887adad..98d04466dcde 100644
-> --- a/kernel/memremap.c
-> +++ b/kernel/memremap.c
-> @@ -408,6 +408,30 @@ void __put_devmap_managed_page(struct page *page)
-> =20
->  		mem_cgroup_uncharge(page);
-> =20
-> +		/*
-> +		 * When a device_private page is freed, the page->mapping field
-> +		 * may still contain a (stale) mapping value. For example, the
-> +		 * lower bits of page->mapping may still identify the page as
-> +		 * an anonymous page. Ultimately, this entire field is just
-> +		 * stale and wrong, and it will cause errors if not cleared.
-> +		 * One example is:
-> +		 *
-> +		 *  migrate_vma_pages()
-> +		 *    migrate_vma_insert_page()
-> +		 *      page_add_new_anon_rmap()
-> +		 *        __page_set_anon_rmap()
-> +		 *          ...checks page->mapping, via PageAnon(page) call,
-> +		 *            and incorrectly concludes that the page is an
-> +		 *            anonymous page. Therefore, it incorrectly,
-> +		 *            silently fails to set up the new anon rmap.
-> +		 *
-> +		 * For other types of ZONE_DEVICE pages, migration is either
-> +		 * handled differently or not done at all, so there is no need
-> +		 * to clear page->mapping.
-> +		 */
-> +		if (is_device_private_page(page))
-> +			page->mapping =3D NULL;
-> +
->  		page->pgmap->ops->page_free(page);
->  	} else if (!count)
->  		__put_page(page);
->=20
+but only in load_module()->parse_args()->parse_one()->param_set_ushort(), it
+changes "__param_ops_rx_frag_size.arg" which in-turn changes the value
+of "rx_frag_size".
