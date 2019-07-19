@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCDEC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DC4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF1C2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DE42084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509933;
-	bh=V7t//CdQTxgs7mOSserxTrv7xWMVDDEvG7FnxmcW7dU=;
+	s=default; t=1563509938;
+	bh=vazYPGWKcn6q++paM75EHcCm+am7X5k6ssbUKYPpdig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T1Y7UAzhqgEY2Zq7TGtc7Brc5lOSzYYNdJJLovuKrdabdNQOebl8Sy3j9djshPuQW
-	 63zxrdMJM8l7bX9wg2hKJxcvWPfIk6Cudjx3LrGhjdv5l5t6V7zzUf5itDDHM4Ag44
-	 Fom9HfM7u9GoWlo7V24yU+OE8OD+YbSEbYLcK2Zk=
+	b=bXqoAfuS5JMyLVLY2VMGdPkIFIoYJ5LVddBmV0KLuY/Ti0ZCL1NllC/LyX8Xb6TW2
+	 /HPsE97ZIa0txoDIZAzmpljeoCRe5oTpjt44/2FFU/PVwmBzqY7Np/1rMNfUJvC2ni
+	 b7GMff6/SeOSndLKGSqDfO7PuvHA+UHc77sAJJ4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389247AbfGSENb (ORCPT
+        id S1728630AbfGSES4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49350 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389181AbfGSENZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:25 -0400
+        id S2388289AbfGSEN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD55521850;
-        Fri, 19 Jul 2019 04:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24F6C2082F;
+        Fri, 19 Jul 2019 04:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509604;
-        bh=V7t//CdQTxgs7mOSserxTrv7xWMVDDEvG7FnxmcW7dU=;
+        s=default; t=1563509606;
+        bh=vazYPGWKcn6q++paM75EHcCm+am7X5k6ssbUKYPpdig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rRq4meUbZTUfKHc5Iha+KAbgedJmnQro06rh/DTQBsYzcEF1qXSdENz0j1rdF94g
-         R5Dfgy698lzvcIufOKOIk5VSEfvTi6C6fP9Trhg3P448lsJ6mlojtZakju7Z0YVLe8
-         iznPRg5J0mCNllEiBdK0s9udrPNIa8uydz4GP14M=
+        b=2v/O/UI60JFLc0c7+9utpWOzld/PnI8/2dmnQHIj0yNjgxH+XZ6qv/nzpzyknzzqU
+         HmYevT8CbjHioTsNiA4yQLYpG1Kzh2d52+RvwODY8OxjpXWjLSTwhpHJ2NlDn9RlPd
+         q1Za6ZQ4nNd7u9poiUfqj4rPuPjAO8d6hcyMPOAA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rautkoski Kimmo EXT <ext-kimmo.rautkoski@vaisala.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/45] serial: 8250: Fix TX interrupt handling condition
-Date:   Fri, 19 Jul 2019 00:12:31 -0400
-Message-Id: <20190719041304.18849-12-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/45] phy: renesas: rcar-gen2: Fix memory leak at error paths
+Date:   Fri, 19 Jul 2019 00:12:33 -0400
+Message-Id: <20190719041304.18849-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -59,46 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rautkoski Kimmo EXT <ext-kimmo.rautkoski@vaisala.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit db1b5bc047b3cadaedab3826bba82c3d9e023c4b ]
+[ Upstream commit d4a36e82924d3305a17ac987a510f3902df5a4b2 ]
 
-Interrupt handler checked THRE bit (transmitter holding register
-empty) in LSR to detect if TX fifo is empty.
-In case when there is only receive interrupts the TX handling
-got called because THRE bit in LSR is set when there is no
-transmission (FIFO empty). TX handling caused TX stop, which in
-RS-485 half-duplex mode actually resets receiver FIFO. This is not
-desired during reception because of possible data loss.
+This patch fixes memory leak at error paths of the probe function.
+In for_each_child_of_node, if the loop returns, the driver should
+call of_put_node() before returns.
 
-The fix is to check if THRI is set in IER in addition of the TX
-fifo status. THRI in IER is set when TX is started and cleared
-when TX is stopped.
-This ensures that TX handling is only called when there is really
-transmission on going and an interrupt for THRE and not when there
-are only RX interrupts.
-
-Signed-off-by: Kimmo Rautkoski <ext-kimmo.rautkoski@vaisala.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Fixes: 1233f59f745b237 ("phy: Renesas R-Car Gen2 PHY driver")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_port.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/phy/phy-rcar-gen2.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 5b54439a8a9b..b4d6fef83f65 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1820,7 +1820,8 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 			status = serial8250_rx_chars(up, status);
- 	}
- 	serial8250_modem_status(up);
--	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE))
-+	if ((!up->dma || up->dma->tx_err) && (status & UART_LSR_THRE) &&
-+		(up->ier & UART_IER_THRI))
- 		serial8250_tx_chars(up);
- 
- 	spin_unlock_irqrestore(&port->lock, flags);
+diff --git a/drivers/phy/phy-rcar-gen2.c b/drivers/phy/phy-rcar-gen2.c
+index 97d4dd6ea924..aa02b19b7e0e 100644
+--- a/drivers/phy/phy-rcar-gen2.c
++++ b/drivers/phy/phy-rcar-gen2.c
+@@ -288,6 +288,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+ 		if (error || channel_num > 2) {
+ 			dev_err(dev, "Invalid \"reg\" property\n");
++			of_node_put(np);
+ 			return error;
+ 		}
+ 		channel->select_mask = select_mask[channel_num];
+@@ -303,6 +304,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 						   &rcar_gen2_phy_ops);
+ 			if (IS_ERR(phy->phy)) {
+ 				dev_err(dev, "Failed to create PHY\n");
++				of_node_put(np);
+ 				return PTR_ERR(phy->phy);
+ 			}
+ 			phy_set_drvdata(phy->phy, phy);
 -- 
 2.20.1
 
