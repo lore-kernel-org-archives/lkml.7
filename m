@@ -2,107 +2,222 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D235C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486D7C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4389521852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:48:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ICnJ3RNF"
+	by mail.kernel.org (Postfix) with ESMTP id 26E372184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfGSMsi (ORCPT
+        id S1728486AbfGSMtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 08:48:38 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:38632 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfGSMsi (ORCPT
+        Fri, 19 Jul 2019 08:49:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38844 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfGSMtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 08:48:38 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x6JCmW6I009843
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 21:48:33 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6JCmW6I009843
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563540513;
-        bh=0qpHUtufjLE2Zht/Y2B4RKQAO0L/g1Zo9WaeV3lBtFs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ICnJ3RNFfFPrNodbEkbdMDdGTp5jW/r9qV7mMEHuFzPhMkQ+G5OeemKkxXgj/0wxq
-         5fJ+H4kucUOwxTKhTptH3mV9n/UmaPYlX/Xd6KbrVBCNWLfTNXbdvw/P4nM89LCJ5q
-         ENmy/FBfkIuzKjfnwCmx8I+Ck764qnnE+N7OvRfYJg9xwKrRirrZKlQ7v8ZPtPT4Qt
-         To8f3h2+z1QIDxJnNpRzCIbr1/KaQyUnxjJOZq9etoVduw5vXeEMmtoSl+J22iIZ4A
-         PIhOt8jrl3XK+OQn6yzOEgWkDoOMCD+AHqwr+ppeObwxOm7FD8c8gcBgw4OIs8CRbU
-         8krrWl39qgDkw==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id z13so12514705uaa.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 05:48:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAXLsNSjYbGN3hxoV2eKS5m90QkY61e9+XnmkfZJddVhuxZq8nRF
-        S4NV6jjpS3jMHjx11ctMDagO7gnh8a+4ubsog6s=
-X-Google-Smtp-Source: APXvYqxOyWum8d8aY9+9Dr7DtLlXKz2YSlhp6ZMGjkRPpk6HL2DkyJda99rECBEPf7yVSnsipgh62d6QeUv24pwtGI8=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr33134716uag.40.1563540511666;
- Fri, 19 Jul 2019 05:48:31 -0700 (PDT)
+        Fri, 19 Jul 2019 08:49:50 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: bbrezillon)
+        with ESMTPSA id 9979628C684
+Date:   Fri, 19 Jul 2019 14:49:45 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        bbrezillon@kernel.org, Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v5 1/2] i3c: move i3c_device_match_id to device.c and
+ export it
+Message-ID: <20190719144945.0a43b37f@pc-375.home>
+In-Reply-To: <40addcc18ac82a3156cd86e153e2b4fc1de2fe54.1563533343.git.vitor.soares@synopsys.com>
+References: <cover.1563533342.git.vitor.soares@synopsys.com>
+        <40addcc18ac82a3156cd86e153e2b4fc1de2fe54.1563533343.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190719113139.4005262-1-arnd@arndb.de>
-In-Reply-To: <20190719113139.4005262-1-arnd@arndb.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 19 Jul 2019 21:47:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS49O=v8tJe+NauzsexVeg5hWNzFMFuWbCJbqc_qRv3dw@mail.gmail.com>
-Message-ID: <CAK7LNAS49O=v8tJe+NauzsexVeg5hWNzFMFuWbCJbqc_qRv3dw@mail.gmail.com>
-Subject: Re: [PATCH] [v2] blkdev: always export SECTOR_SHIFT
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Fri, 19 Jul 2019 13:19:04 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-On Fri, Jul 19, 2019 at 8:32 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> When CONFIG_BLOCK is disabled, SECTOR_SHIFT is unknown, and this leads
-> to a failure in the testing infrastructure added from commit c93a0368aaa2
-> ("kbuild: do not create wrappers for header-test-y"):
-
-I think this should be
-
-commit 43c78d88036e ("kbuild: compile-test kernel headers to ensure
-they are self-contained")
-
-Thanks.
-
-
->
-> In file included from <built-in>:3:
-> include/linux/iomap.h:76:48: error: use of undeclared identifier 'SECTOR_SHIFT'
->         return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
->
-> If we want to keep build testing all headers, the macro needs to
-> either be defined, or not used. Move it out of the #ifdef
-> section to ensure it is visible.
->
-> Fixes: db074436f421 ("iomap: move the direct IO code into a separate file")
-> Link: https://lore.kernel.org/lkml/20190718125509.775525-1-arnd@arndb.de/T/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Some I3C device drivers need to know which entry matches the
+> i3c_device object passed to the probe function
+> 
+> Let's move i3c_device_match_id() to device.c and export it so it can be
+> used by drivers.
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 > ---
-> The discussion about the build testing is still going on, but I promised
-> to send this version anyway for reference. I see no other header-test
-> failures in randconfig builds with this patch.
-> ---
+> Changes in v5:
+>   Add kerneldoc
+>   Improve commit message
+> 
+> Changes in v4:
+>   None
+> 
+> Changes in v3:
+>   Remove i3c_get_device_id
+>   Move i3c_device_match_id from drivers/i3c/master.c to drivers/i3c/device.c
+>   Export i3c_device_match_id
+> 
+> Changes in v2:
+>   move this function to drivers/i3c/device.c
+> 
+>  drivers/i3c/device.c       | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/i3c/master.c       | 45 ---------------------------------------
+>  include/linux/i3c/device.h |  4 ++++
+>  3 files changed, 57 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+> index 69cc040..5349059 100644
+> --- a/drivers/i3c/device.c
+> +++ b/drivers/i3c/device.c
+> @@ -201,6 +201,59 @@ struct i3c_device *dev_to_i3cdev(struct device *dev)
+>  EXPORT_SYMBOL_GPL(dev_to_i3cdev);
+>  
+>  /**
+> + * i3c_device_match_id() - Returns the I3C device match id in @i3cdev
 
+			      Returns the i3c_device_id entry matching
+			      @i3cdev
 
+> + * @i3cdev: I3C device
+> + * @id_table: I3C device match table
+> + *
+> + * Return: a pointer to I3C device id object
+			   an i3c_device_id object or NULL if there's
+no match.
 
--- 
-Best Regards
-Masahiro Yamada
+> + */
+> +const struct i3c_device_id *
+> +i3c_device_match_id(struct i3c_device *i3cdev,
+> +		    const struct i3c_device_id *id_table)
+> +{
+> +	struct i3c_device_info devinfo;
+> +	const struct i3c_device_id *id;
+> +
+> +	i3c_device_get_info(i3cdev, &devinfo);
+> +
+> +	/*
+> +	 * The lower 32bits of the provisional ID is just filled with a random
+> +	 * value, try to match using DCR info.
+> +	 */
+> +	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
+> +		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
+> +		u16 part = I3C_PID_PART_ID(devinfo.pid);
+> +		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
+> +
+> +		/* First try to match by manufacturer/part ID. */
+> +		for (id = id_table; id->match_flags != 0; id++) {
+> +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+> +			    I3C_MATCH_MANUF_AND_PART)
+> +				continue;
+> +
+> +			if (manuf != id->manuf_id || part != id->part_id)
+> +				continue;
+> +
+> +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+> +			    ext_info != id->extra_info)
+> +				continue;
+> +
+> +			return id;
+> +		}
+> +	}
+> +
+> +	/* Fallback to DCR match. */
+> +	for (id = id_table; id->match_flags != 0; id++) {
+> +		if ((id->match_flags & I3C_MATCH_DCR) &&
+> +		    id->dcr == devinfo.dcr)
+> +			return id;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_device_match_id);
+> +
+> +/**
+>   * i3c_driver_register_with_owner() - register an I3C device driver
+>   *
+>   * @drv: driver to register
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 5f4bd52..7667f84 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -270,51 +270,6 @@ static const struct device_type i3c_device_type = {
+>  	.uevent = i3c_device_uevent,
+>  };
+>  
+> -static const struct i3c_device_id *
+> -i3c_device_match_id(struct i3c_device *i3cdev,
+> -		    const struct i3c_device_id *id_table)
+> -{
+> -	struct i3c_device_info devinfo;
+> -	const struct i3c_device_id *id;
+> -
+> -	i3c_device_get_info(i3cdev, &devinfo);
+> -
+> -	/*
+> -	 * The lower 32bits of the provisional ID is just filled with a random
+> -	 * value, try to match using DCR info.
+> -	 */
+> -	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
+> -		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
+> -		u16 part = I3C_PID_PART_ID(devinfo.pid);
+> -		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
+> -
+> -		/* First try to match by manufacturer/part ID. */
+> -		for (id = id_table; id->match_flags != 0; id++) {
+> -			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+> -			    I3C_MATCH_MANUF_AND_PART)
+> -				continue;
+> -
+> -			if (manuf != id->manuf_id || part != id->part_id)
+> -				continue;
+> -
+> -			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+> -			    ext_info != id->extra_info)
+> -				continue;
+> -
+> -			return id;
+> -		}
+> -	}
+> -
+> -	/* Fallback to DCR match. */
+> -	for (id = id_table; id->match_flags != 0; id++) {
+> -		if ((id->match_flags & I3C_MATCH_DCR) &&
+> -		    id->dcr == devinfo.dcr)
+> -			return id;
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  static int i3c_device_match(struct device *dev, struct device_driver *drv)
+>  {
+>  	struct i3c_device *i3cdev;
+> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+> index 5ecb055..de102e4 100644
+> --- a/include/linux/i3c/device.h
+> +++ b/include/linux/i3c/device.h
+> @@ -188,6 +188,10 @@ static inline struct i3c_driver *drv_to_i3cdrv(struct device_driver *drv)
+>  struct device *i3cdev_to_dev(struct i3c_device *i3cdev);
+>  struct i3c_device *dev_to_i3cdev(struct device *dev);
+>  
+> +const struct i3c_device_id *
+> +i3c_device_match_id(struct i3c_device *i3cdev,
+> +		    const struct i3c_device_id *id_table);
+> +
+>  static inline void i3cdev_set_drvdata(struct i3c_device *i3cdev,
+>  				      void *data)
+>  {
+
