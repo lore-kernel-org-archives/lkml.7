@@ -2,200 +2,179 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904E7C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F10C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60533208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B3E2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 02:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LcfO+stf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKiijk8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfGSCDF (ORCPT
+        id S1726399AbfGSCHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 22:03:05 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:10897 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfGSCDF (ORCPT
+        Thu, 18 Jul 2019 22:07:48 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43199 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfGSCHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 22:03:05 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190719020258epoutp03b18171938402c5ce73719499c8a26411~yrJWIjqM12298222982epoutp03a
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 02:02:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190719020258epoutp03b18171938402c5ce73719499c8a26411~yrJWIjqM12298222982epoutp03a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563501778;
-        bh=SD1I4CitgOBqLy/a7BM33AXflBImf0vOY5HIuOGjbN8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=LcfO+stf/MtYPWI7YPjj9LdFcUonCCJkLNZnaEskHWsk9dR9A3B10JINEbXLSUB5o
-         fNZYdLMBo3JqnplJxGdb7sw92F7jV0JSqgvzrk6AALgEBSllbcNGUr8gyu/K1Mz3GE
-         iLsGa7PweO6nA/C1dhh9f8vh6HCZoW2jOzmJmWkQ=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190719020258epcas1p1822b8f78edb67b2cea48e192e8963bbd~yrJVqCUyX2163621636epcas1p1T;
-        Fri, 19 Jul 2019 02:02:58 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 45qZ5q63wczMqYlx; Fri, 19 Jul
-        2019 02:02:55 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        48.82.04066.FC4213D5; Fri, 19 Jul 2019 11:02:55 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190719020255epcas1p1ef47cbb71d96427ac80038f64cf308ba~yrJSy5gKo2163621636epcas1p1J;
-        Fri, 19 Jul 2019 02:02:55 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190719020255epsmtrp194618aadc0b0e2719863904ed9db66dc~yrJSyIyEF1521615216epsmtrp1c;
-        Fri, 19 Jul 2019 02:02:55 +0000 (GMT)
-X-AuditID: b6c32a37-e27ff70000000fe2-9b-5d3124cf41d9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3E.E2.03638.FC4213D5; Fri, 19 Jul 2019 11:02:55 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190719020254epsmtip1e4599b07bf8607c4544c1a0b158a5fb1~yrJSfTYod1535715357epsmtip1m;
-        Fri, 19 Jul 2019 02:02:54 +0000 (GMT)
-Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
- watermark selection
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
-Date:   Fri, 19 Jul 2019 11:06:05 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190719045943.73b53e31@dimatab>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTURDH87rtdjFWngV05IPCeiRgoF1KdTWgJl5VSSTReJEGN7AC0ivd
-        lghKolSxoHJo/OCiqHiAeCEBg0REATWYeKAxEhWDEQ/UgBa8Mdp2a+Tbb+b9Z9783xuKUNeR
-        4VSWxcHbLZyJJsfIL7dHaWLuT2OM2p1lGvbs51eI3SlWydm7BR+V7KPmwyQ7tK8DsUXDIsk+
-        21FDsj+aK+VsyfmH5IIgQ1PPSWS4IvYoDftcA6ShpKEWGYbqJycrNmQnZPJcOm+P4C1p1vQs
-        S0YivWJV6sJU/SwtE8PMYWfTERbOzCfSi5KSY5ZkmbwD0RE5nMnpTSVzgkBr5iXYrU4HH5Fp
-        FRyJNG9LN9nm2GIFziw4LRmxaVbzXEarjdN7hRuzM8vO9hK292FbPBfKie3o4fhiFEQBjgfx
-        dQdRjMZQatyEYMQ1opQCD4K9f+4opOArAs+357J/JUN1LwIHLQi6dv0MBIMIrle5/aoQzEFX
-        6VuFj0PxDKi+OeIXEfiSDG7XnfOLSBwNre+6SR8H40h4/P0VKkYUpcLzoOrgGl9ajqfDm7JG
-        5OMwvA48ve3+nio8HjoP9cl9HIRjwTV4wt+GwBPhad9RmcRTwNVY4TcH2KWErzcuBywsgt/u
-        flLiEHh/u0EpcTj0lxYGeCuc6ewgpWI3gobWBwrpQAetpw7IfIMSOAouNmukdCRc+XUESReP
-        g4EvexU+CWAVuAvVkmQqPOrtCYwwCU7sLiLLEC2OsiOOsiCOsiD+v+wYkteiCbxNMGfwAmPT
-        jf7ueuTf1ujZTajuXlIbwhSix6qSzVqjWsHlCLnmNgQUQYeqnvVrjGpVOpebx9utqXaniRfa
-        kN772uVEeFia1bv7Fkcqo4/T6XRsPDNLzzD0RFXlSJRRjTM4B5/N8zbe/q9ORgWFb0erE4Lj
-        jy9FjZu25ZVf/fay5WZkyq2C+P193ergj7nr3igLjhnFlUmd9fkFCX9yNmvfrmwnYzZpDTtk
-        eeVjB6qX7e9NWp/vyd72uGJxZeH6orhOMaUx69YwPuDe8+TDjd/DF0pKu06b807P3N3+rmjg
-        6PwHNcsrnbULY68NrpXn00T3J1ouZHJMNGEXuL//5Zw2wwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnO55FcNYg+0HeCxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyJqx+wFzwSrTi07qJzA2MlwS7GDk5JARMJD5v
-        uMfaxcjFISSwm1Hi+KodLBAJSYlpF48ydzFyANnCEocPF4OEhQTeMkqc2+ECYgsLJEpc7H/O
-        CmKLCKhJLD/6B2wOs8BmJomzp1azQQztZZLoW3aZDaSKTUBLYv+LG2A2v4CixNUfjxlBFvAK
-        2EksmhoGEmYRUJV4NmErI4gtKhAhcXjHLDCbV0BQ4uTMJ2C3cQroSTS/Xww2hllAXeLPvEvM
-        ELa4xK0n85kgbHmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJdarlec
-        mFtcmpeul5yfu4kRHGFaWjsYT5yIP8QowMGoxMMbkGsQK8SaWFZcmXuIUYKDWUmE9/ZL/Vgh
-        3pTEyqrUovz4otKc1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFINjKsiv3BwPBET
-        e1Kfmp9z76LOW89bmScvqgqnVtrsmzjXPnVe4rIzCUef86sYqClwmO9hefJdJjv49AdB9aum
-        9Z6+0Q5sq1gu5P1dvHP2Vlb9plk1SffDPVfIen6RfrW7y27JV8YetS8Oc3WVVArvTTqR+nam
-        QWDynGcVVTuk3cu1HnYdP9xRocRSnJFoqMVcVJwIAMogfx6sAgAA
-X-CMS-MailID: 20190719020255epcas1p1ef47cbb71d96427ac80038f64cf308ba
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
-        <20190707223303.6755-21-digetx@gmail.com>
-        <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
-        <20190719045943.73b53e31@dimatab>
+        Thu, 18 Jul 2019 22:07:47 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so13715709pgv.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 19:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Cn6HpCqocofcTiM1Gleeu1RdMvR6xgTxVinOm89T4fE=;
+        b=vKiijk8E2GYJLmXCSqisDXKNeVkOdK0i96hFcY3sJE7srh2/Vj0RX1QkFlZN+RZIRo
+         nENub6q4UVws0K+D84WGMBkqQh+V6PbFYUTtthmE+GwfVHqDxpkY8zrofMtEGIdVEyxn
+         Zs1bP/PB5idBKt4D8GK/w+Sp1I2o7cT0Ihbb5NNstyj2rv2oNNYeL9AXIRXgpexhWzmF
+         HlWQJqLV7H7II0Xt9LoyCqnOz8t4gxQ6OqluB9RNuW4gWwtadxmw4XNGFb23te97BQmc
+         ge9o6JKyBrJF+GoUNOch29h5SJKfv9TSwwLAq6C0P9YfbRgGqAGuARQeIAWGDqZETKn6
+         sGig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Cn6HpCqocofcTiM1Gleeu1RdMvR6xgTxVinOm89T4fE=;
+        b=Wpqawy6KbyvPTRrJ5WNymPYJFXRau+0GxK3O5GFzpCM2UzUMMNzpQLgLe91aBY5ijS
+         ZgsQqtN4ausldIdvJU/EzcbUArIlZzy0hAw2S3KY2lQ1+S7U204jDcRJ7UjLJVaUogBj
+         RRavBH6x7Bk3MLrrYQ1lmvLBkLcDJkJraiFmu3FGkCbbj3hQASL11OC/RBfcV7dxBghU
+         aOWXtbntRYF1/H8pkgOlsxtWBIrga9QBh7hYC2jlwi4QR0pTgRGhYLlt9IkZ9N+lPel7
+         EkhaE41qQ4svrV6GZOqnV8bJwJDHGgkv+5pGIhJEYPGdeGyHaI4iagWgB5ixdtmxyxkx
+         9ogw==
+X-Gm-Message-State: APjAAAWNUGw1rCvdK4Tx5db1TVkWT51Q+36bETpz0vXiD+xkpwoY52p1
+        a5MEiA00gE9Tx/PyLLikKUI=
+X-Google-Smtp-Source: APXvYqywOrUiB4kg7/DmwawT/8/A7EhERe2Wb4P1JJ4zXNsXJkbgA6JDlshugGSGnAR+inPbHyVdTA==
+X-Received: by 2002:a17:90b:94:: with SMTP id bb20mr55478290pjb.16.1563502067163;
+        Thu, 18 Jul 2019 19:07:47 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([218.189.10.173])
+        by smtp.gmail.com with ESMTPSA id d6sm25139253pgf.55.2019.07.18.19.07.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 19:07:46 -0700 (PDT)
+From:   Yue Hu <zbestahu@gmail.com>
+To:     phillip@squashfs.org.uk
+Cc:     squashfs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        huyue2@yulong.com
+Subject: [PATCH RESEND v2] squashfs: avoid to allocate page actor when to read into the page cache
+Date:   Fri, 19 Jul 2019 10:06:53 +0800
+Message-Id: <20190719020653.8396-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1.windows.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 19. 오전 10:59, Dmitry Osipenko wrote:
-> В Fri, 19 Jul 2019 10:36:30 +0900
-> Chanwoo Choi <cw00.choi@samsung.com> пишет:
-> 
->> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
->>> I noticed that CPU may be crossing the dependency threshold very
->>> frequently for some workloads and this results in a lot of
->>> interrupts which could be avoided if MCALL client is keeping actual
->>> EMC frequency at a higher rate.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
->>>  1 file changed, 18 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/tegra30-devfreq.c
->>> b/drivers/devfreq/tegra30-devfreq.c index
->>> c3cf87231d25..4d582809acb6 100644 ---
->>> a/drivers/devfreq/tegra30-devfreq.c +++
->>> b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static void
->>> tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
->>>  
->>>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
->>> *tegra,
->>> -					   struct
->>> tegra_devfreq_device *dev)
->>> +					   struct
->>> tegra_devfreq_device *dev,
->>> +					   unsigned long freq)
->>>  {
->>>  	unsigned long avg_threshold, lower, upper;
->>>  
->>> @@ -323,6 +324,15 @@ static void
->>> tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->>> avg_threshold = dev->config->avg_dependency_threshold;
->>> avg_threshold = avg_threshold * ACTMON_SAMPLING_PERIOD; 
->>> +	/*
->>> +	 * If cumulative EMC frequency selection is higher than the
->>> +	 * device's, then there is no need to set upper watermark
->>> to
->>> +	 * a lower value because it will result in unnecessary
->>> upper
->>> +	 * interrupts.
->>> +	 */
->>> +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
->>> +		upper = freq * ACTMON_SAMPLING_PERIOD;  
->>
->> Also, 'upper value is used on the patch5. You can combine this code
->> to patch5 or if this patch depends on the cpu notifier, you can
->> combine it to the patch of adding cpu notifier without separate patch.
-> 
-> Well okay, I'll try to squash some of the patches in the next revision.
-> Usually I'm receiving comments in the other direction, asking to
-> separate patches into smaller changes ;) So that's more a personal
-> preference of each maintainer, I'd say.
-> 
+From: Yue Hu <huyue2@yulong.com>
 
-Right. We have to make the patch with atomic attribute.
-But, if there are patches which touch the same code
-in the same patchset. We can squash or do refactorig
-of this code.
+Currently, we will allocate page actor in squashfs_readpage_block() via
+kmalloc() if enable SQUASHFS_FILE_DIRECT option. However, the actor size
+is small and it will be freed finally in this function. So, use stack
+memory will be better for that case to avoid out of memory.
 
-And also, if possible, I'd like you to make the patch
-list according to the role of patch. For example,
-the patches related to the 'watermark' could be sequentially
-listed. But, it is not forced opinion. If just possible.
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+v2: fix commit message
 
+ fs/squashfs/file_direct.c | 10 +++-------
+ fs/squashfs/page_actor.c  | 10 ++--------
+ fs/squashfs/page_actor.h  |  4 ++--
+ 3 files changed, 7 insertions(+), 17 deletions(-)
 
-
+diff --git a/fs/squashfs/file_direct.c b/fs/squashfs/file_direct.c
+index a4894cc..98c2dd1 100644
+--- a/fs/squashfs/file_direct.c
++++ b/fs/squashfs/file_direct.c
+@@ -35,7 +35,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	int end_index = start_index | mask;
+ 	int i, n, pages, missing_pages, bytes, res = -ENOMEM;
+ 	struct page **page;
+-	struct squashfs_page_actor *actor;
++	struct squashfs_page_actor actor;
+ 	void *pageaddr;
+ 
+ 	if (end_index > file_end)
+@@ -51,9 +51,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	 * Create a "page actor" which will kmap and kunmap the
+ 	 * page cache pages appropriately within the decompressor
+ 	 */
+-	actor = squashfs_page_actor_init_special(page, pages, 0);
+-	if (actor == NULL)
+-		goto out;
++	squashfs_page_actor_init_special(&actor, page, pages, 0);
+ 
+ 	/* Try to grab all the pages covered by the Squashfs block */
+ 	for (missing_pages = 0, i = 0, n = start_index; i < pages; i++, n++) {
+@@ -90,7 +88,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	}
+ 
+ 	/* Decompress directly into the page cache buffers */
+-	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
++	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, &actor);
+ 	if (res < 0)
+ 		goto mark_errored;
+ 
+@@ -116,7 +114,6 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 			put_page(page[i]);
+ 	}
+ 
+-	kfree(actor);
+ 	kfree(page);
+ 
+ 	return 0;
+@@ -135,7 +132,6 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	}
+ 
+ out:
+-	kfree(actor);
+ 	kfree(page);
+ 	return res;
+ }
+diff --git a/fs/squashfs/page_actor.c b/fs/squashfs/page_actor.c
+index 520d323..0344806 100644
+--- a/fs/squashfs/page_actor.c
++++ b/fs/squashfs/page_actor.c
+@@ -78,14 +78,9 @@ static void direct_finish_page(struct squashfs_page_actor *actor)
+ 		kunmap_atomic(actor->pageaddr);
+ }
+ 
+-struct squashfs_page_actor *squashfs_page_actor_init_special(struct page **page,
+-	int pages, int length)
++void squashfs_page_actor_init_special(struct squashfs_page_actor *actor,
++	struct page **page, int pages, int length)
+ {
+-	struct squashfs_page_actor *actor = kmalloc(sizeof(*actor), GFP_KERNEL);
+-
+-	if (actor == NULL)
+-		return NULL;
+-
+ 	actor->length = length ? : pages * PAGE_SIZE;
+ 	actor->page = page;
+ 	actor->pages = pages;
+@@ -94,5 +89,4 @@ struct squashfs_page_actor *squashfs_page_actor_init_special(struct page **page,
+ 	actor->squashfs_first_page = direct_first_page;
+ 	actor->squashfs_next_page = direct_next_page;
+ 	actor->squashfs_finish_page = direct_finish_page;
+-	return actor;
+ }
+diff --git a/fs/squashfs/page_actor.h b/fs/squashfs/page_actor.h
+index 2e3073a..ab9d381 100644
+--- a/fs/squashfs/page_actor.h
++++ b/fs/squashfs/page_actor.h
+@@ -61,8 +61,8 @@ struct squashfs_page_actor {
+ };
+ 
+ extern struct squashfs_page_actor *squashfs_page_actor_init(void **, int, int);
+-extern struct squashfs_page_actor *squashfs_page_actor_init_special(struct page
+-							 **, int, int);
++extern void squashfs_page_actor_init_special(struct squashfs_page_actor *actor,
++				struct page **page, int pages, int length);
+ static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
+ {
+ 	return actor->squashfs_first_page(actor);
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+1.9.1
+
