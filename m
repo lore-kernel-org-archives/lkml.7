@@ -2,214 +2,88 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD601C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D36C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFF62184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF202184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563555737;
+	bh=gaugX9ZhIKdDiADtQa4ubEUvcd0E44zHZspxew0b+eQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WdhHhjVbSg+3XbQaZ0C10fJp7pWpuv611ShbD+oS8K04XyZF/HDOuI1vMpjV2MeUV
+	 mSMTRImF7kmHNJCp4kfxYsmP2UFS6m/93KkIWJBs1YkxxfKdRr6OY89HQ3mM0vuQHK
+	 VKWsVKyW5ONf2+QsG/Ncm8d7r/RysKXkh7GlS7JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731922AbfGSQz6 (ORCPT
+        id S1730723AbfGSRCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:55:58 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35481 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfGSQz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:55:57 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y4so32937753wrm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:55:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RBvdy3j/dhCYKIZJnUPTzXQIvahYRfbHJdHaNI3eSIc=;
-        b=MsSRLMJgdtUOhSrH0J7VMQqrbHEJ3pBkE3aJc57iTc/ycJJkYvLbyeA2CzePmiBHXt
-         RQf+DqC0bLfKBaEoL5ODiMj2gk+komUOMaby06AZAJ7m7EZGApIkolCT4zYSdbFCiO/3
-         LALfyZ8PuqwsPC87y5LyNwA9VvzcbcMW9r0Z1ZBl54zNbr4CnXG29F8vV6wWS1yl1FWy
-         IjO5aOKUTQjJaG4PpCHF0ql9b5VLPipNDAI1+KSYRn+v4yeH7l44o76sRm6H+ZkzKITZ
-         ZfJHWXB9cNF2KGfL4llmqYdUcij1n6Y7oFQb+R1p8pphhfgrNA5EDhXXU3iPVHgkWU+D
-         hvtQ==
-X-Gm-Message-State: APjAAAXHvIgCIimJ+WEscMKR85xl0xKxr2KTeorSwk1ZFVBQpNYUByEA
-        g+qbKVdwBUQtwTXzlKCjY7C/Eg==
-X-Google-Smtp-Source: APXvYqwe2mJPKiPtJFOoa2KLgzD4pwJyIgLxoBcFNx6HMokPG7rxdxjAhwBpBI0dEokftw1KeRTy8g==
-X-Received: by 2002:a05:6000:4b:: with SMTP id k11mr55177677wrx.82.1563555355497;
-        Fri, 19 Jul 2019 09:55:55 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8501:6b03:f18c:74f8? ([2001:b07:6468:f312:8501:6b03:f18c:74f8])
-        by smtp.gmail.com with ESMTPSA id f3sm15880801wrt.56.2019.07.19.09.55.54
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 09:55:54 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: Add fixed counters to PMU filter
-To:     Eric Hankland <ehankland@google.com>,
-        Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-References: <20190718183818.190051-1-ehankland@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e3d2ecb1-5a1d-3294-8de1-eff98a935a5f@redhat.com>
-Date:   Fri, 19 Jul 2019 18:55:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 13:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728476AbfGSRCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 13:02:15 -0400
+Received: from localhost (unknown [84.241.199.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1A262184E;
+        Fri, 19 Jul 2019 17:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563555735;
+        bh=gaugX9ZhIKdDiADtQa4ubEUvcd0E44zHZspxew0b+eQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JkMss7z2IaCuUsVxputAzUIM2ymm12lW7m08ofokuK+NdePzrko3aERRnpx/Lo+Ly
+         z2eOvX9EzbP6flCTJKaIFurLcBwbhTeqFDpXZYYmiLuRg0vxT90A7W7iJmZxDHkP0N
+         2jo7BBtF5tAraPoai88w9WzyprAZ/Luf7LMVxCho=
+Date:   Fri, 19 Jul 2019 19:03:31 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Gen Zhang <blackgod016574@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH AUTOSEL 5.2 014/171] consolemap: Fix a memory leaking bug
+ in drivers/tty/vt/consolemap.c
+Message-ID: <20190719100331.GA11778@kroah.com>
+References: <20190719035643.14300-1-sashal@kernel.org>
+ <20190719035643.14300-14-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190718183818.190051-1-ehankland@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719035643.14300-14-sashal@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/19 20:38, Eric Hankland wrote:
-> From: ehankland <ehankland@google.com>
+On Thu, Jul 18, 2019 at 11:54:05PM -0400, Sasha Levin wrote:
+> From: Gen Zhang <blackgod016574@gmail.com>
 > 
-> Updates KVM_CAP_PMU_EVENT_FILTER so it can also whitelist or blacklist
-> fixed counters.
+> [ Upstream commit 84ecc2f6eb1cb12e6d44818f94fa49b50f06e6ac ]
 > 
-> Signed-off-by: ehankland <ehankland@google.com>
-
-Very nice, thanks.
-
-There's no need to check the padding for zero (flags can be defined to
-give specific meanings in the future to the padding fields), I removed
-that loop and queued the patch.
-
-Paolo
-
+> In function con_insert_unipair(), when allocation for p2 and p1[n]
+> fails, ENOMEM is returned, but previously allocated p1 is not freed,
+> remains as leaking memory. Thus we should free p1 as well when this
+> allocation fails.
+> 
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  Documentation/virtual/kvm/api.txt | 13 ++++++++-----
->  arch/x86/include/uapi/asm/kvm.h   |  9 ++++++---
->  arch/x86/kvm/pmu.c                | 30 +++++++++++++++++++++++++-----
->  3 files changed, 39 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-> index 2cd6250b2896..96bcf1aa1931 100644
-> --- a/Documentation/virtual/kvm/api.txt
-> +++ b/Documentation/virtual/kvm/api.txt
-> @@ -4090,17 +4090,20 @@ Parameters: struct kvm_pmu_event_filter (in)
->  Returns: 0 on success, -1 on error
->  
->  struct kvm_pmu_event_filter {
-> -       __u32 action;
-> -       __u32 nevents;
-> -       __u64 events[0];
-> +	__u32 action;
-> +	__u32 nevents;
-> +	__u32 fixed_counter_bitmap;
-> +	__u32 flags;
-> +	__u32 pad[4];
-> +	__u64 events[0];
->  };
->  
->  This ioctl restricts the set of PMU events that the guest can program.
->  The argument holds a list of events which will be allowed or denied.
->  The eventsel+umask of each event the guest attempts to program is compared
->  against the events field to determine whether the guest should have access.
-> -This only affects general purpose counters; fixed purpose counters can
-> -be disabled by changing the perfmon CPUID leaf.
-> +The events field only controls general purpose counters; fixed purpose
-> +counters are controlled by the fixed_counter_bitmap.
->  
->  Valid values for 'action':
->  #define KVM_PMU_EVENT_ALLOW 0
-> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-> index e901b0ab116f..503d3f42da16 100644
-> --- a/arch/x86/include/uapi/asm/kvm.h
-> +++ b/arch/x86/include/uapi/asm/kvm.h
-> @@ -435,9 +435,12 @@ struct kvm_nested_state {
->  
->  /* for KVM_CAP_PMU_EVENT_FILTER */
->  struct kvm_pmu_event_filter {
-> -       __u32 action;
-> -       __u32 nevents;
-> -       __u64 events[0];
-> +	__u32 action;
-> +	__u32 nevents;
-> +	__u32 fixed_counter_bitmap;
-> +	__u32 flags;
-> +	__u32 pad[4];
-> +	__u64 events[0];
->  };
->  
->  #define KVM_PMU_EVENT_ALLOW 0
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index aa5a2597305a..ae5cd1b02086 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -19,8 +19,8 @@
->  #include "lapic.h"
->  #include "pmu.h"
->  
-> -/* This keeps the total size of the filter under 4k. */
-> -#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
-> +/* This is enough to filter the vast majority of currently defined events. */
-> +#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 300
->  
->  /* NOTE:
->   * - Each perf counter is defined as "struct kvm_pmc";
-> @@ -206,12 +206,25 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
->  {
->  	unsigned en_field = ctrl & 0x3;
->  	bool pmi = ctrl & 0x8;
-> +	struct kvm_pmu_event_filter *filter;
-> +	struct kvm *kvm = pmc->vcpu->kvm;
-> +
->  
->  	pmc_stop_counter(pmc);
->  
->  	if (!en_field || !pmc_is_enabled(pmc))
->  		return;
->  
-> +	filter = srcu_dereference(kvm->arch.pmu_event_filter, &kvm->srcu);
-> +	if (filter) {
-> +		if (filter->action == KVM_PMU_EVENT_DENY &&
-> +		    test_bit(idx, (ulong *)&filter->fixed_counter_bitmap))
-> +			return;
-> +		if (filter->action == KVM_PMU_EVENT_ALLOW &&
-> +		    !test_bit(idx, (ulong *)&filter->fixed_counter_bitmap))
-> +			return;
-> +	}
-> +
->  	pmc_reprogram_counter(pmc, PERF_TYPE_HARDWARE,
->  			      kvm_x86_ops->pmu_ops->find_fixed_event(idx),
->  			      !(en_field & 0x2), /* exclude user */
-> @@ -376,7 +389,7 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
->  {
->  	struct kvm_pmu_event_filter tmp, *filter;
->  	size_t size;
-> -	int r;
-> +	int r, i;
->  
->  	if (copy_from_user(&tmp, argp, sizeof(tmp)))
->  		return -EFAULT;
-> @@ -385,6 +398,13 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
->  	    tmp.action != KVM_PMU_EVENT_DENY)
->  		return -EINVAL;
->  
-> +	if (tmp.flags != 0)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tmp.pad); i++)
-> +		if (tmp.pad[i] != 0)
-> +			return -EINVAL;
-> +
->  	if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
->  		return -E2BIG;
->  
-> @@ -406,8 +426,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
->  	mutex_unlock(&kvm->lock);
->  
->  	synchronize_srcu_expedited(&kvm->srcu);
-> - 	r = 0;
-> +	r = 0;
->  cleanup:
->  	kfree(filter);
-> - 	return r;
-> +	return r;
->  }
-> 
+>  drivers/tty/vt/consolemap.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
+No, please do not take this patch, it was reverted in commit
+15b3cd8ef46a ("Revert "consolemap: Fix a memory leaking bug in
+drivers/tty/vt/consolemap.c"") because it was broken.
+
+Please drop from all of the autosel queues.
+
+thanks,
+
+greg k-h
