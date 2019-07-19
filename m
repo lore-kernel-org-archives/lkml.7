@@ -2,132 +2,73 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TRACKER_ID autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5885C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BA6C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE2A2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1135E2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfGSLcR (ORCPT
+        id S1727665AbfGSLdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:32:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:32889 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfGSLcR (ORCPT
+        Fri, 19 Jul 2019 07:33:07 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41397 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfGSLdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:32:17 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M7v18-1hkbMf1elO-0052h7; Fri, 19 Jul 2019 13:31:47 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH] [v2] blkdev: always export SECTOR_SHIFT
-Date:   Fri, 19 Jul 2019 13:31:18 +0200
-Message-Id: <20190719113139.4005262-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 19 Jul 2019 07:33:07 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g7so24000446oia.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:33:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=DVH71sx/KUqNMTRsOZ2/nVIJEw+oefCrzrIa/hxtMs8=;
+        b=lyofpPpHpfhlbDrZBPJhqG2ftlCqHF7C53Y2OmJDW9OUofkqYC/0GdiPF6Ep1dmkMt
+         MBHDQrz750m5ph+J0xoqNMnzkKJ94R0BiGLpjEe8mqtFxqwVyE1YGUg9q32LoJ5r6ub9
+         qaBDCtFoWYxlysd7rSUDxHNo0WFt3SntvQOZgllR3KRaIBIg67ppFL43NU0ae30Gf/3h
+         lYKaVR931bCYq/LEor9jPmzMJBvOuajzSQ1TiA7NDOqLCuWDYtk3z00NUipk2NOKI3Qv
+         YGVEhoZAA6jw+RFhGGCGOYShUcUWpG2+znRjyHOB+OGTM+C/W1nxXtxhyaRzV9wjYO1x
+         2/rw==
+X-Gm-Message-State: APjAAAUsyUP6bsq7Lw9F+KFKOemnB9a2HGWwZiJlLocaSLamB6a/Sffm
+        QOdnBX1Kr9OQMcy/qCr+xWST2M69nCu8JwG2meO6wqwy
+X-Google-Smtp-Source: APXvYqz6DeDEHX82W2caPGlXlt4Xtf0e6Wrr1snsQJy7l6ruvyBiSq1k3ercbyBq/N2onnVcVW2hdGZvlE+tZBo9/Eo=
+X-Received: by 2002:aca:4744:: with SMTP id u65mr25338324oia.16.1563535986289;
+ Fri, 19 Jul 2019 04:33:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Vmcxqz1+zEC4Gz6MD7qxPE6OvaMIZxoiZywAbPjeNNR5AZUtT2+
- +rfnevMk1EgxsXJurkbh8MjLDWrZ8gHLODetIapgvkq3WJuzsanCjfwpsdc6I7UAoPODYST
- e4CuWsI1cWg7chal0vqGKqISZAJxF4wt5wFpeZ2T83pN61CdvHkanJUFplVU/HEI+KiI6IL
- 3NNUfLtBMCGVeMMdNsADw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rxjEIKNOxbo=:3knNSkYGwlgeMBNhwhifSm
- jilkYZ/AJkClQOMIzvdln5LqT6DE+j9D3SjGQd6LdxsaeX44E29Wp6QQS205jpY5o9F1bC8tk
- MG++tt4QoT1gwZPNgNI3o3PTeLwXLcNCvUS5F0+WHIyXdmtVLvQsToa/JUoAs02Pgczc6ngIv
- fBqqsV32a+DrgnIZBxz61S6Zs0LHkUXGduH1DFjyUOr/a0U+9BqsH1OHCSsFWpZsD5D/AcDs2
- 6PwEAikML8CdlwNQ9MepTYknmmePDWpN/TDfwBgCvD/8aEZuRFz8cYY5GYdjCTAVHJK+CqeEz
- A8PLpSBllLsqSgLweMKVAZNjOA04yeJU3gluqToGzBSlMJ21AbXJAf6S7RF+C4sOGbzrqKwTu
- DZjA50LTI9Z9fH46VUmxt1i/f8cAA5PLz19z4q0bz0Zpb4CpgcdbR6ssbUec6MbejQ+vqqMZr
- dqRQOkuz4iue1VjiVISllaBCGnpm5XwPGyNeFUfWyiYkkUXRsFQqLn4JsvpeS/fgMOtMfuyTQ
- DhyGW+/7Ajtwe2ME/+vpZ3bHRZevJKX7V8+gcc0/sO7usX8qfXPaXq72ZITw1nxK/vYHqTdzX
- HzWORafEMdGaFzxV/iSnpntcsIIY04kjL62jZZ9WiDPqNwhkuBLEJWIhvbOrGZrao7NgdkmIt
- KY5OC4vJKHLDUIxPbXXg62JeiypBO+8VWpBdpbOCuXCxGKlR+cPYjAkZ8PByQUQthJAkcGL0I
- dNY3ATK0ZuCfuy3vpMw8aP2woWfopPmK8+jaJA==
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Fri, 19 Jul 2019 13:32:50 +0200
+Message-ID: <CA+7wUszbn05nieiVsGM=MXFtf9HVks8vqtuOKw7ejTYFZhq0iQ@mail.gmail.com>
+Subject: Help: Regression in v4.19 : do_IRQ: 0.37 No irq handler for vector
+To:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_BLOCK is disabled, SECTOR_SHIFT is unknown, and this leads
-to a failure in the testing infrastructure added from commit c93a0368aaa2
-("kbuild: do not create wrappers for header-test-y"):
+[cc me please]
 
-In file included from <built-in>:3:
-include/linux/iomap.h:76:48: error: use of undeclared identifier 'SECTOR_SHIFT'
-        return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
+Hi there,
 
-If we want to keep build testing all headers, the macro needs to
-either be defined, or not used. Move it out of the #ifdef
-section to ensure it is visible.
+I recently upgraded my desktop to Debian/buster. Now when I start my
+xfce session I can hear the system bell, and my dmesg is filled with
+numerous:
 
-Fixes: db074436f421 ("iomap: move the direct IO code into a separate file")
-Link: https://lore.kernel.org/lkml/20190718125509.775525-1-arnd@arndb.de/T/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-The discussion about the build testing is still going on, but I promised
-to send this version anyway for reference. I see no other header-test
-failures in randconfig builds with this patch.
----
- include/linux/blkdev.h | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+[  920.728347] do_IRQ: 0.37 No irq handler for vector
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 0ec4f975437e..9c22d8bc6bf9 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -5,6 +5,19 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- 
-+/*
-+ * The basic unit of block I/O is a sector. It is used in a number of contexts
-+ * in Linux (blk, bio, genhd). The size of one sector is 512 = 2**9
-+ * bytes. Variables of type sector_t represent an offset or size that is a
-+ * multiple of 512 bytes. Hence these two constants.
-+ */
-+#ifndef SECTOR_SHIFT
-+#define SECTOR_SHIFT 9
-+#endif
-+#ifndef SECTOR_SIZE
-+#define SECTOR_SIZE (1 << SECTOR_SHIFT)
-+#endif
-+
- #ifdef CONFIG_BLOCK
- 
- #include <linux/major.h>
-@@ -889,19 +902,6 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
- 	return bdev->bd_disk->queue;	/* this is never NULL */
- }
- 
--/*
-- * The basic unit of block I/O is a sector. It is used in a number of contexts
-- * in Linux (blk, bio, genhd). The size of one sector is 512 = 2**9
-- * bytes. Variables of type sector_t represent an offset or size that is a
-- * multiple of 512 bytes. Hence these two constants.
-- */
--#ifndef SECTOR_SHIFT
--#define SECTOR_SHIFT 9
--#endif
--#ifndef SECTOR_SIZE
--#define SECTOR_SIZE (1 << SECTOR_SHIFT)
--#endif
--
- /*
-  * blk_rq_pos()			: the current sector
-  * blk_rq_bytes()		: bytes left in the entire request
--- 
-2.20.0
+The symptoms seems to be gone using git/master:
 
+3a1d5384b7decbff6519daa9c65a35665e227323
+
+Could someone suggest a method/tool to track down which commit needs
+backport to v4.19 (other than a git bisect).
+
+For reference:
+* this is bug Debian #932304
+* I can boot in recovery mode without any issue. It seems to be
+related to an event in single mode
+
+Thanks much,
