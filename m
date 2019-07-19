@@ -2,67 +2,104 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73253C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2613C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E652173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC28421849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:06:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tcKoBa8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfGSADx (ORCPT
+        id S1726277AbfGSAGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:03:53 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46236 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfGSADw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:03:52 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 65so22923970oid.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:03:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=LfqsH9Dy5EI0smB3cwAtmZOU+arsDaPcv42+Ozh309pvwEFLDwTIE82BQT9grvBZAD
-         BieAl0c/5EWZ7gLAc63OOAo++Ag6VIIugoW8DB/TlXlf8u8jgoT8FFOcBthuUl4dy4d/
-         AEMhVdOiyTOm/41b6C/t5bglXwv78BaIZfFVKPnJrdEz/m45gvYreByZOUJ5v3cVGRZB
-         JtX3cChzB4oHNrgGb1PtX/nRuvNxlVv9qOfuK2IMmOHtFsNbARY6tGD0K+dOW7jtPyr4
-         1Yls0MI5PJBGmIPwwkuXP0fatyDS8/G9/Jq6Ny7fGtNFUVWjYowGONl+TJd9iC4nobWL
-         dODQ==
-X-Gm-Message-State: APjAAAWNsvLvSz8mWf6vOpur0U3jw2/V2evuvWcdtYHg0kBI2cOidN1p
-        dhdNj1m0t12qv0zT3wYBbNY=
-X-Google-Smtp-Source: APXvYqwXmI+xmNjIVWk7h/9AC53PT7Gf6EJvpvJRB5XNz6gVL0e+il79g7iVNW+3cnS9GFhvUFmcjg==
-X-Received: by 2002:aca:90c:: with SMTP id 12mr23595245oij.91.1563494632110;
-        Thu, 18 Jul 2019 17:03:52 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id c66sm9632510oia.58.2019.07.18.17.03.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 17:03:51 -0700 (PDT)
-Subject: Re: [PATCH] nvme-core: Fix memory leak caused by incorrect subsystem
- free
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190718235350.6610-1-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <cc96d8a4-d5f7-d445-ed26-8e9326b050fe@grimberg.me>
-Date:   Thu, 18 Jul 2019 17:03:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 18 Jul 2019 20:06:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:40671 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfGSAGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:06:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qWVt2D6pz9s3Z;
+        Fri, 19 Jul 2019 10:05:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563494758;
+        bh=3W+rGCBlv9qH/WcczfGAgAysyijlmfF2crVhHqwraek=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tcKoBa8e0EAO+BSWJiiDEISQP8nqquUCBFaDc3/fi9Sqspt9Tnil3oCbD2Ws8l8sV
+         RBcRV9w1oDWYphT8Oz4qoaPNlX4x7UyCnxVH/oot+zsZAXa9IIBaP09QAa6NOCrAo1
+         7GniPU/dFONVT/r5tzZ7Y6pD9+F0Dr3BrlRlCJ5hXXNJ8RCkb+dLAqxpX+CLZocDhj
+         UJ7kVyz4nDJdphwc1Fjr2tlr+8F++fwGtxanRuz2MFbJFd0NbvXcimWZQEFEL0kXWS
+         KYhtJY1ygog30kTm1leiwS06tav+vBF28lC7d73uB5sdP5KcVR+HnCjT6hni2XGpTG
+         0zovX42Va5Jdw==
+Date:   Fri, 19 Jul 2019 10:05:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: linux-next: Tree for Jul 18 (header build error)
+Message-ID: <20190719100557.3ead3285@canb.auug.org.au>
+In-Reply-To: <127d228c-322d-6349-382b-d304974df148@infradead.org>
+References: <20190718133751.3cf036be@canb.auug.org.au>
+        <127d228c-322d-6349-382b-d304974df148@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190718235350.6610-1-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/z1=xYY.a9cTfhHO35FJ79pe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+--Sig_/z1=xYY.a9cTfhHO35FJ79pe
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Thu, 18 Jul 2019 10:00:22 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
+te:
+>
+> on x86_64, when CONFIG_BLOCK is not set:
+>=20
+>   CC      include/linux/iomap.h.s
+> In file included from <command-line>:0:0:
+> ./../include/linux/iomap.h: In function =E2=80=98iomap_sector=E2=80=99:
+> ./../include/linux/iomap.h:76:48: error: =E2=80=98SECTOR_SHIFT=E2=80=99 u=
+ndeclared (first use in this function); did you mean =E2=80=98SECTIONS_SHIF=
+T=E2=80=99?
+>   return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
+>                                                 ^~~~~~~~~~~~
+
+include/linux/iomap.h should only be used when CONFIG_BLOCK is set (if
+you follow the Kconfig trail).  So maybe this header should only be
+compile tested if CONFIG_BLOCK is set.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/z1=xYY.a9cTfhHO35FJ79pe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0xCWUACgkQAVBC80lX
+0GwSMAf/XraSYDqoBJY5K/r9UdR05YjdlfrPEbwsEwGFHCpL0u2m6jiwq9ciOo1R
+E9MgT5vqxAOBTcm8hc4XK0msKMDUWwYso0O6/1BGjRARdUz3c8QHYjIYZ4oHV1nG
+6R4vWHLBKs9YIusRCl7ZFYy364DGmvVAb9dwTc1L3ZF3Tu9vPlIn2ntsrc+Je/zA
+A3OoztV9DKmXWmzL+XZHScEx391GX3pGo3zSL26w4rDpSwSjfFctL5EWo2p9mH2Z
+KFkH0pYUxh2O50GS1XGWfVfmpo7mck6rfHRTuMyKkB2Oq67xFZg+Uh81axMR2hlZ
+M2SCpbYCyCvX+2ZB9uTWpdB31FaytA==
+=Zdp9
+-----END PGP SIGNATURE-----
+
+--Sig_/z1=xYY.a9cTfhHO35FJ79pe--
