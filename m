@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E2C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7B2C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE18206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A89206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511144;
-	bh=30mediPqSyOCVpfpiyzjkQznHDhL3K2DyXhGXN7PMk0=;
+	s=default; t=1563511149;
+	bh=QeqbiBHLeOYnomZOPhjCcLO0gyl5URbYFXDGeDoVHTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJYKQo/Cz3Gc+t7gT7OJi2B+hFT2je5xumrK60CJSzCxzEI7o7C9YT1SihT6NUNHD
-	 WnRpwzqS9GegaNtj+UWszEQHefznbiGKrWH5n7d86nQqWmYWOSoiASe/+sNOi+qmuN
-	 tDxCIqROEw39aqL1Eqs/qe9KzMWDhFDz9mrfU5Vc=
+	b=GdaWDkIrlQBriJiP4clB+WN3VR1qUZtPy1VvpE3dH54jMcNrukQ3VBL8NFey8Txnu
+	 p05OLi9lDxpmwyiW75QjFR2LH8xlc1Zz3CA/Xy9fU4i5I97olW32EonalMnWF/he/D
+	 rqHbZLmYlCeDWK6Ha5uOHeHxDItW7dp4+S/HV5DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfGSD7F (ORCPT
+        id S1729863AbfGSEjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727234AbfGSD67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:59 -0400
+        id S1728452AbfGSD7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06BB62189E;
-        Fri, 19 Jul 2019 03:58:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E952A21850;
+        Fri, 19 Jul 2019 03:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508738;
-        bh=30mediPqSyOCVpfpiyzjkQznHDhL3K2DyXhGXN7PMk0=;
+        s=default; t=1563508744;
+        bh=QeqbiBHLeOYnomZOPhjCcLO0gyl5URbYFXDGeDoVHTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etINGHhRAVeCRbS+owWLGgTDkL8zdXTtVn9Sgw1dPCO6ER6NMat2zTjF8NjikJoPg
-         /Z8V/v0oblRVr3WDajrbAXQaKYcjHyrqdu1R5s7ibNmxBeKTE11RuKq0zwbgUEMs+E
-         GHcVJQqDHxYKeTl+EAsE7PCp+AHmBGTGCO24zWwA=
+        b=Yh6hcVIF40otaGE538bJM62KAWrO2i0NqUl2Hu8soVbS3m9ZELnFeiwtExxKaMLCF
+         RPaF5ZcCph/6zF6lOzGS61d7tmwlwIPjWKek0cLDxokkznyOaMEbO6FdEx81JaU7cw
+         Aoa51N7tvQhlfehDMWb+ceDqvMijUlTPBwGn1OaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 060/171] powerpc/pseries/mobility: prevent cpu hotplug during DT update
-Date:   Thu, 18 Jul 2019 23:54:51 -0400
-Message-Id: <20190719035643.14300-60-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 065/171] iio: adxl372: fix iio_triggered_buffer_{pre,post}enable positions
+Date:   Thu, 18 Jul 2019 23:54:56 -0400
+Message-Id: <20190719035643.14300-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,57 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit e59a175faa8df9d674247946f2a5a9c29c835725 ]
+[ Upstream commit 0e4f0b42f42d88507b48282c8915f502551534e4 ]
 
-CPU online/offline code paths are sensitive to parts of the device
-tree (various cpu node properties, cache nodes) that can be changed as
-a result of a migration.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-Prevent CPU hotplug while the device tree potentially is inconsistent.
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iio/accel/adxl372.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index 0c48c8964783..50e7aee3c7f3 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2010 IBM Corporation
-  */
+diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+index 3b84cb243a87..055227cb3d43 100644
+--- a/drivers/iio/accel/adxl372.c
++++ b/drivers/iio/accel/adxl372.c
+@@ -782,10 +782,14 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 	unsigned int mask;
+ 	int i, ret;
  
-+#include <linux/cpu.h>
- #include <linux/kernel.h>
- #include <linux/kobject.h>
- #include <linux/smp.h>
-@@ -335,11 +336,19 @@ void post_mobility_fixup(void)
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility activate-fw failed: %d\n", rc);
+-	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
++	ret = iio_triggered_buffer_postenable(indio_dev);
+ 	if (ret < 0)
+ 		return ret;
  
-+	/*
-+	 * We don't want CPUs to go online/offline while the device
-+	 * tree is being updated.
-+	 */
-+	cpus_read_lock();
++	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
++	if (ret < 0)
++		goto err;
 +
- 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility device tree update "
- 			"failed: %d\n", rc);
+ 	mask = *indio_dev->active_scan_mask;
  
-+	cpus_read_unlock();
+ 	for (i = 0; i < ARRAY_SIZE(adxl372_axis_lookup_table); i++) {
+@@ -793,8 +797,10 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 			break;
+ 	}
+ 
+-	if (i == ARRAY_SIZE(adxl372_axis_lookup_table))
+-		return -EINVAL;
++	if (i == ARRAY_SIZE(adxl372_axis_lookup_table)) {
++		ret = -EINVAL;
++		goto err;
++	}
+ 
+ 	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
+ 	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
+@@ -814,26 +820,25 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 	if (ret < 0) {
+ 		st->fifo_mode = ADXL372_FIFO_BYPASSED;
+ 		adxl372_set_interrupts(st, 0, 0);
+-		return ret;
++		goto err;
+ 	}
+ 
+-	return iio_triggered_buffer_postenable(indio_dev);
++	return 0;
 +
- 	/* Possibly switch to a new RFI flush type */
- 	pseries_setup_rfi_flush();
++err:
++	iio_triggered_buffer_predisable(indio_dev);
++	return ret;
+ }
  
+ static int adxl372_buffer_predisable(struct iio_dev *indio_dev)
+ {
+ 	struct adxl372_state *st = iio_priv(indio_dev);
+-	int ret;
+-
+-	ret = iio_triggered_buffer_predisable(indio_dev);
+-	if (ret < 0)
+-		return ret;
+ 
+ 	adxl372_set_interrupts(st, 0, 0);
+ 	st->fifo_mode = ADXL372_FIFO_BYPASSED;
+ 	adxl372_configure_fifo(st);
+ 
+-	return 0;
++	return iio_triggered_buffer_predisable(indio_dev);
+ }
+ 
+ static const struct iio_buffer_setup_ops adxl372_buffer_ops = {
 -- 
 2.20.1
 
