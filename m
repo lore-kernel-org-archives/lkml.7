@@ -2,96 +2,132 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8D3C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3966C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDED2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:49:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="leJoLHrP"
+	by mail.kernel.org (Postfix) with ESMTP id 9028F2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfGSAtF (ORCPT
+        id S1726322AbfGSAuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:49:05 -0400
-Received: from ozlabs.org ([203.11.71.1]:35333 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfGSAtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:49:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qXSZ0H8xz9s00;
-        Fri, 19 Jul 2019 10:48:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563497342;
-        bh=8BedKWYpKSSoZ6D7fwbvtLXJw97uraAskO6DkZ6NhX8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=leJoLHrPD8wZCRd5M1MWcfcXU6NvoxIU7wjbvQFqKe6re+RQUBHeaA/gbuHrwL1Ge
-         frqccsHzO0A4pT7L3tBGx02ryGlKf/jwh/fNnC+FVYmSX9Mej56slMZG1AoDwwhzuL
-         r2EWOZimYhd8vM6Xj5cvRhmlBWsIb9UB7VcOAgIFpYjFfpm6hhDa+61hnvsNhJA1By
-         +V0Pgn+g650b2eDx9sK8GEwZNS3jZaRCIL9PrYqT9Pjqs7m5fnayO4LspzGII5Akie
-         gwYe3DMR30QUWUbPLc8CNSCyx+IkzW7BNGzOVnkgPHWpQ4dQu3xjLincf8x6qyH7bO
-         p5At/yPz1QdRg==
-Date:   Fri, 19 Jul 2019 10:48:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: linux-next: build failure after merge of the extcon tree
-Message-ID: <20190719104859.0846f6ac@canb.auug.org.au>
+        Thu, 18 Jul 2019 20:50:15 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42568 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfGSAuO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:50:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so31035142otn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:50:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PzPhqLPpEUKBPHY1ltp2gvt4lZLhIfUB77x+xjeBTiY=;
+        b=WI8R6kRfqvCvepFM0hW9qsohJiO7v1V5mg35z1DhtOiF4LPzEjBIpHb/AxVO9w5pj1
+         gR5/r/+KtqaNDP9rPRN0Ps2qUL7CdQrewKQ3SvCnKVJoecMS3izpTfM9ehjSarGpKaA+
+         0QCpzedj7IudR4CDakpRkyXjeHIMKJ1ZAWiJQzbPI1OWs/yx5rvkX+G2l9rrp+GUGFjM
+         bKbvGAYAqBOSeIavno+k3bFV7r/k11Uuw72FuCkDR84RbH/Iw93uD5ySAC0f2jvAw2cA
+         IsK2BbXnprMzEkdimzqSfHSQj/8xzWwILaKdmERClLCu9FoBJh7k0H2TilnZPrbl7vMA
+         O1vw==
+X-Gm-Message-State: APjAAAXOdmp7ruwRJtxT/k3L/LchbPfetkyjlO2btfDonpjy1tSF1I5I
+        CaLQB/1nvanGHMfNMBy3yZs=
+X-Google-Smtp-Source: APXvYqz+UUlpBFQEjfLv29MELFRuVYRLZkrpe0wSEvFuao+OnOlMnRYW3xSpeUDi3SDe5XPUDgB1tw==
+X-Received: by 2002:a9d:71d7:: with SMTP id z23mr39077704otj.100.1563497413877;
+        Thu, 18 Jul 2019 17:50:13 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id s4sm10308815otp.3.2019.07.18.17.50.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 17:50:13 -0700 (PDT)
+Subject: Re: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while
+ scanning
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190718225132.5865-1-logang@deltatee.com>
+ <20190718225132.5865-2-logang@deltatee.com>
+ <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
+ <6deea9e7-ff3c-e115-b2f2-8914df0b6da7@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <dd287560-2cb3-28ab-c22d-fe9f3682c609@grimberg.me>
+Date:   Thu, 18 Jul 2019 17:50:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9bm/uJQy0H9RyoVGo.cM+c0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <6deea9e7-ff3c-e115-b2f2-8914df0b6da7@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9bm/uJQy0H9RyoVGo.cM+c0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+>>> With multipath enabled, nvme_scan_work() can read from the
+>>> device (through nvme_mpath_add_disk()). However, with fabrics,
+>>> once ctrl->state is set to NVME_CTRL_DELETING, the reads will hang
+>>> (see nvmf_check_ready()).
+>>>
+>>> After setting the state to deleting, nvme_remove_namespaces() will
+>>> hang waiting for scan_work to flush and these tasks will hang.
+>>>
+>>> To fix this, ensure we take scan_lock before changing the ctrl-state.
+>>> Also, ensure the state is checked while the lock is held
+>>> in nvme_scan_lock_work().
+>>
+>> That's a big hammer...
+> 
+> I didn't think the scan_lock was that contested or that
+> nvme_change_ctrl_state() was really called that often...
 
-After merging the extcon tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+it shouldn't be, but I think it makes the flow more convoluted
+as we serialize by flushing the scan_work right after...
 
-drivers/extcon/extcon-gpio.c: In function 'gpio_extcon_probe':
-drivers/extcon/extcon-gpio.c:83:11: error: 'struct gpio_extcon_data' has no=
- member named 'irq_flags'
-  if (!data->irq_flags || data->extcon_id > EXTCON_NONE)
-           ^~
+The design principal is met as we do get the I/O failing,
+but its just that with mpath we simply queue the I/O again
+because the head->list happens to not be empty.
+Perhaps taking care of that check is cleaner.
 
-Caused by commit
+>> But this is I/O that we cannot have queued until we have a path..
+>>
+>> I would rather have nvme_remove_namespaces() requeue all I/Os for
+>> namespaces that serve as the current_path and have the make_request
+>> routine to fail I/O if all controllers are deleting as well.
+>>
+>> Would something like [1] (untested) make sense instead?
+> 
+> I'll have to give this a try next week and I'll let you know then. It
+> kind of makes sense to me but a number of things I tried to fix this
+> that I thought made sense did not work.
 
-  e49d583d1df7 ("extcon: gpio: Request reasonable interrupts")
+Thanks. Do you have a firm reproducer for it?
 
-I have used the extcon tree from next-20190718 for today.
+>>> +    mutex_lock(&ctrl->scan_lock);
+>>> +
+>>>        if (ctrl->state != NVME_CTRL_LIVE)
+>>>            return;
+>>
+>> unlock
+> 
+> If we unlock here and relock below, we'd have to recheck the ctrl->state
+> to avoid any races. If you don't want to call nvme_identify_ctrl with
+> the lock held, then it would probably be better to move the state check
+> below it.
 
---=20
-Cheers,
-Stephen Rothwell
+Meant before the return statement.
 
---Sig_/9bm/uJQy0H9RyoVGo.cM+c0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> 
+>>>    @@ -3547,7 +3554,6 @@ static void nvme_scan_work(struct work_struct
+>>> *work)
+>>>        if (nvme_identify_ctrl(ctrl, &id))
+>>>            return;
+>>
+>> unlock
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0xE3sACgkQAVBC80lX
-0GxnGwf/SnVac3SnoSeM0X/aPdPbCXibF7UpA35UrsNeA9RMFzD0+lq3369QFzfz
-HwvLbxEPZDPhKshoPXoY/+1fFpGQFWF3vzwZnb7ZqfdzMKLOWE3m38lIA+4vzBtY
-xaoavpaqSESV0yQ+8VMvfm+fwhPSMyOJbWrhfBTCQlEjzJEoFLKK25mDT6LD4Bsc
-Iz5NaLEt4aINnwnvIT4ZX64tUf2+nIASt1kskpCNVgJq/yc6qS42oiimojCJLvze
-ScgXNp9QIIVfUOOnd7HCvvGk0+LcWv+j6JrbmgWWe+DqAlJ5MUTlVEHxu1i516sp
-P3wY2fAHHtaVIF5xnSK764p56ZuYeQ==
-=HNBN
------END PGP SIGNATURE-----
-
---Sig_/9bm/uJQy0H9RyoVGo.cM+c0--
+Same here.
