@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADFDC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B953DC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E265205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882E721850
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508985;
-	bh=vIgo9o8osNZccOtEaXlUgkZmiia18kjNAQFNzwMFsPg=;
+	s=default; t=1563508981;
+	bh=loio7EbnPyE2U2r+HyGRrKSUH0ysEvubFWprXBu+1MA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IWM8CLkoxNEuyxkn9ZM3PRcI0URvnqcqCPpInDR4EnOf09lEn67ZaQc0jCEGl8J1
-	 fiPv7qWLVZsC0vxAxhkvWHKMwpa6SCOy1xyu2x4au8lsgcgpXghRxwwXfBQrQJ4POS
-	 JEYoyOykr7yOGcYswXktovm1wEBQvGrhT21srzxg=
+	b=K4SwEeg2aVNStpGqlStBCago1n7kAh9UltJet6qXlGoMQQJPAas8tgZUEd1bJMU3t
+	 yF0dC1a3Tklv4Ctgjqzs79hRm4SMtopeS+BI03lNHCHbHgCUcCnODtLSfFhXj+Px7d
+	 IjQO4z0KocfF/KUPsqGdi/dpY8fVMwaHV3a1ciP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfGSEDD (ORCPT
+        id S1730217AbfGSEDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34914 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730165AbfGSEC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:02:56 -0400
+        id S1730185AbfGSEC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:02:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 432E7218A3;
-        Fri, 19 Jul 2019 04:02:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F1A21882;
+        Fri, 19 Jul 2019 04:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508975;
-        bh=vIgo9o8osNZccOtEaXlUgkZmiia18kjNAQFNzwMFsPg=;
+        s=default; t=1563508976;
+        bh=loio7EbnPyE2U2r+HyGRrKSUH0ysEvubFWprXBu+1MA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGLNTw5Iq87AtHDHrKo7Vmw1vYDDRP2TtuG87dC0xre/i8y9Y7hNZT+f+FvlpD0z+
-         o/oGxtsD6zPNlAIbyJJk9/l3oiSrDRMbTz2mv/uwQfzu4fxovncE9PtYd53ZdLWpGO
-         8sha5n0i8VDnFPcNkn1DfXtYFs2mnj2Y92U3T3Qg=
+        b=A5ODP+2WccjNEqIim8rKr2M3Ucknu6bqDoWDBqwwd78R0wtVFwSdHUlrkZvw7ouKM
+         rOO45oHHq2EigF1g8bFnzWn60nFwHWWXwUFDf2O76ACkWEPHH+1ThDhtcrsCRKLb2o
+         aKSQjbAFBYh0LpqFv4iX376OQjkshnsC4yKrJZjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chia-I Wu <olvaffe@gmail.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.1 004/141] drm/virtio: set seqno for dma-fence
-Date:   Fri, 19 Jul 2019 00:00:29 -0400
-Message-Id: <20190719040246.15945-4-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 005/141] ipmi_si: fix unexpected driver unregister warning
+Date:   Fri, 19 Jul 2019 00:00:30 -0400
+Message-Id: <20190719040246.15945-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -62,109 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chia-I Wu <olvaffe@gmail.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit efe2bf965522bf0796d413b47a2abbf81d471d6f ]
+[ Upstream commit 2f66353963043e1d8dfacfbdf509acc5d3be7698 ]
 
-This is motivated by having meaningful ftrace events, but it also
-fixes use cases where dma_fence_is_later is called, such as in
-sync_file_merge.
+If ipmi_si_platform_init()->platform_driver_register() fails,
+platform_driver_unregister() called unconditionally will trigger
+following warning,
 
-In other drivers, fence creation and cmdbuf submission normally
-happen atomically,
+ipmi_platform: Unable to register driver: -12
+------------[ cut here ]------------
+Unexpected driver unregister!
+WARNING: CPU: 1 PID: 7210 at drivers/base/driver.c:193 driver_unregister+0x60/0x70 drivers/base/driver.c:193
 
-  mutex_lock();
-  fence = dma_fence_create(..., ++timeline->seqno);
-  submit_cmdbuf();
-  mutex_unlock();
+Fix it by adding platform_registered variable, only unregister platform
+driver when it is already successfully registered.
 
-and have no such issue.  But in our driver, because most ioctls
-queue commands into ctrlq, we do not want to grab a lock.  Instead,
-we set seqno to 0 when a fence is created, and update it when the
-command is finally queued and the seqno is known.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-Id: <20190517101245.4341-1-wangkefeng.wang@huawei.com>
 
-Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190429220825.156644-1-olvaffe@gmail.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h   |  1 -
- drivers/gpu/drm/virtio/virtgpu_fence.c | 17 ++++++++++-------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/char/ipmi/ipmi_si_platform.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index d577cb76f5ad..eaa19c338f68 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -85,7 +85,6 @@ struct virtio_gpu_fence {
- 	struct dma_fence f;
- 	struct virtio_gpu_fence_driver *drv;
- 	struct list_head node;
--	uint64_t seq;
- };
- #define to_virtio_fence(x) \
- 	container_of(x, struct virtio_gpu_fence, f)
-diff --git a/drivers/gpu/drm/virtio/virtgpu_fence.c b/drivers/gpu/drm/virtio/virtgpu_fence.c
-index 21bd4c4a32d1..216ab005e224 100644
---- a/drivers/gpu/drm/virtio/virtgpu_fence.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_fence.c
-@@ -40,16 +40,14 @@ static bool virtio_signaled(struct dma_fence *f)
+diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
+index 54c7ded2a1ff..859c78de1d4a 100644
+--- a/drivers/char/ipmi/ipmi_si_platform.c
++++ b/drivers/char/ipmi/ipmi_si_platform.c
+@@ -19,6 +19,7 @@
+ #include "ipmi_si.h"
+ #include "ipmi_dmi.h"
+ 
++static bool platform_registered;
+ static bool si_tryplatform = true;
+ #ifdef CONFIG_ACPI
+ static bool          si_tryacpi = true;
+@@ -471,9 +472,12 @@ void ipmi_si_platform_init(void)
+ 	int rv = platform_driver_register(&ipmi_platform_driver);
+ 	if (rv)
+ 		pr_err("Unable to register driver: %d\n", rv);
++	else
++		platform_registered = true;
+ }
+ 
+ void ipmi_si_platform_shutdown(void)
  {
- 	struct virtio_gpu_fence *fence = to_virtio_fence(f);
- 
--	if (atomic64_read(&fence->drv->last_seq) >= fence->seq)
-+	if (atomic64_read(&fence->drv->last_seq) >= fence->f.seqno)
- 		return true;
- 	return false;
+-	platform_driver_unregister(&ipmi_platform_driver);
++	if (platform_registered)
++		platform_driver_unregister(&ipmi_platform_driver);
  }
- 
- static void virtio_fence_value_str(struct dma_fence *f, char *str, int size)
- {
--	struct virtio_gpu_fence *fence = to_virtio_fence(f);
--
--	snprintf(str, size, "%llu", fence->seq);
-+	snprintf(str, size, "%llu", f->seqno);
- }
- 
- static void virtio_timeline_value_str(struct dma_fence *f, char *str, int size)
-@@ -76,6 +74,11 @@ struct virtio_gpu_fence *virtio_gpu_fence_alloc(struct virtio_gpu_device *vgdev)
- 		return fence;
- 
- 	fence->drv = drv;
-+
-+	/* This only partially initializes the fence because the seqno is
-+	 * unknown yet.  The fence must not be used outside of the driver
-+	 * until virtio_gpu_fence_emit is called.
-+	 */
- 	dma_fence_init(&fence->f, &virtio_fence_ops, &drv->lock, drv->context, 0);
- 
- 	return fence;
-@@ -89,13 +92,13 @@ int virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
- 	unsigned long irq_flags;
- 
- 	spin_lock_irqsave(&drv->lock, irq_flags);
--	fence->seq = ++drv->sync_seq;
-+	fence->f.seqno = ++drv->sync_seq;
- 	dma_fence_get(&fence->f);
- 	list_add_tail(&fence->node, &drv->fences);
- 	spin_unlock_irqrestore(&drv->lock, irq_flags);
- 
- 	cmd_hdr->flags |= cpu_to_le32(VIRTIO_GPU_FLAG_FENCE);
--	cmd_hdr->fence_id = cpu_to_le64(fence->seq);
-+	cmd_hdr->fence_id = cpu_to_le64(fence->f.seqno);
- 	return 0;
- }
- 
-@@ -109,7 +112,7 @@ void virtio_gpu_fence_event_process(struct virtio_gpu_device *vgdev,
- 	spin_lock_irqsave(&drv->lock, irq_flags);
- 	atomic64_set(&vgdev->fence_drv.last_seq, last_seq);
- 	list_for_each_entry_safe(fence, tmp, &drv->fences, node) {
--		if (last_seq < fence->seq)
-+		if (last_seq < fence->f.seqno)
- 			continue;
- 		dma_fence_signal_locked(&fence->f);
- 		list_del(&fence->node);
 -- 
 2.20.1
 
