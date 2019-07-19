@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD39DC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DB9C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836452082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C814421872
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509682;
-	bh=OG3BhARyERKdgIkunOz9Kvv8QPSf6id5watSfgNc7QU=;
+	s=default; t=1563509684;
+	bh=5Nril+9LsbgUoVrHLsCvF9VUvW6BFiF0+UitNynqDi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQcB7VW/mYFPGHeWidFvGOmmdPT5nm98qeWPB5m+0EjllyBy6PHmOPjO5oTdoZplY
-	 yKgMAF/5k3ZgbrATahQbAgsn1GBpUJeTtJKsisyrDtHLRWn8Rt8rw48TcgpKUX9nA4
-	 8H/j51+XVhrMUZWFbHF4Jvr5J5RbI46YmEzvvSrI=
+	b=WTAKI1VAUkirUb6NVnkCi1pYyhBBuJd+j+vVZf7ypjiNF0Az5stZZ2kECaFIZhAmh
+	 ao40gB5scRudlabcd9TBHOAUyNvmF+9b2FSe58ZT8KiyM8VPgeBvxGOhd/29LCNl7w
+	 kiyu0ic37ry4xkPMcb85x+wrhu+Gs0x2G4SzgT2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389827AbfGSEOl (ORCPT
+        id S2389838AbfGSEOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389786AbfGSEOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:37 -0400
+        id S1729582AbfGSEOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2DAB2082F;
-        Fri, 19 Jul 2019 04:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFC6E2189E;
+        Fri, 19 Jul 2019 04:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509676;
-        bh=OG3BhARyERKdgIkunOz9Kvv8QPSf6id5watSfgNc7QU=;
+        s=default; t=1563509680;
+        bh=5Nril+9LsbgUoVrHLsCvF9VUvW6BFiF0+UitNynqDi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ydqxrfnqOFTkmah6lLSVeHvTRM+GZLQwpWa4N84CJmuTDhBurMnGjKPw1U+JyM52U
-         MOQt+aJpxLHAFke6OOdbK9l6/OvkxFGWfqngfq15IJsBLqEiVqA7XBiTn7FzA8fEsb
-         QfrzxU5u4y4ts1o6tDuUa5fhPKAJI6iwzpcJrDNs=
+        b=DD9BJC9ZV/vNa+j0ww+cdUvh0ZbAE5RpKnjQ3gECJyG5T2EqPr4lndgZ3ODM60nZy
+         QTqGeKCUuQGfgSTBryuraT/iyUI4DD+KXuHzPw3Y2d4yZ1iUkdFgREUKt6Q21SzmHu
+         iH+f98LMAXfwAQNVTQ6zScw+SKhvtMhcnX8dl2TY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai26@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/35] memstick: Fix error cleanup path of memstick_init
-Date:   Fri, 19 Jul 2019 00:13:55 -0400
-Message-Id: <20190719041423.19322-7-sashal@kernel.org>
+Cc:     David Riley <davidriley@chromium.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 10/35] drm/virtio: Add memory barriers for capset cache.
+Date:   Fri, 19 Jul 2019 00:13:58 -0400
+Message-Id: <20190719041423.19322-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
 References: <20190719041423.19322-1-sashal@kernel.org>
@@ -59,75 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai26@huawei.com>
+From: David Riley <davidriley@chromium.org>
 
-[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
+[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
 
-If bus_register fails. On its error handling path, it has cleaned up
-what it has done. There is no need to call bus_unregister again.
-Otherwise, if bus_unregister is called, issues such as null-ptr-deref
-will arise.
+After data is copied to the cache entry, atomic_set is used indicate
+that the data is the entry is valid without appropriate memory barriers.
+Similarly the read side was missing the corresponding memory barriers.
 
-Syzkaller report this:
-
-kobject_add_internal failed for memstick (error: -12 parent: bus)
-BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
-Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
-
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- __kasan_report+0x171/0x18d mm/kasan/report.c:321
- kasan_report+0xe/0x20 mm/kasan/common.c:614
- sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
- remove_probe_files drivers/base/bus.c:599 [inline]
- bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
- memstick_init+0x7a/0x1000 [memstick]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai26@huawei.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: David Riley <davidriley@chromium.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memstick/core/memstick.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
-index 4d673a626db4..1041eb7a6167 100644
---- a/drivers/memstick/core/memstick.c
-+++ b/drivers/memstick/core/memstick.c
-@@ -629,13 +629,18 @@ static int __init memstick_init(void)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 6296e9f270ca..0b8f8c10f2ed 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -535,6 +535,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+ 	ret = wait_event_timeout(vgdev->resp_wq,
+ 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
  
- 	rc = bus_register(&memstick_bus_type);
--	if (!rc)
--		rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_destroy_workqueue;
- 
--	if (!rc)
--		return 0;
-+	rc = class_register(&memstick_host_class);
-+	if (rc)
-+		goto error_bus_unregister;
++	/* is_valid check must proceed before copy of the cache entry. */
++	smp_rmb();
 +
-+	return 0;
+ 	ptr = cache_ent->caps_cache;
  
-+error_bus_unregister:
- 	bus_unregister(&memstick_bus_type);
-+error_destroy_workqueue:
- 	destroy_workqueue(workqueue);
- 
- 	return rc;
+ copy_exit:
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index 52436b3c01bb..a1b3ea1ccb65 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -618,6 +618,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
+ 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
+ 			memcpy(cache_ent->caps_cache, resp->capset_data,
+ 			       cache_ent->size);
++			/* Copy must occur before is_valid is signalled. */
++			smp_wmb();
+ 			atomic_set(&cache_ent->is_valid, 1);
+ 			break;
+ 		}
 -- 
 2.20.1
 
