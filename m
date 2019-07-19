@@ -4,72 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5143FC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E58C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275DA218DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75583218DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509560;
-	bh=oXOiVDPKokV0YoJp0VcieNm7AmxS3aIBuNZIJn63Vbk=;
+	s=default; t=1563509561;
+	bh=ND04iyBGZU9uwTapA7OgOZosgZe0ucRFwjwX9sHc5uY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHsBWPZKQQaELlxFA6Pj/gCVg76UOYpLKtjNhiHxsVx0FiRM9MD1EL5XWCDG3QbrT
-	 wdozZL8S7UD30IuSyo8SGyMR3bPPXUEtMq24VyTc6Z4/ENcj8YsM8sKEbOggVbmVd7
-	 6+86EDIbQrrZr1s6Efz4E7CAKZ0aU4/yROfiJBd8=
+	b=pUrWtNoKDRrYVJhuVZVP5BkwTCkMBvyW+U8s/K6Lr0hlN3Jmabm4yy9wzwf9b5bTF
+	 ApJUaSJ6hxKMh1PA7+y3AFmOAAEd3X1WCMC2de3VrzerPzLR3AheUmmCIHqiLHuNd1
+	 61TBctFUqQQJ93sBa66nF2e/kGAZNhwg5HonSebg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388903AbfGSEMi (ORCPT
+        id S2388180AbfGSEKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbfGSEMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:33 -0400
+        id S1733119AbfGSEKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287072189D;
-        Fri, 19 Jul 2019 04:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A398421872;
+        Fri, 19 Jul 2019 04:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509552;
-        bh=oXOiVDPKokV0YoJp0VcieNm7AmxS3aIBuNZIJn63Vbk=;
+        s=default; t=1563509435;
+        bh=ND04iyBGZU9uwTapA7OgOZosgZe0ucRFwjwX9sHc5uY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=az9HOBf+995fDjoDFoxFBCKa1UNqO9MMn97vFtBgLh2m3CrqkFyJqRWg4mvxo+aGm
-         KfvVfHByibr0cjayXLOzvw5hAX9keA1STcu6FSCgf/Anbv2go/ayHg/xSLy4ko1qsz
-         iym4KeIiXkBPE6KvPp/wvaO2C7CgsvwW2Vk+FfLk=
+        b=MCIj12XQF6u63qiSX5RXWmaW9rKHW7Wra8X0q4FPLxtfRxLOGi3tmIDOGY6wXsX9A
+         nheKMhXt3M/2P3SolXApYLyQbEurGzrU2eWzosv57v0aENCMfp/eyVx3fYrU6SEtB9
+         5xVwSRsBTfgsxWONr58FV+QNWxMrVClMtqfphfEY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 44/60] perf session: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Fri, 19 Jul 2019 00:10:53 -0400
-Message-Id: <20190719041109.18262-44-sashal@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 091/101] mm/gup.c: remove some BUG_ONs from get_gate_page()
+Date:   Fri, 19 Jul 2019 00:07:22 -0400
+Message-Id: <20190719040732.17285-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
-References: <20190719041109.18262-1-sashal@kernel.org>
+In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
+References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,79 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Andy Lutomirski <luto@kernel.org>
 
-[ Upstream commit f3c8d90757724982e5f07cd77d315eb64ca145ac ]
+[ Upstream commit b5d1c39f34d1c9bca0c4b9ae2e339fbbe264a9c7 ]
 
-Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+If we end up without a PGD or PUD entry backing the gate area, don't BUG
+-- just fail gracefully.
 
-  tools/perf/util/session.c:1252
-  dump_read() error: we previously assumed 'evsel' could be null
-  (see line 1249)
+It's not entirely implausible that this could happen some day on x86.  It
+doesn't right now even with an execute-only emulated vsyscall page because
+the fixmap shares the PUD, but the core mm code shouldn't rely on that
+particular detail to avoid OOPSing.
 
-  tools/perf/util/session.c
-  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
-  1241 {
-  1242         struct read_event *read_event = &event->read;
-  1243         u64 read_format;
-  1244
-  1245         if (!dump_trace)
-  1246                 return;
-  1247
-  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
-  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
-  1250                event->read.value);
-  1251
-  1252         read_format = evsel->attr.read_format;
-                             ^^^^^^^
-
-'evsel' could be NULL pointer, for this case this patch directly bails
-out without dumping read_event.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/a1d9f4efb75b9d464e59fd6af00104b21c58f6f7.1561610798.git.luto@kernel.org
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/session.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/gup.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index da55081aefc6..c49e8ea1a42c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1145,6 +1145,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
- 	       evsel ? perf_evsel__name(evsel) : "FAIL",
- 	       event->read.value);
- 
-+	if (!evsel)
-+		return;
-+
- 	read_format = evsel->attr.read_format;
- 
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+diff --git a/mm/gup.c b/mm/gup.c
+index 43c71397c7ca..f3088d25bd92 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -458,11 +458,14 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 		pgd = pgd_offset_k(address);
+ 	else
+ 		pgd = pgd_offset_gate(mm, address);
+-	BUG_ON(pgd_none(*pgd));
++	if (pgd_none(*pgd))
++		return -EFAULT;
+ 	p4d = p4d_offset(pgd, address);
+-	BUG_ON(p4d_none(*p4d));
++	if (p4d_none(*p4d))
++		return -EFAULT;
+ 	pud = pud_offset(p4d, address);
+-	BUG_ON(pud_none(*pud));
++	if (pud_none(*pud))
++		return -EFAULT;
+ 	pmd = pmd_offset(pud, address);
+ 	if (!pmd_present(*pmd))
+ 		return -EFAULT;
 -- 
 2.20.1
 
