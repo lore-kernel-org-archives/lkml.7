@@ -2,67 +2,96 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACB4C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42355C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A172084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177352084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GSkUvEXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfGSKJS (ORCPT
+        id S1727222AbfGSKKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:09:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44454 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSKJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:09:18 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DA5EE1A0159;
-        Fri, 19 Jul 2019 12:09:16 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7DFDD1A003F;
-        Fri, 19 Jul 2019 12:09:12 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CB26B402B5;
-        Fri, 19 Jul 2019 18:09:06 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, liviu.dudau@arm.com,
-        robh+dt@kernel.org
-Cc:     leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
-Subject: [v2 3/3] dts: arm64: ls1028a: Add optional property node for Mali DP500
-Date:   Fri, 19 Jul 2019 17:59:56 +0800
-Message-Id: <20190719095956.11774-1-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 19 Jul 2019 06:10:17 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:29227 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfGSKKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:10:17 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6JA93Jd024206;
+        Fri, 19 Jul 2019 19:09:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6JA93Jd024206
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563530944;
+        bh=a3YovZwajy5jGOBf14Q9c/0gf55f02Iub75GoLKtQIY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GSkUvEXip3o937QdMIXgFGg+VCWE+8VZWQ9b9Jj4gfiPnlc9JBOxOietRh9VOev2q
+         pYA5dVmLYxjDNcSndl+DG97sD6JyDgVfjVb04Y5mfdQJp93B7fO2AAB+qa1wauBFOk
+         slOTTL9ILJUpTvPn+4G0vA4lFeC4sgWSMoQTsXdYi1l/07pXU+PRxfckJKiXKdWtIg
+         YewTkXQILglKBCJmUsdkKS7sZ8BSN0xDNnyOelWNexBVpNbxvPBlCQhoHhiaGAWxNd
+         cXAAofc9duC1OcI7E6xI8whOg+AmAjmfSHYCoDvz/5ivt857R4LHfuRii3EXZeadt6
+         dr/J5lYKOa99w==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: disable compile-test of kernel headers for now
+Date:   Fri, 19 Jul 2019 19:08:59 +0900
+Message-Id: <20190719100859.11227-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch use the optional property node "arm,malidp-arqos-value" to
-can be dynamic configure QoS signaling.
+This compile-test started from the strong belief that (almost) all
+headers should be able to be compiled as a standalone unit, but this
+requirement seems to be just annoying.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
+I believe compile-test of exported headers is good. On the other hand,
+in-kernel headers are not necessarily supposed to be always compilable.
+Actually, some headers are only included under a certain combination
+of CONFIG options, and that is definitely fine.
+
+This test is still causing false positive errors in randconfig.
+Moreover, newly added headers are compile-tested by default, sometimes
+they catch (not fatal) bugs, but often raise false positive errors to
+end up with making people upset.
+
+The merge window is closing shortly, so there is not much I can do.
+Disable it for now, and take a pause to re-think whether we should
+continue this or change the course.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 1 +
+
+ init/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..aef5b06a98d5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -554,6 +554,7 @@
- 		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
- 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
- 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-+		arm,malidp-arqos-value = <0xd000d000>;
- 
- 		port {
- 			dp0_out: endpoint {
+diff --git a/init/Kconfig b/init/Kconfig
+index 9697c6b5303c..778551a1a13c 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -111,6 +111,7 @@ config HEADER_TEST
+ config KERNEL_HEADER_TEST
+ 	bool "Compile test kernel headers"
+ 	depends on HEADER_TEST
++	depends on BROKEN	# disabled for now
+ 	help
+ 	  Headers in include/ are used to build external moduls.
+ 	  Compile test them to ensure they are self-contained, i.e.
 -- 
 2.17.1
 
