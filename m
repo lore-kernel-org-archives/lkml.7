@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CD0C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E2C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9986D206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE18206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511139;
-	bh=dxgGkTCEKN+iBBtVZ0FjeumraVHO0H3g3lPhpHsRdgY=;
+	s=default; t=1563511144;
+	bh=30mediPqSyOCVpfpiyzjkQznHDhL3K2DyXhGXN7PMk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sE2UhUFXFAOp6UeSDr9K1oyp1pzYYjoH1QgIn5GsZtQ+djzMZUUwF/B1HYoKHRMyE
-	 /e+4zzDJ8o/9XUMVvrBLLZwMM3l9YaMq9bBjvad3hIu2Pw4LdXs6MEN9hVOQs8YPwh
-	 XUNBXEgS2/oyDlTtEvy4dcHpSPG8fhOL8J4pmjVQ=
+	b=hJYKQo/Cz3Gc+t7gT7OJi2B+hFT2je5xumrK60CJSzCxzEI7o7C9YT1SihT6NUNHD
+	 WnRpwzqS9GegaNtj+UWszEQHefznbiGKrWH5n7d86nQqWmYWOSoiASe/+sNOi+qmuN
+	 tDxCIqROEw39aqL1Eqs/qe9KzMWDhFDz9mrfU5Vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387418AbfGSEi6 (ORCPT
+        id S1728466AbfGSD7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58568 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:59:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbfGSD7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:06 -0400
+        id S1727234AbfGSD67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0416821852;
-        Fri, 19 Jul 2019 03:59:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06BB62189E;
+        Fri, 19 Jul 2019 03:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508745;
-        bh=dxgGkTCEKN+iBBtVZ0FjeumraVHO0H3g3lPhpHsRdgY=;
+        s=default; t=1563508738;
+        bh=30mediPqSyOCVpfpiyzjkQznHDhL3K2DyXhGXN7PMk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gbpz9j8az8hUkJi9YaP1uKDI97fZbehtoaCe4I2q0KS33o3e3iNjI1sy/LBC7rJ+x
-         IJFwUvgqQL0tywxw+ZzuzlHrOWFCu0jAtIsokuPxjndawj+V+jQLSSXLvhyrQS24J/
-         TFl4zt5+hKADeGRYYPKYep0RLj3nSS9kGc8reOD8=
+        b=etINGHhRAVeCRbS+owWLGgTDkL8zdXTtVn9Sgw1dPCO6ER6NMat2zTjF8NjikJoPg
+         /Z8V/v0oblRVr3WDajrbAXQaKYcjHyrqdu1R5s7ibNmxBeKTE11RuKq0zwbgUEMs+E
+         GHcVJQqDHxYKeTl+EAsE7PCp+AHmBGTGCO24zWwA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Organov <sorganov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 066/171] serial: imx: fix locking in set_termios()
-Date:   Thu, 18 Jul 2019 23:54:57 -0400
-Message-Id: <20190719035643.14300-66-sashal@kernel.org>
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.2 060/171] powerpc/pseries/mobility: prevent cpu hotplug during DT update
+Date:   Thu, 18 Jul 2019 23:54:51 -0400
+Message-Id: <20190719035643.14300-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,87 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit 4e828c3e09201512be5ee162393f334321f7cf01 ]
+[ Upstream commit e59a175faa8df9d674247946f2a5a9c29c835725 ]
 
-imx_uart_set_termios() called imx_uart_rts_active(), or
-imx_uart_rts_inactive() before taking port->port.lock.
+CPU online/offline code paths are sensitive to parts of the device
+tree (various cpu node properties, cache nodes) that can be changed as
+a result of a migration.
 
-As a consequence, sport->port.mctrl that these functions modify
-could have been changed without holding port->port.lock.
+Prevent CPU hotplug while the device tree potentially is inconsistent.
 
-Moved locking of port->port.lock above the calls to fix the issue.
-
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/imx.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ arch/powerpc/platforms/pseries/mobility.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 8b752e895053..10db3e54ac9e 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -383,6 +383,7 @@ static void imx_uart_ucrs_restore(struct imx_port *sport,
- }
- #endif
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index 0c48c8964783..50e7aee3c7f3 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) 2010 IBM Corporation
+  */
  
-+/* called with port.lock taken and irqs caller dependent */
- static void imx_uart_rts_active(struct imx_port *sport, u32 *ucr2)
- {
- 	*ucr2 &= ~(UCR2_CTSC | UCR2_CTS);
-@@ -391,6 +392,7 @@ static void imx_uart_rts_active(struct imx_port *sport, u32 *ucr2)
- 	mctrl_gpio_set(sport->gpios, sport->port.mctrl);
- }
++#include <linux/cpu.h>
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
+ #include <linux/smp.h>
+@@ -335,11 +336,19 @@ void post_mobility_fixup(void)
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility activate-fw failed: %d\n", rc);
  
-+/* called with port.lock taken and irqs caller dependent */
- static void imx_uart_rts_inactive(struct imx_port *sport, u32 *ucr2)
- {
- 	*ucr2 &= ~UCR2_CTSC;
-@@ -400,6 +402,7 @@ static void imx_uart_rts_inactive(struct imx_port *sport, u32 *ucr2)
- 	mctrl_gpio_set(sport->gpios, sport->port.mctrl);
- }
- 
-+/* called with port.lock taken and irqs caller dependent */
- static void imx_uart_rts_auto(struct imx_port *sport, u32 *ucr2)
- {
- 	*ucr2 |= UCR2_CTSC;
-@@ -1549,6 +1552,16 @@ imx_uart_set_termios(struct uart_port *port, struct ktermios *termios,
- 		old_csize = CS8;
- 	}
- 
-+	del_timer_sync(&sport->timer);
-+
 +	/*
-+	 * Ask the core to calculate the divisor for us.
++	 * We don't want CPUs to go online/offline while the device
++	 * tree is being updated.
 +	 */
-+	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
-+	quot = uart_get_divisor(port, baud);
++	cpus_read_lock();
 +
-+	spin_lock_irqsave(&sport->port.lock, flags);
-+
- 	if ((termios->c_cflag & CSIZE) == CS8)
- 		ucr2 = UCR2_WS | UCR2_SRST | UCR2_IRTS;
- 	else
-@@ -1592,16 +1605,6 @@ imx_uart_set_termios(struct uart_port *port, struct ktermios *termios,
- 			ucr2 |= UCR2_PROE;
- 	}
+ 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility device tree update "
+ 			"failed: %d\n", rc);
  
--	del_timer_sync(&sport->timer);
--
--	/*
--	 * Ask the core to calculate the divisor for us.
--	 */
--	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
--	quot = uart_get_divisor(port, baud);
--
--	spin_lock_irqsave(&sport->port.lock, flags);
--
- 	sport->port.read_status_mask = 0;
- 	if (termios->c_iflag & INPCK)
- 		sport->port.read_status_mask |= (URXD_FRMERR | URXD_PRERR);
++	cpus_read_unlock();
++
+ 	/* Possibly switch to a new RFI flush type */
+ 	pseries_setup_rfi_flush();
+ 
 -- 
 2.20.1
 
