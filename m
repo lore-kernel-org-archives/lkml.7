@@ -2,127 +2,309 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DCEC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E01EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6EFB21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C5C21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f0rfqSr8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQpGXonR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfGSLLV (ORCPT
+        id S1727937AbfGSLLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:11:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46904 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbfGSLLU (ORCPT
+        Fri, 19 Jul 2019 07:11:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40570 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfGSLLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:11:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c73so14031705pfb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:11:20 -0700 (PDT)
+        Fri, 19 Jul 2019 07:11:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so14034775pfp.7;
+        Fri, 19 Jul 2019 04:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IKhuottjSxGgkbg5ejXRJ13eEQQXYdAPGmSw9/+AZpM=;
-        b=f0rfqSr8iPuQsrcdJa7bP1GKgSw6HqJLzd3G8kjOeeNfce2hkPx2LHfLaJkctQQWke
-         rwx70Ut7Mo2fXlmmQV9u6ige+fNLdxpOsqDXRtzjTQZWsKG6WabWBqJfKkcZigWGpSst
-         3BaZwFEFlTzxaIvyEgZ/WDWHbd2GqUQvW1DlF2vVaEK9lEuDUeF/sGDdDYywVkHoMZdW
-         FxmDYgLAOGpLPZFxWZnZ3jfFSuge4/HUzDzIbEi2mNUlAh0lxTWRtN953REBKy8zgGtj
-         4b8C3ElW6Z+VuHXNq7UhUc0qr/B5rp5hsUKwy6K7YH4RrpsQVrxkUuFQGZO5vzdHgdH2
-         mTRw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O3lVALk3004/9c8QKXvpNIO3VbJTjI1GT+T+VBH4okk=;
+        b=IQpGXonRCc/SMK5H+TUSTLu1RTW2yxdd2KXHjSWz/6g8RmaNNR1xzf7i81NMsQojev
+         MXATNVkI8yAjRD+lbfVjJT+8OYVHi3drKQA2rw2iVRfUDDyhP9QID+mAvZ5xcIC73KdZ
+         Ps7sjvHxFdkRAqZ7yzcjDjn6JFhn3FPNTOmTpKOgQefKM+G0jOMy3ayj3090PMi2mBnm
+         Ve09w6CTPpBmFzXnYliVg5mot9ioLvasJYpcqZyL1QnBQEWigqrXavlF7t3GHa/Xzofq
+         lNeuggWW1J42ICfRbE85Ww9EgVp6ROmbnUB/7nI2dSgEUTlDX1Vgj00v8y8+TU9WeWtb
+         wcDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IKhuottjSxGgkbg5ejXRJ13eEQQXYdAPGmSw9/+AZpM=;
-        b=SA00Guv/ecmzk98rRnAwtBnuRaSe99Qm/bcpr+n/EeE8aMh2bn8WkTLzY3roloNc6b
-         f+YrxusaQzdSfHuo6cqAS/jpkZmrKNGfMqRCvyC/s1o+SyW7uJKWk3UZm1dePuMg6qEG
-         2neJi14Wx30G7tSZkPXYKtsj01PtROYeMGzsDuBTuBqdJCQ49pu6SYcG7sFHjSTAjTeO
-         RsqQNFXeYBM1y8sCFQmP24ou04ysVddamXi5tz9mQGvkQbG4IUTnFHjVNztAX93PQD2y
-         nY7Kpm31g95tgyaDgMWMpo/6zCcGDwrry8s4c3FZmF9aZrFnWskMeWxXD8t0XQDQAzuV
-         al+Q==
-X-Gm-Message-State: APjAAAXgPUmfXVD4AYWYHm7aLhxw29FvxKc+z1rQYr3u6k1KaPBwE6Qq
-        W41Y6eaKmpoIPDoxvmN5eKPlEg==
-X-Google-Smtp-Source: APXvYqzZbKp8wDFScLKLbk1R27CUweZE7G31LV4oG/v3a7WShdgFSbpMho8p4fb5WJQzUoI3VtccEQ==
-X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr56584685pji.136.1563534680244;
-        Fri, 19 Jul 2019 04:11:20 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id i9sm10196872pgg.38.2019.07.19.04.11.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Jul 2019 04:11:19 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     davem@davemloft.net, robh+dt@kernel.org, paul.walmsley@sifive.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc:     mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu,
-        nicolas.ferre@microchip.com, ynezz@true.cz,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet controller driver
-Date:   Fri, 19 Jul 2019 16:40:31 +0530
-Message-Id: <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O3lVALk3004/9c8QKXvpNIO3VbJTjI1GT+T+VBH4okk=;
+        b=qjrpvB2kkPc2xaGWYU4Go/SSCZwjGymJGo02BphSi5Z+d1S1vDuyyCF+2tLkoOsNov
+         Yy0uwuvomRRZNgFaKqMGkkNJuixzcTk5658Oiu3irnjrMXt+24ov74Yy4daHw66MB//z
+         l42aRILUA3B0x9oRdFZTddp9WsMxY8Ryt9b/H/XELWQVstGy+vL+zNaUyb/HaMjre4cB
+         5l093hhZcQBhJKL+VT/qh5uBiN+poh3etMchwxZZ8fXL6H/4vQOY0/qxqVKHE5Doyl7V
+         PQy+JSRq1Wnh+nfpe+KG6C7AeWg0jnOndxWbMjfCTa/p7B3QjuUxnzfVu8/xp5jhMJI9
+         7ECg==
+X-Gm-Message-State: APjAAAVXsdf64QxKm0EZH3CQVktLYJkohJSUB1x8GSzBIb4JBdlyefZ/
+        adkC38gd0u7DfIorn837hFg=
+X-Google-Smtp-Source: APXvYqyypHWDfBUnyk/+KLNTw33ZdhGWZziUFWqyaioTsFqjO6DcTLQ+TVLg+nz1rBvIhxhkt8OkyA==
+X-Received: by 2002:a63:2c8:: with SMTP id 191mr52838755pgc.139.1563534709926;
+        Fri, 19 Jul 2019 04:11:49 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id o24sm59477376pfp.135.2019.07.19.04.11.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 04:11:49 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] Input: misc - Use dev_get_drvdata
+Date:   Fri, 19 Jul 2019 19:11:16 +0800
+Message-Id: <20190719111115.21310-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+dev_get_drvdata is a simpler implementation comparing
+to to_platform_device + platform_get_drvdata.
+This makes the code simpler.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 15 +++++++++++++++
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
- 2 files changed, 24 insertions(+)
+ drivers/input/misc/gpio-vibra.c       |  6 ++----
+ drivers/input/misc/max77693-haptic.c  |  6 ++----
+ drivers/input/misc/max8925_onkey.c    | 10 ++++------
+ drivers/input/misc/max8997_haptic.c   |  3 +--
+ drivers/input/misc/msm-vibrator.c     |  6 ++----
+ drivers/input/misc/palmas-pwrbutton.c |  6 ++----
+ drivers/input/misc/regulator-haptic.c |  6 ++----
+ drivers/input/misc/stpmic1_onkey.c    |  6 ++----
+ drivers/input/misc/twl4030-vibra.c    |  3 +--
+ drivers/input/misc/twl6040-vibra.c    |  3 +--
+ 10 files changed, 19 insertions(+), 36 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index cc73522..588669f0 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -231,5 +231,20 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+		eth0: ethernet@10090000 {
-+			compatible = "sifive,fu540-c000-gem";
-+			interrupt-parent = <&plic0>;
-+			interrupts = <53>;
-+			reg = <0x0 0x10090000 0x0 0x2000
-+			       0x0 0x100a0000 0x0 0x1000>;
-+			local-mac-address = [00 00 00 00 00 00];
-+			clock-names = "pclk", "hclk";
-+			clocks = <&prci PRCI_CLK_GEMGXLPLL>,
-+				 <&prci PRCI_CLK_GEMGXLPLL>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 0b55c53..85c17a7 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -76,3 +76,12 @@
- 		disable-wp;
- 	};
- };
-+
-+&eth0 {
-+	status = "okay";
-+	phy-mode = "gmii";
-+	phy-handle = <&phy1>;
-+	phy1: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+index f79f75595dd7..ad30cb5b1523 100644
+--- a/drivers/input/misc/gpio-vibra.c
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -159,8 +159,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct gpio_vibrator *vibrator = platform_get_drvdata(pdev);
++	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+ 
+ 	cancel_work_sync(&vibrator->play_work);
+ 	if (vibrator->running)
+@@ -171,8 +170,7 @@ static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
+ 
+ static int __maybe_unused gpio_vibrator_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct gpio_vibrator *vibrator = platform_get_drvdata(pdev);
++	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
+ 
+ 	if (vibrator->running)
+ 		gpio_vibrator_start(vibrator);
+diff --git a/drivers/input/misc/max77693-haptic.c b/drivers/input/misc/max77693-haptic.c
+index 0d09ffeafeea..86e1c72efda1 100644
+--- a/drivers/input/misc/max77693-haptic.c
++++ b/drivers/input/misc/max77693-haptic.c
+@@ -377,8 +377,7 @@ static int max77693_haptic_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused max77693_haptic_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct max77693_haptic *haptic = platform_get_drvdata(pdev);
++	struct max77693_haptic *haptic = dev_get_drvdata(dev);
+ 
+ 	if (haptic->enabled) {
+ 		max77693_haptic_disable(haptic);
+@@ -390,8 +389,7 @@ static int __maybe_unused max77693_haptic_suspend(struct device *dev)
+ 
+ static int __maybe_unused max77693_haptic_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct max77693_haptic *haptic = platform_get_drvdata(pdev);
++	struct max77693_haptic *haptic = dev_get_drvdata(dev);
+ 
+ 	if (haptic->suspend_state) {
+ 		max77693_haptic_enable(haptic);
+diff --git a/drivers/input/misc/max8925_onkey.c b/drivers/input/misc/max8925_onkey.c
+index 7c49b8d23894..af0ba592a0b3 100644
+--- a/drivers/input/misc/max8925_onkey.c
++++ b/drivers/input/misc/max8925_onkey.c
+@@ -135,9 +135,8 @@ static int max8925_onkey_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused max8925_onkey_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct max8925_onkey_info *info = platform_get_drvdata(pdev);
+-	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
++	struct max8925_onkey_info *info = dev_get_drvdata(dev);
++	struct max8925_chip *chip = dev_get_drvdata(dev->parent);
+ 
+ 	if (device_may_wakeup(dev)) {
+ 		chip->wakeup_flag |= 1 << info->irq[0];
+@@ -149,9 +148,8 @@ static int __maybe_unused max8925_onkey_suspend(struct device *dev)
+ 
+ static int __maybe_unused max8925_onkey_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct max8925_onkey_info *info = platform_get_drvdata(pdev);
+-	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
++	struct max8925_onkey_info *info = dev_get_drvdata(dev);
++	struct max8925_chip *chip = dev_get_drvdata(dev->parent);
+ 
+ 	if (device_may_wakeup(dev)) {
+ 		chip->wakeup_flag &= ~(1 << info->irq[0]);
+diff --git a/drivers/input/misc/max8997_haptic.c b/drivers/input/misc/max8997_haptic.c
+index 20ff087b8a44..e841b8e4b1d4 100644
+--- a/drivers/input/misc/max8997_haptic.c
++++ b/drivers/input/misc/max8997_haptic.c
+@@ -374,8 +374,7 @@ static int max8997_haptic_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused max8997_haptic_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct max8997_haptic *chip = platform_get_drvdata(pdev);
++	struct max8997_haptic *chip = dev_get_drvdata(dev);
+ 
+ 	max8997_haptic_disable(chip);
+ 
+diff --git a/drivers/input/misc/msm-vibrator.c b/drivers/input/misc/msm-vibrator.c
+index b60f1aaee705..a28974bfb64e 100644
+--- a/drivers/input/misc/msm-vibrator.c
++++ b/drivers/input/misc/msm-vibrator.c
+@@ -234,8 +234,7 @@ static int msm_vibrator_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused msm_vibrator_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
++	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
+ 
+ 	cancel_work_sync(&vibrator->worker);
+ 
+@@ -247,8 +246,7 @@ static int __maybe_unused msm_vibrator_suspend(struct device *dev)
+ 
+ static int __maybe_unused msm_vibrator_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
++	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
+ 
+ 	if (vibrator->enabled)
+ 		msm_vibrator_start(vibrator);
+diff --git a/drivers/input/misc/palmas-pwrbutton.c b/drivers/input/misc/palmas-pwrbutton.c
+index 1e1baed63929..27617868b292 100644
+--- a/drivers/input/misc/palmas-pwrbutton.c
++++ b/drivers/input/misc/palmas-pwrbutton.c
+@@ -270,8 +270,7 @@ static int palmas_pwron_remove(struct platform_device *pdev)
+  */
+ static int __maybe_unused palmas_pwron_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
++	struct palmas_pwron *pwron = dev_get_drvdata(dev);
+ 
+ 	cancel_delayed_work_sync(&pwron->input_work);
+ 
+@@ -291,8 +290,7 @@ static int __maybe_unused palmas_pwron_suspend(struct device *dev)
+  */
+ static int __maybe_unused palmas_pwron_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
++	struct palmas_pwron *pwron = dev_get_drvdata(dev);
+ 
+ 	if (device_may_wakeup(dev))
+ 		disable_irq_wake(pwron->irq);
+diff --git a/drivers/input/misc/regulator-haptic.c b/drivers/input/misc/regulator-haptic.c
+index a661e77545c5..9734374964f2 100644
+--- a/drivers/input/misc/regulator-haptic.c
++++ b/drivers/input/misc/regulator-haptic.c
+@@ -203,8 +203,7 @@ static int regulator_haptic_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused regulator_haptic_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct regulator_haptic *haptic = platform_get_drvdata(pdev);
++	struct regulator_haptic *haptic = dev_get_drvdata(dev);
+ 	int error;
+ 
+ 	error = mutex_lock_interruptible(&haptic->mutex);
+@@ -222,8 +221,7 @@ static int __maybe_unused regulator_haptic_suspend(struct device *dev)
+ 
+ static int __maybe_unused regulator_haptic_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct regulator_haptic *haptic = platform_get_drvdata(pdev);
++	struct regulator_haptic *haptic = dev_get_drvdata(dev);
+ 	unsigned int magnitude;
+ 
+ 	mutex_lock(&haptic->mutex);
+diff --git a/drivers/input/misc/stpmic1_onkey.c b/drivers/input/misc/stpmic1_onkey.c
+index 7b49c9997df7..ff4761540539 100644
+--- a/drivers/input/misc/stpmic1_onkey.c
++++ b/drivers/input/misc/stpmic1_onkey.c
+@@ -150,8 +150,7 @@ static int stpmic1_onkey_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused stpmic1_onkey_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
++	struct stpmic1_onkey *onkey = dev_get_drvdata(dev);
+ 
+ 	if (device_may_wakeup(dev)) {
+ 		enable_irq_wake(onkey->irq_falling);
+@@ -162,8 +161,7 @@ static int __maybe_unused stpmic1_onkey_suspend(struct device *dev)
+ 
+ static int __maybe_unused stpmic1_onkey_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
++	struct stpmic1_onkey *onkey = dev_get_drvdata(dev);
+ 
+ 	if (device_may_wakeup(dev)) {
+ 		disable_irq_wake(onkey->irq_falling);
+diff --git a/drivers/input/misc/twl4030-vibra.c b/drivers/input/misc/twl4030-vibra.c
+index e0ff616fb857..f7ef67997863 100644
+--- a/drivers/input/misc/twl4030-vibra.c
++++ b/drivers/input/misc/twl4030-vibra.c
+@@ -145,8 +145,7 @@ static void twl4030_vibra_close(struct input_dev *input)
+ /*** Module ***/
+ static int __maybe_unused twl4030_vibra_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct vibra_info *info = platform_get_drvdata(pdev);
++	struct vibra_info *info = dev_get_drvdata(dev);
+ 
+ 	if (info->enabled)
+ 		vibra_disable(info);
+diff --git a/drivers/input/misc/twl6040-vibra.c b/drivers/input/misc/twl6040-vibra.c
+index 93235a007d07..900be3420967 100644
+--- a/drivers/input/misc/twl6040-vibra.c
++++ b/drivers/input/misc/twl6040-vibra.c
+@@ -212,8 +212,7 @@ static void twl6040_vibra_close(struct input_dev *input)
+ 
+ static int __maybe_unused twl6040_vibra_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct vibra_info *info = platform_get_drvdata(pdev);
++	struct vibra_info *info = dev_get_drvdata(dev);
+ 
+ 	cancel_work_sync(&info->play_work);
+ 
 -- 
-1.9.1
+2.20.1
 
