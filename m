@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E162C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92F4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782A02077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECEB2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511107;
-	bh=dFjx6SYhIGvhPMZ2Z3/ULBmQ8XVIK4WXF63iZ1aAseE=;
+	s=default; t=1563511110;
+	bh=IgqLmc9gab5vB2kgwbuIUQkckeqHIN4ozj7XkneYH2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=umlxqI8wP3VqY7GN6DmkFoP73WCGnUpyKcKn6PyjTps3j22TkYRe+RdKG4Ae3HMSE
-	 ABK1xwjYBEZFXSNCf7vtEFKiyMUBb9oyUBIz6BEluvh4boXBcaUcFqrWAH2438M1w6
-	 KB7rS8fiEY8kyHVmKC4Q7Vf8bTn3E/8p8pYgd72U=
+	b=JRQk0tgRKEuV3Krc9XtDHwDOvyBwwEJzyk1u+hEk2KpLeTwNJX1hT8UsAwdZkMz5f
+	 IaqEB7gXXCQrf8KNO/ZTsM8lVWumvEkTiVtxp9TDw013y/Y63pPybtDTwBqgpi0BZf
+	 l8VOQwR4tS2sM91RHbzLWI4USKSRuWxYCAQf0rf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbfGSD7U (ORCPT
+        id S1728613AbfGSD7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58690 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbfGSD7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:12 -0400
+        id S1728536AbfGSD7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0D521852;
-        Fri, 19 Jul 2019 03:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3AA921851;
+        Fri, 19 Jul 2019 03:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508751;
-        bh=dFjx6SYhIGvhPMZ2Z3/ULBmQ8XVIK4WXF63iZ1aAseE=;
+        s=default; t=1563508750;
+        bh=IgqLmc9gab5vB2kgwbuIUQkckeqHIN4ozj7XkneYH2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldJgndeEqQceHXqubdb0VMYL8C4fNPgED5qfxzfjUZvTe2V3T+Jgd8IdbdKUtVbvR
-         hAT1hTIIYZFKvM7uh/RLqIgbCFmaNfJCwxgmKjEbP4A+Vpyemde0hGaXUFZMLZXGBk
-         C2+o1nImY7l4F/vubzuT8b5Opj+Fvmdzd6r1OVmw=
+        b=BgcXDqXfRY8R85dPekvsMWFBRXe1oxhHqyjg1ldzAYxhM49C6PPcDSHGuFa7yld+Y
+         yYh9YOqNISmUebB78uNWrf4UPbwN2L53hQ8z0O5C3xRSk55cU33pKir6jfy5jIs+5+
+         iAHjOZ3T1pjQWQvhqSk3/aJag4GrTIuaWINQYKs4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 070/171] usb: dwc3: Fix core validation in probe, move after clocks are enabled
-Date:   Thu, 18 Jul 2019 23:55:01 -0400
-Message-Id: <20190719035643.14300-70-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 069/171] usb: gadget: Zero ffs_io_data
+Date:   Thu, 18 Jul 2019 23:55:00 -0400
+Message-Id: <20190719035643.14300-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,70 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 
-[ Upstream commit dc1b5d9aed1794b5a1c6b0da46e372cc09974cbc ]
+[ Upstream commit 508595515f4bcfe36246e4a565cf280937aeaade ]
 
-The required clocks needs to be enabled before the first register
-access. After commit fe8abf332b8f ("usb: dwc3: support clocks and resets
-for DWC3 core"), this happens when the dwc3_core_is_valid function is
-called, but the mentioned commit adds that call in the wrong place,
-before the clocks are enabled. So, move that call after the
-clk_bulk_enable() to ensure the clocks are enabled and the reset
-deasserted.
+In some cases the "Allocate & copy" block in ffs_epfile_io() is not
+executed. Consequently, in such a case ffs_alloc_buffer() is never called
+and struct ffs_io_data is not initialized properly. This in turn leads to
+problems when ffs_free_buffer() is called at the end of ffs_epfile_io().
 
-I detected this while, as experiment, I tried to move the clocks and resets
-from the glue layer to the DWC3 core on a Samsung Chromebook Plus.
+This patch uses kzalloc() instead of kmalloc() in the aio case and memset()
+in non-aio case to properly initialize struct ffs_io_data.
 
-That was not detected before because, in most cases, the glue layer
-initializes SoC-specific things and then populates the child "snps,dwc3"
-with those clocks already enabled.
-
-Fixes: b873e2d0ea1ef ("usb: dwc3: Do core validation early on probe")
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 4aff1d8dbc4f..6e9e172010fc 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1423,11 +1423,6 @@ static int dwc3_probe(struct platform_device *pdev)
- 	dwc->regs	= regs;
- 	dwc->regs_size	= resource_size(&dwc_res);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index c7ed90084d1a..213ff03c8a9f 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1183,11 +1183,12 @@ static ssize_t ffs_epfile_write_iter(struct kiocb *kiocb, struct iov_iter *from)
+ 	ENTER();
  
--	if (!dwc3_core_is_valid(dwc)) {
--		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
--		return -ENODEV;
--	}
--
- 	dwc3_get_properties(dwc);
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
  
- 	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
-@@ -1460,6 +1455,12 @@ static int dwc3_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto unprepare_clks;
+@@ -1219,11 +1220,12 @@ static ssize_t ffs_epfile_read_iter(struct kiocb *kiocb, struct iov_iter *to)
+ 	ENTER();
  
-+	if (!dwc3_core_is_valid(dwc)) {
-+		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
-+		ret = -ENODEV;
-+		goto disable_clks;
-+	}
-+
- 	platform_set_drvdata(pdev, dwc);
- 	dwc3_cache_hwparams(dwc);
+ 	if (!is_sync_kiocb(kiocb)) {
+-		p = kmalloc(sizeof(io_data), GFP_KERNEL);
++		p = kzalloc(sizeof(io_data), GFP_KERNEL);
+ 		if (unlikely(!p))
+ 			return -ENOMEM;
+ 		p->aio = true;
+ 	} else {
++		memset(p, 0, sizeof(*p));
+ 		p->aio = false;
+ 	}
  
-@@ -1525,6 +1526,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 
-+disable_clks:
- 	clk_bulk_disable(dwc->num_clks, dwc->clks);
- unprepare_clks:
- 	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
 -- 
 2.20.1
 
