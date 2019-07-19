@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D52C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314A4C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B2B218D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0261B218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509577;
-	bh=jNIFKjZHxKkIsndmhUja/7mPzA7vtoEBNyrYHMQ5Zgw=;
+	s=default; t=1563509581;
+	bh=o2CmxtnO3fr6rs0CJpzZuz1kwev2BrwHqvGqigfTsNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=goFJrGwPxLsb/x1Z6f9M4yMHPhTqwaLq47aOHKXwejMF7JeOEm8FqfVMm0Nw1VQsr
-	 eXVt6TJ5N57N5GLHomMZjQkOtWA2KblOyF3jxI73YApEjtkycqWsPrDjgaxfBLLO0R
-	 a1Y/WoVHQlYqdZMazAhnqiKt549sYOYfhaopgDPc=
+	b=hcXsbmcESQkwZxzlzo8x0iH6TyxhXy+2PyyTtIOcej/GKeJQx4XCcHdvo0xYVn3Iy
+	 M7fyTvOtVmoxbxtPaTfnyU22NIa1o5moMKuQNC/k2fB6HtsusDZ0EVNavsaxHdMmDP
+	 sX7zi1hYxooKs5NNO2GQ+VFD9lxMGklNabncRe6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388305AbfGSEM4 (ORCPT
+        id S1732014AbfGSEM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:12:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387639AbfGSEMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:48 -0400
+        id S2388017AbfGSEM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFB1218D1;
-        Fri, 19 Jul 2019 04:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43831218C3;
+        Fri, 19 Jul 2019 04:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509568;
-        bh=jNIFKjZHxKkIsndmhUja/7mPzA7vtoEBNyrYHMQ5Zgw=;
+        s=default; t=1563509576;
+        bh=o2CmxtnO3fr6rs0CJpzZuz1kwev2BrwHqvGqigfTsNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMrKOoGkHzvyhwFyRNZtHS9PPLiLOQZOUFJb0rB9itk8oul3UdIYdxzWQmTTM9sr7
-         fXi7XfhOw32lF81SXQj0h/Feokk5ULfsUUr1wtcbaAFJ0buCxRfqNlaRFRHoYaC3no
-         13so0BtoNosAdeOE+dMIOcjki3GXRlHfXca0iFkk=
+        b=n2m5ud1rRGw/B01/Jxmb91tPTdEeJUBwfYd0ae3btN2dY4TA6rG/WVdudRv9mfrwy
+         itj3E7Vl4FTC5r0d46UwsSbBkS8lRZnbHIlOby2N0j0mpc/PtE/VGxY54C7wCaK6bc
+         pKERvNs+VBerZIlwU+5zpcKbdxdAainAR4bwBz7Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Ming Lei <ming.lei@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 53/60] block/bio-integrity: fix a memory leak bug
-Date:   Fri, 19 Jul 2019 00:11:02 -0400
-Message-Id: <20190719041109.18262-53-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 57/60] mm/gup.c: mark undo_dev_pagemap as __maybe_unused
+Date:   Fri, 19 Jul 2019 00:11:06 -0400
+Message-Id: <20190719041109.18262-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -60,50 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit e7bf90e5afe3aa1d1282c1635a49e17a32c4ecec ]
+[ Upstream commit 790c73690c2bbecb3f6f8becbdb11ddc9bcff8cc ]
 
-In bio_integrity_prep(), a kernel buffer is allocated through kmalloc() to
-hold integrity metadata. Later on, the buffer will be attached to the bio
-structure through bio_integrity_add_page(), which returns the number of
-bytes of integrity metadata attached. Due to unexpected situations,
-bio_integrity_add_page() may return 0. As a result, bio_integrity_prep()
-needs to be terminated with 'false' returned to indicate this error.
-However, the allocated kernel buffer is not freed on this execution path,
-leading to a memory leak.
+Several mips builds generate the following build warning.
 
-To fix this issue, free the allocated buffer before returning from
-bio_integrity_prep().
+  mm/gup.c:1788:13: warning: 'undo_dev_pagemap' defined but not used
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The function is declared unconditionally but only called from behind
+various ifdefs. Mark it __maybe_unused.
+
+Link: http://lkml.kernel.org/r/1562072523-22311-1-git-send-email-linux@roeck-us.net
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 5df32907ff3b..7f8010662437 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -313,8 +313,12 @@ bool bio_integrity_prep(struct bio *bio)
- 		ret = bio_integrity_add_page(bio, virt_to_page(buf),
- 					     bytes, offset);
+diff --git a/mm/gup.c b/mm/gup.c
+index babcbd6d99c3..cee599d1692c 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1364,7 +1364,8 @@ static inline pte_t gup_get_pte(pte_t *ptep)
+ }
+ #endif
  
--		if (ret == 0)
--			return false;
-+		if (ret == 0) {
-+			printk(KERN_ERR "could not attach integrity payload\n");
-+			kfree(buf);
-+			status = BLK_STS_RESOURCE;
-+			goto err_end_io;
-+		}
- 
- 		if (ret < bytes)
- 			break;
+-static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
++static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
++					    struct page **pages)
+ {
+ 	while ((*nr) - nr_start) {
+ 		struct page *page = pages[--(*nr)];
 -- 
 2.20.1
 
