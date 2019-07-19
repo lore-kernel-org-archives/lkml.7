@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050AAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81899C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02D521852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5244D21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509024;
-	bh=7OBpNW6fw6h4L5GKaYIP4jZJ0LWGJFEfN2seOjgzGSQ=;
+	s=default; t=1563509027;
+	bh=z+8JcC18Jtyh8uyT6UA2/SC24y/hq7VVcY9YA+weTuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wvXYBtRrRyKJedVCTcyU7DxYLDApS7Zt5gz53CZ8Sm0gHfjTJX4GVcoT8TuLQtYss
-	 e+If+v32N83+3+/1jdQlB9uzSgmtnR0YOWQzkPjF2xcBgzd6Pj2jTXkFkQQEekd8bP
-	 R+QWARiUt6sLNYX3lRaTH8TQItlAAv8J3E8a7EiE=
+	b=MdWuox8m00BGazkieJMQhM2JRKS5qFCSCEzYXbIWlQ2aq0j/dxkr50x9pkLRCuTY+
+	 SuQTCSIXfu+24P7FqGgEitdlkIwtahDcyIe0j6qMrFZ5G2+lU40SdQYjrXuOJm+5jd
+	 QcL0ap1TOvFdmujOP9ZyIImbcoytbi6zaAY5qjkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbfGSEDn (ORCPT
+        id S1730657AbfGSEDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730558AbfGSEDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:03:38 -0400
+        id S1730614AbfGSEDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4021D218BC;
-        Fri, 19 Jul 2019 04:03:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68EAC21852;
+        Fri, 19 Jul 2019 04:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509017;
-        bh=7OBpNW6fw6h4L5GKaYIP4jZJ0LWGJFEfN2seOjgzGSQ=;
+        s=default; t=1563509022;
+        bh=z+8JcC18Jtyh8uyT6UA2/SC24y/hq7VVcY9YA+weTuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6QkSgIv/6Mm+9ckalQ6eWkgFEdnffkNcSPPnW98bShLIHfCQN8v4087fTSFzMAYf
-         nkQXPnKtJ0G3wqJP0cVgGP9EGzp/3mO7qVh4HlSwMK2boq3cczvKM2POkPuZ/tBhrk
-         BTiJUpLnQpmYatWqfy9hB22j1dUg5dHzXz0aqwQQ=
+        b=INrLGGr2tGkPMzWCVfW7IZQSnJU5FvkBcFX9Nte5umu6BFp+VEIN2YQGAz8wO7cgv
+         ePq7jHIb6y/cKRpuje6CSfISwfmptNgxsQM+1c5+8yU8hTPoOIPsWcWBBMS/GtFJNy
+         6XywLBdArfldITTMQ3+ljyFF5Z6owR05i8aNZlVo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 024/141] drm/bridge: tc358767: read display_props in get_modes()
-Date:   Fri, 19 Jul 2019 00:00:49 -0400
-Message-Id: <20190719040246.15945-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 026/141] drm/amd/display: CS_TFM_1D only applied post EOTF
+Date:   Fri, 19 Jul 2019 00:00:51 -0400
+Message-Id: <20190719040246.15945-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,44 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
 
-[ Upstream commit 3231573065ad4f4ecc5c9147b24f29f846dc0c2f ]
+[ Upstream commit 6ad34adeaec5b56a5ba90e90099cabf1c1fe9dd2 ]
 
-We need to know the link bandwidth to filter out modes we cannot
-support, so we need to have read the display props before doing the
-filtering.
+[Why]
+There's some unnecessary mem allocation for CS_TFM_ID. What's worse, it
+depends on LUT size and since it's 4K for CS_TFM_1D, it is 16x bigger
+than in regular case when it's actually needed. This leads to some
+crashes in stress conditions.
 
-To ensure we have up to date display props, call tc_get_display_props()
-in the beginning of tc_connector_get_modes().
+[How]
+Skip ramp combining designed for RGB256 and DXGI gamma with CS_TFM_1D.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190528082747.3631-22-tomi.valkeinen@ti.com
+Signed-off-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358767.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 888980d4bc74..7e1ff2723636 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -1150,6 +1150,13 @@ static int tc_connector_get_modes(struct drm_connector *connector)
- 	struct tc_data *tc = connector_to_tc(connector);
- 	struct edid *edid;
- 	unsigned int count;
-+	int ret;
-+
-+	ret = tc_get_display_props(tc);
-+	if (ret < 0) {
-+		dev_err(tc->dev, "failed to read display props: %d\n", ret);
-+		return 0;
-+	}
+diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+index a1055413bade..31f867bb5afe 100644
+--- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
++++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+@@ -1564,7 +1564,8 @@ bool mod_color_calculate_regamma_params(struct dc_transfer_func *output_tf,
  
- 	if (tc->panel && tc->panel->funcs && tc->panel->funcs->get_modes) {
- 		count = tc->panel->funcs->get_modes(tc->panel);
+ 	output_tf->type = TF_TYPE_DISTRIBUTED_POINTS;
+ 
+-	if (ramp && (mapUserRamp || ramp->type != GAMMA_RGB_256)) {
++	if (ramp && ramp->type != GAMMA_CS_TFM_1D &&
++			(mapUserRamp || ramp->type != GAMMA_RGB_256)) {
+ 		rgb_user = kvcalloc(ramp->num_entries + _EXTRA_POINTS,
+ 			    sizeof(*rgb_user),
+ 			    GFP_KERNEL);
 -- 
 2.20.1
 
