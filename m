@@ -2,25 +2,26 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B197BC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566CAC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949E321849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC2921873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732198AbfGSSq4 (ORCPT
+        id S1732289AbfGSSrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 14:46:56 -0400
-Received: from 8bytes.org ([81.169.241.247]:36096 "EHLO theia.8bytes.org"
+        Fri, 19 Jul 2019 14:47:06 -0400
+Received: from 8bytes.org ([81.169.241.247]:36132 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727618AbfGSSq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730132AbfGSSq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jul 2019 14:46:56 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7592122E; Fri, 19 Jul 2019 20:46:54 +0200 (CEST)
+        id B973B273; Fri, 19 Jul 2019 20:46:54 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -29,58 +30,74 @@ To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH 0/3 v3] Sync unmappings in vmalloc/ioremap areas
-Date:   Fri, 19 Jul 2019 20:46:49 +0200
-Message-Id: <20190719184652.11391-1-joro@8bytes.org>
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 2/3] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Fri, 19 Jul 2019 20:46:51 +0200
+Message-Id: <20190719184652.11391-3-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190719184652.11391-1-joro@8bytes.org>
+References: <20190719184652.11391-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Joerg Roedel <jroedel@suse.de>
 
-here is a small patch-set to sync unmappings in the
-vmalloc/ioremap areas between page-tables in the system.
+With huge-page ioremap areas the unmappings also need to be
+synced between all page-tables. Otherwise it can cause data
+corruption when a region is unmapped and later re-used.
 
-This is only needed x86-32 with !SHARED_KERNEL_PMD, which is
-the case on a PAE kernel with PTI enabled.
+Make the vmalloc_sync_one() function ready to sync
+unmappings and make sure vmalloc_sync_all() iterates over
+all page-tables even when an unmapped PMD is found.
 
-On affected systems the missing sync causes old mappings to
-persist in some page-tables, causing data corruption and
-other undefined behavior.
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/mm/fault.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-Please review.
-
-Thanks,
-
-	Joerg
-
-Changes v2 -> v3:
-
-	- Moved the vmalloc_sync_all() call to the lazy vmap
-	  purge function as requested by Andy Lutomirski
-
-	- Made sure that the code in vmalloc_sync_all()
-	  really iterates over all pgds (pointed out by
-	  Thomas Gleixner)
-
-	- Added a couple of comments
-
-Changes v1 -> v2:
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index d69f4e4d6918..8807916c712d 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -177,11 +177,12 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
  
-	- Added correct Fixes-tags to all patches
-
-Joerg Roedel (3):
-  x86/mm: Check for pfn instead of page in vmalloc_sync_one()
-  x86/mm: Sync also unmappings in vmalloc_sync_all()
-  mm/vmalloc: Sync unmappings in vunmap_page_range()
-
- arch/x86/mm/fault.c | 15 ++++++---------
- mm/vmalloc.c        |  9 +++++++++
- 2 files changed, 15 insertions(+), 9 deletions(-)
-
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
+ 
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
++
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+ 
+@@ -203,17 +204,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
+ 
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
 -- 
 2.17.1
 
