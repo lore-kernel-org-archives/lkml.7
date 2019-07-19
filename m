@@ -2,179 +2,118 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94831C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBCDC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E63B20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510541;
-	bh=O87zy82aO1OSJVRVphDIdiurfrsMV1lTbejE5XZuTr8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ROCl/9Pju0bOg78oVjF3lXWnAAmYXTUChG/4AFdnmUeHRpx7KkuhkFbGhp9vSm/Wq
-	 +CsOezWy/GQFR3yihIEheJ6oegfeuiCrMFHhOhOC4kOU9F5mjl7/0/6fFf64PKCN/Y
-	 Vx4qL4jJPoCg+V/6ATJjBetQFojQOU4ycQm2dod4=
+	by mail.kernel.org (Postfix) with ESMTP id 7826E2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CA7z7nXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfGSEGL (ORCPT
+        id S2388408AbfGSE3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732001AbfGSEGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:08 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE1B218D8;
-        Fri, 19 Jul 2019 04:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509166;
-        bh=O87zy82aO1OSJVRVphDIdiurfrsMV1lTbejE5XZuTr8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QpESqIrGOKEGSQ1D3E8ZQtpFlU1tkz8Tym6dKZVgUTOulXMoufNh1HfygZMEk92xL
-         MrmguHcMsuft0mEmHWWwAGooI8rxVV5IrCZ/PXw2Zgv/3RBhQkIkm+EDU6T15M1Kmb
-         uDk6mBVnlaUKegqHENpULlDMU5tzl3EGkjnrBpUU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Song Liu <songliubraving@fb.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 102/141] perf annotate: Fix dereferencing freed memory found by the smatch tool
-Date:   Fri, 19 Jul 2019 00:02:07 -0400
-Message-Id: <20190719040246.15945-102-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
-References: <20190719040246.15945-1-sashal@kernel.org>
+        Fri, 19 Jul 2019 00:29:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48560 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730095AbfGSEFx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8rZP02MbRSBBbscvbeC9+WMvkdTaXb3OCI4XMXn4kxA=; b=CA7z7nXmYMd0B49HXCCyEP4B2t
+        Tsl9LivcM+GTdLImucd8KdWVRv1OHB8+n+xmMbRNPPggzXoAK2bNPnVYKW+Yc+lxgrIHH2aL9JCni
+        BYBpRaNV2HDW7Nfy6iSFkXk5oPJIJlOWALCCSzVZHEqXyVKmM8snhfilDtGFNpm0MY9AvDADPvyrn
+        Hj5x9wwunkCmcUs2T+CwfiegCG71vpcJ+Pgs2pwOeA7il1P6Gn5jsEh3ccJqC553xVMKH6zn20qI+
+        JzAPDrGfG9uc4bkEZs9ST6VxzVLjkRsTZlxSjzLqVIAMuT8xpzGlhmmxoBkLcqYtE3LSWRT1NHD+0
+        tEDGckeg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoK9V-0002w4-38; Fri, 19 Jul 2019 04:05:49 +0000
+Subject: Re: [PATCH] Input: applespi: Fix build error without CONFIG_PCI
+To:     "Life is hard, and then you die" <ronald@innovation.ch>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     dmitry.torokhov@gmail.com, hsweeten@visionengravers.com,
+        robh@kernel.org, arnd@arndb.de, andriy.shevchenko@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <20190718020654.39860-1-yuehaibing@huawei.com>
+ <20190718114036.GA2872@innovation.ch>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6a7111e2-3347-11fa-58d9-11d337a91c42@infradead.org>
+Date:   Thu, 18 Jul 2019 21:05:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190718114036.GA2872@innovation.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+On 7/18/19 4:40 AM, Life is hard, and then you die wrote:
+> 
+> On Thu, Jul 18, 2019 at 10:06:54AM +0800, YueHaibing wrote:
+>> If CONFIG_KEYBOARD_APPLESPI is set to y, but
+>> CONFIG_PCI is not set, building will fails:
+>>
+>> drivers/spi/spi-pxa2xx-pci.c: In function pxa2xx_spi_pci_probe:
+>> drivers/spi/spi-pxa2xx-pci.c:208:8: error: implicit declaration of function pcim_enable_device;
+>>  did you mean pci_enable_device? [-Werror=implicit-function-declaration]
+>>   ret = pcim_enable_device(dev);
+>>         ^~~~~~~~~~~~~~~~~~
+>>         pci_enable_device
+>> drivers/spi/spi-pxa2xx-pci.c:239:8: error: implicit declaration of function pci_alloc_irq_vectors;
+>>  did you mean pci_alloc_consistent? [-Werror=implicit-function-declaration]
+>>   ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_ALL_TYPES);
+>>         ^~~~~~~~~~~~~~~~~~~~~
+>>
+>> Make CONFIG_KEYBOARD_APPLESPI depends on CONFIG_PCI
+>> to fix this.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: b426ac045209 ("Input: add Apple SPI keyboard and trackpad driver")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/input/keyboard/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+>> index dd934c4..fefcc46 100644
+>> --- a/drivers/input/keyboard/Kconfig
+>> +++ b/drivers/input/keyboard/Kconfig
+>> @@ -74,7 +74,7 @@ config ATARI_KBD_CORE
+>>  config KEYBOARD_APPLESPI
+>>  	tristate "Apple SPI keyboard and trackpad"
+>>  	depends on ACPI && EFI
+>> -	depends on SPI
+>> +	depends on SPI && PCI
+>>  	depends on X86 || COMPILE_TEST
+>>  	imply SPI_PXA2XX
+>>  	imply SPI_PXA2XX_PCI
+>> -- 
+>> 2.7.4
+> 
+> I think this is more properly fixed by Dmitry's suggestion of making
+> SPI_PXA2XX_PCI depend on PCI, since it's that module, not applespi,
+> that actually needs PCI - see
+> https://www.spinics.net/lists/linux-input/msg62351.html
 
-[ Upstream commit 600c787dbf6521d8d07ee717ab7606d5070103ea ]
+Dmitry's patch works for my failing test case.
 
-Based on the following report from Smatch, fix the potential
-dereferencing freed memory check.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-  tools/perf/util/annotate.c:1125
-  disasm_line__parse() error: dereferencing freed memory 'namep'
+Thanks.
 
-  tools/perf/util/annotate.c
-  1100 static int disasm_line__parse(char *line, const char **namep, char **rawp)
-  1101 {
-  1102         char tmp, *name = ltrim(line);
-
-  [...]
-
-  1114         *namep = strdup(name);
-  1115
-  1116         if (*namep == NULL)
-  1117                 goto out_free_name;
-
-  [...]
-
-  1124 out_free_name:
-  1125         free((void *)namep);
-                            ^^^^^
-  1126         *namep = NULL;
-               ^^^^^^
-  1127         return -1;
-  1128 }
-
-If strdup() fails to allocate memory space for *namep, we don't need to
-free memory with pointer 'namep', which is resident in data structure
-disasm_line::ins::name; and *namep is NULL pointer for this failure, so
-it's pointless to assign NULL to *namep again.
-
-Committer note:
-
-Freeing namep, which is the address of the first entry of the 'struct
-ins' that is the first member of struct disasm_line would in fact free
-that disasm_line instance, if it was allocated via malloc/calloc, which,
-later, would a dereference of freed memory.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190702103420.27540-5-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/annotate.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 09762985c713..b56282041f41 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1115,16 +1115,14 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- 	*namep = strdup(name);
- 
- 	if (*namep == NULL)
--		goto out_free_name;
-+		goto out;
- 
- 	(*rawp)[0] = tmp;
- 	*rawp = ltrim(*rawp);
- 
- 	return 0;
- 
--out_free_name:
--	free((void *)namep);
--	*namep = NULL;
-+out:
- 	return -1;
- }
- 
 -- 
-2.20.1
-
+~Randy
