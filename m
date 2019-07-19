@@ -2,142 +2,195 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF17C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B535C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E143521855
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CEB21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4boiRN5E"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/TRN1HU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbfGSOBs (ORCPT
+        id S1729022AbfGSOC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 10:01:48 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37576 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfGSOBs (ORCPT
+        Fri, 19 Jul 2019 10:02:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35810 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfGSOC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:01:48 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JDn8n3038121;
-        Fri, 19 Jul 2019 14:01:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=X6wMOR1hKPNrM0QQ+tB1C00yfQWcVs6T/NvRGy8Eo0w=;
- b=4boiRN5EskaJGCZJZwbA5uooIUSUUYV0YaFnXGMZULf6c7WkT3yDfe6rFKqghS7OijA9
- hJs3ENN8rCoFFjArc6DQSVIGYYPTnOAod6otGZF0Yifu2m0Ax5E7xxFf4cVmQuY6V+9f
- 6T3o8KH+FfcpNzQ7xKwkvWNwhlJuq57xfPx91TRYpHx/9xL/YOxluszGLh7n+AOv6t74
- uG9Ae8Er1cWeTuH4QMRWi1/GmentqGJYi1WvjmDCLpGwKSh+39zsG7nB3xtOi7xyEweN
- hmsEjLYcLLzrGx0p6z+ZEu810DCpKJAHPJxp86spUx3eQySaag4uY4aeHszSSCTb6eQP hA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tq78q6vq0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 14:01:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JDmHrb189259;
-        Fri, 19 Jul 2019 14:01:41 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tsmcdm420-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 14:01:41 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6JE1eFI008791;
-        Fri, 19 Jul 2019 14:01:40 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Jul 2019 14:01:39 +0000
-Date:   Fri, 19 Jul 2019 17:01:33 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ajay.Kathat@microchip.com
-Cc:     hslester96@gmail.com, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adham.Abozaeid@microchip.com
-Subject: Re: [PATCH] staging: wilc1000: Merge memcpy + le32_to_cpus to
- get_unaligned_le32
-Message-ID: <20190719140133.GH3111@kadam>
-References: <20190719081005.4598-1-hslester96@gmail.com>
- <8c14743d-efe1-3e3a-0419-bde22f848751@microchip.com>
- <CANhBUQ3knUV44GiaB-xZMD8F6y8dcZQdznSmpk3E9ZKoakkBRQ@mail.gmail.com>
- <82dc6d2e-5f62-b2c7-296a-38f781628ec5@microchip.com>
+        Fri, 19 Jul 2019 10:02:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id p197so21808482lfa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 07:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6EWjwfzPupLhNJ5UOgN7tpI5oc+mAJ5lVVKDhUsK6fY=;
+        b=a/TRN1HUuWzEPMUOSfGnAklAOgkYnpaUTyWpI2s26jaaLKZ41flYjTB4a0iM7z5LiI
+         QYRrcpDd/nCvytcEt+q70saM9LRdGjnt86kveGIaZx/H8i+DJPoAsZVT+Gk2u/mpu0fW
+         dxDkNvOF6I3wy9kzj+RrvxHoys4Z6Du53RLcbK9XYFpf0Y8/TCmsml+7zM4Gd/BvHuf/
+         kYPkpo/VSTI5M8qYK+5llL+O7wH0Q3SAdt3xHYUU9OR10Ip4C7FQ+8fahqFlTDlEYoK2
+         VY5Eh0PIkktnZzFOTU6syfloORugABIiRy7SURP8h4TBzj6yDvpSvRv1aJ3g2FTWVkOi
+         lwXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6EWjwfzPupLhNJ5UOgN7tpI5oc+mAJ5lVVKDhUsK6fY=;
+        b=tOGCQi2H2okmP3MekLeuWRS+HZI6V2fl7L9TJJRJkFzQKOiLxUu/q76Hu106pTbbRl
+         PL+aPOotyNAJCUAY4XDg3YVu+wt6yhyv0QvrrQixEmr4Bivf2E7X1K97/6EUw4hF3W9K
+         8omtjSkRrc1ewYMEu0rJmenZBwZd4tvqz6LV1NaA3cWcs08b3m04dhU77YQvkoRuvy+g
+         MUg85yFYWbTn3crVFiGAxElenec+9DgLG1NGIP8lV8nGM7t2xb+DopVJjhM/4g3cqe+6
+         I6ZIgfWPSIM0fbALuK2LZCh0FYsd1JVJ+boeda7gJp7Wj5TXHWj458j+RD49mDQOaDLX
+         HamQ==
+X-Gm-Message-State: APjAAAVAv7woEvcWAkiQ4cSybKqtQ0OWI1B+AeV2gwqwaknciH+JE9t2
+        5BVjGMcTvERiZmlNMZq+jjSSIAO6E4OrJOh2hpebTQ==
+X-Google-Smtp-Source: APXvYqy3N/Q1XNv2LXoYGfvPXRCjHd2p5BFJX8BloUL5zkcFf6DHxUZes6CeGlqt3kKufqu175e/8dTBCWwmJemlGB8=
+X-Received: by 2002:ac2:418f:: with SMTP id z15mr22943139lfh.177.1563544946467;
+ Fri, 19 Jul 2019 07:02:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82dc6d2e-5f62-b2c7-296a-38f781628ec5@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907190158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907190158
+References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
+ <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org> <20190719125443.GJ3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190719125443.GJ3419@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 19 Jul 2019 16:02:15 +0200
+Message-ID: <CAKfTPtBrogvg8Km1O9QOh=hoLM8g5Oc8gUKRoMmHpM54nueijw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Phil Auld <pauld@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 12:05:07PM +0000, Ajay.Kathat@microchip.com wrote:
-> 
-> On 7/19/2019 5:16 PM, Chuhong Yuan wrote:
-> > 
-> > <Ajay.Kathat@microchip.com> 于2019年7月19日周五 下午7:34写道：
-> >>
-> >> On 7/19/2019 1:40 PM, Chuhong Yuan wrote:
-> >>>
-> >>> Merge the combo use of memcpy and le32_to_cpus.
-> >>> Use get_unaligned_le32 instead.
-> >>> This simplifies the code.
-> >>>
-> >>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> >>> ---
-> >>>  drivers/staging/wilc1000/wilc_wfi_cfgoperations.c | 3 +--
-> >>>  1 file changed, 1 insertion(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-> >>> index d72fdd333050..12fb4add05ec 100644
-> >>> --- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-> >>> +++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-> >>> @@ -1038,8 +1038,7 @@ void wilc_wfi_p2p_rx(struct wilc_vif *vif, u8 *buff, u32 size)
-> >>>       s32 freq;
-> >>>       __le16 fc;
-> >>>
-> >>> -     memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
-> >>> -     le32_to_cpus(&header);
-> >>> +     header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
-> >>>       pkt_offset = GET_PKT_OFFSET(header);
-> >>>
-> >>>       if (pkt_offset & IS_MANAGMEMENT_CALLBACK) {
-> >>>
-> >>
-> >> Thanks for sending the patches.
-> >>
-> >> The code change looks okay to me. Just a minor comment, avoid the use of
-> >> same subject line for different patches.
-> > 
-> > These two patches are in the same subsystem and solve the same problem.
-> > I splitted them into two patches by mistake since I did not notice the problems
-> > in the second patch when I sent the first one.
-> > Should I merge the two patches and resend?
-> > 
-> 
-> Yes, please go ahead, merge the patches and send the updated version.
-> 
+On Fri, 19 Jul 2019 at 14:54, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jul 19, 2019 at 09:58:23AM +0200, Vincent Guittot wrote:
+>
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 67f0acd..472959df 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -5376,18 +5376,6 @@ static unsigned long capacity_of(int cpu)
+> >       return cpu_rq(cpu)->cpu_capacity;
+> >  }
+> >
+> > -static unsigned long cpu_avg_load_per_task(int cpu)
+> > -{
+> > -     struct rq *rq = cpu_rq(cpu);
+> > -     unsigned long nr_running = READ_ONCE(rq->cfs.h_nr_running);
+> > -     unsigned long load_avg = cpu_runnable_load(rq);
+> > -
+> > -     if (nr_running)
+> > -             return load_avg / nr_running;
+> > -
+> > -     return 0;
+> > -}
+> > -
+> >  static void record_wakee(struct task_struct *p)
+> >  {
+> >       /*
+>
+> > @@ -7646,7 +7669,6 @@ static unsigned long task_h_load(struct task_struct *p)
+> >  struct sg_lb_stats {
+> >       unsigned long avg_load; /*Avg load across the CPUs of the group */
+> >       unsigned long group_load; /* Total load over the CPUs of the group */
+> > -     unsigned long load_per_task;
+> >       unsigned long group_capacity;
+> >       unsigned long group_util; /* Total utilization of the group */
+> >       unsigned int sum_nr_running; /* Nr tasks running in the group */
+>
+>
+> > @@ -8266,76 +8293,6 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+> >  }
+> >
+> >  /**
+> > - * fix_small_imbalance - Calculate the minor imbalance that exists
+> > - *                   amongst the groups of a sched_domain, during
+> > - *                   load balancing.
+> > - * @env: The load balancing environment.
+> > - * @sds: Statistics of the sched_domain whose imbalance is to be calculated.
+> > - */
+> > -static inline
+> > -void fix_small_imbalance(struct lb_env *env, struct sd_lb_stats *sds)
+> > -{
+> > -     unsigned long tmp, capa_now = 0, capa_move = 0;
+> > -     unsigned int imbn = 2;
+> > -     unsigned long scaled_busy_load_per_task;
+> > -     struct sg_lb_stats *local, *busiest;
+> > -
+> > -     local = &sds->local_stat;
+> > -     busiest = &sds->busiest_stat;
+> > -
+> > -     if (!local->sum_h_nr_running)
+> > -             local->load_per_task = cpu_avg_load_per_task(env->dst_cpu);
+> > -     else if (busiest->load_per_task > local->load_per_task)
+> > -             imbn = 1;
+> > -
+> > -     scaled_busy_load_per_task =
+> > -             (busiest->load_per_task * SCHED_CAPACITY_SCALE) /
+> > -             busiest->group_capacity;
+> > -
+> > -     if (busiest->avg_load + scaled_busy_load_per_task >=
+> > -         local->avg_load + (scaled_busy_load_per_task * imbn)) {
+> > -             env->imbalance = busiest->load_per_task;
+> > -             return;
+> > -     }
+> > -
+> > -     /*
+> > -      * OK, we don't have enough imbalance to justify moving tasks,
+> > -      * however we may be able to increase total CPU capacity used by
+> > -      * moving them.
+> > -      */
+> > -
+> > -     capa_now += busiest->group_capacity *
+> > -                     min(busiest->load_per_task, busiest->avg_load);
+> > -     capa_now += local->group_capacity *
+> > -                     min(local->load_per_task, local->avg_load);
+> > -     capa_now /= SCHED_CAPACITY_SCALE;
+> > -
+> > -     /* Amount of load we'd subtract */
+> > -     if (busiest->avg_load > scaled_busy_load_per_task) {
+> > -             capa_move += busiest->group_capacity *
+> > -                         min(busiest->load_per_task,
+> > -                             busiest->avg_load - scaled_busy_load_per_task);
+> > -     }
+> > -
+> > -     /* Amount of load we'd add */
+> > -     if (busiest->avg_load * busiest->group_capacity <
+> > -         busiest->load_per_task * SCHED_CAPACITY_SCALE) {
+> > -             tmp = (busiest->avg_load * busiest->group_capacity) /
+> > -                   local->group_capacity;
+> > -     } else {
+> > -             tmp = (busiest->load_per_task * SCHED_CAPACITY_SCALE) /
+> > -                   local->group_capacity;
+> > -     }
+> > -     capa_move += local->group_capacity *
+> > -                 min(local->load_per_task, local->avg_load + tmp);
+> > -     capa_move /= SCHED_CAPACITY_SCALE;
+> > -
+> > -     /* Move if we gain throughput */
+> > -     if (capa_move > capa_now)
+> > -             env->imbalance = busiest->load_per_task;
+> > -}
+> > -
+> > -/**
+> >   * calculate_imbalance - Calculate the amount of imbalance present within the
+> >   *                    groups of a given sched_domain during load balance.
+> >   * @env: load balance environment
+>
+> Maybe strip this out first, in a separate patch. It's all magic doo-doo.
 
-This is wrong advice.  Don't merge the patches because they are for
-different drivers.  The original subjects are fine because the
-subsystems are different so that's okay.
-
-regards,
-dan carpenter
-
+If I remove that 1st, we will have commit in the branch that might
+regress some performance temporarily and bisect might spot it while
+looking for a culprit, isn't it ?
