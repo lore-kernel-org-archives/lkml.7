@@ -2,108 +2,69 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8816FC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4391FC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555E42082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563512774;
-	bh=psl4jjNZDQaZ36V6nEf1qHJEUDJyLtVzshme/46dQbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sTyW9F8hUTxtn9IHJYeLMGT2JZJqDWiwNVBfvGChyQjFB/euFgvXqtmv2d53hpRy1
-	 dg0Z+a2Ln0PvUn4IpCBlBpooJwG13d6sLV5as3xflQ36la0EB9DjnpfBbaYw1+0z0W
-	 WShjim0ReZ2fQV5rthILvKiGl1hQ/gBAlv2n+l44=
+	by mail.kernel.org (Postfix) with ESMTP id 275662082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 05:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfGSFGN (ORCPT
+        id S1726726AbfGSFMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 01:06:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725853AbfGSFGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 01:06:12 -0400
-Received: from localhost (unknown [49.207.58.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74F12082F;
-        Fri, 19 Jul 2019 05:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563512771;
-        bh=psl4jjNZDQaZ36V6nEf1qHJEUDJyLtVzshme/46dQbY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c+e5fIAG1af0gZlQk28PSXyzpSXtFZ9lrE9Q5asIftPmY155IQtBE69R+HAf+XaF1
-         2/jrPwV5xA/Vr5R9UUqKlypbs7RoDmMNp/M5K+LisC/e3UkcSlgv+krgMm7Hg64iMR
-         yzZaWhh4GTnFTS7xBtal8p17P0Vv02imtunpNU5c=
-Date:   Fri, 19 Jul 2019 10:34:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190719050459.GM12733@vkoul-mobl.Dlink>
-References: <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
- <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Fri, 19 Jul 2019 01:12:21 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:39976 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725794AbfGSFMV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 01:12:21 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=shannon.zhao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TXG4GTe_1563513118;
+Received: from localhost(mailfrom:shannon.zhao@linux.alibaba.com fp:SMTPD_---0TXG4GTe_1563513118)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 19 Jul 2019 13:12:17 +0800
+From:   Shannon Zhao <shenglong.zsl@alibaba-inc.com>
+To:     linux-kernel@vger.kernel.org, jnair@marvell.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org, gduan@marvell.com
+Subject: [PATCH] PCI: Add ACS quirk for Cavium ThunderX 2 root port devices
+Date:   Fri, 19 Jul 2019 21:10:35 +0800
+Message-Id: <1563541835-141011-1-git-send-email-shenglong.zsl@alibaba-inc.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-07-19, 11:45, Sameer Pujar wrote:
-> Hi Vinod,
-> 
-> What are your final thoughts regarding this?
+From: Shannon Zhao <shannon.zhao@linux.alibaba.com>
 
-Hi sameer,
+Like commit f2ddaf8(PCI: Apply Cavium ThunderX ACS quirk to more Root
+Ports), it should apply ACS quirk to ThunderX 2 root port devices.
 
-Sorry for the delay in replying
+Signed-off-by: Shannon Zhao <shannon.zhao@linux.alibaba.com>
+---
+ drivers/pci/quirks.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On this, I am inclined to think that dma driver should not be involved.
-The ADMAIF needs this configuration and we should take the path of
-dma_router for this piece and add features like this to it
-
-> 
-> Thanks,
-> Sameer.
-> 
-> > > Where does ADMAIF driver reside in kernel, who configures it for normal
-> > > dma txns..?
-> > Not yet, we are in the process of upstreaming ADMAIF driver.
-> > To describe briefly, audio subsystem is using ALSA SoC(ASoC) layer.
-> > ADMAIF is
-> > registered as platform driver and exports DMA functionality. It
-> > registers PCM
-> > devices for each Rx/Tx ADMAIF channel. During PCM playback/capture
-> > operations,
-> > ALSA callbacks configure DMA channel using API dmaengine_slave_config().
-> > RFC patch proposed, is to help populate FIFO_SIZE value as well during
-> > above
-> > call, since ADMA requires it.
-> > > 
-> > > Also it wold have helped the long discussion if that part was made clear
-> > > rather than talking about peripheral all this time :(
-> > Thought it was clear, though should have avoided using 'peripheral' in
-> > the
-> > discussions. Sorry for the confusion.
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 28c64f8..ea7848b 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4224,10 +4224,12 @@ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+ 	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+ 	 * bits of device ID are used to indicate which subdevice is used
+ 	 * within the SoC.
++	 * Effectively selects the ThunderX 2 root ports whose device ID
++	 * is 0xaf84.
+ 	 */
+ 	return (pci_is_pcie(dev) &&
+ 		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+-		((dev->device & 0xf800) == 0xa000));
++		((dev->device & 0xf800) == 0xa000 || dev->device == 0xaf84));
+ }
+ 
+ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
 -- 
-~Vinod
+1.8.3.1
+
