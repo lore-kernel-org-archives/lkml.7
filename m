@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB5C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286D4C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DD321849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E948E21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510051;
-	bh=hiTHTmyk3KOj/EoQupVp/vhM9auTA+2n0b+Szdifsqw=;
+	s=default; t=1563510058;
+	bh=4C3GOrjknXPI85zfXqF36miPxIgMOCcb0/OZJSd8Rqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2mRAbRCdW3J+tu6lsVwy3snmfNN9qwIx48u9NMkh/n/iq+wRCDg3/KgPpl8N0bwO
-	 m0UNgAKzfWGWrA+VB1tDlEtdwUW4+Vi19deiEUrGx4OyGscWzvrpiYWQQcXlTup6Gx
-	 qiVi9ItVUKRoUrcvdBZY3FItnMEmgP2RAC883UAM=
+	b=ag0Fu31Hm5pgU09voB23Wp+Hyaq7CfyRb1DDY5KjBEytafCXaWVRZXR28W4YlBVDP
+	 DUAZyrFs4X7YrK9eO43qfmTZ2tz3SpZtmQ0SsvX8aUlxjQX1xnSiiCzERO41E2ueiy
+	 HhKkB8JS/Vgyskfoo1fD09DoY8ZPeCca6LtgfjbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbfGSEUt (ORCPT
+        id S2389499AbfGSEU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732409AbfGSEMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:18 -0400
+        id S2387878AbfGSEMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B060218D2;
-        Fri, 19 Jul 2019 04:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B6892189D;
+        Fri, 19 Jul 2019 04:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509538;
-        bh=hiTHTmyk3KOj/EoQupVp/vhM9auTA+2n0b+Szdifsqw=;
+        s=default; t=1563509536;
+        bh=4C3GOrjknXPI85zfXqF36miPxIgMOCcb0/OZJSd8Rqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7yd2REnIT0k9rDn9Au9IYAAA4kgrEPVLNgtuSC+hdfqXt/ZpKsx3ZSgR+/TXrYSa
-         aNniuEeOWjOMQUlV2DHkh0Of+AMKdtve9PX09W6iWCl9LHvM3d0GEI92tXPtXSbnwd
-         Hbi5IfnwNCHdmN5tCg3qcrWWKm9tnmWP1Jx6EkVg=
+        b=fP/r4FYgi8ckdxTszqGLR2JZsc8bbvCJ9UELZRHAmmDO5OUHgntHdmasG2/WAa+l0
+         78YvbmplVR6B0A6sLg8Ew8wqccuzN77DeiPb7j7Zx7PwoQIpgi88CDqsrluUjqtxEG
+         p7MHzcddf1dsJZXwnbTPuwdwLrdx8FngzccVbH28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Liu, Changcheng" <changcheng.liu@intel.com>,
-        Changcheng Liu <changcheng.liu@aliyun.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 38/60] RDMA/i40iw: Set queue pair state when being queried
-Date:   Fri, 19 Jul 2019 00:10:47 -0400
-Message-Id: <20190719041109.18262-38-sashal@kernel.org>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 37/60] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
+Date:   Fri, 19 Jul 2019 00:10:46 -0400
+Message-Id: <20190719041109.18262-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
 References: <20190719041109.18262-1-sashal@kernel.org>
@@ -61,36 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Liu, Changcheng" <changcheng.liu@intel.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit 2e67e775845373905d2c2aecb9062c2c4352a535 ]
+[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
 
-The API for ib_query_qp requires the driver to set qp_state and
-cur_qp_state on return, add the missing sets.
+When testing out gpio-keys with a button, a spurious
+interrupt (and therefore a key press or release event)
+gets triggered as soon as the driver enables the irq
+line for the first time.
 
-Fixes: d37498417947 ("i40iw: add files for iwarp interface")
-Signed-off-by: Changcheng Liu <changcheng.liu@aliyun.com>
-Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This patch clears any potential bogus generated interrupt
+that was caused by the switching of the associated irq's
+type and polarity.
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_verbs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/platforms/4xx/uic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_verbs.c b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
-index c1021b4afb41..57bfe4808247 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_verbs.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
-@@ -821,6 +821,8 @@ static int i40iw_query_qp(struct ib_qp *ibqp,
- 	struct i40iw_qp *iwqp = to_iwqp(ibqp);
- 	struct i40iw_sc_qp *qp = &iwqp->sc_qp;
+diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/4xx/uic.c
+index 8b4dd0da0839..9e27cfe27026 100644
+--- a/arch/powerpc/platforms/4xx/uic.c
++++ b/arch/powerpc/platforms/4xx/uic.c
+@@ -158,6 +158,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
  
-+	attr->qp_state = iwqp->ibqp_state;
-+	attr->cur_qp_state = attr->qp_state;
- 	attr->qp_access_flags = 0;
- 	attr->cap.max_send_wr = qp->qp_uk.sq_size;
- 	attr->cap.max_recv_wr = qp->qp_uk.rq_size;
+ 	mtdcr(uic->dcrbase + UIC_PR, pr);
+ 	mtdcr(uic->dcrbase + UIC_TR, tr);
++	mtdcr(uic->dcrbase + UIC_SR, ~mask);
+ 
+ 	raw_spin_unlock_irqrestore(&uic->lock, flags);
+ 
 -- 
 2.20.1
 
