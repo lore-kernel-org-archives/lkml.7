@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67908C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C9C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F072082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58AA21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509614;
-	bh=vqQwjsyXatyGelWezBxGJt5LrvjbIVovafrzOFTMhrc=;
+	s=default; t=1563509617;
+	bh=NDrTMJck9PjoSa91ieKCleeY7HzyP5UQQ+2j9bL/8QY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eKW++QJcW/36WmILnhlkO4xEvCnQ8DRDgCZ9SVc2XMrSBR7WCawdU2chtdHcOr1dW
-	 YmSgr46DNCCFpTv//4EWEanh6dk5TV0L+qM5KABK27TrQzxYQZSck6ar6bstMFSAoC
-	 JSq3T93Z516CFOFArMRGWLynJNILRqKbyqeNgncQ=
+	b=uWA6iy3LeeRMHAlUuRjcHHtGhEFf93xPVmbfKHZSVQYEGjbgnurNhWOfD4PntrnAS
+	 enrfjNVWr0UN84B+IhQfHxrR8S3jwbq+iRFFgJ1PxRzyAzldVgSdJIcwUZU/tB4uCG
+	 xrws25WP5CeVQCaq6l9uN1Yk+asujJXTZ07n49Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389273AbfGSENd (ORCPT
+        id S2389288AbfGSENf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49370 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389204AbfGSEN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:26 -0400
+        id S2388001AbfGSEN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:13:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1CE21872;
-        Fri, 19 Jul 2019 04:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B59121872;
+        Fri, 19 Jul 2019 04:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509605;
-        bh=vqQwjsyXatyGelWezBxGJt5LrvjbIVovafrzOFTMhrc=;
+        s=default; t=1563509608;
+        bh=NDrTMJck9PjoSa91ieKCleeY7HzyP5UQQ+2j9bL/8QY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIkPunHYtf0B+pt/w9AvYMyKNXsiFYd8RLrvnCjXRhVaESXzYH/240p2uwyN3RD4M
-         1Ndf0pwdlBkwQk9RBDs81lXErxhkCjkjiPZgzmaZ49AffZYZPC2SfGDkpQEEi9ZY/5
-         jHYfRuJd0IbsGxLx5BV+tbbmR2uhaFKwJC7jGOFk=
+        b=PWcsjEEz/WQK2GGyiAaSbFsVhTOYzWEKnWio8rbk6xngdE1svgc2t1COimLUoYhWK
+         Fvzj2f5RWzAyOzGjjSovhaY6mzcPHmpRhZtqsUdILc7+Hhajyt2JKvNyUqucvDKnKR
+         p2RPdmHRkLc2gb8pw8C/OJ9e3xT2A/gWR1hmAcv8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Riley <davidriley@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 13/45] drm/virtio: Add memory barriers for capset cache.
-Date:   Fri, 19 Jul 2019 00:12:32 -0400
-Message-Id: <20190719041304.18849-13-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 15/45] drm/rockchip: Properly adjust to a true clock in adjusted_mode
+Date:   Fri, 19 Jul 2019 00:12:34 -0400
+Message-Id: <20190719041304.18849-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
 References: <20190719041304.18849-1-sashal@kernel.org>
@@ -61,50 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Riley <davidriley@chromium.org>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
+[ Upstream commit 99b9683f2142b20bad78e61f7f829e8714e45685 ]
 
-After data is copied to the cache entry, atomic_set is used indicate
-that the data is the entry is valid without appropriate memory barriers.
-Similarly the read side was missing the corresponding memory barriers.
+When fixing up the clock in vop_crtc_mode_fixup() we're not doing it
+quite correctly.  Specifically if we've got the true clock 266666667 Hz,
+we'll perform this calculation:
+   266666667 / 1000 => 266666
 
-Signed-off-by: David Riley <davidriley@chromium.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Later when we try to set the clock we'll do clk_set_rate(266666 *
+1000).  The common clock framework won't actually pick the proper clock
+in this case since it always wants clocks <= the specified one.
+
+Let's solve this by using DIV_ROUND_UP.
+
+Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Reviewed-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190614224730.98622-1-dianders@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 54639395aba0..a3559b1a3a0f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -521,6 +521,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
- 	ret = wait_event_timeout(vgdev->resp_wq,
- 				 atomic_read(&cache_ent->is_valid), 5 * HZ);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index 32d87c6035c9..5bed63eee5f0 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -865,7 +865,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+ 	struct vop *vop = to_vop(crtc);
  
-+	/* is_valid check must proceed before copy of the cache entry. */
-+	smp_rmb();
-+
- 	ptr = cache_ent->caps_cache;
+ 	adjusted_mode->clock =
+-		clk_round_rate(vop->dclk, mode->clock * 1000) / 1000;
++		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
++			     1000);
  
- copy_exit:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 52436b3c01bb..a1b3ea1ccb65 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -618,6 +618,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
- 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
- 			memcpy(cache_ent->caps_cache, resp->capset_data,
- 			       cache_ent->size);
-+			/* Copy must occur before is_valid is signalled. */
-+			smp_wmb();
- 			atomic_set(&cache_ent->is_valid, 1);
- 			break;
- 		}
+ 	return true;
+ }
 -- 
 2.20.1
 
