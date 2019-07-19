@@ -2,143 +2,121 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C541EC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F01DC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9586A21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4703421849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 18:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="gWufHkNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731898AbfGSSlH (ORCPT
+        id S1731942AbfGSSlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 14:41:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:44996 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728356AbfGSSlG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 14:41:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id s9so35502550iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 11:41:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=7mFdXMLBoQKNDPF4SvbgB3lS+daOlhuCux1fzIJOXVg=;
-        b=sqZb4waVKQ4OMRwONR54BfNmmBsBXdj2Zx5vp7w8410OjPXLIJt5uyFsjHmstkIB1b
-         KWB/Z4TSVhndSSh+tuPZgcXwbnLPNHYys7ep00ujp1vT/MjrnSowzaMoKp0XGVgSE/Xo
-         u/oRidQLuZtGRo5PLbHQWYKYDabfMMvA2r5fLIrRPRhAUmL84Cv2griLGkt+FGiHDord
-         VHn5RAe7jL1FTjCG3vLLZN+vBeGchstVCFyy13ZbahUNsQyKxnWE3io72Ixr4G9MHfs1
-         3xZsjvGiSWbBVqnT9JpHS9O8v9toxlGH8iWIxOigxkIIItlA8NbW4VMYmnLcREbJJu59
-         +llw==
-X-Gm-Message-State: APjAAAVGL++Xs8Th9uONjvyphzQ6V8BOIC26US79cBJEBbo0GBM/2FzY
-        feQRJtfjDS+Q0toAquS0Y/SR6L25Ry6Gliv9eOIiHAF8AFLj
-X-Google-Smtp-Source: APXvYqwIEC1emZ2/yBZpVkXd6teZhX3lfYVplN/omvTxKl4yUhwzGYaknqWCJQbkUxg3abOkaZFT7Yd5geMt0ecSKZkIb9i2XpLu
+        Fri, 19 Jul 2019 14:41:15 -0400
+Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:25609
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728356AbfGSSlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 14:41:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KOYP/hsXi1z+IOuhjD1EfqH6smDWwJYq5q5mbA16ur5a4H/4YzTqcnUQEAeT25/hOxiakUurCzSpZsxFKiKzu9i0OZvb0mh2rs/kYpUMROmoqcXU4z0tRLscakIegXtu4QfyDupz7hFpPEFYu4T5mF2c5fQ95WFcC+vAoMER8f4t+lgpDbgebGaBOx+pU3PbyxxRcyaOfgwzMaTmW5y5vvywzmIzUs/qN7gxYn2EA8t60ZrxZvE0FGqoTbEctyN5J/3PxOT6OYrB6W1ia4Pp/OYVWppDgEH+JnqXol7hcVqBgd21f7XkkNK8+reXSz0/n6gc4UfP5Gk6QZSjg5ws9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3psR71/Ki0Ecn1xyN6zgnx3qbKNkGvvz7zmAFeyM674=;
+ b=esqXBgpxwT8+3QBlzqqRkMgbRFfqptllUZuEpLRdzWkabH/4GngVBAu2JFjddpNaCHeBPUJ1BvJ/+zduXfiv6/jm/tsPRQUs9iwawPfaTxGmPsKuuNtVGbzKjLzyGL5MS0yfUvuHzmR5fmVQXWgn8gD7T0u+iWnFlCSLsrntO3LZAfCarTSC62ymEgnNfF/4ctQGPoxBfXKo3SZQBz/bLUiJ2syMt2VwFdTVQKMmrIYa+SlNraLSlF1ZAENh3QpN3g2wKxzqecp6qQDcb1RPUNp6R3Mn8bml3L0k9GgNweBfRMqxdqL8zzTwszQhIGa5WjyGzMb8uSZHDBmmZ3BTNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3psR71/Ki0Ecn1xyN6zgnx3qbKNkGvvz7zmAFeyM674=;
+ b=gWufHkNL2QsV5Bb6ZfHLqS2Io9LJj+CZJfICQtlbkHCEBm0pJtRNX7Jb9ou11H1NhEFf6cz4uIYrT1zMqE4bCHheWkk1leciiMNWiW55PkjLkf81ndVI9W8Dq8dcopd7FQt+m14kAtxd8Q6ZoudP4QdO0Y2GhzxsN1vR/LBkAus=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5768.namprd05.prod.outlook.com (20.178.48.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.8; Fri, 19 Jul 2019 18:41:11 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2094.009; Fri, 19 Jul 2019
+ 18:41:11 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH v3 3/9] x86/mm/tlb: Open-code on_each_cpu_cond_mask() for
+ tlb_is_not_lazy()
+Thread-Topic: [PATCH v3 3/9] x86/mm/tlb: Open-code on_each_cpu_cond_mask() for
+ tlb_is_not_lazy()
+Thread-Index: AQHVPc0s+2522G+J006mLkslhMknOKbSRkAAgAABN4A=
+Date:   Fri, 19 Jul 2019 18:41:11 +0000
+Message-ID: <6847D7A3-4618-4BC3-97B6-EC53F6985504@vmware.com>
+References: <20190719005837.4150-1-namit@vmware.com>
+ <20190719005837.4150-4-namit@vmware.com>
+ <8bf005e2-7ac7-f1cf-eca1-0e152dd912a7@intel.com>
+In-Reply-To: <8bf005e2-7ac7-f1cf-eca1-0e152dd912a7@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19b352c7-30d0-4d45-6472-08d70c78abfc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5768;
+x-ms-traffictypediagnostic: BYAPR05MB5768:
+x-microsoft-antispam-prvs: <BYAPR05MB5768168C64DE7F7420A6440DD0CB0@BYAPR05MB5768.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 01039C93E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(366004)(376002)(346002)(199004)(189003)(8676002)(6512007)(7736002)(68736007)(229853002)(14454004)(6486002)(478600001)(25786009)(6436002)(316002)(6916009)(4326008)(6116002)(3846002)(6246003)(53936002)(99286004)(86362001)(33656002)(54906003)(36756003)(446003)(256004)(14444005)(186003)(486006)(64756008)(66446008)(66946007)(66476007)(66556008)(76116006)(8936002)(81166006)(81156014)(11346002)(4744005)(2616005)(5660300002)(476003)(305945005)(7416002)(6506007)(53546011)(2906002)(76176011)(26005)(71190400001)(102836004)(66066001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5768;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XJhXWM295h7diLaiJ7K2WSNQQQEhmHQ3ASBtoiCQjHe79w4vI5XploXz/LSYPjB7wEyUXQumnJLfwjQPPSsOMuxcwrhTr1qgLOHE7V85mAu8+k1ae5K8utePGbxU8VotmPfCLijyxd1oRugfhkyf8oRLgY/cuKKWndTsul0GrYqthCrDs3PfybpYYCFl+5VRjkLYJEPCpkKXdv1PXsvhXvW0EiBaTbIH1U/WaWmRddpp22yLvj2ueYW4fNodpchBLzB1yGfdMHWb9sO0fCW6ZLxRCmond6PKzUpm9CzIJ2bAFe3wNj563rfskA3BddybbapIpe8NimYiY+FDfk40aNLEVi0xTnDjOR2i/bsG/4Kkd1yOgz6qjdiJnnI4ysslzj0/nvlqkWrtciS1oN8B1ehtwwn8ZdRBAQVDWCz3wqU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4BC2B08C92A8534EBF341964ED4E4B61@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a02:3f1d:: with SMTP id d29mr59971661jaa.116.1563561665791;
- Fri, 19 Jul 2019 11:41:05 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 11:41:05 -0700
-In-Reply-To: <000000000000acb99a058b0d5741@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ac8f77058e0d11e9@google.com>
-Subject: Re: WARNING in snd_usb_motu_microbookii_communicate/usb_submit_urb
-From:   syzbot <syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19b352c7-30d0-4d45-6472-08d70c78abfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 18:41:11.5179
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5768
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
-
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=149006d0600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=d952e5e28f5fb7718d23
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1710cd48600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17650a34600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
-
-usb 1-1: string descriptor 0 read error: -22
-usb 1-1: New USB device found, idVendor=07fd, idProduct=0004,  
-bcdDevice=59.23
-usb 1-1: New USB device strings: Mfr=5, Product=75, SerialNumber=0
-usb 1-1: Waiting for MOTU Microbook II to boot up...
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 /drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack /lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e /lib/dump_stack.c:113
-  panic+0x292/0x6c9 /kernel/panic.c:219
-  __warn.cold+0x20/0x4b /kernel/panic.c:576
-  report_bug+0x262/0x2a0 /lib/bug.c:186
-  fixup_bug /arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug /arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 /arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 /arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 /arch/x86/entry/entry_64.S:986
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 /drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 f8 d3 f4 fd 4c 89 f7 e8 a0 51 1c ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 00 0e f7 85 e8 83 98 ca fd <0f> 0b e9 20 f4  
-ff ff e8 cc d3 f4 fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d9efee68 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfdbf
-RBP: ffff8881cfd97b70 R08: ffff8881d9e36000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8881cfcdea98 R14: ffff8881d0f511a0 R15: ffff8881d4b46200
-  usb_start_wait_urb+0x108/0x2b0 /drivers/usb/core/message.c:57
-  usb_bulk_msg+0x228/0x550 /drivers/usb/core/message.c:253
-  snd_usb_motu_microbookii_communicate.constprop.0+0xe3/0x240  
-/sound/usb/quirks.c:999
-  snd_usb_motu_microbookii_boot_quirk /sound/usb/quirks.c:1039 [inline]
-  snd_usb_apply_boot_quirk.cold+0x140/0x36b /sound/usb/quirks.c:1268
-  usb_audio_probe+0x2ec/0x2010 /sound/usb/card.c:576
-  usb_probe_interface+0x305/0x7a0 /drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 /drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 /drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 /drivers/base/bus.c:454
-  __device_attach+0x217/0x360 /drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 /drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 /drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 /drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 /drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 /drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 /drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 /drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 /drivers/base/bus.c:454
-  __device_attach+0x217/0x360 /drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 /drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 /drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 /drivers/usb/core/hub.c:2536
-  hub_port_connect /drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change /drivers/usb/core/hub.c:5213 [inline]
-  port_event /drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 /drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 /kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 /kernel/workqueue.c:2415
-  kthread+0x30b/0x410 /kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+PiBPbiBKdWwgMTksIDIwMTksIGF0IDExOjM2IEFNLCBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5A
+aW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9uIDcvMTgvMTkgNTo1OCBQTSwgTmFkYXYgQW1pdCB3
+cm90ZToNCj4+IEBAIC04NjUsNyArODkzLDcgQEAgdm9pZCBhcmNoX3RsYmJhdGNoX2ZsdXNoKHN0
+cnVjdCBhcmNoX3RsYmZsdXNoX3VubWFwX2JhdGNoICpiYXRjaCkNCj4+IAlpZiAoY3B1bWFza190
+ZXN0X2NwdShjcHUsICZiYXRjaC0+Y3B1bWFzaykpIHsNCj4+IAkJbG9ja2RlcF9hc3NlcnRfaXJx
+c19lbmFibGVkKCk7DQo+PiAJCWxvY2FsX2lycV9kaXNhYmxlKCk7DQo+PiAtCQlmbHVzaF90bGJf
+ZnVuY19sb2NhbCgmZnVsbF9mbHVzaF90bGJfaW5mbyk7DQo+PiArCQlmbHVzaF90bGJfZnVuY19s
+b2NhbCgodm9pZCAqKSZmdWxsX2ZsdXNoX3RsYl9pbmZvKTsNCj4+IAkJbG9jYWxfaXJxX2VuYWJs
+ZSgpOw0KPj4gCX0NCj4gDQo+IFRoaXMgbG9va3MgbGlrZSBzdXBlcmZsdW91cyBjaHVybi4gIElz
+IGl0Pw0KDQpVbmZvcnR1bmF0ZWx5IG5vdCwgc2luY2UgZnVsbF9mbHVzaF90bGJfaW5mbyBpcyBk
+ZWZpbmVkIGFzIGNvbnN0LiBXaXRob3V0IGl0DQp5b3Ugd291bGQgZ2V0Og0KDQp3YXJuaW5nOiBw
+YXNzaW5nIGFyZ3VtZW50IDEgb2Yg4oCYZmx1c2hfdGxiX2Z1bmNfbG9jYWzigJkgZGlzY2FyZHMg
+4oCYY29uc3TigJkgcXVhbGlmaWVyIGZyb20gcG9pbnRlciB0YXJnZXQgdHlwZSBbLVdkaXNjYXJk
+ZWQtcXVhbGlmaWVyc10NCg0KQW5kIGZsdXNoX3RsYl9mdW5jX2xvY2FsKCkgc2hvdWxkIGdldCAo
+dm9pZCAqKSBhcmd1bWVudCBzaW5jZSBpdCBpcyBhbHNvDQp1c2VkIGJ5IHRoZSBTTVAgaW5mcmFz
+dHJ1Y3R1cmUu
