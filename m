@@ -2,365 +2,119 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EF7C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BCFC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15D52184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B312173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oUqwQm7n"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mlR6bTFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfGSHKH (ORCPT
+        id S1726863AbfGSHOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:10:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33166 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727634AbfGSHKH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:10:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so13775142pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 00:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5G4Tyl2pOOotPvE1eYgBn6NrePAGwj0dYpf/pn7Ku7I=;
-        b=oUqwQm7n78sFhXBSVNQtD0r91V14LfgZCihH5PqfJkwGCExt/5650JHPnIVPR1wPHb
-         AHxCYHtUIm9tjACwETUy8UYH72mXeTwtFwP6ajAZxJEzCZwkU24m3H4GbCOuiNKYgJpr
-         5ZhsAKNw/EtJyv4oPPtcWURkXGtFK9Fda3hVFZmKAWhof4fOxZqVgJJI+QzzspyG560n
-         PWKkav5D0B7yHUEXEGE8aPFteWYGYXhf5PkvEvF/pNe39SjXcVnSW0XUI7UirBzSg79D
-         AYQRp3bwR/X49t0MkM4fA/gStnF9cifRptNk/7sX8og2JLicjcJBICl86+GdWc8oFZe0
-         ragQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=5G4Tyl2pOOotPvE1eYgBn6NrePAGwj0dYpf/pn7Ku7I=;
-        b=X2NMF4loaUpzTgsjFxEI1W05tcEItzy9ybyoy3ZXUZvaBVOjDA3TeqxsrNYGlk5pBz
-         s4zCLKBmctOoQOxoI8MwKglWgPtwoYX72lItonbMzEHawxk2EC3Q/BcnrSpHntVnuUuh
-         tnm1qi4eu0X9EUNzy4OiqsQQtYG4G4dJz9OO/glO6ne4mcsHdq/FnePiZAnK9rVgh5ic
-         riqDsuQchlbRAKxnXzlg0pcyuPOAA6faF5Cs8x6B+ir36dYedVnCkmGjSj52MN13COHr
-         JEfSxRMzRf7t9sGERgO4l9Or2tmWCytdO4pbuABvob2YwLKGlGAn2dFPbNnENzheCc4c
-         Qxfg==
-X-Gm-Message-State: APjAAAWKZunwwFgqD7Kgxgl6CdBKHSYktSY6U2lKkzrtlT8dVAkps4m4
-        T1TVP72CG/ytsrCLnZQcgOro
-X-Google-Smtp-Source: APXvYqyiZM0wUSWyooFFF68eRDnY34iJsZ93/Mg5wJCF18pU0So3lUQWt+pV64PTOBCX1k+fELpcAg==
-X-Received: by 2002:a63:e54:: with SMTP id 20mr51366282pgo.244.1563520205685;
-        Fri, 19 Jul 2019 00:10:05 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:730b:4a40:d09e:c7ec:fbb:1676])
-        by smtp.gmail.com with ESMTPSA id r6sm56259346pjb.22.2019.07.19.00.09.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 00:10:05 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Darshak.Patel@einfochips.com,
-        kinjan.patel@einfochips.com, prajose.john@einfochips.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 3/3] arm64: dts: freescale: Add support for i.MX8QXP AI_ML board
-Date:   Fri, 19 Jul 2019 12:39:26 +0530
-Message-Id: <20190719070926.29114-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190719070926.29114-1-manivannan.sadhasivam@linaro.org>
-References: <20190719070926.29114-1-manivannan.sadhasivam@linaro.org>
+        Fri, 19 Jul 2019 03:14:03 -0400
+Received: from mail-eopbgr50041.outbound.protection.outlook.com ([40.107.5.41]:38535
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725616AbfGSHOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:14:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VSoGI3DyoCQkDwB+FVT17B8+Sh0lonTbIlVu4UE2m6pjSu5gdaKw6XXCdqS+2/WrVV2EjCaYmGDE+YpfcVYl0gaWSR796bMfYAov6HkazjJl+CnUu23ci31Iifpoy1PmZHwZ5Vi79u6QJs/84K4muso2MEI/QIDuqcQXR5kdzGy5SW7cpYkw0Vq60QbIBzZR9zfBq5RcwxkAFjKZxJagOvFEoI5PmpgqPsQHsyvUlPaG/glQ+baOLrc4WyA4bYUak3DqGHE3+dN7HIwcEkGi9LHt2843z+48tyaEwkhUOHlzpQG65JblNt6CeiBQnZXHRJudfTEhZVrXjLTJ+CqAOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=btft8QuLD/BG+xg1YQZesFjlzcFLoaTJjsFVL04PBz4=;
+ b=PIijzwmave3+7aAJKVpvVtYcPpKGGWKEdjIuag3KNi/cOBnjW/hQ7uZeLH/sqsTximfTX0RUCHbwMjeTiKFFBnm1Mq4JezH1VuoemsSEAV6hHbdIT0TfZ8O4Wagw1ZafuaIrsIXVjq4Qcvk522GVRGOfoCIgBxBZF6LPygDbN3vPqCHkgE44H9/iCiZx8DpsPv0W4f5Ly00a1ounsHIH4IoxCJHiqU4l+bCLzEVxtTjtO/akJaS4fysE+G1ka8CeGHsDPK0SS4SKhDkpnhVtnpV8odiJ3xfaP6M89SIlKDK99ITcVp1guHCjcCNyPxM6k3POkZ7kYodRkqq5xM4+4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=btft8QuLD/BG+xg1YQZesFjlzcFLoaTJjsFVL04PBz4=;
+ b=mlR6bTFJdKMJC6OIleflrY5djm6zq0C21FJYU4oY8tKm0MkMioLNvcuCCjWavs9k0FBnGOU/tJDzScdAJwgemJ1vdEJ8F/dfT+vycRkkO8krvYzITQF2zUD5w96BhQ80FKFqk5EgMNEj4jNX5eiOVVM5HDmOqJ3srV84msSOO7o=
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
+ VI1PR04MB5696.eurprd04.prod.outlook.com (20.178.126.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.11; Fri, 19 Jul 2019 07:13:59 +0000
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::90da:d60:f39b:14ac]) by VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::90da:d60:f39b:14ac%3]) with mapi id 15.20.2073.012; Fri, 19 Jul 2019
+ 07:13:59 +0000
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: gcm - restrict assoclen for rfc4543
+Thread-Topic: [PATCH] crypto: gcm - restrict assoclen for rfc4543
+Thread-Index: AQHVPXcr8KdyE5q0fE6fmVOxSMZYdw==
+Date:   Fri, 19 Jul 2019 07:13:58 +0000
+Message-ID: <VI1PR04MB444593F54DFB2EDC0016F56E8CCB0@VI1PR04MB4445.eurprd04.prod.outlook.com>
+References: <1563460984-24593-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190718144647.bbsd65qabqpafehe@gondor.apana.org.au>
+ <VI1PR04MB44451D12B66EE3FADA1ECE208CC80@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190718145907.wercecqwr3wlny73@gondor.apana.org.au>
+ <20190718151101.hutxnd7u5nfrikx2@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=iuliana.prodan@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0effd44a-614f-4820-9cb3-08d70c18ab74
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5696;
+x-ms-traffictypediagnostic: VI1PR04MB5696:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR04MB5696F0D6CBC3178D64D66B168CCB0@VI1PR04MB5696.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01039C93E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(199004)(189003)(6506007)(4326008)(966005)(53546011)(44832011)(4744005)(316002)(486006)(8676002)(478600001)(71190400001)(71200400001)(91956017)(76116006)(55016002)(2906002)(9686003)(6306002)(66476007)(66946007)(476003)(446003)(6916009)(256004)(6436002)(86362001)(76176011)(14444005)(54906003)(7696005)(26005)(66066001)(6246003)(229853002)(66446008)(66556008)(64756008)(186003)(14454004)(74316002)(33656002)(81166006)(305945005)(8936002)(25786009)(81156014)(99286004)(52536014)(5660300002)(6116002)(53936002)(68736007)(3846002)(7736002)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5696;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RLaeY+GLJrlVau4nb6dhrGHqGKur5f3tAghrWlRiBpkNpUvtJOirjAYdSlQCcH9ET+/xagfam/2ViAwt4Oj6wiB60feQrGRvZHvDeiB1MNcJEW6Zae1wasuFG/0fxv0WKgiaH9RNwc35Zf3WA4um20OfX/1oEgvSBjAnMuAbEm8OZ/SDYC/dhB2GfoS8Z9BNPbX7OcosmEvTjtWHXAbAb+70yklCp1y3t0oGdGh7v0A8ECWF6TqhCB4+WN0Le0HwPiOt/FTEIV9g8eQwc4/VxeJI1PojV5Z2GoBtIne/4lz9LZziBzEYyUNPr9Qofgtma7eTKqjZ5+hIfrHvCWlqvaPP4Yt40Waut2gsbrlhnsO9J7JaFG519yOY8dfQ3IFdhcilBeJBBIQqzHaoTAf8lbOq/ZNyCzaFUCnkmn1r07A=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0effd44a-614f-4820-9cb3-08d70c18ab74
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 07:13:59.0020
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iuliana.prodan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5696
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for i.MX8QXP AI_ML board from Einfochips. This board is one
-of the Consumer Edition boards of the 96Boards family based on i.MX8QXP
-SoC from NXP/Freescale.
-
-The initial support includes following peripherals which are tested and
-known to be working:
-
-1. Debug serial via UART2
-2. uSD
-3. WiFi
-4. Ethernet
-
-More information about this board can be found in Arrow website:
-https://www.arrow.com/en/products/imx8-ai-ml/arrow-development-tools
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8qxp-ai_ml.dts      | 249 ++++++++++++++++++
- 2 files changed, 250 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 0bd122f60549..bd8460549d1a 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -24,4 +24,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-new file mode 100644
-index 000000000000..3dc8757d9c42
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018 Einfochips
-+ * Copyright 2019 Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qxp.dtsi"
-+
-+/ {
-+	model = "Einfochips i.MX8QXP AI_ML";
-+	compatible = "einfochips,imx8qxp-ai_ml", "fsl,imx8qxp";
-+
-+	aliases {
-+		serial1 = &adma_lpuart1;
-+		serial2 = &adma_lpuart2;
-+		serial3 = &adma_lpuart3;
-+	};
-+
-+	chosen {
-+		stdout-path = &adma_lpuart2;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x80000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		user_led1 {
-+			label = "green:user1";
-+			gpios = <&lsio_gpio4 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		user_led2 {
-+			label = "green:user2";
-+			gpios = <&lsio_gpio0 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "none";
-+		};
-+
-+		user_led3 {
-+			label = "green:user3";
-+			gpios = <&lsio_gpio0 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		user_led4 {
-+			label = "green:user4";
-+			gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+			panic-indicator;
-+			linux,default-trigger = "none";
-+		};
-+
-+		wlan_active_led {
-+			label = "yellow:wlan";
-+			gpios = <&lsio_gpio4 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		bt_active_led {
-+			label = "blue:bt";
-+			gpios = <&lsio_gpio4 18 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "hci0-power";
-+			default-state = "off";
-+		};
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_reg_on>;
-+		reset-gpios = <&lsio_gpio3 24 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+/* BT */
-+&adma_lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+/* LS-UART0 */
-+&adma_lpuart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart1>;
-+	status = "okay";
-+};
-+
-+/* Debug */
-+&adma_lpuart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart2>;
-+	status = "okay";
-+};
-+
-+/* PCI-E UART */
-+&adma_lpuart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart3>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+/* WiFi */
-+&usdhc1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <4>;
-+	no-sd;
-+	non-removable;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SD */
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QXP_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+			IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_leds: ledsgrp{
-+		fsl,pins = <
-+			IMX8QXP_ESAI0_TX2_RX3_LSIO_GPIO0_IO06			0x00000021
-+			IMX8QXP_ESAI0_TX3_RX2_LSIO_GPIO0_IO07			0x00000021
-+			IMX8QXP_EMMC0_DATA7_LSIO_GPIO4_IO16			0x00000021
-+			IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21			0x00000021
-+			IMX8QXP_EMMC0_STROBE_LSIO_GPIO4_IO17			0x00000021
-+			IMX8QXP_EMMC0_RESET_B_LSIO_GPIO4_IO18			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QXP_UART0_RX_ADMA_UART0_RX				0X06000020
-+			IMX8QXP_UART0_TX_ADMA_UART0_TX				0X06000020
-+			IMX8QXP_FLEXCAN0_TX_ADMA_UART0_CTS_B 			0x06000020
-+			IMX8QXP_FLEXCAN0_RX_ADMA_UART0_RTS_B			0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart1: lpuart1grp {
-+		fsl,pins = <
-+			IMX8QXP_UART1_RX_ADMA_UART1_RX				0X06000020
-+			IMX8QXP_UART1_TX_ADMA_UART1_TX				0X06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart2: lpuart2grp {
-+		fsl,pins = <
-+			IMX8QXP_UART2_RX_ADMA_UART2_RX				0X06000020
-+			IMX8QXP_UART2_TX_ADMA_UART2_TX				0X06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart3: lpuart3grp {
-+		fsl,pins = <
-+			IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX			0X06000020
-+			IMX8QXP_FLEXCAN2_TX_ADMA_UART3_TX			0X06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK			0x06000041
-+			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD			0x00000021
-+			IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+			IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_wifi_reg_on: wifiregongrp {
-+		fsl,pins = <
-+			IMX8QXP_QSPI0B_SS1_B_LSIO_GPIO3_IO24			0x00000021
-+		>;
-+	};
-+};
--- 
-2.17.1
-
+On 7/18/2019 6:11 PM, Herbert Xu wrote:=0A=
+> On Thu, Jul 18, 2019 at 10:59:07PM +0800, Herbert Xu wrote:=0A=
+>>=0A=
+>> So I presume the driver does enforce the limit.  Please actually=0A=
+>> state that in the commit description for future reference.=0A=
+> =0A=
+> Also have you looked at whether other drivers would be affected=0A=
+> by this? It wouldn't be so nice if this change makes other drivers=0A=
+> fail the same test as a result.=0A=
+=0A=
+I've checked the other drivers and I found rfc4543 support in bcm and =0A=
+ccree. I've sent fixes for these two, but I don't have hardware to test =0A=
+on, so they are just compile tested.=0A=
+=0A=
+Link: https://patchwork.kernel.org/project/linux-crypto/list/?series=3D1477=
+47=0A=
+=0A=
+Regards,=0A=
+Iulia=0A=
+=0A=
