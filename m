@@ -2,110 +2,137 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF814C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB65C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00742184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467BE21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 16:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563553344;
+	bh=ToqDnWrzKDf8scCUPMiKsBcInlWhLezxA4/NkXNmy6k=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=I5aPK3N/dCxzg2hrS7Oi9k0TjPLI4C4hTKjHZuXVjgj8OgXzWdmKF2KSeRQ6Wukqn
+	 evoN3zmrAC4j3IkM746267aWsV5rExEsHryoM18+ETMa0GNDIvYJj5iC2wu/aaQyE1
+	 PbfGIdIysIzMBv7BaV8Q70ADrg8HI/mjOrczfjNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfGSQVa convert rfc822-to-8bit (ORCPT
+        id S1730940AbfGSQWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 12:21:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:28121 "EHLO mga12.intel.com"
+        Fri, 19 Jul 2019 12:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbfGSQVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 12:21:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 09:21:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
-   d="scan'208";a="320004439"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga004.jf.intel.com with ESMTP; 19 Jul 2019 09:21:29 -0700
-Received: from orsmsx123.amr.corp.intel.com (10.22.240.116) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 19 Jul 2019 09:21:28 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.232]) by
- ORSMSX123.amr.corp.intel.com ([169.254.1.245]) with mapi id 14.03.0439.000;
- Fri, 19 Jul 2019 09:21:28 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-Subject: RE: [Intel-wired-lan] [PATCH] i40e: reduce stack usage in
- i40e_set_fc
-Thread-Topic: [Intel-wired-lan] [PATCH] i40e: reduce stack usage in
- i40e_set_fc
-Thread-Index: AQHVOwnVVFCI4V0hdECZPxc3EWAaEKbSJavw
-Date:   Fri, 19 Jul 2019 16:21:27 +0000
-Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D40C2EB@ORSMSX104.amr.corp.intel.com>
-References: <20190715123518.3510791-1-arnd@arndb.de>
-In-Reply-To: <20190715123518.3510791-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTljMGYyYzItYTEwYy00MzY5LThiNTctNTk5NTEwOTczOWVmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoia1FMaEpKT3NXbVhlZlY1Q2Z3dFhaaEp4TVV3WnZHNmpcL0hvU255eU9RcXZsQWpwZ2hMS0JDUWp6U2V0WXB1VVMifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 8BIT
+        id S1728051AbfGSQWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 12:22:22 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9490A21872;
+        Fri, 19 Jul 2019 16:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563553341;
+        bh=ToqDnWrzKDf8scCUPMiKsBcInlWhLezxA4/NkXNmy6k=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pSwIfwW4L2MkuF9bTjuPLeJp21+1X1lYJC+rcDxzPI+Kl7EYPVdxjoweiKGglut88
+         xj6kksnmPTgsmGuOMlMV8pvCbPDHG23LAgCfrRVAAgm8qOdwpxAtN22uxL6DaCXoGA
+         9eHaj4KDy2pN1mtZMW+VulcK8aRKauP2ZYbuet2g=
+Date:   Fri, 19 Jul 2019 09:22:21 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
+Subject: [GIT PULL] iomap: cleanups for 5.3 (part 2)
+Message-ID: <20190719162221.GF7093@magnolia>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> Behalf Of Arnd Bergmann
-> Sent: Monday, July 15, 2019 5:35 AM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
-> <davem@davemloft.net>
-> Cc: Catherine Sullivan <catherine.sullivan@intel.com>; Dziggel, Douglas A
-> <douglas.a.dziggel@intel.com>; Arnd Bergmann <arnd@arndb.de>;
-> netdev@vger.kernel.org; Patryk Ma³ek <patryk.malek@intel.com>; linux-
-> kernel@vger.kernel.org; Azarewicz, Piotr <piotr.azarewicz@intel.com>;
-> Loktionov, Aleksandr <aleksandr.loktionov@intel.com>; clang-built-
-> linux@googlegroups.com; intel-wired-lan@lists.osuosl.org; Marczak, Piotr
-> <piotr.marczak@intel.com>
-> Subject: [Intel-wired-lan] [PATCH] i40e: reduce stack usage in i40e_set_fc
-> 
-> The functions i40e_aq_get_phy_abilities_resp() and i40e_set_fc() both have
-> giant structure on the stack, which makes each one use stack frames larger
-> than 500 bytes.
-> 
-> As clang decides one function into the other, we get a warning for exceeding
-> the frame size limit on 32-bit architectures:
-> 
-> drivers/net/ethernet/intel/i40e/i40e_common.c:1654:23: error: stack frame
-> size of 1116 bytes in function 'i40e_set_fc' [-Werror,-Wframe-larger-than=]
-> 
-> When building with gcc, the inlining does not happen, but i40e_set_fc() calls
-> i40e_aq_get_phy_abilities_resp() anyway, so they add up on the kernel
-> stack just as much.
-> 
-> The parts that actually use large stacks don't overlap, so make sure each one
-> is a separate function, and mark them as noinline_for_stack to prevent the
-> compilers from combining them again.
-> 
-> Fixes: 0a862b43acc6 ("i40e/i40evf: Add module_types and
-> update_link_info")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/net/ethernet/intel/i40e/i40e_common.c | 91 +++++++++++--------
->  1 file changed, 51 insertions(+), 40 deletions(-)
+Hi Linus,
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+As promised, here's the second part of the iomap merge for 5.3, in which
+we break up iomap.c into smaller files grouped by functional area so
+that it'll be easier in the long run to maintain cohesiveness of code
+units and to review incoming patches.  There are no functional changes
+and fs/iomap.c split cleanly.
 
+Note that this refactoring series has been lurking in for-next during
+the merge window, but I rebased the series a couple of days ago to pick
+up all the fs/iomap.c changes that came in earlier in the merge window
+from other trees, and now you don't have to pick up the pieces of a
+somewhat messy merge collision. :)
 
+The branch merges cleanly against this morning's HEAD (3bfe1fc46794) and
+survived an overnight run of xfstests.  The merge was completely
+straightforward, so please let me know if you run into anything weird.
 
+The only weirdness I've seen so far is that the new kernel header
+compile test (CONFIG_KERNEL_HEADER_TEST) tries to test-compile iomap.h
+even when CONFIG_BLOCK=n and fails, but that combination wouldn't work
+even in regular kernel code because iomap is a support library for
+filesystems that use block devices.  Masahiro Yamada sent a patch
+earlier today to disable the header compile test for now while he
+reconsiders its strategy.
+
+--D
+
+The following changes since commit fec88ab0af9706b2201e5daf377c5031c62d11f7:
+
+  Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-07-14 19:42:11 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.3-merge-4
+
+for you to fetch changes up to 5d907307adc14cd5148b07629c2b4535acd06062:
+
+  iomap: move internal declarations into fs/iomap/ (2019-07-17 07:21:02 -0700)
+
+----------------------------------------------------------------
+Also new for 5.3:
+- Regroup the fs/iomap.c code by major functional area so that we can
+  start development for 5.4 from a more stable base.
+
+----------------------------------------------------------------
+Darrick J. Wong (8):
+      iomap: start moving code to fs/iomap/
+      iomap: move the swapfile code into a separate file
+      iomap: move the file mapping reporting code into a separate file
+      iomap: move the SEEK_HOLE code into a separate file
+      iomap: move the direct IO code into a separate file
+      iomap: move the buffered IO code into a separate file
+      iomap: move the main iteration code into a separate file
+      iomap: move internal declarations into fs/iomap/
+
+ MAINTAINERS            |    1 +
+ fs/Makefile            |    2 +-
+ fs/dax.c               |    1 -
+ fs/internal.h          |   10 -
+ fs/iomap.c             | 2205 ------------------------------------------------
+ fs/iomap/Makefile      |   15 +
+ fs/iomap/apply.c       |   74 ++
+ fs/iomap/buffered-io.c | 1073 +++++++++++++++++++++++
+ fs/iomap/direct-io.c   |  562 ++++++++++++
+ fs/iomap/fiemap.c      |  144 ++++
+ fs/iomap/seek.c        |  212 +++++
+ fs/iomap/swapfile.c    |  178 ++++
+ include/linux/iomap.h  |   17 +
+ 13 files changed, 2277 insertions(+), 2217 deletions(-)
+ delete mode 100644 fs/iomap.c
+ create mode 100644 fs/iomap/Makefile
+ create mode 100644 fs/iomap/apply.c
+ create mode 100644 fs/iomap/buffered-io.c
+ create mode 100644 fs/iomap/direct-io.c
+ create mode 100644 fs/iomap/fiemap.c
+ create mode 100644 fs/iomap/seek.c
+ create mode 100644 fs/iomap/swapfile.c
