@@ -2,149 +2,76 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072B1C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC33C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAF621851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:04:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ALI4tU3l"
+	by mail.kernel.org (Postfix) with ESMTP id ED27621849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 14:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbfGSOEu (ORCPT
+        id S1729177AbfGSOHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 10:04:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44218 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbfGSOEu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 10:04:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JE47Zk157192;
-        Fri, 19 Jul 2019 14:04:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=mOGnxW2oeyR7eLgIoEBtNWX4Q3za0clxt09dAtyi8dc=;
- b=ALI4tU3l3h/MtvFiWSa1N6ifdl7pe7r5174pSx4JJtgoiV1DeaT+XXLw1P3nXUSYKRfP
- lbp/h/t2Thc+nvJLvBt2qmK1szgzniHzUecvknFy/5+FA2ZA4u0I7xnMFOFMuSOVxKty
- LL4C8VNVmzspDeGP4B9Hnd1yRAPBhPKEm7Lip1Y/sx17A0UIpTgs2sVUQplPEh1Lm0d9
- 4250roVmbhH9Hi/JStYThcbIPFRUqG8RQCCIMqfebyIrM8cpyBMULLZ6LThB8rMZLjfJ
- W4tq6ywgqkYR1Uc3qhG+VV2ScZ9o8t4dBQ31jAgjnzRl/qLM2iNh3y1WINglyiMoLMRD zA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tq6qu71m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 14:04:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6JE3jH6031457;
-        Fri, 19 Jul 2019 14:04:42 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tsmcdm5y3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 14:04:42 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6JE4fK2010649;
-        Fri, 19 Jul 2019 14:04:41 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Jul 2019 14:04:40 +0000
-Date:   Fri, 19 Jul 2019 17:04:29 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ajay.Kathat@microchip.com
-Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
-        gregkh@linuxfoundation.org, hslester96@gmail.com,
-        linux-kernel@vger.kernel.org, Adham.Abozaeid@microchip.com
-Subject: Re: [PATCH] staging: wilc1000: Merge memcpy + le32_to_cpus to
- get_unaligned_le32
-Message-ID: <20190719140429.GI3111@kadam>
-References: <20190719081005.4598-1-hslester96@gmail.com>
- <8c14743d-efe1-3e3a-0419-bde22f848751@microchip.com>
- <CANhBUQ3knUV44GiaB-xZMD8F6y8dcZQdznSmpk3E9ZKoakkBRQ@mail.gmail.com>
- <82dc6d2e-5f62-b2c7-296a-38f781628ec5@microchip.com>
- <20190719140133.GH3111@kadam>
+        Fri, 19 Jul 2019 10:07:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52550 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728351AbfGSOHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 10:07:24 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4A0AEC06511B;
+        Fri, 19 Jul 2019 14:07:23 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E95B3620BD;
+        Fri, 19 Jul 2019 14:07:20 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm, slab: Show last shrink time in us when
+ slab/shrink is read
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <20190717202413.13237-1-longman@redhat.com>
+ <20190717202413.13237-3-longman@redhat.com>
+ <20190719061410.GJ30461@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a0ea7cd2-d66c-f251-d14f-979e0913c7ef@redhat.com>
+Date:   Fri, 19 Jul 2019 10:07:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190719061410.GJ30461@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190719140133.GH3111@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907190159
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907190159
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 19 Jul 2019 14:07:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 05:01:33PM +0300, Dan Carpenter wrote:
-> On Fri, Jul 19, 2019 at 12:05:07PM +0000, Ajay.Kathat@microchip.com wrote:
-> > 
-> > On 7/19/2019 5:16 PM, Chuhong Yuan wrote:
-> > > 
-> > > <Ajay.Kathat@microchip.com> 于2019年7月19日周五 下午7:34写道：
-> > >>
-> > >> On 7/19/2019 1:40 PM, Chuhong Yuan wrote:
-> > >>>
-> > >>> Merge the combo use of memcpy and le32_to_cpus.
-> > >>> Use get_unaligned_le32 instead.
-> > >>> This simplifies the code.
-> > >>>
-> > >>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > >>> ---
-> > >>>  drivers/staging/wilc1000/wilc_wfi_cfgoperations.c | 3 +--
-> > >>>  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-> > >>> index d72fdd333050..12fb4add05ec 100644
-> > >>> --- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-> > >>> +++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-> > >>> @@ -1038,8 +1038,7 @@ void wilc_wfi_p2p_rx(struct wilc_vif *vif, u8 *buff, u32 size)
-> > >>>       s32 freq;
-> > >>>       __le16 fc;
-> > >>>
-> > >>> -     memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
-> > >>> -     le32_to_cpus(&header);
-> > >>> +     header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
-> > >>>       pkt_offset = GET_PKT_OFFSET(header);
-> > >>>
-> > >>>       if (pkt_offset & IS_MANAGMEMENT_CALLBACK) {
-> > >>>
-> > >>
-> > >> Thanks for sending the patches.
-> > >>
-> > >> The code change looks okay to me. Just a minor comment, avoid the use of
-> > >> same subject line for different patches.
-> > > 
-> > > These two patches are in the same subsystem and solve the same problem.
-> > > I splitted them into two patches by mistake since I did not notice the problems
-> > > in the second patch when I sent the first one.
-> > > Should I merge the two patches and resend?
-> > > 
-> > 
-> > Yes, please go ahead, merge the patches and send the updated version.
-> > 
-> 
-> This is wrong advice.  Don't merge the patches because they are for
-> different drivers.  The original subjects are fine because the
-> subsystems are different so that's okay.
-> 
+On 7/19/19 2:14 AM, Michal Hocko wrote:
+> On Wed 17-07-19 16:24:13, Waiman Long wrote:
+>> The show method of /sys/kernel/slab/<slab>/shrink sysfs file currently
+>> returns nothing. This is now modified to show the time of the last
+>> cache shrink operation in us.
+> Isn't this something that tracing can be used for without any kernel
+> modifications?
 
-Oh...  My bad...  I was looking at the wrong patches.  :P  You are
-100% correct Ajay.  Merge the two patches and always make sure to not
-send multiple patches with the same subject.
+That is true, but it will be a bit more cumbersome to get the data.
+Anyway, this is just a nice to have patch for me. I am perfectly fine
+with dropping it if this does not prove to be that useful.
 
-regards,
-dan carpenter
+Thanks,
+Longman
 
