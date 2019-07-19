@@ -2,127 +2,112 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69B8C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B32C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8F62173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF432184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 10:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563530548;
+	bh=KvPLM1GNe5tFVjsJpLtAS+Cc5JSEL3ozQZTgGhM2Zj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cisfm9ExuzRRPwrmc9k3+2R8ZcV3hK6hf2czwUbN18ndJAWn2F8uwUS9HgPJ56hYo
+	 ZMvRCH6kzJjgJNBGZGjiTLKJckb5V4CEdbeaJFUKNHjx20FS8zdvMBQ92HjfQOqLtu
+	 9pxPD2mo+HS5aNdDD3Wpmutu1QbzLnxLdYhh2nOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfGSKAJ (ORCPT
+        id S1727116AbfGSKC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 06:00:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:41202 "EHLO foss.arm.com"
+        Fri, 19 Jul 2019 06:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 06:00:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAF05337;
-        Fri, 19 Jul 2019 03:00:05 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AC3F3F59C;
-        Fri, 19 Jul 2019 03:00:04 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 10:59:59 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
- exception
-Message-ID: <20190719095958.GA19605@lakrids.cambridge.arm.com>
-References: <156342860634.8565.14804606041960884732.stgit@devnote2>
- <156342863822.8565.7624877983728871995.stgit@devnote2>
- <20190718062215.GG14271@linux.ibm.com>
- <20190718092022.GA3625@blommer>
- <20190718233133.146065f668da6297e57e52ef@kernel.org>
+        id S1725794AbfGSKC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 06:02:26 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF302173B;
+        Fri, 19 Jul 2019 10:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563530545;
+        bh=KvPLM1GNe5tFVjsJpLtAS+Cc5JSEL3ozQZTgGhM2Zj0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ngDBnyyvbzeDdeqaWe1yYZ14j969anbfifz4sULg2Y/9mfJfcN2ruBIKYgfHGrwXv
+         RK6jQPeP2tF0RC6ZW5ZWHe7piD8IkfoGr1N8FVpUiEllxkKqG6jvPfz5Eo+0qxU4FW
+         pwk+O2cge3NeLPhjy9rKqiqtFbFtbFxsxPikY1Nw=
+Date:   Fri, 19 Jul 2019 11:02:20 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        Frank Li <frank.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH] perf tool: arch: arm64: change the way for
+ get_cpuid_str() function
+Message-ID: <20190719100219.b3bbrv4t4qcv2gid@willie-the-truck>
+References: <20190718061853.10403-1-qiangqing.zhang@nxp.com>
+ <20190719075450.xcm4i4a5sfaxlfap@willie-the-truck>
+ <DB7PR04MB4618EE69C2D8A664660C19C4E6CB0@DB7PR04MB4618.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190718233133.146065f668da6297e57e52ef@kernel.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <DB7PR04MB4618EE69C2D8A664660C19C4E6CB0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:31:33PM +0900, Masami Hiramatsu wrote:
-> On Thu, 18 Jul 2019 10:20:23 +0100
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> > On Wed, Jul 17, 2019 at 11:22:15PM -0700, Paul E. McKenney wrote:
-> > > On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
-> > > > Remove rcu_read_lock()/rcu_read_unlock() from debug exception
-> > > > handlers since the software breakpoint can be hit on idle task.
+On Fri, Jul 19, 2019 at 08:29:12AM +0000, Joakim Zhang wrote:
+> > On Thu, Jul 18, 2019 at 06:21:30AM +0000, Joakim Zhang wrote:
+> > > Now the get_cpuid__str function returns the MIDR string of the first
+> > > online cpu from the range of cpus asscociated with the PMU CORE device.
+> > >
+> > > It can work when pass a perf_pmu entity to get_cpuid_str. However, it
+> > > will pass NULL via perf_pmu__find_map from metricgroup.c if we want to
+> > > add metric group for arm64. When pass NULL to get_cpuid_str, it can't
+> > > return the MIDR string.
 > > 
-> > Why precisely do we need to elide these? Are we seeing warnings today?
+> > Why is this code passing a NULL PMU? What information does it actually need?
+> > Other functions, such as print_pmu_events(), iterate over all PMUs.
 > 
-> Yes, unfortunately, or fortunately. Naresh reported that warns when
-> ftracetest ran. I confirmed that happens if I probe on default_idle_call too.
+> tools/perf/utils/metricgroup.c:
+> metricgroup__add_metric()/metricgroup__has_metric()/metricgroup__print()---->perf_pmu__find_map(NULL)------>perf_pmu__getcpuid(NULL)----->get_cpuid_str(NULL)
+> So, it will eventually pass NULL to get_cpuid_str() function for arm64, and now get_cpuid_str() for arm64 need *struct perf_pmu* entity to return MIDR string.
 > 
-> /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events 
-> /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable 
-> /sys/kernel/debug/tracing # [  135.122237] 
-> [  135.125035] =============================
-> [  135.125310] WARNING: suspicious RCU usage
-> [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
-> [  135.125904] -----------------------------
-> [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
-> [  135.126839] 
-> [  135.126839] other info that might help us debug this:
-> [  135.126839] 
-> [  135.127410] 
-> [  135.127410] RCU used illegally from idle CPU!
-> [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
-> [  135.128114] RCU used illegally from extended quiescent state!
-> [  135.128555] 1 lock held by swapper/0/0:
-> [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
-> [  135.130499] 
-> [  135.130499] stack backtrace:
-> [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
-> [  135.131841] Hardware name: linux,dummy-virt (DT)
-> [  135.132224] Call trace:
-> [  135.132491]  dump_backtrace+0x0/0x140
-> [  135.132806]  show_stack+0x24/0x30
-> [  135.133133]  dump_stack+0xc4/0x10c
-> [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-> [  135.134171]  call_break_hook+0x170/0x178
-> [  135.134486]  brk_handler+0x28/0x68
-> [  135.134792]  do_debug_exception+0x90/0x150
-> [  135.135051]  el1_dbg+0x18/0x8c
-> [  135.135260]  default_idle_call+0x0/0x44
-> [  135.135516]  cpu_startup_entry+0x2c/0x30
-> [  135.135815]  rest_init+0x1b0/0x280
-> [  135.136044]  arch_call_rest_init+0x14/0x1c
-> [  135.136305]  start_kernel+0x4d4/0x500
-> [  135.136597] 
+> And the declaration for get_cpuid_str() is char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused) in tools/perf/utils/header.h file.
+> So, it can return MIDR string without passing *struct perf_pmu* entity. Arch PowerPC/x86/s390 which implement metricgroup all add __maybe_unused.
 > 
-> > > The exception entry and exit use irq_enter() and irq_exit(), in this
-> > > case, correct?  Otherwise RCU will be ignoring this CPU.
+> > > There are three methods from userspace getting MIDR string for arm64:
+> > > 1. parse
+> > > sysfs(/sys/devices/system/cpu/cpu?/regs/identification/midr_el1)
+> > > 2. parse procfs(/proc/cpuinfo)
+> > > 3. read the hwcaps(MIDR register) with getauxval(AT_HWCAP)
+> > >
+> > > Perfer to select #3 as it is more simple and direct.
 > > 
-> > This is missing today, which sounds like the underlying bug.
+> > That's probably terminally broken for heterogeneous systems, so I'm not at all
+> > happy with this patch.
 > 
-> Agreed. I'm not so familier with how debug exception is handled on arm64,
-> would it be a kind of NMI or IRQ?
+> The implement of get_cpuid_str() for arm64 now only can return the MIDR
+> string of the first online cpu. I think it is also broken for
+> heterogeneous systems.
 
-They're more like faults, in that they're synchronous exceptions.
+I disagree: the current code returns the MIDR string for the first online
+CPU *corresponding to the PMU* (e.g. pmu->cpus) and therefore handles
+heterogeneous systems like that.
 
-Given that, I think using irq_enter() / irq_exit() would be surprising
-here, but perhaps they're misnamed.
+> Will, do you know how to fix this issue more reasonable?
 
-What do other architectures do here? Having a kprobe on the critical
-path to idle doesn't sound specific to arm64, but perhaps it is (and we
-should rule it out).
+I still don't know what the metricgroup coce is trying to achieve, but my
+previous suggestion about looking at print_pmu_events() is probably still a
+good place to start.
 
-Thanks,
-Mark.
+Will
