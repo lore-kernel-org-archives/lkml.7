@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F281C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA6BC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255CA2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB072082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510638;
-	bh=GIVjHN4Ipw1JFaURwKMXoUGR6EIG9Z9SPWtxHcXoxBk=;
+	s=default; t=1563510650;
+	bh=8tBagpOAOpprCs4uYU53NVUBKsHIAknXM1XHCt4N8L0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHbbrPN2gCcGHCrVDZMfqalzWFPFd2rQJ1jknyUwng3rM8ltIYCPRqy27IRG9PMs1
-	 7FqKBxjnPEFmlZXLxaf6qpZGDquYGOQbatB2eZoViyCXCLO0DXu9AisjHxiUcuOzyM
-	 92J//9yX5RDBTeALUhu1UXUBJNQUjH/SA6KCrz5E=
+	b=k3X6WcKZ8/6EktEtOFxPsKKonawNeW0yHBTFiEcDxxfirVZbPqAY/maidof5VuVom
+	 10H05CewgSvkDU6DrLBsoTglLrwGapieO0x/BYpn1kXu+VRVKxzoHN1uNO4UoTyBym
+	 3B3KrOH0uTtXzxxvdF7BURjcvPH/hjRU+6pdZiIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbfGSEag (ORCPT
+        id S1731316AbfGSEEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37194 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbfGSEE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:04:59 -0400
+        id S1729485AbfGSEEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:04:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00322218A3;
-        Fri, 19 Jul 2019 04:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B94D7218B8;
+        Fri, 19 Jul 2019 04:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509098;
-        bh=GIVjHN4Ipw1JFaURwKMXoUGR6EIG9Z9SPWtxHcXoxBk=;
+        s=default; t=1563509087;
+        bh=8tBagpOAOpprCs4uYU53NVUBKsHIAknXM1XHCt4N8L0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJN1hLACcT7Y/BBMj8cTvWiT7H+qcYP1T0vCOkTzEM2+STg9MAtHp2sFrWeRQh/OZ
-         s/zbIjd3hIEPEO+KM9EurCAChP0tg3rOBT+etYX7ffnqdGC94pigbj+nGoR/VmUjgR
-         /gqBHKWBSD7Uc2xKP2RUE4mT1Lxo3WJ05bpyAKtI=
+        b=ojeAN3frEeYJ78CwA+VewqJRBg8iEDSHciGcBU5N9eRfll/yFYawOfMoFpDya1BUG
+         FbqVV9C6B84/jeQbhyjMCCzfd/VKIisWJBomqNHynNNWIGw+bwuygww2yZWkc6ZoZB
+         Yph6MTkWBFJuprSXMOHy7pJh7jKDFhPqFW30JHNU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 067/141] PCI: xilinx-nwl: Fix Multi MSI data programming
-Date:   Fri, 19 Jul 2019 00:01:32 -0400
-Message-Id: <20190719040246.15945-67-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.1 061/141] staging: ks7010: Fix build error
+Date:   Fri, 19 Jul 2019 00:01:26 -0400
+Message-Id: <20190719040246.15945-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -60,97 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
+[ Upstream commit 3e5bc68fa596874500e8c718605aa44d5e42a34c ]
 
-According to the PCI Local Bus specification Revision 3.0,
-section 6.8.1.3 (Message Control for MSI), endpoints that
-are Multiple Message Capable as defined by bits [3:1] in
-the Message Control for MSI can request a number of vectors
-that is power of two aligned.
+when CRYPTO is m and KS7010 is y, building fails:
 
-As specified in section 6.8.1.6 "Message data for MSI", the Multiple
-Message Enable field (bits [6:4] of the Message Control register)
-defines the number of low order message data bits the function is
-permitted to modify to generate its system software allocated
-vectors.
+drivers/staging/ks7010/ks_hostif.o: In function `michael_mic.constprop.13':
+ks_hostif.c:(.text+0x560): undefined reference to `crypto_alloc_shash'
+ks_hostif.c:(.text+0x580): undefined reference to `crypto_shash_setkey'
+ks_hostif.c:(.text+0x5e0): undefined reference to `crypto_destroy_tfm'
+ks_hostif.c:(.text+0x614): undefined reference to `crypto_shash_update'
+ks_hostif.c:(.text+0x62c): undefined reference to `crypto_shash_update'
+ks_hostif.c:(.text+0x648): undefined reference to `crypto_shash_finup'
 
-The MSI controller in the Xilinx NWL PCIe controller supports a number
-of MSI vectors specified through a bitmap and the hwirq number for an
-MSI, that is the value written in the MSI data TLP is determined by
-the bitmap allocation.
+Add CRYPTO and CRYPTO_HASH dependencies to fix this.
 
-For instance, in a situation where two endpoints sitting on
-the PCI bus request the following MSI configuration, with
-the current PCI Xilinx bitmap allocation code (that does not
-align MSI vector allocation on a power of two boundary):
-
-Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
-Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
-
-The bitmap value(s) corresponds to the hwirq number that is programmed
-into the Message Data for MSI field in the endpoint MSI capability
-and is detected by the root complex to fire the corresponding
-MSI irqs. The value written in Message Data for MSI field corresponds
-to the first bit allocated in the bitmap for Multi MSI vectors.
-
-The current Xilinx NWL MSI allocation code allows a bitmap allocation
-that is not a power of two boundaries, so endpoint #2, is allowed to
-toggle Message Data bit[0] to differentiate between its two vectors
-(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
-vectors allocated to endpoint #2).
-
-This clearly aliases with the Endpoint #1 vector allocation, resulting
-in a broken Multi MSI implementation.
-
-Update the code to allocate MSI bitmap ranges with a power of two
-alignment, fixing the bug.
-
-Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 8b523f20417d ("staging: ks7010: removed custom Michael MIC implementation.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/staging/ks7010/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 81538d77f790..a9e07b8a45b1 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int i;
- 
- 	mutex_lock(&msi->lock);
--	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
--					 nr_irqs, 0);
--	if (bit >= INT_PCI_MSI_NR) {
-+	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-+				      get_count_order(nr_irqs));
-+	if (bit < 0) {
- 		mutex_unlock(&msi->lock);
- 		return -ENOSPC;
- 	}
- 
--	bitmap_set(msi->bitmap, bit, nr_irqs);
--
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
- 				domain->host_data, handle_simple_irq,
-@@ -509,7 +507,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct nwl_msi *msi = &pcie->msi;
- 
- 	mutex_lock(&msi->lock);
--	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-+	bitmap_release_region(msi->bitmap, data->hwirq,
-+			      get_count_order(nr_irqs));
- 	mutex_unlock(&msi->lock);
- }
- 
+diff --git a/drivers/staging/ks7010/Kconfig b/drivers/staging/ks7010/Kconfig
+index 0b9217674d5b..8a303ce114d8 100644
+--- a/drivers/staging/ks7010/Kconfig
++++ b/drivers/staging/ks7010/Kconfig
+@@ -4,6 +4,7 @@ config KS7010
+ 	select WIRELESS_EXT
+ 	select WEXT_PRIV
+ 	select FW_LOADER
++	depends on CRYPTO && CRYPTO_HASH
+ 	help
+ 	  This is a driver for KeyStream KS7010 based SDIO WIFI cards. It is
+ 	  found on at least later Spectec SDW-821 (FCC-ID "S2Y-WLAN-11G-K" only,
 -- 
 2.20.1
 
