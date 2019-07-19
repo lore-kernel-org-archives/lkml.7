@@ -2,229 +2,441 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5452C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF05BC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAF621850
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563517257;
-	bh=tKNmhCXir7BMYQTFAEzn0aVjlDHd3zhgOrSFbib2k54=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xLYoaDM51GCkItr+12DUCNdvFh8TpzwaaLMyvF5MHo0x02ZTAcvQx3Typhb/2uK8D
-	 pSJ4edsIXmg5D22Fk29eMLm+IaO/HM/fhyZ54yyS5YfDYmHBcE4UArbW0Twh2gFAIC
-	 jW2cH8DB+W2vvXMLbuIIWu9tpyA+8osQDYyelBsk=
+	by mail.kernel.org (Postfix) with ESMTP id A26D32184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfGSGU4 (ORCPT
+        id S1726788AbfGSG17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:20:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33242 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726072AbfGSGUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:20:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F0133AEAE;
-        Fri, 19 Jul 2019 06:20:53 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 08:20:52 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH v2 1/2] mm, slab: Extend slab/shrink to shrink all memcg
- caches
-Message-ID: <20190719062052.GK30461@dhcp22.suse.cz>
-References: <20190717202413.13237-1-longman@redhat.com>
- <20190717202413.13237-2-longman@redhat.com>
+        Fri, 19 Jul 2019 02:27:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:44353 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfGSG16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:27:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 23:27:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="asc'?scan'208";a="319878919"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by orsmga004.jf.intel.com with ESMTP; 18 Jul 2019 23:27:55 -0700
+Date:   Fri, 19 Jul 2019 14:24:42 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Kechen Lu <kechen.lu@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        kraxel@redhat.com, zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
+        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
+        alex.williamson@redhat.com
+Subject: Re: [RFC PATCH v4 4/6] drm/i915/gvt: Deliver vGPU refresh event to
+ userspace
+Message-ID: <20190719062442.GD28809@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+ <20190718155640.25928-5-kechen.lu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0/kgSOzhNoDC5T3a"
 Content-Disposition: inline
-In-Reply-To: <20190717202413.13237-2-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190718155640.25928-5-kechen.lu@intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-07-19 16:24:12, Waiman Long wrote:
-> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
-> file to shrink the slab by flushing out all the per-cpu slabs and free
-> slabs in partial lists. This can be useful to squeeze out a bit more memory
-> under extreme condition as well as making the active object counts in
-> /proc/slabinfo more accurate.
-> 
-> This usually applies only to the root caches, as the SLUB_MEMCG_SYSFS_ON
-> option is usually not enabled and "slub_memcg_sysfs=1" not set. Even
-> if memcg sysfs is turned on, it is too cumbersome and impractical to
-> manage all those per-memcg sysfs files in a real production system.
-> 
-> So there is no practical way to shrink memcg caches.  Fix this by
-> enabling a proper write to the shrink sysfs file of the root cache
-> to scan all the available memcg caches and shrink them as well. For a
-> non-root memcg cache (when SLUB_MEMCG_SYSFS_ON or slub_memcg_sysfs is
-> on), only that cache will be shrunk when written.
 
-I would mention that memcg unawareness was an overlook more than
-anything else. The interface is intended to shrink all pcp data of the
-cache. The fact that we are using per-memcg internal caches is an
-implementation detail.
+--0/kgSOzhNoDC5T3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On a 2-socket 64-core 256-thread arm64 system with 64k page after
-> a parallel kernel build, the the amount of memory occupied by slabs
-> before shrinking slabs were:
-> 
->  # grep task_struct /proc/slabinfo
->  task_struct        53137  53192   4288   61    4 : tunables    0    0
->  0 : slabdata    872    872      0
->  # grep "^S[lRU]" /proc/meminfo
->  Slab:            3936832 kB
->  SReclaimable:     399104 kB
->  SUnreclaim:      3537728 kB
-> 
-> After shrinking slabs:
-> 
->  # grep "^S[lRU]" /proc/meminfo
->  Slab:            1356288 kB
->  SReclaimable:     263296 kB
->  SUnreclaim:      1092992 kB
->  # grep task_struct /proc/slabinfo
->  task_struct         2764   6832   4288   61    4 : tunables    0    0
->  0 : slabdata    112    112      0
-
-Now that you are touching the documentation I would just add a note that
-shrinking might be expensive and block other slab operations so it
-should be used with some care.
-
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> Acked-by: Roman Gushchin <guro@fb.com>
-
-The patch looks good to me. I do not feel qualified to give my ack but
-it is definitely a change in the good direction.
-
-Let's just be careful recommending people to use this as a workaround to
-over caching and resulting tilted stats. That needs to be addressed
-separately.
-
-Thanks!
-
+On 2019.07.18 23:56:38 +0800, Kechen Lu wrote:
+> From: Tina Zhang <tina.zhang@intel.com>
+>=20
+> Deliver the display refresh events to the user land. Userspace can use
+> the irq mask/unmask mechanism to disable or enable the event delivery.
+>=20
+> As we know, delivering refresh event at each vblank safely avoids
+> tearing and unexpected event overwhelming, but there are still spaces
+> to optimize.
+>=20
+> For handling the normal case, deliver the page flip refresh
+> event at each vblank, in other words, bounded by vblanks. Skipping some
+> events bring performance enhancement while not hurting user experience.
+>=20
+> For single framebuffer case, deliver the refresh events to userspace at
+> all vblanks. This heuristic at each vblank leverages pageflip_count
+> incresements to determine if there is no page flip happens after a certain
+> period and so that the case is regarded as single framebuffer one.
+> Although this heuristic makes incorrect decision sometimes and it depends
+> on guest behavior, for example, when no cursor movements happen, the
+> user experience does not harm and front buffer is still correctly acquire=
+d.
+> Meanwhile, in actual single framebuffer case, the user experience is
+> enhanced compared with page flip events only.
+>=20
+> Addtionally, to mitigate the events delivering footprints, one eventfd and
+> 8 byte eventfd counter partition are leveraged.
+>=20
+> Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> Signed-off-by: Kechen Lu <kechen.lu@intel.com>
 > ---
->  Documentation/ABI/testing/sysfs-kernel-slab | 12 ++++---
->  mm/slab.h                                   |  1 +
->  mm/slab_common.c                            | 37 +++++++++++++++++++++
->  mm/slub.c                                   |  2 +-
->  4 files changed, 47 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-slab b/Documentation/ABI/testing/sysfs-kernel-slab
-> index 29601d93a1c2..94ffd47fc8d7 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-slab
-> +++ b/Documentation/ABI/testing/sysfs-kernel-slab
-> @@ -429,10 +429,14 @@ KernelVersion:	2.6.22
->  Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
->  		Christoph Lameter <cl@linux-foundation.org>
->  Description:
-> -		The shrink file is written when memory should be reclaimed from
-> -		a cache.  Empty partial slabs are freed and the partial list is
-> -		sorted so the slabs with the fewest available objects are used
-> -		first.
-> +		The shrink file is used to enable some unused slab cache
-> +		memory to be reclaimed from a cache.  Empty per-cpu
-> +		or partial slabs are freed and the partial list is
-> +		sorted so the slabs with the fewest available objects
-> +		are used first.  It only accepts a value of "1" on
-> +		write for shrinking the cache. Other input values are
-> +		considered invalid.  If it is a root cache, all the
-> +		child memcg caches will also be shrunk, if available.
->  
->  What:		/sys/kernel/slab/cache/slab_size
->  Date:		May 2007
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 9057b8056b07..5bf615cb3f99 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -174,6 +174,7 @@ int __kmem_cache_shrink(struct kmem_cache *);
->  void __kmemcg_cache_deactivate(struct kmem_cache *s);
->  void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
->  void slab_kmem_cache_release(struct kmem_cache *);
-> +void kmem_cache_shrink_all(struct kmem_cache *s);
->  
->  struct seq_file;
->  struct file;
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 807490fe217a..6491c3a41805 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -981,6 +981,43 @@ int kmem_cache_shrink(struct kmem_cache *cachep)
+>  drivers/gpu/drm/i915/gvt/display.c |  21 ++++
+>  drivers/gpu/drm/i915/gvt/gvt.h     |   7 ++
+>  drivers/gpu/drm/i915/gvt/kvmgt.c   | 154 +++++++++++++++++++++++++++--
+>  3 files changed, 173 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/display.c b/drivers/gpu/drm/i915/gv=
+t/display.c
+> index 1a0a4ae4826e..036db8199983 100644
+> --- a/drivers/gpu/drm/i915/gvt/display.c
+> +++ b/drivers/gpu/drm/i915/gvt/display.c
+> @@ -387,6 +387,8 @@ void intel_gvt_check_vblank_emulation(struct intel_gv=
+t *gvt)
+>  	mutex_unlock(&gvt->lock);
 >  }
->  EXPORT_SYMBOL(kmem_cache_shrink);
->  
-> +/**
-> + * kmem_cache_shrink_all - shrink a cache and all memcg caches for root cache
-> + * @s: The cache pointer
-> + */
-> +void kmem_cache_shrink_all(struct kmem_cache *s)
+> =20
+> +#define PAGEFLIP_INC_COUNT 5
+> +
+>  static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
+>  {
+>  	struct drm_i915_private *dev_priv =3D vgpu->gvt->dev_priv;
+> @@ -396,7 +398,10 @@ static void emulate_vblank_on_pipe(struct intel_vgpu=
+ *vgpu, int pipe)
+>  		[PIPE_B] =3D PIPE_B_VBLANK,
+>  		[PIPE_C] =3D PIPE_C_VBLANK,
+>  	};
+> +	int pri_flip_event =3D SKL_FLIP_EVENT(pipe, PLANE_PRIMARY);
+>  	int event;
+> +	u64 eventfd_signal_val =3D 0;
+> +	static int pageflip_count;
+> =20
+>  	if (pipe < PIPE_A || pipe > PIPE_C)
+>  		return;
+> @@ -407,11 +412,27 @@ static void emulate_vblank_on_pipe(struct intel_vgp=
+u *vgpu, int pipe)
+>  		if (!pipe_is_enabled(vgpu, pipe))
+>  			continue;
+> =20
+> +		if (event =3D=3D pri_flip_event) {
+> +			eventfd_signal_val +=3D DISPLAY_PRI_REFRESH_EVENT_INC;
+> +			pageflip_count +=3D PAGEFLIP_INC_COUNT;
+> +		}
+> +
+>  		intel_vgpu_trigger_virtual_event(vgpu, event);
+>  	}
+> =20
+> +	if (--pageflip_count < 0) {
+> +		eventfd_signal_val +=3D DISPLAY_PRI_REFRESH_EVENT_INC;
+> +		pageflip_count =3D 0;
+> +	}
+
+If pageflip_count has been increased to a big number from page flip
+event for some time, then if guest switch for single buffer render, it
+would take 5x vblank time to send refresh then..
+
+> +
+> +	if (vgpu->vdev.vblank_trigger && !(vgpu->vdev.display_event_mask
+> +		& (DISPLAY_PRI_REFRESH_EVENT | DISPLAY_CUR_REFRESH_EVENT)) &&
+> +		eventfd_signal_val)
+> +		eventfd_signal(vgpu->vdev.vblank_trigger, eventfd_signal_val);
+> +
+>  	if (pipe_is_enabled(vgpu, pipe)) {
+>  		vgpu_vreg_t(vgpu, PIPE_FRMCOUNT_G4X(pipe))++;
+> +
+>  		intel_vgpu_trigger_virtual_event(vgpu, vblank_event[pipe]);
+>  	}
+>  }
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
+t.h
+> index 64d1c1aaa42a..b654b6fa0663 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> @@ -165,6 +165,11 @@ struct intel_vgpu_submission {
+>  	bool active;
+>  };
+> =20
+> +#define DISPLAY_PRI_REFRESH_EVENT	(1 << 0)
+> +#define DISPLAY_PRI_REFRESH_EVENT_INC	(1UL << 56)
+> +#define DISPLAY_CUR_REFRESH_EVENT	(1 << 1)
+> +#define DISPLAY_CUR_REFRESH_EVENT_INC	(1UL << 48)
+> +
+
+As this is for eventfd interface definition, need to put in vfio header ins=
+tead of gvt's,
+as this is userspace API. And better reorder for different usage on irq mas=
+king and eventfd value.
+
+For eventfd value, this looks like counter for each plane? Or do we just ne=
+ed a flag?
+
+>  struct intel_vgpu {
+>  	struct intel_gvt *gvt;
+>  	struct mutex vgpu_lock;
+> @@ -205,6 +210,8 @@ struct intel_vgpu {
+>  		int num_irqs;
+>  		struct eventfd_ctx *intx_trigger;
+>  		struct eventfd_ctx *msi_trigger;
+> +		struct eventfd_ctx *vblank_trigger;
+> +		u32 display_event_mask;
+> =20
+>  		/*
+>  		 * Two caches are used to avoid mapping duplicated pages (eg.
+> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/=
+kvmgt.c
+> index 6fe825763d05..61c634618217 100644
+> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> @@ -1222,6 +1222,8 @@ static int intel_vgpu_get_irq_count(struct intel_vg=
+pu *vgpu, int type)
+>  {
+>  	if (type =3D=3D VFIO_PCI_INTX_IRQ_INDEX || type =3D=3D VFIO_PCI_MSI_IRQ=
+_INDEX)
+>  		return 1;
+> +	else if (type < VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs)
+> +		return vgpu->vdev.irq[type - VFIO_PCI_NUM_IRQS].count;
+> =20
+>  	return 0;
+>  }
+> @@ -1269,7 +1271,62 @@ static int intel_vgpu_set_msi_trigger(struct intel=
+_vgpu *vgpu,
+>  	return 0;
+>  }
+> =20
+> -static int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
+> +static int intel_vgu_set_display_irq_mask(struct intel_vgpu *vgpu,
+> +		unsigned int index, unsigned int start, unsigned int count,
+> +		u32 flags, void *data)
 > +{
-> +	struct kmem_cache *c;
+> +	if (start !=3D 0 || count > 2)
+> +		return -EINVAL;
 > +
-> +	if (!IS_ENABLED(CONFIG_MEMCG_KMEM) || !is_root_cache(s)) {
-> +		kmem_cache_shrink(s);
-> +		return;
-> +	}
+> +	if (flags & VFIO_IRQ_SET_DATA_NONE)
+> +		vgpu->vdev.display_event_mask |=3D DISPLAY_PRI_REFRESH_EVENT |
+> +			DISPLAY_CUR_REFRESH_EVENT;
 > +
-> +	get_online_cpus();
-> +	get_online_mems();
-> +	kasan_cache_shrink(s);
-> +	__kmem_cache_shrink(s);
-> +
-> +	/*
-> +	 * We have to take the slab_mutex to protect from the memcg list
-> +	 * modification.
-> +	 */
-> +	mutex_lock(&slab_mutex);
-> +	for_each_memcg_cache(c, s) {
-> +		/*
-> +		 * Don't need to shrink deactivated memcg caches.
-> +		 */
-> +		if (s->flags & SLAB_DEACTIVATED)
-> +			continue;
-> +		kasan_cache_shrink(c);
-> +		__kmem_cache_shrink(c);
-> +	}
-> +	mutex_unlock(&slab_mutex);
-> +	put_online_mems();
-> +	put_online_cpus();
+> +	return 0;
 > +}
 > +
->  bool slab_is_available(void)
+> +static int intel_vgu_set_display_irq_unmask(struct intel_vgpu *vgpu,
+> +		unsigned int index, unsigned int start, unsigned int count,
+> +		u32 flags, void *data)
+> +{
+> +	if (start !=3D 0 || count > 2)
+> +		return -EINVAL;
+> +
+> +	if (flags & VFIO_IRQ_SET_DATA_NONE)
+> +		vgpu->vdev.display_event_mask &=3D ~(DISPLAY_PRI_REFRESH_EVENT |
+> +			   DISPLAY_CUR_REFRESH_EVENT);
+> +
+> +	return 0;
+> +}
+> +
+> +static int intel_vgpu_set_display_event_trigger(struct intel_vgpu *vgpu,
+> +		unsigned int index, unsigned int start, unsigned int count,
+> +		u32 flags, void *data)
+> +{
+> +	struct eventfd_ctx *trigger;
+> +
+> +	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
+> +		int fd =3D *(int *)data;
+> +
+> +		trigger =3D eventfd_ctx_fdget(fd);
+> +		if (IS_ERR(trigger)) {
+> +			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
+> +			return PTR_ERR(trigger);
+> +		}
+> +		vgpu->vdev.vblank_trigger =3D trigger;
+> +		vgpu->vdev.display_event_mask =3D 0;
+> +	} else if ((flags & VFIO_IRQ_SET_DATA_NONE) && !count) {
+> +		trigger =3D vgpu->vdev.vblank_trigger;
+> +		if (trigger) {
+> +			eventfd_ctx_put(trigger);
+> +			vgpu->vdev.vblank_trigger =3D NULL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int intel_vgpu_set_irqs(struct intel_vgpu *vgpu, u32 flags,
+>  		unsigned int index, unsigned int start, unsigned int count,
+>  		void *data)
 >  {
->  	return slab_state >= UP;
-> diff --git a/mm/slub.c b/mm/slub.c
-> index e6c030e47364..9736eb10dcb8 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -5294,7 +5294,7 @@ static ssize_t shrink_store(struct kmem_cache *s,
->  			const char *buf, size_t length)
->  {
->  	if (buf[0] == '1')
-> -		kmem_cache_shrink(s);
-> +		kmem_cache_shrink_all(s);
->  	else
->  		return -EINVAL;
->  	return length;
-> -- 
-> 2.18.1
+> @@ -1302,6 +1359,35 @@ static int intel_vgpu_set_irqs(struct intel_vgpu *=
+vgpu, u32 flags,
+>  			break;
+>  		}
+>  		break;
+> +	default:
+> +	{
+> +		int i;
+> +
+> +		if (index >=3D VFIO_PCI_NUM_IRQS +
+> +					vgpu->vdev.num_irqs)
+> +			return -EINVAL;
+> +		index =3D
+> +			array_index_nospec(index,
+> +						VFIO_PCI_NUM_IRQS +
+> +						vgpu->vdev.num_irqs);
+> +
+> +		i =3D index - VFIO_PCI_NUM_IRQS;
+> +		if (vgpu->vdev.irq[i].type =3D=3D VFIO_IRQ_TYPE_GFX &&
+> +		    vgpu->vdev.irq[i].subtype =3D=3D
+> +		    VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ) {
+> +			switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
+> +			case VFIO_IRQ_SET_ACTION_MASK:
+> +				func =3D intel_vgu_set_display_irq_mask;
+> +				break;
+> +			case VFIO_IRQ_SET_ACTION_UNMASK:
+> +				func =3D intel_vgu_set_display_irq_unmask;
+> +				break;
+> +			case VFIO_IRQ_SET_ACTION_TRIGGER:
+> +				func =3D intel_vgpu_set_display_event_trigger;
+> +				break;
+> +			}
+> +		}
+> +	}
+>  	}
+> =20
+>  	if (!func)
+> @@ -1333,7 +1419,7 @@ static long intel_vgpu_ioctl(struct mdev_device *md=
+ev, unsigned int cmd,
+>  		info.flags |=3D VFIO_DEVICE_FLAGS_RESET;
+>  		info.num_regions =3D VFIO_PCI_NUM_REGIONS +
+>  				vgpu->vdev.num_regions;
+> -		info.num_irqs =3D VFIO_PCI_NUM_IRQS;
+> +		info.num_irqs =3D VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs;
+> =20
+>  		return copy_to_user((void __user *)arg, &info, minsz) ?
+>  			-EFAULT : 0;
+> @@ -1493,32 +1579,81 @@ static long intel_vgpu_ioctl(struct mdev_device *=
+mdev, unsigned int cmd,
+>  			-EFAULT : 0;
+>  	} else if (cmd =3D=3D VFIO_DEVICE_GET_IRQ_INFO) {
+>  		struct vfio_irq_info info;
+> +		struct vfio_info_cap caps =3D { .buf =3D NULL, .size =3D 0 };
+> +		unsigned int i;
+> +		int ret;
+> =20
+>  		minsz =3D offsetofend(struct vfio_irq_info, count);
+> =20
+>  		if (copy_from_user(&info, (void __user *)arg, minsz))
+>  			return -EFAULT;
+> =20
+> -		if (info.argsz < minsz || info.index >=3D VFIO_PCI_NUM_IRQS)
+> +		if (info.argsz < minsz)
+>  			return -EINVAL;
+> =20
+>  		switch (info.index) {
+>  		case VFIO_PCI_INTX_IRQ_INDEX:
+>  		case VFIO_PCI_MSI_IRQ_INDEX:
+> +			info.flags =3D VFIO_IRQ_INFO_EVENTFD;
+>  			break;
+> -		default:
+> +		case VFIO_PCI_MSIX_IRQ_INDEX:
+> +		case VFIO_PCI_ERR_IRQ_INDEX:
+> +		case VFIO_PCI_REQ_IRQ_INDEX:
+>  			return -EINVAL;
+> -		}
+> +		default:
+> +		{
+> +			struct vfio_irq_info_cap_type cap_type =3D {
+> +				.header.id =3D VFIO_IRQ_INFO_CAP_TYPE,
+> +				.header.version =3D 1 };
+> =20
+> -		info.flags =3D VFIO_IRQ_INFO_EVENTFD;
+> +			if (info.index >=3D VFIO_PCI_NUM_IRQS +
+> +					vgpu->vdev.num_irqs)
+> +				return -EINVAL;
+> +			info.index =3D
+> +				array_index_nospec(info.index,
+> +						VFIO_PCI_NUM_IRQS +
+> +						vgpu->vdev.num_irqs);
+> +
+> +			i =3D info.index - VFIO_PCI_NUM_IRQS;
+> +
+> +			info.flags =3D vgpu->vdev.irq[i].flags;
+> +			cap_type.type =3D vgpu->vdev.irq[i].type;
+> +			cap_type.subtype =3D vgpu->vdev.irq[i].subtype;
+> +
+> +			ret =3D vfio_info_add_capability(&caps,
+> +						&cap_type.header,
+> +						sizeof(cap_type));
+> +			if (ret)
+> +				return ret;
+> +		}
+> +		}
+> =20
+>  		info.count =3D intel_vgpu_get_irq_count(vgpu, info.index);
+> =20
+>  		if (info.index =3D=3D VFIO_PCI_INTX_IRQ_INDEX)
+>  			info.flags |=3D (VFIO_IRQ_INFO_MASKABLE |
+>  				       VFIO_IRQ_INFO_AUTOMASKED);
+> -		else
+> -			info.flags |=3D VFIO_IRQ_INFO_NORESIZE;
+> +
+> +		if (caps.size) {
+> +			info.flags |=3D VFIO_IRQ_INFO_FLAG_CAPS;
+> +			if (info.argsz < sizeof(info) + caps.size) {
+> +				info.argsz =3D sizeof(info) + caps.size;
+> +				info.cap_offset =3D 0;
+> +			} else {
+> +				vfio_info_cap_shift(&caps, sizeof(info));
+> +				if (copy_to_user((void __user *)arg +
+> +						  sizeof(info), caps.buf,
+> +						  caps.size)) {
+> +					kfree(caps.buf);
+> +					return -EFAULT;
+> +				}
+> +				info.cap_offset =3D sizeof(info);
+> +				if (offsetofend(struct vfio_irq_info, cap_offset) > minsz)
+> +					minsz =3D offsetofend(struct vfio_irq_info, cap_offset);
+> +			}
+> +
+> +			kfree(caps.buf);
+> +		}
+> =20
+>  		return copy_to_user((void __user *)arg, &info, minsz) ?
+>  			-EFAULT : 0;
+> @@ -1537,7 +1672,8 @@ static long intel_vgpu_ioctl(struct mdev_device *md=
+ev, unsigned int cmd,
+>  			int max =3D intel_vgpu_get_irq_count(vgpu, hdr.index);
+> =20
+>  			ret =3D vfio_set_irqs_validate_and_prepare(&hdr, max,
+> -						VFIO_PCI_NUM_IRQS, &data_size);
+> +					VFIO_PCI_NUM_IRQS + vgpu->vdev.num_irqs,
+> +								 &data_size);
+>  			if (ret) {
+>  				gvt_vgpu_err("intel:vfio_set_irqs_validate_and_prepare failed\n");
+>  				return -EINVAL;
+> --=20
+> 2.17.1
+>=20
 
--- 
-Michal Hocko
-SUSE Labs
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--0/kgSOzhNoDC5T3a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXTFiKgAKCRCxBBozTXgY
+J3N+AJ9EUVX8oct3pXbBvqhhw8/y4/64wgCfQplGsM2L5KqCBi774yMSpLO1kkY=
+=7UtP
+-----END PGP SIGNATURE-----
+
+--0/kgSOzhNoDC5T3a--
