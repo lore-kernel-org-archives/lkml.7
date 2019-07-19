@@ -2,181 +2,124 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620EFC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D31C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8832186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F361D21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lEIwx3RL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbfGSUi0 (ORCPT
+        id S2388093AbfGSUic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:38:26 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:44733 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfGSUi0 (ORCPT
+        Fri, 19 Jul 2019 16:38:32 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10966 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbfGSUia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:38:26 -0400
-X-AuditID: ac1060b2-3fdff70000003a7d-d3-5d322a4365dd
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id AD.8C.14973.34A223D5; Fri, 19 Jul 2019 16:38:27 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 19 Jul 2019 16:38:24 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     <hongweiz@ami.com>, Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Joel Stanley <joel@jms.id.au>, <devicetree@vger.kernel.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: dt-bindings: gpio: aspeed: Add SGPIO support 
-Date:   Fri, 19 Jul 2019 16:37:24 -0400
-Message-ID: <1563568644-10392-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
-References: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
+        Fri, 19 Jul 2019 16:38:30 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d322a430000>; Fri, 19 Jul 2019 13:38:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 19 Jul 2019 13:38:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 19 Jul 2019 13:38:29 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 20:38:29 +0000
+Subject: Re: [PATCH] mm/Kconfig: additional help text for HMM_MIRROR option
+To:     Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@infradead.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>, <john.hubbard@gmail.com>,
+        <SCheung@nvidia.com>, <akpm@linux-foundation.org>,
+        <aneesh.kumar@linux.vnet.ibm.com>, <benh@kernel.crashing.org>,
+        <bsingharora@gmail.com>, <dan.j.williams@intel.com>,
+        <dnellans@nvidia.com>, <ebaskakov@nvidia.com>,
+        <hannes@cmpxchg.org>, <jglisse@redhat.com>,
+        <kirill.shutemov@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+        <liubo95@huawei.com>, <mhairgrove@nvidia.com>, <mhocko@kernel.org>,
+        <paulmck@linux.vnet.ibm.com>, <ross.zwisler@linux.intel.com>,
+        <sgutti@nvidia.com>, <torvalds@linux-foundation.org>,
+        <vdavydov.dev@gmail.com>
+References: <20190717074124.GA21617@amd>
+ <20190719013253.17642-1-jhubbard@nvidia.com>
+ <20190719055748.GA29082@infradead.org> <20190719105239.GA10627@amd>
+ <20190719114853.GB15816@ziepe.ca> <20190719120043.GA15320@infradead.org>
+ <20190719120432.GC11224@amd>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <b5143eb4-f519-57bc-4058-4ed934596ee1@nvidia.com>
+Date:   Fri, 19 Jul 2019 13:38:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWyRiBhgq6zllGswdyFsha7LnNYfJl7isVi
-        /pFzrBa/z/9ltpjyZzmTxabH11gtmlefY7bYPP8Po8XlXXPYLJZev8hk0br3CLsDt8fV9l3s
-        HmvmrWH0eH+jld3j4sdjzB6bVnWyedy5tofNY/OSeo/zMxYyenzeJBfAGcVlk5Kak1mWWqRv
-        l8CVcWw9S8ENuYqVz24yNjDOluhi5OSQEDCReLr4J2sXIxeHkMAuJonuExeZIJzDjBKr755i
-        BKliE1CT2Lt5DlhCRKCJUeJt02cwh1lgBZNE87Q37CBVwgJmEm8mnGQDsVkEVCXOrF7JCmLz
-        CjhIdJ5rZYbYJydx81wnmM0p4Cgx+eU8MFsIqObN02NMEPWCEidnPmEBsZkFJCQOvngBVSMr
-        cevQYyaIOQoSz/ses0xgFJiFpGUWkpYFjEyrGIUSS3JyEzNz0ssN9RJzM/WS83M3MULiYtMO
-        xpaL5ocYmTgYDzFKcDArifDefqkfK8SbklhZlVqUH19UmpNafIhRmoNFSZx35ZpvMUIC6Ykl
-        qdmpqQWpRTBZJg5OqQZGYXNpDvuN5RdiYoOenjvHVrb9X7Fv8IzT82acjtSboHD2/Jmzsra5
-        r3p7P1SvnKPE4hwU9vTjRdtPFWzX/QoF/fr3mUen9YhYzlyzs3fK5NczPa9/O/Kr7d5UZv62
-        DwrX7TidK9Qa91xjMO/8X8Pk8nWN2vurX/jSXqfo/E37yCryvX/eun4dJZbijERDLeai4kQA
-        krwKtHkCAAA=
+In-Reply-To: <20190719120432.GC11224@amd>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563568707; bh=HOgbiC1squQlyZUEfp8+w/ovzOM9+ohIqBzXO8QodaU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lEIwx3RL04lFpBNY5+S/Kw1meYhtyvjL8ui4abkMkEnIpTrUAs8thEX5l66mPbQHD
+         DT9/FtywQh1keTjnzfeOvVEgLB4yeQRQwvY01O21U4FJPx5KHn74cOqmXjVipWMvmd
+         YPLOEM205r71SXNovjMmiRrBZ6imBZSFp54TXs6os43ujWgUQNfjb/0M3Dx6+ejJcd
+         7Y0KCB0cOQfkYuhuS3JeriCtdXgsuHbRcE/3Ifr5Xe8HeO5QPaXc2/CErw9bWWtEkq
+         viWB/uyB1gsFnPwpv6XwWTrGGJZgSo2/MjygaVNPma09JiD4ShLMxQq3UABzUSZ3ZP
+         xAlbRrO1obU6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andrew,
+On 7/19/19 5:04 AM, Pavel Machek wrote:
+> On Fri 2019-07-19 05:00:43, Christoph Hellwig wrote:
+>> On Fri, Jul 19, 2019 at 08:48:53AM -0300, Jason Gunthorpe wrote:
+>>> It is like MMU_NOTIFIERS, if something needs it, then it will select
+>>> it.
+>>>
+>>> Maybe it should just be a hidden kconfig anyhow as there is no reason
+>>> to turn it on without also turning on a using driver.
+>>
+>> We can't just select it due to the odd X86_64 || PPC64 dependency.
+>>
+>> Which also answers Pavels question:  you never really need it, as we
+>> can only use it for optional functionality due to that.
+> 
+> Okay, just explain it in the help text :-)..
+> 
+> Alternatively... you can have WANT_HMM_MIRROR option drivers select,
+> and option HMM_MIRROR which is yes if WANT_HMM_MIRROR && (X86_64 ||
+> PPC64), no?
+> 
 
-Thanks for reviewing and please see my inline comments.
+Yes. This really should be a hidden option that just auto-enables. It's
+not ideal to require people to both *find* HMM_MIRROR, *and* figure out 
+that they need it. (I think it's just this way due to the history of how
+HMM got merged--it started off as a kind of experimental sandbox, so
+it had it's own config options, to avoid bothering anything else.)
 
---Hongwei
+I'll send out a new patch to just auto-select. The WANT_HMM_MIRROR
+approach seems accurate, given the (X86_64 || PPC64) complication, probably
+after -rc1 is ready (I don't see the ODP code using HMM yet, so that
+must not have been merged yet.)
 
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Wednesday, July 17, 2019 9:48 PM
-> To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
-> Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
-> Subject:	Re: [PATCH 2/3 v4] dt-bindings: gpio: aspeed: Add SGPIO support
-> 
-> The subject is largely correct, but please see the discussion on the driver patch about how to clean up 
-> the [PATCH ...] prefix.
-> 
-> On Thu, 18 Jul 2019, at 05:42, Hongwei Zhang wrote:
-> > Add bindings to support SGPIO on AST2400 or AST2500.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
-> >  1 file changed, 55 insertions(+)
-> >  create mode 100644 
-> > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > new file mode 100644
-> > index 0000000..2d6305e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > @@ -0,0 +1,55 @@
-> > +Aspeed SGPIO controller Device Tree Bindings
-> > +-------------------------------------------
-> > +
-> > +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80
-> > full
-> > +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed
-> > to
-> > +support the following options:
-> > +- Support interrupt option for each input port and various interrupt
-> > +  sensitivity option (level-high, level-low, edge-high, edge-low)
-> > +- Support reset tolerance option for each output port
-> > +- Directly connected to APB bus and its shift clock is from APB bus
-> > clock
-> > +  divided by a programmable value.
-> > +- Co-work with external signal-chained TTL components 
-> > +(74LV165/74LV595)
-> > +
-> > +
-> > +Required properties:
-> > +
-> > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> > +
-> > +- #gpio-cells 		: Should be two
-> > +			  - First cell is the GPIO line number
-> > +			  - Second cell is used to specify optional
-> > +			    parameters (unused)
-> > +
-> > +- reg			: Address and length of the register set for the device
-> > +- gpio-controller	: Marks the device node as a GPIO controller
-> > +- interrupts		: Interrupt specifier (see interrupt bindings for
-> > +			  details)
-> > +
-> > +- interrupt-controller	: Mark the GPIO controller as an 
-> > interrupt-controller
-> > +
-> > +- nr-gpios		: number of GPIO pins to serialise. 
-> > +			  (should be multiple of 8, up to 80 pins)
-> 
-> Please change the property name to "ngpios", as per the generic GPIO bindings[1].
-> 
-> [1] 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindi
-> ngs/gpio/gpio.txt?h=v5.2#n141
+Longer term, I vaguely recall that there is no strong reason preventing 
+HMM from being made to work on other arches, and am hoping that it was
+just done this way to save development time. I don't want to leave it 
+this way unless there's a good reason to.
 
-done
-
-> 
-> Cheers,
-> 
-> Andrew
-> 
-> > +
-> > +- clocks                : A phandle to the APB clock for SGPM clock 
-> > division
-> > +
-> > +- bus-frequency		: SGPM CLK frequency
-> > +
-> > +
-> > +The sgpio and interrupt properties are further described in their
-> > respective bindings documentation:
-> > +
-> > +- Documentation/devicetree/bindings/sgpio/gpio.txt
-> > +- 
-> > +Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > +
-> > +  Example:
-> > +	sgpio: sgpio@1e780200 {
-> > +		#gpio-cells = <2>;
-> > +		compatible = "aspeed,ast2500-sgpio";
-> > +		gpio-controller;
-> > +		interrupts = <40>;
-> > +		reg = <0x1e780200 0x0100>;
-> > +		clocks = <&syscon ASPEED_CLK_APB>;
-> > +		interrupt-controller;
-> > +		nr-gpios = <8>;
-> > +		bus-frequency = <12000000>;
-> > +	};
-> > --
-> > 2.7.4
-> > 
-> >
+thanks,
+-- 
+John Hubbard
+NVIDIA
