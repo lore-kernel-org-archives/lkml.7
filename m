@@ -2,185 +2,136 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F187C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97595C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA1821849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563522898;
-	bh=XfKSAltxhi5qlxrolSDXSYwAaXTxg5dKO4f6VkfLQH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ioMESQXas1G17uKpq0u73ixgg5brlWMnc27h9E3K1Gyw2bFlfacvRR8CGaQInFQiv
-	 aZXVHYT69h6txmDNjCQaEm5osT9+cJrhK3f5Lzh5bQBNI2ZjnJrrfLBtkqnrVYLy8s
-	 tmKSsD5KUMw3wMd9kAJaCbTCSyI+CdlIxos2Tc5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 63A3020651
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odcTokX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfGSHy5 (ORCPT
+        id S1726795AbfGSH64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:54:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725853AbfGSHy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:54:56 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1759A20651;
-        Fri, 19 Jul 2019 07:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563522895;
-        bh=XfKSAltxhi5qlxrolSDXSYwAaXTxg5dKO4f6VkfLQH8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sWzJZ/Q9EiDkpgygmeLpAqsq7jAzJf69p1P63qFb/0qsuHbPjUUaFvyo9oj7k9Sel
-         9H8f5WCczndHkwewiOnS75Z7TDs6KI/UI/HAYeQM6DPq4JtLrBhCfhfmMKIpchPaP2
-         x8RCre9eBUXIRERHXMm1Th9jwTQ/gAiPawNN0Q5A=
-Date:   Fri, 19 Jul 2019 08:54:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        Frank Li <frank.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        mark.rutland@arm.com
-Subject: Re: [PATCH] perf tool: arch: arm64: change the way for
- get_cpuid_str() function
-Message-ID: <20190719075450.xcm4i4a5sfaxlfap@willie-the-truck>
-References: <20190718061853.10403-1-qiangqing.zhang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718061853.10403-1-qiangqing.zhang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 19 Jul 2019 03:58:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42857 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfGSH64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:58:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so16273359wrr.9
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 00:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=laCOxAe96faoh5UJLwde2Jaa33L2DxaeyBFYzqyRqeg=;
+        b=odcTokX63HRghLkFl/JjS7AX7HznB+6KrBGnFtNIfVo2CXF4Zw5o18gGpYUJcRXJkc
+         4R4p5EoDtQ4WfVyUNn/UAZHw1yUX/krnud50J2z2M+NSHzCOusBiGSbHBa1DdZ3BnBa9
+         vQX0J83vn95s7HB63ttDax+VowAMVe6VK2+o4oHyPzYekzLZgAQItJrC4+/2Jc5gG4V/
+         QSce3jIuEKnRG/cNfwe2UtT2v5n0YLYQpq/hpJepIsUNvYQJgC5c2ZXuvu7ElQ2Hu0EV
+         lyesLWVDuQXO7VVss9pNTfmiwnSTJX0HBEXqlx0Kb0rBTo5Lb2HnO0iIZkwl15N7Eusp
+         TGYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=laCOxAe96faoh5UJLwde2Jaa33L2DxaeyBFYzqyRqeg=;
+        b=T4Jp25YDg2p727CL1pMEA0O8SxKPs3QWIl1KZ8C1tORChf1aN0eZzS/RNco5o2vQfi
+         9mYVIsP2DljnerJeBllu/bCzHS9aHV3+3681DiJnvkKE05w4JYz9gLU9vuf9i/qxE3Ao
+         AfZaKDLyv6d4UwAQqSPt5MeStNjjFejpBe7l72PAkZfI94bPto4s7RdibLgos66D6FAW
+         7O8wd/l9QL0PJI/0RxNyl+kuhPSJt3O37pw+/zPajMzlQ5s8iG54EWa7vg8+a+FyYfaL
+         c9Ejrah0tK2djmIsNttHuY8iSaMpFsl/ke7iWil+wfzhyYiA5bBnPS5SsTlkmDd8OHKN
+         Tfzg==
+X-Gm-Message-State: APjAAAWFexmveuR65O+TJENQ/kQrCDxGEdDIi8HXpqyq1A/FFdVrHQeM
+        GkeUnrGt1nCqF8EX1SuJP2ZRU0o3YmU=
+X-Google-Smtp-Source: APXvYqwSk61Sf8whTY3mgJSLp71ju/dELTU1al0q5pe7D8yrbFBs9qtscjpP628sujsl6Wmw/2Lx7A==
+X-Received: by 2002:adf:d4c1:: with SMTP id w1mr56125400wrk.229.1563523134311;
+        Fri, 19 Jul 2019 00:58:54 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:484b:32fe:1cf4:f69b])
+        by smtp.gmail.com with ESMTPSA id c1sm58673826wrh.1.2019.07.19.00.58.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 19 Jul 2019 00:58:53 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, pauld@redhat.com,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH 0/5] sched/fair: rework the CFS load balance
+Date:   Fri, 19 Jul 2019 09:58:20 +0200
+Message-Id: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 06:21:30AM +0000, Joakim Zhang wrote:
-> Now the get_cpuid__str function returns the MIDR string of the first
-> online cpu from the range of cpus asscociated with the PMU CORE device.
-> 
-> It can work when pass a perf_pmu entity to get_cpuid_str. However, it
-> will pass NULL via perf_pmu__find_map from metricgroup.c if we want to add
-> metric group for arm64. When pass NULL to get_cpuid_str, it can't return
-> the MIDR string.
+Several wrong task placement have been raised with the current load
+balance algorithm but their fixes are not always straight forward and
+end up with using biased values to force migrations. A cleanup and rework
+of the load balance will help to handle such UCs and enable to fine grain
+the behavior of the scheduler for other cases.
 
-Why is this code passing a NULL PMU? What information does it actually
-need? Other functions, such as print_pmu_events(), iterate over all PMUs.
+Patch 1 has already been sent separatly and only consolidate policy in one
+place and help the review of the changes in load_balance.
 
-> There are three methods from userspace getting MIDR string for arm64:
-> 1. parse sysfs(/sys/devices/system/cpu/cpu?/regs/identification/midr_el1)
-> 2. parse procfs(/proc/cpuinfo)
-> 3. read the hwcaps(MIDR register) with getauxval(AT_HWCAP)
-> 
-> Perfer to select #3 as it is more simple and direct.
+Patch 2 renames the sum of h_nr_running and also add the sum of nr_running
 
-That's probably terminally broken for heterogeneous systems, so I'm not
-at all happy with this patch.
+Patch 3 reworks load_balance algorithm and fixes some wrong task placement
+but try to stay conservative.
 
-Will
+Patch 4 replaces runnable_load but load now that it is only used when
+overloaded.
 
-> diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-> index 534cd2507d83..f58f08af0be8 100644
-> --- a/tools/perf/arch/arm64/util/header.c
-> +++ b/tools/perf/arch/arm64/util/header.c
-> @@ -2,64 +2,46 @@
->  #include <stdlib.h>
->  #include <api/fs/fs.h>
->  #include "header.h"
-> +#include <asm/hwcap.h>
-> +#include <sys/auxv.h>
->  
-> -#define MIDR "/regs/identification/midr_el1"
->  #define MIDR_SIZE 19
->  #define MIDR_REVISION_MASK      0xf
->  #define MIDR_VARIANT_SHIFT      20
->  #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
->  
-> -char *get_cpuid_str(struct perf_pmu *pmu)
-> +#define get_cpuid(id) ({					\
-> +		unsigned long __val;				\
-> +		asm("mrs %0, "#id : "=r" (__val));		\
-> +		__val;						\
-> +	})
-> +
-> +char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
->  {
->  	char *buf = NULL;
-> -	char path[PATH_MAX];
-> -	const char *sysfs = sysfs__mountpoint();
-> -	int cpu;
-> -	u64 midr = 0;
-> -	struct cpu_map *cpus;
-> -	FILE *file;
-> +	unsigned long midr = 0;
->  
-> -	if (!sysfs || !pmu || !pmu->cpus)
-> +	if (!(getauxval(AT_HWCAP) & HWCAP_CPUID)) {
-> +		fputs("CPUID registers unavailable\n", stderr);
->  		return NULL;
-> +	}
->  
-> -	buf = malloc(MIDR_SIZE);
-> -	if (!buf)
-> +	midr = get_cpuid(MIDR_EL1);
-> +	if (!midr) {
-> +		fputs("Failed to get cpuid string\n", stderr);
->  		return NULL;
-> +	}
->  
-> -	/* read midr from list of cpus mapped to this pmu */
-> -	cpus = cpu_map__get(pmu->cpus);
-> -	for (cpu = 0; cpu < cpus->nr; cpu++) {
-> -		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
-> -				sysfs, cpus->map[cpu]);
-> -
-> -		file = fopen(path, "r");
-> -		if (!file) {
-> -			pr_debug("fopen failed for file %s\n", path);
-> -			continue;
-> -		}
-> -
-> -		if (!fgets(buf, MIDR_SIZE, file)) {
-> -			fclose(file);
-> -			continue;
-> -		}
-> -		fclose(file);
-> +	/* Ignore/clear Variant[23:20] and
-> +	 * Revision[3:0] of MIDR
-> +	 */
-> +	midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
->  
-> -		/* Ignore/clear Variant[23:20] and
-> -		 * Revision[3:0] of MIDR
-> -		 */
-> -		midr = strtoul(buf, NULL, 16);
-> -		midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
-> -		scnprintf(buf, MIDR_SIZE, "0x%016lx", midr);
-> -		/* got midr break loop */
-> -		break;
-> -	}
-> +	buf = malloc(MIDR_SIZE);
-> +	if (!buf)
-> +		return NULL;
->  
-> -	if (!midr) {
-> -		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
-> -		free(buf);
-> -		buf = NULL;
-> -	}
-> +	scnprintf(buf, MIDR_SIZE, "0x%016lx", midr);
->  
-> -	cpu_map__put(cpus);
->  	return buf;
->  }
-> -- 
-> 2.17.1
-> 
+Patch 5 improves the spread of tasks at the 1st scheduling level.
+
+Some benchmarks results based on 8 iterations of each tests:
+- small arm64 dual quad cores system
+
+           tip/sched/core        w/ this patchset    improvement
+schedpipe  53326 +/-0.32%        54494 +/-0.33%       (+2.19%)
+
+hackbench
+1 groups       0.914 +/-1.82%        0.903 +/-2.10%   (+1.24%)
+
+- large arm64 2 nodes / 224 cores system
+
+           tip/sched/core        w/ this patchset    improvement
+schedpipe 123373.625 +/-0.88%   124277.125 +/-1.34%   (+0.73%)
+
+hackbench -l (256000/#grp) -g #grp
+1 groups      14.886 +/-2.31%       14.504 +/-2.54%   (+2.56%)
+4 groups       5.725 +/-7.26%        5.332 +/-9.05%   (+6.85%)
+16 groups      3.041 +/-0.99%        3.221 +/-0.45%   (-5.92%)
+32 groups      2.859 +/-1.04%        2.812 +/-1.25%   (+1.64%)
+64 groups      2.740 +/-1.33%        2.662 +/-1.55%   (+2.84%)
+128 groups     3.090 +/-13.22%       2.808 +/-12.90%  (+9.11%)
+256 groups     3.629 +/-21.20%       3.063 +/-12.86% (+15.60%)
+
+dbench
+1 groups     337.703 +/-0.13%      333.729 +/-0.40%   (-1.18%)
+4 groups     944.095 +/-1.09%      967.050 +/-0.96%   (+2.43%)
+16 groups   1923.760 +/-3.62%     1981.926 +/-0.48%   (+3.02%)
+32 groups   2243.161 +/-8.40%     2453.247 +/-0.56%   (+9.37%)
+64 groups   2351.472 +/-10.64%    2621.137 +/-1.97%  (+11.47%)
+128 groups  2070.117 +/-4.87%     2310.451 +/-2.45%  (+11.61%)
+256 groups  1277.402 +/-3.03%     1691.865 +/-6.34%  (+32.45%)
+
+tip/sched/core sha1:
+  af24bde8df20('sched/uclamp: Add uclamp support to energy_compute()')
+
+Vincent Guittot (5):
+  sched/fair: clean up asym packing
+  sched/fair: rename sum_nr_running to sum_h_nr_running
+  sched/fair: rework load_balance
+  sched/fair: use load instead of runnable load
+  sched/fair: evenly spread tasks when not overloaded
+
+ kernel/sched/fair.c | 614 +++++++++++++++++++++++++++-------------------------
+ 1 file changed, 323 insertions(+), 291 deletions(-)
+
+-- 
+2.7.4
+
