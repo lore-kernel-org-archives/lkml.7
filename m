@@ -2,52 +2,51 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3036DC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B7EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFABB20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD31120873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510307;
-	bh=Kyv9uGp9iUTiphAIRfQy1byK6g7JN0vPQYuBx7y9nTM=;
+	s=default; t=1563510308;
+	bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WcIN4yDniydT4Q/2t0brnyPief4ghIlg5Xa1lw4Fnl0TkZHTVihB3x7eE/f5d4fwh
-	 TTDpT2jdRO4wL3TsDSpHMdxzUDjLlmxsBiyNiLdwALN6ZzzwUIZkG7kESiyNTNf0xo
-	 D5WQkt1aOngePkJfZ7GTbuJfknRZPuKL4EiuonCA=
+	b=LOi62smug3evxe4dIjG+fkHpSRtk3a6kQFLm1hqseYYdOgav4hM9TP/Lc1uvpShFr
+	 VhxdxMgbLiD0Z4q4nYm2A4xJJ+mnkCaiui4HUeeb6KJI4C55g+uK8+v8dHTRlNp+Ci
+	 4ge+nxVjjYR9NEFPzuz+ptnqIc1nZaatPRvmTMks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733293AbfGSEZE (ORCPT
+        id S1728444AbfGSEJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfGSEJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:09:19 -0400
+        id S1732471AbfGSEJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:09:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2472189D;
-        Fri, 19 Jul 2019 04:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E25C2189D;
+        Fri, 19 Jul 2019 04:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509358;
-        bh=Kyv9uGp9iUTiphAIRfQy1byK6g7JN0vPQYuBx7y9nTM=;
+        s=default; t=1563509349;
+        bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tm5NxjBc6rWbbyKswwXkD4rOSEe4Pus7JY1/baXxCttrL+UPfdy0CeDalPmxt6zfm
-         B+dUc1z4aNAoHSNt6RVp/56wbacAwlaS8ju1PjvnvQyf9YVko143AcsGjGgj85KkKf
-         7cHr42HX74nqrgutQArUC97Esk9h5a+hXzM2obQc=
+        b=sUJfk4JA6hNAdkyyaFGBwTx/X8DW4MqIt9mh0CwVFJ61xj+c4YPkV4gbrwXI2a7CX
+         8oQ9bNxJ/vvpdTAlxkjomW63EDLkxtYMXSpag+aRLpNeEFGrPMZksQspmDsp+SBJ/M
+         WAnn7VeUkSkNspSsTe2CNtHo9CHgUz4ft9sGRmD4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Gomez <dagmcr@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.19 051/101] mfd: madera: Add missing of table registration
-Date:   Fri, 19 Jul 2019 00:06:42 -0400
-Message-Id: <20190719040732.17285-51-sashal@kernel.org>
+Cc:     Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 047/101] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Fri, 19 Jul 2019 00:06:38 -0400
+Message-Id: <20190719040732.17285-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
@@ -60,49 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gomez <dagmcr@gmail.com>
+From: Bastien Nocera <hadess@hadess.net>
 
-[ Upstream commit 5aa3709c0a5c026735b0ddd4ec80810a23d65f5b ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table>) should be called to complete DT
-OF mathing mechanism and register it.
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-Before this patch:
-modinfo ./drivers/mfd/madera.ko | grep alias
+*mask = (1 << 32) - 1;
 
-After this patch:
-modinfo ./drivers/mfd/madera.ko | grep alias
-alias:          of:N*T*Ccirrus,wm1840C*
-alias:          of:N*T*Ccirrus,wm1840
-alias:          of:N*T*Ccirrus,cs47l91C*
-alias:          of:N*T*Ccirrus,cs47l91
-alias:          of:N*T*Ccirrus,cs47l90C*
-alias:          of:N*T*Ccirrus,cs47l90
-alias:          of:N*T*Ccirrus,cs47l85C*
-alias:          of:N*T*Ccirrus,cs47l85
-alias:          of:N*T*Ccirrus,cs47l35C*
-alias:          of:N*T*Ccirrus,cs47l35
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
 
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+*mask = (1) - 1;
+
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
+
+Avoid incorrect 0 values caused by compiler optimization.
+
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
+
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/madera-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 8cfea969b060..45c7d8b97349 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -278,6 +278,7 @@ const struct of_device_id madera_of_match[] = {
- 	{ .compatible = "cirrus,wm1840", .data = (void *)WM1840 },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, madera_of_match);
- EXPORT_SYMBOL_GPL(madera_of_match);
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 7a6d61c6c012..55272fef3b50 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
  
- static int madera_get_reset_gpio(struct madera *madera)
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
