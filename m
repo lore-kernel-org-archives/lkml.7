@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B773EC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3678CC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFE92084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E552084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511262;
-	bh=ddgz5FpkFtKJjV40+Op1NTp30XAoAWKB4qb3QXdny4Q=;
+	s=default; t=1563511268;
+	bh=NOChr+M9WOR9orhCSmC3TRPJClfJwif6AL58ptimSVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJ8YVsqFa3W2AdG84fTjMU+XubyLwQed1Fi/I5bRP1eizC+I1QixuZFvU8VHVQnLc
-	 emQ0Vo/5JDV90ZZJpa0ZoxESUDeeQWFquGGmMOYxCmphHC4K+YZ8hF8Cjj80cOmfx2
-	 WtzU+P+oYPixxu8I4oQ8lrPZtt+RbgewXNtUu/GA=
+	b=EP9pZIzgzX2QhlezknntTAsYFKdqZZPmUgVjg7MoYiwwwZ7m3KsOm1xXHt2ab+Zef
+	 6FtdeYGS5E7B37Q/CFWH3Ae/JNBZDfmRlQvDVb75QQT3XAD2m/4hkwKkWarenk4GUz
+	 Q2eAwtOiuHq76cMMOtiA9LxUP69qt2MGdr3dh8JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbfGSElB (ORCPT
+        id S1728479AbfGSElG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56464 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfGSD5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:10 -0400
+        id S1726147AbfGSD5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:57:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F148021855;
-        Fri, 19 Jul 2019 03:57:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CA1221850;
+        Fri, 19 Jul 2019 03:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508629;
-        bh=ddgz5FpkFtKJjV40+Op1NTp30XAoAWKB4qb3QXdny4Q=;
+        s=default; t=1563508625;
+        bh=NOChr+M9WOR9orhCSmC3TRPJClfJwif6AL58ptimSVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqtBlrecgi3VgGRRXlmEwUkYnx21/ccVTfQ1sMmuzcGy9u63DjhIhc1HqxnKRsQNU
-         9AFUTIeY1hWWYnGU7Wr0EQ+Y9a1bBERRyV7uJdZZrN8EjICDeuL14qnh4hX1txVu/A
-         jFD8FgW+VHOYZQ/G0Td83J1hJVK6UnGQ/SWdiAJc=
+        b=YkTqd2ElFuWeLqHW6VEveWs20pnTPxsyuYcyktLIF0EmLLb9EghRc6c0vRN+pgwcH
+         XgEG2EjWDIpQsIBmUkeEIHnlaraYpOI/+lhxioazyYlpFwrbDl7aCqeCVOZRDIQFDA
+         UBZ3tcohv7VraN3xfAosx20DA+V7R3gdGMZNXJCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 011/171] tty: max310x: Fix invalid baudrate divisors calculator
-Date:   Thu, 18 Jul 2019 23:54:02 -0400
-Message-Id: <20190719035643.14300-11-sashal@kernel.org>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 009/171] drm/bochs: Fix connector leak during driver unload
+Date:   Thu, 18 Jul 2019 23:54:00 -0400
+Message-Id: <20190719035643.14300-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,112 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 35240ba26a932b279a513f66fa4cabfd7af55221 ]
+[ Upstream commit 3c6b8625dde82600fd03ad1fcba223f1303ee535 ]
 
-Current calculator doesn't do it' job quite correct. First of all the
-max310x baud-rates generator supports the divisor being less than 16.
-In this case the x2/x4 modes can be used to double or quadruple
-the reference frequency. But the current baud-rate setter function
-just filters all these modes out by the first condition and setups
-these modes only if there is a clocks-baud division remainder. The former
-doesn't seem right at all, since enabling the x2/x4 modes causes the line
-noise tolerance reduction and should be only used as a last resort to
-enable a requested too high baud-rate.
+When unloading the bochs-drm driver, a warning message is printed by
+drm_mode_config_cleanup() because a reference is still held to one of
+the drm_connector structs.
 
-Finally the fraction is supposed to be calculated from D = Fref/(c*baud)
-formulae, but not from D % 16, which causes the precision loss. So to speak
-the current baud-rate calculator code works well only if the baud perfectly
-fits to the uart reference input frequency.
+Correct this by calling drm_atomic_helper_shutdown() in
+bochs_pci_remove().
 
-Lets fix the calculator by implementing the algo fully compliant with
-the fractional baud-rate generator described in the datasheet:
-D = Fref / (c*baud), where c={16,8,4} is the x1/x2/x4 rate mode
-respectively, Fref - reference input frequency. The divisor fraction is
-calculated from the same formulae, but making sure it is found with a
-resolution of 0.0625 (four bits).
-
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6579c39594ae ("drm/bochs: atomic: switch planes to atomic, wire up helpers.")
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/93b363ad62f4938d9ddf3e05b2a61e3f66b2dcd3.1558416473.git.sbobroff@linux.ibm.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/max310x.c | 51 ++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/bochs/bochs_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index e5aebbf5f302..c3afd128b8fc 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -496,37 +496,48 @@ static bool max310x_reg_precious(struct device *dev, unsigned int reg)
+diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+index b86cc705138c..d8b945596b09 100644
+--- a/drivers/gpu/drm/bochs/bochs_drv.c
++++ b/drivers/gpu/drm/bochs/bochs_drv.c
+@@ -7,6 +7,7 @@
+ #include <linux/slab.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_probe_helper.h>
++#include <drm/drm_atomic_helper.h>
  
- static int max310x_set_baud(struct uart_port *port, int baud)
+ #include "bochs.h"
+ 
+@@ -171,6 +172,7 @@ static void bochs_pci_remove(struct pci_dev *pdev)
  {
--	unsigned int mode = 0, clk = port->uartclk, div = clk / baud;
-+	unsigned int mode = 0, div = 0, frac = 0, c = 0, F = 0;
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
  
--	/* Check for minimal value for divider */
--	if (div < 16)
--		div = 16;
--
--	if (clk % baud && (div / 16) < 0x8000) {
-+	/*
-+	 * Calculate the integer divisor first. Select a proper mode
-+	 * in case if the requested baud is too high for the pre-defined
-+	 * clocks frequency.
-+	 */
-+	div = port->uartclk / baud;
-+	if (div < 8) {
-+		/* Mode x4 */
-+		c = 4;
-+		mode = MAX310X_BRGCFG_4XMODE_BIT;
-+	} else if (div < 16) {
- 		/* Mode x2 */
-+		c = 8;
- 		mode = MAX310X_BRGCFG_2XMODE_BIT;
--		clk = port->uartclk * 2;
--		div = clk / baud;
--
--		if (clk % baud && (div / 16) < 0x8000) {
--			/* Mode x4 */
--			mode = MAX310X_BRGCFG_4XMODE_BIT;
--			clk = port->uartclk * 4;
--			div = clk / baud;
--		}
-+	} else {
-+		c = 16;
- 	}
- 
--	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, (div / 16) >> 8);
--	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div / 16);
--	max310x_port_write(port, MAX310X_BRGCFG_REG, (div % 16) | mode);
-+	/* Calculate the divisor in accordance with the fraction coefficient */
-+	div /= c;
-+	F = c*baud;
-+
-+	/* Calculate the baud rate fraction */
-+	if (div > 0)
-+		frac = (16*(port->uartclk % F)) / F;
-+	else
-+		div = 1;
-+
-+	max310x_port_write(port, MAX310X_BRGDIVMSB_REG, div >> 8);
-+	max310x_port_write(port, MAX310X_BRGDIVLSB_REG, div);
-+	max310x_port_write(port, MAX310X_BRGCFG_REG, frac | mode);
- 
--	return DIV_ROUND_CLOSEST(clk, div);
-+	/* Return the actual baud rate we just programmed */
-+	return (16*port->uartclk) / (c*(16*div + frac));
- }
- 
- static int max310x_update_best_err(unsigned long f, long *besterr)
- {
- 	/* Use baudrate 115200 for calculate error */
--	long err = f % (115200 * 16);
-+	long err = f % (460800 * 16);
- 
- 	if ((*besterr < 0) || (*besterr > err)) {
- 		*besterr = err;
++	drm_atomic_helper_shutdown(dev);
+ 	drm_dev_unregister(dev);
+ 	bochs_unload(dev);
+ 	drm_dev_put(dev);
 -- 
 2.20.1
 
