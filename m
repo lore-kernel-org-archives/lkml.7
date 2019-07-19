@@ -2,52 +2,52 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF55DC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0AAC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC26206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D408206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511228;
-	bh=teggvQp7PWhRrkJMsK/tso+6YAghi15Fw5s2In74K+w=;
+	s=default; t=1563511232;
+	bh=khMITClIFeXYHdEQNwwvpfphNqgiJNWFhLiR+IZGREI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1s0NnigJC21jgSLllwVl/K4EAWDOVndU8I6zKBK77iWm07NZ69nGT+KF7CiWsWpA
-	 sBFMD8YTh++OWIHSkPm15cX1ZytWpE0nOQ3nNy8rD+2fHphG7tR0knuR4b4H2gCibn
-	 uQTrDP1p9649/92K93cKpU0w3VeAeR7YFDWfGyL8=
+	b=NsEaV+Ht4QrJmBg2RPyfR/zj8Q/PlIrfz2MVoo1+kSlQILSIOZ9etdaEdo8UckJRI
+	 2P3ysK4BRjHGWvw1g6ncX11RkTsiWBPsid7t5yMiBSHOWKefirC0aNEifDxMQH1we0
+	 rULyQLeOI/zsuEOm3UuOe26Syo4Y4YJvqfSxlEzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfGSD56 (ORCPT
+        id S1729823AbfGSEka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:40:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbfGSD54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:56 -0400
+        id S1727663AbfGSD56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:57:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2FD92184E;
-        Fri, 19 Jul 2019 03:57:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2639621852;
+        Fri, 19 Jul 2019 03:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508675;
-        bh=teggvQp7PWhRrkJMsK/tso+6YAghi15Fw5s2In74K+w=;
+        s=default; t=1563508677;
+        bh=khMITClIFeXYHdEQNwwvpfphNqgiJNWFhLiR+IZGREI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9COdVf0Hd9WaT0PYoM7xHc2/B4FxwrPC6Rwp19SwdXktEmWe5CDE+Ibgvmf+zUmk
-         rK6Cu4b1V+gX7D+rYNU3GOvF+nmBtc10C5ervaXOVRdk/o9U2yMOu1lw0OjNoGBAmv
-         ZfGYNLAj99xH+Iz3IFK9GAkC0cVvBWGPezYekdFY=
+        b=oKvUpsRssfQ8VQP8vcRtJgmvJwWU9eRr5uf5RAdT4YS14I68v8AktSGv2K19c3n7f
+         sk74o638qGsytmbiAt91Wv1p7lm9a0cpNx8D+tPfv7WL2jt5X+/c1ZjrYy1CGTIuSn
+         eDhldfvJhdun9YScljXmaGrEZ8n7wnTG8/LpfGjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oak Zeng <ozeng@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 027/171] drm/amdkfd: Fix a potential memory leak
-Date:   Thu, 18 Jul 2019 23:54:18 -0400
-Message-Id: <20190719035643.14300-27-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 029/171] drm/edid: Fix a missing-check bug in drm_load_edid_firmware()
+Date:   Thu, 18 Jul 2019 23:54:20 -0400
+Message-Id: <20190719035643.14300-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,45 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oak Zeng <ozeng@amd.com>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit e73390d181103a19e1111ec2f25559a0570e9fe0 ]
+[ Upstream commit 9f1f1a2dab38d4ce87a13565cf4dc1b73bef3a5f ]
 
-Free mqd_mem_obj it GTT buffer allocation for MQD+control stack fails.
+In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
+is dereferenced in the following codes. However, memory allocation
+functions such as kstrdup() may fail and returns NULL. Dereferencing
+this null pointer may cause the kernel go wrong. Thus we should check
+this kstrdup() operation.
+Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
+the caller site.
 
-Signed-off-by: Oak Zeng <ozeng@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190524023222.GA5302@zhanggen-UX430UQ
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_edid_load.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
-index 9dbba609450e..8fe74b821b32 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v9.c
-@@ -76,6 +76,7 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
- 	struct v9_mqd *m;
- 	struct kfd_dev *kfd = mm->dev;
+diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
+index 1e5593575d23..6192b7b20d84 100644
+--- a/drivers/gpu/drm/drm_edid_load.c
++++ b/drivers/gpu/drm/drm_edid_load.c
+@@ -278,6 +278,8 @@ struct edid *drm_load_edid_firmware(struct drm_connector *connector)
+ 	 * the last one found one as a fallback.
+ 	 */
+ 	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
++	if (!fwstr)
++		return ERR_PTR(-ENOMEM);
+ 	edidstr = fwstr;
  
-+	*mqd_mem_obj = NULL;
- 	/* From V9,  for CWSR, the control stack is located on the next page
- 	 * boundary after the mqd, we will use the gtt allocation function
- 	 * instead of sub-allocation function.
-@@ -93,8 +94,10 @@ static int init_mqd(struct mqd_manager *mm, void **mqd,
- 	} else
- 		retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct v9_mqd),
- 				mqd_mem_obj);
--	if (retval != 0)
-+	if (retval) {
-+		kfree(*mqd_mem_obj);
- 		return -ENOMEM;
-+	}
- 
- 	m = (struct v9_mqd *) (*mqd_mem_obj)->cpu_ptr;
- 	addr = (*mqd_mem_obj)->gpu_addr;
+ 	while ((edidname = strsep(&edidstr, ","))) {
 -- 
 2.20.1
 
