@@ -2,291 +2,175 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED43C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512C4C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECB32085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2683A2085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCiBd15j"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XoO09VHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfGSBuH (ORCPT
+        id S1726653AbfGSBvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:50:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37967 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGSBuG (ORCPT
+        Thu, 18 Jul 2019 21:51:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38703 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfGSBvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:50:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so6056444wmj.3;
-        Thu, 18 Jul 2019 18:50:03 -0700 (PDT)
+        Thu, 18 Jul 2019 21:51:10 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f5so4878101pgu.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 18:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WDwkNs81FUZFHWGd/sO39vfFP66wdXfNWwzEjhrHbj0=;
-        b=MCiBd15jvjEJxA6x34rhULLLwlTLLYgBXB+F4E6kdkulT7exik970qGy3KFN+BrIxG
-         tZbn6fTjLGy8kP5z+5gGu87VsdN3pCJAeFV5kl4DAjMFIL07g+jtKuY1wJaJCxZC+UvI
-         KpBqmMEkmulOtVwCTW1Pa5fd/yTOoud7D1aEk1p/dPU/wRQsaNs/IBEpalc/mtmbPBmD
-         TH17O/iFCqh6MJxn4s2MvD4Ob72eD3rtN5xa4RxjpMYmyEADilsnpFWUObTViF3vHl5U
-         dHzUjMboThyY73PJtRcjpCIUMGTR1oCSpbx2cwxnL9ItBBcHPznMwS5SEm8e55lcLFCc
-         Wg+A==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bM1qPXQ6CfVnEn3vvRy+9HqmrOIsqvvQngomqNMnrWk=;
+        b=XoO09VHsUOiyoqC1hxSshQ5pzepYo4VADK/vAtt6XAEixB+KpBSbA7+7c9pRSidhBY
+         3stikz00gxTehYr2mkuXXr1YTgqN75mM/XN2pdZRybxoXrzeLh3s200cI/ZyUZpyPdtn
+         PYp6gX756L18o31tEe1HqkISrF7Ku98WVpNVk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WDwkNs81FUZFHWGd/sO39vfFP66wdXfNWwzEjhrHbj0=;
-        b=N7dqCHgoD+YsNRqtj5SbbnZZySSwTYWSut0KWzz3QRxZTr52ZFsZhVP+hGSkZ7zEe+
-         zpeBdxLeo68PaobzKyoDkrpetbYRW3aybg2Q9MvGp9laSXzc9RN2FnhgYKS1DEbwt1YV
-         pP2ML9/4KHNdQ1uWUuwsOQ4/3795vbpu0U13y3hJfP96REbKtmiAlZwrqP4ULxmbeJHM
-         GSP5i6G4Cdf1WGqZIssupKUqrP2i/ZAQ8asQg05Caa4ymqLRkJshRaEdi8tCe6/OwBWt
-         F7jCZQ6vroT2udxRwLGJHkcEeIiDaUNq0tlV2Tdv9wKwl8CIoG/H8RCVMWzouOO1yGu6
-         EEPg==
-X-Gm-Message-State: APjAAAVAnUETxp6Rz7D+OqIpdoTaZVNVvCzPagEbSSIhg6y02pXm4z2u
-        D5cWBylGk0fWXFwJUUXlx/p6b5WSjziF5vzpCQc=
-X-Google-Smtp-Source: APXvYqwFpSPd5I8fcpSYcyID6XJJzY27kjDCAIabLWTM7Nm4GYBgCiQMRA74Jj/XtFnJSc2+Z5ynxPfRIk4fui/EmSw=
-X-Received: by 2002:a1c:1b97:: with SMTP id b145mr42414616wmb.158.1563501002993;
- Thu, 18 Jul 2019 18:50:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bM1qPXQ6CfVnEn3vvRy+9HqmrOIsqvvQngomqNMnrWk=;
+        b=gCsyPNddkq3f8GlUsvtR+tAkjO+FirdosvdPkA0GgUWhQvZV+jD9GR2EH2fjuXvx35
+         PVyoxgDz35dORo0FktI9+zuJh2gwMV/cgf7C45f8dRFC6idcOzSvp4BywnQGESygun4z
+         MUbBYOZbbWop2owMCL3qiO5rk9H3FAL4Zg4PwW8z1lzhVfoavrtNDNOjpMtJVElo9J8/
+         m5OFrAXdmpSGUs1asMa2a+Zc8FHIFFZHIHq1iykfJi8B6oCC3bKClNXskkxjDr48YcG8
+         MYU8MvlM066+FyhH9Wt686/yLF1kcDM+p+kWUWcfYweAZS6bI9orR796gmi3dRknR4QO
+         fEUg==
+X-Gm-Message-State: APjAAAXYfwmeMMD6NSf3SOWm1KWKOUdEgmtfbXZvSAK1CL8UhtgDB6Q6
+        4R6XvMi/tByw6rjn57XcE66frQ==
+X-Google-Smtp-Source: APXvYqxpfT2jLVHsNB0Lnykz1fcfrhTIyUgCLIOl/5FtTh2jioiUC7eBHXYrjErptll9twIwC8R9UA==
+X-Received: by 2002:a63:6f41:: with SMTP id k62mr5055937pgc.32.1563501069756;
+        Thu, 18 Jul 2019 18:51:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h129sm27209190pfb.110.2019.07.18.18.51.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jul 2019 18:51:08 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 18:51:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     corbet@lwn.net, solar@openwall.com, will@kernel.org,
+        peterz@infradead.org, gregkh@linuxfoundation.org,
+        tyhicks@canonical.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation/security-bugs: provide more information
+ about linux-distros
+Message-ID: <201907181833.EF0D93C@keescook>
+References: <20190717231103.13949-1-sashal@kernel.org>
+ <201907181457.D61AC061C@keescook>
+ <20190719003919.GC4240@sasha-vm>
 MIME-Version: 1.0
-References: <20190715082747.fdlpvekbqyhwx724@salvia> <20190716021301.27753-1-xingwu.yang@gmail.com>
- <20190718182608.apjgz5xbpsyvxfp6@salvia>
-In-Reply-To: <20190718182608.apjgz5xbpsyvxfp6@salvia>
-From:   yangxingwu <xingwu.yang@gmail.com>
-Date:   Fri, 19 Jul 2019 09:49:51 +0800
-Message-ID: <CA+7U5Jvb-ZRV3yveyDh-=-uD_aYCHBDTvdbxZ6Mrxj8Mf0oXuw@mail.gmail.com>
-Subject: Re: [PATCH v2] net/netfilter: remove unnecessary spaces
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     wensong@linux-vs.org, Simon Horman <horms@verge.net.au>, ja@ssi.bg,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719003919.GC4240@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thansk Pablo
+On Thu, Jul 18, 2019 at 08:39:19PM -0400, Sasha Levin wrote:
+> On Thu, Jul 18, 2019 at 03:00:55PM -0700, Kees Cook wrote:
+> > On Wed, Jul 17, 2019 at 07:11:03PM -0400, Sasha Levin wrote:
+> > > Provide more information about how to interact with the linux-distros
+> > > mailing list for disclosing security bugs.
+> > > 
+> > > Reference the linux-distros list policy and clarify that the reporter
+> > > must read and understand those policies as they differ from
+> > > security@kernel.org's policy.
+> > > 
+> > > Suggested-by: Solar Designer <solar@openwall.com>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > 
+> > Sorry, but NACK, see below...
+> > 
+> > > ---
+> > > 
+> > > Changes in v2:
+> > >  - Focus more on pointing to the linux-distros wiki and policies.
+> > 
+> > I think this is already happening in the text. What specifically do you
+> > want described differently?
+> 
+> The main issue was that there isn't anything pointing to the
+> linux-distros policies. The current text outlines a few of them ("add
+> [vs]", and "there should be an embargo period"), but it effectively just
+> gives out the linux-distros mailing address and tells the reporter to
+> contact it.
 
-Pablo Neira Ayuso <pablo@netfilter.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8819=
-=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=882:26=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> Looks good, but you will have to wait until net-next reopens:
->
-> http://vger.kernel.org/~davem/net-next.html
->
-> Will keep this in my patchwork until that happens.
->
-> Thanks.
->
-> On Tue, Jul 16, 2019 at 10:13:01AM +0800, yangxingwu wrote:
-> > this patch removes extra spaces
-> >
-> > Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
-> > ---
-> >  net/netfilter/ipset/ip_set_hash_gen.h  | 2 +-
-> >  net/netfilter/ipset/ip_set_list_set.c  | 2 +-
-> >  net/netfilter/ipvs/ip_vs_core.c        | 2 +-
-> >  net/netfilter/ipvs/ip_vs_mh.c          | 4 ++--
-> >  net/netfilter/ipvs/ip_vs_proto_tcp.c   | 2 +-
-> >  net/netfilter/nf_conntrack_ftp.c       | 2 +-
-> >  net/netfilter/nf_conntrack_proto_tcp.c | 2 +-
-> >  net/netfilter/nfnetlink_log.c          | 4 ++--
-> >  net/netfilter/nfnetlink_queue.c        | 4 ++--
-> >  net/netfilter/xt_IDLETIMER.c           | 2 +-
-> >  10 files changed, 13 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipse=
-t/ip_set_hash_gen.h
-> > index 10f6196..eb907d2 100644
-> > --- a/net/netfilter/ipset/ip_set_hash_gen.h
-> > +++ b/net/netfilter/ipset/ip_set_hash_gen.h
-> > @@ -954,7 +954,7 @@ struct htype {
-> >               mtype_data_netmask(d, NCIDR_GET(h->nets[j].cidr[0]));
-> >  #endif
-> >               key =3D HKEY(d, h->initval, t->htable_bits);
-> > -             n =3D  rcu_dereference_bh(hbucket(t, key));
-> > +             n =3D rcu_dereference_bh(hbucket(t, key));
-> >               if (!n)
-> >                       continue;
-> >               for (i =3D 0; i < n->pos; i++) {
-> > diff --git a/net/netfilter/ipset/ip_set_list_set.c b/net/netfilter/ipse=
-t/ip_set_list_set.c
-> > index 8ada318..5c2be76 100644
-> > --- a/net/netfilter/ipset/ip_set_list_set.c
-> > +++ b/net/netfilter/ipset/ip_set_list_set.c
-> > @@ -289,7 +289,7 @@ struct list_set {
-> >       if (n &&
-> >           !(SET_WITH_TIMEOUT(set) &&
-> >             ip_set_timeout_expired(ext_timeout(n, set))))
-> > -             n =3D  NULL;
-> > +             n =3D NULL;
-> >
-> >       e =3D kzalloc(set->dsize, GFP_ATOMIC);
-> >       if (!e)
-> > diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs=
-_core.c
-> > index 7138556..6b3ae76 100644
-> > --- a/net/netfilter/ipvs/ip_vs_core.c
-> > +++ b/net/netfilter/ipvs/ip_vs_core.c
-> > @@ -615,7 +615,7 @@ int ip_vs_leave(struct ip_vs_service *svc, struct s=
-k_buff *skb,
-> >               unsigned int flags =3D (svc->flags & IP_VS_SVC_F_ONEPACKE=
-T &&
-> >                                     iph->protocol =3D=3D IPPROTO_UDP) ?
-> >                                     IP_VS_CONN_F_ONE_PACKET : 0;
-> > -             union nf_inet_addr daddr =3D  { .all =3D { 0, 0, 0, 0 } }=
-;
-> > +             union nf_inet_addr daddr =3D { .all =3D { 0, 0, 0, 0 } };
-> >
-> >               /* create a new connection entry */
-> >               IP_VS_DBG(6, "%s(): create a cache_bypass entry\n", __fun=
-c__);
-> > diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs_m=
-h.c
-> > index 94d9d34..da0280c 100644
-> > --- a/net/netfilter/ipvs/ip_vs_mh.c
-> > +++ b/net/netfilter/ipvs/ip_vs_mh.c
-> > @@ -174,8 +174,8 @@ static int ip_vs_mh_populate(struct ip_vs_mh_state =
-*s,
-> >               return 0;
-> >       }
-> >
-> > -     table =3D  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-> > -                      sizeof(unsigned long), GFP_KERNEL);
-> > +     table =3D kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-> > +                     sizeof(unsigned long), GFP_KERNEL);
-> >       if (!table)
-> >               return -ENOMEM;
-> >
-> > diff --git a/net/netfilter/ipvs/ip_vs_proto_tcp.c b/net/netfilter/ipvs/=
-ip_vs_proto_tcp.c
-> > index 915ac82..c7b46a9 100644
-> > --- a/net/netfilter/ipvs/ip_vs_proto_tcp.c
-> > +++ b/net/netfilter/ipvs/ip_vs_proto_tcp.c
-> > @@ -710,7 +710,7 @@ static int __ip_vs_tcp_init(struct netns_ipvs *ipvs=
-, struct ip_vs_proto_data *pd
-> >                                                       sizeof(tcp_timeou=
-ts));
-> >       if (!pd->timeout_table)
-> >               return -ENOMEM;
-> > -     pd->tcp_state_table =3D  tcp_states;
-> > +     pd->tcp_state_table =3D tcp_states;
-> >       return 0;
-> >  }
-> >
-> > diff --git a/net/netfilter/nf_conntrack_ftp.c b/net/netfilter/nf_conntr=
-ack_ftp.c
-> > index 8c6c11b..26c1ff8 100644
-> > --- a/net/netfilter/nf_conntrack_ftp.c
-> > +++ b/net/netfilter/nf_conntrack_ftp.c
-> > @@ -162,7 +162,7 @@ static int try_rfc959(const char *data, size_t dlen=
-,
-> >       if (length =3D=3D 0)
-> >               return 0;
-> >
-> > -     cmd->u3.ip =3D  htonl((array[0] << 24) | (array[1] << 16) |
-> > +     cmd->u3.ip =3D htonl((array[0] << 24) | (array[1] << 16) |
-> >                                   (array[2] << 8) | array[3]);
-> >       cmd->u.tcp.port =3D htons((array[4] << 8) | array[5]);
-> >       return length;
-> > diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_=
-conntrack_proto_tcp.c
-> > index 1e2cc83..48f3a67 100644
-> > --- a/net/netfilter/nf_conntrack_proto_tcp.c
-> > +++ b/net/netfilter/nf_conntrack_proto_tcp.c
-> > @@ -1225,7 +1225,7 @@ static int tcp_to_nlattr(struct sk_buff *skb, str=
-uct nlattr *nla,
-> >       [CTA_PROTOINFO_TCP_WSCALE_ORIGINAL] =3D { .type =3D NLA_U8 },
-> >       [CTA_PROTOINFO_TCP_WSCALE_REPLY]    =3D { .type =3D NLA_U8 },
-> >       [CTA_PROTOINFO_TCP_FLAGS_ORIGINAL]  =3D { .len =3D sizeof(struct =
-nf_ct_tcp_flags) },
-> > -     [CTA_PROTOINFO_TCP_FLAGS_REPLY]     =3D { .len =3D  sizeof(struct=
- nf_ct_tcp_flags) },
-> > +     [CTA_PROTOINFO_TCP_FLAGS_REPLY]     =3D { .len =3D sizeof(struct =
-nf_ct_tcp_flags) },
-> >  };
-> >
-> >  #define TCP_NLATTR_SIZE      ( \
-> > diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_lo=
-g.c
-> > index 6dee4f9..d69e186 100644
-> > --- a/net/netfilter/nfnetlink_log.c
-> > +++ b/net/netfilter/nfnetlink_log.c
-> > @@ -651,7 +651,7 @@ static void nfulnl_instance_free_rcu(struct rcu_hea=
-d *head)
-> >       /* FIXME: do we want to make the size calculation conditional bas=
-ed on
-> >        * what is actually present?  way more branches and checks, but m=
-ore
-> >        * memory efficient... */
-> > -     size =3D    nlmsg_total_size(sizeof(struct nfgenmsg))
-> > +     size =3D nlmsg_total_size(sizeof(struct nfgenmsg))
-> >               + nla_total_size(sizeof(struct nfulnl_msg_packet_hdr))
-> >               + nla_total_size(sizeof(u_int32_t))     /* ifindex */
-> >               + nla_total_size(sizeof(u_int32_t))     /* ifindex */
-> > @@ -668,7 +668,7 @@ static void nfulnl_instance_free_rcu(struct rcu_hea=
-d *head)
-> >               + nla_total_size(sizeof(struct nfgenmsg));      /* NLMSG_=
-DONE */
-> >
-> >       if (in && skb_mac_header_was_set(skb)) {
-> > -             size +=3D   nla_total_size(skb->dev->hard_header_len)
-> > +             size +=3D nla_total_size(skb->dev->hard_header_len)
-> >                       + nla_total_size(sizeof(u_int16_t))     /* hwtype=
- */
-> >                       + nla_total_size(sizeof(u_int16_t));    /* hwlen =
-*/
-> >       }
-> > diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_=
-queue.c
-> > index 89750f7..a1ef6e3 100644
-> > --- a/net/netfilter/nfnetlink_queue.c
-> > +++ b/net/netfilter/nfnetlink_queue.c
-> > @@ -394,7 +394,7 @@ static int nfqnl_put_bridge(struct nf_queue_entry *=
-entry, struct sk_buff *skb)
-> >       char *secdata =3D NULL;
-> >       u32 seclen =3D 0;
-> >
-> > -     size =3D    nlmsg_total_size(sizeof(struct nfgenmsg))
-> > +     size =3D nlmsg_total_size(sizeof(struct nfgenmsg))
-> >               + nla_total_size(sizeof(struct nfqnl_msg_packet_hdr))
-> >               + nla_total_size(sizeof(u_int32_t))     /* ifindex */
-> >               + nla_total_size(sizeof(u_int32_t))     /* ifindex */
-> > @@ -453,7 +453,7 @@ static int nfqnl_put_bridge(struct nf_queue_entry *=
-entry, struct sk_buff *skb)
-> >       }
-> >
-> >       if (queue->flags & NFQA_CFG_F_UID_GID) {
-> > -             size +=3D  (nla_total_size(sizeof(u_int32_t))     /* uid =
-*/
-> > +             size +=3D (nla_total_size(sizeof(u_int32_t))      /* uid =
-*/
-> >                       + nla_total_size(sizeof(u_int32_t)));   /* gid */
-> >       }
-> >
-> > diff --git a/net/netfilter/xt_IDLETIMER.c b/net/netfilter/xt_IDLETIMER.=
-c
-> > index 9cec9ea..f56d3ed 100644
-> > --- a/net/netfilter/xt_IDLETIMER.c
-> > +++ b/net/netfilter/xt_IDLETIMER.c
-> > @@ -283,7 +283,7 @@ static int __init idletimer_tg_init(void)
-> >
-> >       idletimer_tg_kobj =3D &idletimer_tg_device->kobj;
-> >
-> > -     err =3D  xt_register_target(&idletimer_tg);
-> > +     err =3D xt_register_target(&idletimer_tg);
-> >       if (err < 0) {
-> >               pr_debug("couldn't register xt target\n");
-> >               goto out_dev;
-> > --
-> > 1.8.3.1
-> >
+The current text includes the wiki link, but yes, the anchor tag is not
+present at the wiki anymore. I would agree that's due for updating.
+
+I think reinforcing information to avoid past mistakes is appropriate
+here. Reports have regularly missed the "[vs]" detail or suggested
+embargoes that ended on Fridays, etc.
+
+> > >  - Remove explicit linux-distros email.
+> > 
+> > I don't like this because we had past trouble with notifications going
+> > to the distros@ list and leaking Linux-only flaws to the BSDs. As there
+> > isn't a separate linux-distros wiki, the clarification of WHICH list is
+> > needed.
+> 
+> Why would removing the explicit linux-distros email encourage people to
+> send reports to it?
+
+What? No, I'm saying we should _keep_ linux-distros@... in our text so
+that people don't send to the wrong list.
+
+> I also don't understand what you mean by "there isn't a separate
+> linux-distros wiki"? There is one, and I want to point the reporter
+> there.
+
+That URL is a combined page for two lists. The very fact that it's
+not obvious that there are two lists described there is exactly why I
+think we need to keep an explicit mention of which to use. There are
+two mailing lists described at the wiki URL:
+
+	      distros@lists.openwall.com
+	linux-distros@lists.openwall.com
+
+Sending to the distros@ list risks exposing Linux-only flaws to non-Linux
+distros. This has caused leaks in the past, and we do not want people
+guessing at which list they should use.
+
+Also note that nowhere on the openwall wiki is the email address
+actually spelled out; this is another reason to spell it out in our
+documentation: no misunderstanding.
+
+(And historically there WAS a specific linux-distros wiki:
+https://oss-security.openwall.org/wiki/mailing-lists/linux-distros
+but it redirects to the combined one now...)
+
+> > >  - Remove various explanations of linux-distros policies.
+> > 
+> > I don't think there's value in removing the Tue-Thu comment, nor
+> > providing context for why distros need time. This has been a regular
+> > thing we've had to explain to researchers that aren't familiar with
+> > update procedures and publication timing.
+> 
+> To be fair, the Tue-Thu comment is listed in the section describing how
+> to do coordination with linux-distros, and linux-distros don't have a
+> Tue-Thu policy. If it's a security@kernel.org policy then let's list it
+> elsewhere.
+
+It's a distro preference. Many researchers aren't thinking about the
+larger Linux ecosystem that has to consume fixes. It's not a _policy_,
+but it makes the researchers understand how to construct better embargoes.
+
+> If you feel that there is a consensus around Tue-Thu let's just add it
+> to the linux-distros policy wiki, there's no point in listing random
+> policies from that wiki.
+
+I think it'd be a good idea to add that note also to the wiki, but I
+don't want it removed from our text because I have had to repeat that
+information regularly in the past.
+
+-- 
+Kees Cook
