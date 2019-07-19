@@ -2,96 +2,129 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC19EC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5768FC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A05420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510880;
-	bh=YPHQWDnAjj6f0it24YzhQzQrShEq69mzDHoUQixDxp4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zu9p6/6X4VK756nbUt5mWpE4jISTxSfMxljJPAjcBMq04nO4Tj0jwQvzZMVGXVkDr
-	 BUUaH/bs5oUWHJ3gzZY+zi/XsWfnle/Ix9dKU6PjfvrVg2uuPhZzH7nVq/kZO9BtwQ
-	 mqdOBXfverNsrotXyaNZH9RWJItG53BsRv8eRFg8=
+	by mail.kernel.org (Postfix) with ESMTP id 39DB22173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfGSEBv (ORCPT
+        id S1732614AbfGSEeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33344 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:34:44 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22524 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbfGSEBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93AE521897;
-        Fri, 19 Jul 2019 04:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508896;
-        bh=YPHQWDnAjj6f0it24YzhQzQrShEq69mzDHoUQixDxp4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5TWs8TEwQZ/mx7I1XRVurRH8pfS5GEG78r18znce9w5oWjT2HNj8GS5mr+TAEbZZ
-         OqEZ8bIdN2uXJt+5Rnh08fKCqSMQNfjI7hjTdccR+I3rNnhNLGTIunVT+uvS4WlvQN
-         vYeEyplUD/ej0aqV1qt4NV/g69ngtZaFtRP9Tguo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heng Xiao <heng.xiao@unisoc.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.2 144/171] f2fs: fix to avoid long latency during umount
-Date:   Thu, 18 Jul 2019 23:56:15 -0400
-Message-Id: <20190719035643.14300-144-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
-References: <20190719035643.14300-1-sashal@kernel.org>
+        id S1731387AbfGSEem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:34:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 21:34:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,280,1559545200"; 
+   d="scan'208";a="168447576"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Jul 2019 21:34:40 -0700
+Date:   Thu, 18 Jul 2019 21:34:40 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     john.hubbard@gmail.com
+Cc:     pavel@ucw.cz, SCheung@nvidia.com, akpm@linux-foundation.org,
+        aneesh.kumar@linux.vnet.ibm.com, benh@kernel.crashing.org,
+        bsingharora@gmail.com, dan.j.williams@intel.com,
+        dnellans@nvidia.com, ebaskakov@nvidia.com, hannes@cmpxchg.org,
+        jglisse@redhat.com, jhubbard@nvidia.com,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        liubo95@huawei.com, mhairgrove@nvidia.com, mhocko@kernel.org,
+        paulmck@linux.vnet.ibm.com, ross.zwisler@linux.intel.com,
+        sgutti@nvidia.com, torvalds@linux-foundation.org,
+        vdavydov.dev@gmail.com, Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] mm/Kconfig: additional help text for HMM_MIRROR option
+Message-ID: <20190719043439.GA26230@iweiny-DESK2.sc.intel.com>
+References: <20190717074124.GA21617@amd>
+ <20190719013253.17642-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719013253.17642-1-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heng Xiao <heng.xiao@unisoc.com>
+On Thu, Jul 18, 2019 at 06:32:53PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> The HMM_MIRROR option in Kconfig is a little underdocumented and
+> mysterious, and leaves people wondering whether to enable it.
+> 
+> Add text explaining just a little bit more about HMM, and also
+> mention which hardware would benefit from having HMM_MIRROR
+> enabled.
+> 
+> Suggested-by: Pavel Machek <pavel@ucw.cz>
+> Cc: Balbir Singh <bsingharora@gmail.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Jerome Glisse <jglisse@redhat.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> Hi Pavel and all, does this help? I've tried to capture the key missing bits
+> of documentation, but still keep it small, for Kconfig.
+> 
+> thanks,
+> John Hubbard
+> NVIDIA
+> 
+>  mm/Kconfig | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 56cec636a1fc..2fcb92e7f696 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -681,11 +681,18 @@ config HMM_MIRROR
+>  	depends on MMU && 64BIT
+>  	select MMU_NOTIFIER
+>  	help
+> -	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
+> -	  process into a device page table. Here, mirror means "keep synchronized".
+> -	  Prerequisites: the device must provide the ability to write-protect its
+> -	  page tables (at PAGE_SIZE granularity), and must be able to recover from
+> -	  the resulting potential page faults.
+> +	  This is Heterogeneous Memory Management (HMM) process address space
+> +	  mirroring.
+> +
+> +	  HMM_MIRROR provides a way to mirror ranges of the CPU page tables
+> +	  of a process into a device page table. Here, mirror means "keep
+> +	  synchronized". Prerequisites: the device must provide the ability
+> +	  to write-protect its page tables (at PAGE_SIZE granularity), and
+> +	  must be able to recover from the resulting potential page faults.
+> +
+> +	  Select HMM_MIRROR if you have hardware that meets the above
+> +	  description. An early, partial list of such hardware is:
+> +	  an NVIDIA GPU >= Pascal, Mellanox IB >= mlx5, or an AMD GPU.
 
-[ Upstream commit 6e0cd4a9dd4df1a0afcb454f1e654b5c80685913 ]
+I don't think we want to put device information here.  If we want that
+information in Kconfig best to put it in the devices themselves.  Otherwise
+this list will get stale.
 
-In umount, we give an constand time to handle pending discard, previously,
-in __issue_discard_cmd() we missed to check timeout condition in loop,
-result in delaying long time, fix it.
+Other than that, looks good.
 
-Signed-off-by: Heng Xiao <heng.xiao@unisoc.com>
-[Chao Yu: add commit message]
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/segment.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 8903b61457e7..291f7106537c 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1486,6 +1486,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
- 		list_for_each_entry_safe(dc, tmp, pend_list, list) {
- 			f2fs_bug_on(sbi, dc->state != D_PREP);
- 
-+			if (dpolicy->timeout != 0 &&
-+				f2fs_time_over(sbi, dpolicy->timeout))
-+				break;
-+
- 			if (dpolicy->io_aware && i < dpolicy->io_aware_gran &&
- 						!is_idle(sbi, DISCARD_TIME)) {
- 				io_interrupted = true;
--- 
-2.20.1
+Ira
 
+>  
+>  config DEVICE_PRIVATE
+>  	bool "Unaddressable device memory (GPU memory, ...)"
+> -- 
+> 2.22.0
+> 
