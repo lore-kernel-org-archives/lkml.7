@@ -2,179 +2,99 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543B9C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC479C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F202173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4C42173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nGMv6pXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfGSAkB (ORCPT
+        id S1726506AbfGSAkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:40:01 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48470 "EHLO ale.deltatee.com"
+        Thu, 18 Jul 2019 20:40:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35307 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfGSAkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:40:01 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hoGwH-0003ao-La; Thu, 18 Jul 2019 18:39:58 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190718225132.5865-1-logang@deltatee.com>
- <20190718225132.5865-2-logang@deltatee.com>
- <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <6deea9e7-ff3c-e115-b2f2-8914df0b6da7@deltatee.com>
-Date:   Thu, 18 Jul 2019 18:39:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726015AbfGSAkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:40:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qXGt728nz9s00;
+        Fri, 19 Jul 2019 10:40:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563496839;
+        bh=vWIpdAMZ+vT46Akc4v9NZRJYvyZiozmtJ4+w96anCLY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nGMv6pXAW7TJF2qcbITorX4qbqUA3xOaSbqxDkbX3NwHSKz63W9s8s12/tzLqBJjd
+         Au9HjPjusyb5DNMkmvajn1p7G7C+Wy/+vIdsVyChvneLmrxkJfJs9rgNUmTG8QMZ2V
+         TyODt7ACzQnDFxx3XKzhgXw87sbI1mbkark4o4CRky0L9xSBPkl3D5G26o6ahzFifa
+         CwhdQ6oXc/YdM5hx/cJgGY5s9R022geenaX9VZ0FVCOHbt5V+4vk/XwT41r/kPAeh4
+         9+Ygnu1a0N2uTxrrO+KtmjdqmUCv9TQ56r0H3jM4+YJ8cWiubaLQ5PVofJww97slSY
+         Br0/LJ9Fpv1EQ==
+Date:   Fri, 19 Jul 2019 10:40:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: linux-next: Tree for Jul 18 (header build error)
+Message-ID: <20190719104038.1d1f9a15@canb.auug.org.au>
+In-Reply-To: <20190719003045.GF692234@magnolia>
+References: <20190718133751.3cf036be@canb.auug.org.au>
+        <127d228c-322d-6349-382b-d304974df148@infradead.org>
+        <20190719100557.3ead3285@canb.auug.org.au>
+        <20190719003045.GF692234@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <c52f80b1-e154-b11f-a868-e3209e4ccb2d@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: hch@lst.de, axboe@fb.com, kbusch@kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while
- scanning
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; boundary="Sig_/nX4Jeu6sxuCZYl9N82CPIAF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/nX4Jeu6sxuCZYl9N82CPIAF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Darrick,
 
-On 2019-07-18 6:25 p.m., Sagi Grimberg wrote:
-> 
->> With multipath enabled, nvme_scan_work() can read from the
->> device (through nvme_mpath_add_disk()). However, with fabrics,
->> once ctrl->state is set to NVME_CTRL_DELETING, the reads will hang
->> (see nvmf_check_ready()).
->>
->> After setting the state to deleting, nvme_remove_namespaces() will
->> hang waiting for scan_work to flush and these tasks will hang.
->>
->> To fix this, ensure we take scan_lock before changing the ctrl-state.
->> Also, ensure the state is checked while the lock is held
->> in nvme_scan_lock_work().
-> 
-> That's a big hammer...
+On Thu, 18 Jul 2019 17:30:45 -0700 "Darrick J. Wong" <darrick.wong@oracle.c=
+om> wrote:
+>
+> ... oh, this is some weird "mash all the kernel headers together and see
+> if they compile" thing, isn't it?  Um, yes, iomap.h should only be
+> tested if CONFIG_IOMAP=3Dy (which in turn requires CONFIG_BLOCK=3Dy)
 
-I didn't think the scan_lock was that contested or that
-nvme_change_ctrl_state() was really called that often...
+Actually it tries to build each header file on its own to see if it
+include all its dependencies.
 
-> But this is I/O that we cannot have queued until we have a path..
-> 
-> I would rather have nvme_remove_namespaces() requeue all I/Os for
-> namespaces that serve as the current_path and have the make_request
-> routine to fail I/O if all controllers are deleting as well.
-> 
-> Would something like [1] (untested) make sense instead?
+--=20
+Cheers,
+Stephen Rothwell
 
-I'll have to give this a try next week and I'll let you know then. It
-kind of makes sense to me but a number of things I tried to fix this
-that I thought made sense did not work.
+--Sig_/nX4Jeu6sxuCZYl9N82CPIAF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> 
->> +    mutex_lock(&ctrl->scan_lock);
->> +
->>       if (ctrl->state != NVME_CTRL_LIVE)
->>           return;
-> 
-> unlock
+-----BEGIN PGP SIGNATURE-----
 
-If we unlock here and relock below, we'd have to recheck the ctrl->state
-to avoid any races. If you don't want to call nvme_identify_ctrl with
-the lock held, then it would probably be better to move the state check
-below it.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0xEYYACgkQAVBC80lX
+0Gwjnwf/cpxl9GjFax+XTHpFksObgF3XDfOvv7FrK++PfETXXai/cL9CmG4r0KSY
+m/s7MXlV83ONX4PmSB3LdMjMcPjYZFtuv5ZQ5LsAyupecwuJNDH7MEfH6F5pmx05
+h4DEWwQTSauxRA9GXqUGApYNrzbXcauaUMy1kWyKO95owuNdQWFS5mGq0n3jL2dN
+ClrPQuZZwPjvBRfrlJfJVe4/P8YluO5xJSGDCcFGmjiMc/zB71DoOHjWpP4ttS9J
+/9J7EiaibV7dKQz6fl0uF5HnAyi2i0aD3/HCx4drT+kbMUWiohHlmxXJLyr5BW7j
+tQAdbePufT0htEO3/XVLcm3+3PDyLg==
+=GzlS
+-----END PGP SIGNATURE-----
 
->>   @@ -3547,7 +3554,6 @@ static void nvme_scan_work(struct work_struct
->> *work)
->>       if (nvme_identify_ctrl(ctrl, &id))
->>           return;
-> 
-> unlock
-> 
-> 
-> [1]:
-> -- 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index 76cd3dd8736a..627f5871858d 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -3576,6 +3576,11 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
->         struct nvme_ns *ns, *next;
->         LIST_HEAD(ns_list);
-> 
-> +       mutex_lock(&ctrl->scan_lock);
-> +       list_for_each_entry(ns, &ctrl->namespaces, list)
-> +               nvme_mpath_clear_current_path(ns);
-> +       mutex_lock(&ctrl->scan_lock);
-> +
->         /* prevent racing with ns scanning */
->         flush_work(&ctrl->scan_work);
-> 
-> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-> index a9a927677970..da1731266788 100644
-> --- a/drivers/nvme/host/multipath.c
-> +++ b/drivers/nvme/host/multipath.c
-> @@ -231,6 +231,24 @@ inline struct nvme_ns *nvme_find_path(struct
-> nvme_ns_head *head)
->         return ns;
->  }
-> 
-> +static bool nvme_available_path(struct nvme_ns_head *head)
-> +{
-> +       struct nvme_ns *ns;
-> +
-> +       list_for_each_entry_rcu(ns, &head->list, siblings) {
-> +               switch (ns->ctrl->state) {
-> +               case NVME_CTRL_LIVE:
-> +               case NVME_CTRL_RESETTING:
-> +               case NVME_CTRL_CONNECTING:
-> +                       /* fallthru */
-> +                       return true;
-> +               default:
-> +                       break;
-> +               }
-> +       }
-> +       return false;
-> +}
-> +
->  static blk_qc_t nvme_ns_head_make_request(struct request_queue *q,
->                 struct bio *bio)
->  {
-> @@ -257,14 +275,14 @@ static blk_qc_t nvme_ns_head_make_request(struct
-> request_queue *q,
->                                       disk_devt(ns->head->disk),
->                                       bio->bi_iter.bi_sector);
->                 ret = direct_make_request(bio);
-> -       } else if (!list_empty_careful(&head->list)) {
-> -               dev_warn_ratelimited(dev, "no path available - requeuing
-> I/O\n");
-> +       } else if (nvme_available_path(head)) {
-> +               dev_warn_ratelimited(dev, "no usable path - requeuing
-> I/O\n");
-> 
->                 spin_lock_irq(&head->requeue_lock);
->                 bio_list_add(&head->requeue_list, bio);
->                 spin_unlock_irq(&head->requeue_lock);
->         } else {
-> -               dev_warn_ratelimited(dev, "no path - failing I/O\n");
-> +               dev_warn_ratelimited(dev, "no available path - failing
-> I/O\n");
-> 
->                 bio->bi_status = BLK_STS_IOERR;
->                 bio_endio(bio);
-> -- 
+--Sig_/nX4Jeu6sxuCZYl9N82CPIAF--
