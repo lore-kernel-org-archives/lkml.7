@@ -2,122 +2,235 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F2AC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8FBC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BD52173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563496762;
-	bh=eCiWYiZG0ijNfOfYOEbIo8fg8pTnk26ENs0Aqaz/cgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W+ehLf8mCGOJ8lvrYJqLPe4tGt1V4zKgz+vQzFiJcoP+vm7tMq5c6JFY9tTjWFMl7
-	 PFn1C4yZ7kGahVfy4l10CP6QPZxQHpDxuQEvTRxWo0arPnLWoKpJroeWgsbTHxNMUe
-	 sP0SzcGlZjlQO04ql7uVAPJ9rtmjuFuK8Qnp5DYg=
+	by mail.kernel.org (Postfix) with ESMTP id B9D9A2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 00:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3at9eEM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfGSAjV (ORCPT
+        id S1726447AbfGSAjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 20:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfGSAjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:39:21 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C53C2184E;
-        Fri, 19 Jul 2019 00:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563496760;
-        bh=eCiWYiZG0ijNfOfYOEbIo8fg8pTnk26ENs0Aqaz/cgo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f6Dg00TfBDLf1gF7NAlB0tOU/aoninJxRB86vg6K1gzl6biVF6I0ogXIw2V8fvr5j
-         a2AJ5A5ucibTrJkLgk3rQVoNIXxw3BMXeZbwdymW18rSUauD6E2iKwW31pO6sMiyr6
-         +JjNRC1URT4N53iTjmCJ1ZdOn7iQFbKYqqhivgk4=
-Date:   Thu, 18 Jul 2019 20:39:19 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     corbet@lwn.net, solar@openwall.com, will@kernel.org,
-        peterz@infradead.org, gregkh@linuxfoundation.org,
-        tyhicks@canonical.com, linux-doc@vger.kernel.org,
+        Thu, 18 Jul 2019 20:39:25 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39945 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfGSAjX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:39:23 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so20508313lff.7;
+        Thu, 18 Jul 2019 17:39:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WCkyKYTPbPUh8SG+lXVnndg59ELsHEuerb/rYoY8h3w=;
+        b=g3at9eEMDZ3nWk1PMPltMtWtHC+dIyIRlMQXGTRT7ya+EJuT8QAjC4J/HZ5w+dgPDU
+         fgA63t1tXM/Cki9E1nY8qpomHnjiScNTpE66JF15GxbfJbWojQoZ9qjgk5OeOYeI9J6L
+         /uEFU90Jn0QC42lFXYioKNCdMFF+Lf7cwMYX4+ERkUXbRZeliLeVtQxYf/Z5MsPorZVp
+         K2zAJp2/KVdMjzL/wxu50iIjegpEfzGyBlJvXU2oIedDoknYDYne8OGPvaPvkFNCfPVu
+         /N4F0KC4VNdDUnHGuFLFY3joAJ4JRAmGswjLEjn1WMBbVSycF/gkP4qSl750Gaqhoebc
+         aRJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WCkyKYTPbPUh8SG+lXVnndg59ELsHEuerb/rYoY8h3w=;
+        b=Cm1Q6NUKiP0/7xok5ZPQDUf+p3XrL6/So5FME/dZMCxqLxFvtCwqDAKOGYSuW6xpRr
+         K4Sdl7o2r8q+ClCJSKBtBGBgfUmsrw0+/lG2kDa0CZy44UgbxQThO0u2GBNDRrWs/kJ2
+         5TG4nNeurvdssbhXXLB33LGSgn8O0e6X0BLdT7mcnwaI4Stm/GuiEB0kiXmaXw1BLV+W
+         VBClRMRFS41xEBQHoUbEQ7CzUuPR0aQJ1XML+T9y7DNddb/Ig+itLiLygpaKXACBWH3z
+         uYQxCBx+nIfbv/8sOmjiW8wfYXjlba8VyRnpMjEtU0+PEy6WmvasoBjvgjLx+4Mre0D8
+         0BMA==
+X-Gm-Message-State: APjAAAWJ1LpH899U9yePzFl3KhKVQz0i8x46bmtTO1QUWYN/TjNxlfvy
+        alnX+hPTvTYqa6cZrmKm4rM=
+X-Google-Smtp-Source: APXvYqwMShFT1VPyMw1AhICy0JWk5ONRwIM69pZQ6NM6d2V9e0EnMLTzjZqwDEz19lF2lnERUgsQXg==
+X-Received: by 2002:ac2:4ace:: with SMTP id m14mr9975695lfp.99.1563496760535;
+        Thu, 18 Jul 2019 17:39:20 -0700 (PDT)
+Received: from dimatab (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.gmail.com with ESMTPSA id t137sm4192909lff.78.2019.07.18.17.39.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 17:39:20 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 03:42:58 +0300
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation/security-bugs: provide more information
- about linux-distros
-Message-ID: <20190719003919.GC4240@sasha-vm>
-References: <20190717231103.13949-1-sashal@kernel.org>
- <201907181457.D61AC061C@keescook>
+Subject: Re: [PATCH v4 18/24] PM / devfreq: tegra30: Optimize CPUFreq
+ notifier
+Message-ID: <20190719034258.651a9c06@dimatab>
+In-Reply-To: <ce18694a-4281-a245-7bdf-299fedc3c724@samsung.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223618epcas4p48e1e2ae7af04775ac50c68b7636f1a56@epcas4p4.samsung.com>
+        <20190707223303.6755-19-digetx@gmail.com>
+        <ce18694a-4281-a245-7bdf-299fedc3c724@samsung.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <201907181457.D61AC061C@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 03:00:55PM -0700, Kees Cook wrote:
->On Wed, Jul 17, 2019 at 07:11:03PM -0400, Sasha Levin wrote:
->> Provide more information about how to interact with the linux-distros
->> mailing list for disclosing security bugs.
->>
->> Reference the linux-distros list policy and clarify that the reporter
->> must read and understand those policies as they differ from
->> security@kernel.org's policy.
->>
->> Suggested-by: Solar Designer <solar@openwall.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->Sorry, but NACK, see below...
->
->> ---
->>
->> Changes in v2:
->>  - Focus more on pointing to the linux-distros wiki and policies.
->
->I think this is already happening in the text. What specifically do you
->want described differently?
+=D0=92 Thu, 18 Jul 2019 18:48:42 +0900
+Chanwoo Choi <cw00.choi@samsung.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-The main issue was that there isn't anything pointing to the
-linux-distros policies. The current text outlines a few of them ("add
-[vs]", and "there should be an embargo period"), but it effectively just
-gives out the linux-distros mailing address and tells the reporter to
-contact it.
+> On 19. 7. 8. =EC=98=A4=EC=A0=84 7:32, Dmitry Osipenko wrote:
+> > When CPU's memory activity is low or memory activity is high such
+> > that CPU's frequency contribution to the boosting is not taken into
+> > account, then there is no need to schedule devfreq's update. This
+> > eliminates unnecessary CPU activity during of idling caused by the
+> > scheduled work.
+> >=20
+> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> > ---
+> >  drivers/devfreq/tegra30-devfreq.c | 73
+> > +++++++++++++++++++++++++++---- 1 file changed, 64 insertions(+), 9
+> > deletions(-) =20
+>=20
+> Patch4 add the 'cpufreq notifier' and this patch optimize the cpufreq
+> notifier. I think t hat you can combine two patches.
 
->>  - Remove explicit linux-distros email.
->
->I don't like this because we had past trouble with notifications going
->to the distros@ list and leaking Linux-only flaws to the BSDs. As there
->isn't a separate linux-distros wiki, the clarification of WHICH list is
->needed.
+I'd prefer to keep them separate for a sake of git bisection.
 
-Why would removing the explicit linux-distros email encourage people to
-send reports to it?
+> >=20
+> > diff --git a/drivers/devfreq/tegra30-devfreq.c
+> > b/drivers/devfreq/tegra30-devfreq.c index
+> > 43c9c5fbfe91..8d6bf6e9f1ae 100644 ---
+> > a/drivers/devfreq/tegra30-devfreq.c +++
+> > b/drivers/devfreq/tegra30-devfreq.c @@ -216,10 +216,10 @@ static
+> > inline unsigned long do_percent(unsigned long val, unsigned int
+> > pct) return val * pct / 100; }
+> > =20
+> > -static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq
+> > *tegra) +static unsigned long actmon_cpu_to_emc_rate(struct
+> > tegra_devfreq *tegra,
+> > +					    unsigned int cpu_freq)
+> >  {
+> >  	const struct tegra_actmon_emc_ratio *ratio =3D
+> > actmon_emc_ratios;
+> > -	unsigned int cpu_freq =3D cpufreq_get(0);
+> >  	unsigned int i;
+> > =20
+> >  	for (i =3D 0; i < ARRAY_SIZE(actmon_emc_ratios); i++,
+> > ratio++) { @@ -239,15 +239,15 @@
+> > tegra_actmon_account_cpu_freq(struct tegra_devfreq *tegra, struct
+> > tegra_devfreq_device *dev, unsigned long target_freq)
+> >  {
+> > -	unsigned long static_cpu_emc_freq;
+> > +	unsigned long cpu_emc_freq =3D 0;
+> > =20
+> > -	if (dev->config->avg_dependency_threshold &&
+> > -	    dev->config->avg_dependency_threshold < dev->avg_freq)
+> > {
+> > -		static_cpu_emc_freq =3D
+> > actmon_cpu_to_emc_rate(tegra);
+> > -		target_freq =3D max(target_freq,
+> > static_cpu_emc_freq);
+> > -	}
+> > +	if (!dev->config->avg_dependency_threshold)
+> > +		return target_freq;
+> > =20
+> > -	return target_freq;
+> > +	if (dev->avg_freq > dev->config->avg_dependency_threshold)
+> > +		cpu_emc_freq =3D actmon_cpu_to_emc_rate(tegra,
+> > cpufreq_get(0)); +
+> > +	return max(target_freq, cpu_emc_freq);
+> >  }
+> > =20
+> >  static unsigned long tegra_actmon_lower_freq(struct tegra_devfreq
+> > *tegra, @@ -531,16 +531,71 @@ static void
+> > tegra_actmon_delayed_update(struct work_struct *work)
+> > mutex_unlock(&tegra->devfreq->lock); }
+> > =20
+> > +static unsigned long
+> > +tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
+> > +				  unsigned int cpu_freq)
+> > +{
+> > +	unsigned long freq, static_cpu_emc_freq;
+> > +
+> > +	/* check whether CPU's freq is taken into account at all */
+> > +	if (tegra->devices[MCCPU].avg_freq <=3D
+> > +	    tegra->devices[MCCPU].config->avg_dependency_threshold)
+> > +		return 0;
+> > +
+> > +	static_cpu_emc_freq =3D actmon_cpu_to_emc_rate(tegra,
+> > cpu_freq); +
+> > +	/* compare static CPU-EMC freq with MCALL */
+> > +	freq =3D tegra->devices[MCALL].avg_freq +
+> > +	       tegra->devices[MCALL].boost_freq;
+> > +
+> > +	freq =3D tegra_actmon_upper_freq(tegra, freq);
+> > +
+> > +	if (freq =3D=3D tegra->max_freq || freq >=3D static_cpu_emc_freq)
+> > +		return 0;
+> > +
+> > +	/* compare static CPU-EMC freq with MCCPU */
+> > +	freq =3D tegra->devices[MCCPU].avg_freq +
+> > +	       tegra->devices[MCCPU].boost_freq;
+> > +
+> > +	freq =3D tegra_actmon_upper_freq(tegra, freq);
+> > +
+> > +	if (freq =3D=3D tegra->max_freq || freq >=3D static_cpu_emc_freq)
+> > +		return 0;
+> > +
+> > +	return static_cpu_emc_freq;
+> > +}
+> > +
+> >  static int tegra_actmon_cpu_notify_cb(struct notifier_block *nb,
+> >  				      unsigned long action, void
+> > *ptr) {
+> > +	struct cpufreq_freqs *freqs =3D ptr;
+> >  	struct tegra_devfreq *tegra;
+> > +	unsigned long old, new;
+> > =20
+> >  	if (action !=3D CPUFREQ_POSTCHANGE)
+> >  		return NOTIFY_OK;
+> > =20
+> >  	tegra =3D container_of(nb, struct tegra_devfreq,
+> > cpu_rate_change_nb);=20
+> > +	/*
+> > +	 * Quickly check whether CPU frequency should be taken
+> > into account
+> > +	 * at all, without blocking CPUFreq's core.
+> > +	 */
+> > +	if (mutex_trylock(&tegra->devfreq->lock)) {
+> > +		old =3D tegra_actmon_cpufreq_contribution(tegra,
+> > freqs->old);
+> > +		new =3D tegra_actmon_cpufreq_contribution(tegra,
+> > freqs->new);
+> > +		mutex_unlock(&tegra->devfreq->lock);
+> > +
+> > +		/*
+> > +		 * If CPU's frequency shouldn't be taken into
+> > account at
+> > +		 * the moment, then there is no need to update the
+> > devfreq's
+> > +		 * state because ISR will re-check CPU's frequency
+> > on the
+> > +		 * next interrupt.
+> > +		 */
+> > +		if (old =3D=3D new)
+> > +			return NOTIFY_OK;
+> > +	}
+> > +
+> >  	/*
+> >  	 * CPUFreq driver should support
+> > CPUFREQ_ASYNC_NOTIFICATION in order
+> >  	 * to allow asynchronous notifications. This means we
+> > can't block=20
+>=20
+>=20
 
-I also don't understand what you mean by "there isn't a separate
-linux-distros wiki"? There is one, and I want to point the reporter
-there.
-
->>  - Remove various explanations of linux-distros policies.
->
->I don't think there's value in removing the Tue-Thu comment, nor
->providing context for why distros need time. This has been a regular
->thing we've had to explain to researchers that aren't familiar with
->update procedures and publication timing.
-
-To be fair, the Tue-Thu comment is listed in the section describing how
-to do coordination with linux-distros, and linux-distros don't have a
-Tue-Thu policy. If it's a security@kernel.org policy then let's list it
-elsewhere.
-
-If you feel that there is a consensus around Tue-Thu let's just add it
-to the linux-distros policy wiki, there's no point in listing random
-policies from that wiki.
-
---
-Thanks,
-Sasha
