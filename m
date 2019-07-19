@@ -2,107 +2,162 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A419C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18BFC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89F72184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:43:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHBrAYBs"
+	by mail.kernel.org (Postfix) with ESMTP id B44CD2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfGSMn6 (ORCPT
+        id S1728288AbfGSMs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 08:43:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35923 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfGSMn5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 08:43:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so15602861plt.3;
-        Fri, 19 Jul 2019 05:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=/FrjOlHsU/rFl8swGWw38s2HqBJIeif3GsejqegBQfE=;
-        b=HHBrAYBsAlGxR2OIsZGbdNPvlEtFEwW5mIo9kKXWBwu9d4V+76wWe/JhlvzH4cRzOl
-         c/s+PKUjJ768Dms1tPcHbfJ6sR5hRwsWPCSn8eY//T6P67/wyUyJaHOjg8oWvu6deR80
-         iW23s6joLdSePWwcOSjbrhX1eeq5YlkoYEL1u0MnizWv1QX8dyQ5a6CyDaZEgcw8W0+U
-         jgChwcXrQzqkbJ1aqtVcnbz5FjkgVGMUeVC5uv7X+KyxzAUgwiPOaljKG3L/1HPYtvsO
-         3Tt5t9tvTQBjVupL7CxLf8z4FpRe2usC6RXP0cnB3bESqEweUF6MwX50Ouw7y5Q2oi/W
-         vGnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=/FrjOlHsU/rFl8swGWw38s2HqBJIeif3GsejqegBQfE=;
-        b=E6xfx0dbhMiZ4VD86urN/fjQT8a10D+JviPPhaRKIYJB1i7mekielgjMHQpkp6BEoH
-         /SoHo4KbbNefYiX1biH5aqw23h+94kCoK2QJXzX9RytH10ftK7AfxDFTWBgNoM01UVY3
-         LI6sa/vJ+UlcHx+dFvA2DG8D3oLOc3wd2NXrj6REyaljn0yq+FR+39nFeqYkIl9tdvDd
-         OwVnKiPj+eXqzmXalU/+q6JZt2+xw7m9GWvQVe2drxf0q7jgD2k5yOkBONLN8kP8ftFu
-         wsyrTSiKf3TMh9LOl/DNreuBzMpfQe/Lb4bPyATICbyk0Kxb9afJOSH2+dmXPPnJYlmE
-         /HnQ==
-X-Gm-Message-State: APjAAAXYgD81q2RvWr5A8X8pyg8pHRuf/wQpxBR/ECSwUR6404uuOcVQ
-        DLQyBUyK2GumBZs0A7zX7Ck=
-X-Google-Smtp-Source: APXvYqx+9N9T2/+1wzwWwh/y89oJ9P0IE/G4zN8NafEAO+fPvr12z2A57s7nZTYhogOgeMC5M9ukpg==
-X-Received: by 2002:a17:902:724c:: with SMTP id c12mr55789189pll.219.1563540237303;
-        Fri, 19 Jul 2019 05:43:57 -0700 (PDT)
-Received: from localhost.localdomain ([103.121.208.202])
-        by smtp.gmail.com with ESMTPSA id l189sm37612530pfl.7.2019.07.19.05.43.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 05:43:56 -0700 (PDT)
-From:   Yin Fengwei <nh26223.lmm@gmail.com>
-To:     dhowells@redhat.com, gregkh@linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, miklos@szeredi.hu,
-        viro@zeniv.linux.org.uk, tglx@linutronix.de,
-        kstewart@linuxfoundation.org
-Subject: [PATCH] fs: fs_parser: avoid NULL param->string to kstrtouint
-Date:   Fri, 19 Jul 2019 20:43:29 +0800
-Message-Id: <20190719124329.23207-1-nh26223.lmm@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 19 Jul 2019 08:48:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55894 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727559AbfGSMs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 08:48:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D75DEAF6B;
+        Fri, 19 Jul 2019 12:48:24 +0000 (UTC)
+Subject: Re: [v3 PATCH 1/2] mm: mempolicy: make the behavior consistent when
+ MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
+To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@kernel.org,
+        mgorman@techsingularity.net, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <1563470274-52126-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1563470274-52126-2-git-send-email-yang.shi@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <c1e2b48a-972f-3944-bc17-598cb81a6658@suse.cz>
+Date:   Fri, 19 Jul 2019 14:48:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1563470274-52126-2-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot reported general protection fault in kstrtouint:
-https://lkml.org/lkml/2019/7/18/328
+On 7/18/19 7:17 PM, Yang Shi wrote:
+> When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
+> try best to migrate misplaced pages, if some of the pages could not be
+> migrated, then return -EIO.
+> 
+> There are three different sub-cases:
+> 1. vma is not migratable
+> 2. vma is migratable, but there are unmovable pages
+> 3. vma is migratable, pages are movable, but migrate_pages() fails
+> 
+> If #1 happens, kernel would just abort immediately, then return -EIO,
+> after the commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 ("mm:
+> mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified").
+> 
+> If #3 happens, kernel would set policy and migrate pages with best-effort,
+> but won't rollback the migrated pages and reset the policy back.
+> 
+> Before that commit, they behaves in the same way.  It'd better to keep
+> their behavior consistent.  But, rolling back the migrated pages and
+> resetting the policy back sounds not feasible, so just make #1 behave as
+> same as #3.
+> 
+> Userspace will know that not everything was successfully migrated (via
+> -EIO), and can take whatever steps it deems necessary - attempt rollback,
+> determine which exact page(s) are violating the policy, etc.
+> 
+> Make queue_pages_range() return 1 to indicate there are unmovable pages
+> or vma is not migratable.
+> 
+> The #2 is not handled correctly in the current kernel, the following
+> patch will fix it.
+> 
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-From the log, if the mount option is something like:
-   fd,XXXXXXXXXXXXXXXXXXXX
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-The default parameter (which has NULL param->string) will be
-passed to vfs_parse_fs_param. Finally, this NULL param->string
-is passed to kstrtouint and trigger NULL pointer access.
+Some nits below (I guess Andrew can incorporate them, no need to resend)
 
-Reported-by: syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com
-Fixes: 71cbb7570a9a ("vfs: Move the subtype parameter into fuse")
+...
 
-Signed-off-by: Yin Fengwei <nh26223.lmm@gmail.com>
----
- fs/fs_parser.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> @@ -488,15 +496,15 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	struct queue_pages *qp = walk->private;
+>  	unsigned long flags = qp->flags;
+>  	int ret;
+> +	bool has_unmovable = false;
+>  	pte_t *pte;
+>  	spinlock_t *ptl;
+>  
+>  	ptl = pmd_trans_huge_lock(pmd, vma);
+>  	if (ptl) {
+>  		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
+> -		if (ret > 0)
+> -			return 0;
+> -		else if (ret < 0)
+> +		/* THP was split, fall through to pte walk */
+> +		if (ret != 2)
+>  			return ret;
 
-diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-index d13fe7d797c2..578e6880ac67 100644
---- a/fs/fs_parser.c
-+++ b/fs/fs_parser.c
-@@ -210,6 +210,10 @@ int fs_parse(struct fs_context *fc,
- 	case fs_param_is_fd: {
- 		switch (param->type) {
- 		case fs_value_is_string:
-+			if (result->has_value) {
-+				goto bad_value;
-+			}
-+
- 			ret = kstrtouint(param->string, 0, &result->uint_32);
- 			break;
- 		case fs_value_is_file:
--- 
-2.17.1
+The comment should better go here after the if, as that's where fall through
+happens.
+
+>  	}
+>  
+> @@ -519,14 +527,21 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  		if (!queue_pages_required(page, qp))
+>  			continue;
+>  		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+> -			if (!vma_migratable(vma))
+> +			/* MPOL_MF_STRICT must be specified if we get here */
+> +			if (!vma_migratable(vma)) {
+> +				has_unmovable |= true;
+
+'|=' is weird, just use '='
+
+>  				break;
+> +			}
+>  			migrate_page_add(page, qp->pagelist, flags);
+>  		} else
+>  			break;
+>  	}
+>  	pte_unmap_unlock(pte - 1, ptl);
+>  	cond_resched();
+> +
+> +	if (has_unmovable)
+> +		return 1;
+> +
+>  	return addr != end ? -EIO : 0;
+>  }
+>  
+...
+> @@ -1259,11 +1286,12 @@ static long do_mbind(unsigned long start, unsigned long len,
+>  				putback_movable_pages(&pagelist);
+>  		}
+>  
+> -		if (nr_failed && (flags & MPOL_MF_STRICT))
+> +		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
+>  			err = -EIO;
+>  	} else
+>  		putback_movable_pages(&pagelist);
+>  
+> +up_out:
+>  	up_write(&mm->mmap_sem);
+>   mpol_out:
+
+The new label made the wrong identation of this one stand out, so I'd just fix
+it up while here.
+
+Thanks!
+
+>  	mpol_put(new);
+> 
 
