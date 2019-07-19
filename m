@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859CFC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CDEC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCAB21852
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52F5218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509074;
-	bh=z6+ZAEObeUD6O1kP7DFofWfnwbRNFai+vAnhy80sVg4=;
+	s=default; t=1563509081;
+	bh=Wt/gn8m83bZpyLcVa1ftJFsQb6lYMfvE8ePzwf81kV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WONKQKooNu/dedW4z7BlfuLEa6iOrYJOEfrEDdThxkfRlg5fb2U4pNdk1nsb/JP4D
-	 CMTs9UhYZI/s74ZwMqugin9JYmoa3oOQWcP4RUDVgZi1CiPclQZKkbkH4XbpiY6+eZ
-	 pJIEVL5UPiGH7AoR4efNzFy1Jvcujo+IL6DDR+M0=
+	b=jPKc6ii7PVtHOGvIYbokVvfSE1XFpxqu/RSuV/DbPAQec/43hBvx9L1N7oLuH66PK
+	 LmsM5EDj8Mtz/ma5tBV5Yye87IkW/g2qIcE8V8QXniCQEgdNVSpm6+JRUb0KlCKgwW
+	 gSNfOfUnWhDCOj6k+H87kMRPm1TQJN/uafRr1jAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfGSEEd (ORCPT
+        id S1731177AbfGSEEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:04:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36722 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731044AbfGSEE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:04:27 -0400
+        id S1731098AbfGSEEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:04:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB738218E2;
-        Fri, 19 Jul 2019 04:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91B8E218BB;
+        Fri, 19 Jul 2019 04:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509066;
-        bh=z6+ZAEObeUD6O1kP7DFofWfnwbRNFai+vAnhy80sVg4=;
+        s=default; t=1563509071;
+        bh=Wt/gn8m83bZpyLcVa1ftJFsQb6lYMfvE8ePzwf81kV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFYnQbicn+8e99ff+5Ovsgk94zt5B+cY0fc9O75rJqMMf9iQeNN/09JuNsgHIqtnp
-         VveD7Zbj4uV2mASl5kIhH7woMB4pIJrrkG/j34qCTX+GbFAHDAnemAwPu/tec35CZf
-         O+t9Wz9sEw9d/A78IeHWZwGFApUVGnH7CXgH03Dw=
+        b=uH5Erg4J7RjhUrakMzf7Y6U2i5m2BG3GI2mZZwuSP7PH1FOTiGJQ5ii273C0zv6fH
+         uFePtrJMEE6Piab1ZFzUWEue7Ccf2Z7ylFfWALRDAweaGWyHDuZhiNKmzNwU3LlhRs
+         9hvViaTYr9ODXCDv8Ry11XDTIyMlOdORqSFkek+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 050/141] serial: uartps: Use the same dynamic major number for all ports
-Date:   Fri, 19 Jul 2019 00:01:15 -0400
-Message-Id: <20190719040246.15945-50-sashal@kernel.org>
+Cc:     Eugene Korenevsky <ekorenevsky@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 053/141] kvm: vmx: fix limit checking in get_vmx_mem_address()
+Date:   Fri, 19 Jul 2019 00:01:18 -0400
+Message-Id: <20190719040246.15945-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,63 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Eugene Korenevsky <ekorenevsky@gmail.com>
 
-[ Upstream commit ab262666018de6f4e206b021386b93ed0c164316 ]
+[ Upstream commit c1a9acbc5295e278d788e9f7510f543bc9864fa2 ]
 
-Let kernel to find out major number dynamically for the first device and
-then reuse it for other instances.
-This fixes the issue that each uart is registered with a
-different major number.
+Intel SDM vol. 3, 5.3:
+The processor causes a
+general-protection exception (or, if the segment is SS, a stack-fault
+exception) any time an attempt is made to access the following addresses
+in a segment:
+- A byte at an offset greater than the effective limit
+- A word at an offset greater than the (effective-limit â€“ 1)
+- A doubleword at an offset greater than the (effective-limit â€“ 3)
+- A quadword at an offset greater than the (effective-limit â€“ 7)
 
-After the patch:
-crw-------    1 root     root      253,   0 Jun 10 08:31 /dev/ttyPS0
-crw--w----    1 root     root      253,   1 Jan  1  1970 /dev/ttyPS1
+Therefore, the generic limit checking error condition must be
 
-Fixes: 024ca329bfb9 ("serial: uartps: Register own uart console and driver structures")
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+exn = (off > limit + 1 - access_len) = (off + access_len - 1 > limit)
+
+but not
+
+exn = (off + access_len > limit)
+
+as for now.
+
+Also avoid integer overflow of `off` at 32-bit KVM by casting it to u64.
+
+Note: access length is currently sizeof(u64) which is incorrect. This
+will be fixed in the subsequent patch.
+
+Signed-off-by: Eugene Korenevsky <ekorenevsky@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 74089f5e5b53..fd0aa1e4e5ad 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -29,12 +29,12 @@
- 
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
--#define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
- 
- /* Rx Trigger level */
- static int rx_trigger_level = 56;
-+static int uartps_major;
- module_param(rx_trigger_level, uint, S_IRUGO);
- MODULE_PARM_DESC(rx_trigger_level, "Rx trigger level, 1-63 bytes");
- 
-@@ -1507,7 +1507,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	cdns_uart_uart_driver->owner = THIS_MODULE;
- 	cdns_uart_uart_driver->driver_name = driver_name;
- 	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
--	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
-+	cdns_uart_uart_driver->major = uartps_major;
- 	cdns_uart_uart_driver->minor = cdns_uart_data->id;
- 	cdns_uart_uart_driver->nr = 1;
- 
-@@ -1536,6 +1536,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		goto err_out_id;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 4ca834d22169..897ae4b62980 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4143,7 +4143,7 @@ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+ 		 */
+ 		if (!(s.base == 0 && s.limit == 0xffffffff &&
+ 		     ((s.type & 8) || !(s.type & 4))))
+-			exn = exn || (off + sizeof(u64) > s.limit);
++			exn = exn || ((u64)off + sizeof(u64) - 1 > s.limit);
  	}
- 
-+	uartps_major = cdns_uart_uart_driver->tty_driver->major;
- 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
- 
- 	/*
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
 -- 
 2.20.1
 
