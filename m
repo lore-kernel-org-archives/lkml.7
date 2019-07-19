@@ -2,106 +2,124 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BDBC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577E4C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE9A21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A14D2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:49:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="G9TOwr2r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWNxUzxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfGSRql (ORCPT
+        id S1728578AbfGSRt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 13:46:41 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:47790 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727497AbfGSRqk (ORCPT
+        Fri, 19 Jul 2019 13:49:26 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43864 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbfGSRtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 13:46:40 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id F1AE52E09F4;
-        Fri, 19 Jul 2019 20:46:36 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id ICah43fs8W-kamGWXC8;
-        Fri, 19 Jul 2019 20:46:36 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1563558396; bh=1Z3L2rCQwZ1u7nVoekpSRwgzFoMR8NsFTnt2HHesBaM=;
-        h=Message-ID:Date:To:From:Subject;
-        b=G9TOwr2rBmfREw3RPgVRGhOib+9KfKfXg7eGJs92C82XO+TzZdmfUlsdu83GtwFP2
-         Owe7Ncyh2YWSmj+VLAMHq0GEUgfLLCzsgU6lS4EgQ+/5Rp09NDlCi8dyT67snEocI/
-         Ej2WIi+3xDW5HS6wtiZQm1tCkBz1HU6MULzYQ6c8=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38d2:81d0:9f31:221f])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id C9SHlfdlgB-kZIGxdaN;
-        Fri, 19 Jul 2019 20:46:35 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] cgroup writeback: use online cgroup when switching from
- dying bdi_writebacks
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Jens Axboe <axboe@fb.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org
-Date:   Fri, 19 Jul 2019 20:46:35 +0300
-Message-ID: <156355839560.2063.5265687291430814589.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 13:49:25 -0400
+Received: by mail-io1-f67.google.com with SMTP id k20so60087920ios.10;
+        Fri, 19 Jul 2019 10:49:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=baGSXwBYZTXtADqKE2KAvtjQ3yUogk839fU/9Qnnaa0=;
+        b=uWNxUzxdc26FSrMI/dHfQmD/urraeYPJSBPgI7xG98vVg5wdzwRypXCXXmP/MBVUoj
+         rBSIdntkqQc355oewejCvlAXff8NHR83rsu4TEz7CDNALRw2vMSV/ddS6HwTMjDmqPHr
+         /esy6S+1eQ1G8uJOUGcCS5Z367dX/u5Pps9nbvfIO6LN8rGbruqMiI4kkN5aTjwF56xo
+         Bjngcr0+UdrY0OS8JnFCFCjjkbc9mae9AsHuEMYgzWEYT1MIj0haLTiMoYznkMG2NXAT
+         MdfvMwQeCuq5/vn2EOb58b1p/ID5l9ecIjiSWFIvb0F+Vo+hVxIOUpZBxzxlucdzz0dD
+         Wecw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=baGSXwBYZTXtADqKE2KAvtjQ3yUogk839fU/9Qnnaa0=;
+        b=o/mk4NQ21pEnN/+pyBdk2QQIfUX5ZgyGua67TqtUgdNnaYErGRCXHHRbhTPUscFk/e
+         r1RhLG8vINcW9mIO2C+KMHrYnc0cl8NDTdyFstPDIzUL72MwpAySJz+QJuRWUiaMXfIR
+         ytFbOcc1GRs+W+zIOFCwfMlMlorqPZTheeedY9pkPrz5zkMHlW3tpFPSHTdcJXqdAwM6
+         5bJQClmEtjp5h2Qhrn8ER1EvdXTtsezY/ZTMbW3JH3YKca8KaY/cpEAQwmfQzaAXxCZw
+         3VKu8BRkQsQy/aDZm47vofoodtKc87/elFV4C3wx/hbn+9tTziE+TuU/r86GpXkpA5vt
+         6/ng==
+X-Gm-Message-State: APjAAAVxa99Abm7GwJ2D74wAdSEHVv0P/4QRIuE45Nn/SQlZxGxvO0d+
+        nM95SsCtmE+loQXN41In8YI=
+X-Google-Smtp-Source: APXvYqxim4LXHBZC7WZuwyREL+ASYVopot2Kl4subWNIHwMo/q7MFV3JD3am6uhpSpx1WSv/Gam8CA==
+X-Received: by 2002:a6b:1ca:: with SMTP id 193mr52663297iob.264.1563558564836;
+        Fri, 19 Jul 2019 10:49:24 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id r24sm22957223ioc.76.2019.07.19.10.49.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 10:49:23 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     andriy.shevchenko@linux.intel.com
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] 8250_lpss: check null return when calling pci_ioremap_bar
+Date:   Fri, 19 Jul 2019 12:48:45 -0500
+Message-Id: <20190719174848.24216-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190719151519.GO9224@smile.fi.intel.com>
+References: <20190719151519.GO9224@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Offline memory cgroups forbids creation new bdi_writebacks.
-Each try wastes cpu cycles and increases contention around cgwb_lock.
+pci_ioremap_bar may return null. This is eventually de-referenced at 
+drivers/dma/dw/core.c:1154 and drivers/dma/dw/core.c:1168. A null check 
+is needed to prevent null de-reference. I am adding the check and in case
+ of failure. Thanks to Andy Shevchenko for the hint on the necessity of 
+pci_iounmap when exiting.
 
-For example each O_DIRECT read calls filemap_write_and_wait_range()
-if inode has cached pages which tries to switch from dying writeback.
-
-This patch switches inode writeback to closest online parent cgroup.
-
-Fixes: e8a7abf5a5bd ("writeback: disassociate inodes from dying bdi_writebacks")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- fs/fs-writeback.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_lpss.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 542b02d170f8..3af44591a106 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -505,7 +505,7 @@ static void inode_switch_wbs(struct inode *inode, int new_wb_id)
- 	/* find and pin the new wb */
- 	rcu_read_lock();
- 	memcg_css = css_from_id(new_wb_id, &memory_cgrp_subsys);
--	if (memcg_css)
-+	if (memcg_css && (memcg_css->flags & CSS_ONLINE))
- 		isw->new_wb = wb_get_create(bdi, memcg_css, GFP_ATOMIC);
- 	rcu_read_unlock();
- 	if (!isw->new_wb)
-@@ -579,9 +579,16 @@ void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
- 	/*
- 	 * A dying wb indicates that the memcg-blkcg mapping has changed
- 	 * and a new wb is already serving the memcg.  Switch immediately.
-+	 * If memory cgroup is offline switch to closest online parent.
- 	 */
--	if (unlikely(wb_dying(wbc->wb)))
--		inode_switch_wbs(inode, wbc->wb_id);
-+	if (unlikely(wb_dying(wbc->wb))) {
-+		struct cgroup_subsys_state *memcg_css = wbc->wb->memcg_css;
-+
-+		while (!(memcg_css->flags & CSS_ONLINE))
-+			memcg_css = memcg_css->parent;
-+
-+		inode_switch_wbs(inode, memcg_css->id);
-+	}
- }
- EXPORT_SYMBOL_GPL(wbc_attach_and_unlock_inode);
+diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+index 53ca9ba6ab4b..d07e431110d9 100644
+--- a/drivers/tty/serial/8250/8250_lpss.c
++++ b/drivers/tty/serial/8250/8250_lpss.c
+@@ -169,10 +169,12 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
+ 	struct pci_dev *pdev = to_pci_dev(port->dev);
+ 	int ret;
  
++	chip->pdata = &qrk_serial_dma_pdata;
+ 	chip->dev = &pdev->dev;
+ 	chip->irq = pci_irq_vector(pdev, 0);
+ 	chip->regs = pci_ioremap_bar(pdev, 1);
+-	chip->pdata = &qrk_serial_dma_pdata;
++	if (!chip->regs)
++		return;
+ 
+ 	/* Falling back to PIO mode if DMA probing fails */
+ 	ret = dw_dma_probe(chip);
+@@ -195,11 +197,15 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
+ 
+ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
+ {
++	struct dw_dma_chip *chip = &lpss->dma_chip;
+ 	struct dw_dma_slave *param = &lpss->dma_param;
+ 
+ 	if (!param->dma_dev)
+ 		return;
+-	dw_dma_remove(&lpss->dma_chip);
++
++	dw_dma_remove(chip);
++
++	pci_iounmap(to_pci_dev(chip->dev), chip->regs);
+ }
+ #else	/* CONFIG_SERIAL_8250_DMA */
+ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
+-- 
+2.17.1
 
