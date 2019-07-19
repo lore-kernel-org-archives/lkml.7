@@ -2,233 +2,100 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A19C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A71C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC7321851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732E921849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gBNVRQG3"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="pHLK0RdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfGSNbE (ORCPT
+        id S1728992AbfGSNbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:31:04 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:35552 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728323AbfGSNbA (ORCPT
+        Fri, 19 Jul 2019 09:31:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43447 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728163AbfGSNbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:31:00 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6FAEBC1C32;
-        Fri, 19 Jul 2019 13:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563543059; bh=guLzfTDm0DCrYL34tliMIlpOGpkWKVhqKlozyTjq22U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=gBNVRQG3fcgBpP9c+ZTPkHfktcuLn/rIeT9QocKk8tg9L3pMAXKnWzjeKqwXieytv
-         CVuhcnFzn2RLqLL32/iLCfWPobtbP8a2mQ+NiJyxuNKAgZtTeoKWLQpudFkQttRyi4
-         zwnNRr392g61iEbQKHr7R8S9BryUZrIE9EIftI456GCfhsrqISQzgl57r/glyRUWWp
-         YOyeoYNKmSQul4uGkSq/1uChzbb4PIe9btAHa+brE/b7REsbUIVcMSr3HX7/WA7ZnW
-         3/fnFwiXGsyQPHc293dcxUlIjZPv6pQanpHANEX7UnZdAvJ+wFv89JwAobzNHlQJT6
-         NYOyKkuLK+qqg==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 45915A0057;
-        Fri, 19 Jul 2019 13:30:57 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id E7DF53EBC6;
-        Fri, 19 Jul 2019 15:30:56 +0200 (CEST)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     lorenzo@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org,
-        bbrezillon@kernel.org, Joao.Pinto@synopsys.com,
-        Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH v6 1/2] i3c: move i3c_device_match_id to device.c and export it
-Date:   Fri, 19 Jul 2019 15:30:54 +0200
-Message-Id: <2f94d66bab7e1d47f7eae8cde8028fd37fa4c423.1563542515.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1563542515.git.vitor.soares@synopsys.com>
-References: <cover.1563542515.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1563542515.git.vitor.soares@synopsys.com>
-References: <cover.1563542515.git.vitor.soares@synopsys.com>
+        Fri, 19 Jul 2019 09:31:44 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so14472720pgv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=MVr0XIO31Bkuy2FDATI2mwycXO2udY8JgwdYSo9e+8w=;
+        b=pHLK0RdTzIiVUlo4jNpM+6x8mkmhdSmNWjyd1KwT2Bp7UBpFR8mTwiLUCZhjwwCN6X
+         zrTcQmun3ZX/td2Vxb/qXFKA9qPC0XbhwnEbFoui6Bgh9+mQz2nSFbnFyCX/IzYidMGU
+         ECLsEjIgbbahw5lcOzQCuUaVid/sOxTAFzVg2djQ7TQb9c9woArMBsXwnAoLzGQ+smWi
+         3iDHfEkJEIGFOhf3ZWDyKj8unfJf5rIle2647cJDwOIfTFYE3jCZn0k/W3lX76mqjqBD
+         HE9FaX0zr0SnsIxYp6qeNeDo2GxvNI14+FdsS9FVmUeYyvMWuazxYj6NLR/4/9joy+X7
+         v9Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MVr0XIO31Bkuy2FDATI2mwycXO2udY8JgwdYSo9e+8w=;
+        b=Z5xJKvjiGHTTH7kDsaBxqRph+qjb9ZMuH4tZ7A7Rpqtlvkcox6OFaz1Cb6hpLFbPp5
+         wD192/Xu8SXs1VyLGLyPvcpNUVwQtoIa6do7K3s4wjSkcnhC2fdILyKukyF7K20ooAC+
+         7nOXpV2OA8pYRnW547LDh65V80k3URWHkwtkedvBWCfSkJNmbXjgayIQElHfyyq4I6ii
+         FZ9M6eGsss2hRRxR4ybxldnz+YGRpLFDBoa25Z3ohKvcBDEzXRRhpHxL3dwSilhBO3X6
+         MG2Od8pMNJodahdr1jNwcK2bK6Ps163UwveJXVa3uN42noT51Wko7kwxwCIAEAR8gBuw
+         TSPQ==
+X-Gm-Message-State: APjAAAVomABBfp0hj0e+0ZsDXav7NySvjYLZKPQm5/KcQWUnmvrCSQIV
+        sWaYJdUXpfS080qlhnIF7A3V6jdzzz2PPA==
+X-Google-Smtp-Source: APXvYqyr0/brVyGxhb4PbxwxryDlUtxweTQv+DfpIhIHoLlaxUEBwoAR5YXbBh7iCb3AxDIrPXfxIQ==
+X-Received: by 2002:a65:4786:: with SMTP id e6mr52906473pgs.448.1563543103118;
+        Fri, 19 Jul 2019 06:31:43 -0700 (PDT)
+Received: from bogon.bytedance.net ([61.120.150.76])
+        by smtp.gmail.com with ESMTPSA id x9sm37875954pfn.177.2019.07.19.06.31.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 19 Jul 2019 06:31:42 -0700 (PDT)
+From:   Fei Li <lifei.shirley@bytedance.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>, Pawel Moll <pawel.moll@arm.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fam Zheng <zhengfeiran@bytedance.com>,
+        Fei Li <lifei.shirley@bytedance.com>
+Subject: [PATCH v1 0/2] virtio-mmio: support multiple interrupt vectors
+Date:   Fri, 19 Jul 2019 21:31:33 +0800
+Message-Id: <20190719133135.32418-1-lifei.shirley@bytedance.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some I3C device drivers need to know which entry matches the
-i3c_device object passed to the probe function
+Hi,
 
-Let's move i3c_device_match_id() to device.c and export it so it can be
-used by drivers.
+This patch series implements multiple interrupt vectors support for
+virtio-mmio device. This is especially useful for multiqueue vhost-net
+device when using firecracker micro-vms as the guest.
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
----
-Changes in v6:
-  Improve kerneldoc
+Test result:
+With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs can
+receive 9 times more pps comparing with only one irq:
+- 564830.38 rxpck/s for 8 irqs on
+- 67665.06 rxpck/s for 1 irq on
 
-Changes in v5:
-  Add kerneldoc
-  Improve commit message
+Please help to review, thanks!
 
-Changes in v4:
-  None
+Have a nice day
+Fei
 
-Changes in v3:
-  Remove i3c_get_device_id
-  Move i3c_device_match_id from drivers/i3c/master.c to drivers/i3c/device.c
-  Export i3c_device_match_id
 
-Changes in v2:
-  move this function to drivers/i3c/device.c
+Fam Zheng (1):
+  virtio-mmio: Process vrings more proactively
 
- drivers/i3c/device.c       | 53 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/i3c/master.c       | 45 ---------------------------------------
- include/linux/i3c/device.h |  4 ++++
- 3 files changed, 57 insertions(+), 45 deletions(-)
+Fei Li (1):
+  virtio-mmio: support multiple interrupt vectors
 
-diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
-index 69cc040..c15f5ca 100644
---- a/drivers/i3c/device.c
-+++ b/drivers/i3c/device.c
-@@ -201,6 +201,59 @@ struct i3c_device *dev_to_i3cdev(struct device *dev)
- EXPORT_SYMBOL_GPL(dev_to_i3cdev);
- 
- /**
-+ * i3c_device_match_id() - Returns the i3c_device_id entry matching @i3cdev
-+ * @i3cdev: I3C device
-+ * @id_table: I3C device match table
-+ *
-+ * Return: a pointer to an i3c_device_id object or NULL if there's no match.
-+ */
-+const struct i3c_device_id *
-+i3c_device_match_id(struct i3c_device *i3cdev,
-+		    const struct i3c_device_id *id_table)
-+{
-+	struct i3c_device_info devinfo;
-+	const struct i3c_device_id *id;
-+
-+	i3c_device_get_info(i3cdev, &devinfo);
-+
-+	/*
-+	 * The lower 32bits of the provisional ID is just filled with a random
-+	 * value, try to match using DCR info.
-+	 */
-+	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
-+		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
-+		u16 part = I3C_PID_PART_ID(devinfo.pid);
-+		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
-+
-+		/* First try to match by manufacturer/part ID. */
-+		for (id = id_table; id->match_flags != 0; id++) {
-+			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-+			    I3C_MATCH_MANUF_AND_PART)
-+				continue;
-+
-+			if (manuf != id->manuf_id || part != id->part_id)
-+				continue;
-+
-+			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-+			    ext_info != id->extra_info)
-+				continue;
-+
-+			return id;
-+		}
-+	}
-+
-+	/* Fallback to DCR match. */
-+	for (id = id_table; id->match_flags != 0; id++) {
-+		if ((id->match_flags & I3C_MATCH_DCR) &&
-+		    id->dcr == devinfo.dcr)
-+			return id;
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(i3c_device_match_id);
-+
-+/**
-  * i3c_driver_register_with_owner() - register an I3C device driver
-  *
-  * @drv: driver to register
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 5f4bd52..7667f84 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -270,51 +270,6 @@ static const struct device_type i3c_device_type = {
- 	.uevent = i3c_device_uevent,
- };
- 
--static const struct i3c_device_id *
--i3c_device_match_id(struct i3c_device *i3cdev,
--		    const struct i3c_device_id *id_table)
--{
--	struct i3c_device_info devinfo;
--	const struct i3c_device_id *id;
--
--	i3c_device_get_info(i3cdev, &devinfo);
--
--	/*
--	 * The lower 32bits of the provisional ID is just filled with a random
--	 * value, try to match using DCR info.
--	 */
--	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
--		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
--		u16 part = I3C_PID_PART_ID(devinfo.pid);
--		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
--
--		/* First try to match by manufacturer/part ID. */
--		for (id = id_table; id->match_flags != 0; id++) {
--			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
--			    I3C_MATCH_MANUF_AND_PART)
--				continue;
--
--			if (manuf != id->manuf_id || part != id->part_id)
--				continue;
--
--			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
--			    ext_info != id->extra_info)
--				continue;
--
--			return id;
--		}
--	}
--
--	/* Fallback to DCR match. */
--	for (id = id_table; id->match_flags != 0; id++) {
--		if ((id->match_flags & I3C_MATCH_DCR) &&
--		    id->dcr == devinfo.dcr)
--			return id;
--	}
--
--	return NULL;
--}
--
- static int i3c_device_match(struct device *dev, struct device_driver *drv)
- {
- 	struct i3c_device *i3cdev;
-diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
-index 5ecb055..de102e4 100644
---- a/include/linux/i3c/device.h
-+++ b/include/linux/i3c/device.h
-@@ -188,6 +188,10 @@ static inline struct i3c_driver *drv_to_i3cdrv(struct device_driver *drv)
- struct device *i3cdev_to_dev(struct i3c_device *i3cdev);
- struct i3c_device *dev_to_i3cdev(struct device *dev);
- 
-+const struct i3c_device_id *
-+i3c_device_match_id(struct i3c_device *i3cdev,
-+		    const struct i3c_device_id *id_table);
-+
- static inline void i3cdev_set_drvdata(struct i3c_device *i3cdev,
- 				      void *data)
- {
+ drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 196 insertions(+), 42 deletions(-)
+
 -- 
-2.7.4
+2.11.0
 
