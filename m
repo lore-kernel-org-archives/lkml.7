@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A7FC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64812C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8457F21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D2821851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510220;
-	bh=EC+R/IWz9lMvvkhtV6ReCvhVyoTRgMYn0JYsA9ZNY4M=;
+	s=default; t=1563510226;
+	bh=G+8sZy2ufiDDhHgfN8/lhi9b6SGiBlgFv+YhD3Sr3e0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q9Wzuft8gibxH9Lhb98FKf8dyWZxJd+r05hl3g9c1mkBow2TCm0s0rgXeSwxbvWe7
-	 hADoI4ytM+965uxVCPcUnCUMovNYc71j9ZooRivMSzI3fkpZPuDiprqtzATRFeZpvP
-	 db5PvBjdJZ2q/AomGTh27B2tvwWRPwJm1JZfjpw4=
+	b=UkAKEf2CbYBM1Dxu5QDRiCduZ5Ociw0yEkhO5dsgJqphUikI4eEqQN3BM0cWqUyDM
+	 DXnJ9dWu+puieyOK8TDtZkEhXjAyxqbiaPtIcSZ+jnX8wPt/pXXUmWwPpccVYVjZGB
+	 WpDa+tlqpPgj6Cx6Lujs9nhi3QPxgptGa8jwGgf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388939AbfGSEXj (ORCPT
+        id S2387957AbfGSEKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:23:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387982AbfGSEKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:20 -0400
+        id S1728468AbfGSEKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:10:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9E24218B6;
-        Fri, 19 Jul 2019 04:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 068A5218B6;
+        Fri, 19 Jul 2019 04:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509419;
-        bh=EC+R/IWz9lMvvkhtV6ReCvhVyoTRgMYn0JYsA9ZNY4M=;
+        s=default; t=1563509414;
+        bh=G+8sZy2ufiDDhHgfN8/lhi9b6SGiBlgFv+YhD3Sr3e0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBeFWLzEEXd5KUW3uS4xN+/TP4e5mSFZeiH1kPSicW3FiDejdQffgfS61kQSPoaMz
-         XdFF2wysD7ZASZlCtBL4Cxw+EuapdsvpU9euXMadQPwilgy512ayuG/YFypDOebEqV
-         JY0LYyKx8nDxeHho4CCqiGGLpAN6ZxKS07mNI2CA=
+        b=DoYnaIUwJanPk60qfiHKKBc/eEpYZKhrps5rE3nu6JKPsvjxvd9T13Z3AmHtSFBjv
+         7vHJZ8OzE3LKsEwGQoZEcL1tkLubM7jVqeIKasWNoOjRcSWea1Z0Pny5JsLtEwr0j+
+         CuI1Ava64jD+nV1YbiICl83CV5e5uRoXfMIK1mPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     morten petersen <morten_bp@live.dk>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 082/101] mailbox: handle failed named mailbox channel request
-Date:   Fri, 19 Jul 2019 00:07:13 -0400
-Message-Id: <20190719040732.17285-82-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 078/101] PCI: dwc: pci-dra7xx: Fix compilation when !CONFIG_GPIOLIB
+Date:   Fri, 19 Jul 2019 00:07:09 -0400
+Message-Id: <20190719040732.17285-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,44 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: morten petersen <morten_bp@live.dk>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 25777e5784a7b417967460d4fcf9660d05a0c320 ]
+[ Upstream commit 381ed79c8655a40268ee7391f716edd90c5c3a97 ]
 
-Previously, if mbox_request_channel_byname was used with a name
-which did not exist in the "mbox-names" property of a mailbox
-client, the mailbox corresponding to the last entry in the
-"mbox-names" list would be incorrectly selected.
-With this patch, -EINVAL is returned if the named mailbox is
-not found.
+If CONFIG_GPIOLIB is not selected the compilation results in the
+following build errors:
 
-Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+drivers/pci/controller/dwc/pci-dra7xx.c:
+ In function dra7xx_pcie_probe:
+drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
+ error: implicit declaration of function devm_gpiod_get_optional;
+ did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
+
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
+
+drivers/pci/controller/dwc/pci-dra7xx.c:778:45: error: ‘GPIOD_OUT_HIGH’
+undeclared (first use in this function); did you mean ‘GPIOF_INIT_HIGH’?
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
+                                             ^~~~~~~~~~~~~~
+                                             GPIOF_INIT_HIGH
+
+Fix them by including the appropriate header file.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mailbox.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 674b35f402f5..055c90b8253c 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -391,11 +391,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index a32d6dde7a57..412524aa1fde 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -26,6 +26,7 @@
+ #include <linux/types.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++#include <linux/gpio/consumer.h>
  
- 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
- 		if (!strncmp(name, mbox_name, strlen(name)))
--			break;
-+			return mbox_request_channel(cl, index);
- 		index++;
- 	}
- 
--	return mbox_request_channel(cl, index);
-+	dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
-+		__func__, name);
-+	return ERR_PTR(-EINVAL);
- }
- EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
- 
+ #include "../../pci.h"
+ #include "pcie-designware.h"
 -- 
 2.20.1
 
