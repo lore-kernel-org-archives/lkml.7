@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E5C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7998C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72A7218C5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735A32189F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509183;
-	bh=bZZC5OJ2ldg7kQh44V/WwpdOG7mtNTIKY7rjVmIV2Ww=;
+	s=default; t=1563509196;
+	bh=tUs7HuC82WX+TAG+gnhX976cxKA3Uz7SIO2KeVgJG9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcrP77LoIgDSvEslMmU5FLI+UIZD32wy83cGbakVF45UFtVW9vQc+pIbQJsBlyTaz
-	 s+fwR/JMVSlhxdwjy89BtCHKLr9alWkfWm4y9+kW4eGgR87VEm8Xh++dan0tfsPHdf
-	 MCBehLINwfpi5Li00Yj+88xBKnzlIH9qqG6Llwdw=
+	b=Z2TtcpQoZvlxGVkohE6rPKrPFmp4lkuA1dgHEzzP97FvHPUi3s2Exj4VTV45J11eE
+	 JsvPSKU/NHFt31o5L2JvTxIL785d72tAuhDrOuve4ePfZfSmwfNGUxV6VbI4xo+DrI
+	 3SLiOesoarUI2HnnmDivdDupO0gbf/s4/qK3V23k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbfGSEGX (ORCPT
+        id S1732211AbfGSEGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:06:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732073AbfGSEGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:18 -0400
+        id S1728210AbfGSEGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C894C21873;
-        Fri, 19 Jul 2019 04:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49AD3218BB;
+        Fri, 19 Jul 2019 04:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509177;
-        bh=bZZC5OJ2ldg7kQh44V/WwpdOG7mtNTIKY7rjVmIV2Ww=;
+        s=default; t=1563509182;
+        bh=tUs7HuC82WX+TAG+gnhX976cxKA3Uz7SIO2KeVgJG9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FhUtGdcxvNHcUDffJJr0yjxkZQL/OeNI/Jm8xceEgVGWFjHZ1v8rfwkPERli1sbVL
-         XFV2J9OOwQe3watLvN42GMwV6ntNDp10ypbPTHSFoODjocq1BDD+PGnf5jrK1EROYl
-         jx5NDjoXRqT8RR7uToieV+F1Iy8Rs6mC7zusvc4k=
+        b=V/w1Juf7Vt13qoW7uGPq86ftZpaEeISgvCKxnR3KWv35ZA6ZuxiMQEIzbZ0Yr2lta
+         6vVeb7/0vZDJw+00P7uT5jGev/6wNTDtIA0LVDgRGy273DsjysR+yEOYJUiAcUdhL8
+         JEuItBO+3S8TCpSCgIvX7mbly58gYVy2TabTNTAg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dag Moxnes <dag.moxnes@oracle.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 107/141] RDMA/core: Fix race when resolving IP address
-Date:   Fri, 19 Jul 2019 00:02:12 -0400
-Message-Id: <20190719040246.15945-107-sashal@kernel.org>
+Cc:     Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Mike Playle <mplayle@solarflare.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 111/141] nvme-tcp: set the STABLE_WRITES flag when data digests are enabled
+Date:   Fri, 19 Jul 2019 00:02:16 -0400
+Message-Id: <20190719040246.15945-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,61 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dag Moxnes <dag.moxnes@oracle.com>
+From: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
 
-[ Upstream commit d8d9ec7dc5abbb3f11d866e983c4984f5c2de9d6 ]
+[ Upstream commit 958f2a0f8121ae36a5cbff383ab94fadf1fba5eb ]
 
-Use the neighbour lock when copying the MAC address from the neighbour
-data struct in dst_fetch_ha.
+There was a few false alarms sighted on target side about wrong data
+digest while performing high throughput load to XFS filesystem shared
+through NVMoF TCP.
 
-When not using the lock, it is possible for the function to race with
-neigh_update(), causing it to copy an torn MAC address:
+This flag tells the rest of the kernel to ensure that the data buffer
+does not change while the write is in flight.  It incurs a performance
+penalty, so only enable it when it is actually needed, i.e. when we are
+calculating data digests.
 
-rdma_resolve_addr()
-  rdma_resolve_ip()
-    addr_resolve()
-      addr_resolve_neigh()
-        fetch_ha()
-          dst_fetch_ha()
-	     memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN)
+Although even with this change in place, ext2 users can steel experience
+false positives, as ext2 is not respecting this flag. This may be apply
+to vfat as well.
 
-and
-
-net_ioctl()
-  arp_ioctl()
-    arp_rec_delete()
-      arp_invalidate()
-        neigh_update()
-          __neigh_update()
-	    memcpy(&neigh->ha, lladdr, dev->addr_len)
-
-It is possible to provoke this error by calling rdma_resolve_addr() in a
-tight loop, while deleting the corresponding ARP entry in another tight
-loop.
-
-Fixes: 51d45974515c ("infiniband: addr: Consolidate code to fetch neighbour hardware address from dst.")
-Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+Signed-off-by: Mike Playle <mplayle@solarflare.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/addr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-index d0b04b0d309f..4ca31ce29a29 100644
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -336,7 +336,7 @@ static int dst_fetch_ha(const struct dst_entry *dst,
- 		neigh_event_send(n, NULL);
- 		ret = -ENODATA;
- 	} else {
--		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
-+		neigh_ha_snapshot(dev_addr->dst_dev_addr, n, dst->dev);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 3a390b2c7540..d4c0bc88dd1e 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -11,6 +11,7 @@
+ #include <linux/hdreg.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/backing-dev.h>
+ #include <linux/list_sort.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+@@ -3253,6 +3254,10 @@ static int nvme_alloc_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+ 		goto out_free_ns;
  	}
  
- 	neigh_release(n);
++	if (ctrl->opts->data_digest)
++		ns->queue->backing_dev_info->capabilities
++			|= BDI_CAP_STABLE_WRITES;
++
+ 	blk_queue_flag_set(QUEUE_FLAG_NONROT, ns->queue);
+ 	if (ctrl->ops->flags & NVME_F_PCI_P2PDMA)
+ 		blk_queue_flag_set(QUEUE_FLAG_PCI_P2PDMA, ns->queue);
 -- 
 2.20.1
 
