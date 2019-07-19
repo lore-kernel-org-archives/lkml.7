@@ -2,155 +2,181 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB65C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEAFC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7F821849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA4821849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PgS4m85g";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PgS4m85g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G3cOINU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732966AbfGSXd2 (ORCPT
+        id S1733029AbfGSXgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 19:33:28 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51014 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728247AbfGSXd2 (ORCPT
+        Fri, 19 Jul 2019 19:36:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38268 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728247AbfGSXgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 19:33:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CFADB8EE109;
-        Fri, 19 Jul 2019 16:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563579207;
-        bh=LqTkQf38ZyZNHBsEs0FRO7l02fVIaHk37E45mYH6Eus=;
-        h=Subject:From:To:Cc:Date:From;
-        b=PgS4m85goUu3itIpIledemu5peXYvopzu/9hisi8eRVhR9IkFipWKEFRuzlEapolb
-         gctP4Q8ax7vIBS74F9qlAX4q36qNTkwSj8P5AKj2n+AoVUAwPmJ08/v7RqBkYfPkak
-         Dwh6v6Xw1LWsvoWTPKvc6Q60Yvs8Z/HXKiNnys84=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yOQ9zMAQY4U6; Fri, 19 Jul 2019 16:33:27 -0700 (PDT)
-Received: from [192.168.11.4] (122x212x32x58.ap122.ftth.ucom.ne.jp [122.212.32.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 910868EE0EF;
-        Fri, 19 Jul 2019 16:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563579207;
-        bh=LqTkQf38ZyZNHBsEs0FRO7l02fVIaHk37E45mYH6Eus=;
-        h=Subject:From:To:Cc:Date:From;
-        b=PgS4m85goUu3itIpIledemu5peXYvopzu/9hisi8eRVhR9IkFipWKEFRuzlEapolb
-         gctP4Q8ax7vIBS74F9qlAX4q36qNTkwSj8P5AKj2n+AoVUAwPmJ08/v7RqBkYfPkak
-         Dwh6v6Xw1LWsvoWTPKvc6Q60Yvs8Z/HXKiNnys84=
-Message-ID: <1563579201.1602.7.camel@HansenPartnership.com>
-Subject: [GIT PULL] final round of SCSI updates for the 5.2+ merge window
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sat, 20 Jul 2019 08:33:21 +0900
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 19:36:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y15so14809380pfn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 16:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=adPQzI1v5diG916E3ftdRP7KVUpoq7ni2PbSErONVno=;
+        b=G3cOINU5IIalyfSzoeJGzYHjbbTayjz7uKTmRzNWMjmloTNLmboShFlXotMdaNFDe8
+         LAdBksnVHUYSUdjAjmD3cROKn41n3SKUCER9oghvqyO+rKroqQj7uNodSK+RT3bUNB1S
+         DXoVHjQtNrBXRF4FRkraXhiN3WesLyTqJ7RQQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=adPQzI1v5diG916E3ftdRP7KVUpoq7ni2PbSErONVno=;
+        b=czGcYNFeCOWRIZM07hdDGTMupeMESe7hlgu/hTGpKyeyLbUCosIV6gM2zY+QxV+Fro
+         OCXayaMYrSnqcja5hNPf0IN6F4oS+iEx1aaqSoJ3zbyggVsIvINFTfrk4oXA0xe0AuG1
+         sWVbkOgCxDlVi5UPPXj/TLiVCcB3QPlO17Sb+zHe2p1q/HlvrrcgcNVEP0g9LEIreSLV
+         qlfDE7yAspGq39ol04LAjFSUDm5VwJd+pIrxXsRP8wcYWkQDZeEBXqWL7x/9GjU/qAOi
+         WkNB8t+NjLKTaGy+q6ZPILylDZYj+hVoGVSsU5k6dxhYW6QbvlVhz2m05C9BpwxYLolO
+         ft1g==
+X-Gm-Message-State: APjAAAW36yONYxfRI7XSH69i3uoeizV7GGglqwOeV6VeWlPV2uR7Aax3
+        8yElkhTJ0AiTnCAfJ+tJkz4Bcw==
+X-Google-Smtp-Source: APXvYqxbqPCgcMawQkjn4LpCVpIZIiiIhPeZYJ2X7r56FNvFvPhSCu3KoIIFPtYjLuP6gyd08GrXzQ==
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr56615815pgj.4.1563579371281;
+        Fri, 19 Jul 2019 16:36:11 -0700 (PDT)
+Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id a21sm38313759pfi.27.2019.07.19.16.36.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 16:36:09 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 16:36:06 -0700
+From:   Brian Norris <briannorris@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        linux-wireless@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        netdev@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        linux-mmc@vger.kernel.org, davem@davemloft.net,
+        Xinming Hu <huxinming820@gmail.com>,
+        linux-kernel@vger.kernel.org, Andreas Fenkart <afenkart@gmail.com>
+Subject: Re: [PATCH 2/2] mwifiex: Make use of the new sdio_trigger_replug()
+ API to reset
+Message-ID: <20190719233605.GA66171@google.com>
+References: <20190716164209.62320-1-dianders@chromium.org>
+ <20190716164209.62320-3-dianders@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716164209.62320-3-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the final round of mostly small fixes in our initial
-submit.  It's mostly minor fixes and driver updates.  The only change
-of note is adding a virt_boundary_mask to the SCSI host and host
-template to parametrise this for NVMe devices instead of having them do
-a call in slave_alloc.  It's a fairly straightforward conversion except
-in the two NVMe handling drivers that didn't set it who now have a
-virtual infinity parameter added.
+Hi Doug,
 
-The patch is available here:
+On Tue, Jul 16, 2019 at 09:42:09AM -0700, Doug Anderson wrote:
+> As described in the patch ("mmc: core: Add sdio_trigger_replug()
+> API"), the current mwifiex_sdio_card_reset() is broken in the cases
+> where we're running Bluetooth on a second SDIO func on the same card
+> as WiFi.  The problem goes away if we just use the
+> sdio_trigger_replug() API call.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+I'm unfortunately not a good evaluator of SDIO/MMC stuff, so I'll mostly
+leave that to others and assume that the "replug" description is pretty
+much all I need to know.
 
-The short changelog is:
+> NOTE: Even though with this new solution there is less of a reason to
+> do our work from a workqueue (the unplug / plug mechanism we're using
+> is possible for a human to perform at any time so the stack is
+> supposed to handle it without it needing to be called from a special
+> context), we still need a workqueue because the Marvell reset function
+> could called from a context where sleeping is invalid and thus we
+> can't claim the host.  One example is Marvell's wakeup_timer_fn().
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  drivers/net/wireless/marvell/mwifiex/sdio.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/net/wireless/marvell/mwifiex/sdio.c
+> index 24c041dad9f6..f77ad2615f08 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/sdio.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
+> @@ -2218,14 +2218,6 @@ static void mwifiex_sdio_card_reset_work(struct mwifiex_adapter *adapter)
+>  {
+>  	struct sdio_mmc_card *card = adapter->card;
+>  	struct sdio_func *func = card->func;
+> -	int ret;
+> -
+> -	mwifiex_shutdown_sw(adapter);
 
-Arnd Bergmann (1):
-      scsi: lpfc: reduce stack size with CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE
+I'm very mildly unhappy to see this driver diverge from the PCIe one
+again, but the only way it makes sense to do things the same is if there
+is such thing as a "function level reset" for SDIO (i.e., doesn't also
+kill the Bluetooth function). But it appears we don't really have such a
+thing.
 
-Benjamin Block (3):
-      scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-      scsi: zfcp: fix request object use-after-free in send path causing wrong traces
-      scsi: zfcp: fix request object use-after-free in send path causing seqno errors
+> -
+> -	/* power cycle the adapter */
+> -	sdio_claim_host(func);
+> -	mmc_hw_reset(func->card->host);
+> -	sdio_release_host(func);
+>  
+>  	/* Previous save_adapter won't be valid after this. We will cancel
 
-Christoph Hellwig (8):
-      scsi: megaraid_sas: set an unlimited max_segment_size
-      scsi: mpt3sas: set an unlimited max_segment_size for SAS 3.0 HBAs
-      scsi: IB/srp: set virt_boundary_mask in the scsi host
-      scsi: IB/iser: set virt_boundary_mask in the scsi host
-      scsi: storvsc: set virt_boundary_mask in the scsi host template
-      scsi: ufshcd: set max_segment_size in the scsi host template
-      scsi: core: take the DMA max mapping size into account
-      scsi: core: add a host / host template field for the virt boundary
+^^^ FTR, the "save_adapter" note was already obsolete as of
 
-Colin Ian King (1):
-      scsi: libfc: fix null pointer dereference on a null lport
+  cc75c577806a mwifiex: get rid of global save_adapter and sdio_work
 
-Damien Le Moal (1):
-      scsi: sd_zbc: Fix compilation warning
+but the clear_bit() calls were (before this patch) still useful for
+other reasons.
 
-Deepak Ukey (1):
-      scsi: pm80xx: Fixed kernel panic during error recovery for SATA drive
+>  	 * pending work requests.
+> @@ -2233,9 +2225,9 @@ static void mwifiex_sdio_card_reset_work(struct mwifiex_adapter *adapter)
+>  	clear_bit(MWIFIEX_IFACE_WORK_DEVICE_DUMP, &card->work_flags);
+>  	clear_bit(MWIFIEX_IFACE_WORK_CARD_RESET, &card->work_flags);
 
-Denis Efremov (1):
-      scsi: libsas: remove the exporting of sas_wait_eh
+But now, I don't think you need these clear_bit() calls any more --
+you're totally destroying the card and its workqueue on remove(). (And
+anyway, MWIFIEX_IFACE_WORK_CARD_RESET was just cleared by your caller.)
 
-Marcos Paulo de Souza (1):
-      scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk Cruzer Blade
+>  
+> -	ret = mwifiex_reinit_sw(adapter);
+> -	if (ret)
+> -		dev_err(&func->dev, "reinit failed: %d\n", ret);
+> +	sdio_claim_host(func);
+> +	sdio_trigger_replug(func);
+> +	sdio_release_host(func);
 
-Maurizio Lombardi (1):
-      scsi: core: use scmd_printk() to print which command timed out
+And...we're approximately back to where we were 4 years ago :)
 
-Ming Lei (1):
-      scsi: core: Fix race on creating sense cache
+commit b4336a282db86b298b70563f8ed51782b36b772c
+Author: Andreas Fenkart <afenkart@gmail.com>
+Date:   Thu Jul 16 18:50:01 2015 +0200
 
-Shivasharan S (4):
-      scsi: megaraid_sas: Update driver version to 07.710.50.00
-      scsi: megaraid_sas: Add module parameter for FW Async event logging
-      scsi: megaraid_sas: Enable msix_load_balance for Invader and later controllers
-      scsi: megaraid_sas: Fix calculation of target ID
+    mwifiex: sdio: reset adapter using mmc_hw_reset
 
-YueHaibing (1):
-      scsi: megaraid_sas: Make some symbols static
+Anyway, assuming the "function reset" thing isn't workable, and you drop
+the clear_bit() stuff, I think this is fine:
 
-And the diffstat:
+Reviewed-by: Brian Norris <briannorris@chromium.org>
 
- drivers/infiniband/ulp/iser/iscsi_iser.c  | 35 ++++----------------
- drivers/infiniband/ulp/srp/ib_srp.c       | 18 ++--------
- drivers/s390/scsi/zfcp_erp.c              |  7 ++++
- drivers/s390/scsi/zfcp_fsf.c              | 55 +++++++++++++++++++++++++++----
- drivers/scsi/hosts.c                      |  3 ++
- drivers/scsi/libfc/fc_exch.c              |  2 +-
- drivers/scsi/libsas/sas_scsi_host.c       |  1 -
- drivers/scsi/lpfc/lpfc_debugfs.h          |  2 +-
- drivers/scsi/megaraid/megaraid_sas.h      |  4 +--
- drivers/scsi/megaraid/megaraid_sas_base.c | 31 +++++++++++++----
- drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  1 +
- drivers/scsi/pm8001/pm8001_sas.c          |  6 +++-
- drivers/scsi/pm8001/pm80xx_hwi.c          |  2 +-
- drivers/scsi/pm8001/pm80xx_hwi.h          |  2 ++
- drivers/scsi/scsi_devinfo.c               |  2 ++
- drivers/scsi/scsi_lib.c                   | 13 +++++---
- drivers/scsi/sd_zbc.c                     |  2 +-
- drivers/scsi/storvsc_drv.c                |  5 ++-
- drivers/scsi/ufs/ufshcd.c                 |  3 +-
- include/scsi/scsi_host.h                  |  3 ++
- 20 files changed, 123 insertions(+), 74 deletions(-)
-
-James
-
+>  }
+>  
+>  /* This function read/write firmware */
+> -- 
+> 2.22.0.510.g264f2c817a-goog
+> 
