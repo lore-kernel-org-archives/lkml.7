@@ -2,149 +2,140 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8114AC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929F1C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534312173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:17:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPV17GxC"
+	by mail.kernel.org (Postfix) with ESMTP id 6E3862173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 12:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfGSMRq (ORCPT
+        id S1728057AbfGSMTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 08:17:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44721 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfGSMRp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 08:17:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so15524281plr.11;
-        Fri, 19 Jul 2019 05:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VdW91kGbtMx1/wFOgVLAAmhmR53/Mmovc2B4qKSLVoM=;
-        b=tPV17GxCfw5GOn9Z0SM0asoH6tv9DsX2Mclc+LSSVLakBXKMFML2Nz1RqCm69dXf+4
-         MdNq5/hych7y5E5zSSQn3QbuoCIZJ+yFtf6KM6jbGBLY8qxp7sk9isvGd4mS7j0ecQ3q
-         RShEFu0wZ2yyQkTD2bmGjPnelmS9Cz4K8GIYnjzmYbtfhtej4sZ+ELlk9/v+QNtspy+i
-         k1/ffZR6ZiJD4stuV0bDxMIzzDhgYDg1BAynZHpK1M9YTvsLNswDyxb6MfP5ZG2E2JU8
-         U/2nswAdXaMprd/cETjMj26I3jnB+dOuO9mjr172uRQeZ+F4Nwob4C5fhUO+k8/AsA67
-         hfmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VdW91kGbtMx1/wFOgVLAAmhmR53/Mmovc2B4qKSLVoM=;
-        b=DnTdnsviBuH+g7gNv109I6zSUMb1OFhXzHJ8G75Bm0c4q++c1vkKea/5LfgbNd/3G6
-         rU5LEB5ra6kMbkw3IJaDRDjy4AQhTDNeV1aAyfRHgLm0X/dKdGADCRpTfwljrEP2dsu0
-         vOlO9MsxgTPT6NhCiEcUT8CpK2XVii28zPO5eW23fbKXyfxnuSA0JEPfszR9iV44uVlx
-         01AQ/UitCp4BxAnaYdWjOhqGSIDs3CKOSiGAn8vmACx1dCW5GT9uYn3U7wnir9mkt7Me
-         B5ZZdB1t7Zad2b9NpvR5QM8a3jb9yQqr9BhMCYrIHQrdYSHnZY0eZAuagSxve2abzUJk
-         PZCg==
-X-Gm-Message-State: APjAAAWhHkXqJ5Dr/Csw+Cfqp2NqXyMpk2lggAehiA91gWkZhGN08UnR
-        /sasFi6BiXPi2wz3661EUT0=
-X-Google-Smtp-Source: APXvYqwN+QPUUYQwwFwo9H5EL3ZGPZ+sUtXsif9yiR1QJxdwfi6TZS0sbm/Job3/qEJ0qpOejVDGeQ==
-X-Received: by 2002:a17:902:4501:: with SMTP id m1mr56949207pld.111.1563538665054;
-        Fri, 19 Jul 2019 05:17:45 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id z2sm27019181pgg.58.2019.07.19.05.17.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 05:17:44 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] staging: wilc1000: Merge memcpy + le32_to_cpus to get_unaligned_le32
-Date:   Fri, 19 Jul 2019 20:16:07 +0800
-Message-Id: <20190719121605.22640-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 19 Jul 2019 08:19:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45402 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726076AbfGSMTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 08:19:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0683FAF37;
+        Fri, 19 Jul 2019 12:19:09 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 14:19:07 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] printk/panic/x86: Allow to access printk log buffer
+ after crash_smp_send_stop()
+Message-ID: <20190719121907.4hrfp4dxdhtjygbi@pathway.suse.cz>
+References: <20190716072805.22445-1-pmladek@suse.com>
+ <20190716072805.22445-3-pmladek@suse.com>
+ <20190718104756.GA22851@jagdpanzerIV>
+ <CALYGNiMnqUKxKsY1JRi075xs-P_QzfA4Pg3XANiW0mFYkp_RQQ@mail.gmail.com>
+ <20190718112954.GA1774@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718112954.GA1774@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the combo use of memcpy and le32_to_cpus.
-Use get_unaligned_le32 instead.
-This simplifies the code.
+On Thu 2019-07-18 20:29:54, Sergey Senozhatsky wrote:
+> On (07/18/19 14:07), Konstantin Khlebnikov wrote:
+> > > Let me test the waters. Criticize the following idea:
+> > >
+> > > Can we, sort of, disconnect "supposed to be dead" CPUs from printk()
+> > > so then we can unconditionally re-init printk() from panic-CPU?
+> > >
+> > > We have per-CPU printk_state; so panic-CPU can set, let's say,
+> > > DEAD_CPUS_TELL_NO_TALES bit on all CPUs but self, and vprintk_func()
+> > > will do nothing if DEAD_CPUS_TELL_NO_TALES bit set on particular
+> > > CPU. Foreign CPUs are not even supposed to be alive, and smp_send_stop()
+> > > waits for IPI acks from secondary CPUs long enough on average (need
+> > > to check that) so if one of the CPUs is misbehaving and doesn't want
+> > > to die (geez...) we will just "disconnect" it from printk() to minimize
+> > > possible logbuf/console drivers interventions and then proceed with
+> > > panic; assuming that misbehaving CPUs are actually up to something
+> > > sane. Sometimes, you know, in some cases, those CPUs are already dead:
+> > > either accidentally powered off, or went completely nuts and do nothing,
+> > > etc. etc. but we still can kdump() and console_flush_on_panic().
+> > 
+> > Good idea.
+> > Panic-CPU could just increment state to reroute printk into 'safe'
+> > per-cpu buffer.
+> 
+> Yeah, that's better.
+> 
+> So we can do something like this
+> 
+> @@ -269,15 +269,21 @@ void printk_safe_flush_on_panic(void)
+>  	 * Make sure that we could access the main ring buffer.
+>  	 * Do not risk a double release when more CPUs are up.
+>  	 */
+> -	if (raw_spin_is_locked(&logbuf_lock)) {
+> -		if (num_online_cpus() > 1)
+> -			return;
+> +	debug_locks_off();
+> +	raw_spin_lock_init(&logbuf_lock);
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
- - Merge the two patches with the same
-   subject line.
+Hmm, the check for num_online_cpus() is there to avoid deadlock
+caused be double unlock. The unconditional init would bring it back.
 
- drivers/staging/wilc1000/wilc_mon.c               | 3 +--
- drivers/staging/wilc1000/wilc_wfi_cfgoperations.c | 3 +--
- drivers/staging/wilc1000/wilc_wlan.c              | 9 +++------
- 3 files changed, 5 insertions(+), 10 deletions(-)
+It is about what compromise we use. We either try to get the messages
+out, init the lock and risk a deadlock. Or we do not risk the
+deadlock.
 
-diff --git a/drivers/staging/wilc1000/wilc_mon.c b/drivers/staging/wilc1000/wilc_mon.c
-index 7d7933d40924..d6f14f69ad64 100644
---- a/drivers/staging/wilc1000/wilc_mon.c
-+++ b/drivers/staging/wilc1000/wilc_mon.c
-@@ -35,8 +35,7 @@ void wilc_wfi_monitor_rx(struct net_device *mon_dev, u8 *buff, u32 size)
- 		return;
- 
- 	/* Get WILC header */
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	/*
- 	 * The packet offset field contain info about what type of management
- 	 * the frame we are dealing with and ack status
-diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-index d72fdd333050..12fb4add05ec 100644
---- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-+++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-@@ -1038,8 +1038,7 @@ void wilc_wfi_p2p_rx(struct wilc_vif *vif, u8 *buff, u32 size)
- 	s32 freq;
- 	__le16 fc;
- 
--	memcpy(&header, (buff - HOST_HDR_OFFSET), HOST_HDR_OFFSET);
--	le32_to_cpus(&header);
-+	header = get_unaligned_le32(buff - HOST_HDR_OFFSET);
- 	pkt_offset = GET_PKT_OFFSET(header);
- 
- 	if (pkt_offset & IS_MANAGMEMENT_CALLBACK) {
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index d46876edcfeb..7d438ae90c3e 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -703,8 +703,7 @@ static void wilc_wlan_handle_rx_buff(struct wilc *wilc, u8 *buffer, int size)
- 
- 	do {
- 		buff_ptr = buffer + offset;
--		memcpy(&header, buff_ptr, 4);
--		le32_to_cpus(&header);
-+		header = get_unaligned_le32(buff_ptr);
- 
- 		is_cfg_packet = (header >> 31) & 0x1;
- 		pkt_offset = (header >> 22) & 0x1ff;
-@@ -874,10 +873,8 @@ int wilc_wlan_firmware_download(struct wilc *wilc, const u8 *buffer,
- 
- 	offset = 0;
- 	do {
--		memcpy(&addr, &buffer[offset], 4);
--		memcpy(&size, &buffer[offset + 4], 4);
--		le32_to_cpus(&addr);
--		le32_to_cpus(&size);
-+		addr = get_unaligned_le32(&buffer[offset]);
-+		size = get_unaligned_le32(&buffer[offset + 4]);
- 		acquire_bus(wilc, WILC_BUS_ACQUIRE_ONLY);
- 		offset += 8;
- 		while (((int)size) && (offset < buffer_size)) {
--- 
-2.20.1
+The current code is not consistent. printk_safe_flush_on_panic()
+is conservative and does not risk the deadlock. While kmsg_dump(),
+console_unblank() and console_flush_on_panic() risk the deadlock.
 
+The 1st patch tries to make it more consistent. It makes all
+the above functions as conservative as printk_safe_flush_on_panic()
+regarding logbuf_lock. While they still risk a deadlock with
+console-specific locks.
+
+The reasoning might be:
+
+  + The code under logbuf_lock mostly just manipulates strings. There
+    are no nested locks. Infinite loops would most likely happen also
+    during normal operation. By other words, it is not easy to stay
+    locked in logbuf_lock (he, he, the last famous words).
+
+  + On the other hand, a lot of code is done with disabled interrupts.
+    It is easier to imagine that a CPU could not get stopped by normal
+    interrupt because some deadlock or infinite loop in interrupt
+    context. It might even be a code calling console_unlock().
+    Re-initializing logbuf_lock might be unnecessary risk.
+
+  + We are probably more relaxed with console specific locks because
+    most of them are ignored in panic after bust_spinlocks().
+
+
+Anyway, this patchset is primary about logbuf_lock related deadlocks.
+I needed a fix for our customers. I do not want to spend too much
+time on upstreaming. IMHO, it is better to invest into the lockless
+ring buffer.
+
+If we could agree that the patches makes things better (more
+consistent, more safe in kdump with enabled notifiers) and
+the complexity is acceptable. Then let's accept them
+(with some trivial improvements).
+
+If they are too controversial, risky, or complex then
+let's abandon them and concentrate on lockless ring buffer.
+
+Best Regards,
+Petr
