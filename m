@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F2FC76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88EC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11622084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D925E21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511026;
-	bh=vrWW74EW8bNcSD5jtLgJJHU1PakyrUlgyqxJvf6p7Q0=;
+	s=default; t=1563511032;
+	bh=n/H9DtgbR6PnQvash2wSB/L+kMnJ+lz8di/8qoW6B0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Es3pGbqWeen2hc2CasxqDhxaKsaJjcdMt4QOhLOn4TLT+hiSVXKaPphS41L2CxosE
-	 5JzoeURg/a7jsyC3VKi6+3q/5Vq5Rq7xyLLq7m5oOSP2+n7SSZARIk9MZqmR0+0OAH
-	 Lti8yc9VTJgEaIg/NR/IqYj6gdMXRIlAoXU7pxm0=
+	b=vO90EKqzkDVEzxCUA6TgST++2L4IzCHbUv72e9/RxfgDhL2KuQYi+HvwetpkF85sp
+	 zNJUpjgVV+fjuQu9gaJ2Nri02+eYvloX4d0mr1NbpD8wAAuD9UE2SZtme6cmyPyc3y
+	 HEeiDy5N+RIOKXBvwFMUcGPZOe7rXCrSENjVKyg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbfGSEhG (ORCPT
+        id S1727332AbfGSEAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60214 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbfGSEAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:00:21 -0400
+        id S1726720AbfGSEAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E90A221852;
-        Fri, 19 Jul 2019 04:00:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFCA32189E;
+        Fri, 19 Jul 2019 04:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508820;
-        bh=vrWW74EW8bNcSD5jtLgJJHU1PakyrUlgyqxJvf6p7Q0=;
+        s=default; t=1563508805;
+        bh=n/H9DtgbR6PnQvash2wSB/L+kMnJ+lz8di/8qoW6B0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fj6QVuVLtHprCgGYFn1oXcXYYEFpFgaRU7TmZ8i4hG6phSD/Kz0fHMVnx4zcfp5lg
-         f6DTAcemynStuHrZWnS7ZnnzdW8WI5FOYQZL7qLTe9tvyO3s5qR34b0a42kICRXjgn
-         l2j2zDXnvfKeVmfzs+wgRYpmN56m8nLPboVjBCGw=
+        b=s6Gp/uNlGTBOz0vNCAGctlPyrSRH8TkpIrBhP8ugSTAmRBcThVRvefsueJvTiWk4t
+         CP1Y1yK6cBxxn7T/3DaLp7Tex+s5t6Cw+dhddntvC4h88ZtfdkkMLPHrU5ZyBEGbZd
+         BlYmRhb+1QI7nTZ6GnVgeYrUkD3BxRqX03UUUnPA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 107/171] powerpc/mm: mark more tlb functions as __always_inline
-Date:   Thu, 18 Jul 2019 23:55:38 -0400
-Message-Id: <20190719035643.14300-107-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 100/171] mfd: arizona: Fix undefined behavior
+Date:   Thu, 18 Jul 2019 23:55:31 -0400
+Message-Id: <20190719035643.14300-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,155 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 6d3ca7e73642ce17398f4cd5df1780da4a1ccdaf ]
+[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
 
-With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
-with gcc 9.1.1:
+When the driver is used with a subdevice that is disabled in the
+kernel configuration, clang gets a little confused about the
+control flow and fails to notice that n_subdevs is only
+uninitialized when subdevs is NULL, and we check for that,
+leading to a false-positive warning:
 
-  arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
-  arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
-    104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
-        |  ^~~
-  arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                              subdevs, n_subdevs, NULL, 0, NULL);
+                                       ^~~~~~~~~
+drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
+        int n_subdevs, ret, i;
+                     ^
+                      = 0
 
-Fixing _tlbiel_pid() is enough to address the warning above, but I
-inlined more functions to fix all potential issues.
+Ideally, we would rearrange the code to avoid all those early
+initializations and have an explicit exit in each disabled case,
+but it's much easier to chicken out and add one more initialization
+here to shut up the warning.
 
-To meet the "i" (immediate) constraint for the asm operands, functions
-propagating "ric" must be always inlined.
-
-Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-Reported-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/hash_native.c |  2 +-
- arch/powerpc/mm/book3s64/radix_tlb.c   | 32 +++++++++++++-------------
- 2 files changed, 17 insertions(+), 17 deletions(-)
+ drivers/mfd/arizona-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
-index 30d62ffe3310..1322c59cb5dd 100644
---- a/arch/powerpc/mm/book3s64/hash_native.c
-+++ b/arch/powerpc/mm/book3s64/hash_native.c
-@@ -56,7 +56,7 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
-  * tlbiel instruction for hash, set invalidation
-  * i.e., r=1 and is=01 or is=10 or is=11
-  */
--static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
-+static __always_inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
- 					unsigned int pid,
- 					unsigned int ric, unsigned int prs)
- {
-diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-index bb9835681315..d0cd5271a57c 100644
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -25,7 +25,7 @@
-  * tlbiel instruction for radix, set invalidation
-  * i.e., r=1 and is=01 or is=10 or is=11
-  */
--static inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
-+static __always_inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
- 					unsigned int pid,
- 					unsigned int ric, unsigned int prs)
- {
-@@ -146,8 +146,8 @@ static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
- 	trace_tlbie(lpid, 0, rb, rs, ric, prs, r);
- }
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 2bdc7b02157a..4a31907a4525 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -993,7 +993,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 	unsigned int reg, val;
+ 	int (*apply_patch)(struct arizona *) = NULL;
+ 	const struct mfd_cell *subdevs = NULL;
+-	int n_subdevs, ret, i;
++	int n_subdevs = 0, ret, i;
  
--static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
--				unsigned long ric)
-+static __always_inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
-+						unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -163,8 +163,8 @@ static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
- }
- 
- 
--static inline void __tlbiel_va(unsigned long va, unsigned long pid,
--			       unsigned long ap, unsigned long ric)
-+static __always_inline void __tlbiel_va(unsigned long va, unsigned long pid,
-+					unsigned long ap, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -179,8 +179,8 @@ static inline void __tlbiel_va(unsigned long va, unsigned long pid,
- 	trace_tlbie(0, 1, rb, rs, ric, prs, r);
- }
- 
--static inline void __tlbie_va(unsigned long va, unsigned long pid,
--			      unsigned long ap, unsigned long ric)
-+static __always_inline void __tlbie_va(unsigned long va, unsigned long pid,
-+				       unsigned long ap, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -195,8 +195,8 @@ static inline void __tlbie_va(unsigned long va, unsigned long pid,
- 	trace_tlbie(0, 0, rb, rs, ric, prs, r);
- }
- 
--static inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
--			      unsigned long ap, unsigned long ric)
-+static __always_inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
-+					    unsigned long ap, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -235,7 +235,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
- /*
-  * We use 128 set in radix mode and 256 set in hpt mode.
-  */
--static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
-+static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
- {
- 	int set;
- 
-@@ -337,7 +337,7 @@ static inline void _tlbie_lpid(unsigned long lpid, unsigned long ric)
- 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
- }
- 
--static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
-+static __always_inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
- {
- 	int set;
- 
-@@ -377,8 +377,8 @@ static inline void __tlbiel_va_range(unsigned long start, unsigned long end,
- 		__tlbiel_va(addr, pid, ap, RIC_FLUSH_TLB);
- }
- 
--static inline void _tlbiel_va(unsigned long va, unsigned long pid,
--			      unsigned long psize, unsigned long ric)
-+static __always_inline void _tlbiel_va(unsigned long va, unsigned long pid,
-+				       unsigned long psize, unsigned long ric)
- {
- 	unsigned long ap = mmu_get_ap(psize);
- 
-@@ -409,8 +409,8 @@ static inline void __tlbie_va_range(unsigned long start, unsigned long end,
- 		__tlbie_va(addr, pid, ap, RIC_FLUSH_TLB);
- }
- 
--static inline void _tlbie_va(unsigned long va, unsigned long pid,
--			      unsigned long psize, unsigned long ric)
-+static __always_inline void _tlbie_va(unsigned long va, unsigned long pid,
-+				      unsigned long psize, unsigned long ric)
- {
- 	unsigned long ap = mmu_get_ap(psize);
- 
-@@ -420,7 +420,7 @@ static inline void _tlbie_va(unsigned long va, unsigned long pid,
- 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
- }
- 
--static inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
-+static __always_inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
- 			      unsigned long psize, unsigned long ric)
- {
- 	unsigned long ap = mmu_get_ap(psize);
+ 	dev_set_drvdata(arizona->dev, arizona);
+ 	mutex_init(&arizona->clk_lock);
 -- 
 2.20.1
 
