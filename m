@@ -2,79 +2,124 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66271C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B038EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361312173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8582173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sI6liOEo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSOwOufE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGSGcz (ORCPT
+        id S1726883AbfGSGet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:32:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34856 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfGSGcz (ORCPT
+        Fri, 19 Jul 2019 02:34:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35060 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfGSGes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:32:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WybkyjUrQ9N6AtNgh2oW7UCNiPMoPSi8Rfxq1jvS6sI=; b=sI6liOEo5b8ADps8vl/o0Syy8
-        IRtsJigw1mZ3TGwzhV3Mo4+PobAMJn7BFG4kNw8ZR/Utn9hfCbsnA0jjZJK0gmhlE9mUveuN38czV
-        lr+4yt3vvdA1F4U5Q8ExE+56LsR7ZwbWE4yJZ7lmUqNWMpKSdwUYeKdrmNRZlLmTRPmqhMO5HX+Hy
-        7HEW6dqLsqsULcNg9vxrXf9Kw5cNVY+cD0PJiExlMmthL+QB8S1UcWZj05QjHp9PVYdNv/6uoSYF9
-        w+LL9eBor/WycwceVOUeOu75klzOTzDwYMlDHW5gSVExKmz2b8UiUsal6AhCJDZwT8zrhKtZDt5ZG
-        g9tnU/6nw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hoMRm-0002gn-Ql; Fri, 19 Jul 2019 06:32:50 +0000
-Date:   Thu, 18 Jul 2019 23:32:50 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Loic PALLARDY <loic.pallardy@st.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Clement Leger <cleger@kalray.eu>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
-Message-ID: <20190719063250.GA9545@infradead.org>
-References: <20190612095521.4703-1-cleger@kalray.eu>
- <20190701070245.32083-1-cleger@kalray.eu>
- <20190702132229.GA8100@infradead.org>
- <58c8b8bd30a949678c027eb42a1b1bbb@SFHDAG7NODE2.st.com>
- <20190708184546.GA20670@infradead.org>
+        Fri, 19 Jul 2019 02:34:48 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so31062318wrm.2;
+        Thu, 18 Jul 2019 23:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kMcKTsEVyji+n2fYLtlne8FEnWZcMA2/ktkd0SxT+VI=;
+        b=QSOwOufE4zhKaOthPkDk7gWdX3qwYegZikq56s0mkeTwW5vSbnTSAff0lcnACu34zb
+         vdRjrjSoxzugWQ5xieksmi9CByUQ5AnlvJvPceiVK6Sma4J2CcItR6GSqE/+xv2rjim9
+         hszdEfhJIQs0Cvwusfs52LSo1AccmTUPJozjSty8KUF6cjhaQHqgQxUAgI0dd8a4xTnH
+         BZ8cKAEWJkxNC2IOVZ6nJ+kTlghlY5buBFzyqooQ2Jiy3cOwUPAYOLNzB/9wFrTNfb72
+         p9dkMyMTd4O6yToPz/j1GJ9UScDq+CL+Hi80pQVbp5CH5uBdZp0mNnDg/VSEYBXXVgOE
+         ehYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kMcKTsEVyji+n2fYLtlne8FEnWZcMA2/ktkd0SxT+VI=;
+        b=BILJIDFTiLJd6KQpuJOQE9102mtBhs0Gesstd355vEv53pVH5YpninYpuzepLU6/IK
+         5qx9irZVuyVpmP6sP65zYReupDmBrFUjWdeG8Sf7qSDk6poCR4pUBrtRC618QuWrnY9Y
+         9FdAkTAliSbif+WcdO38zFv/SzRv9r6Wn+f5dH1SHSg87UzteIi+PSgMqemtVNRbhqq3
+         YP4+L+qOsSaXNKcVgq/mj0oX6pYHnK1oYWPWkBfTLPRIepIoKlbhY2qBxtuFeT0QgUtq
+         JS8OPQ92ASJfRMRWhf3o35X2F/dCZzoHLQnVKXOHHHZyvYZiF6l+JeXE9GVu/MSXnHZ5
+         Nx1Q==
+X-Gm-Message-State: APjAAAUTuxFSwkXPusqmSGYuT4NSCRlEa+4gaKO9tspXTaUbOnR7biK8
+        lTq5yylCqjo3tcrihqOS+HpQsdYAjL/auJCOiB4=
+X-Google-Smtp-Source: APXvYqzkF6gS1MNZBLZ1Ty1LQtpQfLnkNKW7cn72gR9MP8uHzDu7PJQxe2xQB/GaBTVdYHWPDS52KzZOIEH2mFQtBgM=
+X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr54574650wrx.196.1563518086309;
+ Thu, 18 Jul 2019 23:34:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708184546.GA20670@infradead.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190718151346.3523-1-daniel.baluta@nxp.com> <20190718151346.3523-4-daniel.baluta@nxp.com>
+ <CAL_JsqJ6o9mTjLYjnfcYgfSFKb95W8FseZBBb8RLosB__GNBcw@mail.gmail.com>
+ <CAEnQRZBubFz90Xf8irDwc=erTXmByXX4rkzZy9r8ymfAuQEsZA@mail.gmail.com> <VI1PR04MB5055597B7C3AC114FEB7E3E5EEC80@VI1PR04MB5055.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB5055597B7C3AC114FEB7E3E5EEC80@VI1PR04MB5055.eurprd04.prod.outlook.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Fri, 19 Jul 2019 09:34:34 +0300
+Message-ID: <CAEnQRZC+LyoZ_C3_0RVgRpBFVMuMT26KPVZunqqNKC=OJcERog@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: dsp: fsl: Add DSP core binding support
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Frank Li <frank.li@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sound-open-firmware@alsa-project.org" 
+        <sound-open-firmware@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 11:45:46AM -0700, Christoph Hellwig wrote:
-> > But that's breaking legacy as all platforms will have to add a virtio device node in
-> > their DT file...
-> > 
-> > Is it aligned with your view ?
-> 
-> Yes, that is how I'd assume it works.  But given that until recently
-> you did now have these subdevices for dma coherent purposes we can't
-> really break anything older than that, so I might still be missing
-> something.
+On Thu, Jul 18, 2019 at 9:40 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> On 18.07.2019 21:24, Daniel Baluta wrote:
+> > On Thu, Jul 18, 2019 at 7:41 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >>
+> >> On Thu, Jul 18, 2019 at 9:13 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+> >>>
+> >>> This describes the DSP device tree node.
+> >>>
+> >>> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+>
+> >>> +  power-domains:
+> >>> +    description:
+> >>> +      List of phandle and PM domain specifier as documented in
+> >>> +      Documentation/devicetree/bindings/power/power_domain.txt
+> >>
+> >> How many? 4?
+> >
+> > Yes, 4 for i.MX8QXP. Also, the same number is for i.MX8QM. Anyhow, I didn't
+> > added added a limit here because I really don't know how many will be
+> > in upcoming i.MX platforms.
+>
+> Which 4? It might help to use power-domain-names explicitly just like
+> it's done for clocks and mboxes.
+>
+> This is very common for phandle lists.
 
-Any chance we could expedite this?  remoteproc is the only driver
-inheriting dma ops to subdevices, and the only one using
-dma_declare_coherent_memory.  I'd really like to clean this mess up
-rather sooner than later.
+4 like in the example at the bottom of the patch:
+
++   power-domains = <&pd IMX_SC_R_MU_13A>,
++                        <&pd IMX_SC_R_MU_13B>,
++                        <&pd IMX_SC_R_DSP>,
++                        <&pd IMX_SC_R_DSP_RAM>;
+
+Not sure if it makes sense to use power-domain-names as the driver parses
+directly the "power-domains" property.
