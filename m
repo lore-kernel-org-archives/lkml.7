@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7EC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDEC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C3D206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31685206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511198;
-	bh=wUJWAjQzObn3pLeVm9IKlEipJO5fexx9Y4fykdY7Iew=;
+	s=default; t=1563511202;
+	bh=A8V1gvm+yaht1CTUyJ/J+QZqRvGR/yXURvSy6UwnNUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gb9nOni0+Dy4qfRGzDThCt7Umo3C88SZm7smpjtTgVAUoGHHVEJuARS/231fTOrDS
-	 4bGylVop6JnHudyRsLQgJvFBcIRcVn6WeTLK3l2J1RmU3V1peC0K/oY6cpIpAkQ/UU
-	 jTEQ8k1NsVoOQ5byLv4ROZY0aAt5K/Eo+CX/zGmo=
+	b=kpNCKZKguJmffi/Lw9IDeHHDPWoFMc+aWvslJbzZhFWbnz2P+BLjOq7bvoLRzeDYv
+	 HiVbwPsnIB7nHPc4Hf8PrVIsskk56CMDTZlOI4HBGlrCIh2BBbkFElQbIjnCQy/mSH
+	 AmVTB1megjhmV723byvDByYfQKE4cjCxLPiKaOlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbfGSEj4 (ORCPT
+        id S1728039AbfGSD6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbfGSD61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:27 -0400
+        id S1727891AbfGSD6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84429218A0;
-        Fri, 19 Jul 2019 03:58:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D51721855;
+        Fri, 19 Jul 2019 03:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508706;
-        bh=wUJWAjQzObn3pLeVm9IKlEipJO5fexx9Y4fykdY7Iew=;
+        s=default; t=1563508701;
+        bh=A8V1gvm+yaht1CTUyJ/J+QZqRvGR/yXURvSy6UwnNUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qhdd1+1dwIZ4cDXAfO9D/OppNTW216J2Si1Em5I5QgOQT1nXEMyu891nFhFlz70s3
-         EZxEJJlsuwlxsRB14IXyGYgcCvNb4XJtYrikQHv/o3WUPpzwSvIjI722eQ+vDpQeiP
-         sMrNetdlsVXLtDEdyLiX5Xrh0cjMwlbwqMBVEus8=
+        b=VlaiSkmGPPBkB1SzAYxXkk6pDs/G0SZZXYxPab2j1TSRBEI01Q1eSH0Fv1mvqSAX5
+         y8Gfamd5N3cRDIE3TDxs7WdRz8kA0zCpR//MNxuNGVDAIUp9XmwfsaoccTpDahRNz8
+         KpKPj3cq8FVTB/E041J8sd0ONAqQP/vQT0TUZoDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ajay Gupta <ajayg@nvidia.com>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 044/171] i2c: nvidia-gpu: resume ccgx i2c client
-Date:   Thu, 18 Jul 2019 23:54:35 -0400
-Message-Id: <20190719035643.14300-44-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 040/171] gpu: host1x: Increase maximum DMA segment size
+Date:   Thu, 18 Jul 2019 23:54:31 -0400
+Message-Id: <20190719035643.14300-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -58,76 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Gupta <ajayg@nvidia.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 9f2e244d0a39eb437f98324ac315e605e48636db ]
+[ Upstream commit 1e390478cfb527e34c9ab89ba57212cb05c33c51 ]
 
-Cypress USB Type-C CCGx controller firmware version 3.1.10
-(which is being used in many NVIDIA GPU cards) has known issue of
-not triggering interrupt when a USB device is hot plugged to runtime
-resume the controller. If any GPU card gets latest kernel with runtime
-pm support but does not get latest fixed firmware then also it should
-continue to work and therefore a workaround is required to check for
-any connector change event
+Recent versions of the DMA API debug code have started to warn about
+violations of the maximum DMA segment size. This is because the segment
+size defaults to 64 KiB, which can easily be exceeded in large buffer
+allocations such as used in DRM/KMS for framebuffers.
 
-The workaround is to request runtime resume of i2c client
-which is UCSI Cypress CCGx driver. CCG driver will call the ISR
-for any connector change event only if NVIDIA GPU has old
-CCG firmware with the known issue.
+Technically the Tegra SMMU and ARM SMMU don't have a maximum segment
+size (they map individual pages irrespective of whether they are
+contiguous or not), so the choice of 4 MiB is a bit arbitrary here. The
+maximum segment size is a 32-bit unsigned integer, though, so we can't
+set it to the correct maximum size, which would be the size of the
+aperture.
 
-Signed-off-by: Ajay Gupta <ajayg@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-nvidia-gpu.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/gpu/host1x/bus.c | 3 +++
+ include/linux/host1x.h   | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
-index 1c8f708f212b..ee2412b7459c 100644
---- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-+++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-@@ -51,6 +51,7 @@ struct gpu_i2c_dev {
- 	void __iomem *regs;
- 	struct i2c_adapter adapter;
- 	struct i2c_board_info *gpu_ccgx_ucsi;
-+	struct i2c_client *ccgx_client;
+diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
+index 9797ccb0a073..6387302c1245 100644
+--- a/drivers/gpu/host1x/bus.c
++++ b/drivers/gpu/host1x/bus.c
+@@ -414,6 +414,9 @@ static int host1x_device_add(struct host1x *host1x,
+ 
+ 	of_dma_configure(&device->dev, host1x->dev->of_node, true);
+ 
++	device->dev.dma_parms = &device->dma_parms;
++	dma_set_max_seg_size(&device->dev, SZ_4M);
++
+ 	err = host1x_device_parse_dt(device, driver);
+ 	if (err < 0) {
+ 		kfree(device);
+diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+index cfff30b9a62e..e6eea45e1154 100644
+--- a/include/linux/host1x.h
++++ b/include/linux/host1x.h
+@@ -297,6 +297,8 @@ struct host1x_device {
+ 	struct list_head clients;
+ 
+ 	bool registered;
++
++	struct device_dma_parameters dma_parms;
  };
  
- static void gpu_enable_i2c_bus(struct gpu_i2c_dev *i2cd)
-@@ -261,8 +262,6 @@ static const struct property_entry ccgx_props[] = {
- 
- static int gpu_populate_client(struct gpu_i2c_dev *i2cd, int irq)
- {
--	struct i2c_client *ccgx_client;
--
- 	i2cd->gpu_ccgx_ucsi = devm_kzalloc(i2cd->dev,
- 					   sizeof(*i2cd->gpu_ccgx_ucsi),
- 					   GFP_KERNEL);
-@@ -274,8 +273,8 @@ static int gpu_populate_client(struct gpu_i2c_dev *i2cd, int irq)
- 	i2cd->gpu_ccgx_ucsi->addr = 0x8;
- 	i2cd->gpu_ccgx_ucsi->irq = irq;
- 	i2cd->gpu_ccgx_ucsi->properties = ccgx_props;
--	ccgx_client = i2c_new_device(&i2cd->adapter, i2cd->gpu_ccgx_ucsi);
--	if (!ccgx_client)
-+	i2cd->ccgx_client = i2c_new_device(&i2cd->adapter, i2cd->gpu_ccgx_ucsi);
-+	if (!i2cd->ccgx_client)
- 		return -ENODEV;
- 
- 	return 0;
-@@ -354,6 +353,13 @@ static __maybe_unused int gpu_i2c_resume(struct device *dev)
- 	struct gpu_i2c_dev *i2cd = dev_get_drvdata(dev);
- 
- 	gpu_enable_i2c_bus(i2cd);
-+	/*
-+	 * Runtime resume ccgx client so that it can see for any
-+	 * connector change event. Old ccg firmware has known
-+	 * issue of not triggering interrupt when a device is
-+	 * connected to runtime resume the controller.
-+	 */
-+	pm_request_resume(&i2cd->ccgx_client->dev);
- 	return 0;
- }
- 
+ static inline struct host1x_device *to_host1x_device(struct device *dev)
 -- 
 2.20.1
 
