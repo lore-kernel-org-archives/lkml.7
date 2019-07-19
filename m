@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2B4C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D4DC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804FE2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7998A2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 21:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389093AbfGSVuh (ORCPT
+        id S2389116AbfGSVuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 17:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51118 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 17:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388770AbfGSVt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388763AbfGSVt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jul 2019 17:49:59 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C6B6218A0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CCDF2189E;
         Fri, 19 Jul 2019 21:49:58 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hoalJ-00083C-IL; Fri, 19 Jul 2019 17:49:57 -0400
-Message-Id: <20190719214957.451089624@goodmis.org>
+        id 1hoalJ-00082E-8e; Fri, 19 Jul 2019 17:49:57 -0400
+Message-Id: <20190719214957.155151346@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 19 Jul 2019 17:49:40 -0400
+Date:   Fri, 19 Jul 2019 17:49:38 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -40,8 +40,7 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com
-Subject: [PATCH RT 09/16] Revert "futex: Ensure lock/unlock symetry versus pi_lock and hash
- bucket lock"
+Subject: [PATCH RT 07/16] sched/core: Drop a preempt_disable_rt() statement
 References: <20190719214931.700049248@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -57,31 +56,47 @@ If anyone has any objections, please let me know.
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 6a773b70cf105b46298ed3b44e77c102ce31d9ec ]
+[ Upstream commit 761126efdcbe3fa3e99c9079fa0ad6eca2f251f2 ]
 
-Drop the RT fixup, the futex code will be changed to avoid the need for
-the workaround.
+The caller holds a lock which already disables preemption.
+Drop the preempt_disable_rt() statement in get_nohz_timer_target().
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/futex.c | 2 --
- 1 file changed, 2 deletions(-)
+ kernel/sched/core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index fe90164aa6ec..a58af833bb77 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -918,9 +918,7 @@ void exit_pi_state_list(struct task_struct *curr)
- 		if (head->next != next) {
- 			/* retain curr->pi_lock for the loop invariant */
- 			raw_spin_unlock(&pi_state->pi_mutex.wait_lock);
--			raw_spin_unlock_irq(&curr->pi_lock);
- 			spin_unlock(&hb->lock);
--			raw_spin_lock_irq(&curr->pi_lock);
- 			put_pi_state(pi_state);
- 			continue;
- 		}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 91a9b2556fb0..1b2503b87473 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -558,14 +558,11 @@ void resched_cpu(int cpu)
+  */
+ int get_nohz_timer_target(void)
+ {
+-	int i, cpu;
++	int i, cpu = smp_processor_id();
+ 	struct sched_domain *sd;
+ 
+-	preempt_disable_rt();
+-	cpu = smp_processor_id();
+-
+ 	if (!idle_cpu(cpu) && housekeeping_cpu(cpu, HK_FLAG_TIMER))
+-		goto preempt_en_rt;
++		return cpu;
+ 
+ 	rcu_read_lock();
+ 	for_each_domain(cpu, sd) {
+@@ -584,8 +581,6 @@ int get_nohz_timer_target(void)
+ 		cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
+ unlock:
+ 	rcu_read_unlock();
+-preempt_en_rt:
+-	preempt_enable_rt();
+ 	return cpu;
+ }
+ 
 -- 
 2.20.1
 
