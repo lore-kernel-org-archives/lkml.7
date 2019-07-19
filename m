@@ -2,130 +2,87 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C529C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11649C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5574A2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2BA2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:50:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BHzE0ERn"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ECe6NvFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfGSItS (ORCPT
+        id S1727177AbfGSIuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:49:18 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18036 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfGSItR (ORCPT
+        Fri, 19 Jul 2019 04:50:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52717 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfGSIuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:49:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3184130000>; Fri, 19 Jul 2019 01:49:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 01:49:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 01:49:16 -0700
-Received: from [10.26.11.13] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
- 2019 08:49:13 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <6a6bac84-1d29-2740-1636-d3adb26b6bcc@nvidia.com>
- <BN8PR12MB3266960A104A7CDBB4E59192D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <bc9ab3c5-b1b9-26d4-7b73-01474328eafa@nvidia.com>
- <BN8PR12MB3266989D15E017A789E14282D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4db855e4-1d59-d30b-154c-e7a2aa1c9047@nvidia.com>
-Date:   Fri, 19 Jul 2019 09:49:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 04:50:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s3so27999029wms.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x2r2aQ0QfHY0nbhB8cKUFwTSscENmMp03cfv/kAtz7Y=;
+        b=ECe6NvFo9wxPW1KC/Bjj1V5Zw+hvSQIZC14D0c9t7qsZTaNWqBorE0RRdRjd9934XP
+         0WQBGEVDEE/bb+iIeZ2ue4n0IfJnstlHhCNdo1wVK/mX3ewodcNOk+d5AWKtmPKyzoZY
+         wDlVBnqCglJtKov9IN6I+jKadOGEV8OFsVvpI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x2r2aQ0QfHY0nbhB8cKUFwTSscENmMp03cfv/kAtz7Y=;
+        b=kSl65j4jNQe6GHz9yyE0Re8L3/Er3G9BQWo9kDfimC0MSjk0T8cxJk+v9RXE9BpSlW
+         AdUvDTh9DujAifHWO5VgpdOti7H4KkstjXS8rcwqyTcKF6YGAPTC2ySy0h+Zr368zRgu
+         a8sOab+4NOhEO9YF+em/gBb7Hu0196i1o4q82SzVibZ5ik23bVnQ8xppRLYd6B4+DL/H
+         R8uN3kDhRsi4doiLMzd0edeWlEBiOZF5DsBxoqrViMzhb5XWo2LyYNWRJcwYDXR5NNEY
+         G4me4WDI3I4D72ZUms9bnvWsafFSakRmechO+V9zDwN6x0E1j3m7ifQtwIQTVDRytflF
+         cvJA==
+X-Gm-Message-State: APjAAAXCvx9/i62mAkVNNJ2dSsCA15xAX3+pckL3FOFTFYHit76wql1u
+        gGa7PwjMVXwyaAXA1Pz4cncCaH2lxTqaVg==
+X-Google-Smtp-Source: APXvYqw1JoWpLmH3YD/r76UHhkPwn+eK0Lt86eaNgA2NYQx2iNZXlwVsI/0LQEeSDJqlXMXeLFi1Mg==
+X-Received: by 2002:a7b:cc81:: with SMTP id p1mr44941846wma.107.1563526203377;
+        Fri, 19 Jul 2019 01:50:03 -0700 (PDT)
+Received: from andrea (host234-214-static.12-87-b.business.telecomitalia.it. [87.12.214.234])
+        by smtp.gmail.com with ESMTPSA id e3sm26110515wrs.37.2019.07.19.01.50.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jul 2019 01:50:02 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 10:49:56 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>,
+        Waiman Long <longman@redhat.com>, dbueso@suse.de,
+        mingo@redhat.com, jade.alglave@arm.com, paulmck@linux.vnet.ibm.com
+Subject: Re: [PATCH 1/4] locking/rwsem: Add missing ACQUIRE to read_slowpath
+ exit when queue is empty
+Message-ID: <20190719084956.GA6750@andrea>
+References: <20190718134954.496297975@infradead.org>
+ <20190718135205.916241783@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <BN8PR12MB3266989D15E017A789E14282D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563526163; bh=1rtA4koPsM5DyIuq49Z5hIDoo4v0wuju2f0uobkbFvs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BHzE0ERn/0Y8becA0P2z+EgCDdV6U/P7zo9He50UJBKNObq0HGDHD3W1fGVK7fNm+
-         WSgPua+CSW3KUXqf7xrtlQtPI+bhvPe5Y6vcUsR+c7nAyPjzfd4T5taqVxZ4ybcj0Z
-         DaiLnRvb8RI4Dc5dIAp5TjNbCDE5v4G7l1CZ+n1Wwglkc0VByQREHvr58+aH4FsRqD
-         bRVoiYFLiBKs4vPfnD7gjg333oZKM7ZAbaJpiSubZZVCsYPg2Y87C3dn9DEzDFf6pN
-         OP1/NqSo7zVMkpsG01v/5zL6Us/KWBjByqdIZN0uLNjzS8yaAHMmO9Vvs3HciYT1fD
-         f8e+jY0MFOH7w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718135205.916241783@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> @@ -1032,6 +1032,8 @@ rwsem_down_read_slowpath(struct rw_semap
+>  		 */
+>  		if (adjustment && !(atomic_long_read(&sem->count) &
+>  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+> +			/* Provide lock ACQUIRE */
+> +			smp_acquire__after_ctrl_dep();
 
-On 19/07/2019 09:44, Jose Abreu wrote:
-> From: Jon Hunter <jonathanh@nvidia.com>
-> Date: Jul/19/2019, 09:37:49 (UTC+00:00)
-> 
->>
->> On 19/07/2019 08:51, Jose Abreu wrote:
->>> From: Jon Hunter <jonathanh@nvidia.com>
->>> Date: Jul/18/2019, 10:16:20 (UTC+00:00)
->>>
->>>> Have you tried using NFS on a board with this ethernet controller?
->>>
->>> I'm having some issues setting up the NFS server in order to replicate 
->>> so this may take some time.
->>
->> If that's the case, we may wish to consider reverting this for now as it
->> is preventing our board from booting. Appears to revert cleanly on top
->> of mainline.
->>
->>> Are you able to add some debug in stmmac_init_rx_buffers() to see what's 
->>> the buffer address ?
->>
->> If you have a debug patch you would like me to apply and test with I
->> can. However, it is best you prepare the patch as maybe I will not dump
->> the appropriate addresses.
->>
->> Cheers
->> Jon
->>
->> -- 
->> nvpublic
-> 
-> Send me full boot log please.
+Does this also make the lock RCtso?  Or maybe RCtso was already
+guaranteed (and I'm failing to see why)?
 
-Please see: https://paste.debian.net/1092277/
-
-Cheers
-Jon
-
--- 
-nvpublic
+Thanks,
+  Andrea
