@@ -2,112 +2,142 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E651C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2950C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6417B21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA6A2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m14xS8Ld"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jPqr/6Ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfGSLx3 (ORCPT
+        id S1728139AbfGSLx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:53:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34280 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbfGSLx2 (ORCPT
+        Fri, 19 Jul 2019 07:53:58 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46099 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbfGSLx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:53:28 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so14093738pfo.1;
-        Fri, 19 Jul 2019 04:53:28 -0700 (PDT)
+        Fri, 19 Jul 2019 07:53:58 -0400
+Received: by mail-vs1-f66.google.com with SMTP id r3so21305551vsr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 04:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7BQWVFk5xnfvY43V3HP4RUSBIEVm8NfFwU/OWhiUguc=;
-        b=m14xS8Ld/wkugydyp1wPJICiD4EZ+GAzIwpCJUIwTOwmHroduRA2AOmXy/2OTSy/OH
-         b2nY8TqpAn7eD29M+OJ7jQ0xs2NmYlTleUX8hIvZ4JCn4nOcKyWrTIoxOk7PHqw+2efO
-         dVcoDfo17nQotY+imVuy8lIqw3klmXSskBNldqft1gmIyGmG2g8LMgOfs94K9S0arRIf
-         88aZ0VvQhi3NEMoQlfBebxeqbKVZTAJhII1aoMMX1cydv8DwmHNwZh2ooqHmwapnuDPy
-         aWNzM32UK/trXBmqx3+upJTFRdcUYLqJIoP5BmNjuyTF+4U5ThU/l2qwHix6qP6/il0H
-         7N6A==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=biEayFt+VruGovDKa3i0LGzkhdkRNPx2sXZYzz56x6U=;
+        b=jPqr/6Mlm/0/pJK4JP6UC30mDBqkzqAztFJLe3h+6SEe9YMj5ao3HwyrxaIM5Bv4Ra
+         Bm7CWyGDK5+SDHUfZKyKuOTqcThuTd9f70KeCl6i+fIOVRu6g20omrBGnh2w5ewzSRg4
+         e23Kq9iizjeG0J3cvawImzFPyq4DEE8PIGHwfdYUXfNzAEoU/ByIxdEE4YDY1IuddtZw
+         cNfgleAGWH3pXzl8fAsg/ybtoC2hNcAcNaTVgKxsZPMlyMxtvOmmsDp50Ylj1uDvUu5t
+         RrSZrj7JilYo1igG+dDX3fv2pCd28LpZMUDQkq7bxHxli/lwPPAqyyvqfnW53jnclsV8
+         fVgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7BQWVFk5xnfvY43V3HP4RUSBIEVm8NfFwU/OWhiUguc=;
-        b=P9qDg6maCC+ogAYcRtq2GEW5GI5t/9sLDFg2OYFQREGEvYBV+NwUNT9BwWq7lD/7WT
-         +SqSLZQSXPRCYcQGKDMrjGO92WqjBe936FOi6PmQfMW9Rqs/SV+fRMqlYuqDpKn3sUUR
-         ClIxTDejHeW9Z3/K3yedDEjLquRB4JRj+p32HE367BeDScfkU/0ovP4TaCAB5ClAADhm
-         NMV6EppExeaXGLJxrpcaRFaiFmf4WBfzPugffwIb/r/F+1TF0iEe33j71bT2cwrskV2O
-         1CVhFgvYGAFgqazT5lECsQe0DXCRDcICM60YX1xoMvNrz8VzoxAR6OSejQD/RjCZzxOb
-         YHVg==
-X-Gm-Message-State: APjAAAX/Cg2OTGXyzuvu+Lr18snDgLSjKIC81rnMH0rVT13ZDqQ6487H
-        ZD2GNgSGt7Wd2pTDJGG5hsY=
-X-Google-Smtp-Source: APXvYqwsybHi6eEwHb23QA32buHWpS8rl4ER9/dYM50aRVRtMMZZpWQTfL6OT5LSZ/rAAsXAj618tg==
-X-Received: by 2002:a63:4c17:: with SMTP id z23mr14499235pga.167.1563537208055;
-        Fri, 19 Jul 2019 04:53:28 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id v184sm30587380pfb.82.2019.07.19.04.53.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 04:53:27 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] Input: touchscreen - Use dev_get_drvdata
-Date:   Fri, 19 Jul 2019 19:53:08 +0800
-Message-Id: <20190719115307.22124-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=biEayFt+VruGovDKa3i0LGzkhdkRNPx2sXZYzz56x6U=;
+        b=iBrCNh9lhnlaKIDZGdHwJuArkbXGqG4Xr1dw0BlQuq6HX7pP3pbsco7gRVUKUVNXQp
+         XbZHiGt9AbNKfdWL0Zpda67hPqr7pTMvS4FD+vkhG8u7ZUhFsAQtUQnHznaQ+/JN8fIV
+         /9qXJ2ye+qBt3AiAyec/O8n4IB50LyrCZOzvcd6i6jM4e6Fht2kM+UrlMjUqEsRF36+R
+         t3rwPOcMN8SMQ+yJINy+OAJ26Cwadpy5v5wuaDo+LCCzZ8vkX8wFWeX/Pd1TNkWkupaQ
+         s74QSFh1Bv5UanhjSn5dicXZo7kTXreCVuwNFaph9NrJjmWKTf8L8Wwv0BkB01WjV4qt
+         Ul7w==
+X-Gm-Message-State: APjAAAUkHYlR/tF66OFwCyNu++yy8QYZuDRwAR8L4RL0esqRI8pBKEPe
+        BxFMa49NE5DRhrG0YejgtY/Q3dUBo2HWu8JDytLUUg==
+X-Google-Smtp-Source: APXvYqwWYrFQyvu6/xqxMA02acIpkSbnOTgebtxdq98QYxw/X8cgoILh6soRL04ZOIZlo8DcDFZfelQM0P8zJtJqS2Q=
+X-Received: by 2002:a67:300f:: with SMTP id w15mr27551944vsw.116.1563537237115;
+ Fri, 19 Jul 2019 04:53:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com> <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Fri, 19 Jul 2019 17:23:45 +0530
+Message-ID: <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     davem@davemloft.net, Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        nicolas.ferre@microchip.com,
+        Sachin Ghadi <sachin.ghadi@sifive.com>, ynezz@true.cz
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_get_drvdata is a simpler implementation comparing
-to to_platform_device + platform_get_drvdata.
-This makes the code simpler.
+The series looks good to me.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/input/touchscreen/imx6ul_tsc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Reviewed-by: Sagar Kadam <sagar.kadam@sifive.com>
 
-diff --git a/drivers/input/touchscreen/imx6ul_tsc.c b/drivers/input/touchscreen/imx6ul_tsc.c
-index e04eecd65bbb..655652f449ec 100644
---- a/drivers/input/touchscreen/imx6ul_tsc.c
-+++ b/drivers/input/touchscreen/imx6ul_tsc.c
-@@ -507,8 +507,7 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
- 
- static int __maybe_unused imx6ul_tsc_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
-+	struct imx6ul_tsc *tsc = dev_get_drvdata(dev);
- 	struct input_dev *input_dev = tsc->input;
- 
- 	mutex_lock(&input_dev->mutex);
-@@ -527,8 +526,7 @@ static int __maybe_unused imx6ul_tsc_suspend(struct device *dev)
- 
- static int __maybe_unused imx6ul_tsc_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
-+	struct imx6ul_tsc *tsc = dev_get_drvdata(dev);
- 	struct input_dev *input_dev = tsc->input;
- 	int retval = 0;
- 
--- 
-2.20.1
-
+On Fri, Jul 19, 2019 at 4:41 PM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 15 +++++++++++++++
+>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index cc73522..588669f0 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -231,5 +231,20 @@
+>                         #size-cells = <0>;
+>                         status = "disabled";
+>                 };
+> +               eth0: ethernet@10090000 {
+> +                       compatible = "sifive,fu540-c000-gem";
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <53>;
+> +                       reg = <0x0 0x10090000 0x0 0x2000
+> +                              0x0 0x100a0000 0x0 0x1000>;
+> +                       local-mac-address = [00 00 00 00 00 00];
+> +                       clock-names = "pclk", "hclk";
+> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
+> +                                <&prci PRCI_CLK_GEMGXLPLL>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+>         };
+>  };
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 0b55c53..85c17a7 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -76,3 +76,12 @@
+>                 disable-wp;
+>         };
+>  };
+> +
+> +&eth0 {
+> +       status = "okay";
+> +       phy-mode = "gmii";
+> +       phy-handle = <&phy1>;
+> +       phy1: ethernet-phy@0 {
+> +               reg = <0>;
+> +       };
+> +};
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
