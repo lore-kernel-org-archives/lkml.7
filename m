@@ -2,97 +2,111 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46804C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D14C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279B12173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD97C2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563510538;
+	bh=zuY25SSnxTlqO2X+VYaatBbwaIjiAAiDI83fxmu47vM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wl7k0r51+jdplXdCD08X9NuCW3tbJkSxklftlTjUNR4vPfxb/MkWuc70xT+hneu8U
+	 Tt/5vKhVC3sBCCV0gN7pBiB1Bohavh8IsY9y4F452RYh1CltGXHXSBExPJHP8rueom
+	 IURKh9KpB958VOVJnzu4h0D8n0VLlQCD3/7IzYK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbfGSE2r (ORCPT
+        id S2388057AbfGSE25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:28:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34020 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732082AbfGSEGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B0197AC2E;
-        Fri, 19 Jul 2019 04:06:19 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH 1/2] xen/gntdev: replace global limit of
- mapped pages by limit per call
-To:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20190718065222.31310-1-jgross@suse.com>
- <20190718065222.31310-2-jgross@suse.com>
- <4e402502-acbc-2718-26d4-cbcf83697c15@citrix.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <03892464-7429-c2e0-79fd-2774bcc3ce20@suse.com>
-Date:   Fri, 19 Jul 2019 06:06:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 19 Jul 2019 00:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732036AbfGSEGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:12 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE3C21873;
+        Fri, 19 Jul 2019 04:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563509172;
+        bh=zuY25SSnxTlqO2X+VYaatBbwaIjiAAiDI83fxmu47vM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1ipnEl5OP6paLKLeLvb/z3sIIBkoQn602cwVwtk0Y+r7fQWpPf4Zwd+3H4GpNh6aF
+         7JAephdjSIwKRgvlF5Y/gYOFTaf5oKKSP76zGjzIyKjNB0npY1/e2YC9ZsX1ZKCXNn
+         WIW3TysPWN0jybfI9cIikw6jgKQ8TkngTzuPpGew=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 105/141] PCI: dwc: pci-dra7xx: Fix compilation when !CONFIG_GPIOLIB
+Date:   Fri, 19 Jul 2019 00:02:10 -0400
+Message-Id: <20190719040246.15945-105-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
+References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4e402502-acbc-2718-26d4-cbcf83697c15@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.07.19 19:36, Andrew Cooper wrote:
-> On 18/07/2019 07:52, Juergen Gross wrote:
->> Today there is a global limit of pages mapped via /dev/xen/gntdev set
->> to 1 million pages per default.
-> 
-> The Xen default limit even for dom0 is 1024 pages * 16 entries per page,
-> which is far lower than this limit.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Actually its 256 entries per page, but this is still lower than the
-current limit.
+[ Upstream commit 381ed79c8655a40268ee7391f716edd90c5c3a97 ]
 
-> 
->> There is no reason why that limit is
->> existing, as total number of foreign mappings is limited by the
-> 
-> s/foreign/grant/ ?
+If CONFIG_GPIOLIB is not selected the compilation results in the
+following build errors:
 
-Can do.
+drivers/pci/controller/dwc/pci-dra7xx.c:
+ In function dra7xx_pcie_probe:
+drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
+ error: implicit declaration of function devm_gpiod_get_optional;
+ did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
 
-> 
->> hypervisor anyway and preferring kernel mappings over userspace ones
->> doesn't make sense.
-> 
-> Its probably also worth stating that this a root-only device, which
-> further brings in to question the user/kernel split.
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
 
-Yes.
+drivers/pci/controller/dwc/pci-dra7xx.c:778:45: error: ‘GPIOD_OUT_HIGH’
+undeclared (first use in this function); did you mean ‘GPIOF_INIT_HIGH’?
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
+                                             ^~~~~~~~~~~~~~
+                                             GPIOF_INIT_HIGH
 
-> 
->>
->> Additionally checking of that limit is fragile, as the number of pages
->> to map via one call is specified in a 32-bit unsigned variable which
->> isn't tested to stay within reasonable limits (the only test is the
->> value to be <= zero, which basically excludes only calls without any
->> mapping requested). So trying to map e.g. 0xffff0000 pages while
->> already nearly 1000000 pages are mapped will effectively lower the
->> global number of mapped pages such that a parallel call mapping a
->> reasonable amount of pages can succeed in spite of the global limit
->> being violated.
->>
->> So drop the global limit and introduce per call limit instead.
-> 
-> Its probably worth talking about this new limit.  What is it trying to
-> protect?
+Fix them by including the appropriate header file.
 
-Out-of-bounds allocations.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index ae84a69ae63a..4ef0a592505c 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -26,6 +26,7 @@
+ #include <linux/types.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include "../../pci.h"
+ #include "pcie-designware.h"
+-- 
+2.20.1
 
-Juergen
