@@ -2,152 +2,100 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331F4C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC18CC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123C420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CF420873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 13:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J8wgj9tt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfGSN4e (ORCPT
+        id S1729387AbfGSN5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 09:56:34 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35003 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbfGSN4e (ORCPT
+        Fri, 19 Jul 2019 09:57:21 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40286 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728441AbfGSN5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 09:56:34 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2B5C31BF207;
-        Fri, 19 Jul 2019 13:56:31 +0000 (UTC)
-Date:   Fri, 19 Jul 2019 15:56:30 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Michael McCormick <michael.mccormick@enatel.net>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: pcf85063: Add support for specifying the clkout
- frequency from device tree node.
-Message-ID: <20190719135630.GD4012@piout.net>
-References: <20190704022439.GA13102@michael-Latitude-5590>
+        Fri, 19 Jul 2019 09:57:21 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so21827633lff.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 06:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g8/nNzFy+4g3/Uw/Y2Voc/T0lsK6bGKc+PCOCJ2I7Y4=;
+        b=J8wgj9ttpXs+AH/fGsPsJPEMU8BH+So6r+U0gv5OVLJdnH3r0N4oe5ZWdoDiSiDKxQ
+         T/Y2BXHohLFh0Aryv5VG+h6UyqwHzOsAWTTAH91rnrFCj5sun2CDYCTkXCIHkZ2jM+zB
+         XvvAOnlbd8eT86dcrdTmgEnkRA3Q3CAVRBSeNsM4xFZop6eZ64emAf4qLfMsJ+gza7SE
+         i8ZxsMPUadDu5wQEXIEhvMbvfrCs9HBFJUU6ZECw0iZjoDLW7atI1G86eSuXfFtX4w9l
+         HeeZzjUXEzy71lDm2UwSTcrk/u6EMxfGaXigfc6akiOXjvdA8tlgUAX+sY3nhlzHcmq4
+         zlKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g8/nNzFy+4g3/Uw/Y2Voc/T0lsK6bGKc+PCOCJ2I7Y4=;
+        b=RVtIQMGrxEZZYDRKo4WnKDJFO5WjsCCajdTzF/UUx0zSIA48l3BA/97oDYdssYnhMe
+         vi4SgfB40cumNVzJy5E9C81IzdgZOHuRzSdRhmdJDVOA2juFtxOR7ZCewyF48iqT0vvX
+         6tkP0wjJraRjDG43QiDRT/uGZlP573CzHh24fWY4+u5ymNBELVFAEthrpyR5aRksW9FL
+         Clanjat2xcN8hmzjVYj6NJvLuxYLPwoj+jrmKEI8Eq7IX2VvjbUMxrGv8NaGlp6PoHKu
+         q3x1bg0qjDx6AC8/1AKdM6tKAGqzHzQAoTgF8i9kxxaHvraV2Vsi+X0UOIQy8HHviiPd
+         9sxA==
+X-Gm-Message-State: APjAAAX1c75ERlErrpJjutcX58XD/+lXaB+sQU5MnAo+eRhN71cTOz6q
+        aKbAqyllvpZfefhIlx69KotuwQU1N5Ju4WjxGJLNXw==
+X-Google-Smtp-Source: APXvYqwh92PfyUj9e2wsjweo019JcreSc9x0X4EUTC/HgNYRXYfMyu7s2D5UokeMAs8TvZufeMrsDroo/XHLF+KiO3o=
+X-Received: by 2002:a19:f603:: with SMTP id x3mr21592635lfe.125.1563544639020;
+ Fri, 19 Jul 2019 06:57:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704022439.GA13102@michael-Latitude-5590>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <1563523105-24673-1-git-send-email-vincent.guittot@linaro.org>
+ <1563523105-24673-4-git-send-email-vincent.guittot@linaro.org> <20190719130624.GK3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190719130624.GK3419@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 19 Jul 2019 15:57:08 +0200
+Message-ID: <CAKfTPtDzeGG-k6i6d0MBwqV9aBH80FxCXHrqu3LzPaa4-rD6hA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] sched/fair: rework load_balance
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Phil Auld <pauld@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, 19 Jul 2019 at 15:06, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jul 19, 2019 at 09:58:23AM +0200, Vincent Guittot wrote:
+> > @@ -7887,7 +7908,7 @@ static inline int sg_imbalanced(struct sched_group *group)
+> >  static inline bool
+> >  group_has_capacity(struct lb_env *env, struct sg_lb_stats *sgs)
+> >  {
+> > -     if (sgs->sum_h_nr_running < sgs->group_weight)
+> > +     if (sgs->sum_nr_running < sgs->group_weight)
+> >               return true;
+> >
+> >       if ((sgs->group_capacity * 100) >
+> > @@ -7908,7 +7929,7 @@ group_has_capacity(struct lb_env *env, struct sg_lb_stats *sgs)
+> >  static inline bool
+> >  group_is_overloaded(struct lb_env *env, struct sg_lb_stats *sgs)
+> >  {
+> > -     if (sgs->sum_h_nr_running <= sgs->group_weight)
+> > +     if (sgs->sum_nr_running <= sgs->group_weight)
+> >               return false;
+> >
+> >       if ((sgs->group_capacity * 100) <
+>
+> I suspect this is a change you can pull out into a separate patch after
+> the big change. Yes it makes sense to account the other class' task
+> presence, but I don't think it is strictly required to be in this patch.
 
-On 04/07/2019 14:24:39+1200, Michael McCormick wrote:
-> Primarily this allows the clkout signal to be disabled and save some
-> power when running off battery backup. However, all hardware implemented
-> values are implemented. Uses default value of 32768Hz if node is not
-> specified.
-> 
-
-the proper way of doing that is to register the clkout signal in the
-common clock framework. You can hava a look at rtc-pcf8563.c or rtc-m41t80.c
-
-> Signed-off-by: Michael McCormick <michael.mccormick@enatel.net>
-> ---
->  drivers/rtc/rtc-pcf85063.c | 52 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-> index 1afa6d9fa9fb..5c19381899ed 100644
-> --- a/drivers/rtc/rtc-pcf85063.c
-> +++ b/drivers/rtc/rtc-pcf85063.c
-> @@ -37,6 +37,9 @@
->  #define PCF85063_REG_CTRL2             0x01
->  #define PCF85063_CTRL2_AF              BIT(6)
->  #define PCF85063_CTRL2_AIE             BIT(7)
-> +#define PCF85063_CTRL2_COF2            BIT(2)
-> +#define PCF85063_CTRL2_COF1            BIT(1)
-> +#define PCF85063_CTRL2_COF0            BIT(0)
-> 
->  #define PCF85063_REG_OFFSET            0x02
->  #define PCF85063_OFFSET_SIGN_BIT       6       /* 2's complement sign bit */
-> @@ -369,6 +372,51 @@ static int pcf85063_load_capacitance(struct pcf85063 *pcf85063,
->                                   PCF85063_REG_CTRL1_CAP_SEL, reg);
->  }
-> 
-> +static int pcf85063_set_clkout_mode(struct pcf85063 *pcf85063,
-> +                                   const struct device_node *np)
-> +{
-> +       u32 load = 32768;
-> +       u8 reg = 0;
-> +
-> +       of_property_read_u32(np, "clockout-frequency", &load);
-> +       switch (load) {
-> +       case 0:
-> +               reg = PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF1 |
-> +                     PCF85063_CTRL2_COF0;
-> +               break;
-> +       case 1:
-> +               reg = PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF1;
-> +               break;
-> +       case 1024:
-> +               reg = PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF0;
-> +               break;
-> +       case 2048:
-> +               reg = PCF85063_CTRL2_COF2;
-> +               break;
-> +       case 4096:
-> +               reg = PCF85063_CTRL2_COF1 | PCF85063_CTRL2_COF0;
-> +               break;
-> +       case 8192:
-> +               reg = PCF85063_CTRL2_COF1;
-> +               break;
-> +       case 16384:
-> +               reg = PCF85063_CTRL2_COF0;
-> +               break;
-> +       case 32768:
-> +               reg = 0;
-> +               break;
-> +       default:
-> +               dev_warn(&pcf85063->rtc->dev,
-> +                       "Unknown clockout-frequency: %d. Assuming 32768", load);
-> +               reg = 0;
-> +               break;
-> +       }
-> +
-> +       return regmap_update_bits(pcf85063->regmap, PCF85063_REG_CTRL2,
-> +                                 PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF1 |
-> +                                 PCF85063_CTRL2_COF0, reg);
-> +}
-> +
->  static const struct pcf85063_config pcf85063a_config = {
->         .regmap = {
->                 .reg_bits = 8,
-> @@ -443,6 +491,10 @@ static int pcf85063_probe(struct i2c_client *client)
->                 dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
->                          err);
-> 
-> +       err = pcf85063_set_clkout_mode(pcf85063, client->dev.of_node);
-> +       if (err < 0)
-> +               dev_warn(&client->dev, "failed to set clock out mode: %d", err);
-> +
->         pcf85063->rtc->ops = &pcf85063_rtc_ops;
->         pcf85063->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
->         pcf85063->rtc->range_max = RTC_TIMESTAMP_END_2099;
-> --
-> 2.17.1
-> 
-> 
-> 
-> **CONFIDENTIALITY STATEMENT**
-> This message is intended for the sole use of the individual(s) and/or entity to whom it is addressed, and may contain information that is legally privileged, confidential, and exempt from disclosure under applicable law. If you are not the intended addressee, nor authorized to receive for the intended addressee, you are hereby notified that dissemination, distribution, copying or disclosure of this message is strictly prohibited. If you have received this message in error please immediately advise the sender by reply email, and delete the message.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+yes
