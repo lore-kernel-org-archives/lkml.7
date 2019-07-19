@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB21FC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA7421849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC3D21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510273;
-	bh=bmTFn2nUfqtn9lYCa79Sidrp3U1/aWjv5+bzonW2H6U=;
+	s=default; t=1563510275;
+	bh=hiQqFChaM1BYuzGcmIazL4uwKKU0rLEaqfYiLtIJh0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMBj4AzXQvkmzmr5ZGwPAR3YXETvzZ1iV5SzaqZNvBdVB0DRjcDGPNDK8/KEre/7O
-	 ptp979toR+bivHsFwleR+WPrV1s9oCPVIn0izWuJgKY9o+e3hnCcij7600mlLEW3+F
-	 +nvTBOaKZtdIcvAruTOU7zSAzOOB6T0YNiXsgfUA=
+	b=n49KWi4EZrDJpOfoHqRRJVc2rGyB2uE0Ay7Ds7bbc/VNYblN8VrtD0A/qNeut0oPu
+	 FC4zdGUiP9b17nNQqRtSFd7bLt0KDxMqWU3hqZPvB+gD+5gkSHcnff3GKnqmUGVQt3
+	 ETMDk3tbnm7NBaEs9aepSuWC/3oaRxJERX1f80Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387649AbfGSEJh (ORCPT
+        id S2388787AbfGSEYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:09:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387551AbfGSEJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:09:25 -0400
+        id S1730975AbfGSEJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:09:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54D322189E;
-        Fri, 19 Jul 2019 04:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1601F218B6;
+        Fri, 19 Jul 2019 04:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509364;
-        bh=bmTFn2nUfqtn9lYCa79Sidrp3U1/aWjv5+bzonW2H6U=;
+        s=default; t=1563509376;
+        bh=hiQqFChaM1BYuzGcmIazL4uwKKU0rLEaqfYiLtIJh0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PV36iSu7F4NEZm28i4ue5LMDmNxsAJaLE8/A5y7NOh5uu563MqFWN3Szz4l8+oA5b
-         ZeQJ6eGoHu08XoRG8TEPudiZhPzhwWMN4Stwjk4/0PVqOJJag4xtd7wgjS9vyKLKuY
-         kUJVPKlNa/P2KjepsK8a73KLBHlLzxXmWPhvw8cY=
+        b=BpjBflXiOHaQp3Hlzimog62Y19L9Imbn/Defx/VYSekkpy5VEHQ4vSZ5tmV86CL2E
+         XSTGJkuQEq9tePT3OuPE0xHL696dDl4Oc6tKlsQfEx81d3rtHg+YBpVFK1+/hA1caI
+         K/dK04EC1zZ7xgVruJXi2QNi/0TvzNL0o0B/XsAc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 055/101] mm/swap: fix release_pages() when releasing devmap pages
-Date:   Fri, 19 Jul 2019 00:06:46 -0400
-Message-Id: <20190719040732.17285-55-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 062/101] powerpc/mm: Handle page table allocation failures
+Date:   Fri, 19 Jul 2019 00:06:53 -0400
+Message-Id: <20190719040732.17285-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,74 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
+[ Upstream commit 2230ebf6e6dd0b7751e2921b40f6cfe34f09bb16 ]
 
-release_pages() is an optimized version of a loop around put_page().
-Unfortunately for devmap pages the logic is not entirely correct in
-release_pages().  This is because device pages can be more than type
-MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
-and PCI P2PDMA.  Some of these have specific needs to "put" the page while
-others do not.
+This fixes kernel crash that arises due to not handling page table allocation
+failures while allocating hugetlb page table.
 
-This logic to handle any special needs is contained in
-put_devmap_managed_page().  Therefore all devmap pages should be processed
-by this function where we can contain the correct logic for a page put.
-
-Handle all device type pages within release_pages() by calling
-put_devmap_managed_page() on all devmap pages.  If
-put_devmap_managed_page() returns true the page has been put and we
-continue with the next page.  A false return of put_devmap_managed_page()
-means the page did not require special processing and should fall to
-"normal" processing.
-
-This was found via code inspection while determining if release_pages()
-and the new put_user_pages() could be interchangeable.[1]
-
-[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
-
-Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: e2b3d202d1db ("powerpc: Switch 16GB and 16MB explicit hugepages to a different page table format")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/hugetlbpage.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index a3fc028e338e..45fdbfb6b2a6 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -740,15 +740,20 @@ void release_pages(struct page **pages, int nr)
- 		if (is_huge_zero_page(page))
- 			continue;
- 
--		/* Device public page can not be huge page */
--		if (is_device_public_page(page)) {
-+		if (is_zone_device_page(page)) {
- 			if (locked_pgdat) {
- 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
- 						       flags);
- 				locked_pgdat = NULL;
- 			}
--			put_devmap_managed_page(page);
--			continue;
-+			/*
-+			 * ZONE_DEVICE pages that return 'false' from
-+			 * put_devmap_managed_page() do not require special
-+			 * processing, and instead, expect a call to
-+			 * put_page_testzero().
-+			 */
-+			if (put_devmap_managed_page(page))
-+				continue;
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 7296a42eb62e..cef0b7ee1024 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -150,6 +150,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
+ 	} else {
+ 		pdshift = PUD_SHIFT;
+ 		pu = pud_alloc(mm, pg, addr);
++		if (!pu)
++			return NULL;
+ 		if (pshift == PUD_SHIFT)
+ 			return (pte_t *)pu;
+ 		else if (pshift > PMD_SHIFT) {
+@@ -158,6 +160,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
+ 		} else {
+ 			pdshift = PMD_SHIFT;
+ 			pm = pmd_alloc(mm, pu, addr);
++			if (!pm)
++				return NULL;
+ 			if (pshift == PMD_SHIFT)
+ 				/* 16MB hugepage */
+ 				return (pte_t *)pm;
+@@ -174,12 +178,16 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
+ 	} else {
+ 		pdshift = PUD_SHIFT;
+ 		pu = pud_alloc(mm, pg, addr);
++		if (!pu)
++			return NULL;
+ 		if (pshift >= PUD_SHIFT) {
+ 			ptl = pud_lockptr(mm, pu);
+ 			hpdp = (hugepd_t *)pu;
+ 		} else {
+ 			pdshift = PMD_SHIFT;
+ 			pm = pmd_alloc(mm, pu, addr);
++			if (!pm)
++				return NULL;
+ 			ptl = pmd_lockptr(mm, pm);
+ 			hpdp = (hugepd_t *)pm;
  		}
- 
- 		page = compound_head(page);
 -- 
 2.20.1
 
