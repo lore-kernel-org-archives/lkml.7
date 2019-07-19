@@ -2,110 +2,99 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C5CC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0436C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8756C21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C311720873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 06:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563518714;
+	bh=o+89jgjRNhqeQIUXmN+u9Pn4Z+UMYYgRdjOR1H7EkWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hiSzomaAYK6I5L9KhGt/fjSjnslGgGtAQnsRZt9EDP7lraCpeWdpsGqUtnbUGGX/c
+	 FJ4ZVGpmCrIDA3Z+RJgEUvkjXUtWstqb4atbv8BHM/ljYoYFWJhaxAgmvdA87xb0Bn
+	 S9ptI8Ke8zP9IfTTEmLbUSpk75EYE0LEOhxtXn9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfGSGo1 (ORCPT
+        id S1726965AbfGSGpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 02:44:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59387 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfGSGo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 02:44:26 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hoMcx-00076v-8g; Fri, 19 Jul 2019 08:44:23 +0200
-Date:   Fri, 19 Jul 2019 08:44:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: x86 - clang / objtool status
-In-Reply-To: <CAKwvOdkYKweg5A6jwomPUjjkRWq5=oVMVM=Wcg=ho+crOnr3Ew@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907190812040.1785@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de> <CAKwvOdkYKweg5A6jwomPUjjkRWq5=oVMVM=Wcg=ho+crOnr3Ew@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 19 Jul 2019 02:45:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37648 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725616AbfGSGpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 02:45:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6BDADAC8F;
+        Fri, 19 Jul 2019 06:45:11 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 08:45:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>
+Subject: Re: [PATCH v3 02/11] s390x/mm: Fail when an altmap is used for
+ arch_add_memory()
+Message-ID: <20190719064510.GL30461@dhcp22.suse.cz>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-3-david@redhat.com>
+ <20190701074306.GC6376@dhcp22.suse.cz>
+ <20190701124628.GT6376@dhcp22.suse.cz>
+ <86f3ff3d-d035-a806-88b7-b8c7b77c206e@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86f3ff3d-d035-a806-88b7-b8c7b77c206e@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019, Nick Desaulniers wrote:
-> On Thu, Jul 18, 2019 at 1:40 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > after picking up Josh's objtool updates I gave clang a test ride again.
+On Mon 15-07-19 12:51:27, David Hildenbrand wrote:
+> On 01.07.19 14:46, Michal Hocko wrote:
+> > On Mon 01-07-19 09:43:06, Michal Hocko wrote:
+> >> On Mon 27-05-19 13:11:43, David Hildenbrand wrote:
+> >>> ZONE_DEVICE is not yet supported, fail if an altmap is passed, so we
+> >>> don't forget arch_add_memory()/arch_remove_memory() when unlocking
+> >>> support.
+> >>
+> >> Why do we need this? Sure ZONE_DEVICE is not supported for s390 and so
+> >> might be the case for other arches which support hotplug. I do not see
+> >> much point in adding warning to each of them.
+> > 
+> > I would drop this one. If there is a strong reason to have something
+> > like that it should come with a better explanation and it can be done on
+> > top.
+> > 
 > 
-> Thanks for testing and the reports; these are valuable and we
-> appreciate the help debugging them.
-> 
-> > 2) debian distro config
-> 
-> Is this checked into the tree, or where can I find it?
+> This was requested by Dan and I agree it is the right thing to do.
 
-See below.
+This is probably a matter of taste. I would argue that altmap doesn't
+really equal ZONE_DEVICE. This is more a mechanism to use an alternative
+memmap allocator. Sure ZONE_DEVICE is the only in tree user of the
+feature but I really do not see why the arh specific code should care
+about it. The lack of altmap allocator is handled in the sparse code so
+this is just adding an early check which might confuse people in future.
 
-> >   drivers/gpu/drm/radeon/evergreen_cs.o: warning: objtool: evergreen_cs_parse() falls through to next function evergreen_dma_cs_parse()
-> 
-> fall through warnings look new to me, but Linaro's KernelCI is
-> currently screaming with tons of reports of -Wfallthrough throughout
-> the kernel.  I assume they're related?
+> In
+> the context of paravirtualized devices (e.g., virtio-pmem), it makes
+> sense to block functionality an arch does not support.
 
-I don't think so. The compiler does not warn about a missing fallthrough.
+Then block it on the config dependences.
 
-> > 3) allmodconfig:
-> >
-> >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x56: redundant UACCESS disable
-> 
-> Do you still have these object files laying around? Josh asked for
-> them in a new thread (from the previous thread), not sure if it's ok
-> to attach object files to emails to LKML? (html email is not allowed,
-> are binary attachments?)
-
-I've uploaded the configs and object files to:
-
-     https://tglx.de/~tglx/clang.tar.bz2
-
-contains:
-
-clang/
-clang/debian/
-clang/debian/atom.o
-clang/debian/platform.o
-clang/debian/i915_gem_execbuffer.o
-clang/debian/.config
-clang/debian/evergreen_cs.o
-clang/allmod/
-clang/allmod/ubsan.o
-clang/allmod/i915_gem_execbuffer.o
-clang/allmod/.config
-clang/allmod/sata_dwc_460ex.o
-clang/allmod/common.o
-clang/allmod/signal.o
-clang/allmod/ia32_signal.o
-
-i.e. the .config and the offending object files for the debian and
-allmodconfig builds.
-
-Thanks,
-
-	tglx
-
-
+-- 
+Michal Hocko
+SUSE Labs
