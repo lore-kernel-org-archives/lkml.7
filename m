@@ -2,107 +2,134 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AF0C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605A0C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234FC2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3838E21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="gWizblmL"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HNjhuoao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfGSRdt (ORCPT
+        id S1730163AbfGSRdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 13:33:49 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43321 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbfGSRds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 13:33:48 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so32988048wru.10
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 10:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=HbloDMykWMJg5GWsUcNK25kqerTy7WxyP9EHxQarjPs=;
-        b=gWizblmL23dyxIJrDU2S1luD8/q15UC2IJn/daoCe7PKjKWeGd+qZ3eNMs2VpZ9YRD
-         3k70M2KsRar2E/031dA2DkYZjI/u7NZrjJIUn8cl0+ngMFaPwvCRM28rqqLp7Dyz6rpX
-         uhsdEa7xtZbCtHt3c8m0amqze0KO/K5gwScZtu9r2s6EH4jC8OCQtQpzyEgYrYaxva2f
-         FN0c9Hlot72MHWtvm4OBBCd6uYXVxKmktONctbZ6v6Ov6pn7AjIrITj6FowXJvc/8IxP
-         DSJaRs+Knxx+JM2c4DoYypwz14OzzuIHB06bpOBU+Xz759to22l2CcwdvAN1vfRbj4aW
-         UMfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=HbloDMykWMJg5GWsUcNK25kqerTy7WxyP9EHxQarjPs=;
-        b=lUXNz0RamI2/6O+12Yy+eklVwU5yjlPz5DAMEq2LiUuIlMlm6kcx7VGTc/e/TZBjB1
-         f8jgC2QQXlpXabwF2bPa49N0AEZNG5Z+wDUiDMwYEfUHB01/k3AbnWXsmTODQ/bnXgMX
-         Q8XCKjGfloWqXjE231Qf7mjfnPORjJ/0GZy5B/hCv0dliNIqIXprOgfvBwmVvh64+Ezq
-         mQWBSuqDJ/CmT0OjqsbPj7g5LW02e5X/9Lf++0euGvKnI/uucAnHuzkwXZIx2NsOVAvb
-         rjrAGoEj1ceimKutf03BgCLciJ0RU5AV3xLttMt3QAGmKQeGU2UzzEwosKZq9wBXhhPZ
-         MsPA==
-X-Gm-Message-State: APjAAAWsJd928RaMY3P8b16pjdFQQICETzV21nQr8AmmaWvXuMdyWl39
-        dx2q8hthI5ru7Iy/ALTDUfU=
-X-Google-Smtp-Source: APXvYqxoph5fTI1ze7NTeFMAAYg7yjt+hFgRrLUFwNaNqoIEGp+nr/9O2bd2g9W42Oz5ZRw93V9WNA==
-X-Received: by 2002:adf:eb51:: with SMTP id u17mr14182061wrn.257.1563557627008;
-        Fri, 19 Jul 2019 10:33:47 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id i66sm51673313wmi.11.2019.07.19.10.33.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 10:33:46 -0700 (PDT)
-Message-ID: <5d31fefa.1c69fb81.a5d88.8efb@mx.google.com>
-Date:   Fri, 19 Jul 2019 10:33:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Fri, 19 Jul 2019 13:33:55 -0400
+Received: from mail-eopbgr720112.outbound.protection.outlook.com ([40.107.72.112]:31709
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727850AbfGSRdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 13:33:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZORznNMZmwiWsMe/Ff7TZ2c38m9autV9X7T+N4L/NN0/xTK+Wfg3C/DXHsu5P9LHaRM6/TMWo+6nb+kQayaaCtZb+uOkg85nxPYhcIdqJ0PY8k/kp4SLrIcN5htb7RUGy6TPgDLOHyvUq5pXrhILoU0RSVgZptqB4OPFhf099qQHivL9chH182bA5WsqEr8vqt5GjjJejOYN0WBMD5BOYiNgJwh7afalJfR04J3taR9PKQH7efQwXbY3eIQIYPOnaN551re5R0XO7VTYKmMWtSpfdNUE2TUYalEkcX67GYbf8WlB9V2q47Uhis/9GskV0jDPvNsgAtkuIXqsyvGSiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ISBpmTld/0RI0g5vNVgx3TACni6otPCXp2fENFWSXB8=;
+ b=EWhdWkjym1ruTW6iixpiazFZwOyCdiguk87asO3ThrrkmQGBhor259gC5M5DiiD6tu7s+Huu+o71USgOZ16HIuA9rbob8YqYOILclKEr8mw8fYhoEhJsBLkZj2CuMJ9WjHL5T1baO4WBGJhr5a5Mm20eW1SfmBQImcHc7KCRhPBMa0OFHEVodJ6ie5XYGg9fj1tAG23/NidLH2lCKspJ4CdcCtlzSM8ClSVPtfWEgL2MVd/cieOscCrCgHd4IHnpNF5eGO1yu7uznvr2OScbHPbdCco3/n80MxYZNgQwOcX5VGJ1m1yMlhnJcUUJm4oE6TEUPQcbapE6qdV6dDtmfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ISBpmTld/0RI0g5vNVgx3TACni6otPCXp2fENFWSXB8=;
+ b=HNjhuoaoJcnJorCilzeOOU1rWli4tJTyMiWcKb0mVCkycHf3wLq2Vw0n4qmUhrn+caH7iMS4Q65tQxnSetnqTZPVhogqa/6oSpeD1Aae276Nia8nK0aUVrEhw8Sr7TgzopUjyO4Q8U+nxafztPT8J3nnED+eSxPpmxga1EeAdFM=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1290.namprd21.prod.outlook.com (20.179.52.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.1; Fri, 19 Jul 2019 17:33:52 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::6055:de8a:48c1:4271]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::6055:de8a:48c1:4271%6]) with mapi id 15.20.2115.005; Fri, 19 Jul 2019
+ 17:33:51 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net] hv_netvsc: Fix extra rcu_read_unlock in
+ netvsc_recv_callback()
+Thread-Topic: [PATCH net] hv_netvsc: Fix extra rcu_read_unlock in
+ netvsc_recv_callback()
+Thread-Index: AQHVPlghcMnY7sIqPkOgR8UytHrZ6g==
+Date:   Fri, 19 Jul 2019 17:33:51 +0000
+Message-ID: <1563557581-17669-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR1001CA0013.namprd10.prod.outlook.com
+ (2603:10b6:301:2a::26) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dbcef387-5553-463d-e35a-08d70c6f43cc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1290;
+x-ms-traffictypediagnostic: DM6PR21MB1290:|DM6PR21MB1290:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1290C5ECD01E498BDF4098F7ACCB0@DM6PR21MB1290.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 01039C93E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(2616005)(50226002)(8936002)(6116002)(305945005)(81156014)(81166006)(3846002)(7736002)(66066001)(68736007)(476003)(5660300002)(25786009)(6436002)(7846003)(6486002)(36756003)(6392003)(2201001)(2906002)(4720700003)(478600001)(4326008)(53936002)(10290500003)(52116002)(6512007)(4744005)(110136005)(8676002)(102836004)(6506007)(386003)(71200400001)(71190400001)(26005)(66946007)(66476007)(66446008)(64756008)(66556008)(54906003)(14454004)(14444005)(10090500001)(256004)(99286004)(2501003)(316002)(186003)(486006)(22452003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1290;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MDjGXvmaq6LXYCwutbSN0svDG9lMNK3ExYsntiRp9bribR9O03+4vSIIB5H6l5FFgRy3LUrUuS9KIHLBaSBueKxLQnc3wQ7lvVoYabXzOZwv1nO8QrcqEF2+58YXKC8XgYMazLt5kBceSscyWmR9A61cxA6dTUPHStZC/IhzTdKazCJG+2PEc2OnXc3gkMf8aowcB561UX2PwP9wp26vWCTIICT6iF7uJwuz1CLr9ArTmk+pMr8yGaHCxMdqz7jnuEFAO7FqpPjeUU7ru76ZIZv/8Gg6etUP9p4bk75uNXdcwe9vXyh0oSx2woFdSefDB8URJIvwnGVP1PDbONWktwFLZKiuxMTQoj90+EVOcZJSqRqMar4rFc7kkUCT5uTf8zOeiSoBrv52F9oz+a8WvpCV7rFwq2rneGsPsPtUl6U=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.2.1-22-gcc78552c7d92
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-5.2.y
-In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
-References: <20190718030030.456918453@linuxfoundation.org>
-Subject: Re: [PATCH 5.2 00/21] 5.2.2-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbcef387-5553-463d-e35a-08d70c6f43cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 17:33:51.8286
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lkmlhyz@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.2.y boot: 135 boots: 0 failed, 134 passed with 1 offline =
-(v5.2.1-22-gcc78552c7d92)
+There is an extra rcu_read_unlock left in netvsc_recv_callback(),
+after a previous patch that removes RCU from this function.
+This patch removes the extra RCU unlock.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.2.y/kernel/v5.2.1-22-gcc78552c7d92/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
-/kernel/v5.2.1-22-gcc78552c7d92/
-
-Tree: stable-rc
-Branch: linux-5.2.y
-Git Describe: v5.2.1-22-gcc78552c7d92
-Git Commit: cc78552c7d92a2d16d8fba672a91499028fca830
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 78 unique boards, 28 SoC families, 17 builds out of 209
-
-Offline Platforms:
-
-arm64:
-
-    defconfig:
-        gcc-8
-            meson-gxbb-odroidc2: 1 offline lab
-
+Fixes: 345ac08990b8 ("hv_netvsc: pass netvsc_device to receive callback")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
-For more info write to <info@kernelci.org>
+ drivers/net/hyperv/netvsc_drv.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
+v.c
+index afdcc56..3544e19 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -836,7 +836,6 @@ int netvsc_recv_callback(struct net_device *net,
+=20
+ 	if (unlikely(!skb)) {
+ 		++net_device_ctx->eth_stats.rx_no_memory;
+-		rcu_read_unlock();
+ 		return NVSP_STAT_FAIL;
+ 	}
+=20
+--=20
+1.8.3.1
+
