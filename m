@@ -2,145 +2,166 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A06C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7B1C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69BF20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TEx0zUe2"
+	by mail.kernel.org (Postfix) with ESMTP id 15A1920693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfGSUXI (ORCPT
+        id S2387971AbfGSU2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:23:08 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:44213 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbfGSUXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:23:08 -0400
-Received: by mail-yb1-f201.google.com with SMTP id w200so15242594ybg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 13:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=nd7na4u6hbizR6uAegpt+Plqr52QAU8/GnshRLqNaeY=;
-        b=TEx0zUe27ionarvWLgmu0t1DbFCPlBQ2k4PhVk9j1IEZS6zASmDTpB8co/e4gesSpq
-         Xxt07/iUwl07JXDLsKxLSyTQ6byotf48XWsPb0EoBfiN7XBWXwtnnsSfmpjzIZndS00U
-         c/woi6uvYA00LfhAk7yEZsG+e1jrGBy5UKZ6sEyDSHg7GuflGq+sKGAbCZzm1eY8eaOV
-         vqH/2893toutBnb2gSlsQpZ7MvwTEmj71ckn5M5uKKkySm9W09U+rInG8A8hxKsvoOVV
-         Br6tSJkMEsqwuoDROTB2Iu/44q5oJRFjQuDCmE4cHBasSRZquTmb1udusRatDMmgRK1W
-         jwug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=nd7na4u6hbizR6uAegpt+Plqr52QAU8/GnshRLqNaeY=;
-        b=lPQN7UzXykBQ7MFR4LmzXbVIlNmYTggSMvfs0PfHqU2w3d3px7J6kr0Fudsekmv/TB
-         7tBf1fM8shzMoY7GRyg9/5qE1yJT6bUqv05pWmY2a7m/Sl/fZV0w4yZmz5Uhv6jFo9sH
-         uHd9lfL4NCVmS/bZJAmBuTsnfcpS/W/mkVYNJXBtkjL9cVm7DPcA1ZL24hgarcOfWt+B
-         AgIyJ03BU4mg0vA7c7i7zZhhiSE/0rb51LN0+0MDeTkKswH/Zb5FdgVZfXkQt44uaMxQ
-         NVciXSEoRoB0qY9c2gPTFhB3ZjvuUyIPqzIb+l1hEtV/ivUdIvfaXwMF6U3ynqTvwkct
-         1Vkw==
-X-Gm-Message-State: APjAAAXqI/uGHzIUI1o1k1WMDvL2YXk/DVHQ+jV1gz+rgpUasx4xfI+P
-        zdzO1ZI61Ds5mlNwJvYHd0rAPu84W03FtLk5
-X-Google-Smtp-Source: APXvYqy73Y98QngmgtKIhEGfjBwpdDWn3QFhV5nfj8xJtepLIPPF/nr4pUAX16YeBr5x0XwQN1DTD6Gb2Ua4em8V
-X-Received: by 2002:a81:5e57:: with SMTP id s84mr30901271ywb.244.1563567787331;
- Fri, 19 Jul 2019 13:23:07 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 13:22:53 -0700
-Message-Id: <20190719202253.220261-1-lukemujica@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH] perf tools: Fix paths in include statements
-From:   Luke Mujica <lukemujica@google.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com
-Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com, Luke Mujica <lukemujica@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 19 Jul 2019 16:28:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:6702 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728057AbfGSU2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:28:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 13:28:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
+   d="scan'208";a="170998185"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
+  by orsmga003.jf.intel.com with ESMTP; 19 Jul 2019 13:28:36 -0700
+Date:   Fri, 19 Jul 2019 13:28:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
+ unnecessarily
+Message-ID: <20190719202836.GB13680@linux.intel.com>
+References: <20190702053151.26922-1-devel@etsukata.com>
+ <20190702072821.GX3419@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
+ <20190702113355.5be9ebfe@gandalf.local.home>
+ <20190702133905.1482b87e@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702133905.1482b87e@gandalf.local.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These paths point to the wrong location but still work because
-they get picked up by a -I flag that happens to direct to the correct
-file. Fix paths to lead to the actual file location without help from
-include flags.
+On Tue, Jul 02, 2019 at 01:39:05PM -0400, Steven Rostedt wrote:
+> On Tue, 2 Jul 2019 11:33:55 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> > 
+> > > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
+> > >   
+> > > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:    
+> > > > > Put the boundary check before it accesses user space to prevent unnecessary
+> > > > > access which might crash the machine.
+> > > > > 
+> > > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
+> > > > > option can trigger SEGV in pid 1 which leads to panic.    
+> > 
+> > Note, I'm only able to trigger this crash with the irq_disable event.
+> > The irq_enable and preempt_disable/enable events work just fine. This
+> > leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
+> > trampoline) may have some issues and is probably the place to look at.
+> 
+> I figured it out.
+> 
+> It's another "corruption of the cr2" register issue. The following
+> patch makes the issue go away. I'm not suggesting that we use this
+> patch, but it shows where the bug lies.
+> 
+> IIRC, there was patches posted before that fixed this issue. I'll go
+> look to see if I can dig them up. Was it Joel that sent them?
+> 
+> -- Steve
+> 
+> diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
+> index be36bf4e0957..dd79256badb2 100644
+> --- a/arch/x86/entry/thunk_64.S
+> +++ b/arch/x86/entry/thunk_64.S
+> @@ -40,7 +40,7 @@
+>  
+>  #ifdef CONFIG_TRACE_IRQFLAGS
+>  	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+> -	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
+> +	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller_cr2,1
+>  #endif
+>  
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 46df4c6aae46..b42ca3fc569d 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -1555,3 +1555,13 @@ do_page_fault(struct pt_regs *regs, unsigned long error_code)
+>  	exception_exit(prev_state);
+>  }
+>  NOKPROBE_SYMBOL(do_page_fault);
+> +
+> +void trace_hardirqs_off_caller(unsigned long addr);
+> +
+> +void notrace trace_hardirqs_off_caller_cr2(unsigned long addr)
+> +{
+> +	unsigned long address = read_cr2(); /* Get the faulting address */
+> +
+> +	trace_hardirqs_off_caller(addr);
+> +	write_cr2(address);
+> +}
 
-Signed-off-by: Luke Mujica <lukemujica@google.com>
----
- tools/perf/arch/x86/util/kvm-stat.c | 4 ++--
- tools/perf/arch/x86/util/tsc.c      | 6 +++---
- tools/perf/ui/helpline.c            | 4 ++--
- tools/perf/ui/util.c                | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+I'm hitting a similar panic that bisects to commit
 
-diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
-index 865a9762f22e..3f84403c0983 100644
---- a/tools/perf/arch/x86/util/kvm-stat.c
-+++ b/tools/perf/arch/x86/util/kvm-stat.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
--#include "../../util/kvm-stat.h"
--#include "../../util/evsel.h"
-+#include "../../../util/kvm-stat.h"
-+#include "../../../util/evsel.h"
- #include <asm/svm.h>
- #include <asm/vmx.h>
- #include <asm/kvm.h>
-diff --git a/tools/perf/arch/x86/util/tsc.c b/tools/perf/arch/x86/util/tsc.c
-index 950539f9a4f7..b1eb963b4a6e 100644
---- a/tools/perf/arch/x86/util/tsc.c
-+++ b/tools/perf/arch/x86/util/tsc.c
-@@ -5,10 +5,10 @@
- #include <linux/stddef.h>
- #include <linux/perf_event.h>
- 
--#include "../../perf.h"
-+#include "../../../perf.h"
- #include <linux/types.h>
--#include "../../util/debug.h"
--#include "../../util/tsc.h"
-+#include "../../../util/debug.h"
-+#include "../../../util/tsc.h"
- 
- int perf_read_tsc_conversion(const struct perf_event_mmap_page *pc,
- 			     struct perf_tsc_conversion *tc)
-diff --git a/tools/perf/ui/helpline.c b/tools/perf/ui/helpline.c
-index b3c421429ed4..54bcd08df87e 100644
---- a/tools/perf/ui/helpline.c
-+++ b/tools/perf/ui/helpline.c
-@@ -3,10 +3,10 @@
- #include <stdlib.h>
- #include <string.h>
- 
--#include "../debug.h"
-+#include "../util/debug.h"
- #include "helpline.h"
- #include "ui.h"
--#include "../util.h"
-+#include "../util/util.h"
- 
- char ui_helpline__current[512];
- 
-diff --git a/tools/perf/ui/util.c b/tools/perf/ui/util.c
-index 63bf06e80ab9..9ed76e88a3e4 100644
---- a/tools/perf/ui/util.c
-+++ b/tools/perf/ui/util.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "util.h"
--#include "../debug.h"
-+#include "../util/debug.h"
- 
- 
- /*
--- 
-2.22.0.657.g960e92d24f-goog
+  a0d14b8909de ("x86/mm, tracing: Fix CR2 corruption")
 
+except I'm experiencing death immediately after starting init.
+
+Through sheer dumb luck, I tracked (pun intended) this down to forcing
+context tracking:
+
+  CONFIG_CONTEXT_TRACKING=y
+  CONFIG_CONTEXT_TRACKING_FORCE=y
+  CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
+
+I haven't attempted to debug further and I'll be offline for most of the
+next few days.  Hopefully this is enough to root cause the badness.
+
+[    0.680477] Run /sbin/init as init process
+[    0.682116] init[1]: segfault at 2926a7ef ip 00007f98a49d9c30 sp 00007fffd83e6af0 error 14 in ld-2.23.so[7f98a49d9000+26000]
+[    0.683427] Code: Bad RIP value.
+[    0.683844] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    0.684710] CPU: 0 PID: 1 Comm: init Not tainted 5.2.0+ #18
+[    0.685352] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    0.686239] Call Trace:
+[    0.686542]  dump_stack+0x46/0x5b
+[    0.686915]  panic+0xf8/0x2d2
+[    0.687252]  do_exit+0xb68/0xb70
+[    0.687616]  do_group_exit+0x3a/0xa0
+[    0.688088]  get_signal+0x184/0x880
+[    0.688483]  do_signal+0x30/0x690
+[    0.688857]  ? signal_wake_up_state+0x15/0x30
+[    0.689433]  ? __send_signal+0x139/0x380
+[    0.689908]  exit_to_usermode_loop+0x6a/0xc0
+[    0.690397]  ? async_page_fault+0x8/0x40
+[    0.690850]  prepare_exit_to_usermode+0x78/0xb0
+[    0.691355]  retint_user+0x8/0x8
+[    0.691722] RIP: 0033:0x7f98a49d9c30
+[    0.692122] Code: Bad RIP value.
+[    0.692484] RSP: 002b:00007fffd83e6af0 EFLAGS: 00010202
+[    0.693060] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[    0.693907] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+[    0.694739] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[    0.695538] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[    0.696322] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    0.697195] Kernel Offset: disabled
+[    0.697600] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
