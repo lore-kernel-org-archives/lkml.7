@@ -2,309 +2,114 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E01EC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E8FC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C5C21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQpGXonR"
+	by mail.kernel.org (Postfix) with ESMTP id 1834F2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfGSLLv (ORCPT
+        id S1727944AbfGSLNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:11:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40570 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfGSLLv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:11:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so14034775pfp.7;
-        Fri, 19 Jul 2019 04:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O3lVALk3004/9c8QKXvpNIO3VbJTjI1GT+T+VBH4okk=;
-        b=IQpGXonRCc/SMK5H+TUSTLu1RTW2yxdd2KXHjSWz/6g8RmaNNR1xzf7i81NMsQojev
-         MXATNVkI8yAjRD+lbfVjJT+8OYVHi3drKQA2rw2iVRfUDDyhP9QID+mAvZ5xcIC73KdZ
-         Ps7sjvHxFdkRAqZ7yzcjDjn6JFhn3FPNTOmTpKOgQefKM+G0jOMy3ayj3090PMi2mBnm
-         Ve09w6CTPpBmFzXnYliVg5mot9ioLvasJYpcqZyL1QnBQEWigqrXavlF7t3GHa/Xzofq
-         lNeuggWW1J42ICfRbE85Ww9EgVp6ROmbnUB/7nI2dSgEUTlDX1Vgj00v8y8+TU9WeWtb
-         wcDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O3lVALk3004/9c8QKXvpNIO3VbJTjI1GT+T+VBH4okk=;
-        b=qjrpvB2kkPc2xaGWYU4Go/SSCZwjGymJGo02BphSi5Z+d1S1vDuyyCF+2tLkoOsNov
-         Yy0uwuvomRRZNgFaKqMGkkNJuixzcTk5658Oiu3irnjrMXt+24ov74Yy4daHw66MB//z
-         l42aRILUA3B0x9oRdFZTddp9WsMxY8Ryt9b/H/XELWQVstGy+vL+zNaUyb/HaMjre4cB
-         5l093hhZcQBhJKL+VT/qh5uBiN+poh3etMchwxZZ8fXL6H/4vQOY0/qxqVKHE5Doyl7V
-         PQy+JSRq1Wnh+nfpe+KG6C7AeWg0jnOndxWbMjfCTa/p7B3QjuUxnzfVu8/xp5jhMJI9
-         7ECg==
-X-Gm-Message-State: APjAAAVXsdf64QxKm0EZH3CQVktLYJkohJSUB1x8GSzBIb4JBdlyefZ/
-        adkC38gd0u7DfIorn837hFg=
-X-Google-Smtp-Source: APXvYqyypHWDfBUnyk/+KLNTw33ZdhGWZziUFWqyaioTsFqjO6DcTLQ+TVLg+nz1rBvIhxhkt8OkyA==
-X-Received: by 2002:a63:2c8:: with SMTP id 191mr52838755pgc.139.1563534709926;
-        Fri, 19 Jul 2019 04:11:49 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id o24sm59477376pfp.135.2019.07.19.04.11.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 04:11:49 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] Input: misc - Use dev_get_drvdata
-Date:   Fri, 19 Jul 2019 19:11:16 +0800
-Message-Id: <20190719111115.21310-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 19 Jul 2019 07:13:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:56171 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbfGSLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 07:13:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45qpJt0NJrz9s00;
+        Fri, 19 Jul 2019 21:13:17 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
+In-Reply-To: <20190719102503.tm3ahvkh4rwykmws@brauner.io>
+References: <20190714192205.27190-1-christian@brauner.io> <20190714192205.27190-2-christian@brauner.io> <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com> <20190716130631.tohj4ub54md25dys@brauner.io> <874l3i8h0l.fsf@concordia.ellerman.id.au> <20190719102503.tm3ahvkh4rwykmws@brauner.io>
+Date:   Fri, 19 Jul 2019 21:13:16 +1000
+Message-ID: <871rym8egj.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_get_drvdata is a simpler implementation comparing
-to to_platform_device + platform_get_drvdata.
-This makes the code simpler.
+Christian Brauner <christian@brauner.io> writes:
+> On Fri, Jul 19, 2019 at 08:18:02PM +1000, Michael Ellerman wrote:
+>> Christian Brauner <christian@brauner.io> writes:
+>> > On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
+>> >> I think Vasily already has a clone3 patch for s390x with 435. 
+>> >
+>> > A quick follow-up on this. Helge and Michael have asked whether there
+>> > are any tests for clone3. Yes, there will be and I try to have them
+>> > ready by the end of the this or next week for review. In the meantime I
+>> > hope the following minimalistic test program that just verifies very
+>> > very basic functionality (It's not pretty.) will help you test:
+>> 
+>> Hi Christian,
+>> 
+>> Thanks for the test.
+>> 
+>> This actually oopses on powerpc, it hits the BUG_ON in CHECK_FULL_REGS
+>> in process.c around line 1633:
+>> 
+>> 	} else {
+>> 		/* user thread */
+>> 		struct pt_regs *regs = current_pt_regs();
+>> 		CHECK_FULL_REGS(regs);
+>> 		*childregs = *regs;
+>> 		if (usp)
+>> 
+>> 
+>> So I'll have to dig into how we fix that before we wire up clone3.
+>> 
+>> Turns out testing is good! :)
+>
+> Indeed. I have a test-suite for clone3 in mind and I hope to have it
+> ready by the end of next week. It's just always the finding the time
+> part that is annoying. :)
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/input/misc/gpio-vibra.c       |  6 ++----
- drivers/input/misc/max77693-haptic.c  |  6 ++----
- drivers/input/misc/max8925_onkey.c    | 10 ++++------
- drivers/input/misc/max8997_haptic.c   |  3 +--
- drivers/input/misc/msm-vibrator.c     |  6 ++----
- drivers/input/misc/palmas-pwrbutton.c |  6 ++----
- drivers/input/misc/regulator-haptic.c |  6 ++----
- drivers/input/misc/stpmic1_onkey.c    |  6 ++----
- drivers/input/misc/twl4030-vibra.c    |  3 +--
- drivers/input/misc/twl6040-vibra.c    |  3 +--
- 10 files changed, 19 insertions(+), 36 deletions(-)
+I know the feeling!
 
-diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-index f79f75595dd7..ad30cb5b1523 100644
---- a/drivers/input/misc/gpio-vibra.c
-+++ b/drivers/input/misc/gpio-vibra.c
-@@ -159,8 +159,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
- 
- static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct gpio_vibrator *vibrator = platform_get_drvdata(pdev);
-+	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
- 
- 	cancel_work_sync(&vibrator->play_work);
- 	if (vibrator->running)
-@@ -171,8 +170,7 @@ static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
- 
- static int __maybe_unused gpio_vibrator_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct gpio_vibrator *vibrator = platform_get_drvdata(pdev);
-+	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
- 
- 	if (vibrator->running)
- 		gpio_vibrator_start(vibrator);
-diff --git a/drivers/input/misc/max77693-haptic.c b/drivers/input/misc/max77693-haptic.c
-index 0d09ffeafeea..86e1c72efda1 100644
---- a/drivers/input/misc/max77693-haptic.c
-+++ b/drivers/input/misc/max77693-haptic.c
-@@ -377,8 +377,7 @@ static int max77693_haptic_probe(struct platform_device *pdev)
- 
- static int __maybe_unused max77693_haptic_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct max77693_haptic *haptic = platform_get_drvdata(pdev);
-+	struct max77693_haptic *haptic = dev_get_drvdata(dev);
- 
- 	if (haptic->enabled) {
- 		max77693_haptic_disable(haptic);
-@@ -390,8 +389,7 @@ static int __maybe_unused max77693_haptic_suspend(struct device *dev)
- 
- static int __maybe_unused max77693_haptic_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct max77693_haptic *haptic = platform_get_drvdata(pdev);
-+	struct max77693_haptic *haptic = dev_get_drvdata(dev);
- 
- 	if (haptic->suspend_state) {
- 		max77693_haptic_enable(haptic);
-diff --git a/drivers/input/misc/max8925_onkey.c b/drivers/input/misc/max8925_onkey.c
-index 7c49b8d23894..af0ba592a0b3 100644
---- a/drivers/input/misc/max8925_onkey.c
-+++ b/drivers/input/misc/max8925_onkey.c
-@@ -135,9 +135,8 @@ static int max8925_onkey_probe(struct platform_device *pdev)
- 
- static int __maybe_unused max8925_onkey_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct max8925_onkey_info *info = platform_get_drvdata(pdev);
--	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-+	struct max8925_onkey_info *info = dev_get_drvdata(dev);
-+	struct max8925_chip *chip = dev_get_drvdata(dev->parent);
- 
- 	if (device_may_wakeup(dev)) {
- 		chip->wakeup_flag |= 1 << info->irq[0];
-@@ -149,9 +148,8 @@ static int __maybe_unused max8925_onkey_suspend(struct device *dev)
- 
- static int __maybe_unused max8925_onkey_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct max8925_onkey_info *info = platform_get_drvdata(pdev);
--	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-+	struct max8925_onkey_info *info = dev_get_drvdata(dev);
-+	struct max8925_chip *chip = dev_get_drvdata(dev->parent);
- 
- 	if (device_may_wakeup(dev)) {
- 		chip->wakeup_flag &= ~(1 << info->irq[0]);
-diff --git a/drivers/input/misc/max8997_haptic.c b/drivers/input/misc/max8997_haptic.c
-index 20ff087b8a44..e841b8e4b1d4 100644
---- a/drivers/input/misc/max8997_haptic.c
-+++ b/drivers/input/misc/max8997_haptic.c
-@@ -374,8 +374,7 @@ static int max8997_haptic_remove(struct platform_device *pdev)
- 
- static int __maybe_unused max8997_haptic_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct max8997_haptic *chip = platform_get_drvdata(pdev);
-+	struct max8997_haptic *chip = dev_get_drvdata(dev);
- 
- 	max8997_haptic_disable(chip);
- 
-diff --git a/drivers/input/misc/msm-vibrator.c b/drivers/input/misc/msm-vibrator.c
-index b60f1aaee705..a28974bfb64e 100644
---- a/drivers/input/misc/msm-vibrator.c
-+++ b/drivers/input/misc/msm-vibrator.c
-@@ -234,8 +234,7 @@ static int msm_vibrator_probe(struct platform_device *pdev)
- 
- static int __maybe_unused msm_vibrator_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
-+	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
- 
- 	cancel_work_sync(&vibrator->worker);
- 
-@@ -247,8 +246,7 @@ static int __maybe_unused msm_vibrator_suspend(struct device *dev)
- 
- static int __maybe_unused msm_vibrator_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_vibrator *vibrator = platform_get_drvdata(pdev);
-+	struct msm_vibrator *vibrator = dev_get_drvdata(dev);
- 
- 	if (vibrator->enabled)
- 		msm_vibrator_start(vibrator);
-diff --git a/drivers/input/misc/palmas-pwrbutton.c b/drivers/input/misc/palmas-pwrbutton.c
-index 1e1baed63929..27617868b292 100644
---- a/drivers/input/misc/palmas-pwrbutton.c
-+++ b/drivers/input/misc/palmas-pwrbutton.c
-@@ -270,8 +270,7 @@ static int palmas_pwron_remove(struct platform_device *pdev)
-  */
- static int __maybe_unused palmas_pwron_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
-+	struct palmas_pwron *pwron = dev_get_drvdata(dev);
- 
- 	cancel_delayed_work_sync(&pwron->input_work);
- 
-@@ -291,8 +290,7 @@ static int __maybe_unused palmas_pwron_suspend(struct device *dev)
-  */
- static int __maybe_unused palmas_pwron_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
-+	struct palmas_pwron *pwron = dev_get_drvdata(dev);
- 
- 	if (device_may_wakeup(dev))
- 		disable_irq_wake(pwron->irq);
-diff --git a/drivers/input/misc/regulator-haptic.c b/drivers/input/misc/regulator-haptic.c
-index a661e77545c5..9734374964f2 100644
---- a/drivers/input/misc/regulator-haptic.c
-+++ b/drivers/input/misc/regulator-haptic.c
-@@ -203,8 +203,7 @@ static int regulator_haptic_probe(struct platform_device *pdev)
- 
- static int __maybe_unused regulator_haptic_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct regulator_haptic *haptic = platform_get_drvdata(pdev);
-+	struct regulator_haptic *haptic = dev_get_drvdata(dev);
- 	int error;
- 
- 	error = mutex_lock_interruptible(&haptic->mutex);
-@@ -222,8 +221,7 @@ static int __maybe_unused regulator_haptic_suspend(struct device *dev)
- 
- static int __maybe_unused regulator_haptic_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct regulator_haptic *haptic = platform_get_drvdata(pdev);
-+	struct regulator_haptic *haptic = dev_get_drvdata(dev);
- 	unsigned int magnitude;
- 
- 	mutex_lock(&haptic->mutex);
-diff --git a/drivers/input/misc/stpmic1_onkey.c b/drivers/input/misc/stpmic1_onkey.c
-index 7b49c9997df7..ff4761540539 100644
---- a/drivers/input/misc/stpmic1_onkey.c
-+++ b/drivers/input/misc/stpmic1_onkey.c
-@@ -150,8 +150,7 @@ static int stpmic1_onkey_probe(struct platform_device *pdev)
- 
- static int __maybe_unused stpmic1_onkey_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
-+	struct stpmic1_onkey *onkey = dev_get_drvdata(dev);
- 
- 	if (device_may_wakeup(dev)) {
- 		enable_irq_wake(onkey->irq_falling);
-@@ -162,8 +161,7 @@ static int __maybe_unused stpmic1_onkey_suspend(struct device *dev)
- 
- static int __maybe_unused stpmic1_onkey_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
-+	struct stpmic1_onkey *onkey = dev_get_drvdata(dev);
- 
- 	if (device_may_wakeup(dev)) {
- 		disable_irq_wake(onkey->irq_falling);
-diff --git a/drivers/input/misc/twl4030-vibra.c b/drivers/input/misc/twl4030-vibra.c
-index e0ff616fb857..f7ef67997863 100644
---- a/drivers/input/misc/twl4030-vibra.c
-+++ b/drivers/input/misc/twl4030-vibra.c
-@@ -145,8 +145,7 @@ static void twl4030_vibra_close(struct input_dev *input)
- /*** Module ***/
- static int __maybe_unused twl4030_vibra_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct vibra_info *info = platform_get_drvdata(pdev);
-+	struct vibra_info *info = dev_get_drvdata(dev);
- 
- 	if (info->enabled)
- 		vibra_disable(info);
-diff --git a/drivers/input/misc/twl6040-vibra.c b/drivers/input/misc/twl6040-vibra.c
-index 93235a007d07..900be3420967 100644
---- a/drivers/input/misc/twl6040-vibra.c
-+++ b/drivers/input/misc/twl6040-vibra.c
-@@ -212,8 +212,7 @@ static void twl6040_vibra_close(struct input_dev *input)
- 
- static int __maybe_unused twl6040_vibra_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct vibra_info *info = platform_get_drvdata(pdev);
-+	struct vibra_info *info = dev_get_drvdata(dev);
- 
- 	cancel_work_sync(&info->play_work);
- 
--- 
-2.20.1
+> Thanks for digging into this, Michael!
 
+No worries, happy to help where I can.
+
+In the intervening five minutes I remembered how we handle this, we just
+need a little wrapper to save the non-volatile regs:
+
+_GLOBAL(ppc_clone3)
+	bl	save_nvgprs
+	bl	sys_clone3
+	b	.Lsyscall_exit
+
+
+A while back I meant to make it generate those automatically based on a
+flag in the syscall.tbl but of course haven't got around to it :)
+
+So with the above it seems all good:
+
+$ ./clone3 ; echo $?
+Parent process received child's pid 4204 as return value
+Parent process received child's pidfd 3
+Parent process received child's pid 4204 as return argument
+Child process with pid 4204
+0
+
+I'll send a patch to wire it up on Monday.
+
+cheers
