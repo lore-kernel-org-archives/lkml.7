@@ -2,98 +2,113 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D09C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A837CC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C192173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F4E20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bf64/F0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfGSIeS (ORCPT
+        id S1726572AbfGSIh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:34:18 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40244 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGSIeR (ORCPT
+        Fri, 19 Jul 2019 04:37:57 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16954 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfGSIh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:34:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s145so22675367qke.7
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:34:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t40DO/X7sJQ9uYQ+vcbmJFxeNmL+Zvgj4hLPmtUltGU=;
-        b=op0CG5iybY/fpMCUhWemQmapw6BuruCiCswT56cyTJkYJrJWdAx6pav6oi3jJXCSBg
-         uWDrB53ViHVuxNIX8lWtOtutQ2cu5uSz4YbCXtibITcNk+MtnfOZMpsvTXoBtp+dsE5u
-         oI6RP/S5V4DolrhB6rC6gbB2QyEXoSZ681iQzraQM6AEkfCtIKFdNt9cmkztxDCioXyv
-         SZ8gsSaQuvD6HxE6LDbKPCyHhJD4Ie1BJO6HOrXmhxS0xSB+uNdr9HPL2dlID4v0mouE
-         qPmyp4JG/fugX6pvYpbopt6UGEEvq0i5u/c7yAtZ4s1QSTOscB/N64ZSo9CO+c1D0SQv
-         /r0g==
-X-Gm-Message-State: APjAAAWG9xNmA9r1cbJhDQaYcRQUB/IRBWImJinu8VmeK0qA0IOP4jdY
-        kep+D6+EPRRz89n7N0wekTFTqJGPw1NrTIatIdY=
-X-Google-Smtp-Source: APXvYqzLBYBJfvV/xjeS7wyaBBemab3RFfVOUtSyHzF7pehxyxR0cNpK6EPy9RAOht/iLf/RIFx1Owo2gClrrMbcQ4A=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr32994894qka.138.1563525256510;
- Fri, 19 Jul 2019 01:34:16 -0700 (PDT)
+        Fri, 19 Jul 2019 04:37:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3181630000>; Fri, 19 Jul 2019 01:37:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jul 2019 01:37:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 01:37:55 -0700
+Received: from [10.26.11.13] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 08:37:52 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+ <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <6a6bac84-1d29-2740-1636-d3adb26b6bcc@nvidia.com>
+ <BN8PR12MB3266960A104A7CDBB4E59192D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <bc9ab3c5-b1b9-26d4-7b73-01474328eafa@nvidia.com>
+Date:   Fri, 19 Jul 2019 09:37:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CGME20190718134253epcas3p32a5afece52c47aaac0cd5795ff4cf022@epcas3p3.samsung.com>
- <20190718134240.2265724-1-arnd@arndb.de> <763005f0-fc66-51bc-fcfe-3ae4942a9c07@samsung.com>
-In-Reply-To: <763005f0-fc66-51bc-fcfe-3ae4942a9c07@samsung.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 19 Jul 2019 10:33:59 +0200
-Message-ID: <CAK8P3a2rJ1WqWZ8VtOZZ5YwFrg5bpVve_kS4utL0MjeBUzrLew@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: fix RC_CORE dependency
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?Q?Ronald_Tschal=C3=A4r?= <ronald@innovation.ch>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <BN8PR12MB3266960A104A7CDBB4E59192D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563525476; bh=1RKYbMEPkBkYAvO9fUPJKXbsZ5aFdO+FGd2zGhkjPj4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bf64/F0tMPXpg033Cj+uCzeKcnWb+BjHUJJ7UiBLrfB42qlERv9j7sGnt94RfHo7I
+         xLt0h459xSXo1xlry7OW/LJjSmKIgWhdNywp6zLUP0XQKA1hCKXDv3xOb0YqGSQWwD
+         7qn5PlEGBWBhDFxuAHXXNfrKYlpKaZAurhdI4BNWKtk/cAQ1WGGQ3YlugAvMzBuySL
+         GN097jfb6sKEFp+5UaqOXEtHuloX3dInrbqNIUnWvz6l7qMhLomk5Ard0CLdbyCbVv
+         fMFMHXntq2wXLJKkHy/3e3KXO0e0CKpYf4305JAz4VyoWBTMMvJt+HnVnRxwtdcd+U
+         Biu4jt1VhFB8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 9:01 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
-> On 18.07.2019 15:42, Arnd Bergmann wrote:
-> > Using 'imply' causes a new problem, as it allows the case of
-> > CONFIG_INPUT=m with RC_CORE=y, which fails to link:
->
->
-> I have reviewed dependencies and I wonder how such configuration is
-> possible at all.
->
-> RC_CORE depends on INPUT (at least on today's next branch) so if INPUT=m
-> then RC_CORE should be either n either m, am I right?
 
-Right.
+On 19/07/2019 08:51, Jose Abreu wrote:
+> From: Jon Hunter <jonathanh@nvidia.com>
+> Date: Jul/18/2019, 10:16:20 (UTC+00:00)
+> 
+>> Have you tried using NFS on a board with this ethernet controller?
+> 
+> I'm having some issues setting up the NFS server in order to replicate 
+> so this may take some time.
 
-> Arnd, are there unknown to me changes in RC/INPUT dependencies?
+If that's the case, we may wish to consider reverting this for now as it
+is preventing our board from booting. Appears to revert cleanly on top
+of mainline.
 
-I think this is 'imply' behaving oddly when we have conflicting requirements:
+> Are you able to add some debug in stmmac_init_rx_buffers() to see what's 
+> the buffer address ?
 
-- INPUT=m forces RC_CORE to be =m or =n
-- DRM_SIL_SII8620=y asks RC_CORE to be =y unless it cannot be enabled
+If you have a debug patch you would like me to apply and test with I
+can. However, it is best you prepare the patch as maybe I will not dump
+the appropriate addresses.
 
-Kconfig decided to make this RC_CORE=y, which caused the link
-failure. Making it RC_CORE=m however would not work either because
-then we'd get a link failure from the sii8620 driver to rc_core.
+Cheers
+Jon
 
-so a pure 'imply' cannot work here, and we need a dependency, one of:
-
-a)
-   depends on INPUT || !INPUT
-   select RC_CORE if INPUT
-
-b) depends on RC_CORE || !RC_CORE
-
-b) is what othe drivers use, e.g. SMS_SDIO_DRV
-
-       Arnd
+-- 
+nvpublic
