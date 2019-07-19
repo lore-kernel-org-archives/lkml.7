@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4745C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECCCC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816302077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B972077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511163;
-	bh=J8yg1JMnlCbaWL6cdq7le4aMJLf01ArsHpijP5jmHeI=;
+	s=default; t=1563511167;
+	bh=iBNWIBHZgGTe5Q+jdZRd+ngLa9VpaLIgZwj92vwqXyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OSKdRIWVUfcb4jej4JF0ruIX8VN+S7pVaCJwzgeWhj15JS0orYzl4fVIGUX0jcY0e
-	 6t+cgh2PtJ8oC28uHiXeZpmMgJMH4tpuKdm/4fTl4Ny+TSoywega5QOhHbNpLsLsWQ
-	 c7kIAzCOkkAkIYPyCjRibLb0LFxEL8dGg/f+tqNQ=
+	b=OEyGDtj3t8b6Xl5j1idEgkLNaj3uQMRW9mQp55WjCDa9qhx3RE/SSNZODw/Ope//N
+	 0ZNh9g+HVLoqP4wn4820+7wnPya0M+YHAuMbkEMLOEqtUFqk44jZCe2iD+NO/xkfEU
+	 8yIAZpWnKpHBHzbkROTV5DFITQpEYh77QrejhQLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfGSD6v (ORCPT
+        id S1728960AbfGSEj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58158 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:39:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbfGSD6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:46 -0400
+        id S1727120AbfGSD6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7064D21873;
-        Fri, 19 Jul 2019 03:58:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20E5021850;
+        Fri, 19 Jul 2019 03:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508726;
-        bh=J8yg1JMnlCbaWL6cdq7le4aMJLf01ArsHpijP5jmHeI=;
+        s=default; t=1563508729;
+        bh=iBNWIBHZgGTe5Q+jdZRd+ngLa9VpaLIgZwj92vwqXyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNUSlW4LxU7CDYItQ9E9EPQk7r2o+O8PTuEOLFOYtfy8bNNIlRycrlIPdhgePMEq5
-         I8dsbW46pbhBP+ZmqUveEjwjx9/GwS4kHF5s3lMoluv6OXiqCZkV2ubM07br55MFE3
-         Qeofr3/vy0HUwG1GDgOjmON793B33uvP/22Iqi30=
+        b=kxorIxo+cqLMrPMWZfPF0TxLhvDMEk/xqLJascO2VQRbtzGGqvy0lMKuVHaWFSqhJ
+         KkIxN3PI5Ku7e2BTu6v7auoQ2/3kDSqZ/sqfRqtN2LvuOWIUywCbFwbqsOalQhz68v
+         /8z2Yoo2O88Dq1MCSmWYPDRuSi09ECn708NHOx9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Riley <davidriley@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.2 054/171] drm/virtio: Add memory barriers for capset cache.
-Date:   Thu, 18 Jul 2019 23:54:45 -0400
-Message-Id: <20190719035643.14300-54-sashal@kernel.org>
+Cc:     Samson Tam <Samson.Tam@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 055/171] drm/amd/display: set link->dongle_max_pix_clk to 0 on a disconnect
+Date:   Thu, 18 Jul 2019 23:54:46 -0400
+Message-Id: <20190719035643.14300-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -61,50 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Riley <davidriley@chromium.org>
+From: Samson Tam <Samson.Tam@amd.com>
 
-[ Upstream commit 9ff3a5c88e1f1ab17a31402b96d45abe14aab9d7 ]
+[ Upstream commit 233d87a579b8adcc6da5823fa507ecb6675e7562 ]
 
-After data is copied to the cache entry, atomic_set is used indicate
-that the data is the entry is valid without appropriate memory barriers.
-Similarly the read side was missing the corresponding memory barriers.
+[Why]
+Found issue in EDID Emulation where if we connect a display using
+ a passive HDMI-DP dongle, disconnect it and then try to emulate
+ a display using DP, we could not see 4K modes.  This was because
+ on a disconnect, dongle_max_pix_clk was still set so when we
+ emulate using DP, in dc_link_validate_mode_timing(), it would
+ think we were still using a dongle and limit the modes we support.
 
-Signed-off-by: David Riley <davidriley@chromium.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190610211810.253227-5-davidriley@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+[How]
+In dc_link_detect(), set dongle_max_pix_clk to 0 when we detect
+ a hotplug out ( if new_connection_type = dc_connection_none ).
+
+Signed-off-by: Samson Tam <Samson.Tam@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c    | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 949a264985fc..19fbffd0f7a3 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -542,6 +542,9 @@ static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
- 	if (!ret)
- 		return -EBUSY;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index b37ecc3ede61..a3ff33ff6da1 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -960,6 +960,12 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
  
-+	/* is_valid check must proceed before copy of the cache entry. */
-+	smp_rmb();
-+
- 	ptr = cache_ent->caps_cache;
+ 		link->type = dc_connection_none;
+ 		sink_caps.signal = SIGNAL_TYPE_NONE;
++		/* When we unplug a passive DP-HDMI dongle connection, dongle_max_pix_clk
++		 *  is not cleared. If we emulate a DP signal on this connection, it thinks
++		 *  the dongle is still there and limits the number of modes we can emulate.
++		 *  Clear dongle_max_pix_clk on disconnect to fix this
++		 */
++		link->dongle_max_pix_clk = 0;
+ 	}
  
- copy_exit:
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 5bb0f0a084e9..a7684f9c80db 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -583,6 +583,8 @@ static void virtio_gpu_cmd_capset_cb(struct virtio_gpu_device *vgdev,
- 		    cache_ent->id == le32_to_cpu(cmd->capset_id)) {
- 			memcpy(cache_ent->caps_cache, resp->capset_data,
- 			       cache_ent->size);
-+			/* Copy must occur before is_valid is signalled. */
-+			smp_wmb();
- 			atomic_set(&cache_ent->is_valid, 1);
- 			break;
- 		}
+ 	LINK_INFO("link=%d, dc_sink_in=%p is now %s prev_sink=%p dpcd same=%d edid same=%d\n",
 -- 
 2.20.1
 
