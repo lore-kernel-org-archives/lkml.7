@@ -2,131 +2,117 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BCFC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19353C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462BE21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F096421872
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfGSPrV convert rfc822-to-8bit (ORCPT
+        id S1730443AbfGSPuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 11:47:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64536 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728443AbfGSPrU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 11:47:20 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6JFkgG5006110
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 11:47:19 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tug36t4h0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 11:47:19 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Fri, 19 Jul 2019 16:47:18 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 19 Jul 2019 16:47:12 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6JFlBQD50725154
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jul 2019 15:47:11 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8EBAAE05C;
-        Fri, 19 Jul 2019 15:47:11 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8ABCAAE05F;
-        Fri, 19 Jul 2019 15:47:07 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.190.209])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 19 Jul 2019 15:47:07 +0000 (GMT)
-References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-6-bauerman@linux.ibm.com> <4a07bf75-b516-c81b-da7a-4b323e6d7e52@amd.com> <c85ae8ff-3b7b-88bf-6b6a-c41b159c9cc2@redhat.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     lijiang <lijiang@redhat.com>
-Cc:     "Lendacky\, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "iommu\@lists.linux-foundation.org" 
-        <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390\@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>, Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3 5/6] fs/core/vmcore: Move sev_active() reference to x86 arch code
-In-reply-to: <c85ae8ff-3b7b-88bf-6b6a-c41b159c9cc2@redhat.com>
-Date:   Fri, 19 Jul 2019 12:47:03 -0300
+        Fri, 19 Jul 2019 11:50:18 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:43326 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728331AbfGSPuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 11:50:17 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id B9CA020AC3;
+        Fri, 19 Jul 2019 17:50:14 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 9A4F720A7E;
+        Fri, 19 Jul 2019 17:50:14 +0200 (CEST)
+Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+ <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
+ <20190612172501.GY4814@minitux>
+ <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
+Message-ID: <5b252fe6-9435-2aad-d0db-f6170a07b5e9@free.fr>
+Date:   Fri, 19 Jul 2019 17:50:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19071915-0072-0000-0000-0000044B1EEB
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011457; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01234458; UDB=6.00650541; IPR=6.01015790;
- MB=3.00027801; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-19 15:47:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071915-0073-0000-0000-00004CBB738B
-Message-Id: <87h87igh6w.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-19_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907190172
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Jul 19 17:50:14 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13/06/2019 11:10, Marc Gonzalez wrote:
 
-Hello Lianbo,
+> Here are my observations for a 8998 board:
+> 
+> 1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
+> qcom_pcie_probe() fails with a timeout in phy_init.
+> => this is in line with your regression analysis.
+> 
+> 2) Your patch also fixes a long-standing bug in UFS init whereby sending
+> lots of information to the console during phy init would lead to an
+> incorrectly diagnosed time-out.
+> 
+> Good stuff!
+> 
+> Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 
-lijiang <lijiang@redhat.com> writes:
+It looks like this patch fixed UFS, but broke PCIe and USB3 ^_^
 
-> 在 2019年07月19日 01:47, Lendacky, Thomas 写道:
->> On 7/17/19 10:28 PM, Thiago Jung Bauermann wrote:
->>> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
->>> appear in generic kernel code because it forces non-x86 architectures to
->>> define the sev_active() function, which doesn't make a lot of sense.
->>>
->>> To solve this problem, add an x86 elfcorehdr_read() function to override
->>> the generic weak implementation. To do that, it's necessary to make
->>> read_from_oldmem() public so that it can be used outside of vmcore.c.
->>>
->>> Also, remove the export for sev_active() since it's only used in files that
->>> won't be built as modules.
->>>
->>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> 
->> Adding Lianbo and Baoquan, who recently worked on this, for their review.
->> 
->
-> This change looks good to me.
->
-> Reviewed-by: Lianbo Jiang <lijiang@redhat.com>
+qcom-qmp-phy 1c06000.phy: Registered Qcom-QMP phy
+qcom-qmp-phy c010000.phy: Registered Qcom-QMP phy
+qcom-qmp-phy 1da7000.phy: Registered Qcom-QMP phy
 
-Thanks for your review!
+qcom-qmp-phy 1c06000.phy: BEFORE=000000a6 AFTER=000000a6
+qcom-qmp-phy 1c06000.phy: phy initialization timed-out
+phy phy-1c06000.phy.0: phy init failed --> -110
+qcom-pcie: probe of 1c00000.pci failed with error -110
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+qcom-qmp-phy 1da7000.phy: BEFORE=00000040 AFTER=0000000d
 
+qcom-qmp-phy c010000.phy: BEFORE=69696969 AFTER=b7b7b7b7
+qcom-qmp-phy c010000.phy: phy initialization timed-out
+phy phy-c010000.phy.1: phy init failed --> -110
+dwc3 a800000.dwc3: failed to initialize core: -110
+dwc3: probe of a800000.dwc3 failed with error -110
+
+
+Downstream code for PCIe is:
+
+static bool pcie_phy_is_ready(struct msm_pcie_dev_t *dev)
+{
+	if (dev->phy_ver >= 0x20) {
+		if (readl_relaxed(dev->phy + PCIE_N_PCS_STATUS(dev->rc_idx, dev->common_phy)) &	BIT(6))
+			return false;
+		else
+			return true;
+	}
+
+	if (!(readl_relaxed(dev->phy + PCIE_COM_PCS_READY_STATUS) & 0x1))
+		return false;
+	else
+		return true;
+}
+
+AFAICT:
+PCIe and USB3 QMP PHYs are ready when PHYSTATUS=BIT(6) goes to 0.
+But UFS is ready when PCS_READY=BIT(0) goes to 1.
+
+
+Can someone verify that USB3 is broken on 845 with 885bd765963b?
+
+Regards.
