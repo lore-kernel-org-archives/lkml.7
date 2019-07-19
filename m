@@ -2,362 +2,114 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5726C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963BC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952D12184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89F52084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="b0QMlkMm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l88tQwrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfGSBlw (ORCPT
+        id S1726572AbfGSBm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:41:52 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49265 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfGSBlv (ORCPT
+        Thu, 18 Jul 2019 21:42:56 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46291 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfGSBm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:41:51 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 694C5891AB;
-        Fri, 19 Jul 2019 13:41:48 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1563500508;
-        bh=GCwWTTvZWjLZoYIVvBtBDfbCvFOBTlmjDF9yXN2JoYk=;
-        h=From:To:Cc:Subject:Date;
-        b=b0QMlkMmdsIHALhWtK310b3onY19uaHU6qx20WkLoJlzbJIpar+16xIswwdqKHHdk
-         phf/GfHBbffYKqxcCKzaVsPf5GA5yk/1hqVno+ytue59uC6xRTK3Hs092aZ1cO8bLI
-         qZdS9rgRD6mhJYAbApu1NpmsAxURYT7H8U2VvtZBGlZKkY2vDYbhfTRug+s05a2BlG
-         +GJemy6zOcy/sTrqWzE3sV3qDJHCd0E0raRr5S5Fev8U+AcNyBAxCgNcH3UMlcwfqh
-         wmkminnXBNfA4KJ7HxsH1b4mvD7Ucl6B1JLoHlV6tfdfTdXdkfZCvwTDtFrLyolGDP
-         RP92m0QkWPKMw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d311fda0000>; Fri, 19 Jul 2019 13:41:48 +1200
-Received: from grantmc-dl.ws.atlnz.lc (grantmc-dl.ws.atlnz.lc [10.33.24.16])
-        by smtp (Postfix) with ESMTP id 88AED13EF59;
-        Fri, 19 Jul 2019 13:41:48 +1200 (NZST)
-Received: by grantmc-dl.ws.atlnz.lc (Postfix, from userid 1772)
-        id 8E84410164A; Fri, 19 Jul 2019 13:41:46 +1200 (NZST)
-From:   Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
-To:     jdelvare@suse.com, linux@roeck-us.net
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
-Subject: [PATCH] hwmon: (adt7475) Convert to use hwmon_device_register_with_groups()
-Date:   Fri, 19 Jul 2019 13:41:30 +1200
-Message-Id: <20190719014130.1090-1-grant.mcewan@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
+        Thu, 18 Jul 2019 21:42:56 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so30550507wru.13;
+        Thu, 18 Jul 2019 18:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ahdHibGHy9qahFvO4H+ZrJxqOuoRka1XVbwU+ThPrP0=;
+        b=l88tQwrwYYL1zDLla+GgAth84oKoQ6mAldxMgDaFKag7GTh5WpqCfOFH6+Iw1rtGKn
+         eNSaaR/R3z4nnWOPv34tr6NeFurgqp4w/wX8xONOjW8jZEh2kthtP1hj+SJgn7xk15DD
+         Q/Rk/niXgHssCEQ9KCCuOP7em9JEmNgUkFkwThc0ia8R5NzCmcARIWi+Ndd+BauyXVnb
+         1+s03c500bInQiVtZPi4HbTPXVMusgJcD1+/WckD2LeEBvWsvOgW3RqrcvNGMvw5BZZX
+         8w44sUQCz7U9IBVGvVaNqdi2dpXNdAdWMPpvKk5JUhWajpo8aSYSCIeMtd6kMh8kWkli
+         /VXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ahdHibGHy9qahFvO4H+ZrJxqOuoRka1XVbwU+ThPrP0=;
+        b=BENFysB/4OGkw+L/jUcDqsw6zPer8FYtv9iGTo6w+kI48m+PRFbfR7eod0gEaVtxPD
+         bOzLLEUjcGVASknjWtqE+gNzbkxrWVi+W3iagJdXQNdmWe06FvhS9CfUnmU4qXKzNshJ
+         YGVJxS0X0IkKcTensD9ygFALbXdAFjVHh+eZXnSju6Be4o7W2kqv628BFsudeKAmr6TL
+         5Z7CQlshcRv9KbYA7COyEc5yqjyQIOQSRLS8fKpQwu5Y4FLrGT1rfrEVyyFY8Q0wh8of
+         LQ0brWTz3iFc8LbOZ6DNcel3f4wSExyGGgW1QuOm2X95ceSikrueSdKl73QGxXr7SkXq
+         Pw2g==
+X-Gm-Message-State: APjAAAX501pr8eTJ82BCS5GDP9m9i7OsLeRpwtBe29Gv0C01K5QxlY+s
+        1iYQjgxF23pGKlEOl6n7LSsYAzdN
+X-Google-Smtp-Source: APXvYqw/1Dw+nt9l5hs2rHp1pnUlgEgKHH0Aw10om65f7H+8pRyubOuadfFPiwjo6JjwpYpa8z9MdQ==
+X-Received: by 2002:a5d:468a:: with SMTP id u10mr700283wrq.177.1563500574829;
+        Thu, 18 Jul 2019 18:42:54 -0700 (PDT)
+Received: from [192.168.8.147] (104.160.185.81.rev.sfr.net. [81.185.160.104])
+        by smtp.gmail.com with ESMTPSA id g10sm20968878wrw.60.2019.07.18.18.42.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 18:42:53 -0700 (PDT)
+Subject: Re: [PATCH] sch_gred: kzalloc needs null check
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190719013026.24297-1-navid.emamdoost@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <c557b5be-202e-d0d5-5c28-5abe138ab81c@gmail.com>
+Date:   Fri, 19 Jul 2019 03:42:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <20190719013026.24297-1-navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hwmon_device_register() is a deprecated function and produces a warning.
 
-Converting the driver to use the hwmon_device_register_with_groups()
-instead.
 
-Signed-off-by: Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
----
- drivers/hwmon/adt7475.c | 104 +++++++++++++++++++---------------------
- 1 file changed, 48 insertions(+), 56 deletions(-)
+On 7/19/19 3:30 AM, Navid Emamdoost wrote:
+> call to kzalloc may fail and return null. So the result should be checked
+> against null. Added the check to cover kzalloc failure case.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  net/sched/sch_gred.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/net/sched/sch_gred.c b/net/sched/sch_gred.c
+> index 8599c6f31b05..5cd0859f0274 100644
+> --- a/net/sched/sch_gred.c
+> +++ b/net/sched/sch_gred.c
+> @@ -697,6 +697,9 @@ static int gred_change(struct Qdisc *sch, struct nlattr *opt,
+>  	}
+>  
+>  	prealloc = kzalloc(sizeof(*prealloc), GFP_KERNEL);
+> +	if (!prealloc)
+> +		return -ENOMEM;
+> +
+>  	sch_tree_lock(sch);
+>  
+>  	err = gred_change_vq(sch, ctl->DP, ctl, prio, stab, max_P, &prealloc,
+> 
 
-diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
-index c3c6031a7285..4e838555102f 100644
---- a/drivers/hwmon/adt7475.c
-+++ b/drivers/hwmon/adt7475.c
-@@ -188,6 +188,7 @@ MODULE_DEVICE_TABLE(of, adt7475_of_match);
-=20
- struct adt7475_data {
- 	struct device *hwmon_dev;
-+	struct i2c_client *client;
- 	struct mutex lock;
-=20
- 	unsigned long measure_updated;
-@@ -212,6 +213,7 @@ struct adt7475_data {
-=20
- 	u8 vid;
- 	u8 vrm;
-+	const struct attribute_group *groups[8];
- };
-=20
- static struct i2c_driver adt7475_driver;
-@@ -346,8 +348,8 @@ static ssize_t voltage_store(struct device *dev,
- {
-=20
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	unsigned char reg;
- 	long val;
-=20
-@@ -440,8 +442,8 @@ static ssize_t temp_store(struct device *dev, struct =
-device_attribute *attr,
- 			  const char *buf, size_t count)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	unsigned char reg =3D 0;
- 	u8 out;
- 	int temp;
-@@ -542,8 +544,7 @@ static ssize_t temp_st_show(struct device *dev, struc=
-t device_attribute *attr,
- 			    char *buf)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
- 	long val;
-=20
- 	switch (sattr->index) {
-@@ -570,8 +571,8 @@ static ssize_t temp_st_store(struct device *dev,
- 			     size_t count)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	unsigned char reg;
- 	int shift, idx;
- 	ulong val;
-@@ -647,8 +648,8 @@ static ssize_t point2_show(struct device *dev, struct=
- device_attribute *attr,
- static ssize_t point2_store(struct device *dev, struct device_attribute =
-*attr,
- 			    const char *buf, size_t count)
- {
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
- 	int temp;
- 	long val;
-@@ -710,8 +711,8 @@ static ssize_t tach_store(struct device *dev, struct =
-device_attribute *attr,
- {
-=20
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	unsigned long val;
-=20
- 	if (kstrtoul(buf, 10, &val))
-@@ -769,8 +770,8 @@ static ssize_t pwm_store(struct device *dev, struct d=
-evice_attribute *attr,
- {
-=20
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	unsigned char reg =3D 0;
- 	long val;
-=20
-@@ -818,8 +819,8 @@ static ssize_t stall_disable_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+
- 	u8 mask =3D BIT(5 + sattr->index);
-=20
- 	return sprintf(buf, "%d\n", !!(data->enh_acoustics[0] & mask));
-@@ -830,8 +831,8 @@ static ssize_t stall_disable_store(struct device *dev=
-,
- 				   const char *buf, size_t count)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	long val;
- 	u8 mask =3D BIT(5 + sattr->index);
-=20
-@@ -914,8 +915,8 @@ static ssize_t pwmchan_store(struct device *dev,
- 			     size_t count)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	int r;
- 	long val;
-=20
-@@ -938,8 +939,8 @@ static ssize_t pwmctrl_store(struct device *dev,
- 			     size_t count)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	int r;
- 	long val;
-=20
-@@ -982,8 +983,8 @@ static ssize_t pwmfreq_store(struct device *dev,
- 			     size_t count)
- {
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	int out;
- 	long val;
-=20
-@@ -1022,8 +1023,8 @@ static ssize_t pwm_use_point2_pwm_at_crit_store(str=
-uct device *dev,
- 					struct device_attribute *devattr,
- 					const char *buf, size_t count)
- {
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	long val;
-=20
- 	if (kstrtol(buf, 10, &val))
-@@ -1305,6 +1306,9 @@ static const struct attribute_group in4_attr_group =
-=3D { .attrs =3D in4_attrs };
- static const struct attribute_group in5_attr_group =3D { .attrs =3D in5_=
-attrs };
- static const struct attribute_group vid_attr_group =3D { .attrs =3D vid_=
-attrs };
-=20
-+/* Number of possible attribute groups to add into sysfs */
-+#define ATTR_GROUP_COUNT 8
-+
- static int adt7475_detect(struct i2c_client *client,
- 			  struct i2c_board_info *info)
- {
-@@ -1489,7 +1493,7 @@ static int adt7475_probe(struct i2c_client *client,
- 	};
-=20
- 	struct adt7475_data *data;
--	int i, ret =3D 0, revision;
-+	int i, ret =3D 0, revision, group_num =3D 0;
- 	u8 config2, config3;
-=20
- 	data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-@@ -1497,6 +1501,7 @@ static int adt7475_probe(struct i2c_client *client,
- 		return -ENOMEM;
-=20
- 	mutex_init(&data->lock);
-+	data->client =3D client;
- 	i2c_set_clientdata(client, data);
-=20
- 	if (client->dev.of_node)
-@@ -1590,49 +1595,37 @@ static int adt7475_probe(struct i2c_client *clien=
-t,
- 		break;
- 	}
-=20
--	ret =3D sysfs_create_group(&client->dev.kobj, &adt7475_attr_group);
--	if (ret)
--		return ret;
-+	data->groups[group_num++] =3D &adt7475_attr_group;
-=20
- 	/* Features that can be disabled individually */
- 	if (data->has_fan4) {
--		ret =3D sysfs_create_group(&client->dev.kobj, &fan4_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num++] =3D &fan4_attr_group;
- 	}
- 	if (data->has_pwm2) {
--		ret =3D sysfs_create_group(&client->dev.kobj, &pwm2_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num++] =3D &pwm2_attr_group;
- 	}
- 	if (data->has_voltage & (1 << 0)) {
--		ret =3D sysfs_create_group(&client->dev.kobj, &in0_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num++] =3D &in0_attr_group;
- 	}
- 	if (data->has_voltage & (1 << 3)) {
--		ret =3D sysfs_create_group(&client->dev.kobj, &in3_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num++] =3D &in3_attr_group;
- 	}
- 	if (data->has_voltage & (1 << 4)) {
--		ret =3D sysfs_create_group(&client->dev.kobj, &in4_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num++] =3D &in4_attr_group;
- 	}
- 	if (data->has_voltage & (1 << 5)) {
--		ret =3D sysfs_create_group(&client->dev.kobj, &in5_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num++] =3D &in5_attr_group;
- 	}
- 	if (data->has_vid) {
- 		data->vrm =3D vid_which_vrm();
--		ret =3D sysfs_create_group(&client->dev.kobj, &vid_attr_group);
--		if (ret)
--			goto eremove;
-+		data->groups[group_num] =3D &vid_attr_group;
- 	}
-=20
--	data->hwmon_dev =3D hwmon_device_register(&client->dev);
-+	/* register device with all the acquired attributes */
-+	data->hwmon_dev =3D hwmon_device_register_with_groups(&client->dev,
-+							    client->name, data,
-+							    data->groups);
-+
- 	if (IS_ERR(data->hwmon_dev)) {
- 		ret =3D PTR_ERR(data->hwmon_dev);
- 		goto eremove;
-@@ -1757,8 +1750,8 @@ static void adt7475_read_pwm(struct i2c_client *cli=
-ent, int index)
-=20
- static int adt7475_update_measure(struct device *dev)
- {
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
-+	struct i2c_client *client =3D data->client;
- 	u16 ext;
- 	int i;
- 	int ret;
-@@ -1854,8 +1847,7 @@ static int adt7475_update_measure(struct device *de=
-v)
-=20
- static struct adt7475_data *adt7475_update_device(struct device *dev)
- {
--	struct i2c_client *client =3D to_i2c_client(dev);
--	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct adt7475_data *data =3D dev_get_drvdata(dev);
- 	int ret;
-=20
- 	mutex_lock(&data->lock);
---=20
-2.22.0
+This seems not needed.
+
+The case is handled later in gred_change_vq()
 
