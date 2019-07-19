@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461ECC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0532BC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210432082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D832082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510564;
-	bh=4bB8qtrnRPBP80hwpyceHPKXuR1qkIAQivDFdyKUZ9Q=;
+	s=default; t=1563510567;
+	bh=iIs0O6PDTaQYyp7kEH6su754Y8rJtU3sCvAPMYLFbs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YmvgS+g+XlQquSEiKa7zQpq34fK7iDNBc00R/NFHIQopS2+eK3lSj+rtB+mNZK3//
-	 V80beQQ5dKKN+F2yPV4k7UKxQigIsV5RE/AaibPe9eJiDENRKvZDW1UpPCP6WFlCPT
-	 wybGC6W3j/Mfn218SgKxk6tBHKWki1BuyWpGgjY4=
+	b=Pn5KuvVrqtPE6nJreKX8jcY7NjpTp/b94l+iPg0/ZznIMXJZJ+RWDAUuYiMUidc/V
+	 nPxY/PcZL3XLSs9vrAa0V1lS3PPTwCeB+DyB3oz7SEyY6DudZifCsoEUL19xxhlNC0
+	 i9UTr2a6eVgPijzPlJqTxbUs3+dTRnl5Y2IwA6mM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfGSEFj (ORCPT
+        id S1733081AbfGSE30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38032 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731747AbfGSEFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:32 -0400
+        id S1731772AbfGSEFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 731E3218A3;
-        Fri, 19 Jul 2019 04:05:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F2F2189F;
+        Fri, 19 Jul 2019 04:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509131;
-        bh=4bB8qtrnRPBP80hwpyceHPKXuR1qkIAQivDFdyKUZ9Q=;
+        s=default; t=1563509138;
+        bh=iIs0O6PDTaQYyp7kEH6su754Y8rJtU3sCvAPMYLFbs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UL7NRhUQ0R2FogDB+gqZk+S1VdEPfA90iMJR7qKmYC+3wXqiw0ILQPo+Af+Rxbzl0
-         mbkPai4c7JrIMtFqpr2afVD8QXgnxDQRJhMhe/r/GH9/GDtzCMhY43rbMl9ZubKXrv
-         4+R7FjRwuajD4MecrTky4IOekdPB9TUT7FFGdNaQ=
+        b=ZeW3pncwfeX/AwPcQKtavR+j2vLhRKI9COfCpWZUACw/aqJf6a00WdHGKaiXMebGm
+         Ote476pKyDaXyrITBBSmEnuqbBFFusL+wqxu/aEX+3prk6fnlvI+jxUKTMq6uXteJY
+         rw1uI3s2HyphRWxAZSujg4gPb+DhsBFNcKE0Z+GE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentine Fatiev <valentinef@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 087/141] IB/ipoib: Add child to parent list only if device initialized
-Date:   Fri, 19 Jul 2019 00:01:52 -0400
-Message-Id: <20190719040246.15945-87-sashal@kernel.org>
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 091/141] PCI: mobiveil: Fix PCI base address in MEM/IO outbound windows
+Date:   Fri, 19 Jul 2019 00:01:56 -0400
+Message-Id: <20190719040246.15945-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -61,95 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentine Fatiev <valentinef@mellanox.com>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 91b01061fef9c57d2f5b712a6322ef51061f4efd ]
+[ Upstream commit f99536e9d2f55996038158a6559d4254a7cc1693 ]
 
-Despite failure in ipoib_dev_init() we continue with initialization flow
-and creation of child device. It causes to the situation where this child
-device is added too early to parent device list.
+The outbound memory windows PCI base addresses should be taken
+from the 'ranges' property of DT node to setup MEM/IO outbound
+windows decoding correctly instead of being hardcoded to zero.
 
-Change the logic, so in case of failure we properly return error from
-ipoib_dev_init() and add child only in success path.
+Update the code to retrieve the PCI base address for each range
+and use it to program the outbound windows address decoders
 
-Fixes: eaeb39842508 ("IB/ipoib: Move init code to ndo_init")
-Signed-off-by: Valentine Fatiev <valentinef@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 34 +++++++++++++----------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 9b5e11d3fb85..bb904ec511be 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1893,12 +1893,6 @@ static void ipoib_child_init(struct net_device *ndev)
- 	struct ipoib_dev_priv *priv = ipoib_priv(ndev);
- 	struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
- 
--	dev_hold(priv->parent);
--
--	down_write(&ppriv->vlan_rwsem);
--	list_add_tail(&priv->list, &ppriv->child_intfs);
--	up_write(&ppriv->vlan_rwsem);
--
- 	priv->max_ib_mtu = ppriv->max_ib_mtu;
- 	set_bit(IPOIB_FLAG_SUBINTERFACE, &priv->flags);
- 	memcpy(priv->dev->dev_addr, ppriv->dev->dev_addr, INFINIBAND_ALEN);
-@@ -1941,6 +1935,17 @@ static int ipoib_ndo_init(struct net_device *ndev)
- 	if (rc) {
- 		pr_warn("%s: failed to initialize device: %s port %d (ret = %d)\n",
- 			priv->ca->name, priv->dev->name, priv->port, rc);
-+		return rc;
-+	}
-+
-+	if (priv->parent) {
-+		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
-+
-+		dev_hold(priv->parent);
-+
-+		down_write(&ppriv->vlan_rwsem);
-+		list_add_tail(&priv->list, &ppriv->child_intfs);
-+		up_write(&ppriv->vlan_rwsem);
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index 77052a0712d0..03d697b63e2a 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -552,8 +552,9 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 		if (type) {
+ 			/* configure outbound translation window */
+ 			program_ob_windows(pcie, pcie->ob_wins_configured,
+-				win->res->start, 0, type,
+-				resource_size(win->res));
++					   win->res->start,
++					   win->res->start - win->offset,
++					   type, resource_size(win->res));
+ 		}
  	}
  
- 	return 0;
-@@ -1958,6 +1963,14 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 	 */
- 	WARN_ON(!list_empty(&priv->child_intfs));
- 
-+	if (priv->parent) {
-+		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
-+
-+		down_write(&ppriv->vlan_rwsem);
-+		list_del(&priv->list);
-+		up_write(&ppriv->vlan_rwsem);
-+	}
-+
- 	ipoib_neigh_hash_uninit(dev);
- 
- 	ipoib_ib_dev_cleanup(dev);
-@@ -1969,15 +1982,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 		priv->wq = NULL;
- 	}
- 
--	if (priv->parent) {
--		struct ipoib_dev_priv *ppriv = ipoib_priv(priv->parent);
--
--		down_write(&ppriv->vlan_rwsem);
--		list_del(&priv->list);
--		up_write(&ppriv->vlan_rwsem);
--
-+	if (priv->parent)
- 		dev_put(priv->parent);
--	}
- }
- 
- static int ipoib_set_vf_link_state(struct net_device *dev, int vf, int link_state)
 -- 
 2.20.1
 
