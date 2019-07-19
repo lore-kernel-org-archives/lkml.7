@@ -2,115 +2,109 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DE0C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455B1C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EC32084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B002084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rojfL0Gu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfGSIaA (ORCPT
+        id S1727502AbfGSIaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:30:00 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33502 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfGSI37 (ORCPT
+        Fri, 19 Jul 2019 04:30:09 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55692 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfGSIaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:29:59 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so31431199wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:29:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k1bnFro2XXdwmJgrGLhv6xKBwMHqJtL+pcbxH+NzjmM=;
-        b=hfcT2kIrbBOc3k3vNbklCVVSTfxswBxhgnTSgzl3zUfz1V7r9x7mBgzlS4fNJSeOFa
-         QhJRTvpZQeD66icGq2ak1c/vxx6zOsQeMk6HYr04drF6ADLp9SQQBydU5hfa4wszrKdm
-         Bve9YQYapasRHzr1mgBbMAP2Tmjpo9drr/P7WeGvVdloyzftxX0ubrjIkMs8q67FX2IA
-         lyBZ+wFeADAv0DjMTnYkSVUEkkjPoWrUgdjVAewa4llUlnS21IWW5LcfOqwd/pbnablp
-         b/5nTIUrPBDsmpYsa1XsR/tM2ua89hoycMeCW8PNWCnyK5+HBdp3+P9CgqrpaxLHAZ1Y
-         KpTQ==
-X-Gm-Message-State: APjAAAXPGqSP4oArgLRupTEFC6ELPpHZf7bz2RRpBt13ZPPreCw7XUuS
-        OHTLaUU1Q8nXv5y8U3mL68F55w==
-X-Google-Smtp-Source: APXvYqyq9acl68xOlc1ZDifwAYF0lAew9EnZOZvpXAWnTf1hg09lgAOCC1cGT8vja/tQpaOoGLEkHQ==
-X-Received: by 2002:a5d:4212:: with SMTP id n18mr53314416wrq.261.1563524997628;
-        Fri, 19 Jul 2019 01:29:57 -0700 (PDT)
-Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
-        by smtp.gmail.com with ESMTPSA id l17sm16941335wrr.94.2019.07.19.01.29.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 01:29:56 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 10:29:54 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] vsock/virtio: change the maximum packet size
- allowed
-Message-ID: <20190719082954.m2lw77adpp5dylxw@steredhat>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-6-sgarzare@redhat.com>
- <20190717105703-mutt-send-email-mst@kernel.org>
- <CAGxU2F5ybg1_8VhS=COMnxSKC4AcW4ZagYwNMi==d6-rNPgzsg@mail.gmail.com>
- <20190718083105-mutt-send-email-mst@kernel.org>
+        Fri, 19 Jul 2019 04:30:09 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6J8THUc065533;
+        Fri, 19 Jul 2019 03:29:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563524957;
+        bh=9c1Ulz4kYZoRGREkkMV4r8fhTvR5MYnlpJnGO/Okjkw=;
+        h=From:To:CC:Subject:Date;
+        b=rojfL0Guo6r6xoQLKN/dOOkhDUdR7wzXZFLufz0UojzpKIyEwvT725r9OzGcSaA9H
+         yYHu0O6BhH8ba+ICNdF417kRWLvDie6c0kLyhTUamslq4syLOsLpoS2qpCJ9HVTg/7
+         wvvI1ktmUMoe10CXb2wN4qww6fR7y/XgtIDC3YS4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6J8THq6029681
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jul 2019 03:29:17 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 19
+ Jul 2019 03:29:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 19 Jul 2019 03:29:16 -0500
+Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6J8TENc076829;
+        Fri, 19 Jul 2019 03:29:14 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>
+CC:     Randy Dunlap <rdunlap@infradead.org>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH] mtd: hyperbus: Kconfig: Fix HBMC_AM654 dependencies
+Date:   Fri, 19 Jul 2019 13:59:12 +0530
+Message-ID: <20190719082912.10316-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718083105-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:33:40AM -0400, Michael S. Tsirkin wrote:
-> On Thu, Jul 18, 2019 at 09:52:41AM +0200, Stefano Garzarella wrote:
-> > On Wed, Jul 17, 2019 at 5:00 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Wed, Jul 17, 2019 at 01:30:30PM +0200, Stefano Garzarella wrote:
-> > > > Since now we are able to split packets, we can avoid limiting
-> > > > their sizes to VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE.
-> > > > Instead, we can use VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max
-> > > > packet size.
-> > > >
-> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > >
-> > >
-> > > OK so this is kind of like GSO where we are passing
-> > > 64K packets to the vsock and then split at the
-> > > low level.
-> > 
-> > Exactly, something like that in the Host->Guest path, instead in the
-> > Guest->Host we use the entire 64K packet.
-> > 
-> > Thanks,
-> > Stefano
-> 
-> btw two allocations for each packet isn't great. How about
-> allocating the struct linearly with the data?
+On x86_64, when CONFIG_OF is not disabled:
 
-Are you referring to the kzalloc() to allocate the 'struct
-virtio_vsock_pkt', followed by the kmalloc() to allocate the buffer?
+WARNING: unmet direct dependencies detected for MUX_MMIO
+  Depends on [n]: MULTIPLEXER [=y] && (OF [=n] || COMPILE_TEST [=n])
+  Selected by [y]:
+  - HBMC_AM654 [=y] && MTD [=y] && MTD_HYPERBUS [=y]
 
-Actually they don't look great, I will try to do a single allocation.
+due to
+config HBMC_AM654
+	tristate "HyperBus controller driver for AM65x SoC"
+	select MULTIPLEXER
+	select MUX_MMIO
 
-> And all buffers are same length for you - so you can actually
-> do alloc_pages.
+Fix this by making HBMC_AM654 imply MUX_MMIO instead of select so
+that dependencies are taken care of. MUX_MMIO is optional for
+functioning of driver.
 
-Yes, also Jason suggested it and we decided to postpone since we will
-try to reuse the virtio-net where it comes for free.
+Fixes: b07079f1642c ("mtd: hyperbus: Add driver for TI's HyperBus memory controller")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
+ drivers/mtd/hyperbus/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Allocating/freeing pages in a batch should also be considered.
+diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
+index cff6bbd226f5..1c691df8eff7 100644
+--- a/drivers/mtd/hyperbus/Kconfig
++++ b/drivers/mtd/hyperbus/Kconfig
+@@ -15,7 +15,7 @@ if MTD_HYPERBUS
+ config HBMC_AM654
+ 	tristate "HyperBus controller driver for AM65x SoC"
+ 	select MULTIPLEXER
+-	select MUX_MMIO
++	imply MUX_MMIO
+ 	help
+ 	 This is the driver for HyperBus controller on TI's AM65x and
+ 	 other SoCs
+-- 
+2.22.0
 
-For the allocation of guest rx buffers we do some kind of batching (we
-refill the queue when it reaches the half), but only it this case :(
-
-I'll try to do more alloc/free batching.
-
-Thanks,
-Stefano
