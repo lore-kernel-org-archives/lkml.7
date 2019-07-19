@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7314C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59D4C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD6A2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5B52082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510613;
-	bh=KNxCdNTnLFb0wH5qkj98icxS6cC4Rc3oQt6T9giH1yM=;
+	s=default; t=1563510617;
+	bh=AtzHmvVdtVpCWqkjwWL0y8J0cpmThlCpcbs1wXUCpJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZG9SgW9hJjhSs4xNmRc6wKsiBA3DTaDkSN3Ust+hi/HL88b9ISDrYox83ssI8b4C
-	 IByvpV4HtlF7f2MejGk4KahyA4XHppg8uIlA8gulbo2tXH7oW6bfZR8G28Gz1LOKb/
-	 SLEanjQGYtPwwLgBawPxej549ZQ8txl0GKHhx9oE=
+	b=p3X1eCG8lCcYAhZXnztWRW1wjsTKMBkUQ7Rgsr6vXpCtSq7wfz6aoz49o+iEuFS5e
+	 soXXTD3UMg8jn3NDyhkWSWThZ3QEpQm7z6OnMPlPpMdR8BihIAj+dvpDMVcfJYNLJw
+	 ihV8oDvi85KpOj67Ig8seA376MDYt3uFSNmRw3pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbfGSEFT (ORCPT
+        id S2387747AbfGSEaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731474AbfGSEFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:10 -0400
+        id S1731530AbfGSEFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A0B21873;
-        Fri, 19 Jul 2019 04:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53F842189F;
+        Fri, 19 Jul 2019 04:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509109;
-        bh=KNxCdNTnLFb0wH5qkj98icxS6cC4Rc3oQt6T9giH1yM=;
+        s=default; t=1563509116;
+        bh=AtzHmvVdtVpCWqkjwWL0y8J0cpmThlCpcbs1wXUCpJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XTbTMSVtnOSr0NFJpKW56b6M4N2KWtI3tEj66fuhQQieDdIO5+ZQ4QKau9FnVjxZz
-         JER9PXrdp/rUXTQChYgyK2uRsoQ41xMmpm3/WLZu//jN+02+JX3Y93v1osIkP5LqYa
-         evsu1zj62Ot2WYTaXNm/I9be30zot9UR95a61jLY=
+        b=uktFBxLtViSjKfTCCaKzPsSwfdkC1Nmvz7jmCbe/wgKf9lJN3Y2WrRtDIjusQW2ps
+         NdVTpkqSNUVj9x0xdyyXHeuQ0iTL1LscojUpn+mYBJzpGwoJtKzjCwl+/afibXjMge
+         QU0aiX7iNHsF0VFwXViK38dxg/YCZ0F95W3lCVjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 073/141] recordmcount: Fix spurious mcount entries on powerpc
-Date:   Fri, 19 Jul 2019 00:01:38 -0400
-Message-Id: <20190719040246.15945-73-sashal@kernel.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.1 078/141] mm/swap: fix release_pages() when releasing devmap pages
+Date:   Fri, 19 Jul 2019 00:01:43 -0400
+Message-Id: <20190719040246.15945-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,94 +64,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-[ Upstream commit 80e5302e4bc85a6b685b7668c36c6487b5f90e9a ]
+[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
 
-An impending change to enable HAVE_C_RECORDMCOUNT on powerpc leads to
-warnings such as the following:
+release_pages() is an optimized version of a loop around put_page().
+Unfortunately for devmap pages the logic is not entirely correct in
+release_pages().  This is because device pages can be more than type
+MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
+and PCI P2PDMA.  Some of these have specific needs to "put" the page while
+others do not.
 
-  # modprobe kprobe_example
-  ftrace-powerpc: Not expected bl: opcode is 3c4c0001
-  WARNING: CPU: 0 PID: 227 at kernel/trace/ftrace.c:2001 ftrace_bug+0x90/0x318
-  Modules linked in:
-  CPU: 0 PID: 227 Comm: modprobe Not tainted 5.2.0-rc6-00678-g1c329100b942 #2
-  NIP:  c000000000264318 LR: c00000000025d694 CTR: c000000000f5cd30
-  REGS: c000000001f2b7b0 TRAP: 0700   Not tainted  (5.2.0-rc6-00678-g1c329100b942)
-  MSR:  900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 28228222  XER: 00000000
-  CFAR: c0000000002642fc IRQMASK: 0
-  <snip>
-  NIP [c000000000264318] ftrace_bug+0x90/0x318
-  LR [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
-  Call Trace:
-  [c000000001f2ba40] [0000000000000004] 0x4 (unreliable)
-  [c000000001f2bad0] [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
-  [c000000001f2bb90] [c00000000020ff10] load_module+0x25b0/0x30c0
-  [c000000001f2bd00] [c000000000210cb0] sys_finit_module+0xc0/0x130
-  [c000000001f2be20] [c00000000000bda4] system_call+0x5c/0x70
-  Instruction dump:
-  419e0018 2f83ffff 419e00bc 2f83ffea 409e00cc 4800001c 0fe00000 3c62ff96
-  39000001 39400000 386386d0 480000c4 <0fe00000> 3ce20003 39000001 3c62ff96
-  ---[ end trace 4c438d5cebf78381 ]---
-  ftrace failed to modify
-  [<c0080000012a0008>] 0xc0080000012a0008
-   actual:   01:00:4c:3c
-  Initializing ftrace call sites
-  ftrace record flags: 2000000
-   (0)
-   expected tramp: c00000000006af4c
+This logic to handle any special needs is contained in
+put_devmap_managed_page().  Therefore all devmap pages should be processed
+by this function where we can contain the correct logic for a page put.
 
-Looking at the relocation records in __mcount_loc shows a few spurious
-entries:
+Handle all device type pages within release_pages() by calling
+put_devmap_managed_page() on all devmap pages.  If
+put_devmap_managed_page() returns true the page has been put and we
+continue with the next page.  A false return of put_devmap_managed_page()
+means the page did not require special processing and should fall to
+"normal" processing.
 
-  RELOCATION RECORDS FOR [__mcount_loc]:
-  OFFSET           TYPE              VALUE
-  0000000000000000 R_PPC64_ADDR64    .text.unlikely+0x0000000000000008
-  0000000000000008 R_PPC64_ADDR64    .text.unlikely+0x0000000000000014
-  0000000000000010 R_PPC64_ADDR64    .text.unlikely+0x0000000000000060
-  0000000000000018 R_PPC64_ADDR64    .text.unlikely+0x00000000000000b4
-  0000000000000020 R_PPC64_ADDR64    .init.text+0x0000000000000008
-  0000000000000028 R_PPC64_ADDR64    .init.text+0x0000000000000014
+This was found via code inspection while determining if release_pages()
+and the new put_user_pages() could be interchangeable.[1]
 
-The first entry in each section is incorrect. Looking at the
-relocation records, the spurious entries correspond to the
-R_PPC64_ENTRY records:
+[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
 
-  RELOCATION RECORDS FOR [.text.unlikely]:
-  OFFSET           TYPE              VALUE
-  0000000000000000 R_PPC64_REL64     .TOC.-0x0000000000000008
-  0000000000000008 R_PPC64_ENTRY     *ABS*
-  0000000000000014 R_PPC64_REL24     _mcount
-  <snip>
-
-The problem is that we are not validating the return value from
-get_mcountsym() in sift_rel_mcount(). With this entry, mcountsym is 0,
-but Elf_r_sym(relp) also ends up being 0. Fix this by ensuring
-mcountsym is valid before processing the entry.
-
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/swap.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 2e7793735e14..ccfbfde61556 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -326,7 +326,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 		if (!mcountsym)
- 			mcountsym = get_mcountsym(sym0, relp, str0);
+diff --git a/mm/swap.c b/mm/swap.c
+index 301ed4e04320..f018d7c0148c 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -739,15 +739,20 @@ void release_pages(struct page **pages, int nr)
+ 		if (is_huge_zero_page(page))
+ 			continue;
  
--		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
-+		if (mcountsym && mcountsym == Elf_r_sym(relp) &&
-+				!is_fake_mcount(relp)) {
- 			uint_t const addend =
- 				_w(_w(relp->r_offset) - recval + mcount_adjust);
- 			mrelp->r_offset = _w(offbase
+-		/* Device public page can not be huge page */
+-		if (is_device_public_page(page)) {
++		if (is_zone_device_page(page)) {
+ 			if (locked_pgdat) {
+ 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+ 						       flags);
+ 				locked_pgdat = NULL;
+ 			}
+-			put_devmap_managed_page(page);
+-			continue;
++			/*
++			 * ZONE_DEVICE pages that return 'false' from
++			 * put_devmap_managed_page() do not require special
++			 * processing, and instead, expect a call to
++			 * put_page_testzero().
++			 */
++			if (put_devmap_managed_page(page))
++				continue;
+ 		}
+ 
+ 		page = compound_head(page);
 -- 
 2.20.1
 
