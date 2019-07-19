@@ -2,69 +2,119 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E4CC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B11EC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F8D21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2CA21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 23:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kSM15fI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732913AbfGSXai (ORCPT
+        id S1732927AbfGSXcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 19:30:38 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41416 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbfGSXai (ORCPT
+        Fri, 19 Jul 2019 19:32:36 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15731 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728247AbfGSXcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 19:30:38 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hocKe-0006qC-Fp; Fri, 19 Jul 2019 23:30:32 +0000
-Date:   Sat, 20 Jul 2019 00:30:32 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ceph: fix buffer free while holding i_ceph_lock in
- __ceph_setxattr()
-Message-ID: <20190719233032.GB17978@ZenIV.linux.org.uk>
-References: <20190719143222.16058-1-lhenriques@suse.com>
- <20190719143222.16058-3-lhenriques@suse.com>
- <1dee14212043f12ef5b26e4aee0c3155e118abf3.camel@kernel.org>
- <20190719232307.GA17978@ZenIV.linux.org.uk>
+        Fri, 19 Jul 2019 19:32:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3253190000>; Fri, 19 Jul 2019 16:32:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Jul 2019 16:32:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 16:32:35 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 23:32:34 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Jul
+ 2019 23:32:34 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 19 Jul 2019 23:32:34 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d3253120000>; Fri, 19 Jul 2019 16:32:34 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        <stable@vger.kernel.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] mm/migrate: initialize pud_entry in migrate_vma()
+Date:   Fri, 19 Jul 2019 16:32:25 -0700
+Message-ID: <20190719233225.12243-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719232307.GA17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563579161; bh=cBV6E3QUPkSFHVwkOFQ0NgttBSDLgksbh5PnUNNrN0w=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=kSM15fI5BAWSOEp5MwrwxhHFCEKX/TAHdTgJ7Umkm6B4XXIZWumZsK8I6vNXvxlBf
+         mFrioVqQhDUY9lYgLXSEnboJcf1bL/ZoAKjGMjxauf+fSi4rSqbEMXL47cK9CyGGTF
+         g6UlqhfdPh1zpX6I83oWpf4TQZ5ThZp39QFmpxmGe0zDXrvtiRevb+VXkN4GGzgnTj
+         j2UwuGP1+O33GpEIbinCf9pcrWajXQUHszoY1LGP8X93xswc/goUG/PiV0lKQP61j0
+         yyhegnK0/aA1cHamqHHjTT59Bc4wWgAHlHX8HarC1Pa3Ate7T5z0I+3qd3KlqLYSpG
+         ucjUxT5cNsAQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 12:23:08AM +0100, Al Viro wrote:
-> On Fri, Jul 19, 2019 at 07:07:49PM -0400, Jeff Layton wrote:
-> 
-> > Al pointed out on IRC that vfree should be callable under spinlock.
-> 
-> Al had been near-terminally low on caffeine at the time, posted
-> a retraction a few minutes later and went to grab some coffee...
-> 
-> > It
-> > only sleeps if !in_interrupt(), and I think that should return true if
-> > we're holding a spinlock.
-> 
-> It can be used from RCU callbacks and all such; it *can't* be used from
-> under spinlock - on non-preempt builds there's no way to recognize that.
+When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
+migrate_vma_collect() which initializes a struct mm_walk but
+didn't initialize mm_walk.pud_entry. (Found by code inspection)
+Use a C structure initialization to make sure it is set to NULL.
 
-	Re original patch: looks like the sane way to handle that.
-Alternatively, we could add kvfree_atomic() for use in such situations,
-but I rather doubt that it's a good idea - not unless you need to free
-something under a spinlock held over a large area, which is generally
-a bad idea to start with...
+Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use with
+device memory")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ mm/migrate.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-	Note that vfree_atomic() has only one caller in the entire tree,
-BTW.
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 515718392b24..a42858d8e00b 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2340,16 +2340,13 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ static void migrate_vma_collect(struct migrate_vma *migrate)
+ {
+ 	struct mmu_notifier_range range;
+-	struct mm_walk mm_walk;
+-
+-	mm_walk.pmd_entry =3D migrate_vma_collect_pmd;
+-	mm_walk.pte_entry =3D NULL;
+-	mm_walk.pte_hole =3D migrate_vma_collect_hole;
+-	mm_walk.hugetlb_entry =3D NULL;
+-	mm_walk.test_walk =3D NULL;
+-	mm_walk.vma =3D migrate->vma;
+-	mm_walk.mm =3D migrate->vma->vm_mm;
+-	mm_walk.private =3D migrate;
++	struct mm_walk mm_walk =3D {
++		.pmd_entry =3D migrate_vma_collect_pmd,
++		.pte_hole =3D migrate_vma_collect_hole,
++		.vma =3D migrate->vma,
++		.mm =3D migrate->vma->vm_mm,
++		.private =3D migrate,
++	};
+=20
+ 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm_walk.mm,
+ 				migrate->start,
+--=20
+2.20.1
+
