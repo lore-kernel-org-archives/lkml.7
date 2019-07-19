@@ -2,98 +2,267 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66240C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715A9C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3678221872
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509599;
-	bh=hYKMYDhiCUOLwuJCCV2T6WZ95tVpSrU+qbjqRPZJz6c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IdXYxcT6ZtgLVJPufgaZNaw/SEy6bFfDp0ocPOpyLerHPHHf2uWQrwbg4nl+SryOD
-	 51xbUY3eAZ5exFZ4fi4WWdEdLktl5Cf2879acGDUcMDdolHnZpQ3xzqib4VNDJIdGO
-	 QvAZPu62Rgm9YGHncClkS2gYA+Lj0mlWbW/8MtV8=
+	by mail.kernel.org (Postfix) with ESMTP id 322EE21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H5OjxIZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389131AbfGSENR (ORCPT
+        id S2389145AbfGSENU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 19 Jul 2019 00:13:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45624 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389120AbfGSENR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jul 2019 00:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389100AbfGSENP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:13:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF47321850;
-        Fri, 19 Jul 2019 04:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509594;
-        bh=hYKMYDhiCUOLwuJCCV2T6WZ95tVpSrU+qbjqRPZJz6c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=le+gVLLnvVhhxzhGPcFM4KhAAkdZe5M/k8MaqvUkowiJNU5WOVEe5MmtT/tbzXzkD
-         NBtQDfdjHF8avNVkSclstgWzS2apiT+u9MiUfg5ZUPzXcux7izCes23hrhTv3jjcq3
-         pu2Hkvfsgx4vrJa/RR2BMlUisy9wk7CjX8BNsfYg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gen Zhang <blackgod016574@gmail.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 06/45] drm/edid: Fix a missing-check bug in drm_load_edid_firmware()
-Date:   Fri, 19 Jul 2019 00:12:25 -0400
-Message-Id: <20190719041304.18849-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
-References: <20190719041304.18849-1-sashal@kernel.org>
+Received: by mail-oi1-f194.google.com with SMTP id m206so23279762oib.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 21:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BBg/SpzJKxugafPWMMosPXw5SytgBm1YGaM4NNvGJDc=;
+        b=H5OjxIZoEkfuh+BaXpjX/pWe+iQGfanbT2bOd3sM4legsE4SiYE80Tj8KAU2jvds0e
+         Mxr/zcqZG87Twl/BXInO3u04qW6G8ozKzk73+dP4GSvDNQCkWRM8vmomFyqwybxWLiFv
+         M9MtWI16w0dfheM9PWO6MmKFfQdJQIh/r4LO1ug7rMYFsKt+o7YJn9md8X+eROEueJRi
+         ovy7Xv6UhsL+a1qx+HFlCXTOGrcZLZRH/HPwZt9ASIbuvmsQOAqGA++h7fvekfYDkRgc
+         XAKx9xe4wBCLPlgopB4mDWDYGLg7iX0Y5/fcPTSK6WZzeOE9IGl2JD6IFuO1q2De7z/u
+         uoGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BBg/SpzJKxugafPWMMosPXw5SytgBm1YGaM4NNvGJDc=;
+        b=W7WsJciH72sl0QIT1yvvPHC9TvExOg33U4GoVmCJcraamFQXjAm5FtpF6YP2qreg+B
+         Y9MXtRDirI5wQdtB0/EFMYAHa7qh/8EpYU9D5OA05ITBR7Glt0HK+HP9U58BgSWfkHJR
+         BvYioZ2psSbZAbhsOXngyLLINczO5yUTRGpCul9UQkUpRn5hBgaLrCdVFhnVPqAVo9Bk
+         hhyUzu7I0xx/kkgUaKYpJMoNxnpe45i49k9vrTHUxxVlDH+NPMAHTUU+1uL2Gt1iRVQo
+         AnVBiLN/tRFPJcDLUESl0PGcPL2Kzo/8UOdAB5TWecsV4wYJTc0C7BoQRbyN8WBhqebE
+         HHDg==
+X-Gm-Message-State: APjAAAXbXyDTwhUCQqc+gERUIR3eKPQZeTs4rhh3ybHV6BHGLhgDZVyq
+        vypqjknxavH7XFxkD1xeYWAaB9YERMB1IJCBaI6ZHg==
+X-Google-Smtp-Source: APXvYqzBAJh1/b89Fa5lS5fErNWhLxSnISMCd/8kxoDRTJTCjc2JoU+Suem39K7FsH59IA+z2qcDYAK7qwDiGu5hcyc=
+X-Received: by 2002:aca:d8c2:: with SMTP id p185mr26312729oig.30.1563509595836;
+ Thu, 18 Jul 2019 21:13:15 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190703011020.151615-1-saravanak@google.com> <20190717103220.f7cys267hq23fbsb@vireshk-i7>
+ <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com> <20190718053746.64drmonk72vwnt4s@vireshk-i7>
+In-Reply-To: <20190718053746.64drmonk72vwnt4s@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 18 Jul 2019 21:12:39 -0700
+Message-ID: <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gen Zhang <blackgod016574@gmail.com>
+On Wed, Jul 17, 2019 at 10:37 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> I know you have explained lots of things earlier as well, but they are
+> available over multiple threads and I don't know where to reply now :)
+>
+> Lets have proper discussion (once again) here and be done with it.
+> Sorry for the trouble of explaining things again.
+>
+> On 17-07-19, 13:34, Saravana Kannan wrote:
+> > On Wed, Jul 17, 2019 at 3:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > On 02-07-19, 18:10, Saravana Kannan wrote:
+> > > > gpu_cache_opp_table: gpu_cache_opp_table {
+> > > >       compatible = "operating-points-v2";
+> > > >
+> > > >       gpu_cache_3000: opp-3000 {
+> > > >               opp-peak-KBps = <3000>;
+> > > >               opp-avg-KBps = <1000>;
+> > > >       };
+> > > >       gpu_cache_6000: opp-6000 {
+> > > >               opp-peak-KBps = <6000>;
+> > > >               opp-avg-KBps = <2000>;
+> > > >       };
+> > > >       gpu_cache_9000: opp-9000 {
+> > > >               opp-peak-KBps = <9000>;
+> > > >               opp-avg-KBps = <9000>;
+> > > >       };
+> > > > };
+> > > >
+> > > > gpu_ddr_opp_table: gpu_ddr_opp_table {
+> > > >       compatible = "operating-points-v2";
+> > > >
+> > > >       gpu_ddr_1525: opp-1525 {
+> > > >               opp-peak-KBps = <1525>;
+> > > >               opp-avg-KBps = <452>;
+> > > >       };
+> > > >       gpu_ddr_3051: opp-3051 {
+> > > >               opp-peak-KBps = <3051>;
+> > > >               opp-avg-KBps = <915>;
+> > > >       };
+> > > >       gpu_ddr_7500: opp-7500 {
+> > > >               opp-peak-KBps = <7500>;
+> > > >               opp-avg-KBps = <3000>;
+> > > >       };
+> > > > };
+> > >
+> > > Who is going to use the above tables and how ?
+> >
+> > In this example the GPU driver would use these. It'll go through these
+> > and then decide what peak and average bw to pick based on whatever
+> > criteria.
+>
+> Are you saying that the GPU driver will decide which bandwidth to
+> choose while running at a particular frequency (say 2 GHz) ? And that
+> it can choose 1525 or 3051 or 7500 from the ddr path ?
+>
+> Will it be possible to publicly share how we derive to these decisions
+> ?
 
-[ Upstream commit 9f1f1a2dab38d4ce87a13565cf4dc1b73bef3a5f ]
+GPU is just an example. So I can't really speak for how a random GPU
+driver might decide the bandwidth to pick.
 
-In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
-is dereferenced in the following codes. However, memory allocation
-functions such as kstrdup() may fail and returns NULL. Dereferencing
-this null pointer may cause the kernel go wrong. Thus we should check
-this kstrdup() operation.
-Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
-the caller site.
+But one obvious way is to start at the lowest bandwidth and check the
+bus port busy%. If it's > 80% busy, it'll pick the next bandwidth,
+etc. So, something like what cpufreq ondemand or conservative governor
+used to do.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190524023222.GA5302@zhanggen-UX430UQ
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/drm_edid_load.c | 2 ++
- 1 file changed, 2 insertions(+)
+> The thing is I don't like these separate OPP tables which will not be
+> used by anyone else, but just GPU (or a single device).
 
-diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
-index 622f788bff46..aa0e8c704c33 100644
---- a/drivers/gpu/drm/drm_edid_load.c
-+++ b/drivers/gpu/drm/drm_edid_load.c
-@@ -275,6 +275,8 @@ int drm_load_edid_firmware(struct drm_connector *connector)
- 	 * the last one found one as a fallback.
- 	 */
- 	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
-+	if (!fwstr)
-+		return ERR_PTR(-ENOMEM);
- 	edidstr = fwstr;
- 
- 	while ((edidname = strsep(&edidstr, ","))) {
--- 
-2.20.1
+The BW OPP table isn't always a secondary OPP table. It can be a
+primary OPP table too. For example, if you have a bandwidth monitoring
+device/HW IP that can measure for a path and make requests for that
+path, it'll have a BW OPP table and it'll pick from one of those BW
+OPP levels based on the hardware measurements. It will have it's own
+device driver. This is basically no different from a device being the
+only user of a freq OPP table.
 
+> I would like
+> to put this data in the GPU OPP table only. What about putting a
+> range in the GPU OPP table for the Bandwidth if it can change so much
+> for the same frequency.
+
+I don't think the range is going to work. If a GPU is doing purely
+computational work, it's not unreasonable for it to vote for the
+lowest bandwidth for any GPU frequency.
+
+>
+> > > These are the maximum
+> > > BW available over these paths, right ?
+> >
+> > I wouldn't call them "maximum" because there can't be multiple
+> > maximums :) But yes, these are the meaningful bandwidth from the GPU's
+> > perspective to use over these paths.
+> >
+> > >
+> > > > gpu_opp_table: gpu_opp_table {
+> > > >       compatible = "operating-points-v2";
+> > > >       opp-shared;
+> > > >
+> > > >       opp-200000000 {
+> > > >               opp-hz = /bits/ 64 <200000000>;
+> > > >       };
+> > > >       opp-400000000 {
+> > > >               opp-hz = /bits/ 64 <400000000>;
+> > > >       };
+> > > > };
+> > >
+> > > Shouldn't this link back to the above tables via required-opp, etc ?
+> > > How will we know how much BW is required by the GPU device for all the
+> > > paths ?
+> >
+> > If that's what the GPU driver wants to do, then yes. But the GPU
+> > driver could also choose to scale the bandwidth for these paths based
+> > on multiple other signals. Eg: bus port busy percentage, measure
+> > bandwidth, etc.
+>
+> Lets say that the GPU is running at 2 GHz right now and based on above
+> inputs it wants to increase the bandwidth to 7500 for ddr path, now
+> does it make sense to run at 4 GHz instead of 2 so we utilize the
+> bandwidth to the best of our ability and waste less power ?
+
+This is kinda hard to explain, but I'll try.
+
+Firstly, the GPU power increase might be so high that you might not
+want to do this anyway.
+
+Also, what you are proposing *might* improve the perf/mW (efficiency)
+but it doesn't decrease the actual power consumption. So, this doesn't
+really work towards saving power for mobile devices.
+
+Also, if the GPU is generating a lot of traffic to DDR and you
+increase the GPU frequency, it's only going to generate even more
+traffic. So you'll end up in a positive feedback loop that maxes out
+the frequency and bandwidth. Definitely not something you want for a
+mobile device.
+
+> If something like that is acceptable, then what about keeping the
+> bandwidth fixed for frequencies and rather scale the frequency of the
+> GPU on the inputs your provided (like bus port busy percentage, etc).
+
+I don't think it's acceptable.
+
+> The current proposal makes me wonder on why should we try to reuse OPP
+> tables for providing these bandwidth values as the OPP tables for
+> interconnect paths isn't really a lot of data, only bandwidth all the
+> time and there is no linking from the device's OPP table as well.
+
+I think everyone is getting too tied up on mapping device frequency to
+bandwidth requests. That's useful for a limited set of cases. But it
+doesn't work for a lot of use cases.
+
+Couple of benefits of using BW OPPs instead of with listing bandwidth
+values as part of frequency OPP tables:
+- Works better when the interconnect path has more useful levels that
+the device frequency levels. I think this might even be true on the
+SDM845 for GPU and DDR. The link from freq OPP to BW OPP could list
+the minimum bandwidth level to use for a particular device freq and
+then let the hardware monitoring heuristic take it higher from there.
+- Works even if no freq to bandwidth mapping heuristic is used but the
+device needs to skip certain bandwidth levels based on the platform's
+power/perf reasons.
+- More scalable as more properties are added to BW OPP levels. Traffic
+priority is one natural extension of the BW OPP "rows". Explicit
+latency is another possibility.
+- Currently devices that have use case specific bandwidth levels
+(that's not computed at runtime) have no way of capturing their use
+case level bandwidth needs in DT. Everyone is inventing their own
+scheme. Having BW OPP table would allow them capture all the use case
+specific bandwidth levels in DT and then pick one using the
+index/phandle/etc. We could even allow naming OPP rows and pick it
+that way. Not saying this is a main reason for BW OPP tables or we
+should do this, but this is a possibility to consider.
+
+Long story short, BW OPP tables make a lot of sense for anyone who has
+actually done bandwidth scaling on a commercial platform.
+
+If people are getting too tied up about the interconnect-opp-table we
+can just drop that. I just added that to avoid having any implicit
+ordering of tables in the operation-points-v2 property vs
+interconnects property and call it out more explicitly. But it's not a
+hill worth dying on.
+
+-Saravana
