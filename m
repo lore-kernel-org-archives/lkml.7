@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF153C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9E4C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C592E21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4734B21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563508943;
-	bh=UBqcQhmWL9gkiGqShZjWJ3U9ctduDaxKS9dB+e4OMVw=;
+	s=default; t=1563508947;
+	bh=9rUR47COOoebE2YSCOiqXeglqii+0EGPJp83O03iyGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KdTbiieIFxpI5lUzQnr1tCFxezO+EPvhXnv9FvNiSf0BmBikbiiR41CLYc2LjCfdF
-	 +C5TpF/5sYYaowL4oWP6X4MTtp/yJFe4xeHnhbOgLdZ2rObEIMUFdtD3YIeOoefaC5
-	 q0cnn/GvDC4Gckcycsm18kcWLo4BmG8XZdQIENYE=
+	b=HrIKUGf5by5ruqefclWxZCBfcE7jz3vBvneI/ezLiEteM+TVcOqPUZYzU3LHk3aTi
+	 +oMQ42oVkyGON3qUZdNc7QmvbXiivfRszo0cCsdZ8rBudLjL8Xv7n5Rfxa1qKxZI/9
+	 bcj2s2aHkg+iFOU3SvUbhVDZ6gglNOqHzDSJ4zWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbfGSECW (ORCPT
+        id S1727944AbfGSEC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbfGSECM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:02:12 -0400
+        id S1729962AbfGSECW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:02:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5897C21882;
-        Fri, 19 Jul 2019 04:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76DB21852;
+        Fri, 19 Jul 2019 04:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508931;
-        bh=UBqcQhmWL9gkiGqShZjWJ3U9ctduDaxKS9dB+e4OMVw=;
+        s=default; t=1563508941;
+        bh=9rUR47COOoebE2YSCOiqXeglqii+0EGPJp83O03iyGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a4IZEAxcKMH6YjRWINICRFRdgh03+lm5kvzXcHJNJoC7ouXPXm8EsfNSWVI1yBOdS
-         jEb3tvSWEnfaEIA4fMC3mzk5mrKRxsMjaxdGx6pRIiI7ewptIEQurDWqigGmvxKJJq
-         BPGDSGvJ7hQqdemB2RGtd/VV45mIIsQpGXfTzj7I=
+        b=whSDvg0ww8px7HJYk5EPOee3Jn4FJSdKFbw0NVsDGu2Yc1jDASLfZ0smOYROeb/FG
+         t4zlWX4muS0W/+l06W5DjqmuwuEpUW9CSHP0d3MJ6gZO7o38bT3moudQjvKeC7DC1Y
+         Sps555z0hWm+7oQ3wuSI6da4VOP6kjba/zqaiNmc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
@@ -54,9 +54,9 @@ Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 163/171] proc: use down_read_killable mmap_sem for /proc/pid/smaps_rollup
-Date:   Thu, 18 Jul 2019 23:56:34 -0400
-Message-Id: <20190719035643.14300-163-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 166/171] proc: use down_read_killable mmap_sem for /proc/pid/map_files
+Date:   Thu, 18 Jul 2019 23:56:37 -0400
+Message-Id: <20190719035643.14300-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -72,12 +72,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit a26a97815548574213fd37f29b4b78ccc6d9ed20 ]
+[ Upstream commit cd9e2bb8271c971d9f37c722be2616c7f8ba0664 ]
 
 Do not remain stuck forever if something goes wrong.  Using a killable
 lock permits cleanup of stuck tasks and simplifies investigation.
 
-Link: http://lkml.kernel.org/r/156007493429.3335.14666825072272692455.stgit@buzz
+It seems ->d_revalidate() could return any error (except ECHILD) to abort
+validation and pass error as result of lookup sequence.
+
+[akpm@linux-foundation.org: fix proc_map_files_lookup() return value, per Andrei]
+Link: http://lkml.kernel.org/r/156007493995.3335.9595044802115356911.stgit@buzz
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Reviewed-by: Roman Gushchin <guro@fb.com>
 Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
@@ -92,36 +96,77 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/task_mmu.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/proc/base.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 01d4eb0e6bd1..4d9a8e72d91f 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -828,7 +828,10 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 255f6754c70d..03517154fe0f 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1962,9 +1962,12 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 		goto out;
  
- 	memset(&mss, 0, sizeof(mss));
+ 	if (!dname_to_vma_addr(dentry, &vm_start, &vm_end)) {
+-		down_read(&mm->mmap_sem);
+-		exact_vma_exists = !!find_exact_vma(mm, vm_start, vm_end);
+-		up_read(&mm->mmap_sem);
++		status = down_read_killable(&mm->mmap_sem);
++		if (!status) {
++			exact_vma_exists = !!find_exact_vma(mm, vm_start,
++							    vm_end);
++			up_read(&mm->mmap_sem);
++		}
+ 	}
+ 
+ 	mmput(mm);
+@@ -2010,8 +2013,11 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
+ 	if (rc)
+ 		goto out_mmput;
+ 
++	rc = down_read_killable(&mm->mmap_sem);
++	if (rc)
++		goto out_mmput;
++
+ 	rc = -ENOENT;
+-	down_read(&mm->mmap_sem);
+ 	vma = find_exact_vma(mm, vm_start, vm_end);
+ 	if (vma && vma->vm_file) {
+ 		*path = vma->vm_file->f_path;
+@@ -2107,7 +2113,11 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
+ 	if (!mm)
+ 		goto out_put_task;
  
 -	down_read(&mm->mmap_sem);
-+	ret = down_read_killable(&mm->mmap_sem);
-+	if (ret)
++	result = ERR_PTR(-EINTR);
++	if (down_read_killable(&mm->mmap_sem))
 +		goto out_put_mm;
 +
- 	hold_task_mempolicy(priv);
++	result = ERR_PTR(-ENOENT);
+ 	vma = find_exact_vma(mm, vm_start, vm_end);
+ 	if (!vma)
+ 		goto out_no_vma;
+@@ -2118,6 +2128,7 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
  
- 	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
-@@ -845,8 +848,9 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
- 
- 	release_task_mempolicy(priv);
+ out_no_vma:
  	up_read(&mm->mmap_sem);
--	mmput(mm);
- 
 +out_put_mm:
-+	mmput(mm);
+ 	mmput(mm);
  out_put_task:
- 	put_task_struct(priv->task);
- 	priv->task = NULL;
+ 	put_task_struct(task);
+@@ -2160,7 +2171,12 @@ proc_map_files_readdir(struct file *file, struct dir_context *ctx)
+ 	mm = get_task_mm(task);
+ 	if (!mm)
+ 		goto out_put_task;
+-	down_read(&mm->mmap_sem);
++
++	ret = down_read_killable(&mm->mmap_sem);
++	if (ret) {
++		mmput(mm);
++		goto out_put_task;
++	}
+ 
+ 	nr_files = 0;
+ 
 -- 
 2.20.1
 
