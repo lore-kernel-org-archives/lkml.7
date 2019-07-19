@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2779C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34A2C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A292084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3178206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511113;
-	bh=hfrOMNGru6MRvPL8gHx4Np2UIlH/+WAWHHwgLRG+3S4=;
+	s=default; t=1563511121;
+	bh=fAxcJtvc6D/lb9qHE8rxAU2u7+yhuYmnb5gHLxvVhm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vaPVtn2AIu62d8Hxs2hvPEtFhHmVpsXGaGjWmnG3Qr75/awPJnragyIp9y8TyzsOO
-	 1Cx3iqU6yVsnb+Khe3LdjzskjlUXNnFNWtmxYc+dTX5nRlKqrfJYQuNiWujyiMX8Qc
-	 XtvbhO9VLhVQM2Z+MGKtJlRIgQE+ZyFL0l+7aDoA=
+	b=wpMFQRcruts0CEsoQ4MdryO4jxjjKxE1KA3xI61Ppx4j8Dl3JPqy0xGK0Nk+znv4N
+	 F0yX3EMCCmlcbjYolg0VNGzlOjmtziWQ/FLsAsrPMGF4KAxSImV4wZiaGB/VqYNXQW
+	 ytEFWkOFePvbObjwlWG3cmWaX2Tw/M1na3qhR4Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389742AbfGSEic (ORCPT
+        id S2389789AbfGSEik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbfGSD7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:19 -0400
+        id S1728556AbfGSD7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:59:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BA62189F;
-        Fri, 19 Jul 2019 03:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFACD21855;
+        Fri, 19 Jul 2019 03:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508757;
-        bh=hfrOMNGru6MRvPL8gHx4Np2UIlH/+WAWHHwgLRG+3S4=;
+        s=default; t=1563508752;
+        bh=fAxcJtvc6D/lb9qHE8rxAU2u7+yhuYmnb5gHLxvVhm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vXA6Y69d2S1WAT9KN0O/dp+JDXALnY1YKuEELADI+tK8t/18R+ibsp6+cH8wLVTAF
-         ofrc+Tt+Pqtw+08cwZgBY9tus/lJ/i13Rw9F5gkhAVAfB/M/916xL/rBioKM5blPLh
-         /PAfvgRnq/9EME02CANtfpXYIIrfhc7AEQqM8p9o=
+        b=Sgias6CZr43YjcFSjkzAkV8UBpAovwYzzcapTKYdrwK62wRvR6SuMIPffs5XyjIiV
+         MNtvP+woe0+1aXuYqY4OlvZgqX1//eZzb49tK44i6bX65qWDzIYiKE7agTkV9HXVIh
+         oAZTH32G1hHElKVRBc2AaPV42aS6eJOtNfFovZfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 073/171] mmc: sdhci: sdhci-pci-o2micro: Check if controller supports 8-bit width
-Date:   Thu, 18 Jul 2019 23:55:04 -0400
-Message-Id: <20190719035643.14300-73-sashal@kernel.org>
+Cc:     Eugene Korenevsky <ekorenevsky@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 071/171] kvm: vmx: fix limit checking in get_vmx_mem_address()
+Date:   Thu, 18 Jul 2019 23:55:02 -0400
+Message-Id: <20190719035643.14300-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,51 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Eugene Korenevsky <ekorenevsky@gmail.com>
 
-[ Upstream commit de23f0b757766d9fae59df97da6e8bdc5b231351 ]
+[ Upstream commit c1a9acbc5295e278d788e9f7510f543bc9864fa2 ]
 
-The O2 controller supports 8-bit EMMC access.
+Intel SDM vol. 3, 5.3:
+The processor causes a
+general-protection exception (or, if the segment is SS, a stack-fault
+exception) any time an attempt is made to access the following addresses
+in a segment:
+- A byte at an offset greater than the effective limit
+- A word at an offset greater than the (effective-limit â€“ 1)
+- A doubleword at an offset greater than the (effective-limit â€“ 3)
+- A quadword at an offset greater than the (effective-limit â€“ 7)
 
-JESD84-B51 section A.6.3.a defines the bus testing procedure that
-`mmc_select_bus_width()` implements. This is used to determine the actual
-bus width of the eMMC.
+Therefore, the generic limit checking error condition must be
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+exn = (off > limit + 1 - access_len) = (off + access_len - 1 > limit)
+
+but not
+
+exn = (off + access_len > limit)
+
+as for now.
+
+Also avoid integer overflow of `off` at 32-bit KVM by casting it to u64.
+
+Note: access length is currently sizeof(u64) which is incorrect. This
+will be fixed in the subsequent patch.
+
+Signed-off-by: Eugene Korenevsky <ekorenevsky@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-o2micro.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-index dd21315922c8..9dc4548271b4 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -395,11 +395,21 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
- {
- 	struct sdhci_pci_chip *chip;
- 	struct sdhci_host *host;
--	u32 reg;
-+	u32 reg, caps;
- 	int ret;
- 
- 	chip = slot->chip;
- 	host = slot->host;
-+
-+	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-+
-+	/*
-+	 * mmc_select_bus_width() will test the bus to determine the actual bus
-+	 * width.
-+	 */
-+	if (caps & SDHCI_CAN_DO_8BIT)
-+		host->mmc->caps |= MMC_CAP_8_BIT_DATA;
-+
- 	switch (chip->pdev->device) {
- 	case PCI_DEVICE_ID_O2_SDS0:
- 	case PCI_DEVICE_ID_O2_SEABIRD0:
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 46af3a5e9209..7958189ee702 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4115,7 +4115,7 @@ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+ 		 */
+ 		if (!(s.base == 0 && s.limit == 0xffffffff &&
+ 		     ((s.type & 8) || !(s.type & 4))))
+-			exn = exn || (off + sizeof(u64) > s.limit);
++			exn = exn || ((u64)off + sizeof(u64) - 1 > s.limit);
+ 	}
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
 -- 
 2.20.1
 
