@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D09C76196
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ED0C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8402077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0BB2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511179;
-	bh=sjTpvekg/2jA/Awx9NsiMfabj+abuEMmkKiAxKHsi9o=;
+	s=default; t=1563511182;
+	bh=igEeNZ+76z4NIULmxopOFwPu8PrRx0t2WKt4pJurkWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ye5EJhPb7HZ6FIMdaP3NAqO31KgjPNRNMyejFhALD0qxkzI1jlFuA2me0OmgeAVSn
-	 BUejOLoSuTISsWpYk4zMLEysRRiYIiZgHn/jimuD0pal/RlHoJHbfpgbn3SN0F1zni
-	 +hB++fveEDBdbWr/93HXMeb0JyblTDFO3rX42ZoE=
+	b=LeZgNggm1baveAyzNQsGKtuD56Uc4MgeWKY7rAaEK3VKQY6YTUs3Pu7Jq5Jqg8hAk
+	 B+R8Z+XNSWCrxOD6BlrNyvYBOIU8c8GPZhWnRDSxPajMiONkvVcjg+POrjYb+KdOjw
+	 cYxoP9D4wtmQeGpsOTLVeJTe0Dl7C6a8m8mT4O6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfGSD6b (ORCPT
+        id S1726860AbfGSEjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 23:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57768 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:39:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbfGSD60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:58:26 -0400
+        id S1728124AbfGSD6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A1E2189D;
-        Fri, 19 Jul 2019 03:58:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87051218B8;
+        Fri, 19 Jul 2019 03:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508705;
-        bh=sjTpvekg/2jA/Awx9NsiMfabj+abuEMmkKiAxKHsi9o=;
+        s=default; t=1563508711;
+        bh=igEeNZ+76z4NIULmxopOFwPu8PrRx0t2WKt4pJurkWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bwZTS6WDBmSQ7cizhIbPh+6YnFCMMN+wOE6jPo6F0geUjp54XMXIkd4kCMJBUpu87
-         M3avqzucB+dtzURI0/TAphm9AMOr1X9+ZnYXahjUplMmc2nz238qkLkRZNI0s6Z8lE
-         Ef26n4OpEzU4MqdRgmUEYi9581bN8WUz3nmd7xy8=
+        b=oXwsVmm+4Yyq4MYhjtRKwVVxYI7vl+Ee79f8Y0yYIIkPFzamuOgNjgTP/1uZLqAOE
+         9XhizH6yRxIHOjf7B4qhL1soaQw/Z4Niefejwl6n5lQFOz1Ax2J4plvKd/We3VZrT7
+         YpgNBF8Uc0RD334ggCbTT2/XZyxh4WU+ydnYLFAs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 043/171] drm/vkms: Forward timer right after drm_crtc_handle_vblank
-Date:   Thu, 18 Jul 2019 23:54:34 -0400
-Message-Id: <20190719035643.14300-43-sashal@kernel.org>
+Cc:     Wang Hai <wanghai26@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 047/171] memstick: Fix error cleanup path of memstick_init
+Date:   Thu, 18 Jul 2019 23:54:38 -0400
+Message-Id: <20190719035643.14300-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -62,115 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Wang Hai <wanghai26@huawei.com>
 
-[ Upstream commit 7355965da22b8d9ebac8bce4b776399fb0bb9d32 ]
+[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
 
-In
+If bus_register fails. On its error handling path, it has cleaned up
+what it has done. There is no need to call bus_unregister again.
+Otherwise, if bus_unregister is called, issues such as null-ptr-deref
+will arise.
 
-commit def35e7c592616bc09be328de8795e5e624a3cf8
-Author: Shayenne Moura <shayenneluzmoura@gmail.com>
-Date:   Wed Jan 30 14:06:36 2019 -0200
+Syzkaller report this:
 
-    drm/vkms: Bugfix extra vblank frame
+kobject_add_internal failed for memstick (error: -12 parent: bus)
+BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
 
-we fixed the vblank counter to give accurate results outside of
-drm_crtc_handle_vblank, which fixed bugs around vblank timestamps
-being off-by-one and causing the vblank counter to jump when it
-shouldn't.
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ __kasan_report+0x171/0x18d mm/kasan/report.c:321
+ kasan_report+0xe/0x20 mm/kasan/common.c:614
+ sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+ sysfs_remove_file include/linux/sysfs.h:519 [inline]
+ bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
+ remove_probe_files drivers/base/bus.c:599 [inline]
+ bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
+ memstick_init+0x7a/0x1000 [memstick]
+ do_one_initcall+0xb9/0x3b5 init/main.c:914
+ do_init_module+0xe0/0x330 kernel/module.c:3468
+ load_module+0x38eb/0x4270 kernel/module.c:3819
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
+ do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The trouble is that this completely broke crc generation. Shayenne and
-Rodrigo tracked this down to the vblank timestamp going backwards in
-time somehow. Which then resulted in an underflow in drm_vblank.c
-code, which resulted in all kinds of things breaking really badly.
-
-The reason for this is that once we've called drm_crtc_handle_vblank
-and the hrtimer isn't forwarded yet, we're returning a vblank
-timestamp in the past. This race is really hard to hit since it's
-small, except when you enable crc generation: In that case there's a
-call to drm_crtc_accurate_vblank right in-betwen, so we're guaranteed
-to hit the bug.
-
-The fix is to roll the hrtimer forward _before_ we do the vblank
-processing (which has a side-effect of incrementing the vblank
-counter), and we always subtract one frame from the hrtimer - since
-now it's always one frame in the future.
-
-To make sure we don't hit this again also add a WARN_ON checking for
-whether our timestamp is somehow moving into the past, which is never
-should.
-
-This also aligns more with how real hw works:
-1. first all registers are updated with the new timestamp/vblank
-counter values.
-2. then an interrupt is generated
-3. kernel interrupt handler eventually fires.
-
-So doing this aligns vkms closer with what drm_vblank.c expects.
-Document this also in a comment.
-
-Cc: Shayenne Moura <shayenneluzmoura@gmail.com>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Tested-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190606084404.12014-1-daniel.vetter@ffwll.ch
+Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai26@huawei.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vkms/vkms_crtc.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/memstick/core/memstick.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index bb66dbcd5e3f..e447b7588d06 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -15,6 +15,10 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
+index 6cfb293396f2..693ee73eb291 100644
+--- a/drivers/memstick/core/memstick.c
++++ b/drivers/memstick/core/memstick.c
+@@ -625,13 +625,18 @@ static int __init memstick_init(void)
+ 		return -ENOMEM;
  
- 	spin_lock(&output->lock);
+ 	rc = bus_register(&memstick_bus_type);
+-	if (!rc)
+-		rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_destroy_workqueue;
  
-+	ret_overrun = hrtimer_forward_now(&output->vblank_hrtimer,
-+					  output->period_ns);
-+	WARN_ON(ret_overrun != 1);
+-	if (!rc)
+-		return 0;
++	rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_bus_unregister;
 +
- 	ret = drm_crtc_handle_vblank(crtc);
- 	if (!ret)
- 		DRM_ERROR("vkms failure on handling vblank");
-@@ -35,10 +39,6 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
- 			DRM_WARN("failed to queue vkms_crc_work_handle");
- 	}
++	return 0;
  
--	ret_overrun = hrtimer_forward_now(&output->vblank_hrtimer,
--					  output->period_ns);
--	WARN_ON(ret_overrun != 1);
--
- 	spin_unlock(&output->lock);
++error_bus_unregister:
+ 	bus_unregister(&memstick_bus_type);
++error_destroy_workqueue:
+ 	destroy_workqueue(workqueue);
  
- 	return HRTIMER_RESTART;
-@@ -74,11 +74,21 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
- {
- 	struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
- 	struct vkms_output *output = &vkmsdev->output;
-+	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
- 
- 	*vblank_time = output->vblank_hrtimer.node.expires;
- 
--	if (!in_vblank_irq)
--		*vblank_time -= output->period_ns;
-+	if (WARN_ON(*vblank_time == vblank->time))
-+		return true;
-+
-+	/*
-+	 * To prevent races we roll the hrtimer forward before we do any
-+	 * interrupt processing - this is how real hw works (the interrupt is
-+	 * only generated after all the vblank registers are updated) and what
-+	 * the vblank core expects. Therefore we need to always correct the
-+	 * timestampe by one frame.
-+	 */
-+	*vblank_time -= output->period_ns;
- 
- 	return true;
- }
+ 	return rc;
 -- 
 2.20.1
 
