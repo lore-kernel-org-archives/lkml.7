@@ -2,192 +2,94 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC9C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58974C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D73E21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C23D21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLE0oo5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfGSHcP (ORCPT
+        id S1727224AbfGSHc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:32:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58441 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfGSHcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:32:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:32:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="asc'?scan'208";a="343619970"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga005.jf.intel.com with ESMTP; 19 Jul 2019 00:32:11 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     fei.yang@intel.com, john.stultz@linaro.org,
-        andrzej.p@collabora.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated properly
-In-Reply-To: <1563497183-7114-1-git-send-email-fei.yang@intel.com>
-References: <1563497183-7114-1-git-send-email-fei.yang@intel.com>
-Date:   Fri, 19 Jul 2019 10:32:07 +0300
-Message-ID: <87k1cescnc.fsf@linux.intel.com>
+        Fri, 19 Jul 2019 03:32:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38566 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfGSHc0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:32:26 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g17so31209407wrr.5;
+        Fri, 19 Jul 2019 00:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hf3Z5Db1yz+0z1tr8VMjazLVeMcit8uK7umZ1IwIpvE=;
+        b=SLE0oo5QSzQIP95QmV8vZvQn1KRcaWlbCpvXzONJ4/CeRcVKNOqqgxoFJZUmr88bN4
+         SUQ+CSvxA++ejAB6PFDy7iY1pqyC7eUPd7rYGqB8DmhJncjBJnJCrquGzuMiNtvBU/7Q
+         ky/pBrRv4pPD/LSVipCIlhHwXKkbclKmn0BCNhbugBfyEzObDonHdIPgry1LK90+nsdD
+         FQus/g6DE2FqYVFcQRBSWxquPoz8YoqXVciAJ6HhcC4X4WvZhp38c7BB3sSx1BH9ylb9
+         feEDLKnC9SrMapkFGLHfIToKVFCv46q2bi3p3BXQyLWoRWVwS/9mLdb/GeTQCCU8PgcT
+         6+6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hf3Z5Db1yz+0z1tr8VMjazLVeMcit8uK7umZ1IwIpvE=;
+        b=VgtugEC+Qid+tXo+hVjj9hYFO0FwnE9135h8e1rS7ciHGkRWOAAhd9AV2VP9N+B4vE
+         Q7ssfeSqBQTqb1WJvT47HXrPSLKM2AnIFo9AiqK3nDKIcj1ZxD5Dq9H/Hh3id6hYzF8S
+         g/ok3huYzyglZtpHoF6eR4b9CJTFpHpCAvDyO1gF+M4MBG3J3otXVDV4xjy/KMjtUA5+
+         qh5Pb3+gaC1MM2IurSM8ZtvZV79HvG1dvsTeiYu+gmnzkpo/bJIBPhx1oSuwQ7P/PApS
+         Ddz7aR0z1hgRlKw5HY4KJdSECwZ6Xrtu2AjMsRAq5MvWQsQh7Wo/KbNXu4u7HYxW19Xf
+         l+vA==
+X-Gm-Message-State: APjAAAX5ZITOW9qKXVlsJqouFBdv2TZs/U6qyosRan5DvJEWO1ltEjOJ
+        /3mPDXJ6kSnAE7DkkmhtI7lIicsS0mzgh29PH78=
+X-Google-Smtp-Source: APXvYqxR9/WsFLxqc7cvzJhK1urFpGl4gUB4HAwVzSC1fDeD1++buc2QQSGtK15wBHAhYaYamjbSOAR6gsjJ8ZcFoo4=
+X-Received: by 2002:adf:f450:: with SMTP id f16mr23333290wrp.335.1563521544375;
+ Fri, 19 Jul 2019 00:32:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20190718151346.3523-1-daniel.baluta@nxp.com> <20190719070005.mkqvfhjras2jmo52@pengutronix.de>
+In-Reply-To: <20190719070005.mkqvfhjras2jmo52@pengutronix.de>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Fri, 19 Jul 2019 10:32:12 +0300
+Message-ID: <CAEnQRZC8D7MR08x_P19kmutN83Jo4wMkHySRhK702TSUHFDqiA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Add DSP node on i.MX8QXP board
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Frank Li <Frank.Li@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        sound-open-firmware@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-fei.yang@intel.com writes:
-> From: Fei Yang <fei.yang@intel.com>
+On Fri, Jul 19, 2019 at 10:00 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
 >
-> If scatter-gather operation is allowed, a large USB request is split into
-> multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN bit
-> except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
-> Since only the last TRB has IOC set for the whole USB request, the
-> dwc3_gadget_ep_reclaim_trb_sg() gets called only once after the last TRB
-> completes and all the TRBs allocated for this request are supposed to be
-> reclaimed. However that is not what the current code does.
+> Hi Daniel,
 >
-> dwc3_gadget_ep_reclaim_trb_sg() is trying to reclaim all the TRBs in the
-> following for-loop,
-> 	for_each_sg(sg, s, pending, i) {
-> 		trb =3D &dep->trb_pool[dep->trb_dequeue];
->
->                 if (trb->ctrl & DWC3_TRB_CTRL_HWO)
->                         break;
->
->                 req->sg =3D sg_next(s);
->                 req->num_pending_sgs--;
->
->                 ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,
->                                 trb, event, status, chain);
->                 if (ret)
->                         break;
->         }
-> but since the interrupt comes only after the last TRB completes, the
-> event->status has DEPEVT_STATUS_IOC bit set, so that the for-loop ends for
-> the first TRB due to dwc3_gadget_ep_reclaim_completed_trb() returns 1.
-> 	if (event->status & DEPEVT_STATUS_IOC)
-> 		return 1;
->
-> This patch addresses the issue by checking each TRB in function
-> dwc3_gadget_ep_reclaim_trb_sg() and maing sure the chained ones are prope=
-rly
-> reclaimed. dwc3_gadget_ep_reclaim_completed_trb() will return 1 Only for =
-the
-> last TRB.
->
-> Signed-off-by: Fei Yang <fei.yang@intel.com>
-> Cc: stable <stable@vger.kernel.org>
-> ---
-> v2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_=
-trb_sg()
->     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
-> v3: Checking DWC3_TRB_CTRL_CHN bit for each TRB instead, and making sure =
-that
->     dwc3_gadget_ep_reclaim_completed_trb() returns 1 only for the last TR=
-B.
-> ---
->  drivers/usb/dwc3/gadget.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 173f532..88eed49 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(str=
-uct dwc3_ep *dep,
->  	if (event->status & DEPEVT_STATUS_SHORT && !chain)
->  		return 1;
->=20=20
-> -	if (event->status & DEPEVT_STATUS_IOC)
-> +	if (event->status & DEPEVT_STATUS_IOC && !chain)
->  		return 1;
+> thanks for your patches :) but it's quite common to bundle the driver
+> related and the dt related patches. Can you add the firmware related
+> patch to this series in your v2?
 
-This will break the situation when we have more SGs than available
-TRBs. In that case we set IOC before the last so we have time to update
-transfer to append more TRBs.
-
-Please, send me tracepoints
-
-> @@ -2404,11 +2404,12 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct d=
-wc3_ep *dep,
->  		struct dwc3_request *req, const struct dwc3_event_depevt *event,
->  		int status)
->  {
-> -	struct dwc3_trb *trb =3D &dep->trb_pool[dep->trb_dequeue];
-> +	struct dwc3_trb *trb;
-
-should be part of another patch. This is a cleanup that has nothing to
-do with this fix.
-
->  	struct scatterlist *sg =3D req->sg;
->  	struct scatterlist *s;
->  	unsigned int pending =3D req->num_pending_sgs;
->  	unsigned int i;
-> +	int chain =3D false;
-
-this could be defined inside for_each_sg() loop like this:
-
-	int chain =3D trb->ctrl & DWC3_TRB_CTRL_CHN;
-
-> @@ -2419,9 +2420,13 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dw=
-c3_ep *dep,
->=20=20
->  		req->sg =3D sg_next(s);
->  		req->num_pending_sgs--;
-> +		if (trb->ctrl & DWC3_TRB_CTRL_CHN)
-> +			chain =3D true;
-> +		else
-> +			chain =3D false;
->=20=20
->  		ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,
-> -				trb, event, status, true);
-> +				trb, event, status, chain);
-
-this is definitely a valid fix :-) I'm not convinced about that IOC &&
-!chain above, however. Also, if "chain" is always trb->ctrl &
-DWC3_TRB_CTRL_CHN, we can get rid of that argument altogether and have
-the callee handle it internally, but that's something else, subject to
-another patch.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0xcfcACgkQzL64meEa
-mQa6hBAAop4hAPq3S8lrAAbH7E6SxCiOg6QGUr0B4mWmj1gXXGZJhw5Ag2WAMD2C
-LuZBvbGvnKWT+lwgz5G6xmNw1ZPSrHivovQ2fG6Cc77EpEwCJULwSRlzfJgdL0bb
-AXDKGKOq57TZGkftniv8uAgNfHSwCCHC2iWzCfqjd79RPwo06gnf1JmoqpU1oroa
-gvY0KP0DXieOm4HHesKeo3Wu6kK6BdulpAd3v7v5fCZaIY7rpaFwawHJQ/KeCgfF
-s+SMO9wJiZmrOIZFfTM6JQYEAKTAERwSuK3eCSt0FRzPbiMmNVD0nWHmHaNS+dR5
-xnyx59zLT1+Lstx94tUz5aGMN8rTK6JmtkdZTple5NRkKIx97wQqG/7mjVTMc8Wd
-Qz2AMYFT/0Wg6Suz4NBNvoC3Ny8dIR9GhqSu3+YDRr/9fWqCkikaopG1vqLdvCPi
-thXi6gLGsPKVZ8yfQMe7lM3Xrrdp72R6QgY8DFLPiLa+rLZmwomCjduV2l4cc0wN
-bniH7CX93giYjIYxHos+LoL/zEAdt1Zr/WRw3Y6KJSdefJNJwuklYhe3gcKAjEyj
-bCU8Q2thd5YHlRCd05MtPQ9PrlS+3ZM/wexVn4wB/diPSgb14Cs+Ng3l+dtQc/AH
-JTPvOVJ8BReIB9DmoZ9RwcLDEt4KE9QShCnEtyDuGBfLXqv70m0=
-=kb6q
------END PGP SIGNATURE-----
---=-=-=--
+Sure. Will do that in v2.
