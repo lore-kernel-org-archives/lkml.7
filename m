@@ -2,248 +2,134 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2690C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200F5C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C9720880
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8E42084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 09:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fC9BomUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfGSJ1V (ORCPT
+        id S1727070AbfGSJ1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 05:27:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:41901 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfGSJ1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 05:27:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 02:27:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="scan'208";a="179575053"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 19 Jul 2019 02:27:18 -0700
-Cc:     baolu.lu@linux.intel.com, Dmitry Safonov <0x7f454c46@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] iommu/vt-d: Don't queue_iova() if there is no flush
- queue
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-References: <20190716213806.20456-1-dima@arista.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d22175ca-817a-fa20-cd23-9f8a5ea9b642@linux.intel.com>
-Date:   Fri, 19 Jul 2019 17:26:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190716213806.20456-1-dima@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 05:27:47 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60222 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfGSJ1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 05:27:47 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190719092745euoutp01d8bd3316b2f0f60cb131419a51bccfb0~yxNscCkjq0044900449euoutp01B
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 09:27:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190719092745euoutp01d8bd3316b2f0f60cb131419a51bccfb0~yxNscCkjq0044900449euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563528466;
+        bh=Spljwi04NPz7tPwQDU3ylhpMAcBmPOyA+LcLqOe48yU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=fC9BomUpsql2COyJ6gc4WDI6fHvJC+/hdyejnXPtXym/Mf8NBhFzk95rsRaQRuSdc
+         KWcWgDc/xOQnP4nkP1j5stZ8RYhe8oHkP8LQNIKM2s8Rx84qNcBpV9GA3fkf/EQJTr
+         EOMjJ2L131jySWjtf0lxGx8bKyFDI3ZqYYTGaaL4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190719092745eucas1p2d63ead0ad0ba74f60f0fefac910e87ea~yxNsEYFit0571605716eucas1p2M;
+        Fri, 19 Jul 2019 09:27:45 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7D.1D.04325.11D813D5; Fri, 19
+        Jul 2019 10:27:45 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190719092744eucas1p24f1b497e46cf66ac3ae8c717b626a5d4~yxNrQ3dVU0485504855eucas1p2a;
+        Fri, 19 Jul 2019 09:27:44 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190719092744eusmtrp1d31cf3cd69253e47b48dfc82134eb1af~yxNrC0zDS1975419754eusmtrp1S;
+        Fri, 19 Jul 2019 09:27:44 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-9f-5d318d1196c9
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6C.01.04140.01D813D5; Fri, 19
+        Jul 2019 10:27:44 +0100 (BST)
+Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190719092744eusmtip243b0f5902555ec37e058b710f169bcc7~yxNqp7hk01330413304eusmtip2b;
+        Fri, 19 Jul 2019 09:27:44 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] phy: exynos5-usbdrd: Calibrating makes sense only for
+ USB2.0 PHY
+Date:   Fri, 19 Jul 2019 11:27:34 +0200
+Message-Id: <20190719092734.12501-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNIsWRmVeSWpSXmKPExsWy7djP87qCvYaxBlP+ilhsnLGe1eLC0x42
+        i/PnN7BbXN41h81ixvl9TBaLlrUyW6w9cpfdgd1j06pONo++LasYPY7f2M7k8XmTXABLFJdN
+        SmpOZllqkb5dAlfGpfO/GQt2clQ8u/mdrYFxBXsXIyeHhICJxOJdPaxdjFwcQgIrGCXmfjnN
+        COF8YZToW30fyvnMKPF+52W4lrXdm9kgEssZJW6unMsM1/Jm6gZGkCo2AUOJrrddbCC2iICD
+        xJKld8A6mAWuMUo8b3zFBJIQFgiWuP/zJFgRi4CqRFPvL6AVHBy8ArYSW7r8IbbJS6zecABs
+        gYTAGTaJ3r+noc5wkbh2cBcbhC0s8er4Fqi4jMTpyT0sEA3NjBIPz61lh3B6GCUuN81ghKiy
+        ljh8/CIryDZmAU2J9bv0IcKOEq1tN8HCEgJ8EjfeCoKEmYHMSdumM0OEeSU62oQgqtUkZh1f
+        B7f24IVLzBC2h8SPlmlgLwoJxEoc3b6KfQKj3CyEXQsYGVcxiqeWFuempxYb56WW6xUn5haX
+        5qXrJefnbmIEJoHT/45/3cG470/SIUYBDkYlHt6AXINYIdbEsuLK3EOMEhzMSiK8t1/qxwrx
+        piRWVqUW5ccXleakFh9ilOZgURLnrWZ4EC0kkJ5YkpqdmlqQWgSTZeLglGpgvCOuuavS+tLj
+        NP/mSK2Ti474X3d8rfjo0udMkYe9U2oZWMw1vwmsW/FD4W9j21YZN5Yb9x+0lqYUn/nFfOTF
+        AcXK+duqxOMlD1yz5rj4qnv9hq6ZK0U4Vr7QmH7mc+/ztsr2K1YHrl16ZpAtrbH7n5Xp6Y12
+        kfwqU290eYSbBy+7ec9278q4ZiWW4oxEQy3mouJEAKPKhdj+AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrALMWRmVeSWpSXmKPExsVy+t/xe7oCvYaxBk9/yFhsnLGe1eLC0x42
+        i/PnN7BbXN41h81ixvl9TBaLlrUyW6w9cpfdgd1j06pONo++LasYPY7f2M7k8XmTXABLlJ5N
+        UX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GpfO/GQt2
+        clQ8u/mdrYFxBXsXIyeHhICJxNruzWxdjFwcQgJLGSW27D3FCJGQkTg5rYEVwhaW+HOtC6ro
+        E6PE9hXfwRJsAoYSXW9BEpwcIgJOEp1rT4MVMQvcYpT4PP8cM0hCWCBQ4uqXuywgNouAqkRT
+        7y+g1RwcvAK2Elu6/CEWyEus3nCAeQIjzwJGhlWMIqmlxbnpucVGesWJucWleel6yfm5mxiB
+        obft2M8tOxi73gUfYhTgYFTi4Q3INYgVYk0sK67MPcQowcGsJMJ7+6V+rBBvSmJlVWpRfnxR
+        aU5q8SFGU6DdE5mlRJPzgXGRVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQim
+        j4mDU6qBcVakvUfebN0Dckcdl77b9/qk4xLLKLH79kmpXMaVGm7x3RV3dhbnpXV9OG2j/Cfc
+        Ittge0hs0ByRTwv8PFhL/XVWPTSfFXSTS/+5+yq1lBdF99VsmH6kXXQJvH/tw/z/LUbhR//4
+        TdP+K1nfG9OVeP1faVXnq0XzJgnyb93ie1HJrcVQzTNXiaU4I9FQi7moOBEAdHBeY1MCAAA=
+X-CMS-MailID: 20190719092744eucas1p24f1b497e46cf66ac3ae8c717b626a5d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190719092744eucas1p24f1b497e46cf66ac3ae8c717b626a5d4
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190719092744eucas1p24f1b497e46cf66ac3ae8c717b626a5d4
+References: <CGME20190719092744eucas1p24f1b497e46cf66ac3ae8c717b626a5d4@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
+calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
 
-On 7/17/19 5:38 AM, Dmitry Safonov wrote:
-> Intel VT-d driver was reworked to use common deferred flushing
-> implementation. Previously there was one global per-cpu flush queue,
-> afterwards - one per domain.
-> 
-> Before deferring a flush, the queue should be allocated and initialized.
-> 
-> Currently only domains with IOMMU_DOMAIN_DMA type initialize their flush
-> queue. It's probably worth to init it for static or unmanaged domains
-> too, but it may be arguable - I'm leaving it to iommu folks.
+Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-We will submit per-device dma ops soon. Then we don't need to call
-intel_unmap() for the identity (static) domain. For unmanaged domains,
-the map/unmap happen only during VM startup/shutdown, I am not sure
-whether it's worth a flush queue.
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 646259bee909..f07edd80d2f3 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -714,7 +714,9 @@ static int exynos5_usbdrd_phy_calibrate(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+ 
+-	return exynos5420_usbdrd_phy_calibrate(phy_drd);
++	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
++		return exynos5420_usbdrd_phy_calibrate(phy_drd);
++	return 0;
+ }
+ 
+ static const struct phy_ops exynos5_usbdrd_phy_ops = {
+-- 
+2.17.1
 
-This fix looks good to me anyway. We should always avoid deferring a
-flush if there's no flush queue there.
-
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-Baolu
-
-> 
-> Prevent queuing an iova flush if the domain doesn't have a queue.
-> The defensive check seems to be worth to keep even if queue would be
-> initialized for all kinds of domains. And is easy backportable.
-> 
-> On 4.19.43 stable kernel it has a user-visible effect: previously for
-> devices in si domain there were crashes, on sata devices:
-> 
->   BUG: spinlock bad magic on CPU#6, swapper/0/1
->    lock: 0xffff88844f582008, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
->   CPU: 6 PID: 1 Comm: swapper/0 Not tainted 4.19.43 #1
->   Call Trace:
->    <IRQ>
->    dump_stack+0x61/0x7e
->    spin_bug+0x9d/0xa3
->    do_raw_spin_lock+0x22/0x8e
->    _raw_spin_lock_irqsave+0x32/0x3a
->    queue_iova+0x45/0x115
->    intel_unmap+0x107/0x113
->    intel_unmap_sg+0x6b/0x76
->    __ata_qc_complete+0x7f/0x103
->    ata_qc_complete+0x9b/0x26a
->    ata_qc_complete_multiple+0xd0/0xe3
->    ahci_handle_port_interrupt+0x3ee/0x48a
->    ahci_handle_port_intr+0x73/0xa9
->    ahci_single_level_irq_intr+0x40/0x60
->    __handle_irq_event_percpu+0x7f/0x19a
->    handle_irq_event_percpu+0x32/0x72
->    handle_irq_event+0x38/0x56
->    handle_edge_irq+0x102/0x121
->    handle_irq+0x147/0x15c
->    do_IRQ+0x66/0xf2
->    common_interrupt+0xf/0xf
->   RIP: 0010:__do_softirq+0x8c/0x2df
-> 
-> The same for usb devices that use ehci-pci:
->   BUG: spinlock bad magic on CPU#0, swapper/0/1
->    lock: 0xffff88844f402008, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
->   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.19.43 #4
->   Call Trace:
->    <IRQ>
->    dump_stack+0x61/0x7e
->    spin_bug+0x9d/0xa3
->    do_raw_spin_lock+0x22/0x8e
->    _raw_spin_lock_irqsave+0x32/0x3a
->    queue_iova+0x77/0x145
->    intel_unmap+0x107/0x113
->    intel_unmap_page+0xe/0x10
->    usb_hcd_unmap_urb_setup_for_dma+0x53/0x9d
->    usb_hcd_unmap_urb_for_dma+0x17/0x100
->    unmap_urb_for_dma+0x22/0x24
->    __usb_hcd_giveback_urb+0x51/0xc3
->    usb_giveback_urb_bh+0x97/0xde
->    tasklet_action_common.isra.4+0x5f/0xa1
->    tasklet_action+0x2d/0x30
->    __do_softirq+0x138/0x2df
->    irq_exit+0x7d/0x8b
->    smp_apic_timer_interrupt+0x10f/0x151
->    apic_timer_interrupt+0xf/0x20
->    </IRQ>
->   RIP: 0010:_raw_spin_unlock_irqrestore+0x17/0x39
-> 
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Cc: iommu@lists.linux-foundation.org
-> Cc: <stable@vger.kernel.org> # 4.14+
-> Fixes: 13cf01744608 ("iommu/vt-d: Make use of iova deferred flushing")
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->   drivers/iommu/intel-iommu.c |  3 ++-
->   drivers/iommu/iova.c        | 18 ++++++++++++++----
->   include/linux/iova.h        |  6 ++++++
->   3 files changed, 22 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index ac4172c02244..6d1510284d21 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -3564,7 +3564,8 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
->   
->   	freelist = domain_unmap(domain, start_pfn, last_pfn);
->   
-> -	if (intel_iommu_strict || (pdev && pdev->untrusted)) {
-> +	if (intel_iommu_strict || (pdev && pdev->untrusted) ||
-> +			!has_iova_flush_queue(&domain->iovad)) {
->   		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
->   				      nrpages, !freelist, 0);
->   		/* free iova */
-> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-> index d499b2621239..8413ae54904a 100644
-> --- a/drivers/iommu/iova.c
-> +++ b/drivers/iommu/iova.c
-> @@ -54,9 +54,14 @@ init_iova_domain(struct iova_domain *iovad, unsigned long granule,
->   }
->   EXPORT_SYMBOL_GPL(init_iova_domain);
->   
-> +bool has_iova_flush_queue(struct iova_domain *iovad)
-> +{
-> +	return !!iovad->fq;
-> +}
-> +
->   static void free_iova_flush_queue(struct iova_domain *iovad)
->   {
-> -	if (!iovad->fq)
-> +	if (!has_iova_flush_queue(iovad))
->   		return;
->   
->   	if (timer_pending(&iovad->fq_timer))
-> @@ -74,13 +79,14 @@ static void free_iova_flush_queue(struct iova_domain *iovad)
->   int init_iova_flush_queue(struct iova_domain *iovad,
->   			  iova_flush_cb flush_cb, iova_entry_dtor entry_dtor)
->   {
-> +	struct iova_fq __percpu *queue;
->   	int cpu;
->   
->   	atomic64_set(&iovad->fq_flush_start_cnt,  0);
->   	atomic64_set(&iovad->fq_flush_finish_cnt, 0);
->   
-> -	iovad->fq = alloc_percpu(struct iova_fq);
-> -	if (!iovad->fq)
-> +	queue = alloc_percpu(struct iova_fq);
-> +	if (!queue)
->   		return -ENOMEM;
->   
->   	iovad->flush_cb   = flush_cb;
-> @@ -89,13 +95,17 @@ int init_iova_flush_queue(struct iova_domain *iovad,
->   	for_each_possible_cpu(cpu) {
->   		struct iova_fq *fq;
->   
-> -		fq = per_cpu_ptr(iovad->fq, cpu);
-> +		fq = per_cpu_ptr(queue, cpu);
->   		fq->head = 0;
->   		fq->tail = 0;
->   
->   		spin_lock_init(&fq->lock);
->   	}
->   
-> +	smp_wmb();
-> +
-> +	iovad->fq = queue;
-> +
->   	timer_setup(&iovad->fq_timer, fq_flush_timeout, 0);
->   	atomic_set(&iovad->fq_timer_on, 0);
->   
-> diff --git a/include/linux/iova.h b/include/linux/iova.h
-> index 781b96ac706f..cd0f1de901a8 100644
-> --- a/include/linux/iova.h
-> +++ b/include/linux/iova.h
-> @@ -155,6 +155,7 @@ struct iova *reserve_iova(struct iova_domain *iovad, unsigned long pfn_lo,
->   void copy_reserved_iova(struct iova_domain *from, struct iova_domain *to);
->   void init_iova_domain(struct iova_domain *iovad, unsigned long granule,
->   	unsigned long start_pfn);
-> +bool has_iova_flush_queue(struct iova_domain *iovad);
->   int init_iova_flush_queue(struct iova_domain *iovad,
->   			  iova_flush_cb flush_cb, iova_entry_dtor entry_dtor);
->   struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn);
-> @@ -235,6 +236,11 @@ static inline void init_iova_domain(struct iova_domain *iovad,
->   {
->   }
->   
-> +bool has_iova_flush_queue(struct iova_domain *iovad)
-> +{
-> +	return false;
-> +}
-> +
->   static inline int init_iova_flush_queue(struct iova_domain *iovad,
->   					iova_flush_cb flush_cb,
->   					iova_entry_dtor entry_dtor)
-> 
