@@ -2,132 +2,112 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BE1C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E651C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B30720873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6417B21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd4qes53"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m14xS8Ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfGSLuG (ORCPT
+        id S1728078AbfGSLx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:50:06 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45932 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbfGSLuG (ORCPT
+        Fri, 19 Jul 2019 07:53:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34280 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfGSLx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:50:06 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m206so24035885oib.12;
-        Fri, 19 Jul 2019 04:50:05 -0700 (PDT)
+        Fri, 19 Jul 2019 07:53:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so14093738pfo.1;
+        Fri, 19 Jul 2019 04:53:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sqpTcP76z8L1qAX6ZIXz8oQ1xDJvx6eMGKj4s5NJ4n4=;
-        b=bd4qes53GBobFCQjiSauq8kko/7lDoscPritfqpd7h/NfzroV52tvn57Qt4nLg/MDZ
-         gnNOw0YQmSxdV2YLiKfb7LLmgz8iHznTxZAACh/IPiIdIMsqfN28Z3RO3tGYlR9ob+Sr
-         XlnAux65a7xlSAaPyepAcJCfmIcS/uc7Ix3qoSzepLhj4qXywdHrTVU1TVWvs0C5GUQG
-         If3PkDVd/xE/RzS2AExYFWIW7+Kyhx3MEk2Xhu6E1HMJWcwnomQukWTaiepmlvFnOS/u
-         A3DeCZIuf4Yg4Oqjy1pDtWwASCaznZkERw4FqyY8AZMYCJUACciqXfHr2rV4cw1U6aWE
-         1tmg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7BQWVFk5xnfvY43V3HP4RUSBIEVm8NfFwU/OWhiUguc=;
+        b=m14xS8Ld/wkugydyp1wPJICiD4EZ+GAzIwpCJUIwTOwmHroduRA2AOmXy/2OTSy/OH
+         b2nY8TqpAn7eD29M+OJ7jQ0xs2NmYlTleUX8hIvZ4JCn4nOcKyWrTIoxOk7PHqw+2efO
+         dVcoDfo17nQotY+imVuy8lIqw3klmXSskBNldqft1gmIyGmG2g8LMgOfs94K9S0arRIf
+         88aZ0VvQhi3NEMoQlfBebxeqbKVZTAJhII1aoMMX1cydv8DwmHNwZh2ooqHmwapnuDPy
+         aWNzM32UK/trXBmqx3+upJTFRdcUYLqJIoP5BmNjuyTF+4U5ThU/l2qwHix6qP6/il0H
+         7N6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sqpTcP76z8L1qAX6ZIXz8oQ1xDJvx6eMGKj4s5NJ4n4=;
-        b=HYkAnrd14WEsUXIjZGSSoaXRZ3nskAvp3n23JCPooX+PV0WdRm3E0/FAL6/RErzjFz
-         p3Vpv8yjK8V1CQjkzIerWOYRiGBVr5FaJE6+57sa1P/nHkIYU/cFDYOdE5KFfEofhUIR
-         yHJpw/kJ/CSR3lLbvJXiRMAEzxlPv0kAuGGLiiLObxvKlHYNlV1f4X/i15CPT0wSr5b0
-         mnDHTRqOcnDD70/3MFMuTYl9EoWCatz8hpi8R3VdXeahGznj0SNO9Q+UleGyBftXapce
-         x3t52Oi+rOfwkSGqCFe6BhiAqNLi+0Tyy8lwvm0z4biwmRQyNVIdicL6ZC8wgcXSkBmg
-         N1cw==
-X-Gm-Message-State: APjAAAUKqoR2R8C1vk8qc4DMBuRvbolg5lpl0PdUZOCThvEIVGvDIHfq
-        7J/gjefCc8s8BMKAENjTvcso5ChskCelHW/VqeA=
-X-Google-Smtp-Source: APXvYqzTzot0TaouNF6K1z/L7Hs8zJ+9SFAcylB1aJuoJDSPAmqyWlbMSaqn+piwy+TqxrQfg7WIaGyMlSocp0wU8CM=
-X-Received: by 2002:aca:2303:: with SMTP id e3mr23263015oie.112.1563537004914;
- Fri, 19 Jul 2019 04:50:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190719104802.18070-1-andradanciu1997@gmail.com>
- <20190719104802.18070-2-andradanciu1997@gmail.com> <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
-In-Reply-To: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
-From:   Andra Danciu <andradanciu1997@gmail.com>
-Date:   Fri, 19 Jul 2019 14:49:54 +0300
-Message-ID: <CAJNLGswXF8XtZKnFtzaK+7Xvs0Ygwwh4WP5PiO8Csc7pDG1vNA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
- the PICO-PI-IMX8M
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7BQWVFk5xnfvY43V3HP4RUSBIEVm8NfFwU/OWhiUguc=;
+        b=P9qDg6maCC+ogAYcRtq2GEW5GI5t/9sLDFg2OYFQREGEvYBV+NwUNT9BwWq7lD/7WT
+         +SqSLZQSXPRCYcQGKDMrjGO92WqjBe936FOi6PmQfMW9Rqs/SV+fRMqlYuqDpKn3sUUR
+         ClIxTDejHeW9Z3/K3yedDEjLquRB4JRj+p32HE367BeDScfkU/0ovP4TaCAB5ClAADhm
+         NMV6EppExeaXGLJxrpcaRFaiFmf4WBfzPugffwIb/r/F+1TF0iEe33j71bT2cwrskV2O
+         1CVhFgvYGAFgqazT5lECsQe0DXCRDcICM60YX1xoMvNrz8VzoxAR6OSejQD/RjCZzxOb
+         YHVg==
+X-Gm-Message-State: APjAAAX/Cg2OTGXyzuvu+Lr18snDgLSjKIC81rnMH0rVT13ZDqQ6487H
+        ZD2GNgSGt7Wd2pTDJGG5hsY=
+X-Google-Smtp-Source: APXvYqwsybHi6eEwHb23QA32buHWpS8rl4ER9/dYM50aRVRtMMZZpWQTfL6OT5LSZ/rAAsXAj618tg==
+X-Received: by 2002:a63:4c17:: with SMTP id z23mr14499235pga.167.1563537208055;
+        Fri, 19 Jul 2019 04:53:28 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id v184sm30587380pfb.82.2019.07.19.04.53.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 04:53:27 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Ping Bai <ping.bai@nxp.com>,
-        =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>,
-        Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Richard Hu <richard.hu@technexion.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] Input: touchscreen - Use dev_get_drvdata
+Date:   Fri, 19 Jul 2019 19:53:08 +0800
+Message-Id: <20190719115307.22124-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
+dev_get_drvdata is a simpler implementation comparing
+to to_platform_device + platform_get_drvdata.
+This makes the code simpler.
 
-I compiled with W=3D1 and you are right, they cause warning. I will remove =
-them.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/input/touchscreen/imx6ul_tsc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-=C3=8En vin., 19 iul. 2019 la 14:19, Fabio Estevam <festevam@gmail.com> a s=
-cris:
->
-> Hi Andra,
->
-> On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
-> <andradanciu1997@gmail.com> wrote:
->
-> > +       pmic: pmic@4b {
-> > +               reg =3D <0x4b>;
-> > +               compatible =3D "rohm,bd71837";
-> > +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> > +               pinctrl-names =3D "default";
-> > +               pinctrl-0 =3D <&pinctrl_pmic>;
-> > +               clocks =3D <&pmic_osc>;
-> > +               clock-names =3D "osc";
-> > +               clock-output-names =3D "pmic_clk";
-> > +               interrupt-parent =3D <&gpio1>;
-> > +               interrupts =3D <3 GPIO_ACTIVE_LOW>;
-> > +               interrupt-names =3D "irq";
-> > +
-> > +               regulators {
-> > +                       #address-cells =3D <1>;
-> > +                       #size-cells =3D <0>;
->
-> #address-cells and  #size-cells are not needed and they cause warnings wi=
-th W=3D1:
->
->   DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
-> arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
-> (avoid_unnecessary_addr_size):
-> /soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
-> #address-cells/#size-cells without "ranges" or child "reg" property
->
-> Please remove them.
+diff --git a/drivers/input/touchscreen/imx6ul_tsc.c b/drivers/input/touchscreen/imx6ul_tsc.c
+index e04eecd65bbb..655652f449ec 100644
+--- a/drivers/input/touchscreen/imx6ul_tsc.c
++++ b/drivers/input/touchscreen/imx6ul_tsc.c
+@@ -507,8 +507,7 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused imx6ul_tsc_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
++	struct imx6ul_tsc *tsc = dev_get_drvdata(dev);
+ 	struct input_dev *input_dev = tsc->input;
+ 
+ 	mutex_lock(&input_dev->mutex);
+@@ -527,8 +526,7 @@ static int __maybe_unused imx6ul_tsc_suspend(struct device *dev)
+ 
+ static int __maybe_unused imx6ul_tsc_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct imx6ul_tsc *tsc = platform_get_drvdata(pdev);
++	struct imx6ul_tsc *tsc = dev_get_drvdata(dev);
+ 	struct input_dev *input_dev = tsc->input;
+ 	int retval = 0;
+ 
+-- 
+2.20.1
+
