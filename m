@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0AAC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0D0C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D408206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C84206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511232;
-	bh=khMITClIFeXYHdEQNwwvpfphNqgiJNWFhLiR+IZGREI=;
+	s=default; t=1563511240;
+	bh=mbhikaGMnXf+YnU2b1rwFEnK/QE9o+IzAB7O7T+g2HA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsEaV+Ht4QrJmBg2RPyfR/zj8Q/PlIrfz2MVoo1+kSlQILSIOZ9etdaEdo8UckJRI
-	 2P3ysK4BRjHGWvw1g6ncX11RkTsiWBPsid7t5yMiBSHOWKefirC0aNEifDxMQH1we0
-	 rULyQLeOI/zsuEOm3UuOe26Syo4Y4YJvqfSxlEzI=
+	b=dvyUT+bhPYtwb9aSwShLeQwmTEjJTlp1Sskdsjip7Vw3L/V16MR82U2jmt6ZkQYAL
+	 AHOII8RMGzbyoGOUzpKPG1QwNEwZSEtHCSfpuvBE/ND/wLQHgQECeu4yVEF7CpThQf
+	 Sl0f1Pci6OoCBWkOLHgD94/OtjNCHItNYXfiQYdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfGSEka (ORCPT
+        id S1731258AbfGSEki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:40:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57178 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfGSD56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:57:58 -0400
+        id S1727523AbfGSD5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:57:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2639621852;
-        Fri, 19 Jul 2019 03:57:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4D42082E;
+        Fri, 19 Jul 2019 03:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508677;
-        bh=khMITClIFeXYHdEQNwwvpfphNqgiJNWFhLiR+IZGREI=;
+        s=default; t=1563508674;
+        bh=mbhikaGMnXf+YnU2b1rwFEnK/QE9o+IzAB7O7T+g2HA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oKvUpsRssfQ8VQP8vcRtJgmvJwWU9eRr5uf5RAdT4YS14I68v8AktSGv2K19c3n7f
-         sk74o638qGsytmbiAt91Wv1p7lm9a0cpNx8D+tPfv7WL2jt5X+/c1ZjrYy1CGTIuSn
-         eDhldfvJhdun9YScljXmaGrEZ8n7wnTG8/LpfGjw=
+        b=p4wQS1eephT+9Fr46/LDvE8PSUBBcq4LlUwXaSNrVJ2tTc2vZC2jWAF12iWGbY9f3
+         jQhQrmoighWwyCTp4Uhk3MDbBBIhUZUxXDrhAz7RgKPBDQ4E68wAMrhhXZRnrK35Gb
+         JW5cqvUx+9hxUYiv9MbhMyEzNMZVyW5MH/IWULZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gen Zhang <blackgod016574@gmail.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Paul Hsieh <paul.hsieh@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 029/171] drm/edid: Fix a missing-check bug in drm_load_edid_firmware()
-Date:   Thu, 18 Jul 2019 23:54:20 -0400
-Message-Id: <20190719035643.14300-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 026/171] drm/amd/display: Disable ABM before destroy ABM struct
+Date:   Thu, 18 Jul 2019 23:54:17 -0400
+Message-Id: <20190719035643.14300-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -60,40 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gen Zhang <blackgod016574@gmail.com>
+From: Paul Hsieh <paul.hsieh@amd.com>
 
-[ Upstream commit 9f1f1a2dab38d4ce87a13565cf4dc1b73bef3a5f ]
+[ Upstream commit 1090d58d4815b1fcd95a80987391006c86398b4c ]
 
-In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
-is dereferenced in the following codes. However, memory allocation
-functions such as kstrdup() may fail and returns NULL. Dereferencing
-this null pointer may cause the kernel go wrong. Thus we should check
-this kstrdup() operation.
-Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
-the caller site.
+[Why]
+When disable driver, OS will set backlight optimization
+then do stop device.  But this flag will cause driver to
+enable ABM when driver disabled.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190524023222.GA5302@zhanggen-UX430UQ
+[How]
+Send ABM disable command before destroy ABM construct
+
+Signed-off-by: Paul Hsieh <paul.hsieh@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid_load.c | 2 ++
+ drivers/gpu/drm/amd/display/dc/dce/dce_abm.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
-index 1e5593575d23..6192b7b20d84 100644
---- a/drivers/gpu/drm/drm_edid_load.c
-+++ b/drivers/gpu/drm/drm_edid_load.c
-@@ -278,6 +278,8 @@ struct edid *drm_load_edid_firmware(struct drm_connector *connector)
- 	 * the last one found one as a fallback.
- 	 */
- 	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
-+	if (!fwstr)
-+		return ERR_PTR(-ENOMEM);
- 	edidstr = fwstr;
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+index da96229db53a..2959c3c9390b 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+@@ -473,6 +473,8 @@ void dce_abm_destroy(struct abm **abm)
+ {
+ 	struct dce_abm *abm_dce = TO_DCE_ABM(*abm);
  
- 	while ((edidname = strsep(&edidstr, ","))) {
++	abm_dce->base.funcs->set_abm_immediate_disable(*abm);
++
+ 	kfree(abm_dce);
+ 	*abm = NULL;
+ }
 -- 
 2.20.1
 
