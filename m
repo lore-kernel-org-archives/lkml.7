@@ -4,86 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D36C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6E2C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF202184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C7D21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563555737;
-	bh=gaugX9ZhIKdDiADtQa4ubEUvcd0E44zHZspxew0b+eQ=;
+	s=default; t=1563555745;
+	bh=mc9dpku4ZlCQzY0VURDm7LZ8gZlKE0j++u2PjTJ3XdM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WdhHhjVbSg+3XbQaZ0C10fJp7pWpuv611ShbD+oS8K04XyZF/HDOuI1vMpjV2MeUV
-	 mSMTRImF7kmHNJCp4kfxYsmP2UFS6m/93KkIWJBs1YkxxfKdRr6OY89HQ3mM0vuQHK
-	 VKWsVKyW5ONf2+QsG/Ncm8d7r/RysKXkh7GlS7JQ=
+	b=vEd5EEDAjRUcNOrwULcfydxjWgblgu1jP/8SovJ9ZTlbZJOLj24tc7fhHVwGZu8Im
+	 J5SULFfdyKt8XfC9HHMF5F+S1OyNzRuF/YtsvurH8KlyhyLo2Jagcd/RIs3hAVGnQt
+	 9hNnjnZkCzpeHHAkRBX7UuQZrqHdjIk8er7z2r+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfGSRCQ (ORCPT
+        id S1732081AbfGSRCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 13:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 13:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728476AbfGSRCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 13:02:15 -0400
+        id S1728476AbfGSRCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 13:02:21 -0400
 Received: from localhost (unknown [84.241.199.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1A262184E;
-        Fri, 19 Jul 2019 17:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 825C12184E;
+        Fri, 19 Jul 2019 17:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563555735;
-        bh=gaugX9ZhIKdDiADtQa4ubEUvcd0E44zHZspxew0b+eQ=;
+        s=default; t=1563555740;
+        bh=mc9dpku4ZlCQzY0VURDm7LZ8gZlKE0j++u2PjTJ3XdM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JkMss7z2IaCuUsVxputAzUIM2ymm12lW7m08ofokuK+NdePzrko3aERRnpx/Lo+Ly
-         z2eOvX9EzbP6flCTJKaIFurLcBwbhTeqFDpXZYYmiLuRg0vxT90A7W7iJmZxDHkP0N
-         2jo7BBtF5tAraPoai88w9WzyprAZ/Luf7LMVxCho=
-Date:   Fri, 19 Jul 2019 19:03:31 +0900
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Gen Zhang <blackgod016574@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH AUTOSEL 5.2 014/171] consolemap: Fix a memory leaking bug
- in drivers/tty/vt/consolemap.c
-Message-ID: <20190719100331.GA11778@kroah.com>
-References: <20190719035643.14300-1-sashal@kernel.org>
- <20190719035643.14300-14-sashal@kernel.org>
+        b=OW4hvB/DoSAgfh3FWmT4AWO+a7FQdlt3aM00yFr9oP8qSAOzd3w7U5lc3JHGO0mlD
+         /XpP4yAmtEhIIugEoVZ014rhWASJywD3fnNthzH8n+t8hHsG2V97sX+qrmaZq60zjK
+         uFs3Q+fcX+VG0Q769/eDIvnWXP4oFaAtbg6a5YHw=
+Date:   Fri, 19 Jul 2019 19:27:48 +0900
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        johan@kernel.org, linux-usb@vger.kernel.org
+Subject: Re: USB Modem support for Droid 4
+Message-ID: <20190719102748.GA14546@kroah.com>
+References: <20190718201713.GA25103@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190719035643.14300-14-sashal@kernel.org>
+In-Reply-To: <20190718201713.GA25103@amd>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:54:05PM -0400, Sasha Levin wrote:
-> From: Gen Zhang <blackgod016574@gmail.com>
+On Thu, Jul 18, 2019 at 10:17:13PM +0200, Pavel Machek wrote:
+> From: Tony Lindgren <tony@atomide.com>
 > 
-> [ Upstream commit 84ecc2f6eb1cb12e6d44818f94fa49b50f06e6ac ]
+> Droid starts to have useful support in linux-next. Modem is tricky to
+> play with, but this is enough to get basic support.
 > 
-> In function con_insert_unipair(), when allocation for p2 and p1[n]
-> fails, ENOMEM is returned, but previously allocated p1 is not freed,
-> remains as leaking memory. Thus we should free p1 as well when this
-> allocation fails.
-> 
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/tty/vt/consolemap.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-No, please do not take this patch, it was reverted in commit
-15b3cd8ef46a ("Revert "consolemap: Fix a memory leaking bug in
-drivers/tty/vt/consolemap.c"") because it was broken.
+No signed-off-by from Tony?
 
-Please drop from all of the autosel queues.
+And no [PATCH] in the subject?
 
-thanks,
+odd...
 
-greg k-h
