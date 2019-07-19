@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9402C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12C8C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866C5206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7142D206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511009;
-	bh=8sW2YS7ii0lNAuJz5v+7XGJtZjSoln1Lotj6urVCiE0=;
+	s=default; t=1563511013;
+	bh=Bgd0Bw6dCsfqG18nCU1TXezh7rwvgVoQ1pq5kShUpig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yn5GwRmZpf+YNju2IL4MIj/hkcXbgLv+mlaxl1uYwmSPvdeaLzcGF47npcMqJIk6
-	 Koz4KyiTiVXCq3VvuwR/JN6y/dCzRo1XYYqKYwRrNCmKXR1kKuaHkTiIhNHOZR9zDC
-	 03HQtbNOucBAT4gn4axfjKhtWC4qtYB+ST1MOiuw=
+	b=bcFSTIbPKLVwyWYJuwpHraKDNkumNWIkvvm5AOmm7tw+Kd8Asz4+w0sRKXnzjyuup
+	 RBQwN73XXNzXj/JP5r3Py46Sy3vu5KJJWlvXuYJ9AwgriLz5MMN6MT1R/dMq64WaNJ
+	 erKZpm66H+ytgBSVdAQ/4kguzCtRh0he+22bIE8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfGSEAa (ORCPT
+        id S1731387AbfGSEgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60146 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbfGSEAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:00:18 -0400
+        id S1727228AbfGSEA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:00:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 897832189F;
-        Fri, 19 Jul 2019 04:00:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C5462189F;
+        Fri, 19 Jul 2019 04:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508817;
-        bh=8sW2YS7ii0lNAuJz5v+7XGJtZjSoln1Lotj6urVCiE0=;
+        s=default; t=1563508827;
+        bh=Bgd0Bw6dCsfqG18nCU1TXezh7rwvgVoQ1pq5kShUpig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Y6TxGXkCEJKkiQEvTDF5uFTU7zehBppphgyk9gqOV69p/dCvI87EBAwS+d/5ws70
-         Nzhh0K19p9wlZ0o4beIaVIHVF5GOimBQtERy8vsv5Kcn5Egr3GiepIjhtQT8aeLf4T
-         Jk75fkT5LEAwy5TOkGC+3FD/tL7Z9lhZ1LLnaq+8=
+        b=BFespdZfk4ajjYEZG76H9K9t1aX/GiI+XInOIZUBWXmHRrWSHqbQOv4bnAJEfy4Gz
+         OhwjtWXkLm7Xz3i9qV9xMXWTX8RysO8+Xh64IBjTLwWltFCbKeEhEVc4t0dhPs7HK9
+         Gn94Ol6VglOkf2cDrCMyOVEefYx1GTw2/GSQhZ2U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 106/171] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
-Date:   Thu, 18 Jul 2019 23:55:37 -0400
-Message-Id: <20190719035643.14300-106-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 112/171] powerpc/mm: Handle page table allocation failures
+Date:   Thu, 18 Jul 2019 23:55:43 -0400
+Message-Id: <20190719035643.14300-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,38 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
+[ Upstream commit 2230ebf6e6dd0b7751e2921b40f6cfe34f09bb16 ]
 
-When testing out gpio-keys with a button, a spurious
-interrupt (and therefore a key press or release event)
-gets triggered as soon as the driver enables the irq
-line for the first time.
+This fixes kernel crash that arises due to not handling page table allocation
+failures while allocating hugetlb page table.
 
-This patch clears any potential bogus generated interrupt
-that was caused by the switching of the associated irq's
-type and polarity.
-
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Fixes: e2b3d202d1db ("powerpc: Switch 16GB and 16MB explicit hugepages to a different page table format")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/4xx/uic.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/mm/hugetlbpage.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/4xx/uic.c
-index 31f12ad37a98..36fb66ce54cf 100644
---- a/arch/powerpc/platforms/4xx/uic.c
-+++ b/arch/powerpc/platforms/4xx/uic.c
-@@ -154,6 +154,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
- 
- 	mtdcr(uic->dcrbase + UIC_PR, pr);
- 	mtdcr(uic->dcrbase + UIC_TR, tr);
-+	mtdcr(uic->dcrbase + UIC_SR, ~mask);
- 
- 	raw_spin_unlock_irqrestore(&uic->lock, flags);
- 
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index b5d92dc32844..1de0f43a68e5 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -130,6 +130,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
+ 	} else {
+ 		pdshift = PUD_SHIFT;
+ 		pu = pud_alloc(mm, pg, addr);
++		if (!pu)
++			return NULL;
+ 		if (pshift == PUD_SHIFT)
+ 			return (pte_t *)pu;
+ 		else if (pshift > PMD_SHIFT) {
+@@ -138,6 +140,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
+ 		} else {
+ 			pdshift = PMD_SHIFT;
+ 			pm = pmd_alloc(mm, pu, addr);
++			if (!pm)
++				return NULL;
+ 			if (pshift == PMD_SHIFT)
+ 				/* 16MB hugepage */
+ 				return (pte_t *)pm;
+@@ -154,12 +158,16 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz
+ 	} else {
+ 		pdshift = PUD_SHIFT;
+ 		pu = pud_alloc(mm, pg, addr);
++		if (!pu)
++			return NULL;
+ 		if (pshift >= PUD_SHIFT) {
+ 			ptl = pud_lockptr(mm, pu);
+ 			hpdp = (hugepd_t *)pu;
+ 		} else {
+ 			pdshift = PMD_SHIFT;
+ 			pm = pmd_alloc(mm, pu, addr);
++			if (!pm)
++				return NULL;
+ 			ptl = pmd_lockptr(mm, pm);
+ 			hpdp = (hugepd_t *)pm;
+ 		}
 -- 
 2.20.1
 
