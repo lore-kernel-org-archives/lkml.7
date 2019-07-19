@@ -2,155 +2,112 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C57EC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D233C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647CD21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2028921849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 08:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzQUCbzu"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="UovNcYRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfGSI7i (ORCPT
+        id S1727248AbfGSI7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 04:59:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46833 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfGSI7h (ORCPT
+        Fri, 19 Jul 2019 04:59:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36468 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfGSI7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 04:59:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 65so23702547oid.13;
-        Fri, 19 Jul 2019 01:59:37 -0700 (PDT)
+        Fri, 19 Jul 2019 04:59:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so24138473wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 01:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gBusBZhQcLKBWDanQAGbHMALYypzWJ4WXbnd8gqcE3w=;
-        b=hzQUCbzumVp7OrDT0mxpxR3wMx4ptyZYpa6YUNaWZPMrRycx8xtDDqJXyYTTAGhRoQ
-         mka1Z7qRSaSNvxu9QSd3RzxuZclNptcC6dYCbJBvRYk6RB/K9v7lKHYZ+dPy2t204zDG
-         8N8aV6KlPlWZoj607hSatkWfw5L2pTyTxUXmFOWPNhqGdLZYpnQpzAwIgvvAzLfrC1JI
-         eqiZxe/3w3ZF+rYttmsr3JQhPutJmcdGhZrWWjFL8aTLYCN+dHTlx5MU4AN4XhQWFlJv
-         snwD0vfxkiSuL+//2Wh85TxuU7E8dkMJIV4+a91zaiLdcz3S6JMMsYJh97qjyx0ciDHJ
-         I21g==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r+mZG8DpAsPgWT5sar/21/BjX4up+4WpKJWqDr5y+XE=;
+        b=UovNcYRJpNCwUpWYyK80hMB+LmsasMk/b+zRnOMrEiqyWDbVXt28ZRGBCmPPcZUN0Q
+         /7jz/DscGGQ7KK1NVhsYrrZmsyJ1wT1ynx4YUOcbWknTuTYIitiIhSJYSjfxO7NDoc6A
+         cYTtdySKxzcVDcyjoGRWTNZh5axkeqLWNaFU3JH3CGLkOMa8TXXFqu/1bhPnrwEP690/
+         j7DnqohaO9uqFP/XnDXVak9aGhsnxhZrKERoM4ZBlXxPF8LvDVS/mfZ+LZ+SnCvaDFOj
+         OBJIhRPnkIjaY5vjk8XEn2AqEibXwCokadCTrFNtJLDod4kk6C3EMdkFR9PqkEePJCcG
+         HoOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gBusBZhQcLKBWDanQAGbHMALYypzWJ4WXbnd8gqcE3w=;
-        b=WfLT+ga7JYV4BIEDmpGdqoHJleYQTKOfnKtHq6g0wQi3yihNb+VEhB9ErP3pxrRutY
-         pablp5GCh9R4rkVPp6vOY3FvsdCqfgVuJSyuINUBMIBziZw8gqjyW4g+rKMTiQ+7iAn3
-         joyDzZv9JxrMnZQqY1fR30IY+/Cjn7FKqEjxmChi9Z0xDEdpq8vNjnoMOkSaILAHtoXj
-         VUx8wl9/N0KuTCgKISTqoxTp+qL+82LN036aoGedR/9jg9Dmyadkhc4gltoeykyf5n8t
-         Zrgl2QnbHrfEExdQL8Gv7/R1kg4XOPUuv8gkFB6to7V63JpnvLSVpo4lcUlLETcQL6Un
-         6Vvg==
-X-Gm-Message-State: APjAAAX+HDauyeBvs62Lmg6r1h0ApkrcBPcRYQAeMmcOUatgh3soxBx6
-        VvVinBMQ2V7lzmwXXFmvk8Q9N9ydchdJv3gMDVgW8bS+ces=
-X-Google-Smtp-Source: APXvYqxkeToemgSjhvUX7UQTyztvFqqM2CAb21z3wyp+gF2R8lPYi/gkwN79NQrxS+EPPCdNYXXQg9mhLqXK9xHzGBw=
-X-Received: by 2002:aca:b9d4:: with SMTP id j203mr25350397oif.5.1563526776730;
- Fri, 19 Jul 2019 01:59:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r+mZG8DpAsPgWT5sar/21/BjX4up+4WpKJWqDr5y+XE=;
+        b=GZ8gzU0cs+EWcZssGBu9zTOjaJO87q3C/efuExpOmnCRP4vUGGaKTzdWQiAj/tiN3w
+         2L0WbemqFE+AzH1gev88ll35NnjIDxH6aKsHnj79P/zE0KyB479UbRdS9eNwHeQzyWDo
+         hLF7Y4EeQFsBjFNKKL9rhOtCEfN8r9SX4QcjgmTmR65rTOggBZqt+ku1GwqbCyA2f2YP
+         nNJQLh4wM5G6u/OmB/rz8U2PX6jILcytSQjWw1Ofz7AzvYDt4da6jnwCJhT6VYpZrZaF
+         i6d6ODmPVCfOFQCmAEcwWO+JLS4ErDuLUzLHepOK+FJrGKLv+V7ZpYYY6F1sFUCg8IYb
+         q/xw==
+X-Gm-Message-State: APjAAAXMQHjZbMRfKGeMgZJ0aXEoJ3YpVMoFMe5vP/Ubtgpex0sSnkwf
+        LBUYEAeTttB3PtguLRevQTs=
+X-Google-Smtp-Source: APXvYqwNeo4Lm2KsUkZw2PBIJv7c22XTMebEqmZ6IGLFDVHBMaZWzxlIxEOLZBcK+t8KjqIA8Sw8Mg==
+X-Received: by 2002:a1c:6555:: with SMTP id z82mr48409335wmb.129.1563526787404;
+        Fri, 19 Jul 2019 01:59:47 -0700 (PDT)
+Received: from brauner.io ([81.92.17.140])
+        by smtp.gmail.com with ESMTPSA id j17sm39177701wrb.35.2019.07.19.01.59.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 01:59:46 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 10:59:45 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH] riscv: enable sys_clone3 syscall for rv64
+Message-ID: <20190719085944.n4ypavxdlf6go4tl@brauner.io>
+References: <alpine.DEB.2.21.9999.1907182118500.7083@viisi.sifive.com>
 MIME-Version: 1.0
-References: <217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de>
-In-Reply-To: <217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 19 Jul 2019 16:59:25 +0800
-Message-ID: <CANRm+CxWbkr0=DB7DBdaQOsTTt0XS5vSk_BRL2iFeAAm81H8Bg@mail.gmail.com>
-Subject: Re: [5.2 regression] x86/fpu changes cause crashes in KVM guest
-To:     Thomas Lambertz <mail@thomaslambertz.de>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>, kvm <kvm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1907182118500.7083@viisi.sifive.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc kvm ml,
-On Thu, 18 Jul 2019 at 08:08, Thomas Lambertz <mail@thomaslambertz.de> wrote:
->
-> Since kernel 5.2, I've been experiencing strange issues in my Windows 10
-> QEMU/KVM guest.
-> Via bisection, I have tracked down that the issue lies in the FPU state
-> handling changes.
-> Kernels before 8ff468c29e9a9c3afe9152c10c7b141343270bf3 work great, the
-> ones afterwards are affected.
-> Sometimes the state seems to be restored incorrectly in the guest.
->
-> I have managed to reproduce it relatively cleanly, on a linux guest.
-> (ubuntu-server 18.04, but that should not matter, since it occured on
-> windows aswell)
->
-> To reproduce the issue, you need prime95 (or mprime), from
-> https://www.mersenne.org/download/ .
-> This is just a stress test for the FPU, which helps reproduce the error
-> much quicker.
->
-> - Run it in the guest as 'Benchmark Only', and choose the '(2) Small
-> FFTs' torture test. Give it the maximum amount of cores (for me 10).
-> - On the host, run the same test. To keep my pc usable, I limited it to
-> 5 cores. I do this to put some pressure on the system.
-> - repeatedly focus and unfocus the qemu window
->
-> With this config, errors in the guest usually occur within 30 seconds.
-> Without the refocusing, takes ~5min on average, but the variance of this
-> time is quite large.
->
-> The error messages are either
->      "FATAL ERROR: Rounding was ......., expected less than 0.4"
-> or
->      "FATAL ERROR: Resulting sum was ....., expexted: ......",
-> suggesting that something in the calculation has gone wrong.
->
-> On the host, no errors are ever observed!
+On Thu, Jul 18, 2019 at 09:20:01PM -0700, Paul Walmsley wrote:
+> 
+> Enable the sys_clone3 syscall for RV64.  We simply include the generic
+> version.
+> 
+> Tested by running the program from
+> 
+>    https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
+> 
+> and verifying that it completes successfully.
+> 
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Christian Brauner <christian@brauner.io>
 
-I found it is offended by commit 5f409e20b (x86/fpu: Defer FPU state
-load until return to userspace) and can only be reproduced when
-CONFIG_PREEMPT is enabled. Why restore qemu userspace fpu context to
-hardware before vmentry in the commit?
-https://lkml.org/lkml/2017/11/14/945 Actually I suspect the commit
-f775b13eedee2 (x86,kvm: move qemu/guest FPU switching out to vcpu_run)
-inaccurately save guest fpu state which in xsave area into the qemu
-userspace fpu buffer. However, Rik replied in
-https://lkml.org/lkml/2017/11/14/891, "The scheduler will save the
-guest fpu context when a vCPU thread is preempted, and restore it when
-it is scheduled back in." But I can't find any scheduler codes do
-this. In addition, below codes can fix the mprime error warning.
-(Still not sure it is correct)
+Thank you!
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 58305cf..18f928e 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3306,6 +3306,9 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+Acked-by: Christian Brauner <christian@brauner.io>
 
-     kvm_x86_ops->vcpu_load(vcpu, cpu);
-
-+    if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+        switch_fpu_return();
-+
-     /* Apply any externally detected TSC adjustments (due to suspend) */
-     if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
-         adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
-@@ -7990,10 +7993,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-     trace_kvm_entry(vcpu->vcpu_id);
-     guest_enter_irqoff();
-
--    fpregs_assert_state_consistent();
--    if (test_thread_flag(TIF_NEED_FPU_LOAD))
--        switch_fpu_return();
--
-     if (unlikely(vcpu->arch.switch_db_regs)) {
-         set_debugreg(0, 7);
-         set_debugreg(vcpu->arch.eff_db[0], 0);
+> ---
+>  arch/riscv/include/uapi/asm/unistd.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/riscv/include/uapi/asm/unistd.h b/arch/riscv/include/uapi/asm/unistd.h
+> index 0e2eeeb1fd27..13ce76cc5aff 100644
+> --- a/arch/riscv/include/uapi/asm/unistd.h
+> +++ b/arch/riscv/include/uapi/asm/unistd.h
+> @@ -18,6 +18,7 @@
+>  #ifdef __LP64__
+>  #define __ARCH_WANT_NEW_STAT
+>  #define __ARCH_WANT_SET_GET_RLIMIT
+> +#define __ARCH_WANT_SYS_CLONE3
+>  #endif /* __LP64__ */
+>  
+>  #include <asm-generic/unistd.h>
+> -- 
+> 2.22.0
+> 
