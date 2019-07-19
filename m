@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEDDC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1655EC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C705F218A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D9C218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509175;
-	bh=zFbi07r+nyZUlEPMyaJQslYDg0thr4ITYLqkbFLBL3I=;
+	s=default; t=1563509179;
+	bh=CAoix3qP2jnrbO20MujvnszQJy01ASlC9QjPR7Q5lxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dbB8PLmvWPGOw18kb2Z1beOpl/mPn+rBYQl5tDPaeIWTFtxNoyPhxvQ6kNmFwUoU4
-	 vcI4p+0kyY6/oIInMikJF/DH+YpXw/u/TVoNVH3wSsD3wEcIC4sXlMhrThyP1Pu5ax
-	 Dog361JsNyL/JppKJuoeKQs2RiMWj1VGqTpZmfj4=
+	b=DfNVF0WgdNzPrCZaihGk1Sz9udMqwdRIsYaF291MEj7fD6wT0llR7i5n94Rn+FCZ6
+	 2drkcSF4YiUPnTXz47QUcU/S070aSW1JDJdmToA7368EdZ3QouY5Fvf08MxAoMJLLY
+	 RzbA8p1h/NdTU8eHBIuAKiSjLvjXPs/URproLUmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbfGSEGP (ORCPT
+        id S1732071AbfGSEGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39082 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfGSEGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:06:10 -0400
+        id S1730836AbfGSEGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:06:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F26B21852;
-        Fri, 19 Jul 2019 04:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FF20218C5;
+        Fri, 19 Jul 2019 04:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509169;
-        bh=zFbi07r+nyZUlEPMyaJQslYDg0thr4ITYLqkbFLBL3I=;
+        s=default; t=1563509170;
+        bh=CAoix3qP2jnrbO20MujvnszQJy01ASlC9QjPR7Q5lxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2xPLU1ORaRo8Rm4o6bujyOg15hcLTfEQLgGFM0QtxoNYUJ7OmqmLGj1PqtMvkdzO
-         f7GiPqJ3MMZTvlp70J2eMfDnaMgOALeEtEkMVtlM1m1safUrE1ys2HByxVUmYbNgM3
-         WS5KOLzA9iLL706vkoEaXEMIypKaD11xWvJDAmoU=
+        b=sDKcvMYkjZ6oHAT73P76O4NZaciTnik7968WbHeayd1jMWNxT0zoxtYfM03RT96pk
+         ZAiyfDhB9Sogviu/SpQ5LU7HrYZ3tyOpxMR7/tlkJUGeDdF4UyvhEerWQzwtzvrf8+
+         PTD986HyAOVcUJnChu6FsNBfytNhr80X6o0qrgH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 103/141] perf hists browser: Fix potential NULL pointer dereference found by the smatch tool
-Date:   Fri, 19 Jul 2019 00:02:08 -0400
-Message-Id: <20190719040246.15945-103-sashal@kernel.org>
+Cc:     Konstantin Taranov <konstantin.taranov@inf.ethz.ch>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 104/141] RDMA/rxe: Fill in wc byte_len with IB_WC_RECV_RDMA_WITH_IMM
+Date:   Fri, 19 Jul 2019 00:02:09 -0400
+Message-Id: <20190719040246.15945-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -66,91 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Konstantin Taranov <konstantin.taranov@inf.ethz.ch>
 
-[ Upstream commit ceb75476db1617a88cc29b09839acacb69aa076e ]
+[ Upstream commit bdce1290493caa3f8119f24b5dacc3fb7ca27389 ]
 
-Based on the following report from Smatch, fix the potential
-NULL pointer dereference check.
+Calculate the correct byte_len on the receiving side when a work
+completion is generated with IB_WC_RECV_RDMA_WITH_IMM opcode.
 
-  tools/perf/ui/browsers/hists.c:641
-  hist_browser__run() error: we previously assumed 'hbt' could be
-  null (see line 625)
+According to the IBA byte_len must indicate the number of written bytes,
+whereas it was always equal to zero for the IB_WC_RECV_RDMA_WITH_IMM
+opcode, even though data was transferred.
 
-  tools/perf/ui/browsers/hists.c:3088
-  perf_evsel__hists_browse() error: we previously assumed
-  'browser->he_selection' could be null (see line 2902)
-
-  tools/perf/ui/browsers/hists.c:3272
-  perf_evsel_menu__run() error: we previously assumed 'hbt' could be
-  null (see line 3260)
-
-This patch firstly validating the pointers before access them, so can
-fix potential NULL pointer dereference.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190708143937.7722-2-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Konstantin Taranov <konstantin.taranov@inf.ethz.ch>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/hists.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_resp.c  | 5 ++++-
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 3421ecbdd3f0..c1dd9b54dc6e 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -638,7 +638,11 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
- 		switch (key) {
- 		case K_TIMER: {
- 			u64 nr_entries;
--			hbt->timer(hbt->arg);
-+
-+			WARN_ON_ONCE(!hbt);
-+
-+			if (hbt)
-+				hbt->timer(hbt->arg);
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index aca9f60f9b21..1cbfbd98eb22 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -431,6 +431,7 @@ static enum resp_states check_rkey(struct rxe_qp *qp,
+ 			qp->resp.va = reth_va(pkt);
+ 			qp->resp.rkey = reth_rkey(pkt);
+ 			qp->resp.resid = reth_len(pkt);
++			qp->resp.length = reth_len(pkt);
+ 		}
+ 		access = (pkt->mask & RXE_READ_MASK) ? IB_ACCESS_REMOTE_READ
+ 						     : IB_ACCESS_REMOTE_WRITE;
+@@ -856,7 +857,9 @@ static enum resp_states do_complete(struct rxe_qp *qp,
+ 				pkt->mask & RXE_WRITE_MASK) ?
+ 					IB_WC_RECV_RDMA_WITH_IMM : IB_WC_RECV;
+ 		wc->vendor_err = 0;
+-		wc->byte_len = wqe->dma.length - wqe->dma.resid;
++		wc->byte_len = (pkt->mask & RXE_IMMDT_MASK &&
++				pkt->mask & RXE_WRITE_MASK) ?
++					qp->resp.length : wqe->dma.length - wqe->dma.resid;
  
- 			if (hist_browser__has_filter(browser) ||
- 			    symbol_conf.report_hierarchy)
-@@ -2819,7 +2823,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- {
- 	struct hists *hists = evsel__hists(evsel);
- 	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env, annotation_opts);
--	struct branch_info *bi;
-+	struct branch_info *bi = NULL;
- #define MAX_OPTIONS  16
- 	char *options[MAX_OPTIONS];
- 	struct popup_action actions[MAX_OPTIONS];
-@@ -3085,7 +3089,9 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- 			goto skip_annotation;
+ 		/* fields after byte_len are different between kernel and user
+ 		 * space
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index 157e51aeb1e1..f99eab4da78b 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -213,6 +213,7 @@ struct rxe_resp_info {
+ 	struct rxe_mem		*mr;
+ 	u32			resid;
+ 	u32			rkey;
++	u32			length;
+ 	u64			atomic_orig;
  
- 		if (sort__mode == SORT_MODE__BRANCH) {
--			bi = browser->he_selection->branch_info;
-+
-+			if (browser->he_selection)
-+				bi = browser->he_selection->branch_info;
- 
- 			if (bi == NULL)
- 				goto skip_annotation;
-@@ -3269,7 +3275,8 @@ static int perf_evsel_menu__run(struct perf_evsel_menu *menu,
- 
- 		switch (key) {
- 		case K_TIMER:
--			hbt->timer(hbt->arg);
-+			if (hbt)
-+				hbt->timer(hbt->arg);
- 
- 			if (!menu->lost_events_warned &&
- 			    menu->lost_events &&
+ 	/* SRQ only */
 -- 
 2.20.1
 
