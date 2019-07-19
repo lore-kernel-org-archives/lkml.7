@@ -2,288 +2,132 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C864DC76197
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5885C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F482173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE2A2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 11:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfGSLaJ (ORCPT
+        id S1727618AbfGSLcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 07:30:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:42160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfGSLaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 07:30:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B46D0337;
-        Fri, 19 Jul 2019 04:30:07 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F245C3F71A;
-        Fri, 19 Jul 2019 04:30:04 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 12:29:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 01/18] dt: psci: Update DT bindings to support
- hierarchical PSCI states
-Message-ID: <20190719112947.GA22746@e121166-lin.cambridge.arm.com>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-2-ulf.hansson@linaro.org>
+        Fri, 19 Jul 2019 07:32:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:32889 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfGSLcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 07:32:17 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M7v18-1hkbMf1elO-0052h7; Fri, 19 Jul 2019 13:31:47 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH] [v2] blkdev: always export SECTOR_SHIFT
+Date:   Fri, 19 Jul 2019 13:31:18 +0200
+Message-Id: <20190719113139.4005262-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-2-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Vmcxqz1+zEC4Gz6MD7qxPE6OvaMIZxoiZywAbPjeNNR5AZUtT2+
+ +rfnevMk1EgxsXJurkbh8MjLDWrZ8gHLODetIapgvkq3WJuzsanCjfwpsdc6I7UAoPODYST
+ e4CuWsI1cWg7chal0vqGKqISZAJxF4wt5wFpeZ2T83pN61CdvHkanJUFplVU/HEI+KiI6IL
+ 3NNUfLtBMCGVeMMdNsADw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rxjEIKNOxbo=:3knNSkYGwlgeMBNhwhifSm
+ jilkYZ/AJkClQOMIzvdln5LqT6DE+j9D3SjGQd6LdxsaeX44E29Wp6QQS205jpY5o9F1bC8tk
+ MG++tt4QoT1gwZPNgNI3o3PTeLwXLcNCvUS5F0+WHIyXdmtVLvQsToa/JUoAs02Pgczc6ngIv
+ fBqqsV32a+DrgnIZBxz61S6Zs0LHkUXGduH1DFjyUOr/a0U+9BqsH1OHCSsFWpZsD5D/AcDs2
+ 6PwEAikML8CdlwNQ9MepTYknmmePDWpN/TDfwBgCvD/8aEZuRFz8cYY5GYdjCTAVHJK+CqeEz
+ A8PLpSBllLsqSgLweMKVAZNjOA04yeJU3gluqToGzBSlMJ21AbXJAf6S7RF+C4sOGbzrqKwTu
+ DZjA50LTI9Z9fH46VUmxt1i/f8cAA5PLz19z4q0bz0Zpb4CpgcdbR6ssbUec6MbejQ+vqqMZr
+ dqRQOkuz4iue1VjiVISllaBCGnpm5XwPGyNeFUfWyiYkkUXRsFQqLn4JsvpeS/fgMOtMfuyTQ
+ DhyGW+/7Ajtwe2ME/+vpZ3bHRZevJKX7V8+gcc0/sO7usX8qfXPaXq72ZITw1nxK/vYHqTdzX
+ HzWORafEMdGaFzxV/iSnpntcsIIY04kjL62jZZ9WiDPqNwhkuBLEJWIhvbOrGZrao7NgdkmIt
+ KY5OC4vJKHLDUIxPbXXg62JeiypBO+8VWpBdpbOCuXCxGKlR+cPYjAkZ8PByQUQthJAkcGL0I
+ dNY3ATK0ZuCfuy3vpMw8aP2woWfopPmK8+jaJA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:43PM +0200, Ulf Hansson wrote:
-> From: Lina Iyer <lina.iyer@linaro.org>
-> 
-> Update DT bindings to represent hierarchical CPU and CPU PM domain idle
-> states for PSCI. Also update the PSCI examples to clearly show how
-> flattened and hierarchical idle states can be represented in DT.
-> 
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Co-developed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
-> 
-> Changes:
-> 	- None.
-> 
-> ---
->  .../devicetree/bindings/arm/psci.txt          | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-> index a2c4f1d52492..e6d3553c8df8 100644
-> --- a/Documentation/devicetree/bindings/arm/psci.txt
-> +++ b/Documentation/devicetree/bindings/arm/psci.txt
-> @@ -105,7 +105,173 @@ Case 3: PSCI v0.2 and PSCI v0.1.
->  		...
->  	};
->  
-> +ARM systems can have multiple cores sometimes in hierarchical arrangement.
-> +This often, but not always, maps directly to the processor power topology of
-> +the system. Individual nodes in a topology have their own specific power states
-> +and can be better represented in DT hierarchically.
-> +
-> +For these cases, the definitions of the idle states for the CPUs and the CPU
-> +topology, must conform to the domain idle state specification [3]. The domain
-> +idle states themselves, must be compatible with the defined 'domain-idle-state'
-> +binding [1], and also need to specify the arm,psci-suspend-param property for
-> +each idle state.
-> +
-> +DT allows representing CPUs and CPU idle states in two different ways -
-> +
-> +The flattened model as given in Example 1, lists CPU's idle states followed by
-> +the domain idle state that the CPUs may choose. Note that the idle states are
-> +all compatible with "arm,idle-state". Additionally, for the domain idle state
-> +the "arm,psci-suspend-param" represents a superset of the CPU's idle state.
-> +
-> +Example 2 represents the hierarchical model of CPUs and domain idle states.
-> +CPUs define their domain provider in their psci DT node. The domain controls
-> +the power to the CPU and possibly other h/w blocks that would enter an idle
-> +state along with the CPU. The CPU's idle states may therefore be considered as
-> +the domain's idle states and have the compatible "arm,idle-state". Such domains
-> +may also be embedded within another domain that may represent common h/w blocks
-> +between these CPUs. The idle states of the CPU topology shall be represented as
-> +the domain's idle states. Note that for the domain idle state, the
-> +"arm,psci-suspend-param" represents idle states hierarchically.
-> +
-> +In PSCI firmware v1.0, the OS-Initiated mode is introduced. However, the
-> +flattened vs hierarchical DT representation is orthogonal to the OS-Initiated
-> +vs the platform-coordinated PSCI CPU suspend modes, thus should be considered
-> +independent of each other.
-> +
-> +The hierarchical representation helps and makes it easy to implement OSI mode
-> +and OS implementations may choose to mandate it. For the default platform-
-> +coordinated mode, both representations are viable options.
-> +
-> +Example 1: Flattened representation of CPU and domain idle states
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
-> +					  <&CLUSTER_PWRDN>;
-> +		};
-> +
-> +		CPU1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a57", "arm,armv8";
-> +			reg = <0x100>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
-> +					  <&CLUSTER_PWRDN>;
-> +		};
-> +
-> +		idle-states {
-> +			CPU_PWRDN: cpu-power-down {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x0000001>;
+When CONFIG_BLOCK is disabled, SECTOR_SHIFT is unknown, and this leads
+to a failure in the testing infrastructure added from commit c93a0368aaa2
+("kbuild: do not create wrappers for header-test-y"):
 
-This value is wrong, StateType must be 1 for CPU power down states.
+In file included from <built-in>:3:
+include/linux/iomap.h:76:48: error: use of undeclared identifier 'SECTOR_SHIFT'
+        return (iomap->addr + pos - iomap->offset) >> SECTOR_SHIFT;
 
-> +				entry-latency-us = <10>;
-> +				exit-latency-us = <10>;
-> +				min-residency-us = <100>;
-> +			};
-> +
-> +			CLUSTER_RET: cluster-retention {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x1000011>;
+If we want to keep build testing all headers, the macro needs to
+either be defined, or not used. Move it out of the #ifdef
+section to ensure it is visible.
 
-It must be made crystal clear that this is the *full* power_state
-that is passed to the CPU_SUSPEND call. It is already specified
-in the bindings.
+Fixes: db074436f421 ("iomap: move the direct IO code into a separate file")
+Link: https://lore.kernel.org/lkml/20190718125509.775525-1-arnd@arndb.de/T/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+The discussion about the build testing is still going on, but I promised
+to send this version anyway for reference. I see no other header-test
+failures in randconfig builds with this patch.
+---
+ include/linux/blkdev.h | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-As Sudeep pointed out already, OR'ing the power_state parameters values
-across power domains is wrong, in that there is nothing in the PSCI
-specifications that enforces a power_state parameter scheme whereby
-different "levels" are assigned different bitfields, in particular with
-the extended format a power_state parameter for eg "system" level is not
-necessarily OR'ed value of cluster|cpu|system values.
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 0ec4f975437e..9c22d8bc6bf9 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -5,6 +5,19 @@
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+ 
++/*
++ * The basic unit of block I/O is a sector. It is used in a number of contexts
++ * in Linux (blk, bio, genhd). The size of one sector is 512 = 2**9
++ * bytes. Variables of type sector_t represent an offset or size that is a
++ * multiple of 512 bytes. Hence these two constants.
++ */
++#ifndef SECTOR_SHIFT
++#define SECTOR_SHIFT 9
++#endif
++#ifndef SECTOR_SIZE
++#define SECTOR_SIZE (1 << SECTOR_SHIFT)
++#endif
++
+ #ifdef CONFIG_BLOCK
+ 
+ #include <linux/major.h>
+@@ -889,19 +902,6 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+ 	return bdev->bd_disk->queue;	/* this is never NULL */
+ }
+ 
+-/*
+- * The basic unit of block I/O is a sector. It is used in a number of contexts
+- * in Linux (blk, bio, genhd). The size of one sector is 512 = 2**9
+- * bytes. Variables of type sector_t represent an offset or size that is a
+- * multiple of 512 bytes. Hence these two constants.
+- */
+-#ifndef SECTOR_SHIFT
+-#define SECTOR_SHIFT 9
+-#endif
+-#ifndef SECTOR_SIZE
+-#define SECTOR_SIZE (1 << SECTOR_SHIFT)
+-#endif
+-
+ /*
+  * blk_rq_pos()			: the current sector
+  * blk_rq_bytes()		: bytes left in the entire request
+-- 
+2.20.0
 
-So, to sum it up, arm,psci-suspend-param must be the full power_state
-parameter to be passed to CPU_SUSPEND and must be specified in full for
-every CPU and power domain idle state.
-
-Thanks,
-Lorenzo
-
-> +				entry-latency-us = <500>;
-> +				exit-latency-us = <500>;
-> +				min-residency-us = <2000>;
-> +			};
-> +
-> +			CLUSTER_PWRDN: cluster-power-down {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x1000031>;
-> +				entry-latency-us = <2000>;
-> +				exit-latency-us = <2000>;
-> +				min-residency-us = <6000>;
-> +			};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +Example 2: Hierarchical representation of CPU and domain idle states
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			power-domains = <&CPU_PD0>;
-> +			power-domain-names = "psci";
-> +		};
-> +
-> +		CPU1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a57", "arm,armv8";
-> +			reg = <0x100>;
-> +			enable-method = "psci";
-> +			power-domains = <&CPU_PD1>;
-> +			power-domain-names = "psci";
-> +		};
-> +
-> +		idle-states {
-> +			CPU_PWRDN: cpu-power-down {
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x0000001>;
-> +				entry-latency-us = <10>;
-> +				exit-latency-us = <10>;
-> +				min-residency-us = <100>;
-> +			};
-> +
-> +			CLUSTER_RET: cluster-retention {
-> +				compatible = "domain-idle-state";
-> +				arm,psci-suspend-param = <0x1000010>;
-> +				entry-latency-us = <500>;
-> +				exit-latency-us = <500>;
-> +				min-residency-us = <2000>;
-> +			};
-> +
-> +			CLUSTER_PWRDN: cluster-power-down {
-> +				compatible = "domain-idle-state";
-> +				arm,psci-suspend-param = <0x1000030>;
-> +				entry-latency-us = <2000>;
-> +				exit-latency-us = <2000>;
-> +				min-residency-us = <6000>;
-> +			};
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +
-> +		CPU_PD0: cpu-pd0 {
-> +			#power-domain-cells = <0>;
-> +			domain-idle-states = <&CPU_PWRDN>;
-> +			power-domains = <&CLUSTER_PD>;
-> +		};
-> +
-> +		CPU_PD1: cpu-pd1 {
-> +			#power-domain-cells = <0>;
-> +			domain-idle-states =  <&CPU_PWRDN>;
-> +			power-domains = <&CLUSTER_PD>;
-> +		};
-> +
-> +		CLUSTER_PD: cluster-pd {
-> +			#power-domain-cells = <0>;
-> +			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWRDN>;
-> +		};
-> +	};
-> +
->  [1] Kernel documentation - ARM idle states bindings
->      Documentation/devicetree/bindings/arm/idle-states.txt
->  [2] Power State Coordination Interface (PSCI) specification
->      http://infocenter.arm.com/help/topic/com.arm.doc.den0022c/DEN0022C_Power_State_Coordination_Interface.pdf
-> +[3]. PM Domains description
-> +    Documentation/devicetree/bindings/power/power_domain.txt
-> -- 
-> 2.17.1
-> 
