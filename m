@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399E6C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA41C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06355206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B841B206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510817;
-	bh=Ieid9JHW9cHMr72tyAO8o2PtFtDA8gd5V7g1Ll5dUiA=;
+	s=default; t=1563510823;
+	bh=Q2SEaEAU3FeOtqv5GUeAciOTGA6J81HutJNlYGYF0XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcNvsPdPzc3UMUz2tr9E+IBekiIKCmNyRaGm8EoDNRIvvtCAcRXnkmA8r1l8E2Eqq
-	 QMtDlC0V1prdv76ZZ+yvd02Ce/0yu0HlFim8gnaen3Ba+R0k4wcSl9BCMnkQ3X8M/m
-	 0uPgFHFb68jLWAc5j/MoQb0KyTVGmQ+Vn2h5a8HE=
+	b=j3BTvZnxrSX97lqwWuSSoSKTPNFTXuDnuUCkvV4vPT1hdYp6TBDzkOPgCdpOz2YXp
+	 9dAGDCWa2J/3Iyl1cPv8RF5/pXiDFuanP9jcfnoL194b5E2nyBROYs6lpiSugZ0SxN
+	 U/xoaQGBoIlQXmnMtgwHu8CiTjZ62uc6sYhsJqrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbfGSEdg (ORCPT
+        id S1732301AbfGSEdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34996 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:33:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbfGSEDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:03:00 -0400
+        id S1728763AbfGSECy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:02:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E71021873;
-        Fri, 19 Jul 2019 04:02:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0C321873;
+        Fri, 19 Jul 2019 04:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508979;
-        bh=Ieid9JHW9cHMr72tyAO8o2PtFtDA8gd5V7g1Ll5dUiA=;
+        s=default; t=1563508973;
+        bh=Q2SEaEAU3FeOtqv5GUeAciOTGA6J81HutJNlYGYF0XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s5bh6m6QcjrG5vQWsN4S8rVrnF6Ec1on8w5uBKEP6KyCSn6i0ePNhVsCBNTaBFk05
-         TxxkXvdEtoP0OiaM5k2C3YJpdTKBaZY2w1eoYDTBrJIySVx7ttWArbRMe/3/YpcUkF
-         tARG5e898EUGyQagetpbbBIEeCXb3bO9eP6vGQeA=
+        b=bme/rG9xwWXhZ9TkNM3JRvXlwu3r7RhpmDD76aKXMHyCt8wCgbJVmquYfAd7zx2UE
+         BKwzxxcSKxPHDsxC2nqnWPgE1kGxfpo3uZ+NFlzNZDXYLlK0iLgMJcxHG9UVJ3qVXV
+         NzzN3EM7rP24lN094OtFWaIAr/Y0jcDjyjgYy7Wc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 007/141] drm/bochs: Fix connector leak during driver unload
-Date:   Fri, 19 Jul 2019 00:00:32 -0400
-Message-Id: <20190719040246.15945-7-sashal@kernel.org>
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 003/141] iio: adc: stm32-dfsdm: missing error case during probe
+Date:   Fri, 19 Jul 2019 00:00:28 -0400
+Message-Id: <20190719040246.15945-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -61,46 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-[ Upstream commit 3c6b8625dde82600fd03ad1fcba223f1303ee535 ]
+[ Upstream commit d2fc0156963cae8f1eec8e2dd645fbbf1e1c1c8e ]
 
-When unloading the bochs-drm driver, a warning message is printed by
-drm_mode_config_cleanup() because a reference is still held to one of
-the drm_connector structs.
+During probe, check the devm_ioremap_resource() error value.
+Also return the devm_clk_get() error value instead of -EINVAL.
 
-Correct this by calling drm_atomic_helper_shutdown() in
-bochs_pci_remove().
-
-Fixes: 6579c39594ae ("drm/bochs: atomic: switch planes to atomic, wire up helpers.")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/93b363ad62f4938d9ddf3e05b2a61e3f66b2dcd3.1558416473.git.sbobroff@linux.ibm.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bochs/bochs_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/adc/stm32-dfsdm-core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-index 6b6e037258c3..7031f0168795 100644
---- a/drivers/gpu/drm/bochs/bochs_drv.c
-+++ b/drivers/gpu/drm/bochs/bochs_drv.c
-@@ -10,6 +10,7 @@
- #include <linux/slab.h>
- #include <drm/drm_fb_helper.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/drm_atomic_helper.h>
+diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+index bf089f5d6225..941630615e88 100644
+--- a/drivers/iio/adc/stm32-dfsdm-core.c
++++ b/drivers/iio/adc/stm32-dfsdm-core.c
+@@ -213,6 +213,8 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+ 	}
+ 	priv->dfsdm.phys_base = res->start;
+ 	priv->dfsdm.base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(priv->dfsdm.base))
++		return PTR_ERR(priv->dfsdm.base);
  
- #include "bochs.h"
+ 	/*
+ 	 * "dfsdm" clock is mandatory for DFSDM peripheral clocking.
+@@ -222,8 +224,10 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+ 	 */
+ 	priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
+ 	if (IS_ERR(priv->clk)) {
+-		dev_err(&pdev->dev, "No stm32_dfsdm_clk clock found\n");
+-		return -EINVAL;
++		ret = PTR_ERR(priv->clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
++		return ret;
+ 	}
  
-@@ -174,6 +175,7 @@ static void bochs_pci_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 
-+	drm_atomic_helper_shutdown(dev);
- 	drm_dev_unregister(dev);
- 	bochs_unload(dev);
- 	drm_dev_put(dev);
+ 	priv->aclk = devm_clk_get(&pdev->dev, "audio");
 -- 
 2.20.1
 
