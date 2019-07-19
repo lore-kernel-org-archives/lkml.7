@@ -2,141 +2,299 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A900C7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFF4C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DC021849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTxXBCRS"
+	by mail.kernel.org (Postfix) with ESMTP id 4503621849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 20:57:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfGSU4j (ORCPT
+        id S2388251AbfGSU5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 16:56:39 -0400
-Received: from mail-pg1-f171.google.com ([209.85.215.171]:40986 "EHLO
-        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbfGSU4j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 16:56:39 -0400
-Received: by mail-pg1-f171.google.com with SMTP id x15so4620811pgg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 13:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3NYv6TCWtb7tkR1P/MbWMgyIgT3S1PINtDcy9WMCXyk=;
-        b=wTxXBCRSeppmWSR7yZ/z0fatUN5RT4CIrq5NGo/JoipBYdHByrus46FERdKzLm/Say
-         sZq1nShQJtykJcyndXzxDXtIVSfFG2V5dvtIQ+wVGU0azw/IoP8kc6e11c1Ub8Wp5SO0
-         BVKoDVWLmTdXKj6ArxpIpfDs+c0NcAdOo3fyjCOp3z0e0CyCPa1HsqK6jBsfD04xjvyO
-         D2JcnFOYZ+Mj3O1c133nZecyNSNGuMldvj0xUo5IA0m7qyELJYsdwzeX5ZYk8UKrYXiS
-         fBUWIjysf/rtZRZAQ/vIPkmssohq9s2WEJAYUpa61wxBqSZzRQp7GZ1lAKEm3xNHDLxt
-         sd6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3NYv6TCWtb7tkR1P/MbWMgyIgT3S1PINtDcy9WMCXyk=;
-        b=Lb7bVcJidwEDkNwDqgQ3FNw6PzIyczW8uTtxwasohwvQpsH6SU09rFXtQ8cu7r2pfh
-         aXtfPpMZGneOVJN0frtKLLQhxp1FELzqPL1B3Je2e2+x6n0OAQdiJvEQpMPQoWTA1qpo
-         SDr0bd5vh/UeX1ufofIPa0pUle3flASsf1EF7RuNu792zq0fa+nIBSI+bK4NQOzsgZft
-         n2KwzMPl9FzE68+/Vx/kk3MdvsRYwjdNA+nWMR7Xfqdd5H9BhnawmAPkM6qqSjYxE/dk
-         TsurBsHCmKZ2E+TQC7cwZDSb6UtxQm2sRni7nLIL0gk1B+6lvGCeWPnncEAFd2X0hYhc
-         3Tlg==
-X-Gm-Message-State: APjAAAVSeaknnwGrTD+ZKVa6SEXuhpmDydGoB2ld/hb7Xv04Q/Lxvfug
-        vYh7o3l760ThnDBdntMJ41tl18pzzZns/eTVFmWdmA==
-X-Google-Smtp-Source: APXvYqyMOIrfjIgnGwgMocYcJ0JN38hJDAsNgaSllqcJ5GyMRnAOgoT2e/hbgQDpittbt0zFbvtqobrf5jz1JuEtHFw=
-X-Received: by 2002:a63:60a:: with SMTP id 10mr25172182pgg.381.1563569798307;
- Fri, 19 Jul 2019 13:56:38 -0700 (PDT)
+        Fri, 19 Jul 2019 16:57:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43288 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728148AbfGSU5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 16:57:35 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 150374F655;
+        Fri, 19 Jul 2019 20:57:34 +0000 (UTC)
+Received: from x1.home (ovpn-116-35.phx2.redhat.com [10.3.116.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54CB419C68;
+        Fri, 19 Jul 2019 20:57:33 +0000 (UTC)
+Date:   Fri, 19 Jul 2019 14:57:32 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
+Message-ID: <20190719145732.169fc4ba@x1.home>
+In-Reply-To: <A2975661238FB949B60364EF0F2C257439FD665D@SHSMSX104.ccr.corp.intel.com>
+References: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
+        <1560000071-3543-10-git-send-email-yi.l.liu@intel.com>
+        <20190619222647.72efc76a@x1.home>
+        <A2975661238FB949B60364EF0F2C257439F0164E@SHSMSX104.ccr.corp.intel.com>
+        <20190620150757.7b2fa405@x1.home>
+        <A2975661238FB949B60364EF0F2C257439F02663@SHSMSX104.ccr.corp.intel.com>
+        <20190621095740.41e6e98e@x1.home>
+        <A2975661238FB949B60364EF0F2C257439F05415@SHSMSX104.ccr.corp.intel.com>
+        <20190628090741.51e8d18e@x1.home>
+        <A2975661238FB949B60364EF0F2C257439F1E9EC@SHSMSX104.ccr.corp.intel.com>
+        <20190703112212.146ac71c@x1.home>
+        <A2975661238FB949B60364EF0F2C257439F1FF4E@SHSMSX104.ccr.corp.intel.com>
+        <20190705095520.548331c2@x1.home>
+        <A2975661238FB949B60364EF0F2C257439F931F8@SHSMSX104.ccr.corp.intel.com>
+        <20190711130811.4e51437d@x1.home>
+        <A2975661238FB949B60364EF0F2C257439FD665D@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190719200347.2596375-1-arnd@arndb.de>
-In-Reply-To: <20190719200347.2596375-1-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 19 Jul 2019 13:56:27 -0700
-Message-ID: <CAKwvOdkv9DebPrB1BLriY+SY5a8EX5VsDVLRS-2-cbORMdTcTQ@mail.gmail.com>
-Subject: Re: [PATCH] [v2] kasan: remove clang version check for KASAN_STACK
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, Qian Cai <cai@lca.pw>,
-        Mark Brown <broonie@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 19 Jul 2019 20:57:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 1:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> asan-stack mode still uses dangerously large kernel stacks of
-> tens of kilobytes in some drivers, and it does not seem that anyone
-> is working on the clang bug.
+On Fri, 12 Jul 2019 12:55:27 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> Hi Alex,
+> 
+> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > Sent: Friday, July 12, 2019 3:08 AM
+> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
+> > 
+> > On Thu, 11 Jul 2019 12:27:26 +0000
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> >   
+> > > Hi Alex,
+> > >  
+> > > > From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On  
+> > Behalf  
+> > > > Of Alex Williamson
+> > > > Sent: Friday, July 5, 2019 11:55 PM
+> > > > To: Liu, Yi L <yi.l.liu@intel.com>
+> > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver
+> > > >
+> > > > On Thu, 4 Jul 2019 09:11:02 +0000
+> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > > >  
+> > > > > Hi Alex,
+> > > > >  
+> > > > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > > > > > Sent: Thursday, July 4, 2019 1:22 AM
+> > > > > > To: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > > Subject: Re: [PATCH v1 9/9] smaples: add vfio-mdev-pci driver  
+> > > [...]  
+> > > > >  
+> > > > > > It's really unfortunate that we don't have the mdev inheriting the
+> > > > > > iommu group of the iommu_device so that userspace can really understand
+> > > > > > this relationship.  A separate group makes sense for the aux-domain
+> > > > > > case, and is (I guess) not a significant issue in the case of a
+> > > > > > singleton iommu_device group, but it's pretty awkward here.  Perhaps
+> > > > > > this is something we should correct in design of iommu backed mdevs.  
+> > > > >
+> > > > > Yeah, for aux-domain case, it is not significant issue as aux-domain essentially
+> > > > > means singleton iommu_devie group. And in early time, when designing the  
+> > > > support  
+> > > > > for wrap pci as a mdev, we also considered to let vfio-mdev-pci to reuse
+> > > > > iommu_device group. But this results in an iommu backed group includes mdev  
+> > and  
+> > > > > physical devices, which might also be strange. Do you think it is valuable to  
+> > > > reconsider  
+> > > > > it?  
+> > > >
+> > > > From a group perspective, the cleanest solution would seem to be that
+> > > > IOMMU backed mdevs w/o aux domain support should inherit the IOMMU
+> > > > group of the iommu_device,  
+> > >
+> > > A confirm here. Regards to inherit the IOMMU group of iommu_device, do
+> > > you mean mdev device should be added to the IOMMU group of iommu_device
+> > > or maintain a parent and inheritor relationship within vfio? I guess you mean the
+> > > later one? :-)  
+> > 
+> > I was thinking the former, I'm not sure what the latter implies.  There
+> > is no hierarchy within or between IOMMU groups, it's simply a set of
+> > devices.  
+> 
+> I have a concern on adding the mdev device to the iommu_group of
+> iommu_device. In such configuration, a iommu backed group includes
+> mdev devices and physical devices. Then it might be necessary to advertise
+> the mdev info to the in-kernel software which want to loop all devices within
+> such an iommu_group. An example I can see is the virtual SVA threads in
+> community. e.g. for a guest pasid bind, the changes below loops all the
+> devices within an iommu_group, and each loop will call into vendor iommu
+> driver with a device structure passed in. It is quite possible that vendor
+> iommu driver need to get something behind a physical device (e.g.
+> intel_iommu structure). For a physical device, it is fine. While for mdev
+> device, it would be a problem if no mdev info advertised to iommu driver. :-(
+> Although we have agreement that PASID support should be disabled for
+> devices which are from non-singleton group. But I don't feel like to rely on
+> such assumptions when designing software flows. Also, it's just an example,
+> we have no idea if there will be more similar flows which require to loop all
+> devices in an iommu group in future. May be we want to avoid adding a mdev
+> to an iommu backed group. :-) More replies to you response below.
+> 
+> +static long vfio_iommu_type1_bind_gpasid(struct vfio_iommu *iommu,
+> +					    void __user *arg,
+> +					    struct vfio_iommu_type1_bind *bind)
+> + ...
+> +	list_for_each_entry(domain, &iommu->domain_list, next) {
+> +		list_for_each_entry(group, &domain->group_list, next) {
+> +			ret = iommu_group_for_each_dev(group->iommu_group,
+> +			   &guest_bind, vfio_bind_gpasid_fn);
+> +			if (ret)
+> +				goto out_unbind;
+> +		}
+> +	}
+> + ...
+> +}
 
->
-> Turn it off for all clang versions to prevent users from
-> accidentally enabling it once they update to clang-9, and
-> to help automated build testing with clang-9.
->
-> Link: https://bugs.llvm.org/show_bug.cgi?id=38809
-> Fixes: 6baec880d7a5 ("kasan: turn off asan-stack for clang-8 and earlier")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: disable the feature for all clang versions, not just 9 and below.
-> ---
->  lib/Kconfig.kasan | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
->
-> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> index 4fafba1a923b..7fa97a8b5717 100644
-> --- a/lib/Kconfig.kasan
-> +++ b/lib/Kconfig.kasan
-> @@ -106,7 +106,6 @@ endchoice
->
->  config KASAN_STACK_ENABLE
->         bool "Enable stack instrumentation (unsafe)" if CC_IS_CLANG && !COMPILE_TEST
-> -       default !(CLANG_VERSION < 90000)
->         depends on KASAN
->         help
->           The LLVM stack address sanitizer has a know problem that
-> @@ -115,11 +114,11 @@ config KASAN_STACK_ENABLE
->           Disabling asan-stack makes it safe to run kernels build
->           with clang-8 with KASAN enabled, though it loses some of
->           the functionality.
-> -         This feature is always disabled when compile-testing with clang-8
-> -         or earlier to avoid cluttering the output in stack overflow
-> -         warnings, but clang-8 users can still enable it for builds without
-> -         CONFIG_COMPILE_TEST.  On gcc and later clang versions it is
-> -         assumed to always be safe to use and enabled by default.
-> +         This feature is always disabled when compile-testing with clang
-> +         to avoid cluttering the output in stack overflow warnings,
-> +         but clang users can still enable it for builds without
-> +         CONFIG_COMPILE_TEST.  On gcc it is assumed to always be safe
-> +         to use and enabled by default.
->
->  config KASAN_STACK
->         int
-> --
-> 2.20.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190719200347.2596375-1-arnd%40arndb.de.
+Sorry for the delayed response.
+
+I think you're right, making the IOMMU code understand virtual devices
+in an IOMMU group makes traversing the group difficult for any layer
+that doesn't understand the relationship of these virtual devices.  I
+guess we can't go that route.
+
+> > Maybe what you're getting at is that vfio needs to understand
+> > that the mdev is a child of the endpoint device in its determination of
+> > whether the group is viable.  
+> 
+> Is the group here the group of iommu_device or a group of a mdev device?
+> :-) Actually, I think the group of a mdev device is always viable since
+> it has only a device and mdev_driver will add the mdev device to vfio
+> controlled scope to make the mdev group viable. Per my understanding,
+> VFIO guarantees the isolation by two major arts. First is checking if
+> group is viable before adding it to a container, second is preventing
+> multiple opens to /dev/vfio/group_id by the vfio_group->opened field
+> maintained in vfio.c.
+
+Yes, minor nit, an mdev needs to be bound to vfio-mdev for the group to
+be vfio "viable", we expect that there will eventually be non-vfio
+drivers for mdev devices.
+
+> Back to the configuration we are talking here (For example a group where
+> one devices is bound to a native host driver and the other device bound
+> to a vfio driver[1].), we have two groups( iommu backed one and mdev group).
+> I think for iommu_device which wants to "donate" its iommu_group, the
+> host driver should explicitly call vfio_add_group_dev() to add itself
+> to the vfio controlled scope. And thus make its iommu backed group be
+> viable. So that we can have two viable iommu groups. iommu backed group
+> is viable by the host driver's vfio_add_group_dev() calling, and mdev
+> group is naturally viable. Until now, we can passthru the devices
+> (vfio-pci device and a mdev device) under this configuration to VM well.
+> But we cannot prevent user to passthru the devices to different VMs since
+> the two iommu groups are both viable. If I'm still understanding vfio
+> correct until this line, I think we need to fail the attempt of passthru
+> to multiple VMs in vfio_iommu_type1_attach_group() by checking the
+> vfio_group->opened field which is maintained in vfio.c. e.g. let's say
+> for iommu backed group, we have vfio_group#1 and mdev group, we have
+> vfio_group#2 in vfio.c, then opening vfio_group#1 requires to inc the
+> vfio_group#2->opened. And vice versa.
+> 
+> [1] the example from the previous reply of you.
+
+I think there's a problem with incrementing the group, the user still
+needs to be able to open the group for devices within the group that
+may be bound to vfio-pci, so I don't think this plan really works.
+Also, who would be responsible for calling vfio_add_group_dev(), the
+vendor driver is just registering an mdev parent device, it doesn't
+know that those devices will be used by vfio-mdev or some other mdev
+bus driver.  I think that means that vfio-mdev would need to call this
+for mdevs with an iommu_device after it registers the mdev itself.  The
+vfio_device_ops it registers would need to essentially be stubbed out
+too, in order to prevent direct vfio access to the backing device.
+
+I wonder if the "inheritance" of a group could be isolated to vfio in
+such a case.  The vfio group file for the mdev must exist for
+userspace compatibility, but I wonder if we could manage to make that be
+effectively an alias for the iommu device.  Using a device from a group
+without actually opening the group still seems problematic too.  I'm
+also wondering how much effort we want to go to in supporting this
+versus mdev could essentially fail the call to register an iommu device
+for an mdev if that iommu device is not in a singleton group.  It would
+limit the application of vfio-mdev-pci, but already being proposed as a
+proof of concept sample driver anyway.
 
 
+> > That's true, but we can also have IOMMU
+> > groups composed of SR-IOV VFs along with their parent PF if the root of
+> > the IOMMU group is (for example) a downstream switch port above the PF.
+> > So we can't simply look at the parent/child relationship within the
+> > group, we somehow need to know that the parent device sharing the IOMMU
+> > group is operating in host kernel space on behalf of the mdev.  
+> 
+> I think for such hardware configuration, we still have only two iommu
+> group, a iommu backed one and a mdev group. May the idea above still
+> applicable. :-)
+> 
+> > > > but I think the barrier here is that we have
+> > > > a difficult time determining if the group is "viable" in that case.
+> > > > For example a group where one devices is bound to a native host driver
+> > > > and the other device bound to a vfio driver would typically be
+> > > > considered non-viable as it breaks the isolation guarantees.  However  
+> > >
+> > > yes, this is how vfio guarantee the isolation before allowing user to further
+> > > add a group to a vfio container and so on.
+> > >  
+> > > > I think in this configuration, the parent device is effectively
+> > > > participating in the isolation and "donating" its iommu group on behalf
+> > > > of the mdev device.  I don't think we can simultaneously use that iommu
+> > > > group for any other purpose.  
+> > >
+> > > Agree. At least host cannot make use of the iommu group any more in such
+> > > configuration.
+> > >  
+> > > > I'm sure we could come up with a way for
+> > > > vifo-core to understand this relationship and add it to the white list,  
+> > >
+> > > The configuration is host driver still exists while we want to let mdev device
+> > > to somehow "own" the iommu backed DMA isolation capability. So one possible
+> > > way may be calling vfio_add_group_dev() which will creates a vfio_device instance
+> > > for the iommu_device in vfio.c when creating a iommu backed mdev. Then the
+> > > iommu group is fairly viable.  
+> > 
+> > "fairly viable" ;)  It's a correct use of the term, it's a little funny
+> > though as "fairly" can also mean reasonably/sufficiently/adequately as
+> > well as I think the intended use here equivalent to justly. </tangent>  
+> 
+> Aha, a nice "lesson" for me. Honestly, I have no idea how it came to me
+> when trying to describe my idea with a moderate term either. Luckily,
+> it made me well understood. :-)
+> 
+> > That's an interesting idea to do an implicit vfio_add_group_dev() on
+> > the iommu_device in this case, if you've worked through how that could
+> > play out, it'd be interesting to see.  
+> 
+> I've tried it in my vfio-mdev-pci driver probe() phase, it works well.
+> And this is an explicit calling. And I guess we may really want host driver
+> to do it explicitly instead of implicitly as host driver owns the choice
+> of whether "donating" group or not. While for failing the
+> vfio_iommu_type1_attach_group() to prevent user passthru the vfio-pci device
+> and vfio-mdev-pci device (share iommu backed group) to different VMs, I'm
+> doing some changes. If it's a correct way, I'll try to send out a new version
+> for your further review. :-)
 
--- 
-Thanks,
-~Nick Desaulniers
+I'm interested to see it, but as above, I have some reservations.  And
+as I mention, and mdev vendor driver cannot assume the device is used
+by vfio-mdev.  I know Intel vGPUs not only assume vfio-mdev, but also
+KVM and fail the device open if the constraints aren't met, but I don't
+think we can start introducing that sort of vfio specific dependencies
+on the mdev bus interface.  Thanks,
+
+Alex
