@@ -2,101 +2,89 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2EFC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB9C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605E92084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D407A2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 01:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfGSBoT convert rfc822-to-8bit (ORCPT
+        id S1726569AbfGSBqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 21:44:19 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:15176 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfGSBoS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 21:44:18 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5d312054c02-a8005; Fri, 19 Jul 2019 09:43:49 +0800 (CST)
-X-RM-TRANSID: 2eeb5d312054c02-a8005
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.21.101] (unknown[112.25.154.148])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15d31205337a-2e74a;
-        Fri, 19 Jul 2019 09:43:48 +0800 (CST)
-X-RM-TRANSID: 2ee15d31205337a-2e74a
-Content-Type: text/plain; charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] openvswitch: Fix a possible memory leak on dst_cache
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-In-Reply-To: <9b231232-dd6e-5733-2af9-e2fb3d6ae0a4@gmail.com>
-Date:   Fri, 19 Jul 2019 09:43:47 +0800
-Cc:     Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <F832C073-F038-40ED-B739-40799F3B859C@cmss.chinamobile.com>
-References: <1563466028-2531-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <9b231232-dd6e-5733-2af9-e2fb3d6ae0a4@gmail.com>
-To:     Gregory Rose <gvrose8192@gmail.com>
-X-Mailer: Apple Mail (2.3273)
+        Thu, 18 Jul 2019 21:46:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2287 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726042AbfGSBqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 21:46:08 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CF09970995D2006834BB;
+        Fri, 19 Jul 2019 09:46:05 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 19 Jul 2019 09:45:55 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <imre.deak@intel.com>, <madhav.chauhan@intel.com>,
+        <vandita.kulkarni@intel.com>, <chris@chris-wilson.co.uk>,
+        <ville.syrjala@linux.intel.com>
+CC:     YueHaibing <yuehaibing@huawei.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] drm/i915/dsi: remove set but not used variable 'hfront_porch'
+Date:   Fri, 19 Jul 2019 01:51:36 +0000
+Message-ID: <20190719015136.103988-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> On 2019年7月19日, at 上午6:12, Gregory Rose <gvrose8192@gmail.com> wrote:
-> 
-> On 7/18/2019 9:07 AM, Haishuang Yan wrote:
->> dst_cache should be destroyed when fail to add flow actions.
->> 
->> Fixes: d71785ffc7e7 ("net: add dst_cache to ovs vxlan lwtunnel")
->> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
->> ---
->>  net/openvswitch/flow_netlink.c | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
->> index d7559c6..1fd1cdd 100644
->> --- a/net/openvswitch/flow_netlink.c
->> +++ b/net/openvswitch/flow_netlink.c
->> @@ -2608,6 +2608,7 @@ static int validate_and_copy_set_tun(const struct nlattr *attr,
->>  			 sizeof(*ovs_tun), log);
->>  	if (IS_ERR(a)) {
->>  		dst_release((struct dst_entry *)tun_dst);
->> +		dst_cache_destroy(&tun_dst->u.tun_info.dst_cache);
->>  		return PTR_ERR(a);
->>  	}
->>  
-> 
-> Nack.
-> 
-> dst_release will decrement the ref count and will call_rcu(&dst->rcu_head, dst_destroy_rcu) if the ref count is zero.  No other net drivers call dst_destroy SFAICT.
-> 
-> Haishuang,
-> 
-> are you trying to fix some specific problem here?
-> 
-> Thanks,
-> 
-> - Greg
-> 
-> 
+drivers/gpu/drm/i915/display/icl_dsi.c: In function 'gen11_dsi_set_transcoder_timings':
+drivers/gpu/drm/i915/display/icl_dsi.c:768:6: warning:
+ variable 'hfront_porch' set but not used [-Wunused-but-set-variable]
 
-Greg,
+It is never used and can be removed.
 
-You’re right, dst_cache would be freed in metadata_dst_free:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/i915/display/icl_dsi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-  125
-  126         if (dst->flags & DST_METADATA)
-  127                 metadata_dst_free((struct metadata_dst *)dst);
-  128         else
-  129                 kmem_cache_free(dst->ops->kmem_cachep, dst);
-  130
+diff --git a/drivers/gpu/drm/i915/display/icl_dsi.c b/drivers/gpu/drm/i915/display/icl_dsi.c
+index 4d952accfaaa..a42348be0438 100644
+--- a/drivers/gpu/drm/i915/display/icl_dsi.c
++++ b/drivers/gpu/drm/i915/display/icl_dsi.c
+@@ -763,7 +763,7 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
+ 	enum transcoder dsi_trans;
+ 	/* horizontal timings */
+ 	u16 htotal, hactive, hsync_start, hsync_end, hsync_size;
+-	u16 hfront_porch, hback_porch;
++	u16 hback_porch;
+ 	/* vertical timings */
+ 	u16 vtotal, vactive, vsync_start, vsync_end, vsync_shift;
+ 
+@@ -772,8 +772,6 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
+ 	hsync_start = adjusted_mode->crtc_hsync_start;
+ 	hsync_end = adjusted_mode->crtc_hsync_end;
+ 	hsync_size  = hsync_end - hsync_start;
+-	hfront_porch = (adjusted_mode->crtc_hsync_start -
+-			adjusted_mode->crtc_hdisplay);
+ 	hback_porch = (adjusted_mode->crtc_htotal -
+ 		       adjusted_mode->crtc_hsync_end);
+ 	vactive = adjusted_mode->crtc_vdisplay;
 
-I thought I encountered a memory leak, but it seems not an issue, thanks for you explanation.
+
 
