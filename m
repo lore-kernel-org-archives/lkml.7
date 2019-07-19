@@ -2,54 +2,51 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182ABC76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A6C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45C02082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9945A2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510626;
-	bh=D9A9AGZPv+SbNcPGaM52XE5WsIS1Akk6wosFa+eVrWc=;
+	s=default; t=1563510634;
+	bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bWwQqq6gHEYCSy6Ag80XMNvoBA8FtF+MnnMJijo6xT2d7jz2yGLEzvNG97xglsdmG
-	 cjRxZ6t6J0yDmIIQaF2gKg0S7Uir3dqThWggp59ExSwCqXN6xZvziyTY2DX18nQF3P
-	 ji75W/mJOLFFqeNLCbeAjSr+kKDJmwG6eOT3yLUA=
+	b=XwCxqTZnRLJzHWRGg0OUghk7vnVUmUKb64UetEsIi9kLevbDdc+uFEd+OfDeuMmHc
+	 QUE/btT7D5CG1DEswHA/sa5Qu1/7af0th8XB2JJMKX0E+GUWyoIjxuR2NkjgGKrYvl
+	 e6LAXSu3DLp3e/9PNFFhWutcPPrCy09/r2I9cJ1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388531AbfGSEaZ (ORCPT
+        id S1733033AbfGSEad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:30:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731488AbfGSEFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:13 -0400
+        id S1731405AbfGSEFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D71B4218BA;
-        Fri, 19 Jul 2019 04:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22170218B8;
+        Fri, 19 Jul 2019 04:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509112;
-        bh=D9A9AGZPv+SbNcPGaM52XE5WsIS1Akk6wosFa+eVrWc=;
+        s=default; t=1563509099;
+        bh=iZ67JdgCIuYaVGiGuIHDqG7PjRoM2Dbn3bbUpNl2z/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xo1XOysIKGSwSL577DbANuGM5m9vbJpgnle4BlmMnIxCoDtzgJ+xcbgZ53YJDW/Do
-         KghU00PjrwLr6osqsjdITsY7oUCq8M5qUg6gqdpLMbjn0vq7fj5/WiRYiaHgjthMNZ
-         DliRNqoV1PhRnY5DE9tTcfe1LnZL6gC8xz4FITac=
+        b=cPyQ/yUdWiBVLWPE51exHMlIVBv9Myt8BLFOsnPZ7TKW0+DSgECEWmpYtOJCAeH5J
+         Ti/Yge6GanisXMbbW+a1koUBDvtavBmoEwC9dyToiBM/zQoYCSA4HJ5FuaZRe9Ddo4
+         ZLWV9z0LCzOasHzbr2KWErIhe4imPaMhFSh9FSec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.1 076/141] mfd: arizona: Fix undefined behavior
-Date:   Fri, 19 Jul 2019 00:01:41 -0400
-Message-Id: <20190719040246.15945-76-sashal@kernel.org>
+Cc:     Bastien Nocera <hadess@hadess.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 068/141] iio: iio-utils: Fix possible incorrect mask calculation
+Date:   Fri, 19 Jul 2019 00:01:33 -0400
+Message-Id: <20190719040246.15945-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -62,52 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bastien Nocera <hadess@hadess.net>
 
-[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
+[ Upstream commit 208a68c8393d6041a90862992222f3d7943d44d6 ]
 
-When the driver is used with a subdevice that is disabled in the
-kernel configuration, clang gets a little confused about the
-control flow and fails to notice that n_subdevs is only
-uninitialized when subdevs is NULL, and we check for that,
-leading to a false-positive warning:
+On some machines, iio-sensor-proxy was returning all 0's for IIO sensor
+values. It turns out that the bits_used for this sensor is 32, which makes
+the mask calculation:
 
-drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                              subdevs, n_subdevs, NULL, 0, NULL);
-                                       ^~~~~~~~~
-drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
-        int n_subdevs, ret, i;
-                     ^
-                      = 0
+*mask = (1 << 32) - 1;
 
-Ideally, we would rearrange the code to avoid all those early
-initializations and have an explicit exit in each disabled case,
-but it's much easier to chicken out and add one more initialization
-here to shut up the warning.
+If the compiler interprets the 1 literals as 32-bit ints, it generates
+undefined behavior depending on compiler version and optimization level.
+On my system, it optimizes out the shift, so the mask value becomes
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+*mask = (1) - 1;
+
+With a mask value of 0, iio-sensor-proxy will always return 0 for every axis.
+
+Avoid incorrect 0 values caused by compiler optimization.
+
+See original fix by Brett Dutro <brett.dutro@gmail.com> in
+iio-sensor-proxy:
+https://github.com/hadess/iio-sensor-proxy/commit/9615ceac7c134d838660e209726cd86aa2064fd3
+
+Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/iio/iio_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 27b61639cdc7..0ca0fc9a67fd 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -996,7 +996,7 @@ int arizona_dev_init(struct arizona *arizona)
- 	unsigned int reg, val;
- 	int (*apply_patch)(struct arizona *) = NULL;
- 	const struct mfd_cell *subdevs = NULL;
--	int n_subdevs, ret, i;
-+	int n_subdevs = 0, ret, i;
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 7a6d61c6c012..55272fef3b50 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -159,9 +159,9 @@ int iioutils_get_type(unsigned *is_signed, unsigned *bytes, unsigned *bits_used,
+ 			*be = (endianchar == 'b');
+ 			*bytes = padint / 8;
+ 			if (*bits_used == 64)
+-				*mask = ~0;
++				*mask = ~(0ULL);
+ 			else
+-				*mask = (1ULL << *bits_used) - 1;
++				*mask = (1ULL << *bits_used) - 1ULL;
  
- 	dev_set_drvdata(arizona->dev, arizona);
- 	mutex_init(&arizona->clk_lock);
+ 			*is_signed = (signchar == 's');
+ 			if (fclose(sysfsfp)) {
 -- 
 2.20.1
 
