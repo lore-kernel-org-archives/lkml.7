@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFA0C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5827DC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E8020659
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2980320659
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509004;
-	bh=ZlWkEdRJvTY47KX2HOEWGdFa6JduKjmmf7EGe4lg97A=;
+	s=default; t=1563509007;
+	bh=gsN6turu9eohHg7Qgi24QpFWTREGQpbEHjZmiX1c1PA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVciMgoKgzr5u8zMG0MBfo8va8OUz2hIv7AqnocO7b4VwA/BuxCjb/a5GNfpbQm0y
-	 g/V7HJc27sknHBTk4romSPhYk0bLVghqsajqbyzsKpeF8BrGp1QF7yA40/9OlxD+WZ
-	 HNdTU0BGTCdLPrfp1QPUScKm0ZY7El2cZ4hXzhAo=
+	b=dZpTcCvNlS9wiR6fWB9Sjx3z33KnDDeT330LGD2wGISieP4CKGxtPJy50HPc0Y4xF
+	 JjNlbXsFa9IgjE1IFSSOwIxiTD/wUIEwFip951RxKr1W4XOlhC7uvSk0+qN8pVgBrC
+	 SbmKWQKOMWAN5DKWG3dpIHWin7JpXVmnlRvLKbQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbfGSEDW (ORCPT
+        id S1730428AbfGSED0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35128 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbfGSEDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:03:09 -0400
+        id S1729262AbfGSEDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:03:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F044220659;
-        Fri, 19 Jul 2019 04:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 097C520659;
+        Fri, 19 Jul 2019 04:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508987;
-        bh=ZlWkEdRJvTY47KX2HOEWGdFa6JduKjmmf7EGe4lg97A=;
+        s=default; t=1563509002;
+        bh=gsN6turu9eohHg7Qgi24QpFWTREGQpbEHjZmiX1c1PA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIfHduBxOH10asP4k3q/5LWZTlF7vO/etAEq5WZA2USxyeyldQhha5sjW0Jf0MMAW
-         d4/EfW+jd/syZriOagHmE5dNw/e4bLpdhJ1oatqv/iWrDHGedyM73TaDhjmzqs0Kdp
-         y8LGsXDe+ffxo5zzwVMUGO15IbakdHdyI6g9eWcc=
+        b=aiSa8reQMSwobz0cGc73RGyuaPozKCMxRj39eir/genFunYLvY7Ieh0ZaBjJwbzrW
+         6aU0ewPa0heImFN/keh+D+/enZ1fMG29YBl7+IkbMU1ZdwCArnoFTpP4kNiKljiM9R
+         3qOMdHMxkY+41iMANgVJHIoPEgX5vgl6arHSG8Mo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 011/141] tty: serial: cpm_uart - fix init when SMC is relocated
-Date:   Fri, 19 Jul 2019 00:00:36 -0400
-Message-Id: <20190719040246.15945-11-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 014/141] drm/amd/display: Fill prescale_params->scale for RGB565
+Date:   Fri, 19 Jul 2019 00:00:39 -0400
+Message-Id: <20190719040246.15945-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -59,76 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
+[ Upstream commit 1352c779cb74d427f4150cbe779a2f7886f70cae ]
 
-SMC relocation can also be activated earlier by the bootloader,
-so the driver's behaviour cannot rely on selected kernel config.
+[Why]
+An assertion is thrown when using SURFACE_PIXEL_FORMAT_GRPH_RGB565
+formats on DCE since the prescale_params->scale wasn't being filled.
 
-When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+Found by a dmesg-fail when running the
+igt@kms_plane@pixel-format-pipe-a-planes test on Baffin.
 
-But the only thing CPM_CR_INIT_TRX does is to clear the
-rstate and tstate registers, so this can be done manually,
-even when SMC is not relocated.
+[How]
+Fill in the scale parameter.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index b929c7ae3a27..7bab9a3eda92 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -407,7 +407,16 @@ static int cpm_uart_startup(struct uart_port *port)
- 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
- 		}
- 		cpm_uart_initbd(pinfo);
--		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		if (IS_SMC(pinfo)) {
-+			out_be32(&pinfo->smcup->smc_rstate, 0);
-+			out_be32(&pinfo->smcup->smc_tstate, 0);
-+			out_be16(&pinfo->smcup->smc_rbptr,
-+				 in_be16(&pinfo->smcup->smc_rbase));
-+			out_be16(&pinfo->smcup->smc_tbptr,
-+				 in_be16(&pinfo->smcup->smc_tbase));
-+		} else {
-+			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		}
- 	}
- 	/* Install interrupt handler. */
- 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
-@@ -861,16 +870,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
+diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
+index 5e4db3712eef..88d37e850a12 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
+@@ -242,6 +242,9 @@ static void build_prescale_params(struct ipp_prescale_params *prescale_params,
+ 	prescale_params->mode = IPP_PRESCALE_MODE_FIXED_UNSIGNED;
  
- /*
-- *  In case SMC1 is being relocated...
-+ *  In case SMC is being relocated...
-  */
--#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
- 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
- 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
- 	out_be32(&up->smc_rstate, 0);
- 	out_be32(&up->smc_tstate, 0);
- 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
- 	out_be16(&up->smc_brkec, 0);
--#endif
- 
- 	/* Set up the uart parameters in the
- 	 * parameter ram.
-@@ -884,8 +891,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	out_be16(&up->smc_brkec, 0);
- 	out_be16(&up->smc_brkcr, 1);
- 
--	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
--
- 	/* Set UART mode, 8 bit, no parity, one stop.
- 	 * Enable receive and transmit.
- 	 */
+ 	switch (plane_state->format) {
++	case SURFACE_PIXEL_FORMAT_GRPH_RGB565:
++		prescale_params->scale = 0x2082;
++		break;
+ 	case SURFACE_PIXEL_FORMAT_GRPH_ARGB8888:
+ 	case SURFACE_PIXEL_FORMAT_GRPH_ABGR8888:
+ 		prescale_params->scale = 0x2020;
 -- 
 2.20.1
 
