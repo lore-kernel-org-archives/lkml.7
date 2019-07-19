@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15349C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104E8C76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF68F20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D952320873
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510659;
-	bh=kr96ZZc2AlQZq4XV7izh+Iz0YIE00T/Y5oun0Dp4WGY=;
+	s=default; t=1563510664;
+	bh=dozGJpyLuR+/7wW4VPK5UUM5ImaAQ/K0982wrhAPpQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZ5CMMP7FHmCG8Qb7lib1+xLAGo2Rl04QQ50B67HJy2aPVm39BrbsJEtBTsG629tA
-	 Uyrm42L1fR+gDM0T9CSZEqtNJvBf3QJlfkGlW+zzM/0YX93EMT+ZS1ZRPMKVOV95Bb
-	 6NkS7vNNr974kpWcuJPOXLzmwPoOMQd8JR4CDwCI=
+	b=RYLnnwF/QjnI0JAKVMaFT0UNWDSkjqZsB3i/rSkd/iJw6hr5ogjkLKAFZOLsbt8GM
+	 dOVx8AA1R8OJx+ylVFqdvJS4LpolCo7ZTk8v5C4Fr0lf47yV8FRIMbZ4yp7B5vZj8B
+	 P+EfbkAaQESFRKSJ/YhbrXlpi69yP8QxnBHJ8azQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbfGSEa6 (ORCPT
+        id S1731237AbfGSEEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbfGSEEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:04:49 -0400
+        id S1731145AbfGSEEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:04:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74BA218A3;
-        Fri, 19 Jul 2019 04:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF69218A6;
+        Fri, 19 Jul 2019 04:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509089;
-        bh=kr96ZZc2AlQZq4XV7izh+Iz0YIE00T/Y5oun0Dp4WGY=;
+        s=default; t=1563509078;
+        bh=dozGJpyLuR+/7wW4VPK5UUM5ImaAQ/K0982wrhAPpQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOyO9hVgFSmhhDq9R4GsZ5ddJg/QRESW1W942h/FjsvQzTxpURPvFDCMQL4yx4vjl
-         Drs+LU4bDnYYohsYE1JtL+2J9j1YAzB1ITW6vZ3zSlRnB61iPBwu9Tg8O/1KTtLwnF
-         bWlx/4KO0YhQdc1oznhjKV0eS3yYMR2Ld02YvY/0=
+        b=MsEOKYm62pq0LxVZknIn5Qw8NA/9nnNseEe/yzLvgHK4dEKwfDOJ9rWeiH0IyZG10
+         cQ9A7ZByVBKr/ztOE6zVXjpqHeEHPMXR6XEL2Ui5U5savoAdgzWVuomkSllxtJi9z3
+         iNNLWGR6VeO0apznKWKgt+Q4s+Glll8cfXPT0Ylw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Tejun Heo <tj@kernel.org>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 062/141] PCI: sysfs: Ignore lockdep for remove attribute
-Date:   Fri, 19 Jul 2019 00:01:27 -0400
-Message-Id: <20190719040246.15945-62-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 056/141] KVM: nVMX: Intercept VMWRITEs to GUEST_{CS,SS}_AR_BYTES
+Date:   Fri, 19 Jul 2019 00:01:21 -0400
+Message-Id: <20190719040246.15945-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
@@ -63,60 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit dc6b698a86fe40a50525433eb8e92a267847f6f9 ]
+[ Upstream commit b643780562af5378ef7fe731c65b8f93e49c59c6 ]
 
-With CONFIG_PROVE_LOCKING=y, using sysfs to remove a bridge with a device
-below it causes a lockdep warning, e.g.,
+VMMs frequently read the guest's CS and SS AR bytes to detect 64-bit
+mode and CPL respectively, but effectively never write said fields once
+the VM is initialized.  Intercepting VMWRITEs for the two fields saves
+~55 cycles in copy_shadow_to_vmcs12().
 
-  # echo 1 > /sys/class/pci_bus/0000:00/device/0000:00:00.0/remove
-  ============================================
-  WARNING: possible recursive locking detected
-  ...
-  pci_bus 0000:01: busn_res: [bus 01] is released
+Because some Intel CPUs, e.g. Haswell, drop the reserved bits of the
+guest access rights fields on VMWRITE, exposing the fields to L1 for
+VMREAD but not VMWRITE leads to inconsistent behavior between L1 and L2.
+On hardware that drops the bits, L1 will see the stripped down value due
+to reading the value from hardware, while L2 will see the full original
+value as stored by KVM.  To avoid such an inconsistency, emulate the
+behavior on all CPUS, but only for intercepted VMWRITEs so as to avoid
+introducing pointless latency into copy_shadow_to_vmcs12(), e.g. if the
+emulation were added to vmcs12_write_any().
 
-The remove recursively removes the subtree below the bridge.  Each call
-uses a different lock so there's no deadlock, but the locks were all
-created with the same lockdep key so the lockdep checker can't tell them
-apart.
+Since the AR_BYTES emulation is done only for intercepted VMWRITE, if a
+future patch (re)exposed AR_BYTES for both VMWRITE and VMREAD, then KVM
+would end up with incosistent behavior on pre-Haswell hardware, e.g. KVM
+would drop the reserved bits on intercepted VMWRITE, but direct VMWRITE
+to the shadow VMCS would not drop the bits.  Add a WARN in the shadow
+field initialization to detect any attempt to expose an AR_BYTES field
+without updating vmcs12_write_any().
 
-Mark the "remove" sysfs attribute with __ATTR_IGNORE_LOCKDEP() as it is
-safe to ignore the lockdep check between different "remove" kernfs
-instances.
+Note, emulation of the AR_BYTES reserved bit behavior is based on a
+patch[1] from Jim Mattson that applied the emulation to all writes to
+vmcs12 so that live migration across different generations of hardware
+would not introduce divergent behavior.  But given that live migration
+of nested state has already been enabled, that ship has sailed (not to
+mention that no sane VMM will be affected by this behavior).
 
-There's discussion about a similar issue in USB at [1], which resulted in
-356c05d58af0 ("sysfs: get rid of some lockdep false positives") and
-e9b526fe7048 ("i2c: suppress lockdep warning on delete_device"), which do
-basically the same thing for USB "remove" and i2c "delete_device" files.
+[1] https://patchwork.kernel.org/patch/10483321/
 
-[1] https://lore.kernel.org/r/Pine.LNX.4.44L0.1204251436140.1206-100000@iolanthe.rowland.org
-Link: https://lore.kernel.org/r/20190526225151.3865-1-marek.vasut@gmail.com
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-[bhelgaas: trim commit log, details at above links]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c             | 15 +++++++++++++++
+ arch/x86/kvm/vmx/vmcs_shadow_fields.h |  4 ++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 25794c27c7a4..eacf84ecdd0d 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -477,7 +477,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 		pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
- 	return count;
- }
--static struct device_attribute dev_remove_attr = __ATTR(remove,
-+static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
- 							(S_IWUSR|S_IWGRP),
- 							NULL, remove_store);
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 897ae4b62980..79c76318bcb8 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -91,6 +91,10 @@ static void init_vmcs_shadow_fields(void)
+ 			pr_err("Missing field from shadow_read_write_field %x\n",
+ 			       field + 1);
+ 
++		WARN_ONCE(field >= GUEST_ES_AR_BYTES &&
++			  field <= GUEST_TR_AR_BYTES,
++			  "Update vmcs12_write_any() to expose AR_BYTES RW");
++
+ 		/*
+ 		 * PML and the preemption timer can be emulated, but the
+ 		 * processor cannot vmwrite to fields that don't exist
+@@ -4532,6 +4536,17 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ 		vmcs12 = get_shadow_vmcs12(vcpu);
+ 	}
+ 
++	/*
++	 * Some Intel CPUs intentionally drop the reserved bits of the AR byte
++	 * fields on VMWRITE.  Emulate this behavior to ensure consistent KVM
++	 * behavior regardless of the underlying hardware, e.g. if an AR_BYTE
++	 * field is intercepted for VMWRITE but not VMREAD (in L1), then VMREAD
++	 * from L1 will return a different value than VMREAD from L2 (L1 sees
++	 * the stripped down value, L2 sees the full value as stored by KVM).
++	 */
++	if (field >= GUEST_ES_AR_BYTES && field <= GUEST_TR_AR_BYTES)
++		field_value &= 0x1f0ff;
++
+ 	if (vmcs12_write_any(vmcs12, field, field_value) < 0)
+ 		return nested_vmx_failValid(vcpu,
+ 			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
+diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+index 132432f375c2..97dd5295be31 100644
+--- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
++++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+@@ -40,14 +40,14 @@ SHADOW_FIELD_RO(VM_EXIT_INSTRUCTION_LEN)
+ SHADOW_FIELD_RO(IDT_VECTORING_INFO_FIELD)
+ SHADOW_FIELD_RO(IDT_VECTORING_ERROR_CODE)
+ SHADOW_FIELD_RO(VM_EXIT_INTR_ERROR_CODE)
++SHADOW_FIELD_RO(GUEST_CS_AR_BYTES)
++SHADOW_FIELD_RO(GUEST_SS_AR_BYTES)
+ SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL)
+ SHADOW_FIELD_RW(EXCEPTION_BITMAP)
+ SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE)
+ SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD)
+ SHADOW_FIELD_RW(VM_ENTRY_INSTRUCTION_LEN)
+ SHADOW_FIELD_RW(TPR_THRESHOLD)
+-SHADOW_FIELD_RW(GUEST_CS_AR_BYTES)
+-SHADOW_FIELD_RW(GUEST_SS_AR_BYTES)
+ SHADOW_FIELD_RW(GUEST_INTERRUPTIBILITY_INFO)
+ SHADOW_FIELD_RW(VMX_PREEMPTION_TIMER_VALUE)
  
 -- 
 2.20.1
