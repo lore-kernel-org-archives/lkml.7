@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9524C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B115DC76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AF5218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D82F21851
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509668;
-	bh=uVcLrusjSfxWYdiusVJ5VcWYyl6XYeIyuSFUIwhDr5M=;
+	s=default; t=1563509673;
+	bh=yR9hjSI+cVCIl0XMZxpMhWedcBUToI5qDQYTPyxAR8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sA5GMBHpT3mS7jCCka0NN4m4qlr1OusEOwAsy6ORlPbBP4cSHhTgKp2KpvR8xj1X8
-	 K+S0zcgArh31+K5OqYJKBl7dwos3oCQ97bwKFy5I4oW3GKSUYlP10WnnSffVyKM4+w
-	 Alr2jVJtKEoqfSMOvV7O5YnyUrwewGXj55IvJ6BQ=
+	b=ZKZqRUheH8eimRlQrJB9pC8wbfSVd3bN5nXzq0n15WSKC6eQBUaUUHHF++WESp7wx
+	 bUCmcb3JjCXg3MnPtMMagjBRXYDZq8oEEyQIxb84/V+1OniXdWPfnUkPKKtrzQE4SG
+	 w+zLc1YRJPBT1m0maL42AcQdBhB2Gr51dKVYa7gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389713AbfGSEO1 (ORCPT
+        id S2389755AbfGSEOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:14:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50460 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387459AbfGSEOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:14:19 -0400
+        id S2389725AbfGSEOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:14:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9939B218A5;
-        Fri, 19 Jul 2019 04:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE65B2189D;
+        Fri, 19 Jul 2019 04:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509658;
-        bh=uVcLrusjSfxWYdiusVJ5VcWYyl6XYeIyuSFUIwhDr5M=;
+        s=default; t=1563509670;
+        bh=yR9hjSI+cVCIl0XMZxpMhWedcBUToI5qDQYTPyxAR8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CGgoKayHgcKQgNHFa7xzfThoJWQ1Sx3rSCcNMKx3cNc7NXJvuFITHUzh6okTchYbU
-         oHEYPXg6lupEwMiVwsfGV+VgeFNmOe7LpJatG4GwVHTDIDNx1VJaH7nK7pUNSTpjhu
-         BkCKUinRie5S4QUrBZ3Bpa797E64i2UxcCB/ZZaw=
+        b=dCZgit4iw4RgbkfNI63CtOO0Ky18fZrDP7j835W2vC0UOda0487UR1qAfMds48fNj
+         8gGdplaXQ+8kf0Zz78EjNHsYrI4ARQtEd6tuSVWHx3qxDerS0+KPCBR7pYCAwDW5eO
+         DL9BFW5PPbIqaKYLcT0FFJLu67mFJuwduKLx5WQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 43/45] 9p: pass the correct prototype to read_cache_page
-Date:   Fri, 19 Jul 2019 00:13:02 -0400
-Message-Id: <20190719041304.18849-43-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 04/35] pinctrl: rockchip: fix leaked of_node references
+Date:   Fri, 19 Jul 2019 00:13:52 -0400
+Message-Id: <20190719041423.19322-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041304.18849-1-sashal@kernel.org>
-References: <20190719041304.18849-1-sashal@kernel.org>
+In-Reply-To: <20190719041423.19322-1-sashal@kernel.org>
+References: <20190719041423.19322-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,51 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit f053cbd4366051d7eb6ba1b8d529d20f719c2963 ]
+[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
 
-Fix the callback 9p passes to read_cache_page to actually have the
-proper type expected.  Casting around function pointers can easily
-hide typing bugs, and defeats control flow protection.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Link: http://lkml.kernel.org/r/20190520055731.24538-5-hch@lst.de
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_addr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index 6181ad79e1a5..e45b1a0dd513 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -49,8 +49,9 @@
-  * @page: structure to page
-  *
-  */
--static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
-+static int v9fs_fid_readpage(void *data, struct page *page)
- {
-+	struct p9_fid *fid = data;
- 	struct inode *inode = page->mapping->host;
- 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
- 	struct iov_iter to;
-@@ -121,7 +122,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
- 	if (ret == 0)
- 		return ret;
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index a0651128e23a..616055b5e996 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -1837,6 +1837,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
+ 						    base,
+ 						    &rockchip_regmap_config);
+ 		}
++		of_node_put(node);
+ 	}
  
--	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
-+	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
-+			filp->private_data);
- 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
- 	return ret;
- }
+ 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
 -- 
 2.20.1
 
