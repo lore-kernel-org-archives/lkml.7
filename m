@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7B2C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB144C76196
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A89206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60B4206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563511149;
-	bh=QeqbiBHLeOYnomZOPhjCcLO0gyl5URbYFXDGeDoVHTo=;
+	s=default; t=1563511152;
+	bh=ESrqzieqi3LyW8vnKAIeIHKfzQXB44HReBLi5IaOldc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdaWDkIrlQBriJiP4clB+WN3VR1qUZtPy1VvpE3dH54jMcNrukQ3VBL8NFey8Txnu
-	 p05OLi9lDxpmwyiW75QjFR2LH8xlc1Zz3CA/Xy9fU4i5I97olW32EonalMnWF/he/D
-	 rqHbZLmYlCeDWK6Ha5uOHeHxDItW7dp4+S/HV5DQ=
+	b=zb8oCmcsVSaCPINFrslwvj3ET5af1OBcuQeNZk69QVHxO2xcAiw+gwOas+64sNvCZ
+	 96emhZbU/qDLdU0eJv7GrBT3vIVUMdBT0bQrA8rLqvvTLvJYAxdYRZfuZrhNANCMyb
+	 ojKAjcHS61WndUN1sA8VsKl6sdUnSOrL77WkSp64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfGSEjI (ORCPT
+        id S1728425AbfGSD7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 23:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbfGSD7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 23:59:05 -0400
+        id S1728348AbfGSD64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:58:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E952A21850;
-        Fri, 19 Jul 2019 03:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B222B21851;
+        Fri, 19 Jul 2019 03:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508744;
-        bh=QeqbiBHLeOYnomZOPhjCcLO0gyl5URbYFXDGeDoVHTo=;
+        s=default; t=1563508735;
+        bh=ESrqzieqi3LyW8vnKAIeIHKfzQXB44HReBLi5IaOldc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yh6hcVIF40otaGE538bJM62KAWrO2i0NqUl2Hu8soVbS3m9ZELnFeiwtExxKaMLCF
-         RPaF5ZcCph/6zF6lOzGS61d7tmwlwIPjWKek0cLDxokkznyOaMEbO6FdEx81JaU7cw
-         Aoa51N7tvQhlfehDMWb+ceDqvMijUlTPBwGn1OaY=
+        b=klUOyINqefKtlLAjLYVaILf8/gy179a2wxVZScRitAddhvWkUJvuR+gwJMqy0QX/F
+         jEj6dOe6LyVfMqXlPEzYVm+dcohzxITmtmwOQXb36TqMsYgaK1kxUL/wmO79jei8HL
+         r9C+5dQiM8TVL04uAxXFzbxKCH36HyYVijdYsJ5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 065/171] iio: adxl372: fix iio_triggered_buffer_{pre,post}enable positions
-Date:   Thu, 18 Jul 2019 23:54:56 -0400
-Message-Id: <20190719035643.14300-65-sashal@kernel.org>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 058/171] sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
+Date:   Thu, 18 Jul 2019 23:54:49 -0400
+Message-Id: <20190719035643.14300-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
 References: <20190719035643.14300-1-sashal@kernel.org>
@@ -59,91 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-[ Upstream commit 0e4f0b42f42d88507b48282c8915f502551534e4 ]
+[ Upstream commit 07a6d63eb1b54b5fb38092780fe618dfe1d96e23 ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+In d5a2aa24, the name in struct console sunhv_console was changed from "ttyS"
+to "ttyHV" while the name in struct uart_ops sunhv_pops remained unchanged.
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+This results in the hypervisor console device to be listed as "ttyHV0" under
+/proc/consoles while the device node is still named "ttyS0":
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+root@osaka:~# cat /proc/consoles
+ttyHV0               -W- (EC p  )    4:64
+tty0                 -WU (E     )    4:1
+root@osaka:~# readlink /sys/dev/char/4:64
+../../devices/root/f02836f0/f0285690/tty/ttyS0
+root@osaka:~#
+
+This means that any userland code which tries to determine the name of the
+device file of the hypervisor console device can not rely on the information
+provided by /proc/consoles. In particular, booting current versions of debian-
+installer inside a SPARC LDOM will fail with the installer unable to determine
+the console device.
+
+After renaming the device in struct uart_ops sunhv_pops to "ttyHV" as well,
+the inconsistency is fixed and it is possible again to determine the name
+of the device file of the hypervisor console device by reading the contents
+of /proc/console:
+
+root@osaka:~# cat /proc/consoles
+ttyHV0               -W- (EC p  )    4:64
+tty0                 -WU (E     )    4:1
+root@osaka:~# readlink /sys/dev/char/4:64
+../../devices/root/f02836f0/f0285690/tty/ttyHV0
+root@osaka:~#
+
+With this change, debian-installer works correctly when installing inside
+a SPARC LDOM.
+
+Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/adxl372.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ drivers/tty/serial/sunhv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index 3b84cb243a87..055227cb3d43 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -782,10 +782,14 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
- 	unsigned int mask;
- 	int i, ret;
+diff --git a/drivers/tty/serial/sunhv.c b/drivers/tty/serial/sunhv.c
+index 63e34d868de8..f8503f8fc44e 100644
+--- a/drivers/tty/serial/sunhv.c
++++ b/drivers/tty/serial/sunhv.c
+@@ -397,7 +397,7 @@ static const struct uart_ops sunhv_pops = {
+ static struct uart_driver sunhv_reg = {
+ 	.owner			= THIS_MODULE,
+ 	.driver_name		= "sunhv",
+-	.dev_name		= "ttyS",
++	.dev_name		= "ttyHV",
+ 	.major			= TTY_MAJOR,
+ };
  
--	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
-+	ret = iio_triggered_buffer_postenable(indio_dev);
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
-+	if (ret < 0)
-+		goto err;
-+
- 	mask = *indio_dev->active_scan_mask;
- 
- 	for (i = 0; i < ARRAY_SIZE(adxl372_axis_lookup_table); i++) {
-@@ -793,8 +797,10 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
- 			break;
- 	}
- 
--	if (i == ARRAY_SIZE(adxl372_axis_lookup_table))
--		return -EINVAL;
-+	if (i == ARRAY_SIZE(adxl372_axis_lookup_table)) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
- 	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
-@@ -814,26 +820,25 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
- 	if (ret < 0) {
- 		st->fifo_mode = ADXL372_FIFO_BYPASSED;
- 		adxl372_set_interrupts(st, 0, 0);
--		return ret;
-+		goto err;
- 	}
- 
--	return iio_triggered_buffer_postenable(indio_dev);
-+	return 0;
-+
-+err:
-+	iio_triggered_buffer_predisable(indio_dev);
-+	return ret;
- }
- 
- static int adxl372_buffer_predisable(struct iio_dev *indio_dev)
- {
- 	struct adxl372_state *st = iio_priv(indio_dev);
--	int ret;
--
--	ret = iio_triggered_buffer_predisable(indio_dev);
--	if (ret < 0)
--		return ret;
- 
- 	adxl372_set_interrupts(st, 0, 0);
- 	st->fifo_mode = ADXL372_FIFO_BYPASSED;
- 	adxl372_configure_fifo(st);
- 
--	return 0;
-+	return iio_triggered_buffer_predisable(indio_dev);
- }
- 
- static const struct iio_buffer_setup_ops adxl372_buffer_ops = {
 -- 
 2.20.1
 
