@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17B7C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D6CC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22C5218A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EF9218E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563509311;
-	bh=d3e4tqvNiIM0DHagGPl0Sq0p/6aSS+We4bM12lQE+Fs=;
+	s=default; t=1563509322;
+	bh=wkULyQRXP14aeC86+dGvNKwqYMCKi3U5/yIPxp27Dnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y7DP5NRii1VPVu/W25xEgW6fKn4EynsUL+vJzsYySDvuJH47aLnESNzH0ROnpCNsP
-	 5xPkikzc3UdyWaa2mJuVoGeXGen6eTg4PpK6s54EFOBtclKk1Q8y1EYYtpy6uBBpvp
-	 Yj01oYmtqyFo86mLIMrwMHzbe4T9pvjkBQpK8EWI=
+	b=reUiAVvt9KpiiT6eOFKrCd88jHnGSuT5O/LTO11NHMQFffo977TuyvqQrJ5nI9uZ5
+	 PgVd66KfsjmCZBOnN64HjS0kMO90XWChi0gguxQWFStg6g5sVkYwW1LbprZaboK39H
+	 bNRW7W9nT6hDgP+4cTvfFYf7ijmLjBu9TKQH6LFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbfGSEIa (ORCPT
+        id S1731992AbfGSEIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733029AbfGSEIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:08:21 -0400
+        id S1730262AbfGSEIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:08:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F09021880;
-        Fri, 19 Jul 2019 04:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C9DA218BB;
+        Fri, 19 Jul 2019 04:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509300;
-        bh=d3e4tqvNiIM0DHagGPl0Sq0p/6aSS+We4bM12lQE+Fs=;
+        s=default; t=1563509315;
+        bh=wkULyQRXP14aeC86+dGvNKwqYMCKi3U5/yIPxp27Dnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lh41Agavwb44jt3CXAUMuEKl86LVl81H1aGy4vV1RFitdoqg7L++cKTB0fuNUiVVo
-         PZbUG4mHVQtaDnuBEegyMZ9s/XiIh08nSQgcs0Nwx1TBYsI1/SHQ99qvlU1GJ0q9nt
-         6uzFKcv7niG+FJOOaeQY69WjRu7RNuwf6EtduU60=
+        b=h6USihHqa99FS9VOVKiBn2213ggTjStitWGlQdweiQOQGidycv19/8ca7B3BhePmg
+         9C+LyF1yAQYVmwE3JIP5Tcw4WJFaeBIeslFF7irF84WAPR+yIk/SjUIJkMhrsiF/C7
+         +0sVT1YzYGbywyW0OdOsASvJ/jTEA14BUMoSZ3aM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 023/101] tty/serial: digicolor: Fix digicolor-usart already registered warning
-Date:   Fri, 19 Jul 2019 00:06:14 -0400
-Message-Id: <20190719040732.17285-23-sashal@kernel.org>
+Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 029/101] drm/amd/display: fix compilation error
+Date:   Fri, 19 Jul 2019 00:06:20 -0400
+Message-Id: <20190719040732.17285-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
 References: <20190719040732.17285-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,44 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-[ Upstream commit c7ad9ba0611c53cfe194223db02e3bca015f0674 ]
+[ Upstream commit 88099f53cc3717437f5fc9cf84205c5b65118377 ]
 
-When modprobe/rmmod/modprobe module, if platform_driver_register() fails,
-the kernel complained,
+this patch fixes below compilation error
 
-  proc_dir_entry 'driver/digicolor-usart' already registered
-  WARNING: CPU: 1 PID: 5636 at fs/proc/generic.c:360 proc_register+0x19d/0x270
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: In
+function ‘dcn10_apply_ctx_for_surface’:
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2378:3:
+error: implicit declaration of function ‘udelay’
+[-Werror=implicit-function-declaration]
+   udelay(underflow_check_delay_us);
 
-Fix this by adding uart_unregister_driver() when platform_driver_register() fails.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/digicolor-usart.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
-index f460cca139e2..13ac36e2da4f 100644
---- a/drivers/tty/serial/digicolor-usart.c
-+++ b/drivers/tty/serial/digicolor-usart.c
-@@ -541,7 +541,11 @@ static int __init digicolor_uart_init(void)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 7736ef123e9b..ead221ccb93e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -23,6 +23,7 @@
+  *
+  */
  
--	return platform_driver_register(&digicolor_uart_platform);
-+	ret = platform_driver_register(&digicolor_uart_platform);
-+	if (ret)
-+		uart_unregister_driver(&digicolor_uart);
-+
-+	return ret;
- }
- module_init(digicolor_uart_init);
- 
++#include <linux/delay.h>
+ #include "dm_services.h"
+ #include "core_types.h"
+ #include "resource.h"
 -- 
 2.20.1
 
