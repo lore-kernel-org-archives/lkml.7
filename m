@@ -2,74 +2,104 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE5EC7618F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BAFC7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAF42085A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FAC2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 15:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfGSPXa (ORCPT
+        id S1728838AbfGSPcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 11:23:30 -0400
-Received: from gate.crashing.org ([63.228.1.57]:49471 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfGSPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 11:23:29 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6JFN5qY026512;
-        Fri, 19 Jul 2019 10:23:05 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6JFN4GP026509;
-        Fri, 19 Jul 2019 10:23:04 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Fri, 19 Jul 2019 10:23:03 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
-Message-ID: <20190719152303.GA20882@gate.crashing.org>
-References: <c6ff2faba7fbb56a7f5b5f08cd3453f89fc0aaf4.1557480165.git.christophe.leroy@c-s.fr> <45hnfp6SlLz9sP0@ozlabs.org> <20190708191416.GA21442@archlinux-threadripper> <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr> <20190709064952.GA40851@archlinux-threadripper> <20190719032456.GA14108@archlinux-threadripper>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719032456.GA14108@archlinux-threadripper>
-User-Agent: Mutt/1.4.2.3i
+        Fri, 19 Jul 2019 11:32:33 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:48180 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfGSPcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 11:32:32 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hoUs1-0002I0-Fb; Fri, 19 Jul 2019 09:32:29 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hoUs0-0005zu-CO; Fri, 19 Jul 2019 09:32:29 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        nhorman@tuxdriver.com
+References: <20190529153427.GB8959@cisco>
+        <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
+        <20190529222835.GD8959@cisco>
+        <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
+        <20190530170913.GA16722@mail.hallyn.com>
+        <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
+        <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
+        <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
+        <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
+        <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
+        <20190718005145.eshekqfr3navqqiy@madcap2.tricolour.ca>
+Date:   Fri, 19 Jul 2019 10:32:13 -0500
+In-Reply-To: <20190718005145.eshekqfr3navqqiy@madcap2.tricolour.ca> (Richard
+        Guy Briggs's message of "Wed, 17 Jul 2019 20:51:45 -0400")
+Message-ID: <874l3ighvm.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1hoUs0-0005zu-CO;;;mid=<874l3ighvm.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+51FYWsW8BRSUlMyR1nWn6IFnz4uCKOTQ=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:24:56PM -0700, Nathan Chancellor wrote:
-> On Mon, Jul 08, 2019 at 11:49:52PM -0700, Nathan Chancellor wrote:
-> > On Tue, Jul 09, 2019 at 07:04:43AM +0200, Christophe Leroy wrote:
-> > > Is that a Clang bug ?
-> > 
-> > No idea, it happens with clang-8 and clang-9 though (pretty sure there
-> > were fixes for PowerPC in clang-8 so something before it probably won't
-> > work but I haven't tried).
-> > 
-> > > 
-> > > Do you have a disassembly of the code both with and without this patch in
-> > > order to compare ?
-> > 
-> > I can give you whatever disassembly you want (or I can upload the raw
-> > files if that is easier).
-> 
-> What disassembly/files did you need to start taking a look at this? I
-> can upload/send whatever you need.
+Richard Guy Briggs <rgb@redhat.com> writes:
 
-A before and after of *only this patch*.  And then look at what changed;
-it maybe be obvious what is the problem to you, as well, so look at it
-yourself first?
+> On 2019-07-16 19:30, Paul Moore wrote:
+>> On Tue, Jul 16, 2019 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> > On 2019-07-15 17:04, Paul Moore wrote:
+>> > > On Mon, Jul 8, 2019 at 2:06 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>> 
+>> > > > At this point I would say we are at an impasse unless we trust
+>> > > > ns_capable() or we implement audit namespaces.
+>> > >
+>> > > I'm not sure how we can trust ns_capable(), but if you can think of a
+>> > > way I would love to hear it.  I'm also not sure how namespacing audit
+>> > > is helpful (see my above comments), but if you think it is please
+>> > > explain.
+>> >
+>> > So if we are not namespacing, why do we not trust capabilities?
+>> 
+>> We can trust capable(CAP_AUDIT_CONTROL) for enforcing audit container
+>> ID policy, we can not trust ns_capable(CAP_AUDIT_CONTROL).
+>
+> Ok.  So does a process in a non-init user namespace have two (or more)
+> sets of capabilities stored in creds, one in the init_user_ns, and one
+> in current_user_ns?  Or does it get stripped of all its capabilities in
+> init_user_ns once it has its own set in current_user_ns?  If the former,
+> then we can use capable().  If the latter, we need another mechanism, as
+> you have suggested might be needed.
 
+The latter.  There is only one set of capabilities and it is in the
+processes current user namespace.
 
-Segher
+Eric
