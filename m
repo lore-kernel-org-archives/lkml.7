@@ -2,150 +2,112 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8143AC76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192BDC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D003218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E549B21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qECwcshm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGSHTS (ORCPT
+        id S1727005AbfGSHYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:19:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:9129 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfGSHTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:19:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:19:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
-   d="scan'208";a="343617583"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.81.172]) ([10.251.81.172])
-  by orsmga005.jf.intel.com with ESMTP; 19 Jul 2019 00:19:12 -0700
-Subject: Re: [PATCH v5 2/6] ASoC: sgtl5000: Improve VAG power and mute control
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Sasha Levin <sashal@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-References: <20190718090240.18432-1-oleksandr.suvorov@toradex.com>
- <20190718090240.18432-3-oleksandr.suvorov@toradex.com>
- <9c9ee47c-48bd-7109-9870-8f73be1f1cfa@intel.com>
- <a86e4d6b-ed2c-d2f2-2974-6f00dc6ef68a@intel.com>
- <CAGgjyvGboMPx5wKJ_1DaeYZazSHmQUGwDZHoCBt5vhpVq3Q_bA@mail.gmail.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <3c153dcc-e656-2959-6281-15cc895660e0@intel.com>
-Date:   Fri, 19 Jul 2019 09:19:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 19 Jul 2019 03:24:04 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46712 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfGSHYD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:24:03 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6J7Itmf100116;
+        Fri, 19 Jul 2019 07:23:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=87OIeSK1sKiVNRTyJCB3x8F8M7//ifJ6aAgQH0sNrRw=;
+ b=qECwcshmJd9jAAhPFEhwo5ilQFHYWfpV7v3ax5bpkxbUbTNoYV+NeDep95NkU74EHbbN
+ 19tVZu1hoGfkG2lqWtK+ukTdjidIpRRp5+c5Z8patXqVtEV2qb1v8Vqy3MqtsvcIcySz
+ 1zgyTk+kXOmsQqMo5wUZURdYO2LEVnJNYI0MbILovqIVtKDimInA16kXQ3pivoWThD6b
+ 6GKkAomZ9yNwfz9+/zjf+ljaDLp/vkf+Y2kfZKFk7RIWqqg4S9qN1oBx7W8uYSM4lRmq
+ fWrUQXu6XDYMgOYBN5THyiomwZDXx/ovGWT+AiWhLpsrmXnb5TZWwvQ36bkvhFmIP/3B dw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2tq78q4wdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 07:23:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6J7MZns049621;
+        Fri, 19 Jul 2019 07:23:33 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tt77j5mnk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 07:23:33 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6J7NQYH009729;
+        Fri, 19 Jul 2019 07:23:31 GMT
+Received: from Subhras-MacBook-Pro.local (/103.217.243.4)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jul 2019 07:23:26 +0000
+Subject: Re: [RFC PATCH 3/3] sched: introduce tunables to control soft
+ affinity
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, tglx@linutronix.de, prakash.sangappa@oracle.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
+        tim.c.chen@linux.intel.com, mgorman@techsingularity.net
+References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
+ <20190626224718.21973-4-subhra.mazumdar@oracle.com>
+ <20190718100816.GA19218@linux.vnet.ibm.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <81034dd8-4074-e716-c3e8-5a23cbb6bb8d@oracle.com>
+Date:   Fri, 19 Jul 2019 12:53:19 +0530
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAGgjyvGboMPx5wKJ_1DaeYZazSHmQUGwDZHoCBt5vhpVq3Q_bA@mail.gmail.com>
+In-Reply-To: <20190718100816.GA19218@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907190083
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907190082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-19 09:09, Oleksandr Suvorov wrote:
-> On Thu, 18 Jul 2019 at 21:49, Cezary Rojewski <cezary.rojewski@intel.com> wrote:
->>
->> On 2019-07-18 20:42, Cezary Rojewski wrote:
->>> On 2019-07-18 11:02, Oleksandr Suvorov wrote:
->>>> +enum {
->>>> +    HP_POWER_EVENT,
->>>> +    DAC_POWER_EVENT,
->>>> +    ADC_POWER_EVENT,
->>>> +    LAST_POWER_EVENT
->>>> +};
->>>> +
->>>> +static u16 mute_mask[] = {
->>>> +    SGTL5000_HP_MUTE,
->>>> +    SGTL5000_OUTPUTS_MUTE,
->>>> +    SGTL5000_OUTPUTS_MUTE
->>>> +};
->>>
->>> If mute_mask[] is only used within common handler, you may consider
->>> declaring const array within said handler instead (did not check that
->>> myself).
->>> Otherwise, simple comment for the second _OUTPUTS_MUTE should suffice -
->>> its not self explanatory why you doubled that mask.
-> 
-> Ok, I'll add a comment to explain doubled mask.
-> 
->>>
->>>> +
->>>>    /* sgtl5000 private structure in codec */
->>>>    struct sgtl5000_priv {
->>>>        int sysclk;    /* sysclk rate */
->>>> @@ -137,8 +157,109 @@ struct sgtl5000_priv {
->>>>        u8 micbias_voltage;
->>>>        u8 lrclk_strength;
->>>>        u8 sclk_strength;
->>>> +    u16 mute_state[LAST_POWER_EVENT];
->>>>    };
->>>
->>> When I spoke of LAST enum constant, I did not really had this specific
->>> usage in mind.
->>>
->>>   From design perspective, _LAST_ does not exist and should never be
->>> referred to as "the next option" i.e.: new enum constant.
-> 
-> By its nature, LAST_POWER_EVENT is actually a size of the array, but I
-> couldn't come up with a better name.
-> 
->>> That is way preferred usage is:
->>> u16 mute_state[ADC_POWER_EVENT+1;
->>> -or-
->>> u16 mute_state[LAST_POWER_EVENT+1];
->>>
->>> Maybe I'm just being radical here :)
-> 
-> Maybe :)  I don't like first variant (ADC_POWER_EVENT+1): somewhen in
-> future, someone can add a new event to this enum and we've got a
-> possible situation with "out of array indexing".
-> 
->>>
->>> Czarek
->>
->> Forgive me for double posting. Comment above is targeted towards:
->>
->>   >> +enum {
->>   >> +    HP_POWER_EVENT,
->>   >> +    DAC_POWER_EVENT,
->>   >> +    ADC_POWER_EVENT,
->>   >> +    LAST_POWER_EVENT
->>   >> +};
->>
->> as LAST_POWER_EVENT is not assigned explicitly to ADC_POWER_EVENT and
->> thus generates implicit "new option" of value 3.
-> 
-> So will you be happy with the following variant?
-> ...
->      ADC_POWER_EVENT,
->      LAST_POWER_EVENT =  ADC_POWER_EVENT,
-> ...
->     u16 mute_state[LAST_POWER_EVENT+1];
-> ...
-> 
 
-It's not about being happy - I'm a happy man in general ;p
-
-As stated already, declaring _LAST_ as the "new option" is misleading 
-and not advised.
-And yeah, [_LAST_ + 1] is usually the one you should go with.
-
-Czarek
+On 7/18/19 3:38 PM, Srikar Dronamraju wrote:
+> * subhra mazumdar <subhra.mazumdar@oracle.com> [2019-06-26 15:47:18]:
+>
+>> For different workloads the optimal "softness" of soft affinity can be
+>> different. Introduce tunables sched_allowed and sched_preferred that can
+>> be tuned via /proc. This allows to chose at what utilization difference
+>> the scheduler will chose cpus_allowed over cpus_preferred in the first
+>> level of search. Depending on the extent of data sharing, cache coherency
+>> overhead of the system etc. the optimal point may vary.
+>>
+>> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+>> ---
+> Correct me but this patchset only seems to be concentrated on the wakeup
+> path, I don't see any changes in the regular load balancer or the
+> numa-balancer. If system is loaded or tasks are CPU intensive, then wouldn't
+> these tasks be moved to cpus_allowed instead of cpus_preferred and hence
+> breaking this soft affinity.
+>
+The new idle is purposefully unchanged, if threads get stolen to the allowed
+set from the preferred set that's intended, together with the enqueue side
+it will achieve softness of affinity.
