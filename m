@@ -4,58 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59D4C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182ABC76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5B52082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45C02082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510617;
-	bh=AtzHmvVdtVpCWqkjwWL0y8J0cpmThlCpcbs1wXUCpJA=;
+	s=default; t=1563510626;
+	bh=D9A9AGZPv+SbNcPGaM52XE5WsIS1Akk6wosFa+eVrWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3X1eCG8lCcYAhZXnztWRW1wjsTKMBkUQ7Rgsr6vXpCtSq7wfz6aoz49o+iEuFS5e
-	 soXXTD3UMg8jn3NDyhkWSWThZ3QEpQm7z6OnMPlPpMdR8BihIAj+dvpDMVcfJYNLJw
-	 ihV8oDvi85KpOj67Ig8seA376MDYt3uFSNmRw3pI=
+	b=bWwQqq6gHEYCSy6Ag80XMNvoBA8FtF+MnnMJijo6xT2d7jz2yGLEzvNG97xglsdmG
+	 cjRxZ6t6J0yDmIIQaF2gKg0S7Uir3dqThWggp59ExSwCqXN6xZvziyTY2DX18nQF3P
+	 ji75W/mJOLFFqeNLCbeAjSr+kKDJmwG6eOT3yLUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbfGSEaQ (ORCPT
+        id S2388531AbfGSEaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
+        Fri, 19 Jul 2019 00:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731530AbfGSEFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:05:17 -0400
+        id S1731488AbfGSEFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:05:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53F842189F;
-        Fri, 19 Jul 2019 04:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D71B4218BA;
+        Fri, 19 Jul 2019 04:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509116;
-        bh=AtzHmvVdtVpCWqkjwWL0y8J0cpmThlCpcbs1wXUCpJA=;
+        s=default; t=1563509112;
+        bh=D9A9AGZPv+SbNcPGaM52XE5WsIS1Akk6wosFa+eVrWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uktFBxLtViSjKfTCCaKzPsSwfdkC1Nmvz7jmCbe/wgKf9lJN3Y2WrRtDIjusQW2ps
-         NdVTpkqSNUVj9x0xdyyXHeuQ0iTL1LscojUpn+mYBJzpGwoJtKzjCwl+/afibXjMge
-         QU0aiX7iNHsF0VFwXViK38dxg/YCZ0F95W3lCVjU=
+        b=xo1XOysIKGSwSL577DbANuGM5m9vbJpgnle4BlmMnIxCoDtzgJ+xcbgZ53YJDW/Do
+         KghU00PjrwLr6osqsjdITsY7oUCq8M5qUg6gqdpLMbjn0vq7fj5/WiRYiaHgjthMNZ
+         DliRNqoV1PhRnY5DE9tTcfe1LnZL6gC8xz4FITac=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.1 078/141] mm/swap: fix release_pages() when releasing devmap pages
-Date:   Fri, 19 Jul 2019 00:01:43 -0400
-Message-Id: <20190719040246.15945-78-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.1 076/141] mfd: arizona: Fix undefined behavior
+Date:   Fri, 19 Jul 2019 00:01:41 -0400
+Message-Id: <20190719040246.15945-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
 References: <20190719040246.15945-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,74 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c5d6c45e90c49150670346967971e14576afd7f1 ]
+[ Upstream commit 5da6cbcd2f395981aa9bfc571ace99f1c786c985 ]
 
-release_pages() is an optimized version of a loop around put_page().
-Unfortunately for devmap pages the logic is not entirely correct in
-release_pages().  This is because device pages can be more than type
-MEMORY_DEVICE_PUBLIC.  There are in fact 4 types, private, public, FS DAX,
-and PCI P2PDMA.  Some of these have specific needs to "put" the page while
-others do not.
+When the driver is used with a subdevice that is disabled in the
+kernel configuration, clang gets a little confused about the
+control flow and fails to notice that n_subdevs is only
+uninitialized when subdevs is NULL, and we check for that,
+leading to a false-positive warning:
 
-This logic to handle any special needs is contained in
-put_devmap_managed_page().  Therefore all devmap pages should be processed
-by this function where we can contain the correct logic for a page put.
+drivers/mfd/arizona-core.c:1423:19: error: variable 'n_subdevs' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                              subdevs, n_subdevs, NULL, 0, NULL);
+                                       ^~~~~~~~~
+drivers/mfd/arizona-core.c:999:15: note: initialize the variable 'n_subdevs' to silence this warning
+        int n_subdevs, ret, i;
+                     ^
+                      = 0
 
-Handle all device type pages within release_pages() by calling
-put_devmap_managed_page() on all devmap pages.  If
-put_devmap_managed_page() returns true the page has been put and we
-continue with the next page.  A false return of put_devmap_managed_page()
-means the page did not require special processing and should fall to
-"normal" processing.
+Ideally, we would rearrange the code to avoid all those early
+initializations and have an explicit exit in each disabled case,
+but it's much easier to chicken out and add one more initialization
+here to shut up the warning.
 
-This was found via code inspection while determining if release_pages()
-and the new put_user_pages() could be interchangeable.[1]
-
-[1] https://lkml.kernel.org/r/20190523172852.GA27175@iweiny-DESK2.sc.intel.com
-
-Link: https://lkml.kernel.org/r/20190605214922.17684-1-ira.weiny@intel.com
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/mfd/arizona-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 301ed4e04320..f018d7c0148c 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -739,15 +739,20 @@ void release_pages(struct page **pages, int nr)
- 		if (is_huge_zero_page(page))
- 			continue;
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 27b61639cdc7..0ca0fc9a67fd 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -996,7 +996,7 @@ int arizona_dev_init(struct arizona *arizona)
+ 	unsigned int reg, val;
+ 	int (*apply_patch)(struct arizona *) = NULL;
+ 	const struct mfd_cell *subdevs = NULL;
+-	int n_subdevs, ret, i;
++	int n_subdevs = 0, ret, i;
  
--		/* Device public page can not be huge page */
--		if (is_device_public_page(page)) {
-+		if (is_zone_device_page(page)) {
- 			if (locked_pgdat) {
- 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
- 						       flags);
- 				locked_pgdat = NULL;
- 			}
--			put_devmap_managed_page(page);
--			continue;
-+			/*
-+			 * ZONE_DEVICE pages that return 'false' from
-+			 * put_devmap_managed_page() do not require special
-+			 * processing, and instead, expect a call to
-+			 * put_page_testzero().
-+			 */
-+			if (put_devmap_managed_page(page))
-+				continue;
- 		}
- 
- 		page = compound_head(page);
+ 	dev_set_drvdata(arizona->dev, arizona);
+ 	mutex_init(&arizona->clk_lock);
 -- 
 2.20.1
 
