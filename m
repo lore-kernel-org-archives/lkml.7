@@ -2,189 +2,222 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73168C76195
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC8C7618F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466F721873
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4B821872
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 17:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/LPUlN7"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bf3BClET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfGSRwY (ORCPT
+        id S1729995AbfGSRys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 13:52:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46177 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfGSRwX (ORCPT
+        Fri, 19 Jul 2019 13:54:48 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:46224 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727497AbfGSRys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 13:52:23 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so18032902lfh.13;
-        Fri, 19 Jul 2019 10:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Wy2x8pwTjFkJ2F2BYzzzdzt5kgC8pQdrsxP6mCTGO+Q=;
-        b=h/LPUlN7kHotEIBWuuJgZrJE0UAznhlWL+6s2j8ZaSHgm4/sRgi2VJJILERoXIJS7Z
-         RpVASIkXHMOpPtfYJWKm5rDBQLFupOLiVaT0I/raPmo6sJlKlY5zvUjaPAUPrayL0R4p
-         /sCt1r9ixB3hsYITxYM7IOFUUBJMg8cATKzp4IQ9Aidfjxe41s0AuEhxBThMiRkWhdc/
-         XnCbm93Hg9BaML5TiBhAoaUd7i3D7I7xOIAgWghZSxmMXIUldcPZkAEEj0o2nnzJOWdm
-         khFa1lTI4D58ZNFOPkFFiDUJh1dlMW2/xTotuqdWyYw6e2C0bNEnWYAHVBUDtUDi/mVz
-         11eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wy2x8pwTjFkJ2F2BYzzzdzt5kgC8pQdrsxP6mCTGO+Q=;
-        b=TqQxR/zgIRNTK2X6B/vBfMmd6XVARZqtVAY4no+DEdBfIp9DRNN1e21gRCNWZsvzxs
-         aIYZu8+A1btywKVvt4y91VZnVM0hRJOSPZB0qGWuQUxBpTcYnDgXuqd1okunBu9yUAZC
-         zofKYvqSaEpMXEpnlav9OdNd3bubDG1+JfEF5ycn9Bae6QZucYc1NRhUhyALxWPVa7Wk
-         FbSia80aJhDtIFIm/tnIWk6Hqg2zuU+iPOylemrDedA1h6M5685sQBilZ/QiqHYvLWA/
-         s3+WwimD/9fzJvr5L/b4M7ZUkIl4jl1osZ060SpVvBkOStk8Ly3nEh0C6iya98Lh1swj
-         UtQw==
-X-Gm-Message-State: APjAAAWtt/KvTOBZKbJbJeTKo3rxrFW8K/b6L3f67Or6MwtTxFr8/gg7
-        Lc3sBrCWyYBC/2x5jxkFUbMvCOND
-X-Google-Smtp-Source: APXvYqzAHUuuxGIlzRhHUnbt8/msQLk1xdcaoeW/+LxKsjxPjD3L0MZyqXGI6QwL/951nnUnWmGJrA==
-X-Received: by 2002:ac2:4c84:: with SMTP id d4mr24593601lfl.1.1563558740513;
-        Fri, 19 Jul 2019 10:52:20 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id j23sm4625482lfb.93.2019.07.19.10.52.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jul 2019 10:52:19 -0700 (PDT)
-Subject: Re: [PATCH v4 20/24] PM / devfreq: tegra30: Optimize upper average
- watermark selection
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223619epcas4p333f556dcf5a477b5cad5c9362a6f9b97@epcas4p3.samsung.com>
- <20190707223303.6755-21-digetx@gmail.com>
- <e3358039-d1b3-a5a0-1a37-aeb8edd49d6b@samsung.com>
- <20190719045943.73b53e31@dimatab>
- <1cec80ae-c03e-98a7-1d9f-6b57690610c7@samsung.com>
- <20190719052111.6641285d@dimatab>
- <3c9c6a3a-8bce-d304-8472-029e6e673a99@samsung.com>
- <c3e4330a-a96c-1ae9-761e-9eb1179e9b01@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <01b442e4-437d-799d-ed0d-4628bd0d683b@gmail.com>
-Date:   Fri, 19 Jul 2019 20:52:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 19 Jul 2019 13:54:48 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 85E63C0163;
+        Fri, 19 Jul 2019 17:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563558887; bh=xfMJh6liO4fii+92mxTSjQb5mrKZeVXSQXRG9ALjwLA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bf3BClETu+mE9kWUsBogQ8PZQ9IeUpOz+lZua8nkCYZfFjkk0UVCkFgbO+IULYpUY
+         k9peBj7qztq1ss6uBbphNZ61O8i6IqC2crF+MF4W+ID3VLwxLtimjl2xblmTobLl+l
+         1NLTMZxJ7dcSPCleF1rIFW6CvgGuh0LHX1mMZhmU1VPNRDNo6COSTgW2V5ZXLAi9ye
+         5K2/IjHPUlU9JpurG5onaigUo618EiKTE1pER9MQhnf/C92585w/AgEEtOnfdfEEoK
+         gyg/QtSVLwxhWeztMUnaGlMvvzrvbuSt/0y9y/eApNRBulMFM14ITycOUNaBJncgjD
+         icDOczE3o1Nqw==
+Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.79])
+        by mailhost.synopsys.com (Postfix) with ESMTP id C30E9A0057;
+        Fri, 19 Jul 2019 17:54:45 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH] ARC: [plat-hsdk]: allow to switch between AXI DMAC port configurations
+Date:   Fri, 19 Jul 2019 20:54:44 +0300
+Message-Id: <20190719175444.21809-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <c3e4330a-a96c-1ae9-761e-9eb1179e9b01@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.07.2019 9:11, Chanwoo Choi пишет:
-> On 19. 7. 19. 오후 3:09, Chanwoo Choi wrote:
->> On 19. 7. 19. 오전 11:21, Dmitry Osipenko wrote:
->>> В Fri, 19 Jul 2019 11:06:05 +0900
->>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
->>>
->>>> On 19. 7. 19. 오전 10:59, Dmitry Osipenko wrote:
->>>>> В Fri, 19 Jul 2019 10:36:30 +0900
->>>>> Chanwoo Choi <cw00.choi@samsung.com> пишет:
->>>>>   
->>>>>> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:  
->>>>>>> I noticed that CPU may be crossing the dependency threshold very
->>>>>>> frequently for some workloads and this results in a lot of
->>>>>>> interrupts which could be avoided if MCALL client is keeping
->>>>>>> actual EMC frequency at a higher rate.
->>>>>>>
->>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>> ---
->>>>>>>  drivers/devfreq/tegra30-devfreq.c | 23 ++++++++++++++++++-----
->>>>>>>  1 file changed, 18 insertions(+), 5 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/devfreq/tegra30-devfreq.c
->>>>>>> b/drivers/devfreq/tegra30-devfreq.c index
->>>>>>> c3cf87231d25..4d582809acb6 100644 ---
->>>>>>> a/drivers/devfreq/tegra30-devfreq.c +++
->>>>>>> b/drivers/devfreq/tegra30-devfreq.c @@ -314,7 +314,8 @@ static
->>>>>>> void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra, }
->>>>>>>  
->>>>>>>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq
->>>>>>> *tegra,
->>>>>>> -					   struct
->>>>>>> tegra_devfreq_device *dev)
->>>>>>> +					   struct
->>>>>>> tegra_devfreq_device *dev,
->>>>>>> +					   unsigned long freq)
->>>>>>>  {
->>>>>>>  	unsigned long avg_threshold, lower, upper;
->>>>>>>  
->>>>>>> @@ -323,6 +324,15 @@ static void
->>>>>>> tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->>>>>>> avg_threshold = dev->config->avg_dependency_threshold;
->>>>>>> avg_threshold = avg_threshold * ACTMON_SAMPLING_PERIOD; 
->>>>>>> +	/*
->>>>>>> +	 * If cumulative EMC frequency selection is higher than
->>>>>>> the
->>>>>>> +	 * device's, then there is no need to set upper watermark
->>>>>>> to
->>>>>>> +	 * a lower value because it will result in unnecessary
->>>>>>> upper
->>>>>>> +	 * interrupts.
->>>>>>> +	 */
->>>>>>> +	if (freq * ACTMON_SAMPLING_PERIOD > upper)
->>>>>>> +		upper = freq * ACTMON_SAMPLING_PERIOD;    
->>>>>>
->>>>>> Also, 'upper value is used on the patch5. You can combine this code
->>>>>> to patch5 or if this patch depends on the cpu notifier, you can
->>>>>> combine it to the patch of adding cpu notifier without separate
->>>>>> patch.  
->>>>>
->>>>> Well okay, I'll try to squash some of the patches in the next
->>>>> revision. Usually I'm receiving comments in the other direction,
->>>>> asking to separate patches into smaller changes ;) So that's more a
->>>>> personal preference of each maintainer, I'd say.
->>>>>   
->>>>
->>>> Right. We have to make the patch with atomic attribute.
->>>> But, if there are patches which touch the same code
->>>> in the same patchset. We can squash or do refactorig
->>>> of this code.
->>>
->>> The main benefit of having smaller logical changes is that when there is
->>> a bug, it's easier to narrow down the offending change using bisection.
->>> And it's just easier to review smaller patches, of course.
->>
->> I agree that the patch should contain the atomic feature.
->> To remove the some communication confusion between us,
->> I don't mean that you have to merge patches to only one patch.
-> 
-> If each patch has the atomic attribute, it have to be made as the separate patch.
-> But, if some patches are included in the the following two case,
-> can combine patches to one patch.
-> 
->>
->> It is important to remove the following two cases on the same patchset.
->>
->> 1. the front patch adds the code and then later patch remove the added code.
+We want to use DW AXI DMAC on HSDK board in our automated verification
+to test cache & dma kernel code changes. This is perfect candidate
+as we don't depend on any external peripherals like MMC card / USB
+storage / etc.
+To increase test coverage we want to test both options:
+ * DW AXI DMAC is connected through IOC port & dma direct ops used
+ * DW AXI DMAC is connected to DDR port & dma noncoherent ops used
 
-Okay, I agree that this is applicable to patch #11.
+Introduce 'arc_hsdk_axi_dmac_coherent' global variable which can be
+modified by debugger (same way as we patch 'ioc_enable') to switch
+between these options without recompiling the kernel.
+Depend on this value we tweak memory bridge configuration and
+"dma-coherent" DTS property of DW AXI DMAC.
 
->> 2. the front patch changes the code and the later patch again modified
->>    the changed code of the front patch
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/boot/dts/Makefile    |  3 ++
+ arch/arc/plat-hsdk/platform.c | 87 ++++++++++++++++++++++++++++++-----
+ 2 files changed, 78 insertions(+), 12 deletions(-)
 
-If patch A adds a new feature and then patch B adds another new feature
-on top of A, do you consider each of these patches as atomic?
+diff --git a/arch/arc/boot/dts/Makefile b/arch/arc/boot/dts/Makefile
+index a83c4f5e928b..8483a86c743d 100644
+--- a/arch/arc/boot/dts/Makefile
++++ b/arch/arc/boot/dts/Makefile
+@@ -12,3 +12,6 @@ dtb-y := $(builtindtb-y).dtb
+ # for CONFIG_OF_ALL_DTBS test
+ dtstree	:= $(srctree)/$(src)
+ dtb-	:= $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
++
++# board-specific dtc flags
++DTC_FLAGS_hsdk += --pad 20
+diff --git a/arch/arc/plat-hsdk/platform.c b/arch/arc/plat-hsdk/platform.c
+index 7dd2dd335cf6..ab8f93e7468e 100644
+--- a/arch/arc/plat-hsdk/platform.c
++++ b/arch/arc/plat-hsdk/platform.c
+@@ -6,11 +6,15 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/of_fdt.h>
++#include <linux/libfdt.h>
+ #include <linux/smp.h>
+ #include <asm/arcregs.h>
+ #include <asm/io.h>
+ #include <asm/mach_desc.h>
+ 
++int arc_hsdk_axi_dmac_coherent = 0;
++
+ #define ARC_CCM_UNUSED_ADDR	0x60000000
+ 
+ static void __init hsdk_init_per_cpu(unsigned int cpu)
+@@ -97,6 +101,42 @@ static void __init hsdk_enable_gpio_intc_wire(void)
+ 	iowrite32(GPIO_INT_CONNECTED_MASK, (void __iomem *) GPIO_INTEN);
+ }
+ 
++static int hsdk_tweak_node_coherency(const char *path, bool coherent)
++{
++	void *fdt = initial_boot_params;
++	const void *prop;
++	int node, ret;
++	bool dt_coh_set;
++
++	node = fdt_path_offset(fdt, path);
++	if (node < 0)
++		goto tweak_fail;
++
++	prop = fdt_getprop(fdt, node, "dma-coherent", &ret);
++	if (!prop && ret != -FDT_ERR_NOTFOUND)
++		goto tweak_fail;
++
++	dt_coh_set = ret != -FDT_ERR_NOTFOUND;
++	ret = 0;
++
++	/* need to remove "dma-coherent" property */
++	if (dt_coh_set && !coherent)
++		ret = fdt_delprop(fdt, node, "dma-coherent");
++
++	/* need to set "dma-coherent" property */
++	if (!dt_coh_set && coherent)
++		ret = fdt_setprop(fdt, node, "dma-coherent", NULL, 0);
++
++	if (ret < 0)
++		goto tweak_fail;
++
++	return 0;
++
++tweak_fail:
++	pr_err("failed to tweak %s to %scoherent\n", path, coherent ? "" : "non");
++	return -EFAULT;
++}
++
+ enum hsdk_axi_masters {
+ 	M_HS_CORE = 0,
+ 	M_HS_RTT,
+@@ -162,6 +202,39 @@ enum hsdk_axi_masters {
+ #define CREG_PAE		((void __iomem *)(CREG_BASE + 0x180))
+ #define CREG_PAE_UPDT		((void __iomem *)(CREG_BASE + 0x194))
+ 
++static void __init hsdk_init_memory_bridge_axi_dmac(void)
++{
++	bool coherent = !!arc_hsdk_axi_dmac_coherent;
++	u32 axi_m_slv1, axi_m_oft1;
++
++	/*
++	 * Don't tweak memory bridge configuration we we failed to tweak DTB
++	 * as we will end up in a inconsistent state.
++	 */
++	if (hsdk_tweak_node_coherency("/soc/dmac@80000", coherent))
++		return;
++
++	if (coherent) {
++		axi_m_slv1 = 0x77999999;
++		axi_m_oft1 = 0x76DCBA98;
++	} else {
++		axi_m_slv1 = 0x77777777;
++		axi_m_oft1 = 0x76543210;
++	}
++
++	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_0));
++	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_0));
++	writel(axi_m_slv1, CREG_AXI_M_SLV1(M_DMAC_0));
++	writel(axi_m_oft1, CREG_AXI_M_OFT1(M_DMAC_0));
++	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_0));
++
++	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_1));
++	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_1));
++	writel(axi_m_slv1, CREG_AXI_M_SLV1(M_DMAC_1));
++	writel(axi_m_oft1, CREG_AXI_M_OFT1(M_DMAC_1));
++	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_1));
++}
++
+ static void __init hsdk_init_memory_bridge(void)
+ {
+ 	u32 reg;
+@@ -227,24 +300,14 @@ static void __init hsdk_init_memory_bridge(void)
+ 	writel(0x76543210, CREG_AXI_M_OFT1(M_GPU));
+ 	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_GPU));
+ 
+-	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_0));
+-	writel(0x77777777, CREG_AXI_M_SLV1(M_DMAC_0));
+-	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_0));
+-	writel(0x76543210, CREG_AXI_M_OFT1(M_DMAC_0));
+-	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_0));
+-
+-	writel(0x77777777, CREG_AXI_M_SLV0(M_DMAC_1));
+-	writel(0x77777777, CREG_AXI_M_SLV1(M_DMAC_1));
+-	writel(0xFEDCBA98, CREG_AXI_M_OFT0(M_DMAC_1));
+-	writel(0x76543210, CREG_AXI_M_OFT1(M_DMAC_1));
+-	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DMAC_1));
+-
+ 	writel(0x00000000, CREG_AXI_M_SLV0(M_DVFS));
+ 	writel(0x60000000, CREG_AXI_M_SLV1(M_DVFS));
+ 	writel(0x00000000, CREG_AXI_M_OFT0(M_DVFS));
+ 	writel(0x00000000, CREG_AXI_M_OFT1(M_DVFS));
+ 	writel(UPDATE_VAL, CREG_AXI_M_UPDT(M_DVFS));
+ 
++	hsdk_init_memory_bridge_axi_dmac();
++
+ 	/*
+ 	 * PAE remapping for DMA clients does not work due to an RTL bug, so
+ 	 * CREG_PAE register must be programmed to all zeroes, otherwise it
+-- 
+2.21.0
 
-[snip]
