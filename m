@@ -2,150 +2,103 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B58C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FF9C76195
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93ABC2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563510008;
-	bh=h6vyEgOAt91ilNFETqHclV73kLzKMq/VD9cGUMby9Ec=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5CCf5PNLw6/kX920BrarR//035trZy+1umbJCQ5yJyLic/rYOMrSnHSDs5+8nufs
-	 oubkKOs+8o82YYwpDqGRzTvrZY5VjzVZBiT0uPtOsC105Cx0qGs+VsJjDC9Eqq2T1b
-	 fxhapGFp9+fGElfTm6M55YkElp7xkj50gArwDuS4=
+	by mail.kernel.org (Postfix) with ESMTP id 3B8CB2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 04:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XBMc40+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389434AbfGSEUG (ORCPT
+        id S2389772AbfGSEUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 00:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388967AbfGSEMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:12:48 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 331BB218C3;
-        Fri, 19 Jul 2019 04:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509567;
-        bh=h6vyEgOAt91ilNFETqHclV73kLzKMq/VD9cGUMby9Ec=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxEeK61/y4/gBvi0J1D1FM3wHoQF637xyLa3PWW0JV9sOaevBxughrV0VXp7elIzx
-         OXvIzxk9ARHuVXT2cBWfhzGTZ3UQJHxelO8YXMM0zXl3nQzi2Ws95kT17H1ME+b/Yp
-         awYx1LzUwYDubZLo19J6caDsSkCSX/OTCfUyhuFE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 52/60] s390/dasd: Make layout analysis ESE compatible
-Date:   Fri, 19 Jul 2019 00:11:01 -0400
-Message-Id: <20190719041109.18262-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
-References: <20190719041109.18262-1-sashal@kernel.org>
+        Fri, 19 Jul 2019 00:20:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34781 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbfGSEUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:20:03 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so55763924iot.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 21:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=y7QcXz6snFzqEHX9oNiwROmLSfrbhKnVywQpaDFxKjU=;
+        b=XBMc40+zE5hV9zvUK7QKYf84WeaZeVOkHEc+Ym7qahSCly2JPuO+wQ8TMLmOlquVIx
+         ZOh7vrznORPoqN9Tk5Vy4ScOe7tXXzyVDkJmHmgSqcKTiL1JAUpA3JP47Z74JkvyMKoG
+         Vru5wrI101h3kL1Fmmr22gglG4E6Gg7M9VEp7u6I4WoKhlt+iT9Hefknr+x05v9NdXh3
+         Ol6fNQLRfAYllDwOtTVJulMat9PzO4gQsnKKY1BKcAINbgC1gOsqYc6NzQ5+wfbg8jar
+         054ZQEV4ZYt2ryIpvydkJL2E2i9kvSUaTHhVznB3dTk8d0jWQU/WsRsAfLEAHW/cGuzf
+         sZfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=y7QcXz6snFzqEHX9oNiwROmLSfrbhKnVywQpaDFxKjU=;
+        b=dSdO07Bv9F81VSfGP6Zi9Rat3VUf6hfXWY1LazUmyuF4FSjPZHs9jAHadTLWUOAkky
+         CMkO6tXcwiUfEMYpnN6+V4Rl17MAUFCxkMJSZ/uw/KsMHtdMoELaxwMH5cF8aFiJtNyM
+         t9s3sncEJRKxKSbW+nHJlViJFZThNAHzYngMJofVDadnsuEErwruUkTelIRby8kWYUNQ
+         vUdhet/U3TWfS/IKI/Nl7bmTj4le+OwA91GR4rf/M2ocHrMaVMeKMdkSCQSXQcwhXiD9
+         nWEsKOJge94Ews1nxVaMvTcIrFlJMAl92QdOcyodT0UJMgUHR3CMso4QQiBzDfxEObhd
+         8D/w==
+X-Gm-Message-State: APjAAAWFn8eYOldpfxkRNJXPg3nxnsdeljN8ro3/3B0vYwTIfY90WU/J
+        aS3Gn4h0Od3QBK4fId/lM3gNBQ==
+X-Google-Smtp-Source: APXvYqzGiWfVK10x/o/hAhjT31ymV7flaSQ4nE5/whEi7UQaYFpREf+rTapypi5WrJkv8Azrv/2p7w==
+X-Received: by 2002:a5d:9749:: with SMTP id c9mr48787103ioo.258.1563510003006;
+        Thu, 18 Jul 2019 21:20:03 -0700 (PDT)
+Received: from localhost (67-0-62-24.albq.qwest.net. [67.0.62.24])
+        by smtp.gmail.com with ESMTPSA id u4sm31205266iol.59.2019.07.18.21.20.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 21:20:02 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 21:20:01 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org
+cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        christian@brauner.io
+Subject: [PATCH] riscv: enable sys_clone3 syscall for rv64
+Message-ID: <alpine.DEB.2.21.9999.1907182118500.7083@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
 
-[ Upstream commit ce6915f5343f5f2a2a937b683d8ffbf12dab3ad4 ]
+Enable the sys_clone3 syscall for RV64.  We simply include the generic
+version.
 
-The disk layout and volume information of a DASD reside in the first two
-tracks of cylinder 0. When a DASD is set online, currently the first
-three tracks are read and analysed to confirm an expected layout.
+Tested by running the program from
 
-For CDL (Compatible Disk Layout) only count area data of the first track
-is evaluated and checked against expected key and data lengths. For LDL
-(Linux Disk Layout) the first and third track is evaluated. However,
-an LDL formatted volume is expected to be in the same format across all
-tracks. Checking the third track therefore doesn't have any more value
-than checking any other track at random.
+   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
 
-Now, an Extent Space Efficient (ESE) DASD is initialised by only
-formatting the first two tracks, as those tracks always contain all
-information necessarry.
+and verifying that it completes successfully.
 
-Checking the third track on an ESE volume will therefore most likely
-fail with a record not found error, as the third track will be empty.
-This in turn leads to the device being recognised with a volume size of
-0. Attempts to write volume information on the first two tracks then
-fail with "no space left on device" errors.
-
-Initialising the first three tracks for an ESE volume is not a viable
-solution, because the third track is already a regular track and could
-contain user data. With that there is potential for data corruption.
-
-Instead, always only analyse the first two tracks, as it is sufficiant
-for both CDL and LDL, and allow ESE volumes to be recognised as well.
-
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Christian Brauner <christian@brauner.io>
 ---
- drivers/s390/block/dasd_eckd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/riscv/include/uapi/asm/unistd.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 0d5e2d92e05b..090c312eae32 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -156,7 +156,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
- #define LABEL_SIZE 140
+diff --git a/arch/riscv/include/uapi/asm/unistd.h b/arch/riscv/include/uapi/asm/unistd.h
+index 0e2eeeb1fd27..13ce76cc5aff 100644
+--- a/arch/riscv/include/uapi/asm/unistd.h
++++ b/arch/riscv/include/uapi/asm/unistd.h
+@@ -18,6 +18,7 @@
+ #ifdef __LP64__
+ #define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SET_GET_RLIMIT
++#define __ARCH_WANT_SYS_CLONE3
+ #endif /* __LP64__ */
  
- /* head and record addresses of count_area read in analysis ccw */
--static const int count_area_head[] = { 0, 0, 0, 0, 2 };
-+static const int count_area_head[] = { 0, 0, 0, 0, 1 };
- static const int count_area_rec[] = { 1, 2, 3, 4, 1 };
- 
- static inline unsigned int
-@@ -1820,8 +1820,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
- 	if (IS_ERR(cqr))
- 		return cqr;
- 	ccw = cqr->cpaddr;
--	/* Define extent for the first 3 tracks. */
--	define_extent(ccw++, cqr->data, 0, 2,
-+	/* Define extent for the first 2 tracks. */
-+	define_extent(ccw++, cqr->data, 0, 1,
- 		      DASD_ECKD_CCW_READ_COUNT, device, 0);
- 	LO_data = cqr->data + sizeof(struct DE_eckd_data);
- 	/* Locate record for the first 4 records on track 0. */
-@@ -1840,9 +1840,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
- 		count_data++;
- 	}
- 
--	/* Locate record for the first record on track 2. */
-+	/* Locate record for the first record on track 1. */
- 	ccw[-1].flags |= CCW_FLAG_CC;
--	locate_record(ccw++, LO_data++, 2, 0, 1,
-+	locate_record(ccw++, LO_data++, 1, 0, 1,
- 		      DASD_ECKD_CCW_READ_COUNT, device, 0);
- 	/* Read count ccw. */
- 	ccw[-1].flags |= CCW_FLAG_CC;
-@@ -1964,7 +1964,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
- 		}
- 	}
- 	if (i == 3)
--		count_area = &private->count_area[4];
-+		count_area = &private->count_area[3];
- 
- 	if (private->uses_cdl == 0) {
- 		for (i = 0; i < 5; i++) {
+ #include <asm-generic/unistd.h>
 -- 
-2.20.1
+2.22.0
 
