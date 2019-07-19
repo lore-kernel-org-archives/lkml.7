@@ -2,148 +2,129 @@ Return-Path: <SRS0=NvuC=VQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23973C76188
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E606FC76188
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C2B21849
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C941A21849
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jul 2019 07:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfGSH1X (ORCPT
+        id S1727171AbfGSH2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 03:27:23 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:4147 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726036AbfGSH1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 03:27:23 -0400
-X-UUID: a69de542ced147f3a1a4b1ceb27efe2f-20190719
-X-UUID: a69de542ced147f3a1a4b1ceb27efe2f-20190719
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 160776184; Fri, 19 Jul 2019 15:27:18 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 19 Jul 2019 15:27:14 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 19 Jul 2019 15:27:14 +0800
-Message-ID: <1563521234.8090.4.camel@mtkswgap22>
-Subject: Re: [PATCH 2/3] mt76: mt7615: add 4 WMM sets support
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Roy Luo <royluo@google.com>
-CC:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Fri, 19 Jul 2019 15:27:14 +0800
-In-Reply-To: <CA+zupgwyz2hdVRmnGr+4vzeEfvTfxYkLmu6jD_jFNjrPAdbvCQ@mail.gmail.com>
-References: <50d28c9b0f9e7d6b277d36fc93f55142d7535259.1563518381.git.ryder.lee@mediatek.com>
-         <1dc3cbc32729be40d0e1f2ef831377f2cddf3df3.1563518381.git.ryder.lee@mediatek.com>
-         <CA+zupgwyz2hdVRmnGr+4vzeEfvTfxYkLmu6jD_jFNjrPAdbvCQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Jul 2019 03:28:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58150 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfGSH2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 03:28:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 00:28:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,281,1559545200"; 
+   d="asc'?scan'208";a="187944515"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jul 2019 00:28:01 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     "Yang\, Fei" <fei.yang@intel.com>,
+        "john.stultz\@linaro.org" <john.stultz@linaro.org>,
+        "andrzej.p\@collabora.com" <andrzej.p@collabora.com>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated properly
+In-Reply-To: <02E7334B1630744CBDC55DA8586225837F8DD883@ORSMSX102.amr.corp.intel.com>
+References: <1563396788-126034-1-git-send-email-fei.yang@intel.com> <87o91riux9.fsf@linux.intel.com> <02E7334B1630744CBDC55DA8586225837F8DD883@ORSMSX102.amr.corp.intel.com>
+Date:   Fri, 19 Jul 2019 10:27:57 +0300
+Message-ID: <87muhascua.fsf@linux.intel.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D61FDE6DCE5E490ED94D7E171FF4DB4510347F1D7F8F881410629479B1536F882000:8
-X-MTK:  N
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 15:05 +0800, Roy Luo wrote:
-> 
-> 
-> 
-> On Fri, Jul 19, 2019 at 2:55 PM Ryder Lee <ryder.lee@mediatek.com>
-> wrote:
-> 
->         MT7615 hardware supoorts 4 WMM sets, so this patch adds them
->         accordingly.
->         Also remove incorrect queue mapping in .conf_tx
->         
->         Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
->         ---
->          drivers/net/wireless/mediatek/mt76/mt7615/mac.c  |  5 +++--
->          drivers/net/wireless/mediatek/mt76/mt7615/main.c | 16
->         ++++++----------
->          .../net/wireless/mediatek/mt76/mt7615/mt7615.h   |  1 +
->          3 files changed, 10 insertions(+), 12 deletions(-)
->         
->         diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
->         b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
->         index 8f9a2bb68ded..d85b3904f33a 100644
->         --- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
->         +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
->         @@ -314,7 +314,7 @@ int mt7615_mac_write_txwi(struct
->         mt7615_dev *dev, __le32 *txwi,
->                 struct ieee80211_hdr *hdr = (struct ieee80211_hdr
->         *)skb->data;
->                 struct ieee80211_vif *vif = info->control.vif;
->                 int tx_count = 8;
->         -       u8 fc_type, fc_stype, p_fmt, q_idx, omac_idx = 0;
->         +       u8 fc_type, fc_stype, p_fmt, q_idx, omac_idx = 0,
->         wmm_idx = 0;
->                 __le16 fc = hdr->frame_control;
->                 u16 seqno = 0;
->                 u32 val;
->         @@ -323,6 +323,7 @@ int mt7615_mac_write_txwi(struct
->         mt7615_dev *dev, __le32 *txwi,
->                         struct mt7615_vif *mvif = (struct mt7615_vif
->         *)vif->drv_priv;
->         
->                         omac_idx = mvif->omac_idx;
->         +               wmm_idx = mvif->wmm_idx;
->                 }
->         
->                 if (sta) {
->         @@ -335,7 +336,7 @@ int mt7615_mac_write_txwi(struct
->         mt7615_dev *dev, __le32 *txwi,
->                 fc_stype = (le16_to_cpu(fc) & IEEE80211_FCTL_STYPE) >>
->         4;
->         
->                 if (ieee80211_is_data(fc) ||
->         ieee80211_is_bufferable_mmpdu(fc)) {
->         -               q_idx = skb_get_queue_mapping(skb);
->         +               q_idx = skb_get_queue_mapping(skb) + wmm_idx *
->         MT7615_MAX_WMM_SETS;
->                         p_fmt = MT_TX_TYPE_CT;
->                 } else if (ieee80211_is_beacon(fc)) {
->                         q_idx = MT_LMAC_BCN0;
->         diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->         b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->         index 2c702b31d55f..ea48dcdb65c0 100644
->         --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->         +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->         @@ -85,9 +85,9 @@ static int mt7615_add_interface(struct
->         ieee80211_hw *hw,
->                 }
->                 mvif->omac_idx = idx;
->         
->         -       /* TODO: DBDC support. Use band 0 and wmm 0 for now */
->         +       /* TODO: DBDC support. Use band 0 for now */
->                 mvif->band_idx = 0;
->         -       mvif->wmm_idx = 0;
->         +       mvif->wmm_idx = mvif->idx % MT7615_MAX_WMM_SETS;
->         
-> 
-> 
-> IIUC, vifs with the same wmm_idx will share the same WMM HW, thus the
-> same WMM parameter.
-> Shouldn't we assign wmm_idx based on that?
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I think that's what I did here. vif0 <-> wmm0, vif1 <->wmm1 ...
+"Yang, Fei" <fei.yang@intel.com> writes:
 
-> 
-> 
+Hi,
 
+>> Can only be true for last TRB
+>>
+> | 	if (event->status & DEPEVT_STATUS_IOC)
+> | 		return 1;
+>
+> This is the problem. The whole USB request gets only one interrupt
+> when the last TRB completes, so dwc3_gadget_ep_reclaim_trb_sg() gets
+> called with event->status =3D 0x6 which has DEPEVT_STATUS_IOC bit
+> set. Thus dwc3_gadget_ep_reclaim_completed_trb() returns 1 for the
+> first TRB and the for-loop ends without having a chance to iterate
+> through the sg list.
+
+IOC is only set for the last TRB, so this will iterate over and over
+again until it reaches the last TRB. Please collect tracepoints of the
+failure case.
+
+>> If we have a short packet, then we may fall here. Is that the case?
+>
+> No need for a short packet to make it fail. In my case below, a 16384
+> byte request got slipt into 4 TRBs of 4096 bytes. All TRBs were
+> completed normally, but the for-loop in
+> dwc3_gadget_ep_reclaim_trb_sg() was terminated right after handling
+> the first TRB. After that the trb_dequeue is messed up.
+
+I need tracepoints to se what's going on, please collect tracepoints.
+
+> buffer_addr,size,type,ioc,isp_imi,csp,chn,lst,hwo
+> 0000000077849000, 4096,normal,0,0,1,1,0,0
+> 000000007784a000, 4096,normal,0,0,1,1,0,0
+> 000000007784b000, 4096,normal,0,0,1,1,0,0
+> 000000007784c000, 4096,normal,1,0,1,0,0,0
+> 000000007784d000, 512,normal,1,0,1,0,0,0
+>
+> My first version of the patch was trying to address the issue in
+> dwc3_gadget_ep_reclaim_completed_trb(), but then I thought it's a bad
+> idea to touch this function because that is also called from non
+> scatter_gather list case, and I was not sure if returning 1 for the
+> linear case is correct or not.
+
+That function *must* be called for all cases. We want to reduce the
+amount of special cases so code is more straight forward and easier to
+maintain. Again, please collect tracepoints of the failure case with the
+latest tag from Linus, otherwise you won't be able to convince me we
+need your patch.
+
+I also think your version is the wrong way to sort it out.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0xcP0ACgkQzL64meEa
+mQa+BRAApybjl0kw74kvUCbgq5JoZMjTCG8mNVR2WL2+gE9qRwGiJ00aSJakl06A
+EH2CUWRGDNzuGyQCajC/GHLl8ZC+yLK5Qu5OSXelZU6k4Ghd9kAfqN57zLbuH6fa
+I2nVdhAehADII/57+s1E86s5d3BctlNd4qZi72dK9GvH55IukzeZWotWiIxUH1F7
+zO5NxKvFV1EIOa/PezcE2bdnbsrzCs6uCySYGlWYDTP2fEfm9XK7/L5/kQGJYpVJ
+0yORd/HLvNPq3bjBPCNOkCkQ3TTv2uc9ybKwlTlPufRET7uTtQD0F8ZRqoGxWZ0j
+8OiSwYcEnzOWhA+o4RpX1XfIkMug75hlsV2BKrTsR9z7e/+isNro6tFqAu/xp/k0
+pRHIHnmDFmkHX9OmwbUQZbBAZGsxm2WB6yh3sqVW0eWQnzlS4TelUu568Nk9La6y
+Jdv6BocpfZ0C3VvvTAxQMncqA4zRiFQZ4ZcFxcJBZzloMn3dBW2bKycpJZkoX1bG
+jyaIKvANmbKjdtdYFWmOsgMNaFCYQvTWHHCBwybskX6lI/0lgmgYx5z72GJ0VTQ9
+THlw7VRPF6u4HXwWd0cSfQFnL5kPRLOzj6i82mhOXZLRQFEHWIMhz8ayKzcQPqh3
+pafP951OscsQdOvOc2tT6lRaItN9j4fIoSuPy7iKlJSOYKWrqyc=
+=YdDN
+-----END PGP SIGNATURE-----
+--=-=-=--
