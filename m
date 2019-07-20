@@ -2,104 +2,228 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9030CC76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4625AC76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A592084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025A42085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDksJr+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfGTI5I (ORCPT
+        id S1727222AbfGTJLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 04:57:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33775 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbfGTI5I (ORCPT
+        Sat, 20 Jul 2019 05:11:30 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34581 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727199AbfGTJLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 04:57:08 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1holAZ-00079f-6P; Sat, 20 Jul 2019 10:56:43 +0200
-Date:   Sat, 20 Jul 2019 10:56:41 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH] x86/entry/64: Prevent clobbering of saved CR2 value
-In-Reply-To: <alpine.DEB.2.21.1907200018050.1782@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907201020540.1782@nanos.tec.linutronix.de>
-References: <20190702053151.26922-1-devel@etsukata.com> <20190702072821.GX3419@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de> <20190702113355.5be9ebfe@gandalf.local.home> <20190702133905.1482b87e@gandalf.local.home>
- <20190719202836.GB13680@linux.intel.com> <alpine.DEB.2.21.1907200018050.1782@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 20 Jul 2019 05:11:30 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so34495021wrm.1;
+        Sat, 20 Jul 2019 02:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EpybfCHDTjlpS+cVkwuETJpShpZaO++Epoz9jlIsJA0=;
+        b=FDksJr+OZvIdeauQ4XmSo5B7FurSdX1IvlSMol4ZkyhXxa9XfRQsCGzB9psqO+ALM5
+         vnxYlnGb/LHLecouru5csLtVHPLbb0o9JkNU3YaESSrvc/kOrn3Ke3X1d4Kj3+T2ghDO
+         5G30A4S5ekq7wlR7zZfP/WkEmspD3fZJau9tSjOtijJyMOsTU3Txncw8HJ0kgH2JtCLi
+         u5jhyWcT3rzCGp6hfG7MpxiuZp+eFWp8FfXDwbfDDST9xBKZvSriAJiOB+/RorVcDyX8
+         GinEpMX6ok68hgP3BlFYfdEkuThf9N4HSgGKhnlvNzlzqOVTFLvHJSMgiVJG/rzwooeU
+         2tdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EpybfCHDTjlpS+cVkwuETJpShpZaO++Epoz9jlIsJA0=;
+        b=qVfiCjrA7fesG6xnwQJzh5iRYvtUMZ7kDBgvZTHnS1FNaGlMVK4jUfekjjK9YYLxIY
+         D6ph0Ni4A8vk2TqUOsHU4b3o59oTNjlzQktHH3hr4mdqWf61q2QlfL4yrHVjXioap9vH
+         dd+YqzN8GY/ZQq9d/Y3F1aVYJKH80JgEQmBP0W0xN/FNsoAjU9BgBcfkFYo5XpcoU4c2
+         cTxWXwpECTHAfIqnbE/9tLq0o7DLqrpeGyHo3B6YxnFowaxH3vpPw464YNZpqt59jSOq
+         UP2HmYr0l3u8pSXIjUyITZk6eleYM+OVnwdRDepMrjKH41DD4b4Kg7QV2AL/YzzYmm1w
+         /52A==
+X-Gm-Message-State: APjAAAUF4sxPrkirUFmTiVFGXs9he07PIqCYgBd0Bjg6Q7v8egNn4qu4
+        JtTHvCRDAAbDyMcIrXg/8aZ8dJo+
+X-Google-Smtp-Source: APXvYqwHHwxBvJDL0wW+6EJFwWQZDpGgDVRZvrUdyumKpffFN2bBP4MNp6JRBvE4JcHScjcz9bxsGQ==
+X-Received: by 2002:adf:f888:: with SMTP id u8mr32670519wrp.238.1563613887083;
+        Sat, 20 Jul 2019 02:11:27 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:2813:fc36:e36e:dd3b? ([2003:ea:8bd6:c00:2813:fc36:e36e:dd3b])
+        by smtp.googlemail.com with ESMTPSA id p3sm28729285wmg.15.2019.07.20.02.11.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Jul 2019 02:11:25 -0700 (PDT)
+Subject: Re: network problems with r8169
+To:     Thomas Voegtle <tv@lio96.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <alpine.LSU.2.21.1907182032370.7080@er-systems.de>
+ <2eeedff5-4911-db6e-6bfd-99b591daa7ef@gmail.com>
+ <alpine.LSU.2.21.1907192310140.11569@er-systems.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <9cab7996-d801-0ae5-9e82-6d24eeb8d7c7@gmail.com>
+Date:   Sat, 20 Jul 2019 11:11:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <alpine.LSU.2.21.1907192310140.11569@er-systems.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent fix for CR2 corruption introduced a new way to reliably corrupt
-the saved CR2 value.
+On 19.07.2019 23:12, Thomas Voegtle wrote:
+> On Fri, 19 Jul 2019, Heiner Kallweit wrote:
+> 
+>> On 18.07.2019 20:50, Thomas Voegtle wrote:
+>>>
+>>> Hello,
+>>>
+>>> I'm having network problems with the commits on r8169 since v5.2. There are ping packet loss, sometimes 100%, sometimes 50%. In the end network is unusable.
+>>>
+>>> v5.2 is fine, I bisected it down to:
+>>>
+>>> a2928d28643e3c064ff41397281d20c445525032 is the first bad commit
+>>> commit a2928d28643e3c064ff41397281d20c445525032
+>>> Author: Heiner Kallweit <hkallweit1@gmail.com>
+>>> Date:   Sun Jun 2 10:53:49 2019 +0200
+>>>
+>>>     r8169: use paged versions of phylib MDIO access functions
+>>>
+>>>     Use paged versions of phylib MDIO access functions to simplify
+>>>     the code.
+>>>
+>>>     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>>     Signed-off-by: David S. Miller <davem@davemloft.net>
+>>>
+>>>
+>>> Reverting that commit on top of v5.2-11564-g22051d9c4a57 fixes the problem
+>>> for me (had to adjust the renaming to r8169_main.c).
+>>>
+>>> I have a:
+>>> 04:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+>>> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev
+>>> 0c)
+>>>         Subsystem: Biostar Microtech Int'l Corp Device [1565:2400]
+>>>         Kernel driver in use: r8169
+>>>
+>>> on a BIOSTAR H81MG motherboard.
+>>>
+>> Interesting. I have the same chip version (RTL8168g) and can't reproduce
+>> the issue. Can you provide a full dmesg output and test the patch below
+>> on top of linux-next? I'd be interested in the WARN_ON stack traces
+>> (if any) and would like to know whether the experimental change to
+>> __phy_modify_changed helps.
+>>
+>>>
+>>> greetings,
+>>>
+>>>   Thomas
+>>>
+>>>
+>> Heiner
+>>
+>>
+>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+>> index 8d7dd4c5f..26be73000 100644
+>> --- a/drivers/net/ethernet/realtek/r8169_main.c
+>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+>> @@ -1934,6 +1934,8 @@ static int rtl_get_eee_supp(struct rtl8169_private *tp)
+>>     struct phy_device *phydev = tp->phydev;
+>>     int ret;
+>>
+>> +    WARN_ON(phy_read(phydev, 0x1f));
+>> +
+>>     switch (tp->mac_version) {
+>>     case RTL_GIGA_MAC_VER_34:
+>>     case RTL_GIGA_MAC_VER_35:
+>> @@ -1957,6 +1959,8 @@ static int rtl_get_eee_lpadv(struct rtl8169_private *tp)
+>>     struct phy_device *phydev = tp->phydev;
+>>     int ret;
+>>
+>> +    WARN_ON(phy_read(phydev, 0x1f));
+>> +
+>>     switch (tp->mac_version) {
+>>     case RTL_GIGA_MAC_VER_34:
+>>     case RTL_GIGA_MAC_VER_35:
+>> @@ -1980,6 +1984,8 @@ static int rtl_get_eee_adv(struct rtl8169_private *tp)
+>>     struct phy_device *phydev = tp->phydev;
+>>     int ret;
+>>
+>> +    WARN_ON(phy_read(phydev, 0x1f));
+>> +
+>>     switch (tp->mac_version) {
+>>     case RTL_GIGA_MAC_VER_34:
+>>     case RTL_GIGA_MAC_VER_35:
+>> @@ -2003,6 +2009,8 @@ static int rtl_set_eee_adv(struct rtl8169_private *tp, int val)
+>>     struct phy_device *phydev = tp->phydev;
+>>     int ret = 0;
+>>
+>> +    WARN_ON(phy_read(phydev, 0x1f));
+>> +
+>>     switch (tp->mac_version) {
+>>     case RTL_GIGA_MAC_VER_34:
+>>     case RTL_GIGA_MAC_VER_35:
+>> diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+>> index 16667fbac..1aa1142b8 100644
+>> --- a/drivers/net/phy/phy-core.c
+>> +++ b/drivers/net/phy/phy-core.c
+>> @@ -463,12 +463,10 @@ int __phy_modify_changed(struct phy_device *phydev, u32 regnum, u16 mask,
+>>         return ret;
+>>
+>>     new = (ret & ~mask) | set;
+>> -    if (new == ret)
+>> -        return 0;
+>>
+>> -    ret = __phy_write(phydev, regnum, new);
+>> +    __phy_write(phydev, regnum, new);
+>>
+>> -    return ret < 0 ? ret : 1;
+>> +    return new != ret;
+>> }
+>> EXPORT_SYMBOL_GPL(__phy_modify_changed);
+>>
+>>
+> 
+> Took your patch on top of next-20190719.
+> See attached dmesg.
+> It didn't work. Same thing, lots of ping drops, no usable network.
+> 
+> like that:
+> 44 packets transmitted, 2 received, 95% packet loss, time 44005ms
+> 
+> 
+> Maybe important:
+> I build a kernel with no modules.
+> 
+> I have to power off when I booted a kernel which doesn't work, a (soft) reboot into a older kernel (e.g. 4.9.y)  doesn't
+> fix the problem. Powering off and on does.
+> 
 
-CR2 is saved early in the entry code in RDX, which is the third argument to
-the fault handling functions. But it missed that between saving and
-invoking the fault handler enter_from_user_mode() can be called. RDX is a
-caller saved register so the invoked function can freely clobber it with
-the obvious consequences.
+Then, what you could do is reversing the hunks of the patch step by step.
+Or make them separate patches and bisect.
+Relevant are the hunks from point 1 and 2.
 
-The TRACE_IRQS_OFF call is safe as it calls through the thunk which
-preserves RDX.
+1. first 5 hunks (I don't think you have to reverse them individually)
+   EEE-related
 
-Store CR2 in R12 instead which is a callee saved register and move R12 to
-RDX just before calling the fault handler.
+2. rtl8168g_disable_aldps, rtl8168g_phy_adjust_10m_aldps, rtl8168g_1_hw_phy_config
+   all of these hunks are in the path for RTL8168g
 
-Fixes: a0d14b8909de ("x86/mm, tracing: Fix CR2 corruption")
-Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/entry_64.S |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+3. rtl8168h_1_hw_phy_config, rtl8168h_2_hw_phy_config, rtl8168ep_1_hw_phy_config,
+   rtl8168ep_2_hw_phy_config
+   not in the path for RTL8168g
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -875,7 +875,12 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
- 	UNWIND_HINT_REGS
- 
- 	.if \read_cr2
--	GET_CR2_INTO(%rdx);			/* can clobber %rax */
-+	/*
-+	 * Store CR2 early so subsequent faults cannot clobber it. Use R12 as
-+	 * intermediate storage as RDX can be clobbered in enter_from_user_mode().
-+	 * GET_CR2_INTO can clobber RAX.
-+	 */
-+	GET_CR2_INTO(%r12);
- 	.endif
- 
- 	.if \shift_ist != -1
-@@ -904,6 +909,10 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
- 	subq	$\ist_offset, CPU_TSS_IST(\shift_ist)
- 	.endif
- 
-+	.if \read_cr2
-+	movq	%r12, %rdx			/* Move CR2 into 3rd argument */
-+	.endif
-+
- 	call	\do_sym
- 
- 	.if \shift_ist != -1
+> 
+> greetings,
+> 
+>       Thomas
+Heiner
