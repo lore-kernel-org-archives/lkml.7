@@ -2,117 +2,191 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52888C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD77AC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B16D21872
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE7B21872
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clh9eyLf"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TdfjmxJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbfGTC3z (ORCPT
+        id S2390336AbfGTCbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 22:29:55 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54279 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbfGTC3z (ORCPT
+        Fri, 19 Jul 2019 22:31:48 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:36103 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbfGTCbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 22:29:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p74so30301847wme.4;
-        Fri, 19 Jul 2019 19:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=btizYwfe6mTTxTPSbiY0caw59UmfBlWe5Uygrq3sqMY=;
-        b=clh9eyLflZh8u307sMXectwSBF7U7lnttdUVNcqGltZM6aSGlUurJ+vHncBUYYMx9d
-         6LKKPIAe9vwuR56CwNHqGBwPQHMCyBjhPBFqtIRwVCbwH9emd+4hgRZeqGhKUmkxmf2p
-         fS/SRTfaAxaTxThjKMpTljw/HGjQ3m5moykiRNMDDo1Ugw1NGov+rYGtsV9zmZx/Xsh6
-         PErHp7FdpLLevkaOCMJeVTyEVzTLvwJvQkTR7TR7vnyyc/8bFwAdTRGCJB6G4GDA+XnG
-         zsAgGIoU534mLqp4RcoTvixNIjGtAwDEEn1JwFhTW8LGDIEmss6up5RhC/baAvAFrePf
-         CZ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=btizYwfe6mTTxTPSbiY0caw59UmfBlWe5Uygrq3sqMY=;
-        b=mWgQjfVcgSLbZF34f658AQiQU+x4xDbyIxPlDnVN1fdPOAKfrE1RsJctRmIMTA0UK6
-         hnPUQ1jXxLDlYYPZZHy9+X4KsSVvOvbOwPix/VWaSKXPUghyw6JfaoDwaVFZjn0zpv1v
-         9Al1m/Hh3BUAhEyhM6unQvIHBCc78xT2+drPkyLhH9LNqa0dpZcz/i2rATRe+cMOAMFw
-         uvEMMmy4NNA9SOPlW+Zgj6YnQhj+KjaGOtaV9oxyYwX19vyBEjFseKYTqMIkbhK0cK9h
-         lG4Kv+ONTzjt/FiDxp6F0z0JTgNdzgIY76fIFBwPXeesnTZPJrvEwO2ULUMhe6ESV4RP
-         uM3g==
-X-Gm-Message-State: APjAAAU7Ao00qG8wa1U/AmEVR/ql92uNM4tKpxOOzKjcBKU4O4qfsEZz
-        FvZeIyl5jvd56cN9hif/rx+qAiOqjQ9qzdgyvZRubXrHT0M1FA==
-X-Google-Smtp-Source: APXvYqzUcdut1lbHeqsszLDgLCKsa9HVLpPrATMQnDMEQXYAAFrwtQVzYjkwMKeXp9Ko0ZVuMiA+yA46DXDXyopz65A=
-X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr51263042wme.146.1563589792642;
- Fri, 19 Jul 2019 19:29:52 -0700 (PDT)
+        Fri, 19 Jul 2019 22:31:47 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6K2VbDr004680;
+        Sat, 20 Jul 2019 11:31:38 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6K2VbDr004680
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563589899;
+        bh=8A38yUD+RN5H5a28RlqUjb+kTd+xkmGUmTALpNhFXHg=;
+        h=From:Date:Subject:To:Cc:From;
+        b=TdfjmxJOmPdLlk1GskO8i45+zDR5za9UgvVTec7JTr6eivcvg/qEl2JnhAsEhM8CE
+         zTr9E3R6W0ihbr/exdtfxPDBY2vB6diW+LVHFdIi+3BIbCc3z5ykYELLe/RA68Du2x
+         kMbBW2vE2BTanaIiC2mWzer96CyypOIMOFa5zfht3UCbq2fjuqjHYcxedDOb6Q4rvu
+         5hECFttaBR1M3OIVH+benMUS5AMWhYRaDNewc/Sh2a+4EVBxpolOqvAGvfOfHSzcc1
+         RGha6cwCSBVlLeVyGRQzg8fdkq7Ewiu3jhxiToj4kKO6ZwuLYBJVfs6e1t7g2cHhwg
+         Fs3QD9su03wcQ==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id k9so22737005vso.5;
+        Fri, 19 Jul 2019 19:31:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAVe4mQp0gXY+xQvKmnXPwwuo3h9HBrhP2VcAowgUYkcK0DlATD7
+        HqyG1S0LkuBpD1uBYM2G2JZekDYFFcDxvdkvwDs=
+X-Google-Smtp-Source: APXvYqy1FPrgczXlm+uOM6C4KBtD2dtEsQs0A2sfOFA+hSAr+WijLwbgRDhDO/zCfxNJCfjnjb9QGXlpMGN3pSUQgA8=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr35530737vsn.181.1563589897214;
+ Fri, 19 Jul 2019 19:31:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <1563579201.1602.7.camel@HansenPartnership.com>
-In-Reply-To: <1563579201.1602.7.camel@HansenPartnership.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Sat, 20 Jul 2019 10:29:40 +0800
-Message-ID: <CACVXFVNOPhiUhrgw07sna0dt5Jy2zckbNXDWPPRAGadXQAS_mQ@mail.gmail.com>
-Subject: Re: [GIT PULL] final round of SCSI updates for the 5.2+ merge window
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 20 Jul 2019 11:31:01 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQD7m+PCS6KtoVmZ_7kggLeWD6LE6NkfZ7TeaSO26sQGA@mail.gmail.com>
+Message-ID: <CAK7LNAQD7m+PCS6KtoVmZ_7kggLeWD6LE6NkfZ7TeaSO26sQGA@mail.gmail.com>
+Subject: [GIT PULL] More Kbuild updates for v5.3-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     masahiroy@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 8:38 AM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> This is the final round of mostly small fixes in our initial
-> submit.  It's mostly minor fixes and driver updates.  The only change
-> of note is adding a virt_boundary_mask to the SCSI host and host
-> template to parametrise this for NVMe devices instead of having them do
-> a call in slave_alloc.  It's a fairly straightforward conversion except
-> in the two NVMe handling drivers that didn't set it who now have a
-> virtual infinity parameter added.
->
-> The patch is available here:
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
->
-> The short changelog is:
->
-> Arnd Bergmann (1):
->       scsi: lpfc: reduce stack size with CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE
->
-> Benjamin Block (3):
->       scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
->       scsi: zfcp: fix request object use-after-free in send path causing wrong traces
->       scsi: zfcp: fix request object use-after-free in send path causing seqno errors
->
-> Christoph Hellwig (8):
->       scsi: megaraid_sas: set an unlimited max_segment_size
->       scsi: mpt3sas: set an unlimited max_segment_size for SAS 3.0 HBAs
->       scsi: IB/srp: set virt_boundary_mask in the scsi host
->       scsi: IB/iser: set virt_boundary_mask in the scsi host
->       scsi: storvsc: set virt_boundary_mask in the scsi host template
->       scsi: ufshcd: set max_segment_size in the scsi host template
->       scsi: core: take the DMA max mapping size into account
+Hi Linus,
 
-It has been observed on NVMe the above approach("take the DMA max
-mapping size into account") causes performance regression, so I'd
-suggest to fix dma_max_mapping_size() first.
-
-Christoph has posted fix already, but looks not merged yet:
-
-      https://lkml.org/lkml/2019/7/17/62
+Please pull some more Kbuild updates.
+Thanks!
 
 
-Thanks,
-Ming Lei
+The following changes since commit 9637d517347e80ee2fe1c5d8ce45ba1b88d8b5cd:
+
+  Merge tag 'for-linus-20190715' of git://git.kernel.dk/linux-block
+(2019-07-15 21:20:52 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.3-2
+
+for you to fetch changes up to 29be86d7f9cb18df4123f309ac7857570513e8bc:
+
+  kbuild: add -fcf-protection=none when using retpoline flags
+(2019-07-20 11:20:24 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.3 (2nd)
+
+- match the directory structure of the linux-libc-dev package to that of
+  Debian-based distributions
+
+- fix incorrect include/config/auto.conf generation when Kconfig creates
+  it along with the .config file
+
+- remove misleading $(AS) from documents
+
+- clean up precious tag files by distclean instead of mrproper
+
+- add a new coccinelle patch for devm_platform_ioremap_resource migration
+
+- refactor module-related scripts to read modules.order instead of
+  $(MODVERDIR)/*.mod files to get the list of created modules
+
+- remove MODVERDIR
+
+- update list of header compile-test
+
+- add -fcf-protection=none flag to avoid conflict with the retpoline
+  flags when CONFIG_RETPOLINE=y
+
+- misc cleanups
+
+----------------------------------------------------------------
+Cedric Hombourger (1):
+      builddeb: generate multi-arch friendly linux-libc-dev package
+
+Himanshu Jha (1):
+      coccinelle: api: add devm_platform_ioremap_resource script
+
+Masahiro Yamada (22):
+      memory: ti-emif-sram: move driver-specific asm-offset.h to drivers/memory/
+      riscv: drop unneeded -Wall addition
+      kconfig: run olddefconfig instead of oldconfig after merging fragments
+      kconfig: fix missing choice values in auto.conf
+      kbuild: get rid of misleading $(AS) from documents
+      kbuild: add --hash-style= and --build-id unconditionally
+      kbuild: remove tag files by distclean instead of mrproper
+      kbuild: remove unused hostcc-option
+      kbuild: compile-test headers listed in header-test-m as well
+      kbuild: do not create empty modules.order in the prepare stage
+      kbuild: get rid of kernel/ prefix from in-tree modules.{order,builtin}
+      kbuild: remove duplication from modules.order in sub-directories
+      scsi: remove pointless $(MODVERDIR)/$(obj)/53c700.ver
+      kbuild: modinst: read modules.order instead of $(MODVERDIR)/*.mod
+      kbuild: modsign: read modules.order instead of $(MODVERDIR)/*.mod
+      kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod
+      kbuild: export_report: read modules.order instead of .tmp_versions/*.mod
+      kbuild: create *.mod with full directory path and remove MODVERDIR
+      kbuild: remove the first line of *.mod files
+      kbuild: remove 'prepare1' target
+      kbuild: split out *.mod out of {single,multi}-used-m rules
+      kbuild: update compile-test header list for v5.3-rc1
+
+Seth Forshee (1):
+      kbuild: add -fcf-protection=none when using retpoline flags
+
+ .gitignore                                                  |  1 +
+ Documentation/dontdiff                                      |  1 +
+ Documentation/kbuild/kbuild.rst                             |  5 +--
+ Documentation/kbuild/makefiles.rst                          | 12 +++---
+ Makefile                                                    | 61
+++++++++++++---------------
+ arch/arm/vdso/Makefile                                      |  3 +-
+ arch/arm64/kernel/vdso32/Makefile                           |  4 +-
+ arch/riscv/Makefile                                         |  2 -
+ arch/sparc/vdso/Makefile                                    |  3 +-
+ arch/x86/entry/vdso/Makefile                                |  5 +--
+ drivers/memory/.gitignore                                   |  1 +
+ drivers/memory/Makefile                                     |  5 ++-
+ drivers/memory/ti-emif-sram-pm.S                            |  2 +-
+ drivers/scsi/Makefile                                       |  2 +-
+ include/Kbuild                                              | 14 +++---
+ lib/Kconfig.debug                                           | 12 +-----
+ scripts/Kbuild.include                                      |  5 ---
+ scripts/Makefile.build                                      | 42
+++++++++----------
+ scripts/Makefile.lib                                        |  2 +-
+ scripts/Makefile.modbuiltin                                 |  2 +-
+ scripts/Makefile.modinst                                    |  5 +--
+ scripts/Makefile.modpost                                    | 19 +++++----
+ scripts/Makefile.modsign                                    |  3 +-
+ scripts/adjust_autoksyms.sh                                 | 14 +++---
+ scripts/coccinelle/api/devm_platform_ioremap_resource.cocci | 60
+++++++++++++++++++++++++++
+ scripts/export_report.pl                                    | 11 +++--
+ scripts/kconfig/Makefile                                    |  2 +-
+ scripts/kconfig/confdata.c                                  |  7 ++-
+ scripts/kconfig/expr.h                                      |  1 +
+ scripts/mod/sumversion.c                                    | 23 ++--------
+ scripts/modules-check.sh                                    |  2 +-
+ scripts/package/builddeb                                    |  5 +++
+ scripts/package/mkdebian                                    |  1 +
+ scripts/package/mkspec                                      |  2 +-
+ tools/power/cpupower/debug/kernel/Makefile                  |  4 +-
+ usr/include/Makefile                                        |  8 ----
+ 36 files changed, 178 insertions(+), 173 deletions(-)
+ create mode 100644 drivers/memory/.gitignore
+ create mode 100644 scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+
+
+--
+Best Regards
+Masahiro Yamada
