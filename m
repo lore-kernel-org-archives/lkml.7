@@ -2,104 +2,245 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C96C76195
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 22:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67DAC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 22:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDFF2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 22:47:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQkILhKA"
+	by mail.kernel.org (Postfix) with ESMTP id 99D912082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 22:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfGTWqw (ORCPT
+        id S1726190AbfGTWuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 18:46:52 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39994 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfGTWqv (ORCPT
+        Sat, 20 Jul 2019 18:50:12 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:54958 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfGTWuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 18:46:51 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so15656871pfp.7;
-        Sat, 20 Jul 2019 15:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8jcJmcHEGEEYqidoI3J8M7I3oaGy7AiHVl+ctm6XmvE=;
-        b=BQkILhKAbudKrFIGtrR8LQOCVFmLrPvFpZ0n8JeCW+eUBMuteZFF8qzv+75IddR6sl
-         tKxxS2m0qsHneAeZsgHEjUpDGDeZk1MaSXLHo3LKbuqrfRJ2NZCGMjK/p2Sy9oUG2RBt
-         aHAgvtDdwqoS7ehePed2xiSE1cwVsHcKrk4BNlduNKsnQcYkMIJygurnKg/hs148QZQL
-         LAdRRVlVSwj433ztmMwSaWh7hjYVxQ2YSUsRGpay7tyf/heGTiWdrtvR9ydA+CicucxN
-         /FfJgr861speGSfR0bjqaekrXFpiHeNhGVVWkodZOvDYf+FAHsOUF2kiOWnVmt6wY1Xs
-         lFyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8jcJmcHEGEEYqidoI3J8M7I3oaGy7AiHVl+ctm6XmvE=;
-        b=tqTmyXoqjV8uOuWFi2wf2wbxm8L5XjhugO34oqM0DlTyJuzPoPAp/4eYkUuzM7Ws/4
-         mYkignS7RwKKJfGkAigmTfsyvX1Efuo+KW7kOCvVpgiVtVMCMwxSh97Btv6Dhg4nxJdG
-         h49sxTBxBUaadl9YTKTxC/Z0d/UzSyixkSbJPJCLa5/2MikTlfFWv/QvJ15afc7SnSuv
-         8CsZLqtJ04D4OTcNtKzb214zh5Wtl36veFxxGhkCBbLouNXfTbR7OP+7mmjIHFIh7hSi
-         CY1mKAff8pUU1tx0glIopPQYpTQoRYVzKNrU+lfxFApF2GNvZoKpBmGTXkMwUlEsiCag
-         m9EA==
-X-Gm-Message-State: APjAAAUEdp+Kzed1mlZauGb1eWc26SwoMgkQXu72e48lUOekDUiCOZ2n
-        e0pSKyLbir0wSMH2BNOUfBkvs1UD
-X-Google-Smtp-Source: APXvYqycVLfr676C6OsN4jsi06svVpHl6nVrJbc+4q8Y8svmMsGHA3fL80AWxKEChmLcLYR60UaFoA==
-X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr66103885pjn.136.1563662810452;
-        Sat, 20 Jul 2019 15:46:50 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i3sm37408448pfo.138.2019.07.20.15.46.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Jul 2019 15:46:49 -0700 (PDT)
-Subject: Re: [PATCH 1/2] hwmon: (k8temp) update to use new hwmon registration
- API
-To:     Robert Karszniewicz <avoidr@firemail.cc>,
-        Rudolf Marek <r.marek@assembler.cz>,
-        Jean Delvare <jdelvare@suse.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <BVOE7U9MRMZY.38N6DGWH9KX7H@HP>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1d0f98fb-a0a6-38b7-98f6-ec4c365587b0@roeck-us.net>
-Date:   Sat, 20 Jul 2019 15:46:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sat, 20 Jul 2019 18:50:12 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hoyAt-0001TD-LG; Sat, 20 Jul 2019 22:49:55 +0000
+Date:   Sat, 20 Jul 2019 23:49:55 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v2 03/24] erofs: add super block operations
+Message-ID: <20190720224955.GD17978@ZenIV.linux.org.uk>
+References: <20190711145755.33908-1-gaoxiang25@huawei.com>
+ <20190711145755.33908-4-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <BVOE7U9MRMZY.38N6DGWH9KX7H@HP>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711145755.33908-4-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/19 2:13 PM, Robert Karszniewicz wrote:
+On Thu, Jul 11, 2019 at 10:57:34PM +0800, Gao Xiang wrote:
+> This commit adds erofs super block operations, including (u)mount,
+> remount_fs, show_options, statfs, in addition to some private
+> icache management functions.
 
-[ ... ]
+Could you explain what's the point of this
 
->>> +	if (data->swap_core_select)
->>> +		core = core ? 0 : 1;
->>
->> 		core = 1 - core;
->>
->> would accomplish the same without conditional.
-> 
-> How do you like
-> 	core ^= 1;
-> ?
-> 
+> +	/* save the device name to sbi */
+> +	sbi->dev_name = __getname();
+> +	if (!sbi->dev_name) {
+> +		err = -ENOMEM;
+> +		goto err_devname;
+> +	}
+> +
+> +	snprintf(sbi->dev_name, PATH_MAX, "%s", dev_name);
+> +	sbi->dev_name[PATH_MAX - 1] = '\0';
 
-I didn't notice that before.
+... and this?
 
-Your call. Everything is fine as long as it doesn't involve a conditional.
-Hmm ... having said that, how about the following ?
+> +struct erofs_mount_private {
+> +	const char *dev_name;
+> +	char *options;
+> +};
+> +
+> +/* support mount_bdev() with options */
+> +static int erofs_fill_super(struct super_block *sb,
+> +			    void *_priv, int silent)
+> +{
+> +	struct erofs_mount_private *priv = _priv;
+> +
+> +	return erofs_read_super(sb, priv->dev_name,
+> +		priv->options, silent);
+> +}
+> +
+> +static struct dentry *erofs_mount(
+> +	struct file_system_type *fs_type, int flags,
+> +	const char *dev_name, void *data)
+> +{
+> +	struct erofs_mount_private priv = {
+> +		.dev_name = dev_name,
+> +		.options = data
+> +	};
+> +
+> +	return mount_bdev(fs_type, flags, dev_name,
+> +		&priv, erofs_fill_super);
+> +}
 
-	core ^= data->swap_core_select;
+AFAICS, the only use of sbi->dev_name is debugging printks and
+all of those have sb->s_id available, with device name stored
+in there.  Which makes the whole thing bloody weird - what's
+wrong with simply passing data to mount_bdev (instead of
+&priv), folding erofs_read_super() into erofs_fill_super(),
+replacing sbi->dev_name with sb->s_id and killing sbi->dev_name,
+along with the associated allocation, freeing, handling of
+allocation failure, etc.?
 
-Thanks,
-Guenter
+For drivers/staging location that would be (compile-tested only)
+the diff below.  I suspect that you could simplify fill_super
+a bit further if you added ->kill_sb() along the lines of
+
+	sbi = EROFS(sb);
+#ifdef EROFS_FS_HAS_MANAGED_CACHE
+	if (sbi && !sb->s_root)
+		iput(sbi->managed_cache);
+#endif
+	kill_block_super(sb);
+	kfree(sbi);
+and took freeing sbi out of your ->put_super().  Then fill_super()
+would simply return -E... on all failure exits, leaving all cleanup
+to ->kill_sb().  E.g. initialization of the same ->managed_cache
+would become
+#ifdef EROFS_FS_HAS_MANAGED_CACHE
+	inode = erofs_init_managed_cache(sb);
+        if (IS_ERR(inode))
+		return PTR_ERR(inode);
+	sbi->managed_cache = inode;
+#endif
+etc.  Matter of taste, but IME if destructor parallels the cleanups on failure
+exits in constructor it often makes sense to make use of that and kill the
+duplication...  Anyway, that's a separate store; sbi->dev_name is a lot more
+obvious one.
+
+
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index 382258fc124d..16bab07e69d8 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -117,8 +117,6 @@ struct erofs_sb_info {
+ 	u8 volume_name[16];             /* volume name */
+ 	u32 requirements;
+ 
+-	char *dev_name;
+-
+ 	unsigned int mount_opt;
+ 	unsigned int shrinker_run_no;
+ 
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index cadbcc11702a..a6ee69d0ce45 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -367,15 +367,14 @@ static struct inode *erofs_init_managed_cache(struct super_block *sb)
+ 
+ #endif
+ 
+-static int erofs_read_super(struct super_block *sb,
+-			    const char *dev_name,
++static int erofs_fill_super(struct super_block *sb,
+ 			    void *data, int silent)
+ {
+ 	struct inode *inode;
+ 	struct erofs_sb_info *sbi;
+ 	int err = -EINVAL;
+ 
+-	infoln("read_super, device -> %s", dev_name);
++	infoln("read_super, device -> %s", sb->s_id);
+ 	infoln("options -> %s", (char *)data);
+ 
+ 	if (unlikely(!sb_set_blocksize(sb, EROFS_BLKSIZ))) {
+@@ -453,20 +452,10 @@ static int erofs_read_super(struct super_block *sb,
+ 		goto err_iget;
+ 	}
+ 
+-	/* save the device name to sbi */
+-	sbi->dev_name = __getname();
+-	if (!sbi->dev_name) {
+-		err = -ENOMEM;
+-		goto err_devname;
+-	}
+-
+-	snprintf(sbi->dev_name, PATH_MAX, "%s", dev_name);
+-	sbi->dev_name[PATH_MAX - 1] = '\0';
+-
+ 	erofs_register_super(sb);
+ 
+ 	if (!silent)
+-		infoln("mounted on %s with opts: %s.", dev_name,
++		infoln("mounted on %s with opts: %s.", sb->s_id,
+ 		       (char *)data);
+ 	return 0;
+ 	/*
+@@ -474,9 +463,6 @@ static int erofs_read_super(struct super_block *sb,
+ 	 * the following name convention, thus new features
+ 	 * can be integrated easily without renaming labels.
+ 	 */
+-err_devname:
+-	dput(sb->s_root);
+-	sb->s_root = NULL;
+ err_iget:
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+ 	iput(sbi->managed_cache);
+@@ -504,8 +490,7 @@ static void erofs_put_super(struct super_block *sb)
+ 
+ 	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
+ 
+-	infoln("unmounted for %s", sbi->dev_name);
+-	__putname(sbi->dev_name);
++	infoln("unmounted for %s", sb->s_id);
+ 
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+ 	iput(sbi->managed_cache);
+@@ -525,33 +510,12 @@ static void erofs_put_super(struct super_block *sb)
+ 	sb->s_fs_info = NULL;
+ }
+ 
+-
+-struct erofs_mount_private {
+-	const char *dev_name;
+-	char *options;
+-};
+-
+-/* support mount_bdev() with options */
+-static int erofs_fill_super(struct super_block *sb,
+-			    void *_priv, int silent)
+-{
+-	struct erofs_mount_private *priv = _priv;
+-
+-	return erofs_read_super(sb, priv->dev_name,
+-		priv->options, silent);
+-}
+-
+ static struct dentry *erofs_mount(
+ 	struct file_system_type *fs_type, int flags,
+ 	const char *dev_name, void *data)
+ {
+-	struct erofs_mount_private priv = {
+-		.dev_name = dev_name,
+-		.options = data
+-	};
+-
+ 	return mount_bdev(fs_type, flags, dev_name,
+-		&priv, erofs_fill_super);
++		data, erofs_fill_super);
+ }
+ 
+ static void erofs_kill_sb(struct super_block *sb)
