@@ -2,138 +2,278 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4A3C76195
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D502AC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF062085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AC52084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BEEnwqfb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8dwWKxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfGTQ1v (ORCPT
+        id S1728727AbfGTQpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 12:27:51 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:52415 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfGTQ1u (ORCPT
+        Sat, 20 Jul 2019 12:45:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36385 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfGTQo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 12:27:50 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6KGRfOr009136;
-        Sun, 21 Jul 2019 01:27:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6KGRfOr009136
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563640062;
-        bh=YWYhkhyNQMCU9Geqh6mdxj3ov/tBxwsPizahvUIX/a0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEEnwqfbXR19pOuh8SGXJnppQecZhxjLGO7rcueaPNBJMBeHmFhXoV2yuVP5nSa3F
-         rhRmz/hTIAG7AacdWnf5hnkBuuvHsSJ3Je8hdQ9+nYsAbC9TdHtIYt7iNbqaGCdjuw
-         nIZrRjFbpOheuDQeWBJ/tqq9dVnKmm8UGdgH9ONM3KhK4RaXZcRk+ny39u8xnloylD
-         5PQJxrykWKviZioQq32/JNXDM5vgZV1wTifngvAe3BIrLQmh5/aeVyd2qoNAS2jPuc
-         tmAU1qDvakt0y1OQ9DmomwmywpeOdnRgajPxo7S0enjqmHSUvBssY4GOEDKvmMVN+8
-         GllZ+WwU8+BYg==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] kbuild: make bison create C file and header in a single pattern rule
-Date:   Sun, 21 Jul 2019 01:27:39 +0900
-Message-Id: <20190720162740.4292-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190720162740.4292-1-yamada.masahiro@socionext.com>
-References: <20190720162740.4292-1-yamada.masahiro@socionext.com>
+        Sat, 20 Jul 2019 12:44:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g67so27508310wme.1;
+        Sat, 20 Jul 2019 09:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m5lKfQnBpu3Z2U9kZ6l+hcIv7hGWKUFy9VsYJw3l5hw=;
+        b=m8dwWKxypk3y8sijFwk4UaGylB6VhiJdOZahjaG/fjitRwUb4g44cP3rjcvkZ659OZ
+         XkvHoHN205P49GHpejjdnXA6t3ReWoR+mnJL+Ldxu6U24QVWUs4qpKxjBM0DiE8ax/PV
+         lPgT2AqUrgU7Or0uQH6qUBPDu2lRuB9dJe7pFxuk/pSVspgfGppkQbtWf0vXl1WNUYz1
+         dzUc+Xi38rboVvrZvr0ITAGntKp/gpOqJxRE8xxfWtGlQIR+0HYHsFiy6d/VqVkTgTTN
+         r3xBEtprUWjfN3j63VJ3++WX+rDqJu6wsDS09ch1rVQJH0jX6BFxPFXNSJYF11a9RIc8
+         VK1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m5lKfQnBpu3Z2U9kZ6l+hcIv7hGWKUFy9VsYJw3l5hw=;
+        b=iaCqXaovq4jw7QnkHA8IGVdGVyK1xFvWGQwGtBGZz9GBV7PHv3QKFpBQAiwS+EzqBN
+         iv2g2r0LkgIzL6a+/O5OoNRB3xoT3FLfdYTiAZOQFXZIUHj84LdHxZ81CBGxAc24fTr/
+         /n/Jb9bYyG5wPRVo/5p2TZkn2Y/tWRpZyFY8Vu/Zh5l59vuK5+a+fX+j7FLiXqXhY2Al
+         OLbnoEnYJVDbLbkDZN0uNuURex87wDqvlZGmy3Oqe1aEhODJaA4uVfKP34zKpN4oeW1u
+         S++MsVtgq+moba+5Y/l0b7WLdVByeQAQxF5RV/Bcm5YfQGMhvSECXCOHBOGVfT4idffc
+         O1FQ==
+X-Gm-Message-State: APjAAAWdY6VYToVXk0wpXWMPvoq9C2/4rOyWx4daqLHlUO50hzyESkcC
+        nhbMXELXUHcu6t5d5XESiGdOWzal
+X-Google-Smtp-Source: APXvYqypdsWBreJeKYDPhjd2RwNtZNQYTOofMYf3G0RF7NEPQ8GRlse7MrFgKGs0NeXIppWP4LV2QA==
+X-Received: by 2002:a1c:4c1a:: with SMTP id z26mr52995996wmf.2.1563641096032;
+        Sat, 20 Jul 2019 09:44:56 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:7490:a073:b68b:c51c? ([2003:ea:8bd6:c00:7490:a073:b68b:c51c])
+        by smtp.googlemail.com with ESMTPSA id g19sm59605244wrb.52.2019.07.20.09.44.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Jul 2019 09:44:55 -0700 (PDT)
+Subject: Re: network problems with r8169
+To:     Thomas Voegtle <tv@lio96.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <alpine.LSU.2.21.1907182032370.7080@er-systems.de>
+ <2eeedff5-4911-db6e-6bfd-99b591daa7ef@gmail.com>
+ <alpine.LSU.2.21.1907192310140.11569@er-systems.de>
+ <9cab7996-d801-0ae5-9e82-6d24eeb8d7c7@gmail.com>
+ <alpine.LSU.2.21.1907201620070.2099@er-systems.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <add2c1e3-a216-5082-e847-452adb0169f7@gmail.com>
+Date:   Sat, 20 Jul 2019 18:44:47 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.LSU.2.21.1907201620070.2099@er-systems.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We generally expect bison to create not only a C file, but also a
-header, which will be included from the lexer.
+On 20.07.2019 16:22, Thomas Voegtle wrote:
+> On Sat, 20 Jul 2019, Heiner Kallweit wrote:
+> 
+>> On 19.07.2019 23:12, Thomas Voegtle wrote:
+>>> On Fri, 19 Jul 2019, Heiner Kallweit wrote:
+>>>
+>>>> On 18.07.2019 20:50, Thomas Voegtle wrote:
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> I'm having network problems with the commits on r8169 since v5.2. There are ping packet loss, sometimes 100%, sometimes 50%. In the end network is unusable.
+>>>>>
+>>>>> v5.2 is fine, I bisected it down to:
+>>>>>
+>>>>> a2928d28643e3c064ff41397281d20c445525032 is the first bad commit
+>>>>> commit a2928d28643e3c064ff41397281d20c445525032
+>>>>> Author: Heiner Kallweit <hkallweit1@gmail.com>
+>>>>> Date:   Sun Jun 2 10:53:49 2019 +0200
+>>>>>
+>>>>>     r8169: use paged versions of phylib MDIO access functions
+>>>>>
+>>>>>     Use paged versions of phylib MDIO access functions to simplify
+>>>>>     the code.
+>>>>>
+>>>>>     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>>>>     Signed-off-by: David S. Miller <davem@davemloft.net>
+>>>>>
+>>>>>
+>>>>> Reverting that commit on top of v5.2-11564-g22051d9c4a57 fixes the problem
+>>>>> for me (had to adjust the renaming to r8169_main.c).
+>>>>>
+>>>>> I have a:
+>>>>> 04:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+>>>>> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev
+>>>>> 0c)
+>>>>>         Subsystem: Biostar Microtech Int'l Corp Device [1565:2400]
+>>>>>         Kernel driver in use: r8169
+>>>>>
+>>>>> on a BIOSTAR H81MG motherboard.
+>>>>>
+>>>> Interesting. I have the same chip version (RTL8168g) and can't reproduce
+>>>> the issue. Can you provide a full dmesg output and test the patch below
+>>>> on top of linux-next? I'd be interested in the WARN_ON stack traces
+>>>> (if any) and would like to know whether the experimental change to
+>>>> __phy_modify_changed helps.
+>>>>
+>>>>>
+>>>>> greetings,
+>>>>>
+>>>>>   Thomas
+>>>>>
+>>>>>
+>>>> Heiner
+>>>>
+>>>>
+>>>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+>>>> index 8d7dd4c5f..26be73000 100644
+>>>> --- a/drivers/net/ethernet/realtek/r8169_main.c
+>>>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+>>>> @@ -1934,6 +1934,8 @@ static int rtl_get_eee_supp(struct rtl8169_private *tp)
+>>>>     struct phy_device *phydev = tp->phydev;
+>>>>     int ret;
+>>>>
+>>>> +    WARN_ON(phy_read(phydev, 0x1f));
+>>>> +
+>>>>     switch (tp->mac_version) {
+>>>>     case RTL_GIGA_MAC_VER_34:
+>>>>     case RTL_GIGA_MAC_VER_35:
+>>>> @@ -1957,6 +1959,8 @@ static int rtl_get_eee_lpadv(struct rtl8169_private *tp)
+>>>>     struct phy_device *phydev = tp->phydev;
+>>>>     int ret;
+>>>>
+>>>> +    WARN_ON(phy_read(phydev, 0x1f));
+>>>> +
+>>>>     switch (tp->mac_version) {
+>>>>     case RTL_GIGA_MAC_VER_34:
+>>>>     case RTL_GIGA_MAC_VER_35:
+>>>> @@ -1980,6 +1984,8 @@ static int rtl_get_eee_adv(struct rtl8169_private *tp)
+>>>>     struct phy_device *phydev = tp->phydev;
+>>>>     int ret;
+>>>>
+>>>> +    WARN_ON(phy_read(phydev, 0x1f));
+>>>> +
+>>>>     switch (tp->mac_version) {
+>>>>     case RTL_GIGA_MAC_VER_34:
+>>>>     case RTL_GIGA_MAC_VER_35:
+>>>> @@ -2003,6 +2009,8 @@ static int rtl_set_eee_adv(struct rtl8169_private *tp, int val)
+>>>>     struct phy_device *phydev = tp->phydev;
+>>>>     int ret = 0;
+>>>>
+>>>> +    WARN_ON(phy_read(phydev, 0x1f));
+>>>> +
+>>>>     switch (tp->mac_version) {
+>>>>     case RTL_GIGA_MAC_VER_34:
+>>>>     case RTL_GIGA_MAC_VER_35:
+>>>> diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+>>>> index 16667fbac..1aa1142b8 100644
+>>>> --- a/drivers/net/phy/phy-core.c
+>>>> +++ b/drivers/net/phy/phy-core.c
+>>>> @@ -463,12 +463,10 @@ int __phy_modify_changed(struct phy_device *phydev, u32 regnum, u16 mask,
+>>>>         return ret;
+>>>>
+>>>>     new = (ret & ~mask) | set;
+>>>> -    if (new == ret)
+>>>> -        return 0;
+>>>>
+>>>> -    ret = __phy_write(phydev, regnum, new);
+>>>> +    __phy_write(phydev, regnum, new);
+>>>>
+>>>> -    return ret < 0 ? ret : 1;
+>>>> +    return new != ret;
+>>>> }
+>>>> EXPORT_SYMBOL_GPL(__phy_modify_changed);
+>>>>
+>>>>
+>>>
+>>> Took your patch on top of next-20190719.
+>>> See attached dmesg.
+>>> It didn't work. Same thing, lots of ping drops, no usable network.
+>>>
+>>> like that:
+>>> 44 packets transmitted, 2 received, 95% packet loss, time 44005ms
+>>>
+>>>
+>>> Maybe important:
+>>> I build a kernel with no modules.
+>>>
+>>> I have to power off when I booted a kernel which doesn't work, a (soft) reboot into a older kernel (e.g. 4.9.y)  doesn't
+>>> fix the problem. Powering off and on does.
+>>>
+>>
+>> Then, what you could do is reversing the hunks of the patch step by step.
+>> Or make them separate patches and bisect.
+>> Relevant are the hunks from point 1 and 2.
+>>
+>> 1. first 5 hunks (I don't think you have to reverse them individually)
+>>   EEE-related
+>>
+>> 2. rtl8168g_disable_aldps, rtl8168g_phy_adjust_10m_aldps, rtl8168g_1_hw_phy_config
+>>   all of these hunks are in the path for RTL8168g
+>>
+>> 3. rtl8168h_1_hw_phy_config, rtl8168h_2_hw_phy_config, rtl8168ep_1_hw_phy_config,
+>>   rtl8168ep_2_hw_phy_config
+>>   not in the path for RTL8168g
+>>
+> 
+> this is the minimal revert:
+> 
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index efef5453b94f..267995a614b5 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -3249,12 +3249,14 @@ static void rtl8168g_1_hw_phy_config(struct rtl8169_private *tp)
+>         else
+>                 phy_modify_paged(tp->phydev, 0x0bcc, 0x12, 0, BIT(15));
+> 
+> -       ret = phy_read_paged(tp->phydev, 0x0a46, 0x13);
+> -       if (ret & BIT(8))
+> -               phy_modify_paged(tp->phydev, 0x0c41, 0x12, 0, BIT(1));
+> -       else
+> -               phy_modify_paged(tp->phydev, 0x0c41, 0x12, BIT(1), 0);
+> -
+> +       rtl_writephy(tp, 0x1f, 0x0a46);
+> +       if (rtl_readphy(tp, 0x13) & 0x0100) {
+> +               rtl_writephy(tp, 0x1f, 0x0c41);
+> +               rtl_w0w1_phy(tp, 0x15, 0x0002, 0x0000);
+> +       } else {
+> +               rtl_writephy(tp, 0x1f, 0x0c41);
+> +               rtl_w0w1_phy(tp, 0x15, 0x0000, 0x0002);
+> +       }
+>         /* Enable PHY auto speed down */
+>         phy_modify_paged(tp->phydev, 0x0a44, 0x11, 0, BIT(3) | BIT(2));
+> 
+> 
+> 
+> Could it be, that there is just a typo?
+> 
+I looked a hundred times over this piece of code ..
+Yes, it's simply a typo. I'll submit a patch for it.
+Thanks a lot for your testing efforts!
 
-Currently, Kbuild generates them in separate rules. So, for instance,
-when building Kconfig, you will notice bison is invoked twice:
-
-  HOSTCC  scripts/kconfig/conf.o
-  HOSTCC  scripts/kconfig/confdata.o
-  HOSTCC  scripts/kconfig/expr.o
-  LEX     scripts/kconfig/lexer.lex.c
-  YACC    scripts/kconfig/parser.tab.h
-  HOSTCC  scripts/kconfig/lexer.lex.o
-  YACC    scripts/kconfig/parser.tab.c
-  HOSTCC  scripts/kconfig/parser.tab.o
-  HOSTCC  scripts/kconfig/preprocess.o
-  HOSTCC  scripts/kconfig/symbol.o
-  HOSTLD  scripts/kconfig/conf
-
-Make handles such cases nicely in pattern rules [1]. Merge the two
-rules so that one invokcation of bison can generate both of them.
-
-  HOSTCC  scripts/kconfig/conf.o
-  HOSTCC  scripts/kconfig/confdata.o
-  HOSTCC  scripts/kconfig/expr.o
-  LEX     scripts/kconfig/lexer.lex.c
-  YACC    scripts/kconfig/parser.tab.[ch]
-  HOSTCC  scripts/kconfig/lexer.lex.o
-  HOSTCC  scripts/kconfig/parser.tab.o
-  HOSTCC  scripts/kconfig/preprocess.o
-  HOSTCC  scripts/kconfig/symbol.o
-  HOSTLD  scripts/kconfig/conf
-
-[1] Pattern rule
-
-GNU Make manual says:
-"Pattern rules may have more than one target. Unlike normal rules,
-this does not act as many different rules with the same prerequisites
-and recipe. If a pattern rule has multiple targets, make knows that
-the rule's recipe is responsible for making all of the targets. The
-recipe is executed only once to make all the targets. When searching
-for a pattern rule to match a target, the target patterns of a rule
-other than the one that matches the target in need of a rule are
-incidental: make worries only about giving a recipe and prerequisites
-to the file presently in question. However, when this file's recipe is
-run, the other targets are marked as having been updated themselves."
-
-https://www.gnu.org/software/make/manual/html_node/Pattern-Intro.html
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- scripts/Makefile.lib | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 8625e9b4572c..6c4a2332f6d6 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -199,18 +199,12 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
- 
- # YACC
- # ---------------------------------------------------------------------------
--quiet_cmd_bison = YACC    $@
--      cmd_bison = $(YACC) -o$@ -t -l $<
-+quiet_cmd_bison = YACC    $(basename $@).[ch]
-+      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
- 
--$(obj)/%.tab.c: $(src)/%.y FORCE
-+$(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
- 	$(call if_changed,bison)
- 
--quiet_cmd_bison_h = YACC    $@
--      cmd_bison_h = $(YACC) -o/dev/null --defines=$@ -t -l $<
--
--$(obj)/%.tab.h: $(src)/%.y FORCE
--	$(call if_changed,bison_h)
--
- # Shipped files
- # ===========================================================================
- 
--- 
-2.17.1
-
+>         if (ret & BIT(8))
+> -               phy_modify_paged(tp->phydev, 0x0c41, 0x12, 0, BIT(1));
+> +               phy_modify_paged(tp->phydev, 0x0c41, 0x15, 0, BIT(1));
+>         else
+> -               phy_modify_paged(tp->phydev, 0x0c41, 0x12, BIT(1), 0);
+> +               phy_modify_paged(tp->phydev, 0x0c41, 0x15, BIT(1), 0);
+> 
+> 
+> 
+> 
+> greetings,
+> 
+>       Thomas
+Heiner
