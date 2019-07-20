@@ -2,72 +2,104 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A407FC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 21:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C96C76195
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 22:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795682082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 21:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDFF2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 22:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQkILhKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfGTV6p (ORCPT
+        id S1726138AbfGTWqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 17:58:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35674 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfGTV6p (ORCPT
+        Sat, 20 Jul 2019 18:46:52 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39994 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfGTWqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 17:58:45 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hoxNI-0005dz-ON; Sat, 20 Jul 2019 21:58:40 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] scsi: megaraid_sas: fix spelling mistake "megarid_sas" -> "megaraid_sas"
-Date:   Sat, 20 Jul 2019 22:58:40 +0100
-Message-Id: <20190720215840.23831-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 20 Jul 2019 18:46:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so15656871pfp.7;
+        Sat, 20 Jul 2019 15:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8jcJmcHEGEEYqidoI3J8M7I3oaGy7AiHVl+ctm6XmvE=;
+        b=BQkILhKAbudKrFIGtrR8LQOCVFmLrPvFpZ0n8JeCW+eUBMuteZFF8qzv+75IddR6sl
+         tKxxS2m0qsHneAeZsgHEjUpDGDeZk1MaSXLHo3LKbuqrfRJ2NZCGMjK/p2Sy9oUG2RBt
+         aHAgvtDdwqoS7ehePed2xiSE1cwVsHcKrk4BNlduNKsnQcYkMIJygurnKg/hs148QZQL
+         LAdRRVlVSwj433ztmMwSaWh7hjYVxQ2YSUsRGpay7tyf/heGTiWdrtvR9ydA+CicucxN
+         /FfJgr861speGSfR0bjqaekrXFpiHeNhGVVWkodZOvDYf+FAHsOUF2kiOWnVmt6wY1Xs
+         lFyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8jcJmcHEGEEYqidoI3J8M7I3oaGy7AiHVl+ctm6XmvE=;
+        b=tqTmyXoqjV8uOuWFi2wf2wbxm8L5XjhugO34oqM0DlTyJuzPoPAp/4eYkUuzM7Ws/4
+         mYkignS7RwKKJfGkAigmTfsyvX1Efuo+KW7kOCvVpgiVtVMCMwxSh97Btv6Dhg4nxJdG
+         h49sxTBxBUaadl9YTKTxC/Z0d/UzSyixkSbJPJCLa5/2MikTlfFWv/QvJ15afc7SnSuv
+         8CsZLqtJ04D4OTcNtKzb214zh5Wtl36veFxxGhkCBbLouNXfTbR7OP+7mmjIHFIh7hSi
+         CY1mKAff8pUU1tx0glIopPQYpTQoRYVzKNrU+lfxFApF2GNvZoKpBmGTXkMwUlEsiCag
+         m9EA==
+X-Gm-Message-State: APjAAAUEdp+Kzed1mlZauGb1eWc26SwoMgkQXu72e48lUOekDUiCOZ2n
+        e0pSKyLbir0wSMH2BNOUfBkvs1UD
+X-Google-Smtp-Source: APXvYqycVLfr676C6OsN4jsi06svVpHl6nVrJbc+4q8Y8svmMsGHA3fL80AWxKEChmLcLYR60UaFoA==
+X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr66103885pjn.136.1563662810452;
+        Sat, 20 Jul 2019 15:46:50 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i3sm37408448pfo.138.2019.07.20.15.46.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Jul 2019 15:46:49 -0700 (PDT)
+Subject: Re: [PATCH 1/2] hwmon: (k8temp) update to use new hwmon registration
+ API
+To:     Robert Karszniewicz <avoidr@firemail.cc>,
+        Rudolf Marek <r.marek@assembler.cz>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <BVOE7U9MRMZY.38N6DGWH9KX7H@HP>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <1d0f98fb-a0a6-38b7-98f6-ec4c365587b0@roeck-us.net>
+Date:   Sat, 20 Jul 2019 15:46:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <BVOE7U9MRMZY.38N6DGWH9KX7H@HP>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 7/20/19 2:13 PM, Robert Karszniewicz wrote:
 
-Fix spelling mistake in kernel warning message and replace
-printk with with pr_warn.
+[ ... ]
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>>> +	if (data->swap_core_select)
+>>> +		core = core ? 0 : 1;
+>>
+>> 		core = 1 - core;
+>>
+>> would accomplish the same without conditional.
+> 
+> How do you like
+> 	core ^= 1;
+> ?
+> 
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index b2339d04a700..2590746c81e3 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -8763,7 +8763,7 @@ static int __init megasas_init(void)
- 
- 	if ((event_log_level < MFI_EVT_CLASS_DEBUG) ||
- 	    (event_log_level > MFI_EVT_CLASS_DEAD)) {
--		printk(KERN_WARNING "megarid_sas: provided event log level is out of range, setting it to default 2(CLASS_CRITICAL), permissible range is: -2 to 4\n");
-+		pr_warn("megaraid_sas: provided event log level is out of range, setting it to default 2(CLASS_CRITICAL), permissible range is: -2 to 4\n");
- 		event_log_level = MFI_EVT_CLASS_CRITICAL;
- 	}
- 
--- 
-2.20.1
+I didn't notice that before.
 
+Your call. Everything is fine as long as it doesn't involve a conditional.
+Hmm ... having said that, how about the following ?
+
+	core ^= data->swap_core_select;
+
+Thanks,
+Guenter
