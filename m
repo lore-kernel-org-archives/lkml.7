@@ -2,116 +2,115 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4D0C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2BBC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 03:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB3621874
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tvyNq2C5"
+	by mail.kernel.org (Postfix) with ESMTP id 41C8D2082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 03:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390385AbfGTClv (ORCPT
+        id S2390397AbfGTDCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 22:41:51 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:37830 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbfGTClu (ORCPT
+        Fri, 19 Jul 2019 23:02:21 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:43768 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbfGTDCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 22:41:50 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x6K2faF9009523;
-        Sat, 20 Jul 2019 11:41:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6K2faF9009523
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563590497;
-        bh=cjbTfQ+RiOWGnD+P3w8/hXI1uAkKHwox2bpmBIGRw+c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tvyNq2C5QDy43yWSnQTrt9fZpvbhivoA8oLA/57KW00GlN16/rhWrebkxM6HocdKH
-         mHuneFcGH5VckWDQ+5kbfsZjgxxmVmb82pwMDwZRoPU7ue3btduMX9BQI8z26neN/6
-         5UPunKfdqKs+TJIwpEEMhdzPDGsdH0m7KpAdvA5kR4ZIcYjee8H5XYHTM9xGdSeeKV
-         TqNajkDZfGpSxHIWGip/ch/Q2pU1aeREd1/VsU65BtidqLvI8DjklJAXA8tNpN/+45
-         On67gegY5+J+I9Ujsk9rcMTdJdtGKoYyg6A1rRzA10+UMjKpcsX1Mv7AD6tmeey8kf
-         VeiA5kw5vXe0w==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id h28so22727481vsl.12;
-        Fri, 19 Jul 2019 19:41:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAU8mkzuAdyMGj2sKQ48+lWNQXwFCO6OL4TsGuI+xxZYnYt6hY63
-        cgDNRsQIgrWOIS/MgqtNiHMxtr0QyY2KNIust2U=
-X-Google-Smtp-Source: APXvYqyrP0gBJfWbNX2CrzcI4Xc86qn1ZOWEJC8CWA+yOCL9ygHgd4K3odEMTDiaNQd1kSnM1ODyQpuWXcK5AzVBdeM=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr35031406vsl.155.1563590495717;
- Fri, 19 Jul 2019 19:41:35 -0700 (PDT)
+        Fri, 19 Jul 2019 23:02:21 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hofda-0003Ma-2g; Sat, 20 Jul 2019 03:02:18 +0000
+Date:   Sat, 20 Jul 2019 04:02:18 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [git pull] vfs.git - dcache and mountpoint stuff
+Message-ID: <20190720030217.GC17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 20 Jul 2019 11:40:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
-Message-ID: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
-Subject: Re: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 4:28 AM Eugeniy Paltsev
-<Eugeniy.Paltsev@synopsys.com> wrote:
->
-> As of today we are able to pass custom flags to dtc compiler but not
-> to dtc preprocessor.
-> This ability is required for including some board-specific header files.
-> It allows us to pass defined constants to dts without their duplication
-> in several places.
+	Saner handling of refcounts to mountpoints.
+Transfer the counting reference from struct mount ->mnt_mountpoint
+over to struct mountpoint ->m_dentry.  That allows to get rid of
+the convoluted games with ordering of mount shutdowns.  The cost
+is in teaching shrink_dcache_{parent,for_umount} to cope with
+mixed-filesystem shrink lists, which we'll also need for the Slab
+Movable Objects patchset.
 
-How to use this option in a useful way?
+	I'm not sure what's the best way to do that pull request;
+there are two branches with identical (modulo one space in comment)
+contents.  The former (#work.dcache) sat in -next; the latter (#work.dcache2)
+has the last commit of the former split and folded.  Said last commit is
+basically what you'd asked to change - comment for locking of ex_mountpoints,
+separating the default variant of put_namespace() from "save to this
+list" one, having the former explicitly pass &ex_mountpoints to the
+latter, comment updates.
 
-I see a bunch of defined constants under include/dt-bindings/.
+	Conservative approach would be to pull #work.dcache, but...
+consider e.g. put_mountpoint() changes in work.dcache: in the middle of
+the series we have
+-static void put_mountpoint(struct mountpoint *mp)
++static void put_mountpoint(struct mountpoint *mp, struct list_head *list)
+...
++               if (!list)
++                       list = &ex_mountpoints;
++               dput_to_list(dentry, list);
+with corresponding callers' updates (all but one passing NULL).  In this
+last commit it becomes
+static void __put_mountpoint(struct mountpoint *mp, struct list_head *list)
+with if (!list) part gone and
++static void put_mountpoint(struct mountpoint *mp)
++{
++       __put_mountpoint(mp, &ex_mountpoints);
++}
+with callers reverted to the original state.  IOW, pointless noise.
+And
+-static LIST_HEAD(ex_mountpoints);
++static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+is better folded into the into the commit introducing the list.
 
-If you are talking about code duplication across architectures,
-you can include arm dtsi from arm64 dts, or vice versa.
-This was made possible by the symbolic links
-in scripts/dtc/include-prefixes/.
+	IOW, if you are OK with pulling #work.dcache2, it would, IMO, be
+better.  Below is the pull request for it; the variant for #work.dcache
+would differ in having 9 commits instead of 8.  Up to you...
 
-Could you please elaborate your issues if you cannot solve them
-by the current strategy?
+The following changes since commit 570d7a98e7d6d5d8706d94ffd2d40adeaa318332:
 
+  vfs: move_mount: reject moving kernel internal mounts (2019-07-01 10:46:36 -0400)
 
+are available in the git repository at:
 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
->  scripts/Makefile.lib | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index f1f38c8cdc74..f2595a608dce 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
->                  $(addprefix -I,$(DTC_INCLUDE))                          \
->                  -undef -D__DTS__
->
-> +dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
-> +
->  # Useful for describing the dependency of composite objects
->  # Usage:
->  #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
-> --
-> 2.21.0
->
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.dcache2
 
+for you to fetch changes up to 56cbb429d911991170fe867b4bba14f0efed5829:
 
--- 
-Best Regards
-Masahiro Yamada
+  switch the remnants of releasing the mountpoint away from fs_pin (2019-07-16 22:52:37 -0400)
+
+----------------------------------------------------------------
+Al Viro (8):
+      ceph: don't open-code the check for dead lockref
+      nfs: dget_parent() never returns NULL
+      __detach_mounts(): lookup_mountpoint() can't return ERR_PTR() anymore
+      fs/namespace.c: shift put_mountpoint() to callers of unhash_mnt()
+      Teach shrink_dcache_parent() to cope with mixed-filesystem shrink lists
+      make struct mountpoint bear the dentry reference to mountpoint, not struct mount
+      get rid of detach_mnt()
+      switch the remnants of releasing the mountpoint away from fs_pin
+
+ fs/ceph/dir.c          |   2 +-
+ fs/dcache.c            | 100 +++++++++++++++++++++++++------
+ fs/fs_pin.c            |  10 +---
+ fs/internal.h          |   2 +
+ fs/mount.h             |   8 ++-
+ fs/namespace.c         | 159 ++++++++++++++++++++++++-------------------------
+ fs/nfs/super.c         |   6 +-
+ include/linux/fs_pin.h |   1 -
+ 8 files changed, 172 insertions(+), 116 deletions(-)
