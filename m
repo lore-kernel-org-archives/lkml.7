@@ -2,88 +2,68 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB9DC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 19:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9746C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 19:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456C02085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 19:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92992217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 19:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563651324;
+	bh=IjC9XRyqEEK7udbTgGaO8BIgzv1bScLdS7/8eArfCM8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=BedACwsKbVTCy4fFCZaRmbF1np+7kG30FaRafvHSJ+oQH4jS0uhGvZMjpD8axe2wq
+	 va4OLbkvNOjBf9q25CHYFgcfQXzfBS0eKCouQqq+Z/KvHHiJr6mYiy41QVhBX5hPsA
+	 cixgIUmRMRk0ZuwKwt5b7C3Ahj9ELc/AknFzvfuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfGTTet (ORCPT
+        id S1726252AbfGTTfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 15:34:49 -0400
-Received: from albireo.enyo.de ([5.158.152.32]:37712 "EHLO albireo.enyo.de"
+        Sat, 20 Jul 2019 15:35:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfGTTes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 15:34:48 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1hov80-0005v7-Fe; Sat, 20 Jul 2019 19:34:44 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1hov80-0004M4-AR; Sat, 20 Jul 2019 21:34:44 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: linux-headers-5.2 and proper use of SIOCGSTAMP
-References: <20190720174844.4b989d34@sf> <87wogca86l.fsf@mid.deneb.enyo.de>
-        <CAK8P3a3s3OeBj1MviaJV2UR0eUhF0GKPBi1iFf_3QKQyNPkuqw@mail.gmail.com>
-Date:   Sat, 20 Jul 2019 21:34:44 +0200
-In-Reply-To: <CAK8P3a3s3OeBj1MviaJV2UR0eUhF0GKPBi1iFf_3QKQyNPkuqw@mail.gmail.com>
-        (Arnd Bergmann's message of "Sat, 20 Jul 2019 20:50:23 +0200")
-Message-ID: <87muh8a4a3.fsf@mid.deneb.enyo.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1725940AbfGTTfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 15:35:22 -0400
+Subject: Re: [GIT PULL] dma-mapping fixes for 5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563651322;
+        bh=IjC9XRyqEEK7udbTgGaO8BIgzv1bScLdS7/8eArfCM8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=StV/0N6ppk/JU6ZqwaFdV6fBW5mAbpoiCLIi5tqBwpt4r7Bl54fGO7GjCQwavlJIh
+         bJQQ/kYrbSM/XW8pDW9gL+NQn6Q2utPiKJD92SHg3kWJ08oAIEJjkrGsLsJnnh1qEv
+         cLZK7nMdbu3lOXoVdENG7+MGgbOS39ThlRouXESs=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190720172911.GA11099@infradead.org>
+References: <20190720172911.GA11099@infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190720172911.GA11099@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
+ tags/dma-mapping-5.3-1
+X-PR-Tracked-Commit-Id: 449fa54d6815be8c2c1f68fa9dbbae9384a7c03e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ac60602a6d8f6830dee89f4b87ee005f62eb7171
+Message-Id: <156365132205.3883.10711143327941655871.pr-tracker-bot@kernel.org>
+Date:   Sat, 20 Jul 2019 19:35:22 +0000
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Arnd Bergmann:
+The pull request you sent on Sat, 20 Jul 2019 19:29:11 +0200:
 
-> On Sat, Jul 20, 2019 at 8:10 PM Florian Weimer <fw@deneb.enyo.de> wrote:
->>
->> * Sergei Trofimovich:
->>
->> > Should #include <linux/sockios.h> always be included by user app?
->> > Or should glibc tweak it's definition of '#include <sys/socket.h>'
->> > to make it available on both old and new version of linux headers?
->>
->> What is the reason for dropping SIOCGSTAMP from <asm/socket.h>?
->>
->> If we know that, it will be much easier to decide what to do about
->> <sys/socket.h>.
->
-> As far as I can tell, nobody thought it would be a problem to move it
-> from asm/sockios.h to linux/sockios.h, as the general rule is that one
-> should use the linux/*.h version if both exist, and that the asm/*.h
-> version only contains architecture specific definitions. The new
-> definition is the same across all architectures, so it made sense to
-> have it in the common file.
+> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.3-1
 
-Most of the socket-related constants are not exposed in UAPI headers,
-although userspace is expected to use them.  It seems to me that due
-to the lack of other options among the UAPI headers, <asm/socket.h>
-has been a dumping ground for various socket-related things in the
-past, whether actually architecture-specific or not.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ac60602a6d8f6830dee89f4b87ee005f62eb7171
 
-<linux/socket.h> does not include <asm/socket.h>, so that's why we
-usually end up with including <asm/socket.h> (perhaps indirectly via
-<sys/socket.h>), which used to include <asm/sockios.h> on most (all?)
-architectures.  That in turn provided some of the SIOC* constants in
-the past, so people didn't investigate other options.
+Thank you!
 
-I think we can change glibc to include <linux/sockios.h> in addition
-to <asm/socket.h>.  <linux/sockios.h> looks reasonably clean to me,
-much better than <asm/socket.h>.  I'm still working on the other
-breakage, and I'm severely limited by the machine resources I have
-access to.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
