@@ -2,94 +2,84 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EACC76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 10:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF75CC76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 11:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A26D20873
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 10:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE352084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 11:10:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="ga/hV/z9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="URTrCFk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfGTK7y (ORCPT
+        id S1728001AbfGTLKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 06:59:54 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39101 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbfGTK7y (ORCPT
+        Sat, 20 Jul 2019 07:10:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60874 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727974AbfGTLKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 06:59:54 -0400
-Received: by mail-qk1-f196.google.com with SMTP id w190so25182836qkc.6
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 03:59:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qV6C2HshTNaf1Z3rmhIYKeohKZT77ml6JYQNs+hOtF0=;
-        b=ga/hV/z9VGir/SFny7Bm11ORYELLp6KLBzSMPiAm45y6KR+NmkCLu4JwONweu4OUl0
-         lz0KFNtU0p4Mjjtd1cnaCrP8F00cCzCIhPmRIu+aMeGb7Q7j2tZMSdaLcTaKS+yNS5QA
-         U5dLURGmNkPxQil04U8X7C9udytYu6IK/DVVrfGu/KyLJt7LDHdzO16hUHJoAP7NPz4R
-         BpN3RngmsKSniSoWX6LnbVtBIPP4EFJP1m6A4mmRLM1WQBEUv13JxqXl/NYJV9VN0qb8
-         bPk1f/1bLsylaQlxqWmmgRfGSpOF8UW5wWR84fgOqtoj2AHuzRpbw7c9Vzg/dv0Yzj13
-         uwNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qV6C2HshTNaf1Z3rmhIYKeohKZT77ml6JYQNs+hOtF0=;
-        b=Gf0ixrxzE6t4zPVu3DNF4VscUohOYU4z6fBQ1/54khLbFeQtgZzWP/T0XGN8LraW4M
-         I52UrPKkF/dE4TuIXKpW1NnWKRPpEGukPNmOkO92FT9M507hTQh6YvzmKGPhHiMgGq09
-         Zr2JpxwPUVEC5IZan5SRJk54agFG4wplMiTCkn+6/4kNtVrDfx7YwrNBCshGXIwMqB86
-         D2mAZBGZtGPlC1PefKx7zQea8FejmfQ8/hTClU93s2L3PEQXpt8+IicbertrCv7yD2LQ
-         DnIXlecRSwTVmWyReXktsAgZ3RzuPSvcGQ9tmjsuFgZga6OYhIYh9Bo4gAaGdsDxoIeV
-         xxtQ==
-X-Gm-Message-State: APjAAAULEYaFrV8ZtSXKHqF3Au8rYD5ipTYo1O3tqFqSkl7Rt4kt8phk
-        KPpoJNs8CqEMIuPPGM7ST7GGwnCDkfjxIJMxZFM=
-X-Google-Smtp-Source: APXvYqyHn+GehhygqUV66ttkVm505Ca0Q+yOuFpiioGMsn25Vi+bYgOJKern2ncZ+vSvfoJMIfbr8uQ+rl36gMRhfT0=
-X-Received: by 2002:a37:2d43:: with SMTP id t64mr36843093qkh.472.1563620393025;
- Sat, 20 Jul 2019 03:59:53 -0700 (PDT)
+        Sat, 20 Jul 2019 07:10:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CSpqqObHAXL3FQ2tTs5Na9vOWdPfphA5nFF5rAves+c=; b=URTrCFk4EzVMuy5SsviQyIhiZ
+        FihaCwluGuw0RwVRDexdapCcVI+KG+Njug+HVIrcUZ5OCnmGj5pjGBBP9wC8zHw3leY5a4neaDP1c
+        wfiICAFvyStwamBskit2b6OqtZMhXWmRcGhH+IRpEfzkoLHkbzbmBHnopniT85knl355H+QHVpJ7O
+        xP50SIi5BdiU8K7WfvtezZnPF2nkQ3KWC+549GtpMA1vgn/uyHvyt6WYG0KdNniWFuHYh54IVwnPC
+        2Xx3aXLFrV1OngTv6az97LW4LTzRje0IMM4O72j+REw5kL8NfPVY0qFUfbA3GL7NbNvbJ21oVAOAm
+        RZhbIe9UA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1honFn-0007Jx-Ud; Sat, 20 Jul 2019 11:10:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6CABF20BAF36C; Sat, 20 Jul 2019 13:10:13 +0200 (CEST)
+Date:   Sat, 20 Jul 2019 13:10:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Will Deacon <will.deacon@arm.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an
+ atomic_long_t
+Message-ID: <20190720111013.GQ3402@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-14-longman@redhat.com>
+ <20190719184538.GA20324@hermes.olymp>
+ <2ed44afa-4528-a785-f188-2daf24343f97@redhat.com>
+ <CAHk-=wioLqXBWWQywZGfxumsY_H6dFE3R=+WJ3mAL_WYV1fm9Q@mail.gmail.com>
+ <87h87hksim.fsf@suse.com>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
- <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
- <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
- <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de>
- <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
- <alpine.DEB.2.21.1907201133000.1782@nanos.tec.linutronix.de>
- <CAHbf0-FfD_tzRFfkYK=gWDOkB=+ecFuJPbZwPS3S3HJmDThPWw@mail.gmail.com> <alpine.DEB.2.21.1907201253360.1782@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907201253360.1782@nanos.tec.linutronix.de>
-From:   Mike Lothian <mike@fireburn.co.uk>
-Date:   Sat, 20 Jul 2019 11:59:41 +0100
-Message-ID: <CAHbf0-GZySHLPMsR7NcyqpxD0DwK1Y44=A0sgA=pFzRMe2fXtw@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h87hksim.fsf@suse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jul 2019 at 11:54, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sat, 20 Jul 2019, Mike Lothian wrote:
-> > Here is my config
-> >
-> > https://github.com/FireBurn/KernelStuff/blob/9b7e96581598d50b266f9df258e7de764949147a/dot_config_tip
-> >
->
-> Builds perfectly fine.
+On Sat, Jul 20, 2019 at 09:41:05AM +0100, Luis Henriques wrote:
+> [   39.801179] ==================================================================
+> [   39.801973] BUG: KASAN: use-after-free in rwsem_down_write_slowpath (/home/miguel/kernel/linux/kernel/locking/rwsem.c:669 /home/miguel/kernel/linux/kernel/locking/rwsem.c:1125) 
 
-Sorry top posted from my phone
+That's rwsem_can_spin_on_owner(), specifically line 669 seems to suggest
+owner_on_cpu().
 
-Are you using gold? And which versions of GCC & binutils are you using?
+So we'd somehow have a dead owner; I'm not immediately seeing how that
+can happen.
+
