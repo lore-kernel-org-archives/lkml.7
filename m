@@ -2,68 +2,86 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F8FC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CD5C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06962085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563648058;
-	bh=3gP7MPMdbmEFT4XsPU9P5AGY+0Uymgo20xnxzSy8AA4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QPrH7BoEzt+/3AP0yJME4Cac3jpE6fgZ0F0mLbp6AAs+AeRh/ucFkjuBLSH7eoNp7
-	 uqiZekK4MoWoW6HfVzWwJM1k2aSRHW/aWx6VsLbBYgVjXZbi4T1Yna0sReY2b/0iMl
-	 m8kJ/U1rgxOzSBbrr5f9yOYyvWgCXWqKIpZXeV1w=
+	by mail.kernel.org (Postfix) with ESMTP id 5C5392085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbfGTSk5 (ORCPT
+        id S1726062AbfGTSul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 14:40:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729075AbfGTSka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 14:40:30 -0400
-Subject: Re: [GIT pull] core/urgent for 5.3-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563648029;
-        bh=3gP7MPMdbmEFT4XsPU9P5AGY+0Uymgo20xnxzSy8AA4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ghwYxjAASOnm64BmH1DYJBJIaxkqSYH12LknZj2FKhPiDwoeGHa2NAPCmBDv8m4f8
-         IqoGfs1RiUiC5SgBm6TsiFGay4qhp683Ql04q29vq3W7i+/iWkVtoDH6Ak0sJu/NP2
-         s16gy1Puv1zQnTgshLtk9Ij3BkJb9330LTSdh6oc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <156362700018.18624.18097992605540415098.tglx@nanos.tec.linutronix.de>
-References: <156362700018.18624.18097992605540415098.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <156362700018.18624.18097992605540415098.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- core-urgent-for-linus
-X-PR-Tracked-Commit-Id: b68b9907069a8d3a65bc16a35360bf8f8603c8fa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e6023adc5c6af79ac8ac5b17939f58091fa0d870
-Message-Id: <156364802960.20023.13325159197022944815.pr-tracker-bot@kernel.org>
-Date:   Sat, 20 Jul 2019 18:40:29 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        Sat, 20 Jul 2019 14:50:41 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:45903 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfGTSul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 14:50:41 -0400
+Received: by mail-qk1-f179.google.com with SMTP id s22so25755102qkj.12;
+        Sat, 20 Jul 2019 11:50:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K1DjJdNnl+zka9s8zl8TpnQj9JyccYfNCrdgUGT2JBc=;
+        b=E0Z9AYzsZ5A+FkVMOHPFogm4Q3Zy261XHb3O8qqBw+NPtSFvrRR3r9pVDAogOIlLHA
+         0UtoVhxWsC/ziDJCqkqCypTBaL4SoK8wqXwBbJuG2es2KigAqB2th+fdX3p+1jGPSI5H
+         kVNrplbfvGwAKoTpRtbYrBSgHTyHHg8Mj5cH1YteEA43gSa4HbpyhdHAMPYsUVGKfyfV
+         B0zOFKof9uyzh6Ln1urU8CnzjrjUUhVwRR4UPS5CzKqAylTFUwOSfU9ItK5+ox8tgTIO
+         ueUhn627l1gXxKK/AYv4OaB5wsJsTfQtRiTKrHHaukvnQsW09u4mr4m4MD8hRnFsvpev
+         uxuA==
+X-Gm-Message-State: APjAAAXHIRaqQwCJ4qWtnjNfnR87+tFy/mdH9EQGiKHwihkIA0nI1XM1
+        zyHmygxLPizB5hkWsU3cuQFc/vNfmSgZ4uSsE/E=
+X-Google-Smtp-Source: APXvYqwOgP5JyfSYb+na0Yw3siiSnE4qFFFhH9b1DMjUEZg8Ra4RTQ8jwZpCHV3GgMemx0iWkTj65t0WRcrRnMXGEsk=
+X-Received: by 2002:a37:76c5:: with SMTP id r188mr39763653qkc.394.1563648640160;
+ Sat, 20 Jul 2019 11:50:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190720174844.4b989d34@sf> <87wogca86l.fsf@mid.deneb.enyo.de>
+In-Reply-To: <87wogca86l.fsf@mid.deneb.enyo.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 20 Jul 2019 20:50:23 +0200
+Message-ID: <CAK8P3a3s3OeBj1MviaJV2UR0eUhF0GKPBi1iFf_3QKQyNPkuqw@mail.gmail.com>
+Subject: Re: linux-headers-5.2 and proper use of SIOCGSTAMP
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 20 Jul 2019 12:50:00 -0000:
+On Sat, Jul 20, 2019 at 8:10 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+>
+> * Sergei Trofimovich:
+>
+> > Should #include <linux/sockios.h> always be included by user app?
+> > Or should glibc tweak it's definition of '#include <sys/socket.h>'
+> > to make it available on both old and new version of linux headers?
+>
+> What is the reason for dropping SIOCGSTAMP from <asm/socket.h>?
+>
+> If we know that, it will be much easier to decide what to do about
+> <sys/socket.h>.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
+As far as I can tell, nobody thought it would be a problem to move it
+from asm/sockios.h to linux/sockios.h, as the general rule is that one
+should use the linux/*.h version if both exist, and that the asm/*.h
+version only contains architecture specific definitions. The new
+definition is the same across all architectures, so it made sense to
+have it in the common file.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e6023adc5c6af79ac8ac5b17939f58091fa0d870
+If the assumption was wrong, the obvious solution is to duplicate the
+definitions everywhere or move the common parts into
+asm-generic/sockios.h, but it would have been better to hear about
+that earlier.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+      Arnd
