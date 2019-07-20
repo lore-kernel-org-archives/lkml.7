@@ -2,181 +2,375 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2CC76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201C1C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391642085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84612085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:28:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="nitR6D2/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZTqzSQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfGTOXn (ORCPT
+        id S1728667AbfGTOYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 10:23:43 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34899 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbfGTOXm (ORCPT
+        Sat, 20 Jul 2019 10:24:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39762 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbfGTOX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 10:23:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so17013814plp.2
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 07:23:42 -0700 (PDT)
+        Sat, 20 Jul 2019 10:23:59 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so17034170pls.6;
+        Sat, 20 Jul 2019 07:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UqZBrRv2xf43dMebSY7ggTEIPQNkD7oY1J85gPXaZlI=;
-        b=nitR6D2/AinbZMpmNM7NqHY/dIjxIIp41JObgwc8v1GhiOQ+38+7bEeTr8eatc5icu
-         dKDclJBaFQEA7M66oj6rgCeV9V5oi11Tic5NuPRM/jhF45RMLnICNkAX3TXnkkC7XHA3
-         tcIM+V5S/gcMPYom+9s2mM8w9KrCmAyziNMMYod2IL13L37TdBGTDCo2RUEzVYlIUhTY
-         iBsOr0vtgmaY4bzToAk77kAqfyzZ95Gb5l/J2pyXIuehlubvAomJSIiGgUc7p4iiJdBo
-         PIBmeRliE+vxCG3KvYfdpKE8XrilZiDcHlU8MsZ4vRdUsQufQjzwnQ1pDURksuwr3/k0
-         H0gw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2WY7gIiE4mOMpygdUF32NBGOQWOHXGXeU7Fsa2C5D6w=;
+        b=SZTqzSQAn6Iy1lRwE1x7yyH32lIyqYNZO+t7ZbjRiYEi2FdGf0vp3GBn3m8+2vTENQ
+         DoEORWiJ43ck/Dp9QsqDHcoZGqrrs82F6oBiZXXVWKsaM6Jo36b6dVGAq6/NpU1NSAe3
+         IUI1EcE8w2rjVhkwlEln0a5z+pkymBObNXMR9ktaj+KJAUvjSqAmUdHwzu6dEWGH7BvF
+         QrtjBrfGwYVw8zKI4GxoPnn7eWBMw+wdhGVdXYxUXp+Lv6oBetWRFZNjPgrVHZQDBSMX
+         8eSjQP73KlkPnFI+iafe18quWzxeMGagNNss6Te4NW4PCp9FZzEtkZBAacxpA/2Sfjc2
+         W07Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UqZBrRv2xf43dMebSY7ggTEIPQNkD7oY1J85gPXaZlI=;
-        b=W3EyqYuDzozcsj6P9ZqfNWoSH3seaWs7jSqvYXJwa6DjXhOeH+tHa6OGSmsh4wJDDu
-         tn9UaL6WcIdSEOfigj10BN1wtuROFiEe0SzVEMTwlqEHP6Fk/6bkCACrXaqx551Gc2vD
-         N1aZGhmBOdpLoTPfY1XN/jwVIYInD0FrEljeD66pDNgdbtBkzuYR4+2khOTAy18Vh0/5
-         mytEzP9F4E83APl3vWKbaRG2w9vHNHnFOoXQ+L+rhIrgNjAOaDVeBFn+00aiRyCjKuvd
-         QnY2U7BjL/6YCE0cPNxC2Piip/NlT44TOUI6g0TZU1ULb5zD6EfkF9yWHfsHsK/enP9v
-         CsXw==
-X-Gm-Message-State: APjAAAXvF2lOhkUMSodJ5cCx7D5QhlGYUGtxfwHJqDvF/pAJCcfRdJ6j
-        WEriVloyDU/NtcH7eeg7R70=
-X-Google-Smtp-Source: APXvYqx2GLgYbLRHJB2hTR206nehq3djl55CUe8KG8g9txhpGuc7utVE8O7RsBeedKI5GUiZl3gmuw==
-X-Received: by 2002:a17:902:7043:: with SMTP id h3mr34544437plt.10.1563632621930;
-        Sat, 20 Jul 2019 07:23:41 -0700 (PDT)
-Received: from Etsukata.local (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id s185sm44064923pgs.67.2019.07.20.07.23.38
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2WY7gIiE4mOMpygdUF32NBGOQWOHXGXeU7Fsa2C5D6w=;
+        b=rmGFCCjuuk2Eo4yGyN5aDfbS2gFTeMchiLFPgS7a9S5p0Wrd7WKVWB3o6+x3e9I1Ph
+         8k/miJH4/Gw6MN8slaQhD1O8S6I1I8gjImwbBvchU2D2Os4UskeUI4asfSaT9jwB9aIF
+         bqiY70Qu6tejHMumBEytDrID1CLqJAw9uKxHYrlmY4iCffnYMTMykh2CWyxJFKxzfgB9
+         djuW0o/7fjdT3QmthLLi63hhEa/p4ImnE4ySojEB9iLzFj/s57EUZb+0THW31Ali+2dn
+         6srFo9/rhSgQrCvw/fdZPSiXGMxy3ASp0nPZqK2XqtDZw8r9aUT71Zp2qNwz4yiFd3y4
+         Fq/w==
+X-Gm-Message-State: APjAAAWyNBGevClLN11t4YvDKAJj+WasN7UdpMaD2GAp2oi/gqUz4hPX
+        CIeI9SsBdxhbQc0NAPprWAwKCvWB
+X-Google-Smtp-Source: APXvYqx7waD5QNp+5QIAsd+uWZsV1dUYM1XdIYYaofP0XGmm9yl9n4KZhYg7bfBpTaoU4cUxpscoVQ==
+X-Received: by 2002:a17:902:112c:: with SMTP id d41mr53467623pla.33.1563632638711;
+        Sat, 20 Jul 2019 07:23:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k5sm26440753pjl.32.2019.07.20.07.23.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Jul 2019 07:23:41 -0700 (PDT)
-Subject: Re: [PATCH v3 0/6] Tracing vs CR2
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux_lkml_grp@oracle.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-References: <20190711114054.406765395@infradead.org>
- <4c71e14d-3a32-c3bb-8e3b-6e5100853192@oracle.com>
- <97cdd0af-95cc-2583-dc19-129b20809110@oracle.com>
- <d82854b2-d2a4-5b83-b4a4-796db0fd401b@etsukata.com>
- <CALCETrVH_F-OVQOsJ=KRGtNLQfM5QpSzP4UNn2RbLjP4ueeq-g@mail.gmail.com>
- <98e20ed8-4032-09b5-e852-9f21df5c237c@etsukata.com>
- <CALCETrUkEB89jkBzWg26Y0unCwgOWYT5da+OkbatUU_Bh97T8g@mail.gmail.com>
-From:   Eiichi Tsukata <devel@etsukata.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=devel@etsukata.com; keydata=
- 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
-Message-ID: <009b1e7e-3278-6acb-40f7-cb5b1245a4ba@etsukata.com>
-Date:   Sat, 20 Jul 2019 23:23:36 +0900
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Sat, 20 Jul 2019 07:23:58 -0700 (PDT)
+Date:   Sat, 20 Jul 2019 07:23:57 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (adt7475) Convert to use
+ hwmon_device_register_with_groups()
+Message-ID: <20190720142357.GA30793@roeck-us.net>
+References: <20190719014130.1090-1-grant.mcewan@alliedtelesis.co.nz>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrUkEB89jkBzWg26Y0unCwgOWYT5da+OkbatUU_Bh97T8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719014130.1090-1-grant.mcewan@alliedtelesis.co.nz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/07/20 21:49, Andy Lutomirski wrote:
-> On Fri, Jul 19, 2019 at 8:59 PM Eiichi Tsukata <devel@etsukata.com> wrote:
->>
-...
->>
->> ====
->>
->> debug() // dr6: 0xffff4ff0, user_mode: 1
->>   TRACE_IRQS_OFF
->>     arch_stack_user_walk()
->>       debug()  // dr6: 0xffff4ff1 == 0xffff4ff0 | 0xffff0ff1 ... (*)
->>         do_debug()
->>           WARN_ON_ONCE
->>   do_debug() // dr6: 0xffff0ff0(cleared in the above do_debug())
+On Fri, Jul 19, 2019 at 01:41:30PM +1200, Grant McEwan wrote:
+> hwmon_device_register() is a deprecated function and produces a warning.
 > 
-> The dr6 register will indeed be cleared like this, but the dr6
-> variable should still be 0xffff4ff0.
-
-I should have use DR6 to mean it is a register, not variable.
-"dr6" was ambiguous.
-
+> Converting the driver to use the hwmon_device_register_with_groups()
+> instead.
 > 
->>
-...
->>
->> Note: printk() in do_debug() can cause infinite loop(printk() ->
->> irq_disable() -> do_debug() -> printk() ...), so printk_deferred()
->> was preferable.
->>
+> Signed-off-by: Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+> ---
+>  drivers/hwmon/adt7475.c | 104 +++++++++++++++++++---------------------
+>  1 file changed, 48 insertions(+), 56 deletions(-)
 > 
-> Shouldn't that be fixed with my patches?  It should only be able to
-> recurse two deep: do_debug() from user mode can indeed trip
-> breakpoints, but the next do_debug() will clear DR7 in paranoid_entry.
-> 
+> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+> index c3c6031a7285..4e838555102f 100644
+> --- a/drivers/hwmon/adt7475.c
+> +++ b/drivers/hwmon/adt7475.c
+> @@ -188,6 +188,7 @@ MODULE_DEVICE_TABLE(of, adt7475_of_match);
+>  
+>  struct adt7475_data {
+>  	struct device *hwmon_dev;
+> +	struct i2c_client *client;
+>  	struct mutex lock;
+>  
+>  	unsigned long measure_updated;
+> @@ -212,6 +213,7 @@ struct adt7475_data {
+>  
+>  	u8 vid;
+>  	u8 vrm;
+> +	const struct attribute_group *groups[8];
 
-Sorry, I missed that. Now I confirmed your patches fixed the loop.
+There are a total of 8 groups, and the list of groups needs to be
+terminated with a NULL pointer, so there have to be 9 entries in
+this array.
 
-Thanks
+>  };
+>  
+>  static struct i2c_driver adt7475_driver;
+> @@ -346,8 +348,8 @@ static ssize_t voltage_store(struct device *dev,
+>  {
+>  
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg;
+>  	long val;
+>  
+> @@ -440,8 +442,8 @@ static ssize_t temp_store(struct device *dev, struct device_attribute *attr,
+>  			  const char *buf, size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg = 0;
+>  	u8 out;
+>  	int temp;
+> @@ -542,8 +544,7 @@ static ssize_t temp_st_show(struct device *dev, struct device_attribute *attr,
+>  			    char *buf)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+>  	long val;
+>  
+>  	switch (sattr->index) {
+> @@ -570,8 +571,8 @@ static ssize_t temp_st_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg;
+>  	int shift, idx;
+>  	ulong val;
+> @@ -647,8 +648,8 @@ static ssize_t point2_show(struct device *dev, struct device_attribute *attr,
+>  static ssize_t point2_store(struct device *dev, struct device_attribute *attr,
+>  			    const char *buf, size_t count)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+>  	int temp;
+>  	long val;
+> @@ -710,8 +711,8 @@ static ssize_t tach_store(struct device *dev, struct device_attribute *attr,
+>  {
+>  
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned long val;
+>  
+>  	if (kstrtoul(buf, 10, &val))
+> @@ -769,8 +770,8 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr,
+>  {
+>  
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg = 0;
+>  	long val;
+>  
+> @@ -818,8 +819,8 @@ static ssize_t stall_disable_show(struct device *dev,
+>  				  struct device_attribute *attr, char *buf)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +
+>  	u8 mask = BIT(5 + sattr->index);
+>  
+>  	return sprintf(buf, "%d\n", !!(data->enh_acoustics[0] & mask));
+> @@ -830,8 +831,8 @@ static ssize_t stall_disable_store(struct device *dev,
+>  				   const char *buf, size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	long val;
+>  	u8 mask = BIT(5 + sattr->index);
+>  
+> @@ -914,8 +915,8 @@ static ssize_t pwmchan_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	int r;
+>  	long val;
+>  
+> @@ -938,8 +939,8 @@ static ssize_t pwmctrl_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	int r;
+>  	long val;
+>  
+> @@ -982,8 +983,8 @@ static ssize_t pwmfreq_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	int out;
+>  	long val;
+>  
+> @@ -1022,8 +1023,8 @@ static ssize_t pwm_use_point2_pwm_at_crit_store(struct device *dev,
+>  					struct device_attribute *devattr,
+>  					const char *buf, size_t count)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	long val;
+>  
+>  	if (kstrtol(buf, 10, &val))
+> @@ -1305,6 +1306,9 @@ static const struct attribute_group in4_attr_group = { .attrs = in4_attrs };
+>  static const struct attribute_group in5_attr_group = { .attrs = in5_attrs };
+>  static const struct attribute_group vid_attr_group = { .attrs = vid_attrs };
+>  
+> +/* Number of possible attribute groups to add into sysfs */
+> +#define ATTR_GROUP_COUNT 8
+> +
 
-Eiichi 
+Not used anywhere.
 
+>  static int adt7475_detect(struct i2c_client *client,
+>  			  struct i2c_board_info *info)
+>  {
+> @@ -1489,7 +1493,7 @@ static int adt7475_probe(struct i2c_client *client,
+>  	};
+>  
+>  	struct adt7475_data *data;
+> -	int i, ret = 0, revision;
+> +	int i, ret = 0, revision, group_num = 0;
+>  	u8 config2, config3;
+>  
+>  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+> @@ -1497,6 +1501,7 @@ static int adt7475_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  
+>  	mutex_init(&data->lock);
+> +	data->client = client;
+>  	i2c_set_clientdata(client, data);
+>  
+>  	if (client->dev.of_node)
+> @@ -1590,49 +1595,37 @@ static int adt7475_probe(struct i2c_client *client,
+>  		break;
+>  	}
+>  
+> -	ret = sysfs_create_group(&client->dev.kobj, &adt7475_attr_group);
+> -	if (ret)
+> -		return ret;
+> +	data->groups[group_num++] = &adt7475_attr_group;
+>  
+>  	/* Features that can be disabled individually */
+>  	if (data->has_fan4) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &fan4_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &fan4_attr_group;
+>  	}
+>  	if (data->has_pwm2) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &pwm2_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &pwm2_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 0)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in0_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in0_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 3)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in3_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in3_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 4)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in4_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in4_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 5)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in5_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in5_attr_group;
+>  	}
+>  	if (data->has_vid) {
+>  		data->vrm = vid_which_vrm();
+> -		ret = sysfs_create_group(&client->dev.kobj, &vid_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num] = &vid_attr_group;
+>  	}
+>  
+> -	data->hwmon_dev = hwmon_device_register(&client->dev);
+> +	/* register device with all the acquired attributes */
+> +	data->hwmon_dev = hwmon_device_register_with_groups(&client->dev,
+> +							    client->name, data,
+> +							    data->groups);
+> +
 
+You could call devm_hwmon_device_register_with_groups() here, drop the
+remove function, and drop hwmon_dev from struct adt7475_data.
+
+Also, adt7475_remove_files() is no longer necessary. With the new API,
+attribute files are owned by the hwmon subsystem.
+
+>  	if (IS_ERR(data->hwmon_dev)) {
+>  		ret = PTR_ERR(data->hwmon_dev);
+>  		goto eremove;
+> @@ -1757,8 +1750,8 @@ static void adt7475_read_pwm(struct i2c_client *client, int index)
+>  
+>  static int adt7475_update_measure(struct device *dev)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	u16 ext;
+>  	int i;
+>  	int ret;
+> @@ -1854,8 +1847,7 @@ static int adt7475_update_measure(struct device *dev)
+>  
+>  static struct adt7475_data *adt7475_update_device(struct device *dev)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+>  	int ret;
+>  
+>  	mutex_lock(&data->lock);
