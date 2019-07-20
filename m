@@ -2,110 +2,224 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09997C76195
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07A1C76195
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F9F217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B11217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oyP+Gltk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I+ScoAv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfGTOL0 (ORCPT
+        id S1728592AbfGTOOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 10:11:26 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45392 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbfGTOL0 (ORCPT
+        Sat, 20 Jul 2019 10:14:05 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40589 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728488AbfGTOOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 10:11:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so16997400plr.12;
-        Sat, 20 Jul 2019 07:11:25 -0700 (PDT)
+        Sat, 20 Jul 2019 10:14:04 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s145so25430353qke.7
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 07:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=11ShUFBUz0HNBtYxl5TBnDhpTQxhxuDz8GhFY3JRxMA=;
-        b=oyP+GltkpKNTXSWKR+W0SzdxZV7ciNYCMgSa+kBO7BH9rWSjj6w2pDVpi1SkuxSXUZ
-         yeHF9R+7Ty+OMSPbRp808LSO6IArjB0c8ZwdhAbKvmebqmoZmWXzmoAvmaSgesI2U/wq
-         xldTTi8gghCMXhUUPWC16k53tacBkLaSWF90N5VcCSs3GFmrsReWdJiCvVlSMD4+7Po/
-         qECJa+rYZRw0fmDuarQmt1uz/xopE99yXAF9i+sROkFhL8HZUs8hSOJ+Kjbkr6xu4Awk
-         LA76G4cYn1+lsoS2GibMSuZc6IawIJtZ9hEQTJED7JBvsqKO9ur7SFh0jq1qiuvIroJW
-         OEYw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rjy01hz76qJsGBlj89nPeHsxAVMf/NWX8i7ANc3NyP4=;
+        b=I+ScoAv8q6Te/9p4Qm1WL3NsGcfq1HXumf4DYD5boY31ZFYqRutFNJ1S92hcXfaKdW
+         ySGkDcfSmbEzvu3bCYyoyAniE54YCEDSk197kKGmTg4uC1O/yTTF/2skSaI2wwX6wvoy
+         /UYRUWxI/jlJK8siKJrmwj689HohB+ApkpM7Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=11ShUFBUz0HNBtYxl5TBnDhpTQxhxuDz8GhFY3JRxMA=;
-        b=PQo7sbruQq/sGc87LwYuF+CtBzHacxDpVG2AOT5npqdehKmDmoSlY0Har3XPvUPxoO
-         1c4GUwPuqUlXKzrTjcZel7tVkJPDTGNJt0c9cnW2P8hO92LURGWgokLfvt2BsOryMXwu
-         UU+1QuJQpGZ2f4a5pIQ+4GPLacUHYt7ZTldwP8s3jFnC5wPky3fGgYuRTxF0DAq8JvYt
-         rQvFT1qn93Ca8bcErJYss6y76FOGFbyTeTlNn12m2+C4qA1KKVnEMRmaQ7l0BwYBPAMK
-         Zxo8OkBlqp8/SbD2p2Ty1HVQDtIouWa/C89plJdwgNs4DtH+OkftZWwgVQNxnJT4IL4b
-         kcfA==
-X-Gm-Message-State: APjAAAX8Jt5kkIKQcMIl6vw/zEKi77VeED2ur+iqHwTtuAypAisUTUxl
-        ALxXBwrF+UPHMW61fPqZtk1DKQYi
-X-Google-Smtp-Source: APXvYqwJ9oaku+wrWFn8jH2YrJTsqd+igBfq69Qm9AZcciSmEBQvc53l7K2ZDxYOgxkGQwzqn5PflQ==
-X-Received: by 2002:a17:902:e6:: with SMTP id a93mr63126317pla.175.1563631885295;
-        Sat, 20 Jul 2019 07:11:25 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j6sm19641504pfa.141.2019.07.20.07.11.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Jul 2019 07:11:24 -0700 (PDT)
-Subject: Re: [PATCH 2/2] hwmon: (k8temp) documentation: update URL of
- datasheet
-To:     Robert Karszniewicz <avoidr@firemail.cc>,
-        Rudolf Marek <r.marek@assembler.cz>,
-        Jean Delvare <jdelvare@suse.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1563522498.git.avoidr@firemail.cc>
- <7139bc7707c24bd4dd7eb323e2da90105a3de9c1.1563522498.git.avoidr@firemail.cc>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <da0ff0ba-eddd-7ea5-91a0-8edb0099a80c@roeck-us.net>
-Date:   Sat, 20 Jul 2019 07:11:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rjy01hz76qJsGBlj89nPeHsxAVMf/NWX8i7ANc3NyP4=;
+        b=DrZwZb69UkwSiOFxWBxBKng2rZUObReJs8aBYINaZvL/0gxMhuv7I7+FcJjn6L5TEH
+         /WfiJ1z8bK5TiNKa8t58LZmJyCU8g59uC0pMOoaOW+infiD0+KTu2ZIqDcQyOMiOMwqb
+         aBVDQdAuRtPPOytob1FvdC4jlpUGLnOjTfrq39BPTBdiUZWz7wgFn0/u7PjSSVk9fUAk
+         iBMHJv/r00rYc5zlMoVEK8s4Yt8YXhnokkIwVArCLZO/xu/eEmi4whEiI5/XoWnqvUX+
+         TeWSGdO8YEqtjUWZfkneSMc3C7us3oVgeJwId5JnBu6Q4YEVAkEWoxeU21dWajYZyF3D
+         apHg==
+X-Gm-Message-State: APjAAAVgCtHCq3cChahC9ZzBhNWqhU+qFKMzIyk7JN8rL7slEIoo8vvA
+        c3eHO2rxbHrFHvjvrKqotsoliICoSr81fkDEKThjAA==
+X-Google-Smtp-Source: APXvYqwPDOsBteUqw3hytvAK4uoJj9IbndzbKZU8k0iNDt6pOzdf6KeidqoUr+AO9CQpwMmx2+ZqXLUueG4APAXdP9E=
+X-Received: by 2002:ae9:f017:: with SMTP id l23mr39448045qkg.457.1563632043392;
+ Sat, 20 Jul 2019 07:14:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7139bc7707c24bd4dd7eb323e2da90105a3de9c1.1563522498.git.avoidr@firemail.cc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190718080119.30707-1-zhiyong.tao@mediatek.com> <20190718080119.30707-3-zhiyong.tao@mediatek.com>
+In-Reply-To: <20190718080119.30707-3-zhiyong.tao@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Sat, 20 Jul 2019 22:13:51 +0800
+Message-ID: <CANMq1KBzLjshQGqfULdPFbzzYxMx2+T+Ku6B4j0QoFRhgsP_nw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] auxadc: mediatek: support efuse calibration in
+ auxadc driver
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, jic23@kernel.org,
+        knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>,
+        pmeerw@pmeerw.net, srv_heupstream <srv_heupstream@mediatek.com>,
+        hui.liu@mediatek.com, jg_poxu@mediatek.com, sj.huang@mediatek.com,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-iio@vger.kernel.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/20/19 6:16 AM, Robert Karszniewicz wrote:
-> The old URL is dead.
-> 
-> Signed-off-by: Robert Karszniewicz <avoidr@firemail.cc>
-
-Applied.
-
-Thanks,
-Guenter
-
+On Thu, Jul 18, 2019 at 4:01 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+>
+> This patch support efuse calibration in auxadc driver
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Signed-off-by: jg_poxu <jg_poxu@mediatek.com>
 > ---
->   Documentation/hwmon/k8temp.rst | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/hwmon/k8temp.rst b/Documentation/hwmon/k8temp.rst
-> index 72da12aa17e5..fe9109521056 100644
-> --- a/Documentation/hwmon/k8temp.rst
-> +++ b/Documentation/hwmon/k8temp.rst
-> @@ -9,7 +9,7 @@ Supported chips:
->   
->       Addresses scanned: PCI space
->   
-> -    Datasheet: http://support.amd.com/us/Processor_TechDocs/32559.pdf
-> +    Datasheet: http://www.amd.com/system/files/TechDocs/32559.pdf
->   
->   Author: Rudolf Marek
->   
-> 
+>  drivers/iio/adc/mt6577_auxadc.c | 71 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>
+> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+> index 95d76abb64ec..e30d9736b1a5 100644
+> --- a/drivers/iio/adc/mt6577_auxadc.c
+> +++ b/drivers/iio/adc/mt6577_auxadc.c
+> @@ -17,12 +17,14 @@
+>  #include <linux/err.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/io.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/slab.h>
+>
+>  /* Register definitions */
+>  #define MT6577_AUXADC_CON0                    0x00
+> @@ -42,6 +44,13 @@
+>  #define MT6577_AUXADC_POWER_READY_MS          1
+>  #define MT6577_AUXADC_SAMPLE_READY_US         25
+>
+> +#define ADC_GE_A_SHIFT      10
+> +#define ADC_GE_A_MASK       (0x3ff << ADC_GE_A_SHIFT)
+> +#define ADC_OE_A_SHIFT      0
+> +#define ADC_OE_A_MASK       (0x3ff << ADC_OE_A_SHIFT)
+> +#define ADC_CALI_EN_A_SHIFT 20
+> +#define ADC_CALI_EN_A_MASK  (0x1 << ADC_CALI_EN_A_SHIFT)
+> +
+>  struct mt6577_auxadc_device {
+>         void __iomem *reg_base;
+>         struct clk *adc_clk;
+> @@ -74,6 +83,64 @@ static const struct iio_chan_spec mt6577_auxadc_iio_channels[] = {
+>         MT6577_AUXADC_CHANNEL(15),
+>  };
+>
+> +s32 cali_oe;
+> +s32 cali_ge;
 
+Why do you need these 2 (global) variables? They are set in
+mt6577_auxadc_update_cali but never read anywhere.
+
+> +struct adc_cali_info {
+> +       u32 cali_ge_a;
+> +       u32 cali_oe_a;
+> +       u32 gain;
+> +};
+> +static struct adc_cali_info adc_cali;
+
+This should be inside struct mt6577_auxadc_device structure. And... I
+still do not understand what this does, since nothing reads back
+adc_cali either...
+
+On gerrit (https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1624410),
+you mentioned that thermal module will use these, can you please
+upload these changes as part of this series, so that we can review the
+whole thing in one piece (and understand better how to fix this
+interface).
+
+> +
+> +static int mt6577_auxadc_update_cali(struct device *dev)
+> +{
+> +       struct nvmem_cell *cell;
+> +       u32 *buf;
+> +       size_t len;
+> +       int ret = 0;
+> +
+> +       cali_oe = 0;
+> +       cali_ge = 0;
+> +
+> +       cell = nvmem_cell_get(dev, "calibration-data");
+> +       if (IS_ERR(cell)) {
+> +               if (PTR_ERR(cell) == -EPROBE_DEFER)
+> +                       return PTR_ERR(cell);
+> +               return 0;
+> +       }
+> +
+> +       buf = (u32 *)nvmem_cell_read(cell, &len);
+
+Cast is not necessary.
+
+> +
+> +       nvmem_cell_put(cell);
+> +
+> +       if (IS_ERR(buf))
+> +               return PTR_ERR(buf);
+> +
+> +       if (len < sizeof(u32)) {
+> +               dev_warn(dev, "invalid calibration data\n");
+> +               ret = -EINVAL;
+> +               goto out;
+> +       }
+> +
+> +       if (((buf[0] & ADC_CALI_EN_A_MASK) >> ADC_CALI_EN_A_SHIFT) != 0) {
+> +               adc_cali.cali_oe_a =
+> +                       (buf[0] & ADC_OE_A_MASK) >> ADC_OE_A_SHIFT;
+> +               adc_cali.cali_ge_a =
+> +                       ((buf[0] & ADC_GE_A_MASK) >> ADC_GE_A_SHIFT);
+> +
+> +               cali_ge = adc_cali.cali_ge_a - 512;
+> +               cali_oe = adc_cali.cali_oe_a - 512;
+> +               adc_cali.gain = 1 + cali_ge;
+> +       }  else {
+> +               dev_info(dev, "Device not calibrated, using default calibration values\n");
+> +       }
+> +
+> +out:
+> +       kfree(buf);
+> +
+> +       return ret;
+> +}
+> +
+>  static inline void mt6577_auxadc_mod_reg(void __iomem *reg,
+>                                          u32 or_mask, u32 and_mask)
+>  {
+> @@ -274,6 +341,10 @@ static int mt6577_auxadc_probe(struct platform_device *pdev)
+>                 goto err_power_off;
+>         }
+>
+> +       ret = mt6577_auxadc_update_cali(&pdev->dev);
+> +       if (ret)
+> +               return ret;
+> +
+>         return 0;
+
+Or just
+return mt6577_auxadc_update_cali(&pdev->dev);
+
+>
+>  err_power_off:
+> --
+> 2.12.5
+>
