@@ -2,77 +2,125 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A14EC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7840CC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2290E20873
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D59B2085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 16:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NxOBzB80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfGTQDf (ORCPT
+        id S1726616AbfGTQ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 12:03:35 -0400
-Received: from mailoutvs36.siol.net ([185.57.226.227]:53080 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726482AbfGTQDf (ORCPT
+        Sat, 20 Jul 2019 12:27:50 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:52416 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfGTQ1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 12:03:35 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 6EE635207E5;
-        Sat, 20 Jul 2019 18:03:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id N2-Axw94Gu4C; Sat, 20 Jul 2019 18:03:32 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 22AFF52066B;
-        Sat, 20 Jul 2019 18:03:32 +0200 (CEST)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id ED72F520CD1;
-        Sat, 20 Jul 2019 18:03:29 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/3] drm/sun4i: Add support for color encoding and range
-Date:   Sat, 20 Jul 2019 18:03:29 +0200
-Message-ID: <10088719.p65GSun1Qg@jernej-laptop>
-In-Reply-To: <20190720054255.vyma2lyiu2tohl74@flea>
-References: <20190713120346.30349-1-jernej.skrabec@siol.net> <20190720054255.vyma2lyiu2tohl74@flea>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Sat, 20 Jul 2019 12:27:49 -0400
+Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x6KGRfOs009136;
+        Sun, 21 Jul 2019 01:27:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6KGRfOs009136
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563640062;
+        bh=uYu3VJ6J2qsvZ4CUEzwqQcj7TCaHdD1WcbA0oBYilBg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NxOBzB80zpfhtzZD/sLrD6crVhdzRlsP4w2a7u7fLE+4u69dS+fqmHrNbIxlZZUME
+         DwU0fFzTBzfExAmdmrAaHYp21mp4BUHeH/II+JAi0ZvhvKht6sQj1lE5vaviFAlfil
+         9j7VO1OK//S5aKiHZfXW5pl8aPvlkD8t0DlQdcQrRGCMDoSWbN1DH9UdahBM97Vx/P
+         xumd4gOBfD8R+KA7oYMUUKWVMBnNeyYmm5JLDawPlB+TnO3R3z9WsIVZQYR0KQfTcA
+         C2S/29a5Mn9JIdgle60b3CHDWwYlxTztzn/JWlq+9YlLmg1VEhh0KtyNYEBZKhEY8e
+         zS5Rc1edLE/hQ==
+X-Nifty-SrcIP: [126.26.94.249]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] kbuild: move flex and bison rules to Makefile.host
+Date:   Sun, 21 Jul 2019 01:27:40 +0900
+Message-Id: <20190720162740.4292-3-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190720162740.4292-1-yamada.masahiro@socionext.com>
+References: <20190720162740.4292-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sobota, 20. julij 2019 ob 07:42:55 CEST je Maxime Ripard napisal(a):
-> On Sat, Jul 13, 2019 at 02:03:43PM +0200, Jernej Skrabec wrote:
-> > In order to correctly convert image between YUV and RGB, you have to
-> > know color encoding and color range. This patch set adds appropriate
-> > properties and considers them when choosing CSC conversion matrix for
-> > DE2 and DE3.
-> > 
-> > Note that this is only the half of needed changes when using HDMI output.
-> > DW HDMI bridge driver has to be extended to have a property to select
-> > limited (TVs) or full (PC monitors) range. But that will be done at a
-> > later time.
-> > 
-> > Please take a look.
-> 
-> Sorry for the delay, I applied all three.
+Flex and bison are used for kconfig, dtc, genksyms, all of which are
+host programs. I never imagine the kernel embeds a parser or a lexer.
 
-No problem. Thanks!
+Move the flex and bison rules to scripts/Makefile.host. This file is
+included only when hostprogs-y etc. is present in the Makefile in the
+directory. So, parsing these rules are skipped in most of directories.
 
-Best regards,
-Jernej
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ scripts/Makefile.host | 17 +++++++++++++++++
+ scripts/Makefile.lib  | 16 ----------------
+ 2 files changed, 17 insertions(+), 16 deletions(-)
 
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index 2208ebbd8c4c..b402c619147d 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -1,4 +1,21 @@
+ # SPDX-License-Identifier: GPL-2.0
++
++# LEX
++# ---------------------------------------------------------------------------
++quiet_cmd_flex = LEX     $@
++      cmd_flex = $(LEX) -o$@ -L $<
++
++$(obj)/%.lex.c: $(src)/%.l FORCE
++	$(call if_changed,flex)
++
++# YACC
++# ---------------------------------------------------------------------------
++quiet_cmd_bison = YACC    $(basename $@).[ch]
++      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
++
++$(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
++	$(call if_changed,bison)
++
+ # ==========================================================================
+ # Building binaries on the host system
+ # Binaries are used during the compilation of the kernel, for example
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 6c4a2332f6d6..4d65172cdcd4 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -189,22 +189,6 @@ $(foreach m, $(notdir $1), \
+ 	$(addprefix $(obj)/, $(foreach s, $3, $($(m:%$(strip $2)=%$(s)))))))
+ endef
+ 
+-# LEX
+-# ---------------------------------------------------------------------------
+-quiet_cmd_flex = LEX     $@
+-      cmd_flex = $(LEX) -o$@ -L $<
+-
+-$(obj)/%.lex.c: $(src)/%.l FORCE
+-	$(call if_changed,flex)
+-
+-# YACC
+-# ---------------------------------------------------------------------------
+-quiet_cmd_bison = YACC    $(basename $@).[ch]
+-      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
+-
+-$(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+-	$(call if_changed,bison)
+-
+ # Shipped files
+ # ===========================================================================
+ 
+-- 
+2.17.1
 
