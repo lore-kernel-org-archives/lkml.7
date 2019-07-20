@@ -2,88 +2,116 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A800C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4D0C7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648F221872
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB3621874
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tvyNq2C5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390361AbfGTCdb (ORCPT
+        id S2390385AbfGTClv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 22:33:31 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:40001 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbfGTCdb (ORCPT
+        Fri, 19 Jul 2019 22:41:51 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:37830 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbfGTClu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 22:33:31 -0400
-Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hofBR-0001QZ-Ku from George_Davis@mentor.com ; Fri, 19 Jul 2019 19:33:13 -0700
-Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
- (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Fri, 19 Jul
- 2019 19:33:11 -0700
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ARM: Fix null die() string for unhandled data and prefetch abort cases
-Date:   Fri, 19 Jul 2019 22:32:55 -0400
-Message-ID: <1563589976-19004-1-git-send-email-george_davis@mentor.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Jul 2019 22:41:50 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x6K2faF9009523;
+        Sat, 20 Jul 2019 11:41:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6K2faF9009523
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563590497;
+        bh=cjbTfQ+RiOWGnD+P3w8/hXI1uAkKHwox2bpmBIGRw+c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tvyNq2C5QDy43yWSnQTrt9fZpvbhivoA8oLA/57KW00GlN16/rhWrebkxM6HocdKH
+         mHuneFcGH5VckWDQ+5kbfsZjgxxmVmb82pwMDwZRoPU7ue3btduMX9BQI8z26neN/6
+         5UPunKfdqKs+TJIwpEEMhdzPDGsdH0m7KpAdvA5kR4ZIcYjee8H5XYHTM9xGdSeeKV
+         TqNajkDZfGpSxHIWGip/ch/Q2pU1aeREd1/VsU65BtidqLvI8DjklJAXA8tNpN/+45
+         On67gegY5+J+I9Ujsk9rcMTdJdtGKoYyg6A1rRzA10+UMjKpcsX1Mv7AD6tmeey8kf
+         VeiA5kw5vXe0w==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id h28so22727481vsl.12;
+        Fri, 19 Jul 2019 19:41:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAU8mkzuAdyMGj2sKQ48+lWNQXwFCO6OL4TsGuI+xxZYnYt6hY63
+        cgDNRsQIgrWOIS/MgqtNiHMxtr0QyY2KNIust2U=
+X-Google-Smtp-Source: APXvYqyrP0gBJfWbNX2CrzcI4Xc86qn1ZOWEJC8CWA+yOCL9ygHgd4K3odEMTDiaNQd1kSnM1ODyQpuWXcK5AzVBdeM=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr35031406vsl.155.1563590495717;
+ Fri, 19 Jul 2019 19:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+References: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 20 Jul 2019 11:40:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
+Message-ID: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
+Subject: Re: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an unhandled data or prefetch abort occurs, the die() string
-is empty resulting in backtrace messages similar to the following:
+On Sat, Jul 20, 2019 at 4:28 AM Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
+>
+> As of today we are able to pass custom flags to dtc compiler but not
+> to dtc preprocessor.
+> This ability is required for including some board-specific header files.
+> It allows us to pass defined constants to dts without their duplication
+> in several places.
 
-	Internal error: : 1 [#1] PREEMPT SMP ARM
+How to use this option in a useful way?
 
-Replace the null string with the name of the abort handler in order
-to provide more meaningful hints as to the cause of the fault.
+I see a bunch of defined constants under include/dt-bindings/.
 
-Signed-off-by: George G. Davis <george_davis@mentor.com>
----
- arch/arm/mm/fault.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you are talking about code duplication across architectures,
+you can include arm dtsi from arm64 dts, or vice versa.
+This was made possible by the symbolic links
+in scripts/dtc/include-prefixes/.
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 0048eadd0681..dddea0a21220 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -557,7 +557,7 @@ do_DataAbort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 		inf->name, fsr, addr);
- 	show_pte(current->mm, addr);
- 
--	arm_notify_die("", regs, inf->sig, inf->code, (void __user *)addr,
-+	arm_notify_die(inf->name, regs, inf->sig, inf->code, (void __user *)addr,
- 		       fsr, 0);
- }
- 
-@@ -585,7 +585,7 @@ do_PrefetchAbort(unsigned long addr, unsigned int ifsr, struct pt_regs *regs)
- 	pr_alert("Unhandled prefetch abort: %s (0x%03x) at 0x%08lx\n",
- 		inf->name, ifsr, addr);
- 
--	arm_notify_die("", regs, inf->sig, inf->code, (void __user *)addr,
-+	arm_notify_die(inf->name, regs, inf->sig, inf->code, (void __user *)addr,
- 		       ifsr, 0);
- }
- 
+Could you please elaborate your issues if you cannot solve them
+by the current strategy?
+
+
+
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  scripts/Makefile.lib | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index f1f38c8cdc74..f2595a608dce 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
+>                  $(addprefix -I,$(DTC_INCLUDE))                          \
+>                  -undef -D__DTS__
+>
+> +dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
+> +
+>  # Useful for describing the dependency of composite objects
+>  # Usage:
+>  #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
+> --
+> 2.21.0
+>
+
+
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
