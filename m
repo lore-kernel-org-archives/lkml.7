@@ -2,80 +2,149 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D349AC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 20:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934ADC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 21:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40B32083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 20:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6767F2082A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 21:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfGTUto (ORCPT
+        id S1726029AbfGTVJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 16:49:44 -0400
-Received: from paleale.coelho.fi ([176.9.41.70]:59664 "EHLO
-        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725801AbfGTUto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 16:49:44 -0400
-Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa)
-        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92)
-        (envelope-from <luca@coelho.fi>)
-        id 1howIQ-0000WV-PJ; Sat, 20 Jul 2019 23:49:38 +0300
-Message-ID: <b225d043d8581e0fec68cb63f7433161868293f3.camel@coelho.fi>
-From:   Luca Coelho <luca@coelho.fi>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     dor.shaish@intel.com, Josh Boyer <jwboyer@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 20 Jul 2019 23:49:33 +0300
-In-Reply-To: <s5hwogcxwt4.wl-tiwai@suse.de>
-References: <s5hr26m9gvc.wl-tiwai@suse.de>
-         <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
-         <s5ho91pzyml.wl-tiwai@suse.de> <s5hwogcxwt4.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Sat, 20 Jul 2019 17:09:29 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:45572 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725801AbfGTVJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 17:09:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 6A16EFB03;
+        Sat, 20 Jul 2019 23:09:24 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lt3q_07BvhWh; Sat, 20 Jul 2019 23:09:23 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id ABB364017E; Sat, 20 Jul 2019 23:09:22 +0200 (CEST)
+Date:   Sat, 20 Jul 2019 23:09:22 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     "marex@denx.de" <marex@denx.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
+ driver
+Message-ID: <20190720210922.GA464@bogon.m.sigxcpu.org>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+ <20190711150403.GB23195@bogon.m.sigxcpu.org>
+ <1562919331.3209.11.camel@nxp.com>
+ <20190716145450.GA609@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190716145450.GA609@bogon.m.sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-07-20 at 22:42 +0200, Takashi Iwai wrote:
-> On Fri, 19 Jul 2019 20:07:46 +0200,
-> Takashi Iwai wrote:
-> > On Fri, 19 Jul 2019 18:36:53 +0200,
-> > Luciano Coelho wrote:
-> > > Adding Dor.
-> > > 
-> > > Hi Takashi,
-> > > 
-> > > Do you have full logs of the crash? We can't see much from the log
-> > > snippet pasted in the bug report.
+Hi Robert,
+On Tue, Jul 16, 2019 at 04:54:50PM +0200, Guido Günther wrote:
+> Hi Robert,
+> On Fri, Jul 12, 2019 at 08:15:32AM +0000, Robert Chiras wrote:
+> > Hi Guido,
 > > 
-> > OK, I'll ask reporters.  If you have a SUSE/openSUSE bugzilla account,
-> > feel free to join there.
+> > On Jo, 2019-07-11 at 17:04 +0200, Guido Günther wrote:
+> > > Hi Robert,
+> > > On Wed, Jun 26, 2019 at 04:32:08PM +0300, Robert Chiras wrote:
+> > > > 
+> > > > This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like
+> > > > 8MQ, 8MM
+> > > > and 8QXP). Following, are the new features added and fixes from
+> > > > this
+> > > > patch-set:
+> > > > 
+> > > > 1. Add support for drm_bridge
+> > > > On 8MQ and 8MM, the LCDIF block is not directly connected to a
+> > > > parallel
+> > > > display connector, where an LCD panel can be attached, but instead
+> > > > it is
+> > > > connected to DSI controller. Since this DSI stands between the
+> > > > display
+> > > > controller (eLCDIF) and the physical connector, the DSI can be
+> > > > implemented
+> > > > as a DRM bridge. So, in order to be able to connect the mxsfb
+> > > > driver to
+> > > > the DSI driver, the support for a drm_bridge was needed in mxsfb
+> > > > DRM
+> > > > driver (the actual driver for the eLCDIF block).
+> > > So I wanted to test this but with both my somewhat cleaned up nwl
+> > > driver¹ and the nwl driver forward ported from the nxp vendor tree
+> > > I'm
+> > > looking at a black screen with current mainline - while my dcss
+> > > forward
+> > > port gives me nice output on mipi dsi. Do you have a tree that uses
+> > > mipi
+> > > dsi on imx8mq where I could look at to check for differences?
+> > Somewhere on the pixel path (between the display controller and the
+> > DSI) there is a block that inverts the polarity. I can't remember
+> > exactly what was the role of this block, but the polarity is inverted
+> > when eLCDIF is used in combination with the DSI.
+> > If you take a look at my DSI driver from NXP releases (I guess you have
+> > them), you will see there is a hack in mode_fixup:
+> > 
+> > unsigned int *flags = &mode->flags;
+> > if (dsi->sync_pol {
+> > 	*flags |= DRM_MODE_FLAG_PHSYNC;
+> > 	*flags |= DRM_MODE_FLAG_PVSYNC;
+> > 	*flags &= ~DRM_MODE_FLAG_NHSYNC;
+> > 	*flags &= ~DRM_MODE_FLAG_NVSYNC;
+> > } else {
+> > 	*flags &= ~DRM_MODE_FLAG_PHSYNC;
+> > 	*flags &= ~DRM_MODE_FLAG_PVSYNC;
+> > 	*flags |= DRM_MODE_FLAG_NHSYNC;
+> > 	*flags |= DRM_MODE_FLAG_NVSYNC;
+> > }
 > 
-> FYI, the dmesg's have been uploaded to the same bugzilla entry:
->   https://bugzilla.opensuse.org/show_bug.cgi?id=1142128
+> Thanks for the suggestion! I'll try that.
+>
+> > 
+> > I know it's not clean, but it works for now. You can try this in your
+> > driver and see if it helps.
+> > These days I will also take your nwl-dsi driver and test it, and also
+> > add support for bridge and eLCDIF to see if I can make it work.
 > 
+> I have hacky bridge support over here already. Give me some days to
+> clean it up and it might safe you some work.
 
-Thanks!
-
-BTW, I pushed new firmwares to our firmware tree in git.kernel.org
-today.  This is the patch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git/commit/?id=b5f09bb4f816abace0227d0f4e749859364cef6b
-
-It would be great if you can try it out and let us know whether the problem is gone or not.
-
---
+Your suggestion above (plus some other fixes) worked and
+mxsfb+nwl+mixel-dphy works over here. I'll try to send a v1 of the nwl
+driver out during the week.
 Cheers,
-Luca.
+ -- Guido
 
+> Cheers,
+>  -- Guido
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
