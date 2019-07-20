@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12FBC76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858EAC76195
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAF22183E
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6277E2085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563648039;
-	bh=D8CxufH+ZLCxOcmkYjiiBFGD4DaPIRsv2t52bC0YZLU=;
+	s=default; t=1563648043;
+	bh=/cpxs0fd5YLbPBSWjoO5XOzLrRC/ESyJi/5tUp3b/1M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=sF0ojYJdLLOaAhKOdoQ1c95G7M14EOKPgEyk+poSBBjMLTIS7T9/GZUj2wTX7E8hU
-	 oc/PC6pK65HuPF1MXVy7lmal6wEbMJVuEUYX1H9HhCq3xZJD7kTCDtt0mt+0+QxoyL
-	 IfEJJAsTIRazYmOa39upBtbjNH5UlFQn4yVv0+5w=
+	b=A6FCD/cEUGoPcPs++w9cV+LiWeYj5zqShlfOpPV6NzyMEZ5UzV1RqlA3ivTS/mznK
+	 KFkANRPEFllkio6K6PIVirrcG/7X1J9pevDHI87BsxB4IPL2aLK3Iq2NDx0vsBfOt3
+	 4yexKvaROi0aiLMEt8a5PRxCsaQL+ruvxRQAnDnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfGTSki (ORCPT
+        id S1729125AbfGTSkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 14:40:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51246 "EHLO mail.kernel.org"
+        Sat, 20 Jul 2019 14:40:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbfGTSk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 14:40:29 -0400
-Subject: Re: [GIT pull] x86/urgent for 5.3-rc1
+        id S1729054AbfGTSk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 14:40:28 -0400
+Subject: Re: [GIT pull] sched/urgent for 5.3-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1563648028;
-        bh=D8CxufH+ZLCxOcmkYjiiBFGD4DaPIRsv2t52bC0YZLU=;
+        bh=/cpxs0fd5YLbPBSWjoO5XOzLrRC/ESyJi/5tUp3b/1M=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=D2HKySVPhM3FL4EqVHtfzT7nAj149BQBpKx33SsagPtq+zSdiEGeCqZIHptHTQpNI
-         ZkRiSOwpqCXUIbnTcXV4oJvY4ArhXo4xmEPbMx1YDeHjkfE8JNdCia4y/XO495MsUG
-         Z4pKJXn911eMlYKNkFWygcANbHlzYckXlGvyHW8M=
+        b=BWweMxFqgSepeTEvcP/H4n5mb63JIV3cPaSQ7HtDDafRtMQXMWgMtik157RZqGZd7
+         CsILy85l4qavG3Ho3IVc68N208XEkCpH9ebG/cdbWfKIudEsbmBh7iUHTxGLnFc8+V
+         zeO5m94egr0oCr7WM6PAmX++8Aftd/zOSver3ypQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <156362700019.18624.7822425287291380783.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <156362700019.18624.13516337882561160480.tglx@nanos.tec.linutronix.de>
 References: <156362700018.18624.18097992605540415098.tglx@nanos.tec.linutronix.de>
- <156362700019.18624.7822425287291380783.tglx@nanos.tec.linutronix.de>
+ <156362700019.18624.13516337882561160480.tglx@nanos.tec.linutronix.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <156362700019.18624.7822425287291380783.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-Message-Id: <156362700019.18624.13516337882561160480.tglx@nanos.tec.linutronix.de>
 X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- x86-urgent-for-linus
-X-PR-Tracked-Commit-Id: 6879298bd0673840cadd1fb36d7225485504ceb4
+ sched-urgent-for-linus
+X-PR-Tracked-Commit-Id: a50a3f4b6a313dc76912bd4ad3b8b4f4b479c801
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c6dd78fcb8eefa15dd861889e0f59d301cb5230c
-Message-Id: <156364802893.20023.15834093863755103206.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 70e6e1b971e46f5c1c2d72217ba62401a2edc22b
+Message-Id: <156364802809.20023.353267650379573879.pr-tracker-bot@kernel.org>
 Date:   Sat, 20 Jul 2019 18:40:28 +0000
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -58,10 +58,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The pull request you sent on Sat, 20 Jul 2019 12:50:00 -0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c6dd78fcb8eefa15dd861889e0f59d301cb5230c
+https://git.kernel.org/torvalds/c/70e6e1b971e46f5c1c2d72217ba62401a2edc22b
 
 Thank you!
 
