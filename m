@@ -2,89 +2,84 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641B1C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA3C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A9420873
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98ABE20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfGTJc4 (ORCPT
+        id S1727412AbfGTJee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 05:32:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41220 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727373AbfGTJc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 05:32:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1159EAE2D;
-        Sat, 20 Jul 2019 09:32:55 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc:     "Waiman Long" <longman@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "Will Deacon" <will.deacon@arm.com>,
-        "huang ying" <huang.ying.caritas@gmail.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an atomic_long_t
-References: <20190520205918.22251-1-longman@redhat.com>
-        <20190520205918.22251-14-longman@redhat.com>
-        <20190719184538.GA20324@hermes.olymp>
-        <2ed44afa-4528-a785-f188-2daf24343f97@redhat.com>
-        <CAHk-=wioLqXBWWQywZGfxumsY_H6dFE3R=+WJ3mAL_WYV1fm9Q@mail.gmail.com>
-        <87h87hksim.fsf@suse.com>
-Date:   Sat, 20 Jul 2019 10:32:53 +0100
-In-Reply-To: <87h87hksim.fsf@suse.com> (Luis Henriques's message of "Sat, 20
-        Jul 2019 09:41:05 +0100")
-Message-ID: <87a7d9kq4a.fsf@suse.com>
+        Sat, 20 Jul 2019 05:34:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33872 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfGTJee (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 05:34:34 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1holl5-00006T-Ss; Sat, 20 Jul 2019 11:34:28 +0200
+Date:   Sat, 20 Jul 2019 11:34:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mike Lothian <mike@fireburn.co.uk>
+cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
+In-Reply-To: <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907201133000.1782@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+ <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com> <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de> <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Henriques <lhenriques@suse.com> writes:
+On Sat, 20 Jul 2019, Mike Lothian wrote:
+> On Wed, 17 Jul 2019 at 08:57, Thomas Gleixner <tglx@linutronix.de> wrote:
+> I've done a bit more digging, I had a second machine that was building
+> Linus's tree just fine with ld.gold
+> 
+> I tried forcing ld.bfd on the problem machine and got this:
+> 
+> ld.bfd: arch/x86/boot/compressed/head_64.o: warning: relocation in
+> read-only section `.head.text'
+> ld.bfd: warning: creating a DT_TEXTREL in object
+> 
+> I had a look at the differences in the kernel configs and noticed this:
+> 
+> CONFIG_RANDOMIZE_BASE=y
+> CONFIG_X86_NEED_RELOCS=y
+> CONFIG_PHYSICAL_ALIGN=0x1000000
+> CONFIG_DYNAMIC_MEMORY_LAYOUT=y
+> CONFIG_RANDOMIZE_MEMORY=y
+> CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING=0x0
+> 
+> Unsetting CONFIG_RANDOMIZE_BASE=y gets things working for me with ld.gold again
 
-> "Linus Torvalds" <torvalds@linux-foundation.org> writes:
->
->> On Fri, Jul 19, 2019 at 12:32 PM Waiman Long <longman@redhat.com> wrote:
->>>
->>> This patch shouldn't change the behavior of the rwsem code. The code
->>> only access data within the rw_semaphore structures. I don't know why it
->>> will cause a KASAN error. I will have to reproduce it and figure out
->>> exactly which statement is doing the invalid access.
->>
->> The stack traces should show line numbers if you run them through
->> scripts/decode_stacktrace.sh.
->>
->> You need to have debug info enabled for that, though.
->>
->> Luis?
->>
->>              Linus
->
-> Yep, sure.  And I should have done this in the initial report.  It's a
-> different trace, I had to recompile the kernel.
->
-> (I'm also adding Jeff to the CC list.)
->
+Can you please provide the full config? I have the above set here and it
+builds just fine.
 
-Ah, and I also managed to reproduce this on btrfs so I guess this rules
-out a bug in the filesystem code.
+> In light of this - can we drop this patch?
 
-Cheers,
--- 
-Luis
+No. I'm not going to deal with unsupported tools.
+
+Thanks,
+
+	tglx
