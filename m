@@ -2,188 +2,243 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572D3C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB02DC76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2768B20873
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D4921872
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYCxoSzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfGTF7o (ORCPT
+        id S1726240AbfGTGP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 01:59:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726094AbfGTF7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 01:59:43 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 68C18AD67F3811885278;
-        Sat, 20 Jul 2019 13:59:40 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 20 Jul 2019
- 13:59:33 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <richard@nod.at>, <s.hauer@pengutronix.de>, <dedekind1@gmail.com>,
-        <yi.zhang@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH] ubifs: ubifs_tnc_start_commit: Fix OOB in layout_in_gaps
-Date:   Sat, 20 Jul 2019 14:05:20 +0800
-Message-ID: <1563602720-113903-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+        Sat, 20 Jul 2019 02:15:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45660 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfGTGP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 02:15:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r1so15068744pfq.12;
+        Fri, 19 Jul 2019 23:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=+RrIwEbaXX9G64W4Jxx7zZ9OtbwTvJNBWcorDjKSWOU=;
+        b=XYCxoSzSIXPdboZhSSc9xmHBX2Hy0DUMYQ5+fu0NT8OdGQ2ZqFQ/Yo3G5TeK56sWfC
+         IMNMyigWXWVsfQFssb0GY2k/Ayo/ZV8rB+yrk+XILxCVAp+PI191R17lztzhXrv3NodF
+         rnC7Xr01ZjcvRr9Iwn8lCjksIF8cyAkd8f09+LK5QOlWYrCcERy/ZrjzDvJEdJiLUPNh
+         /90DQ7GlXfWKQCKALRsbotf2JtwRbQo1t/UvdadsAX+mHUTo5kav2SGv8LKKMdJSnl7r
+         xY3XO4SsvtFcpXi1juU3eWahsdK+hBF198sgdcaptRKuodD75eRsLRHLixEOtxnBobAB
+         M0hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=+RrIwEbaXX9G64W4Jxx7zZ9OtbwTvJNBWcorDjKSWOU=;
+        b=NWY9ffMq7F9/gUYuUutqS4NjyI0VOdiosC2kJBvflKapuELiIyqAxpoGB1Ngv8sH6B
+         GW9czVwhUZFUKQ3qwUVO47hSIrkUBKY4xaaOAUTRKe4E6Rcsw1XUBWDPD0x1dM+AesJP
+         bTRSwd2CGF8USHL2eX5aB1DkDlA2BshehVEwKPJHQuxwCbT9KSOxe8rCin5pW600gZ0t
+         1nAIyqW2pEa1RMiGsepfZWiemXWMv7kSXIYJZzfM4gBjZ9CjyiMQkSsQsIH69zx+3ql6
+         otJrD9kg4XG/dlUdCiSMsH1U3NnhyYutTBuZeC678dB8foarEKgELk7kZggv38bqcVQY
+         m4eg==
+X-Gm-Message-State: APjAAAXb3kIlrOhvSCWt1scYghS19M4jcWB+APQg8RtR3YG+nA1Twijj
+        /MDGsKg4BFYdql177GlLmUw=
+X-Google-Smtp-Source: APXvYqxs16AdKNXW4x8WREXvYXcYknN5210df7xau4yzdwvmT6HmhxieGIKtCzm38lziyjcdn3dcqA==
+X-Received: by 2002:a63:1950:: with SMTP id 16mr58153174pgz.312.1563603354704;
+        Fri, 19 Jul 2019 23:15:54 -0700 (PDT)
+Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([61.1.211.74])
+        by smtp.gmail.com with ESMTPSA id h12sm37014410pje.12.2019.07.19.23.15.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Jul 2019 23:15:53 -0700 (PDT)
+From:   Vandana BN <bnvandana@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tskd08@gmail.com
+Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Vandana BN <bnvandana@gmail.com>
+Subject: [PATCH v2] media:dvb-frontends:Remove dvb_pll_devcount and id module parameters.
+Date:   Sat, 20 Jul 2019 11:43:02 +0530
+Message-Id: <20190720061302.24047-1-bnvandana@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190717141204.19433-1-bnvandana@gmail.com>
+References: <20190717141204.19433-1-bnvandana@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running stress-test test_2 in mtd-utils on ubi device, sometimes we can
-get following oops message:
+Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
+accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
+that is more than size of 'id' which is DVB_PLL_MAX(64).
 
-  BUG: unable to handle page fault for address: ffffffff00000140
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 280a067 P4D 280a067 PUD 0
-  Oops: 0000 [#1] SMP
-  CPU: 0 PID: 60 Comm: kworker/u16:1 Kdump: loaded Not tainted 5.2.0 #13
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
-  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  Workqueue: writeback wb_workfn (flush-ubifs_0_0)
-  RIP: 0010:rb_next_postorder+0x2e/0xb0
-  Code: 80 db 03 01 48 85 ff 0f 84 97 00 00 00 48 8b 17 48 83 05 bc 80 db
-  03 01 48 83 e2 fc 0f 84 82 00 00 00 48 83 05 b2 80 db 03 01 <48> 3b 7a
-  10 48 89 d0 74 02 f3 c3 48 8b 52 08 48 83 05 a3 80 db 03
-  RSP: 0018:ffffc90000887758 EFLAGS: 00010202
-  RAX: ffff888129ae4700 RBX: ffff888138b08400 RCX: 0000000080800001
-  RDX: ffffffff00000130 RSI: 0000000080800024 RDI: ffff888138b08400
-  RBP: ffff888138b08400 R08: ffffea0004a6b920 R09: 0000000000000000
-  R10: ffffc90000887740 R11: 0000000000000001 R12: ffff888128d48000
-  R13: 0000000000000800 R14: 000000000000011e R15: 00000000000007c8
-  FS:  0000000000000000(0000) GS:ffff88813ba00000(0000)
-  knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffffff00000140 CR3: 000000013789d000 CR4: 00000000000006f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-    destroy_old_idx+0x5d/0xa0 [ubifs]
-    ubifs_tnc_start_commit+0x4fe/0x1380 [ubifs]
-    do_commit+0x3eb/0x830 [ubifs]
-    ubifs_run_commit+0xdc/0x1c0 [ubifs]
+Fix would be to check if DVB_PLL_MAX devices are attached and if so return
+NULL from dvb_pll_attach(). But this will put a limit on the number of
+devices that can be attached.
+Also dvb_pll_devcount and "id" module parameter are used for debugging
+purpose to override/force PLL type.
+So this patch removes these module parameters.
 
-Above Oops are due to the slab-out-of-bounds happened in do-while of
-function layout_in_gaps indirectly called by ubifs_tnc_start_commit. In
-function layout_in_gaps, there is a do-while loop placing index nodes
-into the gaps created by obsolete index nodes in non-empty index LEBs
-until rest index nodes can totally be placed into pre-allocated empty
-LEBs. @c->gap_lebs points to a memory area(integer array) which records
-LEB numbers used by 'in-the-gaps' method. Whenever a fitable index LEB
-is found, corresponding lnum will be incrementally written into the
-memory area pointed by @c->gap_lebs. The size
-((@c->lst.idx_lebs + 1) * sizeof(int)) of memory area is allocated before
-do-while loop and can not be changed in the loop. But @c->lst.idx_lebs
-could be increased by function ubifs_change_lp (called by
-layout_leb_in_gaps->ubifs_find_dirty_idx_leb->get_idx_gc_leb) during the
-loop. So, sometimes oob happens when number of cycles in do-while loop
-exceeds the original value of @c->lst.idx_lebs. See detail in
-https://bugzilla.kernel.org/show_bug.cgi?id=204229.
-This patch fixes oob in layout_in_gaps.
+Reported-by: syz...@syzkaller.appspotmail.com
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+software demuxer
+dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
+usb 1-1: media controller created
+dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+tc90522 0-0018: Toshiba TC90522 attached.
+usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
+module)...
+dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
+module' registered.
+==================================================================
+BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
+drivers/media/dvb-frontends/dvb-pll.c:798
+Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
+  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
+  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
+  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
+  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
+  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
+  dvb_usbv2_adapter_frontend_init
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
+  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+[inline]
+  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+  dvb_usbv2_probe.cold+0x24dc/0x255d
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the variable:
+  id+0x100/0x120
+
+Memory state around the buggy address:
+  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
+  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+                                                        ^
+  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+==================================================================
+
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
 ---
- fs/ubifs/tnc_commit.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ drivers/media/dvb-frontends/dvb-pll.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/fs/ubifs/tnc_commit.c b/fs/ubifs/tnc_commit.c
-index a384a0f..234be1c 100644
---- a/fs/ubifs/tnc_commit.c
-+++ b/fs/ubifs/tnc_commit.c
-@@ -212,7 +212,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
- /**
-  * layout_leb_in_gaps - layout index nodes using in-the-gaps method.
-  * @c: UBIFS file-system description object
-- * @p: return LEB number here
-+ * @p: return LEB number in @c->gap_lebs[p]
-  *
-  * This function lays out new index nodes for dirty znodes using in-the-gaps
-  * method of TNC commit.
-@@ -221,7 +221,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
-  * This function returns the number of index nodes written into the gaps, or a
-  * negative error code on failure.
-  */
--static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
-+static int layout_leb_in_gaps(struct ubifs_info *c, int p)
- {
- 	struct ubifs_scan_leb *sleb;
- 	struct ubifs_scan_node *snod;
-@@ -236,7 +236,7 @@ static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
- 		 * filled, however we do not check there at present.
- 		 */
- 		return lnum; /* Error code */
--	*p = lnum;
-+	c->gap_lebs[p] = lnum;
- 	dbg_gc("LEB %d", lnum);
- 	/*
- 	 * Scan the index LEB.  We use the generic scan for this even though
-@@ -355,7 +355,7 @@ static int get_leb_cnt(struct ubifs_info *c, int cnt)
-  */
- static int layout_in_gaps(struct ubifs_info *c, int cnt)
- {
--	int err, leb_needed_cnt, written, *p;
-+	int err, leb_needed_cnt, written, p = 0, old_idx_lebs, *gap_lebs;
- 
- 	dbg_gc("%d znodes to write", cnt);
- 
-@@ -364,9 +364,9 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
- 	if (!c->gap_lebs)
- 		return -ENOMEM;
- 
--	p = c->gap_lebs;
-+	old_idx_lebs = c->lst.idx_lebs;
- 	do {
--		ubifs_assert(c, p < c->gap_lebs + c->lst.idx_lebs);
-+		ubifs_assert(c, p < c->lst.idx_lebs);
- 		written = layout_leb_in_gaps(c, p);
- 		if (written < 0) {
- 			err = written;
-@@ -392,9 +392,29 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
- 		leb_needed_cnt = get_leb_cnt(c, cnt);
- 		dbg_gc("%d znodes remaining, need %d LEBs, have %d", cnt,
- 		       leb_needed_cnt, c->ileb_cnt);
-+		/*
-+		 * Dynamically change the size of @c->gap_lebs to prevent
-+		 * oob, because @c->lst.idx_lebs could be increased by
-+		 * function @get_idx_gc_leb (called by layout_leb_in_gaps->
-+		 * ubifs_find_dirty_idx_leb) during loop. Only enlarge
-+		 * @c->gap_lebs when needed.
-+		 *
-+		 */
-+		if (leb_needed_cnt > c->ileb_cnt && p >= old_idx_lebs &&
-+		    old_idx_lebs < c->lst.idx_lebs) {
-+			old_idx_lebs = c->lst.idx_lebs;
-+			gap_lebs = krealloc(c->gap_lebs, sizeof(int) *
-+					       (old_idx_lebs + 1), GFP_NOFS);
-+			if (!gap_lebs) {
-+				kfree(c->gap_lebs);
-+				c->gap_lebs = NULL;
-+				return -ENOMEM;
-+			}
-+			c->gap_lebs = gap_lebs;
-+		}
- 	} while (leb_needed_cnt > c->ileb_cnt);
- 
--	*p = -1;
-+	c->gap_lebs[p] = -1;
- 	return 0;
- }
- 
--- 
-2.7.4
+diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+index ba0c49107bd2..c3a04751e9cf 100644
+--- a/drivers/media/dvb-frontends/dvb-pll.c
++++ b/drivers/media/dvb-frontends/dvb-pll.c
+@@ -33,19 +33,11 @@ struct dvb_pll_priv {
+ 	u32 bandwidth;
+ };
+
+-#define DVB_PLL_MAX 64
+-
+-static unsigned int dvb_pll_devcount;
+
+ static int debug;
+ module_param(debug, int, 0644);
+ MODULE_PARM_DESC(debug, "enable verbose debug messages");
+
+-static unsigned int id[DVB_PLL_MAX] =
+-	{ [ 0 ... (DVB_PLL_MAX-1) ] = DVB_PLL_UNDEFINED };
+-module_param_array(id, int, NULL, 0644);
+-MODULE_PARM_DESC(id, "force pll id to use (DEBUG ONLY)");
+-
+ /* ----------------------------------------------------------- */
+
+ struct dvb_pll_desc {
+@@ -795,10 +787,6 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	b1[0] = 0;
+ 	msg.buf = b1;
+
+-	if ((id[dvb_pll_devcount] > DVB_PLL_UNDEFINED) &&
+-	    (id[dvb_pll_devcount] < ARRAY_SIZE(pll_list)))
+-		pll_desc_id = id[dvb_pll_devcount];
+-
+ 	BUG_ON(pll_desc_id < 1 || pll_desc_id >= ARRAY_SIZE(pll_list));
+
+ 	desc = pll_list[pll_desc_id];
+@@ -825,7 +813,7 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+ 	priv->pll_i2c_address = pll_addr;
+ 	priv->i2c = i2c;
+ 	priv->pll_desc = desc;
+-	priv->nr = dvb_pll_devcount++;
++	priv->nr = pll_desc_id;
+
+ 	memcpy(&fe->ops.tuner_ops, &dvb_pll_tuner_ops,
+ 	       sizeof(struct dvb_tuner_ops));
+@@ -846,13 +834,12 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
+
+ 	fe->tuner_priv = priv;
+
+-	if ((debug) || (id[priv->nr] == pll_desc_id)) {
++	if (debug) {
+ 		dprintk("dvb-pll[%d]", priv->nr);
+ 		if (i2c != NULL)
+ 			pr_cont(" %d-%04x", i2c_adapter_id(i2c), pll_addr);
+ 		pr_cont(": id# %d (%s) attached, %s\n", pll_desc_id, desc->name,
+-		       id[priv->nr] == pll_desc_id ?
+-				"insmod option" : "autodetected");
++				"insmod option");
+ 	}
+
+ 	kfree(b1);
+--
+2.17.1
 
