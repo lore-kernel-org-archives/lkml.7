@@ -2,30 +2,31 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF348C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41B1C76196
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C398D2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971122084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfGTJqf (ORCPT
+        id S1727632AbfGTJsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 05:46:35 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42243 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbfGTJqf (ORCPT
+        Sat, 20 Jul 2019 05:48:18 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38997 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbfGTJsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 05:46:35 -0400
+        Sat, 20 Jul 2019 05:48:18 -0400
 X-Originating-IP: 91.163.65.175
 Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 743D6FF803;
-        Sat, 20 Jul 2019 09:46:32 +0000 (UTC)
-Date:   Sat, 20 Jul 2019 11:46:32 +0200
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 27AF520006;
+        Sat, 20 Jul 2019 09:48:15 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 11:48:14 +0200
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Icenowy Zheng <icenowy@aosc.io>
 Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
@@ -33,15 +34,16 @@ Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 5/8] clk: sunxi-ng: v3s: add Allwinner V3 support
-Message-ID: <20190720094632.6plwtvt73xlnucw7@flea>
+Subject: Re: [PATCH v4 6/8] ARM: sunxi: dts: s3/s3l/v3: add DTSI files for
+ S3/S3L/V3 SoCs
+Message-ID: <20190720094814.s6qik6ja2ympwpmp@flea>
 References: <20190713034634.44585-1-icenowy@aosc.io>
- <20190713034634.44585-6-icenowy@aosc.io>
+ <20190713034634.44585-7-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qzyk6exegy3asgml"
+        protocol="application/pgp-signature"; boundary="tszo4ocuvok5y3y2"
 Content-Disposition: inline
-In-Reply-To: <20190713034634.44585-6-icenowy@aosc.io>
+In-Reply-To: <20190713034634.44585-7-icenowy@aosc.io>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,19 +51,78 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---qzyk6exegy3asgml
+--tszo4ocuvok5y3y2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Jul 13, 2019 at 11:46:31AM +0800, Icenowy Zheng wrote:
-> +		[CLK_MMC1]		= &mmc1_clk.common.hw,
-> +		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
-> +		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
-> +		[CLK_MMC2]		= &mmc1_clk.common.hw,
-> +		[CLK_MMC2_SAMPLE]	= &mmc1_sample_clk.common.hw,
-> +		[CLK_MMC2_OUTPUT]	= &mmc1_output_clk.common.hw,
+On Sat, Jul 13, 2019 at 11:46:32AM +0800, Icenowy Zheng wrote:
+> The Allwinner S3/S3L/V3 SoCs all share the same die with the V3s SoC,
+> but with more GPIO wired out of the package.
+>
+> Add DTSI files for these SoCs. The DTSI file for V3 just replaces the
+> pinctrl compatible string, and the S3/S3L DTSI files just include the V3
+> DTSI file.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> No changes since v2.
+>
+>  arch/arm/boot/dts/sun8i-s3.dtsi  |  6 ++++++
+>  arch/arm/boot/dts/sun8i-s3l.dtsi |  6 ++++++
+>  arch/arm/boot/dts/sun8i-v3.dtsi  | 14 ++++++++++++++
+>  3 files changed, 26 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
+>  create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
+>
+> diff --git a/arch/arm/boot/dts/sun8i-s3.dtsi b/arch/arm/boot/dts/sun8i-s3.dtsi
+> new file mode 100644
+> index 000000000000..0f41a25ecb30
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3.dtsi
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +#include "sun8i-v3.dtsi"
+> diff --git a/arch/arm/boot/dts/sun8i-s3l.dtsi b/arch/arm/boot/dts/sun8i-s3l.dtsi
+> new file mode 100644
+> index 000000000000..0f41a25ecb30
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3l.dtsi
+> @@ -0,0 +1,6 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +#include "sun8i-v3.dtsi"
+> diff --git a/arch/arm/boot/dts/sun8i-v3.dtsi b/arch/arm/boot/dts/sun8i-v3.dtsi
+> new file mode 100644
+> index 000000000000..6ae8645ade50
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-v3.dtsi
+> @@ -0,0 +1,14 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +#include "sun8i-v3s.dtsi"
+> +
+> +&ccu {
+> +	compatible = "allwinner,sun8i-v3-ccu";
+> +};
+> +
+> +&pio {
+> +	compatible = "allwinner,sun8i-v3-pinctrl";
+> +};
 
-And there's the same mistake here.
+Is there any difference between the S3, S3L and V3?
+
+If not, then we don't need all those DTSI, just add the v3
 
 Maxime
 
@@ -70,15 +131,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---qzyk6exegy3asgml
+--tszo4ocuvok5y3y2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLi+AAKCRDj7w1vZxhR
-xQjRAP9ST2/2c5sjUdw8/ITU0eEvk6+5Bu5SYQ2ltWVX6cOWFgEA9vegVFVC4LnG
-ZendV+/AhkM+QvA9ziMPeStbZE5x+A4=
-=nSSY
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLjXgAKCRDj7w1vZxhR
+xTY0AQCfKKwr5BMF1G0iTCcBBIUMTNJiFvicExk21XH3zaUU7QEA9un9GhY0LMVJ
+LLxdD1eA6DtZDwv0b2+187+cUvotawI=
+=7um4
 -----END PGP SIGNATURE-----
 
---qzyk6exegy3asgml--
+--tszo4ocuvok5y3y2--
