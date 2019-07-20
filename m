@@ -2,107 +2,117 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EA0C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 03:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78C3C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 03:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E983021872
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 03:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936922082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 03:41:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YBL9SX8n"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WXN6CNeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390527AbfGTD1C (ORCPT
+        id S1729234AbfGTDln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 23:27:02 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:51747 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728767AbfGTD1B (ORCPT
+        Fri, 19 Jul 2019 23:41:43 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34606 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbfGTDln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 23:27:01 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x6K3QYjE010762;
-        Sat, 20 Jul 2019 12:26:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x6K3QYjE010762
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563593195;
-        bh=/cy4zkl9MBndlJPf309omN2x5BYB6od3xL14Bqq951k=;
-        h=From:Date:Subject:To:Cc:From;
-        b=YBL9SX8nGcdiSDqzzqhaCwQW4V/n+XvKYlm8sCuY3fUDN7SPLhzmnRVzsx+SE2Jvf
-         eNaza/lW5/OwBI17PmoK/W9nWBdI5rD0xRnCiA80SmEY5HHnBg2i6sttwv9d8Nz4ZM
-         LSLSw/f4andPN3Nu8ltIaR4rVSOoLCVtCoMFlQF2hNPMVk+TnA4CgnKNOoIUJLcwtl
-         RbfI2kFtP1wwHK/N6MC31iIO3u3tHCSCeLd0hsPWAiU44o6YLn2dqmJ+oZp52Rg0YM
-         ZWpFt/AQCsZ3RU0a0uNa+oq0v6pzg9kUYaJlO4jcDeZse1mgR6GLePk5DV6rzd0QwO
-         Xw84/ASDn7gzQ==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id 8so13297460uaz.11;
-        Fri, 19 Jul 2019 20:26:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAVWV+RQ+XS/6XeqH4EMrQmUh/uipTf8oLr741AgajDR1kvw5ktT
-        05QtnOr6Al18wqF/j71peGq6OcnRQdTAK9tjvyM=
-X-Google-Smtp-Source: APXvYqxMWol/Hq29+8CUkgjOAH9mDC4bKgEruVV4pjWDHDa2y3dUX8Vbo6R5vHcaU54H7hy2Je1Ilc698k/gWzOxwd0=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr35301733uag.40.1563593193773;
- Fri, 19 Jul 2019 20:26:33 -0700 (PDT)
+        Fri, 19 Jul 2019 23:41:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so9043090pgc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 20:41:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=rt8ZjqZYhwETF4H/AUDaR/BRfMKu6KoKEf3DEfigTjw=;
+        b=WXN6CNeAumV5siU+FiCqKs9RTZyz/iq0ZqZbhfYdPTremzbXLguWeMwNJJ2dQrFC35
+         Hd07gODeRW9XY/pzRaxSj+TaKHdGoLE2hn+/vlZ6rJ2okpp9qjDCdMX416bOE+/S8fhn
+         4cC9GkkJgBAbdPxxyxhiJ6h1WwewJs5Rn12D8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=rt8ZjqZYhwETF4H/AUDaR/BRfMKu6KoKEf3DEfigTjw=;
+        b=mJhWiGz2h9PYcP97wL8vJukJMqbskwVTVQalzQPvO0RVo7xhz9GFVBWoTr56KLUbwM
+         ooPeR3JpkIpsM5feSC3VQ88+63QO8F2I+0yWTpmJ1CnVGjXeaL/QXhnTSeLOWiHmAl1I
+         a9PSAjG57nnJ3t9SUty8wAaJYeq74NVm75kYUbpjUDL2sjD3GXklyBnD2qrg1pNus6IB
+         KhsDnVeNF2svemrAlcDjRbsic6/UZ9e5ZQljYZ7vJ5Tg1LtyKcK+bhO/4cBNuD+eYdac
+         iXtCd4AgeFK+nZgvYR+VVia3aDhDErfD+1Pxvd58ZLsbJKLMoChJPcLa44Rql9i3NUMZ
+         xSSg==
+X-Gm-Message-State: APjAAAWH/nJMuAjwS1jx8x7yTwUYvnSd1bdf8tIGPRhzyNe/32GERXmy
+        jHinzWJNzgV7JKJwDvLZaYtkQg==
+X-Google-Smtp-Source: APXvYqyzeNksJYd4KoZvasturz4jFM5RNvls/ibesYWVHziTJKh1bq/WGSkBQ810dE4HWKKd8SPFcQ==
+X-Received: by 2002:a17:90b:d8b:: with SMTP id bg11mr61859798pjb.30.1563594102329;
+        Fri, 19 Jul 2019 20:41:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s66sm33681296pfs.8.2019.07.19.20.41.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Jul 2019 20:41:41 -0700 (PDT)
+Date:   Fri, 19 Jul 2019 20:41:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        tobin@kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH] libata: zpodd: Fix small read overflow in
+ zpodd_get_mech_type()
+Message-ID: <201907192038.AEF9B52@keescook>
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 20 Jul 2019 12:25:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
-Message-ID: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
-Subject: [Question] orphan platform data header
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+eject_tray()"), this fixes a cdb[] buffer length, this time in
+zpodd_get_mech_type():
 
-I see several platform-data headers
-that are not used in upstream.
+We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+
+The KASAN report was:
+
+BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+...
+The buggy address belongs to the variable:
+ cdb.48319+0x0/0x40
+
+Reported-by: Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Fixes: afe759511808c ("libata: identify and init ZPODD devices")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/ata/libata-zpodd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 173e6f2dd9af..eefda51f97d3 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ 	unsigned int ret;
+ 	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+-	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
++	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-- 
+2.17.1
 
 
-For instance, please look at this driver:
-drivers/leds/leds-netxbig.c
-
-If I understood it correctly, this driver
-supports both device tree and legacy board-file.
-
-
-I grepped 'netxbig_led_platform_data', but
-I only found the driver and platform_data header.
-No board-file in upstream.
-
-masahiro@grover:~/ref/linux$ git grep netxbig_led_platform_data
-drivers/leds/leds-netxbig.c:                          struct
-netxbig_led_platform_data *pdata,
-drivers/leds/leds-netxbig.c:                                 struct
-netxbig_led_platform_data *pdata)
-drivers/leds/leds-netxbig.c:                      struct
-netxbig_led_platform_data *pdata)
-drivers/leds/leds-netxbig.c:    struct netxbig_led_platform_data
-*pdata = dev_get_platdata(&pdev->dev);
-include/linux/platform_data/leds-kirkwood-netxbig.h:struct
-netxbig_led_platform_data {
-
-
-
-So, what shall we do?
-
-Drop the board-file support? Or, keep it
-in case somebody is still using their board-files
-in downstream?
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Kees Cook
