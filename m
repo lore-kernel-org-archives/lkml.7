@@ -2,104 +2,84 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A542C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D381C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAD421872
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B317F2082A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 06:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UOqEDx5B"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KqK59Wdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfGTGRV (ORCPT
+        id S1726484AbfGTGSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 02:17:21 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:54050 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbfGTGRR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 02:17:17 -0400
-Received: by mail-pf1-f202.google.com with SMTP id 191so19978966pfy.20
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2019 23:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=XHZhcOCJhaOJlDHmwmoOr4DNUGpZjh/DgPbCgvVVpt0=;
-        b=UOqEDx5Bi4XIR97mxVHJYqDas/gsviEa+U5OwWS5eTKp23OgwAL8BATExEQrvB5K3e
-         Ac5paop5IS6XUhdjTZWHgpDoDoOWqQi2476Ysg+MGrfgVAzjXMld8YKcJJHViAa1SGdX
-         hUkYrdANakYTdX/zk5IO2S3mEAx8rXP3gNNE7HZjzxm4i2cCs2y3EQN9EWVdMCNnEBFz
-         TpU/TMt9MQC+Ptilkiks31OWbz2LLdF0QU4/jbIyoYugEgz7isdRkNSSt9l9uvzBHksG
-         rTwMTpV8jj00BNiu3t7MVWhQkTM61rPqYZoKZ3V1kwSsCQRysU/IpzFXBOUyyoWjFjvT
-         HH2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=XHZhcOCJhaOJlDHmwmoOr4DNUGpZjh/DgPbCgvVVpt0=;
-        b=kYZHmnCQ/W7euI+PQBrMT1/DUBNUVoixYpwX6tIK55qLTpOA/7J+LX2GB/jNgm7Ap7
-         uwmfKWOE28NJKjZqVrwOaSlwaxUQiqEoSZtLLDxHiKYl+KH/ECt3SV+xDDB2QMl9ETtI
-         DCt06KvFfYQTwkzWO3wPkQLMLWgnfAme03XNoZHLENnfjn0wpKq+eF07KM0c/HyH0PR9
-         JwlaiujGMXX7HMoOjYE4ptfhAnpf4FFegwLPAPOwNHATeZL7eqoNjp5u6VRFuwuNvp7F
-         JImY1Cc5iUyFsRBXp1tG0Z8RqdPj1UcxWC7aNz4TcUdINMbJaa67SePDclSYHvqERM9G
-         BAYQ==
-X-Gm-Message-State: APjAAAWoIapQBfIzcAkMDKq/s0O4mPdWtDXk/dSEQNZVU0LzId3sfPzh
-        Dy4DIjLCxK4LXcwuz1tsRJnqpXQSn6MjTjw=
-X-Google-Smtp-Source: APXvYqzAzcE5vBjP6RCbXmbEeN0ZSnHHEiMT4lXXkWB1Ez6n0o/JsYvE1WUbpT4tc6ua9le+jI6/+snaGAzggFc=
-X-Received: by 2002:a63:1950:: with SMTP id 16mr58157917pgz.312.1563603436732;
- Fri, 19 Jul 2019 23:17:16 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 23:16:46 -0700
-In-Reply-To: <20190720061647.234852-1-saravanak@google.com>
-Message-Id: <20190720061647.234852-8-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190720061647.234852-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH v6 7/7] of/platform: Don't create device links for default busses
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        David Collins <collinsd@codeaurora.org>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 20 Jul 2019 02:18:09 -0400
+Received: from m12-16.163.com ([220.181.12.16]:46455 "EHLO m12-16.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfGTGSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 02:18:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=qfrh/qNDQzOKN+bqco
+        zbOiHMi58D2XB+uMUBNViNjCA=; b=KqK59WdhgG+CG1hqHP2HeSD2TloalNirEa
+        tBn1dSGykJqUpZ7EfmhAQQ4x6C/4TY+0xvRe8Msl9cnW0oee/fnckswNOxQ8paRF
+        5YbGPm0k1AeTgOWpDFOEyizCy3WrXn6f7wnbV1hhkGNOd2E8r00BwgQfA/IAcCZy
+        co8ICpB6w=
+Received: from localhost.localdomain (unknown [115.238.52.186])
+        by smtp12 (Coremail) with SMTP id EMCowABnHPkKsjJd4ubyBw--.57414S3;
+        Sat, 20 Jul 2019 14:17:48 +0800 (CST)
+From:   lsh <linsheng_111@163.com>
+To:     tglx@linutronix.de
+Cc:     sboyd@kernel.org, john.stultz@linaro.org,
+        linux-kernel@vger.kernel.org, lsh <410860423@qq.com>
+Subject: [alsa-devel][PATCH] Signed-off-by: lsh <410860423@qq.com>
+Date:   Sat, 20 Jul 2019 14:17:45 +0800
+Message-Id: <94b6bb5f3ba41fe87bf5207e08f75e8dfe17ef18.1563599043.git.410860423@qq.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: EMCowABnHPkKsjJd4ubyBw--.57414S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKF15KF4DAw1ktFyrWr4rKrg_yoW3GrgEg3
+        47XF4v9F4DAr92kr4UAws5ZFyktrWUtF18Z347KFZFyr1UtFyrJ3s7AFs8XrnxZ3y8WrWv
+        yFs5JrZ0yr1agjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUn4mh5UUUUU==
+X-Originating-IP: [115.238.52.186]
+X-CM-SenderInfo: polq2x5hqjsiirr6il2tof0z/1tbiORv3OlXlnaUacwAAsO
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Default busses also have devices created for them. But there's no point
-in creating device links for them. It's especially wasteful as it'll
-cause the traversal of the entire device tree and also spend a lot of
-time checking and figuring out that creating those links isn't allowed.
-So check for default busses and skip trying to create device links for
-them.
+From: lsh <410860423@qq.com>
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Modification of leap seconds from 58 59 59 00 to 58 59 00 00
 ---
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index c1a116f7a087..8bf975ee2ff7 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -676,6 +676,8 @@ static int of_link_to_suppliers(struct device *dev)
- 		return 0;
- 	if (unlikely(!dev->of_node))
- 		return 0;
-+	if (of_match_node(of_default_bus_match_table, dev->of_node))
-+		return 0;
- 
- 	return __of_link_to_suppliers(dev, dev->of_node);
- }
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 65eb796..7edae41 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -425,7 +425,6 @@ int second_overflow(time64_t secs)
+ 			ntp_next_leap_sec = TIME64_MAX;
+ 			time_state = TIME_OK;
+ 		} else if (secs == ntp_next_leap_sec) {
+-			leap = -1;
+ 			time_state = TIME_OOP;
+ 			printk(KERN_NOTICE
+ 				"Clock: inserting leap second 23:59:60 UTC\n");
+@@ -444,6 +443,7 @@ int second_overflow(time64_t secs)
+ 		}
+ 		break;
+ 	case TIME_OOP:
++		leap = -1;
+ 		ntp_next_leap_sec = TIME64_MAX;
+ 		time_state = TIME_WAIT;
+ 		break;
 -- 
-2.22.0.657.g960e92d24f-goog
+2.7.4
+
 
