@@ -2,47 +2,46 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82ABC76195
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2506BC76195
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0E217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B882183E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfGTJoE (ORCPT
+        id S1727547AbfGTJoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 05:44:04 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47809 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfGTJoE (ORCPT
+        Sat, 20 Jul 2019 05:44:54 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48111 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfGTJox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 05:44:04 -0400
+        Sat, 20 Jul 2019 05:44:53 -0400
 Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E1E72200002;
-        Sat, 20 Jul 2019 09:44:01 +0000 (UTC)
-Date:   Sat, 20 Jul 2019 11:44:01 +0200
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1A045240004;
+        Sat, 20 Jul 2019 09:44:49 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 11:44:49 +0200
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Icenowy Zheng <icenowy@aosc.io>
 Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/8] dt-bindings: clk: sunxi-ccu: add compatible
- string for V3 CCU
-Message-ID: <20190720094401.rdx5breuvjb4gvp6@flea>
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 4/8] clk: sunxi-ng: v3s: add missing clock slices for
+ MMC2 module clocks
+Message-ID: <20190720094449.dh53rbxz3mc74qls@flea>
 References: <20190713034634.44585-1-icenowy@aosc.io>
- <20190713034634.44585-4-icenowy@aosc.io>
+ <20190713034634.44585-5-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="osywhxx3mepoorol"
+        protocol="application/pgp-signature"; boundary="bygt3ojtr3w3kmjg"
 Content-Disposition: inline
-In-Reply-To: <20190713034634.44585-4-icenowy@aosc.io>
+In-Reply-To: <20190713034634.44585-5-icenowy@aosc.io>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -50,22 +49,38 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---osywhxx3mepoorol
+--bygt3ojtr3w3kmjg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Jul 13, 2019 at 11:46:29AM +0800, Icenowy Zheng wrote:
-> Despite Allwinner V3 and V3s shares the same die, one peripheral (I2S)
-> is only available on V3, and thus the clocks is not declared for V3s
-> CCU.
+On Sat, Jul 13, 2019 at 11:46:30AM +0800, Icenowy Zheng wrote:
+> The MMC2 clock slices are currently not defined in V3s CCU driver, which
+> makes MMC2 not working.
 >
-> Add a V3 CCU compatible string to the binding to prepare for a CCU
-> driver that provide I2S clock on V3, but not on V3s.
+> Fix this issue.
 >
+> Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> New patch in v4.
+>
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> index 4eb68243e310..9c88015d4419 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> @@ -513,6 +513,9 @@ static struct clk_hw_onecell_data sun8i_v3s_hw_clks = {
+>  		[CLK_MMC1]		= &mmc1_clk.common.hw,
+>  		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
+>  		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
+> +		[CLK_MMC2]		= &mmc1_clk.common.hw,
+> +		[CLK_MMC2_SAMPLE]	= &mmc1_sample_clk.common.hw,
+> +		[CLK_MMC2_OUTPUT]	= &mmc1_output_clk.common.hw,
 
-Queued for 5.4, thanks
+You're using the same structures than mmc1, I guess it's a copy and
+paste mistake?
 
 Maxime
 
@@ -74,15 +89,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---osywhxx3mepoorol
+--bygt3ojtr3w3kmjg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLiYAAKCRDj7w1vZxhR
-xT8iAP9PgNA6a4FclZagDfDG0HI7h+CTux3t0n9LdDM5AFTVJgEA5Y+LmaQTX59Y
-bLQb+rAdZTWg+rFyUkgxaqPisf1yWww=
-=RXY8
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLikQAKCRDj7w1vZxhR
+xXstAP4hG1qWU5aKOgq2MiLh0TPYedRrhD3NFX8NrLDp9uXWBAEAzaBusAgbeXvL
+Geinke2sdGlDUaGa2D8WiG7b9POqBA4=
+=hmf1
 -----END PGP SIGNATURE-----
 
---osywhxx3mepoorol--
+--bygt3ojtr3w3kmjg--
