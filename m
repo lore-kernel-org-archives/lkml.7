@@ -2,249 +2,181 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF95FC76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2CC76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99672085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391642085A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 14:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="nitR6D2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfGTOW5 (ORCPT
+        id S1728642AbfGTOXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 10:22:57 -0400
-Received: from er-systems.de ([148.251.68.21]:41552 "EHLO er-systems.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfGTOW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 10:22:56 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        by er-systems.de (Postfix) with ESMTP id C0FD8D6005E;
-        Sat, 20 Jul 2019 16:22:51 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by er-systems.de (Postfix) with ESMTPS id 927D6D6005A;
-        Sat, 20 Jul 2019 16:22:51 +0200 (CEST)
-Date:   Sat, 20 Jul 2019 16:22:50 +0200 (CEST)
-From:   Thomas Voegtle <tv@lio96.de>
-X-X-Sender: thomas@er-systems.de
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-cc:     linux-kernel@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: network problems with r8169
-In-Reply-To: <9cab7996-d801-0ae5-9e82-6d24eeb8d7c7@gmail.com>
-Message-ID: <alpine.LSU.2.21.1907201620070.2099@er-systems.de>
-References: <alpine.LSU.2.21.1907182032370.7080@er-systems.de> <2eeedff5-4911-db6e-6bfd-99b591daa7ef@gmail.com> <alpine.LSU.2.21.1907192310140.11569@er-systems.de> <9cab7996-d801-0ae5-9e82-6d24eeb8d7c7@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Sat, 20 Jul 2019 10:23:43 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34899 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbfGTOXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 10:23:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so17013814plp.2
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 07:23:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UqZBrRv2xf43dMebSY7ggTEIPQNkD7oY1J85gPXaZlI=;
+        b=nitR6D2/AinbZMpmNM7NqHY/dIjxIIp41JObgwc8v1GhiOQ+38+7bEeTr8eatc5icu
+         dKDclJBaFQEA7M66oj6rgCeV9V5oi11Tic5NuPRM/jhF45RMLnICNkAX3TXnkkC7XHA3
+         tcIM+V5S/gcMPYom+9s2mM8w9KrCmAyziNMMYod2IL13L37TdBGTDCo2RUEzVYlIUhTY
+         iBsOr0vtgmaY4bzToAk77kAqfyzZ95Gb5l/J2pyXIuehlubvAomJSIiGgUc7p4iiJdBo
+         PIBmeRliE+vxCG3KvYfdpKE8XrilZiDcHlU8MsZ4vRdUsQufQjzwnQ1pDURksuwr3/k0
+         H0gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UqZBrRv2xf43dMebSY7ggTEIPQNkD7oY1J85gPXaZlI=;
+        b=W3EyqYuDzozcsj6P9ZqfNWoSH3seaWs7jSqvYXJwa6DjXhOeH+tHa6OGSmsh4wJDDu
+         tn9UaL6WcIdSEOfigj10BN1wtuROFiEe0SzVEMTwlqEHP6Fk/6bkCACrXaqx551Gc2vD
+         N1aZGhmBOdpLoTPfY1XN/jwVIYInD0FrEljeD66pDNgdbtBkzuYR4+2khOTAy18Vh0/5
+         mytEzP9F4E83APl3vWKbaRG2w9vHNHnFOoXQ+L+rhIrgNjAOaDVeBFn+00aiRyCjKuvd
+         QnY2U7BjL/6YCE0cPNxC2Piip/NlT44TOUI6g0TZU1ULb5zD6EfkF9yWHfsHsK/enP9v
+         CsXw==
+X-Gm-Message-State: APjAAAXvF2lOhkUMSodJ5cCx7D5QhlGYUGtxfwHJqDvF/pAJCcfRdJ6j
+        WEriVloyDU/NtcH7eeg7R70=
+X-Google-Smtp-Source: APXvYqx2GLgYbLRHJB2hTR206nehq3djl55CUe8KG8g9txhpGuc7utVE8O7RsBeedKI5GUiZl3gmuw==
+X-Received: by 2002:a17:902:7043:: with SMTP id h3mr34544437plt.10.1563632621930;
+        Sat, 20 Jul 2019 07:23:41 -0700 (PDT)
+Received: from Etsukata.local (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
+        by smtp.gmail.com with ESMTPSA id s185sm44064923pgs.67.2019.07.20.07.23.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Jul 2019 07:23:41 -0700 (PDT)
+Subject: Re: [PATCH v3 0/6] Tracing vs CR2
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux_lkml_grp@oracle.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+References: <20190711114054.406765395@infradead.org>
+ <4c71e14d-3a32-c3bb-8e3b-6e5100853192@oracle.com>
+ <97cdd0af-95cc-2583-dc19-129b20809110@oracle.com>
+ <d82854b2-d2a4-5b83-b4a4-796db0fd401b@etsukata.com>
+ <CALCETrVH_F-OVQOsJ=KRGtNLQfM5QpSzP4UNn2RbLjP4ueeq-g@mail.gmail.com>
+ <98e20ed8-4032-09b5-e852-9f21df5c237c@etsukata.com>
+ <CALCETrUkEB89jkBzWg26Y0unCwgOWYT5da+OkbatUU_Bh97T8g@mail.gmail.com>
+From:   Eiichi Tsukata <devel@etsukata.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=devel@etsukata.com; keydata=
+ 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
+Message-ID: <009b1e7e-3278-6acb-40f7-cb5b1245a4ba@etsukata.com>
+Date:   Sat, 20 Jul 2019 23:23:36 +0900
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-74181308-858477326-1563632571=:2099"
-X-Virus-Status: No
-X-Virus-Checker-Version: clamassassin 1.2.4 with clamdscan / ClamAV 0.100.3/25516/Sat Jul 20 10:15:21 2019 signatures 58.
+In-Reply-To: <CALCETrUkEB89jkBzWg26Y0unCwgOWYT5da+OkbatUU_Bh97T8g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
----74181308-858477326-1563632571=:2099
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-
-On Sat, 20 Jul 2019, Heiner Kallweit wrote:
-
-> On 19.07.2019 23:12, Thomas Voegtle wrote:
->> On Fri, 19 Jul 2019, Heiner Kallweit wrote:
+On 2019/07/20 21:49, Andy Lutomirski wrote:
+> On Fri, Jul 19, 2019 at 8:59 PM Eiichi Tsukata <devel@etsukata.com> wrote:
 >>
->>> On 18.07.2019 20:50, Thomas Voegtle wrote:
->>>>
->>>> Hello,
->>>>
->>>> I'm having network problems with the commits on r8169 since v5.2. There are ping packet loss, sometimes 100%, sometimes 50%. In the end network is unusable.
->>>>
->>>> v5.2 is fine, I bisected it down to:
->>>>
->>>> a2928d28643e3c064ff41397281d20c445525032 is the first bad commit
->>>> commit a2928d28643e3c064ff41397281d20c445525032
->>>> Author: Heiner Kallweit <hkallweit1@gmail.com>
->>>> Date:   Sun Jun 2 10:53:49 2019 +0200
->>>>
->>>>     r8169: use paged versions of phylib MDIO access functions
->>>>
->>>>     Use paged versions of phylib MDIO access functions to simplify
->>>>     the code.
->>>>
->>>>     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>>     Signed-off-by: David S. Miller <davem@davemloft.net>
->>>>
->>>>
->>>> Reverting that commit on top of v5.2-11564-g22051d9c4a57 fixes the problem
->>>> for me (had to adjust the renaming to r8169_main.c).
->>>>
->>>> I have a:
->>>> 04:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
->>>> RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] (rev
->>>> 0c)
->>>>         Subsystem: Biostar Microtech Int'l Corp Device [1565:2400]
->>>>         Kernel driver in use: r8169
->>>>
->>>> on a BIOSTAR H81MG motherboard.
->>>>
->>> Interesting. I have the same chip version (RTL8168g) and can't reproduce
->>> the issue. Can you provide a full dmesg output and test the patch below
->>> on top of linux-next? I'd be interested in the WARN_ON stack traces
->>> (if any) and would like to know whether the experimental change to
->>> __phy_modify_changed helps.
->>>
->>>>
->>>> greetings,
->>>>
->>>>   Thomas
->>>>
->>>>
->>> Heiner
->>>
->>>
->>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
->>> index 8d7dd4c5f..26be73000 100644
->>> --- a/drivers/net/ethernet/realtek/r8169_main.c
->>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
->>> @@ -1934,6 +1934,8 @@ static int rtl_get_eee_supp(struct rtl8169_private *tp)
->>>     struct phy_device *phydev = tp->phydev;
->>>     int ret;
->>>
->>> +    WARN_ON(phy_read(phydev, 0x1f));
->>> +
->>>     switch (tp->mac_version) {
->>>     case RTL_GIGA_MAC_VER_34:
->>>     case RTL_GIGA_MAC_VER_35:
->>> @@ -1957,6 +1959,8 @@ static int rtl_get_eee_lpadv(struct rtl8169_private *tp)
->>>     struct phy_device *phydev = tp->phydev;
->>>     int ret;
->>>
->>> +    WARN_ON(phy_read(phydev, 0x1f));
->>> +
->>>     switch (tp->mac_version) {
->>>     case RTL_GIGA_MAC_VER_34:
->>>     case RTL_GIGA_MAC_VER_35:
->>> @@ -1980,6 +1984,8 @@ static int rtl_get_eee_adv(struct rtl8169_private *tp)
->>>     struct phy_device *phydev = tp->phydev;
->>>     int ret;
->>>
->>> +    WARN_ON(phy_read(phydev, 0x1f));
->>> +
->>>     switch (tp->mac_version) {
->>>     case RTL_GIGA_MAC_VER_34:
->>>     case RTL_GIGA_MAC_VER_35:
->>> @@ -2003,6 +2009,8 @@ static int rtl_set_eee_adv(struct rtl8169_private *tp, int val)
->>>     struct phy_device *phydev = tp->phydev;
->>>     int ret = 0;
->>>
->>> +    WARN_ON(phy_read(phydev, 0x1f));
->>> +
->>>     switch (tp->mac_version) {
->>>     case RTL_GIGA_MAC_VER_34:
->>>     case RTL_GIGA_MAC_VER_35:
->>> diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
->>> index 16667fbac..1aa1142b8 100644
->>> --- a/drivers/net/phy/phy-core.c
->>> +++ b/drivers/net/phy/phy-core.c
->>> @@ -463,12 +463,10 @@ int __phy_modify_changed(struct phy_device *phydev, u32 regnum, u16 mask,
->>>         return ret;
->>>
->>>     new = (ret & ~mask) | set;
->>> -    if (new == ret)
->>> -        return 0;
->>>
->>> -    ret = __phy_write(phydev, regnum, new);
->>> +    __phy_write(phydev, regnum, new);
->>>
->>> -    return ret < 0 ? ret : 1;
->>> +    return new != ret;
->>> }
->>> EXPORT_SYMBOL_GPL(__phy_modify_changed);
->>>
->>>
+...
 >>
->> Took your patch on top of next-20190719.
->> See attached dmesg.
->> It didn't work. Same thing, lots of ping drops, no usable network.
+>> ====
 >>
->> like that:
->> 44 packets transmitted, 2 received, 95% packet loss, time 44005ms
+>> debug() // dr6: 0xffff4ff0, user_mode: 1
+>>   TRACE_IRQS_OFF
+>>     arch_stack_user_walk()
+>>       debug()  // dr6: 0xffff4ff1 == 0xffff4ff0 | 0xffff0ff1 ... (*)
+>>         do_debug()
+>>           WARN_ON_ONCE
+>>   do_debug() // dr6: 0xffff0ff0(cleared in the above do_debug())
+> 
+> The dr6 register will indeed be cleared like this, but the dr6
+> variable should still be 0xffff4ff0.
+
+I should have use DR6 to mean it is a register, not variable.
+"dr6" was ambiguous.
+
+> 
 >>
+...
 >>
->> Maybe important:
->> I build a kernel with no modules.
+>> Note: printk() in do_debug() can cause infinite loop(printk() ->
+>> irq_disable() -> do_debug() -> printk() ...), so printk_deferred()
+>> was preferable.
 >>
->> I have to power off when I booted a kernel which doesn't work, a (soft) reboot into a older kernel (e.g. 4.9.y)  doesn't
->> fix the problem. Powering off and on does.
->>
->
-> Then, what you could do is reversing the hunks of the patch step by step.
-> Or make them separate patches and bisect.
-> Relevant are the hunks from point 1 and 2.
->
-> 1. first 5 hunks (I don't think you have to reverse them individually)
->   EEE-related
->
-> 2. rtl8168g_disable_aldps, rtl8168g_phy_adjust_10m_aldps, rtl8168g_1_hw_phy_config
->   all of these hunks are in the path for RTL8168g
->
-> 3. rtl8168h_1_hw_phy_config, rtl8168h_2_hw_phy_config, rtl8168ep_1_hw_phy_config,
->   rtl8168ep_2_hw_phy_config
->   not in the path for RTL8168g
->
+> 
+> Shouldn't that be fixed with my patches?  It should only be able to
+> recurse two deep: do_debug() from user mode can indeed trip
+> breakpoints, but the next do_debug() will clear DR7 in paranoid_entry.
+> 
 
-this is the minimal revert:
+Sorry, I missed that. Now I confirmed your patches fixed the loop.
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c 
-b/drivers/net/ethernet/realtek/r8169_main.c
-index efef5453b94f..267995a614b5 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -3249,12 +3249,14 @@ static void rtl8168g_1_hw_phy_config(struct 
-rtl8169_private *tp)
-         else
-                 phy_modify_paged(tp->phydev, 0x0bcc, 0x12, 0, BIT(15));
+Thanks
 
--       ret = phy_read_paged(tp->phydev, 0x0a46, 0x13);
--       if (ret & BIT(8))
--               phy_modify_paged(tp->phydev, 0x0c41, 0x12, 0, BIT(1));
--       else
--               phy_modify_paged(tp->phydev, 0x0c41, 0x12, BIT(1), 0);
--
-+       rtl_writephy(tp, 0x1f, 0x0a46);
-+       if (rtl_readphy(tp, 0x13) & 0x0100) {
-+               rtl_writephy(tp, 0x1f, 0x0c41);
-+               rtl_w0w1_phy(tp, 0x15, 0x0002, 0x0000);
-+       } else {
-+               rtl_writephy(tp, 0x1f, 0x0c41);
-+               rtl_w0w1_phy(tp, 0x15, 0x0000, 0x0002);
-+       }
-         /* Enable PHY auto speed down */
-         phy_modify_paged(tp->phydev, 0x0a44, 0x11, 0, BIT(3) | BIT(2));
+Eiichi 
 
-
-
-Could it be, that there is just a typo?
-
-         if (ret & BIT(8))
--               phy_modify_paged(tp->phydev, 0x0c41, 0x12, 0, BIT(1));
-+               phy_modify_paged(tp->phydev, 0x0c41, 0x15, 0, BIT(1));
-         else
--               phy_modify_paged(tp->phydev, 0x0c41, 0x12, BIT(1), 0);
-+               phy_modify_paged(tp->phydev, 0x0c41, 0x15, BIT(1), 0);
-
-
-
-
-greetings,
-
-       Thomas
-
----74181308-858477326-1563632571=:2099--
 
