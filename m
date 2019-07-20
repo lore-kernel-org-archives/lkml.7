@@ -2,115 +2,130 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04D2C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 17:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADEFC76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 17:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D1E2084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 17:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF572084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 17:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPapH70G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Km81yo78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfGTRgX (ORCPT
+        id S1728829AbfGTRqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 13:36:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45843 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfGTRgW (ORCPT
+        Sat, 20 Jul 2019 13:46:55 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42195 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfGTRqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 13:36:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so15494888pfq.12
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 10:36:22 -0700 (PDT)
+        Sat, 20 Jul 2019 13:46:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so17164093plb.9;
+        Sat, 20 Jul 2019 10:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/jFzEFbXL8zNeFrvM9gtQJVw7kMPeTM3qxkr4uBXj7g=;
-        b=UPapH70G8Pzu1pg1x2Iha2h7FKvzz82Nv9TupdtGdQWcSvvtDW6XgGpOhzb6+WWvvO
-         UyfByHF80wwI3MBKlBxATaAcS70wQ/N/BvPtoBw6juTuTyuJklnyo6YO+oOVveKIzcTK
-         tQdXFARugh8oJMlOzbMXXFpzPXLBElc+7dUjTIB2RKUCS+Rkr/k0HEdNeFEbvAGuUUra
-         0gGFoYoIOnBF5r+ljjENAr3kJLaZWURQ28WEyUwNl6P5dnd8GjgifxRLfQNjGT4ki4G5
-         QCOIQlE+j15jXUoY3hw4bBKyO7hThGIdgKO4yOIaFXqV+h+G338QIjXtWmzL1ngNUWpn
-         X2/w==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=L2J81KFMB9+2i2dCr/hG5bzUaIW4OMdMzoZ/0Z/JXXY=;
+        b=Km81yo78w+rlAwT/gwFYfbv28Jgs5BCE1MgsQFEdhlhCgQmjldFaKcy3u0HTBYiloX
+         L8XYW/LnaW6ORsZjO8+44qrXVhFzdUCUkEV8eURKJ+SkqB0At6u+qSYVIBIwiXjpTM/x
+         7gmIG7cv4tJFKGtaNpt1pbUjJsWKyfSX04XSoIMkikNZ7T4JXBDCPK5lP7tR6KgYGew9
+         X2ynm2oIHwy3DHRFm78hJguuTFf+gae7qCd2Iwx4GwZQb3lVfmvgExXMNB9Qz8KkCBgW
+         /aqS1YpNQwnrsMTPeWPnYC+ymVRJtmHwMME+8W+cIYYvsvRg4aiq+MCJa1SC2V0Ng/By
+         V0ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/jFzEFbXL8zNeFrvM9gtQJVw7kMPeTM3qxkr4uBXj7g=;
-        b=QK8MLZZpEeK8nYMbDe+OixIFJaOn0UBSSiP5E5XI5SB8sLqlD00KrqdHH3p9TgGTzC
-         F75YnJ+QPyO21Pssls+l1eRC2zjY34AYriZCOMW5uXXskLede9LfpT3hoYYwHoydOu2/
-         02hrAQMJtAX1N9sVMvhC3poJ0adbiPUD9b1VbAnL2heP3/KXG3IwoMuNOvUDYJ5id5LD
-         BA12JdmNbW9UzSUjVrdkKKFMhG7MUtSDDiBm0Zs8N5umbdm47ndrjqCBwoKuXuEaHbGg
-         11aNYb4xkLF/gS8LRfLWCwsBlq5EFDmLzXsFnyE8GpE6o10T/wC0pY/yKx2ElJJddFjS
-         d+kQ==
-X-Gm-Message-State: APjAAAUJ6YDW3l8U5Fg0zpthxj9V3LcvXezIR75BZIQ//TuEyYxklf45
-        AK3pOvYI+LQoaASVj5vz32M=
-X-Google-Smtp-Source: APXvYqxNNZGDJ1Z3eY/IfJfUVpvisSu3W4uOc+tNJWgFyRdKEailjCJybjrD7z7wlYqd/BifdGEweQ==
-X-Received: by 2002:a63:d944:: with SMTP id e4mr60439916pgj.261.1563644182185;
-        Sat, 20 Jul 2019 10:36:22 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id f197sm34302222pfa.161.2019.07.20.10.36.18
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=L2J81KFMB9+2i2dCr/hG5bzUaIW4OMdMzoZ/0Z/JXXY=;
+        b=otzGIJpzqIu0XDfNr0siqTNPXlKSN1j9qofRdRDoAKVjxosqKqXFJ+Ni9uMVqG7H/x
+         SU3JP9tf5CKBI/ttjN/hBpmBFgSk5G9jYsfCc0lzMsOsJg7Lf9O+ByTGaWf9P6f3MEhf
+         NA7HpfTNViy4SBzxJp+9a6qHpjo64gnxFc8p4Ns1bOtll8UVA6pmJgNQwBA1kopzWQxu
+         DTZZhmoptwOHMFQLkee+GC5hUWZnq09o3YG1Imrt6CgLnSiSVBJGbC62G/NVnjzISRUs
+         prgmibjWu8q7vyM4+ck3rMxbfkab2YAM91+u6I6Eo38m/SvhX+M9XpzsFLGPj4VdQ68P
+         aRaQ==
+X-Gm-Message-State: APjAAAURb5M1oEYKTNxDvzMVsJMbERywJGx0lWByVisXNN1ciqiYNQQh
+        N/JU3y71qFQsTkSjfr11A5A=
+X-Google-Smtp-Source: APXvYqxlbLhnEFRhjszPBPUjtGhEt/AVHw3r7MRkvZSxpV9s5/OYqIpRYH0BMPO001+CgtH0WTAmNQ==
+X-Received: by 2002:a17:902:1e6:: with SMTP id b93mr63580645plb.295.1563644814133;
+        Sat, 20 Jul 2019 10:46:54 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id q69sm49590614pjb.0.2019.07.20.10.46.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Jul 2019 10:36:21 -0700 (PDT)
-Date:   Sat, 20 Jul 2019 23:06:15 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Matt Sickler <Matt.Sickler@daktronics.com>
-Cc:     "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
-Subject: Re: [PATCH v3] staging: kpc2000: Convert put_page to put_user_page*()
-Message-ID: <20190720173615.GA4323@bharath12345-Inspiron-5559>
-References: <20190719200235.GA16122@bharath12345-Inspiron-5559>
- <SN6PR02MB4016754FE1BB6200746281A2EECB0@SN6PR02MB4016.namprd02.prod.outlook.com>
+        Sat, 20 Jul 2019 10:46:53 -0700 (PDT)
+Date:   Sat, 20 Jul 2019 23:16:47 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rat_cs: Remove duplicate code
+Message-ID: <20190720174613.GA31062@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4016754FE1BB6200746281A2EECB0@SN6PR02MB4016.namprd02.prod.outlook.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 08:59:02PM +0000, Matt Sickler wrote:
-> >From: Bharath Vedartham <linux.bhar@gmail.com>
-> >Changes since v2
-> >        - Added back PageResevered check as suggested by John Hubbard.
-> >
-> >The PageReserved check needs a closer look and is not worth messing
-> >around with for now.
-> >
-> >Matt, Could you give any suggestions for testing this patch?
-> 
-> Myself or someone else from Daktronics would have to do the testing since the
-> hardware isn't really commercially available.  I've been toying with the idea
-> of asking for a volunteer from the mailing list to help me out with this - I'd
-> send them some hardware and they'd do all the development and testing. :)
-> I still have to run that idea by Management though.
-> 
-> >If in-case, you are willing to pick this up to test. Could you
-> >apply this patch to this tree and test it with your devices?
-> 
-> I've been meaning to get to testing the changes to the drivers since upstreaming
-> them, but I've been swamped with other development.  I'm keeping an eye on the
-> mailing lists, so I'm at least aware of what is coming down the pipe.
-> I'm not too worried about this specific change, even though I don't really know
-> if the reserved check and the dirtying are even necessary.
-> It sounded like John's suggestion was to not do the PageReserved() check and just
-> use put_user_pges_dirty() all the time.  John, is that incorrect?
-The change is fairly trivial in the upstream kernel. It requires no
-testing in the upstream kernel. It would be great if you could test it
-on John's git tree with the implemented gup tracking subsystem and check
-if gup tracking is working alright with your dma driver. I think this
-patch will easily apply to John's git tree.
+Code is same if translate is true/false in case invalid packet is
+received.So remove else part.
 
-Thanks!
-Bharath
+Issue identified with coccicheck
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/net/wireless/ray_cs.c | 29 ++++++++---------------------
+ 1 file changed, 8 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/net/wireless/ray_cs.c b/drivers/net/wireless/ray_cs.c
+index cf37268..a51bbe7 100644
+--- a/drivers/net/wireless/ray_cs.c
++++ b/drivers/net/wireless/ray_cs.c
+@@ -2108,29 +2108,16 @@ static void rx_data(struct net_device *dev, struct rcs __iomem *prcs,
+ #endif
+ 
+ 	if (!sniffer) {
+-		if (translate) {
+ /* TBD length needs fixing for translated header */
+-			if (rx_len < (ETH_HLEN + RX_MAC_HEADER_LENGTH) ||
+-			    rx_len >
+-			    (dev->mtu + RX_MAC_HEADER_LENGTH + ETH_HLEN +
+-			     FCS_LEN)) {
+-				pr_debug(
+-				      "ray_cs invalid packet length %d received\n",
+-				      rx_len);
+-				return;
+-			}
+-		} else { /* encapsulated ethernet */
+-
+-			if (rx_len < (ETH_HLEN + RX_MAC_HEADER_LENGTH) ||
+-			    rx_len >
+-			    (dev->mtu + RX_MAC_HEADER_LENGTH + ETH_HLEN +
+-			     FCS_LEN)) {
+-				pr_debug(
+-				      "ray_cs invalid packet length %d received\n",
+-				      rx_len);
+-				return;
++		if (rx_len < (ETH_HLEN + RX_MAC_HEADER_LENGTH) ||
++		    rx_len >
++		    (dev->mtu + RX_MAC_HEADER_LENGTH + ETH_HLEN +
++		     FCS_LEN)) {
++			pr_debug(
++			      "ray_cs invalid packet length %d received\n",
++			      rx_len);
++			return;
+ 			}
+-		}
+ 	}
+ 	pr_debug("ray_cs rx_data packet\n");
+ 	/* If fragmented packet, verify sizes of fragments add up */
+-- 
+2.7.4
+
