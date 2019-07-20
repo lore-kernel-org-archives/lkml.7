@@ -2,86 +2,161 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CD5C76186
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32E5C76186
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 19:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5392085A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 18:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C952084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 19:10:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptenvZR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbfGTSul (ORCPT
+        id S1726150AbfGTTKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 14:50:41 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]:45903 "EHLO
-        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfGTSul (ORCPT
+        Sat, 20 Jul 2019 15:10:44 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38017 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfGTTKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 14:50:41 -0400
-Received: by mail-qk1-f179.google.com with SMTP id s22so25755102qkj.12;
-        Sat, 20 Jul 2019 11:50:40 -0700 (PDT)
+        Sat, 20 Jul 2019 15:10:44 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so33783577ljg.5;
+        Sat, 20 Jul 2019 12:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=sAW07qyjhEVIxodnCZdBKnM0U4RmWV2j0NCWegzpIwA=;
+        b=ptenvZR0nKtvw5lG1xsrfwOHMtWgvQCqPW3Gx2yHOcOu83Y82gr+P91VFopRAzMctT
+         jQjLCUH7VEJUtZW/zXo3hscgTnCuFCFWfT1Lfud5mWOuaENwUOdHWeQuVZ2B6QFsGYJr
+         CtDLrDFZJVHU5rr2eekIQdRL2rVsxnqqsAUyt2I7zM0GwrkjjpOyDhT24Qu4WfVhddN1
+         cIZVCwWoTgXk5vYsmFabHCIRfm2lR//E43sOZ47XvzDV4xwRShaeDME0yugb38J/iic6
+         Ez9/P2xzRM9DQGqkXznjaQRYYmIlgCgdRZ0xcBbCE+ksGqArwIOTFR0oTAPux7j94ZeN
+         4AkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K1DjJdNnl+zka9s8zl8TpnQj9JyccYfNCrdgUGT2JBc=;
-        b=E0Z9AYzsZ5A+FkVMOHPFogm4Q3Zy261XHb3O8qqBw+NPtSFvrRR3r9pVDAogOIlLHA
-         0UtoVhxWsC/ziDJCqkqCypTBaL4SoK8wqXwBbJuG2es2KigAqB2th+fdX3p+1jGPSI5H
-         kVNrplbfvGwAKoTpRtbYrBSgHTyHHg8Mj5cH1YteEA43gSa4HbpyhdHAMPYsUVGKfyfV
-         B0zOFKof9uyzh6Ln1urU8CnzjrjUUhVwRR4UPS5CzKqAylTFUwOSfU9ItK5+ox8tgTIO
-         ueUhn627l1gXxKK/AYv4OaB5wsJsTfQtRiTKrHHaukvnQsW09u4mr4m4MD8hRnFsvpev
-         uxuA==
-X-Gm-Message-State: APjAAAXHIRaqQwCJ4qWtnjNfnR87+tFy/mdH9EQGiKHwihkIA0nI1XM1
-        zyHmygxLPizB5hkWsU3cuQFc/vNfmSgZ4uSsE/E=
-X-Google-Smtp-Source: APXvYqwOgP5JyfSYb+na0Yw3siiSnE4qFFFhH9b1DMjUEZg8Ra4RTQ8jwZpCHV3GgMemx0iWkTj65t0WRcrRnMXGEsk=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr39763653qkc.394.1563648640160;
- Sat, 20 Jul 2019 11:50:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=sAW07qyjhEVIxodnCZdBKnM0U4RmWV2j0NCWegzpIwA=;
+        b=m691m3f8UN4uT1Xxt3vRK6BWa71zS1j4saojQ+1JeYS6EybuxTIpQ0Tst3o0soU39Q
+         yR94yGLjBtwCeXJpKDI1IE58NpGa3RqnLJ8+JEJ8LqK6YvSBtjUhM1OQgOlHoyk9LGLj
+         6gJFZTIrBtUeandC8rzR/jyox6gTX6f7I3lCb9lLRi9AEhhcjK2B9fTlCPK8q5k9kl3R
+         Q/P40hso4FJZ72CQNptT6WXhUfI+2SrXqoKPLD7J2qec80P1hVaDnlQ9pizyk25TvVUj
+         95ieuK9oVXTlqe+leAznY/A/rugedgiIRbOpzRxJ/nH4DlJbnE+DZxU/nUtW5dG06+yH
+         EYIg==
+X-Gm-Message-State: APjAAAV2bB1z3h+BJWWMjsIZhRB/Sk6SNaEr8PnXT8KJPVYtPEXRpkqS
+        7ixQGHBGyifwI3J56T9J07g=
+X-Google-Smtp-Source: APXvYqyBxBIh1mHcyW6bK8HC8+kmcDdLgU3RNrA61cC4T3vle+Jt3SMjdWQIqYAM8mIcM01jfVXFJw==
+X-Received: by 2002:a2e:9a13:: with SMTP id o19mr31709293lji.102.1563649841588;
+        Sat, 20 Jul 2019 12:10:41 -0700 (PDT)
+Received: from localhost ([188.170.223.67])
+        by smtp.gmail.com with ESMTPSA id y25sm7302408lja.45.2019.07.20.12.10.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 20 Jul 2019 12:10:40 -0700 (PDT)
+Date:   Sat, 20 Jul 2019 22:10:36 +0300
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.3-rc0
+Message-ID: <20190720191036.GA873@penguin>
 MIME-Version: 1.0
-References: <20190720174844.4b989d34@sf> <87wogca86l.fsf@mid.deneb.enyo.de>
-In-Reply-To: <87wogca86l.fsf@mid.deneb.enyo.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 20 Jul 2019 20:50:23 +0200
-Message-ID: <CAK8P3a3s3OeBj1MviaJV2UR0eUhF0GKPBi1iFf_3QKQyNPkuqw@mail.gmail.com>
-Subject: Re: linux-headers-5.2 and proper use of SIOCGSTAMP
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 8:10 PM Florian Weimer <fw@deneb.enyo.de> wrote:
->
-> * Sergei Trofimovich:
->
-> > Should #include <linux/sockios.h> always be included by user app?
-> > Or should glibc tweak it's definition of '#include <sys/socket.h>'
-> > to make it available on both old and new version of linux headers?
->
-> What is the reason for dropping SIOCGSTAMP from <asm/socket.h>?
->
-> If we know that, it will be much easier to decide what to do about
-> <sys/socket.h>.
+Hi Linus,
 
-As far as I can tell, nobody thought it would be a problem to move it
-from asm/sockios.h to linux/sockios.h, as the general rule is that one
-should use the linux/*.h version if both exist, and that the asm/*.h
-version only contains architecture specific definitions. The new
-definition is the same across all architectures, so it made sense to
-have it in the common file.
+Please pull from:
 
-If the assumption was wrong, the obvious solution is to duplicate the
-definitions everywhere or move the common parts into
-asm-generic/sockios.h, but it would have been better to hear about
-that earlier.
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-      Arnd
+to receive updates for the input subsystem. You will get:
+
+- Apple SPI keyboard and trackpad driver for newer Macs
+- ALPS driver will ignore trackpoint-only devices to give chance
+  trackpoint driver handle them properly
+- another Lenovo is switched over to SMbus from PS/2
+- assorted driver fixups.
+
+Changelog:
+---------
+
+Fuqian Huang (1):
+      Input: auo-pixcir-ts - switch to using  devm_add_action_or_reset()
+
+Grant Hernandez (1):
+      Input: gtco - bounds check collection indent level
+
+Hui Wang (2):
+      Input: alps - don't handle ALPS cs19 trackpoint-only device
+      Input: alps - fix a mismatch between a condition check and its comment
+
+Joe Perches (1):
+      Input: synaptics - fix misuse of strlcpy
+
+Lars-Peter Clausen (1):
+      Input: adp5589 - initialize GPIO controller parent device
+
+Mao Wenan (1):
+      Input: applespi - remove set but not used variables 'sts'
+
+Maya Nakamura (1):
+      Input: hyperv-keyboard - remove dependencies on PAGE_SIZE for ring buffer
+
+Nick Black (1):
+      Input: synaptics - whitelist Lenovo T580 SMBus intertouch
+
+Nishka Dasgupta (2):
+      Input: sun4i-lradc-keys - add of_node_put() before return
+      Input: mtk-pmic-keys - add of_node_put() before return
+
+Ronald Tschalär (1):
+      Input: add Apple SPI keyboard and trackpad driver
+
+Tim Schumacher (1):
+      Input: iforce - remove empty multiline comments
+
+YueHaibing (1):
+      Input: psmouse - fix build error of multiple definition
+
+Diffstat:
+--------
+
+ drivers/input/joystick/iforce/iforce-ff.c      |    3 -
+ drivers/input/joystick/iforce/iforce-main.c    |    3 -
+ drivers/input/joystick/iforce/iforce-packets.c |    3 -
+ drivers/input/joystick/iforce/iforce-serio.c   |    3 -
+ drivers/input/joystick/iforce/iforce-usb.c     |    3 -
+ drivers/input/joystick/iforce/iforce.h         |    3 -
+ drivers/input/keyboard/Kconfig                 |   16 +
+ drivers/input/keyboard/Makefile                |    1 +
+ drivers/input/keyboard/adp5589-keys.c          |    1 +
+ drivers/input/keyboard/applespi.c              | 1977 ++++++++++++++++++++++++
+ drivers/input/keyboard/applespi.h              |   29 +
+ drivers/input/keyboard/applespi_trace.h        |   93 ++
+ drivers/input/keyboard/mtk-pmic-keys.c         |    9 +-
+ drivers/input/keyboard/sun4i-lradc-keys.c      |    3 +
+ drivers/input/mouse/alps.c                     |   32 +
+ drivers/input/mouse/synaptics.c                |    3 +-
+ drivers/input/mouse/trackpoint.h               |    3 +-
+ drivers/input/serio/hyperv-keyboard.c          |    4 +-
+ drivers/input/tablet/gtco.c                    |   20 +-
+ drivers/input/touchscreen/auo-pixcir-ts.c      |    3 +-
+ 20 files changed, 2183 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/input/keyboard/applespi.c
+ create mode 100644 drivers/input/keyboard/applespi.h
+ create mode 100644 drivers/input/keyboard/applespi_trace.h
+
+Thanks.
+
+-- 
+Dmitry
