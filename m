@@ -2,96 +2,83 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025AAC76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF348C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99662084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C398D2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 09:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfGTJpn (ORCPT
+        id S1727613AbfGTJqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 05:45:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43098 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727523AbfGTJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 05:45:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 587A3B11A;
-        Sat, 20 Jul 2019 09:45:41 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc:     "Waiman Long" <longman@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "Will Deacon" <will.deacon@arm.com>,
-        "huang ying" <huang.ying.caritas@gmail.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH v8 13/19] locking/rwsem: Make rwsem->owner an atomic_long_t
-References: <20190520205918.22251-1-longman@redhat.com>
-        <20190520205918.22251-14-longman@redhat.com>
-        <20190719184538.GA20324@hermes.olymp>
-        <2ed44afa-4528-a785-f188-2daf24343f97@redhat.com>
-        <CAHk-=wioLqXBWWQywZGfxumsY_H6dFE3R=+WJ3mAL_WYV1fm9Q@mail.gmail.com>
-        <87h87hksim.fsf@suse.com> <87a7d9kq4a.fsf@suse.com>
-Date:   Sat, 20 Jul 2019 10:45:39 +0100
-In-Reply-To: <87a7d9kq4a.fsf@suse.com> (Luis Henriques's message of "Sat, 20
-        Jul 2019 10:32:53 +0100")
-Message-ID: <875znxkpj0.fsf@suse.com>
+        Sat, 20 Jul 2019 05:46:35 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42243 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727590AbfGTJqf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 05:46:35 -0400
+X-Originating-IP: 91.163.65.175
+Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 743D6FF803;
+        Sat, 20 Jul 2019 09:46:32 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 11:46:32 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 5/8] clk: sunxi-ng: v3s: add Allwinner V3 support
+Message-ID: <20190720094632.6plwtvt73xlnucw7@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-6-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qzyk6exegy3asgml"
+Content-Disposition: inline
+In-Reply-To: <20190713034634.44585-6-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Henriques <lhenriques@suse.com> writes:
 
-> Luis Henriques <lhenriques@suse.com> writes:
->
->> "Linus Torvalds" <torvalds@linux-foundation.org> writes:
->>
->>> On Fri, Jul 19, 2019 at 12:32 PM Waiman Long <longman@redhat.com> wrote:
->>>>
->>>> This patch shouldn't change the behavior of the rwsem code. The code
->>>> only access data within the rw_semaphore structures. I don't know why it
->>>> will cause a KASAN error. I will have to reproduce it and figure out
->>>> exactly which statement is doing the invalid access.
->>>
->>> The stack traces should show line numbers if you run them through
->>> scripts/decode_stacktrace.sh.
->>>
->>> You need to have debug info enabled for that, though.
->>>
->>> Luis?
->>>
->>>              Linus
->>
->> Yep, sure.  And I should have done this in the initial report.  It's a
->> different trace, I had to recompile the kernel.
->>
->> (I'm also adding Jeff to the CC list.)
->>
->
-> Ah, and I also managed to reproduce this on btrfs so I guess this rules
-> out a bug in the filesystem code.
+--qzyk6exegy3asgml
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Just another detail (before I go completely offline until tomorrow
-evening): in the btrfs case I'm seeing the bug on the
-rwsem_down_read_slowpath path, not on rwsem_down_write_slowpath.  But it
-seems to be on the same place (i.e. rwsem_can_spin_on_owner).
+On Sat, Jul 13, 2019 at 11:46:31AM +0800, Icenowy Zheng wrote:
+> +		[CLK_MMC1]		= &mmc1_clk.common.hw,
+> +		[CLK_MMC1_SAMPLE]	= &mmc1_sample_clk.common.hw,
+> +		[CLK_MMC1_OUTPUT]	= &mmc1_output_clk.common.hw,
+> +		[CLK_MMC2]		= &mmc1_clk.common.hw,
+> +		[CLK_MMC2_SAMPLE]	= &mmc1_sample_clk.common.hw,
+> +		[CLK_MMC2_OUTPUT]	= &mmc1_output_clk.common.hw,
 
-Cheers,
--- 
-Luis
+And there's the same mistake here.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--qzyk6exegy3asgml
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLi+AAKCRDj7w1vZxhR
+xQjRAP9ST2/2c5sjUdw8/ITU0eEvk6+5Bu5SYQ2ltWVX6cOWFgEA9vegVFVC4LnG
+ZendV+/AhkM+QvA9ziMPeStbZE5x+A4=
+=nSSY
+-----END PGP SIGNATURE-----
+
+--qzyk6exegy3asgml--
