@@ -2,127 +2,176 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB67C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E589BC76196
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E4620880
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA2621873
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FxK9AQGw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="hDPi/0tw";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IvmAdq30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390177AbfGTCD5 (ORCPT
+        id S2390223AbfGTCTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 22:03:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:1032 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbfGTCD4 (ORCPT
+        Fri, 19 Jul 2019 22:19:17 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53056 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729002AbfGTCTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 22:03:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3276920000>; Fri, 19 Jul 2019 19:04:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 19 Jul 2019 19:03:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 19 Jul 2019 19:03:55 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 20 Jul
- 2019 02:03:54 +0000
-Subject: Re: [PATCH] mm/migrate: initialize pud_entry in migrate_vma()
-To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190719233225.12243-1-rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <de0f0abd-d521-9b68-80b2-92e06c6bb8ac@nvidia.com>
-Date:   Fri, 19 Jul 2019 19:03:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190719233225.12243-1-rcampbell@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563588242; bh=K89J2IEPJbk6VmuKgUrqZ1VHo+WQOc0Cte4m7yFZoOE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FxK9AQGwhecU2l9E5xWnRjCI47IQqIB1G9YP1qaTQccoxr6/fiLGGjY0YSYude6Ss
-         ldx4YsThY7WOYGW4UCOdZSHrOrMLWRiaOTTqh477zVcFtymsttcJvuAtY4Kshpzop0
-         05PJiu02FZmZ+NtH84hCL4TFh8r/ULQplJ+ck6f5iEkLuxOYPAGxEadkPzJhh3hB4q
-         IUYfFsqgnuCrhIfSyTwbQMWR6k03sGAIe3VaTzUem3j/u0Ougpqao7phyGoi//a8jr
-         hWzwc654tVQdZg+yMN4xCgTR00cQoYFuD3oWQHcYpWnpmuw23c/tdcZX3fkdD6w1+o
-         8ynbqObsmbohw==
+        Fri, 19 Jul 2019 22:19:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 05B218EE109;
+        Fri, 19 Jul 2019 19:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563589156;
+        bh=z0BDlptRINl0TYz1Ruemp+2buxW+5SV0bIk9ZQ6n5e0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=hDPi/0twr/uhtvTNMyW41cjDy7W3wq32Zf9pSLU3lECjSIsDguI7rTiCDZrgrS28m
+         lJVANDcU0y1M4+leAVIPMJ+8rbzBxDw7n83ljBnIQEiQvjx8yBsF3UvSAREJ9zu5Vq
+         UUevmjYH9qvOEvQy+Nm5iNu7sYVvL/L7LxuLb8Ek=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KZKJBXWlIdD4; Fri, 19 Jul 2019 19:19:15 -0700 (PDT)
+Received: from [192.168.11.4] (122x212x32x58.ap122.ftth.ucom.ne.jp [122.212.32.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D14718EE0EF;
+        Fri, 19 Jul 2019 19:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563589155;
+        bh=z0BDlptRINl0TYz1Ruemp+2buxW+5SV0bIk9ZQ6n5e0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=IvmAdq30Jx7NUn/Uys0+laN2G3mJRyivOZxKsX/+9kpMDqTn9H0/HOpR23pEUnSfL
+         FGNsM3KMGKfOX3Dsh35bsYWk65pp5kG957sswyp0TR81fAAzcWgitNASbXbPSXkR5n
+         OF5kDPjqZ2XZh3bk4KWkKo7jsHgvE5qadhEHKV8A=
+Message-ID: <1563589150.1602.21.camel@HansenPartnership.com>
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, omosnace@redhat.com,
+        dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, simo@redhat.com,
+        netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>, sgrubb@redhat.com
+Date:   Sat, 20 Jul 2019 11:19:10 +0900
+In-Reply-To: <87muhadnfr.fsf@xmission.com>
+References: <20190529153427.GB8959@cisco>
+         <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
+         <20190529222835.GD8959@cisco>
+         <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
+         <20190530170913.GA16722@mail.hallyn.com>
+         <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
+         <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
+         <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
+         <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
+         <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
+         <20190718005145.eshekqfr3navqqiy@madcap2.tricolour.ca>
+         <CAHC9VhTYV02ws3QcezER5cY+Xt+tExcJEO-dumTDx=FXGFh3nw@mail.gmail.com>
+         <87muhadnfr.fsf@xmission.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/19 4:32 PM, Ralph Campbell wrote:
-> When CONFIG_MIGRATE_VMA_HELPER is enabled, migrate_vma() calls
-> migrate_vma_collect() which initializes a struct mm_walk but
-> didn't initialize mm_walk.pud_entry. (Found by code inspection)
-> Use a C structure initialization to make sure it is set to NULL.
->=20
-> Fixes: 8763cb45ab967 ("mm/migrate: new memory migration helper for use wi=
-th
-> device memory")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
->  mm/migrate.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
->=20
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 515718392b24..a42858d8e00b 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2340,16 +2340,13 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
->  static void migrate_vma_collect(struct migrate_vma *migrate)
->  {
->  	struct mmu_notifier_range range;
-> -	struct mm_walk mm_walk;
-> -
-> -	mm_walk.pmd_entry =3D migrate_vma_collect_pmd;
-> -	mm_walk.pte_entry =3D NULL;
-> -	mm_walk.pte_hole =3D migrate_vma_collect_hole;
-> -	mm_walk.hugetlb_entry =3D NULL;
-> -	mm_walk.test_walk =3D NULL;
-> -	mm_walk.vma =3D migrate->vma;
-> -	mm_walk.mm =3D migrate->vma->vm_mm;
-> -	mm_walk.private =3D migrate;
-> +	struct mm_walk mm_walk =3D {
-> +		.pmd_entry =3D migrate_vma_collect_pmd,
-> +		.pte_hole =3D migrate_vma_collect_hole,
-> +		.vma =3D migrate->vma,
-> +		.mm =3D migrate->vma->vm_mm,
-> +		.private =3D migrate,
-> +	};
+On Fri, 2019-07-19 at 11:00 -0500, Eric W. Biederman wrote:
+> Paul Moore <paul@paul-moore.com> writes:
+> 
+> > On Wed, Jul 17, 2019 at 8:52 PM Richard Guy Briggs <rgb@redhat.com>
+> > wrote:
+> > > On 2019-07-16 19:30, Paul Moore wrote:
+> > 
+> > ...
+> > 
+> > > > We can trust capable(CAP_AUDIT_CONTROL) for enforcing audit
+> > > > container ID policy, we can not trust
+> > > > ns_capable(CAP_AUDIT_CONTROL).
+> > > 
+> > > Ok.  So does a process in a non-init user namespace have two (or
+> > > more) sets of capabilities stored in creds, one in the
+> > > init_user_ns, and one in current_user_ns?  Or does it get
+> > > stripped of all its capabilities in init_user_ns once it has its
+> > > own set in current_user_ns?  If the former, then we can use
+> > > capable().  If the latter, we need another mechanism, as
+> > > you have suggested might be needed.
+> > 
+> > Unfortunately I think the problem is that ultimately we need to
+> > allow any container orchestrator that has been given privileges to
+> > manage the audit container ID to also grant that privilege to any
+> > of the child process/containers it manages.  I don't believe we can
+> > do that with capabilities based on the code I've looked at, and the
+> > discussions I've had, but if you find a way I would leave to hear
+> > it.
+> > > If some random unprivileged user wants to fire up a container
+> > > orchestrator/engine in his own user namespace, then audit needs
+> > > to be namespaced.  Can we safely discard this scenario for now?
+> > 
+> > I think the only time we want to allow a container orchestrator to
+> > manage the audit container ID is if it has been granted that
+> > privilege by someone who has that privilege already.  In the zero-
+> > container, or single-level of containers, case this is relatively
+> > easy, and we can accomplish it using CAP_AUDIT_CONTROL as the
+> > privilege.  If we start nesting container orchestrators it becomes
+> > more complicated as we need to be able to support granting and
+> > inheriting this privilege in a manner; this is why I suggested a
+> > new mechanism *may* be necessary.
+> 
+> 
+> Let me segway a bit and see if I can get this conversation out of the
+> rut it seems to have drifted into.
+> 
+> Unprivileged containers and nested containers exist today and are
+> going to become increasingly common.  Let that be a given.
 
-Neatly done.
+Agree fully.
 
-> =20
->  	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm_walk.mm,
->  				migrate->start,
->=20
+> As I recall the interesting thing for audit to log is actions by
+> privileged processes.  Audit can log more but generally configuring
+> logging by of the actions of unprivileged users is effectively a self
+> DOS.
+> 
+> So I think the initial implementation can safely ignore actions of
+> nested containers and unprivileged containers because you don't care
+> about their actions. 
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+I don't entirely agree here:  remember there might be two consumers for
+the audit data: the physical system owner (checking up on the tenants)
+and the tenant themselves who might be watching either their sub
+tenants or their users (and who, obviously, won't get the full audit
+stream).  In either case, the tenant may or may not be privileged, and
+if they're privileged, it might be through the user_ns in which case
+the physical system owner and the kernel would see them as "not
+privileged".  So I think we are ultimately going to need the ability to
+audit unprivileged containers.
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+I also think audit has a role to play in intrusion detection and
+forensic analysis for fully unprivileged containers running external
+services, but I don't think we have to solve that case immediately.
+
+> If we start allow running audit in a container then we need to deal
+> with all of the nesting issues but until then I don't think you folks
+> care.
+> 
+> Or am I wrong.  Do the requirements for securely auditing things from
+> the kernel care about the actions of unprivileged users?
+
+I think ultimately we have to care, but it could be three phases: first
+would be genuinely privileged containers (i.e. with real root inside,
+being our most dangerous problem) the second would be user_ns
+privileged containers (i.e. with both user_ns and an interior root
+mapping) and the third would be unprivileged containers (with or
+without user_ns but no interior root).
+
+James
+
