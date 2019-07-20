@@ -7,98 +7,98 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27A1C7618F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C45DC7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F2A20873
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364F820873
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:22:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ndg144Ux"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OFv71Zt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390251AbfGTCUX (ORCPT
+        id S2390279AbfGTCWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 22:20:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47357 "EHLO ozlabs.org"
+        Fri, 19 Jul 2019 22:22:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34835 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729002AbfGTCUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 22:20:23 -0400
+        id S1729002AbfGTCWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 22:22:07 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45rBRR5gqqz9sNC;
-        Sat, 20 Jul 2019 12:20:19 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45rBTT1yBGz9sNC;
+        Sat, 20 Jul 2019 12:22:05 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563589220;
-        bh=bvMXkyNAr5r3GZ8F2W/i8gufa6oHmhb4XVtDwJJ2NQ8=;
+        s=201702; t=1563589325;
+        bh=89pchNQaTwCtJkzVgc2IMq14XT4KgGS+W+Ry+0m3DJc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ndg144UxdSmgXcsGG688WMrERcnLxKF0belOZbashZDul+UgInRNyhBh4EBqsgATq
-         ACgMkCOBa4CT5/jVMVwTmNOCnGrGal+H3DbU8sbmG7+LLSmNJy1d9UCZRk3CYhgDqa
-         aO4W9wYcLCu8tMxagAeKGVcu/E3d+mvg+prPS6jAnK97vaukOEuQoUUaY8czbZKcto
-         4Hzq9bPZFTDYSO02rEduG4WZzWqBQX6fIbmK/j247kRh9BDmMiRGJPplFOJ7KrMPXw
-         u48uVwicszmJRkiX25kB2kbAeA0HIY9RwAgrP+txJXmPOxnCifxHjPcyGx2yyW8Rjb
-         2WmvbC5tsgIVQ==
-Date:   Sat, 20 Jul 2019 12:20:12 +1000
+        b=OFv71Zt62//jyStqHBpzywP8cPrio53PCzouQv/+Tfr5vBpNCj11dokZTCtA65u/V
+         FMWv0sTRihlvJXwhXP9njN66vHxlCw3MQLs0QMzsi3EdVSAXPUBui5mbLqSFsJJ9u/
+         VZM1R0jv5++epc0AmVGz27W+iFzWsmOZBiC6c+4E4UZu1nuajDp/RjPGcnM3DQWET1
+         KoTptbzTUgJM8EGAIK5nWxNbCO+PSXI0XtZyLlxbWA2dyPXqKYnnV7hH8Q+n1HGWdJ
+         hLy1Yk4tHs+3Fl/ADuOsV6lOFYwvpf/DpbxCX5Ot8Ov7T35UhGk3Juh1VGWoOrANoh
+         Q37UiopVynF2A==
+Date:   Sat, 20 Jul 2019 12:22:03 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
 To:     Joe Perches <joe@perches.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Andy Whitcroft <apw@canonical.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] checkpatch: Don't interpret stack dumps as commit
- IDs
-Message-ID: <20190720122012.24585088@canb.auug.org.au>
-In-Reply-To: <f7dc9727795db3802809a24162abe0b67e14123b.1563575364.git.joe@perches.com>
+Subject: Re: [PATCH 2/2] checkpatch: Improve SPDX license checking
+Message-ID: <20190720122203.7baf841a@canb.auug.org.au>
+In-Reply-To: <f08eb62458407a145cfedf959d1091af151cd665.1563575364.git.joe@perches.com>
 References: <f7dc9727795db3802809a24162abe0b67e14123b.1563575364.git.joe@perches.com>
+        <f08eb62458407a145cfedf959d1091af151cd665.1563575364.git.joe@perches.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JnP7d0OjPCyUgA_Ck52rL4P";
+Content-Type: multipart/signed; boundary="Sig_/QPqjsmXWbqydUvC/uE/SuUL";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JnP7d0OjPCyUgA_Ck52rL4P
+--Sig_/QPqjsmXWbqydUvC/uE/SuUL
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi Joe,
 
-On Fri, 19 Jul 2019 15:31:32 -0700 Joe Perches <joe@perches.com> wrote:
+On Fri, 19 Jul 2019 15:31:33 -0700 Joe Perches <joe@perches.com> wrote:
 >
-> Add more types of lines that appear to be stack dumps that also include
-> hex lines that might otherwise be interpreted as commit IDs.
+> Use perl's m@<match>@ match and not /<match>/ comparisons to avoid
+> an error using c90's // comment style.
 >=20
-> Link: http://lkml.kernel.org/r/ff00208289224f0ca4eaf4ff7c9c6e087dad0a63.c=
+> Miscellanea:
+>=20
+> o Use normal tab indentation and alignment
+>=20
+> Link: http://lkml.kernel.org/r/5e4a8fa7901148fbcd77ab391e6dd0e6bf95777f.c=
 amel@perches.com
-
-That lnk gives me "404 not found"
-
+>=20
 > Signed-off-by: Joe Perches <joe@perches.com>
 > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-You really should not add Andrew and my SOB lines (since we did not
-write this patch).  Those were there in -next because we handled the
-patch along it way.  Thanks for your SOB though.
+Again, don't include other's (non author's) SOB lines.
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_/JnP7d0OjPCyUgA_Ck52rL4P
+--Sig_/QPqjsmXWbqydUvC/uE/SuUL
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0yelwACgkQAVBC80lX
-0GzLBAgAiLKDwU+4L4Mlgk1lTSqkd+KXCbDZ+znj4oaOkrN6HXbgUxUFFY9Yy+8L
-9DZIbTnz+dTjhGEd+V1YsIv165aZNwogPLcgvA3E7nga0mu8bCt23J6+L9JPPGEz
-EwKoTJlKeJZD94WT+LI7c2W1sLzKjwhdXZ55g/zQcS5Wo8XCb1j5uyOXSCBp2wio
-yHwe5UoEuWwTyOpaJWj5iTlp01VMy3P5kI2ptrQW/WM6w6AX2xDWixgVSrvE2/AI
-YW+cfpNeiRmvvw5X82Lti9G6UUMMsuC2EJRnsI3EervM/kyuIlbEkdQXCKZFhSxU
-Rd0mxXGdPZJETXH+JrR4lflaAsQdGA==
-=7Arh
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0yessACgkQAVBC80lX
+0Gzp6QgAkw5u0X9lWHQsvWVt5/7xmfdophsWUNvshGO7kzD+of4HAJ2G8gJowAin
+c8yY+hOcw74kRjohJvOEJtIgOYN14jgFHpcKkIpGZM8wOHQxEBOON0KVxY0TF/I+
+g2cil4VRcxswJVwS4vPZ6A4NfsU73UQDm0TcJBQHXgl4AwhaykXCDbGhOfJiHJ1V
+Xd3CZr5wwtKW8yT1AXLSByzc8C7Tz5NGZES/e8qFvaVsseyzH2bWOp8lmKBZXm2W
+e7CN7xCm5AqibtDaZqT6Kqaa4dKdSLoDJVedSTwKlerpkmqXTuwTFz1emztNsHDi
+4Kp3TDXvbUHjw1oVMlfaGPmuwFsFyQ==
+=2fqo
 -----END PGP SIGNATURE-----
 
---Sig_/JnP7d0OjPCyUgA_Ck52rL4P--
+--Sig_/QPqjsmXWbqydUvC/uE/SuUL--
