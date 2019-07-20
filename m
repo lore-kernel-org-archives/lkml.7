@@ -2,176 +2,103 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E589BC76196
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27A1C7618F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA2621873
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F2A20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 02:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="hDPi/0tw";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IvmAdq30"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ndg144Ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390223AbfGTCTR (ORCPT
+        id S2390251AbfGTCUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jul 2019 22:19:17 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53056 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729002AbfGTCTR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jul 2019 22:19:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 05B218EE109;
-        Fri, 19 Jul 2019 19:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563589156;
-        bh=z0BDlptRINl0TYz1Ruemp+2buxW+5SV0bIk9ZQ6n5e0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hDPi/0twr/uhtvTNMyW41cjDy7W3wq32Zf9pSLU3lECjSIsDguI7rTiCDZrgrS28m
-         lJVANDcU0y1M4+leAVIPMJ+8rbzBxDw7n83ljBnIQEiQvjx8yBsF3UvSAREJ9zu5Vq
-         UUevmjYH9qvOEvQy+Nm5iNu7sYVvL/L7LxuLb8Ek=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KZKJBXWlIdD4; Fri, 19 Jul 2019 19:19:15 -0700 (PDT)
-Received: from [192.168.11.4] (122x212x32x58.ap122.ftth.ucom.ne.jp [122.212.32.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Jul 2019 22:20:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47357 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729002AbfGTCUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jul 2019 22:20:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D14718EE0EF;
-        Fri, 19 Jul 2019 19:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563589155;
-        bh=z0BDlptRINl0TYz1Ruemp+2buxW+5SV0bIk9ZQ6n5e0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IvmAdq30Jx7NUn/Uys0+laN2G3mJRyivOZxKsX/+9kpMDqTn9H0/HOpR23pEUnSfL
-         FGNsM3KMGKfOX3Dsh35bsYWk65pp5kG957sswyp0TR81fAAzcWgitNASbXbPSXkR5n
-         OF5kDPjqZ2XZh3bk4KWkKo7jsHgvE5qadhEHKV8A=
-Message-ID: <1563589150.1602.21.camel@HansenPartnership.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Paul Moore <paul@paul-moore.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, omosnace@redhat.com,
-        dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, simo@redhat.com,
-        netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>, sgrubb@redhat.com
-Date:   Sat, 20 Jul 2019 11:19:10 +0900
-In-Reply-To: <87muhadnfr.fsf@xmission.com>
-References: <20190529153427.GB8959@cisco>
-         <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
-         <20190529222835.GD8959@cisco>
-         <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
-         <20190530170913.GA16722@mail.hallyn.com>
-         <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
-         <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
-         <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
-         <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
-         <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
-         <20190718005145.eshekqfr3navqqiy@madcap2.tricolour.ca>
-         <CAHC9VhTYV02ws3QcezER5cY+Xt+tExcJEO-dumTDx=FXGFh3nw@mail.gmail.com>
-         <87muhadnfr.fsf@xmission.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45rBRR5gqqz9sNC;
+        Sat, 20 Jul 2019 12:20:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563589220;
+        bh=bvMXkyNAr5r3GZ8F2W/i8gufa6oHmhb4XVtDwJJ2NQ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ndg144UxdSmgXcsGG688WMrERcnLxKF0belOZbashZDul+UgInRNyhBh4EBqsgATq
+         ACgMkCOBa4CT5/jVMVwTmNOCnGrGal+H3DbU8sbmG7+LLSmNJy1d9UCZRk3CYhgDqa
+         aO4W9wYcLCu8tMxagAeKGVcu/E3d+mvg+prPS6jAnK97vaukOEuQoUUaY8czbZKcto
+         4Hzq9bPZFTDYSO02rEduG4WZzWqBQX6fIbmK/j247kRh9BDmMiRGJPplFOJ7KrMPXw
+         u48uVwicszmJRkiX25kB2kbAeA0HIY9RwAgrP+txJXmPOxnCifxHjPcyGx2yyW8Rjb
+         2WmvbC5tsgIVQ==
+Date:   Sat, 20 Jul 2019 12:20:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] checkpatch: Don't interpret stack dumps as commit
+ IDs
+Message-ID: <20190720122012.24585088@canb.auug.org.au>
+In-Reply-To: <f7dc9727795db3802809a24162abe0b67e14123b.1563575364.git.joe@perches.com>
+References: <f7dc9727795db3802809a24162abe0b67e14123b.1563575364.git.joe@perches.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JnP7d0OjPCyUgA_Ck52rL4P";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 11:00 -0500, Eric W. Biederman wrote:
-> Paul Moore <paul@paul-moore.com> writes:
-> 
-> > On Wed, Jul 17, 2019 at 8:52 PM Richard Guy Briggs <rgb@redhat.com>
-> > wrote:
-> > > On 2019-07-16 19:30, Paul Moore wrote:
-> > 
-> > ...
-> > 
-> > > > We can trust capable(CAP_AUDIT_CONTROL) for enforcing audit
-> > > > container ID policy, we can not trust
-> > > > ns_capable(CAP_AUDIT_CONTROL).
-> > > 
-> > > Ok.  So does a process in a non-init user namespace have two (or
-> > > more) sets of capabilities stored in creds, one in the
-> > > init_user_ns, and one in current_user_ns?  Or does it get
-> > > stripped of all its capabilities in init_user_ns once it has its
-> > > own set in current_user_ns?  If the former, then we can use
-> > > capable().  If the latter, we need another mechanism, as
-> > > you have suggested might be needed.
-> > 
-> > Unfortunately I think the problem is that ultimately we need to
-> > allow any container orchestrator that has been given privileges to
-> > manage the audit container ID to also grant that privilege to any
-> > of the child process/containers it manages.  I don't believe we can
-> > do that with capabilities based on the code I've looked at, and the
-> > discussions I've had, but if you find a way I would leave to hear
-> > it.
-> > > If some random unprivileged user wants to fire up a container
-> > > orchestrator/engine in his own user namespace, then audit needs
-> > > to be namespaced.  Can we safely discard this scenario for now?
-> > 
-> > I think the only time we want to allow a container orchestrator to
-> > manage the audit container ID is if it has been granted that
-> > privilege by someone who has that privilege already.  In the zero-
-> > container, or single-level of containers, case this is relatively
-> > easy, and we can accomplish it using CAP_AUDIT_CONTROL as the
-> > privilege.  If we start nesting container orchestrators it becomes
-> > more complicated as we need to be able to support granting and
-> > inheriting this privilege in a manner; this is why I suggested a
-> > new mechanism *may* be necessary.
-> 
-> 
-> Let me segway a bit and see if I can get this conversation out of the
-> rut it seems to have drifted into.
-> 
-> Unprivileged containers and nested containers exist today and are
-> going to become increasingly common.  Let that be a given.
+--Sig_/JnP7d0OjPCyUgA_Ck52rL4P
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Agree fully.
+Hi Joe,
 
-> As I recall the interesting thing for audit to log is actions by
-> privileged processes.  Audit can log more but generally configuring
-> logging by of the actions of unprivileged users is effectively a self
-> DOS.
-> 
-> So I think the initial implementation can safely ignore actions of
-> nested containers and unprivileged containers because you don't care
-> about their actions. 
+On Fri, 19 Jul 2019 15:31:32 -0700 Joe Perches <joe@perches.com> wrote:
+>
+> Add more types of lines that appear to be stack dumps that also include
+> hex lines that might otherwise be interpreted as commit IDs.
+>=20
+> Link: http://lkml.kernel.org/r/ff00208289224f0ca4eaf4ff7c9c6e087dad0a63.c=
+amel@perches.com
 
-I don't entirely agree here:  remember there might be two consumers for
-the audit data: the physical system owner (checking up on the tenants)
-and the tenant themselves who might be watching either their sub
-tenants or their users (and who, obviously, won't get the full audit
-stream).  In either case, the tenant may or may not be privileged, and
-if they're privileged, it might be through the user_ns in which case
-the physical system owner and the kernel would see them as "not
-privileged".  So I think we are ultimately going to need the ability to
-audit unprivileged containers.
+That lnk gives me "404 not found"
 
-I also think audit has a role to play in intrusion detection and
-forensic analysis for fully unprivileged containers running external
-services, but I don't think we have to solve that case immediately.
+> Signed-off-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-> If we start allow running audit in a container then we need to deal
-> with all of the nesting issues but until then I don't think you folks
-> care.
-> 
-> Or am I wrong.  Do the requirements for securely auditing things from
-> the kernel care about the actions of unprivileged users?
+You really should not add Andrew and my SOB lines (since we did not
+write this patch).  Those were there in -next because we handled the
+patch along it way.  Thanks for your SOB though.
 
-I think ultimately we have to care, but it could be three phases: first
-would be genuinely privileged containers (i.e. with real root inside,
-being our most dangerous problem) the second would be user_ns
-privileged containers (i.e. with both user_ns and an interior root
-mapping) and the third would be unprivileged containers (with or
-without user_ns but no interior root).
+--=20
+Cheers,
+Stephen Rothwell
 
-James
+--Sig_/JnP7d0OjPCyUgA_Ck52rL4P
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0yelwACgkQAVBC80lX
+0GzLBAgAiLKDwU+4L4Mlgk1lTSqkd+KXCbDZ+znj4oaOkrN6HXbgUxUFFY9Yy+8L
+9DZIbTnz+dTjhGEd+V1YsIv165aZNwogPLcgvA3E7nga0mu8bCt23J6+L9JPPGEz
+EwKoTJlKeJZD94WT+LI7c2W1sLzKjwhdXZ55g/zQcS5Wo8XCb1j5uyOXSCBp2wio
+yHwe5UoEuWwTyOpaJWj5iTlp01VMy3P5kI2ptrQW/WM6w6AX2xDWixgVSrvE2/AI
+YW+cfpNeiRmvvw5X82Lti9G6UUMMsuC2EJRnsI3EervM/kyuIlbEkdQXCKZFhSxU
+Rd0mxXGdPZJETXH+JrR4lflaAsQdGA==
+=7Arh
+-----END PGP SIGNATURE-----
+
+--Sig_/JnP7d0OjPCyUgA_Ck52rL4P--
