@@ -2,142 +2,220 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2B5C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE084C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEFE2082A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563607962;
-	bh=VvlwVVYw0AYiQp3KGjA3u/8HBvxH/UFD5XmZWTT+i4s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=u+PVxcOjHdbT0aVAsVK5FjES30pdLQUC5u4UE0R8GSLBKpePgXqw9xRnXYNyP6Rim
-	 dX7BnERK6T1GIKBOcDhHSs/EEuCkiQn16f2H5pivh8n7ADgNY3aP4tMRsyQH83b8UH
-	 RbgxlLBHRJ2tsDnP+/1DFgyQOUi+HcDpe1e2ACvs=
+	by mail.kernel.org (Postfix) with ESMTP id 72CBA2082A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Hwc59WKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfGTHck (ORCPT
+        id S1726699AbfGTHfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 03:32:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbfGTHck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 03:32:40 -0400
-Received: from devnote2 (72.65.214.202.bf.2iij.net [202.214.65.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED4C220644;
-        Sat, 20 Jul 2019 07:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563607959;
-        bh=VvlwVVYw0AYiQp3KGjA3u/8HBvxH/UFD5XmZWTT+i4s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fb1SJyIYD2QW9MJU129mUeNXY672MYyi18IPneV3j3zTgNPjjNCQtyn9r3sKhBA7J
-         vnjNvJjLQ9bbEJT5Iu+9rWu/KNKXzobh4GAKdu5PrINoLCa7WprronhuPwUB7zh0Re
-         UExXiLJNuk3scbSB+0wmQis4dMvNjvrBF+gIXYS4=
-Date:   Sat, 20 Jul 2019 16:32:32 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     James Morse <james.morse@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>
-Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
- exception
-Message-Id: <20190720163232.49f80bc0e53afb893e7a82e6@kernel.org>
-In-Reply-To: <536ba068-50de-963e-c3a7-0440da56943a@arm.com>
-References: <156342860634.8565.14804606041960884732.stgit@devnote2>
-        <156342863822.8565.7624877983728871995.stgit@devnote2>
-        <20190718062215.GG14271@linux.ibm.com>
-        <20190718092022.GA3625@blommer>
-        <20190718233133.146065f668da6297e57e52ef@kernel.org>
-        <536ba068-50de-963e-c3a7-0440da56943a@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 20 Jul 2019 03:35:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35498 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfGTHfK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 03:35:10 -0400
+Received: by mail-io1-f65.google.com with SMTP id m24so63266616ioo.2
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 00:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yo7l/PRy7h/Gb824LBKVuDwtwGequhTqIvXIp3adEwg=;
+        b=Hwc59WKWLtxrzArZ6J5z8eyuv9j8HpcYCexDbS5qTNlmj/dENQM/OZfD0JZOHjrBcd
+         e3gfY6b3SpgN3x87zCd7LrNgTX7gBvdwrDg8cO7a67MqaBUG2pv/cVmZWv8p2hGjXUAY
+         nXNf8gCxrjgsJRjgJNlbjQ0pOIa+0zdgPAPuA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yo7l/PRy7h/Gb824LBKVuDwtwGequhTqIvXIp3adEwg=;
+        b=Bst6OQ9RrnD3QOJRbbA7f7RrwnvMudZdJT+23f9Hq0CRZ6rrtenwpZLLL9BT7ig/Ni
+         8qRCZqJkG8k+lSLmyXrXhhVoNdZpvzT9CCiZfRfFg41ribAQ4b2jd7UScS1k6RJAN0BW
+         piUFQE/8lk5P5oEG7Eg8FT7HIQZdH37UXbpNBMIHpG5nzvc8HM9x7JlGrVW8v0CLRf8/
+         Cwa68DI03AXGc/NqtWsiehl1fZDNIJIFonRWoN1DvPmKPti8W0EIV00cqaGoJHOKjgv6
+         J1shZ/r2EOMrOO+u+9yTPNuXnbUrj0K82vadQodtq1qzMg6z3ebbwpVqxP9YeQQzhLwD
+         vM8A==
+X-Gm-Message-State: APjAAAXFYakkuwqE67iyEK/QlWKQHKBtAMx3oKpm/ijD8rdvNfMp8uj1
+        MLIo4ti3WeO9SN+tyuMrtTtMBmank73vCmItKcho7A==
+X-Google-Smtp-Source: APXvYqwDavOgrhT4MQJkkvC8k6ZNFapMZUSf4ZAK47DcNazni4xVviIrlaRZatDMKMuGJBCB0akuEaXjv2s8zidOQVM=
+X-Received: by 2002:a02:bb08:: with SMTP id y8mr15097818jan.51.1563608109608;
+ Sat, 20 Jul 2019 00:35:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190605064933.6bmskkxzzgn35xz7@flea> <CAMty3ZCCP=oCqm5=49BsjwoxdDETgBfU_5g8fQ=bz=iWApV0tw@mail.gmail.com>
+ <20190614142406.ybdiqfppo5mc5bgq@flea> <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
+ <20190625144930.5hegt6bkzqzykjid@flea> <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
+ <20190703114933.u3x4ej3v7ocewvif@flea> <CAOf5uw=ZEvMV1hFQE986rNG_ctpReGbjbZzv0m=OzKPdBh57uQ@mail.gmail.com>
+ <20190711100100.cty3s6rs3w27low6@flea> <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
+ <20190720065830.zn3txpyduakywcva@flea> <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
+In-Reply-To: <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Sat, 20 Jul 2019 13:04:58 +0530
+Message-ID: <CAMty3ZA0H_rbe2tJVeOmi=1v4dWXY1=0zK-+DoNawzQaHd=4ug@mail.gmail.com>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for PLL_MIPI
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Sat, Jul 20, 2019 at 12:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Sat, Jul 20, 2019 at 12:28 PM Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
+> > > > > tcon-pixel clock is the rate that you want to achive on display side
+> > > > > and if you have 4 lanes 32bit or lanes and different bit number that
+> > > > > you need to have a clock that is able to put outside bits and speed
+> > > > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
+> > > > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
+> > > > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
+> > > > > the display.
+> > > >
+> > > > So this is what the issue is then?
+> > > >
+> > > > This one does make sense, and you should just change the rate in the
+> > > > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
+> > > >
+> > > > I'm still wondering why that hasn't been brought up in either the
+> > > > discussion or the commit log before though.
+> > > >
+> > > Something like this?
+> > >
+> > > drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
+> > >  2 files changed, 11 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > index 64c43ee6bd92..42560d5c327c 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
+> > > drm_display_mode *mode,
+> > >  }
+> > >
+> > >  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
+> > > -                                       const struct drm_display_mode *mode)
+> > > +                                       const struct drm_display_mode *mode,
+> > > +                                       u32 tcon_mul)
+> > >  {
+> > >         /* Configure the dot clock */
+> > > -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
+> > > +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
+> > >
+> > >         /* Set the resolution */
+> > >         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
+> > > @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
+> > > sun4i_tcon *tcon,
+> > >         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
+> > >         u8 lanes = device->lanes;
+> > >         u32 block_space, start_delay;
+> > > -       u32 tcon_div;
+> > > +       u32 tcon_div, tcon_mul;
+> > >
+> > > -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
+> > > -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
+> > > +       tcon->dclk_min_div = 4;
+> > > +       tcon->dclk_max_div = 127;
+> > >
+> > > -       sun4i_tcon0_mode_set_common(tcon, mode);
+> > > +       tcon_mul = bpp / lanes;
+> > > +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
+> > >
+> > >         /* Set dithering if needed */
+> > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
+> > > @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
+> > > sun4i_tcon *tcon,
+> > >          */
+> > >         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
+> > >         tcon_div &= GENMASK(6, 0);
+> > > -       block_space = mode->htotal * bpp / (tcon_div * lanes);
+> > > +       block_space = mode->htotal * tcon_div * tcon_mul;
+> > >         block_space -= mode->hdisplay + 40;
+> > >
+> > >         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
+> > > @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
+> > > sun4i_tcon *tcon,
+> > >
+> > >         tcon->dclk_min_div = 7;
+> > >         tcon->dclk_max_div = 7;
+> > > -       sun4i_tcon0_mode_set_common(tcon, mode);
+> > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
+> > >
+> > >         /* Set dithering if needed */
+> > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
+> > > @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
+> > > sun4i_tcon *tcon,
+> > >
+> > >         tcon->dclk_min_div = 6;
+> > >         tcon->dclk_max_div = 127;
+> > > -       sun4i_tcon0_mode_set_common(tcon, mode);
+> > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
+> > >
+> > >         /* Set dithering if needed */
+> > >         sun4i_tcon0_mode_set_dithering(tcon, connector);
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > index 5c3ad5be0690..a07090579f84 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > @@ -13,8 +13,6 @@
+> > >  #include <drm/drm_encoder.h>
+> > >  #include <drm/drm_mipi_dsi.h>
+> > >
+> > > -#define SUN6I_DSI_TCON_DIV     4
+> > > -
+> > >  struct sun6i_dsi {
+> > >         struct drm_connector    connector;
+> > >         struct drm_encoder      encoder;
+> >
+> > I had more something like this in mind:
+> > http://code.bulix.org/nlp5a4-803511
+>
+> Worth to look at it. was it working on your panel? meanwhile I will check it.
+>
+> We have updated with below change [1], seems working on but is
+> actually checking the each divider as before start with 4... till 127.
+>
+> This new approach, is start looking the best divider from 4.. based on
+> the idea vs rounded it will ended up best divider like [2]
+>
+> https://gist.github.com/openedev/7e2c33248b372d29be9979e06d483673
+> https://gist.github.com/openedev/c72dfffc0ca59e7ec1edcd7ad360cdd1
 
-On Fri, 19 Jul 2019 09:42:05 +0100
-James Morse <james.morse@arm.com> wrote:
+I made quick check on two possibilities.
 
-> Hi,
-> 
-> On 7/18/19 3:31 PM, Masami Hiramatsu wrote:
-> > On Thu, 18 Jul 2019 10:20:23 +0100
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> >> On Wed, Jul 17, 2019 at 11:22:15PM -0700, Paul E. McKenney wrote:
-> >>> On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
-> >>>> Remove rcu_read_lock()/rcu_read_unlock() from debug exception
-> >>>> handlers since the software breakpoint can be hit on idle task.
-> >>
-> >> Why precisely do we need to elide these? Are we seeing warnings today?
-> > 
-> > Yes, unfortunately, or fortunately. Naresh reported that warns when
-> > ftracetest ran. I confirmed that happens if I probe on default_idle_call too.
-> > 
-> > /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
-> > /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
-> > /sys/kernel/debug/tracing # [  135.122237]
-> > [  135.125035] =============================
-> > [  135.125310] WARNING: suspicious RCU usage
-> 
-> > [  135.132224] Call trace:
-> > [  135.132491]  dump_backtrace+0x0/0x140
-> > [  135.132806]  show_stack+0x24/0x30
-> > [  135.133133]  dump_stack+0xc4/0x10c
-> > [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-> > [  135.134171]  call_break_hook+0x170/0x178
-> > [  135.134486]  brk_handler+0x28/0x68
-> > [  135.134792]  do_debug_exception+0x90/0x150
-> > [  135.135051]  el1_dbg+0x18/0x8c
-> > [  135.135260]  default_idle_call+0x0/0x44
-> > [  135.135516]  cpu_startup_entry+0x2c/0x30
-> > [  135.135815]  rest_init+0x1b0/0x280
-> > [  135.136044]  arch_call_rest_init+0x14/0x1c
-> > [  135.136305]  start_kernel+0x4d4/0x500
-> 
-> >>> The exception entry and exit use irq_enter() and irq_exit(), in this
-> >>> case, correct?  Otherwise RCU will be ignoring this CPU.
-> >>
-> >> This is missing today, which sounds like the underlying bug.
-> > 
-> > Agreed. I'm not so familier with how debug exception is handled on arm64,
-> > would it be a kind of NMI or IRQ?
-> 
-> Debug exceptions can interrupt both SError (think: machine check) and 
-> pseudo-NMI, which both in turn interrupt interrupt-masked code. So they 
-> are a kind of NMI. But, be careful not to call 'nmi_enter()' twice, see 
-> do_serror() for how we work around this...
+1) with Maxime change
+https://gist.github.com/openedev/3b0b3d35ced6d89f5be0831f1cc9d840
+https://gist.github.com/openedev/dd6a9e528cde80ef0508cb54723f505d
 
-OK. I think we can use rcu_nmi_enter/exit() as same as x86.
+2) with Maxime change along with min 4, max 127 divider values.
+The outcome similar like 1)
 
-> > Anyway, it seems that normal irqs are also not calling irq_enter/exit
-> > except for arch/arm64/kernel/smp.c
-> drivers/irqchip/irq-gic.c:gic_handle_irq() either calls 
-> handle_domain_irq() or handle_IPI(). The enter/exit calls live in those 
-> functions.
+This look it will depends on divider, need to check further on this page.
 
-Ah, I see.
-Would you think we need to put rcu_nmi_enter/exit() as similar to x86
-on do_mem_abort() and do_sp_pc_abort() too?
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jagan.
