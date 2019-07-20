@@ -2,85 +2,86 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB78C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 05:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67275C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 05:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5672084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 05:09:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VHK6YSbe"
+	by mail.kernel.org (Postfix) with ESMTP id 47BC12184E
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 05:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfGTFJs (ORCPT
+        id S1726156AbfGTFnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 01:09:48 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:33438 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfGTFJs (ORCPT
+        Sat, 20 Jul 2019 01:43:00 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:50971 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfGTFnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 01:09:48 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x6K59cQV025137;
-        Sat, 20 Jul 2019 14:09:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6K59cQV025137
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563599379;
-        bh=Vt8e4ZibGh6YbYrqAYP6YFb33zJbcUfxyLcUA52ZLCE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VHK6YSbea5EyMgOh50x4apyr9R0Er3JKrwgRzqWa9x8GJcw+7fU6ZipmMnx/M93WA
-         9A17JQyJeocJmXgFdkV9sBKbUC8OX8mXSGlQxUG2vnNt9d6AjOzPL8/fyQaluyeSHA
-         MNz5h5IaJbUDCNMwj+m9vPQJB/t0pLmXNB6tPdLhebhPAMldwgsxVhRbRct/ByEjyp
-         rOPMP3Ur5bCQnyE04nHbmepDzbgD2t2RH8tAZ6wyCEqu8UCOUqK4q+EvDE2FoctuCW
-         sDUf/X0WPnQqEpnR/N9eZCDnTZ880M/VWVOfHUiuJdRXtrqRQBHtocd1EpwCIPhR/h
-         tp2GFOE2QBSrA==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id a186so21238020vsd.7;
-        Fri, 19 Jul 2019 22:09:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAXnY2K5OySyBmwN8cOA1XacwTaaux+C8nrqkQuwWig2WyenlLra
-        GIdbzLTFQlhCnjpE5w6DkbrCEa82LQ0oFjihuf0=
-X-Google-Smtp-Source: APXvYqzPm1XVv4vlss8TM6aaCj/lOCVAn9tMmbSrOhWcHRkLrATsWbcHjwgGjFzsHaVwHEAYvQGWCzN5Rr5q4y2QMic=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr35269851vsn.54.1563599377517;
- Fri, 19 Jul 2019 22:09:37 -0700 (PDT)
+        Sat, 20 Jul 2019 01:43:00 -0400
+Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4F917100005;
+        Sat, 20 Jul 2019 05:42:56 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 07:42:55 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/3] drm/sun4i: Add support for color encoding and range
+Message-ID: <20190720054255.vyma2lyiu2tohl74@flea>
+References: <20190713120346.30349-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
- <20190711054434.1177-9-yamada.masahiro@socionext.com> <20190716214023.GA15159@redhat.com>
- <CAK7LNAQ41NhPPO6xoVObgFctTO6WewSXPfZkE7_bZXsdAtKSpA@mail.gmail.com> <f1222c8a-9301-1e76-981d-a36e8687a29f@redhat.com>
-In-Reply-To: <f1222c8a-9301-1e76-981d-a36e8687a29f@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 20 Jul 2019 14:09:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATrS_ENkz3-dT70mXi=L89w0a-x6tSsDT-r7qxNa+kaOQ@mail.gmail.com>
-Message-ID: <CAK7LNATrS_ENkz3-dT70mXi=L89w0a-x6tSsDT-r7qxNa+kaOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] kbuild: create *.mod with full directory path
- and remove MODVERDIR
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4bp3a2hzmkf5ifze"
+Content-Disposition: inline
+In-Reply-To: <20190713120346.30349-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
 
-On Fri, Jul 19, 2019 at 5:18 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+--4bp3a2hzmkf5ifze
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > Perhaps, adding a new field
-> > to *.mod files might be cleaner.
+On Sat, Jul 13, 2019 at 02:03:43PM +0200, Jernej Skrabec wrote:
+> In order to correctly convert image between YUV and RGB, you have to
+> know color encoding and color range. This patch set adds appropriate
+> properties and considers them when choosing CSC conversion matrix for
+> DE2 and DE3.
 >
-> I can look into that.  By "field" you mean a new row in the file?
+> Note that this is only the half of needed changes when using HDMI output.
+> DW HDMI bridge driver has to be extended to have a property to select
+> limited (TVs) or full (PC monitors) range. But that will be done at a
+> later time.
+>
+> Please take a look.
 
-Yes.
+Sorry for the delay, I applied all three.
 
+Thanks!
+Maxime
 
--- 
-Best Regards
-Masahiro Yamada
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--4bp3a2hzmkf5ifze
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTKp3wAKCRDj7w1vZxhR
+xb/MAP0YGFEL32Wso4KP7I+AUWQBVf1s5y0UbrS6kdiCC1q+pwD+IxvTlGoVYE3C
+XSeD1QTADsnw4LRHiB1TTiZsmdd3rw4=
+=gCkd
+-----END PGP SIGNATURE-----
+
+--4bp3a2hzmkf5ifze--
