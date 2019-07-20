@@ -2,199 +2,206 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E82C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 08:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D754C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 08:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CB22082A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 08:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yPSEvpAh"
+	by mail.kernel.org (Postfix) with ESMTP id 1B13320873
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 08:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfGTINL (ORCPT
+        id S1726945AbfGTI0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 04:13:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38484 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfGTINK (ORCPT
+        Sat, 20 Jul 2019 04:26:04 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59331 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfGTI0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 04:13:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so32875667ljg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 01:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z0jjqiEWK8ZwPUy1E/hBEFEfeUX6fZKXUCvS400AT+E=;
-        b=yPSEvpAhtbj/j09qHG2JWZfrDA4ejU9evwOJais+pJ0lGCPO05Gns70r4+pQNpZ4xK
-         lDKoKVvkmiGIDLP+l/FkDXc1fKJsf9Uk4CdBZeUDu+IsFD4fs/jH9Vh+YJrDGixb3HJ3
-         Ue7R1TwHlXHvmgyfmDJqycCgkmTCbjCHYxmEh2EdRFsmKmntYBYBfVUhRjzsgZeVPYb+
-         8K4202ecZU1xhmPNMkuAY7dkNXe1ab5LPwhjlJnovA4AmK+Wz/yOz1qlHoDUXr4Yj0SC
-         kiaxocC37eF3GwefxCq3OJiGqjz7iJVeDnWpJnKKiO4nhTokU6iSmnvj/ddVQoxSY787
-         XpcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z0jjqiEWK8ZwPUy1E/hBEFEfeUX6fZKXUCvS400AT+E=;
-        b=tL8XAyWIPwM9qfQGlSNOF2Khvk5rrSr5B3st/00MlIEyljSvE8UhVxRVgLHMlKiFn2
-         TU92u177Xy3Cav2yaN3Zpt7kZtaFZrCwbGmE2/R3ohVB8QKKEDZeOofiEQ2AgBfXsbAI
-         El2ecKTXxAmq12k16lvSMg+s+omcQoYFrjSS53Y68NoqrHA8gcxvLbJNwiKNo5GdzaCj
-         4vmSXuXEIiil3z/YjMSDS5T7d5SjPW4BbcNuiSNpz259hEra8Fxyn9KPPl0rn8rQI7B4
-         KIjvDu7jL7foA5ypqlkrHDHXJ46odw02FsVoifg+c6aiuc5EzUrKE4axbYSh/9LyL3Kd
-         AACw==
-X-Gm-Message-State: APjAAAV57qToIty+ojrT18jvH96+icclo2wG8v6vvye/K3J7+9xOSZkS
-        lELc47gsHHS2YomAMEef4hFds6aWvypXK95RHalPYA==
-X-Google-Smtp-Source: APXvYqxPq0egzZ9v6Hlqgi5GtM0dh5ZLA6APWqqK+dAf0wl4ZE3tiHWf4L7DfCkkNOMh235amVo0TuFZXRekFrjKVAc=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr12432277ljs.54.1563610388042;
- Sat, 20 Jul 2019 01:13:08 -0700 (PDT)
+        Sat, 20 Jul 2019 04:26:03 -0400
+X-Originating-IP: 91.163.65.175
+Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C7CC7FF802;
+        Sat, 20 Jul 2019 08:26:00 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 10:25:59 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jan Kotas <jank@cadence.com>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
+Message-ID: <20190720082559.pk3odkf5hztgvpif@flea>
+References: <20190718111509.29924-1-jank@cadence.com>
+ <20190718111509.29924-4-jank@cadence.com>
 MIME-Version: 1.0
-References: <1563564291-9692-1-git-send-email-hongweiz@ami.com> <1563564291-9692-2-git-send-email-hongweiz@ami.com>
-In-Reply-To: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jul 2019 10:12:56 +0200
-Message-ID: <CACRpkdYhVoP75ZDfASW+DH5yf-a5diitiXsh7eLsJx5hsTC9sQ@mail.gmail.com>
-Subject: Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-To:     Hongwei Zhang <hongweiz@ami.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yfjklfzxpduqdxp6"
+Content-Disposition: inline
+In-Reply-To: <20190718111509.29924-4-jank@cadence.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hongwei,
 
-after looking close at the driver and bindings I have this feeback:
+--yfjklfzxpduqdxp6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Jul 19, 2019 at 9:25 PM Hongwei Zhang <hongweiz@ami.com> wrote:
+Hi,
 
-+- reg                  : Address and length of the register set for the device
-
-This 0x100 range may look simple but in the driver it looks like
-this:
-
-+static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-+       {
-+               .val_regs = 0x0000,
-+               .rdata_reg = 0x0070,
-+               .irq_regs = 0x0004,
-+               .names = { "A", "B", "C", "D" },
-+       },
-+       {
-+               .val_regs = 0x001C,
-+               .rdata_reg = 0x0074,
-+               .irq_regs = 0x0020,
-+               .names = { "E", "F", "G", "H" },
-+       },
-+       {
-+               .val_regs = 0x0038,
-+               .rdata_reg = 0x0078,
-+               .irq_regs = 0x003C,
-+               .names = { "I", "J" },
-+       },
-+};
-
-So first break this into up to 10 different instances with one device
-per bank instead.
-
-For each device:
-
-reg = <0x1e780200 4>, <x1e780204 ..>, <0x1e780270 ..>;
-reg-names = "val", "irq", "rdata";
-
-This way you use the device tree features for locating the
-register offsets instead of hard-coding it into the driver,
-which will make the driver simpler.
-
-> +- ngpios               : number of GPIO pins to serialise.
-> +                         (should be multiple of 8, up to 80 pins)
-
-This is wrong. This should be split into 10 different devices providing
-8 GPIO lines each. The "ngpios" is not intended to subdivide
-banks, but for the case where you use say bits 0..11 of 32 bits in
-a register by setting ngpios to 12.
-
-I see that they use the same clock divider and the same interrupt,
-but this is better to partition into a separate clock divider driver
-and up to 10 instances of GPIO devices with 8 GPIOs each.
-
-I also see that they use the same interrupt. This is fine, in your
-driver just grab a shared IRQ and all the IRQ handlers will be
-traversed. This is a well known pattern for all operating systems.
-
-> +- clocks                : A phandle to the APB clock for SGPM clock division
+On Thu, Jul 18, 2019 at 12:15:09PM +0100, Jan Kotas wrote:
+> This patch adds support for CSI2TX v2.1 version of the controller.
+>
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+> ---
+>  drivers/media/platform/cadence/cdns-csi2tx.c | 142 +++++++++++++++++++++------
+>  1 file changed, 112 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
+> index 232259c71..e4d08acfb 100644
+> --- a/drivers/media/platform/cadence/cdns-csi2tx.c
+> +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
+> @@ -52,6 +52,17 @@
+>  #define CSI2TX_STREAM_IF_CFG_REG(n)	(0x100 + (n) * 4)
+>  #define CSI2TX_STREAM_IF_CFG_FILL_LEVEL(n)	((n) & 0x1f)
+>
+> +/* CSI2TX V2 Registers */
+> +#define CSI2TX_V2_DPHY_CFG_REG			0x28
+> +#define CSI2TX_V2_DPHY_CFG_RESET		BIT(16)
+> +#define CSI2TX_V2_DPHY_CFG_CLOCK_MODE		BIT(10)
+> +#define CSI2TX_V2_DPHY_CFG_MODE_MASK		GENMASK(9, 8)
+> +#define CSI2TX_V2_DPHY_CFG_MODE_LPDT		(2 << 8)
+> +#define CSI2TX_V2_DPHY_CFG_MODE_HS		(1 << 8)
+> +#define CSI2TX_V2_DPHY_CFG_MODE_ULPS		(0 << 8)
+> +#define CSI2TX_V2_DPHY_CFG_CLK_ENABLE		BIT(4)
+> +#define CSI2TX_V2_DPHY_CFG_LANE_ENABLE(n)	BIT(n)
 > +
-> +- bus-frequency                : SGPM CLK frequency
+>  #define CSI2TX_LANES_MAX	4
+>  #define CSI2TX_STREAMS_MAX	4
+>
+> @@ -70,6 +81,13 @@ struct csi2tx_fmt {
+>  	u32	bpp;
+>  };
+>
+> +struct csi2tx_priv;
+> +
+> +/* CSI2TX Variant Operations */
+> +struct csi2tx_vops {
+> +	void (*dphy_setup)(struct csi2tx_priv *csi2tx);
+> +};
+> +
+>  struct csi2tx_priv {
+>  	struct device			*dev;
+>  	unsigned int			count;
+> @@ -82,6 +100,8 @@ struct csi2tx_priv {
+>
+>  	void __iomem			*base;
+>
+> +	struct csi2tx_vops		*vops;
+> +
+>  	struct clk			*esc_clk;
+>  	struct clk			*p_clk;
+>  	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
+> @@ -209,53 +229,92 @@ static const struct v4l2_subdev_pad_ops csi2tx_pad_ops = {
+>  	.set_fmt	= csi2tx_set_pad_format,
+>  };
+>
+> -static void csi2tx_reset(struct csi2tx_priv *csi2tx)
+> +/* Set Wake Up value in the D-PHY */
+> +static void csi2tx_dphy_set_wakeup(struct csi2tx_priv *csi2tx)
+>  {
+> -	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
+> -
+> -	udelay(10);
+> +	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
+> +	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
+>  }
+>
+> -static int csi2tx_start(struct csi2tx_priv *csi2tx)
+> +/*
+> + * Finishes the D-PHY initialization
+> + * reg dphy cfg value to be used
+> + */
+> +static void csi2tx_dphy_init_finish(struct csi2tx_priv *csi2tx, u32 reg)
+>  {
+> -	struct media_entity *entity = &csi2tx->subdev.entity;
+> -	struct media_link *link;
+>  	unsigned int i;
+> -	u32 reg;
+>
+> -	csi2tx_reset(csi2tx);
+> +	udelay(10);
+>
+> -	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
+> +	/* Enable our (clock and data) lanes */
+> +	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
+> +	for (i = 0; i < csi2tx->num_lanes; i++)
+> +		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i] - 1);
+> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
+>
+>  	udelay(10);
+>
+> -	/* Configure our PPI interface with the D-PHY */
+> -	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
+> -	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
+> +	/* Switch to HS mode */
+> +	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
+> +	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
+> +	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +}
+> +
+> +/* Configures D-PHY in CSIv1.3 */
+> +static void csi2tx_dphy_setup(struct csi2tx_priv *csi2tx)
+> +{
+> +	u32 reg;
+> +	unsigned int i;
+> +
+> +	csi2tx_dphy_set_wakeup(csi2tx);
+>
+>  	/* Put our lanes (clock and data) out of reset */
+>  	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
+>  	for (i = 0; i < csi2tx->num_lanes; i++)
+> -		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i]);
+> +		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i] - 1);
 
-I see that there is a common clock control register in offset 0x54.
+This looks like a separate change?
 
-Split this out to a separate clock driver that provides a divided clock
-that all GPIO blocks can get, no matter if you use 1, 2 .. 10 of these
-blocks.
+>  	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
+>
+> -	udelay(10);
+> +	csi2tx_dphy_init_finish(csi2tx, reg);
+> +}
+>
+> -	/* Enable our (clock and data) lanes */
+> -	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
+> -	for (i = 0; i < csi2tx->num_lanes; i++)
+> -		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i]);
 
-The fact that these GPIO banks and the clock register is in the same
-memory range does not really matter. Split up the memory range in
-on reg = per GPIO chip and one reg for the clock.
+And you have a similar change here that should be in a separate patch,
+with a proper explanation.
 
-> +  Example:
-> +       sgpio: sgpio@1e780200 {
-> +               #gpio-cells = <2>;
-> +               compatible = "aspeed,ast2500-sgpio";
-> +               gpio-controller;
-> +               interrupts = <40>;
-> +               reg = <0x1e780200 0x0100>;
-> +               clocks = <&syscon ASPEED_CLK_APB>;
-> +               interrupt-controller;
-> +               ngpios = <8>;
-> +               bus-frequency = <12000000>;
-> +       };
+Otherwise, the rest looks good.
 
-Splitting this up into a clock controller and 1-10 instances of sgpio
-will make things simpler, because it will closer reflect what the hardware
-people are doing: they have just created 10 instances of the same
-block, and added a clock divider.
+Maxime
 
-You can put the 1-10 instances and the clock divider inside a collected
-node "simple-bus" in the device tree:
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-{
-    compatible = "simple-bus";
+--yfjklfzxpduqdxp6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    sgpio0: sgpio {
-        compatible = "aspeed,ast2500-sgpio";
-        reg = <0x1e780200 ...> ...;
-        clk = <&sgpioclk>;
-    };
-    sgpio1: sgpio {
-        ...
-    };
-    ...
-    sgpioclk: clock {
-          compatible = "aspeed,sgpio-clock";
-          reg = 0x1e780254 4>;
-    };
-};
+-----BEGIN PGP SIGNATURE-----
 
-This is a better fit with the actual hardware and will make it much
-easier to write drivers.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLQFwAKCRDj7w1vZxhR
+xRmdAQD4HZhHXXUE/mKRCRgQ2CKXh8dUxGgyUCtpgpbpT3wLgAEAm9AjsmUASloS
+MBCOXuYsP6WG14rVejqupZBpnXlv9gk=
+=KJNK
+-----END PGP SIGNATURE-----
 
-Admittedly DT device partitioning of SoC devices is a grey area,
-but here I think the DT infrastructure helps you to break things
-down and make it easier, I am thinking in a divide-and-conquer
-way about it.
-
-Yours,
-Linus Walleij
+--yfjklfzxpduqdxp6--
