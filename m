@@ -2,303 +2,151 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC2CC76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAF8C76188
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512172082A
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:36:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N9T4Hgn2"
+	by mail.kernel.org (Postfix) with ESMTP id 72BD82084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 07:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563609434;
+	bh=c/qcAjooUS+XTsmTRW+jDhrjLGqeN6OgrxYeSB1F2M8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KRSelpjFaJdpfOk+EWQi15BH2wVlVOy6qHnRrPHT+UM4FAI9532sucB35CuzMioyp
+	 unETTXEzm62WPnyj/sSmRtAxZUbqWJwIeOMadvzcv1WvWIYE3meE9DrSVndjayb//m
+	 Fjx6/zQb7z6I4dq/EQTLuKo2ETcwT3Rj0fOl9woc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbfGTHgu (ORCPT
+        id S1726770AbfGTHzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 03:36:50 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38495 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfGTHgt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 03:36:49 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so32828688ljg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jul 2019 00:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+o2We0O4O1K3O8X45oW49z43JEjChY/ZotlUWlRzMeY=;
-        b=N9T4Hgn2olyla091p0rCbp8MGppeNCcuzLHkOg4et/yXeODxWgkgOpQ5JfaWF6yr7p
-         BgtkGV3pNk0iPL0TBtKXBw2VgN2fvhBN+J3Wt8HaFDdVEDuu7mll40N2fYh6qZCR25+P
-         vpABL19mgPfAIXXoYnNa4vSulALLIIB++7KRUJAkULPvnVI8VDRiL2qQeLJQ/6v3TFV3
-         CkQDeTQ01WqrJx/ZFBebwamcrNSIXMDP92yDnECrA30PthrrbGdFytXOixqFOK+KL9JN
-         0kMOsWxnidDmU+v5xf6hmq8gV3JP6Rmc1d0+Z+CNlI/FIVZR/dh/s2sHQi2GFeKqEYyB
-         Y/zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+o2We0O4O1K3O8X45oW49z43JEjChY/ZotlUWlRzMeY=;
-        b=mgJL8lwjejSvhHZ0aTS0NoJKlAk2O1ZzRb49BrwYJH/eePje4GsA2d4BJulmwT98vV
-         pEp32wKXZPDm+dTF6GpD4ISSN0ijIBUAUZg7tHf9gOyy3l8E4VNy1Md3wLQ4fQnFJytI
-         0qQDAXwTMH/LrKIldFSMBVS35Yy3N6J9hl8H/n2IAeJSFvoRA/W85XYWU9Uu0Op5xOsW
-         SVEl+g6AUkJ6My00SQVFigee7jAnZc5xEs3uZk3g8aR3PadkBxkq7bStcheUGg8U1vrR
-         oPaYyNFVjlQTx5t9vek+QPChuXMrNMUoIJVjyttLqlb6SeWw5w5cwwSt6EsJkIKUgSwi
-         7MmA==
-X-Gm-Message-State: APjAAAV5hGO3xUPJatMcOpI2J66kDvWQ/AL4sh56+23Uw7Wkw/1VrBnJ
-        Ss9/yFu0RWupyWfYwni3NueqppraUZAPx9JDfPtAnw==
-X-Google-Smtp-Source: APXvYqzVrTCraoTk8bHhcemevK3zYW7sXOXRysGnUpnwuwErcRyoe5XAsks0BR3u0l9gfYUHHH8w+VinvMvmaGr4J9w=
-X-Received: by 2002:a2e:8195:: with SMTP id e21mr28263938ljg.62.1563608206402;
- Sat, 20 Jul 2019 00:36:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1563564291-9692-1-git-send-email-hongweiz@ami.com> <1563564291-9692-3-git-send-email-hongweiz@ami.com>
-In-Reply-To: <1563564291-9692-3-git-send-email-hongweiz@ami.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jul 2019 09:36:34 +0200
-Message-ID: <CACRpkdYrJkROvPaR51gXzOQW_TtCtpbhbARpgwAqoC77rAhF+g@mail.gmail.com>
-Subject: Re: [v5 2/2] gpio: aspeed: Add SGPIO driver
-To:     Hongwei Zhang <hongweiz@ami.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 20 Jul 2019 03:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbfGTHzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 03:55:05 -0400
+Received: from devnote2 (72.65.214.202.bf.2iij.net [202.214.65.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FF552084C;
+        Sat, 20 Jul 2019 07:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563609304;
+        bh=c/qcAjooUS+XTsmTRW+jDhrjLGqeN6OgrxYeSB1F2M8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q53+vJzOimnDeGgWyVZmYWxjmNNd7QWjAXgV8FUwBw9FZzRKqtNbdE1oxIDPBib5J
+         NW0eJH2epYH4GvO6jdUpcjmSOtJpQrm3oX/qGhKMnk6IB40vJdAZzdTgNJaRJqFrFK
+         i1lY0g8c0blNVYVjwEwQSZWyN1rA0dijHyn+HXDk=
+Date:   Sat, 20 Jul 2019 16:54:58 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Dan Rue <dan.rue@linaro.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
+ exception
+Message-Id: <20190720165458.7333b65244312843c2ca6857@kernel.org>
+In-Reply-To: <20190719095958.GA19605@lakrids.cambridge.arm.com>
+References: <156342860634.8565.14804606041960884732.stgit@devnote2>
+        <156342863822.8565.7624877983728871995.stgit@devnote2>
+        <20190718062215.GG14271@linux.ibm.com>
+        <20190718092022.GA3625@blommer>
+        <20190718233133.146065f668da6297e57e52ef@kernel.org>
+        <20190719095958.GA19605@lakrids.cambridge.arm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hongwei,
+Hi Mark,
 
-thanks for your patch!
+On Fri, 19 Jul 2019 10:59:59 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-some comments and nitpicking below:
+> On Thu, Jul 18, 2019 at 11:31:33PM +0900, Masami Hiramatsu wrote:
+> > On Thu, 18 Jul 2019 10:20:23 +0100
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > > On Wed, Jul 17, 2019 at 11:22:15PM -0700, Paul E. McKenney wrote:
+> > > > On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
+> > > > > Remove rcu_read_lock()/rcu_read_unlock() from debug exception
+> > > > > handlers since the software breakpoint can be hit on idle task.
+> > > 
+> > > Why precisely do we need to elide these? Are we seeing warnings today?
+> > 
+> > Yes, unfortunately, or fortunately. Naresh reported that warns when
+> > ftracetest ran. I confirmed that happens if I probe on default_idle_call too.
+> > 
+> > /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events 
+> > /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable 
+> > /sys/kernel/debug/tracing # [  135.122237] 
+> > [  135.125035] =============================
+> > [  135.125310] WARNING: suspicious RCU usage
+> > [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
+> > [  135.125904] -----------------------------
+> > [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
+> > [  135.126839] 
+> > [  135.126839] other info that might help us debug this:
+> > [  135.126839] 
+> > [  135.127410] 
+> > [  135.127410] RCU used illegally from idle CPU!
+> > [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
+> > [  135.128114] RCU used illegally from extended quiescent state!
+> > [  135.128555] 1 lock held by swapper/0/0:
+> > [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
+> > [  135.130499] 
+> > [  135.130499] stack backtrace:
+> > [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
+> > [  135.131841] Hardware name: linux,dummy-virt (DT)
+> > [  135.132224] Call trace:
+> > [  135.132491]  dump_backtrace+0x0/0x140
+> > [  135.132806]  show_stack+0x24/0x30
+> > [  135.133133]  dump_stack+0xc4/0x10c
+> > [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
+> > [  135.134171]  call_break_hook+0x170/0x178
+> > [  135.134486]  brk_handler+0x28/0x68
+> > [  135.134792]  do_debug_exception+0x90/0x150
+> > [  135.135051]  el1_dbg+0x18/0x8c
+> > [  135.135260]  default_idle_call+0x0/0x44
+> > [  135.135516]  cpu_startup_entry+0x2c/0x30
+> > [  135.135815]  rest_init+0x1b0/0x280
+> > [  135.136044]  arch_call_rest_init+0x14/0x1c
+> > [  135.136305]  start_kernel+0x4d4/0x500
+> > [  135.136597] 
+> > 
+> > > > The exception entry and exit use irq_enter() and irq_exit(), in this
+> > > > case, correct?  Otherwise RCU will be ignoring this CPU.
+> > > 
+> > > This is missing today, which sounds like the underlying bug.
+> > 
+> > Agreed. I'm not so familier with how debug exception is handled on arm64,
+> > would it be a kind of NMI or IRQ?
+> 
+> They're more like faults, in that they're synchronous exceptions.
+> 
+> Given that, I think using irq_enter() / irq_exit() would be surprising
+> here, but perhaps they're misnamed.
+> 
+> What do other architectures do here? Having a kprobe on the critical
+> path to idle doesn't sound specific to arm64, but perhaps it is (and we
+> should rule it out).
 
-On Fri, Jul 19, 2019 at 9:25 PM Hongwei Zhang <hongweiz@ami.com> wrote:
+On x86, it uses rcu_nmi_enter/exit() for kernel mode. For user mode,
+we don't need to care since it must not be an idle task.
 
-> Add SGPIO driver support for Aspeed AST2500 SoC.
->
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+Thank you,
 
-> +// SPDX-License-Identifier: GPL-2.0+
-
-I think the SPDX people prefer GPL-2.0-or-later
-
-> +#include <linux/gpio.h>
-
-Do not include this header in any new code using or
-providing GPIOs.
-
-> +#include <linux/gpio/driver.h>
-
-This should be enough.
-
-> +/*
-> + * Note: The "value" register returns the input value when the GPIO is
-> + *      configured as an input.
-> + *
-> + *      The "rdata" register returns the output value when the GPIO is
-> + *      configured as an output.
-> + */
-> +static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
-> +       {
-> +               .val_regs = 0x0000,
-> +               .rdata_reg = 0x0070,
-> +               .irq_regs = 0x0004,
-> +               .names = { "A", "B", "C", "D" },
-> +       },
-> +       {
-> +               .val_regs = 0x001C,
-> +               .rdata_reg = 0x0074,
-> +               .irq_regs = 0x0020,
-> +               .names = { "E", "F", "G", "H" },
-> +       },
-> +       {
-> +               .val_regs = 0x0038,
-> +               .rdata_reg = 0x0078,
-> +               .irq_regs = 0x003C,
-> +               .names = { "I", "J" },
-> +       },
-> +};
-
-I guess you have been over the reasons why this is one big GPIO
-chip instead of  10 individual gpio_chips?
-
-It is usally better to have the individual chips, because it is easier
-to just cut down the code to handle one instance and not having
-to offset around the different address ranges.
-
-Even if they all have the same clock, the clocks are reference
-counted so it will just be referenced 10 times at most.
-
-If they share a few common registers it is not good to split it
-though. So there may be a compelling argument for keeping them
-all together.
-
-> +/* This will be resolved at compile time */
-
-I don't see why that matters.
-
-> +static inline void __iomem *bank_reg(struct aspeed_sgpio *gpio,
-> +                                    const struct aspeed_sgpio_bank *bank,
-> +                                    const enum aspeed_sgpio_reg reg)
-
-You don't need inline. The compiler will inline it anyway if it
-see the need for it.
-
-The only time we really use inline is in header files, where we
-want to point out that this function will be inlined as there is no
-compiled code in header files.
-
-> +#define GPIO_BANK(x)    ((x) >> 5)
-> +#define GPIO_OFFSET(x)  ((x) & 0x1f)
-> +#define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
-
-OK seems fairly standard.
-
-> +static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int offset)
-> +static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
-> +static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
-
-These are fairly standard.
-
-> +static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
-> +{
-> +       struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&gpio->lock, flags);
-> +       gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
-> +       spin_unlock_irqrestore(&gpio->lock, flags);
-> +
-> +       return 0;
-> +}
-
-There is a bug here. You fail to write the "val" to the output
-line, which is the expected semantic of this call.
-
-> +static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-
-These are all very simple MMIO accessors.
-
-If you made one gpio_chip per bank, you could just use gpio-mmio.c
-to control the lines by
-
-select GPIO_GENERIC
-
-        ret = bgpio_init(chip, dev, 4,
-                         base + GPIO_VAL_VALUE ,
-                         NULL,
-                         NULL,
-                         NULL,
-                         NULL,
-                         0);
-
-The MMIO gpio library takes care of shadowing the direction and all.
-It also will implement get/set_multiple() for you for free.
-
-So seriously consider making one gpio_chip per bank.
-
-> +static inline void irqd_to_aspeed_sgpio_data(struct irq_data *d,
-> +static void aspeed_sgpio_irq_ack(struct irq_data *d)
-> +static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
-> +static void aspeed_sgpio_irq_mask(struct irq_data *d)
-> +static void aspeed_sgpio_irq_unmask(struct irq_data *d)
-> +static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int type)
-> +static void aspeed_sgpio_irq_handler(struct irq_desc *desc)
-> +{
-> +       struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +       struct irq_chip *ic = irq_desc_get_chip(desc);
-> +       struct aspeed_sgpio *data = gpiochip_get_data(gc);
-> +       unsigned int i, p, girq;
-> +       unsigned long reg;
-> +
-> +       chained_irq_enter(ic, desc);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-> +               const struct aspeed_sgpio_bank *bank = &aspeed_sgpio_banks[i];
-> +
-> +               reg = ioread32(bank_reg(data, bank, reg_irq_status));
-> +
-> +               for_each_set_bit(p, &reg, 32) {
-> +                       girq = irq_find_mapping(gc->irq.domain, i * 32 + p);
-> +                       generic_handle_irq(girq);
-> +               }
-> +
-> +       }
-
-This also gets really complex with one driver for all the banks.
-
-> +       /* Disable IRQ and clear Interrupt status registers for all SPGIO Pins. */
-> +       for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
-
-(...)
-> +static int __init aspeed_sgpio_probe(struct platform_device *pdev)
-> +{
-> +       struct aspeed_sgpio *gpio;
-> +       u32 nr_gpios, sgpio_freq, sgpio_clk_div;
-> +       int rc;
-> +       unsigned long apb_freq;
-> +
-> +       /* initialize allocated memory with zeros */
-
-No need for this comment, developers know what "kzalloc" means.
-
-> +       rc = of_property_read_u32(pdev->dev.of_node, "bus-frequency", &sgpio_freq);
-> +       if (rc < 0) {
-> +               dev_err(&pdev->dev, "Could not read bus-frequency property\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       gpio->pclk = devm_clk_get(&pdev->dev, NULL);
-> +       if (IS_ERR(gpio->pclk)) {
-> +               dev_err(&pdev->dev, "devm_clk_get failed\n");
-> +               return PTR_ERR(gpio->pclk);
-> +       }
-> +
-> +       apb_freq = clk_get_rate(gpio->pclk);
-> +
-> +       /*
-> +        * From the datasheet,
-> +        *      SGPIO period = 1/PCLK * 2 * (GPIO254[31:16] + 1)
-> +        *      period = 2 * (GPIO254[31:16] + 1) / PCLK
-> +        *      frequency = 1 / (2 * (GPIO254[31:16] + 1) / PCLK)
-> +        *      frequency = PCLK / (2 * (GPIO254[31:16] + 1))
-> +        *      frequency * 2 * (GPIO254[31:16] + 1) = PCLK
-> +        *      GPIO254[31:16] = PCLK / (frequency * 2) - 1
-> +        */
-> +       if (sgpio_freq == 0)
-> +               return -EINVAL;
-> +
-> +       sgpio_clk_div = (apb_freq / (sgpio_freq * 2)) - 1;
-> +
-> +       if (sgpio_clk_div > (1 << 16) - 1)
-> +               return -EINVAL;
-> +
-> +       iowrite32(FIELD_PREP(ASPEED_SGPIO_CLK_DIV_MASK, sgpio_clk_div) |
-> +                 FIELD_PREP(ASPEED_SGPIO_PINS_MASK, (nr_gpios / 8)) |
-> +                 ASPEED_SGPIO_ENABLE,
-> +                 gpio->base + ASPEED_SGPIO_CTRL);
-
-This is a separate clock driver.
-
-Break this out as a separate clk device that the other GPIOs
-grab.
-
-Put this in drivers/clk/clk-aspeed-gpio.c or wherever appropriate
-with some
-reg = <0xnnnnnn54 4>;
-
-Then let the GPIO driver grab this clock. This makes it possible
-to use a per-gpio-bank split of the GPIO chips.
-
-It looks a bit complicated but this will work so much better because
-the clock code is in the clock subsystem and the GPIO is split up
-and becomes a very small driver since it can use gpio MMIO.
-
-Yours,
-Linus Walleij
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
