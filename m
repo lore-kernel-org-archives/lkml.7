@@ -2,78 +2,181 @@ Return-Path: <SRS0=8q5G=VR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC11C76188
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 10:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F18C76195
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 10:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E2C217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 10:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563617392;
-	bh=v/6mTdXPWdAXUDN5KMQVjYHO1YFlsu5hDM5G0ka8NKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rHnoQOPJSSvHJ8O8H8l/w8ECvQVa7Mtet132QtyvHIkDgO6K4/kqkC9FVQv24nnuj
-	 pTfzFocNUXiU1w85JYedwelOTxDid7XQWij7yKVU75P0cQGW+J6MZF5goryNakKha2
-	 iKFPlE2xhMMIaMeCovut1QVZ9TmvlozwsBAAVXUQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5222E20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Jul 2019 10:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfGTKJu (ORCPT
+        id S1727779AbfGTKMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 06:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727700AbfGTKJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 06:09:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E8120873;
-        Sat, 20 Jul 2019 10:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563617389;
-        bh=v/6mTdXPWdAXUDN5KMQVjYHO1YFlsu5hDM5G0ka8NKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YdumlYAKru89eoGAnBIPQascIIQnHFfJCbYZyrXDXwZfrVhWKKdKnMxM1NIBuowCy
-         OyUaQMVt7et+buTclSlyUQOdb4/jzZDePTNNMsEaaegK38EhpGKb3KlhDA6ZWpGWmt
-         7UsoGw+orM/iNWBUJyyVSZWOMVxfsKnr1LrpSKFI=
-Date:   Sat, 20 Jul 2019 12:09:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Robert Hodaszi <Robert.Hodaszi@digi.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 4.19 30/47] genirq: Delay deactivation in free_irq()
-Message-ID: <20190720100946.GA7731@kroah.com>
-References: <20190718030045.780672747@linuxfoundation.org>
- <20190718030051.289662042@linuxfoundation.org>
- <20190719195852.GA21625@amd>
+        Sat, 20 Jul 2019 06:12:43 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51213 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727699AbfGTKMm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Jul 2019 06:12:42 -0400
+X-Originating-IP: 91.163.65.175
+Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id BB38D60003;
+        Sat, 20 Jul 2019 10:12:39 +0000 (UTC)
+Date:   Sat, 20 Jul 2019 12:12:39 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 8/8] ARM: dts: sun8i: s3: add devicetree for Lichee
+ zero plus w/ S3
+Message-ID: <20190720101239.dg2oe3jazzfmtzvw@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-9-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yaksnqu7g5ezrkwd"
 Content-Disposition: inline
-In-Reply-To: <20190719195852.GA21625@amd>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190713034634.44585-9-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 09:58:53PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> Something went wrong in this mail:
-> 
-> On Thu 2019-07-18 12:01:44, Greg Kroah-Hartman wrote:
-> > From: Thomas Gleixner tglx@linutronix.de
-> > 
-> 
-> normally there should be <> around the email address. And they are in
-> the git, and in 5.1 patch series, so I guess that is not a big deal.
 
-Good catch, this is wrong, I've fixed it up in the patch file.
+--yaksnqu7g5ezrkwd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thanks,
+On Sat, Jul 13, 2019 at 11:46:34AM +0800, Icenowy Zheng wrote:
+> Lichee zero plus is a core board made by Sipeed, which includes on-board
+> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
+> header, a microUSB slot and a gold finger connector for expansion. It
+> can use either Sochip S3 or Allwinner S3L SoC.
+>
+> Add the basic device tree for the core board, w/o optional onboard
+> storage, and with S3 SoC.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> No changes in v4.
+>
+> Changes in v3:
+> - Drop common regulator DTSI usage and added vcc3v3 regulator.
+>
+>  arch/arm/boot/dts/Makefile                    |  1 +
+>  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
+>  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 46 +++++++++++++++++++
+>  3 files changed, 55 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>  create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9159fa2cea90..e320460a952b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1114,6 +1114,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-r16-nintendo-super-nes-classic.dtb \
+>  	sun8i-r16-parrot.dtb \
+>  	sun8i-r40-bananapi-m2-ultra.dtb \
+> +	sun8i-s3-lichee-zero-plus.dtb \
+>  	sun8i-t3-cqa3t-bv3.dtb \
+>  	sun8i-v3s-licheepi-zero.dtb \
+>  	sun8i-v3s-licheepi-zero-dock.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+> new file mode 100644
+> index 000000000000..7d2f6b145190
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-s3.dtsi"
+> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
 
-greg k-h
+Why do we need to mention both the S3 and S3l in the name? What are
+the differences between the two, and why do you need to share a DTSI?
+
+> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+> new file mode 100644
+> index 000000000000..2677d319fb29
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+> @@ -0,0 +1,46 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	reg_vcc3v3: vcc3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	broken-cd;
+> +	bus-width = <4>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-0 = <&uart0_pb_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+
+How can it do OTG if there's no controlable VBUS?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yaksnqu7g5ezrkwd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLpFwAKCRDj7w1vZxhR
+xapNAP9dsiXgIpZkVO/jpxBXiwqOsd98Hw+9A2BukjEQ/nekDAD/auBrd/oUr8MW
+Ebo3HGNtd9Zgkdxi7HdmbdxHN6XzIQs=
+=BhkM
+-----END PGP SIGNATURE-----
+
+--yaksnqu7g5ezrkwd--
