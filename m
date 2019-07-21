@@ -2,429 +2,143 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED818C76196
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CE6C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03462147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97F52084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:28:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihZXwvoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfGUMTK (ORCPT
+        id S1726390AbfGUM2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 08:19:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47868 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfGUMTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 08:19:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 24D1E308425C;
-        Sun, 21 Jul 2019 12:19:08 +0000 (UTC)
-Received: from redhat.com (ovpn-120-23.rdu2.redhat.com [10.10.120.23])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DAFF01001DE1;
-        Sun, 21 Jul 2019 12:18:59 +0000 (UTC)
-Date:   Sun, 21 Jul 2019 08:18:58 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190721081447-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
+        Sun, 21 Jul 2019 08:28:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:32788 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfGUM2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 08:28:02 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x3so24728719lfc.0;
+        Sun, 21 Jul 2019 05:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=B1cKEhyhimzgju0bCuAVL3nF3xEt7T8VCFfT02PNXdE=;
+        b=ihZXwvoibzT1jMBqW65D0MxzA8TjCgeGPuz4PzcvTKVhNaHmrdbx/vOC8w0wNGK5wO
+         hU8kIzMjliGoQYd7CMq/cGAHtAxL+VJyOlAC92fIfl8AmKgzyfEV803ZygrT1TLg/F1X
+         dlSZhjR+soloIBQSTpg6Pm5r/7LqWx7DdhJjMt+YcVNw1cG3ra9d8XcHVi0UXeZlGip6
+         4+4O0rR+vvPiBjvHNrx2etQt4BseTWuTQp9Yr4NzmVbLxFi0HuXTrsMTxhp6NxZveEWI
+         aZWpKeP4Y6fXFBMQRy4NpdDpKuBg1e4jn0VB8qoKff2jBVop+Pnkw5tmy4wCxsG+ldfR
+         FMkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=B1cKEhyhimzgju0bCuAVL3nF3xEt7T8VCFfT02PNXdE=;
+        b=gspv/ECqaR6lkcDhyogpxmXeCERDV/OhKbYEI+6wj25h8WVsVBJ0on5SA3L+ldLo6Y
+         ubPse/qDPSOjc4WkNde+LnF/CEboLw91kIwnj/fC5lL+91qeRwGINp4QZ2R59xUUgU25
+         DMjH3eahZF6eSLVNehaj0BqZglJS6eJWdFFUurGdqBAqAblMgT5YfoSG0gkhrwo2YCOW
+         On7trqTZHckQN31XYxLgAQcVyVkCSJwjrofNsPK0h6ot1jmRULJ7iEwFL0bDoPkkvne2
+         s9ZNtx+4F9Gx4XYfOZQlsRFRnKKO0BSAB1S7apfPK9X2CpsuPV5molOrTUddHFeWi8J8
+         boKQ==
+X-Gm-Message-State: APjAAAU8KxI8fnr3epRKUSKF4+EJ7YhPRopS2bTg/Dg5jJsxS0gyKLHJ
+        bmPvmihGYoPUPw4IRhBBOGA=
+X-Google-Smtp-Source: APXvYqyXNbVUzmUbJGURfMkvPSMWhbC6ChBacKHX8FJ8dcG5/WOFc/Kg09AqX2hFKyh/lMKz+WGt+g==
+X-Received: by 2002:ac2:4c84:: with SMTP id d4mr29129724lfl.1.1563712079264;
+        Sun, 21 Jul 2019 05:27:59 -0700 (PDT)
+Received: from localhost ([188.170.223.67])
+        by smtp.gmail.com with ESMTPSA id w1sm5634104lfe.50.2019.07.21.05.27.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 21 Jul 2019 05:27:58 -0700 (PDT)
+Date:   Sun, 21 Jul 2019 15:27:54 +0300
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>
+Cc:     Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] Input: applespi: fix warnings detected by sparse
+Message-ID: <20190721122754.GA757@penguin>
+References: <20190721081040.26197-1-ronald@innovation.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190721044615-mutt-send-email-mst@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sun, 21 Jul 2019 12:19:08 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190721081040.26197-1-ronald@innovation.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
-> On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
-> > syzbot has bisected this bug to:
-> > 
-> > commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
-> > Author: Jason Wang <jasowang@redhat.com>
-> > Date:   Fri May 24 08:12:18 2019 +0000
-> > 
-> >     vhost: access vq metadata through kernel virtual address
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
-> > start commit:   6d21a41b Add linux-next specific files for 20190718
-> > git tree:       linux-next
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
-> > 
-> > Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
-> > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
-> > address")
-> > 
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
-> 
-> OK I poked at this for a bit, I see several things that
-> we need to fix, though I'm not yet sure it's the reason for
-> the failures:
-> 
-> 
-> 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
->    That's just a bad hack, in particular I don't think device
->    mutex is taken and so poking at two VQs will corrupt
->    memory.
->    So what to do? How about a per vq notifier?
->    Of course we also have synchronize_rcu
->    in the notifier which is slow and is now going to be called twice.
->    I think call_rcu would be more appropriate here.
->    We then need rcu_barrier on module unload.
->    OTOH if we make pages linear with map then we are good
->    with kfree_rcu which is even nicer.
-> 
-> 2. Doesn't map leak after vhost_map_unprefetch?
->    And why does it poke at contents of the map?
->    No one should use it right?
-> 
-> 3. notifier unregister happens last in vhost_dev_cleanup,
->    but register happens first. This looks wrong to me.
-> 
-> 4. OK so we use the invalidate count to try and detect that
->    some invalidate is in progress.
->    I am not 100% sure why do we care.
->    Assuming we do, uaddr can change between start and end
->    and then the counter can get negative, or generally
->    out of sync.
-> 
-> So what to do about all this?
-> I am inclined to say let's just drop the uaddr optimization
-> for now. E.g. kvm invalidates unconditionally.
-> 3 should be fixed independently.
+On Sun, Jul 21, 2019 at 01:10:40AM -0700, Ronald Tschalär wrote:
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
 
+Applied, thank you.
 
-Above implements this but is only build-tested.
-Jason, pls take a look. If you like the approach feel
-free to take it from here.
+> ---
+> Changes in v2:
+>   replaced min_t/max_t with plain min/max since both arguments are now
+>   int's and don't need further casting
+> 
+>  drivers/input/keyboard/applespi.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+> index d5defdefbc34..cd140a92e731 100644
+> --- a/drivers/input/keyboard/applespi.c
+> +++ b/drivers/input/keyboard/applespi.c
+> @@ -998,10 +998,14 @@ static inline int le16_to_int(__le16 x)
+>  static void applespi_debug_update_dimensions(struct applespi_data *applespi,
+>  					     const struct tp_finger *f)
+>  {
+> -	applespi->tp_dim_min_x = min_t(int, applespi->tp_dim_min_x, f->abs_x);
+> -	applespi->tp_dim_max_x = max_t(int, applespi->tp_dim_max_x, f->abs_x);
+> -	applespi->tp_dim_min_y = min_t(int, applespi->tp_dim_min_y, f->abs_y);
+> -	applespi->tp_dim_max_y = max_t(int, applespi->tp_dim_max_y, f->abs_y);
+> +	applespi->tp_dim_min_x = min(applespi->tp_dim_min_x,
+> +				     le16_to_int(f->abs_x));
+> +	applespi->tp_dim_max_x = max(applespi->tp_dim_max_x,
+> +				     le16_to_int(f->abs_x));
+> +	applespi->tp_dim_min_y = min(applespi->tp_dim_min_y,
+> +				     le16_to_int(f->abs_y));
+> +	applespi->tp_dim_max_y = max(applespi->tp_dim_max_y,
+> +				     le16_to_int(f->abs_y));
+>  }
+>  
+>  static int applespi_tp_dim_open(struct inode *inode, struct file *file)
+> @@ -1653,8 +1657,8 @@ static void applespi_save_bl_level(struct applespi_data *applespi,
+>  	efi_attr = EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
+>  		   EFI_VARIABLE_RUNTIME_ACCESS;
+>  
+> -	sts = efivar_entry_set_safe(EFI_BL_LEVEL_NAME, efi_guid, efi_attr, true,
+> -				    efi_data_len, &efi_data);
+> +	sts = efivar_entry_set_safe((efi_char16_t *)EFI_BL_LEVEL_NAME, efi_guid,
+> +				    efi_attr, true, efi_data_len, &efi_data);
+>  	if (sts)
+>  		dev_warn(&applespi->spi->dev,
+>  			 "Error saving backlight level to EFI vars: %d\n", sts);
+> @@ -2027,7 +2031,7 @@ static const struct acpi_device_id applespi_acpi_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, applespi_acpi_match);
+>  
+> -const struct dev_pm_ops applespi_pm_ops = {
+> +static const struct dev_pm_ops applespi_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(applespi_suspend, applespi_resume)
+>  	.poweroff_late	= applespi_poweroff_late,
+>  };
+> -- 
+> 2.21.0
+> 
 
-One thing the below does not have is any kind of rate-limiting.
-Given it's so easy to restart I'm thinking it makes sense
-to add a generic infrastructure for this.
-Can be a separate patch I guess.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 0536f8526359..1d89715af89d 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -299,53 +299,30 @@ static void vhost_vq_meta_reset(struct vhost_dev *d)
- }
- 
- #if VHOST_ARCH_CAN_ACCEL_UACCESS
--static void vhost_map_unprefetch(struct vhost_map *map)
--{
--	kfree(map->pages);
--	map->pages = NULL;
--	map->npages = 0;
--	map->addr = NULL;
--}
--
--static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
-+static void __vhost_cleanup_vq_maps(struct vhost_virtqueue *vq)
- {
- 	struct vhost_map *map[VHOST_NUM_ADDRS];
- 	int i;
- 
--	spin_lock(&vq->mmu_lock);
- 	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
- 		map[i] = rcu_dereference_protected(vq->maps[i],
- 				  lockdep_is_held(&vq->mmu_lock));
--		if (map[i])
-+		if (map[i]) {
-+			if (vq->uaddrs[i].write) {
-+				for (i = 0; i < map[i]->npages; i++)
-+					set_page_dirty(map[i]->pages[i]);
-+			}
- 			rcu_assign_pointer(vq->maps[i], NULL);
-+			kfree_rcu(map[i], head);
-+		}
- 	}
-+}
-+
-+static void vhost_cleanup_vq_maps(struct vhost_virtqueue *vq)
-+{
-+	spin_lock(&vq->mmu_lock);
-+	__vhost_cleanup_vq_maps(vq);
- 	spin_unlock(&vq->mmu_lock);
--
--	synchronize_rcu();
--
--	for (i = 0; i < VHOST_NUM_ADDRS; i++)
--		if (map[i])
--			vhost_map_unprefetch(map[i]);
--
--}
--
--static void vhost_reset_vq_maps(struct vhost_virtqueue *vq)
--{
--	int i;
--
--	vhost_uninit_vq_maps(vq);
--	for (i = 0; i < VHOST_NUM_ADDRS; i++)
--		vq->uaddrs[i].size = 0;
--}
--
--static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
--				     unsigned long start,
--				     unsigned long end)
--{
--	if (unlikely(!uaddr->size))
--		return false;
--
--	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
- }
- 
- static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
-@@ -353,31 +330,11 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
- 				      unsigned long start,
- 				      unsigned long end)
- {
--	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
--	struct vhost_map *map;
--	int i;
--
--	if (!vhost_map_range_overlap(uaddr, start, end))
--		return;
--
- 	spin_lock(&vq->mmu_lock);
- 	++vq->invalidate_count;
- 
--	map = rcu_dereference_protected(vq->maps[index],
--					lockdep_is_held(&vq->mmu_lock));
--	if (map) {
--		if (uaddr->write) {
--			for (i = 0; i < map->npages; i++)
--				set_page_dirty(map->pages[i]);
--		}
--		rcu_assign_pointer(vq->maps[index], NULL);
--	}
-+	__vhost_cleanup_vq_maps(vq);
- 	spin_unlock(&vq->mmu_lock);
--
--	if (map) {
--		synchronize_rcu();
--		vhost_map_unprefetch(map);
--	}
- }
- 
- static void vhost_invalidate_vq_end(struct vhost_virtqueue *vq,
-@@ -385,9 +342,6 @@ static void vhost_invalidate_vq_end(struct vhost_virtqueue *vq,
- 				    unsigned long start,
- 				    unsigned long end)
- {
--	if (!vhost_map_range_overlap(&vq->uaddrs[index], start, end))
--		return;
--
- 	spin_lock(&vq->mmu_lock);
- 	--vq->invalidate_count;
- 	spin_unlock(&vq->mmu_lock);
-@@ -483,7 +437,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
- 	vq->invalidate_count = 0;
- 	__vhost_vq_meta_reset(vq);
- #if VHOST_ARCH_CAN_ACCEL_UACCESS
--	vhost_reset_vq_maps(vq);
-+	vhost_cleanup_vq_maps(vq);
- #endif
- }
- 
-@@ -833,6 +787,7 @@ static void vhost_setup_uaddr(struct vhost_virtqueue *vq,
- 			      size_t size, bool write)
- {
- 	struct vhost_uaddr *addr = &vq->uaddrs[index];
-+	spin_lock(&vq->mmu_lock);
- 
- 	addr->uaddr = uaddr;
- 	addr->size = size;
-@@ -841,6 +796,8 @@ static void vhost_setup_uaddr(struct vhost_virtqueue *vq,
- 
- static void vhost_setup_vq_uaddr(struct vhost_virtqueue *vq)
- {
-+	spin_lock(&vq->mmu_lock);
-+
- 	vhost_setup_uaddr(vq, VHOST_ADDR_DESC,
- 			  (unsigned long)vq->desc,
- 			  vhost_get_desc_size(vq, vq->num),
-@@ -853,6 +810,8 @@ static void vhost_setup_vq_uaddr(struct vhost_virtqueue *vq)
- 			  (unsigned long)vq->used,
- 			  vhost_get_used_size(vq, vq->num),
- 			  true);
-+
-+	spin_unlock(&vq->mmu_lock);
- }
- 
- static int vhost_map_prefetch(struct vhost_virtqueue *vq,
-@@ -874,13 +833,11 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
- 		goto err;
- 
- 	err = -ENOMEM;
--	map = kmalloc(sizeof(*map), GFP_ATOMIC);
-+	map = kmalloc(sizeof(*map) + sizeof(*map->pages) * npages, GFP_ATOMIC);
- 	if (!map)
- 		goto err;
- 
--	pages = kmalloc_array(npages, sizeof(struct page *), GFP_ATOMIC);
--	if (!pages)
--		goto err_pages;
-+	pages = map->pages;
- 
- 	err = EFAULT;
- 	npinned = __get_user_pages_fast(uaddr->uaddr, npages,
-@@ -907,7 +864,6 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
- 
- 	map->addr = vaddr + (uaddr->uaddr & (PAGE_SIZE - 1));
- 	map->npages = npages;
--	map->pages = pages;
- 
- 	rcu_assign_pointer(vq->maps[index], map);
- 	/* No need for a synchronize_rcu(). This function should be
-@@ -919,8 +875,6 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
- 	return 0;
- 
- err_gup:
--	kfree(pages);
--err_pages:
- 	kfree(map);
- err:
- 	spin_unlock(&vq->mmu_lock);
-@@ -942,6 +896,10 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
- 		vhost_vq_reset(dev, dev->vqs[i]);
- 	}
- 	vhost_dev_free_iovecs(dev);
-+#if VHOST_ARCH_CAN_ACCEL_UACCESS
-+	if (dev->mm)
-+		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
-+#endif
- 	if (dev->log_ctx)
- 		eventfd_ctx_put(dev->log_ctx);
- 	dev->log_ctx = NULL;
-@@ -957,16 +915,8 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
- 		kthread_stop(dev->worker);
- 		dev->worker = NULL;
- 	}
--	if (dev->mm) {
--#if VHOST_ARCH_CAN_ACCEL_UACCESS
--		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
--#endif
-+	if (dev->mm)
- 		mmput(dev->mm);
--	}
--#if VHOST_ARCH_CAN_ACCEL_UACCESS
--	for (i = 0; i < dev->nvqs; i++)
--		vhost_uninit_vq_maps(dev->vqs[i]);
--#endif
- 	dev->mm = NULL;
- }
- EXPORT_SYMBOL_GPL(vhost_dev_cleanup);
-@@ -1426,7 +1376,7 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
- 		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
- 		if (likely(map)) {
- 			avail = map->addr;
--			*event = (__virtio16)avail->ring[vq->num];
-+			*event = avail->ring[vq->num];
- 			rcu_read_unlock();
- 			return 0;
- 		}
-@@ -1830,6 +1780,8 @@ static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
- 	struct vhost_map __rcu *map;
- 	int i;
- 
-+	vhost_setup_vq_uaddr(vq);
-+
- 	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
- 		rcu_read_lock();
- 		map = rcu_dereference(vq->maps[i]);
-@@ -1838,6 +1790,10 @@ static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
- 			vhost_map_prefetch(vq, i);
- 	}
- }
-+#else
-+static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
-+{
-+}
- #endif
- 
- int vq_meta_prefetch(struct vhost_virtqueue *vq)
-@@ -1845,9 +1801,7 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
- 	unsigned int num = vq->num;
- 
- 	if (!vq->iotlb) {
--#if VHOST_ARCH_CAN_ACCEL_UACCESS
- 		vhost_vq_map_prefetch(vq);
--#endif
- 		return 1;
- 	}
- 
-@@ -2060,16 +2014,6 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
- 
- 	mutex_lock(&vq->mutex);
- 
--#if VHOST_ARCH_CAN_ACCEL_UACCESS
--	/* Unregister MMU notifer to allow invalidation callback
--	 * can access vq->uaddrs[] without holding a lock.
--	 */
--	if (d->mm)
--		mmu_notifier_unregister(&d->mmu_notifier, d->mm);
--
--	vhost_uninit_vq_maps(vq);
--#endif
--
- 	switch (ioctl) {
- 	case VHOST_SET_VRING_NUM:
- 		r = vhost_vring_set_num(d, vq, argp);
-@@ -2081,13 +2025,6 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
- 		BUG();
- 	}
- 
--#if VHOST_ARCH_CAN_ACCEL_UACCESS
--	vhost_setup_vq_uaddr(vq);
--
--	if (d->mm)
--		mmu_notifier_register(&d->mmu_notifier, d->mm);
--#endif
--
- 	mutex_unlock(&vq->mutex);
- 
- 	return r;
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index 819296332913..584bb13c4d6d 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -86,7 +86,8 @@ enum vhost_uaddr_type {
- struct vhost_map {
- 	int npages;
- 	void *addr;
--	struct page **pages;
-+	struct rcu_head head;
-+	struct page *pages[];
- };
- 
- struct vhost_uaddr {
+-- 
+Dmitry
