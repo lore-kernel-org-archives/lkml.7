@@ -2,57 +2,128 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737ABC76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 03:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21758C76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 03:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560442084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 03:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1A3208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 03:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rWZqNizH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfGUDUL (ORCPT
+        id S1726360AbfGUDpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 23:20:11 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57644 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfGUDUK (ORCPT
+        Sat, 20 Jul 2019 23:45:39 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:49690 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfGUDpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 23:20:10 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hp2OH-00079s-4f; Sun, 21 Jul 2019 03:20:03 +0000
-Date:   Sun, 21 Jul 2019 04:20:01 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [git pull] typo fix
-Message-ID: <20190721031957.GE17978@ZenIV.linux.org.uk>
+        Sat, 20 Jul 2019 23:45:39 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6L3jTUn006757;
+        Sun, 21 Jul 2019 12:45:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6L3jTUn006757
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563680730;
+        bh=+i1P1EOzIYuFKSpLhOGGexoKtgfai1r9bg5dNGXa6F0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rWZqNizHxDGhLXiH5RLEM1t/LUAvsgmp8EZk2jKss2AVNYPU4fdHNbMwigsoLYMLs
+         UZE0/gzjudBE3rzE/Qh1bAbbpWMWEBhqyxX07k+ibiY0tTJQtkLW5cZ0Drmt9Um1Mi
+         +W1GvIBSh8z6IG/egE0QRACea1V6Ej3N06iCH29ThBUqz+5siQ63qPpIm7qQUdBIly
+         NaJ1C47+JSnH+6eArNrZ3vK40VJWjRfNyGrrP+SfXCyvkbDp8BYoqSrMQAym9DMf8s
+         3Z5FWGq6CI5Pqv2Zwz+2nXV3vKgrK14OVX41zB8MGi8vl8Jmv28l9R5CefDW9rghK+
+         Fyh6qQNdBFl2g==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id a186so22376498vsd.7;
+        Sat, 20 Jul 2019 20:45:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAVUWjvL/brrK+krPala2k4FqbnTWkuFgGUuE7Gg4qzyKBVEE4S9
+        klFJGiCZK/xGwdjiLruUFc8Vz2p8k9NRn5ESKjM=
+X-Google-Smtp-Source: APXvYqyXn4LIVIGhGfe4GQcWn8jAhDg5lBZ7sWrCxxc9wSyaVu8Ptfm6hbnzjFDumV0Hyo1hL7V34uRrK01YyrMzJ7Y=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr15137391vsd.215.1563680729320;
+ Sat, 20 Jul 2019 20:45:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
+ <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 21 Jul 2019 12:44:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
+Message-ID: <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
+Subject: Re: [Question] orphan platform data header
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 02e5ad973883c36c0868b301b8357d9c455bb91c:
+Hi Arnd,
 
-  perf_event_get(): don't bother with fget_raw() (2019-06-26 20:43:53 -0400)
+On Sat, Jul 20, 2019 at 10:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Jul 20, 2019 at 5:26 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > masahiro@grover:~/ref/linux$ git grep netxbig_led_platform_data
+> > drivers/leds/leds-netxbig.c:                          struct
+> > netxbig_led_platform_data *pdata,
+> > drivers/leds/leds-netxbig.c:                                 struct
+> > netxbig_led_platform_data *pdata)
+> > drivers/leds/leds-netxbig.c:                      struct
+> > netxbig_led_platform_data *pdata)
+> > drivers/leds/leds-netxbig.c:    struct netxbig_led_platform_data
+> > *pdata = dev_get_platdata(&pdev->dev);
+> > include/linux/platform_data/leds-kirkwood-netxbig.h:struct
+> > netxbig_led_platform_data {
+> >
+> >
+> >
+> > So, what shall we do?
+> >
+> > Drop the board-file support? Or, keep it
+> > in case somebody is still using their board-files
+> > in downstream?
+>
+> Generally speaking, I'd remove the board file support in another
+> case like this, but it's worth looking at when it was last used and by
+> what.
+>
+> For this file, all boards got converted to DT, and the old setup
+> code removed in commit ebc278f15759 ("ARM: mvebu: remove static
+> LED setup for netxbig boards"), four years ago, so it's a fairly
+> easy decision to make it DT only.
 
-are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.misc
+Thanks.
 
-for you to fetch changes up to 1b03bc5c116383b8bc099e8d60978c379196a687:
+I see another case, which is difficult
+to make a decision.
 
-  typo fix: it's d_make_root, not d_make_inode... (2019-07-20 23:17:30 -0400)
+For example, drivers/spi/spi-tle62x0.c
 
-----------------------------------------------------------------
-Al Viro (1):
-      typo fix: it's d_make_root, not d_make_inode...
+This driver supports only board-file, but the board-file
+is not found in upstream.
 
- Documentation/filesystems/porting | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Unless I am terribly missing something,
+there is no one who passes tle62x0_pdata
+to this driver.
+
+$ git grep tle62x0_pdata
+drivers/spi/spi-tle62x0.c:      struct tle62x0_pdata *pdata;
+include/linux/spi/tle62x0.h:struct tle62x0_pdata {
+
+But, removing board-file support
+makes this driver completely useless...
+
+
+--
+Best Regards
+Masahiro Yamada
