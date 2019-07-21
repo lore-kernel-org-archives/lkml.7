@@ -2,32 +2,33 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9841C76196
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A405BC76196
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91BD20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688D4206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfGUVc4 (ORCPT
+        id S1727353AbfGUVdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:32:56 -0400
-Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:44079 "EHLO
+        Sun, 21 Jul 2019 17:33:15 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:39075 "EHLO
         smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfGUVcu (ORCPT
+        with ESMTP id S1726481AbfGUVcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:32:50 -0400
+        Sun, 21 Jul 2019 17:32:55 -0400
 Received: from smtp7.infomaniak.ch (smtp7.infomaniak.ch [83.166.132.30])
-        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x6LLVQGh253725
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x6LLVr1b000408
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 21 Jul 2019 23:31:26 +0200
+        Sun, 21 Jul 2019 23:31:53 +0200
 Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
         (authenticated bits=0)
-        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x6LLVKmf069024;
-        Sun, 21 Jul 2019 23:31:21 +0200
+        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x6LLVpu8070763;
+        Sun, 21 Jul 2019 23:31:52 +0200
 From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
@@ -58,10 +59,12 @@ Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
         kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
         linux-fsdevel@vger.kernel.org,
         linux-security-module@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH bpf-next v10 00/10] Landlock LSM: Toward unprivileged sandboxing
-Date:   Sun, 21 Jul 2019 23:31:06 +0200
-Message-Id: <20190721213116.23476-1-mic@digikod.net>
+Subject: [PATCH bpf-next v10 08/10] bpf: Add a Landlock sandbox example
+Date:   Sun, 21 Jul 2019 23:31:14 +0200
+Message-Id: <20190721213116.23476-9-mic@digikod.net>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190721213116.23476-1-mic@digikod.net>
+References: <20190721213116.23476-1-mic@digikod.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -72,417 +75,695 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add a basic sandbox tool to launch a command which is denied access to a
+list of files and directories.
 
-This tenth series mainly replace the previous [1] inode map
-implementation with a hash map, which assure uniqueness of keys, improve
-performance, and switch to arbitrary value size.  The inode and map
-lifetime are now handled by LSM hooks.  The previous subtype is replaced
-with the already existing expected attach type and a new expected attach
-triggers field.
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: James Morris <jmorris@namei.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Serge E. Hallyn <serge@hallyn.com>
+---
 
-Landlock is a stackable LSM [4] intended to be used as a low-level
-framework to build custom access-control systems or safe endpoint
-security agents.  There is two types of Landlock hooks: FS_WALK and
-FS_PICK.  Each of them accepts a dedicated eBPF program, called a
-Landlock program.  The set of actions on a file is well defined (e.g.
-read, write, ioctl, append, lock, mount...) taking inspiration from the
-major Linux LSMs and some other access-controls like Capsicum.
+Changes since v9:
+* replace subtype with expected_attach_type and expected_attach_triggers
+* add the ability to parse Landlock programs and triggers to libbpf
+* use the new bpf_inode_map_lookup_elem()
+* use read-only inode map for Landlock programs
+* remove bpf_load.c modifications
 
-The example patch show how a file system access control can be built
-based on a list of denied files and directories.  From a security point
-of view, it may be preferable to use a whitelist instead of a blacklist,
-but this series only enable to match a specific list of files.  Bringing
-back a way to evaluate a path is planned for a future dedicated series,
-once this base Landlock framework is merged.  I may take inspiration
-from the LOOKUP_BENEATH approach [5], but from an eBPF point of view.
+Changes since v8:
+* rewrite the landlock1 sample which deny access to a set of files or
+  directories (i.e. simple blacklist) to fit with the previous patches
+* add "landlock1" to .gitignore
+* in bpf_load.c, pass the subtype with a call to
+  bpf_load_program_xattr()
 
-The documentation patch contains some kernel documentation and
-explanations on how to use Landlock.  The compiled documentation and
-some talks can be found here: https://landlock.io
-This patch series can be found in a Git repository here:
-https://github.com/landlock-lsm/linux/commits/landlock-v10
+Changes since v7:
+* rewrite the example using an inode map
+* add to bpf_load the ability to handle subtypes per program type
 
-This is the first step of the roadmap discussed at LPC [2].  While the
-intended final goal is to allow unprivileged users to use Landlock, this
-series allows only a process with global CAP_SYS_ADMIN to load and
-enforce a rule.  This may help to get feedback and avoid unexpected
-behaviors.
+Changes since v6:
+* check return value of load_and_attach()
+* allow to write on pipes
+* rename BPF_PROG_TYPE_LANDLOCK to BPF_PROG_TYPE_LANDLOCK_RULE
+* rename Landlock version to ABI to better reflect its purpose
+* use const variable (suggested by Kees Cook)
+* remove useless definitions (suggested by Kees Cook)
+* add detailed explanations (suggested by Kees Cook)
 
-This series can be applied on top of bpf-next, commit 88091ff56b71
-("selftests, bpf: Add test for veth native XDP").  This can be tested
-with CONFIG_SECCOMP_FILTER and CONFIG_SECURITY_LANDLOCK.  I would really
-appreciate constructive comments on the design and the code.
+Changes since v5:
+* cosmetic fixes
+* rebase
 
+Changes since v4:
+* write Landlock rule in C and compiled it with LLVM
+* remove cgroup handling
+* remove path handling: only handle a read-only environment
+* remove errno return codes
 
-# Landlock LSM
+Changes since v3:
+* remove seccomp and origin field: completely free from seccomp programs
+* handle more FS-related hooks
+* handle inode hooks and directory traversal
+* add faked but consistent view thanks to ENOENT
+* add /lib64 in the example
+* fix spelling
+* rename some types and definitions (e.g. SECCOMP_ADD_LANDLOCK_RULE)
 
-The goal of this new Linux Security Module (LSM) called Landlock is to
-allow any process, including unprivileged ones, to create powerful
-security sandboxes comparable to XNU Sandbox or OpenBSD Pledge (which
-could be implemented with Landlock).  This kind of sandbox is expected
-to help mitigate the security impact of bugs or unexpected/malicious
-behaviors in user-space applications.
-
-The approach taken is to add the minimum amount of code while still
-allowing the user-space application to create quite complex access
-rules.  A dedicated security policy language such as the one used by
-SELinux, AppArmor and other major LSMs involves a lot of code and is
-usually permitted to only a trusted user (i.e. root).  On the contrary,
-eBPF programs already exist and are designed to be safely loaded by
-unprivileged user-space.
-
-This design does not seem too intrusive but is flexible enough to allow
-a powerful sandbox mechanism accessible by any process on Linux. The use
-of seccomp and Landlock is more suitable with the help of a user-space
-library (e.g.  libseccomp) that could help to specify a high-level
-language to express a security policy instead of raw eBPF programs.
-Moreover, thanks to the LLVM front-end, it is quite easy to write an
-eBPF program with a subset of the C language.
-
-
-# Frequently asked questions
-
-## Why is seccomp-bpf not enough?
-
-A seccomp filter can access only raw syscall arguments (i.e. the
-register values) which means that it is not possible to filter according
-to the value pointed to by an argument, such as a file pathname. As an
-embryonic Landlock version demonstrated, filtering at the syscall level
-is complicated (e.g. need to take care of race conditions). This is
-mainly because the access control checkpoints of the kernel are not at
-this high-level but more underneath, at the LSM-hook level. The LSM
-hooks are designed to handle this kind of checks.  Landlock abstracts
-this approach to leverage the ability of unprivileged users to limit
-themselves.
-
-Cf. section "What it isn't?" in Documentation/prctl/seccomp_filter.txt
-
-
-## Why use the seccomp(2) syscall?
-
-Landlock use the same semantic as seccomp to apply access rule
-restrictions. It add a new layer of security for the current process
-which is inherited by its children. It makes sense to use an unique
-access-restricting syscall (that should be allowed by seccomp filters)
-which can only drop privileges. Moreover, a Landlock rule could come
-from outside a process (e.g.  passed through a UNIX socket). It is then
-useful to differentiate the creation/load of Landlock eBPF programs via
-bpf(2), from rule enforcement via seccomp(2).
-
-
-## Why a new LSM? Are SELinux, AppArmor, Smack and Tomoyo not good
-   enough?
-
-The current access control LSMs are fine for their purpose which is to
-give the *root* the ability to enforce a security policy for the
-*system*. What is missing is a way to enforce a security policy for any
-application by its developer and *unprivileged user* as seccomp can do
-for raw syscall filtering.
-
-Differences from other (access control) LSMs:
-* not only dedicated to administrators (i.e. no_new_priv);
-* limited kernel attack surface (e.g. policy parsing);
-* constrained policy rules (no DoS: deterministic execution time);
-* do not leak more information than the loader process can legitimately
-  have access to (minimize metadata inference).
-
-
-# Changes since v9
-
-* replace subtype with expected_attach_type and a new expected_attach_triggers
-  and update libbpf accordingly
-* handle inode and map lifetime with LSM hooks
-* use a hash map for the inode map: integrate inodemap.c into hashtab.c
-* allow arbitrary value size instead of 64-bits
-
-
-# Changes since v8
-
-* fit with the new LSM stacking framework (security blobs were tested
-  but are not use in this series because of the code reduction)
-* remove the Landlock program chaining and the file path evaluation
-  feature to get a minimum viable product and ease the review
-* replace the example with a simple blacklist policy
-* rebase on bpf-next
-
-
-# Changes since v7
-
-* major revamp of the file system enforcement:
-  * new eBPF map dedicated to tie an inode with an arbitrary 64-bits
-    value, which can be used to tag files
-  * three new Landlock hooks: FS_WALK, FS_PICK and FS_GET
-  * add the ability to chain Landlock programs
-  * add a new eBPF map type to compare inodes
-  * don't use macros anymore
-* replace subtype fields:
-  * triggers: fine-grained bitfiel of actions on which a Landlock
-    program may be called (if it comes from a sandbox process)
-  * previous: a parent chained program
-* upstreamed patches:
-  * commit 369130b63178 ("selftests: Enhance kselftest_harness.h to
-    print which assert failed")
-
-
-# Changes since v6
-
-* upstreamed patches:
-  * commit 752ba56fb130 ("bpf: Extend check_uarg_tail_zero() checks")
-  * commit 0b40808a1084 ("selftests: Make test_harness.h more generally
-    available") and related ones
-  * commit 3bb857e47e49 ("LSM: Enable multiple calls to
-    security_add_hooks() for the same LSM")
-* simplify the landlock_context (remove syscall_* fields) and add three
-  FS sub-events: IOCTL, LOCK, FCNTL
-* minimize the number of callable BPF functions from a Landlock rule
-* do not split put_seccomp_filter() with put_seccomp()
-* rename Landlock version to Landlock ABI
-* miscellaneous fixes
-* rebase on net-next
-
-
-# Changes since v5
-
-* eBPF program subtype:
-  * use a prog_subtype pointer instead of inlining it into bpf_attr
-  * enable a future-proof behavior (reject unhandled data/size)
-  * add tests
-* use a simple rule hierarchy (similar to seccomp-bpf)
-* add a ptrace scope protection
-* add more tests
-* add more documentation
-* rename some files
-* miscellaneous fixes
-* rebase on net-next
-
-
-# Changes since v4
-
-* upstreamed patches:
-  * commit d498f8719a09 ("bpf: Rebuild bpf.o for any dependency update")
-  * commit a734fb5d6006 ("samples/bpf: Reset global variables") and
-    related ones
-  * commit f4874d01beba ("bpf: Use bpf_create_map() from the library")
-    and related ones
-  * commit d02d8986a768 ("bpf: Always test unprivileged programs")
-  * commit 640eb7e7b524 ("fs: Constify path_is_under()'s arguments")
-  * commit 535e7b4b5ef2 ("bpf: Use u64_to_user_ptr()")
-* revamp Landlock to not expose an LSM hook interface but wrap and
-  abstract them with Landlock events (currently one for all filesystem
-  related operations: LANDLOCK_SUBTYPE_EVENT_FS)
-* wrap all filesystem kernel objects through the same FS handle (struct
-  landlock_handle_fs): struct file, struct inode, struct path and struct
-  dentry
-* a rule don't return an errno code but only a boolean to allow or deny
-  an access request
-* handle all filesystem related LSM hooks
-* add some tests and a sample:
-  * BPF context tests
-  * Landlock sandboxing tests and sample
-  * write Landlock rules in C and compile them with LLVM
-* change field names of eBPF program subtype
-* remove arraymap of handles for now (will be replaced with a revamped
-  map)
-* remove cgroup handling for now
-* add user and kernel documentation
-* rebase on net-next
-
-
-# Changes since v3
-
-* upstreamed patch:
-  * commit 1955351da41c ("bpf: Set register type according to
-    is_valid_access()")
-* use abstract LSM hook arguments with custom types (e.g.
-  *_LANDLOCK_ARG_FS for struct file, struct inode and struct path)
-* add more LSM hooks to support full filesystem access control
-* improve the sandbox example
-* fix races and RCU issues:
-  * eBPF program execution and eBPF helpers
-  * revamp the arraymap of handles to cleanly deal with update/delete
-* eBPF program subtype for Landlock:
-  * remove the "origin" field
-  * add an "option" field
-* rebase onto Daniel Mack's patches v7 [3]
-* remove merged commit 1955351da41c ("bpf: Set register type according
-  to is_valid_access()")
-* fix spelling mistakes
-* cleanup some type and variable names
-* split patches
-* for now, remove cgroup delegation handling for unprivileged user
-* remove extra access check for cgroup_get_from_fd()
-* remove unused example code dealing with skb
-* remove seccomp-bpf link:
-  * no more seccomp cookie
-  * for now, it is no more possible to check the current syscall
-    properties
-
-
-# Changes since v2
-
-* revamp cgroup handling:
-  * use Daniel Mack's patches "Add eBPF hooks for cgroups" v5
-  * remove bpf_landlock_cmp_cgroup_beneath()
-  * make BPF_PROG_ATTACH usable with delegated cgroups
-  * add a new CGRP_NO_NEW_PRIVS flag for safe cgroups
-  * handle Landlock sandboxing for cgroups hierarchy
-  * allow unprivileged processes to attach Landlock eBPF program to
-    cgroups
-* add subtype to eBPF programs:
-  * replace Landlock hook identification by custom eBPF program types
-    with a dedicated subtype field
-  * manage fine-grained privileged Landlock programs
-  * register Landlock programs for dedicated trigger origins (e.g.
-    syscall, return from seccomp filter and/or interruption)
-* performance and memory optimizations: use an array to access Landlock
-  hooks directly but do not duplicated it for each thread
-  (seccomp-based)
-* allow running Landlock programs without seccomp filter
-* fix seccomp-related issues
-* remove extra errno bounding check for Landlock programs
-* add some examples for optional eBPF functions or context access
-  (network related) according to security checks to allow more features
-  for privileged programs (e.g. Checmate)
-
-
-# Changes since v1
-
-* focus on the LSM hooks, not the syscalls:
-  * much more simple implementation
-  * does not need audit cache tricks to avoid race conditions
-  * more simple to use and more generic because using the LSM hook
-    abstraction directly
-  * more efficient because only checking in LSM hooks
-  * architecture agnostic
-* switch from cBPF to eBPF:
-  * new eBPF program types dedicated to Landlock
-  * custom functions used by the eBPF program
-  * gain some new features (e.g. 10 registers, can load values of
-    different size, LLVM translator) but only a few functions allowed
-    and a dedicated map type
-  * new context: LSM hook ID, cookie and LSM hook arguments
-  * need to set the sysctl kernel.unprivileged_bpf_disable to 0 (default
-    value) to be able to load hook filters as unprivileged users
-* smaller and simpler:
-  * no more checker groups but dedicated arraymap of handles
-  * simpler userland structs thanks to eBPF functions
-* distinctive name: Landlock
-
-
-[1] https://lore.kernel.org/linux-security-module/20190625215239.11136-1-mic@digikod.net/
-[2] https://lore.kernel.org/lkml/5828776A.1010104@digikod.net/
-[3] https://lore.kernel.org/netdev/1477390454-12553-1-git-send-email-daniel@zonque.org/
-[4] https://lore.kernel.org/lkml/50db058a-7dde-441b-a7f9-f6837fe8b69f@schaufler-ca.com/
-[5] https://lore.kernel.org/lkml/20190520133305.11925-1-cyphar@cyphar.com/
-
-Regards,
-
-Mickaël Salaün (10):
-  fs,security: Add a new file access type: MAY_CHROOT
-  bpf: Add expected_attach_triggers and a is_valid_triggers() verifier
-  bpf,landlock: Define an eBPF program type for Landlock hooks
-  seccomp,landlock: Enforce Landlock programs per process hierarchy
-  landlock: Handle filesystem access control
-  bpf,landlock: Add a new map type: inode
-  landlock: Add ptrace restrictions
-  bpf: Add a Landlock sandbox example
-  bpf,landlock: Add tests for Landlock
-  landlock: Add user and kernel documentation for Landlock
-
- Documentation/security/index.rst              |   1 +
- Documentation/security/landlock/index.rst     |  20 +
- Documentation/security/landlock/kernel.rst    |  99 +++
- Documentation/security/landlock/user.rst      | 147 ++++
- MAINTAINERS                                   |  13 +
- fs/open.c                                     |   3 +-
- include/linux/bpf.h                           |  18 +
- include/linux/bpf_types.h                     |   6 +
- include/linux/fs.h                            |   1 +
- include/linux/landlock.h                      |  38 ++
- include/linux/lsm_hooks.h                     |   1 +
- include/linux/seccomp.h                       |   5 +
- include/uapi/linux/bpf.h                      |  16 +-
- include/uapi/linux/landlock.h                 |  94 +++
- include/uapi/linux/seccomp.h                  |   1 +
- kernel/bpf/core.c                             |   2 +
- kernel/bpf/hashtab.c                          | 253 +++++++
- kernel/bpf/syscall.c                          |  41 +-
- kernel/bpf/verifier.c                         |  26 +
- kernel/fork.c                                 |   8 +-
- kernel/seccomp.c                              |   4 +
+Changes since v2:
+* use BPF_PROG_ATTACH for cgroup handling
+---
  samples/bpf/.gitignore                        |   1 +
  samples/bpf/Makefile                          |   3 +
  samples/bpf/landlock1.h                       |   8 +
- samples/bpf/landlock1_kern.c                  |  55 ++
- samples/bpf/landlock1_user.c                  | 250 +++++++
- security/Kconfig                              |   1 +
- security/Makefile                             |   2 +
- security/landlock/Kconfig                     |  18 +
- security/landlock/Makefile                    |   5 +
- security/landlock/common.h                    | 105 +++
- security/landlock/enforce.c                   | 272 ++++++++
- security/landlock/enforce.h                   |  18 +
- security/landlock/enforce_seccomp.c           |  92 +++
- security/landlock/hooks.c                     |  94 +++
- security/landlock/hooks.h                     |  31 +
- security/landlock/hooks_fs.c                  | 639 ++++++++++++++++++
- security/landlock/hooks_fs.h                  |  31 +
- security/landlock/hooks_ptrace.c              | 121 ++++
- security/landlock/hooks_ptrace.h              |   8 +
- security/landlock/init.c                      | 148 ++++
- security/security.c                           |  15 +
- tools/include/uapi/linux/bpf.h                |  16 +-
- tools/include/uapi/linux/landlock.h           | 109 +++
- tools/lib/bpf/bpf.h                           |   1 +
- tools/lib/bpf/libbpf.c                        |  44 +-
+ samples/bpf/landlock1_kern.c                  |  55 ++++
+ samples/bpf/landlock1_user.c                  | 250 ++++++++++++++++++
+ tools/lib/bpf/libbpf.c                        |  43 ++-
  tools/lib/bpf/libbpf.h                        |   7 +-
- tools/lib/bpf/libbpf.map                      |   2 +
- tools/lib/bpf/libbpf_probes.c                 |   2 +
- tools/testing/selftests/Makefile              |   1 +
+ tools/lib/bpf/libbpf.map                      |   1 +
  tools/testing/selftests/bpf/bpf_helpers.h     |   2 +
  .../selftests/bpf/test_section_names.c        |   2 +-
  .../selftests/bpf/test_sockopt_multi.c        |   4 +-
  tools/testing/selftests/bpf/test_sockopt_sk.c |   2 +-
- tools/testing/selftests/bpf/test_verifier.c   |   1 +
- .../testing/selftests/bpf/verifier/landlock.c |  24 +
- tools/testing/selftests/landlock/.gitignore   |   4 +
- tools/testing/selftests/landlock/Makefile     |  39 ++
- tools/testing/selftests/landlock/test.h       |  50 ++
- tools/testing/selftests/landlock/test_base.c  |  24 +
- tools/testing/selftests/landlock/test_fs.c    | 256 +++++++
- .../testing/selftests/landlock/test_ptrace.c  | 148 ++++
- 62 files changed, 3432 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/security/landlock/index.rst
- create mode 100644 Documentation/security/landlock/kernel.rst
- create mode 100644 Documentation/security/landlock/user.rst
- create mode 100644 include/linux/landlock.h
- create mode 100644 include/uapi/linux/landlock.h
+ 12 files changed, 364 insertions(+), 14 deletions(-)
  create mode 100644 samples/bpf/landlock1.h
  create mode 100644 samples/bpf/landlock1_kern.c
  create mode 100644 samples/bpf/landlock1_user.c
- create mode 100644 security/landlock/Kconfig
- create mode 100644 security/landlock/Makefile
- create mode 100644 security/landlock/common.h
- create mode 100644 security/landlock/enforce.c
- create mode 100644 security/landlock/enforce.h
- create mode 100644 security/landlock/enforce_seccomp.c
- create mode 100644 security/landlock/hooks.c
- create mode 100644 security/landlock/hooks.h
- create mode 100644 security/landlock/hooks_fs.c
- create mode 100644 security/landlock/hooks_fs.h
- create mode 100644 security/landlock/hooks_ptrace.c
- create mode 100644 security/landlock/hooks_ptrace.h
- create mode 100644 security/landlock/init.c
- create mode 100644 tools/include/uapi/linux/landlock.h
- create mode 100644 tools/testing/selftests/bpf/verifier/landlock.c
- create mode 100644 tools/testing/selftests/landlock/.gitignore
- create mode 100644 tools/testing/selftests/landlock/Makefile
- create mode 100644 tools/testing/selftests/landlock/test.h
- create mode 100644 tools/testing/selftests/landlock/test_base.c
- create mode 100644 tools/testing/selftests/landlock/test_fs.c
- create mode 100644 tools/testing/selftests/landlock/test_ptrace.c
 
+diff --git a/samples/bpf/.gitignore b/samples/bpf/.gitignore
+index 74d31fd3c99c..a4c9c806f739 100644
+--- a/samples/bpf/.gitignore
++++ b/samples/bpf/.gitignore
+@@ -2,6 +2,7 @@ cpustat
+ fds_example
+ hbm
+ ibumad
++landlock1
+ lathist
+ lwt_len_hist
+ map_perf_test
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index f90daadfbc89..b0309ed7c1c9 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -53,6 +53,7 @@ hostprogs-y += task_fd_query
+ hostprogs-y += xdp_sample_pkts
+ hostprogs-y += ibumad
+ hostprogs-y += hbm
++hostprogs-y += landlock1
+ 
+ # Libbpf dependencies
+ LIBBPF = $(TOOLS_PATH)/lib/bpf/libbpf.a
+@@ -109,6 +110,7 @@ task_fd_query-objs := bpf_load.o task_fd_query_user.o $(TRACE_HELPERS)
+ xdp_sample_pkts-objs := xdp_sample_pkts_user.o $(TRACE_HELPERS)
+ ibumad-objs := bpf_load.o ibumad_user.o $(TRACE_HELPERS)
+ hbm-objs := bpf_load.o hbm.o $(CGROUP_HELPERS)
++landlock1-objs := bpf_load.o landlock1_user.o
+ 
+ # Tell kbuild to always build the programs
+ always := $(hostprogs-y)
+@@ -170,6 +172,7 @@ always += xdp_sample_pkts_kern.o
+ always += ibumad_kern.o
+ always += hbm_out_kern.o
+ always += hbm_edt_kern.o
++always += landlock1_kern.o
+ 
+ KBUILD_HOSTCFLAGS += -I$(objtree)/usr/include
+ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/bpf/
+diff --git a/samples/bpf/landlock1.h b/samples/bpf/landlock1.h
+new file mode 100644
+index 000000000000..53b0a9447855
+--- /dev/null
++++ b/samples/bpf/landlock1.h
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock sample 1 - common header
++ *
++ * Copyright © 2018-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++#define MAP_FLAG_DENY		(1ULL << 0)
+diff --git a/samples/bpf/landlock1_kern.c b/samples/bpf/landlock1_kern.c
+new file mode 100644
+index 000000000000..d6946659f891
+--- /dev/null
++++ b/samples/bpf/landlock1_kern.c
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock sample 1 - whitelist of read only or read-write file hierarchy
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++/*
++ * This file contains a function that will be compiled to eBPF bytecode thanks
++ * to LLVM/Clang.
++ *
++ * Each SEC() means that the following function or variable will be part of a
++ * custom ELF section. This sections are then processed by the userspace part
++ * (see landlock1_user.c) to extract eBPF bytecode and metadata.
++ */
++
++#include <uapi/linux/bpf.h>
++#include <uapi/linux/landlock.h>
++
++#include "bpf_helpers.h"
++#include "landlock1.h" /* MAP_FLAG_DENY */
++
++#define MAP_MAX_ENTRIES		20
++
++struct bpf_map_def SEC("maps") inode_map = {
++	.type = BPF_MAP_TYPE_INODE,
++	.key_size = sizeof(u32),
++	.value_size = sizeof(u64),
++	.max_entries = MAP_MAX_ENTRIES,
++	.map_flags = BPF_F_RDONLY_PROG,
++};
++
++static __always_inline __u64 get_access(void *inode)
++{
++	u64 *flags;
++
++	flags = bpf_inode_map_lookup_elem(&inode_map, inode);
++	if (flags && (*flags & MAP_FLAG_DENY))
++		return LANDLOCK_RET_DENY;
++	return LANDLOCK_RET_ALLOW;
++}
++
++SEC("landlock/fs_walk")
++int fs_walk(struct landlock_ctx_fs_walk *ctx)
++{
++	return get_access((void *)ctx->inode);
++}
++
++SEC("landlock/fs_pick")
++int fs_pick_ro(struct landlock_ctx_fs_pick *ctx)
++{
++	return get_access((void *)ctx->inode);
++}
++
++static const char SEC("license") _license[] = "GPL";
+diff --git a/samples/bpf/landlock1_user.c b/samples/bpf/landlock1_user.c
+new file mode 100644
+index 000000000000..2082ca367f94
+--- /dev/null
++++ b/samples/bpf/landlock1_user.c
+@@ -0,0 +1,250 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock sample 1 - deny access to a set of directories (blacklisting)
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++#include "bpf/libbpf.h"
++#include "bpf_load.h"
++#include "landlock1.h" /* MAP_FLAG_DENY */
++
++#define _GNU_SOURCE
++#include <errno.h>
++#include <fcntl.h> /* open() */
++#include <linux/bpf.h>
++#include <linux/filter.h>
++#include <linux/landlock.h>
++#include <linux/prctl.h>
++#include <linux/seccomp.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/prctl.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++
++#ifndef seccomp
++static int seccomp(unsigned int op, unsigned int flags, void *args)
++{
++	errno = 0;
++	return syscall(__NR_seccomp, op, flags, args);
++}
++#endif
++
++static int apply_sandbox(int prog_fd)
++{
++	int ret = 0;
++
++	/* set up the test sandbox */
++	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
++		perror("prctl(no_new_priv)");
++		return 1;
++	}
++	if (seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, &prog_fd)) {
++		perror("seccomp(set_hook)");
++		ret = 1;
++	}
++	close(prog_fd);
++
++	return ret;
++}
++
++#define ENV_FS_PATH_DENY_NAME "LL_PATH_DENY"
++#define ENV_PATH_TOKEN ":"
++
++static int parse_path(char *env_path, const char ***path_list)
++{
++	int i, path_nb = 0;
++
++	if (env_path) {
++		path_nb++;
++		for (i = 0; env_path[i]; i++) {
++			if (env_path[i] == ENV_PATH_TOKEN[0])
++				path_nb++;
++		}
++	}
++	*path_list = malloc(path_nb * sizeof(**path_list));
++	for (i = 0; i < path_nb; i++)
++		(*path_list)[i] = strsep(&env_path, ENV_PATH_TOKEN);
++
++	return path_nb;
++}
++
++static int populate_map(const char *env_var, unsigned long long value,
++		int map_fd)
++{
++	int path_nb, ref_fd, i;
++	char *env_path_name;
++	const char **path_list = NULL;
++
++	env_path_name = getenv(env_var);
++	if (!env_path_name)
++		return 0;
++	env_path_name = strdup(env_path_name);
++	path_nb = parse_path(env_path_name, &path_list);
++
++	for (i = 0; i < path_nb; i++) {
++		ref_fd = open(path_list[i], O_RDONLY | O_CLOEXEC);
++		if (ref_fd < 0) {
++			fprintf(stderr, "Failed to open \"%s\": %s\n",
++					path_list[i],
++					strerror(errno));
++			return 1;
++		}
++		if (bpf_map_update_elem(map_fd, &ref_fd, &value, BPF_ANY)) {
++			fprintf(stderr, "Failed to update the map with"
++					" \"%s\": %s\n", path_list[i],
++					strerror(errno));
++			return 1;
++		}
++		close(ref_fd);
++	}
++	free(env_path_name);
++	return 0;
++}
++
++/* need to call bpf_object__close(obj) once every FD is used */
++static int ll_load_file(const char *filename, struct bpf_object **obj,
++		int *ll_map, int *ll_prog_walk, int *ll_prog_pick)
++{
++	int first_bpf_prog, map_fd, prog_walk_fd, prog_pick_fd, err;
++	struct bpf_map *map;
++	struct bpf_program *prog;
++	struct bpf_object *tmp_obj;
++	struct bpf_prog_load_attr prog_load_attr = {
++		.prog_type = BPF_PROG_TYPE_UNSPEC,
++		.file = filename,
++	};
++
++	/*
++	 * allowed:
++	 * - LANDLOCK_TRIGGER_FS_PICK_LINK
++	 * - LANDLOCK_TRIGGER_FS_PICK_LINKTO
++	 * - LANDLOCK_TRIGGER_FS_PICK_RECEIVE
++	 * - LANDLOCK_TRIGGER_FS_PICK_MOUNTON
++	 */
++	prog_load_attr.expected_attach_triggers =
++		LANDLOCK_TRIGGER_FS_PICK_APPEND |
++		LANDLOCK_TRIGGER_FS_PICK_CHDIR |
++		LANDLOCK_TRIGGER_FS_PICK_CHROOT |
++		LANDLOCK_TRIGGER_FS_PICK_CREATE |
++		LANDLOCK_TRIGGER_FS_PICK_EXECUTE |
++		LANDLOCK_TRIGGER_FS_PICK_FCNTL |
++		LANDLOCK_TRIGGER_FS_PICK_GETATTR |
++		LANDLOCK_TRIGGER_FS_PICK_IOCTL |
++		LANDLOCK_TRIGGER_FS_PICK_LOCK |
++		LANDLOCK_TRIGGER_FS_PICK_MAP |
++		LANDLOCK_TRIGGER_FS_PICK_OPEN |
++		LANDLOCK_TRIGGER_FS_PICK_READ |
++		LANDLOCK_TRIGGER_FS_PICK_READDIR |
++		LANDLOCK_TRIGGER_FS_PICK_RENAME |
++		LANDLOCK_TRIGGER_FS_PICK_RENAMETO |
++		LANDLOCK_TRIGGER_FS_PICK_RMDIR |
++		LANDLOCK_TRIGGER_FS_PICK_SETATTR |
++		LANDLOCK_TRIGGER_FS_PICK_TRANSFER |
++		LANDLOCK_TRIGGER_FS_PICK_UNLINK |
++		LANDLOCK_TRIGGER_FS_PICK_WRITE;
++
++	if (access(filename, O_RDONLY) < 0) {
++		printf("Failed to access file %s: %s\n", filename,
++				strerror(errno));
++		return 1;
++	}
++	err = bpf_prog_load_xattr(&prog_load_attr, &tmp_obj, &first_bpf_prog);
++	if (err) {
++		printf("Failed to parse file %s: %s\n", filename, strerror(err));
++		goto error_load;
++	}
++
++	map = bpf_object__find_map_by_name(tmp_obj, "inode_map");
++	map_fd = bpf_map__fd(map);
++	if (map_fd < 0) {
++		printf("Map not found: %s\n", strerror(map_fd));
++		goto put_obj;
++	}
++
++	prog = bpf_object__find_program_by_title(tmp_obj, "landlock/fs_walk");
++	if (!prog) {
++		printf("Program for FS_WALK not found in file %s\n", filename);
++		goto put_obj;
++	}
++	prog_walk_fd = bpf_program__fd(prog);
++	if (prog_walk_fd < 0) {
++		printf("Failed to load the FS_WALK program from file %s\n",
++				strerror(prog_walk_fd));
++		goto put_obj;
++	}
++
++	prog = bpf_object__find_program_by_title(tmp_obj, "landlock/fs_pick");
++	if (!prog) {
++		printf("Failed to get a file descriptor for program %s from file %s\n",
++				bpf_program__title(prog, false), filename);
++		goto put_obj;
++	}
++	prog_pick_fd = bpf_program__fd(prog);
++	if (prog_pick_fd < 0) {
++		printf("Failed to get a file descriptor for program %s from file %s\n",
++				bpf_program__title(prog, false), filename);
++		goto put_obj;
++	}
++
++	*obj = tmp_obj;
++	*ll_prog_walk = prog_walk_fd;
++	*ll_prog_pick = prog_pick_fd;
++	*ll_map = map_fd;
++	return 0;
++
++put_obj:
++	/* All FDs are closed with bpf_object__close() */
++	bpf_object__close(tmp_obj);
++error_load:
++	printf("ERROR: load_bpf_file failed for: %s\n", filename);
++	printf("  Output from verifier:\n%s\n------\n", bpf_log_buf);
++	return 1;
++}
++
++int main(int argc, char * const argv[], char * const *envp)
++{
++	char filename[256];
++	char *cmd_path;
++	char * const *cmd_argv;
++	struct bpf_object *obj;
++	int ll_map, ll_prog_walk, ll_prog_pick;
++
++	if (argc < 2) {
++		fprintf(stderr, "usage: %s <cmd> [args]...\n\n", argv[0]);
++		fprintf(stderr, "Launch a command in a restricted environment.\n\n");
++		fprintf(stderr, "Environment variables containing paths, each separated by a colon:\n");
++		fprintf(stderr, "* %s: list of files and directories which are denied\n",
++				ENV_FS_PATH_DENY_NAME);
++		fprintf(stderr, "\nexample:\n"
++				"%s=\"${HOME}/.ssh:${HOME}/Images\" "
++				"%s /bin/sh -i\n",
++				ENV_FS_PATH_DENY_NAME, argv[0]);
++		return 1;
++	}
++
++	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
++	if (ll_load_file(filename, &obj, &ll_map, &ll_prog_walk, &ll_prog_pick))
++		return 1;
++
++	if (populate_map(ENV_FS_PATH_DENY_NAME, MAP_FLAG_DENY, ll_map))
++		return 1;
++	//close(ll_map);
++
++	fprintf(stderr, "Launching a new sandboxed process\n");
++	if (apply_sandbox(ll_prog_walk))
++		return 1;
++	//close(ll_prog_walk);
++	if (apply_sandbox(ll_prog_pick))
++		return 1;
++	//close(ll_prog_pick);
++	//bpf_object__close(obj);
++	cmd_path = argv[1];
++	cmd_argv = argv + 1;
++	execve(cmd_path, cmd_argv, envp);
++	perror("Failed to call execve");
++	return 1;
++}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index ab3b8b510b8a..f043e97bca0c 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -181,6 +181,7 @@ struct bpf_program {
+ 	bpf_program_clear_priv_t clear_priv;
+ 
+ 	enum bpf_attach_type expected_attach_type;
++	__u64 expected_attach_triggers;
+ 	int btf_fd;
+ 	void *func_info;
+ 	__u32 func_info_rec_size;
+@@ -2459,6 +2460,7 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+ 	memset(&load_attr, 0, sizeof(struct bpf_load_program_attr));
+ 	load_attr.prog_type = prog->type;
+ 	load_attr.expected_attach_type = prog->expected_attach_type;
++	load_attr.expected_attach_triggers = prog->expected_attach_triggers;
+ 	if (prog->caps->name)
+ 		load_attr.name = prog->name;
+ 	load_attr.insns = insns;
+@@ -3540,19 +3542,29 @@ void bpf_program__set_expected_attach_type(struct bpf_program *prog,
+ 	prog->expected_attach_type = type;
+ }
+ 
+-#define BPF_PROG_SEC_IMPL(string, ptype, eatype, is_attachable, atype) \
+-	{ string, sizeof(string) - 1, ptype, eatype, is_attachable, atype }
++void bpf_program__set_expected_attach_triggers(struct bpf_program *prog,
++					       __u64 triggers)
++{
++	prog->expected_attach_triggers = triggers;
++}
++
++#define BPF_PROG_SEC_IMPL(string, ptype, eatype, is_attachable, atype, has_triggers) \
++	{ string, sizeof(string) - 1, ptype, eatype, is_attachable, atype, has_triggers }
+ 
+ /* Programs that can NOT be attached. */
+-#define BPF_PROG_SEC(string, ptype) BPF_PROG_SEC_IMPL(string, ptype, 0, 0, 0)
++#define BPF_PROG_SEC(string, ptype) BPF_PROG_SEC_IMPL(string, ptype, 0, 0, 0, false)
+ 
+ /* Programs that can be attached. */
+ #define BPF_APROG_SEC(string, ptype, atype) \
+-	BPF_PROG_SEC_IMPL(string, ptype, 0, 1, atype)
++	BPF_PROG_SEC_IMPL(string, ptype, 0, 1, atype, false)
+ 
+ /* Programs that must specify expected attach type at load time. */
+ #define BPF_EAPROG_SEC(string, ptype, eatype) \
+-	BPF_PROG_SEC_IMPL(string, ptype, eatype, 1, eatype)
++	BPF_PROG_SEC_IMPL(string, ptype, eatype, 1, eatype, false)
++
++/* Programs that must specify expected attach type at load time and has triggers. */
++#define BPF_TEAPROG_SEC(string, ptype, eatype) \
++	BPF_PROG_SEC_IMPL(string, ptype, eatype, 1, eatype, true)
+ 
+ /* Programs that can be attached but attach type can't be identified by section
+  * name. Kept for backward compatibility.
+@@ -3566,6 +3578,7 @@ static const struct {
+ 	enum bpf_attach_type expected_attach_type;
+ 	int is_attachable;
+ 	enum bpf_attach_type attach_type;
++	bool has_triggers;
+ } section_names[] = {
+ 	BPF_PROG_SEC("socket",			BPF_PROG_TYPE_SOCKET_FILTER),
+ 	BPF_PROG_SEC("kprobe/",			BPF_PROG_TYPE_KPROBE),
+@@ -3628,6 +3641,10 @@ static const struct {
+ 						BPF_CGROUP_GETSOCKOPT),
+ 	BPF_EAPROG_SEC("cgroup/setsockopt",	BPF_PROG_TYPE_CGROUP_SOCKOPT,
+ 						BPF_CGROUP_SETSOCKOPT),
++	BPF_EAPROG_SEC("landlock/fs_walk",	BPF_PROG_TYPE_LANDLOCK_HOOK,
++						BPF_LANDLOCK_FS_WALK),
++	BPF_TEAPROG_SEC("landlock/fs_pick",	BPF_PROG_TYPE_LANDLOCK_HOOK,
++						BPF_LANDLOCK_FS_PICK),
+ };
+ 
+ #undef BPF_PROG_SEC_IMPL
+@@ -3665,7 +3682,8 @@ static char *libbpf_get_type_names(bool attach_type)
+ }
+ 
+ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
+-			     enum bpf_attach_type *expected_attach_type)
++			     enum bpf_attach_type *expected_attach_type,
++			     bool *has_triggers)
+ {
+ 	char *type_names;
+ 	int i;
+@@ -3678,6 +3696,7 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
+ 			continue;
+ 		*prog_type = section_names[i].prog_type;
+ 		*expected_attach_type = section_names[i].expected_attach_type;
++		*has_triggers = section_names[i].has_triggers;
+ 		return 0;
+ 	}
+ 	pr_warning("failed to guess program type based on ELF section name '%s'\n", name);
+@@ -3720,10 +3739,11 @@ int libbpf_attach_type_by_name(const char *name,
+ static int
+ bpf_program__identify_section(struct bpf_program *prog,
+ 			      enum bpf_prog_type *prog_type,
+-			      enum bpf_attach_type *expected_attach_type)
++			      enum bpf_attach_type *expected_attach_type,
++			      bool *has_triggers)
+ {
+ 	return libbpf_prog_type_by_name(prog->section_name, prog_type,
+-					expected_attach_type);
++					expected_attach_type, has_triggers);
+ }
+ 
+ int bpf_map__fd(const struct bpf_map *map)
+@@ -3898,6 +3918,7 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
+ 	struct bpf_object *obj;
+ 	struct bpf_map *map;
+ 	int err;
++	bool has_triggers = false;
+ 
+ 	if (!attr)
+ 		return -EINVAL;
+@@ -3921,7 +3942,8 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
+ 		expected_attach_type = attr->expected_attach_type;
+ 		if (prog_type == BPF_PROG_TYPE_UNSPEC) {
+ 			err = bpf_program__identify_section(prog, &prog_type,
+-							    &expected_attach_type);
++							    &expected_attach_type,
++							    &has_triggers);
+ 			if (err < 0) {
+ 				bpf_object__close(obj);
+ 				return -EINVAL;
+@@ -3931,6 +3953,9 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
+ 		bpf_program__set_type(prog, prog_type);
+ 		bpf_program__set_expected_attach_type(prog,
+ 						      expected_attach_type);
++		if (has_triggers)
++			bpf_program__set_expected_attach_triggers(prog,
++					attr->expected_attach_triggers);
+ 
+ 		prog->log_level = attr->log_level;
+ 		prog->prog_flags = attr->prog_flags;
+diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+index 5cbf459ece0b..07e153cebd5d 100644
+--- a/tools/lib/bpf/libbpf.h
++++ b/tools/lib/bpf/libbpf.h
+@@ -123,7 +123,8 @@ LIBBPF_API void *bpf_object__priv(const struct bpf_object *prog);
+ 
+ LIBBPF_API int
+ libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
+-			 enum bpf_attach_type *expected_attach_type);
++			 enum bpf_attach_type *expected_attach_type,
++			 bool *has_triggers);
+ LIBBPF_API int libbpf_attach_type_by_name(const char *name,
+ 					  enum bpf_attach_type *attach_type);
+ 
+@@ -266,6 +267,9 @@ LIBBPF_API void bpf_program__set_type(struct bpf_program *prog,
+ LIBBPF_API void
+ bpf_program__set_expected_attach_type(struct bpf_program *prog,
+ 				      enum bpf_attach_type type);
++LIBBPF_API void
++bpf_program__set_expected_attach_triggers(struct bpf_program *prog,
++					  __u64 triggers);
+ 
+ LIBBPF_API bool bpf_program__is_socket_filter(const struct bpf_program *prog);
+ LIBBPF_API bool bpf_program__is_tracepoint(const struct bpf_program *prog);
+@@ -345,6 +349,7 @@ struct bpf_prog_load_attr {
+ 	const char *file;
+ 	enum bpf_prog_type prog_type;
+ 	enum bpf_attach_type expected_attach_type;
++	__u64 expected_attach_triggers;
+ 	int ifindex;
+ 	int log_level;
+ 	int prog_flags;
+diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+index 36ac26bdfda0..4eb930bfc1d8 100644
+--- a/tools/lib/bpf/libbpf.map
++++ b/tools/lib/bpf/libbpf.map
+@@ -83,6 +83,7 @@ LIBBPF_0.0.1 {
+ 		bpf_program__prev;
+ 		bpf_program__priv;
+ 		bpf_program__set_expected_attach_type;
++		bpf_program__set_expected_attach_triggers;
+ 		bpf_program__set_ifindex;
+ 		bpf_program__set_kprobe;
+ 		bpf_program__set_perf_event;
+diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
+index 5a3d92c8bec8..db2a84a88f5c 100644
+--- a/tools/testing/selftests/bpf/bpf_helpers.h
++++ b/tools/testing/selftests/bpf/bpf_helpers.h
+@@ -228,6 +228,8 @@ static void *(*bpf_sk_storage_get)(void *map, struct bpf_sock *sk,
+ static int (*bpf_sk_storage_delete)(void *map, struct bpf_sock *sk) =
+ 	(void *)BPF_FUNC_sk_storage_delete;
+ static int (*bpf_send_signal)(unsigned sig) = (void *)BPF_FUNC_send_signal;
++static void *(*bpf_inode_map_lookup_elem)(void *map, const void *key) =
++	(void *) BPF_FUNC_inode_map_lookup_elem;
+ 
+ /* llvm builtin functions that eBPF C program may use to
+  * emit BPF_LD_ABS and BPF_LD_IND instructions
+diff --git a/tools/testing/selftests/bpf/test_section_names.c b/tools/testing/selftests/bpf/test_section_names.c
+index 29833aeaf0de..2d08df9156bd 100644
+--- a/tools/testing/selftests/bpf/test_section_names.c
++++ b/tools/testing/selftests/bpf/test_section_names.c
+@@ -153,7 +153,7 @@ static int test_prog_type_by_name(const struct sec_name_test *test)
+ 	int rc;
+ 
+ 	rc = libbpf_prog_type_by_name(test->sec_name, &prog_type,
+-				      &expected_attach_type);
++				      &expected_attach_type, false);
+ 
+ 	if (rc != test->expected_load.rc) {
+ 		warnx("prog: unexpected rc=%d for %s", rc, test->sec_name);
+diff --git a/tools/testing/selftests/bpf/test_sockopt_multi.c b/tools/testing/selftests/bpf/test_sockopt_multi.c
+index 4be3441db867..e499c91f2953 100644
+--- a/tools/testing/selftests/bpf/test_sockopt_multi.c
++++ b/tools/testing/selftests/bpf/test_sockopt_multi.c
+@@ -23,7 +23,7 @@ static int prog_attach(struct bpf_object *obj, int cgroup_fd, const char *title)
+ 	struct bpf_program *prog;
+ 	int err;
+ 
+-	err = libbpf_prog_type_by_name(title, &prog_type, &attach_type);
++	err = libbpf_prog_type_by_name(title, &prog_type, &attach_type, false);
+ 	if (err) {
+ 		log_err("Failed to deduct types for %s BPF program", title);
+ 		return -1;
+@@ -52,7 +52,7 @@ static int prog_detach(struct bpf_object *obj, int cgroup_fd, const char *title)
+ 	struct bpf_program *prog;
+ 	int err;
+ 
+-	err = libbpf_prog_type_by_name(title, &prog_type, &attach_type);
++	err = libbpf_prog_type_by_name(title, &prog_type, &attach_type, false);
+ 	if (err)
+ 		return -1;
+ 
+diff --git a/tools/testing/selftests/bpf/test_sockopt_sk.c b/tools/testing/selftests/bpf/test_sockopt_sk.c
+index 036b652e5ca9..2d1ff616b139 100644
+--- a/tools/testing/selftests/bpf/test_sockopt_sk.c
++++ b/tools/testing/selftests/bpf/test_sockopt_sk.c
+@@ -129,7 +129,7 @@ static int prog_attach(struct bpf_object *obj, int cgroup_fd, const char *title)
+ 	struct bpf_program *prog;
+ 	int err;
+ 
+-	err = libbpf_prog_type_by_name(title, &prog_type, &attach_type);
++	err = libbpf_prog_type_by_name(title, &prog_type, &attach_type, false);
+ 	if (err) {
+ 		log_err("Failed to deduct types for %s BPF program", title);
+ 		return -1;
 -- 
 2.22.0
 
