@@ -2,100 +2,203 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECA7C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 22:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70C0C76197
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 22:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DB02085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 22:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39F6208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 22:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PZ/f4mu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGUWjz (ORCPT
+        id S1727407AbfGUWl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 18:39:55 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.155]:44778 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727310AbfGUWjy (ORCPT
+        Sun, 21 Jul 2019 18:41:59 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15829 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfGUWl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 18:39:54 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id A939F400C9A81
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 17:39:53 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id pKUjhLfYzdnCepKUjhqVvm; Sun, 21 Jul 2019 17:39:53 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink-187-160-61-189.pcs.intercable.net ([187.160.61.189]:12335 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hpKUi-000rlS-I2; Sun, 21 Jul 2019 17:39:52 -0500
-Date:   Sun, 21 Jul 2019 17:39:49 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] drm/amdgpu/gfx10: Fix missing break in switch statement
-Message-ID: <20190721223949.GA13591@embeddedor>
+        Sun, 21 Jul 2019 18:41:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d34ea350002>; Sun, 21 Jul 2019 15:41:57 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 21 Jul 2019 15:41:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 21 Jul 2019 15:41:57 -0700
+Received: from [10.2.164.85] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 21 Jul
+ 2019 22:41:55 +0000
+Subject: Re: [PATCH V6 11/21] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-12-git-send-email-skomatineni@nvidia.com>
+ <54e3237d-c6c2-2007-99b2-89c26004da47@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <4263286c-7ffc-d636-6297-b4eadbd64c36@nvidia.com>
+Date:   Sun, 21 Jul 2019 15:42:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.160.61.189
-X-Source-L: No
-X-Exim-ID: 1hpKUi-000rlS-I2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-187-160-61-189.pcs.intercable.net (embeddedor) [187.160.61.189]:12335
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <54e3237d-c6c2-2007-99b2-89c26004da47@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563748917; bh=zv6HaIH3fMK5h3Tq9Jies9CeO0VhGnda+69NFmhuuMY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=PZ/f4mu9DpC1/DUSfwhP+vUa8oSYORlEyt7NCUzrrpjnWyNi4YPYjXyF7NyOCj4CW
+         Wxxun048Mu/q6OjaOvERi39/vtnJv23BX01UEvv2OWRlMvFWb8NDDtLIg1iCSm8D92
+         QdVYpBKh0cV+x1dr70wg5pUd74GiszY+nxfAIGnVfm4BKdw0do9yZDOqJ3HdQJiTLA
+         fTdfpC4oOisCEMzbu/JVtihdRh5DrNR6dwXb6J4gTyHYGpxz7FVZjE7pNbfLz45tcl
+         Vv4CaVOAmxFoJxrR3ec2AuJTCABt7PhsLppp7qAzYPqM5I3mfKCp0+TrTg0U5rNarY
+         Jv8VZQHxEmaBA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing break statement in order to prevent the code from falling
-through to case AMDGPU_IRQ_STATE_ENABLE.
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
+On 7/21/19 2:32 PM, Dmitry Osipenko wrote:
+> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch implements DFLL suspend and resume operation.
+>>
+>> During system suspend entry, CPU clock will switch CPU to safe
+>> clock source of PLLP and disables DFLL clock output.
+>>
+>> DFLL driver suspend confirms DFLL disable state and errors out on
+>> being active.
+>>
+>> DFLL is re-initialized during the DFLL driver resume as it goes
+>> through complete reset during suspend entry.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-dfll.c               | 44 ++++++++++++++++++++++=
+++++++++
+>>   drivers/clk/tegra/clk-dfll.h               |  2 ++
+>>   drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
+>>   3 files changed, 47 insertions(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+>> index f8688c2ddf1a..7dcad4ccd0ae 100644
+>> --- a/drivers/clk/tegra/clk-dfll.c
+>> +++ b/drivers/clk/tegra/clk-dfll.c
+>> @@ -1513,6 +1513,50 @@ static int dfll_init(struct tegra_dfll *td)
+>>   	return ret;
+>>   }
+>>  =20
+>> +/**
+>> + * tegra_dfll_suspend - check DFLL is disabled
+>> + * @dev: DFLL device *
+>> + *
+>> + * DFLL clock should be disabled by the CPUFreq driver. So, make
+>> + * sure it is disabled and disable all clocks needed by the DFLL.
+>> + */
+>> +int tegra_dfll_suspend(struct device *dev)
+>> +{
+>> +	struct tegra_dfll *td =3D dev_get_drvdata(dev);
+>> +
+>> +	if (dfll_is_running(td)) {
+>> +		dev_warn(td->dev, "failed disabling the dfll\n");
+> Something like "dfll is enabled while shouldn't be\n" will be more
+> informative.
+>
+> This is a error, hence dev_err().
+>
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	pm_runtime_disable(dev);
+>> +
+>> +	clk_unprepare(td->ref_clk);
+>> +	clk_unprepare(td->soc_clk);
+>> +	clk_unprepare(td->i2c_clk);
+> Please don't do this, DFLL is already disabled if not running.
 
-Fixes: a644d85a5cd4 ("drm/amdgpu: add gfx v10 implementation (v10)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 1 +
- 1 file changed, 1 insertion(+)
+during resume dfll re-init sequence is same as dfll init so I am using=20
+existing dfll_init
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-index 1675d5837c3c..35e8e29139b1 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -4611,6 +4611,7 @@ gfx_v10_0_set_gfx_eop_interrupt_state(struct amdgpu_device *adev,
- 		cp_int_cntl = REG_SET_FIELD(cp_int_cntl, CP_INT_CNTL_RING0,
- 					    TIME_STAMP_INT_ENABLE, 0);
- 		WREG32(cp_int_cntl_reg, cp_int_cntl);
-+		break;
- 	case AMDGPU_IRQ_STATE_ENABLE:
- 		cp_int_cntl = RREG32(cp_int_cntl_reg);
- 		cp_int_cntl = REG_SET_FIELD(cp_int_cntl, CP_INT_CNTL_RING0,
--- 
-2.22.0
+which includes runtime_enable and clk_prepare.
 
+
+Will create separate dfll_reinit then...
+
+>> +	reset_control_assert(td->dvco_rst);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(tegra_dfll_suspend);
+>> +
+>> +/**
+>> + * tegra_dfll_resume - reinitialize DFLL on resume
+>> + * @pdev: DFLL instance
+>> + *
+>> + * Re-initialize DFLL on resume as it gets disabled and reset during
+>> + * suspend entry. DFLL clock is enabled in closed loop mode later
+>> + * and CPU frequency will be switched to DFLL output.
+>> + */
+>> +int tegra_dfll_resume(struct device *dev)
+>> +{
+>> +	struct tegra_dfll *td =3D dev_get_drvdata(dev);
+>> +
+>> +	return dfll_init(td);
+> Just create dfll_reinit() variant.
+>
+>> +}
+>> +EXPORT_SYMBOL(tegra_dfll_resume);
+>> +
+>>   /*
+>>    * DT data fetch
+>>    */
+>> diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
+>> index 1b14ebe7268b..fb209eb5f365 100644
+>> --- a/drivers/clk/tegra/clk-dfll.h
+>> +++ b/drivers/clk/tegra/clk-dfll.h
+>> @@ -42,5 +42,7 @@ int tegra_dfll_register(struct platform_device *pdev,
+>>   struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_devi=
+ce *pdev);
+>>   int tegra_dfll_runtime_suspend(struct device *dev);
+>>   int tegra_dfll_runtime_resume(struct device *dev);
+>> +int tegra_dfll_suspend(struct device *dev);
+>> +int tegra_dfll_resume(struct device *dev);
+>>  =20
+>>   #endif /* __DRIVERS_CLK_TEGRA_CLK_DFLL_H */
+>> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/te=
+gra/clk-tegra124-dfll-fcpu.c
+>> index e84b6d52cbbd..2ac2679d696d 100644
+>> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+>> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+>> @@ -631,6 +631,7 @@ static int tegra124_dfll_fcpu_remove(struct platform=
+_device *pdev)
+>>   static const struct dev_pm_ops tegra124_dfll_pm_ops =3D {
+>>   	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
+>>   			   tegra_dfll_runtime_resume, NULL)
+>> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dfll_suspend, tegra_dfll_resume)
+>>   };
+>>  =20
+>>   static struct platform_driver tegra124_dfll_fcpu_driver =3D {
+>>
