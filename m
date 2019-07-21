@@ -2,128 +2,83 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21758C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 03:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91B8C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 04:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED1A3208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 03:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rWZqNizH"
+	by mail.kernel.org (Postfix) with ESMTP id 79DC52084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 04:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfGUDpj (ORCPT
+        id S1725904AbfGUEHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Jul 2019 23:45:39 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:49690 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfGUDpj (ORCPT
+        Sun, 21 Jul 2019 00:07:01 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:58104 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfGUEHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Jul 2019 23:45:39 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6L3jTUn006757;
-        Sun, 21 Jul 2019 12:45:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6L3jTUn006757
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563680730;
-        bh=+i1P1EOzIYuFKSpLhOGGexoKtgfai1r9bg5dNGXa6F0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rWZqNizHxDGhLXiH5RLEM1t/LUAvsgmp8EZk2jKss2AVNYPU4fdHNbMwigsoLYMLs
-         UZE0/gzjudBE3rzE/Qh1bAbbpWMWEBhqyxX07k+ibiY0tTJQtkLW5cZ0Drmt9Um1Mi
-         +W1GvIBSh8z6IG/egE0QRACea1V6Ej3N06iCH29ThBUqz+5siQ63qPpIm7qQUdBIly
-         NaJ1C47+JSnH+6eArNrZ3vK40VJWjRfNyGrrP+SfXCyvkbDp8BYoqSrMQAym9DMf8s
-         3Z5FWGq6CI5Pqv2Zwz+2nXV3vKgrK14OVX41zB8MGi8vl8Jmv28l9R5CefDW9rghK+
-         Fyh6qQNdBFl2g==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id a186so22376498vsd.7;
-        Sat, 20 Jul 2019 20:45:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVUWjvL/brrK+krPala2k4FqbnTWkuFgGUuE7Gg4qzyKBVEE4S9
-        klFJGiCZK/xGwdjiLruUFc8Vz2p8k9NRn5ESKjM=
-X-Google-Smtp-Source: APXvYqyXn4LIVIGhGfe4GQcWn8jAhDg5lBZ7sWrCxxc9wSyaVu8Ptfm6hbnzjFDumV0Hyo1hL7V34uRrK01YyrMzJ7Y=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr15137391vsd.215.1563680729320;
- Sat, 20 Jul 2019 20:45:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
- <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 21 Jul 2019 12:44:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
-Message-ID: <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
-Subject: Re: [Question] orphan platform data header
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sun, 21 Jul 2019 00:07:01 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hp36f-000820-UA; Sun, 21 Jul 2019 04:06:06 +0000
+Date:   Sun, 21 Jul 2019 05:05:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
+        Theodore Ts'o <tytso@mit.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 03/24] erofs: add super block operations
+Message-ID: <20190721040547.GF17978@ZenIV.linux.org.uk>
+References: <20190711145755.33908-1-gaoxiang25@huawei.com>
+ <20190711145755.33908-4-gaoxiang25@huawei.com>
+ <20190720224955.GD17978@ZenIV.linux.org.uk>
+ <161cffc4-1d61-5dc6-45df-f1779ef03b0f@aol.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161cffc4-1d61-5dc6-45df-f1779ef03b0f@aol.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Sun, Jul 21, 2019 at 11:08:42AM +0800, Gao Xiang wrote:
 
-On Sat, Jul 20, 2019 at 10:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Sat, Jul 20, 2019 at 5:26 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > masahiro@grover:~/ref/linux$ git grep netxbig_led_platform_data
-> > drivers/leds/leds-netxbig.c:                          struct
-> > netxbig_led_platform_data *pdata,
-> > drivers/leds/leds-netxbig.c:                                 struct
-> > netxbig_led_platform_data *pdata)
-> > drivers/leds/leds-netxbig.c:                      struct
-> > netxbig_led_platform_data *pdata)
-> > drivers/leds/leds-netxbig.c:    struct netxbig_led_platform_data
-> > *pdata = dev_get_platdata(&pdev->dev);
-> > include/linux/platform_data/leds-kirkwood-netxbig.h:struct
-> > netxbig_led_platform_data {
-> >
-> >
-> >
-> > So, what shall we do?
-> >
-> > Drop the board-file support? Or, keep it
-> > in case somebody is still using their board-files
-> > in downstream?
->
-> Generally speaking, I'd remove the board file support in another
-> case like this, but it's worth looking at when it was last used and by
-> what.
->
-> For this file, all boards got converted to DT, and the old setup
-> code removed in commit ebc278f15759 ("ARM: mvebu: remove static
-> LED setup for netxbig boards"), four years ago, so it's a fairly
-> easy decision to make it DT only.
+> It is for debugging use as you said below, mainly for our internal
+> testers whose jobs are
+> to read kmsg logs and catch kernel problems. sb->s_id (device number)
+> maybe not
+> straight-forward for them compared with dev_name...
 
+Huh? ->s_id is something like "sdb7" - it's bdev_name(), not a device
+number...
 
-Thanks.
+> The initial purpose of erofs_mount_private was to passing multi private
+> data from erofs_mount
+> to erofs_read_super, which was written before fs_contest was introduced.
 
-I see another case, which is difficult
-to make a decision.
+That has nothing to do with fs_context (well, other than fs_context conversions
+affecting the code very close to that).
 
-For example, drivers/spi/spi-tle62x0.c
+> I agree with you, it seems better to just use s_id in community and
+> delete erofs_mount_private stuffs...
+> Yet I don't look into how to use new fs_context, could I keep using
+> legacy mount interface and fix them all?
 
-This driver supports only board-file, but the board-file
-is not found in upstream.
+Sure.
 
-Unless I am terribly missing something,
-there is no one who passes tle62x0_pdata
-to this driver.
+> I guess if I don't misunderstand, that is another suggestion -- in
+> short, leave all destructors to .kill_sb() and
+> cleanup fill_super().
 
-$ git grep tle62x0_pdata
-drivers/spi/spi-tle62x0.c:      struct tle62x0_pdata *pdata;
-include/linux/spi/tle62x0.h:struct tle62x0_pdata {
-
-But, removing board-file support
-makes this driver completely useless...
-
-
---
-Best Regards
-Masahiro Yamada
+Just be careful with that iput() there - AFAICS, if fs went live (i.e.
+if ->s_root is non-NULL), you really need it done only from put_super();
+OTOH, for the case of NULL ->s_root ->put_super() won't be called at all,
+so in that case you need it directly in ->kill_sb().
