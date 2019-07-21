@@ -2,996 +2,215 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0588C76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DAAC76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37D2206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7192320828
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="KdKJiAQY"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="CmwQHPsl";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Kjv2sQi3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfGUOuV (ORCPT
+        id S1726699AbfGUOy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 10:50:21 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:47558 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfGUOuU (ORCPT
+        Sun, 21 Jul 2019 10:54:57 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:64580 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726399AbfGUOy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 10:50:20 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x6LEnDGv018230;
-        Sun, 21 Jul 2019 23:49:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6LEnDGv018230
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563720554;
-        bh=+6NzltfosVhMrJ+j6JDFBGLJU+If1D7YmermMlxuTfM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdKJiAQYuGmM1eLC+iWJW7GR+oacuSpVsraBNWwVFWOxy1MZIi2U/PJISv2MKk17s
-         uB7rcdK/upTo8XxUWWXFzsn83FnJB3E3jhgaKxoUf9FujCG1oCjTdN1sKJHaD02Nsv
-         cPsHNuxggQYuTeunkr3Nkt2DVOZjqcyBWXeejtlbfhaWKk+c4UGU0wZ1pFkKNySiUo
-         0gbQNaQxzPaHmRG0OGPStMgt0Bi9YnqlkegmtvfINkhgRr9nxwKsTlstZQxvDq9iRS
-         6E5bpmwuQ/XYq5lvpZnlZy/bCAgaduLGybPaCCxdfSTnN4JzqC4LqcQ+fHn/OeKnR5
-         i+AkQsrX2xQmA==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] usb: host: oxu210hp-hcd: squash oxu210hp.h into oxu210hp-hcd.c
-Date:   Sun, 21 Jul 2019 23:49:09 +0900
-Message-Id: <20190721144909.5295-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190721144909.5295-1-yamada.masahiro@socionext.com>
-References: <20190721144909.5295-1-yamada.masahiro@socionext.com>
+        Sun, 21 Jul 2019 10:54:57 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6LEregA002379;
+        Sun, 21 Jul 2019 07:54:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=wDg4QsqJKoutl2naKK8IxLfQKox09JeWfvEjgv9wI9A=;
+ b=CmwQHPslOQdov4qdzWc30kwbLhvJ+ZjGNmVQo4LWO+UmC0GB4RnLtXhIYLIdWa449xef
+ ZcHpPUBzcFly4aDJTqpJuwjJ/1Jt5xNR0qPkivcMb/lvyFG9faZ0Wb4jUYDmaziqDWcl
+ i7DE+c3eMMRPFDCWWbz3gTySykmQnmBauF+zcQNgkCdju4cmBZq1YFg6iqrsqbw7LDG5
+ enOYSXlHEAxiMjll4TFvZUchGh3N4Go46gZTHrVMcoNuBLgTM/ipBlZxpUotUnE7lCi2
+ 8p9KKUFnFc3+7nbsrJ0AS6YDFaCyp4HeDibmgO/hyQ8QDP2q8vbz1/5pkJPtXgOK35Hs tA== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pawell@cadence.com
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2058.outbound.protection.outlook.com [104.47.33.58])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2tuxhwbk5n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 21 Jul 2019 07:54:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gGC/yimFglNXSBOfhRoYp1SbIuf7zjGlnDJ+Lx/ejdPDUZx8fnY4+9YVaEu/2kb4WvUoCK6fgw8aNOS5tUi9a8udhdXmyAe8vhbyf60UXO208Z3LnfMkZWMYSe2USO7IyfuaTRJP1pttAJZJTQB7G1koyNSiYvTmDJeJyY/JQu3AIop+MVMGR0Pe0im6yKnk1zxUFmW3gs8Hj1Gg46ABCmLmIt7/Nlz2eFPhXZqQrdubIz+cILxxjeGSAxmS+9/ch2VnP0+DmirhzNABJp2pQ4BOisIk4MfA9BGhNV8wGEZdYVz9N+AeVdJgdIV0q8GcPp5OEVeBqtfCrANawUTUQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wDg4QsqJKoutl2naKK8IxLfQKox09JeWfvEjgv9wI9A=;
+ b=hIvT42heB2Z4dTI23uMiDpRWs0T3PEscJ1tVycYpyQTEJZjZwxIz3/FMX5y89jNQjilWCjJKoOCnPdhE4r4yZiQqArP97cZAflWsaRlmnB51x8mrnknxrqjk+YIha97wdVXle0hg1u9w88krMngfR4g1Xhd+SHgggTkdudFK8cwVnXFjd95yzG+RBvAnN7E/r6g52Y5EEQmVqrqgYMy6vhf4b7Y8mQiZ7eCfXVrrKWS2EV6YEwQBqk0eBUetPejAk7pXwf8CDrrArdJ/VIZs49hIyZ3bdIL3vqgVUmMm3uVdZGm9DHonxFvmW5yGOGxLtWA72DgmTtg8ax7kfekDjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=cadence.com;dmarc=pass action=none
+ header.from=cadence.com;dkim=pass header.d=cadence.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wDg4QsqJKoutl2naKK8IxLfQKox09JeWfvEjgv9wI9A=;
+ b=Kjv2sQi3dksx5CY4yBmLGwn6EZlPfZRgKhkKl6cy1zGGJeBQunppjZVKUr0EjUrycdio9bLMLAfaXNzzX9h/cifBcjif9FvibukJ6T0TiAXc8lIwCS/AzCZS/OscEmT3GFckolTbnq4WLZZg3vdoGo6R9HBFoQwfO92At96Filc=
+Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
+ BYAPR07MB5304.namprd07.prod.outlook.com (20.177.124.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.15; Sun, 21 Jul 2019 14:54:47 +0000
+Received: from BYAPR07MB4709.namprd07.prod.outlook.com
+ ([fe80::41f8:6c26:5cc9:743d]) by BYAPR07MB4709.namprd07.prod.outlook.com
+ ([fe80::41f8:6c26:5cc9:743d%3]) with mapi id 15.20.2094.013; Sun, 21 Jul 2019
+ 14:54:46 +0000
+From:   Pawel Laszczak <pawell@cadence.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>
+Subject: RE: [PATCH 1/3] usb: common: Add usb_get_dr_mode_from_string and
+ usb_dr_mode_to_string.
+Thread-Topic: [PATCH 1/3] usb: common: Add usb_get_dr_mode_from_string and
+ usb_dr_mode_to_string.
+Thread-Index: AQHVNZIWpYuDGK3vWkS+CQXY8vq54abBz0qAgAAB1ECAAAMegIAAAK9ggBNmXgA=
+Date:   Sun, 21 Jul 2019 14:54:46 +0000
+Message-ID: <BYAPR07MB470944CE1294AC9E5878792CDDC50@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562592924-17528-1-git-send-email-pawell@cadence.com>
+ <87y31768k0.fsf@linux.intel.com>
+ <BYAPR07MB4709D1BD29C3E0FA6C5289FBDDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87sgrf67qi.fsf@linux.intel.com>
+ <BYAPR07MB4709AC9C0BBC8822ACE5409BDDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+In-Reply-To: <BYAPR07MB4709AC9C0BBC8822ACE5409BDDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNzhlMWNiMTctYWJjNy0xMWU5LTg3NDMtMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDc4ZTFjYjE5LWFiYzctMTFlOS04NzQzLTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMjQ3NyIgdD0iMTMyMDgxOTQ0ODM2NTc1NDY3IiBoPSJGVTNqUE5hc0Vubmg2YXpTaDUvRisxc0xxbGM9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 70c15124-34a2-428d-634f-08d70deb5fae
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR07MB5304;
+x-ms-traffictypediagnostic: BYAPR07MB5304:
+x-microsoft-antispam-prvs: <BYAPR07MB530419DFF6C34A73F3719824DDC50@BYAPR07MB5304.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0105DAA385
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(39860400002)(376002)(366004)(199004)(189003)(36092001)(51444003)(68736007)(11346002)(71190400001)(71200400001)(446003)(8676002)(6916009)(14454004)(86362001)(9686003)(55016002)(4326008)(6246003)(107886003)(53936002)(6436002)(3846002)(256004)(6116002)(81166006)(26005)(186003)(7736002)(305945005)(81156014)(478600001)(8936002)(66066001)(74316002)(33656002)(7696005)(6506007)(54906003)(76176011)(102836004)(25786009)(316002)(5660300002)(66446008)(52536014)(2906002)(66946007)(229853002)(64756008)(66556008)(66476007)(476003)(76116006)(486006)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5304;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z3i82AZm7liZiCNNgs7yq/3o5SKB+WQchQCUEG8WAmi7CuRrIqcQY1sYHvVdNbGQa4Z92IRhcbY/n5e5JCB9Uifio9Be6yv6qSFFwpxAbrDVwe2A/fsu81pMIlyjp/Z4J0Mr1qbPJ9MZjxcEp7RibWpn0bNYricqIKFpvot28KD4pnWEqGz4dXtT82ebMvZKb2dAMPNSJCMgu6vPOLIK1RyGlBcV80tO0TOJoP+ATdAHHlmAym+fjCRJT0itWoM/BqbhkmHgygbONjUEctLnYQw/NevXXu7YynZ3nRMomSShxwAQbp6JYEHjL7gEg8p881x2ogKlJv5Rtiv5G+7n7BUWUZGKpd2VKuoWYKZ7Ix3M3IC+UlowhHQtbhYgtZcN8rm5OmBopqqgbTVHBiKnlPQJXH15GFUHaK269lDmvHM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70c15124-34a2-428d-634f-08d70deb5fae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2019 14:54:46.6716
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pawell@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5304
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-21_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907210179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The header, oxu210hp.h is only included from oxu210hp-hcd.c
-so squash it.
+Hi,
 
-When I moved the code, I also fixed the following warnings from
-scripts/checkpatch.pl:
+>>Pawel Laszczak <pawell@cadence.com> writes:
+>>>>> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+>>>>> index 69f1b6328532..c156817672c4 100644
+>>>>> --- a/include/linux/usb/otg.h
+>>>>> +++ b/include/linux/usb/otg.h
+>>>>> @@ -129,4 +129,20 @@ enum usb_dr_mode {
+>>>>>   */
+>>>>>  extern enum usb_dr_mode usb_get_dr_mode(struct device *dev);
+>>>>>
+>>>>> +/**
+>>>>> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
+>>>>> + * @str: Pointer to the given string
+>>>>> + *
+>>>>> + * The function gets string and returns the correspondig enum usb_dr=
+_mode.
+>>>>> + */
+>>>>> +extern enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)=
+;
+>>>>> +
+>>>>> +/**
+>>>>> + * usb_dr_mode_to_string - Convert dual role mode to string.
+>>>>> + * @dr_mode: Pointer to the given dual role mode
+>>>>> + *
+>>>>> + * The function gets enum usb_dr_mode, and returns the correspondig =
+string.
+>>>>> + */
+>>>>> +extern const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_m=
+ode);
+>>>>> +
+>>>>>  #endif /* __LINUX_USB_OTG_H */
+>>>>
+>>>>Still missing the stubs I mentioned. Did you try compiling with and
+>>>>without common enabled?
+>>>>
+>>> Sorry, I thought that I send answer yesterday but it's look like I prep=
+ared the answer but
+>>> I  forgot to send.
+>>>
+>>> In /drivers/usb/Kconfig we have:
+>>>
+>>> config USB
+>>> 	tristate "Support for Host-side USB"
+>>> 	depends on USB_ARCH_HAS_HCD
+>>> 	select USB_COMMON
+>>>
+>>> and in /drivers/usb/gadget/Kconfig we have:
+>>>
+>>> menuconfig USB_GADGET
+>>> 	tristate "USB Gadget Support"
+>>> 	select USB_COMMON
+>>>
+>>> I think that it should cover all cases.
+>>>
+>>> Am I right ?
+>>
+>>Run a few tens of randconfig builds and see if you ever catch any
+>>problem. I think randconfig can produce a defconfig where USB=3Dn
+>>USB_GADGET=3Dn and USB_COMMON=3Dy.
+>
+>Ok, I will test it, but I think that it should work.
+>The same situation we have for example with: usb_otg_state_string or usb_e=
+p_type_string.
+>
 
-drivers/usb/host/oxu210hp-hcd.c:117: warning: __packed is preferred over __attribute__((packed))
-drivers/usb/host/oxu210hp-hcd.c:196: warning: __packed is preferred over __attribute__((packed))
-drivers/usb/host/oxu210hp-hcd.c:221: warning: __packed is preferred over __attribute__((packed))
-drivers/usb/host/oxu210hp-hcd.c:266: warning: __aligned(size) is preferred over __attribute__((aligned(size)))
-drivers/usb/host/oxu210hp-hcd.c:336: warning: Prefer 'unsigned int' to bare use of 'unsigned'
-drivers/usb/host/oxu210hp-hcd.c:354: warning: __aligned(size) is preferred over __attribute__((aligned(size)))
-drivers/usb/host/oxu210hp-hcd.c:385: warning: __aligned(size) is preferred over __attribute__((aligned(size)))
-drivers/usb/host/oxu210hp-hcd.c:393: warning: __aligned(size) is preferred over __attribute__((aligned(size)))
-drivers/usb/host/oxu210hp-hcd.c:429: warning: Prefer 'unsigned int' to bare use of 'unsigned'
-drivers/usb/host/oxu210hp-hcd.c:432: warning: Prefer 'unsigned int' to bare use of 'unsigned'
-drivers/usb/host/oxu210hp-hcd.c:436: warning: Prefer 'unsigned int' to bare use of 'unsigned'
-drivers/usb/host/oxu210hp-hcd.c:451: warning: Prefer 'unsigned int' to bare use of 'unsigned'
-drivers/usb/host/oxu210hp-hcd.c:461: warning: Prefer 'unsigned int' to bare use of 'unsigned'
-drivers/usb/host/oxu210hp-hcd.c:467: warning: please, no space before tabs
+I've been testing it with USB=3Dn USB_GADGET=3Dn and USB_COMMON=3Dy and als=
+o only with CONFIG_USB_COMMON=3Dy.=20
+Also I've tested this patch with different default configuration together w=
+ith CDNS3 driver which use these functions.=20
+I've test It mainly with x86 and arm architecture.=20
+So far I've not found any issue.=20
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- drivers/usb/host/oxu210hp-hcd.c | 443 ++++++++++++++++++++++++++++++-
- drivers/usb/host/oxu210hp.h     | 446 --------------------------------
- 2 files changed, 441 insertions(+), 448 deletions(-)
- delete mode 100644 drivers/usb/host/oxu210hp.h
-
-diff --git a/drivers/usb/host/oxu210hp-hcd.c b/drivers/usb/host/oxu210hp-hcd.c
-index 47c5515a9ce4..09cc19df798e 100644
---- a/drivers/usb/host/oxu210hp-hcd.c
-+++ b/drivers/usb/host/oxu210hp-hcd.c
-@@ -31,10 +31,449 @@
- #include <linux/irq.h>
- #include <linux/platform_device.h>
- 
--#include "oxu210hp.h"
--
- #define DRIVER_VERSION "0.0.50"
- 
-+#define OXU_DEVICEID			0x00
-+	#define OXU_REV_MASK		0xffff0000
-+	#define OXU_REV_SHIFT		16
-+	#define OXU_REV_2100		0x2100
-+	#define OXU_BO_SHIFT		8
-+	#define OXU_BO_MASK		(0x3 << OXU_BO_SHIFT)
-+	#define OXU_MAJ_REV_SHIFT	4
-+	#define OXU_MAJ_REV_MASK	(0xf << OXU_MAJ_REV_SHIFT)
-+	#define OXU_MIN_REV_SHIFT	0
-+	#define OXU_MIN_REV_MASK	(0xf << OXU_MIN_REV_SHIFT)
-+#define OXU_HOSTIFCONFIG		0x04
-+#define OXU_SOFTRESET			0x08
-+	#define OXU_SRESET		(1 << 0)
-+
-+#define OXU_PIOBURSTREADCTRL		0x0C
-+
-+#define OXU_CHIPIRQSTATUS		0x10
-+#define OXU_CHIPIRQEN_SET		0x14
-+#define OXU_CHIPIRQEN_CLR		0x18
-+	#define OXU_USBSPHLPWUI		0x00000080
-+	#define OXU_USBOTGLPWUI		0x00000040
-+	#define OXU_USBSPHI		0x00000002
-+	#define OXU_USBOTGI		0x00000001
-+
-+#define OXU_CLKCTRL_SET			0x1C
-+	#define OXU_SYSCLKEN		0x00000008
-+	#define OXU_USBSPHCLKEN		0x00000002
-+	#define OXU_USBOTGCLKEN		0x00000001
-+
-+#define OXU_ASO				0x68
-+	#define OXU_SPHPOEN		0x00000100
-+	#define OXU_OVRCCURPUPDEN	0x00000800
-+	#define OXU_ASO_OP		(1 << 10)
-+	#define OXU_COMPARATOR		0x000004000
-+
-+#define OXU_USBMODE			0x1A8
-+	#define OXU_VBPS		0x00000020
-+	#define OXU_ES_LITTLE		0x00000000
-+	#define OXU_CM_HOST_ONLY	0x00000003
-+
-+/*
-+ * Proper EHCI structs & defines
-+ */
-+
-+/* Magic numbers that can affect system performance */
-+#define EHCI_TUNE_CERR		3	/* 0-3 qtd retries; 0 == don't stop */
-+#define EHCI_TUNE_RL_HS		4	/* nak throttle; see 4.9 */
-+#define EHCI_TUNE_RL_TT		0
-+#define EHCI_TUNE_MULT_HS	1	/* 1-3 transactions/uframe; 4.10.3 */
-+#define EHCI_TUNE_MULT_TT	1
-+#define EHCI_TUNE_FLS		2	/* (small) 256 frame schedule */
-+
-+struct oxu_hcd;
-+
-+/* EHCI register interface, corresponds to EHCI Revision 0.95 specification */
-+
-+/* Section 2.2 Host Controller Capability Registers */
-+struct ehci_caps {
-+	/* these fields are specified as 8 and 16 bit registers,
-+	 * but some hosts can't perform 8 or 16 bit PCI accesses.
-+	 */
-+	u32		hc_capbase;
-+#define HC_LENGTH(p)		(((p)>>00)&0x00ff)	/* bits 7:0 */
-+#define HC_VERSION(p)		(((p)>>16)&0xffff)	/* bits 31:16 */
-+	u32		hcs_params;     /* HCSPARAMS - offset 0x4 */
-+#define HCS_DEBUG_PORT(p)	(((p)>>20)&0xf)	/* bits 23:20, debug port? */
-+#define HCS_INDICATOR(p)	((p)&(1 << 16))	/* true: has port indicators */
-+#define HCS_N_CC(p)		(((p)>>12)&0xf)	/* bits 15:12, #companion HCs */
-+#define HCS_N_PCC(p)		(((p)>>8)&0xf)	/* bits 11:8, ports per CC */
-+#define HCS_PORTROUTED(p)	((p)&(1 << 7))	/* true: port routing */
-+#define HCS_PPC(p)		((p)&(1 << 4))	/* true: port power control */
-+#define HCS_N_PORTS(p)		(((p)>>0)&0xf)	/* bits 3:0, ports on HC */
-+
-+	u32		hcc_params;      /* HCCPARAMS - offset 0x8 */
-+#define HCC_EXT_CAPS(p)		(((p)>>8)&0xff)	/* for pci extended caps */
-+#define HCC_ISOC_CACHE(p)       ((p)&(1 << 7))  /* true: can cache isoc frame */
-+#define HCC_ISOC_THRES(p)       (((p)>>4)&0x7)  /* bits 6:4, uframes cached */
-+#define HCC_CANPARK(p)		((p)&(1 << 2))  /* true: can park on async qh */
-+#define HCC_PGM_FRAMELISTLEN(p) ((p)&(1 << 1))  /* true: periodic_size changes*/
-+#define HCC_64BIT_ADDR(p)       ((p)&(1))       /* true: can use 64-bit addr */
-+	u8		portroute[8];	 /* nibbles for routing - offset 0xC */
-+} __packed;
-+
-+
-+/* Section 2.3 Host Controller Operational Registers */
-+struct ehci_regs {
-+	/* USBCMD: offset 0x00 */
-+	u32		command;
-+/* 23:16 is r/w intr rate, in microframes; default "8" == 1/msec */
-+#define CMD_PARK	(1<<11)		/* enable "park" on async qh */
-+#define CMD_PARK_CNT(c)	(((c)>>8)&3)	/* how many transfers to park for */
-+#define CMD_LRESET	(1<<7)		/* partial reset (no ports, etc) */
-+#define CMD_IAAD	(1<<6)		/* "doorbell" interrupt async advance */
-+#define CMD_ASE		(1<<5)		/* async schedule enable */
-+#define CMD_PSE		(1<<4)		/* periodic schedule enable */
-+/* 3:2 is periodic frame list size */
-+#define CMD_RESET	(1<<1)		/* reset HC not bus */
-+#define CMD_RUN		(1<<0)		/* start/stop HC */
-+
-+	/* USBSTS: offset 0x04 */
-+	u32		status;
-+#define STS_ASS		(1<<15)		/* Async Schedule Status */
-+#define STS_PSS		(1<<14)		/* Periodic Schedule Status */
-+#define STS_RECL	(1<<13)		/* Reclamation */
-+#define STS_HALT	(1<<12)		/* Not running (any reason) */
-+/* some bits reserved */
-+	/* these STS_* flags are also intr_enable bits (USBINTR) */
-+#define STS_IAA		(1<<5)		/* Interrupted on async advance */
-+#define STS_FATAL	(1<<4)		/* such as some PCI access errors */
-+#define STS_FLR		(1<<3)		/* frame list rolled over */
-+#define STS_PCD		(1<<2)		/* port change detect */
-+#define STS_ERR		(1<<1)		/* "error" completion (overflow, ...) */
-+#define STS_INT		(1<<0)		/* "normal" completion (short, ...) */
-+
-+#define INTR_MASK (STS_IAA | STS_FATAL | STS_PCD | STS_ERR | STS_INT)
-+
-+	/* USBINTR: offset 0x08 */
-+	u32		intr_enable;
-+
-+	/* FRINDEX: offset 0x0C */
-+	u32		frame_index;	/* current microframe number */
-+	/* CTRLDSSEGMENT: offset 0x10 */
-+	u32		segment;	/* address bits 63:32 if needed */
-+	/* PERIODICLISTBASE: offset 0x14 */
-+	u32		frame_list;	/* points to periodic list */
-+	/* ASYNCLISTADDR: offset 0x18 */
-+	u32		async_next;	/* address of next async queue head */
-+
-+	u32		reserved[9];
-+
-+	/* CONFIGFLAG: offset 0x40 */
-+	u32		configured_flag;
-+#define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
-+
-+	/* PORTSC: offset 0x44 */
-+	u32		port_status[0];	/* up to N_PORTS */
-+/* 31:23 reserved */
-+#define PORT_WKOC_E	(1<<22)		/* wake on overcurrent (enable) */
-+#define PORT_WKDISC_E	(1<<21)		/* wake on disconnect (enable) */
-+#define PORT_WKCONN_E	(1<<20)		/* wake on connect (enable) */
-+/* 19:16 for port testing */
-+#define PORT_LED_OFF	(0<<14)
-+#define PORT_LED_AMBER	(1<<14)
-+#define PORT_LED_GREEN	(2<<14)
-+#define PORT_LED_MASK	(3<<14)
-+#define PORT_OWNER	(1<<13)		/* true: companion hc owns this port */
-+#define PORT_POWER	(1<<12)		/* true: has power (see PPC) */
-+#define PORT_USB11(x) (((x)&(3<<10)) == (1<<10))	/* USB 1.1 device */
-+/* 11:10 for detecting lowspeed devices (reset vs release ownership) */
-+/* 9 reserved */
-+#define PORT_RESET	(1<<8)		/* reset port */
-+#define PORT_SUSPEND	(1<<7)		/* suspend port */
-+#define PORT_RESUME	(1<<6)		/* resume it */
-+#define PORT_OCC	(1<<5)		/* over current change */
-+#define PORT_OC		(1<<4)		/* over current active */
-+#define PORT_PEC	(1<<3)		/* port enable change */
-+#define PORT_PE		(1<<2)		/* port enable */
-+#define PORT_CSC	(1<<1)		/* connect status change */
-+#define PORT_CONNECT	(1<<0)		/* device connected */
-+#define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
-+} __packed;
-+
-+/* Appendix C, Debug port ... intended for use with special "debug devices"
-+ * that can help if there's no serial console.  (nonstandard enumeration.)
-+ */
-+struct ehci_dbg_port {
-+	u32	control;
-+#define DBGP_OWNER	(1<<30)
-+#define DBGP_ENABLED	(1<<28)
-+#define DBGP_DONE	(1<<16)
-+#define DBGP_INUSE	(1<<10)
-+#define DBGP_ERRCODE(x)	(((x)>>7)&0x07)
-+#	define DBGP_ERR_BAD	1
-+#	define DBGP_ERR_SIGNAL	2
-+#define DBGP_ERROR	(1<<6)
-+#define DBGP_GO		(1<<5)
-+#define DBGP_OUT	(1<<4)
-+#define DBGP_LEN(x)	(((x)>>0)&0x0f)
-+	u32	pids;
-+#define DBGP_PID_GET(x)		(((x)>>16)&0xff)
-+#define DBGP_PID_SET(data, tok)	(((data)<<8)|(tok))
-+	u32	data03;
-+	u32	data47;
-+	u32	address;
-+#define DBGP_EPADDR(dev, ep)	(((dev)<<8)|(ep))
-+} __packed;
-+
-+#define	QTD_NEXT(dma)	cpu_to_le32((u32)dma)
-+
-+/*
-+ * EHCI Specification 0.95 Section 3.5
-+ * QTD: describe data transfer components (buffer, direction, ...)
-+ * See Fig 3-6 "Queue Element Transfer Descriptor Block Diagram".
-+ *
-+ * These are associated only with "QH" (Queue Head) structures,
-+ * used with control, bulk, and interrupt transfers.
-+ */
-+struct ehci_qtd {
-+	/* first part defined by EHCI spec */
-+	__le32			hw_next;		/* see EHCI 3.5.1 */
-+	__le32			hw_alt_next;		/* see EHCI 3.5.2 */
-+	__le32			hw_token;		/* see EHCI 3.5.3 */
-+#define	QTD_TOGGLE	(1 << 31)	/* data toggle */
-+#define	QTD_LENGTH(tok)	(((tok)>>16) & 0x7fff)
-+#define	QTD_IOC		(1 << 15)	/* interrupt on complete */
-+#define	QTD_CERR(tok)	(((tok)>>10) & 0x3)
-+#define	QTD_PID(tok)	(((tok)>>8) & 0x3)
-+#define	QTD_STS_ACTIVE	(1 << 7)	/* HC may execute this */
-+#define	QTD_STS_HALT	(1 << 6)	/* halted on error */
-+#define	QTD_STS_DBE	(1 << 5)	/* data buffer error (in HC) */
-+#define	QTD_STS_BABBLE	(1 << 4)	/* device was babbling (qtd halted) */
-+#define	QTD_STS_XACT	(1 << 3)	/* device gave illegal response */
-+#define	QTD_STS_MMF	(1 << 2)	/* incomplete split transaction */
-+#define	QTD_STS_STS	(1 << 1)	/* split transaction state */
-+#define	QTD_STS_PING	(1 << 0)	/* issue PING? */
-+	__le32			hw_buf[5];		/* see EHCI 3.5.4 */
-+	__le32			hw_buf_hi[5];		/* Appendix B */
-+
-+	/* the rest is HCD-private */
-+	dma_addr_t		qtd_dma;		/* qtd address */
-+	struct list_head	qtd_list;		/* sw qtd list */
-+	struct urb		*urb;			/* qtd's urb */
-+	size_t			length;			/* length of buffer */
-+
-+	u32			qtd_buffer_len;
-+	void			*buffer;
-+	dma_addr_t		buffer_dma;
-+	void			*transfer_buffer;
-+	void			*transfer_dma;
-+} __aligned(32);
-+
-+/* mask NakCnt+T in qh->hw_alt_next */
-+#define QTD_MASK cpu_to_le32 (~0x1f)
-+
-+#define IS_SHORT_READ(token) (QTD_LENGTH(token) != 0 && QTD_PID(token) == 1)
-+
-+/* Type tag from {qh, itd, sitd, fstn}->hw_next */
-+#define Q_NEXT_TYPE(dma) ((dma) & cpu_to_le32 (3 << 1))
-+
-+/* values for that type tag */
-+#define Q_TYPE_QH	cpu_to_le32 (1 << 1)
-+
-+/* next async queue entry, or pointer to interrupt/periodic QH */
-+#define	QH_NEXT(dma)	(cpu_to_le32(((u32)dma)&~0x01f)|Q_TYPE_QH)
-+
-+/* for periodic/async schedules and qtd lists, mark end of list */
-+#define	EHCI_LIST_END	cpu_to_le32(1) /* "null pointer" to hw */
-+
-+/*
-+ * Entries in periodic shadow table are pointers to one of four kinds
-+ * of data structure.  That's dictated by the hardware; a type tag is
-+ * encoded in the low bits of the hardware's periodic schedule.  Use
-+ * Q_NEXT_TYPE to get the tag.
-+ *
-+ * For entries in the async schedule, the type tag always says "qh".
-+ */
-+union ehci_shadow {
-+	struct ehci_qh		*qh;		/* Q_TYPE_QH */
-+	__le32			*hw_next;	/* (all types) */
-+	void			*ptr;
-+};
-+
-+/*
-+ * EHCI Specification 0.95 Section 3.6
-+ * QH: describes control/bulk/interrupt endpoints
-+ * See Fig 3-7 "Queue Head Structure Layout".
-+ *
-+ * These appear in both the async and (for interrupt) periodic schedules.
-+ */
-+
-+struct ehci_qh {
-+	/* first part defined by EHCI spec */
-+	__le32			hw_next;	 /* see EHCI 3.6.1 */
-+	__le32			hw_info1;	/* see EHCI 3.6.2 */
-+#define	QH_HEAD		0x00008000
-+	__le32			hw_info2;	/* see EHCI 3.6.2 */
-+#define	QH_SMASK	0x000000ff
-+#define	QH_CMASK	0x0000ff00
-+#define	QH_HUBADDR	0x007f0000
-+#define	QH_HUBPORT	0x3f800000
-+#define	QH_MULT		0xc0000000
-+	__le32			hw_current;	 /* qtd list - see EHCI 3.6.4 */
-+
-+	/* qtd overlay (hardware parts of a struct ehci_qtd) */
-+	__le32			hw_qtd_next;
-+	__le32			hw_alt_next;
-+	__le32			hw_token;
-+	__le32			hw_buf[5];
-+	__le32			hw_buf_hi[5];
-+
-+	/* the rest is HCD-private */
-+	dma_addr_t		qh_dma;		/* address of qh */
-+	union ehci_shadow	qh_next;	/* ptr to qh; or periodic */
-+	struct list_head	qtd_list;	/* sw qtd list */
-+	struct ehci_qtd		*dummy;
-+	struct ehci_qh		*reclaim;	/* next to reclaim */
-+
-+	struct oxu_hcd		*oxu;
-+	struct kref		kref;
-+	unsigned int		stamp;
-+
-+	u8			qh_state;
-+#define	QH_STATE_LINKED		1		/* HC sees this */
-+#define	QH_STATE_UNLINK		2		/* HC may still see this */
-+#define	QH_STATE_IDLE		3		/* HC doesn't see this */
-+#define	QH_STATE_UNLINK_WAIT	4		/* LINKED and on reclaim q */
-+#define	QH_STATE_COMPLETING	5		/* don't touch token.HALT */
-+
-+	/* periodic schedule info */
-+	u8			usecs;		/* intr bandwidth */
-+	u8			gap_uf;		/* uframes split/csplit gap */
-+	u8			c_usecs;	/* ... split completion bw */
-+	u16			tt_usecs;	/* tt downstream bandwidth */
-+	unsigned short		period;		/* polling interval */
-+	unsigned short		start;		/* where polling starts */
-+#define NO_FRAME ((unsigned short)~0)			/* pick new start */
-+	struct usb_device	*dev;		/* access to TT */
-+} __aligned(32);
-+
-+/*
-+ * Proper OXU210HP structs
-+ */
-+
-+#define OXU_OTG_CORE_OFFSET	0x00400
-+#define OXU_OTG_CAP_OFFSET	(OXU_OTG_CORE_OFFSET + 0x100)
-+#define OXU_SPH_CORE_OFFSET	0x00800
-+#define OXU_SPH_CAP_OFFSET	(OXU_SPH_CORE_OFFSET + 0x100)
-+
-+#define OXU_OTG_MEM		0xE000
-+#define OXU_SPH_MEM		0x16000
-+
-+/* Only how many elements & element structure are specifies here. */
-+/* 2 host controllers are enabled - total size <= 28 kbytes */
-+#define	DEFAULT_I_TDPS		1024
-+#define QHEAD_NUM		16
-+#define QTD_NUM			32
-+#define SITD_NUM		8
-+#define MURB_NUM		8
-+
-+#define BUFFER_NUM		8
-+#define BUFFER_SIZE		512
-+
-+struct oxu_info {
-+	struct usb_hcd *hcd[2];
-+};
-+
-+struct oxu_buf {
-+	u8			buffer[BUFFER_SIZE];
-+} __aligned(BUFFER_SIZE);
-+
-+struct oxu_onchip_mem {
-+	struct oxu_buf		db_pool[BUFFER_NUM];
-+
-+	u32			frame_list[DEFAULT_I_TDPS];
-+	struct ehci_qh		qh_pool[QHEAD_NUM];
-+	struct ehci_qtd		qtd_pool[QTD_NUM];
-+} __aligned(4 << 10);
-+
-+#define	EHCI_MAX_ROOT_PORTS	15		/* see HCS_N_PORTS */
-+
-+struct oxu_murb {
-+	struct urb		urb;
-+	struct urb		*main;
-+	u8			last;
-+};
-+
-+struct oxu_hcd {				/* one per controller */
-+	unsigned int		is_otg:1;
-+
-+	u8			qh_used[QHEAD_NUM];
-+	u8			qtd_used[QTD_NUM];
-+	u8			db_used[BUFFER_NUM];
-+	u8			murb_used[MURB_NUM];
-+
-+	struct oxu_onchip_mem	__iomem *mem;
-+	spinlock_t		mem_lock;
-+
-+	struct timer_list	urb_timer;
-+
-+	struct ehci_caps __iomem *caps;
-+	struct ehci_regs __iomem *regs;
-+
-+	u32			hcs_params;	/* cached register copy */
-+	spinlock_t		lock;
-+
-+	/* async schedule support */
-+	struct ehci_qh		*async;
-+	struct ehci_qh		*reclaim;
-+	unsigned int		reclaim_ready:1;
-+	unsigned int		scanning:1;
-+
-+	/* periodic schedule support */
-+	unsigned int		periodic_size;
-+	__le32			*periodic;	/* hw periodic table */
-+	dma_addr_t		periodic_dma;
-+	unsigned int		i_thresh;	/* uframes HC might cache */
-+
-+	union ehci_shadow	*pshadow;	/* mirror hw periodic table */
-+	int			next_uframe;	/* scan periodic, start here */
-+	unsigned int		periodic_sched;	/* periodic activity count */
-+
-+	/* per root hub port */
-+	unsigned long		reset_done[EHCI_MAX_ROOT_PORTS];
-+	/* bit vectors (one bit per port) */
-+	unsigned long		bus_suspended;	/* which ports were
-+						 * already suspended at the
-+						 * start of a bus suspend
-+						 */
-+	unsigned long		companion_ports;/* which ports are dedicated
-+						 * to the companion controller
-+						 */
-+
-+	struct timer_list	watchdog;
-+	unsigned long		actions;
-+	unsigned int		stamp;
-+	unsigned long		next_statechange;
-+	u32			command;
-+
-+	/* SILICON QUIRKS */
-+	struct list_head	urb_list;	/* this is the head to urb
-+						 * queue that didn't get enough
-+						 * resources
-+						 */
-+	struct oxu_murb		*murb_pool;	/* murb per split big urb */
-+	unsigned int		urb_len;
-+
-+	u8			sbrn;		/* packed release number */
-+};
-+
-+#define EHCI_IAA_JIFFIES	(HZ/100)	/* arbitrary; ~10 msec */
-+#define EHCI_IO_JIFFIES		(HZ/10)		/* io watchdog > irq_thresh */
-+#define EHCI_ASYNC_JIFFIES      (HZ/20)		/* async idle timeout */
-+#define EHCI_SHRINK_JIFFIES     (HZ/200)	/* async qh unlink delay */
-+
-+enum ehci_timer_action {
-+	TIMER_IO_WATCHDOG,
-+	TIMER_IAA_WATCHDOG,
-+	TIMER_ASYNC_SHRINK,
-+	TIMER_ASYNC_OFF,
-+};
-+
- /*
-  * Main defines
-  */
-diff --git a/drivers/usb/host/oxu210hp.h b/drivers/usb/host/oxu210hp.h
-deleted file mode 100644
-index 67ebea4993b6..000000000000
---- a/drivers/usb/host/oxu210hp.h
-+++ /dev/null
-@@ -1,446 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Host interface registers
-- */
--
--#define OXU_DEVICEID			0x00
--	#define OXU_REV_MASK		0xffff0000
--	#define OXU_REV_SHIFT		16
--	#define OXU_REV_2100		0x2100
--	#define OXU_BO_SHIFT		8
--	#define OXU_BO_MASK		(0x3 << OXU_BO_SHIFT)
--	#define OXU_MAJ_REV_SHIFT	4
--	#define OXU_MAJ_REV_MASK	(0xf << OXU_MAJ_REV_SHIFT)
--	#define OXU_MIN_REV_SHIFT	0
--	#define OXU_MIN_REV_MASK	(0xf << OXU_MIN_REV_SHIFT)
--#define OXU_HOSTIFCONFIG		0x04
--#define OXU_SOFTRESET			0x08
--	#define OXU_SRESET		(1 << 0)
--
--#define OXU_PIOBURSTREADCTRL		0x0C
--
--#define OXU_CHIPIRQSTATUS		0x10
--#define OXU_CHIPIRQEN_SET		0x14
--#define OXU_CHIPIRQEN_CLR		0x18
--	#define OXU_USBSPHLPWUI		0x00000080
--	#define OXU_USBOTGLPWUI		0x00000040
--	#define OXU_USBSPHI		0x00000002
--	#define OXU_USBOTGI		0x00000001
--
--#define OXU_CLKCTRL_SET			0x1C
--	#define OXU_SYSCLKEN		0x00000008
--	#define OXU_USBSPHCLKEN		0x00000002
--	#define OXU_USBOTGCLKEN		0x00000001
--
--#define OXU_ASO				0x68
--	#define OXU_SPHPOEN		0x00000100
--	#define OXU_OVRCCURPUPDEN	0x00000800
--	#define OXU_ASO_OP		(1 << 10)
--	#define OXU_COMPARATOR		0x000004000
--
--#define OXU_USBMODE			0x1A8
--	#define OXU_VBPS		0x00000020
--	#define OXU_ES_LITTLE		0x00000000
--	#define OXU_CM_HOST_ONLY	0x00000003
--
--/*
-- * Proper EHCI structs & defines
-- */
--
--/* Magic numbers that can affect system performance */
--#define EHCI_TUNE_CERR		3	/* 0-3 qtd retries; 0 == don't stop */
--#define EHCI_TUNE_RL_HS		4	/* nak throttle; see 4.9 */
--#define EHCI_TUNE_RL_TT		0
--#define EHCI_TUNE_MULT_HS	1	/* 1-3 transactions/uframe; 4.10.3 */
--#define EHCI_TUNE_MULT_TT	1
--#define EHCI_TUNE_FLS		2	/* (small) 256 frame schedule */
--
--struct oxu_hcd;
--
--/* EHCI register interface, corresponds to EHCI Revision 0.95 specification */
--
--/* Section 2.2 Host Controller Capability Registers */
--struct ehci_caps {
--	/* these fields are specified as 8 and 16 bit registers,
--	 * but some hosts can't perform 8 or 16 bit PCI accesses.
--	 */
--	u32		hc_capbase;
--#define HC_LENGTH(p)		(((p)>>00)&0x00ff)	/* bits 7:0 */
--#define HC_VERSION(p)		(((p)>>16)&0xffff)	/* bits 31:16 */
--	u32		hcs_params;     /* HCSPARAMS - offset 0x4 */
--#define HCS_DEBUG_PORT(p)	(((p)>>20)&0xf)	/* bits 23:20, debug port? */
--#define HCS_INDICATOR(p)	((p)&(1 << 16))	/* true: has port indicators */
--#define HCS_N_CC(p)		(((p)>>12)&0xf)	/* bits 15:12, #companion HCs */
--#define HCS_N_PCC(p)		(((p)>>8)&0xf)	/* bits 11:8, ports per CC */
--#define HCS_PORTROUTED(p)	((p)&(1 << 7))	/* true: port routing */
--#define HCS_PPC(p)		((p)&(1 << 4))	/* true: port power control */
--#define HCS_N_PORTS(p)		(((p)>>0)&0xf)	/* bits 3:0, ports on HC */
--
--	u32		hcc_params;      /* HCCPARAMS - offset 0x8 */
--#define HCC_EXT_CAPS(p)		(((p)>>8)&0xff)	/* for pci extended caps */
--#define HCC_ISOC_CACHE(p)       ((p)&(1 << 7))  /* true: can cache isoc frame */
--#define HCC_ISOC_THRES(p)       (((p)>>4)&0x7)  /* bits 6:4, uframes cached */
--#define HCC_CANPARK(p)		((p)&(1 << 2))  /* true: can park on async qh */
--#define HCC_PGM_FRAMELISTLEN(p) ((p)&(1 << 1))  /* true: periodic_size changes*/
--#define HCC_64BIT_ADDR(p)       ((p)&(1))       /* true: can use 64-bit addr */
--	u8		portroute[8];	 /* nibbles for routing - offset 0xC */
--} __attribute__ ((packed));
--
--
--/* Section 2.3 Host Controller Operational Registers */
--struct ehci_regs {
--	/* USBCMD: offset 0x00 */
--	u32		command;
--/* 23:16 is r/w intr rate, in microframes; default "8" == 1/msec */
--#define CMD_PARK	(1<<11)		/* enable "park" on async qh */
--#define CMD_PARK_CNT(c)	(((c)>>8)&3)	/* how many transfers to park for */
--#define CMD_LRESET	(1<<7)		/* partial reset (no ports, etc) */
--#define CMD_IAAD	(1<<6)		/* "doorbell" interrupt async advance */
--#define CMD_ASE		(1<<5)		/* async schedule enable */
--#define CMD_PSE		(1<<4)		/* periodic schedule enable */
--/* 3:2 is periodic frame list size */
--#define CMD_RESET	(1<<1)		/* reset HC not bus */
--#define CMD_RUN		(1<<0)		/* start/stop HC */
--
--	/* USBSTS: offset 0x04 */
--	u32		status;
--#define STS_ASS		(1<<15)		/* Async Schedule Status */
--#define STS_PSS		(1<<14)		/* Periodic Schedule Status */
--#define STS_RECL	(1<<13)		/* Reclamation */
--#define STS_HALT	(1<<12)		/* Not running (any reason) */
--/* some bits reserved */
--	/* these STS_* flags are also intr_enable bits (USBINTR) */
--#define STS_IAA		(1<<5)		/* Interrupted on async advance */
--#define STS_FATAL	(1<<4)		/* such as some PCI access errors */
--#define STS_FLR		(1<<3)		/* frame list rolled over */
--#define STS_PCD		(1<<2)		/* port change detect */
--#define STS_ERR		(1<<1)		/* "error" completion (overflow, ...) */
--#define STS_INT		(1<<0)		/* "normal" completion (short, ...) */
--
--#define INTR_MASK (STS_IAA | STS_FATAL | STS_PCD | STS_ERR | STS_INT)
--
--	/* USBINTR: offset 0x08 */
--	u32		intr_enable;
--
--	/* FRINDEX: offset 0x0C */
--	u32		frame_index;	/* current microframe number */
--	/* CTRLDSSEGMENT: offset 0x10 */
--	u32		segment;	/* address bits 63:32 if needed */
--	/* PERIODICLISTBASE: offset 0x14 */
--	u32		frame_list;	/* points to periodic list */
--	/* ASYNCLISTADDR: offset 0x18 */
--	u32		async_next;	/* address of next async queue head */
--
--	u32		reserved[9];
--
--	/* CONFIGFLAG: offset 0x40 */
--	u32		configured_flag;
--#define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
--
--	/* PORTSC: offset 0x44 */
--	u32		port_status[0];	/* up to N_PORTS */
--/* 31:23 reserved */
--#define PORT_WKOC_E	(1<<22)		/* wake on overcurrent (enable) */
--#define PORT_WKDISC_E	(1<<21)		/* wake on disconnect (enable) */
--#define PORT_WKCONN_E	(1<<20)		/* wake on connect (enable) */
--/* 19:16 for port testing */
--#define PORT_LED_OFF	(0<<14)
--#define PORT_LED_AMBER	(1<<14)
--#define PORT_LED_GREEN	(2<<14)
--#define PORT_LED_MASK	(3<<14)
--#define PORT_OWNER	(1<<13)		/* true: companion hc owns this port */
--#define PORT_POWER	(1<<12)		/* true: has power (see PPC) */
--#define PORT_USB11(x) (((x)&(3<<10)) == (1<<10))	/* USB 1.1 device */
--/* 11:10 for detecting lowspeed devices (reset vs release ownership) */
--/* 9 reserved */
--#define PORT_RESET	(1<<8)		/* reset port */
--#define PORT_SUSPEND	(1<<7)		/* suspend port */
--#define PORT_RESUME	(1<<6)		/* resume it */
--#define PORT_OCC	(1<<5)		/* over current change */
--#define PORT_OC		(1<<4)		/* over current active */
--#define PORT_PEC	(1<<3)		/* port enable change */
--#define PORT_PE		(1<<2)		/* port enable */
--#define PORT_CSC	(1<<1)		/* connect status change */
--#define PORT_CONNECT	(1<<0)		/* device connected */
--#define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
--} __attribute__ ((packed));
--
--/* Appendix C, Debug port ... intended for use with special "debug devices"
-- * that can help if there's no serial console.  (nonstandard enumeration.)
-- */
--struct ehci_dbg_port {
--	u32	control;
--#define DBGP_OWNER	(1<<30)
--#define DBGP_ENABLED	(1<<28)
--#define DBGP_DONE	(1<<16)
--#define DBGP_INUSE	(1<<10)
--#define DBGP_ERRCODE(x)	(((x)>>7)&0x07)
--#	define DBGP_ERR_BAD	1
--#	define DBGP_ERR_SIGNAL	2
--#define DBGP_ERROR	(1<<6)
--#define DBGP_GO		(1<<5)
--#define DBGP_OUT	(1<<4)
--#define DBGP_LEN(x)	(((x)>>0)&0x0f)
--	u32	pids;
--#define DBGP_PID_GET(x)		(((x)>>16)&0xff)
--#define DBGP_PID_SET(data, tok)	(((data)<<8)|(tok))
--	u32	data03;
--	u32	data47;
--	u32	address;
--#define DBGP_EPADDR(dev, ep)	(((dev)<<8)|(ep))
--} __attribute__ ((packed));
--
--
--#define	QTD_NEXT(dma)	cpu_to_le32((u32)dma)
--
--/*
-- * EHCI Specification 0.95 Section 3.5
-- * QTD: describe data transfer components (buffer, direction, ...)
-- * See Fig 3-6 "Queue Element Transfer Descriptor Block Diagram".
-- *
-- * These are associated only with "QH" (Queue Head) structures,
-- * used with control, bulk, and interrupt transfers.
-- */
--struct ehci_qtd {
--	/* first part defined by EHCI spec */
--	__le32			hw_next;		/* see EHCI 3.5.1 */
--	__le32			hw_alt_next;		/* see EHCI 3.5.2 */
--	__le32			hw_token;		/* see EHCI 3.5.3 */
--#define	QTD_TOGGLE	(1 << 31)	/* data toggle */
--#define	QTD_LENGTH(tok)	(((tok)>>16) & 0x7fff)
--#define	QTD_IOC		(1 << 15)	/* interrupt on complete */
--#define	QTD_CERR(tok)	(((tok)>>10) & 0x3)
--#define	QTD_PID(tok)	(((tok)>>8) & 0x3)
--#define	QTD_STS_ACTIVE	(1 << 7)	/* HC may execute this */
--#define	QTD_STS_HALT	(1 << 6)	/* halted on error */
--#define	QTD_STS_DBE	(1 << 5)	/* data buffer error (in HC) */
--#define	QTD_STS_BABBLE	(1 << 4)	/* device was babbling (qtd halted) */
--#define	QTD_STS_XACT	(1 << 3)	/* device gave illegal response */
--#define	QTD_STS_MMF	(1 << 2)	/* incomplete split transaction */
--#define	QTD_STS_STS	(1 << 1)	/* split transaction state */
--#define	QTD_STS_PING	(1 << 0)	/* issue PING? */
--	__le32			hw_buf[5];		/* see EHCI 3.5.4 */
--	__le32			hw_buf_hi[5];		/* Appendix B */
--
--	/* the rest is HCD-private */
--	dma_addr_t		qtd_dma;		/* qtd address */
--	struct list_head	qtd_list;		/* sw qtd list */
--	struct urb		*urb;			/* qtd's urb */
--	size_t			length;			/* length of buffer */
--
--	u32			qtd_buffer_len;
--	void			*buffer;
--	dma_addr_t		buffer_dma;
--	void			*transfer_buffer;
--	void			*transfer_dma;
--} __attribute__ ((aligned(32)));
--
--/* mask NakCnt+T in qh->hw_alt_next */
--#define QTD_MASK cpu_to_le32 (~0x1f)
--
--#define IS_SHORT_READ(token) (QTD_LENGTH(token) != 0 && QTD_PID(token) == 1)
--
--/* Type tag from {qh, itd, sitd, fstn}->hw_next */
--#define Q_NEXT_TYPE(dma) ((dma) & cpu_to_le32 (3 << 1))
--
--/* values for that type tag */
--#define Q_TYPE_QH	cpu_to_le32 (1 << 1)
--
--/* next async queue entry, or pointer to interrupt/periodic QH */
--#define	QH_NEXT(dma)	(cpu_to_le32(((u32)dma)&~0x01f)|Q_TYPE_QH)
--
--/* for periodic/async schedules and qtd lists, mark end of list */
--#define	EHCI_LIST_END	cpu_to_le32(1) /* "null pointer" to hw */
--
--/*
-- * Entries in periodic shadow table are pointers to one of four kinds
-- * of data structure.  That's dictated by the hardware; a type tag is
-- * encoded in the low bits of the hardware's periodic schedule.  Use
-- * Q_NEXT_TYPE to get the tag.
-- *
-- * For entries in the async schedule, the type tag always says "qh".
-- */
--union ehci_shadow {
--	struct ehci_qh		*qh;		/* Q_TYPE_QH */
--	__le32			*hw_next;	/* (all types) */
--	void			*ptr;
--};
--
--/*
-- * EHCI Specification 0.95 Section 3.6
-- * QH: describes control/bulk/interrupt endpoints
-- * See Fig 3-7 "Queue Head Structure Layout".
-- *
-- * These appear in both the async and (for interrupt) periodic schedules.
-- */
--
--struct ehci_qh {
--	/* first part defined by EHCI spec */
--	__le32			hw_next;	 /* see EHCI 3.6.1 */
--	__le32			hw_info1;	/* see EHCI 3.6.2 */
--#define	QH_HEAD		0x00008000
--	__le32			hw_info2;	/* see EHCI 3.6.2 */
--#define	QH_SMASK	0x000000ff
--#define	QH_CMASK	0x0000ff00
--#define	QH_HUBADDR	0x007f0000
--#define	QH_HUBPORT	0x3f800000
--#define	QH_MULT		0xc0000000
--	__le32			hw_current;	 /* qtd list - see EHCI 3.6.4 */
--
--	/* qtd overlay (hardware parts of a struct ehci_qtd) */
--	__le32			hw_qtd_next;
--	__le32			hw_alt_next;
--	__le32			hw_token;
--	__le32			hw_buf[5];
--	__le32			hw_buf_hi[5];
--
--	/* the rest is HCD-private */
--	dma_addr_t		qh_dma;		/* address of qh */
--	union ehci_shadow	qh_next;	/* ptr to qh; or periodic */
--	struct list_head	qtd_list;	/* sw qtd list */
--	struct ehci_qtd		*dummy;
--	struct ehci_qh		*reclaim;	/* next to reclaim */
--
--	struct oxu_hcd		*oxu;
--	struct kref		kref;
--	unsigned		stamp;
--
--	u8			qh_state;
--#define	QH_STATE_LINKED		1		/* HC sees this */
--#define	QH_STATE_UNLINK		2		/* HC may still see this */
--#define	QH_STATE_IDLE		3		/* HC doesn't see this */
--#define	QH_STATE_UNLINK_WAIT	4		/* LINKED and on reclaim q */
--#define	QH_STATE_COMPLETING	5		/* don't touch token.HALT */
--
--	/* periodic schedule info */
--	u8			usecs;		/* intr bandwidth */
--	u8			gap_uf;		/* uframes split/csplit gap */
--	u8			c_usecs;	/* ... split completion bw */
--	u16			tt_usecs;	/* tt downstream bandwidth */
--	unsigned short		period;		/* polling interval */
--	unsigned short		start;		/* where polling starts */
--#define NO_FRAME ((unsigned short)~0)			/* pick new start */
--	struct usb_device	*dev;		/* access to TT */
--} __attribute__ ((aligned(32)));
--
--/*
-- * Proper OXU210HP structs
-- */
--
--#define OXU_OTG_CORE_OFFSET	0x00400
--#define OXU_OTG_CAP_OFFSET	(OXU_OTG_CORE_OFFSET + 0x100)
--#define OXU_SPH_CORE_OFFSET	0x00800
--#define OXU_SPH_CAP_OFFSET	(OXU_SPH_CORE_OFFSET + 0x100)
--
--#define OXU_OTG_MEM		0xE000
--#define OXU_SPH_MEM		0x16000
--
--/* Only how many elements & element structure are specifies here. */
--/* 2 host controllers are enabled - total size <= 28 kbytes */
--#define	DEFAULT_I_TDPS		1024
--#define QHEAD_NUM		16
--#define QTD_NUM			32
--#define SITD_NUM		8
--#define MURB_NUM		8
--
--#define BUFFER_NUM		8
--#define BUFFER_SIZE		512
--
--struct oxu_info {
--	struct usb_hcd *hcd[2];
--};
--
--struct oxu_buf {
--	u8			buffer[BUFFER_SIZE];
--} __attribute__ ((aligned(BUFFER_SIZE)));
--
--struct oxu_onchip_mem {
--	struct oxu_buf		db_pool[BUFFER_NUM];
--
--	u32			frame_list[DEFAULT_I_TDPS];
--	struct ehci_qh		qh_pool[QHEAD_NUM];
--	struct ehci_qtd		qtd_pool[QTD_NUM];
--} __attribute__ ((aligned(4 << 10)));
--
--#define	EHCI_MAX_ROOT_PORTS	15		/* see HCS_N_PORTS */
--
--struct oxu_murb {
--	struct urb		urb;
--	struct urb		*main;
--	u8			last;
--};
--
--struct oxu_hcd {				/* one per controller */
--	unsigned int		is_otg:1;
--
--	u8			qh_used[QHEAD_NUM];
--	u8			qtd_used[QTD_NUM];
--	u8			db_used[BUFFER_NUM];
--	u8			murb_used[MURB_NUM];
--
--	struct oxu_onchip_mem	__iomem *mem;
--	spinlock_t		mem_lock;
--
--	struct timer_list	urb_timer;
--
--	struct ehci_caps __iomem *caps;
--	struct ehci_regs __iomem *regs;
--
--	__u32			hcs_params;	/* cached register copy */
--	spinlock_t		lock;
--
--	/* async schedule support */
--	struct ehci_qh		*async;
--	struct ehci_qh		*reclaim;
--	unsigned		reclaim_ready:1;
--	unsigned		scanning:1;
--
--	/* periodic schedule support */
--	unsigned		periodic_size;
--	__le32			*periodic;	/* hw periodic table */
--	dma_addr_t		periodic_dma;
--	unsigned		i_thresh;	/* uframes HC might cache */
--
--	union ehci_shadow	*pshadow;	/* mirror hw periodic table */
--	int			next_uframe;	/* scan periodic, start here */
--	unsigned		periodic_sched;	/* periodic activity count */
--
--	/* per root hub port */
--	unsigned long		reset_done[EHCI_MAX_ROOT_PORTS];
--	/* bit vectors (one bit per port) */
--	unsigned long		bus_suspended;	/* which ports were
--						 * already suspended at the
--						 * start of a bus suspend
--						 */
--	unsigned long		companion_ports;/* which ports are dedicated
--						 * to the companion controller
--						 */
--
--	struct timer_list	watchdog;
--	unsigned long		actions;
--	unsigned		stamp;
--	unsigned long		next_statechange;
--	u32			command;
--
--	/* SILICON QUIRKS */
--	struct list_head	urb_list;	/* this is the head to urb
--						 * queue that didn't get enough
--						 * resources
--						 */
--	struct oxu_murb		*murb_pool;	/* murb per split big urb */
--	unsigned urb_len;
--
--	u8			sbrn;		/* packed release number */
--};
--
--#define EHCI_IAA_JIFFIES	(HZ/100)	/* arbitrary; ~10 msec */
--#define EHCI_IO_JIFFIES	 	(HZ/10)		/* io watchdog > irq_thresh */
--#define EHCI_ASYNC_JIFFIES      (HZ/20)		/* async idle timeout */
--#define EHCI_SHRINK_JIFFIES     (HZ/200)	/* async qh unlink delay */
--
--enum ehci_timer_action {
--	TIMER_IO_WATCHDOG,
--	TIMER_IAA_WATCHDOG,
--	TIMER_ASYNC_SHRINK,
--	TIMER_ASYNC_OFF,
--};
--- 
-2.17.1
+Cheers,
+Pawell
 
