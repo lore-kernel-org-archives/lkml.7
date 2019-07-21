@@ -2,327 +2,141 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B59C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1180C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAA620578
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563708796;
-	bh=yu/fFq7jFm8OBSZJCa1px8MulhNh8gqUFNdXzV3Xwic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RsO2DwBqWFkLT6/b0RodiEuEk/j/JmjkJ+jVXUqvxDTpEW1v6itekizPFc+verTxW
-	 o4NMqkF0clYe6OjkSaY9EUTXoWwX+NlkysUO9j5QYV72+rSlyvx0ZhJcjVj+4q+6Sp
-	 DS3SIvlk2zs7AFucPqWz9LgTUp/694bLG9hEGiiI=
+	by mail.kernel.org (Postfix) with ESMTP id 814EC2083B
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:42:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXMWzT5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfGULdP (ORCPT
+        id S1726561AbfGULmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 07:33:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40066 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfGULdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 07:33:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E31DF3082E24;
-        Sun, 21 Jul 2019 11:33:13 +0000 (UTC)
-Received: from krava.redhat.com (ovpn-204-23.brq.redhat.com [10.40.204.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D5D8E5D9D3;
-        Sun, 21 Jul 2019 11:33:09 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 79/79] libperf: Initial documentation
-Date:   Sun, 21 Jul 2019 13:25:06 +0200
-Message-Id: <20190721112506.12306-80-jolsa@kernel.org>
-In-Reply-To: <20190721112506.12306-1-jolsa@kernel.org>
-References: <20190721112506.12306-1-jolsa@kernel.org>
+        Sun, 21 Jul 2019 07:42:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32925 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfGULmf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 07:42:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f20so7102222pgj.0;
+        Sun, 21 Jul 2019 04:42:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=bFqUxPRe1jTgd1ktoCz7nnsrlt4+oHvvWSeHFaw4pdQ=;
+        b=eXMWzT5iUsc6q2RzvrILchkAS5fW7mc2bh7cjR1saDScL2M+DWd3ObHPpQ0PeQEU4u
+         XBc7PideiAylo9ccoxubFzV9ObInwRssga7vPTtsA+qPQOq5B0VDihW/+KBXN1KTSu7h
+         v9HxgjXt0F7VtdXi9whnoE8o2yQ5PjaCIm8X9klgl1yAnsEbD86/5SKMRkySb8jh74/E
+         RkcRCKRlBUF1XkSmkzeKy78VUFzlTG9FWDLabUkRGYCa/hPL/kOMyZMXuTIKguY/0j8M
+         dRIp3oXeR63t/AORE+2PTRButskfmGDxChJ8Hd6Tc6/mkSzVkujb/I06CYGtmpDLoP2t
+         dOxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=bFqUxPRe1jTgd1ktoCz7nnsrlt4+oHvvWSeHFaw4pdQ=;
+        b=k9ifoDcMNKngGknMHllSaPxuu0/KVtnwp9dxDBu0D++1j6LZ76UbGgAtMM/VVOL38v
+         P290Qw1A0lOnkKjr5NPXvpMCjo2Rf0RIdLXAhy2YOnu9JUAWfO6AxCGqhGSOnGl7G6Ez
+         0Ut8g7N40eJwkEOrPU9LBEOyQySJZwreW4evKwYc7eyuzFQypAejPf6vz3OUDTripahW
+         /8dI9eb0YdEUi5qyT5zckVO4aqBQr72VyOJ6Cdv0nkaSSN9o9109dvg3hdAg8o2D+dtJ
+         18DWJyeKfHv/i5BkXP5Qu+gYVZwmIXXGUZPXPZ2qxoSmgcCY6EWtPWMY4V8NF04f9Hwm
+         HyUw==
+X-Gm-Message-State: APjAAAUXD/jhEoLrQ6/iC9Fw2G8ZnHCVd4UOMjuVnJ04HGtNAO+bG0Bp
+        1CNGKGXRjSTpBxDwmCleQ8U=
+X-Google-Smtp-Source: APXvYqzwttLT+sGbyYY1ifXZ+8NLE7C6ihdMFdVPGgHTeKapWtvt7kmtDZivRHrcwMePqlxxPXEwdw==
+X-Received: by 2002:a17:90a:1b0c:: with SMTP id q12mr71519546pjq.76.1563709354835;
+        Sun, 21 Jul 2019 04:42:34 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id 201sm44764371pfz.24.2019.07.21.04.42.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 04:42:34 -0700 (PDT)
+Date:   Sun, 21 Jul 2019 17:12:29 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: lpfc: fix "NULL check before some freeing functions is
+ not needed"
+Message-ID: <20190721114229.GA6886@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 21 Jul 2019 11:33:14 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding initial drafts of documentation files,
-hugely unfinished.
+As dma_pool_destroy and mempool_destroy functions has NULL check. We may
+not need NULL check before calling them.
 
-Link: http://lkml.kernel.org/n/tip-aabha27sybyctxfpbdjwyfr2@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Fix below warnings reported by coccicheck
+./drivers/scsi/lpfc/lpfc_mem.c:252:2-18: WARNING: NULL check before some
+freeing functions is not needed.
+./drivers/scsi/lpfc/lpfc_mem.c:255:2-18: WARNING: NULL check before some
+freeing functions is not needed.
+./drivers/scsi/lpfc/lpfc_mem.c:258:2-18: WARNING: NULL check before some
+freeing functions is not needed.
+./drivers/scsi/lpfc/lpfc_mem.c:261:2-18: WARNING: NULL check before some
+freeing functions is not needed.
+./drivers/scsi/lpfc/lpfc_mem.c:265:2-18: WARNING: NULL check before some
+freeing functions is not needed.
+./drivers/scsi/lpfc/lpfc_mem.c:269:2-17: WARNING: NULL check before some
+freeing functions is not needed.
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- tools/perf/lib/Documentation/Makefile         |   7 +
- tools/perf/lib/Documentation/man/libperf.rst  | 102 +++++++++++++++
- .../lib/Documentation/tutorial/tutorial.rst   | 123 ++++++++++++++++++
- 3 files changed, 232 insertions(+)
- create mode 100644 tools/perf/lib/Documentation/Makefile
- create mode 100644 tools/perf/lib/Documentation/man/libperf.rst
- create mode 100644 tools/perf/lib/Documentation/tutorial/tutorial.rst
+ drivers/scsi/lpfc/lpfc_mem.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/lib/Documentation/Makefile b/tools/perf/lib/Documentation/Makefile
-new file mode 100644
-index 000000000000..586425a88795
---- /dev/null
-+++ b/tools/perf/lib/Documentation/Makefile
-@@ -0,0 +1,7 @@
-+all:
-+	rst2man man/libperf.rst > man/libperf.7
-+	rst2pdf tutorial/tutorial.rst
+diff --git a/drivers/scsi/lpfc/lpfc_mem.c b/drivers/scsi/lpfc/lpfc_mem.c
+index 66191fa..9bdb4a0 100644
+--- a/drivers/scsi/lpfc/lpfc_mem.c
++++ b/drivers/scsi/lpfc/lpfc_mem.c
+@@ -248,25 +248,22 @@ lpfc_mem_free(struct lpfc_hba *phba)
+ 
+ 	/* Free HBQ pools */
+ 	lpfc_sli_hbqbuf_free_all(phba);
+-	if (phba->lpfc_nvmet_drb_pool)
+-		dma_pool_destroy(phba->lpfc_nvmet_drb_pool);
++	dma_pool_destroy(phba->lpfc_nvmet_drb_pool);
+ 	phba->lpfc_nvmet_drb_pool = NULL;
+-	if (phba->lpfc_drb_pool)
+-		dma_pool_destroy(phba->lpfc_drb_pool);
 +
-+clean:
-+	rm -f man/libperf.7
-+	rm -f tutorial/tutorial.pdf
-diff --git a/tools/perf/lib/Documentation/man/libperf.rst b/tools/perf/lib/Documentation/man/libperf.rst
-new file mode 100644
-index 000000000000..34fb93e41f5c
---- /dev/null
-+++ b/tools/perf/lib/Documentation/man/libperf.rst
-@@ -0,0 +1,102 @@
-+.. SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++	dma_pool_destroy(phba->lpfc_drb_pool);
+ 	phba->lpfc_drb_pool = NULL;
+-	if (phba->lpfc_hrb_pool)
+-		dma_pool_destroy(phba->lpfc_hrb_pool);
 +
-+=======
-+libperf
-+=======
++	dma_pool_destroy(phba->lpfc_hrb_pool);
+ 	phba->lpfc_hrb_pool = NULL;
+-	if (phba->txrdy_payload_pool)
+-		dma_pool_destroy(phba->txrdy_payload_pool);
 +
-+The libperf library provides API to access linux kernel perf
-+events subsystem. It provides following high level object:
-+
-+  - struct perf_cpu_map
-+  - struct perf_thread_map
-+  - struct perf_evlist
-+  - struct perf_evsel
-+
-+reference
-+=========
-+Function refference by header files:
-+
-+perf/core.h
-+-----------
-+.. code-block:: c
-+
-+  typedef int (\*libperf_print_fn_t)(enum libperf_print_level level,
-+                                     const char \*, va_list ap);
-+
-+  void libperf_set_print(libperf_print_fn_t fn);
-+
-+perf/cpumap.h
-+-------------
-+.. code-block:: c
-+
-+  struct perf_cpu_map \*perf_cpu_map__dummy_new(void);
-+  struct perf_cpu_map \*perf_cpu_map__new(const char \*cpu_list);
-+  struct perf_cpu_map \*perf_cpu_map__read(FILE \*file);
-+  struct perf_cpu_map \*perf_cpu_map__get(struct perf_cpu_map \*map);
-+  void perf_cpu_map__put(struct perf_cpu_map \*map);
-+  int perf_cpu_map__cpu(const struct perf_cpu_map \*cpus, int idx);
-+  int perf_cpu_map__nr(const struct perf_cpu_map \*cpus);
-+  perf_cpu_map__for_each_cpu(cpu, idx, cpus)
-+
-+perf/threadmap.h
-+----------------
-+.. code-block:: c
-+
-+  struct perf_thread_map \*perf_thread_map__new_dummy(void);
-+  void perf_thread_map__set_pid(struct perf_thread_map \*map, int thread, pid_t pid);
-+  char \*perf_thread_map__comm(struct perf_thread_map \*map, int thread);
-+  struct perf_thread_map \*perf_thread_map__get(struct perf_thread_map \*map);
-+  void perf_thread_map__put(struct perf_thread_map \*map);
-+
-+perf/evlist.h
-+-------------
-+.. code-block::
-+
-+  void perf_evlist__init(struct perf_evlist \*evlist);
-+  void perf_evlist__add(struct perf_evlist \*evlist,
-+                      struct perf_evsel \*evsel);
-+  void perf_evlist__remove(struct perf_evlist \*evlist,
-+                         struct perf_evsel \*evsel);
-+  struct perf_evlist \*perf_evlist__new(void);
-+  void perf_evlist__delete(struct perf_evlist \*evlist);
-+  struct perf_evsel\* perf_evlist__next(struct perf_evlist \*evlist,
-+                                     struct perf_evsel \*evsel);
-+  int perf_evlist__open(struct perf_evlist \*evlist);
-+  void perf_evlist__close(struct perf_evlist \*evlist);
-+  void perf_evlist__enable(struct perf_evlist \*evlist);
-+  void perf_evlist__disable(struct perf_evlist \*evlist);
-+  perf_evlist__for_each_evsel(evlist, pos)
-+  void perf_evlist__set_maps(struct perf_evlist \*evlist,
-+                           struct perf_cpu_map \*cpus,
-+                           struct perf_thread_map \*threads);
-+
-+perf/evsel.h
-+------------
-+.. code-block:: c
-+
-+  struct perf_counts_values {
-+        union {
-+                struct {
-+                        uint64_t val;
-+                        uint64_t ena;
-+                        uint64_t run;
-+                };
-+                uint64_t values[3];
-+        };
-+  };
-+
-+  void perf_evsel__init(struct perf_evsel \*evsel,
-+                      struct perf_event_attr \*attr);
-+  struct perf_evsel \*perf_evsel__new(struct perf_event_attr \*attr);
-+  void perf_evsel__delete(struct perf_evsel \*evsel);
-+  int perf_evsel__open(struct perf_evsel \*evsel, struct perf_cpu_map \*cpus,
-+                     struct perf_thread_map \*threads);
-+  void perf_evsel__close(struct perf_evsel \*evsel);
-+  int perf_evsel__read(struct perf_evsel \*evsel, int cpu, int thread,
-+                     struct perf_counts_values \*count);
-+  int perf_evsel__enable(struct perf_evsel \*evsel);
-+  int perf_evsel__disable(struct perf_evsel \*evsel);
-+  int perf_evsel__apply_filter(struct perf_evsel \*evsel, const char \*filter);
-+  struct perf_cpu_map \*perf_evsel__cpus(struct perf_evsel \*evsel);
-+  struct perf_thread_map \*perf_evsel__threads(struct perf_evsel \*evsel);
-+  struct perf_event_attr \*perf_evsel__attr(struct perf_evsel \*evsel);
-diff --git a/tools/perf/lib/Documentation/tutorial/tutorial.rst b/tools/perf/lib/Documentation/tutorial/tutorial.rst
-new file mode 100644
-index 000000000000..8ea72e3b2de9
---- /dev/null
-+++ b/tools/perf/lib/Documentation/tutorial/tutorial.rst
-@@ -0,0 +1,123 @@
-+.. SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+
-+libperf tutorial
-+================
-+
-+Compile and install libperf from kernel sources
-+===============================================
-+.. code-block:: bash
-+
-+  git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-+  cd linux/tools/perf/lib
-+  make
-+  sudo make install prefix=/usr
-+
-+Libperf object
-+==============
-+The libperf library provides several high level objects:
-+
-+struct perf_cpu_map
-+  Provides cpu list abstraction.
-+
-+struct perf_thread_map
-+  Provides thread list abstraction.
-+
-+struct perf_evsel
-+  Provides abstraction for single perf event.
-+
-+struct perf_evlist
-+  Gathers several struct perf_evsel object and performs function on all of them.
-+
-+The exported API binds these objects together,
-+for full reference see libperf.7 man page.
-+
-+Examples
-+========
-+Examples aim to explain libperf functionality on simple use cases.
-+They are based in linux kernel git tree path:
-+
-+.. code-block:: bash
-+
-+  $ cd tools/perf/lib/Documentation/tutorial/
-+  $ ls -d  ex-*
-+  ex-1-compile  ex-2-evsel-stat  ex-3-evlist-stat
-+
-+ex-1-compile example
-+====================
-+This example shows basic usage of *struct perf_cpu_map*,
-+how to create it and display its cpus:
-+
-+.. code-block:: bash
-+
-+  $ cd ex-1-compile/
-+  $ make
-+  gcc -o test test.c -lperf
-+  $ ./test
-+  0 1 2 3 4 5 6 7
-+
-+
-+The full code listing is here:
-+
-+.. code-block:: c
-+
-+   1 #include <perf/cpumap.h>
-+   2
-+   3 int main(int argc, char **Argv)
-+   4 {
-+   5         struct perf_cpu_map *cpus;
-+   6         int cpu, tmp;
-+   7
-+   8         cpus = perf_cpu_map__new(NULL);
-+   9
-+  10         perf_cpu_map__for_each_cpu(cpu, tmp, cpus)
-+  11                 fprintf(stdout, "%d ", cpu);
-+  12
-+  13         fprintf(stdout, "\n");
-+  14
-+  15         perf_cpu_map__put(cpus);
-+  16         return 0;
-+  17 }
-+
-+
-+First you need to include proper header to have *struct perf_cpumap*
-+declaration and functions:
-+
-+.. code-block:: c
-+
-+   1 #include <perf/cpumap.h>
-+
-+
-+The *struct perf_cpumap* object is created by *perf_cpu_map__new* call.
-+The *NULL* argument populates the object with the current online cpus list:
-+
-+.. code-block:: c
-+
-+   8         cpus = perf_cpu_map__new(NULL);
-+
-+This is paired with *perf_cpu_map__put*, that destroys it  at the end:
-+
-+.. code-block:: c
-+
-+  15         perf_cpu_map__put(cpus);
-+
-+The iteration through the *struct perf_cpumap* cpus is done by *perf_cpu_map__for_each_cpu*
-+macro which requires 3 arguments:
-+
-+- cpu  - the cpu numer
-+- tmp  - iteration helper variable
-+- cpus - the *struct perf_cpumap* object
-+
-+.. code-block:: c
-+
-+  10         perf_cpu_map__for_each_cpu(cpu, tmp, cpus)
-+  11                 fprintf(stdout, "%d ", cpu);
-+
-+ex-2-evsel-stat example
-+=======================
-+
-+TBD
-+
-+ex-3-evlist-stat example
-+========================
-+
-+TBD
++	dma_pool_destroy(phba->txrdy_payload_pool);
+ 	phba->txrdy_payload_pool = NULL;
+ 
+-	if (phba->lpfc_hbq_pool)
+-		dma_pool_destroy(phba->lpfc_hbq_pool);
++	dma_pool_destroy(phba->lpfc_hbq_pool);
+ 	phba->lpfc_hbq_pool = NULL;
+ 
+-	if (phba->rrq_pool)
+-		mempool_destroy(phba->rrq_pool);
++	mempool_destroy(phba->rrq_pool);
+ 	phba->rrq_pool = NULL;
+ 
+ 	/* Free NLP memory pool */
 -- 
-2.21.0
+2.7.4
 
