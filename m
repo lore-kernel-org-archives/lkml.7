@@ -2,176 +2,286 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C895AC76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFABC76196
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A05206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328B92083B
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MU3b7ogI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfGUVhO (ORCPT
+        id S1726622AbfGUVit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:37:14 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.109]:27674 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725796AbfGUVhO (ORCPT
+        Sun, 21 Jul 2019 17:38:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39744 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfGUVis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:37:14 -0400
-X-Greylist: delayed 1411 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Jul 2019 17:37:13 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D772B1454
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 16:13:41 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id pJ9JhkGtw4FKppJ9JhvaDU; Sun, 21 Jul 2019 16:13:41 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink-187-160-61-189.pcs.intercable.net ([187.160.61.189]:63708 helo=[192.168.0.8])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hpJ9I-000LJG-Mz; Sun, 21 Jul 2019 16:13:41 -0500
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc1
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-References: <20190709182010.GA32200@embeddedor>
- <20190710141526.2f905572@canb.auug.org.au>
- <3fae69d0-2a7e-107f-e054-d2bdef924704@embeddedor.com>
- <20190711073624.58d7105e@canb.auug.org.au>
- <858bd3e0-ffc5-07e1-d1d9-37c3d2a1d595@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <52f02f6a-ca0f-261c-a1c1-716cb0d9adf2@embeddedor.com>
-Date:   Sun, 21 Jul 2019 16:13:32 -0500
+        Sun, 21 Jul 2019 17:38:48 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so35517161ljh.6;
+        Sun, 21 Jul 2019 14:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SX+w2e2mewK1PQ9A3gUzSlRmLhtrjcNv4uPaB/2bOwc=;
+        b=MU3b7ogIOv6Ir5iu3yldsYUxSv7Ottu6OLV7xfYXuRkZolJNbET5kNfbXzF+Q57h4R
+         3nqq6HW+0ggaCECrxBSj2KugLj0Wl9l4kerbCBAc3Igkn+2QNB3SIs92yegXIkyQxr8a
+         0GFdDNce4vbg+Y/mDRxINb3cEtmekiKFXweqBAbugyKx5al9EkOopnKJNm7ksUD2cZhx
+         lmo8QkMeyjaD++q9hYVbrvucxtf4usO9d3JHIs1apljg20I/1UeBFuO1ld4L8aKV81TZ
+         UsrjAwDMbRmwzEMyQzEI7Mx2ZB7EA/sc8F348sZR5bi/0u+IM9mzqMdRiGVjl+/HT5nj
+         ai0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SX+w2e2mewK1PQ9A3gUzSlRmLhtrjcNv4uPaB/2bOwc=;
+        b=ocLBR3VKTFrNj+A74LGuIWT/DSSmMFTVEGVl9SXMTwidb/jJIY4oDrEaOyTzf8mNcg
+         U0oHnCSlmjTu+jn3M5X0LRTmivOCe8M+nKJAh2NtpwbCN2s4/F+aOBvrgiXqJglx/+O1
+         V4z3WE3V+gTdyZueR23akG93LAjXqslSCK4mJvjvvTnGhQPnJ2VX5vMD00O7iR8IXfZ3
+         67l9OOAQvMUP4sMlsKjv3TQJ77xR7tCth4kS+Mmr3zmApQs18k2A1hpthOIgNKYQ5hT4
+         HejXPQEpKX9TyDhMrfdOzX/scsq0hJ3mW+gEA6rGhaKcOjYGGMQN66wdeInLZK1XUAa2
+         CLLg==
+X-Gm-Message-State: APjAAAVEvRMtSadoOEKqMiNJUNjOIxAYLnjjAiqmLrKHs2jrMLJ0FJPX
+        o/gQl6S4yLVr+W2emcADUopVtvfT
+X-Google-Smtp-Source: APXvYqylNJNqsfETN/UUse1HnB5AsJlsUQf/4dIITwJZV4phgSFpONgn47i+y/QuibLvLuaBYsuy+w==
+X-Received: by 2002:a2e:9ac6:: with SMTP id p6mr17971968ljj.100.1563745124683;
+        Sun, 21 Jul 2019 14:38:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id n1sm5756780lfk.19.2019.07.21.14.38.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 14:38:44 -0700 (PDT)
+Subject: Re: [PATCH V6 14/21] clk: tegra210: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-15-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e683b417-66fb-38dc-c16b-dab616583a88@gmail.com>
+Date:   Mon, 22 Jul 2019 00:38:42 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <858bd3e0-ffc5-07e1-d1d9-37c3d2a1d595@embeddedor.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <1563738060-30213-15-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.160.61.189
-X-Source-L: No
-X-Exim-ID: 1hpJ9I-000LJG-Mz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-187-160-61-189.pcs.intercable.net ([192.168.0.8]) [187.160.61.189]:63708
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+21.07.2019 22:40, Sowjanya Komatineni пишет:
+> This patch adds support for clk: tegra210: suspend-resume.
+> 
+> All the CAR controller settings are lost on suspend when core
+> power goes off.
+> 
+> This patch has implementation for saving and restoring all PLLs
+> and clocks context during system suspend and resume to have the
+> clocks back to same state for normal operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-tegra210.c | 68 ++++++++++++++++++++++++++++++++++++++--
+>  drivers/clk/tegra/clk.c          | 14 +++++++++
+>  drivers/clk/tegra/clk.h          |  1 +
+>  3 files changed, 80 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+> index 55a88c0824a5..68271873acc1 100644
+> --- a/drivers/clk/tegra/clk-tegra210.c
+> +++ b/drivers/clk/tegra/clk-tegra210.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/syscore_ops.h>
+>  #include <linux/delay.h>
+>  #include <linux/export.h>
+>  #include <linux/mutex.h>
+> @@ -220,11 +221,15 @@
+>  #define CLK_M_DIVISOR_SHIFT 2
+>  #define CLK_M_DIVISOR_MASK 0x3
+>  
+> +#define CLK_MASK_ARM	0x44
+> +#define MISC_CLK_ENB	0x48
+> +
+>  #define RST_DFLL_DVCO 0x2f4
+>  #define DVFS_DFLL_RESET_SHIFT 0
+>  
+>  #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>  #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+> +#define CPU_SOFTRST_CTRL 0x380
+>  
+>  #define LVL2_CLK_GATE_OVRA 0xf8
+>  #define LVL2_CLK_GATE_OVRC 0x3a0
+> @@ -2825,6 +2830,7 @@ static int tegra210_enable_pllu(void)
+>  	struct tegra_clk_pll_freq_table *fentry;
+>  	struct tegra_clk_pll pllu;
+>  	u32 reg;
+> +	int ret;
+>  
+>  	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>  		if (fentry->input_rate == pll_ref_freq)
+> @@ -2853,9 +2859,8 @@ static int tegra210_enable_pllu(void)
+>  	reg |= PLL_ENABLE;
+>  	writel(reg, clk_base + PLLU_BASE);
+>  
+> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+> -					  reg & PLL_BASE_LOCK, 2, 1000);
+> -	if (!(reg & PLL_BASE_LOCK)) {
+> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+> +	if (ret) {
 
-I noticed you didn't merge these changes in v5.3-rc1.
+Why this is needed? Was there a bug?
 
-Should I send them again for rc2?
+>  		pr_err("Timed out waiting for PLL_U to lock\n");
+>  		return -ETIMEDOUT;
+>  	}
+> @@ -3288,6 +3293,56 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
+> +#define car_writel(_val, _base, _off) \
+> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+> +
+> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
+> +static u32 cpu_softrst_ctx[3];
+> +
+> +static int tegra210_clk_suspend(void)
+> +{
+> +	unsigned int i;
+> +
+> +	clk_save_context();
+> +
+> +	/*
+> +	 * save the bootloader configured clock registers SPARE_REG0,
+> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL
 
-Do you have any comments on this pull-request?
+Nit: Start all multi-line comments with a capital letter and put dot in
+the end of sentence.
 
-Thanks
---
-Gustavo
+> +	 */
+> +	spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
+> +	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
+> +	clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+> +
+> +	return 0;
+> +}
+> +
+> +static void tegra210_clk_resume(void)
+> +{
+> +	unsigned int i;
+> +
+> +	tegra_clk_osc_resume(clk_base);
+> +
+> +	/*
+> +	 * restore the bootloader configured clock registers SPARE_REG0,
+> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
 
-On 7/18/19 3:28 PM, Gustavo A. R. Silva wrote:
+Same here.
+
+> +	 */
+> +	writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
+> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
+> +	writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+> +
+> +	fence_udelay(5, clk_base);
+> +
+> +	tegra210_init_pllu();
+> +	clk_restore_context();
+> +}
+> +
+>  static void tegra210_cpu_clock_suspend(void)
+>  {
+>  	/* switch coresite to clk_m, save off original source */
+> @@ -3303,6 +3358,11 @@ static void tegra210_cpu_clock_resume(void)
+>  }
+>  #endif
+>  
+> +static struct syscore_ops tegra_clk_syscore_ops = {
+> +	.suspend = tegra210_clk_suspend,
+> +	.resume = tegra210_clk_resume,
+> +};
+> +
+>  static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
+>  	.wait_for_reset	= tegra210_wait_cpu_in_reset,
+>  	.disable_clock	= tegra210_disable_cpu_clock,
+> @@ -3587,5 +3647,7 @@ static void __init tegra210_clock_init(struct device_node *np)
+>  	tegra210_mbist_clk_init();
+>  
+>  	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
+> +
+> +	register_syscore_ops(&tegra_clk_syscore_ops);
+>  }
+>  CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> index 573e3c967ae1..eb08047fd02f 100644
+> --- a/drivers/clk/tegra/clk.c
+> +++ b/drivers/clk/tegra/clk.c
+> @@ -23,6 +23,7 @@
+>  #define CLK_OUT_ENB_W			0x364
+>  #define CLK_OUT_ENB_X			0x280
+>  #define CLK_OUT_ENB_Y			0x298
+> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
+>  #define CLK_OUT_ENB_SET_L		0x320
+>  #define CLK_OUT_ENB_CLR_L		0x324
+>  #define CLK_OUT_ENB_SET_H		0x328
+> @@ -199,6 +200,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
+>  	}
+>  }
+>  
+> +void tegra_clk_set_pllp_out_cpu(bool enable)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(clk_base + CLK_OUT_ENB_Y);
+> +	if (enable)
+> +		val |= CLK_ENB_PLLP_OUT_CPU;
+> +	else
+> +		val &= ~CLK_ENB_PLLP_OUT_CPU;
+> +
+> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
+> +}
+> +
+>  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
+>  {
+>  	clk_base = regs;
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 562a3ee2d537..0ffa763c755b 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -863,6 +863,7 @@ int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>  		 u8 frac_width, u8 flags);
+>  void tegra_clk_sync_state_pll(struct clk_hw *hw);
+>  void tegra_clk_osc_resume(void __iomem *clk_base);
+> +void tegra_clk_set_pllp_out_cpu(bool enable);
+>  
+>  /* Combined read fence with delay */
+>  #define fence_udelay(delay, reg)	\
 > 
-> 
-> On 7/10/19 4:36 PM, Stephen Rothwell wrote:
->> Hi Gustavo,
->>
->> On Wed, 10 Jul 2019 13:14:10 -0500 "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
->>>
->>> At some point during this development cycle, we reached the quota of zero
->>> fall-through warnings, but people continued introducing such warnings. So,
->>> it seems we are now pretty much ready for enabling -Wimplicit-fallthrough
->>> globally. Before it turns into a never ending story. :)
->>
->> Sounds good to me.  My mail was, I guess, just a heads up to Linus that
->> he will see some new warnings in his test build if he merges your
->> tree.  Thanks for addressing them.
->>
-> Yep. Thanks, Stephen.
-> 
-> Linus:
-> 
-> After you have merged all the trees containing fall-through patches, you might
-> see the following warnings:
-> 
-> arch/x86/events/intel/core.c:4957:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> arch/x86/events/intel/core.c:5006:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> drivers/mtd/nand/onenand/onenand_base.c:3261:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> 
-> for which I already have patches ready to be applied, but I didn't include them
-> in my pull-request because such patches don't apply to 5.2-rc2, on which I based
-> my -next tree for v5.3.
-> 
-> We can coordinate and I can send you the patches that address those and any other
-> warning that you might see after merging my pull-request and just before you release
-> 5.3-rc1. So we can have the -Wimplicit-fallthrough option globally enabled in
-> 5.3-rc1 and zero fall-through warnings.
-> 
-> What do you think?
-> 
-> Thanks
-> --
-> Gustavo
-> 
+
