@@ -2,530 +2,758 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEFBC76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8019EC76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4950206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:34:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563744840;
-	bh=oTC/Q9+5qsd96BuF4DZL7MLDF/ZLsKY2142ssWy86WI=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=QEq+46QqnLh3rniKIcZJZC5Zmg3hEEUF1uO9P64yjgJV38jjtLOQLPtp9JMqIVSGk
-	 Zt9WjwlCP8w7Shoy7v3UnbZsxoRS2MK9ioZsHSdy8YWQ28ampnB1GohthHa2lN/0mO
-	 D38QFhKvbKm8QRdHlxY8/HYLuO8PQY2CDT3kwLYM=
+	by mail.kernel.org (Postfix) with ESMTP id 40934206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfGUVd7 (ORCPT
+        id S1726973AbfGUVfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:33:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40150 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfGUVd6 (ORCPT
+        Sun, 21 Jul 2019 17:35:01 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:51903 "EHLO
+        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfGUVfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:33:58 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b17so25158235lff.7
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 14:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=ysf6NXyHxyINdybSYhzJ6GTI+4mpCuoKjt0u636B+z0=;
-        b=BBHxEbteuWqwDueQnwVwdQ0c+gaHO3ivOXHi4+NkNJb5K8bOuA6tsJml1ZOPdQZ3th
-         GT/kwOogijRS3JLaLNunNmTX80M8+y2URxtuSis4YOa+hK+XRO6NEUVjdTeeuWXXFx3b
-         Wy+vqJrXC9bNh0u/nqAKxjlm0+Bx1YPfJQG8k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=ysf6NXyHxyINdybSYhzJ6GTI+4mpCuoKjt0u636B+z0=;
-        b=uB6JtEpDwmJK+8j7wpQSkk1TIKIwnv7C/tDBeJo5r30iIGysvz0b0x/YXfYi7p37Vk
-         Kmn+a7C6+X1jJLjH/Tu/drW51RPTkVoTumebbiBGe/kpwHUSaOZf5CTxEdxYLnbeo2cX
-         aSlw9g8BTJupJnMUuL4kRFlr3Rehuz3XZoFW3gAO4qeVtXDoA+0UbvDtRBUWkmegA1j9
-         KMbqqzAxhj9/rbAmfmcH+PlcK24nVsRREID1R+U6wl9TUQlFTPmQ85S9Vp5aWKSrE123
-         FbFvaDl7sv6TJZkz1U83S0kLFh4NedFYpWKJ/rG+ce0Eaag+EtsjUM2+3hEPMzLy0mET
-         fK4g==
-X-Gm-Message-State: APjAAAUeMb2eukoVkbnmMqiKWWXLUKY5O9XV5Ot5ILepOk3XRSTPRrFL
-        8KdlgY0iMJSbmSMQOTqy2UEudqM/CEI=
-X-Google-Smtp-Source: APXvYqwRzEKUUi/jK3ZhefIeA+2QwgKV5Wqeqc6J8jdvDktjUySWtQ+EiaZcodriGRBisXMrNcK/Vw==
-X-Received: by 2002:a19:8093:: with SMTP id b141mr30855771lfd.137.1563744835629;
-        Sun, 21 Jul 2019 14:33:55 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id b68sm8160216ljb.0.2019.07.21.14.33.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 14:33:55 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id k18so35542031ljc.11
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 14:33:54 -0700 (PDT)
-X-Received: by 2002:a2e:9192:: with SMTP id f18mr4676574ljg.52.1563744834600;
- Sun, 21 Jul 2019 14:33:54 -0700 (PDT)
+        Sun, 21 Jul 2019 17:35:00 -0400
+Received: from smtp7.infomaniak.ch (smtp7.infomaniak.ch [83.166.132.30])
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x6LLVurd000420
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 21 Jul 2019 23:31:56 +0200
+Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x6LLVsJ9070929;
+        Sun, 21 Jul 2019 23:31:55 +0200
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH bpf-next v10 09/10] bpf,landlock: Add tests for Landlock
+Date:   Sun, 21 Jul 2019 23:31:15 +0200
+Message-Id: <20190721213116.23476-10-mic@digikod.net>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190721213116.23476-1-mic@digikod.net>
+References: <20190721213116.23476-1-mic@digikod.net>
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 21 Jul 2019 14:33:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
-Message-ID: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
-Subject: Linux 5.3-rc1
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's been two weeks, and the merge window is over, and Linux 5.3-rc1
-is tagged and pushed out.
+Test basic context access, ptrace protection and filesystem hooks.
 
-This is a pretty big release, judging by the commit count. Not the
-biggest ever (that honor still goes to 4.9-rc1, which was
-exceptionally big), and we've had a couple of comparable ones (4.12,
-4.15 and 4.19 were also big merge windows), but it's definitely up
-there.
-
-The merge window also started out pretty painfully, with me hitting a
-couple of bugs in the first couple of days. That's never a good sign,
-since I don't tend to do anything particularly odd, and if I hit bugs
-it means code wasn't tested well enough. In one case it was due to me
-using a simplified configuration that hadn't been tested, and caused
-an odd issue to show up - it happens. But in the other case, it really
-was code that was too recent and too rough and hadn't baked enough.
-The first got fixed, the second just got reverted.
-
-Anyway, despite the rocky start, and the big size, things mostly
-smoothed out towards the end of the merge window. And there's a lot to
-like in 5.3. Too much to do the shortlog with individual commits, of
-course, so appended is the usual "mergelog" of people I merged from
-and a one-liner very high-level "what got merged". For more detail,
-you should go check the git tree.
-
-As always: the people credited below are just the people I pull from,
-there's about 1600 individual developers (for 12500+ non-merge
-commits) in this merge window.
-
-Go test,
-
-            Linus
-
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: James Morris <jmorris@namei.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Serge E. Hallyn <serge@hallyn.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Will Drewry <wad@chromium.org>
 ---
 
-Al Viro (5):
-    vfs mount updates
-    adfs updates
-    misc vfs updates
-    dcache and mountpoint updates
-    vfs documentation typo fix
+Changes since v9:
+* replace subtype with expected_attach_type and expected_attach_triggers
+* rename inode_map_lookup() into inode_map_lookup_elem()
+* check for inode map entry without value (which is now possible thanks
+  to the pointer null check)
+* use read-only inode map for Landlock programs
+
+Changes since v8:
+* update eBPF include path for macros
+* use TEST_GEN_PROGS and use the generic "clean" target
+* add more verbose errors
+* update the bpf/verifier files
+* remove chain tests (from landlock and bpf/verifier)
+* replace the whitelist tests with blacklist tests (because of stateless
+  Landlock programs): remove "dotdot" tests and other depth tests
+* sync the landlock Makefile with its bpf sibling directory and use
+  bpf_load_program_xattr()
+
+Changes since v7:
+* update tests and add new ones for filesystem hierarchy and Landlock
+  chains.
+
+Changes since v6:
+* use the new kselftest_harness.h
+* use const variables
+* replace ASSERT_STEP with ASSERT_*
+* rename BPF_PROG_TYPE_LANDLOCK to BPF_PROG_TYPE_LANDLOCK_RULE
+* force sample library rebuild
+* fix install target
+
+Changes since v5:
+* add subtype test
+* add ptrace tests
+* split and rename files
+* cleanup and rebase
+---
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/bpf/test_verifier.c   |   1 +
+ .../testing/selftests/bpf/verifier/landlock.c |  24 ++
+ tools/testing/selftests/landlock/.gitignore   |   4 +
+ tools/testing/selftests/landlock/Makefile     |  39 +++
+ tools/testing/selftests/landlock/test.h       |  50 ++++
+ tools/testing/selftests/landlock/test_base.c  |  24 ++
+ tools/testing/selftests/landlock/test_fs.c    | 256 ++++++++++++++++++
+ .../testing/selftests/landlock/test_ptrace.c  | 148 ++++++++++
+ 9 files changed, 547 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/verifier/landlock.c
+ create mode 100644 tools/testing/selftests/landlock/.gitignore
+ create mode 100644 tools/testing/selftests/landlock/Makefile
+ create mode 100644 tools/testing/selftests/landlock/test.h
+ create mode 100644 tools/testing/selftests/landlock/test_base.c
+ create mode 100644 tools/testing/selftests/landlock/test_fs.c
+ create mode 100644 tools/testing/selftests/landlock/test_ptrace.c
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 25b43a8c2b15..1949fbb3098e 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -21,6 +21,7 @@ TARGETS += ir
+ TARGETS += kcmp
+ TARGETS += kexec
+ TARGETS += kvm
++TARGETS += landlock
+ TARGETS += lib
+ TARGETS += livepatch
+ TARGETS += membarrier
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index b0773291012a..b8542431c78b 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -30,6 +30,7 @@
+ #include <linux/bpf.h>
+ #include <linux/if_ether.h>
+ #include <linux/btf.h>
++#include <linux/landlock.h>
+ 
+ #include <bpf/bpf.h>
+ #include <bpf/libbpf.h>
+diff --git a/tools/testing/selftests/bpf/verifier/landlock.c b/tools/testing/selftests/bpf/verifier/landlock.c
+new file mode 100644
+index 000000000000..eaf6dddbf208
+--- /dev/null
++++ b/tools/testing/selftests/bpf/verifier/landlock.c
+@@ -0,0 +1,24 @@
++{
++	"landlock/fs_walk: always accept",
++	.insns = {
++		BPF_MOV32_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
++	.expected_attach_type = BPF_LANDLOCK_FS_WALK,
++},
++{
++	"landlock/fs_pick: read context",
++	.insns = {
++		BPF_MOV64_REG(BPF_REG_6, BPF_REG_1),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_7, BPF_REG_6,
++			offsetof(struct landlock_ctx_fs_pick, inode)),
++		BPF_MOV32_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK,
++	.expected_attach_type = BPF_LANDLOCK_FS_PICK,
++	.expected_attach_triggers = LANDLOCK_TRIGGER_FS_PICK_READ,
++},
+diff --git a/tools/testing/selftests/landlock/.gitignore b/tools/testing/selftests/landlock/.gitignore
+new file mode 100644
+index 000000000000..25b9cd834c3c
+--- /dev/null
++++ b/tools/testing/selftests/landlock/.gitignore
+@@ -0,0 +1,4 @@
++/test_base
++/test_fs
++/test_ptrace
++/tmp_*
+diff --git a/tools/testing/selftests/landlock/Makefile b/tools/testing/selftests/landlock/Makefile
+new file mode 100644
+index 000000000000..7a253bf6d580
+--- /dev/null
++++ b/tools/testing/selftests/landlock/Makefile
+@@ -0,0 +1,39 @@
++LIBDIR := ../../../lib
++BPFDIR := $(LIBDIR)/bpf
++APIDIR := ../../../include/uapi
++GENDIR := ../../../../include/generated
++GENHDR := $(GENDIR)/autoconf.h
++
++ifneq ($(wildcard $(GENHDR)),)
++  GENFLAGS := -DHAVE_GENHDR
++endif
++
++BPFOBJS := $(BPFDIR)/bpf.o $(BPFDIR)/nlattr.o
++LOADOBJ := ../../../../samples/bpf/bpf_load.o
++
++CFLAGS += -Wl,-no-as-needed -Wall -O2 -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(GENDIR) $(GENFLAGS) -I../../../include
++LDFLAGS += -lelf
++
++test_src = $(wildcard test_*.c)
++
++test_objs := $(test_src:.c=)
++
++TEST_GEN_PROGS := $(test_objs)
++
++.PHONY: all clean force
++
++all: $(test_objs)
++
++# force a rebuild of BPFOBJS when its dependencies are updated
++force:
++
++# rebuild bpf.o as a workaround for the samples/bpf bug
++$(BPFOBJS): $(LOADOBJ) force
++	$(MAKE) -C $(BPFDIR)
++
++$(LOADOBJ): force
++	$(MAKE) -C $(dir $(LOADOBJ))
++
++$(test_objs): $(BPFOBJS) $(LOADOBJ) ../kselftest_harness.h
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/landlock/test.h b/tools/testing/selftests/landlock/test.h
+new file mode 100644
+index 000000000000..e1e86a804180
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test.h
+@@ -0,0 +1,50 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Landlock helpers
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2019 ANSSI
++ */
++
++#include <bpf/bpf.h>
++#include <errno.h>
++#include <linux/filter.h>
++#include <linux/landlock.h>
++#include <linux/seccomp.h>
++#include <sys/prctl.h>
++#include <sys/syscall.h>
++
++#include "../kselftest_harness.h"
++#include "../../../../samples/bpf/bpf_load.h"
++
++#ifndef SECCOMP_PREPEND_LANDLOCK_PROG
++#define SECCOMP_PREPEND_LANDLOCK_PROG	4
++#endif
++
++#ifndef seccomp
++static int __attribute__((unused)) seccomp(unsigned int op, unsigned int flags,
++		void *args)
++{
++	errno = 0;
++	return syscall(__NR_seccomp, op, flags, args);
++}
++#endif
++
++/* bpf_load_program() with subtype */
++static int __attribute__((unused)) ll_bpf_load_program(
++		const struct bpf_insn *insns, size_t insns_cnt, char *log_buf,
++		size_t log_buf_sz, const enum bpf_attach_type attach_type,
++		__u64 attach_triggers)
++{
++	struct bpf_load_program_attr load_attr;
++
++	memset(&load_attr, 0, sizeof(struct bpf_load_program_attr));
++	load_attr.prog_type = BPF_PROG_TYPE_LANDLOCK_HOOK;
++	load_attr.expected_attach_type = attach_type;
++	load_attr.expected_attach_triggers = attach_triggers;
++	load_attr.insns = insns;
++	load_attr.insns_cnt = insns_cnt;
++	load_attr.license = "GPL";
++
++	return bpf_load_program_xattr(&load_attr, log_buf, log_buf_sz);
++}
+diff --git a/tools/testing/selftests/landlock/test_base.c b/tools/testing/selftests/landlock/test_base.c
+new file mode 100644
+index 000000000000..db46f39048cb
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test_base.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock tests - base
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++#define _GNU_SOURCE
++#include <errno.h>
++
++#include "test.h"
++
++TEST(seccomp_landlock)
++{
++	int ret;
++
++	ret = seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, NULL);
++	EXPECT_EQ(-1, ret);
++	EXPECT_EQ(EFAULT, errno) {
++		TH_LOG("Kernel does not support CONFIG_SECURITY_LANDLOCK");
++	}
++}
++
++TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/landlock/test_fs.c b/tools/testing/selftests/landlock/test_fs.c
+new file mode 100644
+index 000000000000..f35b99fcb70f
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test_fs.c
+@@ -0,0 +1,256 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock tests - file system
++ *
++ * Copyright © 2018-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++#include <bpf/bpf.h> /* bpf_create_map() */
++#include <fcntl.h> /* O_DIRECTORY */
++#include <sys/stat.h> /* statbuf */
++#include <unistd.h> /* faccessat() */
++
++#include "test.h"
++
++#define TEST_PATH_TRIGGERS ( \
++		LANDLOCK_TRIGGER_FS_PICK_OPEN | \
++		LANDLOCK_TRIGGER_FS_PICK_READDIR | \
++		LANDLOCK_TRIGGER_FS_PICK_EXECUTE | \
++		LANDLOCK_TRIGGER_FS_PICK_GETATTR)
++
++static void test_path_rel(struct __test_metadata *_metadata, int dirfd,
++		const char *path, int ret)
++{
++	int fd;
++	struct stat statbuf;
++
++	ASSERT_EQ(ret, faccessat(dirfd, path, R_OK | X_OK, 0));
++	ASSERT_EQ(ret, fstatat(dirfd, path, &statbuf, 0));
++	fd = openat(dirfd, path, O_DIRECTORY);
++	if (ret) {
++		ASSERT_EQ(-1, fd);
++	} else {
++		ASSERT_NE(-1, fd);
++		EXPECT_EQ(0, close(fd));
++	}
++}
++
++static void test_path(struct __test_metadata *_metadata, const char *path,
++		int ret)
++{
++	return test_path_rel(_metadata, AT_FDCWD, path, ret);
++}
++
++static const char d1[] = "/usr";
++static const char d2[] = "/usr/share";
++static const char d3[] = "/usr/share/doc";
++
++TEST(fs_base)
++{
++	test_path(_metadata, d1, 0);
++	test_path(_metadata, d2, 0);
++	test_path(_metadata, d3, 0);
++}
++
++#define MAP_VALUE_DENY 1
++
++static int create_denied_inode_map(struct __test_metadata *_metadata,
++		const char *const dirs[])
++{
++	int map, key, dirs_len, i;
++	__u64 value = MAP_VALUE_DENY;
++
++	ASSERT_NE(NULL, dirs) {
++		TH_LOG("No directory list\n");
++	}
++	ASSERT_NE(NULL, dirs[0]) {
++		TH_LOG("Empty directory list\n");
++	}
++
++	/* get the number of dir entries */
++	for (dirs_len = 0; dirs[dirs_len]; dirs_len++);
++	map = bpf_create_map(BPF_MAP_TYPE_INODE, sizeof(key), sizeof(value),
++			dirs_len, BPF_F_RDONLY_PROG);
++	ASSERT_NE(-1, map) {
++		TH_LOG("Failed to create a map of %d elements: %s\n", dirs_len,
++				strerror(errno));
++	}
++
++	for (i = 0; dirs[i]; i++) {
++		key = open(dirs[i], O_RDONLY | O_CLOEXEC | O_DIRECTORY);
++		ASSERT_NE(-1, key) {
++			TH_LOG("Failed to open directory \"%s\": %s\n", dirs[i],
++					strerror(errno));
++		}
++		ASSERT_EQ(0, bpf_map_update_elem(map, &key, &value, BPF_ANY)) {
++			TH_LOG("Failed to update the map with \"%s\": %s\n",
++					dirs[i], strerror(errno));
++		}
++		close(key);
++	}
++	return map;
++}
++
++static void enforce_map(struct __test_metadata *_metadata, int map,
++		bool subpath)
++{
++	const struct bpf_insn prog_deny[] = {
++		BPF_ALU64_REG(BPF_MOV, BPF_REG_6, BPF_REG_1),
++		/* look for the requested inode in the map */
++		BPF_LDX_MEM(BPF_DW, BPF_REG_2, BPF_REG_6,
++			offsetof(struct landlock_ctx_fs_walk, inode)),
++		BPF_LD_MAP_FD(BPF_REG_1, map), /* 2 instructions */
++		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
++				BPF_FUNC_inode_map_lookup_elem),
++		/* if there is no mark, then allow access to this inode */
++		BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 2),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_0, 0),
++		/* otherwise, deny access to this inode */
++		BPF_JMP_IMM(BPF_JEQ, BPF_REG_1, MAP_VALUE_DENY, 2),
++		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_ALLOW),
++		BPF_EXIT_INSN(),
++		BPF_MOV32_IMM(BPF_REG_0, LANDLOCK_RET_DENY),
++		BPF_EXIT_INSN(),
++	};
++	int fd_walk = -1, fd_pick;
++	char log[1024] = "";
++
++	if (subpath) {
++		fd_walk = ll_bpf_load_program((const struct bpf_insn *)&prog_deny,
++				sizeof(prog_deny) / sizeof(struct bpf_insn),
++				log, sizeof(log), BPF_LANDLOCK_FS_WALK, 0);
++		ASSERT_NE(-1, fd_walk) {
++			TH_LOG("Failed to load fs_walk program: %s\n%s",
++					strerror(errno), log);
++		}
++		ASSERT_EQ(0, seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, &fd_walk)) {
++			TH_LOG("Failed to apply Landlock program: %s", strerror(errno));
++		}
++		EXPECT_EQ(0, close(fd_walk));
++	}
++
++	fd_pick = ll_bpf_load_program((const struct bpf_insn *)&prog_deny,
++			sizeof(prog_deny) / sizeof(struct bpf_insn), log,
++			sizeof(log), BPF_LANDLOCK_FS_PICK, TEST_PATH_TRIGGERS);
++	ASSERT_NE(-1, fd_pick) {
++		TH_LOG("Failed to load fs_pick program: %s\n%s",
++				strerror(errno), log);
++	}
++	ASSERT_EQ(0, seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, &fd_pick)) {
++		TH_LOG("Failed to apply Landlock program: %s", strerror(errno));
++	}
++	EXPECT_EQ(0, close(fd_pick));
++}
++
++static void check_map_blacklist(struct __test_metadata *_metadata,
++		bool subpath)
++{
++	int map = create_denied_inode_map(_metadata, (const char *const [])
++			{ d2, NULL });
++	ASSERT_NE(-1, map);
++	enforce_map(_metadata, map, subpath);
++	test_path(_metadata, d1, 0);
++	test_path(_metadata, d2, -1);
++	test_path(_metadata, d3, subpath ? -1 : 0);
++	EXPECT_EQ(0, close(map));
++}
++
++TEST(fs_map_blacklist_literal)
++{
++	check_map_blacklist(_metadata, false);
++}
++
++TEST(fs_map_blacklist_subpath)
++{
++	check_map_blacklist(_metadata, true);
++}
++
++static const char r2[] = ".";
++static const char r3[] = "./doc";
++
++enum relative_access {
++	REL_OPEN,
++	REL_CHDIR,
++	REL_CHROOT,
++};
++
++static void check_access(struct __test_metadata *_metadata,
++		bool enforce, enum relative_access rel)
++{
++	int dirfd;
++	int map = -1;
++
++	if (rel == REL_CHROOT)
++		ASSERT_NE(-1, chdir(d2));
++	if (enforce) {
++		map = create_denied_inode_map(_metadata, (const char *const [])
++				{ d3, NULL });
++		ASSERT_NE(-1, map);
++		enforce_map(_metadata, map, true);
++	}
++	switch (rel) {
++	case REL_OPEN:
++		dirfd = open(d2, O_DIRECTORY);
++		ASSERT_NE(-1, dirfd);
++		break;
++	case REL_CHDIR:
++		ASSERT_NE(-1, chdir(d2));
++		dirfd = AT_FDCWD;
++		break;
++	case REL_CHROOT:
++		ASSERT_NE(-1, chroot(d2)) {
++			TH_LOG("Failed to chroot: %s\n", strerror(errno));
++		}
++		dirfd = AT_FDCWD;
++		break;
++	default:
++		ASSERT_TRUE(false);
++		return;
++	}
++
++	test_path_rel(_metadata, dirfd, r2, 0);
++	test_path_rel(_metadata, dirfd, r3, enforce ? -1 : 0);
++
++	if (rel == REL_OPEN)
++		EXPECT_EQ(0, close(dirfd));
++	if (enforce)
++		EXPECT_EQ(0, close(map));
++}
++
++TEST(fs_allow_open)
++{
++	/* no enforcement, via open */
++	check_access(_metadata, false, REL_OPEN);
++}
++
++TEST(fs_allow_chdir)
++{
++	/* no enforcement, via chdir */
++	check_access(_metadata, false, REL_CHDIR);
++}
++
++TEST(fs_allow_chroot)
++{
++	/* no enforcement, via chroot */
++	check_access(_metadata, false, REL_CHROOT);
++}
++
++TEST(fs_deny_open)
++{
++	/* enforcement without tag, via open */
++	check_access(_metadata, true, REL_OPEN);
++}
++
++TEST(fs_deny_chdir)
++{
++	/* enforcement without tag, via chdir */
++	check_access(_metadata, true, REL_CHDIR);
++}
++
++TEST(fs_deny_chroot)
++{
++	/* enforcement without tag, via chroot */
++	check_access(_metadata, true, REL_CHROOT);
++}
++
++TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/landlock/test_ptrace.c b/tools/testing/selftests/landlock/test_ptrace.c
+new file mode 100644
+index 000000000000..b190a809ceec
+--- /dev/null
++++ b/tools/testing/selftests/landlock/test_ptrace.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Landlock tests - ptrace
++ *
++ * Copyright © 2017-2019 Mickaël Salaün <mic@digikod.net>
++ */
++
++#define _GNU_SOURCE
++#include <signal.h> /* raise */
++#include <sys/ptrace.h>
++#include <sys/types.h> /* waitpid */
++#include <sys/wait.h> /* waitpid */
++#include <unistd.h> /* fork, pipe */
++
++#include "test.h"
++
++static void apply_null_sandbox(struct __test_metadata *_metadata)
++{
++	const struct bpf_insn prog_accept[] = {
++		BPF_MOV32_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	};
++	int prog;
++	char log[256] = "";
++
++	prog = ll_bpf_load_program((const struct bpf_insn *)&prog_accept,
++			sizeof(prog_accept) / sizeof(struct bpf_insn), log,
++			sizeof(log), BPF_LANDLOCK_FS_PICK, LANDLOCK_TRIGGER_FS_PICK_OPEN);
++	ASSERT_NE(-1, prog) {
++		TH_LOG("Failed to load minimal rule: %s\n%s",
++				strerror(errno), log);
++	}
++	ASSERT_EQ(0, seccomp(SECCOMP_PREPEND_LANDLOCK_PROG, 0, &prog)) {
++		TH_LOG("Failed to apply minimal rule: %s", strerror(errno));
++	}
++	EXPECT_EQ(0, close(prog));
++}
++
++/* PTRACE_TRACEME and PTRACE_ATTACH without Landlock rules effect */
++static void check_ptrace(struct __test_metadata *_metadata,
++		int sandbox_both, int sandbox_parent, int sandbox_child,
++		int expect_ptrace)
++{
++	pid_t child;
++	int status;
++	int pipefd[2];
++
++	ASSERT_EQ(0, pipe(pipefd));
++	if (sandbox_both)
++		apply_null_sandbox(_metadata);
++
++	child = fork();
++	ASSERT_LE(0, child);
++	if (child == 0) {
++		char buf;
++
++		EXPECT_EQ(0, close(pipefd[1]));
++		if (sandbox_child)
++			apply_null_sandbox(_metadata);
++
++		/* test traceme */
++		ASSERT_EQ(expect_ptrace, ptrace(PTRACE_TRACEME));
++		if (expect_ptrace) {
++			ASSERT_EQ(EPERM, errno);
++		} else {
++			ASSERT_EQ(0, raise(SIGSTOP));
++		}
++
++		/* sync */
++		ASSERT_EQ(1, read(pipefd[0], &buf, 1)) {
++			TH_LOG("Failed to read() sync from parent");
++		}
++		ASSERT_EQ('.', buf);
++		_exit(_metadata->passed ? EXIT_SUCCESS : EXIT_FAILURE);
++	}
++
++	EXPECT_EQ(0, close(pipefd[0]));
++	if (sandbox_parent)
++		apply_null_sandbox(_metadata);
++
++	/* test traceme */
++	if (!expect_ptrace) {
++		ASSERT_EQ(child, waitpid(child, &status, 0));
++		ASSERT_EQ(1, WIFSTOPPED(status));
++		ASSERT_EQ(0, ptrace(PTRACE_DETACH, child, NULL, 0));
++	}
++	/* test attach */
++	ASSERT_EQ(expect_ptrace, ptrace(PTRACE_ATTACH, child, NULL, 0));
++	if (expect_ptrace) {
++		ASSERT_EQ(EPERM, errno);
++	} else {
++		ASSERT_EQ(child, waitpid(child, &status, 0));
++		ASSERT_EQ(1, WIFSTOPPED(status));
++		ASSERT_EQ(0, ptrace(PTRACE_CONT, child, NULL, 0));
++	}
++
++	/* sync */
++	ASSERT_EQ(1, write(pipefd[1], ".", 1)) {
++		TH_LOG("Failed to write() sync to child");
++	}
++	ASSERT_EQ(child, waitpid(child, &status, 0));
++	if (WIFSIGNALED(status) || WEXITSTATUS(status))
++		_metadata->passed = 0;
++}
++
++TEST(ptrace_allow_without_sandbox)
++{
++	/* no sandbox */
++	check_ptrace(_metadata, 0, 0, 0, 0);
++}
++
++TEST(ptrace_allow_with_one_sandbox)
++{
++	/* child sandbox */
++	check_ptrace(_metadata, 0, 0, 1, 0);
++}
++
++TEST(ptrace_allow_with_nested_sandbox)
++{
++	/* inherited and child sandbox */
++	check_ptrace(_metadata, 1, 0, 1, 0);
++}
++
++TEST(ptrace_deny_with_parent_sandbox)
++{
++	/* parent sandbox */
++	check_ptrace(_metadata, 0, 1, 0, -1);
++}
++
++TEST(ptrace_deny_with_nested_and_parent_sandbox)
++{
++	/* inherited and parent sandbox */
++	check_ptrace(_metadata, 1, 1, 0, -1);
++}
++
++TEST(ptrace_deny_with_forked_sandbox)
++{
++	/* inherited, parent and child sandbox */
++	check_ptrace(_metadata, 1, 1, 1, -1);
++}
++
++TEST(ptrace_deny_with_sibling_sandbox)
++{
++	/* parent and child sandbox */
++	check_ptrace(_metadata, 0, 1, 1, -1);
++}
++
++TEST_HARNESS_MAIN
+-- 
+2.22.0
 
-Alex Williamson (1):
-    VFIO updates
-
-Alexandre Belloni (1):
-    RTC updates
-
-Andreas Gruenbacher (1):
-    gfs2 updates
-
-Andrew Morton (3):
-    updates
-    more updates
-    yet more updates
-
-Andy Shevchenko (2):
-    x86 platform driver updates
-    another x86 platform driver update
-
-Arnd Bergmann (1):
-    asm-generic updates
-
-Bartlomiej Zolnierkiewicz (1):
-    fbdev updates
-
-Benson Leung (1):
-    chrome platform updates
-
-Bjorn Andersson (3):
-    rpmsg updates
-    remoteproc updates
-    hwspinlock updates
-
-Bjorn Helgaas (1):
-    PCI updates
-
-Boris Brezillon (1):
-    ic3 updates
-
-Bruce Fields (1):
-    nfsd updates
-
-Catalin Marinas (1):
-    arm64 updates
-
-Christian Brauner (3):
-    pidfd updates
-    clone3 system call
-    pidfd and clone3 fixes
-
-Christoph Hellwig (2):
-    dma-mapping updates
-    dma-mapping fixes
-
-Corey Minyard (1):
-    IPMI updates
-
-Dan Williams (2):
-    libnvdimm updates
-    dax updates
-
-Daniel Vetter (1):
-    drm fixes
-
-Darrick Wong (6):
-    iomap updates
-    copy_file_range updates
-    common SETFLAGS/FSSETXATTR parameter checking
-    xfs updates
-    xfs cleanups
-    iomap split/cleanup
-
-Dave Airlie (1):
-    drm updates
-
-David Howells (5):
-    misc keyring updates
-    request_key improvements
-    keyring namespacing
-    keyring ACL support
-    afs updates
-
-David Miller (5):
-    networking updates
-    IDE update
-    networking fixes
-    sparc updates
-    networking fixes
-
-David Sterba (1):
-    btrfs updates
-
-David Teigland (1):
-    dlm updates
-
-Denis Efremov (1):
-    floppy ioctl verification fixes
-
-Dennis Zhou (1):
-    percpu updates
-
-Dmitry Torokhov (2):
-    input updates
-    more input updates
-
-Dominique Martinet (1):
-    9p updates
-
-Eric Biederman (1):
-    force_sig() argument change
-
-Eric Biggers (1):
-    fscrypt updates
-
-Geert Uytterhoeven (2):
-    m68k updates
-    m68k fix
-
-Greg KH (5):
-    char / misc driver updates
-    staging and IIO driver updates
-    tty / serial driver updates
-    USB / PHY updates
-    driver core and debugfs updates
-
-Greg Ungerer (1):
-    m68nommu updates
-
-Guenter Roeck (1):
-    hwmon updates
-
-Guo Ren (1):
-    arch/csky updates
-
-Helge Deller (2):
-    parisc updates
-    parisc fixes
-
-Herbert Xu (2):
-    crypto updates
-    crypto fixes
-
-Ilya Dryomov (1):
-    ceph updates
-
-Ingo Molnar (17):
-    RCU updates
-    locking updates
-    RAS updates
-    scheduler updates
-    x86 asm updates
-    x86 build updates
-    x86 cache resource control update
-    x86 cleanups
-    x86 AVX512 status update
-    x86 paravirt updates
-    x86 platform updates
-    x86 topology updates
-    perf updates
-    scheduler fix
-    x86 fix
-    locking fix
-    perf fixes
-
-Jacek Anaszewski (1):
-    LED updates
-
-Jaegeuk Kim (1):
-    f2fs updates
-
-James Bottomley (3):
-    SCSI updates
-    SCSI scatter-gather list updates
-    SCSI fixes
-
-James Morris (1):
-    capabilities update
-
-Jan Kara (2):
-    fsnotify updates
-    ext2, udf and quota updates
-
-Jarkko Sakkinen (1):
-    tpm updates
-
-Jason Gunthorpe (2):
-    HMM updates
-    rdma updates
-
-Jassi Brar (1):
-    mailbox updates
-
-Jeff Layton (1):
-    file locking updates
-
-Jens Axboe (4):
-    block updates
-    libata updates
-    io_uring updates
-    more block updates
-
-Jessica Yu (1):
-    module updates
-
-Jiri Kosina (2):
-    livepatching updates
-    HID updates
-
-Joerg Roedel (1):
-    iommu updates
-
-Jon Mason (1):
-    NTB updates
-
-Jonathan Corbet (1):
-    Documentation updates
-
-Juergen Gross (1):
-    xen updates
-
-Kees Cook (2):
-    pstore updates
-    security/loadpin updates
-
-Kirill Smelkov (1):
-    stream_open() updates
-
-Konrad Rzeszutek Wilk (1):
-    swiotlb updates
-
-Lee Jones (2):
-    MFD updates
-    backlight updates
-
-Ley Foon Tan (1):
-    arch/nios2 updates
-
-Linus Walleij (3):
-    GPIO updates
-    pin control updates
-    GPIO fixes
-
-Mark Brown (3):
-    regmap updates
-    regulator updates
-    spi updates
-
-Masahiro Yamada (3):
-    Kbuild updates
-    Kconfig updates
-    more Kbuild updates
-
-Mauro Carvalho Chehab (2):
-    media updates
-    rst conversion of docs
-
-Max Filippov (1):
-    Xtensa updates
-
-Micah Morton (1):
-    safesetid updates
-
-Michael Ellerman (1):
-    powerpc updates
-
-Michael Tsirkin (1):
-    virtio, vhost updates
-
-Mike Marshall (1):
-    orangefs updates
-
-Mike Snitzer (2):
-    device mapper updates
-    more device mapper updates
-
-Mimi Zohar (1):
-    integrity updates
-
-Miquel Raynal (1):
-    MTD updates
-
-Olof Johansson (4):
-    ARM SoC platform updates
-    ARM SoC-related driver updates
-    ARM Devicetree updates
-    ARM SoC defconfig updates
-
-Paolo Bonzini (2):
-    KVM updates
-    more KVM updates
-
-Paul Burton (1):
-    MIPS updates
-
-Paul Moore (2):
-    audit updates
-    selinux updates
-
-Paul Walmsley (1):
-    RISC-V updates
-
-Petr Mladek (1):
-    printk updates
-
-Rafael Wysocki (6):
-    power management updates
-    ACPI updates
-    device properties framework updates
-    ACPI fix
-    more ACPI updates
-    more power management updates
-
-Richard Weinberger (2):
-    UML updates
-    UBIFS updates
-
-Rob Herring (2):
-    Devicetree updates
-    Devicetree fixes
-
-Russell King (1):
-    ARM updates
-
-Sasha Levin (1):
-    hyper-v updates
-
-Sebastian Reichel (1):
-    power supply and reset updates
-
-Shuah Khan (1):
-    Kselftest updates
-
-Stephen Boyd (1):
-    clk updates
-
-Steve French (2):
-    cifs updates
-    cifs fixes
-
-Steven Rostedt (2):
-    tracing updates
-    tracing fix
-
-Takashi Iwai (2):
-    sound updates
-    sound fixes
-
-Ted Ts'o (1):
-    ext4 updates
-
-Tejun Heo (2):
-    workqueue updates
-    cgroup updates
-
-Thierry Reding (1):
-    pwm updates
-
-Thomas Gleixner (22):
-    debugobjects updates
-    Reed-Solomon library updates
-    SMP/hotplug updates
-    irq updates
-    timer updates
-    x96 apic updates
-    x86 vsyscall updates
-    x86 FPU updates
-    x86 CPU feature updates
-    x86 timer updates
-    x86 pti updates
-    x86 boot updates
-    x865 kdump updates
-    irq fixes
-    stacktrace fix
-    timer fixes
-    x86 fixes
-    CONFIG_PREEMPT_RT stub config
-    smp fix
-    core fixes
-    perf tooling updates
-    x86 fixes
-
-Tony Luck (1):
-    EDAC updates
-
-Trond Myklebust (1):
-    NFS client updates
-
-Tyler Hicks (1):
-    eCryptfs updates
-
-Ulf Hansson (1):
-    MMC updates
-
-Vasily Gorbik (2):
-    s390 updates
-    more s390 updates
-
-Vineet Gupta (1):
-    ARC updates
-
-Vinod Koul (1):
-    dmaengine updates
-
-Wim Van Sebroeck (1):
-    watchdog updates
-
-Wolfram Sang (1):
-    i2c updates
-
-Yoshinori Sato (2):
-    SH updates
-    h8300 update
-
-Zhang Rui (1):
-    thermal management updates
