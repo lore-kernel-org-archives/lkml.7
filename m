@@ -2,352 +2,100 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D399DC76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2D7C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BD2208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563730819;
-	bh=RUwhWVbUL14IRol0RUGSko+CviOaKV+9cKBZjBLKF5I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xXZoWorT04MGDUKe7rf/09lILbnzdMAwqPGgdqhR4BRATvgGyMbTzBfhVSQe4Xz7A
-	 jTKxplY51B0cRd0QSZn0gzBJxi1uzpmL62JhJXyiZqJxLVS00IEGT2xRY6xSNwMDnB
-	 85Le6pezp1BU6zMy1HtJEYz/LZd3fJ1QDVuOtw6o=
+	by mail.kernel.org (Postfix) with ESMTP id 001EB2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agbSGPgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfGURkR (ORCPT
+        id S1726888AbfGURrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 13:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfGURkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 13:40:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B53AC2085A;
-        Sun, 21 Jul 2019 17:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563730815;
-        bh=RUwhWVbUL14IRol0RUGSko+CviOaKV+9cKBZjBLKF5I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ivCYv0AlAmx6QgUfOt+/2ydtWb4ZiLWcYmqsnCnLZn9qnUK/yC1Iee4cky8MfRcqV
-         IcYCzau5xeZMfgYPLH+3nST72YgmRjD5QFNeLBUFYNFeoQTGqWvArow5VyIcahhJim
-         z1mHfe2tdJHhmkmgY1dTIVFz6B8xqioaob9VBRRU=
-Date:   Sun, 21 Jul 2019 18:40:09 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Guenter Roeck <groeck@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: cros_ec: Remove replacing error code with -EIO
-Message-ID: <20190721184009.583c9031@archlinux>
-In-Reply-To: <20190718222238.60087-1-gwendal@chromium.org>
-References: <20190718222238.60087-1-gwendal@chromium.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 21 Jul 2019 13:47:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44729 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfGURrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 13:47:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so16211831pfe.11
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 10:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=wfPtSDK6aeQ/5qCMCN3mM+awlrKw6JZ3Ltnav27AGWE=;
+        b=agbSGPgYAkz8RINO8A9YIX3aoh13aW/Egoh5xl7JWIHhrbb13bKHL6CZXdU81vEdoY
+         ZPRPk68EB/1nhGApq8ABJlq/NBW4UOk0aai4BGyImZSoZsLjWWuV26JaHFPLvW9ITm67
+         JzvwIh08zHxx764XxY5kKGTb+5GJ53qIwrZSEAIHB/oYHvj8zrBrdvePkOSrqv5WtuhE
+         38cxfb4tpbb1AXz2kSf44eXcBIqCrHWJeq06wwKFAgv9ZKAOGUGO4jBKJZfqhMVkZ0XU
+         ejgWqCK1OkR/q/EohlmeZuAl8DRZWcHfED79ixq59S1SETR8AkSIgngfFK0ssc81vOe5
+         /K+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wfPtSDK6aeQ/5qCMCN3mM+awlrKw6JZ3Ltnav27AGWE=;
+        b=PNVDhAuhR7XjShroTQ+KYtigihahhk3KjsueQ21xDol054QxCUKBozwGk6TVkGf6qW
+         B61vEI3rCQWLCDPfos4hT44K2wDDLsz0PcPsaeQvrD7N+wS3TGhmwYhH/HCc/wEUaP/Q
+         WlE4ztarB1ZhlfIKiWZJGSTpr4vgP202qOW3ahKDFOYqHavzkJf6JoBEpxVZ4dojF3B8
+         qJyUHgQFzVbdTO6Lqxuqaesvvyyu1fHNZ60oArQiq+qWbi/dAoEB1d7wnhzAwDnySgUg
+         d3JZS12fFv/s0YdsFG5OANsR+m86iAxqdcbMkP5ws5v+BWCEO4ScF0QnDZuvCzAlPqhI
+         eq/g==
+X-Gm-Message-State: APjAAAUwiCra84UKyq/COw4luh2S/H65cIfrNtMGVTKeDXRf2tBGc3wJ
+        qMaw7HMyRl88frjCglpZPANmHcOh
+X-Google-Smtp-Source: APXvYqwf7V9YESE5laxDZ8XK4KR1yCREzPtDTl5Mzg1CZSfoQAVoEeaqqGA40xxdYJMVNrpbuJ/5uw==
+X-Received: by 2002:a63:de43:: with SMTP id y3mr4432535pgi.211.1563731241085;
+        Sun, 21 Jul 2019 10:47:21 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id u16sm36964292pjb.2.2019.07.21.10.47.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 10:47:20 -0700 (PDT)
+Date:   Sun, 21 Jul 2019 23:17:15 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] slimbus: fix duplicated argument to ||
+Message-ID: <20190721174715.GA10747@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 15:22:37 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
+Remove duplicate argument SLIM_MSG_MC_REQUEST_CLEAR_INFORMATION.
 
-> Due to an API misread, error code can be different for -EIO when reading
-> a sysfs entry. Return the error reported by the cros_ec stack.
-> 
-> Check the proper error message (protocol error, not supported) is
-> reported when there is an error returned by the EC stack.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Hi Gwendal,
+fix below issue reported by coccicheck
+./drivers/slimbus/slimbus.h:440:3-46: duplicated argument to && or ||
 
-If you are going to send a series of small patches for a driver
-and they will inherently cause fuzz for each other, please just
-have a small series called something like "misc fixes".
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/slimbus/slimbus.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I clearly applied these in a different order to you, so needed
-a bit of fixing up. I think I got it right, but please check.
-
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
-> 
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 44 +++++++++++--------
->  drivers/iio/light/cros_ec_light_prox.c        | 36 +++++++--------
->  drivers/iio/pressure/cros_ec_baro.c           | 17 ++++---
->  3 files changed, 51 insertions(+), 46 deletions(-)
-> 
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 130362ca421b..ed29ac22dff8 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -33,6 +33,7 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> +	int ret;
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
-> @@ -60,9 +61,10 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->  
->  		state->param.cmd = MOTIONSENSE_CMD_INFO;
->  		state->param.info.sensor_num = sensor_platform->sensor_num;
-> -		if (cros_ec_motion_send_host_cmd(state, 0)) {
-> +		ret = cros_ec_motion_send_host_cmd(state, 0);
-> +		if (ret) {
->  			dev_warn(dev, "Can not access sensor info\n");
-> -			return -EIO;
-> +			return ret;
->  		}
->  		state->type = state->resp->info.type;
->  		state->loc = state->resp->info.location;
-> @@ -86,7 +88,7 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
->  
->  	ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
->  	if (ret < 0)
-> -		return -EIO;
-> +		return ret;
->  
->  	if (ret &&
->  	    state->resp != (struct ec_response_motion_sense *)state->msg->data)
-> @@ -396,7 +398,7 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  			  struct iio_chan_spec const *chan,
->  			  int *val, int *val2, long mask)
->  {
-> -	int ret = IIO_VAL_INT;
-> +	int ret;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> @@ -404,22 +406,27 @@ int cros_ec_sensors_core_read(struct cros_ec_sensors_core_state *st,
->  		st->param.ec_rate.data =
->  			EC_MOTION_SENSE_NO_VALUE;
->  
-> -		if (cros_ec_motion_send_host_cmd(st, 0))
-> -			ret = -EIO;
-> -		else
-> -			*val = st->resp->ec_rate.ret;
-> +		ret = cros_ec_motion_send_host_cmd(st, 0);
-> +		if (ret)
-> +			break;
-> +
-> +		*val = st->resp->ec_rate.ret;
-> +		ret = IIO_VAL_INT;
->  		break;
->  	case IIO_CHAN_INFO_FREQUENCY:
->  		st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
->  		st->param.sensor_odr.data =
->  			EC_MOTION_SENSE_NO_VALUE;
->  
-> -		if (cros_ec_motion_send_host_cmd(st, 0))
-> -			ret = -EIO;
-> -		else
-> -			*val = st->resp->sensor_odr.ret;
-> +		ret = cros_ec_motion_send_host_cmd(st, 0);
-> +		if (ret)
-> +			break;
-> +
-> +		*val = st->resp->sensor_odr.ret;
-> +		ret = IIO_VAL_INT;
->  		break;
->  	default:
-> +		ret = -EINVAL;
->  		break;
->  	}
->  
-> @@ -431,7 +438,7 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->  			       struct iio_chan_spec const *chan,
->  			       int val, int val2, long mask)
->  {
-> -	int ret = 0;
-> +	int ret;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_FREQUENCY:
-> @@ -441,17 +448,16 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
->  		/* Always roundup, so caller gets at least what it asks for. */
->  		st->param.sensor_odr.roundup = 1;
->  
-> -		if (cros_ec_motion_send_host_cmd(st, 0))
-> -			ret = -EIO;
-> +		ret = cros_ec_motion_send_host_cmd(st, 0);
->  		break;
->  	case IIO_CHAN_INFO_SAMP_FREQ:
->  		st->param.cmd = MOTIONSENSE_CMD_EC_RATE;
->  		st->param.ec_rate.data = val;
->  
-> -		if (cros_ec_motion_send_host_cmd(st, 0))
-> -			ret = -EIO;
-> -		else
-> -			st->curr_sampl_freq = val;
-> +		ret = cros_ec_motion_send_host_cmd(st, 0);
-> +		if (ret)
-> +			break;
-> +		st->curr_sampl_freq = val;
->  		break;
->  	default:
->  		ret = -EINVAL;
-> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
-> index 308ee6ff2e22..943fa305af91 100644
-> --- a/drivers/iio/light/cros_ec_light_prox.c
-> +++ b/drivers/iio/light/cros_ec_light_prox.c
-> @@ -42,7 +42,7 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
->  	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
->  	u16 data = 0;
->  	s64 val64;
-> -	int ret = IIO_VAL_INT;
-> +	int ret;
->  	int idx = chan->scan_index;
->  
->  	mutex_lock(&st->core.cmd_lock);
-> @@ -50,23 +50,22 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
->  		if (chan->type == IIO_PROXIMITY) {
-> -			if (cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> -						     (s16 *)&data) < 0) {
-> -				ret = -EIO;
-> +			ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> +						     (s16 *)&data);
-> +			if (ret)
->  				break;
-> -			}
->  			*val = data;
-> +			ret = IIO_VAL_INT;
->  		} else {
->  			ret = -EINVAL;
->  		}
->  		break;
->  	case IIO_CHAN_INFO_PROCESSED:
->  		if (chan->type == IIO_LIGHT) {
-> -			if (cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> -						     (s16 *)&data) < 0) {
-> -				ret = -EIO;
-> +			ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> +						     (s16 *)&data);
-> +			if (ret)
->  				break;
-> -			}
->  			/*
->  			 * The data coming from the light sensor is
->  			 * pre-processed and represents the ambient light
-> @@ -82,15 +81,15 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_OFFSET;
->  		st->core.param.sensor_offset.flags = 0;
->  
-> -		if (cros_ec_motion_send_host_cmd(&st->core, 0)) {
-> -			ret = -EIO;
-> +		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		if (ret)
->  			break;
-> -		}
->  
->  		/* Save values */
->  		st->core.calib[0] = st->core.resp->sensor_offset.offset[0];
->  
->  		*val = st->core.calib[idx];
-> +		ret = IIO_VAL_INT;
->  		break;
->  	case IIO_CHAN_INFO_CALIBSCALE:
->  		/*
-> @@ -101,10 +100,9 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
->  		st->core.param.sensor_range.data = EC_MOTION_SENSE_NO_VALUE;
->  
-> -		if (cros_ec_motion_send_host_cmd(&st->core, 0)) {
-> -			ret = -EIO;
-> +		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		if (ret)
->  			break;
-> -		}
->  
->  		val64 = st->core.resp->sensor_range.ret;
->  		*val = val64 >> 16;
-> @@ -127,7 +125,7 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
->  			       int val, int val2, long mask)
->  {
->  	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
-> -	int ret = 0;
-> +	int ret;
->  	int idx = chan->scan_index;
->  
->  	mutex_lock(&st->core.cmd_lock);
-> @@ -141,14 +139,12 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
->  		st->core.param.sensor_offset.offset[0] = st->core.calib[0];
->  		st->core.param.sensor_offset.temp =
->  					EC_MOTION_SENSE_INVALID_CALIB_TEMP;
-> -		if (cros_ec_motion_send_host_cmd(&st->core, 0))
-> -			ret = -EIO;
-> +		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
->  		break;
->  	case IIO_CHAN_INFO_CALIBSCALE:
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
->  		st->core.param.sensor_range.data = (val << 16) | (val2 / 100);
-> -		if (cros_ec_motion_send_host_cmd(&st->core, 0))
-> -			ret = -EIO;
-> +		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
->  		break;
->  	default:
->  		ret = cros_ec_sensors_core_write(&st->core, chan, val, val2,
-> diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
-> index 034ce98d6e97..a648582b14a7 100644
-> --- a/drivers/iio/pressure/cros_ec_baro.c
-> +++ b/drivers/iio/pressure/cros_ec_baro.c
-> @@ -39,26 +39,29 @@ static int cros_ec_baro_read(struct iio_dev *indio_dev,
->  {
->  	struct cros_ec_baro_state *st = iio_priv(indio_dev);
->  	u16 data = 0;
-> -	int ret = IIO_VAL_INT;
-> +	int ret;
->  	int idx = chan->scan_index;
->  
->  	mutex_lock(&st->core.cmd_lock);
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> -		if (cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> -					     (s16 *)&data) < 0)
-> -			ret = -EIO;
-> +		ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> +					     (s16 *)&data);
-> +		if (ret)
-> +			break;
-> +
->  		*val = data;
-> +		ret = IIO_VAL_INT;
->  		break;
->  	case IIO_CHAN_INFO_SCALE:
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
->  		st->core.param.sensor_range.data = EC_MOTION_SENSE_NO_VALUE;
->  
-> -		if (cros_ec_motion_send_host_cmd(&st->core, 0)) {
-> -			ret = -EIO;
-> +		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		if (ret)
->  			break;
-> -		}
-> +
->  		*val = st->core.resp->sensor_range.ret;
->  
->  		/* scale * in_pressure_raw --> kPa */
+diff --git a/drivers/slimbus/slimbus.h b/drivers/slimbus/slimbus.h
+index 9be4108..46a6441 100644
+--- a/drivers/slimbus/slimbus.h
++++ b/drivers/slimbus/slimbus.h
+@@ -438,8 +438,7 @@ static inline bool slim_tid_txn(u8 mt, u8 mc)
+ 	return (mt == SLIM_MSG_MT_CORE &&
+ 		(mc == SLIM_MSG_MC_REQUEST_INFORMATION ||
+ 		 mc == SLIM_MSG_MC_REQUEST_CLEAR_INFORMATION ||
+-		 mc == SLIM_MSG_MC_REQUEST_VALUE ||
+-		 mc == SLIM_MSG_MC_REQUEST_CLEAR_INFORMATION));
++		 mc == SLIM_MSG_MC_REQUEST_VALUE));
+ }
+ 
+ static inline bool slim_ec_txn(u8 mt, u8 mc)
+-- 
+2.7.4
 
