@@ -2,205 +2,249 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E58C76196
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00C8C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B992147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9D820828
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:57:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qL2O8oB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfGURxe (ORCPT
+        id S1726991AbfGUR54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 13:53:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60316 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbfGURxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 13:53:33 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6475685541;
-        Sun, 21 Jul 2019 17:53:32 +0000 (UTC)
-Received: from redhat.com (ovpn-120-128.rdu2.redhat.com [10.10.120.128])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DABC4600C0;
-        Sun, 21 Jul 2019 17:53:24 +0000 (UTC)
-Date:   Sun, 21 Jul 2019 13:53:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
-Message-ID: <20190721134614-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081933-mutt-send-email-mst@kernel.org>
- <20190721131725.GR14271@linux.ibm.com>
+        Sun, 21 Jul 2019 13:57:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56104 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbfGUR54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 13:57:56 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so32989799wmj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 10:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gjz8oNblawby7NklpmeeuAckSeUwNIdtjSj6EpDbQhY=;
+        b=qL2O8oB1PXS16WRxxiM9a1vbGYVj6aVczfn279cC+F/TtmeOOFTpLWkE9JlH0ezlIM
+         RkelZzcfs+JyJR4bbZ7Fe17oNxySg8ya7JNEM8obrKeIP6UdIC/skiizt7MLBUhUlK7t
+         1rZD5hcJ+LmBjGXN1LKnYQjb80X6lMn3lkF0INIajpS6sginzcCYOUeVP9wHW+jhoMmm
+         uSf54dVRNI2HNExRd6lkH0lBIG+wLY+aQlIXTTTeaCTnOCFcHqhz8jCH2bVjNni9yp5W
+         LGw//SI+/GmthRJVPOqxh/Pxlf7malNEkNmKRE9En9nfmR3KnQM23CAgZS4VxPHhB92a
+         TLCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gjz8oNblawby7NklpmeeuAckSeUwNIdtjSj6EpDbQhY=;
+        b=AbDtfQwrqk4LtbIL0VKI7snUaVVxH+e7p7MLiaBeOnMIuQ+1mxZjDkk2M4OH4JJOyt
+         ggWsHancMVGqgMHvFj2o1QAUDzbITkCGcyxIsr/cBIZnXZBNi3ffl60HcQYKoF3Q8x5Z
+         36o0x7/7cFuyUm31EuCkqnMiS7o785JFetCZo5MjP0tVIIekA1CBnBsn345oipAJQ2fn
+         DQ+BMIQXoPZhFh12AQgFgsfkQFOHJ1NJMJTjZaIpXyyqHZvTtES3PXsXiCYC3ZSQZ6K+
+         FifX/jd+qsLCnwV6KPepbMcmBOdIfw3OBdqAIsIxTXhZW7mB+p99LTSzhBDepfjY/SxC
+         Gqaw==
+X-Gm-Message-State: APjAAAVrwJ9fRIwwIonM96EiKlq78/CPIND1Z2SR1dudAafkgrJx7pNo
+        p6feQ2ajH0ynkp7lPJliyXtlg2rd
+X-Google-Smtp-Source: APXvYqzzJYi6iPUvUrauccDdZBKCmHSGu7o701tN6QkPVBPi4B0GzcHytMDJIqQKv3uuMejz6al+bw==
+X-Received: by 2002:a1c:7a02:: with SMTP id v2mr59433539wmc.159.1563731873815;
+        Sun, 21 Jul 2019 10:57:53 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
+        by smtp.gmail.com with ESMTPSA id o4sm28999864wmh.35.2019.07.21.10.57.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 21 Jul 2019 10:57:53 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8723bs: remove unused file hal_phy.c
+Date:   Sun, 21 Jul 2019 19:57:35 +0200
+Message-Id: <20190721175735.24173-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190721131725.GR14271@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Sun, 21 Jul 2019 17:53:32 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 06:17:25AM -0700, Paul E. McKenney wrote:
-> On Sun, Jul 21, 2019 at 08:28:05AM -0400, Michael S. Tsirkin wrote:
-> > Hi Paul, others,
-> > 
-> > So it seems that vhost needs to call kfree_rcu from an ioctl. My worry
-> > is what happens if userspace starts cycling through lots of these
-> > ioctls.  Given we actually use rcu as an optimization, we could just
-> > disable the optimization temporarily - but the question would be how to
-> > detect an excessive rate without working too hard :) .
-> > 
-> > I guess we could define as excessive any rate where callback is
-> > outstanding at the time when new structure is allocated.  I have very
-> > little understanding of rcu internals - so I wanted to check that the
-> > following more or less implements this heuristic before I spend time
-> > actually testing it.
-> > 
-> > Could others pls take a look and let me know?
-> 
-> These look good as a way of seeing if there are any outstanding callbacks,
-> but in the case of Tree RCU, call_rcu_outstanding() would almost never
-> return false on a busy system.
+Remove the unused file hal_phy.c. No function from this file is used
+in the driver code and it is not listed in the Makefile.
 
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/hal_phy.c | 157 ------------------------
+ 1 file changed, 157 deletions(-)
+ delete mode 100644 drivers/staging/rtl8723bs/hal/hal_phy.c
 
-Hmm, ok. Maybe I could rename this to e.g. call_rcu_busy
-and change the tree one to do rcu_segcblist_n_lazy_cbs > 1000?
+diff --git a/drivers/staging/rtl8723bs/hal/hal_phy.c b/drivers/staging/rtl8723bs/hal/hal_phy.c
+deleted file mode 100644
+index 24a9d8f783f0..000000000000
+--- a/drivers/staging/rtl8723bs/hal/hal_phy.c
++++ /dev/null
+@@ -1,157 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/******************************************************************************
+- *
+- * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
+- *
+- ******************************************************************************/
+-#define _HAL_PHY_C_
+-
+-#include <drv_types.h>
+-
+-/*  */
+-/*  ==> RF shadow Operation API Code Section!!! */
+-/*  */
+-/*-----------------------------------------------------------------------------
+- * Function:	PHY_RFShadowRead
+- *			PHY_RFShadowWrite
+- *			PHY_RFShadowCompare
+- *			PHY_RFShadowRecorver
+- *			PHY_RFShadowCompareAll
+- *			PHY_RFShadowRecorverAll
+- *			PHY_RFShadowCompareFlagSet
+- *			PHY_RFShadowRecorverFlagSet
+- *
+- * Overview:	When we set RF register, we must write shadow at first.
+- *		When we are running, we must compare shadow abd locate error addr.
+- *		Decide to recorver or not.
+- *
+- * Input:       NONE
+- *
+- * Output:      NONE
+- *
+- * Return:      NONE
+- *
+- * Revised History:
+- * When			Who		Remark
+- * 11/20/2008	MHC		Create Version 0.
+- *
+- *---------------------------------------------------------------------------*/
+-u32 PHY_RFShadowRead(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
+-{
+-	return	RF_Shadow[eRFPath][Offset].Value;
+-
+-}	/* PHY_RFShadowRead */
+-
+-
+-void PHY_RFShadowWrite(
+-	IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset, IN u32 Data
+-)
+-{
+-	RF_Shadow[eRFPath][Offset].Value = (Data & bRFRegOffsetMask);
+-	RF_Shadow[eRFPath][Offset].Driver_Write = true;
+-
+-}	/* PHY_RFShadowWrite */
+-
+-
+-bool PHY_RFShadowCompare(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
+-{
+-	u32 reg;
+-	/*  Check if we need to check the register */
+-	if (RF_Shadow[eRFPath][Offset].Compare == true) {
+-		reg = rtw_hal_read_rfreg(Adapter, eRFPath, Offset, bRFRegOffsetMask);
+-		/*  Compare shadow and real rf register for 20bits!! */
+-		if (RF_Shadow[eRFPath][Offset].Value != reg) {
+-			/*  Locate error position. */
+-			RF_Shadow[eRFPath][Offset].ErrorOrNot = true;
+-			/* RT_TRACE(COMP_INIT, DBG_LOUD, */
+-			/* PHY_RFShadowCompare RF-%d Addr%02lx Err = %05lx\n", */
+-			/* eRFPath, Offset, reg)); */
+-		}
+-		return RF_Shadow[eRFPath][Offset].ErrorOrNot;
+-	}
+-	return false;
+-}	/* PHY_RFShadowCompare */
+-
+-
+-void PHY_RFShadowRecorver(IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset)
+-{
+-	/*  Check if the address is error */
+-	if (RF_Shadow[eRFPath][Offset].ErrorOrNot == true) {
+-		/*  Check if we need to recorver the register. */
+-		if (RF_Shadow[eRFPath][Offset].Recorver == true) {
+-			rtw_hal_write_rfreg(Adapter, eRFPath, Offset, bRFRegOffsetMask,
+-							RF_Shadow[eRFPath][Offset].Value);
+-			/* RT_TRACE(COMP_INIT, DBG_LOUD, */
+-			/* PHY_RFShadowRecorver RF-%d Addr%02lx=%05lx", */
+-			/* eRFPath, Offset, RF_Shadow[eRFPath][Offset].Value)); */
+-		}
+-	}
+-
+-}	/* PHY_RFShadowRecorver */
+-
+-
+-void PHY_RFShadowCompareAll(IN PADAPTER Adapter)
+-{
+-	u8 eRFPath = 0;
+-	u32 Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
+-
+-	for (eRFPath = 0; eRFPath < RF6052_MAX_PATH; eRFPath++) {
+-		for (Offset = 0; Offset < maxReg; Offset++) {
+-			PHY_RFShadowCompare(Adapter, eRFPath, Offset);
+-		}
+-	}
+-
+-}	/* PHY_RFShadowCompareAll */
+-
+-
+-void PHY_RFShadowRecorverAll(IN PADAPTER Adapter)
+-{
+-	u8 eRFPath = 0;
+-	u32 Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
+-
+-	for (eRFPath = 0; eRFPath < RF6052_MAX_PATH; eRFPath++) {
+-		for (Offset = 0; Offset < maxReg; Offset++) {
+-			PHY_RFShadowRecorver(Adapter, eRFPath, Offset);
+-		}
+-	}
+-
+-}	/* PHY_RFShadowRecorverAll */
+-
+-
+-void
+-PHY_RFShadowCompareFlagSet(
+-	IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset, IN u8 Type
+-)
+-{
+-	/*  Set True or False!!! */
+-	RF_Shadow[eRFPath][Offset].Compare = Type;
+-
+-}	/* PHY_RFShadowCompareFlagSet */
+-
+-
+-void PHY_RFShadowRecorverFlagSet(
+-	IN PADAPTER Adapter, IN u8 eRFPath, IN u32 Offset, IN u8 Type
+-)
+-{
+-	/*  Set True or False!!! */
+-	RF_Shadow[eRFPath][Offset].Recorver = Type;
+-
+-}	/* PHY_RFShadowRecorverFlagSet */
+-
+-
+-void PHY_RFShadowCompareFlagSetAll(IN PADAPTER Adapter)
+-{
+-	u8 eRFPath = 0;
+-	u32 Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
+-
+-	for (eRFPath = 0; eRFPath < RF6052_MAX_PATH; eRFPath++) {
+-		for (Offset = 0; Offset < maxReg; Offset++) {
+-			/*  2008/11/20 MH For S3S4 test, we only check reg 26/27 now!!!! */
+-			if (Offset != 0x26 && Offset != 0x27)
+-				PHY_RFShadowCompareFlagSet(Adapter, eRFPath, Offset, false);
+-			else
+-				PHY_RFShadowCompareFlagSet(Adapter, eRFPath, Offset, true);
+-		}
+-	}
+-
+-}	/* PHY_RFShadowCompareFlagSetAll */
+-- 
+2.22.0
 
-> 
-> Here are some alternatives:
-> 
-> o	RCU uses some pieces of Rao Shoaib kfree_rcu() patches.
-> 	The idea is to make kfree_rcu() locally buffer requests into
-> 	batches of (say) 1,000, but processing smaller batches when RCU
-> 	is idle, or when some smallish amout of time has passed with
-> 	no more kfree_rcu() request from that CPU.  RCU than takes in
-> 	the batch using not call_rcu(), but rather queue_rcu_work().
-> 	The resulting batch of kfree() calls would therefore execute in
-> 	workqueue context rather than in softirq context, which should
-> 	be much easier on the system.
-> 
-> 	In theory, this would allow people to use kfree_rcu() without
-> 	worrying quite so much about overload.  It would also not be
-> 	that hard to implement.
-> 
-> o	Subsystems vulnerable to user-induced kfree_rcu() flooding use
-> 	call_rcu() instead of kfree_rcu().  Keep a count of the number
-> 	of things waiting for a grace period, and when this gets too
-> 	large, disable the optimization.  It will then drain down, at
-> 	which point the optimization can be re-enabled.
-> 
-> 	But please note that callbacks are -not- guaranteed to run on
-> 	the CPU that queued them.  So yes, you would need a per-CPU
-> 	counter, but you would need to periodically sum it up to check
-> 	against the global state.  Or keep track of the CPU that
-> 	did the call_rcu() so that you can atomically decrement in
-> 	the callback the same counter that was atomically incremented
-> 	just before the call_rcu().  Or any number of other approaches.
-
-I'm really looking for something we can do this merge window
-and without adding too much code, and kfree_rcu is intended to
-fix a bug.
-Adding call_rcu and careful accounting is something that I'm not
-happy adding with merge window already open.
-
-> 
-> Also, the overhead is important.  For example, as far as I know,
-> current RCU gracefully handles close(open(...)) in a tight userspace
-> loop.  But there might be trouble due to tight userspace loops around
-> lighter-weight operations.
-> 
-> So an important question is "Just how fast is your ioctl?"  If it takes
-> (say) 100 microseconds to execute, there should be absolutely no problem.
-> On the other hand, if it can execute in 50 nanoseconds, this very likely
-> does need serious attention.
-> 
-> Other thoughts?
-> 
-> 							Thanx, Paul
-
-Hmm the answer to this would be I'm not sure.
-It's setup time stuff we never tested it.
-
-> > Thanks!
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > 
-> > 
-> > diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
-> > index 477b4eb44af5..067909521d72 100644
-> > --- a/kernel/rcu/tiny.c
-> > +++ b/kernel/rcu/tiny.c
-> > @@ -125,6 +125,25 @@ void synchronize_rcu(void)
-> >  }
-> >  EXPORT_SYMBOL_GPL(synchronize_rcu);
-> > 
-> > +/*
-> > + * Helpful for rate-limiting kfree_rcu/call_rcu callbacks.
-> > + */
-> > +bool call_rcu_outstanding(void)
-> > +{
-> > +	unsigned long flags;
-> > +	struct rcu_data *rdp;
-> > +	bool outstanding;
-> > +
-> > +	local_irq_save(flags);
-> > +	rdp = this_cpu_ptr(&rcu_data);
-> > +	outstanding = rcu_segcblist_empty(&rdp->cblist);
-> > +	outstanding = rcu_ctrlblk.donetail != rcu_ctrlblk.curtail;
-> > +	local_irq_restore(flags);
-> > +
-> > +	return outstanding;
-> > +}
-> > +EXPORT_SYMBOL_GPL(call_rcu_outstanding);
-> > +
-> >  /*
-> >   * Post an RCU callback to be invoked after the end of an RCU grace
-> >   * period.  But since we have but one CPU, that would be after any
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index a14e5fbbea46..d4b9d61e637d 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -2482,6 +2482,24 @@ static void rcu_leak_callback(struct rcu_head *rhp)
-> >  {
-> >  }
-> > 
-> > +/*
-> > + * Helpful for rate-limiting kfree_rcu/call_rcu callbacks.
-> > + */
-> > +bool call_rcu_outstanding(void)
-> > +{
-> > +	unsigned long flags;
-> > +	struct rcu_data *rdp;
-> > +	bool outstanding;
-> > +
-> > +	local_irq_save(flags);
-> > +	rdp = this_cpu_ptr(&rcu_data);
-> > +	outstanding = rcu_segcblist_empty(&rdp->cblist);
-> > +	local_irq_restore(flags);
-> > +
-> > +	return outstanding;
-> > +}
-> > +EXPORT_SYMBOL_GPL(call_rcu_outstanding);
-> > +
-> >  /*
-> >   * Helper function for call_rcu() and friends.  The cpu argument will
-> >   * normally be -1, indicating "currently running CPU".  It may specify
