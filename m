@@ -2,83 +2,178 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1020CC76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EDCC76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88A62147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662B82147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:57:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H/w87sNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfGUUyl (ORCPT
+        id S1726385AbfGUU5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 16:54:41 -0400
-Received: from smtprelay0068.hostedemail.com ([216.40.44.68]:45604 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726233AbfGUUyl (ORCPT
+        Sun, 21 Jul 2019 16:57:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40190 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfGUU5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 16:54:41 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id C6CE9283D;
-        Sun, 21 Jul 2019 20:54:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: badge91_457dfadbc403e
-X-Filterd-Recvd-Size: 2397
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 21 Jul 2019 20:54:37 +0000 (UTC)
-Message-ID: <817d0c88a2764ef07b4169bd0e2632f3e78c47d8.camel@perches.com>
-Subject: Re: [PATCH v10 2/6] usb:common Separated decoding functions from
- dwc3 driver.
-From:   Joe Perches <joe@perches.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Pawel Laszczak <pawell@cadence.com>, felipe.balbi@linux.intel.com,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com,
-        nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, jpawar@cadence.com,
-        kurahul@cadence.com, aniljoy@cadence.com
-Date:   Sun, 21 Jul 2019 13:54:35 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1907211639390.9901-100000@netrider.rowland.org>
-References: <Pine.LNX.4.44L0.1907211639390.9901-100000@netrider.rowland.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Sun, 21 Jul 2019 16:57:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so16338322pfp.7
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 13:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=9F+JC+6LFsWKhUDWDvarnJN98+mFen9oXJXgzo0bSVU=;
+        b=H/w87sNB0a3V+xk2M+jLVLQK59lF76tosZO4VtHv6z4KcZ8NNe7kyUuAe+lpkEX0CV
+         pyFMClI7v1vi3HEadpcpd68msmofnTynhugJIFxcINUwkkT8qGgif5HAFUQVu1UBOnEj
+         6EBZGmgaVM7aRT9eJSoXy7+6VbQsmfP+0A+cgGP3Ou2hoLCcSaf635W7B4wc1Xs/5nrT
+         zpAtLRfh+qWoNm7UpbexEHw4Z5mYdrf4HiExRzITUk7w0I9opkHJCHonc7OgifwzLGPA
+         JCBM2CwY/zTPfC1nMULwOtuxSRmqr/p3p5f9QBunjNlNURxnhm2ZmKA4hnm0tY/BKC1f
+         XX3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=9F+JC+6LFsWKhUDWDvarnJN98+mFen9oXJXgzo0bSVU=;
+        b=Nd3wYbCf6BhVJJUIl1O9SJzxLeTwNzGGmS5wYETmM3p+m8YM4+G2QPrOWUT5TvwQtc
+         ofKsTGKL+DIFk4PXomlFX5DHLadTcTV0VinotlsWwb3dbF4WsMu23iih+OZmSJ4Xt++h
+         450Hob0BVUJcLzEF4K/1NU7/g4IBV9Yly1kHrQE+JIiWlmfPg9qs4CVBwMcoIumg82ne
+         XultGrzNjkoBt1SiRfoKeU3VvBsR9NPiPjuaBGFuxCll8RBmCL9CwgcvfgxD0y1yKa2P
+         4g4d/KHnhdWRHI5mBrBY4G49oWk160rQ/phOE7BRx56XWdBCyYhxsGRTtOOHMbhpJj4v
+         ufRg==
+X-Gm-Message-State: APjAAAV7TPXfjZdUo7v/Ib3ySzAEoZ+rklnTRfrFX2te68wm8li4H/4C
+        TYdyXaP2ojBFGmfB7xMcc/rM8Q==
+X-Google-Smtp-Source: APXvYqy/R3sPr935zDxzmCU0exLHv3/58+pLAknmNb6Kk+mmYSGJCP0x5aeWxQsIXyXJn9OKZFm+wQ==
+X-Received: by 2002:a65:62d7:: with SMTP id m23mr68104938pgv.358.1563742662844;
+        Sun, 21 Jul 2019 13:57:42 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id d14sm47652555pfo.154.2019.07.21.13.57.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 21 Jul 2019 13:57:41 -0700 (PDT)
+Date:   Sun, 21 Jul 2019 13:57:41 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+cc:     Cfir Cohen <cfir@google.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 08/11] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS
+ hypercall
+In-Reply-To: <20190710201244.25195-9-brijesh.singh@amd.com>
+Message-ID: <alpine.DEB.2.21.1907211354220.58367@chino.kir.corp.google.com>
+References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-9-brijesh.singh@amd.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-07-21 at 16:45 -0400, Alan Stern wrote:
-> On Sun, 21 Jul 2019, Joe Perches wrote:
-> 
-> > On Sun, 2019-07-21 at 19:32 +0100, Pawel Laszczak wrote:
-> > > Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
-> > > to driver/usb/common/debug.c file. These moved functions include:
-> > []
-> > > diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
-> > []
-> > > +static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
-> > > +                                    __u16 wValue, __u16 wIndex,
-> > > +                                    char *str, size_t size)
-> > 
-> > It's probably not necessary to use Hungarian
-> > when moving these functions into generic code.
-> 
-> In fact, these are the well known and commonly accepted names for these
-> data values, as given in the USB specification and used in many other
-> places in the Linux USB stack.  See for example the definition of
-> struct usb_ctrlrequest in include/uapi/linux/usb/ch9.h.
->
-> Changing them here would only make the code less readable.
+On Wed, 10 Jul 2019, Singh, Brijesh wrote:
 
-Perhaps, but these have already been converted from
-the __le types, so perhaps not.  It might be more
-sensible to convert the __u16 uses to u16 and avoid
-the __le16 names.
+> diff --git a/Documentation/virtual/kvm/hypercalls.txt b/Documentation/virtual/kvm/hypercalls.txt
+> index da24c138c8d1..94f0611f4d88 100644
+> --- a/Documentation/virtual/kvm/hypercalls.txt
+> +++ b/Documentation/virtual/kvm/hypercalls.txt
+> @@ -141,3 +141,17 @@ a0 corresponds to the APIC ID in the third argument (a2), bit 1
+>  corresponds to the APIC ID a2+1, and so on.
+>  
+>  Returns the number of CPUs to which the IPIs were delivered successfully.
+> +
+> +7. KVM_HC_PAGE_ENC_STATUS
+> +-------------------------
+> +Architecture: x86
+> +Status: active
+> +Purpose: Notify the encryption status changes in guest page table (SEV guest)
+> +
+> +a0: the guest physical address of the start page
+> +a1: the number of pages
+> +a2: encryption attribute
+> +
+> +   Where:
+> +	* 1: Encryption attribute is set
+> +	* 0: Encryption attribute is cleared
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 26d1eb83f72a..b463a81dc176 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1199,6 +1199,8 @@ struct kvm_x86_ops {
+>  	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
+>  
+>  	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
+> +	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+> +				  unsigned long sz, unsigned long mode);
+>  };
+>  
+>  struct kvm_arch_async_pf {
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 3089942f6630..431718309359 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -135,6 +135,8 @@ struct kvm_sev_info {
+>  	int fd;			/* SEV device fd */
+>  	unsigned long pages_locked; /* Number of pages locked */
+>  	struct list_head regions_list;  /* List of registered regions */
+> +	unsigned long *page_enc_bmap;
+> +	unsigned long page_enc_bmap_size;
+>  };
+>  
+>  struct kvm_svm {
+> @@ -1910,6 +1912,8 @@ static void sev_vm_destroy(struct kvm *kvm)
+>  
+>  	sev_unbind_asid(kvm, sev->handle);
+>  	sev_asid_free(kvm);
+> +
+> +	kvfree(sev->page_enc_bmap);
+>  }
+>  
+>  static void avic_vm_destroy(struct kvm *kvm)
 
-cheers, Joe
+Adding Cfir who flagged this kvfree().
 
+Other freeing of sev->page_enc_bmap in this patch also set 
+sev->page_enc_bmap_size to 0 and neither set sev->page_enc_bmap to NULL 
+after freeing it.
+
+For extra safety, is it possible to sev->page_enc_bmap = NULL anytime the 
+bitmap is kvfreed?
+
+> @@ -2084,6 +2088,7 @@ static void avic_set_running(struct kvm_vcpu *vcpu, bool is_run)
+>  
+>  static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  {
+> +	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
+>  	struct vcpu_svm *svm = to_svm(vcpu);
+>  	u32 dummy;
+>  	u32 eax = 1;
+> @@ -2105,6 +2110,12 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  
+>  	if (kvm_vcpu_apicv_active(vcpu) && !init_event)
+>  		avic_update_vapic_bar(svm, APIC_DEFAULT_PHYS_BASE);
+> +
+> +	/* reset the page encryption bitmap */
+> +	if (sev_guest(vcpu->kvm)) {
+> +		kvfree(sev->page_enc_bmap);
+> +		sev->page_enc_bmap_size = 0;
+> +	}
+>  }
+>  
+>  static int avic_init_vcpu(struct vcpu_svm *svm)
+
+What is protecting sev->page_enc_bmap and sev->page_enc_bmap_size in calls 
+to svm_vcpu_reset()?
