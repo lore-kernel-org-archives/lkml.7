@@ -2,195 +2,203 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C05C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75423C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6982085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3651C2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNIkZ2mz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqJJAdT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfGUVxA (ORCPT
+        id S1726828AbfGUV6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:53:00 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36069 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfGUVw7 (ORCPT
+        Sun, 21 Jul 2019 17:58:17 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34928 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfGUV6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:52:59 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so37382546wrs.3;
-        Sun, 21 Jul 2019 14:52:57 -0700 (PDT)
+        Sun, 21 Jul 2019 17:58:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so69770121ioo.2;
+        Sun, 21 Jul 2019 14:58:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ru8G2tF8BrtvXna3nOVM7mk9tZRakkkl3JaP7/Y/7kA=;
-        b=qNIkZ2mzL8gmk9xGrHxKydBYYl4a/hdTaaj7/1xWyAUOLf5EN6tNbb0paiNIzJGF3P
-         lXX/Rwv7nA4+XweAFGbyRAJZhUxOUx8bFDu32V0kD315YEKJTZuYh+PjaQjKh2uhh8FH
-         ZtQ6WrX7j9VBr9+A96pkVWjE0DLRa6enpfSVdIcrQsuHhX8Q6TYHyHwIFgtHO/pc3xGl
-         4KcCyed0yi2QtIRRz5nHcuxQiKNAwCV84juyKnfwJqoS0MKRbhzlmqkoBS4WTLi+l8s2
-         wcyA7ykW3eLJ+VXzGuQKcPlsm7CEgeYiitGF+rFlcM+QYqJTP+kP2RXLPferKvuQJU1d
-         XNyQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tev7n6EVMi7iKztYGKAvEisaO6enLdDJrsSjiK4LjPs=;
+        b=KqJJAdT/oV6WBkbwztABUDP/snUsIkTbcE/2XWZ8pnjDWIyLGI26TEPVMIJ+fwjHCK
+         SvTDnDukqZ4VEOywXYhJMdAMQe+UyIOUMZdsQzqUJtwA8ujaDeAh0bwa7LOLVbA4R5Cw
+         7HXf5Hee5qwjZ4yt3SCncmy4CaojFfO5ERdnyp1BsqKSxr32uSE5wiK/Jztk3MBgYmhU
+         kUPtlpGmAcMOuuyy+/e2Cx4vyTe7qQMhpIA3nAa6yhbb6P6oKLwu5Q38CyE6B34gs3Fs
+         nI6dGTiF4A5BFGoD5OlywZsBlPOgW+FDq3mlCX9E2/5fAZ01qqC9twsGuFZDR4LQVizD
+         BkQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ru8G2tF8BrtvXna3nOVM7mk9tZRakkkl3JaP7/Y/7kA=;
-        b=gHswmcVJ7WA/fA8QMQJ0wBI92/uXVBNYg4uorM03T64QPeJllQNkJGaS7HtLVqMi9Q
-         QjcAt7k+25J9tc9G4nRjiemLojXIgpyq7Ia9+S7t4lJs00RVmDqVVRaJR/yrOsP4um8z
-         Xh5g3fxPesPC+7ODPdOwCMT/bPq4WmgZw4LYRIsZbkaS/rk/czpM8tgk9ApKRVSRwc/e
-         Wtl4KaplZOitc8u8jMpClRH63ouSelhzFz77Dljcy0/t20zbPrlW3Q1TjBUoApz9SFrI
-         edAHbTPiQ9t4ws9dejCk1ROHvEjzkVd7E2EPRanj0Vo46B4ywUp0CiUgpfRXVWkR5mWk
-         vmWQ==
-X-Gm-Message-State: APjAAAXSZ9plu73OZRw5O9h/nKOmI5GFPqHGcbseTDnkr9b/geAB0VN3
-        9ex5fwcS1deHLKgq246ERQ==
-X-Google-Smtp-Source: APXvYqxcUhQtJQz56kf3faYidicE72glm9BCqMWN7zJt3tWR4nw0aOJE4Sqh13+elPcz2/okCcNWNA==
-X-Received: by 2002:a5d:6284:: with SMTP id k4mr36608218wru.179.1563745976784;
-        Sun, 21 Jul 2019 14:52:56 -0700 (PDT)
-Received: from avx2 ([46.53.250.111])
-        by smtp.gmail.com with ESMTPSA id o26sm70069874wro.53.2019.07.21.14.52.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 14:52:56 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 00:52:53 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        axboe@kernel.dk, kvalo@codeaurora.org, john.johansen@canonical.com,
-        linux-arch@vger.kernel.org
-Subject: [PATCH] unaligned: delete 1-byte accessors
-Message-ID: <20190721215253.GA18177@avx2>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tev7n6EVMi7iKztYGKAvEisaO6enLdDJrsSjiK4LjPs=;
+        b=luJd9Jria97280DuSFTQRf+0hXoRXtc/8n5W91/5GIDPmo8g4b3qHD7DF3R+XLYD8h
+         sLEwyzqAGFR0FCR4h4sd3SmFH78gvBHfMsH2+bKnjKl0TzqfnkLZDR0Yf6EAnl2w+K0j
+         +9SrnlDm/q+cOHcjFZMNzkWyyHUf1258CcYYjUv6U3bcRCJcy0RsFky6z/LqtKSFf4uJ
+         ZOd7PFlki1kAccUsq5IHnzDqMoDnWrz5w2DwwmwOJ7ZcazlQW5qgW36MwvZV4MP4a+10
+         AIXdxR/sJMYsYLfHWzSRdzHdm+FNz+XIEYDANswVaeSQdVIPjlpsRC0JKhEAjdxAGWTb
+         XKsw==
+X-Gm-Message-State: APjAAAX11hFgqKqCCu+40vtdBw3bc60BcuRaBfMw5CsLvBuBtMmxfC6t
+        DmgQSop2GvdQSi78buKeqhzxrXrMkBT5g0pMHtw=
+X-Google-Smtp-Source: APXvYqwLSajdLhk84YFgrwdbdYp5pcUUKJgeU5jNbnQdwFql5z60ETrzyOJInwIyUPqjYsPQ4kU5VpZQTAceXEY4CKE=
+X-Received: by 2002:a02:242a:: with SMTP id f42mr68634598jaa.42.1563746295585;
+ Sun, 21 Jul 2019 14:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com> <20190717192616.1731-2-tushar.khandelwal@arm.com>
+In-Reply-To: <20190717192616.1731-2-tushar.khandelwal@arm.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Sun, 21 Jul 2019 16:58:04 -0500
+Message-ID: <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+To:     Tushar Khandelwal <tushar.khandelwal@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tushar.2nov@gmail.com, morten_bp@live.dk, nd@arm.com,
+        Morten Borup Petersen <morten.petersen@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each and every 1-byte access is aligned!
+On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
+<tushar.khandelwal@arm.com> wrote:
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+> new file mode 100644
+> index 000000000000..3a05593414bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+> @@ -0,0 +1,108 @@
+> +Arm MHUv2 Mailbox Driver
+> +========================
+> +
+> +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
+> +between 1 and 124 channel windows to provide unidirectional communication with
+> +remote processor(s).
+> +
+> +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
+> +written to or read from. If a pair of MHU devices is implemented between two
+> +processing elements to provide bidirectional communication, these must be
+> +specified as two separate mailboxes.
+> +
+> +A device tree node for an Arm MHUv2 device must specify either a receiver frame
+> +or a sender frame, indicating which end of the unidirectional MHU device which
+> +the device node entry describes.
+> +
+> +An MHU device must be specified with a transport protocol. The transport
+> +protocol of an MHU device determines the method of data transmission as well as
+> +the number of provided mailboxes.
+> +Following are the possible transport protocol types:
+> +- Single-word: An MHU device implements as many mailboxes as it
+> +               provides channel windows. Data is transmitted through
+> +               the MHU registers.
+> +- Multi-word:  An MHU device implements a single mailbox. All channel windows
+> +               will be used during transmission. Data is transmitted through
+> +               the MHU registers.
+> +- Doorbell:    An MHU device implements as many mailboxes as there are flag
+> +               bits available in its channel windows. Optionally, data may
+> +               be transmitted through a shared memory region, wherein the MHU
+> +               is used strictly as an interrupt generation mechanism.
+> +
+> +Mailbox Device Node:
+> +====================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
+> +- reg:         Contains the mailbox register address range (base
+> +               address and length)
+> +- #mbox-cells  Shall be 1 - the index of the channel needed.
+> +- mhu-frame    Frame type of the device.
+> +               Shall be either "sender" or "receiver"
+> +- mhu-protocol Transport protocol of the device. Shall be one of the
+> +               following: "single-word", "multi-word", "doorbell"
+> +
+> +Required properties (receiver frame):
+> +-------------------------------------
+> +- interrupts:  Contains the interrupt information corresponding to the
+> +               combined interrupt of the receiver frame
+> +
+> +Example:
+> +--------
+> +
+> +       mbox_mw_tx: mhu@10000000 {
+> +               compatible = "arm,mhuv2","arm,primecell";
+> +               reg = <0x10000000 0x1000>;
+> +               clocks = <&refclk100mhz>;
+> +               clock-names = "apb_pclk";
+> +               #mbox-cells = <1>;
+> +               mhu-protocol = "multi-word";
+> +               mhu-frame = "sender";
+> +       };
+> +
+> +       mbox_sw_tx: mhu@10000000 {
+> +               compatible = "arm,mhuv2","arm,primecell";
+> +               reg = <0x11000000 0x1000>;
+> +               clocks = <&refclk100mhz>;
+> +               clock-names = "apb_pclk";
+> +               #mbox-cells = <1>;
+> +               mhu-protocol = "single-word";
+> +               mhu-frame = "sender";
+> +       };
+> +
+> +       mbox_db_rx: mhu@10000000 {
+> +               compatible = "arm,mhuv2","arm,primecell";
+> +               reg = <0x12000000 0x1000>;
+> +               clocks = <&refclk100mhz>;
+> +               clock-names = "apb_pclk";
+> +               #mbox-cells = <1>;
+> +               interrupts = <0 45 4>;
+> +               interrupt-names = "mhu_rx";
+> +               mhu-protocol = "doorbell";
+> +               mhu-frame = "receiver";
+> +       };
+> +
+> +       mhu_client: scb@2e000000 {
+> +       compatible = "fujitsu,mb86s70-scb-1.0";
+> +       reg = <0 0x2e000000 0x4000>;
+> +       mboxes =
+> +               // For multi-word frames, client may only instantiate a single
+> +               // mailbox for a mailbox controller
+> +               <&mbox_mw_tx 0>,
+> +
+> +               // For single-word frames, client may instantiate as many
+> +               // mailboxes as there are channel windows in the MHU
+> +                <&mbox_sw_tx 0>,
+> +                <&mbox_sw_tx 1>,
+> +                <&mbox_sw_tx 2>,
+> +                <&mbox_sw_tx 3>,
+> +
+> +               // For doorbell frames, client may instantiate as many mailboxes
+> +               // as there are bits available in the combined number of channel
+> +               // windows ((channel windows * 32) mailboxes)
+> +                <mbox_db_rx 0>,
+> +                <mbox_db_rx 1>,
+> +                ...
+> +                <mbox_db_rx 17>;
+> +       };
 
-	There may be more unaligned stuff in arch/.
+If the mhuv2 instance implements, say, 3 channel windows between
+sender (linux) and receiver (firmware), and Linux runs two protocols
+each requiring 1 and 2-word sized messages respectively. The hardware
+supports that by assigning windows [0] and [1,2] to each protocol.
+However, I don't think the driver can support that. Or does it?
 
- block/partitions/ldm.h                      |    2 +-
- block/partitions/msdos.c                    |    2 +-
- drivers/net/wireless/marvell/mwifiex/pcie.c |    2 +-
- include/linux/unaligned/generic.h           |   12 ++----------
- net/core/netpoll.c                          |    4 ++--
- security/apparmor/policy_unpack.c           |    2 +-
- 6 files changed, 8 insertions(+), 16 deletions(-)
+Also I see problem with implementing "protocol modes" in the
+controller driver - 'mhu-protocol' property should go away.  And
+'mhu-frame' is unncessary - presence of interrupt property could imply
+'receiver', otherwise 'sender'.
 
---- a/block/partitions/ldm.h
-+++ b/block/partitions/ldm.h
-@@ -85,7 +85,7 @@ struct parsed_partitions;
- #define TOC_BITMAP2		"log"		/* bitmaps in the TOCBLOCK. */
- 
- /* Borrowed from msdos.c */
--#define SYS_IND(p)		(get_unaligned(&(p)->sys_ind))
-+#define SYS_IND(p)		((p)->sys_ind)
- 
- struct frag {				/* VBLK Fragment handling */
- 	struct list_head list;
---- a/block/partitions/msdos.c
-+++ b/block/partitions/msdos.c
-@@ -33,7 +33,7 @@
-  */
- #include <asm/unaligned.h>
- 
--#define SYS_IND(p)	get_unaligned(&p->sys_ind)
-+#define SYS_IND(p)	((p)->sys_ind)
- 
- static inline sector_t nr_sects(struct partition *p)
- {
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -1090,7 +1090,7 @@ static int mwifiex_pcie_alloc_sleep_cookie_buf(struct mwifiex_adapter *adapter)
- 
- 	mwifiex_dbg(adapter, INFO,
- 		    "alloc_scook: sleep cookie=0x%x\n",
--		    get_unaligned(card->sleep_cookie_vbase));
-+		    *card->sleep_cookie_vbase);
- 
- 	return 0;
- }
---- a/include/linux/unaligned/generic.h
-+++ b/include/linux/unaligned/generic.h
-@@ -9,27 +9,22 @@
- extern void __bad_unaligned_access_size(void);
- 
- #define __get_unaligned_le(ptr) ((__force typeof(*(ptr)))({			\
--	__builtin_choose_expr(sizeof(*(ptr)) == 1, *(ptr),			\
- 	__builtin_choose_expr(sizeof(*(ptr)) == 2, get_unaligned_le16((ptr)),	\
- 	__builtin_choose_expr(sizeof(*(ptr)) == 4, get_unaligned_le32((ptr)),	\
- 	__builtin_choose_expr(sizeof(*(ptr)) == 8, get_unaligned_le64((ptr)),	\
--	__bad_unaligned_access_size()))));					\
-+	__bad_unaligned_access_size())));					\
- 	}))
- 
- #define __get_unaligned_be(ptr) ((__force typeof(*(ptr)))({			\
--	__builtin_choose_expr(sizeof(*(ptr)) == 1, *(ptr),			\
- 	__builtin_choose_expr(sizeof(*(ptr)) == 2, get_unaligned_be16((ptr)),	\
- 	__builtin_choose_expr(sizeof(*(ptr)) == 4, get_unaligned_be32((ptr)),	\
- 	__builtin_choose_expr(sizeof(*(ptr)) == 8, get_unaligned_be64((ptr)),	\
--	__bad_unaligned_access_size()))));					\
-+	__bad_unaligned_access_size())));					\
- 	}))
- 
- #define __put_unaligned_le(val, ptr) ({					\
- 	void *__gu_p = (ptr);						\
- 	switch (sizeof(*(ptr))) {					\
--	case 1:								\
--		*(u8 *)__gu_p = (__force u8)(val);			\
--		break;							\
- 	case 2:								\
- 		put_unaligned_le16((__force u16)(val), __gu_p);		\
- 		break;							\
-@@ -48,9 +43,6 @@ extern void __bad_unaligned_access_size(void);
- #define __put_unaligned_be(val, ptr) ({					\
- 	void *__gu_p = (ptr);						\
- 	switch (sizeof(*(ptr))) {					\
--	case 1:								\
--		*(u8 *)__gu_p = (__force u8)(val);			\
--		break;							\
- 	case 2:								\
- 		put_unaligned_be16((__force u16)(val), __gu_p);		\
- 		break;							\
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -408,7 +408,7 @@ void netpoll_send_udp(struct netpoll *np, const char *msg, int len)
- 		ip6h = ipv6_hdr(skb);
- 
- 		/* ip6h->version = 6; ip6h->priority = 0; */
--		put_unaligned(0x60, (unsigned char *)ip6h);
-+		*(unsigned char *)ip6h = 0x60;
- 		ip6h->flow_lbl[0] = 0;
- 		ip6h->flow_lbl[1] = 0;
- 		ip6h->flow_lbl[2] = 0;
-@@ -436,7 +436,7 @@ void netpoll_send_udp(struct netpoll *np, const char *msg, int len)
- 		iph = ip_hdr(skb);
- 
- 		/* iph->version = 4; iph->ihl = 5; */
--		put_unaligned(0x45, (unsigned char *)iph);
-+		*(unsigned char *)iph = 0x45;
- 		iph->tos      = 0;
- 		put_unaligned(htons(ip_len), &(iph->tot_len));
- 		iph->id       = htons(atomic_inc_return(&ip_ident));
---- a/security/apparmor/policy_unpack.c
-+++ b/security/apparmor/policy_unpack.c
-@@ -301,7 +301,7 @@ static bool unpack_u8(struct aa_ext *e, u8 *data, const char *name)
- 		if (!inbounds(e, sizeof(u8)))
- 			goto fail;
- 		if (data)
--			*data = get_unaligned((u8 *)e->pos);
-+			*data = *(u8 *)e->pos;
- 		e->pos += sizeof(u8);
- 		return 1;
- 	}
+Cheers!
