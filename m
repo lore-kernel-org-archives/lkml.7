@@ -2,104 +2,266 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2D7C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79685C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D338206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2EYg2QA"
+	by mail.kernel.org (Postfix) with ESMTP id 5599E2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfGUSPn (ORCPT
+        id S1727276AbfGUSXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 14:15:43 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33179 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfGUSPm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 14:15:42 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so17976940plo.0
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 11:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=RWwLZt/rt3rzH+QJKbsOFH6f0FNBf1yA2AONMe227Ak=;
-        b=P2EYg2QAnNUbU3edGEbUEtYVrJRG76A7b0Brz9dpH6TpPooOr0Jo1P0e8Gdft5T3dn
-         PP/qZG+gyty4qKDJl0c1Vy8cbBApIuwPOUTFiBgPD8QyvXZt/IagX/d9+BkqvDZTl2il
-         C+MUUBa0fm6EG3pqtQPCiWsu79ojKs/Jl1IOXAFaE2dwGRVxwosrUVk5A9AL9Owwcvdk
-         fJe6vKUKzFReByV1D6poE8WPcJiyhlmsAWUdmhocaYsP3coFXxw4WkF8W83qcgY8jAMO
-         qcktb+53nUerGJE2SkSn4Lc9+2bmJkG0FO/VzoOssUjCuP++aUiHOku1/669hBw6J3Ha
-         hTRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=RWwLZt/rt3rzH+QJKbsOFH6f0FNBf1yA2AONMe227Ak=;
-        b=bHGnLr8+iFDf7D5PRCg8YdX5lLcmjMGUZQK4kaOQPU8ftBORIBkq3c6UI2d4mYZI6v
-         qCDH0g75dO3oXNeOG13WjGVMRf4EIgTtfbe2yoE8akry7D0t503GqO5ODFAy9+UUNbxx
-         4Zd8Gn4wYcWNE/cP3cYUec6KBIznuRDGxKCVfr8n5IQPiNxsA3t3CQEgCSTLzKZXlX6r
-         dPJ11XBarOV7pX94WIaBprGYzdWsNvYiH+6REs8tefvcFK7JVCdOWbmp6Xne/czyY7wd
-         Y0K0y0iOfL4YCwC6xXWyl5/xX3T4h2BFSWAOZCZ3ONZgG/ViFaiyFiQnr7kP7GYx0q3L
-         GRaQ==
-X-Gm-Message-State: APjAAAVKdbe3GFr47H22zJ+/Gh5HcTeNJpYfGZT64vU20dPI3SiB6UxV
-        g1V2RVQYsYtMPgcIi0Q3P7Q=
-X-Google-Smtp-Source: APXvYqxsFR6/nJOopb1myYnRstaWcWMyoLeAJ5eu/0DJ3inVuljlHLs/0ckz4mLYB2FUulM73NnvJw==
-X-Received: by 2002:a17:902:124:: with SMTP id 33mr72747169plb.145.1563732942128;
-        Sun, 21 Jul 2019 11:15:42 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id 35sm38914619pgw.91.2019.07.21.11.15.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 11:15:41 -0700 (PDT)
-Date:   Sun, 21 Jul 2019 23:45:36 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] irqchip/tango: Add NULL check after memory operation
-Message-ID: <20190721181536.GA13450@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sun, 21 Jul 2019 14:23:04 -0400
+Received: from viti.kaiser.cx ([85.214.81.225]:39132 "EHLO viti.kaiser.cx"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727221AbfGUSXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 14:23:03 -0400
+X-Greylist: delayed 1387 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Jul 2019 14:23:00 EDT
+Received: from dslb-188-097-215-143.188.097.pools.vodafone-ip.de ([188.97.215.143] helo=martin-debian-1.paytec.ch)
+        by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <martin@kaiser.cx>)
+        id 1hpG7h-0006mO-DO; Sun, 21 Jul 2019 19:59:49 +0200
+From:   Martin Kaiser <martin@kaiser.cx>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH] iio: potentiometer: add a driver for Maxim 5432-5435
+Date:   Sun, 21 Jul 2019 19:59:15 +0200
+Message-Id: <20190721175915.27192-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add NULL check after kzalloc operation.
+Add a driver for the Maxim Integrated MAX5432-MAX5435 family of digital
+potentiometers.
 
-Fix below issue reported by coccicheck
-./drivers/irqchip/irq-tango.c:189:1-5: alloc with no test, possible
-model on line 193
+These potentiometers are connected via I2C and have 32 wiper positions.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Supported functionality
+- set the volatile wiper position
+- read the potentiometer scale
+
+Datasheet:
+https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
+
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
- drivers/irqchip/irq-tango.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/iio/potentiometer/max5432.txt         |  22 ++++
+ drivers/iio/potentiometer/Kconfig                  |  11 ++
+ drivers/iio/potentiometer/Makefile                 |   1 +
+ drivers/iio/potentiometer/max5432.c                | 131 +++++++++++++++++++++
+ 4 files changed, 165 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5432.txt
+ create mode 100644 drivers/iio/potentiometer/max5432.c
 
-diff --git a/drivers/irqchip/irq-tango.c b/drivers/irqchip/irq-tango.c
-index 34290f0..761b9fa 100644
---- a/drivers/irqchip/irq-tango.c
-+++ b/drivers/irqchip/irq-tango.c
-@@ -187,6 +187,8 @@ static int __init tangox_irq_init(void __iomem *base, struct resource *baseres,
- 		panic("%pOFn: failed to get address", node);
+diff --git a/Documentation/devicetree/bindings/iio/potentiometer/max5432.txt b/Documentation/devicetree/bindings/iio/potentiometer/max5432.txt
+new file mode 100644
+index 000000000000..89ccc8fc7df1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/potentiometer/max5432.txt
+@@ -0,0 +1,22 @@
++* Maxim Integrated MAX5432-MAX5435 Digital Potentiometers.
++
++The node for this driver must be a child node of an I2C controller, hence
++all mandatory properties for your controller must be specified. See directory:
++
++        Documentation/devicetree/bindings/i2c
++
++for more details.
++
++Required properties:
++	- compatible:  	Must be one of the following, depending on the
++			model:
++			"maxim,max5432"
++			"maxim,max5433"
++			"maxim,max5434"
++			"maxim,max5435"
++
++Example:
++max5434@28 {
++	compatible = "maxim,max5434";
++	reg = <0x28>;
++};
+diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
+index ebc7c72a5e36..4cac0173db8b 100644
+--- a/drivers/iio/potentiometer/Kconfig
++++ b/drivers/iio/potentiometer/Kconfig
+@@ -26,6 +26,17 @@ config DS1803
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ds1803.
  
- 	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
++config MAX5432
++	tristate "Maxim MAX5432-MAX5435 Digital Potentiometer driver"
++	depends on I2C
++	help
++	  Say yes here to build support for the Maxim
++	  MAX5432, MAX5433, MAX5434 and MAX5435 digital
++	  potentiometer chips.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called max5432.
++
+ config MAX5481
+ 	tristate "Maxim MAX5481-MAX5484 Digital Potentiometer driver"
+ 	depends on SPI
+diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
+index 8ff55138cf12..091adf3cdd0b 100644
+--- a/drivers/iio/potentiometer/Makefile
++++ b/drivers/iio/potentiometer/Makefile
+@@ -6,6 +6,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD5272) += ad5272.o
+ obj-$(CONFIG_DS1803) += ds1803.o
++obj-$(CONFIG_MAX5432) += max5432.o
+ obj-$(CONFIG_MAX5481) += max5481.o
+ obj-$(CONFIG_MAX5487) += max5487.o
+ obj-$(CONFIG_MCP4018) += mcp4018.o
+diff --git a/drivers/iio/potentiometer/max5432.c b/drivers/iio/potentiometer/max5432.c
+new file mode 100644
+index 000000000000..959883297fb5
+--- /dev/null
++++ b/drivers/iio/potentiometer/max5432.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Maxim Integrated MAX5432-MAX5435 digital potentiometer driver
++ * Copyright (C) 2019 Martin Kaiser <martin@kaiser.cx>
++ *
++ * Datasheet:
++ * https://datasheets.maximintegrated.com/en/ds/MAX5432-MAX5435.pdf
++ */
++
++#include <linux/i2c.h>
++#include <linux/iio/iio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++
++/* All chip variants have 32 wiper positions. */
++#define MAX5432_MAX_POS 31
++
++#define OHM_50K   (50  * 1000)
++#define OHM_100K  (100 * 1000)
++
++/* Update the volatile (currently active) setting. */
++#define CMD_VREG  0x11
++
++struct max5432_data {
++	struct i2c_client *client;
++	u32 ohm;
++};
++
++static const struct iio_chan_spec max5432_channels[] = {
++	{
++		.type = IIO_RESISTANCE,
++		.indexed = 1,
++		.output = 1,
++		.channel = 0,
++		.address = CMD_VREG,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
++	}
++};
++
++static int max5432_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int *val, int *val2, long mask)
++{
++	struct max5432_data *data = iio_priv(indio_dev);
++
++	if (mask != IIO_CHAN_INFO_SCALE)
++		return -EINVAL;
++
++	*val = data->ohm;
++	*val2 = MAX5432_MAX_POS;
++
++	return IIO_VAL_FRACTIONAL;
++}
++
++static int max5432_write_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int val, int val2, long mask)
++{
++	struct max5432_data *data = iio_priv(indio_dev);
++	u8 data_byte;
++
++	if (mask != IIO_CHAN_INFO_RAW)
++		return -EINVAL;
++
++	if (val < 0 || val > MAX5432_MAX_POS)
++		return -EINVAL;
++
++	if (val2 != 0)
++		return -EINVAL;
++
++	/* Wiper position is in bits D7-D3. (D2-D0 are don't care bits.) */
++	data_byte = val << 3;
++	return i2c_smbus_write_byte_data(
++			data->client, chan->address, data_byte);
++}
++
++static const struct iio_info max5432_info = {
++	.read_raw = max5432_read_raw,
++	.write_raw = max5432_write_raw,
++};
++
++static int max5432_probe(
++		struct i2c_client *client, const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct iio_dev *indio_dev;
++	struct max5432_data *data;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(struct max5432_data));
++	if (!indio_dev)
 +		return -ENOMEM;
- 	chip->ctl = res.start - baseres->start;
- 	chip->base = base;
- 
++
++	i2c_set_clientdata(client, indio_dev);
++
++	data = iio_priv(indio_dev);
++	data->client = client;
++	data->ohm = (u32)of_device_get_match_data(dev);
++
++	indio_dev->dev.parent = dev;
++	indio_dev->info = &max5432_info;
++	indio_dev->channels = max5432_channels;
++	indio_dev->num_channels = ARRAY_SIZE(max5432_channels);
++	indio_dev->name = client->name;
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct of_device_id max5432_dt_ids[] = {
++	{ .compatible = "maxim,max5432", .data = (void *)OHM_50K  },
++	{ .compatible = "maxim,max5433", .data = (void *)OHM_100K },
++	{ .compatible = "maxim,max5434", .data = (void *)OHM_50K  },
++	{ .compatible = "maxim,max5435", .data = (void *)OHM_100K },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, max5432_dt_ids);
++
++static struct i2c_driver max5432_driver = {
++	.driver = {
++		.name = "max5432",
++		.of_match_table = of_match_ptr(max5432_dt_ids),
++	},
++	.probe = max5432_probe,
++};
++
++module_i2c_driver(max5432_driver);
++
++MODULE_AUTHOR("Martin Kaiser <martin@kaiser.cx>");
++MODULE_DESCRIPTION("max5432-max5435 digital potentiometers");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.11.0
 
