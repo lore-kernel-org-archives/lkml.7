@@ -2,96 +2,75 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA5FC76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11A5C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C272147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563728874;
-	bh=R8Hr0tfNTH4upkVmsaqqbj5X8e5xKssG+gEwj3raiy0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ArAciISTfYnjhH7uPXvL1qllSEuU18iSkDwhRtuwHjMO5kP0qkgMHx03WZpwakIZa
-	 Kzuoax4pxh7FdE+P3OAo+kKL0GioHk9Q/HgAFIGHEQ2ytKjjKdgDZrvo29Ve29FToi
-	 N8dFMllNcWinV7elqtBt3xBeQgCeg7nVXFddaLIk=
+	by mail.kernel.org (Postfix) with ESMTP id BEBB620823
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 17:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfGURHw (ORCPT
+        id S1726852AbfGURI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 13:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfGURHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 13:07:52 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5635320823;
-        Sun, 21 Jul 2019 17:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563728872;
-        bh=R8Hr0tfNTH4upkVmsaqqbj5X8e5xKssG+gEwj3raiy0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PLTh6buooMC1I/m8/mRQ9O7vfqGhNPS4NTl4SEiK/97o7YZ/WYLPDn3KhqwYxXRfz
-         7WuSWFuaKZLmDBX873MR7hNgBh05sPMFyZyKtipRIMrlgSpmLQRhSWzshhBB5B683V
-         9mQ+Sm/KDBCW31OXbzItSA7uUN+1zAd+feyb+Emo=
-Date:   Sun, 21 Jul 2019 18:07:46 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gustavo@embeddedor.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] iio: sca3000: Fix a typo
-Message-ID: <20190721180746.7564f406@archlinux>
-In-Reply-To: <20190721105353.30504-1-christophe.jaillet@wanadoo.fr>
-References: <20190721105353.30504-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 21 Jul 2019 13:08:57 -0400
+Received: from smtp01.smtpout.orange.fr ([80.12.242.123]:39858 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfGURI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 13:08:57 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d01 with ME
+        id fV8q2000Q4n7eLC03V8rGm; Sun, 21 Jul 2019 19:08:55 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 21 Jul 2019 19:08:55 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     david.kershner@unisys.com, gregkh@linuxfoundation.org,
+        hariprasad.kelam@gmail.com, petrm@mellanox.com,
+        davem@davemloft.net, jannh@google.com
+Cc:     sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] staging: unisys: visornic: Update the description of 'poll_for_irq()'
+Date:   Sun, 21 Jul 2019 19:08:24 +0200
+Message-Id: <20190721170824.3412-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 21 Jul 2019 12:53:53 +0200
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+Commit e99e88a9d2b06 ("treewide: setup_timer() -> timer_setup()") has
+updated the parameters of 'poll_for_irq()' but not the comment above the
+function.
 
-> All #define are about SCA3000_... except the last one.
-> Make it consistent.
-> 
-> s/SAC3000/SCA3000/
-> 
-> This #define is apparently unused up to now.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Applied to the togreg branch of iio.git and pushed out as testing to have
-no actually effect whatsoever ;)
+Update the comment and fix a typo.
+s/visronic/visornic/
 
-Thanks for tidying this up!
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/staging/unisys/visornic/visornic_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Jonathan
-
-
-> ---
->  drivers/iio/accel/sca3000.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-> index 4964561595f5..537e9325bcc7 100644
-> --- a/drivers/iio/accel/sca3000.c
-> +++ b/drivers/iio/accel/sca3000.c
-> @@ -114,7 +114,7 @@
->  /* Currently unsupported */
->  #define SCA3000_MD_CTRL_AND_Y				BIT(3)
->  #define SCA3000_MD_CTRL_AND_X				BIT(4)
-> -#define SAC3000_MD_CTRL_AND_Z				BIT(5)
-> +#define SCA3000_MD_CTRL_AND_Z				BIT(5)
->  
->  /*
->   * Some control registers of complex access methods requiring this register to
+diff --git a/drivers/staging/unisys/visornic/visornic_main.c b/drivers/staging/unisys/visornic/visornic_main.c
+index 9d4f1dab0968..40dd573e73c3 100644
+--- a/drivers/staging/unisys/visornic/visornic_main.c
++++ b/drivers/staging/unisys/visornic/visornic_main.c
+@@ -1750,7 +1750,8 @@ static int visornic_poll(struct napi_struct *napi, int budget)
+ }
+ 
+ /* poll_for_irq	- checks the status of the response queue
+- * @v: Void pointer to the visronic devdata struct.
++ * @t: pointer to the 'struct timer_list' from which we can retrieve the
++ *     the visornic devdata struct.
+  *
+  * Main function of the vnic_incoming thread. Periodically check the response
+  * queue and drain it if needed.
+-- 
+2.20.1
 
