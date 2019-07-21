@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54963C76191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA89C76195
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 15:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299812083B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 15:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569DE208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 15:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6dwQn1n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifiOqyLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfGUP6X (ORCPT
+        id S1726802AbfGUP61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 11:58:23 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39253 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfGUP6W (ORCPT
+        Sun, 21 Jul 2019 11:58:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42703 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfGUP60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 11:58:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so17974895pls.6
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 08:58:22 -0700 (PDT)
+        Sun, 21 Jul 2019 11:58:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so16168612pff.9
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 08:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JyrOjFUx/MRse3HXWL5eBpv0RUzUDf7uqwjLdruvk74=;
-        b=c6dwQn1npVP477E/wwUDfZXXs4PH5AGJyZ36YnFhXxt+3hwOGrOvuiiR8gK3sEpjtB
-         WiGZWjZ1UNMC1L6Ox3RYGz8Fvu1wKUbJ+JqYncKoWoQaF9hBM5wTRVX9r3WB7z1Q49K0
-         4+aNg+MobiwUdEY6WrtZd0FnQQ0o2qXB8gQwFVuCmGe2Jkprim3Je0/L+cu8T9j4wiIh
-         myl5IHrGskpz8sAyzbxCnd1e7LSgGIBiCjBwimvtgCUE/LrEor8wEPwb1cnMqV65eiRU
-         30xl0000zcHhG3vQsfQtucLqNTeri/MnBwMpv5W5n1g2eLWighpH/DTX8+8d1y6t+S9I
-         Kpqg==
+        bh=YPxj1xULAmyThBZtHUXs4RUTpVotq1m6ArGML4hnd9o=;
+        b=ifiOqyLuR2fVpSX7LgALyQR4fLm8I1fH/HPzFhDKareH7Mat4AeFK7FriOec5kkIK2
+         wrkY60M1g9T4xGKZPATWmMcmqyzUnhouyS8jLdWqlmaw7Uhyw/yfS0tLX1lp5rQKJaLB
+         fSm4JJfRR3RL77klHIt1fyvoW6veo0UFmmjnBE0gck+i8fxq2rd44U40PHlylpJTqIFg
+         +L6uKhgtV6nQN6+xT9aOPjVaCGAp/jC3uuTmzJ4x6M5L8PFe1TRJ2Dg9yYZ8tyYsO4mz
+         WffynzmJeO020XEI+EyeM/h1PfhhEpTI0MK5P2rjMCAKJbRMywzH8bFyVmkubOP7fvDa
+         Bwyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JyrOjFUx/MRse3HXWL5eBpv0RUzUDf7uqwjLdruvk74=;
-        b=Xx2t94dmnoYe+kHDV82ioKnpyLBb6GjpLhQlvXIGeF/24etiygBpZEog2n7hPXd0nc
-         bWxW+dWd2v0f2QgbV3uy2171eHAXuWVxgkJFEAeIM2i4LVCU4wZa9LtwHjhb18QMive5
-         lOhiI6enXIv/3nroIj4Er5FASZxRXfeuKAnZi9YP8Akj6iWmj3EYs2Q6E3TDUN8w8qbF
-         3+ZPNIOLp/npqRjoAJcuZkcTcjTP2L/khu3dvvv2nC6vV4yACRgLO8pGLmZgbl3i9xwF
-         0ZVikq+ebdtZhTX703VlsGKgvhhvey5f9xHtEktSZsQer90+rGLW4XzUK2sJNDLOXc5Y
-         gWqA==
-X-Gm-Message-State: APjAAAWYZpgKRX4Cs2kt8VtyoUK60El2WTuO4fcNSZgO4y2Q3MEq6hci
-        O59nf1l/UQSsd8nmukLt3/4=
-X-Google-Smtp-Source: APXvYqxcll7G/MTDDThq2L/Ziyu763qr+TVJaFz6DGgGZzAfccbiPOPYj/IdvSBgFi/gtmy5opFZBA==
-X-Received: by 2002:a17:902:a606:: with SMTP id u6mr65491139plq.275.1563724702028;
-        Sun, 21 Jul 2019 08:58:22 -0700 (PDT)
+        bh=YPxj1xULAmyThBZtHUXs4RUTpVotq1m6ArGML4hnd9o=;
+        b=sRtbXbj107BF4n+E/gqeFXUbg05KzunvbKVlzei0STkOYlQ7M1S08IY8c+R5djTNbH
+         sSPT3ECe2n+plmoBvm2b0LMbRf4rMOZDvaZCuMpFhiFQG0/2xmQPYtgimcRDtYSVHWOb
+         ta4eFKv+C0tfO1PJiQGYAzNk66IikqxZ4ortX1/vnikbUgMNwM/qt06qsXscTJk6FvGh
+         eRRCHxfyqDltz4ye9hhYuVW/0yQPzgY1cqye2sl4uML1WRhAhA/oJHG6Ux3Qy/8kQuXG
+         fLj/qev2xQu+Ng654KTwv0KG5BU0RS3jKLIaxNTlw+LndoTMiarveMfc80fF2VfzzAlw
+         n/qQ==
+X-Gm-Message-State: APjAAAU3Ltdfyf9iv/Sq7Xo2HD0a+8Ivc3chrJS9oaPiPSDhMRv8SjKQ
+        v7rjVFCQj7WL5/yFdQcv80E=
+X-Google-Smtp-Source: APXvYqzyvqZLIxg67pxkdxLJpTK/51NalCRn7KTGd70dRGh3NJlFIdRe+Ue6E9oqJ+ciSF87NclM4A==
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr67183457pgl.103.1563724705973;
+        Sun, 21 Jul 2019 08:58:25 -0700 (PDT)
 Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id o14sm74720111pfh.153.2019.07.21.08.58.20
+        by smtp.gmail.com with ESMTPSA id e17sm27335437pgm.21.2019.07.21.08.58.24
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 21 Jul 2019 08:58:21 -0700 (PDT)
+        Sun, 21 Jul 2019 08:58:25 -0700 (PDT)
 From:   Bharath Vedartham <linux.bhar@gmail.com>
 To:     arnd@arndb.de, sivanich@sgi.com, gregkh@linuxfoundation.org
 Cc:     ira.weiny@intel.com, jhubbard@nvidia.com, jglisse@redhat.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Bharath Vedartham <linux.bhar@gmail.com>
-Subject: [PATCH 1/3] sgi-gru: Convert put_page() to get_user_page*()
-Date:   Sun, 21 Jul 2019 21:28:03 +0530
-Message-Id: <1563724685-6540-2-git-send-email-linux.bhar@gmail.com>
+Subject: [PATCH 2/3] sgi-gru: Remove CONFIG_HUGETLB_PAGE ifdef
+Date:   Sun, 21 Jul 2019 21:28:04 +0530
+Message-Id: <1563724685-6540-3-git-send-email-linux.bhar@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
 References: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
@@ -76,11 +76,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page().
-
-This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-("mm: introduce put_user_page*(), placeholder versions").
+is_vm_hugetlb_page has checks for whether CONFIG_HUGETLB_PAGE is defined
+or not. If CONFIG_HUGETLB_PAGE is not defined is_vm_hugetlb_page will
+always return false. There is no need to have an uneccessary
+CONFIG_HUGETLB_PAGE check in the code.
 
 Cc: Ira Weiny <ira.weiny@intel.com>
 Cc: John Hubbard <jhubbard@nvidia.com>
@@ -92,22 +91,40 @@ Cc: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org
 Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 ---
- drivers/misc/sgi-gru/grufault.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/sgi-gru/grufault.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-index 4b713a8..61b3447 100644
+index 61b3447..75108d2 100644
 --- a/drivers/misc/sgi-gru/grufault.c
 +++ b/drivers/misc/sgi-gru/grufault.c
-@@ -188,7 +188,7 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
+@@ -180,11 +180,8 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
+ {
+ 	struct page *page;
+ 
+-#ifdef CONFIG_HUGETLB_PAGE
+ 	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+-#else
+-	*pageshift = PAGE_SHIFT;
+-#endif
++
  	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
  		return -EFAULT;
  	*paddr = page_to_phys(page);
--	put_page(page);
-+	put_user_page(page);
- 	return 0;
- }
+@@ -238,11 +235,9 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
+ 		return 1;
  
+ 	*paddr = pte_pfn(pte) << PAGE_SHIFT;
+-#ifdef CONFIG_HUGETLB_PAGE
++
+ 	*pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+-#else
+-	*pageshift = PAGE_SHIFT;
+-#endif
++
+ 	return 0;
+ 
+ err:
 -- 
 2.7.4
 
