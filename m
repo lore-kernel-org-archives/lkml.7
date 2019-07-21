@@ -2,85 +2,102 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC9C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AB5C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D20620838
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:08:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LXq+BCz0";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LXq+BCz0"
+	by mail.kernel.org (Postfix) with ESMTP id 80DC22173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfGUXIj (ORCPT
+        id S1726351AbfGUXVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 19:08:39 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57228 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfGUXIj (ORCPT
+        Sun, 21 Jul 2019 19:21:04 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.72]:29424 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbfGUXVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 19:08:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B939E8EE105;
-        Sun, 21 Jul 2019 16:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563750517;
-        bh=mpQW7FGrJB7rmR1nmV6m3V1GTNaPj3kOjzaz4eZp9Ik=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LXq+BCz0OH1gGgj+Rhft0XdRqxEfX2FaeFnT1pHQ2bf7CxwcU4cr2eL8EXJiWNXLA
-         kbNsNOw9XAedh+luDytBF6AuIrpu9WPPsADVpNAtGET5UCEVHyJIL5jvtGeM+GL7Nk
-         eua2uxWau1zmvY9tZr5Va38lNqgpX3Ayk9RdcNbE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qOBa1RhLoC6V; Sun, 21 Jul 2019 16:08:37 -0700 (PDT)
-Received: from [192.168.12.43] (unknown [153.171.18.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id F368E8EE104;
-        Sun, 21 Jul 2019 16:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563750517;
-        bh=mpQW7FGrJB7rmR1nmV6m3V1GTNaPj3kOjzaz4eZp9Ik=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LXq+BCz0OH1gGgj+Rhft0XdRqxEfX2FaeFnT1pHQ2bf7CxwcU4cr2eL8EXJiWNXLA
-         kbNsNOw9XAedh+luDytBF6AuIrpu9WPPsADVpNAtGET5UCEVHyJIL5jvtGeM+GL7Nk
-         eua2uxWau1zmvY9tZr5Va38lNqgpX3Ayk9RdcNbE=
-Message-ID: <1563750513.2898.4.camel@HansenPartnership.com>
-Subject: Re: [PATCH] unaligned: delete 1-byte accessors
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        axboe@kernel.dk, kvalo@codeaurora.org, john.johansen@canonical.com,
-        linux-arch@vger.kernel.org
-Date:   Mon, 22 Jul 2019 08:08:33 +0900
-In-Reply-To: <20190721215253.GA18177@avx2>
-References: <20190721215253.GA18177@avx2>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 21 Jul 2019 19:21:04 -0400
+X-Greylist: delayed 1301 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Jul 2019 19:21:03 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 816E0471FC
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 17:59:21 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id pKnZhYNWgiQerpKnZhyxY8; Sun, 21 Jul 2019 17:59:21 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink-187-160-61-189.pcs.intercable.net ([187.160.61.189]:45688 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hpKnY-000zdY-9q; Sun, 21 Jul 2019 17:59:20 -0500
+Date:   Sun, 21 Jul 2019 17:59:20 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Philip Cox <Philip.Cox@amd.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/amdkfd/kfd_mqd_manager_v10: Fix missing break in switch
+ statement
+Message-ID: <20190721225920.GA18099@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.189
+X-Source-L: No
+X-Exim-ID: 1hpKnY-000zdY-9q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-189.pcs.intercable.net (embeddedor) [187.160.61.189]:45688
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 20
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-22 at 00:52 +0300, Alexey Dobriyan wrote:
-> Each and every 1-byte access is aligned!
+Add missing break statement in order to prevent the code from falling
+through to case KFD_MQD_TYPE_COMPUTE.
 
-The design idea of this is for parsing descriptors.  We simply chunk up
-the describing structure using get_unaligned for everything.  The
-reason is because a lot of these structures come with reserved areas
-which we may make use of later.  If we're using get_unaligned for
-everything we can simply change a u8 to a u16 in the structure
-absorbing the reserved padding.  With your change now I'd have to chase
-down every byte access and replace it with get_unaligned instead of
-simply changing the structure.
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-What's the significant advantage of this change that compensates for
-the problems the above causes?
+Fixes: 14328aa58ce5 ("drm/amdkfd: Add navi10 support to amdkfd. (v3)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-James
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c
+index 4f8a6ffc5775..1d8b13ad46f9 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c
+@@ -430,6 +430,7 @@ struct mqd_manager *mqd_manager_init_v10(enum KFD_MQD_TYPE type,
+ 	switch (type) {
+ 	case KFD_MQD_TYPE_CP:
+ 		pr_debug("%s@%i\n", __func__, __LINE__);
++		break;
+ 	case KFD_MQD_TYPE_COMPUTE:
+ 		pr_debug("%s@%i\n", __func__, __LINE__);
+ 		mqd->allocate_mqd = allocate_mqd;
+-- 
+2.22.0
 
