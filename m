@@ -2,115 +2,101 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89775C76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BAFC76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC342084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAC5208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563701366;
+	bh=XFXz06/TX2cnOE0rdgo0TH18QiPU5z1ph+93rEumalg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GKryjnJ6V+AizLZk6vbFDcYiDR1MLp1Nh+kWRR6YYwKYC9F6avJl4cJeV+BUZKWCS
+	 sRRyk0M3dGXecb/O3ls8gEvGwLth9PrK578neSSMUON3srvKlcgVELuhHWXkjkA3IA
+	 tF2e1wirBc4i5dZKdvKTmzbSLjt1XvF05RPS/fCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfGUJNA (ORCPT
+        id S1726115AbfGUJ3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 05:13:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57296 "EHLO mx1.redhat.com"
+        Sun, 21 Jul 2019 05:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfGUJM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 05:12:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725851AbfGUJ3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 05:29:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7717BC036744;
-        Sun, 21 Jul 2019 09:12:59 +0000 (UTC)
-Received: from maya.cloud.tilaa.com (ovpn-112-24.ams2.redhat.com [10.36.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33E1B60497;
-        Sun, 21 Jul 2019 09:12:59 +0000 (UTC)
-Received: from elisabeth (055-041-157-037.ip-addr.inexio.net [37.157.41.55])
-        by maya.cloud.tilaa.com (Postfix) with ESMTPSA id 365394007B;
-        Sun, 21 Jul 2019 11:12:58 +0200 (CEST)
-Date:   Sun, 21 Jul 2019 11:12:56 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        by mail.kernel.org (Postfix) with ESMTPSA id 8063320838;
+        Sun, 21 Jul 2019 09:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563701364;
+        bh=XFXz06/TX2cnOE0rdgo0TH18QiPU5z1ph+93rEumalg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IxxC4BhY5LKAiDf05Jar/SyU9EZw5zBrSdCx9u2JnCZdi5kNav1o/gM4u4GvZY1gk
+         s//UloopvRmkNes8HoBgxkw53eCleAq+vpJCzUqfEsZjFIizl5EeTi4JeHQTEEGeiD
+         27LTrRAkW47oXZtWisrSeQko+J5tPjXaFwVUsXDM=
+Date:   Sun, 21 Jul 2019 11:29:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hennie Muller <hm@bitlabs.co.za>
+Cc:     Tim Collier <osdevtc@gmail.com>, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rat_cs: Remove duplicate code
-Message-ID: <20190721111256.708f4cfa@elisabeth>
-In-Reply-To: <20190720174613.GA31062@hari-Inspiron-1545>
-References: <20190720174613.GA31062@hari-Inspiron-1545>
-Organization: Red Hat
+Subject: Re: [PATCH] staging/wlan-ng: Fixing "line over 80 characters"
+ warnings.
+Message-ID: <20190721092919.GA9188@kroah.com>
+References: <20190721091326.7363-1-hm@bitlabs.co.za>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Sun, 21 Jul 2019 09:12:59 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190721091326.7363-1-hm@bitlabs.co.za>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Jul 2019 23:16:47 +0530
-Hariprasad Kelam <hariprasad.kelam@gmail.com> wrote:
-
-> Code is same if translate is true/false in case invalid packet is
-> received.So remove else part.
+On Sun, Jul 21, 2019 at 11:13:26AM +0200, Hennie Muller wrote:
+> Reindent multiline function calls to be tab aligned, instead of open brace
+> aligned. This fixes multiple "WARNING: line over 80 characters" generated
+> by checkpatch.
 > 
-> Issue identified with coccicheck
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
 > ---
->  drivers/net/wireless/ray_cs.c | 29 ++++++++---------------------
->  1 file changed, 8 insertions(+), 21 deletions(-)
+>  drivers/staging/wlan-ng/cfg80211.c    |  55 ++---
+>  drivers/staging/wlan-ng/hfa384x_usb.c | 282 +++++++++++++-------------
+>  drivers/staging/wlan-ng/p80211conv.c  |  48 +++--
+>  drivers/staging/wlan-ng/p80211req.c   |   6 +-
+>  drivers/staging/wlan-ng/prism2fw.c    | 101 +++++----
+>  drivers/staging/wlan-ng/prism2mgmt.c  | 170 ++++++++--------
+>  drivers/staging/wlan-ng/prism2mib.c   |  14 +-
+>  drivers/staging/wlan-ng/prism2sta.c   | 282 +++++++++++++-------------
+>  drivers/staging/wlan-ng/prism2usb.c   |  13 +-
+>  9 files changed, 494 insertions(+), 477 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/ray_cs.c b/drivers/net/wireless/ray_cs.c
-> index cf37268..a51bbe7 100644
-> --- a/drivers/net/wireless/ray_cs.c
-> +++ b/drivers/net/wireless/ray_cs.c
-> @@ -2108,29 +2108,16 @@ static void rx_data(struct net_device *dev, struct rcs __iomem *prcs,
->  #endif
+> diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
+> index eee1998c4b18..c69fb83267ef 100644
+> --- a/drivers/staging/wlan-ng/cfg80211.c
+> +++ b/drivers/staging/wlan-ng/cfg80211.c
+> @@ -130,8 +130,8 @@ static int prism2_change_virtual_intf(struct wiphy *wiphy,
 >  
->  	if (!sniffer) {
-> -		if (translate) {
->  /* TBD length needs fixing for translated header */
-> -			if (rx_len < (ETH_HLEN + RX_MAC_HEADER_LENGTH) ||
-> -			    rx_len >
-> -			    (dev->mtu + RX_MAC_HEADER_LENGTH + ETH_HLEN +
-> -			     FCS_LEN)) {
-> -				pr_debug(
-> -				      "ray_cs invalid packet length %d received\n",
-> -				      rx_len);
-> -				return;
-> -			}
-> -		} else { /* encapsulated ethernet */
-> -
-> -			if (rx_len < (ETH_HLEN + RX_MAC_HEADER_LENGTH) ||
-> -			    rx_len >
-> -			    (dev->mtu + RX_MAC_HEADER_LENGTH + ETH_HLEN +
-> -			     FCS_LEN)) {
-> -				pr_debug(
-> -				      "ray_cs invalid packet length %d received\n",
-> -				      rx_len);
-> -				return;
-> +		if (rx_len < (ETH_HLEN + RX_MAC_HEADER_LENGTH) ||
-> +		    rx_len >
-> +		    (dev->mtu + RX_MAC_HEADER_LENGTH + ETH_HLEN +
-> +		     FCS_LEN)) {
-> +			pr_debug(
-> +			      "ray_cs invalid packet length %d received\n",
-> +			      rx_len);
-> +			return;
->  			}
-> -		}
+>  	/* Set Operation mode to the PORT TYPE RID */
+>  	result = prism2_domibset_uint32(wlandev,
+> -					DIDMIB_P2_STATIC_CNFPORTTYPE,
+> -					data);
+> +			DIDMIB_P2_STATIC_CNFPORTTYPE,
+> +			data);
 
-NACK. The TBD comment makes no sense anymore if you remove one of the
-branches. Believe me or not, I have one of those cards, a (yes, 22
-years old) Buslink Raytheon model 24020. That check needed (for sure)
-and needs (maybe) to be fixed.
+This then violates another checkpatch warning, so you can't win :(
 
-Besides, patch subject and resulting coding style are also wrong.
+Just leave it as-is, it's fine, right?  Coding styles are there to make
+things easy to read and understand, and the code is fine like this.
 
--- 
-Stefano
+So don't move arguments to the left of the '(' character on the line
+above please.
+
+thanks,
+
+greg k-h
