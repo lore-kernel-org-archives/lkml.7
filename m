@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D0C76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29285C76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1152147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F091D21738
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563708512;
-	bh=YL0d7FA/eGRjG/IeLPWD/Ng8fJ7y938JOXwNk3C7Sog=;
+	s=default; t=1563708518;
+	bh=fahNAPQu0yjdYYRRzob/rTOlHyYN3a6Tg9TMFz8zzNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZuBWd4ErxVgMjDN5GaUEBI8pH7N+6Qx4c/XpbZrybs6/kSrLB/ycC/Q3uwwXnLHe3
-	 2ArJfh2LvqavWhf6YkMGZ9UZHUJJV01M7drL9VsztXTQgyLDIg88asBaAARwga+B8q
-	 lIZh0QrPMYmU9ZFHXBeZduXTGD3yVu5cIR5hc1EU=
+	b=GF8lb5ejHroQI3q+x9h3XXEjlP/xjCY4OmQBmtI3PLGUbFtz6ehsjS3IKmSE9S84X
+	 yEYH9XWAs83JKKf+2HldpX+ncEv2JlRYeVsrs5hTYam89In7Z/+dX/GpUiHM1SLdBp
+	 VKMBISBoZtauMf35QjbC06np6xB3PWeeiWQQlgrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfGUL2b (ORCPT
+        id S1726597AbfGUL2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 07:28:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41860 "EHLO mx1.redhat.com"
+        Sun, 21 Jul 2019 07:28:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46804 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfGUL2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 07:28:31 -0400
+        id S1726262AbfGUL2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 07:28:36 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 726553083363;
-        Sun, 21 Jul 2019 11:28:30 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6CB5F3082132;
+        Sun, 21 Jul 2019 11:28:35 +0000 (UTC)
 Received: from krava.redhat.com (ovpn-204-23.brq.redhat.com [10.40.204.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB5A55D9D3;
-        Sun, 21 Jul 2019 11:28:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 230F75D9D3;
+        Sun, 21 Jul 2019 11:28:30 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -45,133 +45,121 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 27/79] libperf: Add debug output support
-Date:   Sun, 21 Jul 2019 13:24:14 +0200
-Message-Id: <20190721112506.12306-28-jolsa@kernel.org>
+Subject: [PATCH 28/79] libperf: Add perf_cpu_map struct
+Date:   Sun, 21 Jul 2019 13:24:15 +0200
+Message-Id: <20190721112506.12306-29-jolsa@kernel.org>
 In-Reply-To: <20190721112506.12306-1-jolsa@kernel.org>
 References: <20190721112506.12306-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 21 Jul 2019 11:28:30 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sun, 21 Jul 2019 11:28:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding perf_set_print function allowing to set output function
-for warn/info/debug messages.
+Adding perf_cpu_map struct into libperf.
 
-Link: http://lkml.kernel.org/n/tip-2tf4pywtnzctbcgkgdhf0y19@git.kernel.org
+It's added as a declaration into into:
+  include/perf/cpumap.h
+which will be included by users.
+
+The perf_cpu_map struct definition is added into:
+  include/internal/cpumap.h
+
+which is not to be included by users, but shared
+within perf and libperf.
+
+We tried the total separation of the perf_cpu_map struct
+in libperf, but it lead to complications and much bigger
+changes in perf code, so we decided to share the declaration.
+
+Link: http://lkml.kernel.org/n/tip-vhtr6a8apr7vkh2tou0r8896@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/lib/core.c              | 34 ++++++++++++++++++++++++++++++
- tools/perf/lib/include/perf/core.h | 13 ++++++++++++
- tools/perf/lib/internal.h          | 18 ++++++++++++++++
- tools/perf/lib/libperf.map         |  2 ++
- 4 files changed, 67 insertions(+)
- create mode 100644 tools/perf/lib/internal.h
+ tools/perf/lib/Build                     |  1 +
+ tools/perf/lib/cpumap.c                  |  5 +++++
+ tools/perf/lib/include/internal/cpumap.h | 13 +++++++++++++
+ tools/perf/lib/include/perf/cpumap.h     |  7 +++++++
+ tools/perf/util/cpumap.h                 |  7 +------
+ 5 files changed, 27 insertions(+), 6 deletions(-)
+ create mode 100644 tools/perf/lib/cpumap.c
+ create mode 100644 tools/perf/lib/include/internal/cpumap.h
+ create mode 100644 tools/perf/lib/include/perf/cpumap.h
 
-diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
-index e69de29bb2d1..29d5e3348718 100644
---- a/tools/perf/lib/core.c
-+++ b/tools/perf/lib/core.c
-@@ -0,0 +1,34 @@
+diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+index 5196958cec01..195b274db49a 100644
+--- a/tools/perf/lib/Build
++++ b/tools/perf/lib/Build
+@@ -1 +1,2 @@
+ libperf-y += core.o
++libperf-y += cpumap.o
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+new file mode 100644
+index 000000000000..86a199c26f20
+--- /dev/null
++++ b/tools/perf/lib/cpumap.c
+@@ -0,0 +1,5 @@
 +// SPDX-License-Identifier: GPL-2.0-only
++#include <perf/cpumap.h>
++#include <stdlib.h>
++#include <linux/refcount.h>
++#include <internal/cpumap.h>
+diff --git a/tools/perf/lib/include/internal/cpumap.h b/tools/perf/lib/include/internal/cpumap.h
+new file mode 100644
+index 000000000000..53ce95374b05
+--- /dev/null
++++ b/tools/perf/lib/include/internal/cpumap.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_INTERNAL_CPUMAP_H
++#define __LIBPERF_INTERNAL_CPUMAP_H
 +
-+#define __printf(a, b)  __attribute__((format(printf, a, b)))
++#include <linux/refcount.h>
 +
-+#include <stdio.h>
-+#include <stdarg.h>
-+#include <perf/core.h>
-+#include "internal.h"
-+
-+static int __base_pr(enum libperf_print_level level, const char *format,
-+		     va_list args)
-+{
-+	return vfprintf(stderr, format, args);
-+}
-+
-+static libperf_print_fn_t __libperf_pr = __base_pr;
-+
-+void libperf_set_print(libperf_print_fn_t fn)
-+{
-+	__libperf_pr = fn;
-+}
-+
-+__printf(2, 3)
-+void libperf_print(enum libperf_print_level level, const char *format, ...)
-+{
-+	va_list args;
-+
-+	if (!__libperf_pr)
-+		return;
-+
-+	va_start(args, format);
-+	__libperf_pr(level, format, args);
-+	va_end(args);
-+}
-diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
-index e2e4b43c9131..c341a7b2c874 100644
---- a/tools/perf/lib/include/perf/core.h
-+++ b/tools/perf/lib/include/perf/core.h
-@@ -2,8 +2,21 @@
- #ifndef __LIBPERF_CORE_H
- #define __LIBPERF_CORE_H
- 
-+#include <stdarg.h>
-+
- #ifndef LIBPERF_API
- #define LIBPERF_API __attribute__((visibility("default")))
- #endif
- 
-+enum libperf_print_level {
-+	LIBPERF_WARN,
-+	LIBPERF_INFO,
-+	LIBPERF_DEBUG,
++struct perf_cpu_map {
++	refcount_t	refcnt;
++	int		nr;
++	int		map[];
 +};
 +
-+typedef int (*libperf_print_fn_t)(enum libperf_print_level level,
-+				  const char *, va_list ap);
-+
-+LIBPERF_API void libperf_set_print(libperf_print_fn_t fn);
-+
- #endif /* __LIBPERF_CORE_H */
-diff --git a/tools/perf/lib/internal.h b/tools/perf/lib/internal.h
++#endif /* __LIBPERF_INTERNAL_CPUMAP_H */
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
 new file mode 100644
-index 000000000000..dc92f241732e
+index 000000000000..8355d3ce7d0c
 --- /dev/null
-+++ b/tools/perf/lib/internal.h
-@@ -0,0 +1,18 @@
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -0,0 +1,7 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LIBPERF_INTERNAL_H
-+#define __LIBPERF_INTERNAL_H
++#ifndef __LIBPERF_CPUMAP_H
++#define __LIBPERF_CPUMAP_H
 +
-+void libperf_print(enum libperf_print_level level,
-+		   const char *format, ...)
-+	__attribute__((format(printf, 2, 3)));
++struct perf_cpu_map;
 +
-+#define __pr(level, fmt, ...)   \
-+do {                            \
-+	libperf_print(level, "libperf: " fmt, ##__VA_ARGS__);     \
-+} while (0)
-+
-+#define pr_warning(fmt, ...)    __pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
-+#define pr_info(fmt, ...)       __pr(LIBPERF_INFO, fmt, ##__VA_ARGS__)
-+#define pr_debug(fmt, ...)      __pr(LIBPERF_DEBUG, fmt, ##__VA_ARGS__)
-+
-+#endif /* __LIBPERF_INTERNAL_H */
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index a8e913988edf..3536242c545c 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -1,4 +1,6 @@
- LIBPERF_0.0.1 {
-+	global:
-+		libperf_set_print;
- 	local:
- 		*;
- };
++#endif /* __LIBPERF_CPUMAP_H */
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 22729beae959..c2ba9ae195f7 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -5,16 +5,11 @@
+ #include <stdio.h>
+ #include <stdbool.h>
+ #include <linux/refcount.h>
++#include <internal/cpumap.h>
+ 
+ #include "perf.h"
+ #include "util/debug.h"
+ 
+-struct perf_cpu_map {
+-	refcount_t refcnt;
+-	int nr;
+-	int map[];
+-};
+-
+ struct perf_cpu_map *cpu_map__new(const char *cpu_list);
+ struct perf_cpu_map *cpu_map__empty_new(int nr);
+ struct perf_cpu_map *cpu_map__dummy_new(void);
 -- 
 2.21.0
 
