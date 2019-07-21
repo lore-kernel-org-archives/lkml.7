@@ -2,82 +2,188 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB30C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEEBC76196
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929E82085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9481E21721
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hOxpb6w1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4IyTJvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfGUVJG (ORCPT
+        id S1726818AbfGUVQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:09:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36938 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfGUVJF (ORCPT
+        Sun, 21 Jul 2019 17:16:43 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36459 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfGUVQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:09:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=m+ymzWwJthSyMsIrAZa5UVM+lb+OeBZIRhgzMglbtss=; b=hOxpb6w1+7znVOU/LYcc4TCsi
-        AU34x9DctQ72CdFA2SbXaxcS1FbGoIVqML8MnXJToxuML6SZi8848XN5DS9AVL0Z9wQgsUK2KRVeI
-        Wz7K+4anU/cZMplgZTFu8tTBeFDdLQlK+4EzYTlmpy18b/zeZMWzGbE65oBnEfAvV8IKyijqNY5Kz
-        B1UEaYbbU2KZci/M3mW5svS0g1vE2DZjApbLyiTi9LrqIkXtIvvBRXC3Hu/WKpOP6J4pBN/jLFKkT
-        nwP8xiN5kn2rcd2USEhk/o97boU6FKRBx8S2WJNurFZKhP65CJgPUJfkVoDYo/kddkcDF3S5fnxNx
-        q3ODFsGGQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpJ4P-00031q-HE; Sun, 21 Jul 2019 21:08:37 +0000
-Date:   Sun, 21 Jul 2019 14:08:37 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, aarcange@redhat.com,
-        akpm@linux-foundation.org, christian@brauner.io,
-        davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
-Message-ID: <20190721210837.GC363@bombadil.infradead.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081933-mutt-send-email-mst@kernel.org>
- <20190721131725.GR14271@linux.ibm.com>
+        Sun, 21 Jul 2019 17:16:43 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so35547996ljj.3;
+        Sun, 21 Jul 2019 14:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3txf9Lvt0i2AtQo17oHOJUAM62u+WqQuxF6kiDtoHLY=;
+        b=n4IyTJvEM7ucvxZSTKG88V0fo38OSIkeJnuHUKIgHr+uQIvh0pMSuyEnW7px0/h0Oq
+         8wKr3pogMi6S59B5zk+MhOgaGAyAN+ruRqiQCVPz1tg84p3cKKQFDnszPhSEWW5K6WIh
+         7WZ+FpHIM4XYAl98qlcih64/xG55mdgRQ8Z7zOEihzRmOxC95X2m966IyLOPZaNcrShn
+         5sEGJjavZy5hSm7wO6Y/WV3X/Oy70f3NyVBN4/YeyY9lnp/PBamI8qmIn7YOmPKy9guV
+         GusG3H6pXFcuTb0+JIr4TEYIsrTkjBBC9VEv0cvqz8WJ5l77XOxR9imwj4oSrLzalX9R
+         74aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3txf9Lvt0i2AtQo17oHOJUAM62u+WqQuxF6kiDtoHLY=;
+        b=VFkJ27Fu6gljy/E9bO2lMEaaxzcvgAjQrKQJX/pzCwhqL3i1WHakte1xcUZdb0rEjH
+         ldiHm4JFzOqX2lwJSkok3kiDUacN9G9n9+oh5Os+EBacVBZ/162kroG1H8BEJ6wwJkRb
+         eAYTwhfo2hYs27iWRfZwcMPXsXHwciBAPdCQLbdV3GDJV/xCiX5S5OPYxFvBL/QvV+uk
+         PMdrw6qAHDE5bQK3fdWoUyT2o/bGuv3v6wkUYfR57U/fYhDnUbXj/OUvAPbNWJz6WJwk
+         9g3hMYbn9XKdOz5W+P/CGhf+mXNefPp2LsGJjdlKidBsrUzNWg4fS/KT9X/mrFl4UyIR
+         +iow==
+X-Gm-Message-State: APjAAAVudLYvtIpcxS/HYoP/x3T77dnYLLIG75y5H7wbmRciDxT6wJlg
+        4LkphZsklgIZP1+/h1zNPM/RVhnA
+X-Google-Smtp-Source: APXvYqzHAEfh8Be1M4mR4Grt8lD41aHIlCWfGhYJYzBgxbGe3e/x+FuLRT/88frDBID33WGch1SPLA==
+X-Received: by 2002:a2e:8ecb:: with SMTP id e11mr7378502ljl.218.1563743799834;
+        Sun, 21 Jul 2019 14:16:39 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id y5sm7163581ljj.5.2019.07.21.14.16.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 14:16:39 -0700 (PDT)
+Subject: Re: [PATCH V6 09/21] clk: tegra: clk-super: Fix to enable PLLP
+ branches to CPU
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-10-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0c86cd7f-81b5-40c5-6f1e-796e8f13b522@gmail.com>
+Date:   Mon, 22 Jul 2019 00:16:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190721131725.GR14271@linux.ibm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1563738060-30213-10-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 06:17:25AM -0700, Paul E. McKenney wrote:
-> Also, the overhead is important.  For example, as far as I know,
-> current RCU gracefully handles close(open(...)) in a tight userspace
-> loop.  But there might be trouble due to tight userspace loops around
-> lighter-weight operations.
+21.07.2019 22:40, Sowjanya Komatineni пишет:
+> This patch has a fix to enable PLLP branches to CPU before changing
+> the CPU clusters clock source to PLLP for Gen5 Super clock.
+> 
+> During system suspend entry and exit, CPU source will be switched
+> to PLLP and this needs PLLP branches to be enabled to CPU prior to
+> the switch.
+> 
+> On system resume, warmboot code enables PLLP branches to CPU and
+> powers up the CPU with PLLP clock source.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-super.c            | 11 +++++++++++
+>  drivers/clk/tegra/clk-tegra-super-gen4.c |  4 ++--
+>  drivers/clk/tegra/clk.h                  |  4 ++++
+>  3 files changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
+> index 39ef31b46df5..d73c587e4853 100644
+> --- a/drivers/clk/tegra/clk-super.c
+> +++ b/drivers/clk/tegra/clk-super.c
+> @@ -28,6 +28,9 @@
+>  #define super_state_to_src_shift(m, s) ((m->width * s))
+>  #define super_state_to_src_mask(m) (((1 << m->width) - 1))
+>  
+> +#define CCLK_SRC_PLLP_OUT0 4
+> +#define CCLK_SRC_PLLP_OUT4 5
+> +
+>  static u8 clk_super_get_parent(struct clk_hw *hw)
+>  {
+>  	struct tegra_clk_super_mux *mux = to_clk_super_mux(hw);
+> @@ -97,6 +100,14 @@ static int clk_super_set_parent(struct clk_hw *hw, u8 index)
+>  		if (index == mux->div2_index)
+>  			index = mux->pllx_index;
+>  	}
+> +
+> +	/*
+> +	 * Enable PLLP branches to CPU before selecting PLLP source
+> +	 */
+> +	if ((mux->flags & TEGRA_CPU_CLK) &&
+> +	    ((index == CCLK_SRC_PLLP_OUT0) || (index == CCLK_SRC_PLLP_OUT4)))
+> +		tegra_clk_set_pllp_out_cpu(true);
 
-I thought you believed that RCU was antifragile, in that it would scale
-better as it was used more heavily?
+Should somewhere here be tegra_clk_set_pllp_out_cpu(false) when
+switching from PLLP?
 
-Would it make sense to have call_rcu() check to see if there are many
-outstanding requests on this CPU and if so process them before returning?
-That would ensure that frequent callers usually ended up doing their
-own processing.
+>  	val &= ~((super_state_to_src_mask(mux)) << shift);
+>  	val |= (index & (super_state_to_src_mask(mux))) << shift;
+>  
+> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
+> index cdfe7c9697e1..cd208d0eca2a 100644
+> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
+> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
+> @@ -180,7 +180,7 @@ static void __init tegra_super_clk_init(void __iomem *clk_base,
+>  					gen_info->num_cclk_g_parents,
+>  					CLK_SET_RATE_PARENT,
+>  					clk_base + CCLKG_BURST_POLICY,
+> -					0, 4, 8, 0, NULL);
+> +					TEGRA_CPU_CLK, 4, 8, 0, NULL);
+>  		} else {
+>  			clk = tegra_clk_register_super_mux("cclk_g",
+>  					gen_info->cclk_g_parents,
+> @@ -201,7 +201,7 @@ static void __init tegra_super_clk_init(void __iomem *clk_base,
+>  					gen_info->num_cclk_lp_parents,
+>  					CLK_SET_RATE_PARENT,
+>  					clk_base + CCLKLP_BURST_POLICY,
+> -					0, 4, 8, 0, NULL);
+> +					TEGRA_CPU_CLK, 4, 8, 0, NULL);
+>  		} else {
+>  			clk = tegra_clk_register_super_mux("cclk_lp",
+>  					gen_info->cclk_lp_parents,
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index ac6de3a0b91f..c357b49e49b0 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -694,6 +694,9 @@ struct clk *tegra_clk_register_periph_data(void __iomem *clk_base,
+>   * Flags:
+>   * TEGRA_DIVIDER_2 - LP cluster has additional divider. This flag indicates
+>   *     that this is LP cluster clock.
+> + * TEGRA_CPU_CLK - This flag indicates this is CPU cluster clock. To use PLLP
+> + * for CPU clock source, need to enable PLLP branches to CPU by setting the
+> + * additional bit PLLP_OUT_CPU for gen5 super clock.
+>   */
+>  struct tegra_clk_super_mux {
+>  	struct clk_hw	hw;
+> @@ -710,6 +713,7 @@ struct tegra_clk_super_mux {
+>  #define to_clk_super_mux(_hw) container_of(_hw, struct tegra_clk_super_mux, hw)
+>  
+>  #define TEGRA_DIVIDER_2 BIT(0)
+> +#define TEGRA_CPU_CLK	BIT(1)
+
+I'd name this TEGRA210_CPU_CLK for clarity.
+
+>  extern const struct clk_ops tegra_clk_super_ops;
+>  struct clk *tegra_clk_register_super_mux(const char *name,
+> 
+
+Will be better to move the tegra_clk_set_pllp_out_cpu() definition into
+this patch, otherwise this looks inconsistent for reviewer.
