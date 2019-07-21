@@ -2,200 +2,126 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC32C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25E8C76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBF6206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evNf3jpS"
+	by mail.kernel.org (Postfix) with ESMTP id B398E20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfGUVc3 (ORCPT
+        id S1726432AbfGUVcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:32:29 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38145 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfGUVc3 (ORCPT
+        Sun, 21 Jul 2019 17:32:50 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:55905 "EHLO
+        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfGUVct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:32:29 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so35553739ljg.5;
-        Sun, 21 Jul 2019 14:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7pC/pygQnxXVdrtejHUkPFtVoKsU72zGHkszKq+xSic=;
-        b=evNf3jpS5qYVY2p6JD1cDwNdrDLK4RLQmB/u1b2Rf06fuCeigEkGP9fggfi1hokO4O
-         e4JB48pKUZae5fspzNNvka2NijxKvMl64etLikltUdhcYeNz2lt0k2wfe7/N0im/UL2y
-         ATgeNIFLxSQYlaaMbzFQDTJHc+8370eSiTsh3E5NMXwXLrlShT4wa3k+8oPlJKb4yx7b
-         erwtF70T02+VtgkzmUtgR6+OcVPyFdRAMZwHrfpWNJh8vcwcNOvc7vorbP78pfTGbrcf
-         +xo9I/hm4FEQ+E3Dd6K3eKVnW/k/hbGOOQpBhfvCVgQhN0660HqM4fyo7BTh6VyRDlko
-         bHag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7pC/pygQnxXVdrtejHUkPFtVoKsU72zGHkszKq+xSic=;
-        b=VaPPb0d1WJDYR9JJ3uj4+MRYfW6nxMfUsftxp6xOOwr9XdoehEJguOoZUsvylSGkU6
-         UfaACzFSx6iC9+7DYzs95mArl39Pz4oc/EtNeGfznfNbK6lHLNnTwqLJVA96Fm5SNM/a
-         NOGGtOP1e4TTx57ZngUEaCdMlGotxQh5SgfV6YDiIN+RLWUKboCE7mRq/S2jD48Pon3I
-         mAtP+P5O4c6PAkIp4tyyN2dUDQZP4SCNaF9ql0hVnXiptuY3v/3kRJLeqc6P5uh27tfD
-         JezwSZDjzcvfUaY9FUNzBuA5oQZaPebBFshd8uAiFxU1sTtsNwtOUpeNofZD8YeTDYaE
-         SPtw==
-X-Gm-Message-State: APjAAAV0ufHkviV2Rp8wW+WcbnvA+f0fSsMuGN9LqwAXFVzjfdfiNIHW
-        GKfdwv3Cx40H0BlgsILXqHK3w0M3
-X-Google-Smtp-Source: APXvYqy3tbv+tcPdjd6a/OMrspSUOM15guPCXPV80Q+aAEQXpW6Q7Ln9u91Wng8Vbh1eJbr0fhXXwA==
-X-Received: by 2002:a2e:b009:: with SMTP id y9mr23414874ljk.152.1563744745672;
-        Sun, 21 Jul 2019 14:32:25 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id x18sm5794381lfe.42.2019.07.21.14.32.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 14:32:24 -0700 (PDT)
-Subject: Re: [PATCH V6 11/21] clk: tegra: clk-dfll: Add suspend and resume
- support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-12-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <54e3237d-c6c2-2007-99b2-89c26004da47@gmail.com>
-Date:   Mon, 22 Jul 2019 00:32:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 21 Jul 2019 17:32:49 -0400
+Received: from smtp7.infomaniak.ch (smtp7.infomaniak.ch [83.166.132.30])
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x6LLVU5D253757
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 21 Jul 2019 23:31:30 +0200
+Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x6LLVRN8069488;
+        Sun, 21 Jul 2019 23:31:28 +0200
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH bpf-next v10 01/10] fs,security: Add a new file access type: MAY_CHROOT
+Date:   Sun, 21 Jul 2019 23:31:07 +0200
+Message-Id: <20190721213116.23476-2-mic@digikod.net>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190721213116.23476-1-mic@digikod.net>
+References: <20190721213116.23476-1-mic@digikod.net>
 MIME-Version: 1.0
-In-Reply-To: <1563738060-30213-12-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.07.2019 22:40, Sowjanya Komatineni пишет:
-> This patch implements DFLL suspend and resume operation.
-> 
-> During system suspend entry, CPU clock will switch CPU to safe
-> clock source of PLLP and disables DFLL clock output.
-> 
-> DFLL driver suspend confirms DFLL disable state and errors out on
-> being active.
-> 
-> DFLL is re-initialized during the DFLL driver resume as it goes
-> through complete reset during suspend entry.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-dfll.c               | 44 ++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-dfll.h               |  2 ++
->  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
->  3 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
-> index f8688c2ddf1a..7dcad4ccd0ae 100644
-> --- a/drivers/clk/tegra/clk-dfll.c
-> +++ b/drivers/clk/tegra/clk-dfll.c
-> @@ -1513,6 +1513,50 @@ static int dfll_init(struct tegra_dfll *td)
->  	return ret;
->  }
->  
-> +/**
-> + * tegra_dfll_suspend - check DFLL is disabled
-> + * @dev: DFLL device *
-> + *
-> + * DFLL clock should be disabled by the CPUFreq driver. So, make
-> + * sure it is disabled and disable all clocks needed by the DFLL.
-> + */
-> +int tegra_dfll_suspend(struct device *dev)
-> +{
-> +	struct tegra_dfll *td = dev_get_drvdata(dev);
-> +
-> +	if (dfll_is_running(td)) {
-> +		dev_warn(td->dev, "failed disabling the dfll\n");
+For compatibility reason, MAY_CHROOT is always set with MAY_CHDIR.
+However, this new flag enable to differentiate a chdir form a chroot.
 
-Something like "dfll is enabled while shouldn't be\n" will be more
-informative.
+This is needed for the Landlock LSM to be able to evaluate a new root
+directory.
 
-This is a error, hence dev_err().
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: John Johansen <john.johansen@canonical.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Stephen Smalley <sds@tycho.nsa.gov>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: linux-fsdevel@vger.kernel.org
+---
+ fs/open.c          | 3 ++-
+ include/linux/fs.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-> +		return -EBUSY;
-> +	}
-> +
-> +	pm_runtime_disable(dev);
-> +
-> +	clk_unprepare(td->ref_clk);
-> +	clk_unprepare(td->soc_clk);
-> +	clk_unprepare(td->i2c_clk);
-
-Please don't do this, DFLL is already disabled if not running.
-
-> +	reset_control_assert(td->dvco_rst);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(tegra_dfll_suspend);
-> +
-> +/**
-> + * tegra_dfll_resume - reinitialize DFLL on resume
-> + * @pdev: DFLL instance
-> + *
-> + * Re-initialize DFLL on resume as it gets disabled and reset during
-> + * suspend entry. DFLL clock is enabled in closed loop mode later
-> + * and CPU frequency will be switched to DFLL output.
-> + */
-> +int tegra_dfll_resume(struct device *dev)
-> +{
-> +	struct tegra_dfll *td = dev_get_drvdata(dev);
-> +
-> +	return dfll_init(td);
-
-Just create dfll_reinit() variant.
-
-> +}
-> +EXPORT_SYMBOL(tegra_dfll_resume);
-> +
->  /*
->   * DT data fetch
->   */
-> diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
-> index 1b14ebe7268b..fb209eb5f365 100644
-> --- a/drivers/clk/tegra/clk-dfll.h
-> +++ b/drivers/clk/tegra/clk-dfll.h
-> @@ -42,5 +42,7 @@ int tegra_dfll_register(struct platform_device *pdev,
->  struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_device *pdev);
->  int tegra_dfll_runtime_suspend(struct device *dev);
->  int tegra_dfll_runtime_resume(struct device *dev);
-> +int tegra_dfll_suspend(struct device *dev);
-> +int tegra_dfll_resume(struct device *dev);
->  
->  #endif /* __DRIVERS_CLK_TEGRA_CLK_DFLL_H */
-> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> index e84b6d52cbbd..2ac2679d696d 100644
-> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-> @@ -631,6 +631,7 @@ static int tegra124_dfll_fcpu_remove(struct platform_device *pdev)
->  static const struct dev_pm_ops tegra124_dfll_pm_ops = {
->  	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
->  			   tegra_dfll_runtime_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dfll_suspend, tegra_dfll_resume)
->  };
->  
->  static struct platform_driver tegra124_dfll_fcpu_driver = {
-> 
+diff --git a/fs/open.c b/fs/open.c
+index b5b80469b93d..e8767318fd03 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -494,7 +494,8 @@ int ksys_chroot(const char __user *filename)
+ 	if (error)
+ 		goto out;
+ 
+-	error = inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR);
++	error = inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR |
++			MAY_CHROOT);
+ 	if (error)
+ 		goto dput_and_out;
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 75f2ed289a3f..7a0d92b1da85 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -99,6 +99,7 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+ #define MAY_CHDIR		0x00000040
+ /* called from RCU mode, don't block */
+ #define MAY_NOT_BLOCK		0x00000080
++#define MAY_CHROOT		0x00000100
+ 
+ /*
+  * flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must correspond
+-- 
+2.22.0
 
