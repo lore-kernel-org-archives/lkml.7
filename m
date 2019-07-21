@@ -2,204 +2,91 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BAAC76196
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2270BC76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EC9208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMQwJjQ1"
+	by mail.kernel.org (Postfix) with ESMTP id E8C2A208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563741541;
+	bh=hYvRrhbpdsyO4Qp79Qe8iUUhmkNadJdoita/rQ/p/20=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Nxpf6z3DmFaYnvWvhaU8C9MLPCSDYU3Vw1VzozNk5emaeWlkYVtqMgauadH9aSsMt
+	 OcjXSPvZuR5a6s1Tc/0iVQnQ8zSahwUasXOVvxN+L07zMmlIWszZUgmU9DA+tHvliL
+	 QpwDHFEUSPZrvUiWqzbbX518xZ4s+p96rlB2SFXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfGUUi2 (ORCPT
+        id S1727336AbfGUUi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 16:38:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38295 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfGUUi2 (ORCPT
+        Sun, 21 Jul 2019 16:38:59 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44082 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfGUUi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 16:38:28 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so7797900pgu.5;
-        Sun, 21 Jul 2019 13:38:27 -0700 (PDT)
+        Sun, 21 Jul 2019 16:38:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k18so35474814ljc.11
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 13:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iO+iPyFQkM1ZL64hEc+0DL6isJZcUzSGAfleOmXyrUU=;
-        b=LMQwJjQ1tvUUG9mJ4W7Gca0Yc5nhcZfMc0lZdT1IMdS0t7/9Tk9w6qo/s5QkJBcW/C
-         1ftte1/ukUFVue3R8ivPdZa9E6LUeynw5lqcGXf17ki9uKboYB3hDTNRM/ayUuGU/sO+
-         W59tWrHWiO7v6P68I+ssoLzSpiUT0gYiiUQZqqxpgdaQJU0vONYIVAPylB5LZ6wfuJIq
-         nzzuA4EbyXaIYKpetASY1taTNmd8ncSRIPBaKsJFlHL8PgtmdE0uGH1YJ7iqxBlS/r4S
-         xpByDI/QFv6bSBNbS6KB6uojAySrkexc2XtTktKQATWJvDF64L3vgH/zVfOnrS5H/qTo
-         7LRg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VFhbBpOoZTNy9EMhjzpqd/YuAOOhoH6s3ZbDQhN/5VM=;
+        b=EYyAu5FNL7gKp0HuaHxd3VFhuw6OMNQ1ynqqj6BKsVxhnlAOQzaSgoqA2/t5l63YVC
+         UK7L9wQH/n7peWeSk05TUKDMFY6v8Jwp73ku2LrkRQvdJHt7ULoCbcRQ5wDFhLLVzafi
+         fWcVH07bkb/MP62sTSMXJXpR9LaasGZFbWyfk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iO+iPyFQkM1ZL64hEc+0DL6isJZcUzSGAfleOmXyrUU=;
-        b=hgmTTqTyRlRx9DpzIFRuDN/ZS5sT5RrNIr53UvAN4K2/T7JjqXyCikVIZ2kxh5QiG8
-         WN8OwcG0DuTfx5wsm5uOvgpHq5DxMS/jtezaHJgI5BLi/WHgrsNvZrajtFGjd5gol8Lw
-         EVsWWxfTEzNj4MEdCFIOwrnwW+1Lk5RgsXTsaRJZxtAJ2GHnCAgsDWffsjFZZ4SPMO7H
-         +6hj4/Ar14ljt3PMlcn6gvbaXGAf+wLfurq5BacjCUQ5rOYmindNp1GSWhV6W0zNMUEU
-         qyt7Is/prA8TgVO95J8MXKzCsX4+xGV+8xXEDaPyz5ZIHKEYahe9Mrq5szfYat3nU9co
-         85nw==
-X-Gm-Message-State: APjAAAVWwyMGFQ3Y0kRO3kIpLZVyUQYdlt8vn5gcRmNIgIa2YtfaJdXu
-        3LUwle+0IUBjAbgJZsl6jt1vuRR11a4MPA==
-X-Google-Smtp-Source: APXvYqyIOZZW6KCdylHdgxsQuzgVif6+z4WdtfFUvlAFJ5VELeWzPFv/BBI76DVMExvQACcQaMY52g==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr73981057pjq.114.1563741506878;
-        Sun, 21 Jul 2019 13:38:26 -0700 (PDT)
-Received: from Gentoo ([103.231.91.69])
-        by smtp.gmail.com with ESMTPSA id a3sm38982421pfo.49.2019.07.21.13.38.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 13:38:25 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 02:08:07 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.2.2
-Message-ID: <20190721203803.GA7362@Gentoo>
-References: <20190721134918.GA23461@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VFhbBpOoZTNy9EMhjzpqd/YuAOOhoH6s3ZbDQhN/5VM=;
+        b=Ngg9neb3z0WJ2grJ7kmygA466dngAGzaQHTVh1nmE2zVEUDUOzA7bKK2Zo5EBNjBXC
+         kYbRYabEk3pFidMcOCSVpB7YEXhWG+gbvEqqJF/9XmVGtlm/4vxRX/QyJVrr+6jvXOwB
+         9bexU9eZLdj2+6O+dfuoYO7JRxzaoIyQhbxqkT5y3U7w3P+jNJLUANGg2nNgqKwq3qB4
+         ijK6nKR7/QopEGEXZHkQYLkL83gaBvZnoDo7o0Rkegghg1jVLZShbm70nSXo3v0Vqnll
+         ZzHyE401NDO7y05Yk8aO2Ui3J5PWSqelCQsYQ9PID8PIylxyjspmOT3+i5HK+qu7Z5y3
+         Jy2A==
+X-Gm-Message-State: APjAAAXcbjTwtvbc1/in7M2B1IYRUlSY03ZSavRk10Pgcn8yimlK0zT+
+        UmB/CQiVQK61jCB7SzCC7QCFxmhqlAE=
+X-Google-Smtp-Source: APXvYqzhYpEtzNlhEX9Do0kHPX+QL9JtXzOLTgANG+R54MWtgSVUepXo0rpYBTj0tvaNg+ft6GVOkA==
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr6938221lji.84.1563741536723;
+        Sun, 21 Jul 2019 13:38:56 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id v7sm7260285ljj.3.2019.07.21.13.38.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 13:38:56 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id v85so25069999lfa.6
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 13:38:55 -0700 (PDT)
+X-Received: by 2002:ac2:5601:: with SMTP id v1mr30384046lfd.106.1563741535585;
+ Sun, 21 Jul 2019 13:38:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-In-Reply-To: <20190721134918.GA23461@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190721201956.941-1-daniel.vetter@ffwll.ch>
+In-Reply-To: <20190721201956.941-1-daniel.vetter@ffwll.ch>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 21 Jul 2019 13:38:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiaHB_0bS_x=p-xeyp7bW7bGgkZ9QkXe6SS9axu7OP95w@mail.gmail.com>
+Message-ID: <CAHk-=wiaHB_0bS_x=p-xeyp7bW7bGgkZ9QkXe6SS9axu7OP95w@mail.gmail.com>
+Subject: Re: [PATCH] fbdev: Ditch fb_edid_add_monspecs
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tavis Ormandy <taviso@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 21, 2019 at 1:20 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+>
+> It's dead code ever since
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Lovely. Ack.
 
-
-Thanks, a bunch Greg!
-
-On 15:49 Sun 21 Jul , Greg KH wrote:
->I'm announcing the release of the 5.2.2 kernel.
->
->All users of the 5.2 kernel series must upgrade.
->
->The updated 5.2.y git tree can be found at:
->	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.2.y
->and can be browsed at the normal kernel.org git web browser:
->	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
->
->thanks,
->
->greg k-h
->
->------------
->
-> Makefile                                   |    2
-> arch/arc/kernel/unwind.c                   |    9 +-
-> arch/s390/include/asm/facility.h           |   21 ++++--
-> arch/s390/include/asm/sclp.h               |    1
-> arch/s390/kernel/ipl.c                     |    7 --
-> arch/x86/entry/entry_32.S                  |   24 +++++++
-> arch/x86/entry/entry_64.S                  |   30 +++++++-
-> arch/x86/include/asm/hw_irq.h              |    5 +
-> arch/x86/kernel/apic/apic.c                |   33 ++++++---
-> arch/x86/kernel/apic/io_apic.c             |   46 +++++++++++++
-> arch/x86/kernel/apic/vector.c              |    4 -
-> arch/x86/kernel/idt.c                      |    3
-> arch/x86/kernel/irq.c                      |    2
-> drivers/base/cacheinfo.c                   |    3
-> drivers/base/firmware_loader/fallback.c    |    2
-> drivers/crypto/nx/nx-842-powernv.c         |    8 +-
-> drivers/crypto/talitos.c                   |   99 ++++++++++++-----------------
-> drivers/crypto/talitos.h                   |   30 ++++++++
-> drivers/input/mouse/synaptics.c            |    1
-> drivers/net/ethernet/intel/e1000e/netdev.c |   21 +++---
-> drivers/s390/char/sclp_early.c             |    1
-> drivers/s390/cio/qdio_setup.c              |    2
-> drivers/s390/cio/qdio_thinint.c            |    5 -
-> include/linux/cpuhotplug.h                 |    1
-> include/uapi/linux/nilfs2_ondisk.h         |   24 +++----
-> kernel/irq/autoprobe.c                     |    6 -
-> kernel/irq/chip.c                          |    6 +
-> kernel/irq/cpuhotplug.c                    |    2
-> kernel/irq/internals.h                     |    5 +
-> kernel/irq/manage.c                        |   90 ++++++++++++++++++++------
-> 30 files changed, 341 insertions(+), 152 deletions(-)
->
->Arnd Bergmann (1):
->      ARC: hide unused function unw_hdr_alloc
->
->Christophe Leroy (2):
->      crypto: talitos - move struct talitos_edesc into talitos.h
->      crypto: talitos - fix hash on SEC1.
->
->Cole Rogers (1):
->      Input: synaptics - enable SMBUS on T480 thinkpad trackpad
->
->Greg Kroah-Hartman (1):
->      Linux 5.2.2
->
->Haren Myneni (1):
->      crypto/NX: Set receive window credits to max number of CRBs in RxFIFO
->
->Heiko Carstens (1):
->      s390: fix stfle zero padding
->
->James Morse (1):
->      drivers: base: cacheinfo: Ensure cpu hotplug work is done before Intel RDT
->
->Jiri Slaby (1):
->      x86/entry/32: Fix ENDPROC of common_spurious
->
->Julian Wiedmann (2):
->      s390/qdio: (re-)initialize tiqdio list entries
->      s390/qdio: don't touch the dsci in tiqdio_add_input_queues()
->
->Konstantin Khlebnikov (2):
->      Revert "e1000e: fix cyclic resets at link up with active tx"
->      e1000e: start network tx queue only when link is up
->
->Masahiro Yamada (1):
->      nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
->
->Philipp Rudo (1):
->      s390/ipl: Fix detection of has_secure attribute
->
->Sven Van Asbroeck (1):
->      firmware: improve LSM/IMA security behaviour
->
->Thomas Gleixner (6):
->      genirq: Delay deactivation in free_irq()
->      genirq: Fix misleading synchronize_irq() documentation
->      genirq: Add optional hardware synchronization for shutdown
->      x86/ioapic: Implement irq_get_irqchip_state() callback
->      x86/irq: Handle spurious interrupt after shutdown gracefully
->      x86/irq: Seperate unused system vectors from spurious entry again
->
-
-
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl00zScACgkQsjqdtxFL
-KRVh3QgA0cmZqjBdqm8sfTKIj1yWyJUHABDWdT+/s0+GrmuZNhj3axQU7I4RO3v8
-hd7MAH1lDMY9JsqS+yU3tZvusf82eSVRZwHKA/SqJv/XhJO3G3oI8ds/4fQJB0IO
-Z9bmdy9aRU1JBGm54AtXwFmpyox6m/c5Jq4HvQKbxy3TNS+aWs712VXEF4ylvpdu
-vlOjJdDozMrWrD5omSDvdoEOk8+1VQP1Rj1XULWq+nbwdQbygDeWQAg1fWu8o+MZ
-nLu9pHdcHIHUfPVHziZ9heVxPov8UMePIWUxBlLdnjaTX5+fEGaUtOHvFxbcF5qj
-lXltw77Vaflk8kNxTxx8iiWHJkr6Zg==
-=Vb6f
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+               Linus
