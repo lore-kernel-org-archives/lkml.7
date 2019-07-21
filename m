@@ -2,54 +2,53 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F09C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAA9C76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA5320823
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03FF20823
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 14:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1FApfRSi"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BwU/A5h4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfGUOZj (ORCPT
+        id S1726595AbfGUOZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 10:25:39 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:62041 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfGUOZj (ORCPT
+        Sun, 21 Jul 2019 10:25:44 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:44313 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfGUOZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 10:25:39 -0400
+        Sun, 21 Jul 2019 10:25:43 -0400
 Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6LENIai000764;
-        Sun, 21 Jul 2019 23:23:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6LENIai000764
+        by conuserg-08.nifty.com with ESMTP id x6LEP6So028038;
+        Sun, 21 Jul 2019 23:25:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6LEP6So028038
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563718999;
-        bh=TgOPi4OI1U4SdoPkJqKJcXQszKG8Kxse+HEK34XePJk=;
+        s=dec2015msa; t=1563719106;
+        bh=s33EX00wTiBe9Bau2mAVNBRw2u1DMafGh9Oh+rM2cNk=;
         h=From:To:Cc:Subject:Date:From;
-        b=1FApfRSiENS3WRZpU6ySuiAAfzqq6EZu4OJSrIQ+KHEey91/xZbaS+4IHX/Rsc2Mi
-         lGvBezwmbpj+Bnwht4hEnR2cfQlO1PvONQmGE7FQo43fDuUS5XZ0TxJcU9NITfCqLc
-         90bEFpJYvCYwcYoHhj1+O51sFeU8fSxM11RkwORxQ8p2wXjgSIVAvBH2Yhs1TpBkUa
-         2nXZTk8eow/a+PODwEof1tgvv0pnnJANK908/ax8pXVgnmg+1fteJTqW0i+FrFuScS
-         b4M0UkNMRzNPbBV5rScBg0kmwWq52dx8sKwHIKuDeTI7KqGIthe5Ci0tTuNcxix5Az
-         hJC2HFg4sIu/Q==
+        b=BwU/A5h4kRa6W4caGY0ekKCsMx/zOUmTdqcbUCLogAedBXbl8IB+3Unpc2psgl1C2
+         pak7DFhwiWg3QPz8AgwmX2toPhin+YxS+B5GC2p2HaVkx+3JjPmCVyLLb9Dz13kE/v
+         mUDi+fHumqxyHwI38+A3z+QDHugw924uNpaMRbDPYpFv9iHVkTneI9aZS6/Jxu6M9Q
+         r2QdWOzgfFHV5Dz/rJXn2cUWtMVIpObtCxWOzxK6lhWgcYUA7Gm3u8K3BL2cOP3M9A
+         ToYeNwCZqTqzGAeudtLgwU5+MTMegoBv6ypXqhu4tihavOuyvyjyH5rH4S+ZhPsS31
+         OIenvHnYrPFqw==
 X-Nifty-SrcIP: [126.26.94.249]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: use __u32 instead of uint32_t in uapi headers
-Date:   Sun, 21 Jul 2019 23:23:08 +0900
-Message-Id: <20190721142308.30306-1-yamada.masahiro@socionext.com>
+        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: use __u{8,16,32,64} instead of uint{8,16,32,64}_t in uapi headers
+Date:   Sun, 21 Jul 2019 23:25:02 +0900
+Message-Id: <20190721142502.30599-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,9 +61,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
 make sure they can be included from user-space.
 
-Currently, header.h and fw.h are excluded from the test coverage.
-To make them join the compile-test, we need to fix the build errors
-attached below.
+Currently, scsi_bsg_fc.h, scsi_netlink.h, and scsi_netlink_fc.h are
+excluded from the test coverage. To make them join the compile-test,
+we need to fix the build errors attached below.
 
 For a case like this, we decided to use __u{8,16,32,64} variable types
 in this discussion:
@@ -73,137 +72,385 @@ in this discussion:
 
 Build log:
 
-  CC      usr/include/sound/sof/header.h.s
-  CC      usr/include/sound/sof/fw.h.s
+  CC      usr/include/scsi/scsi_netlink_fc.h.s
+  CC      usr/include/scsi/scsi_netlink.h.s
+  CC      usr/include/scsi/scsi_bsg_fc.h.s
+In file included from ./usr/include/scsi/scsi_netlink_fc.h:10:0,
+                 from <command-line>:32:
+./usr/include/scsi/scsi_netlink.h:29:2: error: unknown type name ‘uint8_t’
+  uint8_t version;
+  ^~~~~~~
+./usr/include/scsi/scsi_netlink.h:30:2: error: unknown type name ‘uint8_t’
+  uint8_t transport;
+  ^~~~~~~
+./usr/include/scsi/scsi_netlink.h:31:2: error: unknown type name ‘uint16_t’
+  uint16_t magic;
+  ^~~~~~~~
+./usr/include/scsi/scsi_netlink.h:32:2: error: unknown type name ‘uint16_t’
+  uint16_t msgtype;
+  ^~~~~~~~
+  CC      usr/include/rdma/vmw_pvrdma-abi.h.s
+./usr/include/scsi/scsi_netlink.h:33:2: error: unknown type name ‘uint16_t’
+  uint16_t msglen;
+  ^~~~~~~~
+./usr/include/scsi/scsi_netlink.h:34:33: error: ‘uint64_t’ undeclared here (not in a function); did you mean ‘__uint128_t’?
+ } __attribute__((aligned(sizeof(uint64_t))));
+                                 ^~~~~~~~
+                                 __uint128_t
+./usr/include/scsi/scsi_netlink.h:78:2: error: expected specifier-qualifier-list before ‘uint64_t’
+  uint64_t vendor_id;
+  ^~~~~~~~
 In file included from <command-line>:32:0:
-./usr/include/sound/sof/header.h:19:2: error: unknown type name ‘uint32_t’
-  uint32_t magic;  /**< 'S', 'O', 'F', '\0' */
+./usr/include/scsi/scsi_netlink_fc.h:46:2: error: expected specifier-qualifier-list before ‘uint64_t’
+  uint64_t seconds;
   ^~~~~~~~
-./usr/include/sound/sof/header.h:20:2: error: unknown type name ‘uint32_t’
-  uint32_t type;  /**< component specific type */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:21:2: error: unknown type name ‘uint32_t’
-  uint32_t size;  /**< size in bytes of data excl. this struct */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:22:2: error: unknown type name ‘uint32_t’
-  uint32_t abi;  /**< SOF ABI version */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:23:2: error: unknown type name ‘uint32_t’
-  uint32_t reserved[4]; /**< reserved for future use */
-  ^~~~~~~~
-./usr/include/sound/sof/header.h:24:2: error: unknown type name ‘uint32_t’
-  uint32_t data[0]; /**< Component data - opaque to core */
-  ^~~~~~~~
+make[2]: *** [scripts/Makefile.build;302: usr/include/scsi/scsi_netlink_fc.h.s] Error 1
+make[2]: *** Waiting for unfinished jobs....
 In file included from <command-line>:32:0:
-./usr/include/sound/sof/fw.h:49:2: error: unknown type name ‘uint32_t’
-  uint32_t size;  /* bytes minus this header */
+./usr/include/scsi/scsi_netlink.h:29:2: error: unknown type name ‘uint8_t’
+  uint8_t version;
+  ^~~~~~~
+./usr/include/scsi/scsi_netlink.h:30:2: error: unknown type name ‘uint8_t’
+  uint8_t transport;
+  ^~~~~~~
+./usr/include/scsi/scsi_netlink.h:31:2: error: unknown type name ‘uint16_t’
+  uint16_t magic;
   ^~~~~~~~
-./usr/include/sound/sof/fw.h:50:2: error: unknown type name ‘uint32_t’
-  uint32_t offset; /* offset from base */
+./usr/include/scsi/scsi_netlink.h:32:2: error: unknown type name ‘uint16_t’
+  uint16_t msgtype;
   ^~~~~~~~
-./usr/include/sound/sof/fw.h:64:2: error: unknown type name ‘uint32_t’
-  uint32_t size;  /* bytes minus this header */
+./usr/include/scsi/scsi_netlink.h:33:2: error: unknown type name ‘uint16_t’
+  uint16_t msglen;
   ^~~~~~~~
-./usr/include/sound/sof/fw.h:65:2: error: unknown type name ‘uint32_t’
-  uint32_t num_blocks; /* number of blocks */
+./usr/include/scsi/scsi_netlink.h:34:33: error: ‘uint64_t’ undeclared here (not in a function); did you mean ‘__uint128_t’?
+ } __attribute__((aligned(sizeof(uint64_t))));
+                                 ^~~~~~~~
+                                 __uint128_t
+./usr/include/scsi/scsi_netlink.h:78:2: error: expected specifier-qualifier-list before ‘uint64_t’
+  uint64_t vendor_id;
   ^~~~~~~~
-./usr/include/sound/sof/fw.h:73:2: error: unknown type name ‘uint32_t’
-  uint32_t file_size; /* size of file minus this header */
+make[2]: *** [scripts/Makefile.build;302: usr/include/scsi/scsi_netlink.h.s] Error 1
+In file included from <command-line>:32:0:
+./usr/include/scsi/scsi_bsg_fc.h:69:2: error: unknown type name ‘uint8_t’
+  uint8_t  reserved;
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:72:2: error: unknown type name ‘uint8_t’
+  uint8_t  port_id[3];
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:90:2: error: unknown type name ‘uint8_t’
+  uint8_t  reserved;
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:93:2: error: unknown type name ‘uint8_t’
+  uint8_t  port_id[3];
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:114:2: error: unknown type name ‘uint8_t’
+  uint8_t  command_code;
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:117:2: error: unknown type name ‘uint8_t’
+  uint8_t  port_id[3];
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:154:2: error: unknown type name ‘uint32_t’
+  uint32_t status;  /* See FC_CTELS_STATUS_xxx */
   ^~~~~~~~
-./usr/include/sound/sof/fw.h:74:2: error: unknown type name ‘uint32_t’
-  uint32_t num_modules; /* number of modules */
+./usr/include/scsi/scsi_bsg_fc.h:158:3: error: unknown type name ‘uint8_t’
+   uint8_t action;  /* fragment_id for CT REJECT */
+   ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:159:3: error: unknown type name ‘uint8_t’
+   uint8_t reason_code;
+   ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:160:3: error: unknown type name ‘uint8_t’
+   uint8_t reason_explanation;
+   ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:161:3: error: unknown type name ‘uint8_t’
+   uint8_t vendor_unique;
+   ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:177:2: error: unknown type name ‘uint8_t’
+  uint8_t  reserved;
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:180:2: error: unknown type name ‘uint8_t’
+  uint8_t  port_id[3];
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:185:2: error: unknown type name ‘uint32_t’
+  uint32_t preamble_word0; /* revision & IN_ID */
   ^~~~~~~~
-./usr/include/sound/sof/fw.h:75:2: error: unknown type name ‘uint32_t’
-  uint32_t abi;  /* version of header format */
+./usr/include/scsi/scsi_bsg_fc.h:186:2: error: unknown type name ‘uint32_t’
+  uint32_t preamble_word1; /* GS_Type, GS_SubType, Options, Rsvd */
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:187:2: error: unknown type name ‘uint32_t’
+  uint32_t preamble_word2; /* Cmd Code, Max Size */
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:207:2: error: unknown type name ‘uint64_t’
+  uint64_t vendor_id;
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:210:2: error: unknown type name ‘uint32_t’
+  uint32_t vendor_cmd[0];
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:217:2: error: unknown type name ‘uint32_t’
+  uint32_t vendor_rsp[0];
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:236:2: error: unknown type name ‘uint8_t’
+  uint8_t els_code;
+  ^~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:254:2: error: unknown type name ‘uint32_t’
+  uint32_t preamble_word0; /* revision & IN_ID */
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:255:2: error: unknown type name ‘uint32_t’
+  uint32_t preamble_word1; /* GS_Type, GS_SubType, Options, Rsvd */
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:256:2: error: unknown type name ‘uint32_t’
+  uint32_t preamble_word2; /* Cmd Code, Max Size */
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:268:2: error: unknown type name ‘uint32_t’
+  uint32_t msgcode;
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:292:2: error: unknown type name ‘uint32_t’
+  uint32_t result;
+  ^~~~~~~~
+./usr/include/scsi/scsi_bsg_fc.h:295:2: error: unknown type name ‘uint32_t’
+  uint32_t reply_payload_rcv_len;
   ^~~~~~~~
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- include/uapi/sound/sof/fw.h     | 16 +++++++++-------
- include/uapi/sound/sof/header.h | 14 ++++++++------
- 2 files changed, 17 insertions(+), 13 deletions(-)
+ include/uapi/scsi/scsi_bsg_fc.h     | 54 +++++++++++++++--------------
+ include/uapi/scsi/scsi_netlink.h    | 20 +++++------
+ include/uapi/scsi/scsi_netlink_fc.h | 17 ++++-----
+ 3 files changed, 47 insertions(+), 44 deletions(-)
 
-diff --git a/include/uapi/sound/sof/fw.h b/include/uapi/sound/sof/fw.h
-index 1afca973eb09..e9f697467a86 100644
---- a/include/uapi/sound/sof/fw.h
-+++ b/include/uapi/sound/sof/fw.h
-@@ -13,6 +13,8 @@
- #ifndef __INCLUDE_UAPI_SOF_FW_H__
- #define __INCLUDE_UAPI_SOF_FW_H__
+diff --git a/include/uapi/scsi/scsi_bsg_fc.h b/include/uapi/scsi/scsi_bsg_fc.h
+index 52f32a60d056..3ae65e93235c 100644
+--- a/include/uapi/scsi/scsi_bsg_fc.h
++++ b/include/uapi/scsi/scsi_bsg_fc.h
+@@ -8,6 +8,8 @@
+ #ifndef SCSI_BSG_FC_H
+ #define SCSI_BSG_FC_H
  
 +#include <linux/types.h>
 +
- #define SND_SOF_FW_SIG_SIZE	4
- #define SND_SOF_FW_ABI		1
- #define SND_SOF_FW_SIG		"Reef"
-@@ -46,8 +48,8 @@ enum snd_sof_fw_blk_type {
- 
- struct snd_sof_blk_hdr {
- 	enum snd_sof_fw_blk_type type;
--	uint32_t size;		/* bytes minus this header */
--	uint32_t offset;	/* offset from base */
-+	__u32 size;		/* bytes minus this header */
-+	__u32 offset;		/* offset from base */
- } __packed;
- 
  /*
-@@ -61,8 +63,8 @@ enum snd_sof_fw_mod_type {
- 
- struct snd_sof_mod_hdr {
- 	enum snd_sof_fw_mod_type type;
--	uint32_t size;		/* bytes minus this header */
--	uint32_t num_blocks;	/* number of blocks */
-+	__u32 size;		/* bytes minus this header */
-+	__u32 num_blocks;	/* number of blocks */
- } __packed;
- 
- /*
-@@ -70,9 +72,9 @@ struct snd_sof_mod_hdr {
+  * This file intended to be included by both kernel and user space
   */
- struct snd_sof_fw_header {
- 	unsigned char sig[SND_SOF_FW_SIG_SIZE]; /* "Reef" */
--	uint32_t file_size;	/* size of file minus this header */
--	uint32_t num_modules;	/* number of modules */
--	uint32_t abi;		/* version of header format */
-+	__u32 file_size;	/* size of file minus this header */
-+	__u32 num_modules;	/* number of modules */
-+	__u32 abi;		/* version of header format */
- } __packed;
+@@ -66,10 +68,10 @@
+  * with the transport upon completion of the login.
+  */
+ struct fc_bsg_host_add_rport {
+-	uint8_t		reserved;
++	__u8	reserved;
  
- #endif
-diff --git a/include/uapi/sound/sof/header.h b/include/uapi/sound/sof/header.h
-index 7868990b0d6f..5f4518e7a972 100644
---- a/include/uapi/sound/sof/header.h
-+++ b/include/uapi/sound/sof/header.h
-@@ -9,6 +9,8 @@
- #ifndef __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
- #define __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
+ 	/* FC Address Identier of the remote port to login to */
+-	uint8_t		port_id[3];
++	__u8	port_id[3];
+ };
  
-+#include <linux/types.h>
-+
- /*
-  * Header for all non IPC ABI data.
+ /* Response:
+@@ -87,10 +89,10 @@ struct fc_bsg_host_add_rport {
+  * remain logged in with the remote port.
+  */
+ struct fc_bsg_host_del_rport {
+-	uint8_t		reserved;
++	__u8	reserved;
+ 
+ 	/* FC Address Identier of the remote port to logout of */
+-	uint8_t		port_id[3];
++	__u8	port_id[3];
+ };
+ 
+ /* Response:
+@@ -111,10 +113,10 @@ struct fc_bsg_host_els {
+ 	 * ELS Command Code being sent (must be the same as byte 0
+ 	 * of the payload)
+ 	 */
+-	uint8_t 	command_code;
++	__u8	command_code;
+ 
+ 	/* FC Address Identier of the remote port to send the ELS to */
+-	uint8_t		port_id[3];
++	__u8	port_id[3];
+ };
+ 
+ /* Response:
+@@ -151,14 +153,14 @@ struct fc_bsg_ctels_reply {
+ 	 * Note: x_RJT/BSY status will indicae that the rjt_data field
+ 	 *   is valid and contains the reason/explanation values.
+ 	 */
+-	uint32_t	status;		/* See FC_CTELS_STATUS_xxx */
++	__u32	status;		/* See FC_CTELS_STATUS_xxx */
+ 
+ 	/* valid if status is not FC_CTELS_STATUS_OK */
+ 	struct	{
+-		uint8_t	action;		/* fragment_id for CT REJECT */
+-		uint8_t	reason_code;
+-		uint8_t	reason_explanation;
+-		uint8_t	vendor_unique;
++		__u8	action;		/* fragment_id for CT REJECT */
++		__u8	reason_code;
++		__u8	reason_explanation;
++		__u8	vendor_unique;
+ 	} rjt_data;
+ };
+ 
+@@ -174,17 +176,17 @@ struct fc_bsg_ctels_reply {
+  * and whether to tear it down after the request.
+  */
+ struct fc_bsg_host_ct {
+-	uint8_t		reserved;
++	__u8	reserved;
+ 
+ 	/* FC Address Identier of the remote port to send the ELS to */
+-	uint8_t		port_id[3];
++	__u8	port_id[3];
+ 
+ 	/*
+ 	 * We need words 0-2 of the generic preamble for the LLD's
+ 	 */
+-	uint32_t	preamble_word0;	/* revision & IN_ID */
+-	uint32_t	preamble_word1;	/* GS_Type, GS_SubType, Options, Rsvd */
+-	uint32_t	preamble_word2;	/* Cmd Code, Max Size */
++	__u32	preamble_word0;	/* revision & IN_ID */
++	__u32	preamble_word1;	/* GS_Type, GS_SubType, Options, Rsvd */
++	__u32	preamble_word2;	/* Cmd Code, Max Size */
+ 
+ };
+ /* Response:
+@@ -204,17 +206,17 @@ struct fc_bsg_host_vendor {
+ 	 * Identifies the vendor that the message is formatted for. This
+ 	 * should be the recipient of the message.
+ 	 */
+-	uint64_t vendor_id;
++	__u64 vendor_id;
+ 
+ 	/* start of vendor command area */
+-	uint32_t vendor_cmd[0];
++	__u32 vendor_cmd[0];
+ };
+ 
+ /* Response:
+  */
+ struct fc_bsg_host_vendor_reply {
+ 	/* start of vendor response area */
+-	uint32_t vendor_rsp[0];
++	__u32 vendor_rsp[0];
+ };
+ 
+ 
+@@ -233,7 +235,7 @@ struct fc_bsg_rport_els {
+ 	 * ELS Command Code being sent (must be the same as
+ 	 * byte 0 of the payload)
+ 	 */
+-	uint8_t els_code;
++	__u8 els_code;
+ };
+ 
+ /* Response:
+@@ -251,9 +253,9 @@ struct fc_bsg_rport_ct {
+ 	/*
+ 	 * We need words 0-2 of the generic preamble for the LLD's
+ 	 */
+-	uint32_t	preamble_word0;	/* revision & IN_ID */
+-	uint32_t	preamble_word1;	/* GS_Type, GS_SubType, Options, Rsvd */
+-	uint32_t	preamble_word2;	/* Cmd Code, Max Size */
++	__u32	preamble_word0;	/* revision & IN_ID */
++	__u32	preamble_word1;	/* GS_Type, GS_SubType, Options, Rsvd */
++	__u32	preamble_word2;	/* Cmd Code, Max Size */
+ };
+ /* Response:
   *
-@@ -16,12 +18,12 @@
-  * Used by any bespoke component data structures or binary blobs.
-  */
- struct sof_abi_hdr {
--	uint32_t magic;		/**< 'S', 'O', 'F', '\0' */
--	uint32_t type;		/**< component specific type */
--	uint32_t size;		/**< size in bytes of data excl. this struct */
--	uint32_t abi;		/**< SOF ABI version */
--	uint32_t reserved[4];	/**< reserved for future use */
--	uint32_t data[0];	/**< Component data - opaque to core */
-+	__u32 magic;		/**< 'S', 'O', 'F', '\0' */
-+	__u32 type;		/**< component specific type */
-+	__u32 size;		/**< size in bytes of data excl. this struct */
-+	__u32 abi;		/**< SOF ABI version */
-+	__u32 reserved[4];	/**< reserved for future use */
-+	__u32 data[0];		/**< Component data - opaque to core */
- }  __packed;
+@@ -265,7 +267,7 @@ struct fc_bsg_rport_ct {
  
- #endif
+ /* request (CDB) structure of the sg_io_v4 */
+ struct fc_bsg_request {
+-	uint32_t msgcode;
++	__u32 msgcode;
+ 	union {
+ 		struct fc_bsg_host_add_rport	h_addrport;
+ 		struct fc_bsg_host_del_rport	h_delrport;
+@@ -289,10 +291,10 @@ struct fc_bsg_reply {
+ 	 *    msg and status fields. The per-msgcode reply structure
+ 	 *    will contain valid data.
+ 	 */
+-	uint32_t result;
++	__u32 result;
+ 
+ 	/* If there was reply_payload, how much was recevied ? */
+-	uint32_t reply_payload_rcv_len;
++	__u32 reply_payload_rcv_len;
+ 
+ 	union {
+ 		struct fc_bsg_host_vendor_reply		vendor_reply;
+diff --git a/include/uapi/scsi/scsi_netlink.h b/include/uapi/scsi/scsi_netlink.h
+index 5dd382054e45..1b1737c3c9d8 100644
+--- a/include/uapi/scsi/scsi_netlink.h
++++ b/include/uapi/scsi/scsi_netlink.h
+@@ -26,12 +26,12 @@
+ 
+ /* SCSI_TRANSPORT_MSG event message header */
+ struct scsi_nl_hdr {
+-	uint8_t version;
+-	uint8_t transport;
+-	uint16_t magic;
+-	uint16_t msgtype;
+-	uint16_t msglen;
+-} __attribute__((aligned(sizeof(uint64_t))));
++	__u8 version;
++	__u8 transport;
++	__u16 magic;
++	__u16 msgtype;
++	__u16 msglen;
++} __attribute__((aligned(sizeof(__u64))));
+ 
+ /* scsi_nl_hdr->version value */
+ #define SCSI_NL_VERSION				1
+@@ -75,10 +75,10 @@ struct scsi_nl_hdr {
+  */
+ struct scsi_nl_host_vendor_msg {
+ 	struct scsi_nl_hdr snlh;		/* must be 1st element ! */
+-	uint64_t vendor_id;
+-	uint16_t host_no;
+-	uint16_t vmsg_datalen;
+-} __attribute__((aligned(sizeof(uint64_t))));
++	__u64 vendor_id;
++	__u16 host_no;
++	__u16 vmsg_datalen;
++} __attribute__((aligned(sizeof(__u64))));
+ 
+ 
+ /*
+diff --git a/include/uapi/scsi/scsi_netlink_fc.h b/include/uapi/scsi/scsi_netlink_fc.h
+index a39023579051..7535253f1a96 100644
+--- a/include/uapi/scsi/scsi_netlink_fc.h
++++ b/include/uapi/scsi/scsi_netlink_fc.h
+@@ -7,6 +7,7 @@
+ #ifndef SCSI_NETLINK_FC_H
+ #define SCSI_NETLINK_FC_H
+ 
++#include <linux/types.h>
+ #include <scsi/scsi_netlink.h>
+ 
+ /*
+@@ -43,14 +44,14 @@
+  */
+ struct fc_nl_event {
+ 	struct scsi_nl_hdr snlh;		/* must be 1st element ! */
+-	uint64_t seconds;
+-	uint64_t vendor_id;
+-	uint16_t host_no;
+-	uint16_t event_datalen;
+-	uint32_t event_num;
+-	uint32_t event_code;
+-	uint32_t event_data;
+-} __attribute__((aligned(sizeof(uint64_t))));
++	__u64 seconds;
++	__u64 vendor_id;
++	__u16 host_no;
++	__u16 event_datalen;
++	__u32 event_num;
++	__u32 event_code;
++	__u32 event_data;
++} __attribute__((aligned(sizeof(__u64))));
+ 
+ 
+ #endif /* SCSI_NETLINK_FC_H */
 -- 
 2.17.1
 
