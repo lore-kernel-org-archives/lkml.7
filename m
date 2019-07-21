@@ -2,79 +2,82 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE80C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB30C76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912292147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929E82085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hOxpb6w1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfGUVGJ (ORCPT
+        id S1726749AbfGUVJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:06:09 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:46723 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfGUVGI (ORCPT
+        Sun, 21 Jul 2019 17:09:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36938 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfGUVJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:06:08 -0400
-Received: from localhost.localdomain ([92.140.204.221])
-        by mwinf5d11 with ME
-        id fZ662000A4n7eLC03Z66rk; Sun, 21 Jul 2019 23:06:07 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 21 Jul 2019 23:06:07 +0200
-X-ME-IP: 92.140.204.221
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] leds: ktd2692: Fix a typo in the name of a constant
-Date:   Sun, 21 Jul 2019 23:05:39 +0200
-Message-Id: <20190721210539.25669-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 21 Jul 2019 17:09:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m+ymzWwJthSyMsIrAZa5UVM+lb+OeBZIRhgzMglbtss=; b=hOxpb6w1+7znVOU/LYcc4TCsi
+        AU34x9DctQ72CdFA2SbXaxcS1FbGoIVqML8MnXJToxuML6SZi8848XN5DS9AVL0Z9wQgsUK2KRVeI
+        Wz7K+4anU/cZMplgZTFu8tTBeFDdLQlK+4EzYTlmpy18b/zeZMWzGbE65oBnEfAvV8IKyijqNY5Kz
+        B1UEaYbbU2KZci/M3mW5svS0g1vE2DZjApbLyiTi9LrqIkXtIvvBRXC3Hu/WKpOP6J4pBN/jLFKkT
+        nwP8xiN5kn2rcd2USEhk/o97boU6FKRBx8S2WJNurFZKhP65CJgPUJfkVoDYo/kddkcDF3S5fnxNx
+        q3ODFsGGQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpJ4P-00031q-HE; Sun, 21 Jul 2019 21:08:37 +0000
+Date:   Sun, 21 Jul 2019 14:08:37 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, aarcange@redhat.com,
+        akpm@linux-foundation.org, christian@brauner.io,
+        davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
+        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
+Message-ID: <20190721210837.GC363@bombadil.infradead.org>
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <20190721081933-mutt-send-email-mst@kernel.org>
+ <20190721131725.GR14271@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190721131725.GR14271@linux.ibm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a typo in KTD2962_MM_MIN_CURR_THRESHOLD_SCALE. 6 and 9 are
-switched in 2962.
+On Sun, Jul 21, 2019 at 06:17:25AM -0700, Paul E. McKenney wrote:
+> Also, the overhead is important.  For example, as far as I know,
+> current RCU gracefully handles close(open(...)) in a tight userspace
+> loop.  But there might be trouble due to tight userspace loops around
+> lighter-weight operations.
 
-Define and use KTD2692_MM_MIN_CURR_THRESHOLD_SCALE instead.
+I thought you believed that RCU was antifragile, in that it would scale
+better as it was used more heavily?
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/leds/leds-ktd2692.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/leds/leds-ktd2692.c b/drivers/leds/leds-ktd2692.c
-index 45296aaca9da..44db748c570e 100644
---- a/drivers/leds/leds-ktd2692.c
-+++ b/drivers/leds/leds-ktd2692.c
-@@ -22,7 +22,7 @@
- /* Value related the movie mode */
- #define KTD2692_MOVIE_MODE_CURRENT_LEVELS	16
- #define KTD2692_MM_TO_FL_RATIO(x)		((x) / 3)
--#define KTD2962_MM_MIN_CURR_THRESHOLD_SCALE	8
-+#define KTD2692_MM_MIN_CURR_THRESHOLD_SCALE	8
- 
- /* Value related the flash mode */
- #define KTD2692_FLASH_MODE_TIMEOUT_LEVELS	8
-@@ -253,7 +253,7 @@ static void ktd2692_setup(struct ktd2692_context *led)
- 	ktd2692_expresswire_reset(led);
- 	gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
- 
--	ktd2692_expresswire_write(led, (KTD2962_MM_MIN_CURR_THRESHOLD_SCALE - 1)
-+	ktd2692_expresswire_write(led, (KTD2692_MM_MIN_CURR_THRESHOLD_SCALE - 1)
- 				 | KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE);
- 	ktd2692_expresswire_write(led, KTD2692_FLASH_MODE_CURR_PERCENT(45)
- 				 | KTD2692_REG_FLASH_CURRENT_BASE);
--- 
-2.20.1
-
+Would it make sense to have call_rcu() check to see if there are many
+outstanding requests on this CPU and if so process them before returning?
+That would ensure that frequent callers usually ended up doing their
+own processing.
