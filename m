@@ -2,138 +2,76 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3E4C76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B98C76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A412084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=out.zamailgate.com header.i=@out.zamailgate.com header.b="Cd32LO9L";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bitlabs.co.za header.i=@bitlabs.co.za header.b="COqRMtcO"
+	by mail.kernel.org (Postfix) with ESMTP id C08A52084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 12:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfGUMxo (ORCPT
+        id S1726480AbfGUM4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 08:53:44 -0400
-Received: from de-outgoing-5-3.antispam.co.za ([144.76.180.170]:40931 "EHLO
-        de-outgoing-5-3.antispam.co.za" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726290AbfGUMxo (ORCPT
+        Sun, 21 Jul 2019 08:56:11 -0400
+Received: from smtp11.smtpout.orange.fr ([80.12.242.133]:45440 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfGUM4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 08:53:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=out.zamailgate.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:reply-to:sender:bcc
-        :content-type; bh=buBYYi396xcSaJT/XDuQShpgTr3LN2/3uNKENHO08Sw=; b=Cd32LO9LFWy
-        GyLPDeehTKcjqjZrrYhfJyypggveIMxfac7l9/QevxoSw8YP7071PQ1Cq0d3DMSWTdG0Tel0Rc76j
-        djr+6LArSpoaxnWwkxE5zVE5gZp1CYUOpzSiFXJAzmr0kdrIDa3ubh2JpCmR/7bb572RT2710479q
-        CfdOlc=;
-Received: from cp46-jhb.za-dns.com ([164.160.91.39])
-        by server5.antispam.co.za with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <hm@bitlabs.co.za>)
-        id 1hpBLR-00081Y-Cj; Sun, 21 Jul 2019 14:53:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=bitlabs.co.za; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=buBYYi396xcSaJT/XDuQShpgTr3LN2/3uNKENHO08Sw=; b=COqRMtcOO64PFkXehzUhI/TtRd
-        rued0P6zRKM/0VfnD2pNXiym94MDdcDtlvUnE1Wy+nJCNgipmYGfFw8tMK5+E4JCtVQCCMuvXZ/l8
-        UtlJ0roqTFWqObhY0XtFP3VoUFgGp4tYOYMv6SRwBzb2xhEr4nk+FLXmcIxOhHhdDU0ChZoQqwoPl
-        sru/wf+jQTHtywYEDE1fC3xeIYXGPk5DvbGURr2zc9a+2+3FN2iCCcucfmVAGNeP1DCS1aycPIQ1X
-        eDAoVm4om+05XOPU41xfxfnJaWsz/bx3OJTRmivZa4rgDYu/Ao+z1+Wd2ieN3pww+WE12zhxEWheh
-        lbtN6Hlw==;
-Received: from [45.56.148.82] (port=49478 helo=localhost.localdomain)
-        by cp46-jhb.za-dns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <hm@bitlabs.co.za>)
-        id 1hpBLN-0006Fx-Me; Sun, 21 Jul 2019 14:53:38 +0200
-From:   Hennie Muller <hm@bitlabs.co.za>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hennie Muller <hm@bitlabs.co.za>
-Subject: [PATCH 2/2] [PATCH] gpio: Explicitly cast from __be16 to unsigned short
-Date:   Sun, 21 Jul 2019 14:52:59 +0200
-Message-Id: <20190721125259.13990-2-hm@bitlabs.co.za>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190721125259.13990-1-hm@bitlabs.co.za>
-References: <20190721125259.13990-1-hm@bitlabs.co.za>
+        Sun, 21 Jul 2019 08:56:11 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d34 with ME
+        id fQw8200044n7eLC03Qw8SE; Sun, 21 Jul 2019 14:56:09 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 21 Jul 2019 14:56:09 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] watchdog: ath79_wdt: fix a typo in the name of a function
+Date:   Sun, 21 Jul 2019 14:55:47 +0200
+Message-Id: <20190721125547.13473-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Get-Message-Sender-Via: cp46-jhb.za-dns.com: authenticated_id: hm@bitlabs.co.za
-X-Authenticated-Sender: cp46-jhb.za-dns.com: hm@bitlabs.co.za
-X-AuthUser: hm@bitlabs.co.za
-X-AuthUsername: 
-X-AuthDomain: @
-X-Originating-IP: 164.160.91.39
-X-SpamExperts-Domain: out.zamailgate.com
-X-SpamExperts-Username: 164.160.91.39
-Authentication-Results: antispam.co.za; auth=pass smtp.auth=164.160.91.39@out.zamailgate.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.04)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0STiPCilqAig5bem4hJMKBmpSDasLI4SayDByyq9LIhVeI9b6VwZ3DDl
- ALWhNv8vnUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3KEwPbPfm46SVmcjKGg/vvJcjg
- psH8EURDj2+nvfVvd2OCDRc7mE6FGcH4GWh0rcZNjb5Y4yyK4cVMCLdgtg9oswvP6sgp/Cgm9hg+
- aKQBPsK+N5nG6G/3iwkegTmD8LVCYCTwuapYHJC4Tg2AsI28yjI08kz8IMGRUJ+wCrJ2Otaz5Syd
- WSH0rH63HiY0gg7ajjPEWb6iCVLQ9/3YJnY0urQECoD7tXk5DWl5CthSgMiL6MkaMp8wmQonzS4S
- mVPetvaF1wvahLF7fn6stPOQnRHmBDjB5dBfrKK6brkLGEEAi1fNjOTGPw1WbSK2CLHT1DazhdmC
- tripa4vix9d+LDxIPj1UU4msT2Odp9D6f/NhwcWHRC6wZYUOUOFbYTyLX+GM6unUtNX7p31A+jrv
- 1Q5FeC4tytch5aOT5kkeKlgYR0M9co5K3vHM563cCqjV49m/kXtHMZLehVy2OJlt2j3dKxLhoxcm
- aInYbR5vlqFdXQ7uGDLB2H+/FeyuwGDE6OzOQntygAhcyxKY3zevmkVBVFOfybSyihFLuHrF0SAp
- OMQJvQ/Ck3iiU+4DQAj3fpzRIzzgHHNpkiopd/EYQtHARfaad0wX0dtjby8vx7/DGwkCl9w2fkLy
- M/2u1DALko3tzxLr3iY05QV039RV5rWDwPdGGQrkGEl3HM9Z0HcgX9iM+ZHcbTmJo7AdaWB4FGzo
- U4UQ7kfOPMXZSDIkcnfnS1sQ2lU1ojhss6m6CisW+oJtyG1C7hFyWbydVxAvfXdD1ehzU0aBKsri
- WnMGTc5E7CxTeb+PXp9vfNeY2TLDrq+TbJF3aeF44wDkHDZ6XPWlFdaGOH191uXjgjQN/Y3lBqKt
- A01vC3FWwyyzKsHpuzhRGeBg3lFh4U2l2IYde0+ahziiMH54cFNN8s3U12MXSLBvmNOl3tg+JoTA
- KpSJvXzobDJyUVEv3v3xOoI2NZ2dffprtS99//gWO/K2VMSiUuvJJoqKJa784HZRC/79o0QwB/Tw
- iLvM1GdDenSZ1BBHnfQWPa3yu2LnNBRhJke3eAlqUrf7Jv4GIZjXCEg=
-X-Report-Abuse-To: spam@server1.antispam.co.za
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_to_be16 returns a __be16 value. This does not break anything
-but does cause sparse to generate unnecessary warnings.
+It is likely that 'ath97_wdt_shutdown()' should be 'ath79_wdt_shutdown()'
 
-Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/gpio/gpio-viperboard.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/watchdog/ath79_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-viperboard.c b/drivers/gpio/gpio-viperboard.c
-index c301c1d56dd2..7ff80d18bb70 100644
---- a/drivers/gpio/gpio-viperboard.c
-+++ b/drivers/gpio/gpio-viperboard.c
-@@ -258,8 +258,8 @@ static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned int offset,
- 	int ret;
+diff --git a/drivers/watchdog/ath79_wdt.c b/drivers/watchdog/ath79_wdt.c
+index 02234c254b10..436cdb4f0392 100644
+--- a/drivers/watchdog/ath79_wdt.c
++++ b/drivers/watchdog/ath79_wdt.c
+@@ -306,7 +306,7 @@ static int ath79_wdt_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 	gbmsg->cmd = VPRBRD_GPIOB_CMD_SETDIR;
--	gbmsg->val = cpu_to_be16(dir << offset);
--	gbmsg->mask = cpu_to_be16(0x0001 << offset);
-+	gbmsg->val = (__force u16)cpu_to_be16(dir << offset);
-+	gbmsg->mask = (__force u16)cpu_to_be16(0x0001 << offset);
- 
- 	ret = usb_control_msg(vb->usb_dev, usb_sndctrlpipe(vb->usb_dev, 0),
- 		VPRBRD_USB_REQUEST_GPIOB, VPRBRD_USB_TYPE_OUT, 0x0000,
-@@ -321,8 +321,8 @@ static void vprbrd_gpiob_set(struct gpio_chip *chip,
- 		mutex_lock(&vb->lock);
- 
- 		gbmsg->cmd = VPRBRD_GPIOB_CMD_SETVAL;
--		gbmsg->val = cpu_to_be16(value << offset);
--		gbmsg->mask = cpu_to_be16(0x0001 << offset);
-+		gbmsg->val = (__force u16)cpu_to_be16(value << offset);
-+		gbmsg->mask = (__force u16)cpu_to_be16(0x0001 << offset);
- 
- 		ret = usb_control_msg(vb->usb_dev,
- 			usb_sndctrlpipe(vb->usb_dev, 0),
+-static void ath97_wdt_shutdown(struct platform_device *pdev)
++static void ath79_wdt_shutdown(struct platform_device *pdev)
+ {
+ 	ath79_wdt_disable();
+ }
+@@ -322,7 +322,7 @@ MODULE_DEVICE_TABLE(of, ath79_wdt_match);
+ static struct platform_driver ath79_wdt_driver = {
+ 	.probe		= ath79_wdt_probe,
+ 	.remove		= ath79_wdt_remove,
+-	.shutdown	= ath97_wdt_shutdown,
++	.shutdown	= ath79_wdt_shutdown,
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.of_match_table = of_match_ptr(ath79_wdt_match),
 -- 
-2.22.0
+2.20.1
 
