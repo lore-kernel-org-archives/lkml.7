@@ -2,60 +2,79 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54010C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 19:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB129C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 19:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29291206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 19:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B408C206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 19:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfGUTEs (ORCPT
+        id S1727482AbfGUTEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 15:04:48 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49479 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfGUTEs (ORCPT
+        Sun, 21 Jul 2019 15:04:53 -0400
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:57247 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbfGUTEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 15:04:48 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 3B47880385; Sun, 21 Jul 2019 21:04:35 +0200 (CEST)
-Date:   Sun, 21 Jul 2019 21:03:35 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     felipe.balbi@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, rogerq@ti.com,
-        linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com,
-        nm@ti.com, sureshp@cadence.com, jpawar@cadence.com,
-        kurahul@cadence.com, aniljoy@cadence.com
-Subject: Re: [PATCH v10 0/6] Introduced new Cadence USBSS DRD Driver.
-Message-ID: <20190721190335.GA19831@xo-6d-61-c0.localdomain>
-References: <1563733939-21214-1-git-send-email-pawell@cadence.com>
+        Sun, 21 Jul 2019 15:04:53 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d45 with ME
+        id fX4n2000F4n7eLC03X4oXd; Sun, 21 Jul 2019 21:04:48 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 21 Jul 2019 21:04:48 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     rmfrfs@gmail.com, mchehab@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] media: ov2680: fix a typo in a function name
+Date:   Sun, 21 Jul 2019 21:04:23 +0200
+Message-Id: <20190721190423.9534-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563733939-21214-1-git-send-email-pawell@cadence.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+All functions in this file starts with 'ov2680_', except ov2860_parse_dt().
 
-> This patch introduce new Cadence USBSS DRD driver to linux kernel.
-> 
-> The Cadence USBSS DRD Controller is a highly configurable IP Core which
-> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
-> Host Only (XHCI)configurations.
+This is likely a typo.
+rename it to 'ov2680_parse_dt()' (6 and 8)
 
-I see you are using debugfs to select between DRD, peripheral-onlyh and XHCI... 
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/media/i2c/ov2680.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Is that good idea?
+diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
+index b10bcfabaeeb..c59c9e51c380 100644
+--- a/drivers/media/i2c/ov2680.c
++++ b/drivers/media/i2c/ov2680.c
+@@ -1023,7 +1023,7 @@ static int ov2680_check_id(struct ov2680_dev *sensor)
+ 	return 0;
+ }
+ 
+-static int ov2860_parse_dt(struct ov2680_dev *sensor)
++static int ov2680_parse_dt(struct ov2680_dev *sensor)
+ {
+ 	struct device *dev = ov2680_to_dev(sensor);
+ 	int ret;
+@@ -1064,7 +1064,7 @@ static int ov2680_probe(struct i2c_client *client)
+ 
+ 	sensor->i2c_client = client;
+ 
+-	ret = ov2860_parse_dt(sensor);
++	ret = ov2680_parse_dt(sensor);
+ 	if (ret < 0)
+ 		return -EINVAL;
+ 
+-- 
+2.20.1
 
-This is at least 3rd driver needing that capability, and debugfs does not
-sound like a good match.
-
-									Pavel
