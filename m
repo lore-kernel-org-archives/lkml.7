@@ -2,188 +2,148 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEEBC76196
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C989AC76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9481E21721
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928D220644
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4IyTJvE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hp2HAxF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfGUVQn (ORCPT
+        id S1726666AbfGUV2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:16:43 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36459 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfGUVQn (ORCPT
+        Sun, 21 Jul 2019 17:28:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37400 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfGUV2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:16:43 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i21so35547996ljj.3;
-        Sun, 21 Jul 2019 14:16:40 -0700 (PDT)
+        Sun, 21 Jul 2019 17:28:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so16372661pfa.4
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 14:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3txf9Lvt0i2AtQo17oHOJUAM62u+WqQuxF6kiDtoHLY=;
-        b=n4IyTJvEM7ucvxZSTKG88V0fo38OSIkeJnuHUKIgHr+uQIvh0pMSuyEnW7px0/h0Oq
-         8wKr3pogMi6S59B5zk+MhOgaGAyAN+ruRqiQCVPz1tg84p3cKKQFDnszPhSEWW5K6WIh
-         7WZ+FpHIM4XYAl98qlcih64/xG55mdgRQ8Z7zOEihzRmOxC95X2m966IyLOPZaNcrShn
-         5sEGJjavZy5hSm7wO6Y/WV3X/Oy70f3NyVBN4/YeyY9lnp/PBamI8qmIn7YOmPKy9guV
-         GusG3H6pXFcuTb0+JIr4TEYIsrTkjBBC9VEv0cvqz8WJ5l77XOxR9imwj4oSrLzalX9R
-         74aA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mwJM3c0gaWg0zGSILw2AF3ai5zXNRsZUALz5h/E3eZ0=;
+        b=Hp2HAxF0bbaDK0XwTA65uLk++76frJkdHY4Fn55wcJleF5X8JA9HT0r4kCuHVJk1ig
+         LD44q1GFEfRlVMY77yiGyNgWdzwowz+qUAxFN0Qjv95rpiq8zmLRtlvFeH6pnGLHaYKd
+         1rj71SV1VmCjnvAGR98srmYNlI3FSP7b7rf3QCNyKocbOt3fTtUnLk+YREkULc3K9zCe
+         J5VayiGgJbGb5k0tJPbtBqgTeGOvMuxNS2oEIQoqXY46VHzn1kRMjI83cQUyB7KumNXF
+         gSqLdkcsjUTfUb9oWzCH7P+WjpNTZkw237si2YHaptG0il2DQfxFU+hcts3HyP+WXhZ6
+         QnYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3txf9Lvt0i2AtQo17oHOJUAM62u+WqQuxF6kiDtoHLY=;
-        b=VFkJ27Fu6gljy/E9bO2lMEaaxzcvgAjQrKQJX/pzCwhqL3i1WHakte1xcUZdb0rEjH
-         ldiHm4JFzOqX2lwJSkok3kiDUacN9G9n9+oh5Os+EBacVBZ/162kroG1H8BEJ6wwJkRb
-         eAYTwhfo2hYs27iWRfZwcMPXsXHwciBAPdCQLbdV3GDJV/xCiX5S5OPYxFvBL/QvV+uk
-         PMdrw6qAHDE5bQK3fdWoUyT2o/bGuv3v6wkUYfR57U/fYhDnUbXj/OUvAPbNWJz6WJwk
-         9g3hMYbn9XKdOz5W+P/CGhf+mXNefPp2LsGJjdlKidBsrUzNWg4fS/KT9X/mrFl4UyIR
-         +iow==
-X-Gm-Message-State: APjAAAVudLYvtIpcxS/HYoP/x3T77dnYLLIG75y5H7wbmRciDxT6wJlg
-        4LkphZsklgIZP1+/h1zNPM/RVhnA
-X-Google-Smtp-Source: APXvYqzHAEfh8Be1M4mR4Grt8lD41aHIlCWfGhYJYzBgxbGe3e/x+FuLRT/88frDBID33WGch1SPLA==
-X-Received: by 2002:a2e:8ecb:: with SMTP id e11mr7378502ljl.218.1563743799834;
-        Sun, 21 Jul 2019 14:16:39 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id y5sm7163581ljj.5.2019.07.21.14.16.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 14:16:39 -0700 (PDT)
-Subject: Re: [PATCH V6 09/21] clk: tegra: clk-super: Fix to enable PLLP
- branches to CPU
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-10-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0c86cd7f-81b5-40c5-6f1e-796e8f13b522@gmail.com>
-Date:   Mon, 22 Jul 2019 00:16:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=mwJM3c0gaWg0zGSILw2AF3ai5zXNRsZUALz5h/E3eZ0=;
+        b=AtR2/+MfeUq1hCXR0M80yLSsBIiS4WUNL4LpcC6TcgzHHTmTC4+R/lSSTX8nMDiCfW
+         xkpMjdGxqWexTArlEMnI0X79pxHOqL51hIHnOXz8reTMstPNUgnxT/+fsQZCN5MiKk1k
+         psTKcxaHmfKAgmwfRP9DLc2Qhbjm9DbU1QLAr+qumEMuFjNLktx28YF5e0mfLvBx2WGs
+         xO9kBeL/NZbEI2IGYu8xaICwqFHTOCZVzOheObCl/QvvBhT4N0asHUjyXg/5PFtQ+dOF
+         ShFoMGIGQS/riGn6l+fHXmOoGv6/vLeOhaN4AmtOVqsbJrJEY7NhXIjrKPNlNTCB4mj3
+         PDPQ==
+X-Gm-Message-State: APjAAAXPyjjoDYGIjYspTrQcPsreeEsqtWaSfeI06G5pVf9oy6Kxbco/
+        CWoSSIPrlFVKxT0fdDroMz8=
+X-Google-Smtp-Source: APXvYqy7df/bHQj+/KeVJZzbxsfYyySceINjhMVfFUTtbM/06sbquVq5FFbQbeORpi0dW1kqxsyjYg==
+X-Received: by 2002:a63:5f95:: with SMTP id t143mr8266157pgb.304.1563744511027;
+        Sun, 21 Jul 2019 14:28:31 -0700 (PDT)
+Received: from localhost.localdomain ([2601:640:105:2ef8:a909:5e8d:6363:7009])
+        by smtp.gmail.com with ESMTPSA id t9sm37970510pji.18.2019.07.21.14.28.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 21 Jul 2019 14:28:30 -0700 (PDT)
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Yury Norov <yury.norov@gmail.com>, Yury Norov <ynorov@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH v3 0/7] lib: rework bitmap_parse
+Date:   Sun, 21 Jul 2019 14:27:46 -0700
+Message-Id: <20190721212753.3287-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1563738060-30213-10-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.07.2019 22:40, Sowjanya Komatineni пишет:
-> This patch has a fix to enable PLLP branches to CPU before changing
-> the CPU clusters clock source to PLLP for Gen5 Super clock.
-> 
-> During system suspend entry and exit, CPU source will be switched
-> to PLLP and this needs PLLP branches to be enabled to CPU prior to
-> the switch.
-> 
-> On system resume, warmboot code enables PLLP branches to CPU and
-> powers up the CPU with PLLP clock source.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-super.c            | 11 +++++++++++
->  drivers/clk/tegra/clk-tegra-super-gen4.c |  4 ++--
->  drivers/clk/tegra/clk.h                  |  4 ++++
->  3 files changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
-> index 39ef31b46df5..d73c587e4853 100644
-> --- a/drivers/clk/tegra/clk-super.c
-> +++ b/drivers/clk/tegra/clk-super.c
-> @@ -28,6 +28,9 @@
->  #define super_state_to_src_shift(m, s) ((m->width * s))
->  #define super_state_to_src_mask(m) (((1 << m->width) - 1))
->  
-> +#define CCLK_SRC_PLLP_OUT0 4
-> +#define CCLK_SRC_PLLP_OUT4 5
-> +
->  static u8 clk_super_get_parent(struct clk_hw *hw)
->  {
->  	struct tegra_clk_super_mux *mux = to_clk_super_mux(hw);
-> @@ -97,6 +100,14 @@ static int clk_super_set_parent(struct clk_hw *hw, u8 index)
->  		if (index == mux->div2_index)
->  			index = mux->pllx_index;
->  	}
-> +
-> +	/*
-> +	 * Enable PLLP branches to CPU before selecting PLLP source
-> +	 */
-> +	if ((mux->flags & TEGRA_CPU_CLK) &&
-> +	    ((index == CCLK_SRC_PLLP_OUT0) || (index == CCLK_SRC_PLLP_OUT4)))
-> +		tegra_clk_set_pllp_out_cpu(true);
+From Yury Norov <ynorov@marvell.com>
 
-Should somewhere here be tegra_clk_set_pllp_out_cpu(false) when
-switching from PLLP?
+On top of next-20190717.
 
->  	val &= ~((super_state_to_src_mask(mux)) << shift);
->  	val |= (index & (super_state_to_src_mask(mux))) << shift;
->  
-> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> index cdfe7c9697e1..cd208d0eca2a 100644
-> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> @@ -180,7 +180,7 @@ static void __init tegra_super_clk_init(void __iomem *clk_base,
->  					gen_info->num_cclk_g_parents,
->  					CLK_SET_RATE_PARENT,
->  					clk_base + CCLKG_BURST_POLICY,
-> -					0, 4, 8, 0, NULL);
-> +					TEGRA_CPU_CLK, 4, 8, 0, NULL);
->  		} else {
->  			clk = tegra_clk_register_super_mux("cclk_g",
->  					gen_info->cclk_g_parents,
-> @@ -201,7 +201,7 @@ static void __init tegra_super_clk_init(void __iomem *clk_base,
->  					gen_info->num_cclk_lp_parents,
->  					CLK_SET_RATE_PARENT,
->  					clk_base + CCLKLP_BURST_POLICY,
-> -					0, 4, 8, 0, NULL);
-> +					TEGRA_CPU_CLK, 4, 8, 0, NULL);
->  		} else {
->  			clk = tegra_clk_register_super_mux("cclk_lp",
->  					gen_info->cclk_lp_parents,
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index ac6de3a0b91f..c357b49e49b0 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -694,6 +694,9 @@ struct clk *tegra_clk_register_periph_data(void __iomem *clk_base,
->   * Flags:
->   * TEGRA_DIVIDER_2 - LP cluster has additional divider. This flag indicates
->   *     that this is LP cluster clock.
-> + * TEGRA_CPU_CLK - This flag indicates this is CPU cluster clock. To use PLLP
-> + * for CPU clock source, need to enable PLLP branches to CPU by setting the
-> + * additional bit PLLP_OUT_CPU for gen5 super clock.
->   */
->  struct tegra_clk_super_mux {
->  	struct clk_hw	hw;
-> @@ -710,6 +713,7 @@ struct tegra_clk_super_mux {
->  #define to_clk_super_mux(_hw) container_of(_hw, struct tegra_clk_super_mux, hw)
->  
->  #define TEGRA_DIVIDER_2 BIT(0)
-> +#define TEGRA_CPU_CLK	BIT(1)
+Similarly to recently revisited bitmap_parselist() [1],
+bitmap_parse() is ineffective and overcomplicated.  This
+series reworks it, aligns its interface with bitmap_parselist()
+and makes usage simpler.
 
-I'd name this TEGRA210_CPU_CLK for clarity.
+The series also adds a test for the function and fixes usage of it
+in cpumask_parse() according to new design - drops the calculating
+of length of an input string.
 
->  extern const struct clk_ops tegra_clk_super_ops;
->  struct clk *tegra_clk_register_super_mux(const char *name,
-> 
+bitmap_parse() takes the array of numbers to be put into the map in
+the BE order which is reversed to the natural LE order for bitmaps.
+For example, to construct bitmap containing a bit on the position 42,
+we have to put a line '400,0'. Current implementation reads chunk
+one by one from the beginning ('400' before '0') and makes bitmap
+shift after each successful parse. It makes the complexity of the
+whole process as O(n^2). We can do it in reverse direction ('0'
+before '400') and avoid shifting, but it requires reverse parsing
+helpers.
 
-Will be better to move the tegra_clk_set_pllp_out_cpu() definition into
-this patch, otherwise this looks inconsistent for reviewer.
+Tested on arm64 and BE mips.
+
+v1: https://lkml.org/lkml/2019/4/27/597
+v2:
+ - strnchrnul() signature and description changed, ifdeffery and
+   exporting removed;
+ - test split for better demonstration of before/after changes;
+ - minor naming and formatting issues fixed.
+v3:
+  - fix bitmap_clear() misuse.
+  - opencode in_str() helper
+  - simplify while() in bitmap_parse()
+
+
+Yury Norov (7):
+  lib/string: add strnchrnul()
+  bitops: more BITS_TO_* macros
+  lib: add test for bitmap_parse()
+  lib: make bitmap_parse_user a wrapper on bitmap_parse
+  lib: rework bitmap_parse()
+  lib: new testcases for bitmap_parse{_user}
+  cpumask: don't calculate length of the input string
+
+ include/linux/bitmap.h       |   8 +-
+ include/linux/bitops.h       |   5 +-
+ include/linux/cpumask.h      |   4 +-
+ include/linux/string.h       |   1 +
+ lib/bitmap.c                 | 196 +++++++++++++++++------------------
+ lib/string.c                 |  17 +++
+ lib/test_bitmap.c            | 102 +++++++++++++++++-
+ tools/include/linux/bitops.h |   9 +-
+ 8 files changed, 225 insertions(+), 117 deletions(-)
+
+-- 
+2.20.1
+
