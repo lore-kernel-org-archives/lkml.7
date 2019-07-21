@@ -2,84 +2,85 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97449C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC9C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8DA2083B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D20620838
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 23:08:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LXq+BCz0";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LXq+BCz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfGUXA6 (ORCPT
+        id S1726516AbfGUXIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 19:00:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57806 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfGUXA5 (ORCPT
+        Sun, 21 Jul 2019 19:08:39 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57228 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfGUXIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 19:00:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 7E59628A24F
-Message-ID: <22d7eca4ad8aa2e73933c4f83c92221ce6e0945a.camel@collabora.com>
-Subject: Re: [PATCH] Enable backlight when trigger is activated
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Pavel Machek <pavel@ucw.cz>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Date:   Sun, 21 Jul 2019 20:00:44 -0300
-In-Reply-To: <20190718190849.GA11409@amd>
-References: <20190718190849.GA11409@amd>
-Organization: Collabora
+        Sun, 21 Jul 2019 19:08:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B939E8EE105;
+        Sun, 21 Jul 2019 16:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563750517;
+        bh=mpQW7FGrJB7rmR1nmV6m3V1GTNaPj3kOjzaz4eZp9Ik=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LXq+BCz0OH1gGgj+Rhft0XdRqxEfX2FaeFnT1pHQ2bf7CxwcU4cr2eL8EXJiWNXLA
+         kbNsNOw9XAedh+luDytBF6AuIrpu9WPPsADVpNAtGET5UCEVHyJIL5jvtGeM+GL7Nk
+         eua2uxWau1zmvY9tZr5Va38lNqgpX3Ayk9RdcNbE=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qOBa1RhLoC6V; Sun, 21 Jul 2019 16:08:37 -0700 (PDT)
+Received: from [192.168.12.43] (unknown [153.171.18.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id F368E8EE104;
+        Sun, 21 Jul 2019 16:08:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563750517;
+        bh=mpQW7FGrJB7rmR1nmV6m3V1GTNaPj3kOjzaz4eZp9Ik=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LXq+BCz0OH1gGgj+Rhft0XdRqxEfX2FaeFnT1pHQ2bf7CxwcU4cr2eL8EXJiWNXLA
+         kbNsNOw9XAedh+luDytBF6AuIrpu9WPPsADVpNAtGET5UCEVHyJIL5jvtGeM+GL7Nk
+         eua2uxWau1zmvY9tZr5Va38lNqgpX3Ayk9RdcNbE=
+Message-ID: <1563750513.2898.4.camel@HansenPartnership.com>
+Subject: Re: [PATCH] unaligned: delete 1-byte accessors
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        axboe@kernel.dk, kvalo@codeaurora.org, john.johansen@canonical.com,
+        linux-arch@vger.kernel.org
+Date:   Mon, 22 Jul 2019 08:08:33 +0900
+In-Reply-To: <20190721215253.GA18177@avx2>
+References: <20190721215253.GA18177@avx2>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Mon, 2019-07-22 at 00:52 +0300, Alexey Dobriyan wrote:
+> Each and every 1-byte access is aligned!
 
-The commit log is lacking the proper "leds: triggers: ".
+The design idea of this is for parsing descriptors.  We simply chunk up
+the describing structure using get_unaligned for everything.  The
+reason is because a lot of these structures come with reserved areas
+which we may make use of later.  If we're using get_unaligned for
+everything we can simply change a u8 to a u16 in the structure
+absorbing the reserved padding.  With your change now I'd have to chase
+down every byte access and replace it with get_unaligned instead of
+simply changing the structure.
 
-Also...
+What's the significant advantage of this change that compensates for
+the problems the above causes?
 
-On Thu, 2019-07-18 at 21:08 +0200, Pavel Machek wrote:
-> Configuring backlight trigger from dts results in backlight off during
-> boot. Machine looks dead upon boot, which is not good.
-> 
-> Fix that by enabling LED on trigger activation.
-> 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> diff --git a/drivers/leds/trigger/ledtrig-backlight.c b/drivers/leds/trigger/ledtrig-backlight.c
-> index 487577d..6e6bc78 100644
-> --- a/drivers/leds/trigger/ledtrig-backlight.c
-> +++ b/drivers/leds/trigger/ledtrig-backlight.c
-> @@ -114,6 +114,8 @@ static int bl_trig_activate(struct led_classdev *led)
->  	n->old_status = UNBLANK;
->  	n->notifier.notifier_call = fb_notifier_callback;
->  
-> +	led_set_brightness(led, LED_ON);
-> +
-
-This looks fishy.
-
-Maybe you should use a default-state = "keep" instead? (and you'll have
-to support it in the LED driver).
-
-That'll give you proper "don't touch the LED if it was turned on" behavior,
-which is what you seem to want.
-
-Regards,
-Eze
+James
 
