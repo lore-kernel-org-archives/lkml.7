@@ -2,60 +2,61 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C989AC76191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8772C76196
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928D220644
+	by mail.kernel.org (Postfix) with ESMTP id BF3E621721
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 21:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hp2HAxF0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsdNsgdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfGUV2c (ORCPT
+        id S1726852AbfGUV2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 17:28:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37400 "EHLO
+        Sun, 21 Jul 2019 17:28:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43439 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfGUV2b (ORCPT
+        with ESMTP id S1726216AbfGUV2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 17:28:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so16372661pfa.4
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 14:28:31 -0700 (PDT)
+        Sun, 21 Jul 2019 17:28:33 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so16372277pfg.10
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 14:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mwJM3c0gaWg0zGSILw2AF3ai5zXNRsZUALz5h/E3eZ0=;
-        b=Hp2HAxF0bbaDK0XwTA65uLk++76frJkdHY4Fn55wcJleF5X8JA9HT0r4kCuHVJk1ig
-         LD44q1GFEfRlVMY77yiGyNgWdzwowz+qUAxFN0Qjv95rpiq8zmLRtlvFeH6pnGLHaYKd
-         1rj71SV1VmCjnvAGR98srmYNlI3FSP7b7rf3QCNyKocbOt3fTtUnLk+YREkULc3K9zCe
-         J5VayiGgJbGb5k0tJPbtBqgTeGOvMuxNS2oEIQoqXY46VHzn1kRMjI83cQUyB7KumNXF
-         gSqLdkcsjUTfUb9oWzCH7P+WjpNTZkw237si2YHaptG0il2DQfxFU+hcts3HyP+WXhZ6
-         QnYQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g2Z6q8ck1RIyh1hSmuStD87TyKPTUPv+AqsUwd0PZas=;
+        b=UsdNsgdKUucUE1b5Vo2HibCW9ifgF34ltHi3FJubq3dY3okBQK4kF2wL1LZkTiADXE
+         d8+NGVFRyeCwIBx3vJs3JqMI6x4XAtc3RY1KDGj8kEq9xQhmfcmoSfGn1V4ZMsH26Rue
+         nVk63uE1VPamZJ51xS2IwGWH9I3J3T56ujxoBCcG5dJjlCoiusbkhTrvb9ygvyLokMIv
+         jJbuH/AhVFNF3frQVbsl55FnqPfltm7/XJ4Rx6TUB9YOWDLRUe+2hffzaxK8zna9ezrS
+         N/UQhRF4kuHvmRyFlirI8NvSaUMlxEwSJDRbPvnJdDCWanK/ULBkivy59TarfbwcwW/D
+         H6eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mwJM3c0gaWg0zGSILw2AF3ai5zXNRsZUALz5h/E3eZ0=;
-        b=AtR2/+MfeUq1hCXR0M80yLSsBIiS4WUNL4LpcC6TcgzHHTmTC4+R/lSSTX8nMDiCfW
-         xkpMjdGxqWexTArlEMnI0X79pxHOqL51hIHnOXz8reTMstPNUgnxT/+fsQZCN5MiKk1k
-         psTKcxaHmfKAgmwfRP9DLc2Qhbjm9DbU1QLAr+qumEMuFjNLktx28YF5e0mfLvBx2WGs
-         xO9kBeL/NZbEI2IGYu8xaICwqFHTOCZVzOheObCl/QvvBhT4N0asHUjyXg/5PFtQ+dOF
-         ShFoMGIGQS/riGn6l+fHXmOoGv6/vLeOhaN4AmtOVqsbJrJEY7NhXIjrKPNlNTCB4mj3
-         PDPQ==
-X-Gm-Message-State: APjAAAXPyjjoDYGIjYspTrQcPsreeEsqtWaSfeI06G5pVf9oy6Kxbco/
-        CWoSSIPrlFVKxT0fdDroMz8=
-X-Google-Smtp-Source: APXvYqy7df/bHQj+/KeVJZzbxsfYyySceINjhMVfFUTtbM/06sbquVq5FFbQbeORpi0dW1kqxsyjYg==
-X-Received: by 2002:a63:5f95:: with SMTP id t143mr8266157pgb.304.1563744511027;
-        Sun, 21 Jul 2019 14:28:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g2Z6q8ck1RIyh1hSmuStD87TyKPTUPv+AqsUwd0PZas=;
+        b=jzRrIWXrT+ikaO9VsRNOG3caj8RI5MAbVIWkPw9PDvGTbLfyAGovAdwLRgvXRKKneS
+         y/y0MFwNTdu6atJZdl9dITD1vHCzIwz5W1gt7Bxo54ZMsLk+hKkWB/BMWaP3yHoZKfPV
+         D4qCpgYkaNFchB3yzaTXbiPtVDWZsYugEyoga5blQYDJN8ebXh4534hDxIoDJRFKrllk
+         hHQlPc5Kra3g+3Qedxc7jr3zWIzLKJih79xuhrGGZaLpz18sxfMSk3U+cc61uEksjwbD
+         3oEp6XNYj1QnOahKnUQk6Bkn5ymlWu9isXy+RHQlg9pKMGfTFBllQxts8s7mGbzaM2M7
+         iXTQ==
+X-Gm-Message-State: APjAAAUIhejL24ffDoOWt0rdnXM/Hgv0MwVDt4I6wZ/6RECm5sKq8uXM
+        H7TrR8qqPyQRECQ1MKBB72c=
+X-Google-Smtp-Source: APXvYqx8mp+hft3QwW7/KNHUelenEkP0bS0mYY83EGIt50wQtccAnEXlnS+Jff26wsdogvQ0mxWeug==
+X-Received: by 2002:a65:464d:: with SMTP id k13mr61606941pgr.99.1563744512754;
+        Sun, 21 Jul 2019 14:28:32 -0700 (PDT)
 Received: from localhost.localdomain ([2601:640:105:2ef8:a909:5e8d:6363:7009])
-        by smtp.gmail.com with ESMTPSA id t9sm37970510pji.18.2019.07.21.14.28.29
+        by smtp.gmail.com with ESMTPSA id t9sm37970510pji.18.2019.07.21.14.28.31
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 14:28:30 -0700 (PDT)
+        Sun, 21 Jul 2019 14:28:32 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -77,10 +78,12 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
 Cc:     Yury Norov <yury.norov@gmail.com>, Yury Norov <ynorov@marvell.com>,
         Jens Axboe <axboe@kernel.dk>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH v3 0/7] lib: rework bitmap_parse
-Date:   Sun, 21 Jul 2019 14:27:46 -0700
-Message-Id: <20190721212753.3287-1-yury.norov@gmail.com>
+Subject: [PATCH 1/7] lib/string: add strnchrnul()
+Date:   Sun, 21 Jul 2019 14:27:47 -0700
+Message-Id: <20190721212753.3287-2-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190721212753.3287-1-yury.norov@gmail.com>
+References: <20190721212753.3287-1-yury.norov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,60 +93,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From Yury Norov <ynorov@marvell.com>
 
-On top of next-20190717.
+New function works like strchrnul() with a length limited strings.
 
-Similarly to recently revisited bitmap_parselist() [1],
-bitmap_parse() is ineffective and overcomplicated.  This
-series reworks it, aligns its interface with bitmap_parselist()
-and makes usage simpler.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Yury Norov <ynorov@marvell.com>
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+---
+ include/linux/string.h |  1 +
+ lib/string.c           | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
-The series also adds a test for the function and fixes usage of it
-in cpumask_parse() according to new design - drops the calculating
-of length of an input string.
-
-bitmap_parse() takes the array of numbers to be put into the map in
-the BE order which is reversed to the natural LE order for bitmaps.
-For example, to construct bitmap containing a bit on the position 42,
-we have to put a line '400,0'. Current implementation reads chunk
-one by one from the beginning ('400' before '0') and makes bitmap
-shift after each successful parse. It makes the complexity of the
-whole process as O(n^2). We can do it in reverse direction ('0'
-before '400') and avoid shifting, but it requires reverse parsing
-helpers.
-
-Tested on arm64 and BE mips.
-
-v1: https://lkml.org/lkml/2019/4/27/597
-v2:
- - strnchrnul() signature and description changed, ifdeffery and
-   exporting removed;
- - test split for better demonstration of before/after changes;
- - minor naming and formatting issues fixed.
-v3:
-  - fix bitmap_clear() misuse.
-  - opencode in_str() helper
-  - simplify while() in bitmap_parse()
-
-
-Yury Norov (7):
-  lib/string: add strnchrnul()
-  bitops: more BITS_TO_* macros
-  lib: add test for bitmap_parse()
-  lib: make bitmap_parse_user a wrapper on bitmap_parse
-  lib: rework bitmap_parse()
-  lib: new testcases for bitmap_parse{_user}
-  cpumask: don't calculate length of the input string
-
- include/linux/bitmap.h       |   8 +-
- include/linux/bitops.h       |   5 +-
- include/linux/cpumask.h      |   4 +-
- include/linux/string.h       |   1 +
- lib/bitmap.c                 | 196 +++++++++++++++++------------------
- lib/string.c                 |  17 +++
- lib/test_bitmap.c            | 102 +++++++++++++++++-
- tools/include/linux/bitops.h |   9 +-
- 8 files changed, 225 insertions(+), 117 deletions(-)
-
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 4deb11f7976bc..ae934d6c50bf5 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -62,6 +62,7 @@ extern char * strchr(const char *,int);
+ #ifndef __HAVE_ARCH_STRCHRNUL
+ extern char * strchrnul(const char *,int);
+ #endif
++extern char * strnchrnul(const char *, size_t, int);
+ #ifndef __HAVE_ARCH_STRNCHR
+ extern char * strnchr(const char *, size_t, int);
+ #endif
+diff --git a/lib/string.c b/lib/string.c
+index 461fb620f85f3..5b5fee266c193 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -432,6 +432,23 @@ char *strchrnul(const char *s, int c)
+ EXPORT_SYMBOL(strchrnul);
+ #endif
+ 
++/**
++ * strnchrnul - Find and return a character in a length limited string,
++ * or end of string
++ * @s: The string to be searched
++ * @count: The number of characters to be searched
++ * @c: The character to search for
++ *
++ * Returns pointer to the first occurrence of 'c' in s. If c is not found,
++ * then return a pointer to the last character of the string.
++ */
++char *strnchrnul(const char *s, size_t count, int c)
++{
++	while (count-- && *s && *s != (char)c)
++		s++;
++	return (char *)s;
++}
++
+ #ifndef __HAVE_ARCH_STRRCHR
+ /**
+  * strrchr - Find the last occurrence of a character in a string
 -- 
 2.20.1
 
