@@ -2,105 +2,69 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBC76196
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDACC76195
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C808920693
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTK9qK/8"
+	by mail.kernel.org (Postfix) with ESMTP id C7B3820693
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 18:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfGUSIV (ORCPT
+        id S1727233AbfGUSJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 14:08:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46424 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfGUSIV (ORCPT
+        Sun, 21 Jul 2019 14:09:40 -0400
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:35600 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfGUSJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 14:08:21 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i8so16514454pgm.13;
-        Sun, 21 Jul 2019 11:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FTXdst5R/SQuzieJLsSNsjPa5PEZl3NiZMobkmxYQpo=;
-        b=TTK9qK/8sWitI8E3pN3YavfH2FqVB/+VQYItc84o0fD/vpZ1OeI2c8c0AWWZhLBkfR
-         bEXAb5KG8cL2vk1SsPpFStibPjEpYFWeIEzSlkL4PQCDm3mDXuaZuASgZDpRySce1/uj
-         8j0v1I+MrFW7tZz0fDRiZDtQLtkKoBwTG2zZV6W2A50fIw7k6caFg64Ut8WzOhK587PD
-         za4dfniHkJZdkWRUilpR+08mlWSsjoijWSqllat/ql6W9CfLJF/DW/9VwROFGk/jfzMf
-         8LMV2FSt4zR5LXXJIZSE8/u1NbFUmRIXPLXteqUj7BC0iwhNG5mCfH2oXw6U8toPMo5b
-         hRbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FTXdst5R/SQuzieJLsSNsjPa5PEZl3NiZMobkmxYQpo=;
-        b=rsUICB8mLcTdcL7lENBo6UWkujoUBhU+EeoZI/AvmJrbkKuQoBUWqWOGaSmlploHa+
-         D66xP3NKW/ncjy0pbuklPxv7W2TS2CsfNn3rSq2OICWawo4qZX1E06NagfwA7eneH93m
-         zGdGYCep1y8f5illLPTET2R2fDmtxTvomJZ3PecQBre0OtXe7zoLkw8eY+IdLrj4jVFp
-         V8JxO4V3qX9wLs92PfUJz69tihzcQfZA7V1CIHoINhOlb1vIYJjKVY/3ANcCN14eeFaI
-         uEQ49xzJ4Ff/yGQhd8SmQYEqMEq8n9mtTS4D092EttdZr48xHT+v2wfxcL1Tm22j6xZb
-         AVdQ==
-X-Gm-Message-State: APjAAAUg6ITS44Z4CsMltwEG8OS2bKntACXNgDTXBspXp12+68JkJmgC
-        tTYupBKotpdlwggxYbzujEVXKHnE
-X-Google-Smtp-Source: APXvYqxKToO74HULDPrAR27wvE/2XIeV/0Bn1VO4CaU+4sIBGxvw1p7b9ZQxXZUdfJFA3s0S9POK3g==
-X-Received: by 2002:a17:90a:228b:: with SMTP id s11mr70837355pjc.23.1563732500738;
-        Sun, 21 Jul 2019 11:08:20 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id m31sm44011625pjb.6.2019.07.21.11.08.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 11:08:20 -0700 (PDT)
-Date:   Sun, 21 Jul 2019 23:38:15 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: ap806: Add NULL check after kcalloc
-Message-ID: <20190721180815.GA12437@hari-Inspiron-1545>
+        Sun, 21 Jul 2019 14:09:39 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d45 with ME
+        id fW9Y2000C4n7eLC03W9YaP; Sun, 21 Jul 2019 20:09:37 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 21 Jul 2019 20:09:37 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     akpm@linux-foundation.org, mhocko@suse.com,
+        rppt@linux.vnet.ibm.com, aryabinin@virtuozzo.com,
+        wei.w.wang@intel.com, cai@lca.pw
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] mm/page_poison: fix a typo in a comment
+Date:   Sun, 21 Jul 2019 20:09:08 +0200
+Message-Id: <20190721180908.6534-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add NULL check  after kcalloc.
+s/posioned/poisoned/
 
-Fix below issue reported by coccicheck
-./drivers/cpufreq/armada-8k-cpufreq.c:138:1-12: alloc with no test,
-possible model on line 151
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/cpufreq/armada-8k-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/page_poison.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/armada-8k-cpufreq.c b/drivers/cpufreq/armada-8k-cpufreq.c
-index 988ebc3..39e34f50 100644
---- a/drivers/cpufreq/armada-8k-cpufreq.c
-+++ b/drivers/cpufreq/armada-8k-cpufreq.c
-@@ -136,6 +136,8 @@ static int __init armada_8k_cpufreq_init(void)
- 
- 	nb_cpus = num_possible_cpus();
- 	freq_tables = kcalloc(nb_cpus, sizeof(*freq_tables), GFP_KERNEL);
-+	if (!freq_tables)
-+		return -ENOMEM;
- 	cpumask_copy(&cpus, cpu_possible_mask);
- 
+diff --git a/mm/page_poison.c b/mm/page_poison.c
+index 21d4f97cb49b..34b9181ee5d1 100644
+--- a/mm/page_poison.c
++++ b/mm/page_poison.c
+@@ -101,7 +101,7 @@ static void unpoison_page(struct page *page)
  	/*
+ 	 * Page poisoning when enabled poisons each and every page
+ 	 * that is freed to buddy. Thus no extra check is done to
+-	 * see if a page was posioned.
++	 * see if a page was poisoned.
+ 	 */
+ 	check_poison_mem(addr, PAGE_SIZE);
+ 	kunmap_atomic(addr);
 -- 
-2.7.4
+2.20.1
 
