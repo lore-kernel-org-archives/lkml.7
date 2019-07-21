@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F58C76195
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CF2C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796FF2085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83AD62085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563708487;
-	bh=7OaZoQffvI2YpxR+acrU66uoo8gedo3taMnG9MmbuY4=;
+	s=default; t=1563708491;
+	bh=UmEYbca/hb3ikcz69IcsIcWMmrjxYzeFu41G04DA84o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMN7NdPdPq2Udaq+4NhSSCGs2IqtchirWuVOaxXi5KbFYNUb2ZrMkr6xl+fiqVJ4R
-	 kPmZDCQ+hQOO+JuKYKDIFcdxedGsCDKk9ikTkEhg0dVK8qEhzwGTdigSPp9tdMEJW5
-	 JsClWY1/APvEsxW89+BdtGvqk84svAKlKr4hT35E=
+	b=kAWyvDWAevXgAlSCXA39jTFb827eV8s207kVHpRcqTjUBQJoR1GWbJCSp6kiGLPAj
+	 PO1qEccCVulNAoq5znERdm01NQilmE87yNQyBnEb1nWrIo61cG1CSmNTC5PAIRY95Y
+	 vtb28qwcSwaIDMiCpJvRh37RrgL+/AGjBHqDtGbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfGUL2G (ORCPT
+        id S1726939AbfGUL2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 07:28:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46992 "EHLO mx1.redhat.com"
+        Sun, 21 Jul 2019 07:28:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47012 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbfGUL2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 07:28:05 -0400
+        id S1726405AbfGUL2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 07:28:09 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C04493082B5F;
-        Sun, 21 Jul 2019 11:28:04 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id B10E33082A24;
+        Sun, 21 Jul 2019 11:28:09 +0000 (UTC)
 Received: from krava.redhat.com (ovpn-204-23.brq.redhat.com [10.40.204.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A27935D9D3;
-        Sun, 21 Jul 2019 11:28:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 512885D9D3;
+        Sun, 21 Jul 2019 11:28:05 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -45,255 +45,251 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 22/79] perf tools: Rename perf_evlist__disable to evlist__disable
-Date:   Sun, 21 Jul 2019 13:24:09 +0200
-Message-Id: <20190721112506.12306-23-jolsa@kernel.org>
+Subject: [PATCH 23/79] libperf: Make libperf.a part of the build
+Date:   Sun, 21 Jul 2019 13:24:10 +0200
+Message-Id: <20190721112506.12306-24-jolsa@kernel.org>
 In-Reply-To: <20190721112506.12306-1-jolsa@kernel.org>
 References: <20190721112506.12306-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sun, 21 Jul 2019 11:28:04 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sun, 21 Jul 2019 11:28:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Renaming perf_evlist__disable to evlist__disable, so we don't
-have a name clash when we add perf_evlist__disable in libperf.
+Adding empty libperf.a under toos/perf/lib and
+linking it with perf.
 
-Link: http://lkml.kernel.org/n/tip-vn0lz359acxl89cq6fm54iox@git.kernel.org
+It can also be built separately with:
+
+  $ cd tools/perf/lib && make
+    CC       core.o
+    LD       libperf-in.o
+    AR       libperf.a
+    LINK     libperf.so
+
+Link: http://lkml.kernel.org/n/tip-lzrlfu3hutepbeqyntjks3za@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/arch/x86/tests/perf-time-to-tsc.c | 2 +-
- tools/perf/builtin-kvm.c                     | 2 +-
- tools/perf/builtin-record.c                  | 2 +-
- tools/perf/builtin-stat.c                    | 2 +-
- tools/perf/builtin-trace.c                   | 4 ++--
- tools/perf/tests/backward-ring-buffer.c      | 2 +-
- tools/perf/tests/bpf.c                       | 2 +-
- tools/perf/tests/code-reading.c              | 2 +-
- tools/perf/tests/keep-tracking.c             | 6 +++---
- tools/perf/tests/sw-clock.c                  | 2 +-
- tools/perf/tests/switch-tracking.c           | 4 ++--
- tools/perf/util/evlist.c                     | 4 ++--
- tools/perf/util/evlist.h                     | 2 +-
- 13 files changed, 18 insertions(+), 18 deletions(-)
+ tools/perf/Makefile.config |  1 +
+ tools/perf/Makefile.perf   | 30 ++++++++--------
+ tools/perf/lib/Build       |  1 +
+ tools/perf/lib/Makefile    | 74 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/lib/core.c      |  0
+ 5 files changed, 92 insertions(+), 14 deletions(-)
+ create mode 100644 tools/perf/lib/Build
+ create mode 100644 tools/perf/lib/Makefile
+ create mode 100644 tools/perf/lib/core.c
 
-diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-index aa5a5c972ce5..8b70e9ee341a 100644
---- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-+++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-@@ -107,7 +107,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
- 	comm2 = "Test COMM 2";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm2, 0, 0, 0));
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 89ac5a1f1550..e4988f49ea79 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -277,6 +277,7 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
++INC_FLAGS += -I$(src-perf)/lib/include
+ INC_FLAGS += -I$(src-perf)/util/include
+ INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
+ INC_FLAGS += -I$(srctree)/tools/include/uapi
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 0fffd2bb6cd9..6e7e7d44ffac 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -224,6 +224,7 @@ LIB_DIR         = $(srctree)/tools/lib/api/
+ TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
+ BPF_DIR         = $(srctree)/tools/lib/bpf/
+ SUBCMD_DIR      = $(srctree)/tools/lib/subcmd/
++LIBPERF_DIR     = $(srctree)/tools/perf/lib/
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		md = &evlist->mmap[i];
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 9207bd49583e..3370eba0d3f3 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -993,7 +993,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 			err = fdarray__poll(fda, 100);
- 	}
+ # Set FEATURE_TESTS to 'all' so all possible feature checkers are executed.
+ # Without this setting the output feature dump file misses some features, for
+@@ -272,6 +273,7 @@ ifneq ($(OUTPUT),)
+   TE_PATH=$(OUTPUT)
+   BPF_PATH=$(OUTPUT)
+   SUBCMD_PATH=$(OUTPUT)
++  LIBPERF_PATH=$(OUTPUT)
+ ifneq ($(subdir),)
+   API_PATH=$(OUTPUT)/../lib/api/
+ else
+@@ -282,6 +284,7 @@ else
+   API_PATH=$(LIB_DIR)
+   BPF_PATH=$(BPF_DIR)
+   SUBCMD_PATH=$(SUBCMD_DIR)
++  LIBPERF_PATH=$(LIBPERF_DIR)
+ endif
  
--	perf_evlist__disable(kvm->evlist);
-+	evlist__disable(kvm->evlist);
+ LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
+@@ -303,6 +306,8 @@ LIBBPF = $(BPF_PATH)libbpf.a
  
- 	if (err == 0) {
- 		sort_result(kvm);
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8e20ead0ddbe..c0962ddfad04 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1605,7 +1605,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		 */
- 		if (done && !disabled && !target__none(&opts->target)) {
- 			trigger_off(&auxtrace_snapshot_trigger);
--			perf_evlist__disable(rec->evlist);
-+			evlist__disable(rec->evlist);
- 			disabled = true;
- 		}
- 	}
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c0e9d94b6dd5..36e66a4f3c57 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -373,7 +373,7 @@ static void disable_counters(void)
- 	 * from counting before reading their constituent counters.
- 	 */
- 	if (!target__none(&target))
--		perf_evlist__disable(evsel_list);
-+		evlist__disable(evsel_list);
- }
+ LIBSUBCMD = $(SUBCMD_PATH)libsubcmd.a
  
- static volatile int workload_exec_errno;
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index b0e840a6906b..0fa6f0530d0f 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3450,7 +3450,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 				goto out_disable;
++LIBPERF = $(LIBPERF_PATH)libperf.a
++
+ # python extension build directories
+ PYTHON_EXTBUILD     := $(OUTPUT)python_ext_build/
+ PYTHON_EXTBUILD_LIB := $(PYTHON_EXTBUILD)lib/
+@@ -348,9 +353,7 @@ endif
  
- 			if (done && !draining) {
--				perf_evlist__disable(evlist);
-+				evlist__disable(evlist);
- 				draining = true;
- 			}
- 		}
-@@ -3476,7 +3476,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- out_disable:
- 	thread__zput(trace->current);
+ export PERL_PATH
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-LIBPERF_A=$(OUTPUT)libperf.a
+-
+-PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
++PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD) $(LIBPERF)
+ ifndef NO_LIBBPF
+   PERFLIBS += $(LIBBPF)
+ endif
+@@ -583,8 +586,6 @@ JEVENTS_IN    := $(OUTPUT)pmu-events/jevents-in.o
  
- 	if (trace->sort_events)
- 		ordered_events__flush(&trace->oe.data, OE_FLUSH__FINAL);
-diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index f4b45702821d..9bdf66139099 100644
---- a/tools/perf/tests/backward-ring-buffer.c
-+++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -70,7 +70,7 @@ static int do_test(struct evlist *evlist, int mmap_pages,
+ PMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
  
- 	evlist__enable(evlist);
- 	testcase();
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-LIBPERF_IN := $(OUTPUT)libperf-in.o
+-
+ export JEVENTS
  
- 	err = count_samples(evlist, sample_count, comm_count);
- 	perf_evlist__munmap(evlist);
-diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 92fed94f4b6c..e16f927f38b6 100644
---- a/tools/perf/tests/bpf.c
-+++ b/tools/perf/tests/bpf.c
-@@ -173,7 +173,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+@@ -601,12 +602,9 @@ $(JEVENTS): $(JEVENTS_IN)
+ $(PMU_EVENTS_IN): $(JEVENTS) FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
  
- 	evlist__enable(evlist);
- 	(*func)();
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-$(LIBPERF_IN): prepare FORCE
+-	$(Q)$(MAKE) $(build)=libperf
+-
+-$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
++$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
+ 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS) \
+-		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBS) -o $@
++		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		union perf_event *event;
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 8d38e001160d..ec4b0bf28270 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -684,7 +684,7 @@ static int do_test_code_reading(bool try_kcore)
+ $(GTK_IN): FORCE
+ 	$(Q)$(MAKE) $(build)=gtk
+@@ -727,9 +725,6 @@ endif
  
- 	do_something();
+ $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-$(LIBPERF_A): $(LIBPERF_IN)
+-	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN) $(LIB_OBJS)
+-
+ LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
  
- 	ret = process_events(machine, evlist, &state);
- 	if (ret < 0)
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index c333b9c765e8..7bfc859971e5 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -112,7 +112,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 	comm = "Test COMM 1";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm, 0, 0, 0));
+ $(LIBTRACEEVENT): FORCE
+@@ -762,6 +757,13 @@ $(LIBBPF)-clean:
+ 	$(call QUIET_CLEAN, libbpf)
+ 	$(Q)$(MAKE) -C $(BPF_DIR) O=$(OUTPUT) clean >/dev/null
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
++$(LIBPERF): FORCE
++	$(Q)$(MAKE) -C $(LIBPERF_DIR) O=$(OUTPUT) $(OUTPUT)libperf.a
++
++$(LIBPERF)-clean:
++	$(call QUIET_CLEAN, libperf)
++	$(Q)$(MAKE) -C $(LIBPERF_DIR) O=$(OUTPUT) clean >/dev/null
++
+ $(LIBSUBCMD): FORCE
+ 	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) $(OUTPUT)libsubcmd.a
  
- 	found = find_comm(evlist, comm);
- 	if (found != 1) {
-@@ -134,7 +134,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 	comm = "Test COMM 2";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm, 0, 0, 0));
+@@ -948,7 +950,7 @@ config-clean:
+ python-clean:
+ 	$(python-clean)
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
- 
- 	found = find_comm(evlist, comm);
- 	if (found != 1) {
-@@ -146,7 +146,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 
- out_err:
- 	if (evlist) {
--		perf_evlist__disable(evlist);
-+		evlist__disable(evlist);
- 		evlist__delete(evlist);
- 	} else {
- 		cpu_map__put(cpus);
-diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 4ab316c04ce7..ba033a6e6c0f 100644
---- a/tools/perf/tests/sw-clock.c
-+++ b/tools/perf/tests/sw-clock.c
-@@ -92,7 +92,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 	for (i = 0; i < NR_LOOPS; i++)
- 		tmp++;
- 
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
- 
- 	md = &evlist->mmap[0];
- 	if (perf_mmap__read_init(md) < 0)
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index ea214313f22b..d5537edb47db 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -528,7 +528,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_err;
- 	}
- 
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
- 
- 	switch_tracking.switch_evsel = switch_evsel;
- 	switch_tracking.cycles_evsel = cycles_evsel;
-@@ -566,7 +566,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 	}
- out:
- 	if (evlist) {
--		perf_evlist__disable(evlist);
-+		evlist__disable(evlist);
- 		evlist__delete(evlist);
- 	} else {
- 		cpu_map__put(cpus);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 94825c37a35f..1bedec28e58f 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -343,7 +343,7 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
- 		return thread_map__nr(evlist->threads);
- }
- 
--void perf_evlist__disable(struct evlist *evlist)
-+void evlist__disable(struct evlist *evlist)
- {
- 	struct evsel *pos;
- 
-@@ -371,7 +371,7 @@ void evlist__enable(struct evlist *evlist)
- 
- void perf_evlist__toggle_enable(struct evlist *evlist)
- {
--	(evlist->enabled ? perf_evlist__disable : evlist__enable)(evlist);
-+	(evlist->enabled ? evlist__disable : evlist__enable)(evlist);
- }
- 
- static int perf_evlist__enable_event_cpu(struct evlist *evlist,
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index ab48bbfbca41..99621c056d09 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -184,7 +184,7 @@ void perf_evlist__munmap(struct evlist *evlist);
- 
- size_t perf_evlist__mmap_size(unsigned long pages);
- 
--void perf_evlist__disable(struct evlist *evlist);
-+void evlist__disable(struct evlist *evlist);
- void evlist__enable(struct evlist *evlist);
- void perf_evlist__toggle_enable(struct evlist *evlist);
- 
+-clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean python-clean
++clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean config-clean fixdep-clean python-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(LANG_BINDINGS)
+ 	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+new file mode 100644
+index 000000000000..5196958cec01
+--- /dev/null
++++ b/tools/perf/lib/Build
+@@ -0,0 +1 @@
++libperf-y += core.o
+diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+new file mode 100644
+index 000000000000..e6f2eb702aaa
+--- /dev/null
++++ b/tools/perf/lib/Makefile
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++# Most of this file is copied from tools/lib/bpf/Makefile
++
++MAKEFLAGS += --no-print-directory
++
++ifeq ($(srctree),)
++srctree := $(patsubst %/,%,$(dir $(CURDIR)))
++srctree := $(patsubst %/,%,$(dir $(srctree)))
++srctree := $(patsubst %/,%,$(dir $(srctree)))
++#$(info Determined 'srctree' to be $(srctree))
++endif
++
++include $(srctree)/tools/scripts/Makefile.include
++include $(srctree)/tools/scripts/Makefile.arch
++
++ifeq ("$(origin V)", "command line")
++  VERBOSE = $(V)
++endif
++ifndef VERBOSE
++  VERBOSE = 0
++endif
++
++ifeq ($(VERBOSE),1)
++  Q =
++else
++  Q = @
++endif
++
++# Set compile option CFLAGS
++ifdef EXTRA_CFLAGS
++  CFLAGS := $(EXTRA_CFLAGS)
++else
++  CFLAGS := -g -Wall
++endif
++
++INCLUDES = -I. -Iinclude -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/
++
++# Append required CFLAGS
++override CFLAGS += $(EXTRA_WARNINGS)
++override CFLAGS += -Werror -Wall
++override CFLAGS += -fPIC
++override CFLAGS += $(INCLUDES)
++override CFLAGS += -fvisibility=hidden
++
++all:
++
++export srctree OUTPUT CC LD CFLAGS V
++include $(srctree)/tools/build/Makefile.include
++
++LIBPERF_SO := $(OUTPUT)libperf.so
++LIBPERF_A  := $(OUTPUT)libperf.a
++LIBPERF_IN := $(OUTPUT)libperf-in.o
++
++$(LIBPERF_IN): FORCE
++	$(Q)$(MAKE) $(build)=libperf
++
++$(LIBPERF_A): $(LIBPERF_IN)
++	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN)
++
++$(LIBPERF_SO): $(LIBPERF_IN)
++	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so $^ -o $@
++
++libs: $(LIBPERF_A) $(LIBPERF_SO)
++
++all: fixdep
++	$(Q)$(MAKE) libs
++
++clean:
++	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
++                *.o *~ *.a *.so .*.d .*.cmd LIBPERF-CFLAGS
++
++FORCE:
++
++.PHONY: all install clean FORCE
+diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
 -- 
 2.21.0
 
