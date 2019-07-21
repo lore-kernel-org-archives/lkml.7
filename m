@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80BCC76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32271C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32842147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056822147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 11:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563708758;
-	bh=1PKLopZ2B1TA37clZUJgk2xzyzh4cVCaEXJ7mC/jvkY=;
+	s=default; t=1563708763;
+	bh=xju/LHAt3005uCQggonRohIWeYbULyao7d8LtBo5Qkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ymdYcZox2/ujbudXauO3tZTdnyGLxX3lzVhK0Es++/8+/CKcHWZZW56YnvvXills4
-	 W/yD3tyqOYh+0/YYK1LZrNejq6IsYf7WqEe2k87hVob88n5yWzTGQ1kDXCD3AVwoZn
-	 fBezn/Lmg0cLk8sX5tsHanZJXO4WTTA/kdht4uMg=
+	b=MQ/DvtbG8GHLEX6mjVuONFS0EBJNp/lwBM5wbpud+cI2SuLgI4Aoj5iXl49+ZGlyj
+	 lv1SsxqLOTGkraSohqVy2lLtCMiA1NF8yuOiFrU+oFSM1j0BMrSUg1nj1aqXtBpFC8
+	 56Z/mlSxUwwhSGZ2vV8luUuWibPPSTXFlLa2t+gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfGULch (ORCPT
+        id S1727513AbfGULcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 07:32:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39970 "EHLO mx1.redhat.com"
+        Sun, 21 Jul 2019 07:32:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47150 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfGULch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 07:32:37 -0400
+        id S1726390AbfGULcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 07:32:41 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 447913082DDD;
-        Sun, 21 Jul 2019 11:32:36 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0FA71300CA39;
+        Sun, 21 Jul 2019 11:32:41 +0000 (UTC)
 Received: from krava.redhat.com (ovpn-204-23.brq.redhat.com [10.40.204.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C2825D9D3;
-        Sun, 21 Jul 2019 11:32:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 080195D9D3;
+        Sun, 21 Jul 2019 11:32:36 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -45,183 +45,123 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH 71/79] libperf: Add install targets
-Date:   Sun, 21 Jul 2019 13:24:58 +0200
-Message-Id: <20190721112506.12306-72-jolsa@kernel.org>
+Subject: [PATCH 72/79] libperf: Add tests support
+Date:   Sun, 21 Jul 2019 13:24:59 +0200
+Message-Id: <20190721112506.12306-73-jolsa@kernel.org>
 In-Reply-To: <20190721112506.12306-1-jolsa@kernel.org>
 References: <20190721112506.12306-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 21 Jul 2019 11:32:36 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sun, 21 Jul 2019 11:32:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add install targets (mostly copied from lib/bpf),
-it's now possible to install libperf with:
+Adding simple test framework, now empty.
 
-  $ make DESTDIR=/tmp/krava  install
-    INSTALL  libperf.a
-    INSTALL  libperf.so
-    INSTALL  libperf.so.0
-    INSTALL  libperf.so.0.0.1
-    INSTALL  headers
-    INSTALL  libperf.pc
-
-  $ find /tmp/krava/
-  /tmp/krava/
-  /tmp/krava/include
-  /tmp/krava/include/perf
-  /tmp/krava/include/perf/evsel.h
-  /tmp/krava/include/perf/evlist.h
-  /tmp/krava/include/perf/threadmap.h
-  /tmp/krava/include/perf/cpumap.h
-  /tmp/krava/include/perf/core.h
-  /tmp/krava/lib64
-  /tmp/krava/lib64/pkgconfig
-  /tmp/krava/lib64/pkgconfig/libperf.pc
-  /tmp/krava/lib64/libperf.so.0.0.1
-  /tmp/krava/lib64/libperf.so.0
-  /tmp/krava/lib64/libperf.so
-  /tmp/krava/lib64/libperf.a
-
-Link: http://lkml.kernel.org/n/tip-gz16baafdkv6irfkywache2i@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-62jm3ylb5o3d5tq8scbuk0sd@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/lib/Makefile            | 69 +++++++++++++++++++++++++++++-
- tools/perf/lib/libperf.pc.template | 11 +++++
- 2 files changed, 78 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/lib/libperf.pc.template
+ tools/perf/lib/Makefile                 |  7 ++++-
+ tools/perf/lib/include/internal/tests.h | 19 +++++++++++++
+ tools/perf/lib/tests/Makefile           | 38 +++++++++++++++++++++++++
+ 3 files changed, 63 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/lib/include/internal/tests.h
+ create mode 100644 tools/perf/lib/tests/Makefile
 
 diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
-index 25a6476f8b12..e69014a76971 100644
+index e69014a76971..b5547b725a17 100644
 --- a/tools/perf/lib/Makefile
 +++ b/tools/perf/lib/Makefile
-@@ -14,9 +14,31 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- #$(info Determined 'srctree' to be $(srctree))
- endif
- 
-+INSTALL = install
-+
-+# Use DESTDIR for installing into a different root directory.
-+# This is useful for building a package. The program will be
-+# installed in this directory as if it was the root directory.
-+# Then the build tool can move it later.
-+DESTDIR ?=
-+DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
-+
- include $(srctree)/tools/scripts/Makefile.include
- include $(srctree)/tools/scripts/Makefile.arch
- 
-+ifeq ($(LP64), 1)
-+  libdir_relative = lib64
-+else
-+  libdir_relative = lib
-+endif
-+
-+prefix ?=
-+libdir = $(prefix)/$(libdir_relative)
-+
-+# Shell quotes
-+libdir_SQ = $(subst ','\'',$(libdir))
-+libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
-+
- ifeq ("$(origin V)", "command line")
-   VERBOSE = $(V)
- endif
-@@ -49,6 +71,8 @@ override CFLAGS += -fvisibility=hidden
- all:
- 
- export srctree OUTPUT CC LD CFLAGS V
-+export DESTDIR DESTDIR_SQ
-+
- include $(srctree)/tools/build/Makefile.include
- 
- VERSION_SCRIPT := libperf.map
-@@ -60,6 +84,9 @@ VERSION       = $(LIBPERF_VERSION).$(LIBPERF_PATCHLEVEL).$(LIBPERF_EXTRAVERSION)
- LIBPERF_SO := $(OUTPUT)libperf.so.$(VERSION)
- LIBPERF_A  := $(OUTPUT)libperf.a
- LIBPERF_IN := $(OUTPUT)libperf-in.o
-+LIBPERF_PC := $(OUTPUT)libperf.pc
-+
-+LIBPERF_ALL := $(LIBPERF_A) $(OUTPUT)libperf.so*
- 
- $(LIBPERF_IN): FORCE
- 	$(Q)$(MAKE) $(build)=libperf
-@@ -74,14 +101,52 @@ $(LIBPERF_SO): $(LIBPERF_IN)
- 	@ln -sf $(@F) $(OUTPUT)libperf.so.$(LIBPERF_VERSION)
- 
- 
--libs: $(LIBPERF_A) $(LIBPERF_SO)
-+libs: $(LIBPERF_A) $(LIBPERF_SO) $(LIBPERF_PC)
- 
- all: fixdep
- 	$(Q)$(MAKE) libs
- 
+@@ -109,6 +109,11 @@ all: fixdep
  clean:
  	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
--                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS
-+                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS $(LIBPERF_PC)
+                 *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS $(LIBPERF_PC)
++	$(Q)$(MAKE) -C tests clean
 +
-+$(LIBPERF_PC):
-+	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
-+		-e "s|@LIBDIR@|$(libdir_SQ)|" \
-+		-e "s|@VERSION@|$(VERSION)|" \
-+		< libperf.pc.template > $@
-+
-+define do_install_mkdir
-+	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$1'; \
-+	fi
-+endef
-+
-+define do_install
-+	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-+	fi;                                             \
-+	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-+endef
-+
-+install_lib: libs
-+	$(call QUIET_INSTALL, $(LIBPERF_ALL)) \
-+		$(call do_install_mkdir,$(libdir_SQ)); \
-+		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
-+
-+install_headers:
-+	$(call QUIET_INSTALL, headers) \
-+		$(call do_install,include/perf/core.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/cpumap.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644);
-+
-+install_pkgconfig: $(LIBPERF_PC)
-+	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
-+		$(call do_install,$(LIBPERF_PC),$(libdir_SQ)/pkgconfig,644)
-+
-+install: install_lib install_headers install_pkgconfig
++tests:
++	$(Q)$(MAKE) -C tests
++	$(Q)$(MAKE) -C tests run
+ 
+ $(LIBPERF_PC):
+ 	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
+@@ -150,4 +155,4 @@ install: install_lib install_headers install_pkgconfig
  
  FORCE:
  
-diff --git a/tools/perf/lib/libperf.pc.template b/tools/perf/lib/libperf.pc.template
+-.PHONY: all install clean FORCE
++.PHONY: all install clean tests FORCE
+diff --git a/tools/perf/lib/include/internal/tests.h b/tools/perf/lib/include/internal/tests.h
 new file mode 100644
-index 000000000000..117e4a237b55
+index 000000000000..b7a20cd24ee1
 --- /dev/null
-+++ b/tools/perf/lib/libperf.pc.template
-@@ -0,0 +1,11 @@
++++ b/tools/perf/lib/include/internal/tests.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_INTERNAL_TESTS_H
++#define __LIBPERF_INTERNAL_TESTS_H
++
++#include <stdio.h>
++
++#define __T_START fprintf(stdout, "- running %s...", __FILE__)
++#define __T_OK    fprintf(stdout, "OK\n")
++#define __T_FAIL  fprintf(stdout, "FAIL\n")
++
++#define __T(text, cond)                                                          \
++do {                                                                             \
++	if (!(cond)) {                                                           \
++		fprintf(stderr, "FAILED %s:%d %s\n", __FILE__, __LINE__, text);  \
++		return -1;                                                       \
++	}                                                                        \
++} while (0)
++
++#endif /* __LIBPERF_INTERNAL_TESTS_H */
+diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makefile
+new file mode 100644
+index 000000000000..de951ae38dea
+--- /dev/null
++++ b/tools/perf/lib/tests/Makefile
+@@ -0,0 +1,38 @@
 +# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
 +
-+prefix=@PREFIX@
-+libdir=@LIBDIR@
-+includedir=${prefix}/include
++TESTS =
 +
-+Name: libperf
-+Description: perf library
-+Version: @VERSION@
-+Libs: -L${libdir} -lperf
-+Cflags: -I${includedir}
++TESTS_SO := $(addsuffix -so,$(TESTS))
++TESTS_A  := $(addsuffix -a,$(TESTS))
++
++# Set compile option CFLAGS
++ifdef EXTRA_CFLAGS
++  CFLAGS := $(EXTRA_CFLAGS)
++else
++  CFLAGS := -g -Wall
++endif
++
++all:
++
++include $(srctree)/tools/scripts/Makefile.include
++
++INCLUDE = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include
++
++$(TESTS_A): FORCE
++	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -o $@ $(subst -a,.c,$@) ../libperf.a
++
++$(TESTS_SO): FORCE
++	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -L.. -o $@ $(subst -so,.c,$@) -lperf
++
++all: $(TESTS_A) $(TESTS_SO)
++
++run:
++	@echo "running static:"
++	@for i in $(TESTS_A); do ./$$i; done
++	@echo "running dynamic:"
++	@for i in $(TESTS_SO); do LD_LIBRARY_PATH=../ ./$$i; done
++
++clean:
++	$(call QUIET_CLEAN, tests)$(RM) $(TESTS_A) $(TESTS_SO)
++
++.PHONY: all clean FORCE
 -- 
 2.21.0
 
