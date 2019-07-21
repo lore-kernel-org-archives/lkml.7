@@ -7,135 +7,98 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0F8C76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 07:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE54C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 07:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A342084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 07:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3662084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 07:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UUMyY7Pd"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XAJuBIGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfGUHhV (ORCPT
+        id S1726327AbfGUHkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 03:37:21 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:19482 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfGUHhV (ORCPT
+        Sun, 21 Jul 2019 03:40:21 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:16776 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfGUHkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 03:37:21 -0400
+        Sun, 21 Jul 2019 03:40:21 -0400
 Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x6L7app4023640;
-        Sun, 21 Jul 2019 16:36:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6L7app4023640
+        by conuserg-09.nifty.com with ESMTP id x6L7did6032459;
+        Sun, 21 Jul 2019 16:39:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6L7did6032459
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563694612;
-        bh=wTXJF9fhQh2D0Z3FIBOZ7YbgbP65Cu8NPe1b56CrBY4=;
+        s=dec2015msa; t=1563694785;
+        bh=W0RUjdCqSIfb8kJEGYHindDEe89Kcz2+NHbUKHueqzc=;
         h=From:To:Cc:Subject:Date:From;
-        b=UUMyY7PdwUXFxgwVA1qrpTAkFxOMkkDnDinMaytewX3bPxk0jzE6ufeO/VW+mpAp1
-         0Ba8MmMi3em0cO8j5V2B9pGvZ2jnYzu1uR/faKEOx8HtUAZgjOAa0qxHC7L7wVvDbk
-         WSGhCzvCJzvL7/eEvTiVHgFfs6HCKsNbR43VFHef0kRijq7TaUbxO4Pl3LYWz0kql8
-         Wpesc1sETHdLpA1mXg6Fj5lprMEXTuoeTRRy74qUwzrD4VfWObDF4IYreuor86ZXVV
-         I9XC/dINSs6huiqAQ86CfcBUgkrLOm4mJGTwwQaHN8KsX9r/eJtzy4PeKo3aoBdjxW
-         7yCyu7drYPWkg==
+        b=XAJuBIGZ21ReoDh6CZlT/2Sh/YRKG/vB22kdveU1dNeOC1kP38EjuChgisNKIVrOw
+         nP0mTnaux9Vc7IwAb79qiFVDk6PSB9LrZokQqd9jw6smAresbU8xv06eVzbpSDLc4S
+         fehvQyXWPn3fdcTWAshQ32TgF7FyBabdgfbtVSK4wsZeT0W712INelHMpqzzhyDMQW
+         lWP+YKTKNarlwoj24ACDAgVTGUrpd/qvNJ3J+aOVkleLJL5UeRp+lTx1Bt1nka7nvg
+         mveHMD/kMimOPZ/0BR+Z12zrY3GEf96L2rxL4P8SW3v6Tz+J2O0ZQz5umGzJRXAmHR
+         +hneKraGoJl2g==
 X-Nifty-SrcIP: [126.26.94.249]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: [PATCH] usb: dwc3: omap: squash include/linux/platform_data/dwc3-omap.h
-Date:   Sun, 21 Jul 2019 16:36:49 +0900
-Message-Id: <20190721073649.11100-1-yamada.masahiro@socionext.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] backlight: add include guards to platform_lcd.h and ili9320.h
+Date:   Sun, 21 Jul 2019 16:39:40 +0900
+Message-Id: <20190721073940.11422-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enum is only used in drivers/usb/dwc3/dwc3-omap3.c
+Add header include guards just in case.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- drivers/usb/dwc3/dwc3-omap.c            |  7 +++-
- include/linux/platform_data/dwc3-omap.h | 43 -------------------------
- 2 files changed, 6 insertions(+), 44 deletions(-)
- delete mode 100644 include/linux/platform_data/dwc3-omap.h
+ include/video/ili9320.h      | 4 ++++
+ include/video/platform_lcd.h | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
-index ed8b86517675..4f51523a07ac 100644
---- a/drivers/usb/dwc3/dwc3-omap.c
-+++ b/drivers/usb/dwc3/dwc3-omap.c
-@@ -14,7 +14,6 @@
- #include <linux/irq.h>
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
--#include <linux/platform_data/dwc3-omap.h>
- #include <linux/pm_runtime.h>
- #include <linux/dma-mapping.h>
- #include <linux/ioport.h>
-@@ -106,6 +105,12 @@
- #define USBOTGSS_UTMI_OTG_CTRL_SESSVALID	BIT(2)
- #define USBOTGSS_UTMI_OTG_CTRL_VBUSVALID	BIT(1)
+diff --git a/include/video/ili9320.h b/include/video/ili9320.h
+index 62f424f0bc52..b76a0b8f16fc 100644
+--- a/include/video/ili9320.h
++++ b/include/video/ili9320.h
+@@ -9,6 +9,9 @@
+  * http://armlinux.simtec.co.uk/
+ */
  
-+enum dwc3_omap_utmi_mode {
-+	DWC3_OMAP_UTMI_MODE_UNKNOWN = 0,
-+	DWC3_OMAP_UTMI_MODE_HW,
-+	DWC3_OMAP_UTMI_MODE_SW,
-+};
++#ifndef _VIDEO_ILI9320_H
++#define _VIDEO_ILI9320_H
 +
- struct dwc3_omap {
- 	struct device		*dev;
+ #define ILI9320_REG(x)	(x)
  
-diff --git a/include/linux/platform_data/dwc3-omap.h b/include/linux/platform_data/dwc3-omap.h
-deleted file mode 100644
-index 1d36ca874cc8..000000000000
---- a/include/linux/platform_data/dwc3-omap.h
-+++ /dev/null
-@@ -1,43 +0,0 @@
--/**
-- * dwc3-omap.h - OMAP Specific Glue layer, header.
-- *
-- * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
-- * All rights reserved.
-- *
-- * Author: Felipe Balbi <balbi@ti.com>
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
--
--enum dwc3_omap_utmi_mode {
--	DWC3_OMAP_UTMI_MODE_UNKNOWN = 0,
--	DWC3_OMAP_UTMI_MODE_HW,
--	DWC3_OMAP_UTMI_MODE_SW,
--};
+ #define ILI9320_INDEX			ILI9320_REG(0x00)
+@@ -196,3 +199,4 @@ struct ili9320_platdata {
+ 	unsigned short	interface6;
+ };
+ 
++#endif /* _VIDEO_ILI9320_H */
+diff --git a/include/video/platform_lcd.h b/include/video/platform_lcd.h
+index 6a95184a28c1..c68f3f45b5c1 100644
+--- a/include/video/platform_lcd.h
++++ b/include/video/platform_lcd.h
+@@ -7,6 +7,9 @@
+  * Generic platform-device LCD power control interface.
+ */
+ 
++#ifndef _VIDEO_PLATFORM_LCD_H
++#define _VIDEO_PLATFORM_LCD_H
++
+ struct plat_lcd_data;
+ struct fb_info;
+ 
+@@ -16,3 +19,4 @@ struct plat_lcd_data {
+ 	int	(*match_fb)(struct plat_lcd_data *, struct fb_info *);
+ };
+ 
++#endif /* _VIDEO_PLATFORM_LCD_H */
 -- 
 2.17.1
 
