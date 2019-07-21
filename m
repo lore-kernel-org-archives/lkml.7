@@ -2,356 +2,310 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AC3C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 19:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4523C76191
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2902220823
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 19:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F7B2147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 20:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GcES4xjr"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AyehZSuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbfGUTm1 (ORCPT
+        id S1726941AbfGUUUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 15:42:27 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12478 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfGUTlC (ORCPT
+        Sun, 21 Jul 2019 16:20:08 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42776 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfGUUUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 15:41:02 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d34bfcd0000>; Sun, 21 Jul 2019 12:41:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 21 Jul 2019 12:41:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 21 Jul 2019 12:41:00 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 21 Jul
- 2019 19:41:00 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL102.nvidia.com
- (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 21 Jul
- 2019 19:40:59 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 21 Jul 2019 19:40:59 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.85]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d34bfca0000>; Sun, 21 Jul 2019 12:41:00 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V6 06/21] clk: tegra: pll: Save and restore pll context
-Date:   Sun, 21 Jul 2019 12:40:45 -0700
-Message-ID: <1563738060-30213-7-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Sun, 21 Jul 2019 16:20:08 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v15so38838628eds.9
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 13:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XRwj/hgNS14q+rvkCpix4vLLy7DZh4BLZEjg+qSfiZg=;
+        b=AyehZSuGZCvBsaILvR/krcYsapjAPI1gVWmMmVd+jre9fcmOOPqhoywhyy47IXwENp
+         tqNgZVjZgEkBNduUidPOAMhHOZ5b3JKmpwziOTwokGvDa2rRpYoTaJmGAyjBxRZbTaOy
+         UvogFiqQ2RBg8fEs4X4YI880mcQdt1U0lNNIk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XRwj/hgNS14q+rvkCpix4vLLy7DZh4BLZEjg+qSfiZg=;
+        b=a/wgfWVDY8e8LHX33YghPndSslhwzhUYQw9AgoDzwBwGMKc1MQ1puwE9r94gwedxF0
+         5HNH0SDMKN3pLo52naPYeQ3IDJ2VYdkWVvqqjSwnn/yQ3lmlvOz+/iGQbE/po1241Pk/
+         v/CFxvo0GuZA9cAxaDerRmT8zgQ/Jqf6p96hW5ZGBUIWIFDRJPs0DQwF2nZMro4CtqVS
+         J262W3CKiqPMapqELJwlzuqfbHTJSK/tHJmS7aqxX3SHN0LSpBP2q/VGDRgdIKWXLQ/6
+         Y1WLfZ/MAQgkNKa61oOuNV1tWx7KFGb4oUwyS9mft8EvaRPnIihFgUPRoZXMSKHhI+U+
+         qIwg==
+X-Gm-Message-State: APjAAAXnN7JjvFS9UWJXH5nFauxUzfqwH7H+E6idiNW9MimMKc0xGUbc
+        d1lpJCNZEDA7J83wBMji2eM=
+X-Google-Smtp-Source: APXvYqxi2U8nESKiWK5L9snLfUB1kh5NY8KjkT4EGpbXWuhn4pGor8y7Xqg7LmeOA6xXbjUWkN2JRQ==
+X-Received: by 2002:a17:906:802:: with SMTP id e2mr50030972ejd.59.1563740405438;
+        Sun, 21 Jul 2019 13:20:05 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id m25sm7648677ejs.85.2019.07.21.13.20.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 21 Jul 2019 13:20:04 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tavis Ormandy <taviso@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] fbdev: Ditch fb_edid_add_monspecs
+Date:   Sun, 21 Jul 2019 22:19:56 +0200
+Message-Id: <20190721201956.941-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563738061; bh=aHWJSVx13LuzUutUKwAZaVtBY+ayrcR85Vq9Znm7wZ8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=GcES4xjrPQcsRDHO2yAPAy97aWt9M27BBGBO3a0ZABOED56SNrV1EAeoRRnw6sW+O
-         1bNSQ1Nc2206e7neLaxJKKGjPHI/di+IygQJEsJd6/WwVDnebZbrwju+vmpdNr6z+6
-         fkC5phKuMxcTF5rIozQL5ZdaAw1NxlG0whxjh/Kf1Bd58lE8frIaAzVedtHzCnaJVa
-         8kMdZeiTTSL/ua1g+vrlJFavdMvKIBnIqcOUkUqFp7EJrk89UL4OxLdvCbJdESD/0m
-         vMD5PVnC5wkNo66R7rlUoj0vHOSpsrsP+0qXcVWl9xwd2Ad1/qbbJfJYIAZ+KXMpzm
-         uc89zmrdNym3A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements save and restore of PLL context.
+It's dead code ever since
 
-During system suspend, core power goes off and looses the settings
-of the Tegra CAR controller registers.
+commit 34280340b1dc74c521e636f45cd728f9abf56ee2
+Author: Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Fri Dec 4 17:01:43 2015 +0100
 
-So during suspend entry pll rate is stored and on resume it is
-restored back along with its state.
+    fbdev: Remove unused SH-Mobile HDMI driver
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Also with this gone we can remove the cea_modes db. This entire thing
+is massively incomplete anyway, compared to the CEA parsing that
+drm_edid.c does.
+
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Tavis Ormandy <taviso@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-fbdev@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
- drivers/clk/tegra/clk-pll.c      | 121 ++++++++++++++++++++++++++++-----------
- drivers/clk/tegra/clk-tegra210.c |   2 +-
- drivers/clk/tegra/clk.h          |  10 +++-
- 3 files changed, 99 insertions(+), 34 deletions(-)
+ drivers/video/fbdev/core/fbmon.c  | 96 -------------------------------
+ drivers/video/fbdev/core/modedb.c | 57 ------------------
+ include/linux/fb.h                |  3 -
+ 3 files changed, 156 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index 1583f5fc992f..f136964e6c44 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -1008,6 +1008,59 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
- 	return rate;
+diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
+index 3558a70a6664..8e2e19f3bf44 100644
+--- a/drivers/video/fbdev/core/fbmon.c
++++ b/drivers/video/fbdev/core/fbmon.c
+@@ -999,98 +999,6 @@ void fb_edid_to_monspecs(unsigned char *edid, struct fb_monspecs *specs)
+ 	DPRINTK("========================================\n");
  }
  
-+void tegra_clk_sync_state_pll(struct clk_hw *hw)
-+{
-+	if (!__clk_get_enable_count(hw->clk))
-+		clk_pll_disable(hw);
-+	else
-+		clk_pll_enable(hw);
-+}
-+
-+static int tegra_clk_pll_save_context(struct clk_hw *hw)
-+{
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+	u32 val = 0;
-+
-+	pll->rate = clk_hw_get_rate(hw);
-+
-+	if (pll->params->flags & TEGRA_PLLMB)
-+		val = pll_readl_base(pll);
-+	else if (pll->params->flags & TEGRA_PLLRE)
-+		val = pll_readl_base(pll) & divp_mask_shifted(pll);
-+
-+	pll->pllbase_ctx = val;
-+
-+	return 0;
-+}
-+
-+static void tegra_clk_pll_restore_context(struct clk_hw *hw)
-+{
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+	struct clk_hw *parent = clk_hw_get_parent(hw);
-+	unsigned long parent_rate = clk_hw_get_rate(parent);
-+	u32 val;
-+
-+	if (clk_pll_is_enabled(hw))
-+		return;
-+
-+	if (pll->params->flags & TEGRA_PLLMB) {
-+		pll_writel_base(pll->pllbase_ctx, pll);
-+	} else if (pll->params->flags & TEGRA_PLLRE) {
-+		val = pll_readl_base(pll);
-+		val &= ~(divp_mask_shifted(pll));
-+		pll_writel_base(pll->pllbase_ctx | val, pll);
-+	}
-+
-+	if (pll->params->set_defaults)
-+		pll->params->set_defaults(pll);
-+
-+	clk_pll_set_rate(hw, pll->rate, parent_rate);
-+
-+	/* do not sync pllx state here. pllx is sync'd after dfll resume */
-+	if (!(pll->params->flags & TEGRA_PLLX))
-+		tegra_clk_sync_state_pll(hw);
-+}
-+
- const struct clk_ops tegra_clk_pll_ops = {
- 	.is_enabled = clk_pll_is_enabled,
- 	.enable = clk_pll_enable,
-@@ -1015,6 +1068,8 @@ const struct clk_ops tegra_clk_pll_ops = {
- 	.recalc_rate = clk_pll_recalc_rate,
- 	.round_rate = clk_pll_round_rate,
- 	.set_rate = clk_pll_set_rate,
-+	.save_context = tegra_clk_pll_save_context,
-+	.restore_context = tegra_clk_pll_restore_context,
- };
- 
- const struct clk_ops tegra_clk_plle_ops = {
-@@ -1802,6 +1857,27 @@ static int clk_pllu_tegra114_enable(struct clk_hw *hw)
- 
- 	return ret;
- }
-+
-+static void _clk_plle_tegra_init_parent(struct tegra_clk_pll *pll)
-+{
-+	u32 val, val_aux;
-+
-+	/* ensure parent is set to pll_ref */
-+	val = pll_readl_base(pll);
-+	val_aux = pll_readl(pll->params->aux_reg, pll);
-+
-+	if (val & PLL_BASE_ENABLE) {
-+		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
-+		    (val_aux & PLLE_AUX_PLLP_SEL))
-+			WARN(1, "pll_e enabled with unsupported parent %s\n",
-+			     (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
-+			     "pll_re_vco");
-+	} else {
-+		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
-+		pll_writel(val_aux, pll->params->aux_reg, pll);
-+		fence_udelay(1, pll->clk_base);
-+	}
-+}
- #endif
- 
- static struct tegra_clk_pll *_tegra_init_pll(void __iomem *clk_base,
-@@ -2214,27 +2290,12 @@ struct clk *tegra_clk_register_plle_tegra114(const char *name,
- {
- 	struct tegra_clk_pll *pll;
- 	struct clk *clk;
--	u32 val, val_aux;
- 
- 	pll = _tegra_init_pll(clk_base, NULL, pll_params, lock);
- 	if (IS_ERR(pll))
- 		return ERR_CAST(pll);
- 
--	/* ensure parent is set to pll_re_vco */
+-/**
+- * fb_edid_add_monspecs() - add monitor video modes from E-EDID data
+- * @edid:	128 byte array with an E-EDID block
+- * @spacs:	monitor specs to be extended
+- */
+-void fb_edid_add_monspecs(unsigned char *edid, struct fb_monspecs *specs)
+-{
+-	unsigned char *block;
+-	struct fb_videomode *m;
+-	int num = 0, i;
+-	u8 svd[64], edt[(128 - 4) / DETAILED_TIMING_DESCRIPTION_SIZE];
+-	u8 pos = 4, svd_n = 0;
 -
--	val = pll_readl_base(pll);
--	val_aux = pll_readl(pll_params->aux_reg, pll);
+-	if (!edid)
+-		return;
 -
--	if (val & PLL_BASE_ENABLE) {
--		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
--			(val_aux & PLLE_AUX_PLLP_SEL))
--			WARN(1, "pll_e enabled with unsupported parent %s\n",
--			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
--					"pll_re_vco");
--	} else {
--		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
--		pll_writel(val_aux, pll_params->aux_reg, pll);
+-	if (!edid_checksum(edid))
+-		return;
+-
+-	if (edid[0] != 0x2 ||
+-	    edid[2] < 4 || edid[2] > 128 - DETAILED_TIMING_DESCRIPTION_SIZE)
+-		return;
+-
+-	DPRINTK("  Short Video Descriptors\n");
+-
+-	while (pos < edid[2]) {
+-		u8 len = edid[pos] & 0x1f, type = (edid[pos] >> 5) & 7;
+-		pr_debug("Data block %u of %u bytes\n", type, len);
+-		if (type == 2) {
+-			for (i = pos; i < pos + len; i++) {
+-				u8 idx = edid[pos + i] & 0x7f;
+-				svd[svd_n++] = idx;
+-				pr_debug("N%sative mode #%d\n",
+-					 edid[pos + i] & 0x80 ? "" : "on-n", idx);
+-			}
+-		} else if (type == 3 && len >= 3) {
+-			/* Check Vendor Specific Data Block.  For HDMI,
+-			   it is always 00-0C-03 for HDMI Licensing, LLC. */
+-			if (edid[pos + 1] == 3 && edid[pos + 2] == 0xc &&
+-			    edid[pos + 3] == 0)
+-				specs->misc |= FB_MISC_HDMI;
+-		}
+-		pos += len + 1;
 -	}
-+	_clk_plle_tegra_init_parent(pll);
- 
- 	clk = _tegra_clk_register_pll(pll, name, parent_name, flags,
- 				      &tegra_clk_plle_tegra114_ops);
-@@ -2276,6 +2337,8 @@ static const struct clk_ops tegra_clk_pllss_ops = {
- 	.recalc_rate = clk_pll_recalc_rate,
- 	.round_rate = clk_pll_ramp_round_rate,
- 	.set_rate = clk_pllxc_set_rate,
-+	.save_context = tegra_clk_pll_save_context,
-+	.restore_context = tegra_clk_pll_restore_context,
- };
- 
- struct clk *tegra_clk_register_pllss(const char *name, const char *parent_name,
-@@ -2375,6 +2438,7 @@ struct clk *tegra_clk_register_pllre_tegra210(const char *name,
- 		pll_params->vco_min = pll_params->adjust_vco(pll_params,
- 							     parent_rate);
- 
-+	pll_params->flags |= TEGRA_PLLRE;
- 	pll = _tegra_init_pll(clk_base, pmc, pll_params, lock);
- 	if (IS_ERR(pll))
- 		return ERR_CAST(pll);
-@@ -2520,11 +2584,19 @@ static void clk_plle_tegra210_disable(struct clk_hw *hw)
- 		spin_unlock_irqrestore(pll->lock, flags);
- }
- 
-+static void tegra_clk_plle_t210_restore_context(struct clk_hw *hw)
-+{
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+
-+	_clk_plle_tegra_init_parent(pll);
-+}
-+
- static const struct clk_ops tegra_clk_plle_tegra210_ops = {
- 	.is_enabled =  clk_plle_tegra210_is_enabled,
- 	.enable = clk_plle_tegra210_enable,
- 	.disable = clk_plle_tegra210_disable,
- 	.recalc_rate = clk_pll_recalc_rate,
-+	.restore_context = tegra_clk_plle_t210_restore_context,
- };
- 
- struct clk *tegra_clk_register_plle_tegra210(const char *name,
-@@ -2535,27 +2607,12 @@ struct clk *tegra_clk_register_plle_tegra210(const char *name,
- {
- 	struct tegra_clk_pll *pll;
- 	struct clk *clk;
--	u32 val, val_aux;
- 
- 	pll = _tegra_init_pll(clk_base, NULL, pll_params, lock);
- 	if (IS_ERR(pll))
- 		return ERR_CAST(pll);
- 
--	/* ensure parent is set to pll_re_vco */
 -
--	val = pll_readl_base(pll);
--	val_aux = pll_readl(pll_params->aux_reg, pll);
+-	block = edid + edid[2];
 -
--	if (val & PLLE_BASE_ENABLE) {
--		if ((val_aux & PLLE_AUX_PLLRE_SEL) ||
--			(val_aux & PLLE_AUX_PLLP_SEL))
--			WARN(1, "pll_e enabled with unsupported parent %s\n",
--			  (val_aux & PLLE_AUX_PLLP_SEL) ? "pllp_out0" :
--					"pll_re_vco");
--	} else {
--		val_aux &= ~(PLLE_AUX_PLLRE_SEL | PLLE_AUX_PLLP_SEL);
--		pll_writel(val_aux, pll_params->aux_reg, pll);
+-	DPRINTK("  Extended Detailed Timings\n");
+-
+-	for (i = 0; i < (128 - edid[2]) / DETAILED_TIMING_DESCRIPTION_SIZE;
+-	     i++, block += DETAILED_TIMING_DESCRIPTION_SIZE)
+-		if (PIXEL_CLOCK != 0)
+-			edt[num++] = block - edid;
+-
+-	/* Yikes, EDID data is totally useless */
+-	if (!(num + svd_n))
+-		return;
+-
+-	m = kcalloc(specs->modedb_len + num + svd_n,
+-		    sizeof(struct fb_videomode),
+-		    GFP_KERNEL);
+-
+-	if (!m)
+-		return;
+-
+-	memcpy(m, specs->modedb, specs->modedb_len * sizeof(struct fb_videomode));
+-
+-	for (i = specs->modedb_len; i < specs->modedb_len + num; i++) {
+-		get_detailed_timing(edid + edt[i - specs->modedb_len], &m[i]);
+-		if (i == specs->modedb_len)
+-			m[i].flag |= FB_MODE_IS_FIRST;
+-		pr_debug("Adding %ux%u@%u\n", m[i].xres, m[i].yres, m[i].refresh);
 -	}
-+	_clk_plle_tegra_init_parent(pll);
- 
- 	clk = _tegra_clk_register_pll(pll, name, parent_name, flags,
- 				      &tegra_clk_plle_tegra210_ops);
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index 4721ee030d1c..58397f93166c 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -1602,7 +1602,7 @@ static struct tegra_clk_pll_params pll_x_params = {
- 	.pdiv_tohw = pll_qlin_pdiv_to_hw,
- 	.div_nmp = &pllx_nmp,
- 	.freq_table = pll_x_freq_table,
--	.flags = TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE,
-+	.flags = TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE | TEGRA_PLLX,
- 	.dyn_ramp = tegra210_pllx_dyn_ramp,
- 	.set_defaults = tegra210_pllx_set_defaults,
- 	.calc_rate = tegra210_pll_fixed_mdiv_cfg,
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index fb29a8c27873..8532f5150091 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -235,6 +235,8 @@ struct tegra_clk_pll;
-  * TEGRA_PLLMB - PLLMB has should be treated similar to PLLM. This
-  *     flag indicated that it is PLLMB.
-  * TEGRA_PLL_VCO_OUT - Used to indicate that the PLL has a VCO output
-+ * TEGRA_PLLRE - Used to indicate that it is PLLRE.
-+ * TEGRA_PLLX - Used to indicate that it is PLLX.
+-
+-	for (i = specs->modedb_len + num; i < specs->modedb_len + num + svd_n; i++) {
+-		int idx = svd[i - specs->modedb_len - num];
+-		if (!idx || idx >= ARRAY_SIZE(cea_modes)) {
+-			pr_warn("Reserved SVD code %d\n", idx);
+-		} else if (!cea_modes[idx].xres) {
+-			pr_warn("Unimplemented SVD code %d\n", idx);
+-		} else {
+-			memcpy(&m[i], cea_modes + idx, sizeof(m[i]));
+-			pr_debug("Adding SVD #%d: %ux%u@%u\n", idx,
+-				 m[i].xres, m[i].yres, m[i].refresh);
+-		}
+-	}
+-
+-	kfree(specs->modedb);
+-	specs->modedb = m;
+-	specs->modedb_len = specs->modedb_len + num + svd_n;
+-}
+-
+ /*
+  * VESA Generalized Timing Formula (GTF)
   */
- struct tegra_clk_pll_params {
- 	unsigned long	input_min;
-@@ -301,6 +303,8 @@ struct tegra_clk_pll_params {
- #define TEGRA_MDIV_NEW BIT(11)
- #define TEGRA_PLLMB BIT(12)
- #define TEGRA_PLL_VCO_OUT BIT(13)
-+#define TEGRA_PLLRE BIT(14)
-+#define TEGRA_PLLX BIT(15)
+@@ -1500,9 +1408,6 @@ int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+ void fb_edid_to_monspecs(unsigned char *edid, struct fb_monspecs *specs)
+ {
+ }
+-void fb_edid_add_monspecs(unsigned char *edid, struct fb_monspecs *specs)
+-{
+-}
+ void fb_destroy_modedb(struct fb_videomode *modedb)
+ {
+ }
+@@ -1610,7 +1515,6 @@ EXPORT_SYMBOL(fb_firmware_edid);
  
- /**
-  * struct tegra_clk_pll - Tegra PLL clock
-@@ -310,6 +314,8 @@ struct tegra_clk_pll_params {
-  * @pmc:	address of PMC, required to read override bits
-  * @lock:	register lock
-  * @params:	PLL parameters
-+ * @rate:	rate during system suspend and resume
-+ * @pllbase_ctx: pll base register value during suspend and resume
-  */
- struct tegra_clk_pll {
- 	struct clk_hw	hw;
-@@ -317,6 +323,8 @@ struct tegra_clk_pll {
- 	void __iomem	*pmc;
- 	spinlock_t	*lock;
- 	struct tegra_clk_pll_params	*params;
-+	unsigned long	rate;
-+	u32	pllbase_ctx;
+ EXPORT_SYMBOL(fb_parse_edid);
+ EXPORT_SYMBOL(fb_edid_to_monspecs);
+-EXPORT_SYMBOL(fb_edid_add_monspecs);
+ EXPORT_SYMBOL(fb_get_mode);
+ EXPORT_SYMBOL(fb_validate_mode);
+ EXPORT_SYMBOL(fb_destroy_modedb);
+diff --git a/drivers/video/fbdev/core/modedb.c b/drivers/video/fbdev/core/modedb.c
+index ac049871704d..6473e0dfe146 100644
+--- a/drivers/video/fbdev/core/modedb.c
++++ b/drivers/video/fbdev/core/modedb.c
+@@ -289,63 +289,6 @@ static const struct fb_videomode modedb[] = {
  };
  
- #define to_clk_pll(_hw) container_of(_hw, struct tegra_clk_pll, hw)
-@@ -840,7 +848,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsigned long input_rate);
- int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
- int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
- 		 u8 frac_width, u8 flags);
+ #ifdef CONFIG_FB_MODE_HELPERS
+-const struct fb_videomode cea_modes[65] = {
+-	/* #1: 640x480p@59.94/60Hz */
+-	[1] = {
+-		NULL, 60, 640, 480, 39722, 48, 16, 33, 10, 96, 2, 0,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-	/* #3: 720x480p@59.94/60Hz */
+-	[3] = {
+-		NULL, 60, 720, 480, 37037, 60, 16, 30, 9, 62, 6, 0,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-	/* #5: 1920x1080i@59.94/60Hz */
+-	[5] = {
+-		NULL, 60, 1920, 1080, 13763, 148, 88, 15, 2, 44, 5,
+-		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+-		FB_VMODE_INTERLACED, 0,
+-	},
+-	/* #7: 720(1440)x480iH@59.94/60Hz */
+-	[7] = {
+-		NULL, 60, 1440, 480, 18554/*37108*/, 114, 38, 15, 4, 124, 3, 0,
+-		FB_VMODE_INTERLACED, 0,
+-	},
+-	/* #9: 720(1440)x240pH@59.94/60Hz */
+-	[9] = {
+-		NULL, 60, 1440, 240, 18554, 114, 38, 16, 4, 124, 3, 0,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-	/* #18: 720x576pH@50Hz */
+-	[18] = {
+-		NULL, 50, 720, 576, 37037, 68, 12, 39, 5, 64, 5, 0,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-	/* #19: 1280x720p@50Hz */
+-	[19] = {
+-		NULL, 50, 1280, 720, 13468, 220, 440, 20, 5, 40, 5,
+-		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-	/* #20: 1920x1080i@50Hz */
+-	[20] = {
+-		NULL, 50, 1920, 1080, 13480, 148, 528, 15, 5, 528, 5,
+-		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+-		FB_VMODE_INTERLACED, 0,
+-	},
+-	/* #32: 1920x1080p@23.98/24Hz */
+-	[32] = {
+-		NULL, 24, 1920, 1080, 13468, 148, 638, 36, 4, 44, 5,
+-		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-	/* #35: (2880)x480p4x@59.94/60Hz */
+-	[35] = {
+-		NULL, 60, 2880, 480, 9250, 240, 64, 30, 9, 248, 6, 0,
+-		FB_VMODE_NONINTERLACED, 0,
+-	},
+-};
 -
-+void tegra_clk_sync_state_pll(struct clk_hw *hw);
+ const struct fb_videomode vesa_modes[] = {
+ 	/* 0 640x350-85 VESA */
+ 	{ NULL, 85, 640, 350, 31746,  96, 32, 60, 32, 64, 3,
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 303771264644..50948e519897 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -721,8 +721,6 @@ extern int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var);
+ extern const unsigned char *fb_firmware_edid(struct device *device);
+ extern void fb_edid_to_monspecs(unsigned char *edid,
+ 				struct fb_monspecs *specs);
+-extern void fb_edid_add_monspecs(unsigned char *edid,
+-				 struct fb_monspecs *specs);
+ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+ extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+ extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+@@ -796,7 +794,6 @@ struct dmt_videomode {
  
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
+ extern const char *fb_mode_option;
+ extern const struct fb_videomode vesa_modes[];
+-extern const struct fb_videomode cea_modes[65];
+ extern const struct dmt_videomode dmt_modes[];
+ 
+ struct fb_modelist {
 -- 
-2.7.4
+2.22.0
 
