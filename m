@@ -2,96 +2,87 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D2C76191
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67993C76196
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 16:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EB42083B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 16:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F39208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 16:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfGUQDy (ORCPT
+        id S1726255AbfGUQUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 12:03:54 -0400
-Received: from smtp01.smtpout.orange.fr ([80.12.242.123]:55508 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfGUQDy (ORCPT
+        Sun, 21 Jul 2019 12:20:45 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45217 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfGUQUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 12:03:54 -0400
-Received: from localhost.localdomain ([92.140.204.221])
-        by mwinf5d01 with ME
-        id fU3q2000X4n7eLC03U3rbD; Sun, 21 Jul 2019 18:03:52 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 21 Jul 2019 18:03:52 +0200
-X-ME-IP: 92.140.204.221
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] power: supply: max17042_battery: Fix a typo in function names
-Date:   Sun, 21 Jul 2019 18:03:28 +0200
-Message-Id: <20190721160328.24660-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 21 Jul 2019 12:20:45 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 284CC8031A; Sun, 21 Jul 2019 18:20:31 +0200 (CEST)
+Date:   Sun, 21 Jul 2019 18:20:41 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        johan@kernel.org, linux-usb@vger.kernel.org
+Subject: Re: USB Modem support for Droid 4
+Message-ID: <20190721162041.GA10770@amd>
+References: <20190718201713.GA25103@amd>
+ <20190719102748.GA14546@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Disposition: inline
+In-Reply-To: <20190719102748.GA14546@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is likely that 'max10742_[un]lock_model()' functions should be
-'max17042_[un]lock_model()'
-(0 and 7 switched in 10742)
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/power/supply/max17042_battery.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supply/max17042_battery.c
-index 581c6bd23388..da3904822929 100644
---- a/drivers/power/supply/max17042_battery.c
-+++ b/drivers/power/supply/max17042_battery.c
-@@ -511,7 +511,7 @@ static inline void max17042_override_por(struct regmap *map,
- 		regmap_write(map, reg, value);
- }
- 
--static inline void max10742_unlock_model(struct max17042_chip *chip)
-+static inline void max17042_unlock_model(struct max17042_chip *chip)
- {
- 	struct regmap *map = chip->regmap;
- 
-@@ -519,7 +519,7 @@ static inline void max10742_unlock_model(struct max17042_chip *chip)
- 	regmap_write(map, MAX17042_MLOCKReg2, MODEL_UNLOCK2);
- }
- 
--static inline void max10742_lock_model(struct max17042_chip *chip)
-+static inline void max17042_lock_model(struct max17042_chip *chip)
- {
- 	struct regmap *map = chip->regmap;
- 
-@@ -577,7 +577,7 @@ static int max17042_init_model(struct max17042_chip *chip)
- 	if (!temp_data)
- 		return -ENOMEM;
- 
--	max10742_unlock_model(chip);
-+	max17042_unlock_model(chip);
- 	max17042_write_model_data(chip, MAX17042_MODELChrTbl,
- 				table_size);
- 	max17042_read_model_data(chip, MAX17042_MODELChrTbl, temp_data,
-@@ -589,7 +589,7 @@ static int max17042_init_model(struct max17042_chip *chip)
- 		temp_data,
- 		table_size);
- 
--	max10742_lock_model(chip);
-+	max17042_lock_model(chip);
- 	kfree(temp_data);
- 
- 	return ret;
--- 
-2.20.1
+On Fri 2019-07-19 19:27:48, Greg KH wrote:
+> On Thu, Jul 18, 2019 at 10:17:13PM +0200, Pavel Machek wrote:
+> > From: Tony Lindgren <tony@atomide.com>
+> >=20
+> > Droid starts to have useful support in linux-next. Modem is tricky to
+> > play with, but this is enough to get basic support.
+> >=20
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> No signed-off-by from Tony?
+>=20
+> And no [PATCH] in the subject?
 
+I was relaying patch. You'll get better one directly from Tony,
+"soon". :-)
+
+Best regards,							Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl00kNkACgkQMOfwapXb+vIgTQCgpJ9Kbk6HEqIkXfdxzMixzN84
+EEAAnjKV5UDsIV/DGiDl9pgRUZD/3CbW
+=EXnG
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
