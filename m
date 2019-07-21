@@ -7,57 +7,792 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D551C76197
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD679C76198
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 13:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D982084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 13:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495C42084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 13:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563716913;
-	bh=OqGQWPSr1AGtbOijPEmWNIIJqu6tn9R4G9hMI6XugzU=;
+	s=default; t=1563716919;
+	bh=iRD5IKgPSlhvVJtSiTmVSkwBUi/xPzM2SC53GyJ11hQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OAjjta0PbQoOTgLIfZrhXCrkp2vCbdm45srD5H4BMQ9/kJIRfmY1Grg9eFQgJpWWm
-	 OedqjNufDz/Ce556K+NTQpRKCECWMknU8tyDskJBFOqcm9KkqYZ8WvqIPIuzkcGvNt
-	 a5ggLKEhbiOiQxMQAhRc+B7Z5tx31clJYe2+kq4A=
+	b=RlX6cU7/xlasLwbRpoMNQjnfZnP/yFARSWbQimI2+ezq4yFIunNAnI9c1rj650awD
+	 To9/2rUlyib2nhHR3fQCpMQJx3dWSYREAL9wghTIq9TcGF9f9aPxTVqENvnkVpPOCZ
+	 cY1hISMmiSdTYCi4ez4kpzm+0Os+XkOh99cmJ79g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfGUNsa (ORCPT
+        id S1726719AbfGUNsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 09:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
+        Sun, 21 Jul 2019 09:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbfGUNs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 09:48:27 -0400
+        id S1726311AbfGUNsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 09:48:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79FC82084C;
-        Sun, 21 Jul 2019 13:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A4F208E4;
+        Sun, 21 Jul 2019 13:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563716893;
-        bh=OqGQWPSr1AGtbOijPEmWNIIJqu6tn9R4G9hMI6XugzU=;
+        s=default; t=1563716911;
+        bh=iRD5IKgPSlhvVJtSiTmVSkwBUi/xPzM2SC53GyJ11hQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R0N4fGrwoX6Wz4vpCKcEYUMIQt/mLNIxPvgiPkeqLzXwc+DvcYMTZLCWuFZN5zaU3
-         1sX35D6Jc3FlvgrOp/2Bvz4IHj2xXl3TvJfKXl7hNqPK+hUX9GZb8KkB+jupVp/GFp
-         TZLQvHlsD65yUsJag+VlR/6EfJ30EIiD4g0vtzQc=
-Date:   Sun, 21 Jul 2019 15:48:08 +0200
+        b=BrksxRtIsGQpEZ+tRggDTk7Gqmo50Wb1zs6YeeOyfaPuRnZ8xalEivq4J2q/vwAVH
+         0KlFAlSOr7ODSBEvyrJuv4n5cQLFIHh7CQbs5N+QKVAOKrNM5VhncFFYb3W81Mf1iX
+         fklRrmfw+jNWZLSudsI0H7DkdC46IQB/XKDYK/hE=
+Date:   Sun, 21 Jul 2019 15:48:26 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 4.9.186
-Message-ID: <20190721134808.GB23081@kroah.com>
-References: <20190721134801.GA23081@kroah.com>
+Subject: Re: Linux 4.14.134
+Message-ID: <20190721134826.GB23180@kroah.com>
+References: <20190721134820.GA23180@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190721134801.GA23081@kroah.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190721134820.GA23180@kroah.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+diff --git a/Documentation/ABI/testing/sysfs-class-net-qmi b/Documentation/ABI/testing/sysfs-class-net-qmi
+index 7122d6264c49..c310db4ccbc2 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-qmi
++++ b/Documentation/ABI/testing/sysfs-class-net-qmi
+@@ -29,7 +29,7 @@ Contact:	Bjørn Mork <bjorn@mork.no>
+ Description:
+ 		Unsigned integer.
+ 
+-		Write a number ranging from 1 to 127 to add a qmap mux
++		Write a number ranging from 1 to 254 to add a qmap mux
+ 		based network device, supported by recent Qualcomm based
+ 		modems.
+ 
+@@ -46,5 +46,5 @@ Contact:	Bjørn Mork <bjorn@mork.no>
+ Description:
+ 		Unsigned integer.
+ 
+-		Write a number ranging from 1 to 127 to delete a previously
++		Write a number ranging from 1 to 254 to delete a previously
+ 		created qmap mux based network device.
+diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
+index ffc064c1ec68..49311f3da6f2 100644
+--- a/Documentation/admin-guide/hw-vuln/index.rst
++++ b/Documentation/admin-guide/hw-vuln/index.rst
+@@ -9,5 +9,6 @@ are configurable at compile, boot or run time.
+ .. toctree::
+    :maxdepth: 1
+ 
++   spectre
+    l1tf
+    mds
+diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
+new file mode 100644
+index 000000000000..25f3b2532198
+--- /dev/null
++++ b/Documentation/admin-guide/hw-vuln/spectre.rst
+@@ -0,0 +1,697 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++Spectre Side Channels
++=====================
++
++Spectre is a class of side channel attacks that exploit branch prediction
++and speculative execution on modern CPUs to read memory, possibly
++bypassing access controls. Speculative execution side channel exploits
++do not modify memory but attempt to infer privileged data in the memory.
++
++This document covers Spectre variant 1 and Spectre variant 2.
++
++Affected processors
++-------------------
++
++Speculative execution side channel methods affect a wide range of modern
++high performance processors, since most modern high speed processors
++use branch prediction and speculative execution.
++
++The following CPUs are vulnerable:
++
++    - Intel Core, Atom, Pentium, and Xeon processors
++
++    - AMD Phenom, EPYC, and Zen processors
++
++    - IBM POWER and zSeries processors
++
++    - Higher end ARM processors
++
++    - Apple CPUs
++
++    - Higher end MIPS CPUs
++
++    - Likely most other high performance CPUs. Contact your CPU vendor for details.
++
++Whether a processor is affected or not can be read out from the Spectre
++vulnerability files in sysfs. See :ref:`spectre_sys_info`.
++
++Related CVEs
++------------
++
++The following CVE entries describe Spectre variants:
++
++   =============   =======================  =================
++   CVE-2017-5753   Bounds check bypass      Spectre variant 1
++   CVE-2017-5715   Branch target injection  Spectre variant 2
++   =============   =======================  =================
++
++Problem
++-------
++
++CPUs use speculative operations to improve performance. That may leave
++traces of memory accesses or computations in the processor's caches,
++buffers, and branch predictors. Malicious software may be able to
++influence the speculative execution paths, and then use the side effects
++of the speculative execution in the CPUs' caches and buffers to infer
++privileged data touched during the speculative execution.
++
++Spectre variant 1 attacks take advantage of speculative execution of
++conditional branches, while Spectre variant 2 attacks use speculative
++execution of indirect branches to leak privileged memory.
++See :ref:`[1] <spec_ref1>` :ref:`[5] <spec_ref5>` :ref:`[7] <spec_ref7>`
++:ref:`[10] <spec_ref10>` :ref:`[11] <spec_ref11>`.
++
++Spectre variant 1 (Bounds Check Bypass)
++---------------------------------------
++
++The bounds check bypass attack :ref:`[2] <spec_ref2>` takes advantage
++of speculative execution that bypasses conditional branch instructions
++used for memory access bounds check (e.g. checking if the index of an
++array results in memory access within a valid range). This results in
++memory accesses to invalid memory (with out-of-bound index) that are
++done speculatively before validation checks resolve. Such speculative
++memory accesses can leave side effects, creating side channels which
++leak information to the attacker.
++
++There are some extensions of Spectre variant 1 attacks for reading data
++over the network, see :ref:`[12] <spec_ref12>`. However such attacks
++are difficult, low bandwidth, fragile, and are considered low risk.
++
++Spectre variant 2 (Branch Target Injection)
++-------------------------------------------
++
++The branch target injection attack takes advantage of speculative
++execution of indirect branches :ref:`[3] <spec_ref3>`.  The indirect
++branch predictors inside the processor used to guess the target of
++indirect branches can be influenced by an attacker, causing gadget code
++to be speculatively executed, thus exposing sensitive data touched by
++the victim. The side effects left in the CPU's caches during speculative
++execution can be measured to infer data values.
++
++.. _poison_btb:
++
++In Spectre variant 2 attacks, the attacker can steer speculative indirect
++branches in the victim to gadget code by poisoning the branch target
++buffer of a CPU used for predicting indirect branch addresses. Such
++poisoning could be done by indirect branching into existing code,
++with the address offset of the indirect branch under the attacker's
++control. Since the branch prediction on impacted hardware does not
++fully disambiguate branch address and uses the offset for prediction,
++this could cause privileged code's indirect branch to jump to a gadget
++code with the same offset.
++
++The most useful gadgets take an attacker-controlled input parameter (such
++as a register value) so that the memory read can be controlled. Gadgets
++without input parameters might be possible, but the attacker would have
++very little control over what memory can be read, reducing the risk of
++the attack revealing useful data.
++
++One other variant 2 attack vector is for the attacker to poison the
++return stack buffer (RSB) :ref:`[13] <spec_ref13>` to cause speculative
++subroutine return instruction execution to go to a gadget.  An attacker's
++imbalanced subroutine call instructions might "poison" entries in the
++return stack buffer which are later consumed by a victim's subroutine
++return instructions.  This attack can be mitigated by flushing the return
++stack buffer on context switch, or virtual machine (VM) exit.
++
++On systems with simultaneous multi-threading (SMT), attacks are possible
++from the sibling thread, as level 1 cache and branch target buffer
++(BTB) may be shared between hardware threads in a CPU core.  A malicious
++program running on the sibling thread may influence its peer's BTB to
++steer its indirect branch speculations to gadget code, and measure the
++speculative execution's side effects left in level 1 cache to infer the
++victim's data.
++
++Attack scenarios
++----------------
++
++The following list of attack scenarios have been anticipated, but may
++not cover all possible attack vectors.
++
++1. A user process attacking the kernel
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   The attacker passes a parameter to the kernel via a register or
++   via a known address in memory during a syscall. Such parameter may
++   be used later by the kernel as an index to an array or to derive
++   a pointer for a Spectre variant 1 attack.  The index or pointer
++   is invalid, but bound checks are bypassed in the code branch taken
++   for speculative execution. This could cause privileged memory to be
++   accessed and leaked.
++
++   For kernel code that has been identified where data pointers could
++   potentially be influenced for Spectre attacks, new "nospec" accessor
++   macros are used to prevent speculative loading of data.
++
++   Spectre variant 2 attacker can :ref:`poison <poison_btb>` the branch
++   target buffer (BTB) before issuing syscall to launch an attack.
++   After entering the kernel, the kernel could use the poisoned branch
++   target buffer on indirect jump and jump to gadget code in speculative
++   execution.
++
++   If an attacker tries to control the memory addresses leaked during
++   speculative execution, he would also need to pass a parameter to the
++   gadget, either through a register or a known address in memory. After
++   the gadget has executed, he can measure the side effect.
++
++   The kernel can protect itself against consuming poisoned branch
++   target buffer entries by using return trampolines (also known as
++   "retpoline") :ref:`[3] <spec_ref3>` :ref:`[9] <spec_ref9>` for all
++   indirect branches. Return trampolines trap speculative execution paths
++   to prevent jumping to gadget code during speculative execution.
++   x86 CPUs with Enhanced Indirect Branch Restricted Speculation
++   (Enhanced IBRS) available in hardware should use the feature to
++   mitigate Spectre variant 2 instead of retpoline. Enhanced IBRS is
++   more efficient than retpoline.
++
++   There may be gadget code in firmware which could be exploited with
++   Spectre variant 2 attack by a rogue user process. To mitigate such
++   attacks on x86, Indirect Branch Restricted Speculation (IBRS) feature
++   is turned on before the kernel invokes any firmware code.
++
++2. A user process attacking another user process
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   A malicious user process can try to attack another user process,
++   either via a context switch on the same hardware thread, or from the
++   sibling hyperthread sharing a physical processor core on simultaneous
++   multi-threading (SMT) system.
++
++   Spectre variant 1 attacks generally require passing parameters
++   between the processes, which needs a data passing relationship, such
++   as remote procedure calls (RPC).  Those parameters are used in gadget
++   code to derive invalid data pointers accessing privileged memory in
++   the attacked process.
++
++   Spectre variant 2 attacks can be launched from a rogue process by
++   :ref:`poisoning <poison_btb>` the branch target buffer.  This can
++   influence the indirect branch targets for a victim process that either
++   runs later on the same hardware thread, or running concurrently on
++   a sibling hardware thread sharing the same physical core.
++
++   A user process can protect itself against Spectre variant 2 attacks
++   by using the prctl() syscall to disable indirect branch speculation
++   for itself.  An administrator can also cordon off an unsafe process
++   from polluting the branch target buffer by disabling the process's
++   indirect branch speculation. This comes with a performance cost
++   from not using indirect branch speculation and clearing the branch
++   target buffer.  When SMT is enabled on x86, for a process that has
++   indirect branch speculation disabled, Single Threaded Indirect Branch
++   Predictors (STIBP) :ref:`[4] <spec_ref4>` are turned on to prevent the
++   sibling thread from controlling branch target buffer.  In addition,
++   the Indirect Branch Prediction Barrier (IBPB) is issued to clear the
++   branch target buffer when context switching to and from such process.
++
++   On x86, the return stack buffer is stuffed on context switch.
++   This prevents the branch target buffer from being used for branch
++   prediction when the return stack buffer underflows while switching to
++   a deeper call stack. Any poisoned entries in the return stack buffer
++   left by the previous process will also be cleared.
++
++   User programs should use address space randomization to make attacks
++   more difficult (Set /proc/sys/kernel/randomize_va_space = 1 or 2).
++
++3. A virtualized guest attacking the host
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   The attack mechanism is similar to how user processes attack the
++   kernel.  The kernel is entered via hyper-calls or other virtualization
++   exit paths.
++
++   For Spectre variant 1 attacks, rogue guests can pass parameters
++   (e.g. in registers) via hyper-calls to derive invalid pointers to
++   speculate into privileged memory after entering the kernel.  For places
++   where such kernel code has been identified, nospec accessor macros
++   are used to stop speculative memory access.
++
++   For Spectre variant 2 attacks, rogue guests can :ref:`poison
++   <poison_btb>` the branch target buffer or return stack buffer, causing
++   the kernel to jump to gadget code in the speculative execution paths.
++
++   To mitigate variant 2, the host kernel can use return trampolines
++   for indirect branches to bypass the poisoned branch target buffer,
++   and flushing the return stack buffer on VM exit.  This prevents rogue
++   guests from affecting indirect branching in the host kernel.
++
++   To protect host processes from rogue guests, host processes can have
++   indirect branch speculation disabled via prctl().  The branch target
++   buffer is cleared before context switching to such processes.
++
++4. A virtualized guest attacking other guest
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   A rogue guest may attack another guest to get data accessible by the
++   other guest.
++
++   Spectre variant 1 attacks are possible if parameters can be passed
++   between guests.  This may be done via mechanisms such as shared memory
++   or message passing.  Such parameters could be used to derive data
++   pointers to privileged data in guest.  The privileged data could be
++   accessed by gadget code in the victim's speculation paths.
++
++   Spectre variant 2 attacks can be launched from a rogue guest by
++   :ref:`poisoning <poison_btb>` the branch target buffer or the return
++   stack buffer. Such poisoned entries could be used to influence
++   speculation execution paths in the victim guest.
++
++   Linux kernel mitigates attacks to other guests running in the same
++   CPU hardware thread by flushing the return stack buffer on VM exit,
++   and clearing the branch target buffer before switching to a new guest.
++
++   If SMT is used, Spectre variant 2 attacks from an untrusted guest
++   in the sibling hyperthread can be mitigated by the administrator,
++   by turning off the unsafe guest's indirect branch speculation via
++   prctl().  A guest can also protect itself by turning on microcode
++   based mitigations (such as IBPB or STIBP on x86) within the guest.
++
++.. _spectre_sys_info:
++
++Spectre system information
++--------------------------
++
++The Linux kernel provides a sysfs interface to enumerate the current
++mitigation status of the system for Spectre: whether the system is
++vulnerable, and which mitigations are active.
++
++The sysfs file showing Spectre variant 1 mitigation status is:
++
++   /sys/devices/system/cpu/vulnerabilities/spectre_v1
++
++The possible values in this file are:
++
++  =======================================  =================================
++  'Mitigation: __user pointer sanitation'  Protection in kernel on a case by
++                                           case base with explicit pointer
++                                           sanitation.
++  =======================================  =================================
++
++However, the protections are put in place on a case by case basis,
++and there is no guarantee that all possible attack vectors for Spectre
++variant 1 are covered.
++
++The spectre_v2 kernel file reports if the kernel has been compiled with
++retpoline mitigation or if the CPU has hardware mitigation, and if the
++CPU has support for additional process-specific mitigation.
++
++This file also reports CPU features enabled by microcode to mitigate
++attack between user processes:
++
++1. Indirect Branch Prediction Barrier (IBPB) to add additional
++   isolation between processes of different users.
++2. Single Thread Indirect Branch Predictors (STIBP) to add additional
++   isolation between CPU threads running on the same core.
++
++These CPU features may impact performance when used and can be enabled
++per process on a case-by-case base.
++
++The sysfs file showing Spectre variant 2 mitigation status is:
++
++   /sys/devices/system/cpu/vulnerabilities/spectre_v2
++
++The possible values in this file are:
++
++  - Kernel status:
++
++  ====================================  =================================
++  'Not affected'                        The processor is not vulnerable
++  'Vulnerable'                          Vulnerable, no mitigation
++  'Mitigation: Full generic retpoline'  Software-focused mitigation
++  'Mitigation: Full AMD retpoline'      AMD-specific software mitigation
++  'Mitigation: Enhanced IBRS'           Hardware-focused mitigation
++  ====================================  =================================
++
++  - Firmware status: Show if Indirect Branch Restricted Speculation (IBRS) is
++    used to protect against Spectre variant 2 attacks when calling firmware (x86 only).
++
++  ========== =============================================================
++  'IBRS_FW'  Protection against user program attacks when calling firmware
++  ========== =============================================================
++
++  - Indirect branch prediction barrier (IBPB) status for protection between
++    processes of different users. This feature can be controlled through
++    prctl() per process, or through kernel command line options. This is
++    an x86 only feature. For more details see below.
++
++  ===================   ========================================================
++  'IBPB: disabled'      IBPB unused
++  'IBPB: always-on'     Use IBPB on all tasks
++  'IBPB: conditional'   Use IBPB on SECCOMP or indirect branch restricted tasks
++  ===================   ========================================================
++
++  - Single threaded indirect branch prediction (STIBP) status for protection
++    between different hyper threads. This feature can be controlled through
++    prctl per process, or through kernel command line options. This is x86
++    only feature. For more details see below.
++
++  ====================  ========================================================
++  'STIBP: disabled'     STIBP unused
++  'STIBP: forced'       Use STIBP on all tasks
++  'STIBP: conditional'  Use STIBP on SECCOMP or indirect branch restricted tasks
++  ====================  ========================================================
++
++  - Return stack buffer (RSB) protection status:
++
++  =============   ===========================================
++  'RSB filling'   Protection of RSB on context switch enabled
++  =============   ===========================================
++
++Full mitigation might require a microcode update from the CPU
++vendor. When the necessary microcode is not available, the kernel will
++report vulnerability.
++
++Turning on mitigation for Spectre variant 1 and Spectre variant 2
++-----------------------------------------------------------------
++
++1. Kernel mitigation
++^^^^^^^^^^^^^^^^^^^^
++
++   For the Spectre variant 1, vulnerable kernel code (as determined
++   by code audit or scanning tools) is annotated on a case by case
++   basis to use nospec accessor macros for bounds clipping :ref:`[2]
++   <spec_ref2>` to avoid any usable disclosure gadgets. However, it may
++   not cover all attack vectors for Spectre variant 1.
++
++   For Spectre variant 2 mitigation, the compiler turns indirect calls or
++   jumps in the kernel into equivalent return trampolines (retpolines)
++   :ref:`[3] <spec_ref3>` :ref:`[9] <spec_ref9>` to go to the target
++   addresses.  Speculative execution paths under retpolines are trapped
++   in an infinite loop to prevent any speculative execution jumping to
++   a gadget.
++
++   To turn on retpoline mitigation on a vulnerable CPU, the kernel
++   needs to be compiled with a gcc compiler that supports the
++   -mindirect-branch=thunk-extern -mindirect-branch-register options.
++   If the kernel is compiled with a Clang compiler, the compiler needs
++   to support -mretpoline-external-thunk option.  The kernel config
++   CONFIG_RETPOLINE needs to be turned on, and the CPU needs to run with
++   the latest updated microcode.
++
++   On Intel Skylake-era systems the mitigation covers most, but not all,
++   cases. See :ref:`[3] <spec_ref3>` for more details.
++
++   On CPUs with hardware mitigation for Spectre variant 2 (e.g. Enhanced
++   IBRS on x86), retpoline is automatically disabled at run time.
++
++   The retpoline mitigation is turned on by default on vulnerable
++   CPUs. It can be forced on or off by the administrator
++   via the kernel command line and sysfs control files. See
++   :ref:`spectre_mitigation_control_command_line`.
++
++   On x86, indirect branch restricted speculation is turned on by default
++   before invoking any firmware code to prevent Spectre variant 2 exploits
++   using the firmware.
++
++   Using kernel address space randomization (CONFIG_RANDOMIZE_SLAB=y
++   and CONFIG_SLAB_FREELIST_RANDOM=y in the kernel configuration) makes
++   attacks on the kernel generally more difficult.
++
++2. User program mitigation
++^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   User programs can mitigate Spectre variant 1 using LFENCE or "bounds
++   clipping". For more details see :ref:`[2] <spec_ref2>`.
++
++   For Spectre variant 2 mitigation, individual user programs
++   can be compiled with return trampolines for indirect branches.
++   This protects them from consuming poisoned entries in the branch
++   target buffer left by malicious software.  Alternatively, the
++   programs can disable their indirect branch speculation via prctl()
++   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
++   On x86, this will turn on STIBP to guard against attacks from the
++   sibling thread when the user program is running, and use IBPB to
++   flush the branch target buffer when switching to/from the program.
++
++   Restricting indirect branch speculation on a user program will
++   also prevent the program from launching a variant 2 attack
++   on x86.  All sand-boxed SECCOMP programs have indirect branch
++   speculation restricted by default.  Administrators can change
++   that behavior via the kernel command line and sysfs control files.
++   See :ref:`spectre_mitigation_control_command_line`.
++
++   Programs that disable their indirect branch speculation will have
++   more overhead and run slower.
++
++   User programs should use address space randomization
++   (/proc/sys/kernel/randomize_va_space = 1 or 2) to make attacks more
++   difficult.
++
++3. VM mitigation
++^^^^^^^^^^^^^^^^
++
++   Within the kernel, Spectre variant 1 attacks from rogue guests are
++   mitigated on a case by case basis in VM exit paths. Vulnerable code
++   uses nospec accessor macros for "bounds clipping", to avoid any
++   usable disclosure gadgets.  However, this may not cover all variant
++   1 attack vectors.
++
++   For Spectre variant 2 attacks from rogue guests to the kernel, the
++   Linux kernel uses retpoline or Enhanced IBRS to prevent consumption of
++   poisoned entries in branch target buffer left by rogue guests.  It also
++   flushes the return stack buffer on every VM exit to prevent a return
++   stack buffer underflow so poisoned branch target buffer could be used,
++   or attacker guests leaving poisoned entries in the return stack buffer.
++
++   To mitigate guest-to-guest attacks in the same CPU hardware thread,
++   the branch target buffer is sanitized by flushing before switching
++   to a new guest on a CPU.
++
++   The above mitigations are turned on by default on vulnerable CPUs.
++
++   To mitigate guest-to-guest attacks from sibling thread when SMT is
++   in use, an untrusted guest running in the sibling thread can have
++   its indirect branch speculation disabled by administrator via prctl().
++
++   The kernel also allows guests to use any microcode based mitigation
++   they choose to use (such as IBPB or STIBP on x86) to protect themselves.
++
++.. _spectre_mitigation_control_command_line:
++
++Mitigation control on the kernel command line
++---------------------------------------------
++
++Spectre variant 2 mitigation can be disabled or force enabled at the
++kernel command line.
++
++	nospectre_v2
++
++		[X86] Disable all mitigations for the Spectre variant 2
++		(indirect branch prediction) vulnerability. System may
++		allow data leaks with this option, which is equivalent
++		to spectre_v2=off.
++
++
++        spectre_v2=
++
++		[X86] Control mitigation of Spectre variant 2
++		(indirect branch speculation) vulnerability.
++		The default operation protects the kernel from
++		user space attacks.
++
++		on
++			unconditionally enable, implies
++			spectre_v2_user=on
++		off
++			unconditionally disable, implies
++		        spectre_v2_user=off
++		auto
++			kernel detects whether your CPU model is
++		        vulnerable
++
++		Selecting 'on' will, and 'auto' may, choose a
++		mitigation method at run time according to the
++		CPU, the available microcode, the setting of the
++		CONFIG_RETPOLINE configuration option, and the
++		compiler with which the kernel was built.
++
++		Selecting 'on' will also enable the mitigation
++		against user space to user space task attacks.
++
++		Selecting 'off' will disable both the kernel and
++		the user space protections.
++
++		Specific mitigations can also be selected manually:
++
++		retpoline
++					replace indirect branches
++		retpoline,generic
++					google's original retpoline
++		retpoline,amd
++					AMD-specific minimal thunk
++
++		Not specifying this option is equivalent to
++		spectre_v2=auto.
++
++For user space mitigation:
++
++        spectre_v2_user=
++
++		[X86] Control mitigation of Spectre variant 2
++		(indirect branch speculation) vulnerability between
++		user space tasks
++
++		on
++			Unconditionally enable mitigations. Is
++			enforced by spectre_v2=on
++
++		off
++			Unconditionally disable mitigations. Is
++			enforced by spectre_v2=off
++
++		prctl
++			Indirect branch speculation is enabled,
++			but mitigation can be enabled via prctl
++			per thread. The mitigation control state
++			is inherited on fork.
++
++		prctl,ibpb
++			Like "prctl" above, but only STIBP is
++			controlled per thread. IBPB is issued
++			always when switching between different user
++			space processes.
++
++		seccomp
++			Same as "prctl" above, but all seccomp
++			threads will enable the mitigation unless
++			they explicitly opt out.
++
++		seccomp,ibpb
++			Like "seccomp" above, but only STIBP is
++			controlled per thread. IBPB is issued
++			always when switching between different
++			user space processes.
++
++		auto
++			Kernel selects the mitigation depending on
++			the available CPU features and vulnerability.
++
++		Default mitigation:
++		If CONFIG_SECCOMP=y then "seccomp", otherwise "prctl"
++
++		Not specifying this option is equivalent to
++		spectre_v2_user=auto.
++
++		In general the kernel by default selects
++		reasonable mitigations for the current CPU. To
++		disable Spectre variant 2 mitigations, boot with
++		spectre_v2=off. Spectre variant 1 mitigations
++		cannot be disabled.
++
++Mitigation selection guide
++--------------------------
++
++1. Trusted userspace
++^^^^^^^^^^^^^^^^^^^^
++
++   If all userspace applications are from trusted sources and do not
++   execute externally supplied untrusted code, then the mitigations can
++   be disabled.
++
++2. Protect sensitive programs
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   For security-sensitive programs that have secrets (e.g. crypto
++   keys), protection against Spectre variant 2 can be put in place by
++   disabling indirect branch speculation when the program is running
++   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
++
++3. Sandbox untrusted programs
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   Untrusted programs that could be a source of attacks can be cordoned
++   off by disabling their indirect branch speculation when they are run
++   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
++   This prevents untrusted programs from polluting the branch target
++   buffer.  All programs running in SECCOMP sandboxes have indirect
++   branch speculation restricted by default. This behavior can be
++   changed via the kernel command line and sysfs control files. See
++   :ref:`spectre_mitigation_control_command_line`.
++
++3. High security mode
++^^^^^^^^^^^^^^^^^^^^^
++
++   All Spectre variant 2 mitigations can be forced on
++   at boot time for all programs (See the "on" option in
++   :ref:`spectre_mitigation_control_command_line`).  This will add
++   overhead as indirect branch speculations for all programs will be
++   restricted.
++
++   On x86, branch target buffer will be flushed with IBPB when switching
++   to a new program. STIBP is left on all the time to protect programs
++   against variant 2 attacks originating from programs running on
++   sibling threads.
++
++   Alternatively, STIBP can be used only when running programs
++   whose indirect branch speculation is explicitly disabled,
++   while IBPB is still used all the time when switching to a new
++   program to clear the branch target buffer (See "ibpb" option in
++   :ref:`spectre_mitigation_control_command_line`).  This "ibpb" option
++   has less performance cost than the "on" option, which leaves STIBP
++   on all the time.
++
++References on Spectre
++---------------------
++
++Intel white papers:
++
++.. _spec_ref1:
++
++[1] `Intel analysis of speculative execution side channels <https://newsroom.intel.com/wp-content/uploads/sites/11/2018/01/Intel-Analysis-of-Speculative-Execution-Side-Channels.pdf>`_.
++
++.. _spec_ref2:
++
++[2] `Bounds check bypass <https://software.intel.com/security-software-guidance/software-guidance/bounds-check-bypass>`_.
++
++.. _spec_ref3:
++
++[3] `Deep dive: Retpoline: A branch target injection mitigation <https://software.intel.com/security-software-guidance/insights/deep-dive-retpoline-branch-target-injection-mitigation>`_.
++
++.. _spec_ref4:
++
++[4] `Deep Dive: Single Thread Indirect Branch Predictors <https://software.intel.com/security-software-guidance/insights/deep-dive-single-thread-indirect-branch-predictors>`_.
++
++AMD white papers:
++
++.. _spec_ref5:
++
++[5] `AMD64 technology indirect branch control extension <https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf>`_.
++
++.. _spec_ref6:
++
++[6] `Software techniques for managing speculation on AMD processors <https://developer.amd.com/wp-content/resources/90343-B_SoftwareTechniquesforManagingSpeculation_WP_7-18Update_FNL.pdf>`_.
++
++ARM white papers:
++
++.. _spec_ref7:
++
++[7] `Cache speculation side-channels <https://developer.arm.com/support/arm-security-updates/speculative-processor-vulnerability/download-the-whitepaper>`_.
++
++.. _spec_ref8:
++
++[8] `Cache speculation issues update <https://developer.arm.com/support/arm-security-updates/speculative-processor-vulnerability/latest-updates/cache-speculation-issues-update>`_.
++
++Google white paper:
++
++.. _spec_ref9:
++
++[9] `Retpoline: a software construct for preventing branch-target-injection <https://support.google.com/faqs/answer/7625886>`_.
++
++MIPS white paper:
++
++.. _spec_ref10:
++
++[10] `MIPS: response on speculative execution and side channel vulnerabilities <https://www.mips.com/blog/mips-response-on-speculative-execution-and-side-channel-vulnerabilities/>`_.
++
++Academic papers:
++
++.. _spec_ref11:
++
++[11] `Spectre Attacks: Exploiting Speculative Execution <https://spectreattack.com/spectre.pdf>`_.
++
++.. _spec_ref12:
++
++[12] `NetSpectre: Read Arbitrary Memory over Network <https://arxiv.org/abs/1807.10535>`_.
++
++.. _spec_ref13:
++
++[13] `Spectre Returns! Speculation Attacks using the Return Stack Buffer <https://www.usenix.org/system/files/conference/woot18/woot18-paper-koruyeh.pdf>`_.
 diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
 index ee3723beb701..33b38716b77f 100644
 --- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
@@ -70,20 +805,34 @@ index ee3723beb701..33b38716b77f 100644
   - reg: SPI chip select.
   - clocks: The clock feeding the CAN controller.
   - interrupt-parent: The parent interrupt controller.
+diff --git a/Documentation/userspace-api/spec_ctrl.rst b/Documentation/userspace-api/spec_ctrl.rst
+index c4dbe6f7cdae..0fda8f614110 100644
+--- a/Documentation/userspace-api/spec_ctrl.rst
++++ b/Documentation/userspace-api/spec_ctrl.rst
+@@ -47,6 +47,8 @@ If PR_SPEC_PRCTL is set, then the per-task control of the mitigation is
+ available. If not set, prctl(PR_SET_SPECULATION_CTRL) for the speculation
+ misfeature will fail.
+ 
++.. _set_spec_ctrl:
++
+ PR_SET_SPECULATION_CTRL
+ -----------------------
+ 
 diff --git a/Makefile b/Makefile
-index c80dad45334e..1ab22a85118f 100644
+index c36e64bd9ae7..97c744513af0 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1,6 +1,6 @@
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
  VERSION = 4
- PATCHLEVEL = 9
--SUBLEVEL = 185
-+SUBLEVEL = 186
+ PATCHLEVEL = 14
+-SUBLEVEL = 133
++SUBLEVEL = 134
  EXTRAVERSION =
- NAME = Roaring Lionus
+ NAME = Petit Gorille
  
 diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
-index 61fd1ce63c56..6bb9f8ea9291 100644
+index 333daab7def0..93453fa48193 100644
 --- a/arch/arc/kernel/unwind.c
 +++ b/arch/arc/kernel/unwind.c
 @@ -185,11 +185,6 @@ static void *__init unw_hdr_alloc_early(unsigned long sz)
@@ -109,11 +858,37 @@ index 61fd1ce63c56..6bb9f8ea9291 100644
  
  static struct unwind_table *last_table;
  
+diff --git a/arch/arm/boot/dts/am335x-pcm-953.dtsi b/arch/arm/boot/dts/am335x-pcm-953.dtsi
+index 1ec8e0d80191..572fbd254690 100644
+--- a/arch/arm/boot/dts/am335x-pcm-953.dtsi
++++ b/arch/arm/boot/dts/am335x-pcm-953.dtsi
+@@ -197,7 +197,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
+index 8ce541739b24..83e4fe595e37 100644
+--- a/arch/arm/boot/dts/am335x-wega.dtsi
++++ b/arch/arm/boot/dts/am335x-wega.dtsi
+@@ -157,7 +157,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
 diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 7839300fe46b..200d9082caa4 100644
+index 036aeba4f02c..49f4bdc0d864 100644
 --- a/arch/arm/boot/dts/imx6ul.dtsi
 +++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -332,7 +332,7 @@
+@@ -342,7 +342,7 @@
  			pwm1: pwm@02080000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x02080000 0x4000>;
@@ -122,7 +897,7 @@ index 7839300fe46b..200d9082caa4 100644
  				clocks = <&clks IMX6UL_CLK_PWM1>,
  					 <&clks IMX6UL_CLK_PWM1>;
  				clock-names = "ipg", "per";
-@@ -343,7 +343,7 @@
+@@ -353,7 +353,7 @@
  			pwm2: pwm@02084000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x02084000 0x4000>;
@@ -131,7 +906,7 @@ index 7839300fe46b..200d9082caa4 100644
  				clocks = <&clks IMX6UL_CLK_PWM2>,
  					 <&clks IMX6UL_CLK_PWM2>;
  				clock-names = "ipg", "per";
-@@ -354,7 +354,7 @@
+@@ -364,7 +364,7 @@
  			pwm3: pwm@02088000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x02088000 0x4000>;
@@ -140,7 +915,7 @@ index 7839300fe46b..200d9082caa4 100644
  				clocks = <&clks IMX6UL_CLK_PWM3>,
  					 <&clks IMX6UL_CLK_PWM3>;
  				clock-names = "ipg", "per";
-@@ -365,7 +365,7 @@
+@@ -375,7 +375,7 @@
  			pwm4: pwm@0208c000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x0208c000 0x4000>;
@@ -150,10 +925,10 @@ index 7839300fe46b..200d9082caa4 100644
  					 <&clks IMX6UL_CLK_PWM4>;
  				clock-names = "ipg", "per";
 diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 8e4539f69fdc..3bdf0d588238 100644
+index 2f6ac1afa804..686e7e6f2eb3 100644
 --- a/arch/arm/mach-davinci/board-da850-evm.c
 +++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1479,6 +1479,8 @@ static __init void da850_evm_init(void)
+@@ -1464,6 +1464,8 @@ static __init void da850_evm_init(void)
  	if (ret)
  		pr_warn("%s: dsp/rproc registration failed: %d\n",
  			__func__, ret);
@@ -163,10 +938,10 @@ index 8e4539f69fdc..3bdf0d588238 100644
  
  #ifdef CONFIG_SERIAL_8250_CONSOLE
 diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index 9a22d40602aa..24779504f489 100644
+index 22440c05d66a..7120f93eab0b 100644
 --- a/arch/arm/mach-davinci/devices-da8xx.c
 +++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -706,6 +706,9 @@ static struct platform_device da8xx_lcdc_device = {
+@@ -699,6 +699,9 @@ static struct platform_device da8xx_lcdc_device = {
  	.id		= 0,
  	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
  	.resource	= da8xx_lcdc_resources,
@@ -177,7 +952,7 @@ index 9a22d40602aa..24779504f489 100644
  
  int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
 diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index 718981bb80cd..0aec48c1736b 100644
+index a2dd13217c89..2819c43fe754 100644
 --- a/arch/arm/mach-omap2/prm3xxx.c
 +++ b/arch/arm/mach-omap2/prm3xxx.c
 @@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
@@ -189,3169 +964,11 @@ index 718981bb80cd..0aec48c1736b 100644
  {
  	if (prm_features & PRM_HAS_IO_WAKEUP)
  		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
-diff --git a/arch/arm64/crypto/sha256-core.S b/arch/arm64/crypto/sha256-core.S
-deleted file mode 100644
-index 3ce82cc860bc..000000000000
---- a/arch/arm64/crypto/sha256-core.S
-+++ /dev/null
-@@ -1,2061 +0,0 @@
--// Copyright 2014-2016 The OpenSSL Project Authors. All Rights Reserved.
--//
--// Licensed under the OpenSSL license (the "License").  You may not use
--// this file except in compliance with the License.  You can obtain a copy
--// in the file LICENSE in the source distribution or at
--// https://www.openssl.org/source/license.html
--
--// ====================================================================
--// Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
--// project. The module is, however, dual licensed under OpenSSL and
--// CRYPTOGAMS licenses depending on where you obtain it. For further
--// details see http://www.openssl.org/~appro/cryptogams/.
--//
--// Permission to use under GPLv2 terms is granted.
--// ====================================================================
--//
--// SHA256/512 for ARMv8.
--//
--// Performance in cycles per processed byte and improvement coefficient
--// over code generated with "default" compiler:
--//
--//		SHA256-hw	SHA256(*)	SHA512
--// Apple A7	1.97		10.5 (+33%)	6.73 (-1%(**))
--// Cortex-A53	2.38		15.5 (+115%)	10.0 (+150%(***))
--// Cortex-A57	2.31		11.6 (+86%)	7.51 (+260%(***))
--// Denver	2.01		10.5 (+26%)	6.70 (+8%)
--// X-Gene			20.0 (+100%)	12.8 (+300%(***))
--// Mongoose	2.36		13.0 (+50%)	8.36 (+33%)
--//
--// (*)	Software SHA256 results are of lesser relevance, presented
--//	mostly for informational purposes.
--// (**)	The result is a trade-off: it's possible to improve it by
--//	10% (or by 1 cycle per round), but at the cost of 20% loss
--//	on Cortex-A53 (or by 4 cycles per round).
--// (***)	Super-impressive coefficients over gcc-generated code are
--//	indication of some compiler "pathology", most notably code
--//	generated with -mgeneral-regs-only is significanty faster
--//	and the gap is only 40-90%.
--//
--// October 2016.
--//
--// Originally it was reckoned that it makes no sense to implement NEON
--// version of SHA256 for 64-bit processors. This is because performance
--// improvement on most wide-spread Cortex-A5x processors was observed
--// to be marginal, same on Cortex-A53 and ~10% on A57. But then it was
--// observed that 32-bit NEON SHA256 performs significantly better than
--// 64-bit scalar version on *some* of the more recent processors. As
--// result 64-bit NEON version of SHA256 was added to provide best
--// all-round performance. For example it executes ~30% faster on X-Gene
--// and Mongoose. [For reference, NEON version of SHA512 is bound to
--// deliver much less improvement, likely *negative* on Cortex-A5x.
--// Which is why NEON support is limited to SHA256.]
--
--#ifndef	__KERNEL__
--# include "arm_arch.h"
--#endif
--
--.text
--
--.extern	OPENSSL_armcap_P
--.globl	sha256_block_data_order
--.type	sha256_block_data_order,%function
--.align	6
--sha256_block_data_order:
--#ifndef	__KERNEL__
--# ifdef	__ILP32__
--	ldrsw	x16,.LOPENSSL_armcap_P
--# else
--	ldr	x16,.LOPENSSL_armcap_P
--# endif
--	adr	x17,.LOPENSSL_armcap_P
--	add	x16,x16,x17
--	ldr	w16,[x16]
--	tst	w16,#ARMV8_SHA256
--	b.ne	.Lv8_entry
--	tst	w16,#ARMV7_NEON
--	b.ne	.Lneon_entry
--#endif
--	stp	x29,x30,[sp,#-128]!
--	add	x29,sp,#0
--
--	stp	x19,x20,[sp,#16]
--	stp	x21,x22,[sp,#32]
--	stp	x23,x24,[sp,#48]
--	stp	x25,x26,[sp,#64]
--	stp	x27,x28,[sp,#80]
--	sub	sp,sp,#4*4
--
--	ldp	w20,w21,[x0]				// load context
--	ldp	w22,w23,[x0,#2*4]
--	ldp	w24,w25,[x0,#4*4]
--	add	x2,x1,x2,lsl#6	// end of input
--	ldp	w26,w27,[x0,#6*4]
--	adr	x30,.LK256
--	stp	x0,x2,[x29,#96]
--
--.Loop:
--	ldp	w3,w4,[x1],#2*4
--	ldr	w19,[x30],#4			// *K++
--	eor	w28,w21,w22				// magic seed
--	str	x1,[x29,#112]
--#ifndef	__AARCH64EB__
--	rev	w3,w3			// 0
--#endif
--	ror	w16,w24,#6
--	add	w27,w27,w19			// h+=K[i]
--	eor	w6,w24,w24,ror#14
--	and	w17,w25,w24
--	bic	w19,w26,w24
--	add	w27,w27,w3			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w20,w21			// a^b, b^c in next round
--	eor	w16,w16,w6,ror#11	// Sigma1(e)
--	ror	w6,w20,#2
--	add	w27,w27,w17			// h+=Ch(e,f,g)
--	eor	w17,w20,w20,ror#9
--	add	w27,w27,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w23,w23,w27			// d+=h
--	eor	w28,w28,w21			// Maj(a,b,c)
--	eor	w17,w6,w17,ror#13	// Sigma0(a)
--	add	w27,w27,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w27,w27,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w4,w4			// 1
--#endif
--	ldp	w5,w6,[x1],#2*4
--	add	w27,w27,w17			// h+=Sigma0(a)
--	ror	w16,w23,#6
--	add	w26,w26,w28			// h+=K[i]
--	eor	w7,w23,w23,ror#14
--	and	w17,w24,w23
--	bic	w28,w25,w23
--	add	w26,w26,w4			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w27,w20			// a^b, b^c in next round
--	eor	w16,w16,w7,ror#11	// Sigma1(e)
--	ror	w7,w27,#2
--	add	w26,w26,w17			// h+=Ch(e,f,g)
--	eor	w17,w27,w27,ror#9
--	add	w26,w26,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w22,w22,w26			// d+=h
--	eor	w19,w19,w20			// Maj(a,b,c)
--	eor	w17,w7,w17,ror#13	// Sigma0(a)
--	add	w26,w26,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w26,w26,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w5,w5			// 2
--#endif
--	add	w26,w26,w17			// h+=Sigma0(a)
--	ror	w16,w22,#6
--	add	w25,w25,w19			// h+=K[i]
--	eor	w8,w22,w22,ror#14
--	and	w17,w23,w22
--	bic	w19,w24,w22
--	add	w25,w25,w5			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w26,w27			// a^b, b^c in next round
--	eor	w16,w16,w8,ror#11	// Sigma1(e)
--	ror	w8,w26,#2
--	add	w25,w25,w17			// h+=Ch(e,f,g)
--	eor	w17,w26,w26,ror#9
--	add	w25,w25,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w21,w21,w25			// d+=h
--	eor	w28,w28,w27			// Maj(a,b,c)
--	eor	w17,w8,w17,ror#13	// Sigma0(a)
--	add	w25,w25,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w25,w25,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w6,w6			// 3
--#endif
--	ldp	w7,w8,[x1],#2*4
--	add	w25,w25,w17			// h+=Sigma0(a)
--	ror	w16,w21,#6
--	add	w24,w24,w28			// h+=K[i]
--	eor	w9,w21,w21,ror#14
--	and	w17,w22,w21
--	bic	w28,w23,w21
--	add	w24,w24,w6			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w25,w26			// a^b, b^c in next round
--	eor	w16,w16,w9,ror#11	// Sigma1(e)
--	ror	w9,w25,#2
--	add	w24,w24,w17			// h+=Ch(e,f,g)
--	eor	w17,w25,w25,ror#9
--	add	w24,w24,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w20,w20,w24			// d+=h
--	eor	w19,w19,w26			// Maj(a,b,c)
--	eor	w17,w9,w17,ror#13	// Sigma0(a)
--	add	w24,w24,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w24,w24,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w7,w7			// 4
--#endif
--	add	w24,w24,w17			// h+=Sigma0(a)
--	ror	w16,w20,#6
--	add	w23,w23,w19			// h+=K[i]
--	eor	w10,w20,w20,ror#14
--	and	w17,w21,w20
--	bic	w19,w22,w20
--	add	w23,w23,w7			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w24,w25			// a^b, b^c in next round
--	eor	w16,w16,w10,ror#11	// Sigma1(e)
--	ror	w10,w24,#2
--	add	w23,w23,w17			// h+=Ch(e,f,g)
--	eor	w17,w24,w24,ror#9
--	add	w23,w23,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w27,w27,w23			// d+=h
--	eor	w28,w28,w25			// Maj(a,b,c)
--	eor	w17,w10,w17,ror#13	// Sigma0(a)
--	add	w23,w23,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w23,w23,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w8,w8			// 5
--#endif
--	ldp	w9,w10,[x1],#2*4
--	add	w23,w23,w17			// h+=Sigma0(a)
--	ror	w16,w27,#6
--	add	w22,w22,w28			// h+=K[i]
--	eor	w11,w27,w27,ror#14
--	and	w17,w20,w27
--	bic	w28,w21,w27
--	add	w22,w22,w8			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w23,w24			// a^b, b^c in next round
--	eor	w16,w16,w11,ror#11	// Sigma1(e)
--	ror	w11,w23,#2
--	add	w22,w22,w17			// h+=Ch(e,f,g)
--	eor	w17,w23,w23,ror#9
--	add	w22,w22,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w26,w26,w22			// d+=h
--	eor	w19,w19,w24			// Maj(a,b,c)
--	eor	w17,w11,w17,ror#13	// Sigma0(a)
--	add	w22,w22,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w22,w22,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w9,w9			// 6
--#endif
--	add	w22,w22,w17			// h+=Sigma0(a)
--	ror	w16,w26,#6
--	add	w21,w21,w19			// h+=K[i]
--	eor	w12,w26,w26,ror#14
--	and	w17,w27,w26
--	bic	w19,w20,w26
--	add	w21,w21,w9			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w22,w23			// a^b, b^c in next round
--	eor	w16,w16,w12,ror#11	// Sigma1(e)
--	ror	w12,w22,#2
--	add	w21,w21,w17			// h+=Ch(e,f,g)
--	eor	w17,w22,w22,ror#9
--	add	w21,w21,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w25,w25,w21			// d+=h
--	eor	w28,w28,w23			// Maj(a,b,c)
--	eor	w17,w12,w17,ror#13	// Sigma0(a)
--	add	w21,w21,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w21,w21,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w10,w10			// 7
--#endif
--	ldp	w11,w12,[x1],#2*4
--	add	w21,w21,w17			// h+=Sigma0(a)
--	ror	w16,w25,#6
--	add	w20,w20,w28			// h+=K[i]
--	eor	w13,w25,w25,ror#14
--	and	w17,w26,w25
--	bic	w28,w27,w25
--	add	w20,w20,w10			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w21,w22			// a^b, b^c in next round
--	eor	w16,w16,w13,ror#11	// Sigma1(e)
--	ror	w13,w21,#2
--	add	w20,w20,w17			// h+=Ch(e,f,g)
--	eor	w17,w21,w21,ror#9
--	add	w20,w20,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w24,w24,w20			// d+=h
--	eor	w19,w19,w22			// Maj(a,b,c)
--	eor	w17,w13,w17,ror#13	// Sigma0(a)
--	add	w20,w20,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w20,w20,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w11,w11			// 8
--#endif
--	add	w20,w20,w17			// h+=Sigma0(a)
--	ror	w16,w24,#6
--	add	w27,w27,w19			// h+=K[i]
--	eor	w14,w24,w24,ror#14
--	and	w17,w25,w24
--	bic	w19,w26,w24
--	add	w27,w27,w11			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w20,w21			// a^b, b^c in next round
--	eor	w16,w16,w14,ror#11	// Sigma1(e)
--	ror	w14,w20,#2
--	add	w27,w27,w17			// h+=Ch(e,f,g)
--	eor	w17,w20,w20,ror#9
--	add	w27,w27,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w23,w23,w27			// d+=h
--	eor	w28,w28,w21			// Maj(a,b,c)
--	eor	w17,w14,w17,ror#13	// Sigma0(a)
--	add	w27,w27,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w27,w27,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w12,w12			// 9
--#endif
--	ldp	w13,w14,[x1],#2*4
--	add	w27,w27,w17			// h+=Sigma0(a)
--	ror	w16,w23,#6
--	add	w26,w26,w28			// h+=K[i]
--	eor	w15,w23,w23,ror#14
--	and	w17,w24,w23
--	bic	w28,w25,w23
--	add	w26,w26,w12			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w27,w20			// a^b, b^c in next round
--	eor	w16,w16,w15,ror#11	// Sigma1(e)
--	ror	w15,w27,#2
--	add	w26,w26,w17			// h+=Ch(e,f,g)
--	eor	w17,w27,w27,ror#9
--	add	w26,w26,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w22,w22,w26			// d+=h
--	eor	w19,w19,w20			// Maj(a,b,c)
--	eor	w17,w15,w17,ror#13	// Sigma0(a)
--	add	w26,w26,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w26,w26,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w13,w13			// 10
--#endif
--	add	w26,w26,w17			// h+=Sigma0(a)
--	ror	w16,w22,#6
--	add	w25,w25,w19			// h+=K[i]
--	eor	w0,w22,w22,ror#14
--	and	w17,w23,w22
--	bic	w19,w24,w22
--	add	w25,w25,w13			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w26,w27			// a^b, b^c in next round
--	eor	w16,w16,w0,ror#11	// Sigma1(e)
--	ror	w0,w26,#2
--	add	w25,w25,w17			// h+=Ch(e,f,g)
--	eor	w17,w26,w26,ror#9
--	add	w25,w25,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w21,w21,w25			// d+=h
--	eor	w28,w28,w27			// Maj(a,b,c)
--	eor	w17,w0,w17,ror#13	// Sigma0(a)
--	add	w25,w25,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w25,w25,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w14,w14			// 11
--#endif
--	ldp	w15,w0,[x1],#2*4
--	add	w25,w25,w17			// h+=Sigma0(a)
--	str	w6,[sp,#12]
--	ror	w16,w21,#6
--	add	w24,w24,w28			// h+=K[i]
--	eor	w6,w21,w21,ror#14
--	and	w17,w22,w21
--	bic	w28,w23,w21
--	add	w24,w24,w14			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w25,w26			// a^b, b^c in next round
--	eor	w16,w16,w6,ror#11	// Sigma1(e)
--	ror	w6,w25,#2
--	add	w24,w24,w17			// h+=Ch(e,f,g)
--	eor	w17,w25,w25,ror#9
--	add	w24,w24,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w20,w20,w24			// d+=h
--	eor	w19,w19,w26			// Maj(a,b,c)
--	eor	w17,w6,w17,ror#13	// Sigma0(a)
--	add	w24,w24,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w24,w24,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w15,w15			// 12
--#endif
--	add	w24,w24,w17			// h+=Sigma0(a)
--	str	w7,[sp,#0]
--	ror	w16,w20,#6
--	add	w23,w23,w19			// h+=K[i]
--	eor	w7,w20,w20,ror#14
--	and	w17,w21,w20
--	bic	w19,w22,w20
--	add	w23,w23,w15			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w24,w25			// a^b, b^c in next round
--	eor	w16,w16,w7,ror#11	// Sigma1(e)
--	ror	w7,w24,#2
--	add	w23,w23,w17			// h+=Ch(e,f,g)
--	eor	w17,w24,w24,ror#9
--	add	w23,w23,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w27,w27,w23			// d+=h
--	eor	w28,w28,w25			// Maj(a,b,c)
--	eor	w17,w7,w17,ror#13	// Sigma0(a)
--	add	w23,w23,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w23,w23,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w0,w0			// 13
--#endif
--	ldp	w1,w2,[x1]
--	add	w23,w23,w17			// h+=Sigma0(a)
--	str	w8,[sp,#4]
--	ror	w16,w27,#6
--	add	w22,w22,w28			// h+=K[i]
--	eor	w8,w27,w27,ror#14
--	and	w17,w20,w27
--	bic	w28,w21,w27
--	add	w22,w22,w0			// h+=X[i]
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w23,w24			// a^b, b^c in next round
--	eor	w16,w16,w8,ror#11	// Sigma1(e)
--	ror	w8,w23,#2
--	add	w22,w22,w17			// h+=Ch(e,f,g)
--	eor	w17,w23,w23,ror#9
--	add	w22,w22,w16			// h+=Sigma1(e)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	add	w26,w26,w22			// d+=h
--	eor	w19,w19,w24			// Maj(a,b,c)
--	eor	w17,w8,w17,ror#13	// Sigma0(a)
--	add	w22,w22,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	//add	w22,w22,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w1,w1			// 14
--#endif
--	ldr	w6,[sp,#12]
--	add	w22,w22,w17			// h+=Sigma0(a)
--	str	w9,[sp,#8]
--	ror	w16,w26,#6
--	add	w21,w21,w19			// h+=K[i]
--	eor	w9,w26,w26,ror#14
--	and	w17,w27,w26
--	bic	w19,w20,w26
--	add	w21,w21,w1			// h+=X[i]
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w22,w23			// a^b, b^c in next round
--	eor	w16,w16,w9,ror#11	// Sigma1(e)
--	ror	w9,w22,#2
--	add	w21,w21,w17			// h+=Ch(e,f,g)
--	eor	w17,w22,w22,ror#9
--	add	w21,w21,w16			// h+=Sigma1(e)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	add	w25,w25,w21			// d+=h
--	eor	w28,w28,w23			// Maj(a,b,c)
--	eor	w17,w9,w17,ror#13	// Sigma0(a)
--	add	w21,w21,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	//add	w21,w21,w17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	w2,w2			// 15
--#endif
--	ldr	w7,[sp,#0]
--	add	w21,w21,w17			// h+=Sigma0(a)
--	str	w10,[sp,#12]
--	ror	w16,w25,#6
--	add	w20,w20,w28			// h+=K[i]
--	ror	w9,w4,#7
--	and	w17,w26,w25
--	ror	w8,w1,#17
--	bic	w28,w27,w25
--	ror	w10,w21,#2
--	add	w20,w20,w2			// h+=X[i]
--	eor	w16,w16,w25,ror#11
--	eor	w9,w9,w4,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w21,w22			// a^b, b^c in next round
--	eor	w16,w16,w25,ror#25	// Sigma1(e)
--	eor	w10,w10,w21,ror#13
--	add	w20,w20,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w8,w8,w1,ror#19
--	eor	w9,w9,w4,lsr#3	// sigma0(X[i+1])
--	add	w20,w20,w16			// h+=Sigma1(e)
--	eor	w19,w19,w22			// Maj(a,b,c)
--	eor	w17,w10,w21,ror#22	// Sigma0(a)
--	eor	w8,w8,w1,lsr#10	// sigma1(X[i+14])
--	add	w3,w3,w12
--	add	w24,w24,w20			// d+=h
--	add	w20,w20,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w3,w3,w9
--	add	w20,w20,w17			// h+=Sigma0(a)
--	add	w3,w3,w8
--.Loop_16_xx:
--	ldr	w8,[sp,#4]
--	str	w11,[sp,#0]
--	ror	w16,w24,#6
--	add	w27,w27,w19			// h+=K[i]
--	ror	w10,w5,#7
--	and	w17,w25,w24
--	ror	w9,w2,#17
--	bic	w19,w26,w24
--	ror	w11,w20,#2
--	add	w27,w27,w3			// h+=X[i]
--	eor	w16,w16,w24,ror#11
--	eor	w10,w10,w5,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w20,w21			// a^b, b^c in next round
--	eor	w16,w16,w24,ror#25	// Sigma1(e)
--	eor	w11,w11,w20,ror#13
--	add	w27,w27,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w9,w9,w2,ror#19
--	eor	w10,w10,w5,lsr#3	// sigma0(X[i+1])
--	add	w27,w27,w16			// h+=Sigma1(e)
--	eor	w28,w28,w21			// Maj(a,b,c)
--	eor	w17,w11,w20,ror#22	// Sigma0(a)
--	eor	w9,w9,w2,lsr#10	// sigma1(X[i+14])
--	add	w4,w4,w13
--	add	w23,w23,w27			// d+=h
--	add	w27,w27,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w4,w4,w10
--	add	w27,w27,w17			// h+=Sigma0(a)
--	add	w4,w4,w9
--	ldr	w9,[sp,#8]
--	str	w12,[sp,#4]
--	ror	w16,w23,#6
--	add	w26,w26,w28			// h+=K[i]
--	ror	w11,w6,#7
--	and	w17,w24,w23
--	ror	w10,w3,#17
--	bic	w28,w25,w23
--	ror	w12,w27,#2
--	add	w26,w26,w4			// h+=X[i]
--	eor	w16,w16,w23,ror#11
--	eor	w11,w11,w6,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w27,w20			// a^b, b^c in next round
--	eor	w16,w16,w23,ror#25	// Sigma1(e)
--	eor	w12,w12,w27,ror#13
--	add	w26,w26,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w10,w10,w3,ror#19
--	eor	w11,w11,w6,lsr#3	// sigma0(X[i+1])
--	add	w26,w26,w16			// h+=Sigma1(e)
--	eor	w19,w19,w20			// Maj(a,b,c)
--	eor	w17,w12,w27,ror#22	// Sigma0(a)
--	eor	w10,w10,w3,lsr#10	// sigma1(X[i+14])
--	add	w5,w5,w14
--	add	w22,w22,w26			// d+=h
--	add	w26,w26,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w5,w5,w11
--	add	w26,w26,w17			// h+=Sigma0(a)
--	add	w5,w5,w10
--	ldr	w10,[sp,#12]
--	str	w13,[sp,#8]
--	ror	w16,w22,#6
--	add	w25,w25,w19			// h+=K[i]
--	ror	w12,w7,#7
--	and	w17,w23,w22
--	ror	w11,w4,#17
--	bic	w19,w24,w22
--	ror	w13,w26,#2
--	add	w25,w25,w5			// h+=X[i]
--	eor	w16,w16,w22,ror#11
--	eor	w12,w12,w7,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w26,w27			// a^b, b^c in next round
--	eor	w16,w16,w22,ror#25	// Sigma1(e)
--	eor	w13,w13,w26,ror#13
--	add	w25,w25,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w11,w11,w4,ror#19
--	eor	w12,w12,w7,lsr#3	// sigma0(X[i+1])
--	add	w25,w25,w16			// h+=Sigma1(e)
--	eor	w28,w28,w27			// Maj(a,b,c)
--	eor	w17,w13,w26,ror#22	// Sigma0(a)
--	eor	w11,w11,w4,lsr#10	// sigma1(X[i+14])
--	add	w6,w6,w15
--	add	w21,w21,w25			// d+=h
--	add	w25,w25,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w6,w6,w12
--	add	w25,w25,w17			// h+=Sigma0(a)
--	add	w6,w6,w11
--	ldr	w11,[sp,#0]
--	str	w14,[sp,#12]
--	ror	w16,w21,#6
--	add	w24,w24,w28			// h+=K[i]
--	ror	w13,w8,#7
--	and	w17,w22,w21
--	ror	w12,w5,#17
--	bic	w28,w23,w21
--	ror	w14,w25,#2
--	add	w24,w24,w6			// h+=X[i]
--	eor	w16,w16,w21,ror#11
--	eor	w13,w13,w8,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w25,w26			// a^b, b^c in next round
--	eor	w16,w16,w21,ror#25	// Sigma1(e)
--	eor	w14,w14,w25,ror#13
--	add	w24,w24,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w12,w12,w5,ror#19
--	eor	w13,w13,w8,lsr#3	// sigma0(X[i+1])
--	add	w24,w24,w16			// h+=Sigma1(e)
--	eor	w19,w19,w26			// Maj(a,b,c)
--	eor	w17,w14,w25,ror#22	// Sigma0(a)
--	eor	w12,w12,w5,lsr#10	// sigma1(X[i+14])
--	add	w7,w7,w0
--	add	w20,w20,w24			// d+=h
--	add	w24,w24,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w7,w7,w13
--	add	w24,w24,w17			// h+=Sigma0(a)
--	add	w7,w7,w12
--	ldr	w12,[sp,#4]
--	str	w15,[sp,#0]
--	ror	w16,w20,#6
--	add	w23,w23,w19			// h+=K[i]
--	ror	w14,w9,#7
--	and	w17,w21,w20
--	ror	w13,w6,#17
--	bic	w19,w22,w20
--	ror	w15,w24,#2
--	add	w23,w23,w7			// h+=X[i]
--	eor	w16,w16,w20,ror#11
--	eor	w14,w14,w9,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w24,w25			// a^b, b^c in next round
--	eor	w16,w16,w20,ror#25	// Sigma1(e)
--	eor	w15,w15,w24,ror#13
--	add	w23,w23,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w13,w13,w6,ror#19
--	eor	w14,w14,w9,lsr#3	// sigma0(X[i+1])
--	add	w23,w23,w16			// h+=Sigma1(e)
--	eor	w28,w28,w25			// Maj(a,b,c)
--	eor	w17,w15,w24,ror#22	// Sigma0(a)
--	eor	w13,w13,w6,lsr#10	// sigma1(X[i+14])
--	add	w8,w8,w1
--	add	w27,w27,w23			// d+=h
--	add	w23,w23,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w8,w8,w14
--	add	w23,w23,w17			// h+=Sigma0(a)
--	add	w8,w8,w13
--	ldr	w13,[sp,#8]
--	str	w0,[sp,#4]
--	ror	w16,w27,#6
--	add	w22,w22,w28			// h+=K[i]
--	ror	w15,w10,#7
--	and	w17,w20,w27
--	ror	w14,w7,#17
--	bic	w28,w21,w27
--	ror	w0,w23,#2
--	add	w22,w22,w8			// h+=X[i]
--	eor	w16,w16,w27,ror#11
--	eor	w15,w15,w10,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w23,w24			// a^b, b^c in next round
--	eor	w16,w16,w27,ror#25	// Sigma1(e)
--	eor	w0,w0,w23,ror#13
--	add	w22,w22,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w14,w14,w7,ror#19
--	eor	w15,w15,w10,lsr#3	// sigma0(X[i+1])
--	add	w22,w22,w16			// h+=Sigma1(e)
--	eor	w19,w19,w24			// Maj(a,b,c)
--	eor	w17,w0,w23,ror#22	// Sigma0(a)
--	eor	w14,w14,w7,lsr#10	// sigma1(X[i+14])
--	add	w9,w9,w2
--	add	w26,w26,w22			// d+=h
--	add	w22,w22,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w9,w9,w15
--	add	w22,w22,w17			// h+=Sigma0(a)
--	add	w9,w9,w14
--	ldr	w14,[sp,#12]
--	str	w1,[sp,#8]
--	ror	w16,w26,#6
--	add	w21,w21,w19			// h+=K[i]
--	ror	w0,w11,#7
--	and	w17,w27,w26
--	ror	w15,w8,#17
--	bic	w19,w20,w26
--	ror	w1,w22,#2
--	add	w21,w21,w9			// h+=X[i]
--	eor	w16,w16,w26,ror#11
--	eor	w0,w0,w11,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w22,w23			// a^b, b^c in next round
--	eor	w16,w16,w26,ror#25	// Sigma1(e)
--	eor	w1,w1,w22,ror#13
--	add	w21,w21,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w15,w15,w8,ror#19
--	eor	w0,w0,w11,lsr#3	// sigma0(X[i+1])
--	add	w21,w21,w16			// h+=Sigma1(e)
--	eor	w28,w28,w23			// Maj(a,b,c)
--	eor	w17,w1,w22,ror#22	// Sigma0(a)
--	eor	w15,w15,w8,lsr#10	// sigma1(X[i+14])
--	add	w10,w10,w3
--	add	w25,w25,w21			// d+=h
--	add	w21,w21,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w10,w10,w0
--	add	w21,w21,w17			// h+=Sigma0(a)
--	add	w10,w10,w15
--	ldr	w15,[sp,#0]
--	str	w2,[sp,#12]
--	ror	w16,w25,#6
--	add	w20,w20,w28			// h+=K[i]
--	ror	w1,w12,#7
--	and	w17,w26,w25
--	ror	w0,w9,#17
--	bic	w28,w27,w25
--	ror	w2,w21,#2
--	add	w20,w20,w10			// h+=X[i]
--	eor	w16,w16,w25,ror#11
--	eor	w1,w1,w12,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w21,w22			// a^b, b^c in next round
--	eor	w16,w16,w25,ror#25	// Sigma1(e)
--	eor	w2,w2,w21,ror#13
--	add	w20,w20,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w0,w0,w9,ror#19
--	eor	w1,w1,w12,lsr#3	// sigma0(X[i+1])
--	add	w20,w20,w16			// h+=Sigma1(e)
--	eor	w19,w19,w22			// Maj(a,b,c)
--	eor	w17,w2,w21,ror#22	// Sigma0(a)
--	eor	w0,w0,w9,lsr#10	// sigma1(X[i+14])
--	add	w11,w11,w4
--	add	w24,w24,w20			// d+=h
--	add	w20,w20,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w11,w11,w1
--	add	w20,w20,w17			// h+=Sigma0(a)
--	add	w11,w11,w0
--	ldr	w0,[sp,#4]
--	str	w3,[sp,#0]
--	ror	w16,w24,#6
--	add	w27,w27,w19			// h+=K[i]
--	ror	w2,w13,#7
--	and	w17,w25,w24
--	ror	w1,w10,#17
--	bic	w19,w26,w24
--	ror	w3,w20,#2
--	add	w27,w27,w11			// h+=X[i]
--	eor	w16,w16,w24,ror#11
--	eor	w2,w2,w13,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w20,w21			// a^b, b^c in next round
--	eor	w16,w16,w24,ror#25	// Sigma1(e)
--	eor	w3,w3,w20,ror#13
--	add	w27,w27,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w1,w1,w10,ror#19
--	eor	w2,w2,w13,lsr#3	// sigma0(X[i+1])
--	add	w27,w27,w16			// h+=Sigma1(e)
--	eor	w28,w28,w21			// Maj(a,b,c)
--	eor	w17,w3,w20,ror#22	// Sigma0(a)
--	eor	w1,w1,w10,lsr#10	// sigma1(X[i+14])
--	add	w12,w12,w5
--	add	w23,w23,w27			// d+=h
--	add	w27,w27,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w12,w12,w2
--	add	w27,w27,w17			// h+=Sigma0(a)
--	add	w12,w12,w1
--	ldr	w1,[sp,#8]
--	str	w4,[sp,#4]
--	ror	w16,w23,#6
--	add	w26,w26,w28			// h+=K[i]
--	ror	w3,w14,#7
--	and	w17,w24,w23
--	ror	w2,w11,#17
--	bic	w28,w25,w23
--	ror	w4,w27,#2
--	add	w26,w26,w12			// h+=X[i]
--	eor	w16,w16,w23,ror#11
--	eor	w3,w3,w14,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w27,w20			// a^b, b^c in next round
--	eor	w16,w16,w23,ror#25	// Sigma1(e)
--	eor	w4,w4,w27,ror#13
--	add	w26,w26,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w2,w2,w11,ror#19
--	eor	w3,w3,w14,lsr#3	// sigma0(X[i+1])
--	add	w26,w26,w16			// h+=Sigma1(e)
--	eor	w19,w19,w20			// Maj(a,b,c)
--	eor	w17,w4,w27,ror#22	// Sigma0(a)
--	eor	w2,w2,w11,lsr#10	// sigma1(X[i+14])
--	add	w13,w13,w6
--	add	w22,w22,w26			// d+=h
--	add	w26,w26,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w13,w13,w3
--	add	w26,w26,w17			// h+=Sigma0(a)
--	add	w13,w13,w2
--	ldr	w2,[sp,#12]
--	str	w5,[sp,#8]
--	ror	w16,w22,#6
--	add	w25,w25,w19			// h+=K[i]
--	ror	w4,w15,#7
--	and	w17,w23,w22
--	ror	w3,w12,#17
--	bic	w19,w24,w22
--	ror	w5,w26,#2
--	add	w25,w25,w13			// h+=X[i]
--	eor	w16,w16,w22,ror#11
--	eor	w4,w4,w15,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w26,w27			// a^b, b^c in next round
--	eor	w16,w16,w22,ror#25	// Sigma1(e)
--	eor	w5,w5,w26,ror#13
--	add	w25,w25,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w3,w3,w12,ror#19
--	eor	w4,w4,w15,lsr#3	// sigma0(X[i+1])
--	add	w25,w25,w16			// h+=Sigma1(e)
--	eor	w28,w28,w27			// Maj(a,b,c)
--	eor	w17,w5,w26,ror#22	// Sigma0(a)
--	eor	w3,w3,w12,lsr#10	// sigma1(X[i+14])
--	add	w14,w14,w7
--	add	w21,w21,w25			// d+=h
--	add	w25,w25,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w14,w14,w4
--	add	w25,w25,w17			// h+=Sigma0(a)
--	add	w14,w14,w3
--	ldr	w3,[sp,#0]
--	str	w6,[sp,#12]
--	ror	w16,w21,#6
--	add	w24,w24,w28			// h+=K[i]
--	ror	w5,w0,#7
--	and	w17,w22,w21
--	ror	w4,w13,#17
--	bic	w28,w23,w21
--	ror	w6,w25,#2
--	add	w24,w24,w14			// h+=X[i]
--	eor	w16,w16,w21,ror#11
--	eor	w5,w5,w0,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w25,w26			// a^b, b^c in next round
--	eor	w16,w16,w21,ror#25	// Sigma1(e)
--	eor	w6,w6,w25,ror#13
--	add	w24,w24,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w4,w4,w13,ror#19
--	eor	w5,w5,w0,lsr#3	// sigma0(X[i+1])
--	add	w24,w24,w16			// h+=Sigma1(e)
--	eor	w19,w19,w26			// Maj(a,b,c)
--	eor	w17,w6,w25,ror#22	// Sigma0(a)
--	eor	w4,w4,w13,lsr#10	// sigma1(X[i+14])
--	add	w15,w15,w8
--	add	w20,w20,w24			// d+=h
--	add	w24,w24,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w15,w15,w5
--	add	w24,w24,w17			// h+=Sigma0(a)
--	add	w15,w15,w4
--	ldr	w4,[sp,#4]
--	str	w7,[sp,#0]
--	ror	w16,w20,#6
--	add	w23,w23,w19			// h+=K[i]
--	ror	w6,w1,#7
--	and	w17,w21,w20
--	ror	w5,w14,#17
--	bic	w19,w22,w20
--	ror	w7,w24,#2
--	add	w23,w23,w15			// h+=X[i]
--	eor	w16,w16,w20,ror#11
--	eor	w6,w6,w1,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w24,w25			// a^b, b^c in next round
--	eor	w16,w16,w20,ror#25	// Sigma1(e)
--	eor	w7,w7,w24,ror#13
--	add	w23,w23,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w5,w5,w14,ror#19
--	eor	w6,w6,w1,lsr#3	// sigma0(X[i+1])
--	add	w23,w23,w16			// h+=Sigma1(e)
--	eor	w28,w28,w25			// Maj(a,b,c)
--	eor	w17,w7,w24,ror#22	// Sigma0(a)
--	eor	w5,w5,w14,lsr#10	// sigma1(X[i+14])
--	add	w0,w0,w9
--	add	w27,w27,w23			// d+=h
--	add	w23,w23,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w0,w0,w6
--	add	w23,w23,w17			// h+=Sigma0(a)
--	add	w0,w0,w5
--	ldr	w5,[sp,#8]
--	str	w8,[sp,#4]
--	ror	w16,w27,#6
--	add	w22,w22,w28			// h+=K[i]
--	ror	w7,w2,#7
--	and	w17,w20,w27
--	ror	w6,w15,#17
--	bic	w28,w21,w27
--	ror	w8,w23,#2
--	add	w22,w22,w0			// h+=X[i]
--	eor	w16,w16,w27,ror#11
--	eor	w7,w7,w2,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w23,w24			// a^b, b^c in next round
--	eor	w16,w16,w27,ror#25	// Sigma1(e)
--	eor	w8,w8,w23,ror#13
--	add	w22,w22,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w6,w6,w15,ror#19
--	eor	w7,w7,w2,lsr#3	// sigma0(X[i+1])
--	add	w22,w22,w16			// h+=Sigma1(e)
--	eor	w19,w19,w24			// Maj(a,b,c)
--	eor	w17,w8,w23,ror#22	// Sigma0(a)
--	eor	w6,w6,w15,lsr#10	// sigma1(X[i+14])
--	add	w1,w1,w10
--	add	w26,w26,w22			// d+=h
--	add	w22,w22,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w1,w1,w7
--	add	w22,w22,w17			// h+=Sigma0(a)
--	add	w1,w1,w6
--	ldr	w6,[sp,#12]
--	str	w9,[sp,#8]
--	ror	w16,w26,#6
--	add	w21,w21,w19			// h+=K[i]
--	ror	w8,w3,#7
--	and	w17,w27,w26
--	ror	w7,w0,#17
--	bic	w19,w20,w26
--	ror	w9,w22,#2
--	add	w21,w21,w1			// h+=X[i]
--	eor	w16,w16,w26,ror#11
--	eor	w8,w8,w3,ror#18
--	orr	w17,w17,w19			// Ch(e,f,g)
--	eor	w19,w22,w23			// a^b, b^c in next round
--	eor	w16,w16,w26,ror#25	// Sigma1(e)
--	eor	w9,w9,w22,ror#13
--	add	w21,w21,w17			// h+=Ch(e,f,g)
--	and	w28,w28,w19			// (b^c)&=(a^b)
--	eor	w7,w7,w0,ror#19
--	eor	w8,w8,w3,lsr#3	// sigma0(X[i+1])
--	add	w21,w21,w16			// h+=Sigma1(e)
--	eor	w28,w28,w23			// Maj(a,b,c)
--	eor	w17,w9,w22,ror#22	// Sigma0(a)
--	eor	w7,w7,w0,lsr#10	// sigma1(X[i+14])
--	add	w2,w2,w11
--	add	w25,w25,w21			// d+=h
--	add	w21,w21,w28			// h+=Maj(a,b,c)
--	ldr	w28,[x30],#4		// *K++, w19 in next round
--	add	w2,w2,w8
--	add	w21,w21,w17			// h+=Sigma0(a)
--	add	w2,w2,w7
--	ldr	w7,[sp,#0]
--	str	w10,[sp,#12]
--	ror	w16,w25,#6
--	add	w20,w20,w28			// h+=K[i]
--	ror	w9,w4,#7
--	and	w17,w26,w25
--	ror	w8,w1,#17
--	bic	w28,w27,w25
--	ror	w10,w21,#2
--	add	w20,w20,w2			// h+=X[i]
--	eor	w16,w16,w25,ror#11
--	eor	w9,w9,w4,ror#18
--	orr	w17,w17,w28			// Ch(e,f,g)
--	eor	w28,w21,w22			// a^b, b^c in next round
--	eor	w16,w16,w25,ror#25	// Sigma1(e)
--	eor	w10,w10,w21,ror#13
--	add	w20,w20,w17			// h+=Ch(e,f,g)
--	and	w19,w19,w28			// (b^c)&=(a^b)
--	eor	w8,w8,w1,ror#19
--	eor	w9,w9,w4,lsr#3	// sigma0(X[i+1])
--	add	w20,w20,w16			// h+=Sigma1(e)
--	eor	w19,w19,w22			// Maj(a,b,c)
--	eor	w17,w10,w21,ror#22	// Sigma0(a)
--	eor	w8,w8,w1,lsr#10	// sigma1(X[i+14])
--	add	w3,w3,w12
--	add	w24,w24,w20			// d+=h
--	add	w20,w20,w19			// h+=Maj(a,b,c)
--	ldr	w19,[x30],#4		// *K++, w28 in next round
--	add	w3,w3,w9
--	add	w20,w20,w17			// h+=Sigma0(a)
--	add	w3,w3,w8
--	cbnz	w19,.Loop_16_xx
--
--	ldp	x0,x2,[x29,#96]
--	ldr	x1,[x29,#112]
--	sub	x30,x30,#260		// rewind
--
--	ldp	w3,w4,[x0]
--	ldp	w5,w6,[x0,#2*4]
--	add	x1,x1,#14*4			// advance input pointer
--	ldp	w7,w8,[x0,#4*4]
--	add	w20,w20,w3
--	ldp	w9,w10,[x0,#6*4]
--	add	w21,w21,w4
--	add	w22,w22,w5
--	add	w23,w23,w6
--	stp	w20,w21,[x0]
--	add	w24,w24,w7
--	add	w25,w25,w8
--	stp	w22,w23,[x0,#2*4]
--	add	w26,w26,w9
--	add	w27,w27,w10
--	cmp	x1,x2
--	stp	w24,w25,[x0,#4*4]
--	stp	w26,w27,[x0,#6*4]
--	b.ne	.Loop
--
--	ldp	x19,x20,[x29,#16]
--	add	sp,sp,#4*4
--	ldp	x21,x22,[x29,#32]
--	ldp	x23,x24,[x29,#48]
--	ldp	x25,x26,[x29,#64]
--	ldp	x27,x28,[x29,#80]
--	ldp	x29,x30,[sp],#128
--	ret
--.size	sha256_block_data_order,.-sha256_block_data_order
--
--.align	6
--.type	.LK256,%object
--.LK256:
--	.long	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5
--	.long	0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5
--	.long	0xd807aa98,0x12835b01,0x243185be,0x550c7dc3
--	.long	0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174
--	.long	0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc
--	.long	0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da
--	.long	0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7
--	.long	0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967
--	.long	0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13
--	.long	0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85
--	.long	0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3
--	.long	0xd192e819,0xd6990624,0xf40e3585,0x106aa070
--	.long	0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5
--	.long	0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3
--	.long	0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208
--	.long	0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
--	.long	0	//terminator
--.size	.LK256,.-.LK256
--#ifndef	__KERNEL__
--.align	3
--.LOPENSSL_armcap_P:
--# ifdef	__ILP32__
--	.long	OPENSSL_armcap_P-.
--# else
--	.quad	OPENSSL_armcap_P-.
--# endif
--#endif
--.asciz	"SHA256 block transform for ARMv8, CRYPTOGAMS by <appro@openssl.org>"
--.align	2
--#ifndef	__KERNEL__
--.type	sha256_block_armv8,%function
--.align	6
--sha256_block_armv8:
--.Lv8_entry:
--	stp		x29,x30,[sp,#-16]!
--	add		x29,sp,#0
--
--	ld1		{v0.4s,v1.4s},[x0]
--	adr		x3,.LK256
--
--.Loop_hw:
--	ld1		{v4.16b-v7.16b},[x1],#64
--	sub		x2,x2,#1
--	ld1		{v16.4s},[x3],#16
--	rev32		v4.16b,v4.16b
--	rev32		v5.16b,v5.16b
--	rev32		v6.16b,v6.16b
--	rev32		v7.16b,v7.16b
--	orr		v18.16b,v0.16b,v0.16b		// offload
--	orr		v19.16b,v1.16b,v1.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v4.4s
--	.inst	0x5e2828a4	//sha256su0 v4.16b,v5.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--	.inst	0x5e0760c4	//sha256su1 v4.16b,v6.16b,v7.16b
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v5.4s
--	.inst	0x5e2828c5	//sha256su0 v5.16b,v6.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--	.inst	0x5e0460e5	//sha256su1 v5.16b,v7.16b,v4.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v6.4s
--	.inst	0x5e2828e6	//sha256su0 v6.16b,v7.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--	.inst	0x5e056086	//sha256su1 v6.16b,v4.16b,v5.16b
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v7.4s
--	.inst	0x5e282887	//sha256su0 v7.16b,v4.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--	.inst	0x5e0660a7	//sha256su1 v7.16b,v5.16b,v6.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v4.4s
--	.inst	0x5e2828a4	//sha256su0 v4.16b,v5.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--	.inst	0x5e0760c4	//sha256su1 v4.16b,v6.16b,v7.16b
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v5.4s
--	.inst	0x5e2828c5	//sha256su0 v5.16b,v6.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--	.inst	0x5e0460e5	//sha256su1 v5.16b,v7.16b,v4.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v6.4s
--	.inst	0x5e2828e6	//sha256su0 v6.16b,v7.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--	.inst	0x5e056086	//sha256su1 v6.16b,v4.16b,v5.16b
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v7.4s
--	.inst	0x5e282887	//sha256su0 v7.16b,v4.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--	.inst	0x5e0660a7	//sha256su1 v7.16b,v5.16b,v6.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v4.4s
--	.inst	0x5e2828a4	//sha256su0 v4.16b,v5.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--	.inst	0x5e0760c4	//sha256su1 v4.16b,v6.16b,v7.16b
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v5.4s
--	.inst	0x5e2828c5	//sha256su0 v5.16b,v6.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--	.inst	0x5e0460e5	//sha256su1 v5.16b,v7.16b,v4.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v6.4s
--	.inst	0x5e2828e6	//sha256su0 v6.16b,v7.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--	.inst	0x5e056086	//sha256su1 v6.16b,v4.16b,v5.16b
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v7.4s
--	.inst	0x5e282887	//sha256su0 v7.16b,v4.16b
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--	.inst	0x5e0660a7	//sha256su1 v7.16b,v5.16b,v6.16b
--	ld1		{v17.4s},[x3],#16
--	add		v16.4s,v16.4s,v4.4s
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--
--	ld1		{v16.4s},[x3],#16
--	add		v17.4s,v17.4s,v5.4s
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--
--	ld1		{v17.4s},[x3]
--	add		v16.4s,v16.4s,v6.4s
--	sub		x3,x3,#64*4-16	// rewind
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e104020	//sha256h v0.16b,v1.16b,v16.4s
--	.inst	0x5e105041	//sha256h2 v1.16b,v2.16b,v16.4s
--
--	add		v17.4s,v17.4s,v7.4s
--	orr		v2.16b,v0.16b,v0.16b
--	.inst	0x5e114020	//sha256h v0.16b,v1.16b,v17.4s
--	.inst	0x5e115041	//sha256h2 v1.16b,v2.16b,v17.4s
--
--	add		v0.4s,v0.4s,v18.4s
--	add		v1.4s,v1.4s,v19.4s
--
--	cbnz		x2,.Loop_hw
--
--	st1		{v0.4s,v1.4s},[x0]
--
--	ldr		x29,[sp],#16
--	ret
--.size	sha256_block_armv8,.-sha256_block_armv8
--#endif
--#ifdef	__KERNEL__
--.globl	sha256_block_neon
--#endif
--.type	sha256_block_neon,%function
--.align	4
--sha256_block_neon:
--.Lneon_entry:
--	stp	x29, x30, [sp, #-16]!
--	mov	x29, sp
--	sub	sp,sp,#16*4
--
--	adr	x16,.LK256
--	add	x2,x1,x2,lsl#6	// len to point at the end of inp
--
--	ld1	{v0.16b},[x1], #16
--	ld1	{v1.16b},[x1], #16
--	ld1	{v2.16b},[x1], #16
--	ld1	{v3.16b},[x1], #16
--	ld1	{v4.4s},[x16], #16
--	ld1	{v5.4s},[x16], #16
--	ld1	{v6.4s},[x16], #16
--	ld1	{v7.4s},[x16], #16
--	rev32	v0.16b,v0.16b		// yes, even on
--	rev32	v1.16b,v1.16b		// big-endian
--	rev32	v2.16b,v2.16b
--	rev32	v3.16b,v3.16b
--	mov	x17,sp
--	add	v4.4s,v4.4s,v0.4s
--	add	v5.4s,v5.4s,v1.4s
--	add	v6.4s,v6.4s,v2.4s
--	st1	{v4.4s-v5.4s},[x17], #32
--	add	v7.4s,v7.4s,v3.4s
--	st1	{v6.4s-v7.4s},[x17]
--	sub	x17,x17,#32
--
--	ldp	w3,w4,[x0]
--	ldp	w5,w6,[x0,#8]
--	ldp	w7,w8,[x0,#16]
--	ldp	w9,w10,[x0,#24]
--	ldr	w12,[sp,#0]
--	mov	w13,wzr
--	eor	w14,w4,w5
--	mov	w15,wzr
--	b	.L_00_48
--
--.align	4
--.L_00_48:
--	ext	v4.16b,v0.16b,v1.16b,#4
--	add	w10,w10,w12
--	add	w3,w3,w15
--	and	w12,w8,w7
--	bic	w15,w9,w7
--	ext	v7.16b,v2.16b,v3.16b,#4
--	eor	w11,w7,w7,ror#5
--	add	w3,w3,w13
--	mov	d19,v3.d[1]
--	orr	w12,w12,w15
--	eor	w11,w11,w7,ror#19
--	ushr	v6.4s,v4.4s,#7
--	eor	w15,w3,w3,ror#11
--	ushr	v5.4s,v4.4s,#3
--	add	w10,w10,w12
--	add	v0.4s,v0.4s,v7.4s
--	ror	w11,w11,#6
--	sli	v6.4s,v4.4s,#25
--	eor	w13,w3,w4
--	eor	w15,w15,w3,ror#20
--	ushr	v7.4s,v4.4s,#18
--	add	w10,w10,w11
--	ldr	w12,[sp,#4]
--	and	w14,w14,w13
--	eor	v5.16b,v5.16b,v6.16b
--	ror	w15,w15,#2
--	add	w6,w6,w10
--	sli	v7.4s,v4.4s,#14
--	eor	w14,w14,w4
--	ushr	v16.4s,v19.4s,#17
--	add	w9,w9,w12
--	add	w10,w10,w15
--	and	w12,w7,w6
--	eor	v5.16b,v5.16b,v7.16b
--	bic	w15,w8,w6
--	eor	w11,w6,w6,ror#5
--	sli	v16.4s,v19.4s,#15
--	add	w10,w10,w14
--	orr	w12,w12,w15
--	ushr	v17.4s,v19.4s,#10
--	eor	w11,w11,w6,ror#19
--	eor	w15,w10,w10,ror#11
--	ushr	v7.4s,v19.4s,#19
--	add	w9,w9,w12
--	ror	w11,w11,#6
--	add	v0.4s,v0.4s,v5.4s
--	eor	w14,w10,w3
--	eor	w15,w15,w10,ror#20
--	sli	v7.4s,v19.4s,#13
--	add	w9,w9,w11
--	ldr	w12,[sp,#8]
--	and	w13,w13,w14
--	eor	v17.16b,v17.16b,v16.16b
--	ror	w15,w15,#2
--	add	w5,w5,w9
--	eor	w13,w13,w3
--	eor	v17.16b,v17.16b,v7.16b
--	add	w8,w8,w12
--	add	w9,w9,w15
--	and	w12,w6,w5
--	add	v0.4s,v0.4s,v17.4s
--	bic	w15,w7,w5
--	eor	w11,w5,w5,ror#5
--	add	w9,w9,w13
--	ushr	v18.4s,v0.4s,#17
--	orr	w12,w12,w15
--	ushr	v19.4s,v0.4s,#10
--	eor	w11,w11,w5,ror#19
--	eor	w15,w9,w9,ror#11
--	sli	v18.4s,v0.4s,#15
--	add	w8,w8,w12
--	ushr	v17.4s,v0.4s,#19
--	ror	w11,w11,#6
--	eor	w13,w9,w10
--	eor	v19.16b,v19.16b,v18.16b
--	eor	w15,w15,w9,ror#20
--	add	w8,w8,w11
--	sli	v17.4s,v0.4s,#13
--	ldr	w12,[sp,#12]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	ld1	{v4.4s},[x16], #16
--	add	w4,w4,w8
--	eor	v19.16b,v19.16b,v17.16b
--	eor	w14,w14,w10
--	eor	v17.16b,v17.16b,v17.16b
--	add	w7,w7,w12
--	add	w8,w8,w15
--	and	w12,w5,w4
--	mov	v17.d[1],v19.d[0]
--	bic	w15,w6,w4
--	eor	w11,w4,w4,ror#5
--	add	w8,w8,w14
--	add	v0.4s,v0.4s,v17.4s
--	orr	w12,w12,w15
--	eor	w11,w11,w4,ror#19
--	eor	w15,w8,w8,ror#11
--	add	v4.4s,v4.4s,v0.4s
--	add	w7,w7,w12
--	ror	w11,w11,#6
--	eor	w14,w8,w9
--	eor	w15,w15,w8,ror#20
--	add	w7,w7,w11
--	ldr	w12,[sp,#16]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w3,w3,w7
--	eor	w13,w13,w9
--	st1	{v4.4s},[x17], #16
--	ext	v4.16b,v1.16b,v2.16b,#4
--	add	w6,w6,w12
--	add	w7,w7,w15
--	and	w12,w4,w3
--	bic	w15,w5,w3
--	ext	v7.16b,v3.16b,v0.16b,#4
--	eor	w11,w3,w3,ror#5
--	add	w7,w7,w13
--	mov	d19,v0.d[1]
--	orr	w12,w12,w15
--	eor	w11,w11,w3,ror#19
--	ushr	v6.4s,v4.4s,#7
--	eor	w15,w7,w7,ror#11
--	ushr	v5.4s,v4.4s,#3
--	add	w6,w6,w12
--	add	v1.4s,v1.4s,v7.4s
--	ror	w11,w11,#6
--	sli	v6.4s,v4.4s,#25
--	eor	w13,w7,w8
--	eor	w15,w15,w7,ror#20
--	ushr	v7.4s,v4.4s,#18
--	add	w6,w6,w11
--	ldr	w12,[sp,#20]
--	and	w14,w14,w13
--	eor	v5.16b,v5.16b,v6.16b
--	ror	w15,w15,#2
--	add	w10,w10,w6
--	sli	v7.4s,v4.4s,#14
--	eor	w14,w14,w8
--	ushr	v16.4s,v19.4s,#17
--	add	w5,w5,w12
--	add	w6,w6,w15
--	and	w12,w3,w10
--	eor	v5.16b,v5.16b,v7.16b
--	bic	w15,w4,w10
--	eor	w11,w10,w10,ror#5
--	sli	v16.4s,v19.4s,#15
--	add	w6,w6,w14
--	orr	w12,w12,w15
--	ushr	v17.4s,v19.4s,#10
--	eor	w11,w11,w10,ror#19
--	eor	w15,w6,w6,ror#11
--	ushr	v7.4s,v19.4s,#19
--	add	w5,w5,w12
--	ror	w11,w11,#6
--	add	v1.4s,v1.4s,v5.4s
--	eor	w14,w6,w7
--	eor	w15,w15,w6,ror#20
--	sli	v7.4s,v19.4s,#13
--	add	w5,w5,w11
--	ldr	w12,[sp,#24]
--	and	w13,w13,w14
--	eor	v17.16b,v17.16b,v16.16b
--	ror	w15,w15,#2
--	add	w9,w9,w5
--	eor	w13,w13,w7
--	eor	v17.16b,v17.16b,v7.16b
--	add	w4,w4,w12
--	add	w5,w5,w15
--	and	w12,w10,w9
--	add	v1.4s,v1.4s,v17.4s
--	bic	w15,w3,w9
--	eor	w11,w9,w9,ror#5
--	add	w5,w5,w13
--	ushr	v18.4s,v1.4s,#17
--	orr	w12,w12,w15
--	ushr	v19.4s,v1.4s,#10
--	eor	w11,w11,w9,ror#19
--	eor	w15,w5,w5,ror#11
--	sli	v18.4s,v1.4s,#15
--	add	w4,w4,w12
--	ushr	v17.4s,v1.4s,#19
--	ror	w11,w11,#6
--	eor	w13,w5,w6
--	eor	v19.16b,v19.16b,v18.16b
--	eor	w15,w15,w5,ror#20
--	add	w4,w4,w11
--	sli	v17.4s,v1.4s,#13
--	ldr	w12,[sp,#28]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	ld1	{v4.4s},[x16], #16
--	add	w8,w8,w4
--	eor	v19.16b,v19.16b,v17.16b
--	eor	w14,w14,w6
--	eor	v17.16b,v17.16b,v17.16b
--	add	w3,w3,w12
--	add	w4,w4,w15
--	and	w12,w9,w8
--	mov	v17.d[1],v19.d[0]
--	bic	w15,w10,w8
--	eor	w11,w8,w8,ror#5
--	add	w4,w4,w14
--	add	v1.4s,v1.4s,v17.4s
--	orr	w12,w12,w15
--	eor	w11,w11,w8,ror#19
--	eor	w15,w4,w4,ror#11
--	add	v4.4s,v4.4s,v1.4s
--	add	w3,w3,w12
--	ror	w11,w11,#6
--	eor	w14,w4,w5
--	eor	w15,w15,w4,ror#20
--	add	w3,w3,w11
--	ldr	w12,[sp,#32]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w7,w7,w3
--	eor	w13,w13,w5
--	st1	{v4.4s},[x17], #16
--	ext	v4.16b,v2.16b,v3.16b,#4
--	add	w10,w10,w12
--	add	w3,w3,w15
--	and	w12,w8,w7
--	bic	w15,w9,w7
--	ext	v7.16b,v0.16b,v1.16b,#4
--	eor	w11,w7,w7,ror#5
--	add	w3,w3,w13
--	mov	d19,v1.d[1]
--	orr	w12,w12,w15
--	eor	w11,w11,w7,ror#19
--	ushr	v6.4s,v4.4s,#7
--	eor	w15,w3,w3,ror#11
--	ushr	v5.4s,v4.4s,#3
--	add	w10,w10,w12
--	add	v2.4s,v2.4s,v7.4s
--	ror	w11,w11,#6
--	sli	v6.4s,v4.4s,#25
--	eor	w13,w3,w4
--	eor	w15,w15,w3,ror#20
--	ushr	v7.4s,v4.4s,#18
--	add	w10,w10,w11
--	ldr	w12,[sp,#36]
--	and	w14,w14,w13
--	eor	v5.16b,v5.16b,v6.16b
--	ror	w15,w15,#2
--	add	w6,w6,w10
--	sli	v7.4s,v4.4s,#14
--	eor	w14,w14,w4
--	ushr	v16.4s,v19.4s,#17
--	add	w9,w9,w12
--	add	w10,w10,w15
--	and	w12,w7,w6
--	eor	v5.16b,v5.16b,v7.16b
--	bic	w15,w8,w6
--	eor	w11,w6,w6,ror#5
--	sli	v16.4s,v19.4s,#15
--	add	w10,w10,w14
--	orr	w12,w12,w15
--	ushr	v17.4s,v19.4s,#10
--	eor	w11,w11,w6,ror#19
--	eor	w15,w10,w10,ror#11
--	ushr	v7.4s,v19.4s,#19
--	add	w9,w9,w12
--	ror	w11,w11,#6
--	add	v2.4s,v2.4s,v5.4s
--	eor	w14,w10,w3
--	eor	w15,w15,w10,ror#20
--	sli	v7.4s,v19.4s,#13
--	add	w9,w9,w11
--	ldr	w12,[sp,#40]
--	and	w13,w13,w14
--	eor	v17.16b,v17.16b,v16.16b
--	ror	w15,w15,#2
--	add	w5,w5,w9
--	eor	w13,w13,w3
--	eor	v17.16b,v17.16b,v7.16b
--	add	w8,w8,w12
--	add	w9,w9,w15
--	and	w12,w6,w5
--	add	v2.4s,v2.4s,v17.4s
--	bic	w15,w7,w5
--	eor	w11,w5,w5,ror#5
--	add	w9,w9,w13
--	ushr	v18.4s,v2.4s,#17
--	orr	w12,w12,w15
--	ushr	v19.4s,v2.4s,#10
--	eor	w11,w11,w5,ror#19
--	eor	w15,w9,w9,ror#11
--	sli	v18.4s,v2.4s,#15
--	add	w8,w8,w12
--	ushr	v17.4s,v2.4s,#19
--	ror	w11,w11,#6
--	eor	w13,w9,w10
--	eor	v19.16b,v19.16b,v18.16b
--	eor	w15,w15,w9,ror#20
--	add	w8,w8,w11
--	sli	v17.4s,v2.4s,#13
--	ldr	w12,[sp,#44]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	ld1	{v4.4s},[x16], #16
--	add	w4,w4,w8
--	eor	v19.16b,v19.16b,v17.16b
--	eor	w14,w14,w10
--	eor	v17.16b,v17.16b,v17.16b
--	add	w7,w7,w12
--	add	w8,w8,w15
--	and	w12,w5,w4
--	mov	v17.d[1],v19.d[0]
--	bic	w15,w6,w4
--	eor	w11,w4,w4,ror#5
--	add	w8,w8,w14
--	add	v2.4s,v2.4s,v17.4s
--	orr	w12,w12,w15
--	eor	w11,w11,w4,ror#19
--	eor	w15,w8,w8,ror#11
--	add	v4.4s,v4.4s,v2.4s
--	add	w7,w7,w12
--	ror	w11,w11,#6
--	eor	w14,w8,w9
--	eor	w15,w15,w8,ror#20
--	add	w7,w7,w11
--	ldr	w12,[sp,#48]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w3,w3,w7
--	eor	w13,w13,w9
--	st1	{v4.4s},[x17], #16
--	ext	v4.16b,v3.16b,v0.16b,#4
--	add	w6,w6,w12
--	add	w7,w7,w15
--	and	w12,w4,w3
--	bic	w15,w5,w3
--	ext	v7.16b,v1.16b,v2.16b,#4
--	eor	w11,w3,w3,ror#5
--	add	w7,w7,w13
--	mov	d19,v2.d[1]
--	orr	w12,w12,w15
--	eor	w11,w11,w3,ror#19
--	ushr	v6.4s,v4.4s,#7
--	eor	w15,w7,w7,ror#11
--	ushr	v5.4s,v4.4s,#3
--	add	w6,w6,w12
--	add	v3.4s,v3.4s,v7.4s
--	ror	w11,w11,#6
--	sli	v6.4s,v4.4s,#25
--	eor	w13,w7,w8
--	eor	w15,w15,w7,ror#20
--	ushr	v7.4s,v4.4s,#18
--	add	w6,w6,w11
--	ldr	w12,[sp,#52]
--	and	w14,w14,w13
--	eor	v5.16b,v5.16b,v6.16b
--	ror	w15,w15,#2
--	add	w10,w10,w6
--	sli	v7.4s,v4.4s,#14
--	eor	w14,w14,w8
--	ushr	v16.4s,v19.4s,#17
--	add	w5,w5,w12
--	add	w6,w6,w15
--	and	w12,w3,w10
--	eor	v5.16b,v5.16b,v7.16b
--	bic	w15,w4,w10
--	eor	w11,w10,w10,ror#5
--	sli	v16.4s,v19.4s,#15
--	add	w6,w6,w14
--	orr	w12,w12,w15
--	ushr	v17.4s,v19.4s,#10
--	eor	w11,w11,w10,ror#19
--	eor	w15,w6,w6,ror#11
--	ushr	v7.4s,v19.4s,#19
--	add	w5,w5,w12
--	ror	w11,w11,#6
--	add	v3.4s,v3.4s,v5.4s
--	eor	w14,w6,w7
--	eor	w15,w15,w6,ror#20
--	sli	v7.4s,v19.4s,#13
--	add	w5,w5,w11
--	ldr	w12,[sp,#56]
--	and	w13,w13,w14
--	eor	v17.16b,v17.16b,v16.16b
--	ror	w15,w15,#2
--	add	w9,w9,w5
--	eor	w13,w13,w7
--	eor	v17.16b,v17.16b,v7.16b
--	add	w4,w4,w12
--	add	w5,w5,w15
--	and	w12,w10,w9
--	add	v3.4s,v3.4s,v17.4s
--	bic	w15,w3,w9
--	eor	w11,w9,w9,ror#5
--	add	w5,w5,w13
--	ushr	v18.4s,v3.4s,#17
--	orr	w12,w12,w15
--	ushr	v19.4s,v3.4s,#10
--	eor	w11,w11,w9,ror#19
--	eor	w15,w5,w5,ror#11
--	sli	v18.4s,v3.4s,#15
--	add	w4,w4,w12
--	ushr	v17.4s,v3.4s,#19
--	ror	w11,w11,#6
--	eor	w13,w5,w6
--	eor	v19.16b,v19.16b,v18.16b
--	eor	w15,w15,w5,ror#20
--	add	w4,w4,w11
--	sli	v17.4s,v3.4s,#13
--	ldr	w12,[sp,#60]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	ld1	{v4.4s},[x16], #16
--	add	w8,w8,w4
--	eor	v19.16b,v19.16b,v17.16b
--	eor	w14,w14,w6
--	eor	v17.16b,v17.16b,v17.16b
--	add	w3,w3,w12
--	add	w4,w4,w15
--	and	w12,w9,w8
--	mov	v17.d[1],v19.d[0]
--	bic	w15,w10,w8
--	eor	w11,w8,w8,ror#5
--	add	w4,w4,w14
--	add	v3.4s,v3.4s,v17.4s
--	orr	w12,w12,w15
--	eor	w11,w11,w8,ror#19
--	eor	w15,w4,w4,ror#11
--	add	v4.4s,v4.4s,v3.4s
--	add	w3,w3,w12
--	ror	w11,w11,#6
--	eor	w14,w4,w5
--	eor	w15,w15,w4,ror#20
--	add	w3,w3,w11
--	ldr	w12,[x16]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w7,w7,w3
--	eor	w13,w13,w5
--	st1	{v4.4s},[x17], #16
--	cmp	w12,#0				// check for K256 terminator
--	ldr	w12,[sp,#0]
--	sub	x17,x17,#64
--	bne	.L_00_48
--
--	sub	x16,x16,#256		// rewind x16
--	cmp	x1,x2
--	mov	x17, #64
--	csel	x17, x17, xzr, eq
--	sub	x1,x1,x17			// avoid SEGV
--	mov	x17,sp
--	add	w10,w10,w12
--	add	w3,w3,w15
--	and	w12,w8,w7
--	ld1	{v0.16b},[x1],#16
--	bic	w15,w9,w7
--	eor	w11,w7,w7,ror#5
--	ld1	{v4.4s},[x16],#16
--	add	w3,w3,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w7,ror#19
--	eor	w15,w3,w3,ror#11
--	rev32	v0.16b,v0.16b
--	add	w10,w10,w12
--	ror	w11,w11,#6
--	eor	w13,w3,w4
--	eor	w15,w15,w3,ror#20
--	add	v4.4s,v4.4s,v0.4s
--	add	w10,w10,w11
--	ldr	w12,[sp,#4]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w6,w6,w10
--	eor	w14,w14,w4
--	add	w9,w9,w12
--	add	w10,w10,w15
--	and	w12,w7,w6
--	bic	w15,w8,w6
--	eor	w11,w6,w6,ror#5
--	add	w10,w10,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w6,ror#19
--	eor	w15,w10,w10,ror#11
--	add	w9,w9,w12
--	ror	w11,w11,#6
--	eor	w14,w10,w3
--	eor	w15,w15,w10,ror#20
--	add	w9,w9,w11
--	ldr	w12,[sp,#8]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w5,w5,w9
--	eor	w13,w13,w3
--	add	w8,w8,w12
--	add	w9,w9,w15
--	and	w12,w6,w5
--	bic	w15,w7,w5
--	eor	w11,w5,w5,ror#5
--	add	w9,w9,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w5,ror#19
--	eor	w15,w9,w9,ror#11
--	add	w8,w8,w12
--	ror	w11,w11,#6
--	eor	w13,w9,w10
--	eor	w15,w15,w9,ror#20
--	add	w8,w8,w11
--	ldr	w12,[sp,#12]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w4,w4,w8
--	eor	w14,w14,w10
--	add	w7,w7,w12
--	add	w8,w8,w15
--	and	w12,w5,w4
--	bic	w15,w6,w4
--	eor	w11,w4,w4,ror#5
--	add	w8,w8,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w4,ror#19
--	eor	w15,w8,w8,ror#11
--	add	w7,w7,w12
--	ror	w11,w11,#6
--	eor	w14,w8,w9
--	eor	w15,w15,w8,ror#20
--	add	w7,w7,w11
--	ldr	w12,[sp,#16]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w3,w3,w7
--	eor	w13,w13,w9
--	st1	{v4.4s},[x17], #16
--	add	w6,w6,w12
--	add	w7,w7,w15
--	and	w12,w4,w3
--	ld1	{v1.16b},[x1],#16
--	bic	w15,w5,w3
--	eor	w11,w3,w3,ror#5
--	ld1	{v4.4s},[x16],#16
--	add	w7,w7,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w3,ror#19
--	eor	w15,w7,w7,ror#11
--	rev32	v1.16b,v1.16b
--	add	w6,w6,w12
--	ror	w11,w11,#6
--	eor	w13,w7,w8
--	eor	w15,w15,w7,ror#20
--	add	v4.4s,v4.4s,v1.4s
--	add	w6,w6,w11
--	ldr	w12,[sp,#20]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w10,w10,w6
--	eor	w14,w14,w8
--	add	w5,w5,w12
--	add	w6,w6,w15
--	and	w12,w3,w10
--	bic	w15,w4,w10
--	eor	w11,w10,w10,ror#5
--	add	w6,w6,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w10,ror#19
--	eor	w15,w6,w6,ror#11
--	add	w5,w5,w12
--	ror	w11,w11,#6
--	eor	w14,w6,w7
--	eor	w15,w15,w6,ror#20
--	add	w5,w5,w11
--	ldr	w12,[sp,#24]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w9,w9,w5
--	eor	w13,w13,w7
--	add	w4,w4,w12
--	add	w5,w5,w15
--	and	w12,w10,w9
--	bic	w15,w3,w9
--	eor	w11,w9,w9,ror#5
--	add	w5,w5,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w9,ror#19
--	eor	w15,w5,w5,ror#11
--	add	w4,w4,w12
--	ror	w11,w11,#6
--	eor	w13,w5,w6
--	eor	w15,w15,w5,ror#20
--	add	w4,w4,w11
--	ldr	w12,[sp,#28]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w8,w8,w4
--	eor	w14,w14,w6
--	add	w3,w3,w12
--	add	w4,w4,w15
--	and	w12,w9,w8
--	bic	w15,w10,w8
--	eor	w11,w8,w8,ror#5
--	add	w4,w4,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w8,ror#19
--	eor	w15,w4,w4,ror#11
--	add	w3,w3,w12
--	ror	w11,w11,#6
--	eor	w14,w4,w5
--	eor	w15,w15,w4,ror#20
--	add	w3,w3,w11
--	ldr	w12,[sp,#32]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w7,w7,w3
--	eor	w13,w13,w5
--	st1	{v4.4s},[x17], #16
--	add	w10,w10,w12
--	add	w3,w3,w15
--	and	w12,w8,w7
--	ld1	{v2.16b},[x1],#16
--	bic	w15,w9,w7
--	eor	w11,w7,w7,ror#5
--	ld1	{v4.4s},[x16],#16
--	add	w3,w3,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w7,ror#19
--	eor	w15,w3,w3,ror#11
--	rev32	v2.16b,v2.16b
--	add	w10,w10,w12
--	ror	w11,w11,#6
--	eor	w13,w3,w4
--	eor	w15,w15,w3,ror#20
--	add	v4.4s,v4.4s,v2.4s
--	add	w10,w10,w11
--	ldr	w12,[sp,#36]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w6,w6,w10
--	eor	w14,w14,w4
--	add	w9,w9,w12
--	add	w10,w10,w15
--	and	w12,w7,w6
--	bic	w15,w8,w6
--	eor	w11,w6,w6,ror#5
--	add	w10,w10,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w6,ror#19
--	eor	w15,w10,w10,ror#11
--	add	w9,w9,w12
--	ror	w11,w11,#6
--	eor	w14,w10,w3
--	eor	w15,w15,w10,ror#20
--	add	w9,w9,w11
--	ldr	w12,[sp,#40]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w5,w5,w9
--	eor	w13,w13,w3
--	add	w8,w8,w12
--	add	w9,w9,w15
--	and	w12,w6,w5
--	bic	w15,w7,w5
--	eor	w11,w5,w5,ror#5
--	add	w9,w9,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w5,ror#19
--	eor	w15,w9,w9,ror#11
--	add	w8,w8,w12
--	ror	w11,w11,#6
--	eor	w13,w9,w10
--	eor	w15,w15,w9,ror#20
--	add	w8,w8,w11
--	ldr	w12,[sp,#44]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w4,w4,w8
--	eor	w14,w14,w10
--	add	w7,w7,w12
--	add	w8,w8,w15
--	and	w12,w5,w4
--	bic	w15,w6,w4
--	eor	w11,w4,w4,ror#5
--	add	w8,w8,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w4,ror#19
--	eor	w15,w8,w8,ror#11
--	add	w7,w7,w12
--	ror	w11,w11,#6
--	eor	w14,w8,w9
--	eor	w15,w15,w8,ror#20
--	add	w7,w7,w11
--	ldr	w12,[sp,#48]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w3,w3,w7
--	eor	w13,w13,w9
--	st1	{v4.4s},[x17], #16
--	add	w6,w6,w12
--	add	w7,w7,w15
--	and	w12,w4,w3
--	ld1	{v3.16b},[x1],#16
--	bic	w15,w5,w3
--	eor	w11,w3,w3,ror#5
--	ld1	{v4.4s},[x16],#16
--	add	w7,w7,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w3,ror#19
--	eor	w15,w7,w7,ror#11
--	rev32	v3.16b,v3.16b
--	add	w6,w6,w12
--	ror	w11,w11,#6
--	eor	w13,w7,w8
--	eor	w15,w15,w7,ror#20
--	add	v4.4s,v4.4s,v3.4s
--	add	w6,w6,w11
--	ldr	w12,[sp,#52]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w10,w10,w6
--	eor	w14,w14,w8
--	add	w5,w5,w12
--	add	w6,w6,w15
--	and	w12,w3,w10
--	bic	w15,w4,w10
--	eor	w11,w10,w10,ror#5
--	add	w6,w6,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w10,ror#19
--	eor	w15,w6,w6,ror#11
--	add	w5,w5,w12
--	ror	w11,w11,#6
--	eor	w14,w6,w7
--	eor	w15,w15,w6,ror#20
--	add	w5,w5,w11
--	ldr	w12,[sp,#56]
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w9,w9,w5
--	eor	w13,w13,w7
--	add	w4,w4,w12
--	add	w5,w5,w15
--	and	w12,w10,w9
--	bic	w15,w3,w9
--	eor	w11,w9,w9,ror#5
--	add	w5,w5,w13
--	orr	w12,w12,w15
--	eor	w11,w11,w9,ror#19
--	eor	w15,w5,w5,ror#11
--	add	w4,w4,w12
--	ror	w11,w11,#6
--	eor	w13,w5,w6
--	eor	w15,w15,w5,ror#20
--	add	w4,w4,w11
--	ldr	w12,[sp,#60]
--	and	w14,w14,w13
--	ror	w15,w15,#2
--	add	w8,w8,w4
--	eor	w14,w14,w6
--	add	w3,w3,w12
--	add	w4,w4,w15
--	and	w12,w9,w8
--	bic	w15,w10,w8
--	eor	w11,w8,w8,ror#5
--	add	w4,w4,w14
--	orr	w12,w12,w15
--	eor	w11,w11,w8,ror#19
--	eor	w15,w4,w4,ror#11
--	add	w3,w3,w12
--	ror	w11,w11,#6
--	eor	w14,w4,w5
--	eor	w15,w15,w4,ror#20
--	add	w3,w3,w11
--	and	w13,w13,w14
--	ror	w15,w15,#2
--	add	w7,w7,w3
--	eor	w13,w13,w5
--	st1	{v4.4s},[x17], #16
--	add	w3,w3,w15			// h+=Sigma0(a) from the past
--	ldp	w11,w12,[x0,#0]
--	add	w3,w3,w13			// h+=Maj(a,b,c) from the past
--	ldp	w13,w14,[x0,#8]
--	add	w3,w3,w11			// accumulate
--	add	w4,w4,w12
--	ldp	w11,w12,[x0,#16]
--	add	w5,w5,w13
--	add	w6,w6,w14
--	ldp	w13,w14,[x0,#24]
--	add	w7,w7,w11
--	add	w8,w8,w12
--	 ldr	w12,[sp,#0]
--	stp	w3,w4,[x0,#0]
--	add	w9,w9,w13
--	 mov	w13,wzr
--	stp	w5,w6,[x0,#8]
--	add	w10,w10,w14
--	stp	w7,w8,[x0,#16]
--	 eor	w14,w4,w5
--	stp	w9,w10,[x0,#24]
--	 mov	w15,wzr
--	 mov	x17,sp
--	b.ne	.L_00_48
--
--	ldr	x29,[x29]
--	add	sp,sp,#16*4+16
--	ret
--.size	sha256_block_neon,.-sha256_block_neon
--#ifndef	__KERNEL__
--.comm	OPENSSL_armcap_P,4,4
--#endif
-diff --git a/arch/arm64/crypto/sha512-core.S b/arch/arm64/crypto/sha512-core.S
-deleted file mode 100644
-index bd0f59f06c9d..000000000000
---- a/arch/arm64/crypto/sha512-core.S
-+++ /dev/null
-@@ -1,1085 +0,0 @@
--// Copyright 2014-2016 The OpenSSL Project Authors. All Rights Reserved.
--//
--// Licensed under the OpenSSL license (the "License").  You may not use
--// this file except in compliance with the License.  You can obtain a copy
--// in the file LICENSE in the source distribution or at
--// https://www.openssl.org/source/license.html
--
--// ====================================================================
--// Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
--// project. The module is, however, dual licensed under OpenSSL and
--// CRYPTOGAMS licenses depending on where you obtain it. For further
--// details see http://www.openssl.org/~appro/cryptogams/.
--//
--// Permission to use under GPLv2 terms is granted.
--// ====================================================================
--//
--// SHA256/512 for ARMv8.
--//
--// Performance in cycles per processed byte and improvement coefficient
--// over code generated with "default" compiler:
--//
--//		SHA256-hw	SHA256(*)	SHA512
--// Apple A7	1.97		10.5 (+33%)	6.73 (-1%(**))
--// Cortex-A53	2.38		15.5 (+115%)	10.0 (+150%(***))
--// Cortex-A57	2.31		11.6 (+86%)	7.51 (+260%(***))
--// Denver	2.01		10.5 (+26%)	6.70 (+8%)
--// X-Gene			20.0 (+100%)	12.8 (+300%(***))
--// Mongoose	2.36		13.0 (+50%)	8.36 (+33%)
--//
--// (*)	Software SHA256 results are of lesser relevance, presented
--//	mostly for informational purposes.
--// (**)	The result is a trade-off: it's possible to improve it by
--//	10% (or by 1 cycle per round), but at the cost of 20% loss
--//	on Cortex-A53 (or by 4 cycles per round).
--// (***)	Super-impressive coefficients over gcc-generated code are
--//	indication of some compiler "pathology", most notably code
--//	generated with -mgeneral-regs-only is significanty faster
--//	and the gap is only 40-90%.
--//
--// October 2016.
--//
--// Originally it was reckoned that it makes no sense to implement NEON
--// version of SHA256 for 64-bit processors. This is because performance
--// improvement on most wide-spread Cortex-A5x processors was observed
--// to be marginal, same on Cortex-A53 and ~10% on A57. But then it was
--// observed that 32-bit NEON SHA256 performs significantly better than
--// 64-bit scalar version on *some* of the more recent processors. As
--// result 64-bit NEON version of SHA256 was added to provide best
--// all-round performance. For example it executes ~30% faster on X-Gene
--// and Mongoose. [For reference, NEON version of SHA512 is bound to
--// deliver much less improvement, likely *negative* on Cortex-A5x.
--// Which is why NEON support is limited to SHA256.]
--
--#ifndef	__KERNEL__
--# include "arm_arch.h"
--#endif
--
--.text
--
--.extern	OPENSSL_armcap_P
--.globl	sha512_block_data_order
--.type	sha512_block_data_order,%function
--.align	6
--sha512_block_data_order:
--	stp	x29,x30,[sp,#-128]!
--	add	x29,sp,#0
--
--	stp	x19,x20,[sp,#16]
--	stp	x21,x22,[sp,#32]
--	stp	x23,x24,[sp,#48]
--	stp	x25,x26,[sp,#64]
--	stp	x27,x28,[sp,#80]
--	sub	sp,sp,#4*8
--
--	ldp	x20,x21,[x0]				// load context
--	ldp	x22,x23,[x0,#2*8]
--	ldp	x24,x25,[x0,#4*8]
--	add	x2,x1,x2,lsl#7	// end of input
--	ldp	x26,x27,[x0,#6*8]
--	adr	x30,.LK512
--	stp	x0,x2,[x29,#96]
--
--.Loop:
--	ldp	x3,x4,[x1],#2*8
--	ldr	x19,[x30],#8			// *K++
--	eor	x28,x21,x22				// magic seed
--	str	x1,[x29,#112]
--#ifndef	__AARCH64EB__
--	rev	x3,x3			// 0
--#endif
--	ror	x16,x24,#14
--	add	x27,x27,x19			// h+=K[i]
--	eor	x6,x24,x24,ror#23
--	and	x17,x25,x24
--	bic	x19,x26,x24
--	add	x27,x27,x3			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x20,x21			// a^b, b^c in next round
--	eor	x16,x16,x6,ror#18	// Sigma1(e)
--	ror	x6,x20,#28
--	add	x27,x27,x17			// h+=Ch(e,f,g)
--	eor	x17,x20,x20,ror#5
--	add	x27,x27,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x23,x23,x27			// d+=h
--	eor	x28,x28,x21			// Maj(a,b,c)
--	eor	x17,x6,x17,ror#34	// Sigma0(a)
--	add	x27,x27,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x27,x27,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x4,x4			// 1
--#endif
--	ldp	x5,x6,[x1],#2*8
--	add	x27,x27,x17			// h+=Sigma0(a)
--	ror	x16,x23,#14
--	add	x26,x26,x28			// h+=K[i]
--	eor	x7,x23,x23,ror#23
--	and	x17,x24,x23
--	bic	x28,x25,x23
--	add	x26,x26,x4			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x27,x20			// a^b, b^c in next round
--	eor	x16,x16,x7,ror#18	// Sigma1(e)
--	ror	x7,x27,#28
--	add	x26,x26,x17			// h+=Ch(e,f,g)
--	eor	x17,x27,x27,ror#5
--	add	x26,x26,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x22,x22,x26			// d+=h
--	eor	x19,x19,x20			// Maj(a,b,c)
--	eor	x17,x7,x17,ror#34	// Sigma0(a)
--	add	x26,x26,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x26,x26,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x5,x5			// 2
--#endif
--	add	x26,x26,x17			// h+=Sigma0(a)
--	ror	x16,x22,#14
--	add	x25,x25,x19			// h+=K[i]
--	eor	x8,x22,x22,ror#23
--	and	x17,x23,x22
--	bic	x19,x24,x22
--	add	x25,x25,x5			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x26,x27			// a^b, b^c in next round
--	eor	x16,x16,x8,ror#18	// Sigma1(e)
--	ror	x8,x26,#28
--	add	x25,x25,x17			// h+=Ch(e,f,g)
--	eor	x17,x26,x26,ror#5
--	add	x25,x25,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x21,x21,x25			// d+=h
--	eor	x28,x28,x27			// Maj(a,b,c)
--	eor	x17,x8,x17,ror#34	// Sigma0(a)
--	add	x25,x25,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x25,x25,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x6,x6			// 3
--#endif
--	ldp	x7,x8,[x1],#2*8
--	add	x25,x25,x17			// h+=Sigma0(a)
--	ror	x16,x21,#14
--	add	x24,x24,x28			// h+=K[i]
--	eor	x9,x21,x21,ror#23
--	and	x17,x22,x21
--	bic	x28,x23,x21
--	add	x24,x24,x6			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x25,x26			// a^b, b^c in next round
--	eor	x16,x16,x9,ror#18	// Sigma1(e)
--	ror	x9,x25,#28
--	add	x24,x24,x17			// h+=Ch(e,f,g)
--	eor	x17,x25,x25,ror#5
--	add	x24,x24,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x20,x20,x24			// d+=h
--	eor	x19,x19,x26			// Maj(a,b,c)
--	eor	x17,x9,x17,ror#34	// Sigma0(a)
--	add	x24,x24,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x24,x24,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x7,x7			// 4
--#endif
--	add	x24,x24,x17			// h+=Sigma0(a)
--	ror	x16,x20,#14
--	add	x23,x23,x19			// h+=K[i]
--	eor	x10,x20,x20,ror#23
--	and	x17,x21,x20
--	bic	x19,x22,x20
--	add	x23,x23,x7			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x24,x25			// a^b, b^c in next round
--	eor	x16,x16,x10,ror#18	// Sigma1(e)
--	ror	x10,x24,#28
--	add	x23,x23,x17			// h+=Ch(e,f,g)
--	eor	x17,x24,x24,ror#5
--	add	x23,x23,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x27,x27,x23			// d+=h
--	eor	x28,x28,x25			// Maj(a,b,c)
--	eor	x17,x10,x17,ror#34	// Sigma0(a)
--	add	x23,x23,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x23,x23,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x8,x8			// 5
--#endif
--	ldp	x9,x10,[x1],#2*8
--	add	x23,x23,x17			// h+=Sigma0(a)
--	ror	x16,x27,#14
--	add	x22,x22,x28			// h+=K[i]
--	eor	x11,x27,x27,ror#23
--	and	x17,x20,x27
--	bic	x28,x21,x27
--	add	x22,x22,x8			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x23,x24			// a^b, b^c in next round
--	eor	x16,x16,x11,ror#18	// Sigma1(e)
--	ror	x11,x23,#28
--	add	x22,x22,x17			// h+=Ch(e,f,g)
--	eor	x17,x23,x23,ror#5
--	add	x22,x22,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x26,x26,x22			// d+=h
--	eor	x19,x19,x24			// Maj(a,b,c)
--	eor	x17,x11,x17,ror#34	// Sigma0(a)
--	add	x22,x22,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x22,x22,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x9,x9			// 6
--#endif
--	add	x22,x22,x17			// h+=Sigma0(a)
--	ror	x16,x26,#14
--	add	x21,x21,x19			// h+=K[i]
--	eor	x12,x26,x26,ror#23
--	and	x17,x27,x26
--	bic	x19,x20,x26
--	add	x21,x21,x9			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x22,x23			// a^b, b^c in next round
--	eor	x16,x16,x12,ror#18	// Sigma1(e)
--	ror	x12,x22,#28
--	add	x21,x21,x17			// h+=Ch(e,f,g)
--	eor	x17,x22,x22,ror#5
--	add	x21,x21,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x25,x25,x21			// d+=h
--	eor	x28,x28,x23			// Maj(a,b,c)
--	eor	x17,x12,x17,ror#34	// Sigma0(a)
--	add	x21,x21,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x21,x21,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x10,x10			// 7
--#endif
--	ldp	x11,x12,[x1],#2*8
--	add	x21,x21,x17			// h+=Sigma0(a)
--	ror	x16,x25,#14
--	add	x20,x20,x28			// h+=K[i]
--	eor	x13,x25,x25,ror#23
--	and	x17,x26,x25
--	bic	x28,x27,x25
--	add	x20,x20,x10			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x21,x22			// a^b, b^c in next round
--	eor	x16,x16,x13,ror#18	// Sigma1(e)
--	ror	x13,x21,#28
--	add	x20,x20,x17			// h+=Ch(e,f,g)
--	eor	x17,x21,x21,ror#5
--	add	x20,x20,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x24,x24,x20			// d+=h
--	eor	x19,x19,x22			// Maj(a,b,c)
--	eor	x17,x13,x17,ror#34	// Sigma0(a)
--	add	x20,x20,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x20,x20,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x11,x11			// 8
--#endif
--	add	x20,x20,x17			// h+=Sigma0(a)
--	ror	x16,x24,#14
--	add	x27,x27,x19			// h+=K[i]
--	eor	x14,x24,x24,ror#23
--	and	x17,x25,x24
--	bic	x19,x26,x24
--	add	x27,x27,x11			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x20,x21			// a^b, b^c in next round
--	eor	x16,x16,x14,ror#18	// Sigma1(e)
--	ror	x14,x20,#28
--	add	x27,x27,x17			// h+=Ch(e,f,g)
--	eor	x17,x20,x20,ror#5
--	add	x27,x27,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x23,x23,x27			// d+=h
--	eor	x28,x28,x21			// Maj(a,b,c)
--	eor	x17,x14,x17,ror#34	// Sigma0(a)
--	add	x27,x27,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x27,x27,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x12,x12			// 9
--#endif
--	ldp	x13,x14,[x1],#2*8
--	add	x27,x27,x17			// h+=Sigma0(a)
--	ror	x16,x23,#14
--	add	x26,x26,x28			// h+=K[i]
--	eor	x15,x23,x23,ror#23
--	and	x17,x24,x23
--	bic	x28,x25,x23
--	add	x26,x26,x12			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x27,x20			// a^b, b^c in next round
--	eor	x16,x16,x15,ror#18	// Sigma1(e)
--	ror	x15,x27,#28
--	add	x26,x26,x17			// h+=Ch(e,f,g)
--	eor	x17,x27,x27,ror#5
--	add	x26,x26,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x22,x22,x26			// d+=h
--	eor	x19,x19,x20			// Maj(a,b,c)
--	eor	x17,x15,x17,ror#34	// Sigma0(a)
--	add	x26,x26,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x26,x26,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x13,x13			// 10
--#endif
--	add	x26,x26,x17			// h+=Sigma0(a)
--	ror	x16,x22,#14
--	add	x25,x25,x19			// h+=K[i]
--	eor	x0,x22,x22,ror#23
--	and	x17,x23,x22
--	bic	x19,x24,x22
--	add	x25,x25,x13			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x26,x27			// a^b, b^c in next round
--	eor	x16,x16,x0,ror#18	// Sigma1(e)
--	ror	x0,x26,#28
--	add	x25,x25,x17			// h+=Ch(e,f,g)
--	eor	x17,x26,x26,ror#5
--	add	x25,x25,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x21,x21,x25			// d+=h
--	eor	x28,x28,x27			// Maj(a,b,c)
--	eor	x17,x0,x17,ror#34	// Sigma0(a)
--	add	x25,x25,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x25,x25,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x14,x14			// 11
--#endif
--	ldp	x15,x0,[x1],#2*8
--	add	x25,x25,x17			// h+=Sigma0(a)
--	str	x6,[sp,#24]
--	ror	x16,x21,#14
--	add	x24,x24,x28			// h+=K[i]
--	eor	x6,x21,x21,ror#23
--	and	x17,x22,x21
--	bic	x28,x23,x21
--	add	x24,x24,x14			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x25,x26			// a^b, b^c in next round
--	eor	x16,x16,x6,ror#18	// Sigma1(e)
--	ror	x6,x25,#28
--	add	x24,x24,x17			// h+=Ch(e,f,g)
--	eor	x17,x25,x25,ror#5
--	add	x24,x24,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x20,x20,x24			// d+=h
--	eor	x19,x19,x26			// Maj(a,b,c)
--	eor	x17,x6,x17,ror#34	// Sigma0(a)
--	add	x24,x24,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x24,x24,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x15,x15			// 12
--#endif
--	add	x24,x24,x17			// h+=Sigma0(a)
--	str	x7,[sp,#0]
--	ror	x16,x20,#14
--	add	x23,x23,x19			// h+=K[i]
--	eor	x7,x20,x20,ror#23
--	and	x17,x21,x20
--	bic	x19,x22,x20
--	add	x23,x23,x15			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x24,x25			// a^b, b^c in next round
--	eor	x16,x16,x7,ror#18	// Sigma1(e)
--	ror	x7,x24,#28
--	add	x23,x23,x17			// h+=Ch(e,f,g)
--	eor	x17,x24,x24,ror#5
--	add	x23,x23,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x27,x27,x23			// d+=h
--	eor	x28,x28,x25			// Maj(a,b,c)
--	eor	x17,x7,x17,ror#34	// Sigma0(a)
--	add	x23,x23,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x23,x23,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x0,x0			// 13
--#endif
--	ldp	x1,x2,[x1]
--	add	x23,x23,x17			// h+=Sigma0(a)
--	str	x8,[sp,#8]
--	ror	x16,x27,#14
--	add	x22,x22,x28			// h+=K[i]
--	eor	x8,x27,x27,ror#23
--	and	x17,x20,x27
--	bic	x28,x21,x27
--	add	x22,x22,x0			// h+=X[i]
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x23,x24			// a^b, b^c in next round
--	eor	x16,x16,x8,ror#18	// Sigma1(e)
--	ror	x8,x23,#28
--	add	x22,x22,x17			// h+=Ch(e,f,g)
--	eor	x17,x23,x23,ror#5
--	add	x22,x22,x16			// h+=Sigma1(e)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	add	x26,x26,x22			// d+=h
--	eor	x19,x19,x24			// Maj(a,b,c)
--	eor	x17,x8,x17,ror#34	// Sigma0(a)
--	add	x22,x22,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	//add	x22,x22,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x1,x1			// 14
--#endif
--	ldr	x6,[sp,#24]
--	add	x22,x22,x17			// h+=Sigma0(a)
--	str	x9,[sp,#16]
--	ror	x16,x26,#14
--	add	x21,x21,x19			// h+=K[i]
--	eor	x9,x26,x26,ror#23
--	and	x17,x27,x26
--	bic	x19,x20,x26
--	add	x21,x21,x1			// h+=X[i]
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x22,x23			// a^b, b^c in next round
--	eor	x16,x16,x9,ror#18	// Sigma1(e)
--	ror	x9,x22,#28
--	add	x21,x21,x17			// h+=Ch(e,f,g)
--	eor	x17,x22,x22,ror#5
--	add	x21,x21,x16			// h+=Sigma1(e)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	add	x25,x25,x21			// d+=h
--	eor	x28,x28,x23			// Maj(a,b,c)
--	eor	x17,x9,x17,ror#34	// Sigma0(a)
--	add	x21,x21,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	//add	x21,x21,x17			// h+=Sigma0(a)
--#ifndef	__AARCH64EB__
--	rev	x2,x2			// 15
--#endif
--	ldr	x7,[sp,#0]
--	add	x21,x21,x17			// h+=Sigma0(a)
--	str	x10,[sp,#24]
--	ror	x16,x25,#14
--	add	x20,x20,x28			// h+=K[i]
--	ror	x9,x4,#1
--	and	x17,x26,x25
--	ror	x8,x1,#19
--	bic	x28,x27,x25
--	ror	x10,x21,#28
--	add	x20,x20,x2			// h+=X[i]
--	eor	x16,x16,x25,ror#18
--	eor	x9,x9,x4,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x21,x22			// a^b, b^c in next round
--	eor	x16,x16,x25,ror#41	// Sigma1(e)
--	eor	x10,x10,x21,ror#34
--	add	x20,x20,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x8,x8,x1,ror#61
--	eor	x9,x9,x4,lsr#7	// sigma0(X[i+1])
--	add	x20,x20,x16			// h+=Sigma1(e)
--	eor	x19,x19,x22			// Maj(a,b,c)
--	eor	x17,x10,x21,ror#39	// Sigma0(a)
--	eor	x8,x8,x1,lsr#6	// sigma1(X[i+14])
--	add	x3,x3,x12
--	add	x24,x24,x20			// d+=h
--	add	x20,x20,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x3,x3,x9
--	add	x20,x20,x17			// h+=Sigma0(a)
--	add	x3,x3,x8
--.Loop_16_xx:
--	ldr	x8,[sp,#8]
--	str	x11,[sp,#0]
--	ror	x16,x24,#14
--	add	x27,x27,x19			// h+=K[i]
--	ror	x10,x5,#1
--	and	x17,x25,x24
--	ror	x9,x2,#19
--	bic	x19,x26,x24
--	ror	x11,x20,#28
--	add	x27,x27,x3			// h+=X[i]
--	eor	x16,x16,x24,ror#18
--	eor	x10,x10,x5,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x20,x21			// a^b, b^c in next round
--	eor	x16,x16,x24,ror#41	// Sigma1(e)
--	eor	x11,x11,x20,ror#34
--	add	x27,x27,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x9,x9,x2,ror#61
--	eor	x10,x10,x5,lsr#7	// sigma0(X[i+1])
--	add	x27,x27,x16			// h+=Sigma1(e)
--	eor	x28,x28,x21			// Maj(a,b,c)
--	eor	x17,x11,x20,ror#39	// Sigma0(a)
--	eor	x9,x9,x2,lsr#6	// sigma1(X[i+14])
--	add	x4,x4,x13
--	add	x23,x23,x27			// d+=h
--	add	x27,x27,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x4,x4,x10
--	add	x27,x27,x17			// h+=Sigma0(a)
--	add	x4,x4,x9
--	ldr	x9,[sp,#16]
--	str	x12,[sp,#8]
--	ror	x16,x23,#14
--	add	x26,x26,x28			// h+=K[i]
--	ror	x11,x6,#1
--	and	x17,x24,x23
--	ror	x10,x3,#19
--	bic	x28,x25,x23
--	ror	x12,x27,#28
--	add	x26,x26,x4			// h+=X[i]
--	eor	x16,x16,x23,ror#18
--	eor	x11,x11,x6,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x27,x20			// a^b, b^c in next round
--	eor	x16,x16,x23,ror#41	// Sigma1(e)
--	eor	x12,x12,x27,ror#34
--	add	x26,x26,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x10,x10,x3,ror#61
--	eor	x11,x11,x6,lsr#7	// sigma0(X[i+1])
--	add	x26,x26,x16			// h+=Sigma1(e)
--	eor	x19,x19,x20			// Maj(a,b,c)
--	eor	x17,x12,x27,ror#39	// Sigma0(a)
--	eor	x10,x10,x3,lsr#6	// sigma1(X[i+14])
--	add	x5,x5,x14
--	add	x22,x22,x26			// d+=h
--	add	x26,x26,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x5,x5,x11
--	add	x26,x26,x17			// h+=Sigma0(a)
--	add	x5,x5,x10
--	ldr	x10,[sp,#24]
--	str	x13,[sp,#16]
--	ror	x16,x22,#14
--	add	x25,x25,x19			// h+=K[i]
--	ror	x12,x7,#1
--	and	x17,x23,x22
--	ror	x11,x4,#19
--	bic	x19,x24,x22
--	ror	x13,x26,#28
--	add	x25,x25,x5			// h+=X[i]
--	eor	x16,x16,x22,ror#18
--	eor	x12,x12,x7,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x26,x27			// a^b, b^c in next round
--	eor	x16,x16,x22,ror#41	// Sigma1(e)
--	eor	x13,x13,x26,ror#34
--	add	x25,x25,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x11,x11,x4,ror#61
--	eor	x12,x12,x7,lsr#7	// sigma0(X[i+1])
--	add	x25,x25,x16			// h+=Sigma1(e)
--	eor	x28,x28,x27			// Maj(a,b,c)
--	eor	x17,x13,x26,ror#39	// Sigma0(a)
--	eor	x11,x11,x4,lsr#6	// sigma1(X[i+14])
--	add	x6,x6,x15
--	add	x21,x21,x25			// d+=h
--	add	x25,x25,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x6,x6,x12
--	add	x25,x25,x17			// h+=Sigma0(a)
--	add	x6,x6,x11
--	ldr	x11,[sp,#0]
--	str	x14,[sp,#24]
--	ror	x16,x21,#14
--	add	x24,x24,x28			// h+=K[i]
--	ror	x13,x8,#1
--	and	x17,x22,x21
--	ror	x12,x5,#19
--	bic	x28,x23,x21
--	ror	x14,x25,#28
--	add	x24,x24,x6			// h+=X[i]
--	eor	x16,x16,x21,ror#18
--	eor	x13,x13,x8,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x25,x26			// a^b, b^c in next round
--	eor	x16,x16,x21,ror#41	// Sigma1(e)
--	eor	x14,x14,x25,ror#34
--	add	x24,x24,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x12,x12,x5,ror#61
--	eor	x13,x13,x8,lsr#7	// sigma0(X[i+1])
--	add	x24,x24,x16			// h+=Sigma1(e)
--	eor	x19,x19,x26			// Maj(a,b,c)
--	eor	x17,x14,x25,ror#39	// Sigma0(a)
--	eor	x12,x12,x5,lsr#6	// sigma1(X[i+14])
--	add	x7,x7,x0
--	add	x20,x20,x24			// d+=h
--	add	x24,x24,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x7,x7,x13
--	add	x24,x24,x17			// h+=Sigma0(a)
--	add	x7,x7,x12
--	ldr	x12,[sp,#8]
--	str	x15,[sp,#0]
--	ror	x16,x20,#14
--	add	x23,x23,x19			// h+=K[i]
--	ror	x14,x9,#1
--	and	x17,x21,x20
--	ror	x13,x6,#19
--	bic	x19,x22,x20
--	ror	x15,x24,#28
--	add	x23,x23,x7			// h+=X[i]
--	eor	x16,x16,x20,ror#18
--	eor	x14,x14,x9,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x24,x25			// a^b, b^c in next round
--	eor	x16,x16,x20,ror#41	// Sigma1(e)
--	eor	x15,x15,x24,ror#34
--	add	x23,x23,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x13,x13,x6,ror#61
--	eor	x14,x14,x9,lsr#7	// sigma0(X[i+1])
--	add	x23,x23,x16			// h+=Sigma1(e)
--	eor	x28,x28,x25			// Maj(a,b,c)
--	eor	x17,x15,x24,ror#39	// Sigma0(a)
--	eor	x13,x13,x6,lsr#6	// sigma1(X[i+14])
--	add	x8,x8,x1
--	add	x27,x27,x23			// d+=h
--	add	x23,x23,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x8,x8,x14
--	add	x23,x23,x17			// h+=Sigma0(a)
--	add	x8,x8,x13
--	ldr	x13,[sp,#16]
--	str	x0,[sp,#8]
--	ror	x16,x27,#14
--	add	x22,x22,x28			// h+=K[i]
--	ror	x15,x10,#1
--	and	x17,x20,x27
--	ror	x14,x7,#19
--	bic	x28,x21,x27
--	ror	x0,x23,#28
--	add	x22,x22,x8			// h+=X[i]
--	eor	x16,x16,x27,ror#18
--	eor	x15,x15,x10,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x23,x24			// a^b, b^c in next round
--	eor	x16,x16,x27,ror#41	// Sigma1(e)
--	eor	x0,x0,x23,ror#34
--	add	x22,x22,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x14,x14,x7,ror#61
--	eor	x15,x15,x10,lsr#7	// sigma0(X[i+1])
--	add	x22,x22,x16			// h+=Sigma1(e)
--	eor	x19,x19,x24			// Maj(a,b,c)
--	eor	x17,x0,x23,ror#39	// Sigma0(a)
--	eor	x14,x14,x7,lsr#6	// sigma1(X[i+14])
--	add	x9,x9,x2
--	add	x26,x26,x22			// d+=h
--	add	x22,x22,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x9,x9,x15
--	add	x22,x22,x17			// h+=Sigma0(a)
--	add	x9,x9,x14
--	ldr	x14,[sp,#24]
--	str	x1,[sp,#16]
--	ror	x16,x26,#14
--	add	x21,x21,x19			// h+=K[i]
--	ror	x0,x11,#1
--	and	x17,x27,x26
--	ror	x15,x8,#19
--	bic	x19,x20,x26
--	ror	x1,x22,#28
--	add	x21,x21,x9			// h+=X[i]
--	eor	x16,x16,x26,ror#18
--	eor	x0,x0,x11,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x22,x23			// a^b, b^c in next round
--	eor	x16,x16,x26,ror#41	// Sigma1(e)
--	eor	x1,x1,x22,ror#34
--	add	x21,x21,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x15,x15,x8,ror#61
--	eor	x0,x0,x11,lsr#7	// sigma0(X[i+1])
--	add	x21,x21,x16			// h+=Sigma1(e)
--	eor	x28,x28,x23			// Maj(a,b,c)
--	eor	x17,x1,x22,ror#39	// Sigma0(a)
--	eor	x15,x15,x8,lsr#6	// sigma1(X[i+14])
--	add	x10,x10,x3
--	add	x25,x25,x21			// d+=h
--	add	x21,x21,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x10,x10,x0
--	add	x21,x21,x17			// h+=Sigma0(a)
--	add	x10,x10,x15
--	ldr	x15,[sp,#0]
--	str	x2,[sp,#24]
--	ror	x16,x25,#14
--	add	x20,x20,x28			// h+=K[i]
--	ror	x1,x12,#1
--	and	x17,x26,x25
--	ror	x0,x9,#19
--	bic	x28,x27,x25
--	ror	x2,x21,#28
--	add	x20,x20,x10			// h+=X[i]
--	eor	x16,x16,x25,ror#18
--	eor	x1,x1,x12,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x21,x22			// a^b, b^c in next round
--	eor	x16,x16,x25,ror#41	// Sigma1(e)
--	eor	x2,x2,x21,ror#34
--	add	x20,x20,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x0,x0,x9,ror#61
--	eor	x1,x1,x12,lsr#7	// sigma0(X[i+1])
--	add	x20,x20,x16			// h+=Sigma1(e)
--	eor	x19,x19,x22			// Maj(a,b,c)
--	eor	x17,x2,x21,ror#39	// Sigma0(a)
--	eor	x0,x0,x9,lsr#6	// sigma1(X[i+14])
--	add	x11,x11,x4
--	add	x24,x24,x20			// d+=h
--	add	x20,x20,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x11,x11,x1
--	add	x20,x20,x17			// h+=Sigma0(a)
--	add	x11,x11,x0
--	ldr	x0,[sp,#8]
--	str	x3,[sp,#0]
--	ror	x16,x24,#14
--	add	x27,x27,x19			// h+=K[i]
--	ror	x2,x13,#1
--	and	x17,x25,x24
--	ror	x1,x10,#19
--	bic	x19,x26,x24
--	ror	x3,x20,#28
--	add	x27,x27,x11			// h+=X[i]
--	eor	x16,x16,x24,ror#18
--	eor	x2,x2,x13,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x20,x21			// a^b, b^c in next round
--	eor	x16,x16,x24,ror#41	// Sigma1(e)
--	eor	x3,x3,x20,ror#34
--	add	x27,x27,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x1,x1,x10,ror#61
--	eor	x2,x2,x13,lsr#7	// sigma0(X[i+1])
--	add	x27,x27,x16			// h+=Sigma1(e)
--	eor	x28,x28,x21			// Maj(a,b,c)
--	eor	x17,x3,x20,ror#39	// Sigma0(a)
--	eor	x1,x1,x10,lsr#6	// sigma1(X[i+14])
--	add	x12,x12,x5
--	add	x23,x23,x27			// d+=h
--	add	x27,x27,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x12,x12,x2
--	add	x27,x27,x17			// h+=Sigma0(a)
--	add	x12,x12,x1
--	ldr	x1,[sp,#16]
--	str	x4,[sp,#8]
--	ror	x16,x23,#14
--	add	x26,x26,x28			// h+=K[i]
--	ror	x3,x14,#1
--	and	x17,x24,x23
--	ror	x2,x11,#19
--	bic	x28,x25,x23
--	ror	x4,x27,#28
--	add	x26,x26,x12			// h+=X[i]
--	eor	x16,x16,x23,ror#18
--	eor	x3,x3,x14,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x27,x20			// a^b, b^c in next round
--	eor	x16,x16,x23,ror#41	// Sigma1(e)
--	eor	x4,x4,x27,ror#34
--	add	x26,x26,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x2,x2,x11,ror#61
--	eor	x3,x3,x14,lsr#7	// sigma0(X[i+1])
--	add	x26,x26,x16			// h+=Sigma1(e)
--	eor	x19,x19,x20			// Maj(a,b,c)
--	eor	x17,x4,x27,ror#39	// Sigma0(a)
--	eor	x2,x2,x11,lsr#6	// sigma1(X[i+14])
--	add	x13,x13,x6
--	add	x22,x22,x26			// d+=h
--	add	x26,x26,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x13,x13,x3
--	add	x26,x26,x17			// h+=Sigma0(a)
--	add	x13,x13,x2
--	ldr	x2,[sp,#24]
--	str	x5,[sp,#16]
--	ror	x16,x22,#14
--	add	x25,x25,x19			// h+=K[i]
--	ror	x4,x15,#1
--	and	x17,x23,x22
--	ror	x3,x12,#19
--	bic	x19,x24,x22
--	ror	x5,x26,#28
--	add	x25,x25,x13			// h+=X[i]
--	eor	x16,x16,x22,ror#18
--	eor	x4,x4,x15,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x26,x27			// a^b, b^c in next round
--	eor	x16,x16,x22,ror#41	// Sigma1(e)
--	eor	x5,x5,x26,ror#34
--	add	x25,x25,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x3,x3,x12,ror#61
--	eor	x4,x4,x15,lsr#7	// sigma0(X[i+1])
--	add	x25,x25,x16			// h+=Sigma1(e)
--	eor	x28,x28,x27			// Maj(a,b,c)
--	eor	x17,x5,x26,ror#39	// Sigma0(a)
--	eor	x3,x3,x12,lsr#6	// sigma1(X[i+14])
--	add	x14,x14,x7
--	add	x21,x21,x25			// d+=h
--	add	x25,x25,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x14,x14,x4
--	add	x25,x25,x17			// h+=Sigma0(a)
--	add	x14,x14,x3
--	ldr	x3,[sp,#0]
--	str	x6,[sp,#24]
--	ror	x16,x21,#14
--	add	x24,x24,x28			// h+=K[i]
--	ror	x5,x0,#1
--	and	x17,x22,x21
--	ror	x4,x13,#19
--	bic	x28,x23,x21
--	ror	x6,x25,#28
--	add	x24,x24,x14			// h+=X[i]
--	eor	x16,x16,x21,ror#18
--	eor	x5,x5,x0,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x25,x26			// a^b, b^c in next round
--	eor	x16,x16,x21,ror#41	// Sigma1(e)
--	eor	x6,x6,x25,ror#34
--	add	x24,x24,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x4,x4,x13,ror#61
--	eor	x5,x5,x0,lsr#7	// sigma0(X[i+1])
--	add	x24,x24,x16			// h+=Sigma1(e)
--	eor	x19,x19,x26			// Maj(a,b,c)
--	eor	x17,x6,x25,ror#39	// Sigma0(a)
--	eor	x4,x4,x13,lsr#6	// sigma1(X[i+14])
--	add	x15,x15,x8
--	add	x20,x20,x24			// d+=h
--	add	x24,x24,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x15,x15,x5
--	add	x24,x24,x17			// h+=Sigma0(a)
--	add	x15,x15,x4
--	ldr	x4,[sp,#8]
--	str	x7,[sp,#0]
--	ror	x16,x20,#14
--	add	x23,x23,x19			// h+=K[i]
--	ror	x6,x1,#1
--	and	x17,x21,x20
--	ror	x5,x14,#19
--	bic	x19,x22,x20
--	ror	x7,x24,#28
--	add	x23,x23,x15			// h+=X[i]
--	eor	x16,x16,x20,ror#18
--	eor	x6,x6,x1,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x24,x25			// a^b, b^c in next round
--	eor	x16,x16,x20,ror#41	// Sigma1(e)
--	eor	x7,x7,x24,ror#34
--	add	x23,x23,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x5,x5,x14,ror#61
--	eor	x6,x6,x1,lsr#7	// sigma0(X[i+1])
--	add	x23,x23,x16			// h+=Sigma1(e)
--	eor	x28,x28,x25			// Maj(a,b,c)
--	eor	x17,x7,x24,ror#39	// Sigma0(a)
--	eor	x5,x5,x14,lsr#6	// sigma1(X[i+14])
--	add	x0,x0,x9
--	add	x27,x27,x23			// d+=h
--	add	x23,x23,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x0,x0,x6
--	add	x23,x23,x17			// h+=Sigma0(a)
--	add	x0,x0,x5
--	ldr	x5,[sp,#16]
--	str	x8,[sp,#8]
--	ror	x16,x27,#14
--	add	x22,x22,x28			// h+=K[i]
--	ror	x7,x2,#1
--	and	x17,x20,x27
--	ror	x6,x15,#19
--	bic	x28,x21,x27
--	ror	x8,x23,#28
--	add	x22,x22,x0			// h+=X[i]
--	eor	x16,x16,x27,ror#18
--	eor	x7,x7,x2,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x23,x24			// a^b, b^c in next round
--	eor	x16,x16,x27,ror#41	// Sigma1(e)
--	eor	x8,x8,x23,ror#34
--	add	x22,x22,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x6,x6,x15,ror#61
--	eor	x7,x7,x2,lsr#7	// sigma0(X[i+1])
--	add	x22,x22,x16			// h+=Sigma1(e)
--	eor	x19,x19,x24			// Maj(a,b,c)
--	eor	x17,x8,x23,ror#39	// Sigma0(a)
--	eor	x6,x6,x15,lsr#6	// sigma1(X[i+14])
--	add	x1,x1,x10
--	add	x26,x26,x22			// d+=h
--	add	x22,x22,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x1,x1,x7
--	add	x22,x22,x17			// h+=Sigma0(a)
--	add	x1,x1,x6
--	ldr	x6,[sp,#24]
--	str	x9,[sp,#16]
--	ror	x16,x26,#14
--	add	x21,x21,x19			// h+=K[i]
--	ror	x8,x3,#1
--	and	x17,x27,x26
--	ror	x7,x0,#19
--	bic	x19,x20,x26
--	ror	x9,x22,#28
--	add	x21,x21,x1			// h+=X[i]
--	eor	x16,x16,x26,ror#18
--	eor	x8,x8,x3,ror#8
--	orr	x17,x17,x19			// Ch(e,f,g)
--	eor	x19,x22,x23			// a^b, b^c in next round
--	eor	x16,x16,x26,ror#41	// Sigma1(e)
--	eor	x9,x9,x22,ror#34
--	add	x21,x21,x17			// h+=Ch(e,f,g)
--	and	x28,x28,x19			// (b^c)&=(a^b)
--	eor	x7,x7,x0,ror#61
--	eor	x8,x8,x3,lsr#7	// sigma0(X[i+1])
--	add	x21,x21,x16			// h+=Sigma1(e)
--	eor	x28,x28,x23			// Maj(a,b,c)
--	eor	x17,x9,x22,ror#39	// Sigma0(a)
--	eor	x7,x7,x0,lsr#6	// sigma1(X[i+14])
--	add	x2,x2,x11
--	add	x25,x25,x21			// d+=h
--	add	x21,x21,x28			// h+=Maj(a,b,c)
--	ldr	x28,[x30],#8		// *K++, x19 in next round
--	add	x2,x2,x8
--	add	x21,x21,x17			// h+=Sigma0(a)
--	add	x2,x2,x7
--	ldr	x7,[sp,#0]
--	str	x10,[sp,#24]
--	ror	x16,x25,#14
--	add	x20,x20,x28			// h+=K[i]
--	ror	x9,x4,#1
--	and	x17,x26,x25
--	ror	x8,x1,#19
--	bic	x28,x27,x25
--	ror	x10,x21,#28
--	add	x20,x20,x2			// h+=X[i]
--	eor	x16,x16,x25,ror#18
--	eor	x9,x9,x4,ror#8
--	orr	x17,x17,x28			// Ch(e,f,g)
--	eor	x28,x21,x22			// a^b, b^c in next round
--	eor	x16,x16,x25,ror#41	// Sigma1(e)
--	eor	x10,x10,x21,ror#34
--	add	x20,x20,x17			// h+=Ch(e,f,g)
--	and	x19,x19,x28			// (b^c)&=(a^b)
--	eor	x8,x8,x1,ror#61
--	eor	x9,x9,x4,lsr#7	// sigma0(X[i+1])
--	add	x20,x20,x16			// h+=Sigma1(e)
--	eor	x19,x19,x22			// Maj(a,b,c)
--	eor	x17,x10,x21,ror#39	// Sigma0(a)
--	eor	x8,x8,x1,lsr#6	// sigma1(X[i+14])
--	add	x3,x3,x12
--	add	x24,x24,x20			// d+=h
--	add	x20,x20,x19			// h+=Maj(a,b,c)
--	ldr	x19,[x30],#8		// *K++, x28 in next round
--	add	x3,x3,x9
--	add	x20,x20,x17			// h+=Sigma0(a)
--	add	x3,x3,x8
--	cbnz	x19,.Loop_16_xx
--
--	ldp	x0,x2,[x29,#96]
--	ldr	x1,[x29,#112]
--	sub	x30,x30,#648		// rewind
--
--	ldp	x3,x4,[x0]
--	ldp	x5,x6,[x0,#2*8]
--	add	x1,x1,#14*8			// advance input pointer
--	ldp	x7,x8,[x0,#4*8]
--	add	x20,x20,x3
--	ldp	x9,x10,[x0,#6*8]
--	add	x21,x21,x4
--	add	x22,x22,x5
--	add	x23,x23,x6
--	stp	x20,x21,[x0]
--	add	x24,x24,x7
--	add	x25,x25,x8
--	stp	x22,x23,[x0,#2*8]
--	add	x26,x26,x9
--	add	x27,x27,x10
--	cmp	x1,x2
--	stp	x24,x25,[x0,#4*8]
--	stp	x26,x27,[x0,#6*8]
--	b.ne	.Loop
--
--	ldp	x19,x20,[x29,#16]
--	add	sp,sp,#4*8
--	ldp	x21,x22,[x29,#32]
--	ldp	x23,x24,[x29,#48]
--	ldp	x25,x26,[x29,#64]
--	ldp	x27,x28,[x29,#80]
--	ldp	x29,x30,[sp],#128
--	ret
--.size	sha512_block_data_order,.-sha512_block_data_order
--
--.align	6
--.type	.LK512,%object
--.LK512:
--	.quad	0x428a2f98d728ae22,0x7137449123ef65cd
--	.quad	0xb5c0fbcfec4d3b2f,0xe9b5dba58189dbbc
--	.quad	0x3956c25bf348b538,0x59f111f1b605d019
--	.quad	0x923f82a4af194f9b,0xab1c5ed5da6d8118
--	.quad	0xd807aa98a3030242,0x12835b0145706fbe
--	.quad	0x243185be4ee4b28c,0x550c7dc3d5ffb4e2
--	.quad	0x72be5d74f27b896f,0x80deb1fe3b1696b1
--	.quad	0x9bdc06a725c71235,0xc19bf174cf692694
--	.quad	0xe49b69c19ef14ad2,0xefbe4786384f25e3
--	.quad	0x0fc19dc68b8cd5b5,0x240ca1cc77ac9c65
--	.quad	0x2de92c6f592b0275,0x4a7484aa6ea6e483
--	.quad	0x5cb0a9dcbd41fbd4,0x76f988da831153b5
--	.quad	0x983e5152ee66dfab,0xa831c66d2db43210
--	.quad	0xb00327c898fb213f,0xbf597fc7beef0ee4
--	.quad	0xc6e00bf33da88fc2,0xd5a79147930aa725
--	.quad	0x06ca6351e003826f,0x142929670a0e6e70
--	.quad	0x27b70a8546d22ffc,0x2e1b21385c26c926
--	.quad	0x4d2c6dfc5ac42aed,0x53380d139d95b3df
--	.quad	0x650a73548baf63de,0x766a0abb3c77b2a8
--	.quad	0x81c2c92e47edaee6,0x92722c851482353b
--	.quad	0xa2bfe8a14cf10364,0xa81a664bbc423001
--	.quad	0xc24b8b70d0f89791,0xc76c51a30654be30
--	.quad	0xd192e819d6ef5218,0xd69906245565a910
--	.quad	0xf40e35855771202a,0x106aa07032bbd1b8
--	.quad	0x19a4c116b8d2d0c8,0x1e376c085141ab53
--	.quad	0x2748774cdf8eeb99,0x34b0bcb5e19b48a8
--	.quad	0x391c0cb3c5c95a63,0x4ed8aa4ae3418acb
--	.quad	0x5b9cca4f7763e373,0x682e6ff3d6b2b8a3
--	.quad	0x748f82ee5defb2fc,0x78a5636f43172f60
--	.quad	0x84c87814a1f0ab72,0x8cc702081a6439ec
--	.quad	0x90befffa23631e28,0xa4506cebde82bde9
--	.quad	0xbef9a3f7b2c67915,0xc67178f2e372532b
--	.quad	0xca273eceea26619c,0xd186b8c721c0c207
--	.quad	0xeada7dd6cde0eb1e,0xf57d4f7fee6ed178
--	.quad	0x06f067aa72176fba,0x0a637dc5a2c898a6
--	.quad	0x113f9804bef90dae,0x1b710b35131c471b
--	.quad	0x28db77f523047d84,0x32caab7b40c72493
--	.quad	0x3c9ebe0a15c9bebc,0x431d67c49c100d4c
--	.quad	0x4cc5d4becb3e42b6,0x597f299cfc657e2a
--	.quad	0x5fcb6fab3ad6faec,0x6c44198c4a475817
--	.quad	0	// terminator
--.size	.LK512,.-.LK512
--#ifndef	__KERNEL__
--.align	3
--.LOPENSSL_armcap_P:
--# ifdef	__ILP32__
--	.long	OPENSSL_armcap_P-.
--# else
--	.quad	OPENSSL_armcap_P-.
--# endif
--#endif
--.asciz	"SHA512 block transform for ARMv8, CRYPTOGAMS by <appro@openssl.org>"
--.align	2
--#ifndef	__KERNEL__
--.comm	OPENSSL_armcap_P,4,4
--#endif
 diff --git a/arch/mips/include/uapi/asm/sgidefs.h b/arch/mips/include/uapi/asm/sgidefs.h
-index 876442fcfb32..5be81f8fd479 100644
+index 26143e3b7c26..69c3de90c536 100644
 --- a/arch/mips/include/uapi/asm/sgidefs.h
 +++ b/arch/mips/include/uapi/asm/sgidefs.h
-@@ -10,14 +10,6 @@
+@@ -11,14 +11,6 @@
  #ifndef __ASM_SGIDEFS_H
  #define __ASM_SGIDEFS_H
  
@@ -3367,10 +984,10 @@ index 876442fcfb32..5be81f8fd479 100644
   * Definitions for the ISA levels
   *
 diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
-index 5811e7849a2e..1df70a73dc5c 100644
+index 2d58478c2745..9fee469d7130 100644
 --- a/arch/s390/include/asm/facility.h
 +++ b/arch/s390/include/asm/facility.h
-@@ -61,6 +61,18 @@ static inline int test_facility(unsigned long nr)
+@@ -59,6 +59,18 @@ static inline int test_facility(unsigned long nr)
  	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
  }
  
@@ -3389,7 +1006,7 @@ index 5811e7849a2e..1df70a73dc5c 100644
  /**
   * stfle - Store facility list extended
   * @stfle_fac_list: array where facility list can be stored
-@@ -78,13 +90,8 @@ static inline void stfle(u64 *stfle_fac_list, int size)
+@@ -76,13 +88,8 @@ static inline void stfle(u64 *stfle_fac_list, int size)
  	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
  	if (S390_lowcore.stfl_fac_list & 0x01000000) {
  		/* More facility bits available with stfle */
@@ -3405,19 +1022,59 @@ index 5811e7849a2e..1df70a73dc5c 100644
  	}
  	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
  	preempt_enable();
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 45b5c6c4a55e..7c67d8939f3e 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -117,26 +117,27 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+ 		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
+ 
+-		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
+-		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
+-		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
++		i = physaddr >> P4D_SHIFT;
++		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
++		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
+ 	} else {
+ 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
+ 		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
+ 		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
+ 	}
+ 
+-	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
+-	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
+-	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
++	i = physaddr >> PUD_SHIFT;
++	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
++	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
+ 
+ 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
+ 	pmd_entry += sme_get_me_mask();
+ 	pmd_entry +=  physaddr;
+ 
+ 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
+-		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
+-		pmd[idx] = pmd_entry + i * PMD_SIZE;
++		int idx = i + (physaddr >> PMD_SHIFT);
++
++		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
+ 	}
+ 
+ 	/*
 diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index e497d374412a..8d20fb09722c 100644
+index ed5c4cdf0a34..2a65ab291312 100644
 --- a/arch/x86/kernel/ptrace.c
 +++ b/arch/x86/kernel/ptrace.c
-@@ -23,6 +23,7 @@
+@@ -24,6 +24,7 @@
  #include <linux/rcupdate.h>
  #include <linux/export.h>
  #include <linux/context_tracking.h>
 +#include <linux/nospec.h>
  
- #include <asm/uaccess.h>
+ #include <linux/uaccess.h>
  #include <asm/pgtable.h>
-@@ -650,9 +651,11 @@ static unsigned long ptrace_get_debugreg(struct task_struct *tsk, int n)
+@@ -651,9 +652,11 @@ static unsigned long ptrace_get_debugreg(struct task_struct *tsk, int n)
  {
  	struct thread_struct *thread = &tsk->thread;
  	unsigned long val = 0;
@@ -3431,18 +1088,18 @@ index e497d374412a..8d20fb09722c 100644
  		if (bp)
  			val = bp->hw.info.address;
 diff --git a/arch/x86/kernel/tls.c b/arch/x86/kernel/tls.c
-index 9692a5e9fdab..b95693a73f12 100644
+index a5b802a12212..71d3fef1edc9 100644
 --- a/arch/x86/kernel/tls.c
 +++ b/arch/x86/kernel/tls.c
-@@ -4,6 +4,7 @@
+@@ -5,6 +5,7 @@
  #include <linux/user.h>
  #include <linux/regset.h>
  #include <linux/syscalls.h>
 +#include <linux/nospec.h>
  
- #include <asm/uaccess.h>
+ #include <linux/uaccess.h>
  #include <asm/desc.h>
-@@ -219,6 +220,7 @@ int do_get_thread_area(struct task_struct *p, int idx,
+@@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struct *p, int idx,
  		       struct user_desc __user *u_info)
  {
  	struct user_desc info;
@@ -3450,7 +1107,7 @@ index 9692a5e9fdab..b95693a73f12 100644
  
  	if (idx == -1 && get_user(idx, &u_info->entry_number))
  		return -EFAULT;
-@@ -226,8 +228,11 @@ int do_get_thread_area(struct task_struct *p, int idx,
+@@ -227,8 +229,11 @@ int do_get_thread_area(struct task_struct *p, int idx,
  	if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
  		return -EINVAL;
  
@@ -3464,8 +1121,110 @@ index 9692a5e9fdab..b95693a73f12 100644
  
  	if (copy_to_user(u_info, &info, sizeof(info)))
  		return -EFAULT;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 7d45ac451745..e65b0da1007b 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -3760,6 +3760,7 @@ static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
+ 		unsigned long flags;
+ 
+ 		spin_lock_irqsave(&bfqd->lock, flags);
++		bfqq->bic = NULL;
+ 		bfq_exit_bfqq(bfqd, bfqq);
+ 		bic_set_bfqq(bic, NULL, is_sync);
+ 		spin_unlock_irqrestore(&bfqd->lock, flags);
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index 96a0f940e54d..1af9f36f89cf 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -3876,6 +3876,8 @@ static int binder_thread_read(struct binder_proc *proc,
+ 		case BINDER_WORK_TRANSACTION_COMPLETE: {
+ 			binder_inner_proc_unlock(proc);
+ 			cmd = BR_TRANSACTION_COMPLETE;
++			kfree(w);
++			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
+ 			if (put_user(cmd, (uint32_t __user *)ptr))
+ 				return -EFAULT;
+ 			ptr += sizeof(uint32_t);
+@@ -3884,8 +3886,6 @@ static int binder_thread_read(struct binder_proc *proc,
+ 			binder_debug(BINDER_DEBUG_TRANSACTION_COMPLETE,
+ 				     "%d:%d BR_TRANSACTION_COMPLETE\n",
+ 				     proc->pid, thread->pid);
+-			kfree(w);
+-			binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
+ 		} break;
+ 		case BINDER_WORK_NODE: {
+ 			struct binder_node *node = container_of(w, struct binder_node, work);
+diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+index 07532d83be0b..e405ea3ca8d8 100644
+--- a/drivers/base/cacheinfo.c
++++ b/drivers/base/cacheinfo.c
+@@ -669,7 +669,8 @@ static int cacheinfo_cpu_pre_down(unsigned int cpu)
+ 
+ static int __init cacheinfo_sysfs_init(void)
+ {
+-	return cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "base/cacheinfo:online",
++	return cpuhp_setup_state(CPUHP_AP_BASE_CACHEINFO_ONLINE,
++				 "base/cacheinfo:online",
+ 				 cacheinfo_cpu_online, cacheinfo_cpu_pre_down);
+ }
+ device_initcall(cacheinfo_sysfs_init);
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 82e4d5cccf84..2df8564f08a0 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -215,6 +215,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
+ {
+ 	struct omap_clkctrl_provider *provider = data;
+ 	struct omap_clkctrl_clk *entry;
++	bool found = false;
+ 
+ 	if (clkspec->args_count != 2)
+ 		return ERR_PTR(-EINVAL);
+@@ -224,11 +225,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
+ 
+ 	list_for_each_entry(entry, &provider->clocks, node) {
+ 		if (entry->reg_offset == clkspec->args[0] &&
+-		    entry->bit_offset == clkspec->args[1])
++		    entry->bit_offset == clkspec->args[1]) {
++			found = true;
+ 			break;
++		}
+ 	}
+ 
+-	if (!entry)
++	if (!found)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	return entry->clk;
+diff --git a/drivers/crypto/nx/nx-842-powernv.c b/drivers/crypto/nx/nx-842-powernv.c
+index 874ddf5e9087..dbf80b55c2a4 100644
+--- a/drivers/crypto/nx/nx-842-powernv.c
++++ b/drivers/crypto/nx/nx-842-powernv.c
+@@ -34,8 +34,6 @@ MODULE_ALIAS_CRYPTO("842-nx");
+ #define WORKMEM_ALIGN	(CRB_ALIGN)
+ #define CSB_WAIT_MAX	(5000) /* ms */
+ #define VAS_RETRIES	(10)
+-/* # of requests allowed per RxFIFO at a time. 0 for unlimited */
+-#define MAX_CREDITS_PER_RXFIFO	(1024)
+ 
+ struct nx842_workmem {
+ 	/* Below fields must be properly aligned */
+@@ -801,7 +799,11 @@ static int __init vas_cfg_coproc_info(struct device_node *dn, int chip_id,
+ 	rxattr.lnotify_lpid = lpid;
+ 	rxattr.lnotify_pid = pid;
+ 	rxattr.lnotify_tid = tid;
+-	rxattr.wcreds_max = MAX_CREDITS_PER_RXFIFO;
++	/*
++	 * Maximum RX window credits can not be more than #CRBs in
++	 * RxFIFO. Otherwise, can get checkstop if RxFIFO overruns.
++	 */
++	rxattr.wcreds_max = fifo_size / CRB_SIZE;
+ 
+ 	/*
+ 	 * Open a VAS receice window which is used to configure RxFIFO
 diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 463033b4db1d..5a24a484ecc7 100644
+index 4388f4e3840c..1f8fe1795964 100644
 --- a/drivers/crypto/talitos.c
 +++ b/drivers/crypto/talitos.c
 @@ -2185,7 +2185,7 @@ static struct talitos_alg_template driver_algs[] = {
@@ -3540,6 +1299,334 @@ index 463033b4db1d..5a24a484ecc7 100644
  				.cra_blocksize = DES3_EDE_BLOCK_SIZE,
  				.cra_flags = CRYPTO_ALG_ASYNC,
  			},
+diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
+index 50793fda7819..e3d86aa1ad5d 100644
+--- a/drivers/firmware/efi/efi-bgrt.c
++++ b/drivers/firmware/efi/efi-bgrt.c
+@@ -50,11 +50,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
+ 		       bgrt->version);
+ 		goto out;
+ 	}
+-	if (bgrt->status & 0xfe) {
+-		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
+-		       bgrt->status);
+-		goto out;
+-	}
+ 	if (bgrt->image_type != 0) {
+ 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
+ 		       bgrt->image_type);
+diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
+index 0f05b8d8fefa..b829fde80f7b 100644
+--- a/drivers/gpu/drm/drm_bufs.c
++++ b/drivers/gpu/drm/drm_bufs.c
+@@ -1321,7 +1321,10 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
+ 				 .size = from->buf_size,
+ 				 .low_mark = from->low_mark,
+ 				 .high_mark = from->high_mark};
+-	return copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags));
++
++	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
++		return -EFAULT;
++	return 0;
+ }
+ 
+ int drm_legacy_infobufs(struct drm_device *dev, void *data,
+diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
+index f8e96e648acf..bfeeb6a56135 100644
+--- a/drivers/gpu/drm/drm_ioc32.c
++++ b/drivers/gpu/drm/drm_ioc32.c
+@@ -372,7 +372,10 @@ static int copy_one_buf32(void *data, int count, struct drm_buf_entry *from)
+ 			      .size = from->buf_size,
+ 			      .low_mark = from->low_mark,
+ 			      .high_mark = from->high_mark};
+-	return copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags));
++
++	if (copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags)))
++		return -EFAULT;
++	return 0;
+ }
+ 
+ static int drm_legacy_infobufs32(struct drm_device *dev, void *data,
+diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+index b45ac6bc8add..b428c3da7576 100644
+--- a/drivers/gpu/drm/udl/udl_drv.c
++++ b/drivers/gpu/drm/udl/udl_drv.c
+@@ -43,10 +43,16 @@ static const struct file_operations udl_driver_fops = {
+ 	.llseek = noop_llseek,
+ };
+ 
++static void udl_driver_release(struct drm_device *dev)
++{
++	udl_fini(dev);
++	udl_modeset_cleanup(dev);
++	drm_dev_fini(dev);
++	kfree(dev);
++}
++
+ static struct drm_driver driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME,
+-	.load = udl_driver_load,
+-	.unload = udl_driver_unload,
+ 	.release = udl_driver_release,
+ 
+ 	/* gem hooks */
+@@ -70,28 +76,56 @@ static struct drm_driver driver = {
+ 	.patchlevel = DRIVER_PATCHLEVEL,
+ };
+ 
++static struct udl_device *udl_driver_create(struct usb_interface *interface)
++{
++	struct usb_device *udev = interface_to_usbdev(interface);
++	struct udl_device *udl;
++	int r;
++
++	udl = kzalloc(sizeof(*udl), GFP_KERNEL);
++	if (!udl)
++		return ERR_PTR(-ENOMEM);
++
++	r = drm_dev_init(&udl->drm, &driver, &interface->dev);
++	if (r) {
++		kfree(udl);
++		return ERR_PTR(r);
++	}
++
++	udl->udev = udev;
++	udl->drm.dev_private = udl;
++
++	r = udl_init(udl);
++	if (r) {
++		drm_dev_fini(&udl->drm);
++		kfree(udl);
++		return ERR_PTR(r);
++	}
++
++	usb_set_intfdata(interface, udl);
++	return udl;
++}
++
+ static int udl_usb_probe(struct usb_interface *interface,
+ 			 const struct usb_device_id *id)
+ {
+-	struct usb_device *udev = interface_to_usbdev(interface);
+-	struct drm_device *dev;
+ 	int r;
++	struct udl_device *udl;
+ 
+-	dev = drm_dev_alloc(&driver, &interface->dev);
+-	if (IS_ERR(dev))
+-		return PTR_ERR(dev);
++	udl = udl_driver_create(interface);
++	if (IS_ERR(udl))
++		return PTR_ERR(udl);
+ 
+-	r = drm_dev_register(dev, (unsigned long)udev);
++	r = drm_dev_register(&udl->drm, 0);
+ 	if (r)
+ 		goto err_free;
+ 
+-	usb_set_intfdata(interface, dev);
+-	DRM_INFO("Initialized udl on minor %d\n", dev->primary->index);
++	DRM_INFO("Initialized udl on minor %d\n", udl->drm.primary->index);
+ 
+ 	return 0;
+ 
+ err_free:
+-	drm_dev_unref(dev);
++	drm_dev_unref(&udl->drm);
+ 	return r;
+ }
+ 
+diff --git a/drivers/gpu/drm/udl/udl_drv.h b/drivers/gpu/drm/udl/udl_drv.h
+index 307455dd6526..d5a5dcd15dd8 100644
+--- a/drivers/gpu/drm/udl/udl_drv.h
++++ b/drivers/gpu/drm/udl/udl_drv.h
+@@ -49,8 +49,8 @@ struct urb_list {
+ struct udl_fbdev;
+ 
+ struct udl_device {
++	struct drm_device drm;
+ 	struct device *dev;
+-	struct drm_device *ddev;
+ 	struct usb_device *udev;
+ 	struct drm_crtc *crtc;
+ 
+@@ -68,6 +68,8 @@ struct udl_device {
+ 	atomic_t cpu_kcycles_used; /* transpired during pixel processing */
+ };
+ 
++#define to_udl(x) container_of(x, struct udl_device, drm)
++
+ struct udl_gem_object {
+ 	struct drm_gem_object base;
+ 	struct page **pages;
+@@ -99,9 +101,8 @@ struct urb *udl_get_urb(struct drm_device *dev);
+ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len);
+ void udl_urb_completion(struct urb *urb);
+ 
+-int udl_driver_load(struct drm_device *dev, unsigned long flags);
+-void udl_driver_unload(struct drm_device *dev);
+-void udl_driver_release(struct drm_device *dev);
++int udl_init(struct udl_device *udl);
++void udl_fini(struct drm_device *dev);
+ 
+ int udl_fbdev_init(struct drm_device *dev);
+ void udl_fbdev_cleanup(struct drm_device *dev);
+diff --git a/drivers/gpu/drm/udl/udl_fb.c b/drivers/gpu/drm/udl/udl_fb.c
+index 491f1892b50e..f41fd0684ce4 100644
+--- a/drivers/gpu/drm/udl/udl_fb.c
++++ b/drivers/gpu/drm/udl/udl_fb.c
+@@ -82,7 +82,7 @@ int udl_handle_damage(struct udl_framebuffer *fb, int x, int y,
+ 		      int width, int height)
+ {
+ 	struct drm_device *dev = fb->base.dev;
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int i, ret;
+ 	char *cmd;
+ 	cycles_t start_cycles, end_cycles;
+@@ -210,10 +210,10 @@ static int udl_fb_open(struct fb_info *info, int user)
+ {
+ 	struct udl_fbdev *ufbdev = info->par;
+ 	struct drm_device *dev = ufbdev->ufb.base.dev;
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 
+ 	/* If the USB device is gone, we don't accept new opens */
+-	if (drm_dev_is_unplugged(udl->ddev))
++	if (drm_dev_is_unplugged(&udl->drm))
+ 		return -ENODEV;
+ 
+ 	ufbdev->fb_count++;
+@@ -441,7 +441,7 @@ static void udl_fbdev_destroy(struct drm_device *dev,
+ 
+ int udl_fbdev_init(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int bpp_sel = fb_bpp;
+ 	struct udl_fbdev *ufbdev;
+ 	int ret;
+@@ -480,7 +480,7 @@ int udl_fbdev_init(struct drm_device *dev)
+ 
+ void udl_fbdev_cleanup(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	if (!udl->fbdev)
+ 		return;
+ 
+@@ -491,7 +491,7 @@ void udl_fbdev_cleanup(struct drm_device *dev)
+ 
+ void udl_fbdev_unplug(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	struct udl_fbdev *ufbdev;
+ 	if (!udl->fbdev)
+ 		return;
+diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
+index 60866b422f81..124428f33e1e 100644
+--- a/drivers/gpu/drm/udl/udl_main.c
++++ b/drivers/gpu/drm/udl/udl_main.c
+@@ -28,7 +28,7 @@
+ static int udl_parse_vendor_descriptor(struct drm_device *dev,
+ 				       struct usb_device *usbdev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	char *desc;
+ 	char *buf;
+ 	char *desc_end;
+@@ -164,7 +164,7 @@ void udl_urb_completion(struct urb *urb)
+ 
+ static void udl_free_urb_list(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int count = udl->urbs.count;
+ 	struct list_head *node;
+ 	struct urb_node *unode;
+@@ -198,7 +198,7 @@ static void udl_free_urb_list(struct drm_device *dev)
+ 
+ static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	struct urb *urb;
+ 	struct urb_node *unode;
+ 	char *buf;
+@@ -262,7 +262,7 @@ static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
+ 
+ struct urb *udl_get_urb(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int ret = 0;
+ 	struct list_head *entry;
+ 	struct urb_node *unode;
+@@ -296,7 +296,7 @@ struct urb *udl_get_urb(struct drm_device *dev)
+ 
+ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 	int ret;
+ 
+ 	BUG_ON(len > udl->urbs.size);
+@@ -311,20 +311,12 @@ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
+ 	return ret;
+ }
+ 
+-int udl_driver_load(struct drm_device *dev, unsigned long flags)
++int udl_init(struct udl_device *udl)
+ {
+-	struct usb_device *udev = (void*)flags;
+-	struct udl_device *udl;
++	struct drm_device *dev = &udl->drm;
+ 	int ret = -ENOMEM;
+ 
+ 	DRM_DEBUG("\n");
+-	udl = kzalloc(sizeof(struct udl_device), GFP_KERNEL);
+-	if (!udl)
+-		return -ENOMEM;
+-
+-	udl->udev = udev;
+-	udl->ddev = dev;
+-	dev->dev_private = udl;
+ 
+ 	if (!udl_parse_vendor_descriptor(dev, udl->udev)) {
+ 		ret = -ENODEV;
+@@ -359,7 +351,6 @@ int udl_driver_load(struct drm_device *dev, unsigned long flags)
+ err:
+ 	if (udl->urbs.count)
+ 		udl_free_urb_list(dev);
+-	kfree(udl);
+ 	DRM_ERROR("%d\n", ret);
+ 	return ret;
+ }
+@@ -370,20 +361,12 @@ int udl_drop_usb(struct drm_device *dev)
+ 	return 0;
+ }
+ 
+-void udl_driver_unload(struct drm_device *dev)
++void udl_fini(struct drm_device *dev)
+ {
+-	struct udl_device *udl = dev->dev_private;
++	struct udl_device *udl = to_udl(dev);
+ 
+ 	if (udl->urbs.count)
+ 		udl_free_urb_list(dev);
+ 
+ 	udl_fbdev_cleanup(dev);
+-	kfree(udl);
+-}
+-
+-void udl_driver_release(struct drm_device *dev)
+-{
+-	udl_modeset_cleanup(dev);
+-	drm_dev_fini(dev);
+-	kfree(dev);
+ }
 diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
 index 2165f3dd328b..842c0235471d 100644
 --- a/drivers/input/keyboard/imx_keypad.c
@@ -3593,10 +1680,10 @@ index 2165f3dd328b..842c0235471d 100644
  static struct platform_driver imx_keypad_driver = {
  	.driver		= {
 diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 38edf8f5bf8a..15be3ee6cc50 100644
+index fda33fc3ffcc..ab4888d043f0 100644
 --- a/drivers/input/mouse/elantech.c
 +++ b/drivers/input/mouse/elantech.c
-@@ -1187,6 +1187,8 @@ static const char * const middle_button_pnp_ids[] = {
+@@ -1191,6 +1191,8 @@ static const char * const middle_button_pnp_ids[] = {
  	"LEN2132", /* ThinkPad P52 */
  	"LEN2133", /* ThinkPad P72 w/ NFC */
  	"LEN2134", /* ThinkPad P72 */
@@ -3605,11 +1692,23 @@ index 38edf8f5bf8a..15be3ee6cc50 100644
  	NULL
  };
  
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index a5f279da83a1..1a6a05c45ee7 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -176,6 +176,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
+ 	"LEN0092", /* X1 Carbon 6 */
++	"LEN0093", /* T480 */
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN200f", /* T450s */
 diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index 0aba34a7b3b3..727f9e571955 100644
+index 8573c70a1880..e705799976c2 100644
 --- a/drivers/md/dm-verity-target.c
 +++ b/drivers/md/dm-verity-target.c
-@@ -218,8 +218,8 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
+@@ -276,8 +276,8 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
  		BUG();
  	}
  
@@ -3621,10 +1720,10 @@ index 0aba34a7b3b3..727f9e571955 100644
  	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
  		DMERR("%s: reached maximum errors", v->data_dev->name);
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 21698eb671d7..765a16dab2e5 100644
+index b27a69388dcd..764ed9c46629 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -7296,9 +7296,9 @@ static void status_unused(struct seq_file *seq)
+@@ -7605,9 +7605,9 @@ static void status_unused(struct seq_file *seq)
  static int status_resync(struct seq_file *seq, struct mddev *mddev)
  {
  	sector_t max_sectors, resync, res;
@@ -3637,7 +1736,7 @@ index 21698eb671d7..765a16dab2e5 100644
  	unsigned int per_milli;
  
  	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
-@@ -7368,22 +7368,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+@@ -7677,22 +7677,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
  	 * db: blocks written from mark until now
  	 * rt: remaining time
  	 *
@@ -3680,10 +1779,10 @@ index 21698eb671d7..765a16dab2e5 100644
  	rt >>= 5;
  
 diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
-index f866a4baecb5..b9da2c6cc981 100644
+index 21d0fa592145..bc089e634a75 100644
 --- a/drivers/misc/vmw_vmci/vmci_context.c
 +++ b/drivers/misc/vmw_vmci/vmci_context.c
-@@ -28,6 +28,9 @@
+@@ -29,6 +29,9 @@
  #include "vmci_driver.h"
  #include "vmci_event.h"
  
@@ -3693,7 +1792,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  /*
   * List of current VMCI contexts.  Contexts can be added by
   * vmci_ctx_create() and removed via vmci_ctx_destroy().
-@@ -124,19 +127,22 @@ struct vmci_ctx *vmci_ctx_create(u32 cid, u32 priv_flags,
+@@ -125,19 +128,22 @@ struct vmci_ctx *vmci_ctx_create(u32 cid, u32 priv_flags,
  	/* Initialize host-specific VMCI context. */
  	init_waitqueue_head(&context->host_context.wait_queue);
  
@@ -3719,7 +1818,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  	if (!context->pending_doorbell_array) {
  		error = -ENOMEM;
  		goto err_free_db_array;
-@@ -211,7 +217,7 @@ static int ctx_fire_notification(u32 context_id, u32 priv_flags)
+@@ -212,7 +218,7 @@ static int ctx_fire_notification(u32 context_id, u32 priv_flags)
  	 * We create an array to hold the subscribers we find when
  	 * scanning through all contexts.
  	 */
@@ -3728,7 +1827,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  	if (subscriber_array == NULL)
  		return VMCI_ERROR_NO_MEM;
  
-@@ -630,20 +636,26 @@ int vmci_ctx_add_notification(u32 context_id, u32 remote_cid)
+@@ -631,20 +637,26 @@ int vmci_ctx_add_notification(u32 context_id, u32 remote_cid)
  
  	spin_lock(&context->lock);
  
@@ -3766,7 +1865,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  	}
  
  	spin_unlock(&context->lock);
-@@ -728,8 +740,7 @@ static int vmci_ctx_get_chkpt_doorbells(struct vmci_ctx *context,
+@@ -729,8 +741,7 @@ static int vmci_ctx_get_chkpt_doorbells(struct vmci_ctx *context,
  					u32 *buf_size, void **pbuf)
  {
  	struct dbell_cpt_state *dbells;
@@ -3776,7 +1875,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  
  	n_doorbells = vmci_handle_arr_get_size(context->doorbell_array);
  	if (n_doorbells > 0) {
-@@ -867,7 +878,8 @@ int vmci_ctx_rcv_notifications_get(u32 context_id,
+@@ -868,7 +879,8 @@ int vmci_ctx_rcv_notifications_get(u32 context_id,
  	spin_lock(&context->lock);
  
  	*db_handle_array = context->pending_doorbell_array;
@@ -3786,7 +1885,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  	if (!context->pending_doorbell_array) {
  		context->pending_doorbell_array = *db_handle_array;
  		*db_handle_array = NULL;
-@@ -949,12 +961,11 @@ int vmci_ctx_dbell_create(u32 context_id, struct vmci_handle handle)
+@@ -950,12 +962,11 @@ int vmci_ctx_dbell_create(u32 context_id, struct vmci_handle handle)
  		return VMCI_ERROR_NOT_FOUND;
  
  	spin_lock(&context->lock);
@@ -3803,7 +1902,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  
  	spin_unlock(&context->lock);
  	vmci_ctx_put(context);
-@@ -1090,15 +1101,16 @@ int vmci_ctx_notify_dbell(u32 src_cid,
+@@ -1091,15 +1102,16 @@ int vmci_ctx_notify_dbell(u32 src_cid,
  			if (!vmci_handle_arr_has_entry(
  					dst_context->pending_doorbell_array,
  					handle)) {
@@ -3826,7 +1925,7 @@ index f866a4baecb5..b9da2c6cc981 100644
  		}
  		spin_unlock(&dst_context->lock);
  	}
-@@ -1125,13 +1137,11 @@ int vmci_ctx_qp_create(struct vmci_ctx *context, struct vmci_handle handle)
+@@ -1126,13 +1138,11 @@ int vmci_ctx_qp_create(struct vmci_ctx *context, struct vmci_handle handle)
  	if (context == NULL || vmci_handle_is_invalid(handle))
  		return VMCI_ERROR_INVALID_ARGS;
  
@@ -4006,12 +2105,44 @@ index b5f3a7f98cf1..0fc58597820e 100644
  	const struct vmci_handle_arr *array)
  {
  	return array->size;
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index d3ce904e929e..ebad93ac8f11 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -818,6 +818,27 @@ static int m_can_poll(struct napi_struct *napi, int quota)
+ 	if (!irqstatus)
+ 		goto end;
+ 
++	/* Errata workaround for issue "Needless activation of MRAF irq"
++	 * During frame reception while the MCAN is in Error Passive state
++	 * and the Receive Error Counter has the value MCAN_ECR.REC = 127,
++	 * it may happen that MCAN_IR.MRAF is set although there was no
++	 * Message RAM access failure.
++	 * If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is generated
++	 * The Message RAM Access Failure interrupt routine needs to check
++	 * whether MCAN_ECR.RP = ’1’ and MCAN_ECR.REC = 127.
++	 * In this case, reset MCAN_IR.MRAF. No further action is required.
++	 */
++	if ((priv->version <= 31) && (irqstatus & IR_MRAF) &&
++	    (m_can_read(priv, M_CAN_ECR) & ECR_RP)) {
++		struct can_berr_counter bec;
++
++		__m_can_get_berr_counter(dev, &bec);
++		if (bec.rxerr == 127) {
++			m_can_write(priv, M_CAN_IR, IR_MRAF);
++			irqstatus &= ~IR_MRAF;
++		}
++	}
++
+ 	psr = m_can_read(priv, M_CAN_PSR);
+ 	if (irqstatus & IR_ERR_STATE)
+ 		work_done += m_can_handle_state_errors(dev, psr);
 diff --git a/drivers/net/can/spi/Kconfig b/drivers/net/can/spi/Kconfig
-index 148cae5871a6..249d2db7d600 100644
+index 8f2e0dd7b756..792e9c6c4a2f 100644
 --- a/drivers/net/can/spi/Kconfig
 +++ b/drivers/net/can/spi/Kconfig
-@@ -2,9 +2,10 @@ menu "CAN SPI interfaces"
- 	depends on SPI
+@@ -8,9 +8,10 @@ config CAN_HI311X
+ 	  Driver for the Holt HI311x SPI CAN controllers.
  
  config CAN_MCP251X
 -	tristate "Microchip MCP251x SPI CAN controllers"
@@ -4118,11 +2249,24 @@ index f3f05fea8e1f..d8c448beab24 100644
 -MODULE_DESCRIPTION("Microchip 251x CAN driver");
 +MODULE_DESCRIPTION("Microchip 251x/25625 CAN driver");
  MODULE_LICENSE("GPL v2");
+diff --git a/drivers/net/dsa/mv88e6xxx/global1_vtu.c b/drivers/net/dsa/mv88e6xxx/global1_vtu.c
+index 8c8a0ec3d6e9..f260bd30c73a 100644
+--- a/drivers/net/dsa/mv88e6xxx/global1_vtu.c
++++ b/drivers/net/dsa/mv88e6xxx/global1_vtu.c
+@@ -416,7 +416,7 @@ int mv88e6185_g1_vtu_loadpurge(struct mv88e6xxx_chip *chip,
+ 		 * VTU DBNum[7:4] are located in VTU Operation 11:8
+ 		 */
+ 		op |= entry->fid & 0x000f;
+-		op |= (entry->fid & 0x00f0) << 8;
++		op |= (entry->fid & 0x00f0) << 4;
+ 	}
+ 
+ 	return mv88e6xxx_g1_vtu_op(chip, op);
 diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-index 8aecd8ef6542..15a0850e6bde 100644
+index 3fd1085a093f..65bc1929d1a8 100644
 --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
 +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -1562,7 +1562,8 @@ static int bnx2x_get_module_info(struct net_device *dev,
+@@ -1581,7 +1581,8 @@ static int bnx2x_get_module_info(struct net_device *dev,
  	}
  
  	if (!sff8472_comp ||
@@ -4144,11 +2288,24 @@ index b7d251108c19..7115f5025664 100644
  #define SFP_EEPROM_SFF_8472_COMP_ADDR		0x5e
  #define SFP_EEPROM_SFF_8472_COMP_SIZE		1
  
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_core.c b/drivers/net/ethernet/cavium/liquidio/lio_core.c
+index 23f6b60030c5..8c16298a252d 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_core.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_core.c
+@@ -854,7 +854,7 @@ static void liquidio_schedule_droq_pkt_handlers(struct octeon_device *oct)
+ 
+ 			if (droq->ops.poll_mode) {
+ 				droq->ops.napi_fn(droq);
+-				oct_priv->napi_mask |= (1 << oq_no);
++				oct_priv->napi_mask |= BIT_ULL(oq_no);
+ 			} else {
+ 				tasklet_schedule(&oct_priv->droq_tasklet);
+ 			}
 diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index 345818193de9..56db37d92937 100644
+index 6ce7b8435ace..f66b246acaea 100644
 --- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
 +++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -898,7 +898,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+@@ -893,7 +893,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
  			 u64 *data)
  {
  	struct be_adapter *adapter = netdev_priv(netdev);
@@ -4157,7 +2314,7 @@ index 345818193de9..56db37d92937 100644
  	u8 link_status = 0;
  
  	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -909,6 +909,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+@@ -904,6 +904,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
  
  	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
  
@@ -4167,7 +2324,7 @@ index 345818193de9..56db37d92937 100644
  	if (test->flags & ETH_TEST_FL_OFFLINE) {
  		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
  			test->flags |= ETH_TEST_FL_FAILED;
-@@ -929,13 +932,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+@@ -924,13 +927,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
  		test->flags |= ETH_TEST_FL_FAILED;
  	}
  
@@ -4199,11 +2356,25 @@ index 345818193de9..56db37d92937 100644
  	}
  }
  
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index c914b338691b..956fbb164e6f 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1489,6 +1489,9 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 		return 0;
+ 	}
+ 
++	/* refresh device's multicast list */
++	ibmvnic_set_multi(netdev);
++
+ 	/* kick napi */
+ 	for (i = 0; i < adapter->req_rx_queues; i++)
+ 		napi_schedule(&adapter->napi[i]);
 diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 8bbedfc9c48f..a0f97c5ab6ef 100644
+index 3c214a47c1c4..1ad345796e80 100644
 --- a/drivers/net/ethernet/intel/e1000e/netdev.c
 +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4212,7 +4212,7 @@ void e1000e_up(struct e1000_adapter *adapter)
+@@ -4228,7 +4228,7 @@ void e1000e_up(struct e1000_adapter *adapter)
  		e1000_configure_msix(adapter);
  	e1000_irq_enable(adapter);
  
@@ -4212,7 +2383,7 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  
  	e1000e_trigger_lsc(adapter);
  }
-@@ -4588,6 +4588,7 @@ int e1000e_open(struct net_device *netdev)
+@@ -4604,6 +4604,7 @@ int e1000e_open(struct net_device *netdev)
  	pm_runtime_get_sync(&pdev->dev);
  
  	netif_carrier_off(netdev);
@@ -4220,7 +2391,7 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  
  	/* allocate transmit descriptors */
  	err = e1000e_setup_tx_resources(adapter->tx_ring);
-@@ -4648,7 +4649,6 @@ int e1000e_open(struct net_device *netdev)
+@@ -4664,7 +4665,6 @@ int e1000e_open(struct net_device *netdev)
  	e1000_irq_enable(adapter);
  
  	adapter->tx_hang_recheck = false;
@@ -4228,7 +2399,7 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  
  	hw->mac.get_link_status = true;
  	pm_runtime_put(&pdev->dev);
-@@ -5271,6 +5271,7 @@ static void e1000_watchdog_task(struct work_struct *work)
+@@ -5286,6 +5286,7 @@ static void e1000_watchdog_task(struct work_struct *work)
  			if (phy->ops.cfg_on_link_up)
  				phy->ops.cfg_on_link_up(hw);
  
@@ -4236,7 +2407,7 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  			netif_carrier_on(netdev);
  
  			if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -5284,6 +5285,7 @@ static void e1000_watchdog_task(struct work_struct *work)
+@@ -5299,6 +5300,7 @@ static void e1000_watchdog_task(struct work_struct *work)
  			/* Link status message must follow this format */
  			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
  			netif_carrier_off(netdev);
@@ -4244,7 +2415,7 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  			if (!test_bit(__E1000_DOWN, &adapter->state))
  				mod_timer(&adapter->phy_info_timer,
  					  round_jiffies(jiffies + 2 * HZ));
-@@ -5291,13 +5293,8 @@ static void e1000_watchdog_task(struct work_struct *work)
+@@ -5306,13 +5308,8 @@ static void e1000_watchdog_task(struct work_struct *work)
  			/* 8000ES2LAN requires a Rx packet buffer work-around
  			 * on link down event; reset the controller to flush
  			 * the Rx packet buffer.
@@ -4259,7 +2430,7 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  				adapter->flags |= FLAG_RESTART_NOW;
  			else
  				pm_schedule_suspend(netdev->dev.parent,
-@@ -5320,6 +5317,14 @@ static void e1000_watchdog_task(struct work_struct *work)
+@@ -5335,6 +5332,14 @@ static void e1000_watchdog_task(struct work_struct *work)
  	adapter->gotc_old = adapter->stats.gotc;
  	spin_unlock(&adapter->stats64_lock);
  
@@ -4275,10 +2446,10 @@ index 8bbedfc9c48f..a0f97c5ab6ef 100644
  	if (adapter->flags & FLAG_RESTART_NOW) {
  		schedule_work(&adapter->reset_task);
 diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index a01e6c0d0cd1..b2a745b579fd 100644
+index 5acfbe5b8b9d..8ab7a4f98a07 100644
 --- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
 +++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -935,7 +935,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
+@@ -911,7 +911,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
  	MLXSW_REG_ZERO(spaft, payload);
  	mlxsw_reg_spaft_local_port_set(payload, local_port);
  	mlxsw_reg_spaft_allow_untagged_set(payload, allow_untagged);
@@ -4288,10 +2459,10 @@ index a01e6c0d0cd1..b2a745b579fd 100644
  }
  
 diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
-index 6f85276376e8..ae9b983e8e5c 100644
+index 40bd88362e3d..693f9582173b 100644
 --- a/drivers/net/ethernet/sis/sis900.c
 +++ b/drivers/net/ethernet/sis/sis900.c
-@@ -1058,7 +1058,7 @@ sis900_open(struct net_device *net_dev)
+@@ -1057,7 +1057,7 @@ sis900_open(struct net_device *net_dev)
  	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
  
  	/* Enable all known interrupts by setting the interrupt mask. */
@@ -4300,7 +2471,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  	sw32(cr, RxENA | sr32(cr));
  	sw32(ier, IE);
  
-@@ -1581,7 +1581,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
+@@ -1580,7 +1580,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
  	sw32(txdp, sis_priv->tx_ring_dma);
  
  	/* Enable all known interrupts by setting the interrupt mask. */
@@ -4309,7 +2480,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  }
  
  /**
-@@ -1621,7 +1621,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+@@ -1620,7 +1620,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
  			spin_unlock_irqrestore(&sis_priv->lock, flags);
  			return NETDEV_TX_OK;
  	}
@@ -4318,7 +2489,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  	sw32(cr, TxENA | sr32(cr));
  
  	sis_priv->cur_tx ++;
-@@ -1677,7 +1677,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+@@ -1676,7 +1676,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
  	do {
  		status = sr32(isr);
  
@@ -4327,7 +2498,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  			/* nothing intresting happened */
  			break;
  		handled = 1;
-@@ -1687,7 +1687,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+@@ -1686,7 +1686,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
  			/* Rx interrupt */
  			sis900_rx(net_dev);
  
@@ -4336,7 +2507,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  			/* Tx interrupt */
  			sis900_finish_xmit(net_dev);
  
-@@ -1899,8 +1899,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
+@@ -1898,8 +1898,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
  
  		if (tx_status & OWN) {
  			/* The packet is not transmitted yet (owned by hardware) !
@@ -4347,7 +2518,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  			break;
  		}
  
-@@ -2476,7 +2476,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
+@@ -2475,7 +2475,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
  	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
  
  	/* Enable all known interrupts by setting the interrupt mask. */
@@ -4357,7 +2528,7 @@ index 6f85276376e8..ae9b983e8e5c 100644
  	sw32(ier, IE);
  
 diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
-index f60f7660b451..92f52a73ec0e 100644
+index 6c7fd98cb00a..d9eda7c217e9 100644
 --- a/drivers/net/ppp/ppp_mppe.c
 +++ b/drivers/net/ppp/ppp_mppe.c
 @@ -63,6 +63,7 @@ MODULE_AUTHOR("Frank Cusack <fcusack@fcusack.com>");
@@ -4368,11 +2539,107 @@ index f60f7660b451..92f52a73ec0e 100644
  MODULE_VERSION("1.0.2");
  
  static unsigned int
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 063daa3435e4..4b0144b2a252 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -153,7 +153,7 @@ static bool qmimux_has_slaves(struct usbnet *dev)
+ 
+ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ {
+-	unsigned int len, offset = 0;
++	unsigned int len, offset = 0, pad_len, pkt_len;
+ 	struct qmimux_hdr *hdr;
+ 	struct net_device *net;
+ 	struct sk_buff *skbn;
+@@ -171,10 +171,16 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		if (hdr->pad & 0x80)
+ 			goto skip;
+ 
++		/* extract padding length and check for valid length info */
++		pad_len = hdr->pad & 0x3f;
++		if (len == 0 || pad_len >= len)
++			goto skip;
++		pkt_len = len - pad_len;
++
+ 		net = qmimux_find_dev(dev, hdr->mux_id);
+ 		if (!net)
+ 			goto skip;
+-		skbn = netdev_alloc_skb(net, len);
++		skbn = netdev_alloc_skb(net, pkt_len);
+ 		if (!skbn)
+ 			return 0;
+ 		skbn->dev = net;
+@@ -191,7 +197,7 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 			goto skip;
+ 		}
+ 
+-		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, len);
++		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, pkt_len);
+ 		if (netif_rx(skbn) != NET_RX_SUCCESS)
+ 			return 0;
+ 
+@@ -241,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
+ 	return err;
+ }
+ 
+-static void qmimux_unregister_device(struct net_device *dev)
++static void qmimux_unregister_device(struct net_device *dev,
++				     struct list_head *head)
+ {
+ 	struct qmimux_priv *priv = netdev_priv(dev);
+ 	struct net_device *real_dev = priv->real_dev;
+ 
+ 	netdev_upper_dev_unlink(real_dev, dev);
+-	unregister_netdevice(dev);
++	unregister_netdevice_queue(dev, head);
+ 
+ 	/* Get rid of the reference to real_dev */
+ 	dev_put(real_dev);
+@@ -356,8 +363,8 @@ static ssize_t add_mux_store(struct device *d,  struct device_attribute *attr, c
+ 	if (kstrtou8(buf, 0, &mux_id))
+ 		return -EINVAL;
+ 
+-	/* mux_id [1 - 0x7f] range empirically found */
+-	if (mux_id < 1 || mux_id > 0x7f)
++	/* mux_id [1 - 254] for compatibility with ip(8) and the rmnet driver */
++	if (mux_id < 1 || mux_id > 254)
+ 		return -EINVAL;
+ 
+ 	if (!rtnl_trylock())
+@@ -418,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+-	qmimux_unregister_device(del_dev);
++	qmimux_unregister_device(del_dev, NULL);
+ 
+ 	if (!qmimux_has_slaves(dev))
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+@@ -1417,6 +1424,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 	struct qmi_wwan_state *info;
+ 	struct list_head *iter;
+ 	struct net_device *ldev;
++	LIST_HEAD(list);
+ 
+ 	/* called twice if separate control and data intf */
+ 	if (!dev)
+@@ -1429,8 +1437,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 		}
+ 		rcu_read_lock();
+ 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
+-			qmimux_unregister_device(ldev);
++			qmimux_unregister_device(ldev, &list);
+ 		rcu_read_unlock();
++		unregister_netdevice_many(&list);
+ 		rtnl_unlock();
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+ 	}
 diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
-index 99ab20334d21..37c3cbe0ff2b 100644
+index e7c3f3b8457d..99f1897a775d 100644
 --- a/drivers/net/wireless/ath/carl9170/usb.c
 +++ b/drivers/net/wireless/ath/carl9170/usb.c
-@@ -128,6 +128,8 @@ static struct usb_device_id carl9170_usb_ids[] = {
+@@ -128,6 +128,8 @@ static const struct usb_device_id carl9170_usb_ids[] = {
  };
  MODULE_DEVICE_TABLE(usb, carl9170_usb_ids);
  
@@ -4469,8 +2736,20 @@ index 99ab20334d21..37c3cbe0ff2b 100644
  }
  
  #ifdef CONFIG_PM
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 99676d6c4713..6c10b8c4ddbe 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1509,7 +1509,6 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
+ 	goto free;
+ 
+  out_free_fw:
+-	iwl_dealloc_ucode(drv);
+ 	release_firmware(ucode_raw);
+  out_unbind:
+ 	complete(&drv->request_firmware_complete);
 diff --git a/drivers/net/wireless/intersil/p54/p54usb.c b/drivers/net/wireless/intersil/p54/p54usb.c
-index 043bd1c23c19..4a197a32d78c 100644
+index b0b86f701061..15661da6eedc 100644
 --- a/drivers/net/wireless/intersil/p54/p54usb.c
 +++ b/drivers/net/wireless/intersil/p54/p54usb.c
 @@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
@@ -4579,10 +2858,10 @@ index 043bd1c23c19..4a197a32d78c 100644
  	p54_free_common(dev);
  }
 diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-index 4b1894b4757f..395d6ece2cac 100644
+index 9e75522d248a..342555ebafd7 100644
 --- a/drivers/net/wireless/marvell/mwifiex/fw.h
 +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-@@ -1719,9 +1719,10 @@ struct mwifiex_ie_types_wmm_queue_status {
+@@ -1744,9 +1744,10 @@ struct mwifiex_ie_types_wmm_queue_status {
  struct ieee_types_vendor_header {
  	u8 element_id;
  	u8 len;
@@ -4596,7 +2875,7 @@ index 4b1894b4757f..395d6ece2cac 100644
  } __packed;
  
  struct ieee_types_wmm_parameter {
-@@ -1735,6 +1736,9 @@ struct ieee_types_wmm_parameter {
+@@ -1760,6 +1761,9 @@ struct ieee_types_wmm_parameter {
  	 *   Version     [1]
  	 */
  	struct ieee_types_vendor_header vend_hdr;
@@ -4606,7 +2885,7 @@ index 4b1894b4757f..395d6ece2cac 100644
  	u8 qos_info_bitmap;
  	u8 reserved;
  	struct ieee_types_wmm_ac_parameters ac_params[IEEE80211_NUM_ACS];
-@@ -1752,6 +1756,8 @@ struct ieee_types_wmm_info {
+@@ -1777,6 +1781,8 @@ struct ieee_types_wmm_info {
  	 *   Version     [1]
  	 */
  	struct ieee_types_vendor_header vend_hdr;
@@ -4616,10 +2895,10 @@ index 4b1894b4757f..395d6ece2cac 100644
  	u8 qos_info_bitmap;
  } __packed;
 diff --git a/drivers/net/wireless/marvell/mwifiex/ie.c b/drivers/net/wireless/marvell/mwifiex/ie.c
-index c488c3068abc..0f977dc556ca 100644
+index 922e3d69fd84..32853496fe8c 100644
 --- a/drivers/net/wireless/marvell/mwifiex/ie.c
 +++ b/drivers/net/wireless/marvell/mwifiex/ie.c
-@@ -328,6 +328,8 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+@@ -329,6 +329,8 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
  	struct ieee80211_vendor_ie *vendorhdr;
  	u16 gen_idx = MWIFIEX_AUTO_IDX_MASK, ie_len = 0;
  	int left_len, parsed_len = 0;
@@ -4628,7 +2907,7 @@ index c488c3068abc..0f977dc556ca 100644
  
  	if (!info->tail || !info->tail_len)
  		return 0;
-@@ -343,6 +345,12 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+@@ -344,6 +346,12 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
  	 */
  	while (left_len > sizeof(struct ieee_types_header)) {
  		hdr = (void *)(info->tail + parsed_len);
@@ -4641,7 +2920,7 @@ index c488c3068abc..0f977dc556ca 100644
  		switch (hdr->element_id) {
  		case WLAN_EID_SSID:
  		case WLAN_EID_SUPP_RATES:
-@@ -356,13 +364,16 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+@@ -357,13 +365,16 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
  		case WLAN_EID_VENDOR_SPECIFIC:
  			break;
  		default:
@@ -4663,7 +2942,7 @@ index c488c3068abc..0f977dc556ca 100644
  	}
  
  	/* parse only WPA vendor IE from tail, WMM IE is configured by
-@@ -372,15 +383,17 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+@@ -373,15 +384,17 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
  						    WLAN_OUI_TYPE_MICROSOFT_WPA,
  						    info->tail, info->tail_len);
  	if (vendorhdr) {
@@ -4688,7 +2967,7 @@ index c488c3068abc..0f977dc556ca 100644
  
  	gen_ie->ie_index = cpu_to_le16(gen_idx);
  	gen_ie->mgmt_subtype_mask = cpu_to_le16(MGMT_MASK_BEACON |
-@@ -390,13 +403,15 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
+@@ -391,13 +404,15 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
  
  	if (mwifiex_update_uap_custom_ie(priv, gen_ie, &gen_idx, NULL, NULL,
  					 NULL, NULL)) {
@@ -4708,10 +2987,10 @@ index c488c3068abc..0f977dc556ca 100644
  
  /* This function parses different IEs-head & tail IEs, beacon IEs,
 diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index 78d59a67f7e1..97847eee2dfb 100644
+index c9d41ed77fc7..29284f9a0646 100644
 --- a/drivers/net/wireless/marvell/mwifiex/scan.c
 +++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1236,6 +1236,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1244,6 +1244,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  		}
  		switch (element_id) {
  		case WLAN_EID_SSID:
@@ -4720,7 +2999,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			bss_entry->ssid.ssid_len = element_len;
  			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
  			       element_len);
-@@ -1245,6 +1247,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1253,6 +1255,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			break;
  
  		case WLAN_EID_SUPP_RATES:
@@ -4729,7 +3008,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			memcpy(bss_entry->data_rates, current_ptr + 2,
  			       element_len);
  			memcpy(bss_entry->supported_rates, current_ptr + 2,
-@@ -1254,6 +1258,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1262,6 +1266,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			break;
  
  		case WLAN_EID_FH_PARAMS:
@@ -4738,7 +3017,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			fh_param_set =
  				(struct ieee_types_fh_param_set *) current_ptr;
  			memcpy(&bss_entry->phy_param_set.fh_param_set,
-@@ -1262,6 +1268,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1270,6 +1276,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			break;
  
  		case WLAN_EID_DS_PARAMS:
@@ -4747,7 +3026,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			ds_param_set =
  				(struct ieee_types_ds_param_set *) current_ptr;
  
-@@ -1273,6 +1281,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1281,6 +1289,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			break;
  
  		case WLAN_EID_CF_PARAMS:
@@ -4756,7 +3035,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			cf_param_set =
  				(struct ieee_types_cf_param_set *) current_ptr;
  			memcpy(&bss_entry->ss_param_set.cf_param_set,
-@@ -1281,6 +1291,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1289,6 +1299,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			break;
  
  		case WLAN_EID_IBSS_PARAMS:
@@ -4765,7 +3044,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			ibss_param_set =
  				(struct ieee_types_ibss_param_set *)
  				current_ptr;
-@@ -1290,10 +1302,14 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1298,10 +1310,14 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			break;
  
  		case WLAN_EID_ERP_INFO:
@@ -4780,7 +3059,7 @@ index 78d59a67f7e1..97847eee2dfb 100644
  			bss_entry->local_constraint = *(current_ptr + 2);
  			bss_entry->sensed_11h = true;
  			break;
-@@ -1336,15 +1352,22 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+@@ -1344,15 +1360,22 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
  			vendor_ie = (struct ieee_types_vendor_specific *)
  					current_ptr;
  
@@ -4808,29 +3087,29 @@ index 78d59a67f7e1..97847eee2dfb 100644
  				if (total_ie_len ==
  				    sizeof(struct ieee_types_wmm_parameter) ||
 diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-index 1532ac9cee0b..7f9645703d96 100644
+index a6077ab3efc3..82828a207963 100644
 --- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
 +++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -1374,7 +1374,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex_private *priv, u8 *ie_data_ptr,
- 			/* Test to see if it is a WPA IE, if not, then it is a
- 			 * gen IE
+@@ -1388,7 +1388,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex_private *priv, u8 *ie_data_ptr,
+ 			/* Test to see if it is a WPA IE, if not, then
+ 			 * it is a gen IE
  			 */
 -			if (!memcmp(pvendor_ie->oui, wpa_oui,
 +			if (!memcmp(&pvendor_ie->oui, wpa_oui,
  				    sizeof(wpa_oui))) {
- 				find_wpa_ie = 1;
- 				break;
-@@ -1383,7 +1383,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex_private *priv, u8 *ie_data_ptr,
- 			/* Test to see if it is a WPS IE, if so, enable
- 			 * wps session flag
- 			 */
+ 				/* IE is a WPA/WPA2 IE so call set_wpa function
+ 				 */
+@@ -1398,7 +1398,7 @@ mwifiex_set_gen_ie_helper(struct mwifiex_private *priv, u8 *ie_data_ptr,
+ 				goto next_ie;
+ 			}
+ 
 -			if (!memcmp(pvendor_ie->oui, wps_oui,
 +			if (!memcmp(&pvendor_ie->oui, wps_oui,
  				    sizeof(wps_oui))) {
- 				priv->wps.session_enable = true;
- 				mwifiex_dbg(priv->adapter, MSG,
+ 				/* Test to see if it is a WPS IE,
+ 				 * if so, enable wps session flag
 diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index dea2fe671dfe..9843560e784f 100644
+index 0edd26881321..7fba4d940131 100644
 --- a/drivers/net/wireless/marvell/mwifiex/wmm.c
 +++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
 @@ -240,7 +240,7 @@ mwifiex_wmm_setup_queue_priorities(struct mwifiex_private *priv,
@@ -4863,10 +3142,10 @@ index 35286907c636..d0090c5c88e7 100644
  
  static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
 diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
-index 30e9fbbff051..debe69adfc70 100644
+index a739bdf9630e..831a3a0a2837 100644
 --- a/drivers/s390/cio/qdio_thinint.c
 +++ b/drivers/s390/cio/qdio_thinint.c
-@@ -80,7 +80,6 @@ void tiqdio_add_input_queues(struct qdio_irq *irq_ptr)
+@@ -83,7 +83,6 @@ void tiqdio_add_input_queues(struct qdio_irq *irq_ptr)
  	mutex_lock(&tiq_list_lock);
  	list_add_rcu(&irq_ptr->input_qs[0]->entry, &tiq_list);
  	mutex_unlock(&tiq_list_lock);
@@ -4874,7 +3153,7 @@ index 30e9fbbff051..debe69adfc70 100644
  }
  
  void tiqdio_remove_input_queues(struct qdio_irq *irq_ptr)
-@@ -88,14 +87,14 @@ void tiqdio_remove_input_queues(struct qdio_irq *irq_ptr)
+@@ -91,14 +90,14 @@ void tiqdio_remove_input_queues(struct qdio_irq *irq_ptr)
  	struct qdio_q *q;
  
  	q = irq_ptr->input_qs[0];
@@ -4892,10 +3171,10 @@ index 30e9fbbff051..debe69adfc70 100644
  
  static inline int has_multiple_inq_on_dsci(struct qdio_irq *irq_ptr)
 diff --git a/drivers/staging/comedi/drivers/amplc_pci230.c b/drivers/staging/comedi/drivers/amplc_pci230.c
-index 42945de31fe2..d23aa5d8e62a 100644
+index 48c7890c3007..2b0b757dc626 100644
 --- a/drivers/staging/comedi/drivers/amplc_pci230.c
 +++ b/drivers/staging/comedi/drivers/amplc_pci230.c
-@@ -2337,7 +2337,8 @@ static irqreturn_t pci230_interrupt(int irq, void *d)
+@@ -2339,7 +2339,8 @@ static irqreturn_t pci230_interrupt(int irq, void *d)
  	devpriv->intr_running = false;
  	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
  
@@ -4920,7 +3199,7 @@ index d5295bbdd28c..37133d54dda1 100644
  	return IRQ_RETVAL(handled);
  }
 diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index 50a5b0c2cc7b..7ab95efcf1dc 100644
+index a6f249e9c1e1..4d218d554878 100644
 --- a/drivers/staging/iio/cdc/ad7150.c
 +++ b/drivers/staging/iio/cdc/ad7150.c
 @@ -6,6 +6,7 @@
@@ -4972,10 +3251,10 @@ index 50a5b0c2cc7b..7ab95efcf1dc 100644
  		break;
  	}
 diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 5b54439a8a9b..84474f06dbcf 100644
+index ecf3d631bc09..ab0796d14ac1 100644
 --- a/drivers/tty/serial/8250/8250_port.c
 +++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1814,8 +1814,7 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
+@@ -1873,8 +1873,7 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
  
  	status = serial_port_in(port, UART_LSR);
  
@@ -4986,10 +3265,10 @@ index 5b54439a8a9b..84474f06dbcf 100644
  			status = serial8250_rx_chars(up, status);
  	}
 diff --git a/drivers/usb/gadget/function/u_ether.c b/drivers/usb/gadget/function/u_ether.c
-index 5d1bd13a56c1..d5fbc2352029 100644
+index 3a0e4f5d7b83..81d84e0c3c6c 100644
 --- a/drivers/usb/gadget/function/u_ether.c
 +++ b/drivers/usb/gadget/function/u_ether.c
-@@ -198,11 +198,12 @@ rx_submit(struct eth_dev *dev, struct usb_request *req, gfp_t gfp_flags)
+@@ -190,11 +190,12 @@ rx_submit(struct eth_dev *dev, struct usb_request *req, gfp_t gfp_flags)
  		out = dev->port_usb->out_ep;
  	else
  		out = NULL;
@@ -5004,19 +3283,19 @@ index 5d1bd13a56c1..d5fbc2352029 100644
  
  	/* Padding up to RX_EXTRA handles minor disagreements with host.
  	 * Normally we use the USB "terminate on short read" convention;
-@@ -223,6 +224,7 @@ rx_submit(struct eth_dev *dev, struct usb_request *req, gfp_t gfp_flags)
+@@ -218,6 +219,7 @@ rx_submit(struct eth_dev *dev, struct usb_request *req, gfp_t gfp_flags)
  
  	if (dev->port_usb->is_fixed)
  		size = max_t(size_t, size, dev->port_usb->fixed_out_len);
 +	spin_unlock_irqrestore(&dev->lock, flags);
  
- 	skb = alloc_skb(size + NET_IP_ALIGN, gfp_flags);
+ 	skb = __netdev_alloc_skb(dev->net, size + NET_IP_ALIGN, gfp_flags);
  	if (skb == NULL) {
 diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-index 968ade5a35f5..696560529e6a 100644
+index 5d369b38868a..b6d9308d43ba 100644
 --- a/drivers/usb/renesas_usbhs/fifo.c
 +++ b/drivers/usb/renesas_usbhs/fifo.c
-@@ -821,9 +821,8 @@ static int __usbhsf_dma_map_ctrl(struct usbhs_pkt *pkt, int map)
+@@ -818,9 +818,8 @@ static int __usbhsf_dma_map_ctrl(struct usbhs_pkt *pkt, int map)
  }
  
  static void usbhsf_dma_complete(void *arg);
@@ -5027,7 +3306,7 @@ index 968ade5a35f5..696560529e6a 100644
  	struct usbhs_pipe *pipe = pkt->pipe;
  	struct usbhs_fifo *fifo;
  	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
-@@ -831,12 +830,10 @@ static void xfer_work(struct work_struct *work)
+@@ -828,12 +827,10 @@ static void xfer_work(struct work_struct *work)
  	struct dma_chan *chan;
  	struct device *dev = usbhs_priv_to_dev(priv);
  	enum dma_transfer_direction dir;
@@ -5041,7 +3320,7 @@ index 968ade5a35f5..696560529e6a 100644
  
  	chan = usbhsf_dma_chan_get(fifo, pkt);
  	dir = usbhs_pipe_is_dir_in(pipe) ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
-@@ -845,7 +842,7 @@ static void xfer_work(struct work_struct *work)
+@@ -842,7 +839,7 @@ static void xfer_work(struct work_struct *work)
  					pkt->trans, dir,
  					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
  	if (!desc)
@@ -5050,7 +3329,7 @@ index 968ade5a35f5..696560529e6a 100644
  
  	desc->callback		= usbhsf_dma_complete;
  	desc->callback_param	= pipe;
-@@ -853,7 +850,7 @@ static void xfer_work(struct work_struct *work)
+@@ -850,7 +847,7 @@ static void xfer_work(struct work_struct *work)
  	pkt->cookie = dmaengine_submit(desc);
  	if (pkt->cookie < 0) {
  		dev_err(dev, "Failed to submit dma descriptor\n");
@@ -5059,7 +3338,7 @@ index 968ade5a35f5..696560529e6a 100644
  	}
  
  	dev_dbg(dev, "  %s %d (%d/ %d)\n",
-@@ -864,8 +861,17 @@ static void xfer_work(struct work_struct *work)
+@@ -861,8 +858,17 @@ static void xfer_work(struct work_struct *work)
  	dma_async_issue_pending(chan);
  	usbhsf_dma_start(pipe, fifo);
  	usbhs_pipe_enable(pipe);
@@ -5078,7 +3357,7 @@ index 968ade5a35f5..696560529e6a 100644
  	usbhs_unlock(priv, flags);
  }
  
-@@ -918,8 +924,13 @@ static int usbhsf_dma_prepare_push(struct usbhs_pkt *pkt, int *is_done)
+@@ -915,8 +921,13 @@ static int usbhsf_dma_prepare_push(struct usbhs_pkt *pkt, int *is_done)
  	pkt->trans = len;
  
  	usbhsf_tx_irq_ctrl(pipe, 0);
@@ -5094,7 +3373,7 @@ index 968ade5a35f5..696560529e6a 100644
  
  	return 0;
  
-@@ -1025,8 +1036,7 @@ static int usbhsf_dma_prepare_pop_with_usb_dmac(struct usbhs_pkt *pkt,
+@@ -1022,8 +1033,7 @@ static int usbhsf_dma_prepare_pop_with_usb_dmac(struct usbhs_pkt *pkt,
  
  	pkt->trans = pkt->length;
  
@@ -5105,7 +3384,7 @@ index 968ade5a35f5..696560529e6a 100644
  	return 0;
  
 diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index f54931aa7528..63ff1a4f2e41 100644
+index e76395d7f17d..d2349c094767 100644
 --- a/drivers/usb/serial/ftdi_sio.c
 +++ b/drivers/usb/serial/ftdi_sio.c
 @@ -1024,6 +1024,7 @@ static const struct usb_device_id id_table_combined[] = {
@@ -5117,10 +3396,10 @@ index f54931aa7528..63ff1a4f2e41 100644
  };
  
 diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
-index 15d220eaf6e6..ed6b36674c15 100644
+index 5755f0df0025..f12d806220b4 100644
 --- a/drivers/usb/serial/ftdi_sio_ids.h
 +++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1542,3 +1542,9 @@
+@@ -1543,3 +1543,9 @@
  #define CHETCO_SEASMART_DISPLAY_PID	0xA5AD /* SeaSmart NMEA2000 Display */
  #define CHETCO_SEASMART_LITE_PID	0xA5AE /* SeaSmart Lite USB Adapter */
  #define CHETCO_SEASMART_ANALOG_PID	0xA5AF /* SeaSmart Analog Adapter */
@@ -5131,10 +3410,10 @@ index 15d220eaf6e6..ed6b36674c15 100644
 +#define UNJO_VID			0x22B7
 +#define UNJO_ISODEBUG_V1_PID		0x150D
 diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-index 1effe74ec638..d7b31fdce94d 100644
+index 3c8e4970876c..8b9e12ab1fe6 100644
 --- a/drivers/usb/serial/option.c
 +++ b/drivers/usb/serial/option.c
-@@ -1338,6 +1338,7 @@ static const struct usb_device_id option_ids[] = {
+@@ -1346,6 +1346,7 @@ static const struct usb_device_id option_ids[] = {
  	  .driver_info = RSVD(4) },
  	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0414, 0xff, 0xff, 0xff) },
  	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0417, 0xff, 0xff, 0xff) },
@@ -5143,23 +3422,38 @@ index 1effe74ec638..d7b31fdce94d 100644
  	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1008, 0xff, 0xff, 0xff),
  	  .driver_info = RSVD(4) },
 diff --git a/fs/crypto/policy.c b/fs/crypto/policy.c
-index c160d2d0e18d..57a97b38a2fa 100644
+index a120649beeca..d13a154c8424 100644
 --- a/fs/crypto/policy.c
 +++ b/fs/crypto/policy.c
-@@ -114,6 +114,8 @@ int fscrypt_process_policy(struct file *filp,
- 	if (!inode_has_encryption_context(inode)) {
+@@ -81,6 +81,8 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
+ 	if (ret == -ENODATA) {
  		if (!S_ISDIR(inode->i_mode))
  			ret = -ENOTDIR;
 +		else if (IS_DEADDIR(inode))
 +			ret = -ENOENT;
- 		else if (!inode->i_sb->s_cop->empty_dir)
- 			ret = -EOPNOTSUPP;
  		else if (!inode->i_sb->s_cop->empty_dir(inode))
+ 			ret = -ENOTEMPTY;
+ 		else
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 4cd0c2336624..9c81fd973418 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1989,8 +1989,8 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+ 				       &warn_to[cnt]);
+ 		if (ret)
+ 			goto over_quota;
+-		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space, 0,
+-				      &warn_to[cnt]);
++		ret = dquot_add_space(transfer_to[cnt], cur_space, rsv_space,
++				      DQUOT_SPACE_WARN, &warn_to[cnt]);
+ 		if (ret) {
+ 			spin_lock(&transfer_to[cnt]->dq_dqb_lock);
+ 			dquot_decr_inodes(transfer_to[cnt], inode_usage);
 diff --git a/fs/udf/inode.c b/fs/udf/inode.c
-index fd817022cb9b..9e66d85021fc 100644
+index 28b9d7cca29b..3c1b54091d6c 100644
 --- a/fs/udf/inode.c
 +++ b/fs/udf/inode.c
-@@ -478,13 +478,15 @@ static struct buffer_head *udf_getblk(struct inode *inode, long block,
+@@ -470,13 +470,15 @@ static struct buffer_head *udf_getblk(struct inode *inode, long block,
  	return NULL;
  }
  
@@ -5178,7 +3472,7 @@ index fd817022cb9b..9e66d85021fc 100644
  	int count = 0, fake = !(last_ext->extLength & UDF_EXTENT_LENGTH_MASK);
  	struct super_block *sb = inode->i_sb;
  	struct kernel_lb_addr prealloc_loc = {};
-@@ -494,7 +496,7 @@ static int udf_do_extend_file(struct inode *inode,
+@@ -486,7 +488,7 @@ static int udf_do_extend_file(struct inode *inode,
  
  	/* The previous extent is fake and we should not extend by anything
  	 * - there's nothing to do... */
@@ -5187,7 +3481,7 @@ index fd817022cb9b..9e66d85021fc 100644
  		return 0;
  
  	iinfo = UDF_I(inode);
-@@ -525,13 +527,12 @@ static int udf_do_extend_file(struct inode *inode,
+@@ -517,13 +519,12 @@ static int udf_do_extend_file(struct inode *inode,
  	/* Can we merge with the previous extent? */
  	if ((last_ext->extLength & UDF_EXTENT_FLAG_MASK) ==
  					EXT_NOT_RECORDED_NOT_ALLOCATED) {
@@ -5207,7 +3501,7 @@ index fd817022cb9b..9e66d85021fc 100644
  	}
  
  	if (fake) {
-@@ -552,28 +553,27 @@ static int udf_do_extend_file(struct inode *inode,
+@@ -544,28 +545,27 @@ static int udf_do_extend_file(struct inode *inode,
  	}
  
  	/* Managed to do everything necessary? */
@@ -5243,7 +3537,7 @@ index fd817022cb9b..9e66d85021fc 100644
  		err = udf_add_aext(inode, last_pos, &last_ext->extLocation,
  				   last_ext->extLength, 1);
  		if (err)
-@@ -604,6 +604,24 @@ static int udf_do_extend_file(struct inode *inode,
+@@ -596,6 +596,24 @@ static int udf_do_extend_file(struct inode *inode,
  	return count;
  }
  
@@ -5268,7 +3562,7 @@ index fd817022cb9b..9e66d85021fc 100644
  static int udf_extend_file(struct inode *inode, loff_t newsize)
  {
  
-@@ -613,10 +631,12 @@ static int udf_extend_file(struct inode *inode, loff_t newsize)
+@@ -605,10 +623,12 @@ static int udf_extend_file(struct inode *inode, loff_t newsize)
  	int8_t etype;
  	struct super_block *sb = inode->i_sb;
  	sector_t first_block = newsize >> sb->s_blocksize_bits, offset;
@@ -5282,7 +3576,7 @@ index fd817022cb9b..9e66d85021fc 100644
  
  	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_SHORT)
  		adsize = sizeof(struct short_ad);
-@@ -626,18 +646,8 @@ static int udf_extend_file(struct inode *inode, loff_t newsize)
+@@ -618,18 +638,8 @@ static int udf_extend_file(struct inode *inode, loff_t newsize)
  		BUG();
  
  	etype = inode_bmap(inode, first_block, &epos, &eloc, &elen, &offset);
@@ -5302,7 +3596,7 @@ index fd817022cb9b..9e66d85021fc 100644
  	if ((!epos.bh && epos.offset == udf_file_entry_alloc_offset(inode)) ||
  	    (epos.bh && epos.offset == sizeof(struct allocExtDesc))) {
  		/* File has no extents at all or has empty last
-@@ -651,7 +661,22 @@ static int udf_extend_file(struct inode *inode, loff_t newsize)
+@@ -643,7 +653,22 @@ static int udf_extend_file(struct inode *inode, loff_t newsize)
  				      &extent.extLength, 0);
  		extent.extLength |= etype << 30;
  	}
@@ -5326,7 +3620,7 @@ index fd817022cb9b..9e66d85021fc 100644
  	if (err < 0)
  		goto out;
  	err = 0;
-@@ -756,6 +781,7 @@ static sector_t inode_getblk(struct inode *inode, sector_t block,
+@@ -745,6 +770,7 @@ static sector_t inode_getblk(struct inode *inode, sector_t block,
  	/* Are we beyond EOF? */
  	if (etype == -1) {
  		int ret;
@@ -5334,7 +3628,7 @@ index fd817022cb9b..9e66d85021fc 100644
  		isBeyondEOF = true;
  		if (count) {
  			if (c)
-@@ -771,7 +797,8 @@ static sector_t inode_getblk(struct inode *inode, sector_t block,
+@@ -760,7 +786,8 @@ static sector_t inode_getblk(struct inode *inode, sector_t block,
  			startnum = (offset > 0);
  		}
  		/* Create extents for the hole between EOF and offset */
@@ -5342,13 +3636,39 @@ index fd817022cb9b..9e66d85021fc 100644
 +		hole_len = (loff_t)offset << inode->i_blkbits;
 +		ret = udf_do_extend_file(inode, &prev_epos, laarr, hole_len);
  		if (ret < 0) {
- 			brelse(prev_epos.bh);
- 			brelse(cur_epos.bh);
+ 			*err = ret;
+ 			newblock = 0;
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 6376e2dcb0b7..0c78ad0cc515 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -163,6 +163,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_PERF_POWERPC_THREAD_IMC_ONLINE,
+ 	CPUHP_AP_WORKQUEUE_ONLINE,
+ 	CPUHP_AP_RCUTREE_ONLINE,
++	CPUHP_AP_BASE_CACHEINFO_ONLINE,
+ 	CPUHP_AP_ONLINE_DYN,
+ 	CPUHP_AP_ONLINE_DYN_END		= CPUHP_AP_ONLINE_DYN + 30,
+ 	CPUHP_AP_X86_HPET_ONLINE,
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 1c5469adaa85..bb7baecef002 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -101,7 +101,8 @@
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
+ 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+ 
+-#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
++#define DIV_ROUND_UP_ULL(ll, d) \
++	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
+ 
+ #if BITS_PER_LONG == 32
+ # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
 diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
-index 1bd31a38c51e..ce13d4677f1d 100644
+index b724ef7005de..53c5e40a2a8f 100644
 --- a/include/linux/vmw_vmci_defs.h
 +++ b/include/linux/vmw_vmci_defs.h
-@@ -75,9 +75,18 @@ enum {
+@@ -68,9 +68,18 @@ enum {
  
  /*
   * A single VMCI device has an upper limit of 128MB on the amount of
@@ -5369,10 +3689,10 @@ index 1bd31a38c51e..ce13d4677f1d 100644
  /*
   * Queues with pre-mapped data pages must be small, so that we don't pin
 diff --git a/include/net/ip6_tunnel.h b/include/net/ip6_tunnel.h
-index 1b1cf33cbfb0..2b6abd046087 100644
+index d66f70f63734..3b0e3cdee1c3 100644
 --- a/include/net/ip6_tunnel.h
 +++ b/include/net/ip6_tunnel.h
-@@ -149,9 +149,12 @@ static inline void ip6tunnel_xmit(struct sock *sk, struct sk_buff *skb,
+@@ -152,9 +152,12 @@ static inline void ip6tunnel_xmit(struct sock *sk, struct sk_buff *skb,
  	memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
  	pkt_len = skb->len - skb_inner_network_offset(skb);
  	err = ip6_local_out(dev_net(skb_dst(skb)->dev), sk, skb);
@@ -5389,10 +3709,10 @@ index 1b1cf33cbfb0..2b6abd046087 100644
  #endif
  #endif
 diff --git a/include/uapi/linux/nilfs2_ondisk.h b/include/uapi/linux/nilfs2_ondisk.h
-index 2a8a3addb675..f9b6b5be7ddf 100644
+index a7e66ab11d1d..c23f91ae5fe8 100644
 --- a/include/uapi/linux/nilfs2_ondisk.h
 +++ b/include/uapi/linux/nilfs2_ondisk.h
-@@ -28,7 +28,7 @@
+@@ -29,7 +29,7 @@
  
  #include <linux/types.h>
  #include <linux/magic.h>
@@ -5401,7 +3721,7 @@ index 2a8a3addb675..f9b6b5be7ddf 100644
  
  #define NILFS_INODE_BMAP_SIZE	7
  
-@@ -532,19 +532,19 @@ enum {
+@@ -533,19 +533,19 @@ enum {
  static inline void							\
  nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
  {									\
@@ -5425,7 +3745,7 @@ index 2a8a3addb675..f9b6b5be7ddf 100644
  		  (1UL << NILFS_CHECKPOINT_##flag));			\
  }
  
-@@ -594,20 +594,20 @@ enum {
+@@ -595,20 +595,20 @@ enum {
  static inline void							\
  nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
  {									\
@@ -5449,7 +3769,7 @@ index 2a8a3addb675..f9b6b5be7ddf 100644
  		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
  }
  
-@@ -618,15 +618,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
+@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
  static inline void
  nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
  {
@@ -5469,11 +3789,25 @@ index 2a8a3addb675..f9b6b5be7ddf 100644
  }
  
  /**
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index f370a0f43005..d768e15bef83 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1944,6 +1944,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
++	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
++		return -EINVAL;
++
+ 	/*
+ 	 * Cannot fail STARTING/DYING callbacks.
+ 	 */
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7929526e96e2..93d7333c64d8 100644
+index 580616e6fcee..3d4eb6f840eb 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5492,7 +5492,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+@@ -5630,7 +5630,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
  	if (user_mode(regs)) {
  		regs_user->abi = perf_reg_abi(current);
  		regs_user->regs = regs;
@@ -5482,11 +3816,71 @@ index 7929526e96e2..93d7333c64d8 100644
  		perf_get_regs_user(regs_user, regs, regs_user_copy);
  	} else {
  		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+diff --git a/net/can/af_can.c b/net/can/af_can.c
+index 9de9678fa7d0..46c85731d16f 100644
+--- a/net/can/af_can.c
++++ b/net/can/af_can.c
+@@ -959,6 +959,8 @@ static struct pernet_operations can_pernet_ops __read_mostly = {
+ 
+ static __init int can_init(void)
+ {
++	int err;
++
+ 	/* check for correct padding to be able to use the structs similarly */
+ 	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
+ 		     offsetof(struct canfd_frame, len) ||
+@@ -972,15 +974,31 @@ static __init int can_init(void)
+ 	if (!rcv_cache)
+ 		return -ENOMEM;
+ 
+-	register_pernet_subsys(&can_pernet_ops);
++	err = register_pernet_subsys(&can_pernet_ops);
++	if (err)
++		goto out_pernet;
+ 
+ 	/* protocol register */
+-	sock_register(&can_family_ops);
+-	register_netdevice_notifier(&can_netdev_notifier);
++	err = sock_register(&can_family_ops);
++	if (err)
++		goto out_sock;
++	err = register_netdevice_notifier(&can_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&can_packet);
+ 	dev_add_pack(&canfd_packet);
+ 
+ 	return 0;
++
++out_notifier:
++	sock_unregister(PF_CAN);
++out_sock:
++	unregister_pernet_subsys(&can_pernet_ops);
++out_pernet:
++	kmem_cache_destroy(rcv_cache);
++
++	return err;
+ }
+ 
+ static __exit void can_exit(void)
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 2b3b0307dd89..6d9fd7d4bdfa 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -2299,6 +2299,7 @@ int skb_send_sock_locked(struct sock *sk, struct sk_buff *skb, int offset,
+ 		kv.iov_base = skb->data + offset;
+ 		kv.iov_len = slen;
+ 		memset(&msg, 0, sizeof(msg));
++		msg.msg_flags = MSG_DONTWAIT;
+ 
+ 		ret = kernel_sendmsg_locked(sk, &msg, &kv, 1, slen);
+ 		if (ret <= 0)
 diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 1e1fa99b3243..0b53d1907e4a 100644
+index cb1b4772dac0..35d5a76867d0 100644
 --- a/net/ipv6/netfilter/nf_conntrack_reasm.c
 +++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -264,8 +264,14 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+@@ -265,8 +265,14 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
  
  	prev = fq->q.fragments_tail;
  	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
@@ -5502,7 +3896,7 @@ index 1e1fa99b3243..0b53d1907e4a 100644
  
  	if (dev)
  		fq->iif = dev->ifindex;
-@@ -292,15 +298,17 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+@@ -293,15 +299,17 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
  		skb->_skb_refdst = 0UL;
  		err = nf_ct_frag6_reasm(fq, skb, prev, dev);
  		skb->_skb_refdst = orefdst;
@@ -5523,7 +3917,7 @@ index 1e1fa99b3243..0b53d1907e4a 100644
  	inet_frag_kill(&fq->q);
  err:
  	skb_dst_drop(skb);
-@@ -480,12 +488,6 @@ int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user)
+@@ -481,12 +489,6 @@ int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user)
  		ret = 0;
  	}
  
@@ -5537,10 +3931,10 @@ index 1e1fa99b3243..0b53d1907e4a 100644
  	inet_frag_put(&fq->q);
  	return ret;
 diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index 8a690ebd7374..6708de10a3e5 100644
+index a133acb43eb1..0e209a88d88a 100644
 --- a/net/mac80211/ieee80211_i.h
 +++ b/net/mac80211/ieee80211_i.h
-@@ -1403,7 +1403,7 @@ ieee80211_get_sband(struct ieee80211_sub_if_data *sdata)
+@@ -1405,7 +1405,7 @@ ieee80211_get_sband(struct ieee80211_sub_if_data *sdata)
  	rcu_read_lock();
  	chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
  
@@ -5550,10 +3944,10 @@ index 8a690ebd7374..6708de10a3e5 100644
  		return NULL;
  	}
 diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index b2a27263d6ff..5c347d3a92c9 100644
+index 96e57d7c2872..c6edae051e9b 100644
 --- a/net/mac80211/mesh.c
 +++ b/net/mac80211/mesh.c
-@@ -885,6 +885,7 @@ void ieee80211_stop_mesh(struct ieee80211_sub_if_data *sdata)
+@@ -922,6 +922,7 @@ void ieee80211_stop_mesh(struct ieee80211_sub_if_data *sdata)
  
  	/* flush STAs and mpaths on this iface */
  	sta_info_flush(sdata);
@@ -5561,7 +3955,7 @@ index b2a27263d6ff..5c347d3a92c9 100644
  	mesh_path_flush_by_iface(sdata);
  
  	/* stop the beacon */
-@@ -1135,7 +1136,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
+@@ -1209,7 +1210,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
  	ifmsh->chsw_ttl = 0;
  
  	/* Remove the CSA and MCSP elements from the beacon */
@@ -5571,7 +3965,7 @@ index b2a27263d6ff..5c347d3a92c9 100644
  	RCU_INIT_POINTER(ifmsh->csa, NULL);
  	if (tmp_csa_settings)
  		kfree_rcu(tmp_csa_settings, rcu_head);
-@@ -1157,6 +1159,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
+@@ -1231,6 +1233,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
  	struct mesh_csa_settings *tmp_csa_settings;
  	int ret = 0;
  
@@ -5581,10 +3975,10 @@ index b2a27263d6ff..5c347d3a92c9 100644
  				   GFP_ATOMIC);
  	if (!tmp_csa_settings)
 diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 244eac1bd648..de18a463ac96 100644
+index 6d118357d9dc..9259529e0412 100644
 --- a/net/sunrpc/clnt.c
 +++ b/net/sunrpc/clnt.c
-@@ -2718,6 +2718,7 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
+@@ -2706,6 +2706,7 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
  	xprt = xprt_iter_xprt(&clnt->cl_xpi);
  	if (xps == NULL || xprt == NULL) {
  		rcu_read_unlock();
@@ -5593,10 +3987,10 @@ index 244eac1bd648..de18a463ac96 100644
  	}
  	resvport = xprt->resvport;
 diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
-index 97913e109b14..99e5a2f63e76 100644
+index 2325d7ad76df..e8e8b756dc52 100644
 --- a/samples/bpf/bpf_load.c
 +++ b/samples/bpf/bpf_load.c
-@@ -369,7 +369,7 @@ void read_trace_pipe(void)
+@@ -613,7 +613,7 @@ void read_trace_pipe(void)
  		static char buf[4096];
  		ssize_t sz;
  
@@ -5605,15 +3999,35 @@ index 97913e109b14..99e5a2f63e76 100644
  		if (sz > 0) {
  			buf[sz] = 0;
  			puts(buf);
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 3552b4b1f902..20914a33ca5d 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -3114,6 +3114,7 @@ static void alc256_init(struct hda_codec *codec)
+ 	alc_update_coefex_idx(codec, 0x57, 0x04, 0x0007, 0x4); /* Hight power */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 1 << 15); /* Clear bit */
+ 	alc_update_coefex_idx(codec, 0x53, 0x02, 0x8000, 0 << 15);
++	alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
+ }
+ 
+ static void alc256_shutup(struct hda_codec *codec)
+@@ -7218,7 +7219,6 @@ static int patch_alc269(struct hda_codec *codec)
+ 		spec->shutup = alc256_shutup;
+ 		spec->init_hook = alc256_init;
+ 		spec->gen.mixer_nid = 0; /* ALC256 does not have any loopback mixer path */
+-		alc_update_coef_idx(codec, 0x36, 1 << 13, 1 << 5); /* Switch pcbeep path to Line in path*/
+ 		break;
+ 	case 0x10ec0257:
+ 		spec->codec_variant = ALC269_TYPE_ALC257;
 diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index 1ebbf233de9a..6d64b2cb02ab 100644
+index dc06f5e40041..526d808ecbbd 100644
 --- a/virt/kvm/arm/vgic/vgic-its.c
 +++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -1466,6 +1466,7 @@ static void vgic_its_destroy(struct kvm_device *kvm_dev)
+@@ -1677,6 +1677,7 @@ static void vgic_its_destroy(struct kvm_device *kvm_dev)
  	mutex_unlock(&its->its_lock);
  
  	kfree(its);
 +	kfree(kvm_dev);/* alloc by kvm_ioctl_create_device, free by .destroy */
  }
  
- static int vgic_its_has_attr(struct kvm_device *dev,
+ int vgic_its_has_attr_regs(struct kvm_device *dev,
