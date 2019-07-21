@@ -2,137 +2,109 @@ Return-Path: <SRS0=KmSF=VS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7737AC76188
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A24C76188
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E33206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:01:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bo0U1egZ"
+	by mail.kernel.org (Postfix) with ESMTP id A47E521872
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Jul 2019 09:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfGUJBf (ORCPT
+        id S1726130AbfGUJKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 05:01:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42268 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGUJBf (ORCPT
+        Sun, 21 Jul 2019 05:10:13 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43380 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfGUJKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 05:01:35 -0400
-Received: by mail-pl1-f195.google.com with SMTP id ay6so17710267plb.9;
-        Sun, 21 Jul 2019 02:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uMCT1sRvSpYaoD1Z8FlxTMQ/VpyVpjBJDn9MHa/ZVPo=;
-        b=bo0U1egZOrd62N2e2VId7EPbVmrGg8I6+LSmMCOOlbh1JSpDDny0jX6sY6Aj8uQZ0V
-         FDwFWUnBN6gqTfizZciyH98orjrfc3S1wNDrSeFt9xfMUwXuEtMPunSq0mmpn/0yBnII
-         LbXxrVBLoabcRCyF38hBvo0lu78uBosAsIruwJI7fabIvOmk502+1WzwSFBkr0r4opP5
-         AOSCNTjUvXB075IaUcpmXtQ/yzFSo4xaLu4+9HD61M4u1Y2DKy69Eu7BOV8xhhCEn7kD
-         rcKWZW93sIpMRRIBniwanhC0t1cWsyyxu/XeFP5EZ1PbxEMTLrTOa6mLnNSmLyW+yWfH
-         Qy0A==
+        Sun, 21 Jul 2019 05:10:13 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m14so792775qka.10;
+        Sun, 21 Jul 2019 02:10:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uMCT1sRvSpYaoD1Z8FlxTMQ/VpyVpjBJDn9MHa/ZVPo=;
-        b=tEtSZ+2YxJ9X0igWYXGuVOov7YAGhoGbleh+va98G32s3conZVtdoX26yARQTE+QxD
-         6uOpbS2LNL4H9XjJMqNf8ieon10Z6RFLA/GvN9M7SlgRUZERxXBAPKUEoKmbmqAaBX1g
-         wR131os/5itDbgq2rhtEplMyfMXBfiM5gWSXJ8Oi0xU0wIfBXgMgJcVUTd32U8AA0Ovu
-         75At1Ea3mzDHPsNrHJ1ArXs1IZyzVNUrK3qkyUex3B3oWZD7EiX8cWuAKvLUokQeu+6c
-         kCDp0p9EGL9kgTciTM4/08ofZYwg7CBLpuoqQ5gOIcuaSGpTx2QEqPmwQtlc0zIyJez3
-         Kzkg==
-X-Gm-Message-State: APjAAAWkK+RQ8NPkg4t8nF/0xEGY5G4NmBHp6iTrbXqo/jFttokop71g
-        LgemRtCH9334Fk4HSG/IEhI=
-X-Google-Smtp-Source: APXvYqyikdxi8c6IvDgbXlRE72AiaNOa+eepRpqSFBRQj/PNMLJamXs6jgijafuJBKPoUp8opfJD2Q==
-X-Received: by 2002:a17:902:b603:: with SMTP id b3mr69739706pls.9.1563699694660;
-        Sun, 21 Jul 2019 02:01:34 -0700 (PDT)
-Received: from localhost.localdomain ([125.142.23.13])
-        by smtp.gmail.com with ESMTPSA id r1sm34548144pgv.70.2019.07.21.02.01.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 02:01:34 -0700 (PDT)
-Date:   Sun, 21 Jul 2019 18:01:29 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah <shuah@kernel.org>
-Cc:     valentina.manea.m@gmail.com, stern@rowland.harvard.edu,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] usbip: Implement SG support
-Message-ID: <20190721090129.GA13527@localhost.localdomain>
-References: <20190705164355.14025-1-suwan.kim027@gmail.com>
- <7eaaf016-8da5-6089-fe19-bf62c3bbe187@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PbP2X6NIQ0TsX6f4YAaWzUSD+G4Atkgs9bO3GMLpkFo=;
+        b=S8YBxnqkUM+kxxvnU5QZpqsAP8ZEEQVh2aL+5/6pYcwPD2TTOvWUQC2BUdbbTKWF2A
+         aukBFJjR0yFqDX8C1Io5MA71icVNCoIb01RlJPM7eBasbNbJO7FfqLE4PJ1gr9vwAW0o
+         FWlRTd1S9oaPJOQHPJZ1PuqNCJipWWRcXfsxAw8gY/WyCJN0AQ4b3lgAWJW5kjrKlaJn
+         GD78X1JSiM+wimy0vEKBx4BxaiZpKtNxr4V/50ERWDwQ9GcmGPoFkWnfIOwpcz4ISwoe
+         F4IsIVLOC6RdVbnHLrZO7u5epOIwE7EWOIOBaT089c6JQWlw2iiKpDWo3sRAqYE3gKvF
+         2SDw==
+X-Gm-Message-State: APjAAAWuJOyPUj0/iovPv3ZKtMH2Wf+DBQwaNai5kMT85g7NaJeIf1L/
+        kW2s6Xb2aMQ/6jEmV3yO74VRr+gJVMTz54UDJJ4=
+X-Google-Smtp-Source: APXvYqxjHmilE5N9LuNpTfJRWTexnfcMwdOlI/rw0tJewIMNf4YcI56JyWv6tb+DANtn3aJAz06JD3ezoAiIRcMhEcU=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr40996804qka.138.1563700211845;
+ Sun, 21 Jul 2019 02:10:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7eaaf016-8da5-6089-fe19-bf62c3bbe187@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
+ <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com> <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
+In-Reply-To: <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 21 Jul 2019 11:09:55 +0200
+Message-ID: <CAK8P3a3cURmbGZc-6ESLjrF465VLnBroD4QENyfsSsCrNenRrA@mail.gmail.com>
+Subject: Re: [Question] orphan platform data header
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 04:04:20PM -0600, shuah wrote:
-> On 7/5/19 10:43 AM, Suwan Kim wrote:
-> > There are bugs on vhci with usb 3.0 storage device. Originally, vhci
-> > doesn't supported SG, so USB storage driver on vhci breaks SG list
-> > into multiple URBs and it causes error that a transfer got terminated
-> > too early because the transfer length for one of the URBs was not
-> > divisible by the maxpacket size.
-> > 
-> > To support SG, vhci doesn't map and unmap URB for DMA to use native
-> > SG list (urb->num_sgs). In DMA mapping function of vhci, it sets
-> > URB_DMA_MAP_SG flag in urb->transfer_flags if URB has SG list and
-> > this flag will tell the stub driver to use SG list.
-> > 
-> > In this patch, vhci basically support SG and it sends each SG list
-> > entry to the stub driver. Then, the stub driver sees the total length
-> > of the buffer and allocates SG table and pages according to the total
-> > buffer length calling sgl_alloc(). After the stub driver receives
-> > completed URB, it again sends each SG list entry to vhci.
-> > 
-> > If HCD of the server doesn't support SG, the stub driver breaks a
-> > single SG reqeust into several URBs and submit them to the server's
-> > HCD. When all the split URBs are completed, the stub driver
-> > reassembles the URBs into a single return command and sends it to
-> > vhci.
-> > 
-> > Alan fixed vhci bug with the USB 3.0 storage device by modifying
-> > USB storage driver.
-> > ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
-> > But the fundamental solution of it is to add SG support to vhci.
-> > 
-> > This patch works well with the USB 3.0 storage devices without Alan's
-> > patch, and we can revert Alan's patch if it causes some troubles.
-> > 
-> > Suwan Kim (2):
-> >    usbip: Skip DMA mapping and unmapping for urb at vhci
-> >    usbip: Implement SG support to vhci
-> > 
-> >   drivers/usb/usbip/stub.h         |   7 +-
-> >   drivers/usb/usbip/stub_main.c    |  52 +++++---
-> >   drivers/usb/usbip/stub_rx.c      | 207 ++++++++++++++++++++++---------
-> >   drivers/usb/usbip/stub_tx.c      | 108 +++++++++++-----
-> >   drivers/usb/usbip/usbip_common.c |  60 +++++++--
-> >   drivers/usb/usbip/vhci_hcd.c     |  29 ++++-
-> >   drivers/usb/usbip/vhci_tx.c      |  49 ++++++--
-> >   7 files changed, 391 insertions(+), 121 deletions(-)
-> > 
-> 
-> Hi Suwan,
-> 
-> I have been traveling and would like to test this series before I ask
-> Greg to pick it up.
-> 
-> Just a quick note that I will get to this early next week.
+On Sun, Jul 21, 2019 at 5:45 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> On Sat, Jul 20, 2019 at 10:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Sat, Jul 20, 2019 at 5:26 AM Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> > > So, what shall we do?
+> > >
+> > > Drop the board-file support? Or, keep it
+> > > in case somebody is still using their board-files
+> > > in downstream?
+>>
+> > For this file, all boards got converted to DT, and the old setup
+> > code removed in commit ebc278f15759 ("ARM: mvebu: remove static
+> > LED setup for netxbig boards"), four years ago, so it's a fairly
+> > easy decision to make it DT only.
+>
+> I see another case, which is difficult
+> to make a decision.
+>
+> For example, drivers/spi/spi-tle62x0.c
+>
+> This driver supports only board-file, but the board-file
+> is not found in upstream.
+>
+> Unless I am terribly missing something,
+> there is no one who passes tle62x0_pdata
+> to this driver.
+>
+> $ git grep tle62x0_pdata
+> drivers/spi/spi-tle62x0.c:      struct tle62x0_pdata *pdata;
+> include/linux/spi/tle62x0.h:struct tle62x0_pdata {
+>
+> But, removing board-file support
+> makes this driver completely useless...
 
-Ok. Thank you for reviewing the patch, Shuah.
-Please let me know if you have any problems reviewing the patch :)
+Adding Ben Dooks to Cc.
 
-Regards
+I suspect this driver is completely obsolete and should be removed.
 
-Suwan Kim
+For some reason, it's not an SPI controller driver like all the other
+files in that directory, but implements low-level access to the state
+of a particular SPI device.
+
+However, there should not really be a low-level driver for it that
+just exports the pins to user space. It should either be a gpiolib
+driver to let other drivers talk to the pins, or a high-level driver that
+exposes the intended functionality (watchdog, regulator, ...)
+to those respective subsystems.
+
+       Arnd
