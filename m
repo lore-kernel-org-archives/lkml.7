@@ -2,72 +2,125 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD0EC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49408C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAB021993
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7ED2229C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c83Ai06+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfGVJhA (ORCPT
+        id S1729035AbfGVJhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:37:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:58804 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfGVJhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:37:00 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id F1AF268B20; Mon, 22 Jul 2019 11:36:56 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 11:36:56 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 1/3] mm: document zone device struct page field usage
-Message-ID: <20190722093656.GD29538@lst.de>
-References: <20190719192955.30462-1-rcampbell@nvidia.com> <20190719192955.30462-2-rcampbell@nvidia.com> <20190721160204.GB363@bombadil.infradead.org>
+        Mon, 22 Jul 2019 05:37:25 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8769 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfGVJhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:37:24 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3583da0000>; Mon, 22 Jul 2019 02:37:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 02:37:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 22 Jul 2019 02:37:23 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 09:37:20 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+ <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <6a6bac84-1d29-2740-1636-d3adb26b6bcc@nvidia.com>
+ <BN8PR12MB3266960A104A7CDBB4E59192D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <bc9ab3c5-b1b9-26d4-7b73-01474328eafa@nvidia.com>
+ <BN8PR12MB3266989D15E017A789E14282D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <4db855e4-1d59-d30b-154c-e7a2aa1c9047@nvidia.com>
+ <BN8PR12MB3266FD9CF18691EDEF05A4B8D3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <64e37224-6661-ddb0-4394-83a16e1ccb61@nvidia.com>
+ <BN8PR12MB3266E1FAC5B7874EFA69DD7BD3CB0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <25512348-5b98-aeb7-a6fb-f90376e66a84@nvidia.com>
+ <BN8PR12MB32665C1A106D3DCBF89CEA54D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <49efad87-2f74-5804-af4c-33730f865c41@nvidia.com>
+Date:   Mon, 22 Jul 2019 10:37:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190721160204.GB363@bombadil.infradead.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <BN8PR12MB32665C1A106D3DCBF89CEA54D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563788251; bh=UJ0seHB+XN7Jd8VCDCnDcS3jZbxUmkRZdEKXTGpmU+M=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=c83Ai06+UTmxG7QV6Zri0El0rMs4N+Vfba7mgKAH5mCYGi9gfrZ1tjJUqTYqbkp0u
+         atczBX+qG5MVadEdx/Q311ClTaGcKF5bQR1Hvufr/OtoACsQm3n0uDSc4HwkpK357S
+         A+GfgHW/n1ToDqgAjVYOjdWBpQx5zA5nSL9zvigFKMrvUr7TlarWgoVnpPthIOHnyL
+         8d35NN4TA7PxMQWlOQo28mac7ucnVl8joI/V968MYaZTVJuVsCZUb6rLCk5sGLk6Hx
+         YDoBLRZFUF0zvoqDrZqfTsmE7uN5wgwHdA54DC36AvhNi9jxsGZnvh7HPxNeJio+Md
+         f2/rfA26O0dAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 09:02:04AM -0700, Matthew Wilcox wrote:
-> On Fri, Jul 19, 2019 at 12:29:53PM -0700, Ralph Campbell wrote:
-> > Struct page for ZONE_DEVICE private pages uses the page->mapping and
-> > and page->index fields while the source anonymous pages are migrated to
-> > device private memory. This is so rmap_walk() can find the page when
-> > migrating the ZONE_DEVICE private page back to system memory.
-> > ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
-> > page->index fields when files are mapped into a process address space.
-> > 
-> > Restructure struct page and add comments to make this more clear.
-> 
-> NAK.  I just got rid of this kind of foolishness from struct page,
-> and you're making it harder to understand, not easier.  The comments
-> could be improved, but don't lay it out like this again.
 
-This comes over pretty agressive.  Please explain how making the
-layout match how the code actually is used vs the previous separation
-that is actively misleading and confused multiple people is "foolishness".
+On 22/07/2019 08:23, Jose Abreu wrote:
+> From: Jon Hunter <jonathanh@nvidia.com>
+> Date: Jul/19/2019, 14:35:52 (UTC+00:00)
+> 
+>>
+>> On 19/07/2019 13:32, Jose Abreu wrote:
+>>> From: Jon Hunter <jonathanh@nvidia.com>
+>>> Date: Jul/19/2019, 13:30:10 (UTC+00:00)
+>>>
+>>>> I booted the board without using NFS and then started used dhclient to
+>>>> bring up the network interface and it appears to be working fine. I can
+>>>> even mount the NFS share fine. So it does appear to be particular to
+>>>> using NFS to mount the rootfs.
+>>>
+>>> Damn. Can you send me your .config ?
+>>
+>> Yes no problem. Attached.
+> 
+> Can you compile your image without modules (i.e. all built-in) and let 
+> me know if the error still happens ?
+
+I simply removed the /lib/modules directory from the NFS share and
+verified that I still see the same issue. So it is not loading the
+modules that is a problem.
+
+Jon
+
+-- 
+nvpublic
