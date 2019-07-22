@@ -2,129 +2,151 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BDEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB74C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E4C21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B6B219BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563839178;
-	bh=2kvTNJ/WtCOi8bWsTdXHkWIo4rho6UoaXin9Tpgh2C0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uc3uBqNOY/NTcV09/wxE8kDCnjcSPwEoK/FewV6Xo3rxX3bEhJAQBkbZa+pptw6jD
-	 JasXUFCRxitHuC7YtQjEceTAYBfDb33xlbVt4x4vvI3FXFt9GEsd/R/tLRDhnZqAk1
-	 PMOSs3642DcA9cC/OPPd/V0dsjsTVqoIbZY4DLxA=
+	s=default; t=1563839272;
+	bh=ZJaWlqPi2cdZE2l3aFe+zt2XP8rCoSUqW+jNvs+HvNM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rf6tSK4wR8BI7R0s7MK2QQGUkegY22EoPGMdDGg2BDwWz9Z0sXlVVudh3BEpElDce
+	 Uhat9jPy4saUVmSruIW0sJ2+Uqzo3Kg5o2DY/IyzgoHodSp/nm9s7YtzR5lfq1/mAh
+	 FdtepP5ZcMbfWO+PyMzxcPvgPjRsIXvQIgkPPbYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbfGVXqR (ORCPT
+        id S1731784AbfGVXru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:46:17 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34390 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbfGVXqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:46:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so77941824iot.1;
-        Mon, 22 Jul 2019 16:46:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sv3qs1LiG1cFkAf5nI2IFon5jGR413J80KduD7S3roU=;
-        b=QjPFNXhrA/svKLVLuUN+JhbRjjIPpEDlecb+zESUjN9nywOl2WyDjNcXcoz+Ir5u+4
-         8WFCcbDE5EV1lCW3/IMDKb/cRRk57nrr8XvF0XHoSFBWBw54uQ2a9cGy5dNLZ6R8W6bC
-         09W3xhaNdsAvRxEJz3BalBAgl8ZyzLVcBaJFB9qJkh+JXffzJiXughOwOt5tQStp04nT
-         dkXnAhEeA6D0oZ8bBa5OKIu/XEJJ9DzYH+GXydVNtlfZCbnGK/aj5MyS+IL4b7CSTQTq
-         C9Eu7Xi1fiuJN4bfber5I4uFTPDgUAZWgFbvchtD5q5QkJl3nIKCTtKQl+y3NY8i4cqu
-         3d/Q==
-X-Gm-Message-State: APjAAAVVL3S/Biquh/WhrNqZiheTWQCDkXdDj9O5ZtGREMejjsFGnAV2
-        6Ll4S8E/YQcL2/bWeNdf0A==
-X-Google-Smtp-Source: APXvYqw1qg7734Vxs9hak2lfaWjc22w1+joRV0CBw3JzSvesU72Jp8TsxdwSaK3mf2yQyW8xrm3tVA==
-X-Received: by 2002:a02:7303:: with SMTP id y3mr74340417jab.97.1563839175981;
-        Mon, 22 Jul 2019 16:46:15 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id m20sm39702147ioh.4.2019.07.22.16.46.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 16:46:15 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 17:46:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     miquel.raynal@bootlin.com, marek.vasut@gmail.com,
-        bbrezillon@kernel.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at,
-        stefan@agner.ch, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com,
-        lee.jones@linaro.org, anders.roxell@linaro.org,
-        christophe.kerello@st.com, paul@crapouillou.net,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND
- controller bindings
-Message-ID: <20190722234614.GA11971@bogus>
-References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw>
- <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
+        Mon, 22 Jul 2019 19:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728655AbfGVXru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:47:50 -0400
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 946F421E70
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 23:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563839269;
+        bh=ZJaWlqPi2cdZE2l3aFe+zt2XP8rCoSUqW+jNvs+HvNM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EkqROvek39weM/EmV7A0thZwlX/NAlBfawlc0NcqiZY01njUcGWhiGpUMo9HvH9sR
+         m1Ne/VIJ8ORlqcwW+/RnvQ36aDp9zUbe5ZqOUOok9fgOWLBjA8krGJ5kGrN1+eHoKX
+         qZHPRnp/qin31xajsOh4DCjVxwZkDB0kqGfZTyaw=
+Received: by mail-wr1-f51.google.com with SMTP id 31so41175413wrm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 16:47:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAXWu/ovbXMjoMGYbQ9atnPjrVdhSAVZxOgPckhQSgFj46bZ8EUB
+        OMTLdGYbgmtp0X46QqeX2sbzDyzX52JmjO8bEsybPQ==
+X-Google-Smtp-Source: APXvYqwAIA+zz6u6QBDVlYPUQTRuAj5apJ1OiftcFR+jI3UsI3EoxsU+6lP/gtGZ+idzIBt7brzF/57apW17CzjlCL0=
+X-Received: by 2002:a5d:4309:: with SMTP id h9mr74387750wrq.221.1563839268042;
+ Mon, 22 Jul 2019 16:47:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190719170343.GA13680@linux.intel.com> <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
+ <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
+ <201907221135.2C2D262D8@keescook> <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
+ <201907221620.F31B9A082@keescook>
+In-Reply-To: <201907221620.F31B9A082@keescook>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 22 Jul 2019 16:47:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
+Message-ID: <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace on i386
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 03:15:44PM +0800, Mason Yang wrote:
-> Document the bindings used by the Macronix raw NAND controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> new file mode 100644
-> index 0000000..ddd7660
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> @@ -0,0 +1,20 @@
-> +Macronix Raw NAND Controller Device Tree Bindings
-> +-------------------------------------------------
+On Mon, Jul 22, 2019 at 4:28 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jul 22, 2019 at 12:17:16PM -0700, Andy Lutomirski wrote:
+> > On Mon, Jul 22, 2019 at 11:39 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Mon, Jul 22, 2019 at 08:31:32PM +0200, Thomas Gleixner wrote:
+> > > > On Mon, 22 Jul 2019, Kees Cook wrote:
+> > > > > Just so I'm understanding: the vDSO change introduced code to make an
+> > > > > actual syscall on i386, which for most seccomp filters would be rejected?
+> > > >
+> > > > No. The old x86 specific VDSO implementation had a fallback syscall as
+> > > > well, i.e. clock_gettime(). On 32bit clock_gettime() uses the y2038
+> > > > endangered timespec.
+> > > >
+> > > > So when the VDSO was made generic we changed the internal data structures
+> > > > to be 2038 safe right away. As a consequence the fallback syscall is not
+> > > > clock_gettime(), it's clock_gettime64(). which seems to surprise seccomp.
+> > >
+> > > Okay, it's didn't add a syscall, it just changed it. Results are the
+> > > same: conservative filters suddenly start breaking due to the different
+> > > call. (And now I see why Andy's alias suggestion would help...)
+> > >
+> > > I'm not sure which direction to do with this. It seems like an alias
+> > > list is a large hammer for this case, and a "seccomp-bypass when calling
+> > > from vDSO" solution seems too fragile?
+> > >
+> >
+> > I don't like the seccomp bypass at all.  If someone uses seccomp to
+> > disallow all clock_gettime() variants, there shouldn't be a back door
+> > to learn the time.
+> >
+> > Here's the restart_syscall() logic that makes me want aliases: we have
+> > different syscall numbers for restart_syscall() on 32-bit and 64-bit.
+> > The logic to decide which one to use is dubious at best.  I'd like to
+> > introduce a restart_syscall2() that is identical to restart_syscall()
+> > except that it has the same number on both variants.
+>
+> I've built a straw-man for this idea... but I have to say I don't
+> like it. This can lead to really unexpected behaviors if someone
+> were to have differing filters for the two syscalls. For example,
+> let's say someone was doing a paranoid audit of 2038-unsafe clock usage
+> and marked clock_gettime() with RET_KILL and marked clock_gettime64()
+> with RET_LOG. This aliasing would make clock_gettime64() trigger with
+> RET_KILL...
+
+This particular issue is solvable:
+
+> +       /* Handle syscall aliases when result is not SECCOMP_RET_ALLOW. */
+> +       if (unlikely(action != SECCOMP_RET_ALLOW)) {
+> +               int alias;
 > +
-> +Required properties:
-> +- compatible: should be "macronix,nand-controller"
-
-That's not very specific. There's only 1 version of this h/w?
-
-> +- reg: should contain 1 entrie for the registers
-
-s/entrie/entry/
-
-> +- interrupts: interrupt line connected to this raw NAND controller
-> +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
-> +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
-> +	 "send_dly_clk" clocks
-
-You can drop '_clk' as that is redundant.
-
+> +               alias = seccomp_syscall_alias(sd->arch, sd->nr);
+> +               if (unlikely(alias != -1)) {
+> +                       /* Use sd_local for an aliased syscall. */
+> +                       if (sd != &sd_local) {
+> +                               sd_local = *sd;
+> +                               sd = &sd_local;
+> +                       }
+> +                       sd_local.nr = alias;
 > +
-> +Example:
-> +
-> +	nand: mxic-nfc@43c30000 {
-> +		compatible = "macronix,nand-controller";
-> +		reg = <0x43c30000 0x10000>;
-> +		reg-names = "regs";
+> +                       /* Run again, with the alias, accepting the results. */
+> +                       filter_ret = seccomp_run_filters(sd, &match);
+> +                       data = filter_ret & SECCOMP_RET_DATA;
+> +                       action = filter_ret & SECCOMP_RET_ACTION_FULL;
 
-Not documented. You can drop as *-names is not generally useful when 
-there is only 1 entry.
+How about:
 
-> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> +	};
-> -- 
-> 1.9.1
-> 
+new_data = ...;
+new_action = ...;
+if (new_action == SECCOMP_RET_ALLOW) {
+  data = new_data;
+  action = new_action;
+}
+
+It might also be nice to allow a filter to say "hey, I want to set
+this result and I do *not* want compatibility aliases applied", but
+I'm not quite sure how to express that.
+
+I don't love this whole concept, but I also don't have a better idea.
+
+
+--Andy
