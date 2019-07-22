@@ -2,97 +2,155 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E4BC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C9FC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D19E21BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7956B21BF2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="X/RB4iRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfGVEtt (ORCPT
+        id S1727913AbfGVEuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 00:49:49 -0400
-Received: from mga17.intel.com ([192.55.52.151]:61490 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfGVEtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 00:49:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jul 2019 21:49:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,293,1559545200"; 
-   d="scan'208";a="170755148"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jul 2019 21:49:48 -0700
-Date:   Sun, 21 Jul 2019 21:49:48 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     arnd@arndb.de, sivanich@sgi.com, gregkh@linuxfoundation.org,
-        jhubbard@nvidia.com, jglisse@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/3] sgi-gru: get_user_page changes
-Message-ID: <20190722044947.GA6157@iweiny-DESK2.sc.intel.com>
-References: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
+        Mon, 22 Jul 2019 00:50:09 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:45663 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfGVEuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 00:50:09 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6M4nnJ6022698;
+        Mon, 22 Jul 2019 13:49:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6M4nnJ6022698
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563770990;
+        bh=9RX5JiKfnBiGDConOws41uRVdm8O7qY3Y3y6qfXVKKA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=X/RB4iRi2ha7tsRUTpCvv3e9ha83yJXFIq5OvTKB1KBxpE2LomrXulUeDGJ3wRyc4
+         Q1H7L4fz/LMCUIdZIdonTz3JxQBCdbmPAOuQ4kxR6lrWF0qTcykC6HdhGc63pOFEL9
+         JmryPJzookxatCYYDFvAqnuGEGXB2cKMQgV0//zMaSZbLPR2UYpDASvq399f8yMuTC
+         D2nbmzQDZ863TlVypm/yDboM0jKG8mgd4hPwI6rc6LQMJh0OxfwU0x7CVXNccYFrW1
+         rT/nnOGVVbzN/xNCdzM6Nlpazu3vV8yAPW2lBjdMmOPwGGh8Dom55Mll0lqoQ8lj4U
+         oBOB+93oQ46aQ==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id v6so25279347vsq.4;
+        Sun, 21 Jul 2019 21:49:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAX98vSC1rFL6B7a7AjeBhXUa8MZcu+zOGAb4uha8l8qHKbkvuKa
+        fv6Aou/xXISTE4ONc2A/GkZnqH3G7AObPGbDwHA=
+X-Google-Smtp-Source: APXvYqyCpxbMn6um9veQlKpgDsTaGkywR8dJ+yp0tC+gN3rXLIXAxN9lQ8f6GjcgoYmU4f/PVo3dRJuMmhVzpkQl4h4=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr41395812vsn.181.1563770988750;
+ Sun, 21 Jul 2019 21:49:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20190719100859.11227-1-yamada.masahiro@socionext.com> <20190719124030.GA5858@ravnborg.org>
+In-Reply-To: <20190719124030.GA5858@ravnborg.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 22 Jul 2019 13:49:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASc5Fjic-zMKO6EKGUb2zWbTr=BmWUASFW6+n90FfRhxg@mail.gmail.com>
+Message-ID: <CAK7LNASc5Fjic-zMKO6EKGUb2zWbTr=BmWUASFW6+n90FfRhxg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: disable compile-test of kernel headers for now
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 09:28:02PM +0530, Bharath Vedartham wrote:
-> This patch series incorporates a few changes in the get_user_page usage 
-> of sgi-gru.
-> 
-> The main change is the first patch, which is a trivial one line change to 
-> convert put_page to put_user_page to enable tracking of get_user_pages.
-> 
-> The second patch removes an uneccessary ifdef of CONFIG_HUGETLB.
-> 
-> The third patch adds __get_user_pages_fast in atomic_pte_lookup to retrive
-> a physical user page in an atomic context instead of manually walking up
-> the page tables like the current code does. This patch should be subject to 
-> more review from the gup people.
-> 
-> drivers/misc/sgi-gru/* builds after this patch series. But I do not have the 
-> hardware to verify these changes. 
-> 
-> The first patch implements gup tracking in the current code. This is to be tested
-> as to check whether gup tracking works properly. Currently, in the upstream kernels
-> put_user_page simply calls put_page. But that is to change in the future. 
-> Any suggestions as to how to test this code?
-> 
-> The implementation of gup tracking is in:
-> https://github.com/johnhubbard/linux/tree/gup_dma_core
-> 
-> We could test it by applying the first patch to the above tree and test it.
-> 
-> More details are in the individual changelogs.
-> 
-> Bharath Vedartham (3):
+Hi Sam,
 
-I don't have an opinion on the second patch regarding any performance concerns
-since I'm not familiar with this hardware.
 
-But from a GUP POV For the series.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+On Fri, Jul 19, 2019 at 9:40 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Masahiro.
+>
+> On Fri, Jul 19, 2019 at 07:08:59PM +0900, Masahiro Yamada wrote:
+> > This compile-test started from the strong belief that (almost) all
+> > headers should be able to be compiled as a standalone unit, but this
+> > requirement seems to be just annoying.
+> >
+> > I believe compile-test of exported headers is good. On the other hand,
+> > in-kernel headers are not necessarily supposed to be always compilable.
+> > Actually, some headers are only included under a certain combination
+> > of CONFIG options, and that is definitely fine.
+> >
+> > This test is still causing false positive errors in randconfig.
+> > Moreover, newly added headers are compile-tested by default, sometimes
+> > they catch (not fatal) bugs, but often raise false positive errors to
+> > end up with making people upset.
+> >
+> > The merge window is closing shortly, so there is not much I can do.
+> > Disable it for now, and take a pause to re-think whether we should
+> > continue this or change the course.
+>
+> The present status is that iomap.h fails - and Arnd promptly
+> made a fix for it:
+> https://lore.kernel.org/lkml/20190719113139.4005262-1-arnd@arndb.de/T/#u
+>
+> You already fixed another issue.
+> So the fall-out so far is miniaml and already fixed (pending Arnd's
+> patch).
+>
+> If headers are not self-contained then one needs to include them in a
+> specific order which can be quite hard to get right.
+> Especially if the requirements differ across different architectures.
+> So the whole concept seems sane.
+>
+> I have thrown it after may array of cross builds:
+> => alpha arm arm64 sparc64 i386 x86 powerpc s390 riscv sh
+>
+> For each arch I try:
+> => allmodconfig allyesconfig allnoconfig defconfig
+>
+> No errros.
+> But that obviously only coveres a very minial set of configurations.
+> Arnd's result from his randconfig are also very promising.
+>
+> I advise to keep it enabled and if there is a steady stream of
+> new errors after -rc1 and -rc2 then to disable the testing.
+> We will not get the coverage unless this is upstreamed.
+> And the testing is relevant.
+>
+>         Sam
 
->   sgi-gru: Convert put_page() to get_user_page*()
->   sgi-gru: Remove CONFIG_HUGETLB_PAGE ifdef
->   sgi-gru: Use __get_user_pages_fast in atomic_pte_lookup
-> 
->  drivers/misc/sgi-gru/grufault.c | 50 +++++++----------------------------------
->  1 file changed, 8 insertions(+), 42 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+
+
+I am still wondering what to do about this.
+
+After some consideration, I thought it would be too
+annoying to put new headers to the test coverage
+unconditionally.
+
+Kernel code are compiled only under some circumstances.
+It is not feasible to know correct CONFIG options
+that headers are compiled with.
+
+So, I am thinking of making this testing service on demand.
+Headers need to be manually added to header-test-y
+by somebody who is interested in doing so.
+
+Divide Makefiles into sub-directory basis as you suggested first.
+The area of test-coverage is up to each subsystem.
+If drm people are really passionate about this,
+they can make effort to make headers self-contained
+and add everything to include/drm/Kbuild.
+If nobody is interested, that's it.
+
+Probably, many new headers will fall off the coverage,
+but this is a trade-off to avoiding false-positives.
+
+
+--
+Best Regards
+
+
+Masahiro Yamada
