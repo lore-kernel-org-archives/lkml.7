@@ -2,171 +2,95 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA1AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D986C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B90321955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C2721985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bm8hR45y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=reply2setup-com.20150623.gappssmtp.com header.i=@reply2setup-com.20150623.gappssmtp.com header.b="Er1whEjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfGVSvr (ORCPT
+        id S1731804AbfGVSvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:51:47 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37590 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbfGVSvq (ORCPT
+        Mon, 22 Jul 2019 14:51:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38554 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727821AbfGVSvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:51:46 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s20so41324438otp.4;
-        Mon, 22 Jul 2019 11:51:46 -0700 (PDT)
+        Mon, 22 Jul 2019 14:51:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id az7so19544290plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:51:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xjJupYIc6xWc8gLFfPCwhmNtFxBF1s29Cj+SrhBx5Is=;
-        b=bm8hR45ywmygZ8NW0eNp6YDk/NoCpAjuyMaoMf5JVUbHHpaC7V+k2GEyK/Sxbub2Io
-         10P9Eqp7mwTpApV9roRtHUIppuq9fRxcVehIInvSLpuWNk3JdidqKDG7RO5zsMfYiz04
-         M2CRABNHRuqfxifSuEgV7kO5xBzUcuv5s0n3ma/hI9X3iO+XsAlF6LZjgFeAQMq1mlNZ
-         q7C/CD1aTbdIdyP0ZkBhU+q765+neevpRfJfRG/X7YJSC3P2MuuwZ/Ulup6VUHuwLSEi
-         JMn8Jt2ACGXiSOJ6H/2giqHKf7zjFeZtRoF1Fw7MhYblXHt0DLaYrP42uXq1SO9Rz01j
-         qpYA==
+        d=reply2setup-com.20150623.gappssmtp.com; s=20150623;
+        h=to:subject:from:message-id:disposition-notification-to:date
+         :user-agent:mime-version:content-transfer-encoding:content-language;
+        bh=CkPTLp1+mLr2WEfeyAA98TPYjmGNdrnGzYHbmZtdlPc=;
+        b=Er1whEjJ4kNYucyXbVOdIhrBNUD6NqjK/gBR+omL5PT370IIwZKZtMupePvJy7ntqU
+         MuB3auJKkJSqLFoBHOumNxaIDprhkQOj5pPjReQvgDrZOLlp9Q3lNCelPfUaa4CeQ/g6
+         1KVpuHzOxxJk9ow3+gidRwjh9DT1XCEfx3HEJmisgfAdc7EYTfTPWy4RNLFBzLch1mmc
+         7xi6/0ewr5lpG7oA/3ZL96EZ5B8oEZoHxcbTPx8hiVQZa2K245djnaRYDaOod3QFplnW
+         uw2jRlb/UAPCh4eeWMtcq/Cyy+cQh8xvsabdMrUmiBQA2/xIaUIsO0h3MfDpo3XWWolE
+         RxYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xjJupYIc6xWc8gLFfPCwhmNtFxBF1s29Cj+SrhBx5Is=;
-        b=ndYDKpWaZYgPZgF97g5OS5u6K5Lnb1QQilFfIqzw7ivYggGrHEcByDIkeQhH2p3BSE
-         Y1L8Mm6Uqm77VijwhpFoIZPkFlbXmRynQAbBAnli8d8KhgJmYoWpMOVStyy1Pic3kT8j
-         3q6haUt5QShBX0ndva/LaHxUZZ08C3Flg4UNmvcRBDbBchjCPisYWTi6gYaaSN58lOu3
-         Aw53r/JgLPuDN+gJ+X8PwSdwQXL6me2mhOipRvoGsw54Gh9xSUbLGRScmMWEmoA1VKSG
-         cTkTI3pn9oafVt5VYs/b8lALGLqHH8brx22uDaHfF8Gz7XkesN+bqIZgl51Pgp+9wg49
-         CEHQ==
-X-Gm-Message-State: APjAAAV54ibBel9qpp8BQXmf+x2tVU+9Otwry3WsgUoQeR8uc1S5On+k
-        lrDoTR3UfEJnzZ8VmLueqaLL83mwF/2rAorBG4M=
-X-Google-Smtp-Source: APXvYqxJ1cmuAUD5O0KF/ePYZbRJdJ5aTWAG9K+yO/+94qQbz28EEpCc4OtsYtwRR4vQw7JKfy3sOGJoQP+tXdUEhp8=
-X-Received: by 2002:a9d:4b02:: with SMTP id q2mr16501766otf.312.1563821505561;
- Mon, 22 Jul 2019 11:51:45 -0700 (PDT)
+        h=x-gm-message-state:to:subject:from:message-id
+         :disposition-notification-to:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=CkPTLp1+mLr2WEfeyAA98TPYjmGNdrnGzYHbmZtdlPc=;
+        b=ktKzs9JClxXRRgZpOo+CfVKx52APKzT7ooBaekUHWxytjsP0MjLT48x/8mr5nyfw2C
+         zR7VuUDbCj+b0oFZdyXvU9pDOSD1AD2xjqtj931d2d6PSvzGHDbQjjHVdIs68ekNiGzj
+         SVtZmoY/dMp/FyAw8EqPHEs53VjmuBiYN19ii0Z+hyT6uZbEs3eZVKwErNEthlrGqeBC
+         0Iiqreg8tNtRcXTv6QlHwb/FlE0v6zZMInfq8R4XbevaACMLc5ZPN5z8pTRFXox5MPfr
+         UPe+pQZ4Yo/oipJBI0ZGJSCiuRcL4pzHW0gtln0ECKsB1WevfiGzwsNHmO9KKQndKDbP
+         TCaw==
+X-Gm-Message-State: APjAAAVs7oHCd4/oSbpxtBOf0p3v1Vw2D+BShRWxnMQo6NHX3JTL4265
+        mBIP+a1la5qbGquPrwf03208kn0G
+X-Google-Smtp-Source: APXvYqxm8U0feXuxfSWfxLubfRTvs1pbMHcnkOb4MXmMeW89K1c9aX+6YdjZMlDFY0s/NYZGQkQ9pg==
+X-Received: by 2002:a17:902:6b85:: with SMTP id p5mr73556286plk.225.1563821507341;
+        Mon, 22 Jul 2019 11:51:47 -0700 (PDT)
+Received: from [192.168.0.13] ([103.253.170.188])
+        by smtp.gmail.com with ESMTPSA id p67sm48316622pfg.124.2019.07.22.11.51.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 11:51:46 -0700 (PDT)
+To:     linux-kernel@vger.kernel.org
+Subject: Wine Enthusiasts
+From:   Leslie Arthur <larthur@reply2setup.com>
+Message-ID: <c54758c2-20be-ef3e-014b-5364844dfe95@reply2setup.com>
+Date:   Mon, 22 Jul 2019 13:43:48 -0400
+User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722151202.5506768B20@verein.lst.de>
-In-Reply-To: <20190722151202.5506768B20@verein.lst.de>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 22 Jul 2019 11:51:36 -0700
-Message-ID: <CA+E=qVdu3Hf7ufst-t_CiWkquximGFX8B2RcoQ1x0m++cc8n8Q@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Antivirus: Avast (VPS 190722-4, 07/22/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 8:12 AM Torsten Duwe <duwe@lst.de> wrote:
->
-> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> for portable devices.
->
-> Add a binding document for it.
 
-I believe you'll have to convert it to yaml format.
+Hello,
 
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  .../devicetree/bindings/display/bridge/anx6345.txt | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> new file mode 100644
-> index 000000000000..0af092d101c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> @@ -0,0 +1,57 @@
-> +Analogix ANX6345 eDP Transmitter
-> +--------------------------------
-> +
-> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> +portable devices.
-> +
-> +Required properties:
-> +
-> + - compatible          : "analogix,anx6345"
-> + - reg                 : I2C address of the device
-> + - reset-gpios         : Which GPIO to use for reset (active low)
-> + - dvdd12-supply       : Regulator for 1.2V digital core power.
-> + - dvdd25-supply       : Regulator for 2.5V digital core power.
-> + - Video port 0 for LVTTL input, using the DT bindings defined in [1].
-> +
-> +Optional properties:
-> +
-> + - Video port 1 for eDP output (panel or connector) using the DT bindings
-> +   defined in [1].
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +anx6345: anx6345@38 {
-> +       compatible = "analogix,anx6345";
-> +       reg = <0x38>;
-> +       reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-> +       dvdd25-supply = <&reg_dldo2>;
-> +       dvdd12-supply = <&reg_fldo1>;
-> +
-> +       ports {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               anx6345_in: port@0 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0>;
-> +                       anx6345_in_tcon0: endpoint@0 {
-> +                               reg = <0>;
-> +                               remote-endpoint = <&tcon0_out_anx6345>;
-> +                       };
-> +               };
-> +
-> +               anx6345_out: port@1 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <1>;
-> +
-> +                       anx6345_out_panel: endpoint@0 {
-> +                               reg = <0>;
-> +                               remote-endpoint = <&panel_in_edp>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 2.16.4
->
+Would you be interested in acquiring an email list of "Wine Enthusiasts" from USA?
+
+We also have data for Golfers, Alcohol Enthusiasts, Beer Enthusiasts, Chocolate Enthusiasts, Foodies, Travelers, Gift Buyers, Spa and Resort Visitors, Sports Enthusiasts, Android Users and many more..
+
+Each record in the list contains Contact Name (First, Middle and Last Name), Mailing Address, List type and Opt-in email address.
+
+All the contacts are opt-in verified, 100% permission based and can be used for unlimited multi-channel marketing.
+
+Please let me know your thoughts towards procuring the Wine Enthusiasts List.
+
+Best Regards,
+Leslie Arthur
+Research Analyst
+
+We respect your privacy, if you do not wish to receive any further emails from our end, please reply with a subject "Remove".
+
