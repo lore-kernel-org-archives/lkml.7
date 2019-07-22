@@ -2,118 +2,423 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AF8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E5BC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642FB2190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D9A2190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="bANGXbCv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXymgly1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbfGVSe0 (ORCPT
+        id S1730479AbfGVSfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:34:26 -0400
-Received: from mail-eopbgr680068.outbound.protection.outlook.com ([40.107.68.68]:64738
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727855AbfGVSe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:34:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k4z4avDFHMFNPhyDBllFg7KZ9V/GjG2lASbofCrfAZa4NkSGPqNI6CtSHYlF+awIEe7udLQixqoY43LGiwyZ/wq9k5xJT39IlAKpVij2WP+vLqARyBG8U19BYya/Vy5WXRIb2pOB+ZmsQQdxgFv1XDsHU1NW7CZM67CVQcY0LOQsIwxjF5DFg8Mh4+BRFHzRkyBPfbrlLyIVRBa/A36EM1vUvm1BYB0O8hedxRwReHlOp8xBueYepB1l2zlCZ3Cn+FpVOY+JbDDCBnmR4GLDuGbvAUDd8vJXrixqRWbrqqZQJB8/3ASEMBvgYji7pBjPD0NpGtMr+bXIxCBuQzBMpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j+whafBv6dvP4kqssG21n82+bw58Xj1lDtfyufnenwc=;
- b=gPjghOXec04ZPggwousBCYf7+E5CvFu5yH5TabyUsKE7hRTrMWhvdDU+h52TK1bWT8HKykrx31Bkcxoe/zdM2L3iWfZLUTZo0MUJ/w2ttHW7ebOcshU8VXrr6ZQJoU87oO+SsAD4bZDKQkHJIP9Hjs8Ny5GtWvdJ1hSBSF2TdhoDZPjkl4/guLgDiY5pFWyYuU+L00jJnm/IU98YNc0qbY3yUje9GUu3I+SVyqx4du88p1ebVOs+aAnTpGFNjssRoWSvUbmH2sq7Yzszae7ipEgiodRAWqV5DkncUmoCGgsNYW+/HuYETlGUzHiPvAaNu2Ng0L5j+77fIKyVqCl9cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=vmware.com;dmarc=pass action=none
- header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j+whafBv6dvP4kqssG21n82+bw58Xj1lDtfyufnenwc=;
- b=bANGXbCvypER1/DNkWS4vB98eXuoS/6q1mnareOi/k0QSrprCuOVye7t8b3UtSfqYQjQCi6TWsplfB8f7BH9TwJG/UsxpFZld+b3s6skoQ3dM5QoAzHOoKiE03PCeM9ztQ4ozIuZ3VvsXjtXOMCDPKCc9fW69OEynS7+WIClsAk=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB3943.namprd05.prod.outlook.com (52.135.195.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.10; Mon, 22 Jul 2019 18:34:23 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2115.005; Mon, 22 Jul 2019
- 18:34:23 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH v3 1/9] smp: Run functions concurrently in
- smp_call_function_many()
-Thread-Topic: [PATCH v3 1/9] smp: Run functions concurrently in
- smp_call_function_many()
-Thread-Index: AQHVPc0owCZu4w44l0OVUg4r6D6Gu6bW+RmAgAADdQA=
-Date:   Mon, 22 Jul 2019 18:34:22 +0000
-Message-ID: <C93C241E-E078-4825-8C59-39C84D30F9CB@vmware.com>
-References: <20190719005837.4150-1-namit@vmware.com>
- <20190719005837.4150-2-namit@vmware.com>
- <20190722182159.GB6698@worktop.programming.kicks-ass.net>
-In-Reply-To: <20190722182159.GB6698@worktop.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8620cf3f-50bc-4508-3e01-08d70ed337c3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB3943;
-x-ms-traffictypediagnostic: BYAPR05MB3943:
-x-microsoft-antispam-prvs: <BYAPR05MB3943F2973349179A5881AFE1D0C40@BYAPR05MB3943.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(39860400002)(376002)(366004)(199004)(189003)(229853002)(6116002)(2616005)(476003)(76176011)(186003)(71190400001)(71200400001)(53546011)(81166006)(36756003)(5660300002)(11346002)(33656002)(7736002)(102836004)(4326008)(81156014)(3846002)(6506007)(6916009)(64756008)(66476007)(76116006)(66556008)(66446008)(66946007)(14454004)(26005)(86362001)(53936002)(68736007)(99286004)(66066001)(446003)(478600001)(6512007)(6246003)(2906002)(6486002)(25786009)(316002)(4744005)(8936002)(256004)(54906003)(14444005)(8676002)(305945005)(486006)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB3943;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GMF21qDiLXjS/Pazm2146TUKZF/NNrzkaND/1SxgRpP9qiTixIMvAzbktxvtd3JXDi0LWri0Hn7lgJ/MJjRS+v2tn8kVDyVZ8BwDSUCMlc1j4yWaZFrV5oh275QxxcsEB31HRxgjUvAx/Xyk5ZyIg8/70ZagEpTEIPFMowKT8lYSPvhpsCCBXuSThuTdUtgsmOuQ6X+AnacIPn6A5reymlyELdcrQjQunKQKK9UGe7soOjXsTq1n/SZSKmceBOoylhekBvCkFXX+m41RUr5fDeY/nnkMhAzEz5I9CaCTM/FYHEMJsuiou4zoVazYqZO/RFzHdM317D3OdsiaHhqX9Y2duGoVgQ7f3srXcKDO+7HGID2Vi4qgKqiM2vpqkFaeoLRBWVAhklcnCy5HSRB2d4OkbW46ZzSVznBL9VsZS34=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1CA8EDC67F4B37449680634FF20D1F0D@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 22 Jul 2019 14:35:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38209 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbfGVSfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 14:35:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y15so17790572pfn.5;
+        Mon, 22 Jul 2019 11:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZvKX1n+pRbwdwmkbAvRdkhqHzETPBbuvkZpv6xUMk4Y=;
+        b=KXymgly1tLbiJJTn3kj4fLT5hodvOy620VRtbaqkAKBxAekrqOWQdXPrDo5n5Ey9xC
+         G/lCDUEVJIQI/7dzG8ht4/ozuO8JfNsK6m5Y8RsJawzLXk3YJqt9DvdgWtcgjfiTuyfz
+         PrKX4LWI9HpIb+4gswVFyKqv6o/jNDkuWkJmMf6SDytgpWpvifx7vYTXVVe6Q490g7uS
+         1JsF+jQmK4XgAiXzmknvQGrJGd2ohHAxVycm+OBHAD40Bimdn5VoYhoaf7v8RFyCn26N
+         hxJmNRVaU5g/givrJrKzbhU8CV8iCkL22ilzN6TGcll8PXeXCuZ4e0IByd+hbBsIP+9V
+         mbWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZvKX1n+pRbwdwmkbAvRdkhqHzETPBbuvkZpv6xUMk4Y=;
+        b=q/+ly/8mwNXOYGc724iRDX897+SPdAQyvQfWQ7Somj7ctS1adfdJ+ZTsCyVL0kskrp
+         WmcGZxU7VyXoksfvtesjETGoEvqCicShA9A8Z5ak85/H3kS2oZwN9ClWperklhWhBzJU
+         oDn6IGScirsgWSgCdG9qY1s0u7andiAXD7CU4RhJZmzLhSTYzKVaxHHdYTXFkfwfZQxp
+         tu5hS1SpM5tyKcgraFJ2dRwpmJFXR7UwK8hJt2lCSDIQUSTmIgYjPkFST2vr2XKXdRze
+         clHmpCsnZ7ZN1CUx2yFJCSBvz1uCMnDKQx96hBmGjTfyujDkiIqOFe5wvev2QYudsE4e
+         jiPw==
+X-Gm-Message-State: APjAAAX5/nSCVQmKrtAfsKye+WtZlKPNnx/Yiznk0IKqRn/DaSLbPgtE
+        BHIDAXa4dUFnLFCiTFf/zyj5t445
+X-Google-Smtp-Source: APXvYqy73MAipaG+76GHf1r68WlljKaZpWHyYZf+GA62pnDJrokp7+meFXXzsBOfg43sCAxpq1tIbA==
+X-Received: by 2002:a17:90a:30e4:: with SMTP id h91mr75301019pjb.37.1563820524227;
+        Mon, 22 Jul 2019 11:35:24 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 23sm43942566pfn.176.2019.07.22.11.35.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 11:35:23 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:35:22 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] hwmon: (adt7475) Convert to use
+ hwmon_device_register_with_groups()
+Message-ID: <20190722183522.GA17207@roeck-us.net>
+References: <20190721225530.28799-1-grant.mcewan@alliedtelesis.co.nz>
+ <20190721225530.28799-2-grant.mcewan@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8620cf3f-50bc-4508-3e01-08d70ed337c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 18:34:23.0066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB3943
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190721225530.28799-2-grant.mcewan@alliedtelesis.co.nz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdWwgMjIsIDIwMTksIGF0IDExOjIxIEFNLCBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGlu
-ZnJhZGVhZC5vcmc+IHdyb3RlOg0KPiANCj4gT24gVGh1LCBKdWwgMTgsIDIwMTkgYXQgMDU6NTg6
-MjlQTSAtMDcwMCwgTmFkYXYgQW1pdCB3cm90ZToNCj4+ICsvKg0KPj4gKyAqIENhbGwgYSBmdW5j
-dGlvbiBvbiBhbGwgcHJvY2Vzc29ycy4gIE1heSBiZSB1c2VkIGR1cmluZyBlYXJseSBib290IHdo
-aWxlDQo+PiArICogZWFybHlfYm9vdF9pcnFzX2Rpc2FibGVkIGlzIHNldC4NCj4+ICsgKi8NCj4+
-ICtzdGF0aWMgaW5saW5lIHZvaWQgb25fZWFjaF9jcHUoc21wX2NhbGxfZnVuY190IGZ1bmMsIHZv
-aWQgKmluZm8sIGludCB3YWl0KQ0KPj4gK3sNCj4+ICsJb25fZWFjaF9jcHVfbWFzayhjcHVfb25s
-aW5lX21hc2ssIGZ1bmMsIGluZm8sIHdhaXQpOw0KPj4gK30NCj4gDQo+IEknbSB0aGlua2luZyB0
-aGF0IG9uZSBpZiBidWdneSwgbm90aGluZyBwcm90ZWN0cyBvbmxpbmUgbWFzayBoZXJlLg0KDQpv
-bl9lYWNoX2NwdV9tYXNrKCkgY2FsbHMgX19vbl9lYWNoX2NwdV9tYXNrKCkgd2hpY2ggd291bGQg
-ZGlzYWJsZSBwcmVlbXB0aW9uLg0KVGhlIG1hc2sgbWlnaHQgY2hhbmdlLCBidXQgYW55aG93IF9f
-c21wX2NhbGxfZnVuY3Rpb25fbWFueSgpIHdvdWxkIOKAnGFuZOKAnSBpdCwNCmFmdGVyIGRpc2Fi
-bGluZyBwcmVlbXB0aW9uLCB3aXRoICh0aGUgcG90ZW50aWFsbHkgdXBkYXRlZCkgY3B1X29ubGlu
-ZV9tYXNrLg0KDQpXaGF0IGlzIHlvdXIgY29uY2Vybj8=
+On Mon, Jul 22, 2019 at 10:55:30AM +1200, Grant McEwan wrote:
+> hwmon_device_register() is a deprecated function and produces a warning.
+> 
+> Converting the driver to use the hwmon_device_register_with_groups()
+> instead.
+> 
+> Signed-off-by: Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+
+Applied to hwmon-next.
+
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/adt7475.c | 146 ++++++++++++++--------------------------
+>  1 file changed, 50 insertions(+), 96 deletions(-)
+> 
+> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+> index c3c6031a7285..6c64d50c9aae 100644
+> --- a/drivers/hwmon/adt7475.c
+> +++ b/drivers/hwmon/adt7475.c
+> @@ -187,7 +187,7 @@ static const struct of_device_id __maybe_unused adt7475_of_match[] = {
+>  MODULE_DEVICE_TABLE(of, adt7475_of_match);
+>  
+>  struct adt7475_data {
+> -	struct device *hwmon_dev;
+> +	struct i2c_client *client;
+>  	struct mutex lock;
+>  
+>  	unsigned long measure_updated;
+> @@ -212,6 +212,7 @@ struct adt7475_data {
+>  
+>  	u8 vid;
+>  	u8 vrm;
+> +	const struct attribute_group *groups[9];
+>  };
+>  
+>  static struct i2c_driver adt7475_driver;
+> @@ -346,8 +347,8 @@ static ssize_t voltage_store(struct device *dev,
+>  {
+>  
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg;
+>  	long val;
+>  
+> @@ -440,8 +441,8 @@ static ssize_t temp_store(struct device *dev, struct device_attribute *attr,
+>  			  const char *buf, size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg = 0;
+>  	u8 out;
+>  	int temp;
+> @@ -542,8 +543,7 @@ static ssize_t temp_st_show(struct device *dev, struct device_attribute *attr,
+>  			    char *buf)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+>  	long val;
+>  
+>  	switch (sattr->index) {
+> @@ -570,8 +570,8 @@ static ssize_t temp_st_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg;
+>  	int shift, idx;
+>  	ulong val;
+> @@ -647,8 +647,8 @@ static ssize_t point2_show(struct device *dev, struct device_attribute *attr,
+>  static ssize_t point2_store(struct device *dev, struct device_attribute *attr,
+>  			    const char *buf, size_t count)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+>  	int temp;
+>  	long val;
+> @@ -710,8 +710,8 @@ static ssize_t tach_store(struct device *dev, struct device_attribute *attr,
+>  {
+>  
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned long val;
+>  
+>  	if (kstrtoul(buf, 10, &val))
+> @@ -769,8 +769,8 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr,
+>  {
+>  
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	unsigned char reg = 0;
+>  	long val;
+>  
+> @@ -818,8 +818,8 @@ static ssize_t stall_disable_show(struct device *dev,
+>  				  struct device_attribute *attr, char *buf)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +
+>  	u8 mask = BIT(5 + sattr->index);
+>  
+>  	return sprintf(buf, "%d\n", !!(data->enh_acoustics[0] & mask));
+> @@ -830,8 +830,8 @@ static ssize_t stall_disable_store(struct device *dev,
+>  				   const char *buf, size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	long val;
+>  	u8 mask = BIT(5 + sattr->index);
+>  
+> @@ -914,8 +914,8 @@ static ssize_t pwmchan_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	int r;
+>  	long val;
+>  
+> @@ -938,8 +938,8 @@ static ssize_t pwmctrl_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	int r;
+>  	long val;
+>  
+> @@ -982,8 +982,8 @@ static ssize_t pwmfreq_store(struct device *dev,
+>  			     size_t count)
+>  {
+>  	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	int out;
+>  	long val;
+>  
+> @@ -1022,8 +1022,8 @@ static ssize_t pwm_use_point2_pwm_at_crit_store(struct device *dev,
+>  					struct device_attribute *devattr,
+>  					const char *buf, size_t count)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	long val;
+>  
+>  	if (kstrtol(buf, 10, &val))
+> @@ -1342,26 +1342,6 @@ static int adt7475_detect(struct i2c_client *client,
+>  	return 0;
+>  }
+>  
+> -static void adt7475_remove_files(struct i2c_client *client,
+> -				 struct adt7475_data *data)
+> -{
+> -	sysfs_remove_group(&client->dev.kobj, &adt7475_attr_group);
+> -	if (data->has_fan4)
+> -		sysfs_remove_group(&client->dev.kobj, &fan4_attr_group);
+> -	if (data->has_pwm2)
+> -		sysfs_remove_group(&client->dev.kobj, &pwm2_attr_group);
+> -	if (data->has_voltage & (1 << 0))
+> -		sysfs_remove_group(&client->dev.kobj, &in0_attr_group);
+> -	if (data->has_voltage & (1 << 3))
+> -		sysfs_remove_group(&client->dev.kobj, &in3_attr_group);
+> -	if (data->has_voltage & (1 << 4))
+> -		sysfs_remove_group(&client->dev.kobj, &in4_attr_group);
+> -	if (data->has_voltage & (1 << 5))
+> -		sysfs_remove_group(&client->dev.kobj, &in5_attr_group);
+> -	if (data->has_vid)
+> -		sysfs_remove_group(&client->dev.kobj, &vid_attr_group);
+> -}
+> -
+>  static int adt7475_update_limits(struct i2c_client *client)
+>  {
+>  	struct adt7475_data *data = i2c_get_clientdata(client);
+> @@ -1489,7 +1469,8 @@ static int adt7475_probe(struct i2c_client *client,
+>  	};
+>  
+>  	struct adt7475_data *data;
+> -	int i, ret = 0, revision;
+> +	struct device *hwmon_dev;
+> +	int i, ret = 0, revision, group_num = 0;
+>  	u8 config2, config3;
+>  
+>  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+> @@ -1497,6 +1478,7 @@ static int adt7475_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  
+>  	mutex_init(&data->lock);
+> +	data->client = client;
+>  	i2c_set_clientdata(client, data);
+>  
+>  	if (client->dev.of_node)
+> @@ -1590,52 +1572,40 @@ static int adt7475_probe(struct i2c_client *client,
+>  		break;
+>  	}
+>  
+> -	ret = sysfs_create_group(&client->dev.kobj, &adt7475_attr_group);
+> -	if (ret)
+> -		return ret;
+> +	data->groups[group_num++] = &adt7475_attr_group;
+>  
+>  	/* Features that can be disabled individually */
+>  	if (data->has_fan4) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &fan4_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &fan4_attr_group;
+>  	}
+>  	if (data->has_pwm2) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &pwm2_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &pwm2_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 0)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in0_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in0_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 3)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in3_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in3_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 4)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in4_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in4_attr_group;
+>  	}
+>  	if (data->has_voltage & (1 << 5)) {
+> -		ret = sysfs_create_group(&client->dev.kobj, &in5_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num++] = &in5_attr_group;
+>  	}
+>  	if (data->has_vid) {
+>  		data->vrm = vid_which_vrm();
+> -		ret = sysfs_create_group(&client->dev.kobj, &vid_attr_group);
+> -		if (ret)
+> -			goto eremove;
+> +		data->groups[group_num] = &vid_attr_group;
+>  	}
+>  
+> -	data->hwmon_dev = hwmon_device_register(&client->dev);
+> -	if (IS_ERR(data->hwmon_dev)) {
+> -		ret = PTR_ERR(data->hwmon_dev);
+> -		goto eremove;
+> +	/* register device with all the acquired attributes */
+> +	hwmon_dev = devm_hwmon_device_register_with_groups(&client->dev,
+> +							   client->name, data,
+> +							   data->groups);
+> +
+> +	if (IS_ERR(hwmon_dev)) {
+> +		ret = PTR_ERR(hwmon_dev);
+> +		return ret;
+>  	}
+>  
+>  	dev_info(&client->dev, "%s device, revision %d\n",
+> @@ -1657,21 +1627,7 @@ static int adt7475_probe(struct i2c_client *client,
+>  	/* Limits and settings, should never change update more than once */
+>  	ret = adt7475_update_limits(client);
+>  	if (ret)
+> -		goto eremove;
+> -
+> -	return 0;
+> -
+> -eremove:
+> -	adt7475_remove_files(client, data);
+> -	return ret;
+> -}
+> -
+> -static int adt7475_remove(struct i2c_client *client)
+> -{
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> -
+> -	hwmon_device_unregister(data->hwmon_dev);
+> -	adt7475_remove_files(client, data);
+> +		return ret;
+>  
+>  	return 0;
+>  }
+> @@ -1683,7 +1639,6 @@ static struct i2c_driver adt7475_driver = {
+>  		.of_match_table = of_match_ptr(adt7475_of_match),
+>  	},
+>  	.probe		= adt7475_probe,
+> -	.remove		= adt7475_remove,
+>  	.id_table	= adt7475_id,
+>  	.detect		= adt7475_detect,
+>  	.address_list	= normal_i2c,
+> @@ -1757,8 +1712,8 @@ static void adt7475_read_pwm(struct i2c_client *client, int index)
+>  
+>  static int adt7475_update_measure(struct device *dev)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+>  	u16 ext;
+>  	int i;
+>  	int ret;
+> @@ -1854,8 +1809,7 @@ static int adt7475_update_measure(struct device *dev)
+>  
+>  static struct adt7475_data *adt7475_update_device(struct device *dev)
+>  {
+> -	struct i2c_client *client = to_i2c_client(dev);
+> -	struct adt7475_data *data = i2c_get_clientdata(client);
+> +	struct adt7475_data *data = dev_get_drvdata(dev);
+>  	int ret;
+>  
+>  	mutex_lock(&data->lock);
