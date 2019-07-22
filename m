@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B4BC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E27C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE992199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEA02199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qU5ZgH7l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hP5neMly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfGVI0l (ORCPT
+        id S1728025AbfGVI1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:26:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35761 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfGVI0l (ORCPT
+        Mon, 22 Jul 2019 04:27:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44253 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfGVI1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:26:41 -0400
-Received: by mail-lf1-f65.google.com with SMTP id p197so25946094lfa.2;
-        Mon, 22 Jul 2019 01:26:39 -0700 (PDT)
+        Mon, 22 Jul 2019 04:27:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k18so36702686ljc.11;
+        Mon, 22 Jul 2019 01:27:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qfvfkEyZd+DLJr7SlSsxk5CR4wqlGHyDi7qXTnWxyjM=;
-        b=qU5ZgH7lnaBzI3Nk5qQNMvhVjMl1vZtjvP9SIy4aOn1q2RIFIL5sAukQ+3bhdueGsf
-         gF8gLTsZT604maLq0+AppwcO65gamoxEZLGspJOmgg4gf0xYYZ8jBYG5qwrYKk/BXyRJ
-         KOPx7ak3bgjRRiylLqULa2Dgx8dDTnjDL81skNMbTQktuIrwOxJUPGx4WI7O0GGObHJC
-         7ubrWYDhzeHI50ALl8xoEgp/omFiEBRd7mHRj5mB42vvJUoHH6GF3YybSOuAgSTSAxCO
-         gBb6cTwH9guFxUqHNDSlFxGiwrMrCoGUKv28FutneKRZuXRl8o3ZRFgKBxjx+VvqE2aY
-         msPQ==
+        bh=nj8hr54aC91iZO9zPn8MMR4EigRoMAm4mTd0A3+k1NE=;
+        b=hP5neMlyz+5e+2U8xDlE89eOLeTQWHaifGHF/QjpvKArO1BhhnEsqT7HfLg9KGm/qq
+         qIlacbQp7CcFspokSaYv541f0QtAhFynrZGozw8oMU/qBIcvkfJVZrU4S+SJm6VYc0aX
+         f8zJTvmroLD6bt+a1ZpBpbYye4JVoJ7yalM9I7ypuMDnyA0XSGC82n76FuLSIvytLjje
+         nEI58UEqbDznzAcxz+0ma6vKfsFuhxI6cFn73UmXAaHE2NTYJviyzBaph9Edaq4c2CGw
+         6nNbCothbaDr1NUvgUJhDFKig8UrVfqLN8Ab8baYlI+iCE/Dmi4LfZaMwjBw+8Z92hwC
+         7Sjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qfvfkEyZd+DLJr7SlSsxk5CR4wqlGHyDi7qXTnWxyjM=;
-        b=WMyN8m16HWBYr3crDlY2wSxBTWhWZWTDFUf+jzSz3eua0XsHKX1DbmJf4hrexOvP5+
-         hKXhA+u5CN7Hdqh/NA9XMSt0VBexfn2TEXosC6isT/OXmeeOdiSPiplwjL/YPCyWh0Y4
-         6LLdRDvzM39i+X2CAvXpiGRdvHwwTGgKzkiy71H+dzHR2xONeYOzpSrwZF8coZSEo2V3
-         Jm386ikwilOgcocVZ54SqUDI0XO8fWwK0z+FweTpNXxgssaq2POdxIL22W2JilMN7LL6
-         3JgFXueRwZTHgcv8qrYncDA36epZ8tMqexz/Bn+5WCP79afa0P2Mx+dcyb7aM/hbS4bo
-         THOQ==
-X-Gm-Message-State: APjAAAUczZppSdTwr2b+rDwLwJKUg0WSrZA68hoST1kwzGFO85ogPPkC
-        DZw9TqMbS3NczcXDgDfG60M10yLLPGpqLRo8+ns=
-X-Google-Smtp-Source: APXvYqwdhc62rde+BTL3HtJEfabYZbOQO1FtvdIwx9Mc0UCkMBYiG0Q9xBEQCHEmk0uZ9+MEutmP0pVQlvGMwM821Q8=
-X-Received: by 2002:ac2:568e:: with SMTP id 14mr31838975lfr.189.1563783998994;
- Mon, 22 Jul 2019 01:26:38 -0700 (PDT)
+        bh=nj8hr54aC91iZO9zPn8MMR4EigRoMAm4mTd0A3+k1NE=;
+        b=oTCvTemefJDynsfVCLVRsbIb/IdjFGafp2WGBxF1SOIm1aIbXPDomsSfSIoXlOx5Pf
+         +o8nshC02K9av8wqAON4UnIu1Om248GTbV+3s0iOaYTqbfRFiY/0JXibT/aH2jNPHoyh
+         XCOeGpepS1WF/PVX2WKP3xDG4bg1TR8suBMxQyGyseHpOi2bVVm8vMpGUWBFFiIXwvus
+         B0ue8xE94G0EVB7HHTOxSSw7jytzywlMnNs4KfPosPXnHi4iPea2NUhZky3eR0deD3By
+         0m3byT3SM+u9YnRVDmCN8xaSI0yGm56d9ilwxWDcxhpHEe0crPt9wETAESpWQqF0dHWW
+         xcTQ==
+X-Gm-Message-State: APjAAAWZeRHoGVyWxI92+RirlCGluXRkzSWKpfz8x/wYed3CxSO2XK9D
+        VTXEVRynHJb/jskzMEvlVt7Lgt8OErhL103KLGA=
+X-Google-Smtp-Source: APXvYqwyDiZeM7CIZXMroBkoG2dnBbbNmuL1qR3F0kaVqk9dbQIfb9/GjjWTnFV6oLhY9burQ68yiDemISxthkZmRUM=
+X-Received: by 2002:a2e:b009:: with SMTP id y9mr24641129ljk.152.1563784023026;
+ Mon, 22 Jul 2019 01:27:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <1562781795-3494-1-git-send-email-jrdr.linux@gmail.com>
-In-Reply-To: <1562781795-3494-1-git-send-email-jrdr.linux@gmail.com>
+References: <1562782586-3994-1-git-send-email-jrdr.linux@gmail.com>
+In-Reply-To: <1562782586-3994-1-git-send-email-jrdr.linux@gmail.com>
 From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Mon, 22 Jul 2019 13:56:27 +0530
-Message-ID: <CAFqt6zb-LmG4PrWCXfmDqor2bgxyFJRt5Yg0vmNgE9zvaw+S3Q@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: nvidia: Remove extra return
+Date:   Mon, 22 Jul 2019 13:56:51 +0530
+Message-ID: <CAFqt6zaNcNdxcT2WLOvL0LTX_R9ShRNx6UW6s4k+wc=Zj2MaSg@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: nvidia: Remove dead code
 To:     adaplas@gmail.com, b.zolnierkie@samsung.com
 Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
@@ -69,31 +69,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:28 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+On Wed, Jul 10, 2019 at 11:41 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
 >
-> Minor cleanup to remove extra return statement.
->
+> This is dead code since 3.15. If there is no plan to use it
+> further, this can be removed forever.
 
 Any comment on this patch ?
 
+>
 > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 > ---
->  drivers/video/fbdev/nvidia/nv_backlight.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/video/fbdev/nvidia/nv_setup.c | 24 ------------------------
+>  1 file changed, 24 deletions(-)
 >
-> diff --git a/drivers/video/fbdev/nvidia/nv_backlight.c b/drivers/video/fbdev/nvidia/nv_backlight.c
-> index e705a78..2ce5352 100644
-> --- a/drivers/video/fbdev/nvidia/nv_backlight.c
-> +++ b/drivers/video/fbdev/nvidia/nv_backlight.c
-> @@ -123,8 +123,6 @@ void nvidia_bl_init(struct nvidia_par *par)
->
->         printk("nvidia: Backlight initialized (%s)\n", name);
->
-> -       return;
-> -
->  error:
->         return;
+> diff --git a/drivers/video/fbdev/nvidia/nv_setup.c b/drivers/video/fbdev/nvidia/nv_setup.c
+> index b17acd2..2fa6866 100644
+> --- a/drivers/video/fbdev/nvidia/nv_setup.c
+> +++ b/drivers/video/fbdev/nvidia/nv_setup.c
+> @@ -119,34 +119,10 @@ u8 NVReadMiscOut(struct nvidia_par *par)
+>  {
+>         return (VGA_RD08(par->PVIO, VGA_MIS_R));
 >  }
+> -#if 0
+> -void NVEnablePalette(struct nvidia_par *par)
+> -{
+> -       volatile u8 tmp;
+> -
+> -       tmp = VGA_RD08(par->PCIO, par->IOBase + 0x0a);
+> -       VGA_WR08(par->PCIO, VGA_ATT_IW, 0x00);
+> -       par->paletteEnabled = 1;
+> -}
+> -void NVDisablePalette(struct nvidia_par *par)
+> -{
+> -       volatile u8 tmp;
+> -
+> -       tmp = VGA_RD08(par->PCIO, par->IOBase + 0x0a);
+> -       VGA_WR08(par->PCIO, VGA_ATT_IW, 0x20);
+> -       par->paletteEnabled = 0;
+> -}
+> -#endif  /*  0  */
+>  void NVWriteDacMask(struct nvidia_par *par, u8 value)
+>  {
+>         VGA_WR08(par->PDIO, VGA_PEL_MSK, value);
+>  }
+> -#if 0
+> -u8 NVReadDacMask(struct nvidia_par *par)
+> -{
+> -       return (VGA_RD08(par->PDIO, VGA_PEL_MSK));
+> -}
+> -#endif  /*  0  */
+>  void NVWriteDacReadAddr(struct nvidia_par *par, u8 value)
+>  {
+>         VGA_WR08(par->PDIO, VGA_PEL_IR, value);
 > --
 > 1.9.1
 >
