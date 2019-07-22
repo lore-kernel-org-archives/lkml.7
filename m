@@ -6,72 +6,73 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B549C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A3C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D6220665
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0422120665
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfGVM0H (ORCPT
+        id S1729210AbfGVM0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:26:07 -0400
-Received: from relay.sw.ru ([185.231.240.75]:41638 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfGVM0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:26:07 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hpXOG-0001lV-Ct; Mon, 22 Jul 2019 15:26:04 +0300
-Subject: Re: [PATCH] [v3] page flags: prioritize kasan bits over last-cpuid
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <20190722115520.3743282-1-arnd@arndb.de>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <40fa8d23-e53e-48c3-a2d9-1d1f8ecee0c1@virtuozzo.com>
-Date:   Mon, 22 Jul 2019 15:26:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 08:26:21 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43692 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfGVM0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:26:21 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 3A3328034D; Mon, 22 Jul 2019 14:26:08 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 14:26:17 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, jacek.anaszewski@gmail.com,
+        dmurphy@ti.com, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v2] leds: apu: fix error message on probing failure
+Message-ID: <20190722122617.GB12069@amd>
+References: <f54bb3f1-2699-1213-f568-b2c529488306@gmail.com>
+ <1563797331-20993-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20190722115520.3743282-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Content-Disposition: inline
+In-Reply-To: <1563797331-20993-1-git-send-email-info@metux.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--E39vaYmALEf/7YXx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7/22/19 2:55 PM, Arnd Bergmann wrote:
-> ARM64 randdconfig builds regularly run into a build error, especially
-> when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
-> 
->  #error "KASAN: not enough bits in page flags for tag"
-> 
-> The last-cpuid bits are already contitional on the available space,
-> so the result of the calculation is a bit random on whether they
-> were already left out or not.
-> 
-> Adding the kasan tag bits before last-cpuid makes it much more likely
-> to end up with a successful build here, and should be reliable for
-> randconfig at least, as long as that does not randomize NR_CPUS
-> or NODES_SHIFT but uses the defaults.
-> 
-> In order for the modified check to not trigger in the x86 vdso32 code
-> where all constants are wrong (building with -m32), enclose all the
-> definitions with an #ifdef.
-> 
-> Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
-> Link: https://lore.kernel.org/lkml/20190618095347.3850490-1-arnd@arndb.de/
-> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Mon 2019-07-22 14:08:51, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+>=20
+> The current error message on failed probing tends to be a bit
+> misleading. Fix it to tell exactly that an APU v1 was not found.
+>=20
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--E39vaYmALEf/7YXx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl01q2kACgkQMOfwapXb+vJUCwCfd48hXYfazmUEgv6Kxz5IaWBM
+Fo4AoKbRA/qApIJ5y1VubAMfRN40LgVl
+=7D1n
+-----END PGP SIGNATURE-----
+
+--E39vaYmALEf/7YXx--
