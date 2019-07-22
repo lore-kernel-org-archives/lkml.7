@@ -7,106 +7,203 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68675C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7FAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3825F21901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E342190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817737;
-	bh=IFPxTgv+/38iCLXEQkCFgDfc3sGgooEMWOxpK/+OA+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RDtXXo6ThkDOZzb47lZaqoLycxnplhIEKQoUm4Rixtck5mdhio40RcpzlQ8zTKH4e
-	 jA27JWnYdG/Yrb59Wb01Zpujs/FiCGSuf/dZjjdGETsUU8568QpldP+nyUs4ZXPniT
-	 eQCuIsr46wTc/Z0czphAJZMJckdhCB2HB3/+FrzU=
+	s=default; t=1563817770;
+	bh=dpuT6DAOEvg4WPEHSOsY4+pS2JlF9VtnrxTopY/3FOw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zCetaIUT5Tmp6m4YZNyzTN1supSJpuvGx6waCE+nec6/QPW2YeVnF0YBCmcYuS80C
+	 5vHoqvOwSPtTQyy+xnq1CEdJtQ++EiDuYmWNx51MyFkB2iTc6nsnsVeeIwego9TlIW
+	 4BX7b5lsnCna/xXTLoPeF92exHyEmaXEvmPf9Lpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfGVRs4 (ORCPT
+        id S1729835AbfGVRt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:48:56 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46603 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfGVRsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:48:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so75768956iol.13;
-        Mon, 22 Jul 2019 10:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CxrJ1h1Gj9qffdtw6gn6IuFX9kNT09jtgH+ckcJPTWk=;
-        b=CMvB803DUZ1IsKkDomdkjDfaomZ9p/zcCcdDhde2i62lFZ2wOaFo3u+jKPdWd5L9RV
-         I3i/gpUmVdOWno601py0CS9BzU9/iEctSNQCabBCvQN8EaZ2zzXG8socZDXqQz9lCJ2C
-         /WN2BamGmGw/fwFPljFSaAoLUcGOjNoZsB5BQclura6rRfkA3Pe5NLlmW3YHFpTpEDzE
-         dfbDmFiJKRAWhv2W3MIemXsqofWWAHiD4lBJ5CXvD+KC+OLSa58dIUU2o0eoHk8QTX2D
-         TRRzPpsfmDCvNwxo5vUN0GmbIs+Pi2brPGEdpxBcGQx47o76dTt3Y64xrTh1lKIphq6M
-         Pyfg==
-X-Gm-Message-State: APjAAAVT1CznYUZUUaTfl5TkgeBEwbOLERpj2NhBYV8NYTzAlpfEv3lX
-        cT2ByzxoWRGqDi0vhpgKiA==
-X-Google-Smtp-Source: APXvYqw0FDve9Mw/vkxriVI+KvJ+PlrXuiZ8o2qd7ioxmjQY7NUFYzDL8hVPS4tO0BHR0p8241W5WA==
-X-Received: by 2002:a02:90c8:: with SMTP id c8mr75947688jag.22.1563817734501;
-        Mon, 22 Jul 2019 10:48:54 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id c81sm62071726iof.28.2019.07.22.10.48.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 10:48:54 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 11:48:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] dt-bindings: display: Add max-res property for
- mxsfb
-Message-ID: <20190722174853.GA31795@bogus>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
- <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
+        Mon, 22 Jul 2019 13:49:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbfGVRt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:49:28 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C949121901;
+        Mon, 22 Jul 2019 17:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563817768;
+        bh=dpuT6DAOEvg4WPEHSOsY4+pS2JlF9VtnrxTopY/3FOw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=bmU7+lHFMC6G9n30drUObfx5tIH8zoeLGSUgniKCI29RDnLHESnRNeOVwqq04qpR6
+         07uREYjtp1saf0PEnSkBJ9CoHlSjdAo8Kzb7mV1/Fzi/N08kGDxcheCDEwKvdrkG1V
+         QJiySjx1XtkLhsmi5W6iXjBRpE5l3gxAi4+PbcCI=
+Date:   Mon, 22 Jul 2019 10:49:27 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v3] xen: avoid link error on ARM
+In-Reply-To: <20190722074705.2082153-1-arnd@arndb.de>
+Message-ID: <alpine.DEB.2.21.1907221041420.31177@sstabellini-ThinkPad-T480s>
+References: <20190722074705.2082153-1-arnd@arndb.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 04:32:13PM +0300, Robert Chiras wrote:
-> Add new optional property 'max-res', to limit the maximum supported
-> resolution by the MXSFB_DRM driver.
-
-Bindings are for h/w description, not driver config.
-
+On Mon, 22 Jul 2019, Arnd Bergmann wrote:
+> Building the privcmd code as a loadable module on ARM, we get
+> a link error due to the private cache management functions:
 > 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> ERROR: "__sync_icache_dcache" [drivers/xen/xen-privcmd.ko] undefined!
+> 
+> Move the code into a new that is always built in when Xen is enabled,
+> as suggested by Juergen Gross and Boris Ostrovsky.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> v2: rename mm.o to xen-builtin.o, make it unconditional
+> v3: move new code into xlate_mmu as suggested by Boris Ostrovsky.
+>     sorry for the long delay since v2, I lost track of this.
+> ---
+>  drivers/xen/privcmd.c   | 35 +++++------------------------------
+>  drivers/xen/xlate_mmu.c | 32 ++++++++++++++++++++++++++++++++
+>  include/xen/xen-ops.h   |  3 +++
+>  3 files changed, 40 insertions(+), 30 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
-> index 472e1ea..55e22ed 100644
-> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
-> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-> @@ -17,6 +17,12 @@ Required properties:
->  Required sub-nodes:
->    - port: The connection to an encoder chip.
+> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> index 2f5ce7230a43..c6070e70dd73 100644
+> --- a/drivers/xen/privcmd.c
+> +++ b/drivers/xen/privcmd.c
+> @@ -724,25 +724,6 @@ static long privcmd_ioctl_restrict(struct file *file, void __user *udata)
+>  	return 0;
+>  }
 >  
-> +Optional properties:
-> +- max-res:	an array with a maximum of two integers, representing the
-> +		maximum supported resolution, in the form of
-> +		<maxX>, <maxY>; if one of the item is <0>, the default
-> +		driver-defined maximum resolution for that axis is used
+> -struct remap_pfn {
+> -	struct mm_struct *mm;
+> -	struct page **pages;
+> -	pgprot_t prot;
+> -	unsigned long i;
+> -};
+> -
+> -static int remap_pfn_fn(pte_t *ptep, unsigned long addr, void *data)
+> -{
+> -	struct remap_pfn *r = data;
+> -	struct page *page = r->pages[r->i];
+> -	pte_t pte = pte_mkspecial(pfn_pte(page_to_pfn(page), r->prot));
+> -
+> -	set_pte_at(r->mm, addr, ptep, pte);
+> -	r->i++;
+> -
+> -	return 0;
+> -}
+> -
+>  static long privcmd_ioctl_mmap_resource(struct file *file, void __user *udata)
+>  {
+>  	struct privcmd_data *data = file->private_data;
+> @@ -774,7 +755,8 @@ static long privcmd_ioctl_mmap_resource(struct file *file, void __user *udata)
+>  		goto out;
+>  	}
+>  
+> -	if (xen_feature(XENFEAT_auto_translated_physmap)) {
+> +	if (IS_ENABLED(CONFIG_XEN_AUTO_XLATE) &&
+> +	    xen_feature(XENFEAT_auto_translated_physmap)) {
 
-I suppose what you are after is bandwidth limits? IIRC, there's already 
-some bindings expressing such limits. Also, wouldn't you need to account 
-for bpp and using the 2nd plane (IIRC that there is one).
+The patch looks good. I tested it and works as intended. Instead of
+adding the additional IS_ENABLED check, I would have gone with providing
+an empty implementation of xen_remap_vma_range as a static inline
+function, if CONFIG_XEN_AUTO_XLATE is not enabled.
 
-Rob
+Either way:
+
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+
+
+>  		unsigned int nr = DIV_ROUND_UP(kdata.num, XEN_PFN_PER_PAGE);
+>  		struct page **pages;
+>  		unsigned int i;
+> @@ -808,16 +790,9 @@ static long privcmd_ioctl_mmap_resource(struct file *file, void __user *udata)
+>  	if (rc)
+>  		goto out;
+>  
+> -	if (xen_feature(XENFEAT_auto_translated_physmap)) {
+> -		struct remap_pfn r = {
+> -			.mm = vma->vm_mm,
+> -			.pages = vma->vm_private_data,
+> -			.prot = vma->vm_page_prot,
+> -		};
+> -
+> -		rc = apply_to_page_range(r.mm, kdata.addr,
+> -					 kdata.num << PAGE_SHIFT,
+> -					 remap_pfn_fn, &r);
+> +	if (IS_ENABLED(CONFIG_XEN_AUTO_XLATE) &&
+> +	    xen_feature(XENFEAT_auto_translated_physmap)) {
+> +		rc = xen_remap_vma_range(vma, kdata.addr, kdata.num << PAGE_SHIFT);
+>  	} else {
+>  		unsigned int domid =
+>  			(xdata.flags & XENMEM_rsrc_acq_caller_owned) ?
+> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> index ba883a80b3c0..7b1077f0abcb 100644
+> --- a/drivers/xen/xlate_mmu.c
+> +++ b/drivers/xen/xlate_mmu.c
+> @@ -262,3 +262,35 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(xen_xlate_map_ballooned_pages);
+> +
+> +struct remap_pfn {
+> +	struct mm_struct *mm;
+> +	struct page **pages;
+> +	pgprot_t prot;
+> +	unsigned long i;
+> +};
+> +
+> +static int remap_pfn_fn(pte_t *ptep, unsigned long addr, void *data)
+> +{
+> +	struct remap_pfn *r = data;
+> +	struct page *page = r->pages[r->i];
+> +	pte_t pte = pte_mkspecial(pfn_pte(page_to_pfn(page), r->prot));
+> +
+> +	set_pte_at(r->mm, addr, ptep, pte);
+> +	r->i++;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Used by the privcmd module, but has to be built-in on ARM */
+> +int xen_remap_vma_range(struct vm_area_struct *vma, unsigned long addr, unsigned long len)
+> +{
+> +	struct remap_pfn r = {
+> +		.mm = vma->vm_mm,
+> +		.pages = vma->vm_private_data,
+> +		.prot = vma->vm_page_prot,
+> +	};
+> +
+> +	return apply_to_page_range(vma->vm_mm, addr, len, remap_pfn_fn, &r);
+> +}
+> +EXPORT_SYMBOL_GPL(xen_remap_vma_range);
+> diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
+> index 4969817124a8..98b30c1613b2 100644
+> --- a/include/xen/xen-ops.h
+> +++ b/include/xen/xen-ops.h
+> @@ -109,6 +109,9 @@ static inline int xen_xlate_unmap_gfn_range(struct vm_area_struct *vma,
+>  }
+>  #endif
+>  
+> +int xen_remap_vma_range(struct vm_area_struct *vma, unsigned long addr,
+> +			unsigned long len);
+> +
+>  /*
+>   * xen_remap_domain_gfn_array() - map an array of foreign frames by gfn
+>   * @vma:     VMA to map the pages into
+> -- 
+> 2.20.0
+> 
