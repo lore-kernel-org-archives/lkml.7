@@ -2,142 +2,129 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE6C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABFCC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E42218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F9720449
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG/d5ZL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfGVLz3 (ORCPT
+        id S1730083AbfGVL4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:55:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:46629 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730062AbfGVLz2 (ORCPT
+        Mon, 22 Jul 2019 07:56:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44788 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727728AbfGVL4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:55:28 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MSbov-1i0IYV27p3-00T06j; Mon, 22 Jul 2019 13:55:22 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] page flags: prioritize kasan bits over last-cpuid
-Date:   Mon, 22 Jul 2019 13:55:13 +0200
-Message-Id: <20190722115520.3743282-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:HYCKKaWem6pMuWADqfMV+oLPSrN4UO4x5g8SpZTmnBVDkynf91r
- u4QKrrDHUt8/L0iJAYkC0sRQIH8sGZT1eJYIG0RPerjoOSnjqfL1TguSBpVTT8B9g4uHjy2
- ZA7aKQ0OaZsIg/+/qG90Abp81/nRdkOh+m8yzTAL5In48TozJn5YF/lF8b78mymIdIBLg76
- s1Hfb6QgTM1V/YP9cUn6w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vBG3mOLaeAU=:guUWUZc8D6eSdeLn+5NxyV
- 1FMBdMbh3gfxEpkKl3SogitvEh4ZH7K7U4/jUzUNa/++1/ahkInucQ4Wp76voSBRSmB8m2vNS
- L2gNOH5AwqAfUaCeOXgMOqAt0L6Ntuf/8hgo6yk9Hm453wrU6n+Pm+0KV/G+A1WIh2Xy5jmGf
- R3rgQgHvnEaY1ohRQjKuZCSUjtUc2LY+9JLdN0vISYYZNRGV755z01ENjHpJVM4xt7q+rNxp6
- y+3rts1GL0ouI3sqefSAowCCzvoTch3Y1gRiLlME//e5bhN0JKGVdClvHm/9E9BL80DpB83WC
- iPNxNapVXGRh2uHmpbnOIYW7ZGrdyl6t+0blZdiGIUWPP1H8/FyH8JoIvIe2Jmd8eNfOkCf5E
- S5tMStUvUkq3wtjBtRDONd6duaWXY8FlRO2Qv7LKqCumTzTGdYpoQZB2IN2vxrCgCg46FgSVF
- DSzonEV7wj7LJPopGNJ2J6mJlGnmd3zPZ50rjqjEV15LS+mC02VPFuGgZN7kMCgcfGKeHwR6h
- tIq+LnCkSJc8WHXAIu4MEDfx3H9QP+PdGhMBlu99bqLHDmgI/X/l2e1tuzSs3rtoVR8SMTrXw
- KKx+rC3bRbg9NrHq6BufmAM8d0T2HHOvwja85N+EEYRaV5Ts671eu8BnXKzBtu2pQH6VLxhdh
- h0iiZ/LuZBX7xI2Uk8kJrumpV239WjEPOr088W+bx2TwIuDtPQH1oEWyN17dRXFyYKq5a9iwd
- D/d4aQQNRDHKRk3la1/JZMErAPiRinswvmESMA==
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 22 Jul 2019 07:56:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p17so39075688wrf.11;
+        Mon, 22 Jul 2019 04:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=wYE/nhc4N92v6LXkAKkrTf5th+f3+Wju4vNytZnYrvI=;
+        b=eG/d5ZL9OmuTgooJTT+pydFaonxG+a382DSwnK4ARBiEKzpqc8uJp+Gt+clbJ+3Mb2
+         rtwAe3RAKfVf8UY8pZiISeKE9jslkDzt/oWJEbrmVtZoYePty2BMn89iOBFdtRHsyP20
+         Vf3shxoMhjh4ylWhkCKHQUmbIqLXivUhGtVEdRhtMRnhbHpoqpMaXLGvVb3xl1eKIFUl
+         NozVw7BjCzzLeHEMv9a8qdcoIMaISJLrMD3V/mXdbLMLeKAlVQcojiBflUjp8Ydc8wxQ
+         AboiJFtQ+Q6vG42RAt4p15H0Ju1eLnCFGb7k/LwBMmWyAg7NvuoJI2eS3o/1zkSIGQXA
+         dfPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=wYE/nhc4N92v6LXkAKkrTf5th+f3+Wju4vNytZnYrvI=;
+        b=o+E+tKRSYP+UC1JhMwcRTr2pZiiP3Bl+zYaLEPtIsV4pic5K2OWyX48RVm8QiYEkl5
+         cV3zGzwzgfpsp9PzF2vGIzepfLU/6Q2THOOk+uLG9ZGQCjvu9GQLzZ2d1X+05qvKqcmv
+         VmrOnYl9lAspRISlB+mcMC3qo81TkkUK/kBnz8oUtxgTEbQIAknPMYW3ZBesznMRNA/i
+         oqGlg6Wwl8lcBPy2bU0tC+4zFb8ajySwOLtKJokf4tSpTAV/Wq6exQNMJDPvJ6fwhwIF
+         xsjno0T0JF6uBCKKInRgwoJ5+Hua66qN/BuEhtZpGWYM6hOWLkNK8xF6hcDm22A8lPk+
+         vQsA==
+X-Gm-Message-State: APjAAAUcE/jzgGE6YqspEjELFRdAne+wBS9SUv7+HAccv/etcLINQb6A
+        TmQcxr5lT1QLNew5MpmRU1vQocb1Ag4=
+X-Google-Smtp-Source: APXvYqwcxM/LHAt08mGwsS9gTr/2RF7hUy13btsugqaeyPE/Sy+8S6Q0u0uu2Xa/F5Ka/uN8VO16LQ==
+X-Received: by 2002:adf:f68b:: with SMTP id v11mr10169330wrp.116.1563796595786;
+        Mon, 22 Jul 2019 04:56:35 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id m24sm24096366wmi.39.2019.07.22.04.56.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 04:56:35 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: [PATCH] Revert "kvm: x86: Use task structs fpu field for user"
+Date:   Mon, 22 Jul 2019 13:56:34 +0200
+Message-Id: <1563796594-25317-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM64 randdconfig builds regularly run into a build error, especially
-when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
+This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
+("kvm: x86: Use task structs fpu field for user", 2018-11-06).
+The commit is broken and causes QEMU's FPU state to be destroyed
+when KVM_RUN is preempted.
 
- #error "KASAN: not enough bits in page flags for tag"
-
-The last-cpuid bits are already contitional on the available space,
-so the result of the calculation is a bit random on whether they
-were already left out or not.
-
-Adding the kasan tag bits before last-cpuid makes it much more likely
-to end up with a successful build here, and should be reliable for
-randconfig at least, as long as that does not randomize NR_CPUS
-or NODES_SHIFT but uses the defaults.
-
-In order for the modified check to not trigger in the x86 vdso32 code
-where all constants are wrong (building with -m32), enclose all the
-definitions with an #ifdef.
-
-Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
-Link: https://lore.kernel.org/lkml/20190618095347.3850490-1-arnd@arndb.de/
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
-v3: rework the #error message to make more sense
-v2: fix a build regression with vdso32
----
- include/linux/page-flags-layout.h | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 7 ++++---
+ arch/x86/kvm/x86.c              | 4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
-index 1dda31825ec4..71283739ffd2 100644
---- a/include/linux/page-flags-layout.h
-+++ b/include/linux/page-flags-layout.h
-@@ -32,6 +32,7 @@
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0cc5b611a113..b2f1ffb937af 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -607,15 +607,16 @@ struct kvm_vcpu_arch {
  
- #endif /* CONFIG_SPARSEMEM */
+ 	/*
+ 	 * QEMU userspace and the guest each have their own FPU state.
+-	 * In vcpu_run, we switch between the user, maintained in the
+-	 * task_struct struct, and guest FPU contexts. While running a VCPU,
+-	 * the VCPU thread will have the guest FPU context.
++	 * In vcpu_run, we switch between the user and guest FPU contexts.
++	 * While running a VCPU, the VCPU thread will have the guest FPU
++	 * context.
+ 	 *
+ 	 * Note that while the PKRU state lives inside the fpu registers,
+ 	 * it is switched out separately at VMENTER and VMEXIT time. The
+ 	 * "guest_fpu" state here contains the guest FPU context, with the
+ 	 * host PRKU bits.
+ 	 */
++	struct fpu user_fpu;
+ 	struct fpu *guest_fpu;
  
-+#ifndef BUILD_VDSO32_64
- /*
-  * page->flags layout:
-  *
-@@ -76,20 +77,22 @@
- #define LAST_CPUPID_SHIFT 0
- #endif
+ 	u64 xcr0;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 58305cf81182..cf2afdf8facf 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8270,7 +8270,7 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	fpregs_lock();
  
--#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT <= BITS_PER_LONG - NR_PAGEFLAGS
-+#ifdef CONFIG_KASAN_SW_TAGS
-+#define KASAN_TAG_WIDTH 8
-+#else
-+#define KASAN_TAG_WIDTH 0
-+#endif
-+
-+#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT+KASAN_TAG_WIDTH \
-+	<= BITS_PER_LONG - NR_PAGEFLAGS
- #define LAST_CPUPID_WIDTH LAST_CPUPID_SHIFT
- #else
- #define LAST_CPUPID_WIDTH 0
- #endif
+-	copy_fpregs_to_fpstate(&current->thread.fpu);
++	copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
+ 	/* PKRU is separately restored in kvm_x86_ops->run.  */
+ 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+ 				~XFEATURE_MASK_PKRU);
+@@ -8287,7 +8287,7 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+ 	fpregs_lock();
  
--#ifdef CONFIG_KASAN_SW_TAGS
--#define KASAN_TAG_WIDTH 8
- #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
- 	> BITS_PER_LONG - NR_PAGEFLAGS
--#error "KASAN: not enough bits in page flags for tag"
--#endif
--#else
--#define KASAN_TAG_WIDTH 0
-+#error "Not enough bits in page flags"
- #endif
+ 	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+-	copy_kernel_to_fpregs(&current->thread.fpu.state);
++	copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
  
- /*
-@@ -104,4 +107,5 @@
- #define LAST_CPUPID_NOT_IN_PAGE_FLAGS
- #endif
- 
-+#endif
- #endif /* _LINUX_PAGE_FLAGS_LAYOUT */
+ 	fpregs_mark_activate();
+ 	fpregs_unlock();
 -- 
-2.20.0
+1.8.3.1
 
