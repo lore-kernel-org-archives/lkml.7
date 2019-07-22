@@ -8,68 +8,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5746BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081A0C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6C221951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAC621951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kjc7Z7Lb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnoDBrth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732936AbfGVVsu (ORCPT
+        id S1732913AbfGVVsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:48:50 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38842 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732907AbfGVVsr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jul 2019 17:48:47 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so7147103edo.5;
-        Mon, 22 Jul 2019 14:48:46 -0700 (PDT)
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34446 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730274AbfGVVsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:48:43 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so7115350edb.1;
+        Mon, 22 Jul 2019 14:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=inZa3TVmWFkwKROJnwjdOzwsfiSlRUzlERV4AMAiDbU=;
-        b=Kjc7Z7LbkyZQoSYGIqGObI6lmtBjBt3vDFoIHBE3IjlpFyFMt7itVoEIPg7EzqEBkl
-         2r9oOlFGi1mlcnyOXAP44kNxY2aHsO6VkgNWB1zaHyHoHMt4UiG/7yD/gDv3uLi1Rpg1
-         8rF7bLnZ+D/TXDBAokXCP38dEDpTOa98eOOt7DHgmu63o1n23PAqRxElh0dOoRa/giWn
-         p75TAJt6Qs5SIaNDwPoHcBJ7mcP1ZwyHnUWPqVVNY6B9zzsbqIN6LDsKpBWLnhL+MnR+
-         PNE7pLw2VZUHOTfsDFcuXB8wm3Tma+QmNe15fuTV3co19jvD8JDyHzlAbXE4V0O5VMO7
-         Dufg==
+        bh=ZbTATclhVfBlGWFDB5efjA9W9vf6/Py4hi06i3erHPU=;
+        b=AnoDBrthgsI3o8DGAH7++2JDKpO82XDtupaff6mpz+ogj/++m9LBhYgjzm5kZJkgeJ
+         NGtdFGN3lGgpql95xFsgGsh0Wom2dUDyrglnt4RNWBFy7aNU5veBR7Vbpscp67hceA4i
+         N42ClwCCBIvusI0evmnIdaWNN5TOIWZC+f1PuT8JonpTCccV8zWWC403k9ixwjL1STCf
+         wAq+EK/I3Us34HitRF6oj1Yf0eRD0V/n4K1mD5kRZEbw5Xrc4pSaPcmkSZPY0yzHqWpa
+         lHcVIbPb4ZRVLJnbbFQER1Jgt9sTFsbwLhbpiKlk+t0wmhPKJbTaUjkkKC21dIpfWLEJ
+         3lyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=inZa3TVmWFkwKROJnwjdOzwsfiSlRUzlERV4AMAiDbU=;
-        b=BhYyz3JgA6Z8bI0/Ng0DMjxkqAW2XogEMNaL9CgKu3epKeeL/wQ0OxFlF6SIF+VJdX
-         l858D9Wb39Rn7BIm0EN5rj0aHWFYEMNWuZFGHvt4E75JCddDNyayjMFDTKSfm/r4aDIG
-         OtA0YpdAH0bjTaO7jGFpnBTuKybGWzm7nX2Zw9UwnCPzW48nI1L/Bt/M8F3X+6ayttnX
-         BsvWfb2tWczLgS41kmZolcj7ARCYZ5qHG3VrOqfU3Lsgqg9F6wtHHATsvE7Z378SkX+m
-         Iv5NtpURhPuaDpatOtpS9L2bnPI5MLrfpHQjMBHHDRWqewRm00O+xntYpblMcxzQuzdV
-         BTzA==
-X-Gm-Message-State: APjAAAXc+oXSlxsRjVO3rVHvsdUGh387tsEyLW5EYQ8ZgDF5H0lMV6dy
-        8cvGsu3GHkCsP1wCLfwfCxQ=
-X-Google-Smtp-Source: APXvYqwaf+94HctotgfRZtaDLULEesihLhjER6anVGZWKKut2Gqj7GVw1S5B6Pok/SYDL+TqT8txlw==
-X-Received: by 2002:a17:906:340e:: with SMTP id c14mr56112743ejb.170.1563832125374;
-        Mon, 22 Jul 2019 14:48:45 -0700 (PDT)
+        bh=ZbTATclhVfBlGWFDB5efjA9W9vf6/Py4hi06i3erHPU=;
+        b=PEXk9YTtgtDvcZZsnv6jyEUauXg94WcttO8V4GrNzTPh/V7RYoJ2D5vgNNci4Y/NZx
+         pd2KLB5plvy9WH2F24A4ZcR/4o3/GG653tG9i6DnHtztNNMEFkO1B5LMWyu4rIVm8RR4
+         Z5m2x1TNl5FWDBnUzG8W1PhVaPFZSy3cjVnC1RttqxPdtvX+hBaOtcYuECAuosoZFhrk
+         IOaRd85r321dZ47f1OdG5evJspjlVhflo8i+3HpqhkD9dfx2Q/UbatM5qMy2l/lAY6Ef
+         i0mViu6MeN/NZeSVB3e5+NATylSkA7EPfOLb3nWsS4GAkhCnLtT7SbYpRIKCaDQyDwej
+         F8Iw==
+X-Gm-Message-State: APjAAAWfnnXbPsBo41/qFad6kBrPM5iKH8hDwiY5k3Ax1GJgGJA3f9XW
+        +x0ySQUxdM+jgeMPdBwK1Gc=
+X-Google-Smtp-Source: APXvYqwPv/bMIzABFLEfvw6u9o5ZuTRHhGYUL6UWFvdaMSvHKjs0ttQnmpA18+gun2JCC71272dLlw==
+X-Received: by 2002:a17:906:ad86:: with SMTP id la6mr52067941ejb.43.1563832121287;
+        Mon, 22 Jul 2019 14:48:41 -0700 (PDT)
 Received: from localhost.localdomain ([65.154.66.198])
-        by smtp.gmail.com with ESMTPSA id d4sm11315617edb.4.2019.07.22.14.48.43
+        by smtp.gmail.com with ESMTPSA id d4sm11315617edb.4.2019.07.22.14.48.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 14:48:44 -0700 (PDT)
+        Mon, 22 Jul 2019 14:48:40 -0700 (PDT)
 From:   stillcompiling@gmail.com
 To:     Joe Perches <joe@perches.com>, Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-input@vger.kernel.org (open list:HID CORE LAYER),
         linux-kernel@vger.kernel.org (open list)
 Cc:     Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v3 3/3] HID: core: only warn once of oversize hid report
-Date:   Mon, 22 Jul 2019 15:48:27 -0600
-Message-Id: <20190722214827.29257-3-stillcompiling@gmail.com>
+Subject: [PATCH v3 1/3] HID: core: reformat and reduce hid_printk macros
+Date:   Mon, 22 Jul 2019 15:48:25 -0600
+Message-Id: <20190722214827.29257-1-stillcompiling@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722214827.29257-1-stillcompiling@gmail.com>
+In-Reply-To: <20190722163642.10417-2-stillcompiling@gmail.com>
 References: <20190722163642.10417-2-stillcompiling@gmail.com>
- <20190722214827.29257-1-stillcompiling@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,31 +78,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joshua Clayton <stillcompiling@gmail.com>
 
-On HP spectre x360 convertible the message:
-hid-sensor-hub 001F:8087:0AC2.0002: hid_field_extract() called with n (192) > 32! (kworker/1:2)
-is continually printed many times per second, crowding out all else
-Protect dmesg by printing the warning only one time.
+Reformat hid_printk macros to use standard __VA_ARGS__ syntax
+Remove hid_printk(), hid_emerg(), hid_crit(), and hid_alert().
+Per Joe Perches these unused and likely never to be used.
 
 Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
 ---
- drivers/hid/hid-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/hid.h | 32 ++++++++++++--------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 210b81a56e1a..3eaee2c37931 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1311,8 +1311,8 @@ u32 hid_field_extract(const struct hid_device *hid, u8 *report,
- 			unsigned offset, unsigned n)
- {
- 	if (n > 32) {
--		hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
--			 n, current->comm);
-+		hid_warn_once(hid, "%s() called with n (%d) > 32! (%s)\n",
-+			      __func__, n, current->comm);
- 		n = 32;
- 	}
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index d770ab1a0479..e6c7efdb0458 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -1154,29 +1154,21 @@ int hid_pidff_init(struct hid_device *hid);
+ #define hid_pidff_init NULL
+ #endif
  
+-#define dbg_hid(format, arg...)						\
++#define dbg_hid(fmt, ...)						\
+ do {									\
+ 	if (hid_debug)							\
+-		printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);	\
++		printk(KERN_DEBUG "%s: " fmt, __FILE__, ##__VA_ARGS__);	\
+ } while (0)
+ 
+-#define hid_printk(level, hid, fmt, arg...)		\
+-	dev_printk(level, &(hid)->dev, fmt, ##arg)
+-#define hid_emerg(hid, fmt, arg...)			\
+-	dev_emerg(&(hid)->dev, fmt, ##arg)
+-#define hid_crit(hid, fmt, arg...)			\
+-	dev_crit(&(hid)->dev, fmt, ##arg)
+-#define hid_alert(hid, fmt, arg...)			\
+-	dev_alert(&(hid)->dev, fmt, ##arg)
+-#define hid_err(hid, fmt, arg...)			\
+-	dev_err(&(hid)->dev, fmt, ##arg)
+-#define hid_notice(hid, fmt, arg...)			\
+-	dev_notice(&(hid)->dev, fmt, ##arg)
+-#define hid_warn(hid, fmt, arg...)			\
+-	dev_warn(&(hid)->dev, fmt, ##arg)
+-#define hid_info(hid, fmt, arg...)			\
+-	dev_info(&(hid)->dev, fmt, ##arg)
+-#define hid_dbg(hid, fmt, arg...)			\
+-	dev_dbg(&(hid)->dev, fmt, ##arg)
++#define hid_err(hid, fmt, ...)				\
++	dev_err(&(hid)->dev, fmt, ##__VA_ARGS__)
++#define hid_notice(hid, fmt, ...)			\
++	dev_notice(&(hid)->dev, fmt, ##__VA_ARGS__)
++#define hid_warn(hid, fmt, ...)				\
++	dev_warn(&(hid)->dev, fmt, ##__VA_ARGS__)
++#define hid_info(hid, fmt, ...)				\
++	dev_info(&(hid)->dev, fmt, ##__VA_ARGS__)
++#define hid_dbg(hid, fmt, ...)				\
++	dev_dbg(&(hid)->dev, fmt, ##__VA_ARGS__)
+ 
+ #endif
 -- 
 2.21.0
 
