@@ -2,127 +2,88 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6959EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2954DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFD1218BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A0C218BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jTBi+NPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfGVR7E (ORCPT
+        id S1731117AbfGVR7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:59:04 -0400
-Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:57090 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbfGVR7E (ORCPT
+        Mon, 22 Jul 2019 13:59:43 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43026 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfGVR7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:59:04 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9AE27125C;
-        Mon, 22 Jul 2019 17:59:03 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: drug03_31cab706afb19
-X-Filterd-Recvd-Size: 4309
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 22 Jul 2019 17:59:02 +0000 (UTC)
-Message-ID: <15f2be3cde69321f4f3a48d60645b303d66a600b.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: Added warnings in favor of strscpy().
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>, Stephen Kitt <steve@sk2.org>
-Cc:     Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com, corbet@lwn.net,
-        linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Date:   Mon, 22 Jul 2019 10:59:00 -0700
-In-Reply-To: <201907221047.4895D35B30@keescook>
-References: <1561722948-28289-1-git-send-email-nitin.r.gote@intel.com>
-         <20190629181537.7d524f7d@sk2.org> <201907021024.D1C8E7B2D@keescook>
-         <20190706144204.15652de7@heffalump.sk2.org>
-         <201907221047.4895D35B30@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 22 Jul 2019 13:59:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so40318639wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 10:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ycadGQDE4oZyvw12oXYJ4WF1B4/T2UP6dzxNsmJvfxM=;
+        b=jTBi+NPyGucvcpKOawAKTa0RLUGhkfYhXUuvJrCeVHn2mamHggpENuFUQc17rIYjEg
+         fvweoDdId5HjjQHL/BXWLYzpHNAKAAtn3kFtQucL/ebJCC8HFda9utGu93YOT70asHpa
+         xAqg7mmUBFNQCrDHfUh+SBx959Ytn4b2EpVPxmL5qoyXuSiFwbGm/G0IFVT63mKFAAXR
+         Bm8WA3GII0DdIlLrXQeFGhfw0h3kYbaR9+9FBdUC/RPxDqZvjmkFpd3seNxTBj4ufgwo
+         xKVj6U8ora6iIsfETSBbNdpl5NTtPwHKWbbPSDcSJNVJ+OXpOzk3vcksTEcaJRRnJg+T
+         5dFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ycadGQDE4oZyvw12oXYJ4WF1B4/T2UP6dzxNsmJvfxM=;
+        b=Aqj20tzDQa3o5oMYrrTUYWw9wUSqlF8RJNallovNaAMDwA7Hg1TYTzi7WJ74olsIUB
+         QKLVToADZ0OLFrL7ifanJwj/9807lmSU+iH1g2BFcl12NrRprkrKSU1le6/+ALfM0BNW
+         AJnml33/x9sttZ8vJwiLaJj5Z78jj2sYeWA0ug0hbTy4mr7IVOACfE4Jcu+drAqbQlh/
+         ikW2WVH+PL1dzrCd2fL9ZZFgIKDbvoMQzTLwRA9tQklQ7CqiKPwaE8Gj/KVzAiQ2E0xQ
+         y7syoPpR+/rXnBUDyJQVuMN1Jn95pon8gcvpfftZuxW4Mit36ztMwSNY4fjrYLla7kdj
+         FUmw==
+X-Gm-Message-State: APjAAAWhE4z7bUzEtQm8nU8vUTG7271tLLzMCnTVqAg4/cs5/qLqMQjJ
+        b41vLTPuVplkB1+ORqT1J3QHEgOAmzsU7+lNFlETAdK2Aso=
+X-Google-Smtp-Source: APXvYqwlRd47wiagLFbiUTQcD8iVytL4bqRXE0cbaMtP/4phsmBBnlC1SVVbRDBhCh2JWkOpN6VJUQ4COpQROg2kSG4=
+X-Received: by 2002:a5d:63c8:: with SMTP id c8mr35059124wrw.21.1563818380982;
+ Mon, 22 Jul 2019 10:59:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <94b6bb5f3ba41fe87bf5207e08f75e8dfe17ef18.1563599043.git.410860423@qq.com>
+In-Reply-To: <94b6bb5f3ba41fe87bf5207e08f75e8dfe17ef18.1563599043.git.410860423@qq.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 22 Jul 2019 10:59:28 -0700
+Message-ID: <CALAqxLUL-p6eF5tK3SnYa0RbCHLg92uQ-Z9T8U0QGnNbpnJG5g@mail.gmail.com>
+Subject: Re: [alsa-devel][PATCH] Signed-off-by: lsh <410860423@qq.com>
+To:     lsh <linsheng_111@163.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, 42304622@qq.com,
+        lsh <410860423@qq.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-22 at 10:50 -0700, Kees Cook wrote:
-> On Sat, Jul 06, 2019 at 02:42:04PM +0200, Stephen Kitt wrote:
-> > On Tue, 2 Jul 2019 10:25:04 -0700, Kees Cook <keescook@chromium.org> wrote:
-> > > On Sat, Jun 29, 2019 at 06:15:37PM +0200, Stephen Kitt wrote:
-> > > > On Fri, 28 Jun 2019 17:25:48 +0530, Nitin Gote <nitin.r.gote@intel.com>
-> > > > wrote:  
-> > > > > 1. Deprecate strcpy() in favor of strscpy().  
-> > > > 
-> > > > This isn’t a comment “against” this patch, but something I’ve been
-> > > > wondering recently and which raises a question about how to handle
-> > > > strcpy’s deprecation in particular. There is still one scenario where
-> > > > strcpy is useful: when GCC replaces it with its builtin, inline version...
-> > > > 
-> > > > Would it be worth introducing a macro for strcpy-from-constant-string,
-> > > > which would check that GCC’s builtin is being used (when building with
-> > > > GCC), and fall back to strscpy otherwise?  
-> > > 
-> > > How would you suggest it operate? A separate API, or something like the
-> > > existing overloaded strcpy() macros in string.h?
-> > 
-> > The latter; in my mind the point is to simplify the thought process for
-> > developers, so strscpy should be the “obvious” choice in all cases, even when
-> > dealing with constant strings in hot paths. Something like
-> > 
-> > __FORTIFY_INLINE ssize_t strscpy(char *dest, const char *src, size_t count)
-> > {
-> > 	size_t dest_size = __builtin_object_size(dest, 0);
-> > 	size_t src_size = __builtin_object_size(src, 0);
-> > 	if (__builtin_constant_p(count) &&
-> > 	    __builtin_constant_p(src_size) &&
-> > 	    __builtin_constant_p(dest_size) &&
-> > 	    src_size <= count &&
-> > 	    src_size <= dest_size &&
-> > 	    src[src_size - 1] == '\0') {
-> > 		strcpy(dest, src);
-> > 		return src_size - 1;
-> > 	} else {
-> > 		return __strscpy(dest, src, count);
-> > 	}
-> > }
-> > 
-> > with the current strscpy renamed to __strscpy. I imagine it’s not necessary
-> > to tie this to FORTIFY — __OPTIMIZE__ should be sufficient, shouldn’t it?
-> > Although building on top of the fortified strcpy is reassuring, and I might
-> > be missing something. I’m also not sure how to deal with the backing strscpy:
-> > weak symbol, or something else... At least there aren’t (yet) any
-> > arch-specific implementations of strscpy to deal with, but obviously they’d
-> > still need to be supportable.
-> > 
-> > In my tests, this all gets optimised away, and we end up with code such as
-> > 
-> > 	strscpy(raead.type, "aead", sizeof(raead.type));
-> > 
-> > being compiled down to
-> > 
-> > 	movl    $1684104545, 4(%rsp)
-> > 
-> > on x86-64, and non-constant code being compiled down to a direct __strscpy
-> > call.
-> 
-> Thanks for the details! Yeah, that seems nice. I wonder if there is a
-> sensible way to combine these also with the stracpy*() proposal[1], so the
-> call in your example above could just be:
-> 
-> 	stracpy(raead.type, "aead");
-> 
-> (It seems both proposals together would have the correct result...)
-> 
-> [1] https://lkml.kernel.org/r/201907221031.8B87A9DE@keescook
+On Fri, Jul 19, 2019 at 11:35 PM lsh <linsheng_111@163.com> wrote:
+>
+> From: lsh <410860423@qq.com>
+>
+> Modification of leap seconds from 58 59 59 00 to 58 59 00 00
 
-Easy enough to do.
+In the future, on other patches, you should provide a rational for
+*why* you are submitting this change, not what the change does.
 
+As for this patch, it would be a bad change, as this changes the
+established behavior that the repeating 59th second w/ the TIME_OOP
+flag set is the 60th/leap second and would break any apps that care to
+actually watch for the leap second. Your change would cause
+applications that do not care about leapseconds which have timers set
+to the 00:00:00 UTC to fire a second early.
 
+thanks
+-john
