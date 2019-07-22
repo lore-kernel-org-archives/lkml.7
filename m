@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05ACC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0D1C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B35218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B98218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbfGVPwV (ORCPT
+        id S1730375AbfGVPwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:52:21 -0400
-Received: from os.inf.tu-dresden.de ([141.76.48.99]:60568 "EHLO
+        Mon, 22 Jul 2019 11:52:09 -0400
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:60526 "EHLO
         os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730449AbfGVPwQ (ORCPT
+        with ESMTP id S1729377AbfGVPwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:52:16 -0400
+        Mon, 22 Jul 2019 11:52:06 -0400
 Received: from [195.176.96.199] (helo=jupiter)
         by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.92)
-        id 1hpa1N-0008A8-KD; Mon, 22 Jul 2019 17:14:37 +0200
+        id 1hpa1L-00089i-SP; Mon, 22 Jul 2019 17:14:35 +0200
 From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 To:     Moni Shoua <monis@mellanox.com>,
         Doug Ledford <dledford@redhat.com>,
         Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Subject: [PATCH 07/10] Pass the return value of kref_put further
-Date:   Mon, 22 Jul 2019 17:14:23 +0200
-Message-Id: <20190722151426.5266-8-mplaneta@os.inf.tu-dresden.de>
+Subject: [PATCH 04/10] Protect kref_put with the lock
+Date:   Mon, 22 Jul 2019 17:14:20 +0200
+Message-Id: <20190722151426.5266-5-mplaneta@os.inf.tu-dresden.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
 References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
@@ -43,43 +43,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Used in a later patch.
+Need to ensure that kref_put does not run concurrently with the loop
+inside rxe_pool_get_key.
 
 Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 ---
- drivers/infiniband/sw/rxe/rxe_pool.c | 3 ++-
- drivers/infiniband/sw/rxe/rxe_pool.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_pool.c | 18 ++++++++++++++++++
+ drivers/infiniband/sw/rxe/rxe_pool.h |  4 +---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
-index 30a887cf9200..711d7d7f3692 100644
+index efa9bab01e02..30a887cf9200 100644
 --- a/drivers/infiniband/sw/rxe/rxe_pool.c
 +++ b/drivers/infiniband/sw/rxe/rxe_pool.c
-@@ -541,7 +541,7 @@ static void rxe_dummy_release(struct kref *kref)
- {
+@@ -536,3 +536,21 @@ void *rxe_pool_get_key(struct rxe_pool *pool, void *key)
+ 	read_unlock_irqrestore(&pool->pool_lock, flags);
+ 	return node ? elem : NULL;
  }
- 
--void rxe_drop_ref(struct rxe_pool_entry *pelem)
-+int rxe_drop_ref(struct rxe_pool_entry *pelem)
- {
- 	int res;
- 	struct rxe_pool *pool = pelem->pool;
-@@ -553,4 +553,5 @@ void rxe_drop_ref(struct rxe_pool_entry *pelem)
- 	if (res) {
- 		rxe_elem_release(&pelem->ref_cnt);
- 	}
-+	return res;
- }
++
++static void rxe_dummy_release(struct kref *kref)
++{
++}
++
++void rxe_drop_ref(struct rxe_pool_entry *pelem)
++{
++	int res;
++	struct rxe_pool *pool = pelem->pool;
++	unsigned long flags;
++
++	write_lock_irqsave(&pool->pool_lock, flags);
++	res = kref_put(&pelem->ref_cnt, rxe_dummy_release);
++	write_unlock_irqrestore(&pool->pool_lock, flags);
++	if (res) {
++		rxe_elem_release(&pelem->ref_cnt);
++	}
++}
 diff --git a/drivers/infiniband/sw/rxe/rxe_pool.h b/drivers/infiniband/sw/rxe/rxe_pool.h
-index b90cc84c5511..1e3508c74dc0 100644
+index 5c6a9429f541..b90cc84c5511 100644
 --- a/drivers/infiniband/sw/rxe/rxe_pool.h
 +++ b/drivers/infiniband/sw/rxe/rxe_pool.h
-@@ -166,6 +166,6 @@ static inline void rxe_add_ref(struct rxe_pool_entry *pelem) {
+@@ -166,8 +166,6 @@ static inline void rxe_add_ref(struct rxe_pool_entry *pelem) {
  }
  
  /* drop a reference on an object */
--void rxe_drop_ref(struct rxe_pool_entry *pelem);
-+int rxe_drop_ref(struct rxe_pool_entry *pelem);
+-static inline void rxe_drop_ref(struct rxe_pool_entry *pelem) {
+-	kref_put(&pelem->ref_cnt, rxe_elem_release);
+-}
++void rxe_drop_ref(struct rxe_pool_entry *pelem);
  
  #endif /* RXE_POOL_H */
 -- 
