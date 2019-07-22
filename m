@@ -2,157 +2,117 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EA8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D552CC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2120321955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A013C2199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BFaD/7jU"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="rbl7cmey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732449AbfGVVNU (ORCPT
+        id S1732465AbfGVVNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:13:20 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34086 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732125AbfGVVNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:13:20 -0400
-Received: by mail-qk1-f195.google.com with SMTP id t8so29583593qkt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BKxiGWjC+5P401jeWuqAwXoma7yfPGk4/g2Ytyh5U30=;
-        b=BFaD/7jUsYikt25fnCeLunhpd4nXxRG1xIUkQlhVAPFQXJyx/6r2vVBCFl/NMqD8+U
-         pbeanWTIc9BMwg32VoB/9EstVkIA1Quz19bbbkvvpefdgBlJXn01fqZYsfFJ2B8u6umk
-         K+PQDVU84pJTf/VW30aLeOw9iatqrmyi1M7EUzyX2bhFdOPQdmlBf9AehzVOynsPESXe
-         7kvsKl82+LmMohjq+ELusDXm62Z369AQbp87hp0WoRk2eC8qsdvxghIhHcwbTz6XPLPk
-         E1fPPylZLIDB1qiXxnwk7wQCr1VaAq+Nl0jRYC9RB+Q5Sd/U4eZpdjuXVxKCeRnDJ8rT
-         Y85w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BKxiGWjC+5P401jeWuqAwXoma7yfPGk4/g2Ytyh5U30=;
-        b=uNQsRPQcczSK2lqu7d3Ytbm2xZ1cGrHezMlQB1b08lrP1Osi9sSYn32gg8hP7LbIIK
-         iJSFE4+ecrHxAi6CJoBwcsGxmQhGxITJQf4V0V/tkLIuBLnN72uoMjS0ZM9qgaoT6wHb
-         rbOcrz4gIDM7DTVvDdMy8RDhE/tU+MACQJ3QFvjMisBRpDqS/B/IJX2nGw13ePufCHKj
-         ++zdwFYwYr/q6/5pmQoUeke1B+j0j1oDTks/wa3byReJdj7Bd59IoDTd3l5JvknDP7nv
-         TuhYE9yl7SD3GU1xv3FNMryz7r7hRJZO4RN99xIMVhoyd/QRQwFxp0r1AaM8KJtXPgSe
-         jafQ==
-X-Gm-Message-State: APjAAAXMdFgY96DBnNJJFSrtq8PQRXsHFSlZIfelvGq8ywEB/Zu7+Q+i
-        3+ByXMzwdy9g6CPZCDu53bu3HA==
-X-Google-Smtp-Source: APXvYqwsFCj6xytMhGmclxHIaeQskKQrC4psHIw5WW42v731oBjjDbzmgqJHveBylv4SkFw7Rlp47Q==
-X-Received: by 2002:a37:a010:: with SMTP id j16mr48945457qke.152.1563829999256;
-        Mon, 22 Jul 2019 14:13:19 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z1sm19024894qke.122.2019.07.22.14.13.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 14:13:18 -0700 (PDT)
-Message-ID: <1563829996.11067.4.camel@lca.pw>
-Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
-From:   Qian Cai <cai@lca.pw>
-To:     David Miller <davem@davemloft.net>
-Cc:     morbo@google.com, ndesaulniers@google.com, jyknight@google.com,
-        sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        arnd@arndb.de, dhowells@redhat.com, hpa@zytor.com,
-        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, natechancellor@gmail.com,
-        Jakub Jelinek <jakub@redhat.com>
-Date:   Mon, 22 Jul 2019 17:13:16 -0400
-In-Reply-To: <1563572871.11067.2.camel@lca.pw>
-References: <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
-         <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
-         <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
-         <20190718.162928.124906203979938369.davem@davemloft.net>
-         <1563572871.11067.2.camel@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jul 2019 17:13:48 -0400
+Received: from mail-eopbgr710120.outbound.protection.outlook.com ([40.107.71.120]:50394
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728001AbfGVVNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:13:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zy9NhRshzTklmPscFRSgppZTfKFO84dMq+E5REPeUKclZqrTJaGsOG0IIzmpB1C/gOMhfgmHUmOoYshZoZzxmv/zjC5xOVqoT6C2qc/utnzgvXlYfJ6bkqSjSLo2S/AqEHhMmt0TzjrTeBjOc0rczBsqeaMtHxO69MIv1e6Zy0BikmaFXxsmOQXt09TdZ/RxCQ4HGBHkulscHe4TOE8SiE74E94FF+ILVjbeO1bndc2+ej4/dmhGu5hYE7pkMVKuQ1IscSdM3n3dM5OB4YKnCnt5pBUn01UqDcdekjVP8aWQCna/ivA1DSbthUJK2d3yPB0fcBciBUcDn+OftvM6iA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jITQvDSj0IJ24zFNXEy5mooVKxSUqjjEjk0w3wgFpVQ=;
+ b=ED+r/gJj6rZ/6z0I+LctyKWFBnzFLIFL7xVpBwFp/Yttpip0xf9P9lZFWw15hiXFOSh7Hndr2Q62gVBoe2Bqe+mcBwB8Q1Trijj5v+EcVWktFk2wFKAnxuxYqiTUsJKinIae42kkCo+GWOJkJ7Fg313pIoOy95TilLFQPLr2wTmuz0Vw/5tidHZwC+55Sjkd47fQN9h0ynX9fGiFH/Bc7dyzddEL8SKE9P/5nn6c8o1eHjvouR1vlAaSyFFtZ0cTAmOJGbfT4iwvCY3KH4PYKEofXpe0x+JOHBxrDiS0B3UNlEga1F88iHkS/TmQAfEcq/I6agdP+iD1XMeJ9oLAEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jITQvDSj0IJ24zFNXEy5mooVKxSUqjjEjk0w3wgFpVQ=;
+ b=rbl7cmeydhlrTp2e7tien99ioMDaPNIXeaaQLdZL42K2gmvOIsJuxtd+NuEMMAtUDI9cjfnUCDPPK02vwrYQ66Yftq1jqjPcdzlXXNLgcC9E4nNHMMRoMw8yjksR4tJU5m6FEOS/1Y2Dz/zS4UY2CeupsIb5aDUIN3xlyKT+EGs=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1504.namprd22.prod.outlook.com (10.174.170.153) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.11; Mon, 22 Jul 2019 21:13:46 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::49d3:37f8:217:c83]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::49d3:37f8:217:c83%6]) with mapi id 15.20.2094.017; Mon, 22 Jul 2019
+ 21:13:46 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>, "od@zcrc.me" <od@zcrc.me>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 1/2] MIPS: Rename JZRISC to XBURST
+Thread-Topic: [PATCH 1/2] MIPS: Rename JZRISC to XBURST
+Thread-Index: AQHVBSZrV//oDl1AOkCny9Jo631A7qbXmmSA
+Date:   Mon, 22 Jul 2019 21:13:46 +0000
+Message-ID: <MWHPR2201MB12777764E50A96AAA1A5A048C1C40@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190507224357.23778-1-paul@crapouillou.net>
+In-Reply-To: <20190507224357.23778-1-paul@crapouillou.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR11CA0047.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::24) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1b89d3b9-3e90-4292-14bd-08d70ee97bba
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1504;
+x-ms-traffictypediagnostic: MWHPR2201MB1504:
+x-microsoft-antispam-prvs: <MWHPR2201MB1504723B6A904D624C690D14C1C40@MWHPR2201MB1504.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(39850400004)(346002)(376002)(199004)(189003)(8936002)(256004)(3846002)(6116002)(81166006)(2906002)(81156014)(25786009)(44832011)(8676002)(99286004)(68736007)(14454004)(33656002)(386003)(54906003)(486006)(102836004)(76176011)(6506007)(229853002)(7696005)(52116002)(4326008)(71190400001)(26005)(316002)(64756008)(4744005)(66946007)(66446008)(42882007)(52536014)(66476007)(476003)(186003)(11346002)(446003)(66556008)(5660300002)(71200400001)(55016002)(9686003)(6916009)(53936002)(7736002)(305945005)(66066001)(6436002)(6246003)(74316002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1504;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: H/eSNgNIqaNt1jIPygObDZvuZgLR2WI28Vd+HBYwvIkxsdzaNJfbQxHikPPrp/ZHeSEHGxsvCcWBtX7kq5y2qFNaWk/7Z6Fs/VRWUblYP9ubYjA/Zd1u5/XP+oaB8w56NuaCsfWqOnPv1PEkeOENxVhLI7nemMnvyRCOa+/HIsADKcClLqfybcq+wRbbt5BorSOwsj30kg64Y7sp5kDFhHPpwY4gFXExF4KGVCjr3BxSGmobkQEsuXvsjb/vi+rbJ1qQdg3pTR2sktureSD+RQe3Mg6zPQsRXUWfQESxAQbo8CGvlLa2hbU5f1axEBMAzSUGF0fSHVfl1U/VqHqhiEA4Nj5tFZzncujg0+VxCTCR8oaGCtLT/vmHz6oC+mNrM3m3/YkqUpSsAcY/AozP9vKIvVhOjmN6Cw1pQ0EbWsI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b89d3b9-3e90-4292-14bd-08d70ee97bba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 21:13:46.5768
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-19 at 17:47 -0400, Qian Cai wrote:
-> On Thu, 2019-07-18 at 16:29 -0700, David Miller wrote:
-> > From: Qian Cai <cai@lca.pw>
-> > Date: Thu, 18 Jul 2019 19:26:47 -0400
-> > 
-> > >  
-> > >  
-> > > > On Jul 18, 2019, at 5:21 PM, Bill Wendling <morbo@google.com> wrote:
-> > > >  
-> > > > [My previous response was marked as spam...]
-> > > >  
-> > > > Top-of-tree clang says that it's const:
-> > > >  
-> > > > $ gcc a.c -O2 && ./a.out
-> > > > a is a const.
-> > > >  
-> > > > $ clang a.c -O2 && ./a.out
-> > > > a is a const.
-> > > 
-> > >  
-> > >  
-> > > I used clang-7.0.1. So, this is getting worse where both GCC and clang
-> > > will
-> > 
-> > start to suffer the
-> > > same problem.
-> > 
-> > Then rewrite the module parameter macros such that the non-constness
-> > is evident to all compilers regardless of version.
-> > 
-> > That is the place to fix this, otherwise we will just be adding hacks
-> > all over the place rather than in just one spot.
-> 
-> The problem is that when the compiler is compiling be_main.o, it has no
-> knowledge about what is going to happen in load_module().  The compiler can
-> only
-> see that a "const struct kernel_param_ops" "__param_ops_rx_frag_size" at the
-> time with
-> 
-> __param_ops_rx_frag_size.arg = &rx_frag_size
-> 
-> but only in load_module()->parse_args()->parse_one()->param_set_ushort(), it
-> changes "__param_ops_rx_frag_size.arg" which in-turn changes the value
-> of "rx_frag_size".
+Hello,
 
-Even for an obvious case, the compilers still go ahead optimizing a variable as
-a constant. Maybe it is best to revert the commit d66acc39c7ce ("bitops:
-Optimise get_order()") unless some compiler experts could improve the situation.
+Paul Cercueil wrote:
+> The real name of the CPU present in the JZ line of SoCs from Ingenic is
+> XBurst, not JZRISC.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-#include <stdio.h>
+Series applied to mips-next.
 
-int a = 1;
+Thanks,
+    Paul
 
-int main(void)
-{
-        int *p;
-
-        p = &a;
-        *p = 2;
-
-        if (__builtin_constant_p(a))
-                printf("a is a const.\n");
-
-        printf("a = %d\n", a);
-
-        return 0;
-}
-
-# gcc -O2 const.c -o const
-
-# ./const
-a is a const.
-a = 2
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
