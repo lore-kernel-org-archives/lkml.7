@@ -2,168 +2,152 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91106C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D1EC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B99121985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936D52199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R2/O16xw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMDsv5gG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfGVWdp (ORCPT
+        id S1733237AbfGVWeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:33:45 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42269 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfGVWdm (ORCPT
+        Mon, 22 Jul 2019 18:34:20 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46416 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfGVWeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:33:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t132so18327362pgb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 15:33:42 -0700 (PDT)
+        Mon, 22 Jul 2019 18:34:19 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so19731796plz.13;
+        Mon, 22 Jul 2019 15:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WWFTKtpGRlvvtiWS/Mg0wAkpilGgkx7X1cSC4y5EWxE=;
-        b=R2/O16xw6Vk/KNoxUlhUa5Y+bXgLiwKgbdav7p8y4DZGly/uyjCTGTMmALhIz+umS2
-         BzWjpf90ZaYSY/iJRimrYmRKxNKa5lfLyYlUtkqPpeXJE1zQboA2EQf93zE2W+kDjXt5
-         XiLOxoYWuYSBNhATVp5D+auF3i3e+jHCk2Ttg=
+        bh=QIVVOI9gQsNqxVjPu4etuG1LAE6h//kEaksqjz3X+CU=;
+        b=BMDsv5gG591HtpdOHiM5RyNT1mlqGKuDllYZiTvtfU6CS37Na6fH30nZ9rafb98EIN
+         Wlx6iYo9w1xSehuO8cIJ4H5bGxghqyq/GdTmn8CtSOjBrKbVjiTCAavuri+1MJ+5Lp9e
+         ObaapI4WPRlWLRFRAe0E0R3/VMrPOqGwFLm0iaeIqT1zZr/EjHzUVR61q43igVVjThf5
+         hfxKwYURdgHOehai2YXnoTuh01yL6YImTUqYbD+uXPyZT1gjMy3KpQ/FF0BCGEDZoSoL
+         09JhKrG9WJuSpUXM5gobrsghXz+1i6xd9uKLZ5Miti6aS5v9RD3RibWcoah6SPr4u6OX
+         ZMcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WWFTKtpGRlvvtiWS/Mg0wAkpilGgkx7X1cSC4y5EWxE=;
-        b=hpZDCOy0JCbUPfPFfsl6Nr9TLAwmFl769VtfUCsjzwRiaaMeMA0NLS6U6pLeLdCFIE
-         fPrFjE2EQkkGro0BgdslvWEOu3vJbXCIn06aD2ZF8lCneJJZVeFl61q1/O+LWPmuhucC
-         xl4qUlD+Spag02/aVbJp4MlsLZY98e5TdaOikwtN9iGQwIYVzDd3GzEtzTdkLwOMivx3
-         oXs4pvcCERz66XbngfIrcvsGOV6JZt3XoKKeeH/MPM8gY8JzJubUGjHESa0EcN1hs3MF
-         v2Q0Viy3Tg/+mC/55TKmNO8atPIhHALFrBz7x74py4QfNSS2hJyRDDz2+uCDSQ4hhbnE
-         481Q==
-X-Gm-Message-State: APjAAAV16p3JMVRZAgQHJ/tPxgTmG5Cb8CcaWs/jvNWnhb+KbiD3PiPy
-        88+Rv112lCHhJr2Oj/zqXAkojA==
-X-Google-Smtp-Source: APXvYqzjNkKn9xJVfs5xGw8cpI55YmF3SpQ0/H+z0hmLe5p5Yj86uEZ+s3rh1vxlzdvzJ8lbYTj9ug==
-X-Received: by 2002:a17:90a:b011:: with SMTP id x17mr79797580pjq.113.1563834822065;
-        Mon, 22 Jul 2019 15:33:42 -0700 (PDT)
-Received: from ravisadineni0.mtv.corp.google.com ([2620:15c:202:1:98d2:1663:78dd:3593])
-        by smtp.gmail.com with ESMTPSA id k186sm20614285pga.68.2019.07.22.15.33.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 22 Jul 2019 15:33:41 -0700 (PDT)
-From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, rjw@rjwysocki.net, pavel@ucw.cz,
-        len.brown@intel.com, gregkh@linuxfoundation.org,
-        ravisadineni@chromium.org, bhe@redhat.com, dyoung@redhat.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        tbroch@chromium.org
-Subject: [PATCH 1/2 V2] power: sysfs: Remove wakeup_abort_count attribute.
-Date:   Mon, 22 Jul 2019 15:33:36 -0700
-Message-Id: <20190722223337.36199-2-ravisadineni@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722223337.36199-1-ravisadineni@chromium.org>
-References: <20190722182451.GB24412@kroah.com>
- <20190722223337.36199-1-ravisadineni@chromium.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QIVVOI9gQsNqxVjPu4etuG1LAE6h//kEaksqjz3X+CU=;
+        b=lqrdojt/VOGpZQAL0fEj0iJ5o8td0pqhVNbPUfygb1U/fle0lhMWHOLtlUcF6CkKGX
+         uqpVEQ8piRw9FnS3RGlkGdxScuYsjpvTwrkRWPn/uevJr47mIRAoftJehOcpKR5DtK1S
+         k0rpXZiYoIPfXtUOE8ZTAuqvuda6lIkI/FVUlvNK9rMeNyc3zwt4b4oeo46jZsnkqbFD
+         091It22kbvLnqnDQCBoYBtg5If8NE+t6VI93MJmYC/a7ymIkyBPZanv7q9mw9/VBDGwF
+         65irFD7lFOuOJAq8KG1FbpAmUDLovfCyiMYdQL3Di1JVtVLNBYWpgyTNyfo9xIZP3UDJ
+         a01g==
+X-Gm-Message-State: APjAAAVZzk04mr2XOmYuerCt7moKwkwTX6hi5lLpY6v5YoBiIbTA410N
+        jmholzBwLg1oFcN6m8DYlck=
+X-Google-Smtp-Source: APXvYqxp+r9/TLSrU0csTSoFktj9yzfPPZmms2rTPYm/o4pShtHwmlaILQQ11XVVhMCGVRsd5PF4qg==
+X-Received: by 2002:a17:902:820c:: with SMTP id x12mr78020390pln.216.1563834859258;
+        Mon, 22 Jul 2019 15:34:19 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id r18sm30597570pfg.77.2019.07.22.15.34.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 15:34:18 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 0/3] introduce __put_user_pages(), convert a few call sites
+Date:   Mon, 22 Jul 2019 15:34:12 -0700
+Message-Id: <20190722223415.13269-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wakeup_abort_count and wakeup_count sysfs entries print the
-same (wakeup_count) attribute. This patch removes the duplicate
-wakeup_abort_count sysfs entry.
+From: John Hubbard <jhubbard@nvidia.com>
 
-Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
----
- Documentation/ABI/testing/sysfs-devices-power | 25 ++++++-------------
- drivers/base/power/sysfs.c                    | 19 --------------
- 2 files changed, 7 insertions(+), 37 deletions(-)
+As discussed in [1] just now, this adds a more capable variation of
+put_user_pages() to the API set, and uses it to simplify both the
+main implementation, and (especially) the call sites.
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentation/ABI/testing/sysfs-devices-power
-index 80a00f7b6667..1ca04b4f0489 100644
---- a/Documentation/ABI/testing/sysfs-devices-power
-+++ b/Documentation/ABI/testing/sysfs-devices-power
-@@ -81,12 +81,13 @@ What:		/sys/devices/.../power/wakeup_count
- Date:		September 2010
- Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
- Description:
--		The /sys/devices/.../wakeup_count attribute contains the number
--		of signaled wakeup events associated with the device.  This
--		attribute is read-only.  If the device is not capable to wake up
--		the system from sleep states, this attribute is not present.
--		If the device is not enabled to wake up the system from sleep
--		states, this attribute is empty.
-+		The /sys/devices/.../wakeup_count attribute contains the
-+		number of times the processing of a wakeup event associated with
-+		the device might have aborted system transition into a sleep
-+		state in progress. This attribute is read-only. If the device
-+		is not capable to wake up the system from sleep states, this
-+		attribute is not present. If the device is not enabled to wake
-+		up the system from sleep states, this attribute is empty.
- 
- What:		/sys/devices/.../power/wakeup_active_count
- Date:		September 2010
-@@ -100,18 +101,6 @@ Description:
- 		the device is not enabled to wake up the system from sleep
- 		states, this attribute is empty.
- 
--What:		/sys/devices/.../power/wakeup_abort_count
--Date:		February 2012
--Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
--Description:
--		The /sys/devices/.../wakeup_abort_count attribute contains the
--		number of times the processing of a wakeup event associated with
--		the device might have aborted system transition into a sleep
--		state in progress.  This attribute is read-only.  If the device
--		is not capable to wake up the system from sleep states, this
--		attribute is not present.  If the device is not enabled to wake
--		up the system from sleep states, this attribute is empty.
--
- What:		/sys/devices/.../power/wakeup_expire_count
- Date:		February 2012
- Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
-diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-index 1b9c281cbe41..f42044d9711c 100644
---- a/drivers/base/power/sysfs.c
-+++ b/drivers/base/power/sysfs.c
-@@ -375,24 +375,6 @@ static ssize_t wakeup_active_count_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(wakeup_active_count);
- 
--static ssize_t wakeup_abort_count_show(struct device *dev,
--				       struct device_attribute *attr,
--				       char *buf)
--{
--	unsigned long count = 0;
--	bool enabled = false;
--
--	spin_lock_irq(&dev->power.lock);
--	if (dev->power.wakeup) {
--		count = dev->power.wakeup->wakeup_count;
--		enabled = true;
--	}
--	spin_unlock_irq(&dev->power.lock);
--	return enabled ? sprintf(buf, "%lu\n", count) : sprintf(buf, "\n");
--}
--
--static DEVICE_ATTR_RO(wakeup_abort_count);
--
- static ssize_t wakeup_expire_count_show(struct device *dev,
- 					struct device_attribute *attr,
- 					char *buf)
-@@ -580,7 +562,6 @@ static struct attribute *wakeup_attrs[] = {
- 	&dev_attr_wakeup.attr,
- 	&dev_attr_wakeup_count.attr,
- 	&dev_attr_wakeup_active_count.attr,
--	&dev_attr_wakeup_abort_count.attr,
- 	&dev_attr_wakeup_expire_count.attr,
- 	&dev_attr_wakeup_active.attr,
- 	&dev_attr_wakeup_total_time_ms.attr,
+Thanks to Christoph for the simplifying ideas, and Matthew for (again)
+recommending an enum in the API. Matthew, I seem to recall you asked
+for enums before this, so I'm sorry it took until now for me to add
+them. :)
+
+The new __put_user_pages() takes an enum that handles the various
+combinations of needing to call set_page_dirty() or
+set_page_dirty_lock(), before calling put_user_page().
+
+I'm using the same CC list as in [1], even though IB is no longer
+included in the series. That's everyone can see what the end result
+turns out to be.
+
+Notes about the remaining patches to come:
+
+There are about 50+ patches in my tree [2], and I'll be sending out the
+remaining ones in a few more groups:
+
+    * The block/bio related changes (Jerome mostly wrote those, but I've
+      had to move stuff around extensively, and add a little code)
+
+    * mm/ changes
+
+    * other subsystem patches
+
+    * an RFC that shows the current state of the tracking patch set. That
+      can only be applied after all call sites are converted, but it's
+      good to get an early look at it.
+
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
+
+[1] https://lore.kernel.org/r/20190722093355.GB29538@lst.de
+[2] https://github.com/johnhubbard/linux/tree/gup_dma_core
+
+John Hubbard (3):
+  mm/gup: introduce __put_user_pages()
+  drivers/gpu/drm/via: convert put_page() to put_user_page*()
+  net/xdp: convert put_page() to put_user_page*()
+
+ drivers/gpu/drm/via/via_dmablit.c |  11 +--
+ include/linux/mm.h                |  58 +++++++++++-
+ mm/gup.c                          | 149 +++++++++++++++---------------
+ net/xdp/xdp_umem.c                |   9 +-
+ 4 files changed, 135 insertions(+), 92 deletions(-)
+
 -- 
-2.20.1
+2.22.0
 
