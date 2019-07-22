@@ -2,161 +2,239 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC83AC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F52C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE57122296
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F31F22296
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2mcfnGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfGVHlE (ORCPT
+        id S1728148AbfGVHly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:41:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35385 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfGVHlE (ORCPT
+        Mon, 22 Jul 2019 03:41:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46799 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfGVHlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:41:04 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hpSwO-0007zh-HD; Mon, 22 Jul 2019 07:41:01 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     dmitry.torokhov@gmail.com
-Cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Your Name <you@example.com>
-Subject: [PATCH v3] Input: elantech: Enable SMBus on new (2018+) systems
-Date:   Mon, 22 Jul 2019 15:40:55 +0800
-Message-Id: <20190722074055.22427-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190121070258.1844-1-kai.heng.feng@canonical.com>
-References: <20190121070258.1844-1-kai.heng.feng@canonical.com>
+        Mon, 22 Jul 2019 03:41:53 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so16957778pfb.13;
+        Mon, 22 Jul 2019 00:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bgk59hNZZxqJ+wHkif44Odgi7FpW/CEYdnQcMyiPlt4=;
+        b=D2mcfnGkowNh48/IuGfMW8WPzrt6h9BmpFV+lBdSjOWegSjyooyEPn91oei1VIOdI4
+         pu8uZsIXIPSdCS2VJQVzuGO3d1LlPdNYay78ln2JYX1r+6gOvA9BP34Vtjur+xLeFugc
+         B+r9Id9870AgDuSik6U+JFQ1AG7lf88DIb/HHlnsOqvYtM6MO2LEk3XAuqDPakv+FGNz
+         okRGhZAy+l4wKrekxWO5vEh/b3I+ySVhT6w6IVbPwtYcPg3n4m0/e3mrJSGxIdHDac6t
+         43pG9L5hQnsh+zeLJG0nX4qBP0J3D38Et4Tj0fUNUBycaAvS53RE4ON/mhxHHBOOILx4
+         yZSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bgk59hNZZxqJ+wHkif44Odgi7FpW/CEYdnQcMyiPlt4=;
+        b=rdDHhe2sVeyKnpOZkjWnCaTvmaIbW3pJ9onVg8Pi5rUPZqASRInqrLoXAHl1gNm5X/
+         n7R4x4vxYDJG60MPJ6M+pyCd4v9+y3ziCKeasE3W0hP7xdFwKKBaXsGD+hxe+svQVDUc
+         87AsdyA17Efc1rUoJu62fz6WjcCzqU0GTWKe/WGYDNM9aevwddrSCQ+R15wNULc6Exe5
+         SeuZDTsUDV4ZXYaf4bg7DOGoDexSDrvJhMpa46TzlkHsT3eG+H4g/TpLOH9fUU+5qTrF
+         /tdOa8bv4vwXsrrMTYkj6Dg00kLzc4Fg97el9PRtS+CxEakhoXj2tuvXCOt/eXo47Bih
+         +N9g==
+X-Gm-Message-State: APjAAAWSAM4GXGQUmktT5T/nYHupVExxIX90vRFEuTf4oQN8xmC7Tp/U
+        aVdE4HceIcRX0aNeZUj+EOQ=
+X-Google-Smtp-Source: APXvYqwSl/uh7SK95eO77VgmSxhQzE+J0u32oeQkDxloK2R4qZUtuWy4yljaXZQdizuxy7TXCmPd6w==
+X-Received: by 2002:a17:90b:8e:: with SMTP id bb14mr75943756pjb.19.1563781312423;
+        Mon, 22 Jul 2019 00:41:52 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id c130sm36877577pfc.184.2019.07.22.00.41.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 00:41:51 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] net: usb: Merge cpu_to_le32s + memcpy to put_unaligned_le32
+Date:   Mon, 22 Jul 2019 15:41:34 +0800
+Message-Id: <20190722074133.17777-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some new HP laptops with Elantech touchpad don't support
-multitouch.
+Merge the combo uses of cpu_to_le32s and memcpy.
+Use put_unaligned_le32 instead.
+This simplifies the code.
 
-Currently we use ETP_NEW_IC_SMBUS_HOST_NOTIFY() to check if SMBus is
-supported, but in addition to firmware version, the bus type also
-informs us if the IC can support SMBus, so also check that.
-
-In case of breaking old ICs, only enables SMBus on systems manufactured
-after 2018, alongsides aforementioned checks.
-
-Lastly, consolidats all check into elantech_use_host_notify() and use it
-to determine whether to use PS/2 or SMBus.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Your Name <you@example.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-v3:
-- Put dmi_get_bios_year() under switch.
+ drivers/net/usb/asix_common.c  |  9 ++++-----
+ drivers/net/usb/ax88179_178a.c | 11 ++++-------
+ drivers/net/usb/lan78xx.c      | 11 ++++-------
+ drivers/net/usb/smsc75xx.c     | 11 ++++-------
+ drivers/net/usb/sr9800.c       |  9 ++++-----
+ 5 files changed, 20 insertions(+), 31 deletions(-)
 
-v2:
-- Wording.
-- Further restrain on older systems (< 2018).
-
- drivers/input/mouse/elantech.c | 64 +++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 2d8434b7b623..46e70535a069 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1827,6 +1827,40 @@ static int elantech_create_smbus(struct psmouse *psmouse,
- 				  leave_breadcrumbs);
- }
+diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+index b39ee714fb01..e39f41efda3e 100644
+--- a/drivers/net/usb/asix_common.c
++++ b/drivers/net/usb/asix_common.c
+@@ -221,6 +221,7 @@ struct sk_buff *asix_tx_fixup(struct usbnet *dev, struct sk_buff *skb,
+ 	int tailroom = skb_tailroom(skb);
+ 	u32 packet_len;
+ 	u32 padbytes = 0xffff0000;
++	void *ptr;
  
-+static bool elantech_use_host_notify(struct psmouse *psmouse,
-+				     struct elantech_device_info *info)
-+{
-+	bool host_notify = false;
-+
-+	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-+		host_notify = true;
-+	else {
-+		switch (info->bus) {
-+		case ETP_BUS_PS2_ONLY:
-+			/* expected case */
-+			break;
-+		case ETP_BUS_SMB_ALERT_ONLY:
-+			/* fall-through  */
-+		case ETP_BUS_PS2_SMB_ALERT:
-+			psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
-+			break;
-+		case ETP_BUS_SMB_HST_NTFY_ONLY:
-+			/* fall-through  */
-+		case ETP_BUS_PS2_SMB_HST_NTFY:
-+			/* SMbus implementation is stable since 2018 */
-+			if (dmi_get_bios_year() >= 2018)
-+				host_notify = true;
-+			break;
-+		default:
-+			psmouse_dbg(psmouse,
-+				    "Ignoring SMBus bus provider %d.\n",
-+				    info->bus);
-+		}
-+	}
-+
-+	return host_notify;
-+}
-+
- /**
-  * elantech_setup_smbus - called once the PS/2 devices are enumerated
-  * and decides to instantiate a SMBus InterTouch device.
-@@ -1846,7 +1880,7 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
- 		 * i2c_blacklist_pnp_ids.
- 		 * Old ICs are up to the user to decide.
- 		 */
--		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
-+		if (!elantech_use_host_notify(psmouse, info) ||
- 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
- 			return -ENXIO;
+ 	padlen = ((skb->len + 4) & (dev->maxpacket - 1)) ? 0 : 4;
+ 
+@@ -256,13 +257,11 @@ struct sk_buff *asix_tx_fixup(struct usbnet *dev, struct sk_buff *skb,
  	}
-@@ -1866,34 +1900,6 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
- 	return 0;
- }
  
--static bool elantech_use_host_notify(struct psmouse *psmouse,
--				     struct elantech_device_info *info)
--{
--	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
--		return true;
+ 	packet_len = ((skb->len ^ 0x0000ffff) << 16) + skb->len;
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&packet_len);
+-	skb_copy_to_linear_data(skb, &packet_len, sizeof(packet_len));
++	ptr = skb_push(skb, 4);
++	put_unaligned_le32(packet_len, ptr);
+ 
+ 	if (padlen) {
+-		cpu_to_le32s(&padbytes);
+-		memcpy(skb_tail_pointer(skb), &padbytes, sizeof(padbytes));
++		put_unaligned_le32(padbytes, skb_tail_pointer(skb));
+ 		skb_put(skb, sizeof(padbytes));
+ 	}
+ 
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 72d165114b67..daa54486ab09 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1421,6 +1421,7 @@ ax88179_tx_fixup(struct usbnet *dev, struct sk_buff *skb, gfp_t flags)
+ 	int frame_size = dev->maxpacket;
+ 	int mss = skb_shinfo(skb)->gso_size;
+ 	int headroom;
++	void *ptr;
+ 
+ 	tx_hdr1 = skb->len;
+ 	tx_hdr2 = mss;
+@@ -1435,13 +1436,9 @@ ax88179_tx_fixup(struct usbnet *dev, struct sk_buff *skb, gfp_t flags)
+ 		return NULL;
+ 	}
+ 
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&tx_hdr2);
+-	skb_copy_to_linear_data(skb, &tx_hdr2, 4);
 -
--	switch (info->bus) {
--	case ETP_BUS_PS2_ONLY:
--		/* expected case */
--		break;
--	case ETP_BUS_SMB_ALERT_ONLY:
--		/* fall-through  */
--	case ETP_BUS_PS2_SMB_ALERT:
--		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
--		break;
--	case ETP_BUS_SMB_HST_NTFY_ONLY:
--		/* fall-through  */
--	case ETP_BUS_PS2_SMB_HST_NTFY:
--		return true;
--	default:
--		psmouse_dbg(psmouse,
--			    "Ignoring SMBus bus provider %d.\n",
--			    info->bus);
--	}
--
--	return false;
--}
--
- int elantech_init_smbus(struct psmouse *psmouse)
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&tx_hdr1);
+-	skb_copy_to_linear_data(skb, &tx_hdr1, 4);
++	ptr = skb_push(skb, 8);
++	put_unaligned_le32(tx_hdr1, ptr);
++	put_unaligned_le32(tx_hdr2, ptr + 4);
+ 
+ 	return skb;
+ }
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 9c33b35bd155..769bb262fbec 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2729,6 +2729,7 @@ static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
+ 				       struct sk_buff *skb, gfp_t flags)
  {
- 	struct elantech_device_info info;
+ 	u32 tx_cmd_a, tx_cmd_b;
++	void *ptr;
+ 
+ 	if (skb_cow_head(skb, TX_OVERHEAD)) {
+ 		dev_kfree_skb_any(skb);
+@@ -2757,13 +2758,9 @@ static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
+ 		tx_cmd_b |= skb_vlan_tag_get(skb) & TX_CMD_B_VTAG_MASK_;
+ 	}
+ 
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&tx_cmd_b);
+-	memcpy(skb->data, &tx_cmd_b, 4);
+-
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&tx_cmd_a);
+-	memcpy(skb->data, &tx_cmd_a, 4);
++	ptr = skb_push(skb, 8);
++	put_unaligned_le32(tx_cmd_a, ptr);
++	put_unaligned_le32(tx_cmd_b, ptr + 4);
+ 
+ 	return skb;
+ }
+diff --git a/drivers/net/usb/smsc75xx.c b/drivers/net/usb/smsc75xx.c
+index 7fac9db5380d..9556d431885f 100644
+--- a/drivers/net/usb/smsc75xx.c
++++ b/drivers/net/usb/smsc75xx.c
+@@ -2255,6 +2255,7 @@ static struct sk_buff *smsc75xx_tx_fixup(struct usbnet *dev,
+ 					 struct sk_buff *skb, gfp_t flags)
+ {
+ 	u32 tx_cmd_a, tx_cmd_b;
++	void *ptr;
+ 
+ 	if (skb_cow_head(skb, SMSC75XX_TX_OVERHEAD)) {
+ 		dev_kfree_skb_any(skb);
+@@ -2275,13 +2276,9 @@ static struct sk_buff *smsc75xx_tx_fixup(struct usbnet *dev,
+ 		tx_cmd_b = 0;
+ 	}
+ 
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&tx_cmd_b);
+-	memcpy(skb->data, &tx_cmd_b, 4);
+-
+-	skb_push(skb, 4);
+-	cpu_to_le32s(&tx_cmd_a);
+-	memcpy(skb->data, &tx_cmd_a, 4);
++	ptr = skb_push(skb, 8);
++	put_unaligned_le32(tx_cmd_a, ptr);
++	put_unaligned_le32(tx_cmd_b, ptr + 4);
+ 
+ 	return skb;
+ }
+diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
+index 35f39f23d881..c5d4a0060124 100644
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -115,6 +115,7 @@ static struct sk_buff *sr_tx_fixup(struct usbnet *dev, struct sk_buff *skb,
+ 	u32 padbytes = 0xffff0000;
+ 	u32 packet_len;
+ 	int padlen;
++	void *ptr;
+ 
+ 	padlen = ((skb->len + 4) % (dev->maxpacket - 1)) ? 0 : 4;
+ 
+@@ -133,14 +134,12 @@ static struct sk_buff *sr_tx_fixup(struct usbnet *dev, struct sk_buff *skb,
+ 			return NULL;
+ 	}
+ 
+-	skb_push(skb, 4);
++	ptr = skb_push(skb, 4);
+ 	packet_len = (((skb->len - 4) ^ 0x0000ffff) << 16) + (skb->len - 4);
+-	cpu_to_le32s(&packet_len);
+-	skb_copy_to_linear_data(skb, &packet_len, sizeof(packet_len));
++	put_unaligned_le32(packet_len, ptr);
+ 
+ 	if (padlen) {
+-		cpu_to_le32s(&padbytes);
+-		memcpy(skb_tail_pointer(skb), &padbytes, sizeof(padbytes));
++		put_unaligned_le32(padbytes, skb_tail_pointer(skb));
+ 		skb_put(skb, sizeof(padbytes));
+ 	}
+ 
 -- 
-2.17.1
+2.20.1
 
