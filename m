@@ -4,82 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBC6C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E69C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E7521951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB5021951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563835435;
-	bh=D0+rE0nbr7yWO7MjUTR+SDmrakBuXq6MNj1dAG8RaXA=;
+	s=default; t=1563835903;
+	bh=A7v4CfcRuYNReLAZd+hcJx9ucWrRYSbIuwn1cIfmwIg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ijubN3EPxixs1P8yEK5hgb/2Gd0sTvTv/BL3xGJ9zGCdw0zKlY2fnoLPg7nSwUbeK
-	 5ECsPu/R4PxVxsPn0JlPAnnCzCiRR9t/njRMX/Ah/LWISWr6dX4Nw+GbUUUKJiSYeD
-	 UxjAYxX3SHH/mqnOXUpuepyUo5xDfXhAD2EHDiYE=
+	b=L/C6A65Kvq46AzFltLcBV/RevxLiiQkywaOkp02xBoGJ3iEmHzGWnH6T8DENwGr8l
+	 U9YsnO4IVOBjRHEy6SVfX1viFZyFHvsjBv7Gbc0z3om12btSCCnU8H6tPfyDBSOPfv
+	 Y87EY3zvrVYiLw/h7dDCbYWlZpFoUk+awvMECYhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733292AbfGVWny (ORCPT
+        id S1733062AbfGVWvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:43:54 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41957 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727731AbfGVWnx (ORCPT
+        Mon, 22 Jul 2019 18:51:42 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32919 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728529AbfGVWvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:43:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id j5so73478931ioj.8;
-        Mon, 22 Jul 2019 15:43:53 -0700 (PDT)
+        Mon, 22 Jul 2019 18:51:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so77730643iog.0;
+        Mon, 22 Jul 2019 15:51:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Svp74BvkdGsqSw/CVQeALZTPJjUPC2evM1cScX7kmfc=;
-        b=L2+Xu/380uEDkPvB4/qm8edraKYRuNPAFQe/CFgg7CMsBZeqwymbMxIordm1pZmOzh
-         GRuEhGz5GX4wQ7ycYuWKZn4P8NwlxSjYN7s4zzfoOUZN+3wF+cmqsgHNe4Z+I9et1RL/
-         oYL+1tT95BZ1sQI9II/qrVmp/f1FKshezmhaNp52SZQj3mGy995rr73oCN/+2ehcOoVX
-         ywt0+iEc7uV8a+TXh4eClxdtZh6dhXXe6WHtPwP89D1PG7T6knbU41TJJf2Is4pXH81Y
-         F0D48nH2DUW8lBgTykGr5MK40q40A/vHV2MqnKPaZquCJ0iPb7f3xhXEDpMHeob7Do8z
-         SbDA==
-X-Gm-Message-State: APjAAAXsrJQMCqSQD6yKCClQ+xtDNKEdLjAR2M58nMLRgyq/VBE3xDr1
-        BIw5jxfjQ3uiqM/U7AIdXA==
-X-Google-Smtp-Source: APXvYqyEzhs4Q0KHFzrQB3A2UUaYKgS3Bjub7g5xu87KWZze3VmYU1AICYNgXLhU9c/erhypSpAdcA==
-X-Received: by 2002:a6b:dc08:: with SMTP id s8mr21558994ioc.209.1563835432947;
-        Mon, 22 Jul 2019 15:43:52 -0700 (PDT)
+        bh=sYRqGzsa2Mqfa8UCEWc+Q6d3arkBPq6mEZsIpfw+fso=;
+        b=nFDQJHVRhOLRyaiT1zjKy46M7vIugomAzSolqlUdVYh5NSK7epDlEqva304RVtfaxO
+         vhyD5341lLbIpcnmMD+DJkSGYFpyy53Ij1lVBvIsSMK91Sglixk6Km+RUYAphu8kiWDN
+         Z19O6IXUdMVnQqD1qClEC1or95/uN/j2vdjfa7dpAriogpr/SQMF0Rweh7Wg0hQZbaXm
+         EooLb7zvEphmUrtoqsztLOaCLXcnJY98VXakQ76RhOOeIyMAytPJXZ+/j5gK0Q8PRac0
+         CQI6UCW8+xWWHc0lxNKkDlRlAjliKQVfUJ3dr77zHmqGQnuM/v6kBZPP+hbDsZJaLmm2
+         am6A==
+X-Gm-Message-State: APjAAAV+1zEzs1bnZyi9rj8mw+7k3fajDyscGO1jPiMly5VR1s5qgSev
+        hqU8iiy8PDj5TCnWBp8Xeg==
+X-Google-Smtp-Source: APXvYqxFG3cem2D0uzg43tQTtA1WyJdJngPhgAlqWXVNUVcQmwLGOFIjnFebC9eNH3FaJ4tc0VmjRg==
+X-Received: by 2002:a5d:8d12:: with SMTP id p18mr65859087ioj.251.1563835901424;
+        Mon, 22 Jul 2019 15:51:41 -0700 (PDT)
 Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id t133sm58987380iof.21.2019.07.22.15.43.52
+        by smtp.gmail.com with ESMTPSA id k5sm46038653ioj.47.2019.07.22.15.51.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 15:43:52 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 16:43:51 -0600
+        Mon, 22 Jul 2019 15:51:40 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 16:51:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, joel@jms.id.au, eduval@amazon.com,
-        Eddie James <eajames@linux.ibm.com>
-Subject: Re: [PATCH v4 1/8] dt-bindings: soc: Add Aspeed XDMA engine binding
- documentation
-Message-ID: <20190722224351.GA18423@bogus>
-References: <1562010839-1113-1-git-send-email-eajames@linux.ibm.com>
- <1562010839-1113-2-git-send-email-eajames@linux.ibm.com>
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Ran Bi <ran.bi@mediatek.com>
+Subject: Re: [PATCH 1/3] bindings: rtc: add bindings for MT2712 RTC
+Message-ID: <20190722225140.GA30571@bogus>
+References: <20190702032120.16539-1-ran.bi@mediatek.com>
+ <20190702032120.16539-2-ran.bi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562010839-1113-2-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <20190702032120.16539-2-ran.bi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  1 Jul 2019 14:53:52 -0500, Eddie James wrote:
-> Document the bindings.
+On Tue, 2 Jul 2019 11:21:18 +0800, Ran Bi wrote:
+> Document the binding for MT2712 RTC implemented by rtc-mt2712.
 > 
-> Reviewed-by: Andrew Jeffrey <andrew@aj.id.au>
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 > ---
->  .../devicetree/bindings/soc/aspeed/xdma.txt        | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>  .../devicetree/bindings/rtc/rtc-mt2712.txt         | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
