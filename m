@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A490C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4A0C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBD721926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7FE218A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfGVMiI (ORCPT
+        id S1729320AbfGVMiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:38:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:41629 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGVMiH (ORCPT
+        Mon, 22 Jul 2019 08:38:11 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:35885 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbfGVMiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:38:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id x17so43066226iog.8
+        Mon, 22 Jul 2019 08:38:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id k21so43367318ioj.3
         for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 05:38:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VItuQN9qHf7biuqoGJvDu7qwjG4la7NuuYZupbpksME=;
-        b=VVeRVZAGqOcSN20GVM9cN6QFP2yasrJJXKucdohZzYWsOjfm1kGn752gqNY4CsAD0/
-         JB6KT1qpq5nn/gKCva7HZp2VAYBAP78eoS8MRr3odYIO2Lcn3F681HbpFOcaFmBLRVAl
-         zryqSYtKnTnIeKNGT4P2iLcmXbKN5zH82BgCCCX2uGngNlilbniMCeS3dx4US4bDvK4M
-         YPPiyviO2RbLTgckAi34h4wNlORhsMSVRKn0jhFu5j8duH4EV7k9ZPqYJjSTjc6sjSk+
-         4+i3WrA93IawCZN+e6uiwquAcOE/pmN5eTAZPrVnJ1Pkhg9tnSZXqILhf0PuUxOOUyaD
-         125Q==
-X-Gm-Message-State: APjAAAU1u1zdwwu+LsjJ0iHK9wYy2f7Ucx/x8enl+UaW37E58xX4eU4F
-        BShVpncw18jA2LPoTHFWFBnkLh4Gxyi43IIUCykcrVZbwpP6
-X-Google-Smtp-Source: APXvYqyWlIPTpElvhQ7EMUhk0KPOnVfjc9ucwIj8jGV9d5Lup0rL4Td8YDieiIjH71S51A1+ib4EWlH6eTL55TZMRCR6wwMYtK7S
+        bh=XN7mQ/LbwS2GODYkDwnmvqmvNwPxxRZ0Psf5NFa9KBE=;
+        b=sOxxWil9UJvKNuZPRp4J27mfcd8r/fjMjAb2IDolWORaUbbbRJazcvaMNjhCqddygP
+         hEFXyrXyjzd81LuQVsJx4wgJ4KBGa7xTlGdWTZ8StxXkk49Ph6QiDnegiOjpFFeYJ4I8
+         nrPaNt2qU0Nll2p0o/hFl/TIfrrqInNFry212sw6V0RYXQinTXc1ZXKMqAJh/Nx2Jhr2
+         /JYk0NJ4muX/CG+bX+MJuZfSU76bhneqlkJVaGnje8s5GRgmWEzwdBt9+5lb5VF4UFkB
+         fdVlogj7TMaCc4Cwixqq2e1RunzBeFTbWaip0TWYaPTmDdt0QOKe+CXtBWmbMRoEX+8H
+         5agg==
+X-Gm-Message-State: APjAAAVqgUbpYxaHnY1SwhlXNsmQcO5K/dZbanU4EX+Wx3+Jodu8kwCY
+        UCt6Uv2+b4se6orK2QRhzfP/XTGTJOLZwhSs0YQPjr6YJfNm
+X-Google-Smtp-Source: APXvYqzLgm7H+0s4vjrNik4iYDGcdItZNbvxNBMTEFEnQ3ka+wAyuLJOjfoii/Kln7+76lgFX66PYizRZuXfL4C3T/GD3RYvn5c2
 MIME-Version: 1.0
-X-Received: by 2002:a02:8a:: with SMTP id 132mr71018760jaa.89.1563799086597;
+X-Received: by 2002:a5d:9749:: with SMTP id c9mr67412596ioo.258.1563799086829;
  Mon, 22 Jul 2019 05:38:06 -0700 (PDT)
 Date:   Mon, 22 Jul 2019 05:38:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000e8df8058e445912@google.com>
-Subject: WARNING in amradio_send_cmd/usb_submit_urb
-From:   syzbot <syzbot+485b10e300244dc0046c@syzkaller.appspotmail.com>
+Message-ID: <000000000000121ea5058e445936@google.com>
+Subject: WARNING in shark_write_val/usb_submit_urb
+From:   syzbot <syzbot+1cb937c125adb93fad2d@syzkaller.appspotmail.com>
 To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
         gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
@@ -59,20 +59,20 @@ syzbot found the following crash on:
 
 HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=111a1ed0600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=138da9d0600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=485b10e300244dc0046c
+dashboard link: https://syzkaller.appspot.com/bug?extid=1cb937c125adb93fad2d
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154d3d48600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ef1634600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159ab958600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177bd6afa00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+485b10e300244dc0046c@syzkaller.appspotmail.com
+Reported-by: syzbot+1cb937c125adb93fad2d@syzkaller.appspotmail.com
 
 usb 1-1: string descriptor 0 read error: -22
-usb 1-1: New USB device found, idVendor=07ca, idProduct=b800,  
-bcdDevice=d3.2a
-usb 1-1: New USB device strings: Mfr=5, Product=3, SerialNumber=255
+usb 1-1: New USB device found, idVendor=077d, idProduct=627a, bcdDevice=  
+0.01
+usb 1-1: New USB device strings: Mfr=1, Product=64, SerialNumber=255
 ------------[ cut here ]------------
 usb 1-1: BOGUS urb xfer, pipe 1 != type 3
 WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
@@ -97,18 +97,19 @@ RIP: 0010:usb_submit_urb+0x1188/0x13b0 /drivers/usb/core/urb.c:477
 Code: 4d 85 ed 74 2c e8 f8 d3 f4 fd 4c 89 f7 e8 a0 51 1c ff 41 89 d8 44 89  
 e1 4c 89 ea 48 89 c6 48 c7 c7 00 0e f7 85 e8 83 98 ca fd <0f> 0b e9 20 f4  
 ff ff e8 cc d3 f4 fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d9eff090 EFLAGS: 00010282
+RSP: 0018:ffff8881d9efefe0 EFLAGS: 00010286
 RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfe04
-RBP: ffff8881cfd4a540 R08: ffff8881d9e36000 R09: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfdee
+RBP: ffff8881d41e5e60 R08: ffff8881d9e36000 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8881d3629f48 R14: ffff8881cfdc80a0 R15: ffff8881d41fa300
+R13: ffff8881cff4cbd0 R14: ffff8881d7b33c20 R15: ffff8881d41c9b00
   usb_start_wait_urb+0x108/0x2b0 /drivers/usb/core/message.c:57
   usb_bulk_msg+0x228/0x550 /drivers/usb/core/message.c:253
-  amradio_send_cmd+0x2e4/0x800 /drivers/media/radio/radio-mr800.c:150
-  amradio_set_mute /drivers/media/radio/radio-mr800.c:182 [inline]
-  usb_amradio_init /drivers/media/radio/radio-mr800.c:414 [inline]
-  usb_amradio_probe+0x409/0x6b2 /drivers/media/radio/radio-mr800.c:555
+  shark_write_val+0x20b/0x310 /drivers/media/radio/radio-shark.c:94
+  snd_tea575x_write+0x78/0x330 /drivers/media/radio/tea575x.c:88
+  snd_tea575x_hw_init+0x8d/0x170 /drivers/media/radio/tea575x.c:506
+  snd_tea575x_init+0x1f/0x6b8 /drivers/media/radio/tea575x.c:521
+  usb_shark_probe+0x5e1/0x770 /drivers/media/radio/radio-shark.c:353
   usb_probe_interface+0x305/0x7a0 /drivers/usb/core/driver.c:361
   really_probe+0x281/0x660 /drivers/base/dd.c:509
   driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
