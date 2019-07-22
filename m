@@ -2,201 +2,148 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD29AC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3661FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8641D21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BC521738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="X6sWygAG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lMVKoC32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfGVQwc (ORCPT
+        id S1730930AbfGVQwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:52:32 -0400
-Received: from sonic316-54.consmr.mail.gq1.yahoo.com ([98.137.69.30]:44605
-        "EHLO sonic316-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728752AbfGVQwb (ORCPT
+        Mon, 22 Jul 2019 12:52:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38671 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730740AbfGVQwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:52:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563814350; bh=+/7np4FvOppMR9Hf/eQxNoXzqpdKSRbs1I6bZt2UJ40=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=X6sWygAGuqfUgp75ROg5xSq7l5O2IjRks7AVIlvspODL2N9BhL1kDzaRObLFMlu8emxd2RLdH53eDGjWoMCoW2D6KbF2FE8pMxXTJhsR76v/Ozz4VGbTdCBBJ/WRVZ/fcEvjpoP+z9BeM5kEdCpLzbQsL6JcUrBTGhlusK8JJ7lLNsmPxqnUHw3OcLw+WCu2TgEtVZr52Yc1pjEP8/qIhJ9NnirSU2eCEdI7S3ATGA3dR2yD3zkx2v6MW2qcF2pDZ5EHW1AcFkzs7yEU1E6lJptYoiAjsfP3ho3TRJADVWl0lh3YuS+jI1hgY8uAF1xk45T/ICG8CRkJ/HUQgrPiNw==
-X-YMail-OSG: 7mUnhZ0VM1mdbBsgLOwGGOHmwMtvDtQE7eENg83jN0mkP4RUNMNHU9GIn.Ll8dy
- szGhTNA0ZIbinU.B9RfRBHEL80BMJRj4Eue5nnUmw6nOUbHhskhcSuVtttowGK4q5Yu9H4Vpd_3d
- hGeM4yB.cfwoSlnMf_zFR14nbjPo2Ba1VU1MkqAcsErp5SA_MztAYz9ZC_ysVHoUTxo_gm00jUp2
- 9JCdGciZuYS4n4YOFa.nC_ZvXPA22I_8YlCBULrdV4KBqArqO1Ii0aogVpa_ZhugGM6lBH42hGt7
- 0F2.tWIVP6X10DiMFp96o3lck69dLmScvYTOW5uivlW_kup42JMbTyEBRgiUyFN6tDw5DGii3t41
- ZJEjyNu0b7Il4Gyo6nZft9dcj.oro21Riof99754opovfYziPReDh9CH2k38ADyTdnG1x1ZSELtm
- 44iysiZBcw1BvdnPIDnvk2uD1qKsxlxYueoK9LBBDSYuH8_GZxskpwDowsee0JPEygILzBqV1Dj7
- FrBkF7NxwYbqKXGmBsdHLrGaxpVpU1fUjrTbC5sTEr.gHiDswsTjybvlu7MMfmZoViHEW7P.aVmX
- mHKUk5Hij9WgPOuOK23aSuu9XkVHg.tn5RGKj42doquhRnYNWZ_EDpSHMKyQYOzd4QxcgaNchubC
- oWI_uaW21cfwMokc8lHvSRi.Lq8wOxzLTWdEHtoAzvdXdjTVi7e2LY_8Zt5q0sK7N3KrQH1vZQcz
- xlZGZ.sdhvkSLYW31e9xm6QVKixcUepKmtNKjD8wt.qczdyJ_L1MRZ2BI5EBkfEmfNpAI9cyDc9I
- bM3y6eg_w4vz4t9llHdpxVloO2nqvg5_W.X7C6kL.OzWepycJ9O0H8.cjrEqxbk5dXRyQCdvdj3o
- 6ZlcLeadJlxY0bAh6XSG7LYq1YstpiopTW5P0clR2P9KDlRKwf.1su7WasPLe8j0mt.QH_cbN1fy
- tw6_tyiUlI9GcNBrUV.b_lHdQd_9LIb8ss9HitVzA6PpXX6DwzL85wmMtjZ4XYfy8m7e0pKnSUxI
- epITVX5BALgw0ynLy1HXHEWw79qlBj9udhJ_l0ZnmGRhHDxRcQwOsRmbQjgeNwHAT.uXm2raNpyf
- vQkYb9Mm4r3Ko9x8IRG.Nyt4GfwPSQ1l7N599PvuP0sDCx1MFBRbgwiBDeXE2TNsrQsT_guJ1Uq0
- NMWS7m1REosIvBs_QxPK4Sq22II3YEeVRvi3FFTbqk3PX5DhkoeeB7uPtloCJEw_HmrIEIKgupcU
- FctUVfufA
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Mon, 22 Jul 2019 16:52:30 +0000
-Received: by smtp421.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d88bfb998e3ead874cbe21f5d0ea57ed;
-          Mon, 22 Jul 2019 16:52:26 +0000 (UTC)
-Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Amir Goldstein <amir73il@gmail.com>, devel@driverdev.osuosl.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-13-gaoxiang25@huawei.com>
- <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
- <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
- <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
- <20190722104048.463397a0@gandalf.local.home>
- <0c2cdd4f-8fe7-6084-9c2d-c2e475e6806e@aol.com>
- <20190722123502.328cecb6@gandalf.local.home>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <25e5dd99-b110-45f8-f769-5372ff01510f@aol.com>
-Date:   Tue, 23 Jul 2019 00:52:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 12:52:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f5so9112882pgu.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 09:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D5i5eeVRTyq7Qm2OPmoZkgOgQ/VLsd39M3tEbxvABCE=;
+        b=lMVKoC32q6jdc5s52CXFaKProF9HEK95pIIg8BJ02KRdMo2T+G1UQFwnI3hhGF8+qU
+         sA+I2b5X4bmmD3l4DMPwDW82vI93F3KlS+ABw8rfpPxwGuJjlU4ikbVcjw+QJS8Ok0+k
+         NfKpy3LGpTZr6M9s+RV94qzCTTn8uIg1TOEHY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=D5i5eeVRTyq7Qm2OPmoZkgOgQ/VLsd39M3tEbxvABCE=;
+        b=iXpB4/7p6fD+Om9j99UgrtoKdn7ABQQ/RaNKuwWSQpmFWi7lWCCForUPdULZDs3w72
+         RmVbdWltkU16gcSJlPgvWwnVP0sHP1dQSk04srq47b8ELrrAj8FBIep9VPFy04wx659T
+         t/7n6dREAVPWknH25xMxncpru+jYrJQQ/S53YjfNfJxW9GwjimesajMyomtOfEMAsENn
+         e1fmtxfg1Hjmx9mlTzPQ0NPZBqEUl5obSeiDNm8zXVFlqGqAKipmviTquK9mqbt99SnJ
+         4u3Y98Ub43wkt1bBbvBgImKfHFmcPP4zvnQokNnJ3tYXj9UDbZHRsnZ91QnDnJXJ3JUt
+         27cg==
+X-Gm-Message-State: APjAAAXSzfq7ng0ScwsfgpEZ4wCVvd4FMRGVlSBGgA+L0WIYPD4nYq3b
+        q8ruOXvivb0ztvfEEmCTb8fVdw==
+X-Google-Smtp-Source: APXvYqx5EPVBdAZB9hQMVYd5b0pm0ScpmGtAOsQZBAbG8Ghj6g8EOLpHTo6yIfQxYVdOh6K7G5nb9g==
+X-Received: by 2002:a63:7b4d:: with SMTP id k13mr70901703pgn.182.1563814351931;
+        Mon, 22 Jul 2019 09:52:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d8sm36678029pgh.45.2019.07.22.09.52.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jul 2019 09:52:31 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 09:52:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@google.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] [v2] drbd: dynamically allocate shash descriptor
+Message-ID: <201907220952.EA05EEE9FC@keescook>
+References: <20190722122647.351002-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190722123502.328cecb6@gandalf.local.home>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722122647.351002-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/23 ????12:35, Steven Rostedt wrote:
-> On Mon, 22 Jul 2019 23:33:53 +0800
-> Gao Xiang <hsiangkao@aol.com> wrote:
+On Mon, Jul 22, 2019 at 02:26:34PM +0200, Arnd Bergmann wrote:
+> Building with clang and KASAN, we get a warning about an overly large
+> stack frame on 32-bit architectures:
 > 
->> Hi Steven,
->>
->> On 2019/7/22 ????10:40, Steven Rostedt wrote:
->>>>> and I'm not sure Al could accept __fdget conversion (I just wanted to give a example then...)
->>>>>
->>>>> Therefore, I tend to keep silence and just promote EROFS... some better ideas?...
->>>>>    
->>>> Writing example conversion patches to demonstrate cleaner code
->>>> and perhaps reduce LOC seems the best way.  
->>> Yes, I would be more interested in seeing patches that clean up the
->>> code than just talking about it.
->>>   
->>
->> I guess that is related to me, though I didn't plan to promote
->> a generic tagged pointer implementation in this series...
+> drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+>       [-Werror,-Wframe-larger-than=]
 > 
-> I don't expect you to either.
-
-Beyond my expectation, I think I will (could) learn some new knowledge
-from this topic, thanks you and Amir :)
-
+> We already allocate other data dynamically in this function, so
+> just do the same for the shash descriptor, which makes up most of
+> this memory.
 > 
->>
->> I try to describe what erofs met and my own implementation,
->> assume that we have 3 tagged pointers, a, b, c, and one
->> potential user only (no need to ACCESS_ONCE).
->>
->> One way is
->>
->> #define A_MASK		1
->> #define B_MASK		1
->> #define C_MASK		3
->>
->> /* now we have 3 mask there, A, B, C is simple,
->>    the real name could be long... */
->>
->> void *a;
->> void *b;
->> void *c;		/* and some pointers */
->>
->> In order to decode the tag, we have to
->> 	((unsigned long)a & A_MASK)
->>
->> to decode the ptr, we have to
->> 	((unsigned long)a & ~A_MASK)
->>
->> In order to fold the tagged pointer...
->> 	(void *)((unsigned long)a | tag)
+> Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+> v2:
+> - don't try to zero a NULL descriptor pointer,
+>   based on review from Roland Kammerer.
+> ---
+>  drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 > 
-> And you need a way to clear the flag.
-
-Considering one potential user, we could refold the tagged pointer.
-or we could refold the tagged pointer and update the value in atomic
-(like atomic_t does).
-
-a = tagptr_fold(ta, tagptr_unfold_tags(a), tag);
-
+> diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+> index 90ebfcae0ce6..2b3103c30857 100644
+> --- a/drivers/block/drbd/drbd_receiver.c
+> +++ b/drivers/block/drbd/drbd_receiver.c
+> @@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+>  	unsigned int key_len;
+>  	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+>  	unsigned int resp_size;
+> -	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
+> +	struct shash_desc *desc;
+>  	struct packet_info pi;
+>  	struct net_conf *nc;
+>  	int err, rv;
+> @@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+>  	memcpy(secret, nc->shared_secret, key_len);
+>  	rcu_read_unlock();
+>  
+> +	desc = kmalloc(sizeof(struct shash_desc) +
+> +		       crypto_shash_descsize(connection->cram_hmac_tfm),
+> +		       GFP_KERNEL);
+> +	if (!desc) {
+> +		rv = -1;
+> +		goto fail;
+> +	}
+>  	desc->tfm = connection->cram_hmac_tfm;
+>  
+>  	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
+> @@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+>  	kfree(peers_ch);
+>  	kfree(response);
+>  	kfree(right_response);
+> -	shash_desc_zero(desc);
+> +	if (desc) {
+> +		shash_desc_zero(desc);
+> +		kfree(desc);
+> +	}
+>  
+>  	return rv;
+>  }
+> -- 
+> 2.20.0
 > 
->>
->> You can see the only meaning of these masks is the bitlength of tags,
->> but there are many masks (or we have to do open-coded a & 3,
->> if bitlength is changed, we have to fix them all)...
->>
->> therefore my approach is
->>
->> typedef tagptr1_t ta;	/* tagptr type a with 1-bit tag */
->> typedef tagptr1_t tb;	/* tagptr type b with 1-bit tag */
->> typedef tagptr2_t tc;	/* tagptr type c with 2-bit tag */
->>
->> and ta a; tb b; tc c;
->>
->> the type will represent its bitlength of tags and we can use ta, tb, tc
->> to avoid masks or open-coded bitlength.
->>
->> In order to decode the tag, we can
->> 	tagptr_unfold_tags(a)
->>
->> In order to decode the ptr, we can
->> 	tagptr_unfold_ptr(a)
->>
->> In order to fold the tagged pointer...
->> 	a = tagptr_fold(ta, ptr, tag)
->>
->>
->> ACCESS_ONCE stuff is another thing... If my approach seems cleaner,
->> we could move to include/linux later after EROFS stuffs is done...
->> Or I could use a better tagptr approach later if any...
-> 
-> Looking at the ring buffer code, it may be a bit too complex to try to
-> use a generic infrastructure. Look at rb_head_page_set(), where it does
-> a cmpxchg to set or clear the flags and then tests the previous flags
-> to know what actions need to be done.
 
-The current code supports cmpxchg as well, but I don't look into
-rb_head_page_set... (although I think it is not the critical thing if we
-decide to do some generic tagged pointer approach...)
-
-> 
-> The ring buffer tag code was added in 2009, the rtmutex tag code was
-> added in 2006. It's been 10 years before we needed another tag
-> operation. I'm not sure we benefit from making this generic.
-
-Okay, that depends on your folks, actually...
-
-
-Thanks,
-Gao Xiang
-
-> 
-> -- Steve
-> 
+-- 
+Kees Cook
