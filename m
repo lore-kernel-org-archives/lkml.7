@@ -2,109 +2,104 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6BDC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A788C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AD621903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F0F21985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817179;
-	bh=07kmdvtAjq+P6lKb4NfPv1qRZVvaGFBnnOj5BVi+pjY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Go6XGIR/2eGojLMdipCI52bR5NZgargQ2UdZAIq/1FSVhBIk933jLRjCdoUaq7YAy
-	 RCWERZJvKLmjfYM8xCxtxV3gl4wM7wvkQZLUJEm4c6IoIqzJM9hwerz6h1DL/X8pBq
-	 f2H3BQ1prx8WdAURmqHCn+QBvtuFo6Wn/KFwFrNU=
+	s=default; t=1563817184;
+	bh=o97yR4ndjmuHYvoK/zzHZytfgc6wu0vjaLx08w0yOzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ezg3UPHafLLqcmHc/rrpmBE1lhjKLDbR74uaZtEMlvUjLOBaiEs/eUvu+/w6vQctN
+	 6YMs1do+f2EOIPHlGhHb5loQk0e0967hBKmb9NZNsB714TFgAwUJFKjIGaaewoMJcl
+	 8LKV15n7Abc0g3osVGEIHCbqL6lIS2scuk1neAf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfGVRjh (ORCPT
+        id S1729601AbfGVRjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfGVRjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:39:35 -0400
-Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C30A21985;
-        Mon, 22 Jul 2019 17:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817174;
-        bh=07kmdvtAjq+P6lKb4NfPv1qRZVvaGFBnnOj5BVi+pjY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6PawSNQlI3RbAjCFfU1t7mZ+ygnxIn9OIIO8MXN0Eu7ni4HHv4xGKrBCXXEyOMPM
-         uer8ChWWiNGZ4NpSfOtjCDiO+sL9SbyVchSxI4uGBs9i3fS9dT6iWL6SUXiyIoI8Gt
-         2vlJhkUilHB5wA9HBmOqkh20ZIk2Z2Gawz5uvW04=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>
-Subject: [PATCH 06/37] perf trace: Order -e syscalls table
-Date:   Mon, 22 Jul 2019 14:38:08 -0300
-Message-Id: <20190722173839.22898-7-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
-References: <20190722173839.22898-1-acme@kernel.org>
+        Mon, 22 Jul 2019 13:39:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33239 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729483AbfGVRji (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:39:38 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so75838742iog.0;
+        Mon, 22 Jul 2019 10:39:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yuyB8pILujpflF/Q/M9APeaT5IXpHOGkbQKNsVipriU=;
+        b=YMnDDGpqtihngU2XWC4e9SLK1sLrK28a7LKJBSpEwCjcLouedXzcTGrHou65W6SfSV
+         rHMHML8qaNGPuIJ3wcIi3ZVgx7puk8T5kviG53nnYuqNcaTiXROyL2NYDe3F31XQcutI
+         peVgLKOXOhBoor2j+PgkQg5mqK5LmDOv6hKUAGT87MAWb/oGSpWrm6jL5x+cgo8WoL6d
+         evleacvElgPIEumo3tWSRJxbL30GBZqmVfa37En8q7cLC2UiFo0ocoS2KDgDP38A2/fG
+         wYXjR9RPSD6i8vyrJWy/yOIHU92Z7rn4mPSOswrCSZIjhOfiMHQj+8r4qB8gayCRwF+W
+         xtag==
+X-Gm-Message-State: APjAAAX/JE0yrEk0c+62p54U3IXsY3s4ZHyj9RWdMsGNo1uKLKsTbuYg
+        xL0qmQdE+byfGfXLKL8tPg==
+X-Google-Smtp-Source: APXvYqxNSkCw3W+oC2a+dAbLpos4fIcmpa8N1UVKkDaxst8+m0rwQM+coXmVvshQIkATlSLf6D7EeA==
+X-Received: by 2002:a02:b713:: with SMTP id g19mr74167358jam.77.1563817177425;
+        Mon, 22 Jul 2019 10:39:37 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id i3sm37295539ion.9.2019.07.22.10.39.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 10:39:36 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:39:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [v3 3/4] dt-bindings: display: panel: add auo kd101n80-45na
+ panel bindings
+Message-ID: <20190722173936.GA26950@bogus>
+References: <20190626025400.109567-1-jitao.shi@mediatek.com>
+ <20190626025400.109567-4-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626025400.109567-4-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, 26 Jun 2019 10:53:59 +0800, Jitao Shi wrote:
+> Add documentation for auo kd101n80-45na panel.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../display/panel/auo,kd101n80-45na.txt       | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
+> 
 
-The ev_qualifier is an array with the syscall ids passed via -e on the
-command line, sort it as we'll search it when setting up the
-BPF_MAP_TYPE_PROG_ARRAY.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-c8hprylp3ai6e0z9burn2r3s@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index bfd739a321d1..9bd5ecd6a8dd 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1528,6 +1528,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	return syscall__set_arg_fmts(sc);
- }
- 
-+static int intcmp(const void *a, const void *b)
-+{
-+	const int *one = a, *another = b;
-+
-+	return *one - *another;
-+}
-+
- static int trace__validate_ev_qualifier(struct trace *trace)
- {
- 	int err = 0;
-@@ -1591,6 +1598,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 	}
- 
- 	trace->ev_qualifier_ids.nr = nr_used;
-+	qsort(trace->ev_qualifier_ids.entries, nr_used, sizeof(int), intcmp);
- out:
- 	if (printed_invalid_prefix)
- 		pr_debug("\n");
--- 
-2.21.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
