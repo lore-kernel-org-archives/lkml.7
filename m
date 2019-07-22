@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1CEC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93501C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFCB21903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7C821985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817334;
-	bh=BT1XZolZI8moecnZ7T/qlkmE1d3lhrifZUgv3/CCVG0=;
+	s=default; t=1563817342;
+	bh=EASSxj9sw+3zA2cPBdwt8kv9OFzKD98mWXpVd808xiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t6ASyxuEQZBuSepDZkJmlg/ej5ra3YEcp6sop2g/OFPTnC174ktFZT6ufirahZhMM
-	 2taTPK/LfaUUaphUD/iw0s84VB+6XmRGvrZf1FQdUNzLUT8bpq6eCJ9IkoMSigdk3v
-	 7Ag55Y3Lz0Fttckbi5Elzh0MTc+Nfy285RNimqmo=
+	b=SmyjUGwEFSAPC7R584yMpIOM/vGgrW7XK1la09uPdGWEOt8de84Uzt/DJdV4a8ZGm
+	 o2oDyL6+lAuGxzZLw3uAx/ESbbiSRuqfR1d2VfYj2eTz5oHSGI4hs5GIdQI/QiCM9H
+	 s8en5nVwLPkqoAaGrsnZ9mW2bU/dfoX/9l5TziP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbfGVRmN (ORCPT
+        id S1731962AbfGVRmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:42:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:42:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfGVRmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:42:12 -0400
+        id S1728762AbfGVRmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:42:19 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1044921901;
-        Mon, 22 Jul 2019 17:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D29F21955;
+        Mon, 22 Jul 2019 17:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817331;
-        bh=BT1XZolZI8moecnZ7T/qlkmE1d3lhrifZUgv3/CCVG0=;
+        s=default; t=1563817338;
+        bh=EASSxj9sw+3zA2cPBdwt8kv9OFzKD98mWXpVd808xiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I72cIFvtr4rToq0b1SJ/3mBcpgMJb1laSrhO5ZmQwHCdWN6tbGb58Abxrl9ZvUNMv
-         7B+zHMqvXqB3HBWhbCJXJc8IKRGxgQtT/PrpLLbw2TRnzz3FLG+dKArdDUpeJlzryJ
-         BYNW5aa0RhoTd6U1MHCcw1+pS15nc/viANbFFcUw=
+        b=U+6LpDrxQH+dFJZiLHiIwJ+0rtoHbsjRr+OemwpYx95k/DAn/jAJgoqg2aOnjhRVi
+         P7pgvr3p/furFT/p91sYIkDUOC1CU9ne3ApDT7C5pSx+2Wtk1OSsSzvbFVaB1xTBld
+         arrNxh1JyB1yIpZIuXHngEDkCmXYdm3J56ij6KDE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 29/37] perf trace beauty: Add BPF augmenter for the 'rename' syscall
-Date:   Mon, 22 Jul 2019 14:38:31 -0300
-Message-Id: <20190722173839.22898-30-acme@kernel.org>
+Subject: [PATCH 30/37] perf trace: Forward error codes when trying to read syscall info
+Date:   Mon, 22 Jul 2019 14:38:32 -0300
+Message-Id: <20190722173839.22898-31-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
@@ -65,77 +65,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I.e. two strings:
+We iterate thru the syscall table produced from the kernel syscall
+tables reading info, propagate the error and add to the debug message.
 
-  # perf trace -e rename
-  systemd/1 rename("/run/systemd/units/.#invocation:dnf-makecache.service970761b7f2840dcc", "/run/systemd/units/invocation:dnf-makecache.service") = 0
-  systemd-journa/715 rename("/run/systemd/journal/streams/.#9:17539785BJDblc", "/run/systemd/journal/streams/9:17539785") = 0
-  mv/1936 rename("/tmp/build/perf/fd/.array.o.tmp", "/tmp/build/perf/fd/.array.o.cmd") = 0
-  sh/1949 rename("/tmp/build/perf/.cpu.o.tmp", "/tmp/build/perf/.cpu.o.cmd") = 0
-  mv/1954 rename("/tmp/build/perf/fs/.tracing_path.o.tmp", "/tmp/build/perf/fs/.tracing_path.o.cmd") = 0
-  mv/1963 rename("/tmp/build/perf/common-cmds.h+", "/tmp/build/perf/common-cmds.h") = 0
-  :1975/1975 rename("/tmp/build/perf/.exec-cmd.o.tmp", "/tmp/build/perf/.exec-cmd.o.cmd") = 0
-  mv/1979 rename("/tmp/build/perf/fs/.fs.o.tmp", "/tmp/build/perf/fs/.fs.o.cmd") = 0
-  mv/2005 rename("/tmp/build/perf/.debug.o.tmp", "/tmp/build/perf/.debug.o.cmd") = 0
-  mv/2012 rename("/tmp/build/perf/.str_error_r.o.tmp", "/tmp/build/perf/.str_error_r.o.cmd") = 0
-  mv/2019 rename("/tmp/build/perf/.help.o.tmp", "/tmp/build/perf/.help.o.cmd") = 0
-  mv/2031 rename("/tmp/build/perf/.trace-seq.o.tmp", "/tmp/build/perf/.trace-seq.o.cmd") = 0
-  make/2038  ... [continued]: rename())             = 0
-  :2038/2038 rename("/tmp/build/perf/.event-plugin.o.tmp", "/tmp/build/perf/.event-plugin.o.cmd") ...
-  ar/2035 rename("/tmp/build/perf/stzwBX3a", "/tmp/build/perf/libapi.a") = 0
-  mv/2051 rename("/tmp/build/perf/.parse-utils.o.tmp", "/tmp/build/perf/.parse-utils.o.cmd") = 0
-  mv/2069 rename("/tmp/build/perf/.subcmd-config.o.tmp", "/tmp/build/perf/.subcmd-config.o.cmd") = 0
-  make/2080 rename("/tmp/build/perf/.parse-filter.o.tmp", "/tmp/build/perf/.parse-filter.o.cmd") = 0
-  mv/2099 rename("/tmp/build/perf/.pager.o.tmp", "/tmp/build/perf/.pager.o.cmd") = 0
-  :2124/2124 rename("/tmp/build/perf/.sigchain.o.tmp", "/tmp/build/perf/.sigchain.o.cmd") = 0
-  make/2140 rename("/tmp/build/perf/.event-parse.o.tmp", "/tmp/build/perf/.event-parse.o.cmd") = 0
-  mv/2164 rename("/tmp/build/perf/.kbuffer-parse.o.tmp", "/tmp/build/perf/.kbuffer-parse.o.cmd") = 0
-  sh/2174 rename("/tmp/build/perf/.run-command.o.tmp", "/tmp/build/perf/.run-command.o.cmd") = 0
-  mv/2190 rename("/tmp/build/perf/.tep_strerror.o.tmp", "/tmp/build/perf/.tep_strerror.o.cmd") = 0
-  :2261/2261 rename("/tmp/build/perf/.event-parse-api.o.tmp", "/tmp/build/perf/.event-parse-api.o.cmd") = 0
-  :2480/2480 rename("/tmp/build/perf/stLv3kG2", "/tmp/build/perf/libtraceevent.a") = 0
-  ^C#
+This helps in fixing further bugs, such as failing to read the
+"sendfile" syscall info when it really should try the aliasm
+"sendfile64".
+
+  Problems reading syscall 40: 2 (No such file or directory)(sendfile) information
+
+  # grep sendfile /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
+	[40] = "sendfile",
+  #
+
+I.e. in the tracefs format file for the syscall tracepoints we have it
+as sendfile64:
+
+  # find /sys -type f -name format | grep sendfile
+  /sys/kernel/debug/tracing/events/syscalls/sys_enter_sendfile64/format
+  /sys/kernel/debug/tracing/events/syscalls/sys_exit_sendfile64/format
+  #
+
+But as "sendfile" in the file used to build the syscall table used in
+perf:
+
+  $ grep sendfile arch/x86/entry/syscalls/syscall_64.tbl
+  40	common	sendfile		__x64_sys_sendfile64
+  $
+
+So we need to add, in followup patches, aliases in 'perf trace' syscall
+data structures to cope with thie.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-6hh2rl27uri6gsxhmk6q3hx5@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-w3eluap63x9je0bb8o3t79tz@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ tools/perf/builtin-trace.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 9c2228b01ee6..79787cf4fce9 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -197,6 +197,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
- 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
- }
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d403b09812d1..5dae7b172291 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1492,13 +1492,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	const char *name = syscalltbl__name(trace->sctbl, id);
  
-+SEC("!syscalls:sys_enter_rename")
-+int sys_enter_rename(struct syscall_enter_args *args)
-+{
-+	int key = 0;
-+	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
-+	const void *oldpath_arg = (const void *)args->args[0],
-+		   *newpath_arg = (const void *)args->args[1];
-+	unsigned int len = sizeof(augmented_args->args), oldpath_len;
-+
-+        if (augmented_args == NULL)
-+                return 1; /* Failure: don't filter */
-+
-+	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
-+	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
-+
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+}
-+
- SEC("!syscalls:sys_enter_renameat")
- int sys_enter_renameat(struct syscall_enter_args *args)
+ 	if (name == NULL)
+-		return -1;
++		return -EINVAL;
+ 
+ 	if (id > trace->syscalls.max) {
+ 		struct syscall *nsyscalls = realloc(trace->syscalls.table, (id + 1) * sizeof(*sc));
+ 
+ 		if (nsyscalls == NULL)
+-			return -1;
++			return -ENOMEM;
+ 
+ 		if (trace->syscalls.max != -1) {
+ 			memset(nsyscalls + trace->syscalls.max + 1, 0,
+@@ -1525,10 +1525,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	}
+ 
+ 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ? 6 : sc->tp_format->format.nr_fields))
+-		return -1;
++		return -ENOMEM;
+ 
+ 	if (IS_ERR(sc->tp_format))
+-		return -1;
++		return PTR_ERR(sc->tp_format);
+ 
+ 	sc->args = sc->tp_format->format.fields;
+ 	/*
+@@ -1789,6 +1789,7 @@ typedef int (*tracepoint_handler)(struct trace *trace, struct perf_evsel *evsel,
+ static struct syscall *trace__syscall_info(struct trace *trace,
+ 					   struct perf_evsel *evsel, int id)
  {
++	int err = 0;
+ 
+ 	if (id < 0) {
+ 
+@@ -1811,9 +1812,10 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+ 	}
+ 
+ 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
+-	    trace__read_syscall_info(trace, id))
++	    (err = trace__read_syscall_info(trace, id)) != 0)
+ 		goto out_cant_read;
+ 
++	err = -EINVAL;
+ 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL))
+ 		goto out_cant_read;
+ 
+@@ -1821,7 +1823,8 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+ 
+ out_cant_read:
+ 	if (verbose > 0) {
+-		fprintf(trace->output, "Problems reading syscall %d", id);
++		char sbuf[STRERR_BUFSIZE];
++		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err, str_error_r(-err, sbuf, sizeof(sbuf)));
+ 		if (id <= trace->syscalls.max && trace->syscalls.table[id].name != NULL)
+ 			fprintf(trace->output, "(%s)", trace->syscalls.table[id].name);
+ 		fputs(" information\n", trace->output);
 -- 
 2.21.0
 
