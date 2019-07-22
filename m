@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8B2C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC9C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE43D21921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A02221921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfGVG6Q (ORCPT
+        id S1727719AbfGVG6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 02:58:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:45575 "EHLO
+        Mon, 22 Jul 2019 02:58:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:33825 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfGVG6Q (ORCPT
+        with ESMTP id S1725920AbfGVG6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 02:58:16 -0400
+        Mon, 22 Jul 2019 02:58:32 -0400
 Received: from [192.168.1.110] ([77.2.59.209]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MidPj-1iJXhV0B5r-00fkTH; Mon, 22 Jul 2019 08:58:10 +0200
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mi2aH-1iK6C51qS1-00e5BX; Mon, 22 Jul 2019 08:58:28 +0200
 Subject: Re: [PATCH] ia64: tioca: fix spelling mistake in macros
  CA_APERATURE_{BASE|SIZE}
 To:     Colin King <colin.king@canonical.com>,
@@ -32,8 +32,8 @@ Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190721205921.9960-1-colin.king@canonical.com>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Organization: metux IT consult
-Message-ID: <c62e488f-38b9-304d-f9d6-5502c25b84b7@metux.net>
-Date:   Mon, 22 Jul 2019 08:58:05 +0200
+Message-ID: <0c45cb73-f869-a1ae-e2b9-f2297a6db8e1@metux.net>
+Date:   Mon, 22 Jul 2019 08:58:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -41,22 +41,22 @@ In-Reply-To: <20190721205921.9960-1-colin.king@canonical.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:6Cz69RqLT0dFKL3GeeZxgqGnJtSxgvnVxPk/WTbGqZGWTx0LFw7
- 7ARXE6t+4WwyoWIEOjArQFZ6VBHRI+3FUKlcyrFWOItioRv1fIBzOZ52bRh87zpinFjcFyN
- seWLNr2nip6A0e32Jz/DMtyaiC/O4hmxe27SqU4P8BPzp7O3owiN+cNrgLn/NDtKgoRifkW
- hSiZ/Aqad5quh4Ld1jtwQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fDfb8F7oJqw=:EZzhv07YxlCmIWvOHTo6TU
- O4FG/vR3+G9+REBTbncXrfVqyot4wAza6ebqLqCoFdUKacVom5Em7fISK+erX+u5cRqsobQNj
- TAAvEOXfpgb7SYhlxBGxWj7DkT4vQOjVlOmaiHqHCWryp73Wa7mGevGf8CsKn8XP8VfN9PoQ7
- HhVr1iDmkPn6zWQPZ9f2hv/xv5wU95vTTS/s8TafLKx3HVGXhJ+lR1GvaJ6z8b4Jrnvhr1Fhl
- x8vRdL6pYBIxtty1/iwKirvg2ZkoevNefVgVKl+IlGDzl49jmKUphDPBjR67LRTYJvRrODmTF
- 9RA/TW2MOgNg+RV9xUkXyAnU73lNSOhY1/AkaY8LIItCxcpnWjsCf0NN2cyy9AVIVt8spfrRB
- ZhlRMg0ZjbRpxlSJ6HFn1lgZWu0awf/kXbe0bTeDRyB4Cr7XliSnj7gzioZK6j5FTygQSL3nx
- FBvcd++hg8gNk+5VTwYwuPx8Dqy7vc29DJrMLAftxvcAy9bCDE7/PAso7V7LzDUP+AaZxddQK
- frxEg9HYkaVgHKC9UZWJOPzn1u98s/QdjX/LDrm5FabBVx2DEprcgB1MAU+3bD0wv8pJRtLZC
- EyMaX4PqMe3Tex3u8TS3Zueete4YC1olcuHIeCCW55jVxV/RjTbTalbZa7L819HreuYj14bEn
- GMyzfqCk+WkYUpZwB0a5nHRe/5EkREZILBfIYjgkviYIbW3bvyHBkrO0yZCQcBzk7nLkj8Hmt
- 8FNqPRuCncME+1GY5vezEpsayMeLmHgodlI3Az6BgCa3/S5syDWrPIJSP10=
+X-Provags-ID: V03:K1:pW3j4GvUOpOyHC+3k1Q37w9HoWfGi1ZoS4eS4SnudMZ/ZNW/OwG
+ pF8S4K86INo3flLgyXk0udbAPuTqcK0thZJiTeUneU2EphH641SiW4pMjeET86aEkHGCAQj
+ seMIcVrWsCOfcB189DBX0oecD0qjnBd2dol2KWKhdrJVObaPuLJ5TM6GwZkWzrkgHs2UhnY
+ EEShaFWZeJ5uoak74B4NQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XSVY6tdZ90E=:byR3JslXxV+cM38n57Pffw
+ CtBDBub7zBtRWYQ549EmtL2+LpLdjOKnZ3aWFGZGudezmhZYm9MJjGWpe/clG8zYjrbWvZyzr
+ W6h5YuoCjje+fMTq2axi4EkEO4HyFAvTZrKLpR0SZ7w4UaPGKTV1S8nMLXm19x7Ldl8jcp5LM
+ mMZYVo9xeXZE85OfJ5DWp4/C7A6NXDuSmel6mXIOj+DrX2YyWIdFSGa8o4tjvne1gT5S9o7LX
+ nTfWKiQkXzMp+R5G8BtNQ5HrdjgUfWHOPq0C0cF8XS34J5Sse0n2of6WIRAL1YYOCAII3tsb9
+ TeSyM/TfhOJbRsk9Jw3favTuwKRLGI/OPMt5xzJ9lAiQe3j3SKFPPkOboHsWAutvu6tVDTMSg
+ CV7TAcbgvWhzlXqPGdgHQW+bG7raD0qj2vBeyqU3BM8NdiwVnn7+/8FqOAW5yKhIf/A3Rj2lx
+ 1bHSzgFxcgqVMecByeg+BRSr9L7QOeKL2rODCHoPkcnwjcSqDwNQynKTW8FJrjo3gfziVsmU/
+ CePNy7qM7vnqD4iCj37/Xa50YnsC+UwauBioMlxo08OHFGJr1cZwOU8EAeDVtOjqatROMNYit
+ /sgWBY/N/YKi7kvfN0BCTNCXFTrs9Dc/1Mv682Dqpy7qGvFwH9ANLFzfjQgL+vKI7Kb8OI6TG
+ kV1L/83fF1zPqiCl2pP9L1H9yA6dN1Rk9MXopHTuk28Gh+BpUq2vqXJqDSCiUbb/RTP0e9TVV
+ 2PHu+09JBgPwvzHm09DAAH+PHBgh6zCK8zE81zHx+qZPlCwukT4rG4W73x0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -142,8 +142,8 @@ On 21.07.19 22:59, Colin King wrote:
 >   	tioca_kern->ca_gfxap_size = CA_AGP_MAPPED_SIZE;
 >   	tioca_kern->ca_gfxgart_start = offset / tioca_kern->ca_ap_pagesize;
 > 
-Reviewed-By: Enrico Weigelt <info@metux.net>
 
+Reviewed-By: Enrico Weigelt <info@metux.net>
 -- 
 Enrico Weigelt, metux IT consult
 Free software and Linux embedded engineering
