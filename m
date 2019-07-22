@@ -2,93 +2,96 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38250C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FCC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0965F21911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qVOsFplG"
+	by mail.kernel.org (Postfix) with ESMTP id E580021911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfGVOTr (ORCPT
+        id S1729957AbfGVOT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:19:47 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56162 "EHLO vps0.lunn.ch"
+        Mon, 22 Jul 2019 10:19:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49126 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbfGVOTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:19:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=w7liDE+E5Iu1xIHWqacl7h46/XlirlaNe/zw3/PBWCk=; b=qVOsFplGBuYk4ymZhAgzpL6i71
-        /wdEDJ7Aejf42R92mP3bplohaTlECg+3Zv96yKTaZH25VSn4ERUgQoNInz2f9W2vbWPA/xWF5eOhP
-        wUqPRaw0PMeLwHs3cj+Kw721melKrgtIO8rh8GvT5oTpSXOVQHFujFs7hLu3G+18ikIk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hpZAF-0003Dn-Fp; Mon, 22 Jul 2019 16:19:43 +0200
-Date:   Mon, 22 Jul 2019 16:19:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next 0/3] net: stmmac: Convert to phylink
-Message-ID: <20190722141943.GE8972@lunn.ch>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <20190722124240.464e73losonwb356@core.my.home>
- <BN8PR12MB32660B12F8E2617ED42249BBD3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722134023.GD8972@lunn.ch>
- <BN8PR12MB3266678A3ABD0EBF429C9766D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+        id S1728228AbfGVOT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:19:58 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 25C563C91A;
+        Mon, 22 Jul 2019 14:19:58 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C31360BF1;
+        Mon, 22 Jul 2019 14:19:48 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 22:19:41 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     axboe@kernel.dk, adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com, arnd@arndb.de,
+        linus.walleij@linaro.org, vincent.guittot@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: Re: [RFC PATCH 1/7] blk-mq: Export blk_mq_hctx_has_pending() function
+Message-ID: <20190722141940.GA26528@ming.t460p>
+References: <cover.1563782844.git.baolin.wang@linaro.org>
+ <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN8PR12MB3266678A3ABD0EBF429C9766D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 22 Jul 2019 14:19:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:58:20PM +0000, Jose Abreu wrote:
-> From: Andrew Lunn <andrew@lunn.ch>
-> Date: Jul/22/2019, 14:40:23 (UTC+00:00)
+On Mon, Jul 22, 2019 at 09:09:36PM +0800, Baolin Wang wrote:
+> Some SD/MMC host controllers can support packed command or packed request,
+> that means we can package several requests to host controller at one time
+> to improve performence. And this patch set will introduce MMC packed function
+> to support this feature by following patches.
 > 
-> > Does this mean that all stmmac variants support 1G? There are none
-> > which just support Fast Ethernet?
+> To support MMC packed function, the MMC layer need to know if there are
+> requests are pending now in hardware queue to help to combine requests
+> as much as possible. If we know there are requests pending in hardware
+> queue, then we should not package requests to host controller immediately,
+> instead we should collect more requests into MMC packed queue to be packed
+> to host controller with packed condition.
 > 
-> This glue logic drivers sometimes reflect a custom IP that's Synopsys 
-> based but modified by customer, so I can't know before-hand what's the 
-> supported max speed. There are some old versions that don't support 1G 
-> but I expect that PHY driver limits this ...
-
-If a Fast PHY is used, then yes, it would be limited. But sometimes a
-1G PHY is used because they are cheaper than a Fast PHY.
- 
-> > I'm also not sure the change fits the problem. Why did it not
-> > negotiate 100FULL rather than 10Half? You are only moving the 1G
-> > speeds around, so 100 speeds should of been advertised and selected.
+> Thus export this function for MMC packed function.
 > 
-> Hmm, now that I'm looking at it closer I agree with you. Maybe link 
-> partner or PHY doesn't support 100M ?
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  block/blk-mq.c         |    3 ++-
+>  include/linux/blk-mq.h |    1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index b038ec6..5bd4ef9 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -63,12 +63,13 @@ static int blk_mq_poll_stats_bkt(const struct request *rq)
+>   * Check if any of the ctx, dispatch list or elevator
+>   * have pending work in this hardware queue.
+>   */
+> -static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
+> +bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
+>  {
+>  	return !list_empty_careful(&hctx->dispatch) ||
+>  		sbitmap_any_bit_set(&hctx->ctx_map) ||
+>  			blk_mq_sched_has_work(hctx);
+>  }
+> +EXPORT_SYMBOL_GPL(blk_mq_hctx_has_pending);
 
-In the working case, ethtool shows the link partner supports 10, 100,
-and 1G. So something odd is going on here.
+Just wondering why you don't use the 'last' field of 'struct blk_mq_queue_data',
+which is passed to .queue_rq(), and supposed for implementing batch submission.
+	
 
-You fix does seems reasonable, and it has been reported to fix the
-issue, but it would be good to understand what is going on here.
-
-    Andrew
+Thanks,
+Ming
