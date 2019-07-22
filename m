@@ -2,193 +2,122 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F69AC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D9C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCDB2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3012229A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="S6d3yn/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbfGVPiI (ORCPT
+        id S1729676AbfGVPiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:38:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:39784 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbfGVPiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:38:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2D381509;
-        Mon, 22 Jul 2019 08:37:59 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83A453F694;
-        Mon, 22 Jul 2019 08:37:58 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 5/6] ARM: psci: cpuidle: Enable PSCI CPUidle driver
-Date:   Mon, 22 Jul 2019 16:37:44 +0100
-Message-Id: <20190722153745.32446-6-lorenzo.pieralisi@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
-References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+        Mon, 22 Jul 2019 11:38:52 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:28619 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727364AbfGVPiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:38:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563809931; x=1595345931;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=p+BFPwGgmyuthzqKYX1LJhl13bUmA6xYC+bpOYReBp0=;
+  b=S6d3yn/mFul4AJMAyI0sojVQWI6OLaGv8u7VO0KVDemA3UW31QqMb6xA
+   jo3sXSoLoAN3lq2nvDhxILktjBjmuazrOlMQ/ZNCSt1yo/WReRzB+bLse
+   n18FuPCCKRgRxTVP1/t9BETwLE4OncAZb9wy786VBDm/YHVg/YVdqgdG1
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.64,295,1559520000"; 
+   d="scan'208";a="686990785"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 22 Jul 2019 15:38:48 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id 0B3F1A06CE;
+        Mon, 22 Jul 2019 15:38:47 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 22 Jul 2019 15:38:47 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 22 Jul 2019 15:38:47 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Mon, 22 Jul 2019 15:38:46 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "Gustavo.Pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v2 6/8] PCI: al: Add support for DW based driver type
+Thread-Topic: [PATCH v2 6/8] PCI: al: Add support for DW based driver type
+Thread-Index: AQHVPU3XMXwgBID7IUCMB4MzIhERXqbRpMwAgAOM1wCAASn+AIAAcNuA
+Date:   Mon, 22 Jul 2019 15:38:46 +0000
+Message-ID: <27d8e8a8bba4aeb845d6c953f3a07a29875fef02.camel@amazon.com>
+References: <20190718094531.21423-1-jonnyc@amazon.com>
+         <20190718094718.25083-2-jonnyc@amazon.com>
+         <DM6PR12MB4010913E5408349A600762CADACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
+         <d323007c6bf14cb9f90a497a26b66dac151164fc.camel@amazon.com>
+         <DM6PR12MB40101465C6D032B025473EFADAC40@DM6PR12MB4010.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB40101465C6D032B025473EFADAC40@DM6PR12MB4010.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.8]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BEE06177C9B70F46A85B8E622B3F6BA5@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow selection of the PSCI CPUidle in the kernel by adding
-the required Kconfig options.
-
-Remove PSCI callbacks from ARM/ARM64 generic CPU ops
-to prevent the PSCI idle driver from clashing with the generic
-ARM CPUidle driver initialization, that relies on CPU ops
-to initialize and enter idle states.
-
-Update the affected defconfig files to guarantee seamingless
-transition from the generic ARM CPUidle to the PSCI CPUidle
-driver on arch/platforms using it.
-
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
----
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- arch/arm64/configs/defconfig         | 1 +
- arch/arm64/kernel/cpuidle.c          | 7 ++++---
- arch/arm64/kernel/psci.c             | 4 ----
- drivers/cpuidle/Kconfig.arm          | 8 ++++++--
- drivers/firmware/psci/psci.c         | 9 ---------
- 6 files changed, 12 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index a53b29251ed4..4174fd1b79e7 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -60,6 +60,7 @@ CONFIG_ARM_IMX6Q_CPUFREQ=y
- CONFIG_ARM_IMX_CPUFREQ_DT=y
- CONFIG_CPU_IDLE=y
- CONFIG_ARM_CPUIDLE=y
-+CONFIG_ARM_PSCI_CPUIDLE=y
- CONFIG_VFP=y
- CONFIG_NEON=y
- CONFIG_PM_DEBUG=y
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0e58ef02880c..c0a7cfe3aebd 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -72,6 +72,7 @@ CONFIG_RANDOMIZE_BASE=y
- CONFIG_HIBERNATION=y
- CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
- CONFIG_ARM_CPUIDLE=y
-+CONFIG_ARM_PSCI_CPUIDLE=y
- CONFIG_CPU_FREQ=y
- CONFIG_CPU_FREQ_STAT=y
- CONFIG_CPU_FREQ_GOV_POWERSAVE=m
-diff --git a/arch/arm64/kernel/cpuidle.c b/arch/arm64/kernel/cpuidle.c
-index d1048173fd8a..4bcd1bca0dfc 100644
---- a/arch/arm64/kernel/cpuidle.c
-+++ b/arch/arm64/kernel/cpuidle.c
-@@ -11,6 +11,7 @@
- #include <linux/cpu_pm.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/psci.h>
- 
- #include <asm/cpuidle.h>
- #include <asm/cpu_ops.h>
-@@ -48,15 +49,15 @@ int arm_cpuidle_suspend(int index)
- 
- int acpi_processor_ffh_lpi_probe(unsigned int cpu)
- {
--	return arm_cpuidle_init(cpu);
-+	return psci_acpi_cpu_init_idle(cpu);
- }
- 
- int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
- {
- 	if (ARM64_LPI_IS_RETENTION_STATE(lpi->arch_flags))
--		return CPU_PM_CPU_IDLE_ENTER_RETENTION(arm_cpuidle_suspend,
-+		return CPU_PM_CPU_IDLE_ENTER_RETENTION(psci_cpu_suspend_enter,
- 						lpi->index);
- 	else
--		return CPU_PM_CPU_IDLE_ENTER(arm_cpuidle_suspend, lpi->index);
-+		return CPU_PM_CPU_IDLE_ENTER(psci_cpu_suspend_enter, lpi->index);
- }
- #endif
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 85ee7d07889e..a543ab7e007c 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -105,10 +105,6 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 
- const struct cpu_operations cpu_psci_ops = {
- 	.name		= "psci",
--#ifdef CONFIG_CPU_IDLE
--	.cpu_init_idle	= psci_cpu_init_idle,
--	.cpu_suspend	= psci_cpu_suspend_enter,
--#endif
- 	.cpu_init	= cpu_psci_cpu_init,
- 	.cpu_prepare	= cpu_psci_cpu_prepare,
- 	.cpu_boot	= cpu_psci_cpu_boot,
-diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
-index 929b57424ea4..b9c56c60ab98 100644
---- a/drivers/cpuidle/Kconfig.arm
-+++ b/drivers/cpuidle/Kconfig.arm
-@@ -14,8 +14,12 @@ config ARM_CPUIDLE
-           provided by architecture code.
- 
- config ARM_PSCI_CPUIDLE
--	bool
--
-+	bool "PSCI CPU idle Driver"
-+	depends on ARM_PSCI_FW
-+	select DT_IDLE_STATES
-+	select CPU_IDLE_MULTIPLE_DRIVERS
-+	help
-+	  Select this to enable PSCI firmware based CPUidle driver for ARM.
- config ARM_BIG_LITTLE_CPUIDLE
- 	bool "Support for ARM big.LITTLE processors"
- 	depends on ARCH_VEXPRESS_TC2_PM || ARCH_EXYNOS
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index f82ccd39a913..bae734d13a52 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -436,15 +436,6 @@ int psci_cpu_suspend_enter(unsigned long index)
- 
- 	return ret;
- }
--
--/* ARM specific CPU idle operations */
--#ifdef CONFIG_ARM
--static const struct cpuidle_ops psci_cpuidle_ops __initconst = {
--	.suspend = psci_cpu_suspend_enter,
--	.init = psci_dt_cpu_init_idle,
--};
--
--CPUIDLE_METHOD_OF_DECLARE(psci, "psci", &psci_cpuidle_ops);
- #endif
- #endif
- 
--- 
-2.21.0
-
+T24gTW9uLCAyMDE5LTA3LTIyIGF0IDA4OjU0ICswMDAwLCBHdXN0YXZvIFBpbWVudGVsIHdyb3Rl
+Og0KPiANCj4gPiANCj4gPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBhbF9wY2llX3RhcmdldF9i
+dXNfc2V0KHN0cnVjdCBhbF9wY2llDQo+ID4gPiA+ICpwY2llLA0KPiA+ID4gPiArCQkJCQkgIHU4
+IHRhcmdldF9idXMsDQo+ID4gPiA+ICsJCQkJCSAgdTggbWFza190YXJnZXRfYnVzKQ0KPiA+ID4g
+PiArew0KPiA+ID4gPiArCXZvaWQgX19pb21lbSAqY2ZnX2NvbnRyb2xfYWRkcjsNCj4gPiA+ID4g
+Kwl1MzIgcmVnOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcmVnID0gRklFTERfUFJFUChDRkdfVEFS
+R0VUX0JVU19NQVNLX01BU0ssDQo+ID4gPiA+IG1hc2tfdGFyZ2V0X2J1cykgfA0KPiA+ID4gPiAr
+CSAgICAgIEZJRUxEX1BSRVAoQ0ZHX1RBUkdFVF9CVVNfQlVTTlVNX01BU0ssDQo+ID4gPiA+IHRh
+cmdldF9idXMpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJY2ZnX2NvbnRyb2xfYWRkciA9ICh2b2lk
+IF9faW9tZW0gKikoKHVpbnRwdHJfdClwY2llLQ0KPiA+ID4gPiA+IGNvbnRyb2xsZXJfYmFzZSAr
+DQo+ID4gPiA+IA0KPiA+ID4gPiArCQkJICAgQVhJX0JBU0VfT0ZGU0VUICsgcGNpZS0NCj4gPiA+
+ID4gPnJlZ19vZmZzZXRzLm9iX2N0cmwNCj4gPiA+ID4gKw0KPiA+ID4gPiArCQkJICAgQ0ZHX1RB
+UkdFVF9CVVMpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJd3JpdGVsKHJlZywgY2ZnX2NvbnRyb2xf
+YWRkcik7DQo+ID4gPiANCj4gPiA+IEZyb20gd2hhdCBJJ20gc2VlaW5nIHlvdSBjb21tb25seSB1
+c2Ugd3JpdGVsKCkgYW5kIHJlYWRsKCkgd2l0aCBhDQo+ID4gPiBjb21tb24gDQo+ID4gPiBiYXNl
+IGFkZHJlc3MsIHN1Y2ggYXMgcGNpZS0+Y29udHJvbGxlcl9iYXNlICsgQVhJX0JBU0VfT0ZGU0VU
+Lg0KPiA+ID4gSSdkIHN1Z2dlc3QgdG8gY3JlYXRpbmcgYSB3cml0ZWwgYW5kIHJlYWRsIHdpdGgg
+dGhhdCBvZmZzZXQNCj4gPiA+IGJ1aWx0LWluLg0KPiA+ID4gDQo+ID4gDQo+ID4gSSBwcmVmZXIg
+dG8ga2VlcCBpdCBnZW5lcmljLCBzaW5jZSBpbiBmdXR1cmUgcmV2aXNpb25zIHdlIG1pZ2h0DQo+
+ID4gd2FudCB0bw0KPiA+IGFjY2VzcyByZWdzIHdoaWNoIGFyZSBub3QgaW4gdGhlIEFYSSByZWdp
+b24uIFlvdSB0aGluayBJIHNob3VsZCBhZGQNCj4gPiB3cmFwcGVycyB3aGljaCBzaW1wbHkgaGlk
+ZSB0aGUgcGNpZS0+Y29udHJvbGxlcl9iYXNlIHBhcnQ/DQo+IA0KPiBJIGFuZCBvdGhlciBkZXZl
+bG9wZXJzIHR5cGljYWxseSBkbyB0aGF0LCBidXQgaXQncyBhIHN1Z2dlc3Rpb24uIElNSE8NCj4g
+aXQgDQo+IGhlbHBzIHRvIGtlZXAgdGhlIGNvZGUgY2xlYW5lciBhbmQgbW9yZSByZWFkYWJsZS4N
+Cj4gDQoNCkFkZGVkIGFsX3BjaWVfY29udHJvbGxlcl9yZWFkbC93cml0ZWwgd3JhcHBlcnMuDQoN
+Ci0tIA0KVGhhbmtzLA0KICAgSm9uYXRoYW4NCg==
