@@ -2,146 +2,152 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB981C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980F1C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA3C21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F1021955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uY2n8ftA"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ic76KIn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbfGVW75 (ORCPT
+        id S1733057AbfGVXGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:59:57 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36907 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfGVW74 (ORCPT
+        Mon, 22 Jul 2019 19:06:12 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15593 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728191AbfGVXGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:59:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id q22so77701272iog.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 15:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JWzObsdwU3i63gvAqqM5ECXti3xb+XhH33+pC1nlaaE=;
-        b=uY2n8ftAPZVkAr8jdXWBsvcA8yE2U1CfjtybqA2v1jcwqs41Rc5uWFaGUn8oPnRXaX
-         3lfZTk36mp9FamG+/DoyegTCUAwZSZzYFBBhFjtXWGcaBzThO2TQSdiwihiIBMXW/4Bh
-         OyNV8TZnwhmrWcqfgwn6lLrY49qviOAuTzMEMw1ai8KBzKf4Hb90sDAXpnFAFZGlvq6Z
-         Gcy11kj1ZRl+XlYxCYZaQCFUfG266OQOPGCqPlxSKXFf5NS4hIQKQWJLxTk/FZZmkjKq
-         GluMQ/svUi8OOMHmTlk/Nl24kVdeYwQYcmD/C9fLaJlyekSE24i/n1i/VDnmljBh/aHi
-         fsmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JWzObsdwU3i63gvAqqM5ECXti3xb+XhH33+pC1nlaaE=;
-        b=VSXbsiFxsMixPWVzoflzDraGQbzcFQFmNxf2l6EF0h72Mn7kaDfNqhlAZXHkK2A33e
-         MzQwKgLEW4zVxEVNEekUZL09HibmQ9tR4Mo+Cj493oNJu6vuiWFNgKNPrjVgyK7gdw4w
-         JyXLd8M9uKqrdzoR+uCy+ndjBH3tg5eoVsS9msoJakww3hbmfEb3TgBeilEpgiE5KT9H
-         MZYfVFHZzyMrLuozcmAftTC/1lZlBK4Q/upDSouFPABuOr4p2l2sQ7KhZtlyTYHPMkFQ
-         NQT+aQKb7axDvFXqUxFkj66bMrJGvqKXOpdiT7AdG3+YDWorCjcVv9okw8Pif3ExYtBa
-         7mFQ==
-X-Gm-Message-State: APjAAAV5P59YkyT4UaTepvwnuuaKTYxjH6+hNWOfc+RLVxxZlaT0Fp6W
-        OMzDCta3A6QKzUqNqzp3nOpY1KgEa339ah51+HHA3Q==
-X-Google-Smtp-Source: APXvYqy6QBLbVbywHf8Q6h+aeZbSlkdjm2Xi4/FetLBdPWhaZz7AKFhhp5qclvY2nAoZq7qq7j1xVayXRZfBYRWpDFI=
-X-Received: by 2002:a02:ad15:: with SMTP id s21mr78069681jan.47.1563836395727;
- Mon, 22 Jul 2019 15:59:55 -0700 (PDT)
+        Mon, 22 Jul 2019 19:06:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3641600000>; Mon, 22 Jul 2019 16:06:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 16:06:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 16:06:11 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 23:06:10 +0000
+Subject: Re: [PATCH 3/3] sgi-gru: Use __get_user_pages_fast in
+ atomic_pte_lookup
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+CC:     <arnd@arndb.de>, <sivanich@sgi.com>, <gregkh@linuxfoundation.org>,
+        <ira.weiny@intel.com>, <jglisse@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+References: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
+ <1563724685-6540-4-git-send-email-linux.bhar@gmail.com>
+ <c508330d-a5d0-fba3-9dd0-eb820a96ee09@nvidia.com>
+ <20190722175310.GC12278@bharath12345-Inspiron-5559>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <15223dd3-8018-65f0-dc0b-aef43945e54e@nvidia.com>
+Date:   Mon, 22 Jul 2019 16:06:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722213250.238685-1-ndesaulniers@google.com>
- <20190722213250.238685-2-ndesaulniers@google.com> <CAKwvOdm3iyeJfuivhQJqXB9FfC0zHgrfgoN_qW4poEyfcw3C9A@mail.gmail.com>
-In-Reply-To: <CAKwvOdm3iyeJfuivhQJqXB9FfC0zHgrfgoN_qW4poEyfcw3C9A@mail.gmail.com>
-From:   Vaibhav Rustagi <vaibhavrustagi@google.com>
-Date:   Mon, 22 Jul 2019 15:59:44 -0700
-Message-ID: <CAMVonLjd3DoKQatdraG0t8X_F9Au-fA_vL2RSNfNPNbqvXWCDA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] x86/purgatory: use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722175310.GC12278@bharath12345-Inspiron-5559>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563836768; bh=8L2t5eNHtNZSBlKOQ4UF/BYJB/qKm9Cii8LsBa8jE4c=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ic76KIn3tVio6vzVxE2FnWPCYuR7SXKbShoLnDet+7TPVb2NHLdtlV/kDMJCRRg5I
+         t95iAmFuphbDWTfhJWQVcutfK4K3SSC7t0F07t/GUpbG5ve7mqdnCpz9zM5WVTZl+o
+         HGCA5yP0OGGXa76TuqLlfEc+S1OholGwzkmaROv5W2B7rQgMJbNC/NEkcDdp4TjjyS
+         4k83+HfBmE41XSDRriG7l+FvX8LSKEaI56L7iHXvhZ1cFPSFVCko1yx/ukVBFs4KaH
+         LwwauagCcI6DjUxHcUesRH9e43/t9Wl7Iz+snHAqXnxusLedgIJXzOB3cZRf98KVyL
+         7I7k+ccEnSXyQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 3:10 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Jul 22, 2019 at 2:33 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > KBUILD_CFLAGS is very carefully built up in the top level Makefile,
-> > particularly when cross compiling or using different build tools.
-> > Resetting KBUILD_CFLAGS via := assignment is an antipattern.
-> >
-> > The comment above the reset mentions that -pg is problematic.  Other
-> > Makefiles like arch/x86/xen/vdso/Makefile use
-> > `CFLAGS_REMOVE_file.o = -pg` when CONFIG_FUNCTION_TRACER is set. Prefer
-> > that pattern to wiping out all of the important KBUILD_CFLAGS then
-> > manually having to re-add them.
-> >
-> > Fixes: 8fc5b4d4121c ("purgatory: core purgatory functionality")
-> > Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> > Rather than manually add -mno-sse, -mno-mmx, -mno-sse2, prefer to filter
-> > -pg flags.
-> >
-> >  arch/x86/purgatory/Makefile | 12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> > index 91ef244026d2..56bcabca283f 100644
-> > --- a/arch/x86/purgatory/Makefile
-> > +++ b/arch/x86/purgatory/Makefile
-> > @@ -20,11 +20,13 @@ KCOV_INSTRUMENT := n
-> >
-> >  # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
-> >  # in turn leaves some undefined symbols like __fentry__ in purgatory and not
-> > -# sure how to relocate those. Like kexec-tools, use custom flags.
-> > -
-> > -KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
-> > -KBUILD_CFLAGS += -m$(BITS)
->
-> Is purgatory/kexec supported for CONFIG_X86_32?  Should I be keeping
-> `-m$(BITS)`?  arch/x86/purgatory/Makefile mentions
-> `setup-x86_$(BITS).o` which I assume is broken as there is no
-> arch/x86/purgatory/setup-x86_32.S?
->
-> > -KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
-> > +# sure how to relocate those.
-> > +ifdef CONFIG_FUNCTION_TRACER
-> > +CFLAGS_REMOVE_sha256.o = -pg
-> > +CFLAGS_REMOVE_purgatory.o = -pg
-> > +CFLAGS_REMOVE_string.o = -pg
-> > +CFLAGS_REMOVE_kexec-purgatory.o = -pg
-> > +endif
-> >
+On 7/22/19 10:53 AM, Bharath Vedartham wrote:
+> On Sun, Jul 21, 2019 at 07:32:36PM -0700, John Hubbard wrote:
+>> On 7/21/19 8:58 AM, Bharath Vedartham wrote:
+...
 
-The changes suggested will cause undefined symbols while loading the new kernel.
-On doing 'nm purgatory.ro', I found below undefined symbols:
+>> Also, optional: as long as you're there, atomic_pte_lookup() ought to
+>> either return a bool (true == success) or an errno, rather than a
+>> numeric zero or one.
+> That makes sense. But the code which uses atomic_pte_lookup uses the
+> return value of 1 for success and failure value of 0 in gru_vtop. That's
+> why I did not mess with the return values in this code. It would require
+> some change in the driver functionality which I am not ready to do :(
 
-U bmcp
-U __stack_chk_fail
+It's a static function with only one caller. You could just merge in
+something like this, on top of what you have:
 
-> >  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
-> >                 $(call if_changed,ld)
-> > --
-> > 2.22.0.657.g960e92d24f-goog
-> >
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
+index 121c9a4ccb94..2f768fc06432 100644
+--- a/drivers/misc/sgi-gru/grufault.c
++++ b/drivers/misc/sgi-gru/grufault.c
+@@ -189,10 +189,11 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
+        return 0;
+ }
+ 
+-/*
+- * atomic_pte_lookup
++/**
++ * atomic_pte_lookup() - Convert a user virtual address to a physical address
++ * @Return: true for success, false for failure. Failure means that the page
++ *         could not be pinned via gup fast.
+  *
+- * Convert a user virtual address to a physical address
+  * Only supports Intel large pages (2MB only) on x86_64.
+  *     ZZZ - hugepage support is incomplete
+  *
+@@ -207,12 +208,12 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
+        *pageshift = is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+ 
+        if (!__get_user_pages_fast(vaddr, 1, write, &page))
+-               return 1;
++               return false;
+ 
+        *paddr = page_to_phys(page);
+        put_user_page(page);
+ 
+-       return 0;
++       return true;
+ }
+ 
+ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+@@ -221,7 +222,8 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+        struct mm_struct *mm = gts->ts_mm;
+        struct vm_area_struct *vma;
+        unsigned long paddr;
+-       int ret, ps;
++       int ps;
++       bool success;
+ 
+        vma = find_vma(mm, vaddr);
+        if (!vma)
+@@ -232,8 +234,8 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+         * context.
+         */
+        rmb();  /* Must/check ms_range_active before loading PTEs */
+-       ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
+-       if (ret) {
++       success = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
++       if (!success) {
+                if (atomic)
+                        goto upm;
+                if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
