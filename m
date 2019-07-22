@@ -2,119 +2,116 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3B6C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF1C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D170D218C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51577218C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8HWUQlF"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="JtIYbjWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732467AbfGVUGZ (ORCPT
+        id S1732479AbfGVUGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 16:06:25 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36082 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbfGVUGZ (ORCPT
+        Mon, 22 Jul 2019 16:06:30 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34995 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbfGVUG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 16:06:25 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so17894953pfl.3;
-        Mon, 22 Jul 2019 13:06:24 -0700 (PDT)
+        Mon, 22 Jul 2019 16:06:27 -0400
+Received: by mail-yw1-f65.google.com with SMTP id g19so15610018ywe.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=dc1nDbjKpnpP+a+/MmVe5NpW+Or0aQ+dHKZXZgx9JfE=;
-        b=b8HWUQlFI4Bi3Vsm9h3pIL1BtPQ+jCsskWoS3LtjbQqMzNMt/ByjHN8SUdmCg4wCvg
-         56aMy7KRNlT5Nyv+O+oWRkgwIWjVJ2hfQ7yczoZweGJLJbOe914LSiJsaHRGx1lr1FEp
-         kC9Nx9QUUS8SrXKa1bvAwrbSDDSaqBTJf3vN7+Y9D1MKF5fnMwXNinoN/Q6WIk6TAK31
-         Oyh8D5d5wUR/yIWMJzLhxnW5kMJ8eC5r+RY7gIrkOtwVc9IcKgB7bzqnOE/g1m/CMBl4
-         rX5e6DeeEXM4oGUG5qWj0EvzUlLdkjOqwsn9BvkYvFtenYXanekOBprQdaWBcQktjGdG
-         EBsA==
+        bh=HwvJiB020PdHZrr6dRx+YAOsgzbnAkiZvqKqCv91HY0=;
+        b=JtIYbjWtQYouQdTV52R6hWVjmr3h57dT7O21FB17MAyvKSdf74C8ZQ/+UWuVXvOJPp
+         aKOjxaacmyjkLvWwvM4/prsMKdiimEZ9YgK3Fcv2V7GMLb/sIaU6zTApATxI39pVHQWV
+         lyNwl6s5dbvE73l0D+VnMm2cQWYc8y1prkn79WgdqihoOcXQaiZ9L44hPGAqOvspPIYf
+         sVsWG16yFJULB+qnmzLAjFYcKLfidEqT5RbRJW4cYbtVj0sIOkBygQRSny/9K7KoROeD
+         SKOl/vT9+KCDofXbNh/M8kkSINAXNf3Fsw0LqEzLhh1zlzGwFA8KzmNo/2ySLN3D/puE
+         fTnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dc1nDbjKpnpP+a+/MmVe5NpW+Or0aQ+dHKZXZgx9JfE=;
-        b=ny9IQVkApLwXVLRZ7sjniX07lKNC1O+1aYoClk1CxWOP6zuTz+9AOdBCpQ1OHYCfe0
-         l0QEc3yE4N86rza6u9DjJkRVsGSlt+AjkAyTDNRPhwdZfRvMJREGIUcQRTu+tpHta98K
-         jq2V8NYyywUdap3GIhwXp4v0n0RIMrBWfTJGChWn+HHguWomPvGULBwVL3Vw/v7pqBrX
-         342ewQDSaCL1jxRnGiLYRobrLFTAxII8h6wWdOkDcDziE8dMqKe5yB343mg+ujP/A7Ib
-         e3LcU8k4KgddwLLQvxoHF9BBc9/HBFU5kaofqPD33XVYyqiwtwBY/o4Ye8icGpQCJarB
-         dcfw==
-X-Gm-Message-State: APjAAAVGWjlnMHbe8emA2XFs2qnU3EJ1pNW6VlFK+S7/DBVaWHsqOn3I
-        vqw56uIHwbhOwJmUgUx2QH0=
-X-Google-Smtp-Source: APXvYqwrrfr8vZZ2zi0ljFQ1dG1N1h86xfW6V0hOrIDJx0pWBHs5P2AHff6cpF9shtD3j/eNTJY0qA==
-X-Received: by 2002:a63:1046:: with SMTP id 6mr75083719pgq.111.1563825984205;
-        Mon, 22 Jul 2019 13:06:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b26sm44559517pfo.129.2019.07.22.13.06.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 13:06:23 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 13:06:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        sdasari@fb.com
-Subject: Re: [PATCH] dt-bindings: hwmon: Add binding for pxe1610
-Message-ID: <20190722200622.GA20435@roeck-us.net>
-References: <20190722192451.1947348-1-vijaykhemka@fb.com>
- <20190722192451.1947348-2-vijaykhemka@fb.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HwvJiB020PdHZrr6dRx+YAOsgzbnAkiZvqKqCv91HY0=;
+        b=ItotVd9TLoc9NVZpjPJ0Mm30SZkP8CpiXWgn797XzwMPdGA7bea2JBP60lXYYRrFI6
+         EkWe+nJ7y9Ldh1RUD1nU/uZLaUGn2JZwr6gCRlp/Y5/+WT8g1xsjxz8PJv0+AwPcEzqv
+         Cjx5zcbc4HLcUS5z8ybjAl1An+gRo+iL8S61CqbGTnSKjtpw9UBcm8csk0Nm+df7hiNs
+         70DGcGjsLt1QU67DMzlg77ip/wQiW0xrh/6txazBbUY8knRMEM6zTQLQ4P1/0/mZaLk9
+         A79C/3bLLi0m2OjuDgBrpLu3mC/ah2EWxtG0ORvdRqSZ+5OA1mofShzuhXbgqsuy/p90
+         hkjg==
+X-Gm-Message-State: APjAAAXmEngW421Bqd8UqdYMX3X/vHK2RGQvD0uI5H/lhZrhcEbHMIAS
+        aPU+0ZDF6TiDlWEw3Ic1o4AojQ==
+X-Google-Smtp-Source: APXvYqzI5OqP4T4u5XK4DV6I74KUqwu9SCJCcgyXgPpUcws2Jxp6KM4gJRYUdFkGTCujjYBQpMHQPQ==
+X-Received: by 2002:a81:aa50:: with SMTP id z16mr41029409ywk.278.1563825986781;
+        Mon, 22 Jul 2019 13:06:26 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id 131sm9412431ywq.21.2019.07.22.13.06.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 13:06:26 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 16:06:25 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Qian Cai <cai@lca.pw>
+Cc:     daniel@ffwll.ch, maarten.lankhorst@linux.intel.com,
+        maxime.ripard@bootlin.com, sean@poorly.run, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: silence variable 'conn' set but not used
+Message-ID: <20190722200625.GJ104440@art_vandelay>
+References: <1563822886-13570-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722192451.1947348-2-vijaykhemka@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1563822886-13570-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 12:24:48PM -0700, Vijay Khemka wrote:
-> Added new DT binding document for Infineon PXE1610 devices.
+On Mon, Jul 22, 2019 at 03:14:46PM -0400, Qian Cai wrote:
+> The "struct drm_connector" iteration cursor from
+> "for_each_new_connector_in_state" is never used in atomic_remove_fb()
+> which generates a compilation warning,
 > 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> drivers/gpu/drm/drm_framebuffer.c: In function 'atomic_remove_fb':
+> drivers/gpu/drm/drm_framebuffer.c:838:24: warning: variable 'conn' set
+> but not used [-Wunused-but-set-variable]
+> 
+> Silence it by marking "conn" __maybe_unused.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+
+Thanks for your patch! I've applied it to drm-misc-fixes
+
+Sean
+
 > ---
->  .../devicetree/bindings/hwmon/pxe1610.txt         | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pxe1610.txt
+>  drivers/gpu/drm/drm_framebuffer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/pxe1610.txt b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
-> new file mode 100644
-> index 000000000000..635daf4955db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
-> @@ -0,0 +1,15 @@
-> +pxe1610 properties
-> +
-> +Required properties:
-> +- compatible: Must be one of the following:
-> +	- "infineon,pxe1610" for pxe1610
-> +	- "infineon,pxe1110" for pxe1610
-> +	- "infineon,pxm1310" for pxm1310
-> +- reg: I2C address
-> +
-> +Example:
-> +
-> +vr@48 {
-> +	compatible = "infineon,pxe1610";
-> +	reg = <0x48>;
-> +};
+> diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+> index 0b72468e8131..57564318ceea 100644
+> --- a/drivers/gpu/drm/drm_framebuffer.c
+> +++ b/drivers/gpu/drm/drm_framebuffer.c
+> @@ -835,7 +835,7 @@ static int atomic_remove_fb(struct drm_framebuffer *fb)
+>  	struct drm_device *dev = fb->dev;
+>  	struct drm_atomic_state *state;
+>  	struct drm_plane *plane;
+> -	struct drm_connector *conn;
+> +	struct drm_connector *conn __maybe_unused;
+>  	struct drm_connector_state *conn_state;
+>  	int i, ret;
+>  	unsigned plane_mask;
+> -- 
+> 1.8.3.1
+> 
 
-Wouldn't it be better to add this to
-./Documentation/devicetree/bindings/trivial-devices.txt ?
-
-Thanks,
-Guenter
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
