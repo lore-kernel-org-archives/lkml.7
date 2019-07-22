@@ -2,86 +2,76 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD68C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8277AC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03CB82229A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5752E21E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T5bfwCKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfGVJUP (ORCPT
+        id S1728799AbfGVJYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:20:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59156 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727744AbfGVJUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:20:15 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3E55D308FBB4;
-        Mon, 22 Jul 2019 09:20:15 +0000 (UTC)
-Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7447210027BE;
-        Mon, 22 Jul 2019 09:20:14 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     trivial@kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] kernel/configs: Replace GPL boilerplate code with SPDX identifier
-Date:   Mon, 22 Jul 2019 11:20:08 +0200
-Message-Id: <20190722092008.15403-1-thuth@redhat.com>
+        Mon, 22 Jul 2019 05:24:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56436 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbfGVJYd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:24:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t3OOtdtvnUF+XIhRdblqC3W61fdm4p0+hRCO2GTass0=; b=T5bfwCKQxBqLdvGK7DUUv/qBF
+        A3kj9iXi8RBhf93TTorLkVtrw7BW16+3qcT/9BEB2Ga6jU6aEy0WklSkiV9ZxcBQiGgiIrC6CC2K5
+        fuVktxlCFh34qfa/DF37DbcFPYJXGrgM+3qTzGn3xiuQ884GfaRbjwSrqBRVHS0R8VgwSpASMod9X
+        XjtU86WIBrX8lLXvkgincw5Mh5dEeSvNQE7YvNezTP2r+yRPNY/ybN/Np+9Xhqnh+U6NqbtueEVv0
+        5ibmXk+6BFTEQkmKv66nwmKvr6BtbpDn6l0hEKNk1b4LnUXUrAJNZfZMul4QE8bj3Z7XnrsgqaDOo
+        xnZXpYI2Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpUYX-0000m2-Ao; Mon, 22 Jul 2019 09:24:29 +0000
+Date:   Mon, 22 Jul 2019 02:24:29 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Loic PALLARDY <loic.pallardy@st.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Clement Leger <cleger@kalray.eu>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
+Message-ID: <20190722092429.GB12167@infradead.org>
+References: <20190612095521.4703-1-cleger@kalray.eu>
+ <20190701070245.32083-1-cleger@kalray.eu>
+ <20190702132229.GA8100@infradead.org>
+ <58c8b8bd30a949678c027eb42a1b1bbb@SFHDAG7NODE2.st.com>
+ <20190708184546.GA20670@infradead.org>
+ <20190719063250.GA9545@infradead.org>
+ <3c2c98e785704969a862715ab52ce2de@SFHDAG7NODE2.st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 22 Jul 2019 09:20:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3c2c98e785704969a862715ab52ce2de@SFHDAG7NODE2.st.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FSF does not reside in "675 Mass Ave, Cambridge" anymore...
-let's replace the old GPL boilerplate code with a proper SPDX
-identifier instead.
+On Mon, Jul 22, 2019 at 08:41:32AM +0000, Loic PALLARDY wrote:
+> Ongoing...
+> Two topics to clean up:
+> - Sub device creation and DMA ops inheritance --> need to use platform_device or device tree
+> - dma_declare_coherent_memory use --> it has been introduced to support internal memories declared via reg field.
+> I propose to migrate existing drivers on reserved memory usage and so remove dma_declare_coherent call from remoteproc core.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- kernel/configs.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
-
-diff --git a/kernel/configs.c b/kernel/configs.c
-index b062425ccf8d..c09ea4c995e1 100644
---- a/kernel/configs.c
-+++ b/kernel/configs.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  * kernel/configs.c
-  * Echo the kernel .config file used to build the kernel
-@@ -6,21 +7,6 @@
-  * Copyright (C) 2002 Randy Dunlap <rdunlap@xenotime.net>
-  * Copyright (C) 2002 Al Stone <ahs3@fc.hp.com>
-  * Copyright (C) 2002 Hewlett-Packard Company
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or (at
-- * your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
-- * NON INFRINGEMENT.  See the GNU General Public License for more
-- * details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-  */
- 
- #include <linux/kernel.h>
--- 
-2.21.0
-
+I thought this was inter-related in that you needed the additional
+field with the manual memory region for the subdevs, but I guess I
+misunderstood.  Anyway, thanks for doing the work.
