@@ -2,69 +2,114 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8EDC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFB1C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C2C21951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B14521911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbfGVOOo (ORCPT
+        id S1730804AbfGVOPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:14:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727880AbfGVOOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:14:44 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B550494DBD9CAC0C381D;
-        Mon, 22 Jul 2019 22:14:37 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 22 Jul 2019
- 22:14:31 +0800
-From:   John Garry <john.garry@huawei.com>
-Subject: About threaded interrupt handler CPU affinity
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <bigeasy@linutronix.de>, <maz@kernel.org>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <e0e9478e-62a5-ca24-3b12-58f7d056383e@huawei.com>
-Date:   Mon, 22 Jul 2019 15:14:26 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Mon, 22 Jul 2019 10:15:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37018 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbfGVOPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:15:55 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id E289928A49D
+Subject: Re: [PATCH] mfd: cros_ec: Update cros_ec_commands.h
+To:     Gwendal Grignou <gwendal@chromium.org>,
+        Yicheng Li <yichengli@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+References: <20190708181536.2125-1-yichengli@chromium.org>
+ <CAPUE2uvnPfA8y1bqppC3-vZyRKRwdF4evGY8X4c-xP=YZi4HRw@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <e241dc48-5cb0-3b60-9b84-cad8e80eb617@collabora.com>
+Date:   Mon, 22 Jul 2019 16:15:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAPUE2uvnPfA8y1bqppC3-vZyRKRwdF4evGY8X4c-xP=YZi4HRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi Lee,
 
-I have a question on commit cbf8699996a6 ("genirq: Let irq thread follow 
-the effective hard irq affinity"), if you could kindly check:
+On 11/7/19 19:17, Gwendal Grignou wrote:
+> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> 
+> Note there is a patch series that move cros_ec_commands.h from
+> nclude/linux/mfd/ to include/linux/platform_data.
+> 
 
-Here we set the thread affinity to be the same as the hard interrupt 
-affinity. For an arm64 system with GIC ITS, this will be a single CPU, 
-the lowest in the interrupt affinity mask. So, in this case, effectively 
-the thread will be bound to a single CPU. I think APIC is the same for this.
+I just sent a new version of the patches mentioned above now that rc1 is out [1]
 
-The commit message describes the problem that we solve here is that the 
-thread may become affine to a different CPU to the hard interrupt - does 
-it mean that the thread CPU mask could not cover that of the hard 
-interrupt? I couldn't follow the reason.
+As Gwendal said this patch will conflict with them, so we have two options.
 
-We have experimented with fixing the thread mask to be the same as the 
-interrupt mask (we're using managed interrupts), like before, and get a 
-significant performance boost at high IO datarates on our storage 
-controller - like ~11%.
+1. If Lee picks that patch I can rebase again my series on top of it.
+2. If not, we can wait for Lee reviewing my patch series and then I don't mind
+to rebase that patch on top of my series and carry the patch through
+chrome-platform. Anyway I'll need an immutable branch from Lee.
 
-Thanks in advance,
-John
+> On Mon, Jul 8, 2019 at 11:16 AM Yicheng Li <yichengli@chromium.org> wrote:
+>>
+>> Update cros_ec_commands.h to match the fingerprint MCU section in
+>> the current ec_commands.h
+>>
+>> Signed-off-by: Yicheng Li <yichengli@chromium.org>
 
+For the first case:
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Thanks,
+~ Enric
+
+[1] https://lkml.org/lkml/2019/7/22/497
+
+>> ---
+>>
+>>  include/linux/mfd/cros_ec_commands.h | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+>> index 7ccb8757b79d..98415686cbfa 100644
+>> --- a/include/linux/mfd/cros_ec_commands.h
+>> +++ b/include/linux/mfd/cros_ec_commands.h
+>> @@ -5513,6 +5513,18 @@ struct ec_params_fp_seed {
+>>         uint8_t seed[FP_CONTEXT_TPM_BYTES];
+>>  } __ec_align4;
+>>
+>> +#define EC_CMD_FP_ENC_STATUS 0x0409
+>> +
+>> +/* FP TPM seed has been set or not */
+>> +#define FP_ENC_STATUS_SEED_SET BIT(0)
+>> +
+>> +struct ec_response_fp_encryption_status {
+>> +       /* Used bits in encryption engine status */
+>> +       uint32_t valid_flags;
+>> +       /* Encryption engine status */
+>> +       uint32_t status;
+>> +} __ec_align4;
+>> +
+>>  /*****************************************************************************/
+>>  /* Touchpad MCU commands: range 0x0500-0x05FF */
+>>
+>> --
+>> 2.20.1
+>>
