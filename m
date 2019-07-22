@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7373EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DCEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7BD21901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF8E21955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817323;
-	bh=JKP2JhzEnsc9bYpk6Y10mwB1u8TREd4TKCmiXyAbUAo=;
+	s=default; t=1563817330;
+	bh=JdowPRpPbbQQV14qRQQAF/+PxPxi44BB8cKBgxEZ2VM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kD6ZKlIu6rIOIqea0beqtCIrLNByDN0UNKaoY3I6Kk+aAuZ9pOyEsRDqN3/E4Nr6h
-	 1HXibbrjafziDP5jwK6kLuAdvrLlstFcdyhaGU+t3ljMpKzjRQDapZXrfO9HmppYt1
-	 Ras2oWmYSfjw5FPKqqzoHX/483Ds+v2LfZCV3AUU=
+	b=Ue++Wu3KbIoQ6BieGWBwWiFe+Yd+NkvuNzEdQOqVPYn2flNnU/6qgGv/vXnW4TWLT
+	 CacdOOw3u5EbPsp4/T0WDB4lR8gSbZxWC7Hux66sYdn8iYjVI0oB5CZ9w8DyOWhlw4
+	 5c0xNkELMOWAuoCuhozATXMIVWDFIlRYwaj9vszY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfGVRmC (ORCPT
+        id S1730665AbfGVRmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfGVRmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:42:00 -0400
+        id S1728762AbfGVRmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:42:07 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20D7B2199C;
-        Mon, 22 Jul 2019 17:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F50A21903;
+        Mon, 22 Jul 2019 17:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817319;
-        bh=JKP2JhzEnsc9bYpk6Y10mwB1u8TREd4TKCmiXyAbUAo=;
+        s=default; t=1563817326;
+        bh=JdowPRpPbbQQV14qRQQAF/+PxPxi44BB8cKBgxEZ2VM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrUtYE51OZl0yT8nAivq7HBz7UYxspsLLxpgCngLMGIdKC7kdPXyV7+wn54r0sAUE
-         jlt0HzQm9UW9vz9QV0xhwwzYf/gtaF1kmV7VUiXe/jbJhk+mw2iHx50VhBqSafv+9W
-         vKHZIBaxArYL3q+5bKmEhomtuba3S4R/2I2jnRUw=
+        b=ASz8i5hEyZGcbCo2Ml+K8V11uJn+nwrUU23BQCZy1od8xAkxmNyzg5+ZiAkYwdpiw
+         GxSVlhsTKfIPMbe57ErwY+yktuQPPVnBfL/4QTLEzXGWx1CApMpOmvbp36KjYSxBRS
+         LJQ+rAx06Ay1RE0o5gQypux3BB0hFY9h01wcVyTk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 27/37] perf stat: Always separate stalled cycles per insn
-Date:   Mon, 22 Jul 2019 14:38:29 -0300
-Message-Id: <20190722173839.22898-28-acme@kernel.org>
+Subject: [PATCH 28/37] perf session: Fix loading of compressed data split across adjacent records
+Date:   Mon, 22 Jul 2019 14:38:30 -0300
+Message-Id: <20190722173839.22898-29-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
@@ -61,49 +63,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-The "stalled cycles per insn" is appended to "instructions" when the CPU
-has this hardware counter directly. We should always make it a separate
-line, which also aligns to the output when we hit the "if (total &&
-avg)" branch.
+Fix decompression failure found during the loading of compressed trace
+collected on larger scale systems (>48 cores).
 
-Before:
+The error happened due to lack of decompression space for a mmaped
+buffer data chunk split across adjacent PERF_RECORD_COMPRESSED records.
 
-  $ sudo perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
-  4565048704,,instructions,64114578096,100.00,1.34,insn per cycle,,
-  3396325133,,cycles,64146628546,100.00,,
+  $ perf report -i bt.16384.data --stats
+  failed to decompress (B): 63869 -> 0 : Destination buffer is too small
+  user stack dump failure
+  Can't parse sample, err = -14
+  0x2637e436 [0x4080]: failed to process type: 9
+  Error:
+  failed to process sample
 
-After:
+  $ perf test 71
+  71: Zstd perf.data compression/decompression              : Ok
 
-  $ sudo ./tools/perf/perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
-  6721924,,instructions,24026790339,100.00,0.22,insn per cycle
-  ,,,,,0.00,stalled cycles per insn
-  30939953,,cycles,24025512526,100.00,,
-
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Link: http://lkml.kernel.org/r/20190517221039.8975-1-xiyou.wangcong@gmail.com
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/session.c | 22 ++++++++++++++--------
+ tools/perf/util/session.h |  1 +
+ tools/perf/util/zstd.c    |  4 ++--
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 656065af4971..accb1bf1cfd8 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -819,7 +819,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 					"stalled cycles per insn",
- 					ratio);
- 		} else if (have_frontend_stalled) {
--			print_metric(config, ctxp, NULL, NULL,
-+			out->new_line(config, ctxp);
-+			print_metric(config, ctxp, NULL, "%7.2f ",
- 				     "stalled cycles per insn", 0);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d0fd6c614e68..37efa1f43d8b 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	void *src;
+ 	size_t decomp_size, src_size;
+ 	u64 decomp_last_rem = 0;
+-	size_t decomp_len = session->header.env.comp_mmap_len;
++	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
+ 	struct decomp *decomp, *decomp_last = session->decomp_last;
+ 
+-	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
++	if (decomp_last) {
++		decomp_last_rem = decomp_last->size - decomp_last->head;
++		decomp_len += decomp_last_rem;
++	}
++
++	mmap_len = sizeof(struct decomp) + decomp_len;
++	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
+ 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
+ 	if (decomp == MAP_FAILED) {
+ 		pr_err("Couldn't allocate memory for decompression\n");
+@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	}
+ 
+ 	decomp->file_pos = file_offset;
++	decomp->mmap_len = mmap_len;
+ 	decomp->head = 0;
+ 
+-	if (decomp_last) {
+-		decomp_last_rem = decomp_last->size - decomp_last->head;
++	if (decomp_last_rem) {
+ 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
+ 		decomp->size = decomp_last_rem;
+ 	}
+@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
+ 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
+ 	if (!decomp_size) {
+-		munmap(decomp, sizeof(struct decomp) + decomp_len);
++		munmap(decomp, mmap_len);
+ 		pr_err("Couldn't decompress data\n");
+ 		return -1;
+ 	}
+@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
+ static void perf_session__release_decomp_events(struct perf_session *session)
+ {
+ 	struct decomp *next, *decomp;
+-	size_t decomp_len;
++	size_t mmap_len;
+ 	next = session->decomp;
+-	decomp_len = session->header.env.comp_mmap_len;
+ 	do {
+ 		decomp = next;
+ 		if (decomp == NULL)
+ 			break;
+ 		next = decomp->next;
+-		munmap(decomp, decomp_len + sizeof(struct decomp));
++		mmap_len = decomp->mmap_len;
++		munmap(decomp, mmap_len);
+ 	} while (1);
+ }
+ 
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index dd8920b745bc..863dbad87849 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -46,6 +46,7 @@ struct perf_session {
+ struct decomp {
+ 	struct decomp *next;
+ 	u64 file_pos;
++	size_t mmap_len;
+ 	u64 head;
+ 	size_t size;
+ 	char data[];
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index 23bdb9884576..d2202392ffdb 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+ 	while (input.pos < input.size) {
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+-			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
+-			       src_size, output.size, ZSTD_getErrorName(ret));
++			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
++			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+ 			break;
  		}
- 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
+ 		output.dst  = dst + output.pos;
 -- 
 2.21.0
 
