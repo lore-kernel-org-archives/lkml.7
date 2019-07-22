@@ -2,90 +2,84 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA56C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A8FC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A27821E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7E82229B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Tw0NjjLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfGVIi6 (ORCPT
+        id S1728576AbfGVIjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:38:58 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:48734 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfGVIi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:38:58 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 3001C20598;
-        Mon, 22 Jul 2019 10:38:56 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 188EA200A6;
-        Mon, 22 Jul 2019 10:38:56 +0200 (CEST)
-Subject: Re: [PATCH] firmware: qcom_scm: fix error for incompatible pointer
-To:     Minwoo Im <minwoo.im.dev@gmail.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, Christoph Hellwig <hch@lst.de>
-References: <20190719134303.7617-1-minwoo.im.dev@gmail.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <7ea51e42-ab8a-e4e2-1833-651e2dabca3c@free.fr>
-Date:   Mon, 22 Jul 2019 10:38:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190719134303.7617-1-minwoo.im.dev@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Jul 22 10:38:56 2019 +0200 (CEST)
+        Mon, 22 Jul 2019 04:39:54 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:45694 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728120AbfGVIjw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:39:52 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EA265C1227;
+        Mon, 22 Jul 2019 08:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563784792; bh=gAQ84Z8uQYEqLwe3t0dAiOmw/qC87vcNk5Wf+7zF7eY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Tw0NjjLDtWP8eBnJ6Xt4QyVdruzgB9/y/J+RuQynTViyqlcHCEiVQDEA0qu2HSXEv
+         YacB3+0odjiXogl/oj8vkMpzHN0Xb17sALqOGPbxvQT0NzMugg5Fq2pFUkgi0E+1C9
+         ZUz3L4pKY8S7S/OuTysc5hdUycHpUFRg/T4DhZ+52yfym8VeZkes4+4sFikIrnNiya
+         bee1H9EZhI8BiNJK2rnUAE+hoOwo9EhJHsxANi6lp9rJLsRJEOMjwhWzvh2BVu0aGR
+         jwUq7yfvUijBi+RnXZfY6hMJ1r/LXxCeoLwsw7sUY+eVGGNY5WCZ+m843HTrUcIr2o
+         0m3X94RXrr7yA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 9FD1AA0057;
+        Mon, 22 Jul 2019 08:39:44 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/2] net: stmmac: Two fixes
+Date:   Mon, 22 Jul 2019 10:39:29 +0200
+Message-Id: <cover.1563784666.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding people who have worked on drivers/firmware/qcom_scm.c or DMA
+Two fixes targeting -net.
 
-On 19/07/2019 15:43, Minwoo Im wrote:
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-> The following error can happen when trying to build it:
-> 
-> ```
-> drivers/firmware/qcom_scm.c: In function ‘qcom_scm_assign_mem’:
-> drivers/firmware/qcom_scm.c:460:47: error: passing argument 3 of ‘dma_alloc_coherent’ from incompatible pointer type [-Werror=incompatible-pointer-types]
->   ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
->                                                ^
-> In file included from drivers/firmware/qcom_scm.c:12:0:
-> ./include/linux/dma-mapping.h:636:21: note: expected ‘dma_addr_t * {aka long long unsigned int *}’ but argument is of type ‘phys_addr_t * {aka unsigned int *}’
->  static inline void *dma_alloc_coherent(struct device *dev, size_t size,
->                      ^~~~~~~~~~~~~~~~~~
-> ```
-> 
-> We just can cast phys_addr_t to dma_addr_t here.
+Jose Abreu (2):
+  net: stmmac: RX Descriptors need to be clean before setting buffers
+  net: stmmac: Use kcalloc() instead of kmalloc_array()
 
-IME, casting is rarely a proper solution.
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 2ddc118dba1b..7f6c841fa200 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -457,7 +457,8 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
->  	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
->  			ALIGN(dest_sz, SZ_64);
->  
-> -	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
-> +	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, (dma_addr_t *) &ptr_phys,
-> +					GFP_KERNEL);
->  	if (!ptr)
->  		return -ENOMEM;
->  
+-- 
+2.7.4
 
