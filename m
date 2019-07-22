@@ -2,105 +2,90 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B710AC76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C0EC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915612229B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:06:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V8ICTnG6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dym/B+E1"
+	by mail.kernel.org (Postfix) with ESMTP id 557E72229B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfGVJGN (ORCPT
+        id S1728681AbfGVJGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:06:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38880 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfGVJGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:06:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3010A61639; Mon, 22 Jul 2019 09:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563786372;
-        bh=Skk8yN1BQ/FRV8haTYnRCNUnzZEfrYwlXcy3MNbPGTc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=V8ICTnG6m2z6JRboxwzE2LEsEW0LyBtM703/KrzBvKuhL3jRIxknD6rSZKhg8+ZG4
-         +BWbQE64bPivYzwUvJyWGz6eOzI1UPuwqyGdY2F6jZcRkfF40y1DEpeb/62Hpf62XE
-         VUX0H3jqxxzjHHl7vEx8HmFYzpT7RRU9zzdIlYAk=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 22 Jul 2019 05:06:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45386 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfGVJGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:06:37 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC3A0604BE;
-        Mon, 22 Jul 2019 09:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563786371;
-        bh=Skk8yN1BQ/FRV8haTYnRCNUnzZEfrYwlXcy3MNbPGTc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dym/B+E1dILyC4VTJuwmchUxq0cdrAFuk1RNAuZxJLKAVSEblp1dYGB+42NZduvaw
-         2WltOhXE9aEL4JAadwqDXkn1ecvvNZDAo7rGedykj0qgHPqjwnGLHfjwh8IKL9CjTP
-         gGXDDVsJL9Sk6RgYZqrzL7xGbFY+KyhvWaRRro2Y=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AC3A0604BE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH v6 0/4] media: venus: Update clock scaling and core selection
-Date:   Mon, 22 Jul 2019 14:35:56 +0530
-Message-Id: <1563786360-16467-1-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mx1.redhat.com (Postfix) with ESMTPS id B40D2307D88C;
+        Mon, 22 Jul 2019 09:06:36 +0000 (UTC)
+Received: from localhost (ovpn-117-250.ams2.redhat.com [10.36.117.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C788010027B9;
+        Mon, 22 Jul 2019 09:06:33 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 10:06:32 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v4 4/5] vhost/vsock: split packets to send using multiple
+ buffers
+Message-ID: <20190722090632.GD24934@stefanha-x1.localdomain>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-5-sgarzare@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-5-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 22 Jul 2019 09:06:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this patch series, clock scaling and core selection methods are
-updated. Current clock scaling and core selection methods are same
-for vpu4 and previous versions. Introducing load calculations using
-vpp cycles, which indicates the cycles required by video hardware to
-process each macroblock. Also adding vsp cycles, cycles require by
-stream processor. Clock scaling is now done more precisely using vpp
-and vsp cycles. Instance is assigned to core with minimum load, instead
-of static assignment.
 
-Changes since v5:
- - Corrected load_per_core calculations.
+--BI5RvnYi6R4T2M87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes since v4:
- - Added call to load_scale_clocks from venus_helper_vb2_buf_queue.
- - Modified check to match core_id in core_selection.
+On Wed, Jul 17, 2019 at 01:30:29PM +0200, Stefano Garzarella wrote:
+> If the packets to sent to the guest are bigger than the buffer
+> available, we can split them, using multiple buffers and fixing
+> the length in the packet header.
+> This is safe since virtio-vsock supports only stream sockets.
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  drivers/vhost/vsock.c                   | 66 ++++++++++++++++++-------
+>  net/vmw_vsock/virtio_transport_common.c | 15 ++++--
+>  2 files changed, 60 insertions(+), 21 deletions(-)
 
-Changes since v3:
- - vsp_cycles and vpp_cyles are now unsigned long.
- - Core number counting aligned with VIDC_CORE_ID_.
- - Aligned hardware overload handling of scale_clocks_v4 with scale_clocks.
- - Added bitrate based clock scaling patch in this patch series.
- - Instance state check is now moved from scale_clocks to load_scale_clocks.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Aniket Masule (4):
-  media: venus: Add codec data table
-  media: venus: Update clock scaling
-  media: venus: Update to bitrate based clock scaling
-  media: venus: Update core selection
+--BI5RvnYi6R4T2M87
+Content-Type: application/pgp-signature; name="signature.asc"
 
- drivers/media/platform/qcom/venus/core.c       |  13 ++
- drivers/media/platform/qcom/venus/core.h       |  16 ++
- drivers/media/platform/qcom/venus/helpers.c    | 215 +++++++++++++++++++++++--
- drivers/media/platform/qcom/venus/helpers.h    |   3 +-
- drivers/media/platform/qcom/venus/hfi_helper.h |   1 +
- drivers/media/platform/qcom/venus/hfi_parser.h |   5 +
- drivers/media/platform/qcom/venus/vdec.c       |   6 +-
- drivers/media/platform/qcom/venus/venc.c       |   6 +-
- 8 files changed, 252 insertions(+), 13 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl01fJgACgkQnKSrs4Gr
+c8iGEAf8Djr/PEoFhNeRcB4nTbEZ0yqI9J0bTIg+5JPeRIwVuw8VN0SNdYcbUn4x
+8z5Ze/MQcXrji7cU3OHBfNC0aTebpQ7odl8Fh+0Ge74z8CGT4fjTHgVVuFXcGOdw
+oO0lLxNBn1PEZG3GziU7v1nnOOQMP7p1uedmMBNm1eRJztxOFGIfbl7eQzGYE0/0
+UvnT0EbbiIaqcN151Db4L94rvRASIhKQSvk/Vx9lM6kKFzjJml2dO/pirzJvwyg7
+ToYEINcqb5vJibA/uV9zXiaQPIuAi4HNSrXWXXvCyPZycd4MsISdRQSig44VmT3P
+bkhomEAvwsqdfMfALjPSRENrlVKkhg==
+=9pnw
+-----END PGP SIGNATURE-----
 
+--BI5RvnYi6R4T2M87--
