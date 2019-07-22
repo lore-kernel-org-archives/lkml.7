@@ -2,144 +2,90 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09775C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE29C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB203218B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C04218B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="IJ79AYkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732234AbfGVT6P (ORCPT
+        id S1732390AbfGVT7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:58:15 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.234]:41794 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729232AbfGVT6P (ORCPT
+        Mon, 22 Jul 2019 15:59:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45428 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732268AbfGVT7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:58:15 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id A93D420C9E4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:58:14 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id peRqhmRzYiQerpeRqhCrsi; Mon, 22 Jul 2019 14:58:14 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:47902 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hpeRp-0032XC-D0; Mon, 22 Jul 2019 14:58:13 -0500
-Date:   Mon, 22 Jul 2019 14:58:13 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
-Message-ID: <20190722195813.GA18127@embeddedor>
+        Mon, 22 Jul 2019 15:59:48 -0400
+Received: by mail-io1-f65.google.com with SMTP id g20so76693339ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=/OH/wTTBC4X8SVdlUJnb/Ot3whBKsHxdPt8gk14iyRI=;
+        b=IJ79AYkgljjvskCTjQpSnN1VcH07Jaf0C4IA1a0choaa0aexD+z3BEclu3qrc9dm3n
+         lBK21ZNYuMibEYuUgygq+2qS2ESPxBGKUwXvVigWSpRh9CwNlh/ZUXg/MmPBdBUR6ATS
+         YBi5nY2XkwV5ILZWw6+gXVamBXBWc7oqg1/guzrXAmEDgJgrn/KAyHYEd1jIUJ7RWN3s
+         uWLy87j5aKFkEkCNP7wNl61lZeUBVV7FlRWlRE/C0p1pHbYXu1oqr8iyYY/GrvFZMAUx
+         IvaNafhhR7IsprcZ8ibKROvteizgzd7sF6M2zQzbCOghqLdEORkE8voLl1fPRzEn0Eq3
+         oqmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=/OH/wTTBC4X8SVdlUJnb/Ot3whBKsHxdPt8gk14iyRI=;
+        b=hJk5LY0ZmjpiQZttER0uL3Hem3+3h3mGWUkscrgtvTe4Q/0gUyj/dxXUY4ZpPx+9cs
+         gF0LW6GXZBFp292TnsdMy1Vj4oaxj5Buv9YA9s+vrpYDhIhVt+DLPmUByUSrzwMIPrHO
+         WXUU3dL1dFbW4KfMtqfU1aJaDon7krcV3LlVCLzNWVxwEWAujTJ3GtBA19vGHsbecZ26
+         fzRH6/KVha7zYfsUYdi6B9xwNyYzg/xX4Hq7TtdUhmNvofmb/5C2F84THn8urAB9+Lhi
+         XR2yq5pVAsv5aWz9JlQDEDf5OzOCiKTGYQeVFn5Dzx1El5H1XXKJeeVMveqg2w3zeAEq
+         MwNg==
+X-Gm-Message-State: APjAAAW79kySSdlq9JNlJy7wQz0R9HS5ydxzCqJ+SWtSg7fZqMpSy08B
+        G0tzi7C13MQj02VUADnZRSNJVEOa5/0=
+X-Google-Smtp-Source: APXvYqzscqmldHBLHAIijDkbQwm+paiGghQKVRTUe6alP23cCGUxgKPjiGuPPJhasKI7fp5io+M8rg==
+X-Received: by 2002:a6b:8f47:: with SMTP id r68mr69303919iod.204.1563825587225;
+        Mon, 22 Jul 2019 12:59:47 -0700 (PDT)
+Received: from localhost (67-0-62-24.albq.qwest.net. [67.0.62.24])
+        by smtp.gmail.com with ESMTPSA id m20sm39336195ioh.4.2019.07.22.12.59.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 12:59:46 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 12:59:45 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Yash Shah <yash.shah@sifive.com>
+cc:     davem@davemloft.net, robh+dt@kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, mark.rutland@arm.com,
+        palmer@sifive.com, aou@eecs.berkeley.edu,
+        nicolas.ferre@microchip.com, ynezz@true.cz, sachin.ghadi@sifive.com
+Subject: Re: [PATCH 1/3] macb: bindings doc: update sifive fu540-c000
+ binding
+In-Reply-To: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1907221259300.5793@viisi.sifive.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.149.185
-X-Source-L: No
-X-Exim-ID: 1hpeRp-0032XC-D0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink149-185.telefonia.intercable.net (embeddedor) [201.172.149.185]:47902
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 42
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+On Fri, 19 Jul 2019, Yash Shah wrote:
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> As per the discussion with Nicolas Ferre, rename the compatible property
+> to a more appropriate and specific string.
+> LINK: https://lkml.org/lkml/2019/7/17/200
+> 
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
-are available in the Git repository at:
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc2
-
-for you to fetch changes up to bc512fd704a92e1be700c941c137d73c0f222eed:
-
-  Makefile: Globally enable fall-through warning (2019-07-22 14:50:20 -0500)
-
-----------------------------------------------------------------
-Wimplicit-fallthrough patches for 5.3-rc2
-
-Hi Linus,
-
-Please, pull the following patches that mark switch cases where we are
-expecting to fall through. These patches are part of the ongoing efforts
-to enable -Wimplicit-fallthrough. Most of them have been baking in linux-next
-for a whole development cycle.
-
-Also, pull the Makefile patch that globally enables the
--Wimplicit-fallthrough option.
-
-Finally, some missing-break fixes that have been tagged for -stable:
-
- - drm/amdkfd: Fix missing break in switch statement
- - drm/amdgpu/gfx10: Fix missing break in switch statement
-
-Notice that with these changes, we completely get rid of all the
-fall-through warnings in the kernel.
-
-Thanks
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (11):
-      firewire: mark expected switch fall-throughs
-      can: mark expected switch fall-throughs
-      afs: yfsclient: Mark expected switch fall-throughs
-      afs: fsclient: Mark expected switch fall-throughs
-      mtd: onenand_base: Mark expected switch fall-through
-      perf/x86/intel: Mark expected switch fall-throughs
-      drm/amdkfd: Fix missing break in switch statement
-      drm/amdgpu/gfx10: Fix missing break in switch statement
-      drm/amdkfd/kfd_mqd_manager_v10: Avoid fall-through warning
-      drm/i915: Mark expected switch fall-throughs
-      Makefile: Globally enable fall-through warning
-
- Documentation/process/deprecated.rst             | 14 ++++++
- Makefile                                         |  3 ++
- arch/x86/events/intel/core.c                     |  2 +
- drivers/firewire/core-device.c                   |  2 +-
- drivers/firewire/core-iso.c                      |  2 +-
- drivers/firewire/core-topology.c                 |  1 +
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c           |  1 +
- drivers/gpu/drm/amd/amdkfd/kfd_crat.c            |  1 +
- drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c |  1 -
- drivers/gpu/drm/i915/Makefile                    |  1 -
- drivers/gpu/drm/i915/display/intel_display.c     |  2 +-
- drivers/gpu/drm/i915/display/intel_dp.c          |  1 +
- drivers/gpu/drm/i915/gem/i915_gem_mman.c         |  2 +-
- drivers/gpu/drm/i915/gem/i915_gem_pages.c        |  2 +-
- drivers/gpu/drm/i915/i915_gpu_error.c            |  1 +
- drivers/mtd/nand/onenand/onenand_base.c          |  1 +
- drivers/net/can/at91_can.c                       |  6 ++-
- drivers/net/can/peak_canfd/peak_pciefd_main.c    |  2 +-
- drivers/net/can/spi/mcp251x.c                    |  3 +-
- drivers/net/can/usb/peak_usb/pcan_usb.c          |  2 +-
- fs/afs/fsclient.c                                | 51 ++++++++++++++--------
- fs/afs/yfsclient.c                               | 54 +++++++++++++++---------
- 22 files changed, 106 insertions(+), 49 deletions(-)
+- Paul
