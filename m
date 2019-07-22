@@ -2,83 +2,59 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F5DC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0500CC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E1F218D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0ED21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfGVD36 (ORCPT
+        id S1728059AbfGVDmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 23:29:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2694 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727860AbfGVD35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 23:29:57 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8B5CF8303BF188C45117;
-        Mon, 22 Jul 2019 11:29:55 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 11:29:48 +0800
-Subject: Re: [PATCH v3 01/24] erofs: add on-disk layout
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-2-gaoxiang25@huawei.com>
- <20190722132616.60edd141@canb.auug.org.au>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <b1ff773b-eb15-9fdc-77aa-f7446471a1d4@huawei.com>
-Date:   Mon, 22 Jul 2019 11:29:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190722132616.60edd141@canb.auug.org.au>
-Content-Type: text/plain; charset="windows-1252"
+        Sun, 21 Jul 2019 23:42:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38278 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfGVDmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 23:42:17 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 75E5714EC8285;
+        Sun, 21 Jul 2019 20:42:16 -0700 (PDT)
+Date:   Sun, 21 Jul 2019 20:41:56 -0700 (PDT)
+Message-Id: <20190721.204156.403753211415246792.davem@davemloft.net>
+To:     haiyangz@microsoft.com
+Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] hv_netvsc: Fix extra rcu_read_unlock in
+ netvsc_recv_callback()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1563557581-17669-1-git-send-email-haiyangz@microsoft.com>
+References: <1563557581-17669-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 21 Jul 2019 20:42:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+From: Haiyang Zhang <haiyangz@microsoft.com>
+Date: Fri, 19 Jul 2019 17:33:51 +0000
 
-On 2019/7/22 11:26, Stephen Rothwell wrote:
-> Hi Gao,
+> There is an extra rcu_read_unlock left in netvsc_recv_callback(),
+> after a previous patch that removes RCU from this function.
+> This patch removes the extra RCU unlock.
 > 
-> On Mon, 22 Jul 2019 10:50:20 +0800 Gao Xiang <gaoxiang25@huawei.com> wrote:
->>
->> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
->> new file mode 100644
->> index 000000000000..e418725abfd6
->> --- /dev/null
->> +++ b/fs/erofs/erofs_fs.h
->> @@ -0,0 +1,316 @@
->> +/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
-> 
-> I think the preferred tag is now GPL-2.0-only (assuming that is what is
-> intended).
+> Fixes: 345ac08990b8 ("hv_netvsc: pass netvsc_device to receive callback")
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-OK, GPL-2.0-only is much better.
-I will change these tags in the next version :)
-
-Thanks,
-Gao Xiang
-
-> 
+Applied and queued up for -stable.
