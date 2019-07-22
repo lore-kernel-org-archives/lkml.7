@@ -2,101 +2,79 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4390C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA1FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA34721955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563830149;
-	bh=AIZzoT5ZYNcjgOzxp5tAPR6+/rNuqLReT3uMdcYoavY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GzNl/tbcJkCtjqEGqQwKNoIzksuzRdJXH2zv3PDK8VTkknO/dCgz+vAJVmqdo8Wa6
-	 DG387Ock0dFIa+oECY+fU2UTKtQMBEt4ulEnbo4Vy029/C0ZHFCTNuX72++1A9QaTx
-	 8tXRZyco4R0U23bNbNHh3Z2Uju6RKI/j9UawcJG4=
+	by mail.kernel.org (Postfix) with ESMTP id 1051C21955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731057AbfGVVPs (ORCPT
+        id S1730940AbfGVVQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729697AbfGVVPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:15:46 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1822221955;
-        Mon, 22 Jul 2019 21:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563830145;
-        bh=AIZzoT5ZYNcjgOzxp5tAPR6+/rNuqLReT3uMdcYoavY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iRJji6EcKDZ3rNaenkThR3bEKTYeoPbgWZ5Em5QbX6S3sLNUNEmwShKrkD3Iz3et3
-         fsrBVi68W2MImveoLTFgx5nNRgtbWMIZ1mkJwIql8NEci4tBOmN/WV7j/Dk+txETd1
-         yDQ84WnlNQ4e7tkMX4/PwhqFjwh4AxDCeiZyQqhA=
-Date:   Mon, 22 Jul 2019 16:15:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "Gustavo.Pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 6/8] PCI: al: Add support for DW based driver type
-Message-ID: <20190722211542.GB203187@google.com>
-References: <20190718094531.21423-1-jonnyc@amazon.com>
- <20190718094718.25083-2-jonnyc@amazon.com>
- <DM6PR12MB4010913E5408349A600762CADACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
- <d323007c6bf14cb9f90a497a26b66dac151164fc.camel@amazon.com>
+        Mon, 22 Jul 2019 17:16:00 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:55634 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729749AbfGVVP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:15:59 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d78 with ME
+        id fxFr2000D4n7eLC03xFs2c; Mon, 22 Jul 2019 23:15:57 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 22 Jul 2019 23:15:57 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     lgirdwood@gmail.com, broonie@kernel.org, tiwai@suse.com,
+        kuninori.morimoto.gx@renesas.com, peter.ujfalusi@ti.com,
+        gregkh@linuxfoundation.org, wang@mentor.com, tglx@linutronix.de
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] ASoC: pcm3168a: Fix a typo in the name of a constant
+Date:   Mon, 22 Jul 2019 23:15:28 +0200
+Message-Id: <20190722211528.26600-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d323007c6bf14cb9f90a497a26b66dac151164fc.camel@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 03:08:18PM +0000, Chocron, Jonathan wrote:
-> On Fri, 2019-07-19 at 08:55 +0000, Gustavo Pimentel wrote:
-> > On Thu, Jul 18, 2019 at 10:47:16, Jonathan Chocron <jonnyc@amazon.com> wrote:
+There is a typo in PCM1368A_MAX_SYSCLK, it should be PCM3168A_MAX_SYSCLK
+(1 and 3 switched in 3168)
 
-> > > +static int al_pcie_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device *dev = &pdev->dev;
-> > > +	struct al_pcie *al_pcie;
-> > > +	struct dw_pcie *pci;
-> > > +	struct resource *dbi_res;
-> > > +	struct resource *controller_res;
-> > > +	struct resource *ecam_res;
-> > > +	int ret;
-> > 
-> > Please sort the variables following the reverse tree order.
-> > 
-> Done. 
-> 
-> I'd think that it would make sense to group variables which have a
-> common characteristic (e.g. resources read from the DT), even if it
-> mildly breaks the convention (as long as the general frame is longest
-> to shortest). Does this sound ok?
-> 
-> BTW, I couldn't find any documentation regarding the reverse-tree
-> convention, do you have a pointer to some?
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ sound/soc/codecs/pcm3168a.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-What I personally do is sort declarations in the order they're used.
+diff --git a/sound/soc/codecs/pcm3168a.c b/sound/soc/codecs/pcm3168a.c
+index ed0b4317c9ae..844602710eee 100644
+--- a/sound/soc/codecs/pcm3168a.c
++++ b/sound/soc/codecs/pcm3168a.c
+@@ -263,7 +263,7 @@ static unsigned int pcm3168a_scki_ratios[] = {
+ #define PCM3168A_NUM_SCKI_RATIOS_DAC	ARRAY_SIZE(pcm3168a_scki_ratios)
+ #define PCM3168A_NUM_SCKI_RATIOS_ADC	(ARRAY_SIZE(pcm3168a_scki_ratios) - 2)
+ 
+-#define PCM1368A_MAX_SYSCLK		36864000
++#define PCM3168A_MAX_SYSCLK		36864000
+ 
+ static int pcm3168a_reset(struct pcm3168a_priv *pcm3168a)
+ {
+@@ -296,7 +296,7 @@ static int pcm3168a_set_dai_sysclk(struct snd_soc_dai *dai,
+ 	struct pcm3168a_priv *pcm3168a = snd_soc_component_get_drvdata(dai->component);
+ 	int ret;
+ 
+-	if (freq > PCM1368A_MAX_SYSCLK)
++	if (freq > PCM3168A_MAX_SYSCLK)
+ 		return -EINVAL;
+ 
+ 	ret = clk_set_rate(pcm3168a->scki, freq);
+-- 
+2.20.1
+
