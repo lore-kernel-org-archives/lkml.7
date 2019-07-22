@@ -2,43 +2,51 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA05C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D80C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C31214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4874214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfGVP2z (ORCPT
+        id S1729086AbfGVP3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:28:55 -0400
-Received: from os.inf.tu-dresden.de ([141.76.48.99]:59090 "EHLO
-        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbfGVP2y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:28:54 -0400
-X-Greylist: delayed 859 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 11:28:53 EDT
-Received: from [195.176.96.199] (helo=[10.3.5.139])
-        by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.92)
-        id 1hpaFA-0008NN-TJ; Mon, 22 Jul 2019 17:28:52 +0200
-Subject: Re: [PATCH 04/10] Protect kref_put with the lock
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Moni Shoua <monis@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
- <20190722151426.5266-5-mplaneta@os.inf.tu-dresden.de>
- <20190722152559.GD7607@ziepe.ca>
-From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Message-ID: <c2fdbf86-acea-aebb-48c4-8c2f85a68978@os.inf.tu-dresden.de>
-Date:   Mon, 22 Jul 2019 17:28:51 +0200
+        Mon, 22 Jul 2019 11:29:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:36808 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728385AbfGVP3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:29:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 08:19:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,295,1559545200"; 
+   d="scan'208";a="177015340"
+Received: from agalla-mobl1.amr.corp.intel.com (HELO [10.254.103.46]) ([10.254.103.46])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jul 2019 08:19:53 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: use __u32 instead of uint32_t in
+ uapi headers
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190721142308.30306-1-yamada.masahiro@socionext.com>
+ <CAK8P3a01MzCTJnk_fuMgWsRBa3u_CEZegZqH37G7qLiquHWncA@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <fdd24e93-efad-0132-e1ff-b7f5f87e8efc@linux.intel.com>
+Date:   Mon, 22 Jul 2019 10:19:53 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190722152559.GD7607@ziepe.ca>
+In-Reply-To: <CAK8P3a01MzCTJnk_fuMgWsRBa3u_CEZegZqH37G7qLiquHWncA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,58 +57,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 22/07/2019 17:25, Jason Gunthorpe wrote:
-> On Mon, Jul 22, 2019 at 05:14:20PM +0200, Maksym Planeta wrote:
->> Need to ensure that kref_put does not run concurrently with the loop
->> inside rxe_pool_get_key.
+On 7/22/19 8:39 AM, Arnd Bergmann wrote:
+> On Sun, Jul 21, 2019 at 4:25 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
 >>
->> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
->>   drivers/infiniband/sw/rxe/rxe_pool.c | 18 ++++++++++++++++++
->>   drivers/infiniband/sw/rxe/rxe_pool.h |  4 +---
->>   2 files changed, 19 insertions(+), 3 deletions(-)
+>>   struct snd_sof_blk_hdr {
+>>          enum snd_sof_fw_blk_type type;
+>> -       uint32_t size;          /* bytes minus this header */
+>> -       uint32_t offset;        /* offset from base */
+>> +       __u32 size;             /* bytes minus this header */
+>> +       __u32 offset;           /* offset from base */
+>>   } __packed;
 >>
->> diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
->> index efa9bab01e02..30a887cf9200 100644
->> +++ b/drivers/infiniband/sw/rxe/rxe_pool.c
->> @@ -536,3 +536,21 @@ void *rxe_pool_get_key(struct rxe_pool *pool, void *key)
->>   	read_unlock_irqrestore(&pool->pool_lock, flags);
->>   	return node ? elem : NULL;
->>   }
->> +
->> +static void rxe_dummy_release(struct kref *kref)
->> +{
->> +}
->> +
->> +void rxe_drop_ref(struct rxe_pool_entry *pelem)
->> +{
->> +	int res;
->> +	struct rxe_pool *pool = pelem->pool;
->> +	unsigned long flags;
->> +
->> +	write_lock_irqsave(&pool->pool_lock, flags);
->> +	res = kref_put(&pelem->ref_cnt, rxe_dummy_release);
->> +	write_unlock_irqrestore(&pool->pool_lock, flags);
 > 
-> This doesn't make sense..
-> 
-> If something is making the kref go to 0 while the node is still in the
-> RB tree then that is a bug.
-> 
-> You should never need to add locking around a kref_put.
-> 
+> On a related note: Using an 'enum' in an ABI structure is not portable
+> across architectures. This is probably fine in a UAPI as long as user
+> and kernel space agree on the size of an enum, but if the same
+> structure is used to talk to the firmware, it won't work on architectures
+> that have a different size for the first field.
 
- From https://www.kernel.org/doc/Documentation/kref.txt
-
-| The last rule (rule 3) is the nastiest one to handle.  Say, for
-| instance, you have a list of items that are each kref-ed, and you wish
-| to get the first one.  You can't just pull the first item off the list
-| and kref_get() it.  That violates rule 3 because you are not already
-| holding a valid pointer.  You must add a mutex (or some other lock).
-
-
-> Jason
-> 
-
--- 
-Regards,
-Maksym Planeta
+yes, we've removed all enums in SOF and missed this one. This should be 
+changed, thanks for the note.
