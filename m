@@ -2,73 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C31C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B85C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E253221953
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563765911;
-	bh=OuaSMyJ31uzehvilbNtzHBL2+HlRaa400vG7NlP8qIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VSya9wU4gYdWcOkaotZPg1WzxPgv3UYnFWNiz6t0UfXZSY+yFojCiohdzB8qSOOKt
-	 GWp2XmyhwRlN8apvh9pqjPDfpEG5VIcn1L31HCxIcQEF1vjZqDKWq0pwwjcdomnAX8
-	 je+bdEM98gapCOpSzGPk7vPF7P+HJlAQqrXuN5hY=
+	by mail.kernel.org (Postfix) with ESMTP id 3116521921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CblAnu5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfGVDZK (ORCPT
+        id S1727962AbfGVD0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 23:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
+        Sun, 21 Jul 2019 23:26:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36087 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfGVDZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 23:25:09 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1727860AbfGVD0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 23:26:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F6721921;
-        Mon, 22 Jul 2019 03:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563765908;
-        bh=OuaSMyJ31uzehvilbNtzHBL2+HlRaa400vG7NlP8qIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gwMTXrZSxokCdVtYuEJue+C7vgSZRNLf9rreY8p7Za0B8QNrzynY3cO7taVJTFZs0
-         tGTlH60d28O0DeEM8Wm5vMvTqlSFqaJeXYOCzEdzF/uhvTEzJUpbZLxznp2ZVe/qUY
-         cG+sDYZUj4BSiTRGNlv995NBbvkfLRz3YAB5qgG0=
-Date:   Mon, 22 Jul 2019 11:24:42 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, aisheng.dong@nxp.com,
-        weiyongjun1@huawei.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, shengjiu.wang@nxp.com
-Subject: Re: [PATCH] clk: imx8: Add DSP related clocks
-Message-ID: <20190722032441.GW3738@dragon>
-References: <20190702152007.12190-1-daniel.baluta@nxp.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45sRpd1Ttlz9s4Y;
+        Mon, 22 Jul 2019 13:26:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563765979;
+        bh=izlUaNDnsxAjxbvmHOjmdpi6IZgjT2QLOfpi5tmaLcI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CblAnu5MeM0hBxJbpABZdmp+zXc/2DaMCeUTHwqfUmYt6YMTw71TLvxnvEDfTrIly
+         LfiCbZRVtkQVzDM3H2LNS9hkeMpdncFBdtVMxagT1V3yUtERezRQQ8PIqgW3DOVXUC
+         znM198nB9t4HRnx/3T5RTRS/MH78L6OafwpHihAhQ83H/SheqBZ+3IKo8ShrAo0gtD
+         F4CsE9zghsITOnKclF068MCgBOj9Hd1G5N8W9VEuIFnZOOFvoknIhI7lAiDaOOb2QN
+         uLGzV68/XmpR7LRsToWKdH8y2/I2LWIe+FqpIRQJtO8n8cx7v5rLfkdaobVqevRGg4
+         ZcD4NyG7f60fA==
+Date:   Mon, 22 Jul 2019 13:26:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v3 01/24] erofs: add on-disk layout
+Message-ID: <20190722132616.60edd141@canb.auug.org.au>
+In-Reply-To: <20190722025043.166344-2-gaoxiang25@huawei.com>
+References: <20190722025043.166344-1-gaoxiang25@huawei.com>
+        <20190722025043.166344-2-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702152007.12190-1-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="Sig_/WUcwS=0enPg+/u1ca6ebcMn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 06:20:07PM +0300, Daniel Baluta wrote:
-> i.MX8QXP contains Hifi4 DSP. There are four clocks
-> associated with DSP:
->   * dsp_lpcg_core_clk
->   * dsp_lpcg_ipg_clk
->   * dsp_lpcg_adb_aclk
->   * ocram_lpcg_ipg_clk
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+--Sig_/WUcwS=0enPg+/u1ca6ebcMn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi Gao,
+
+On Mon, 22 Jul 2019 10:50:20 +0800 Gao Xiang <gaoxiang25@huawei.com> wrote:
+>
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> new file mode 100644
+> index 000000000000..e418725abfd6
+> --- /dev/null
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -0,0 +1,316 @@
+> +/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
+
+I think the preferred tag is now GPL-2.0-only (assuming that is what is
+intended).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/WUcwS=0enPg+/u1ca6ebcMn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl01LNgACgkQAVBC80lX
+0Gx7dgf/U1zjLC4FYm3ODLxzwXPJq0Beid0tos0kzSrX0W8mbyk7heedRm4rJLg3
+W24je4AYnli8U16tdWs2MFqcJc3Lf3vToB8AlX2x7HNxtA4gqSwZhC5IBszif8yT
+CJaKj8CxSrrIgZqrlTDidx6N3ibdv0+dVaZi0MfyrbVsu8siwmH7II0faV9F+OBJ
+CT5LN09VVMS4dSYtAwBORXvVlB06AmeV3k7/cw4rGppyLXY9hcyC5doFgWN3VBoC
+MSn/YUDz1Sd2UkUx8hZm8jyAOvuCr9x8Hh5Wo3mSL/d3qPmMo2vDLx+etHqhgNGy
+W+BwaAZMVfvs6GWfIQdWQiTm4EIU2w==
+=KnjG
+-----END PGP SIGNATURE-----
+
+--Sig_/WUcwS=0enPg+/u1ca6ebcMn--
