@@ -2,175 +2,186 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67868C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0A7C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED382199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71B62199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VyEAdJ9u"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1yhteVtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfGVJzA (ORCPT
+        id S1729613AbfGVJzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:55:00 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42193 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729327AbfGVJy5 (ORCPT
+        Mon, 22 Jul 2019 05:55:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39216 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729308AbfGVJyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:54:57 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t28so36969638lje.9;
-        Mon, 22 Jul 2019 02:54:55 -0700 (PDT)
+        Mon, 22 Jul 2019 05:54:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so38679417wrt.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 02:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Bz0B3znRkzN1aaFEIYtkZkLNv7SC5uYBJx9GcgvIbo=;
-        b=VyEAdJ9u8WWneLydpX8Bd+0pO+roYUg07OcNb8qu5Sg4AabJ+sNVtDsHffSGPA3OYD
-         Gx95JME7Xf4Wx7Cz8UB1JwqqFAoPRdshuJwIAnHk/vFHgI3/1KYIJPRqRbHIffR4DlcO
-         Vm+T4KP2K1ZRuR3RWltbC53T0WbdxvZB5po7/FJ7HnWJX0b8Bgskb8ew4NimOJRndFmD
-         BrVygFj2+LSmBndycp1HRHUKjqyrhnnLLQnhG65IjxQE+vR5YnC5bNAql0iV6p/EnGNf
-         5qA22Yi4T+YoYLTiWXwhQc2fdbIk5Ti7wqXr1LpnVOWzSaq92Eyy/L7f4/ScdkJ7BrS/
-         T1SA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=FzybNdR15Qijg3J4fYjrwfuwdELElwLJSXj8hs/YBLw=;
+        b=1yhteVtcPtFx4Ow5mRS1dEYidbu/9IxM9sPWNJNT45dOEo7E8OXzf6gEVZ9WGA/MTn
+         I6w+jBuWDmggTJxDLUZlYKS8Y2muvq7EDEKDwEfO+CMDLCbuV6nKIOQBVICUfHRX7Lcj
+         xBKAhXLscNeyht23Rn1AkeBZlgfokWedeKrfQICGs0WYR/wEEup+xhNjyD3dULRQ1aT+
+         rMg9Z6IkCygJZK2Vf6/Jx8lsKQH/6drWnK4otqUQr7DjG6srtxP3MhLrxDXi0H4tAHno
+         oSo6NRsyq7/rsUJLATSY+F9m+FXBVJmbUUrG3DYGA3hJh9sWT4Yn8VZG1KtSlzh8kBqd
+         v4cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Bz0B3znRkzN1aaFEIYtkZkLNv7SC5uYBJx9GcgvIbo=;
-        b=EljAupdm+n52dU8C6eIkdLs7ZEGZ38by46gfvYY6ArE3AqsbJc51AtYMYZdOWa38y5
-         5gAuzUXwwk/IazWHgltzMGreORWeoZ+uXMshqWeucLs6eF9J7y9m53ddZbLGn8lQn0yH
-         i37P4zqMBJI61uJv1IX4VkCElUim2m1oJy3cgBgtymWwuHi9XHgTwzRpn8sXW+CJVxjp
-         dXG8uZ1oAkB7+hHLr1jMdia2iFRCcAPrbfF02YIyNoVxgrBqD6NION4KOvYBg8+vfgCM
-         bVDlMVHeMYDawoBzC673Q2s1Ha6zfJyGyQq47XgakY4u99cfELzvoJbuiu6nP7JsYT0q
-         5k+Q==
-X-Gm-Message-State: APjAAAXbScJNNz6tsDcGp03rh4MoNO7I2jIuYg8aD+LQFn6S2jtnBFQA
-        O2BL/HXlztv54lN47QO93m9iIzTp
-X-Google-Smtp-Source: APXvYqxY/YvLFYLne+VP2QqRsaaLYHKAFFp28j2d6BRsG1OoG7yHU03akGcUAWdgtDmSUHqQXfPk3Q==
-X-Received: by 2002:a2e:8007:: with SMTP id j7mr35985709ljg.191.1563789294111;
-        Mon, 22 Jul 2019 02:54:54 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id c30sm5992003lfp.70.2019.07.22.02.54.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=FzybNdR15Qijg3J4fYjrwfuwdELElwLJSXj8hs/YBLw=;
+        b=fFuaYQrNrUHHN9zbCb4ElRi7f9NgjOGo68IDEFy55sWsulz9+CnlzbL7JbZ6lIy15z
+         GutiLNq2NWlacwN4HvyW80IrKWTFmdKEGe0ErhfxCG+ulNwmXYtIhxQq6qHZBijl1NvB
+         6eSfF8AHQL6Dhl/WRr30kpwbfxJeC/DRG6+9MIFeV0uoB0slQakbJCpGPh3C2ekchpHJ
+         7e+wqhhqXVv4Vm1cpkymvB9qvWi2zGpR30TtLZBZocEoINW2WD4P58hrQ4qd5RIIh+xI
+         qPNBSuOJ6p9ctR92Rvn5N1gnNpe7c3MrWAYRo4AUsyCk9Tv6y37LdTrN2jor/dCEBldM
+         +udw==
+X-Gm-Message-State: APjAAAUHCFiyEBTdhUjpNutU10+HSGxu5H5rwfwSshibiXs7DJZlVDhQ
+        5TEB82fMf00eMMIGvulEI234i4YCCiM=
+X-Google-Smtp-Source: APXvYqxz7bBeXcmL7PjwbF/jjbnawlFtyOHeGm6cHqounIFe8r151Sq4YxwMsZm5483RpcF7MmPOGg==
+X-Received: by 2002:adf:f1d1:: with SMTP id z17mr895976wro.190.1563789274244;
+        Mon, 22 Jul 2019 02:54:34 -0700 (PDT)
+Received: from pop-os.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id 91sm83158469wrp.3.2019.07.22.02.54.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 02:54:53 -0700 (PDT)
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-Date:   Mon, 22 Jul 2019 12:54:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jul 2019 02:54:33 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+To:     jbrunet@baylibre.com
+Cc:     khilman@baylibre.com, sboyd@kernel.org, narmstrong@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH 6/8] clk: meson: clk-regmap: migrate to new parent description method
+Date:   Mon, 22 Jul 2019 11:54:23 +0200
+Message-Id: <20190722095425.14193-7-amergnat@baylibre.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190722095425.14193-1-amergnat@baylibre.com>
+References: <20190722095425.14193-1-amergnat@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.07.2019 22:40, Sowjanya Komatineni пишет:
-> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
-> 
-> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-> for Tegra210.
-> 
-> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-> interrupt controller suspend operation.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-> index e1f771c72fc4..851f88cef508 100644
-> --- a/drivers/irqchip/irq-tegra.c
-> +++ b/drivers/irqchip/irq-tegra.c
-> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->  
->  struct tegra_ictlr_soc {
->  	unsigned int num_ictlrs;
-> +	bool supports_sc7;
->  };
->  
->  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
-> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
->  
->  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
->  	.num_ictlrs = 6,
-> +	.supports_sc7 = true,
->  };
->  
->  static const struct of_device_id ictlr_matches[] = {
-> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
->  
->  struct tegra_ictlr_info {
->  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
-> +	const struct tegra_ictlr_soc *soc;
->  #ifdef CONFIG_PM_SLEEP
->  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
-> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
->  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->  
-> -		/* Disable COP interrupts */
-> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> +		/*
-> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
-> +		 *
-> +		 * Tegra210 system suspend flow uses sc7entry firmware which
-> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
-> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
-> +		 * system to go to SC7/LP0.
-> +		 *
-> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
-> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
-> +		 */
-> +		if (!lic->soc->supports_sc7)
-> +			/* Disable COP interrupts if SC7 is not supported */
+This clock controller use the string comparison method to describe parent
+relation between the clocks, which is not optimized.
 
-All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-doesn't sound correct to me. Something like 'firmware_sc7' should suit
-better here.
+Migrate to the new way by using .parent_hws where possible (ie. when
+all clocks are local to the controller) and use .parent_data otherwise.
 
-> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+ drivers/clk/meson/axg.c        |  3 +++
+ drivers/clk/meson/clk-regmap.h | 12 ++++++------
+ drivers/clk/meson/g12a.c       |  6 ++++++
+ drivers/clk/meson/gxbb.c       |  3 +++
+ drivers/clk/meson/meson8b.c    |  3 +++
+ 5 files changed, 21 insertions(+), 6 deletions(-)
 
-Secondly, I'm also not sure why COP interrupts need to be disabled for
-pre-T210 at all, since COP is unused. This looks to me like it was
-cut-n-pasted from downstream kernel without a good reason and could be
-simply removed.
-
->  		/* Disable CPU interrupts */
->  		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
-> @@ -339,6 +354,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
->  		goto out_unmap;
->  	}
->  
-> +	lic->soc = soc;
->  	tegra_ictlr_syscore_init();
->  
->  	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
-> 
+diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+index 7a3d795cc614..13fc0006f63d 100644
+--- a/drivers/clk/meson/axg.c
++++ b/drivers/clk/meson/axg.c
+@@ -1096,6 +1096,9 @@ static struct clk_regmap axg_gen_clk = {
+ 	},
+ };
+ 
++#define MESON_GATE(_name, _reg, _bit) \
++	MESON_PCLK(_name, _reg, _bit, &axg_clk81.hw)
++
+ /* Everything Else (EE) domain gates */
+ static MESON_GATE(axg_ddr, HHI_GCLK_MPEG0, 0);
+ static MESON_GATE(axg_audio_locker, HHI_GCLK_MPEG0, 2);
+diff --git a/drivers/clk/meson/clk-regmap.h b/drivers/clk/meson/clk-regmap.h
+index 1dd0abe3ba91..c4a39604cffd 100644
+--- a/drivers/clk/meson/clk-regmap.h
++++ b/drivers/clk/meson/clk-regmap.h
+@@ -111,7 +111,7 @@ clk_get_regmap_mux_data(struct clk_regmap *clk)
+ extern const struct clk_ops clk_regmap_mux_ops;
+ extern const struct clk_ops clk_regmap_mux_ro_ops;
+ 
+-#define __MESON_GATE(_name, _reg, _bit, _ops)				\
++#define __MESON_PCLK(_name, _reg, _bit, _ops, _pname)			\
+ struct clk_regmap _name = {						\
+ 	.data = &(struct clk_regmap_gate_data){				\
+ 		.offset = (_reg),					\
+@@ -120,15 +120,15 @@ struct clk_regmap _name = {						\
+ 	.hw.init = &(struct clk_init_data) {				\
+ 		.name = #_name,						\
+ 		.ops = _ops,						\
+-		.parent_names = (const char *[]){ "clk81" },		\
++		.parent_hws = (const struct clk_hw *[]) { _pname },	\
+ 		.num_parents = 1,					\
+ 		.flags = (CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED),	\
+ 	},								\
+ }
+ 
+-#define MESON_GATE(_name, _reg, _bit)	\
+-	__MESON_GATE(_name, _reg, _bit, &clk_regmap_gate_ops)
++#define MESON_PCLK(_name, _reg, _bit, _pname)	\
++	__MESON_PCLK(_name, _reg, _bit, &clk_regmap_gate_ops, _pname)
+ 
+-#define MESON_GATE_RO(_name, _reg, _bit)	\
+-	__MESON_GATE(_name, _reg, _bit, &clk_regmap_gate_ro_ops)
++#define MESON_PCLK_RO(_name, _reg, _bit, _pname)	\
++	__MESON_PCLK(_name, _reg, _bit, &clk_regmap_gate_ro_ops, _pname)
+ #endif /* __CLK_REGMAP_H */
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index 5cad8cee142b..891140eaeefb 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -3318,6 +3318,12 @@ static struct clk_regmap g12a_ts = {
+ 	},
+ };
+ 
++#define MESON_GATE(_name, _reg, _bit) \
++	MESON_PCLK(_name, _reg, _bit, &g12a_clk81.hw)
++
++#define MESON_GATE_RO(_name, _reg, _bit) \
++	MESON_PCLK_RO(_name, _reg, _bit, &g12a_clk81.hw)
++
+ /* Everything Else (EE) domain gates */
+ static MESON_GATE(g12a_ddr,			HHI_GCLK_MPEG0,	0);
+ static MESON_GATE(g12a_dos,			HHI_GCLK_MPEG0,	1);
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 65ba08c210d2..45b4c0e62d7a 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -2576,6 +2576,9 @@ static struct clk_regmap gxbb_gen_clk = {
+ 	},
+ };
+ 
++#define MESON_GATE(_name, _reg, _bit) \
++	MESON_PCLK(_name, _reg, _bit, &gxbb_clk81.hw)
++
+ /* Everything Else (EE) domain gates */
+ static MESON_GATE(gxbb_ddr, HHI_GCLK_MPEG0, 0);
+ static MESON_GATE(gxbb_dos, HHI_GCLK_MPEG0, 1);
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 8d0e362d750d..3414e573b8a1 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -2550,6 +2550,9 @@ static struct clk_regmap meson8b_cts_i958 = {
+ 	},
+ };
+ 
++#define MESON_GATE(_name, _reg, _bit) \
++	MESON_PCLK(_name, _reg, _bit, &meson8b_clk81.hw)
++
+ /* Everything Else (EE) domain gates */
+ 
+ static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
+-- 
+2.17.1
 
