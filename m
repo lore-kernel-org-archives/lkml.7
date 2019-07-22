@@ -2,109 +2,106 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EBFC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AB8C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D3521BD9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDB62199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i2kr/bAJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nHHruWm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfGVJvD (ORCPT
+        id S1729458AbfGVJvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:51:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40642 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729418AbfGVJvA (ORCPT
+        Mon, 22 Jul 2019 05:51:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43284 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729430AbfGVJvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:51:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cABJAC81WTfvAsX4yATKnx6SK90w2XcHzkRpr1xGDvc=; b=i2kr/bAJkKVbh2A8CybECWcPA3
-        EmDsrp5UxkdNcrdWWAVnus10ZuPOcOtkDs/pqYJRXkHM9DnXbMe4PrdfTAZ48VilNv/kML4S01IRE
-        l8OQ1SfB3snqRTqUcDhpLz8tVE/MBFZxxaqX59FDC1+4+GWpjQYi4RRdp2kD8qMFSJ/6TQtABtEg+
-        7Omm7Ho5OySOtQwNRfeZN+EGIOerh+pWQ6UKcxUAbeCxGXBGy1qlCJlcSBTqqAtoNEOmXGPfTp5Ab
-        9mhYFXHpCe9+uT3NP3J8tAzl7XH3ywPeS+kSmwpcC+vp2o0PcsvY4x2S7wgPdZfH1/JcUXNTQ6FED
-        6xsPiVgw==;
-Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpUy9-0005ix-Hb; Mon, 22 Jul 2019 09:50:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] iomap: zero newly allocated mapped blocks
-Date:   Mon, 22 Jul 2019 11:50:24 +0200
-Message-Id: <20190722095024.19075-13-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722095024.19075-1-hch@lst.de>
-References: <20190722095024.19075-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 22 Jul 2019 05:51:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so38667654wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 02:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=bWP5xS/4YYzdQVyLQ3+texqZ8kAemNHSwaQHX5jsQwQ=;
+        b=nHHruWm11yckWxNykJfOsz9XcXvSNUyeaA7NSVCJWFqG9us6WcySaPabt7WprIsSUR
+         wP9dWNuHAhwiU91FTYXvRMDCopEmn1534xz5aLuB7yd/AaZZUlse3dknne1Y++W7Q4iu
+         hMDxPdDMlCisFkNrrgkVS9FdiwRBJ4ispJGxHc5GYJKotyiDkL3PF32gZ8OGntUkjZjx
+         YN+yzZa/akUwMmGOtCPqBcQLNFeUW1hbFi4gwgFHns88vo1oQzKHvgL1iCvzuEaTBoIi
+         kijywq1IvG3ywooo4YsmAt9jQi7ZRc+zqt1bAzCqxVAyr+uMSXlgZ6OVSDuZ9fsEX1DL
+         qShA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bWP5xS/4YYzdQVyLQ3+texqZ8kAemNHSwaQHX5jsQwQ=;
+        b=EmWCSG2vgb+N1NbUagVant29Zv7caXZr0ZrxcH4Po5r/0t9mjbuSqmU0Tf73IFMNt6
+         Zydn1QGVFzYSnpH1uin5qQeP0Axicvece8qp+tS0fYGWg0G5HRxoXSFzvsKx6/LFnoFE
+         WKZ3SH/CV+NqxU8yUF7FGRrIkXfh7sAP29BknQagghxme5MiZAoKMYkvawAwtE/YdQ2R
+         fbnrClpKoVPmyt7ITDf0sczXam22xw3pN5wqpYG56ipry1OtfC1MwLteqa+p5IBlyMUw
+         JP50BTWGUq7W4QCuwX9JfNSbxtirLR3U1Ox6qSKzICgLgcKZxXyNNdbR+26iBv+OB7VX
+         b7BQ==
+X-Gm-Message-State: APjAAAV+hfwNRdRIwqf0E2fjGoiF17lVd3l8rFgCLU5Dp9reFE/qYBg2
+        GShe+T4jzWgc+8cbJ8H4i+Uryg==
+X-Google-Smtp-Source: APXvYqy1nKso+GnHov2Vamg3HX7qKDmtTy9gNOQdWWtffkvp3JgGap0R3bk+1lQNEs186TKMf9sKBQ==
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr73312101wre.205.1563789060893;
+        Mon, 22 Jul 2019 02:51:00 -0700 (PDT)
+Received: from pop-os.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id o3sm31050738wrs.59.2019.07.22.02.50.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 02:51:00 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+To:     jbrunet@baylibre.com
+Cc:     khilman@baylibre.com, sboyd@kernel.org, narmstrong@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        baylibre-upstreaming@groups.io,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH 0/4] clk: meson: ao: use the new parent description method
+Date:   Mon, 22 Jul 2019 11:50:49 +0200
+Message-Id: <20190722095053.14104-1-amergnat@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-File systems like gfs2 don't support delayed allocations or unwritten
-extents and thus allocate normal mapped blocks to fill holes.  To
-cover the case of such file systems allocating new blocks to fill holes
-also zero out mapped blocks with the new flag.
+Meson SoCs clock controllers use the string comparison method to describe
+parent relation between the clocks, which is not optimized.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Its also use bypass clock made from device-tree clock to provide an input
+clock which can be access through global name, but it still not optimal.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 91a9796f8a7c..ba0511131868 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -226,6 +226,14 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
- 	SetPageUptodate(page);
- }
- 
-+static inline bool iomap_block_needs_zeroing(struct inode *inode,
-+		struct iomap *iomap, loff_t pos)
-+{
-+	return iomap->type != IOMAP_MAPPED ||
-+		(iomap->flags & IOMAP_F_NEW) ||
-+		pos >= i_size_read(inode);
-+}
-+
- static loff_t
- iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		struct iomap *iomap)
-@@ -249,7 +257,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 	if (plen == 0)
- 		goto done;
- 
--	if (iomap->type != IOMAP_MAPPED || pos >= i_size_read(inode)) {
-+	if (iomap_block_needs_zeroing(inode, iomap, pos)) {
- 		zero_user(page, poff, plen);
- 		iomap_set_range_uptodate(page, poff, plen);
- 		goto done;
-@@ -563,7 +571,7 @@ iomap_read_page_sync(struct inode *inode, loff_t block_start, struct page *page,
- 	struct bio_vec bvec;
- 	struct bio bio;
- 
--	if (iomap->type != IOMAP_MAPPED || block_start >= i_size_read(inode)) {
-+	if (iomap_block_needs_zeroing(inode, iomap, block_start)) {
- 		zero_user_segments(page, poff, from, to, poff + plen);
- 		iomap_set_range_uptodate(page, poff, plen);
- 		return 0;
+A recent patch [0] allows parents to be directly specified with
+device-tree clock name or without string names from localy declared clocks.
+
+This patchset replaces clock string names by clock pointers (as possible),
+removes bypass clocks and uses directly device-tree clock names in parent
+assignment.
+
+Tested on GXL, GXBB, Meson8b, AXG SoCs by comparing the clock summary
+(orphan too) before and after migration.
+
+[0] commit fc0c209c147f ("clk: Allow parents to be specified without string names")
+
+Alexandre Mergnat (4):
+  clk: meson: g12a-aoclk: migrate to the new parent description method
+  clk: meson: gxbb-aoclk: migrate to the new parent description method
+  clk: meson: axg-aoclk: migrate to the new parent description method
+  clk: meson: remove ao input bypass clocks
+
+ drivers/clk/meson/Kconfig       |  1 -
+ drivers/clk/meson/axg-aoclk.c   | 63 ++++++++++++++-----------
+ drivers/clk/meson/g12a-aoclk.c  | 81 ++++++++++++++++++++-------------
+ drivers/clk/meson/gxbb-aoclk.c  | 55 +++++++++++-----------
+ drivers/clk/meson/meson-aoclk.c | 37 ---------------
+ drivers/clk/meson/meson-aoclk.h |  8 ----
+ 6 files changed, 114 insertions(+), 131 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
