@@ -2,99 +2,165 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A307C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43543C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4152D218B0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GOl+n50o";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ERr2t9Tz"
+	by mail.kernel.org (Postfix) with ESMTP id 16329216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfGVTq1 (ORCPT
+        id S1732331AbfGVTqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:46:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39782 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbfGVTq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:46:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F15B960F3E; Mon, 22 Jul 2019 19:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563824786;
-        bh=7eD+eVqFrtz3xwFVMMyatV/ixJ3r8Kbtxeq9wzu5IKQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GOl+n50oNJeKGpt1Z0Psg6IsQpupO2+uH9JxXDplcwwpU+dSKAJAmcg+8J3jGxpq5
-         qf1rHJQ3vBKSAIu45h5jk6LpUa070gZ6UF7xRH/U5v8uOjyfiZztRuGZmf5BH5NS3Z
-         DhVuipozaH1XgVVBX02F7knbBYhbfRQuML0OyNOs=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1808460E72;
-        Mon, 22 Jul 2019 19:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563824785;
-        bh=7eD+eVqFrtz3xwFVMMyatV/ixJ3r8Kbtxeq9wzu5IKQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ERr2t9TzgA7dmFYQp6vEONA9i9/l5p8TslDfJQXB+JVAmLHefAc6cSxX7TYP2fcJD
-         +URQ4J+SrDUSabnJqEPXVI0x90iUETo84prVGXQIJYcVbXNO/6qe1IUaxJGpEMYxV8
-         uxKnXuhGMVwRqMziIXCugnf7xhWEK0byf4+wjnTs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1808460E72
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Mon, 22 Jul 2019 13:46:24 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Subject: Re: [PATCH 1/2] drivers: qcom: rpmh-rsc: simplify TCS locking
-Message-ID: <20190722194624.GA11589@codeaurora.org>
-References: <20190701152907.16407-1-ilina@codeaurora.org>
- <5d3209e7.1c69fb81.5ef1.5195@mx.google.com>
- <20190722162003.GG25567@codeaurora.org>
- <5d35fdfb.1c69fb81.5fafa.aaa9@mx.google.com>
+        Mon, 22 Jul 2019 15:46:45 -0400
+Received: from mga09.intel.com ([134.134.136.24]:37149 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729117AbfGVTqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 15:46:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 12:46:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,296,1559545200"; 
+   d="scan'208";a="169344749"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jul 2019 12:46:41 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.186]) with mapi id 14.03.0439.000;
+ Mon, 22 Jul 2019 12:46:41 -0700
+From:   "Topper, Craig" <craig.topper@intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Simon Pilgrim" <llvm-dev@redking.me.uk>
+Subject: RE: warning: objtool: fn1 uses BP as a scratch register
+Thread-Topic: warning: objtool: fn1 uses BP as a scratch register
+Thread-Index: AQHVPmLLC1eGCWucqkeyNwv3lWarDKbSzSgAgAQuO7A=
+Date:   Mon, 22 Jul 2019 19:46:40 +0000
+Message-ID: <A7C736AD528C0C49B483E1E9E462D1A4969999C8@ORSMSX114.amr.corp.intel.com>
+References: <CAK8P3a12cVdrEXdgWkHGHP6O04mz5khaB7WgQ1nvOptaUTu_SA@mail.gmail.com>
+ <CAKwvOdmoD1wVFLdWRXTA=c-p4oc6HDxsfhXq5wQpD-8oFUfNNQ@mail.gmail.com>
+ <20190719183125.2tuhcch2rtanxvyn@treble>
+ <CAK8P3a1hxEAnuqt=ajUf4ETCOY9ckEEVZVrG1c+SV=bn2_Ga-Q@mail.gmail.com>
+ <CAKwvOd=jc06YyF2YsAfHWCR9qtB8oOeR5oQMpJe69TTfG3s2RA@mail.gmail.com>
+ <CAK8P3a1m9VwQe4M0HVChjpPNfG4BSDXa-Vo1_ceCV1pHxeAyag@mail.gmail.com>
+In-Reply-To: <CAK8P3a1m9VwQe4M0HVChjpPNfG4BSDXa-Vo1_ceCV1pHxeAyag@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDg1ZGFlZDYtMDMyMi00MDRiLTg3MGYtOTE0ZmM0YzFkNGI2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNTdJeW9ocmxYVXp6YUQ0WVZ5eVd4bDhHMlVcL2lyNVo3cFpGSDllUVpNejNGZmNoV0cwcXJMNVZVWVF4eDZpVloifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d35fdfb.1c69fb81.5fafa.aaa9@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22 2019 at 12:18 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-22 09:20:03)
->> On Fri, Jul 19 2019 at 12:20 -0600, Stephen Boyd wrote:
->> >Quoting Lina Iyer (2019-07-01 08:29:06)
->> >> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
->> >>
->> >> tcs->lock was introduced to serialize access with in TCS group. But
->> >> even without tcs->lock, drv->lock is serving the same purpose. So
->> >> use a single drv->lock.
->> >
->> >Isn't the downside now that we're going to be serializing access to the
->> >different TCSes when two are being written in parallel or waited on? I
->> >thought that was the whole point of splitting the lock into a TCS lock
->> >and a general "driver" lock that protects the global driver state vs.
->> >the specific TCS state.
->> >
->> Yes but we were holding the drv->lock as well as tcs->lock for the most
->> critical of the path anyways (writing to TCS). The added complexity
->> doesn't seem to help reduce the latency that it expected to reduce.
->
->Ok. That sort of information should be in the commit text to explain why
->it's not helping with reducing the latency or throughput of the API.
->
-Will add.
-
---Lina
+VGhlIGZyYW1lcG9pbnRlciB0aGluZyBtYXkgaGF2ZSBiZWVuIGZpeGVkIGJ5IHRoaXMgIGh0dHBz
+Oi8vcmV2aWV3cy5sbHZtLm9yZy9ENjQyOTQgDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQpGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPiANClNlbnQ6IEZyaWRheSwgSnVs
+eSAxOSwgMjAxOSAxMjo0NCBQTQ0KVG86IE5pY2sgRGVzYXVsbmllcnMgPG5kZXNhdWxuaWVyc0Bn
+b29nbGUuY29tPg0KQ2M6IEpvc2ggUG9pbWJvZXVmIDxqcG9pbWJvZUByZWRoYXQuY29tPjsgY2xh
+bmctYnVpbHQtbGludXggPGNsYW5nLWJ1aWx0LWxpbnV4QGdvb2dsZWdyb3Vwcy5jb20+OyBMaW51
+eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgUGV0
+ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPjsgVG9wcGVyLCBDcmFpZyA8Y3JhaWcu
+dG9wcGVyQGludGVsLmNvbT47IFNpbW9uIFBpbGdyaW0gPGxsdm0tZGV2QHJlZGtpbmcubWUudWs+
+DQpTdWJqZWN0OiBSZTogd2FybmluZzogb2JqdG9vbDogZm4xIHVzZXMgQlAgYXMgYSBzY3JhdGNo
+IHJlZ2lzdGVyDQoNCk9uIEZyaSwgSnVsIDE5LCAyMDE5IGF0IDg6NTAgUE0gJ05pY2sgRGVzYXVs
+bmllcnMnIHZpYSBDbGFuZyBCdWlsdCBMaW51eCA8Y2xhbmctYnVpbHQtbGludXhAZ29vZ2xlZ3Jv
+dXBzLmNvbT4gd3JvdGU6DQo+IE9uIEZyaSwgSnVsIDE5LCAyMDE5IGF0IDExOjQ0IEFNIEFybmQg
+QmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+IHdyb3RlOg0KPiA+IE9uIEZyaSwgSnVsIDE5LCAyMDE5
+IGF0IDg6MzEgUE0gSm9zaCBQb2ltYm9ldWYgPGpwb2ltYm9lQHJlZGhhdC5jb20+IHdyb3RlOg0K
+PiA+IEFjdHVhbGx5IHRoZSByZXByb2R1Y2VyIG1heSBiZSB3cm9uZy4gSSByZWR1Y2VkIHRoZSB0
+ZXN0IGNhc2UgdXNpbmcgDQo+ID4gOS4wLjAtc3ZuMzYzOTAyLTF+ZXhwMSswfjIwMTkwNjIwMDAx
+NTA5LjIzMTV+MS5nYnA3NmU3NTYsDQo+ID4gYW5kIHRoaXMgY29udGFpbnMgYSBsaW5rDQo+ID4N
+Cj4gPiAgICAgICAgICB0ZXN0bCAlZWJwLCAlZWJwDQo+ID4NCj4gPiBJIGdldCB0aGUgc2FtZSB0
+aGluZyB3aXRoIGNsYW5nLTgsIGJ1dCBnb2Rib2x0Lm9yZyBzaG93cyBpdCBvbmx5IA0KPiA+IHdp
+dGggY2xhbmctOCAoc2VlIGh0dHBzOi8vZ29kYm9sdC5vcmcvei9nMWxaTzApICwgbm90IHdpdGgg
+dHJ1bmsuDQo+DQo+IChTb3JyeSBmb3Igc2VuZGluZyBhIGJsYW5rIGVtYWlsIGp1c3Qgbm93KQ0K
+PiArIENyYWlnIGFuZCBTaW1vbiwgaW4gY2FzZSB0aGV5IHJlY2FsbCB0aGlzIGJlaW5nIGEgcmVj
+ZW50IGZpeCBpbg0KPiBMTFZNJ3MgeDg2IGJhY2tlbmQuDQo+IFNvdW5kcyBsaWtlIHRoaXMgaXMg
+Zml4aW5nIGluIHVwc3RyZWFtIExMVk0uICBHdWVzc2luZyB0aGlzIGNvdWxkIA0KPiByZXN1bHQg
+aW4gaW1wcm9wZXIgdW53aW5kaW5nIHcvIGNsYW5nLTgsIGJ1dCB0aGF0J3Mga2luZCBvZiBpcnJl
+bGV2YW50IA0KPiBmb3IgeDg2IGFzIHRoZXJlJ3Mgbm8gYXNtIGdvdG8gKHRob3VnaCB3ZSBkb24n
+dCBuZWVkIENPTkZJR19KVU1QX0xBQkVMIA0KPiBpbiBMVFMgYnJhbmNoZXMgOlApDQoNCk1heWJl
+IHlvdSBjYW4gdHJ5IHRoZSBhdHRhY2hlZCAuY29uZmlnIGZpbGUgd2l0aCBhIG1vcmUgcmVjZW50
+IGNsYW5nIGJ1aWxkLiBUaGlzIHNob3dlZCBhIGZldyBodW5kcmVkIHdhcm5pbmdzIGxpa2UgdGhp
+cyBvbmUgZm9yIG1lLCBzbyBpZiBpdCB3YXMgbm90IGEgYnVnZml4IGJ1dCBhIHJhbmRvbSBjaGFu
+Z2UgaW4gY2xhbmctOSB0aGF0IGNoYW5nZWQgbXkgcmVwcm9kdWNlci4NCg0KSWdub3JpbmcgdGhl
+ICd1c2VzIEJQIGFzIGEgc2NyYXRjaCcgd2FybmluZ3MgYW5kIHRoZSByZWlzZXJmcyAndW5yZWFj
+aGFibGUgaW5zdHJ1Y3Rpb24nIG9uZXMsIHRoaXMgaXMgd2hhdCBlbHNlIEkgZ290IHdpdGggdG9k
+YXkncw0KbGludXgtbmV4dDoNCg0KYXJjaC94ODYvZXZlbnRzL2ludGVsL2NvcmUubzogd2Fybmlu
+Zzogb2JqdG9vbDoNCmludGVsX3BtdV9uaG1fd29ya2Fyb3VuZCgpKzB4MTAzOiB1bnJlYWNoYWJs
+ZSBpbnN0cnVjdGlvbg0KYXJjaC94ODYvaWEzMi9pYTMyX3NpZ25hbC5vOiB3YXJuaW5nOiBvYmp0
+b29sOg0KaWEzMl9zZXR1cF9ydF9mcmFtZSgpKzB4MTUxOiBjYWxsIHRvIG1lbXNldCgpIHdpdGgg
+VUFDQ0VTUyBlbmFibGVkDQphcmNoL3g4Ni9rZXJuZWwvY3B1L210cnIvZ2VuZXJpYy5vOiB3YXJu
+aW5nOiBvYmp0b29sOg0KZ2V0X2ZpeGVkX3JhbmdlcygpKzB4MTQ0OiB1bnJlYWNoYWJsZSBpbnN0
+cnVjdGlvbg0KYXJjaC94ODYva2VybmVsL3Byb2Nlc3Mubzogd2FybmluZzogb2JqdG9vbDogZ2V0
+X3RzY19tb2RlKCkrMHgyMDogY2FsbCB3aXRob3V0IGZyYW1lIHBvaW50ZXIgc2F2ZS9zZXR1cA0K
+YXJjaC94ODYva2VybmVsL3NpZ25hbC5vOiB3YXJuaW5nOiBvYmp0b29sOiBfX3NldHVwX3J0X2Zy
+YW1lKCkrMHgxYTA6DQpjYWxsIHRvIG1lbXNldCgpIHdpdGggVUFDQ0VTUyBlbmFibGVkDQphcmNo
+L3g4Ni9rZXJuZWwvc2lnbmFsLm86IHdhcm5pbmc6IG9ianRvb2w6DQp4MzJfc2V0dXBfcnRfZnJh
+bWUoKSsweDFkYTogY2FsbCB0byBtZW1zZXQoKSB3aXRoIFVBQ0NFU1MgZW5hYmxlZA0KYXJjaC94
+ODYva2VybmVsL3RzYy5vOiB3YXJuaW5nOiBvYmp0b29sOiBzY2hlZF9jbG9jaygpKzB4MDogY2Fs
+bCB3aXRob3V0IGZyYW1lIHBvaW50ZXIgc2F2ZS9zZXR1cA0KYXJjaC94ODYvbW0vZmF1bHQubzog
+d2FybmluZzogb2JqdG9vbDogZG9fdXNlcl9hZGRyX2ZhdWx0KCkrMHg1MzoNCnVucmVhY2hhYmxl
+IGluc3RydWN0aW9uDQpkcml2ZXJzL2F0YS9zYXRhX2R3Y180NjBleC5vOiB3YXJuaW5nOiBvYmp0
+b29sOg0Kc2F0YV9kd2NfYm1kbWFfc3RhcnRfYnlfdGFnKCkrMHgyNTk6IGNhbid0IGZpbmQgc3dp
+dGNoIGp1bXAgdGFibGUNCmRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2F0b20ubzogd2Fybmlu
+Zzogb2JqdG9vbDogYXRvbV9vcF9tb3ZlKCkgZmFsbHMgdGhyb3VnaCB0byBuZXh0IGZ1bmN0aW9u
+IGF0b21fb3BfYW5kKCkNCmRyaXZlcnMvZ3B1L2RybS9yYWRlb24vYXRvbS5vOiB3YXJuaW5nOiBv
+Ymp0b29sOiBhdG9tX29wX21vdmUoKSsweGNlOg0Kc2libGluZyBjYWxsIGZyb20gY2FsbGFibGUg
+aW5zdHJ1Y3Rpb24gd2l0aCBtb2RpZmllZCBzdGFjayBmcmFtZQ0KZHJpdmVycy9ncHUvZHJtL3Jh
+ZGVvbi9hdG9tLm86IHdhcm5pbmc6IG9ianRvb2w6IGF0b21fb3BfbW92ZSgpIGZhbGxzIHRocm91
+Z2ggdG8gbmV4dCBmdW5jdGlvbiBhdG9tX29wX2FuZCgpIG1vZGlmaWVkIHN0YWNrIGZyYW1lDQpk
+cml2ZXJzL2dwdS9kcm0vcmFkZW9uL2V2ZXJncmVlbl9jcy5vOiB3YXJuaW5nOiBvYmp0b29sOg0K
+ZXZlcmdyZWVuX2NzX3BhcnNlKCkrMHhiY2Y6IHNpYmxpbmcgY2FsbCBmcm9tIGNhbGxhYmxlIGlu
+c3RydWN0aW9uIHdpdGggbW9kaWZpZWQgc3RhY2sgZnJhbWUNCmRyaXZlcnMvZ3B1L2RybS9yYWRl
+b24vZXZlcmdyZWVuX2NzLm86IHdhcm5pbmc6IG9ianRvb2w6DQpldmVyZ3JlZW5fY3NfcGFyc2Uo
+KSBmYWxscyB0aHJvdWdoIHRvIG5leHQgZnVuY3Rpb24NCmV2ZXJncmVlbl9kbWFfY3NfcGFyc2Uo
+KQ0KZHJpdmVycy9od21vbi9wbWJ1cy9hZG0xMjc1Lm86IHdhcm5pbmc6IG9ianRvb2w6DQphZG0x
+Mjc1X3Byb2JlKCkrMHg5NDk6IHVucmVhY2hhYmxlIGluc3RydWN0aW9uDQpkcml2ZXJzL21lZGlh
+L2R2Yi1mcm9udGVuZHMvY3hkMjg4MC9jeGQyODgwX3RucmRtZF9kdmJ0Mi5vOiB3YXJuaW5nOg0K
+b2JqdG9vbDogeF90dW5lX2R2YnQyX2RlbW9kX3NldHRpbmcoKSsweDkyYTogY2FuJ3QgZmluZCBz
+d2l0Y2gganVtcCB0YWJsZQ0KZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtaW5nZW5pYy5vOiB3YXJu
+aW5nOiBvYmp0b29sOg0KaW5nZW5pY19waW5jb25mX3NldCgpKzB4OTM6IHNpYmxpbmcgY2FsbCBm
+cm9tIGNhbGxhYmxlIGluc3RydWN0aW9uIHdpdGggbW9kaWZpZWQgc3RhY2sgZnJhbWUNCmRyaXZl
+cnMvcGxhdGZvcm0veDg2L2ludGVsX3NwZWVkX3NlbGVjdF9pZi9pc3N0X2lmX2NvbW1vbi5vOiB3
+YXJuaW5nOg0Kb2JqdG9vbDogaXNzdF9yZXN0b3JlX21zcl9sb2NhbCgpKzB4MTNkOiB1bnJlYWNo
+YWJsZSBpbnN0cnVjdGlvbg0KZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfc3BlZWRfc2VsZWN0
+X2lmL2lzc3RfaWZfbWJveF9tc3IubzoNCndhcm5pbmc6IG9ianRvb2w6IGlzc3RfaWZfc2VuZF9t
+Ym94X2NtZCgpKzB4ODA6IHVucmVhY2hhYmxlIGluc3RydWN0aW9uDQpmcy9oZnNwbHVzL3hhdHRy
+Lm86IHdhcm5pbmc6IG9ianRvb2w6DQpoZnNwbHVzX2NyZWF0ZV9hdHRyaWJ1dGVzX2ZpbGUoKSsw
+eDRmNzogdW5yZWFjaGFibGUgaW5zdHJ1Y3Rpb24NCmtlcm5lbC90cmFjZS9yaW5nX2J1ZmZlci5v
+OiB3YXJuaW5nOiBvYmp0b29sOg0KcmluZ19idWZmZXJfbmVzdF9lbmQoKSsweDFiOiBjYWxsIHdp
+dGhvdXQgZnJhbWUgcG9pbnRlciBzYXZlL3NldHVwDQprZXJuZWwvdHJhY2UvdHJhY2Uubzogd2Fy
+bmluZzogb2JqdG9vbDogc2F2ZWRfY21kbGluZXNfc3RvcCgpKzB4MTM6DQpjYWxsIHdpdGhvdXQg
+ZnJhbWUgcG9pbnRlciBzYXZlL3NldHVwDQpsaWIvaW92X2l0ZXIubzogd2FybmluZzogb2JqdG9v
+bDogLmFsdGluc3RyX3JlcGxhY2VtZW50KzB4MzA6IGNhbGwgd2l0aG91dCBmcmFtZSBwb2ludGVy
+IHNhdmUvc2V0dXANCmxpYi91YnNhbi5vOiB3YXJuaW5nOiBvYmp0b29sOiBfX3Vic2FuX2hhbmRs
+ZV90eXBlX21pc21hdGNoKCkrMHgyNToNCmNhbGwgdG8gbWVtY3B5KCkgd2l0aCBVQUNDRVNTIGVu
+YWJsZWQNCmxpYi91YnNhbi5vOiB3YXJuaW5nOiBvYmp0b29sOiBfX3Vic2FuX2hhbmRsZV90eXBl
+X21pc21hdGNoX3YxKCkrMHhiZDoNCmNhbGwgdG8gX19zdGFja19jaGtfZmFpbCgpIHdpdGggVUFD
+Q0VTUyBlbmFibGVkDQpsaWIvdWJzYW4ubzogd2FybmluZzogb2JqdG9vbDogdWJzYW5fdHlwZV9t
+aXNtYXRjaF9jb21tb24oKSsweDQ0ODoNCmNhbGwgdG8gX19zdGFja19jaGtfZmFpbCgpIHdpdGgg
+VUFDQ0VTUyBlbmFibGVkDQptbS9rYXNhbi9jb21tb24ubzogd2FybmluZzogb2JqdG9vbDoga2Fz
+YW5fcmVwb3J0KCkrMHg0MzogY2FsbCB0bw0KX19zdGFja19jaGtfZmFpbCgpIHdpdGggVUFDQ0VT
+UyBlbmFibGVkDQptbS9wYWdlX2FsbG9jLm86IHdhcm5pbmc6IG9ianRvb2w6IC5hbHRpbnN0cl9y
+ZXBsYWNlbWVudCsweDQ3OiBjYWxsIHdpdGhvdXQgZnJhbWUgcG9pbnRlciBzYXZlL3NldHVwDQpt
+bS93b3JraW5nc2V0Lm86IHdhcm5pbmc6IG9ianRvb2w6IGNvdW50X3NoYWRvd19ub2RlcygpKzB4
+MTI2Og0KdW5yZWFjaGFibGUgaW5zdHJ1Y3Rpb24NCg0KQW55IGludGVyZXN0aW5nIG9uZXMgaW4g
+dGhlcmU/DQoNCiAgICAgICBBcm5kDQo=
