@@ -2,222 +2,193 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215BCC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BA2C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6B121BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCCB21BF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="wOJxCxgk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfGVH4e (ORCPT
+        id S1727892AbfGVH7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:56:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54790 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbfGVH4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:56:33 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C52CD3083363;
-        Mon, 22 Jul 2019 07:56:31 +0000 (UTC)
-Received: from redhat.com (ovpn-120-233.rdu2.redhat.com [10.10.120.233])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 9E2225D704;
-        Mon, 22 Jul 2019 07:56:23 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 03:56:22 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
-Message-ID: <20190722035236-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081933-mutt-send-email-mst@kernel.org>
- <20190721131725.GR14271@linux.ibm.com>
- <20190721134614-mutt-send-email-mst@kernel.org>
- <20190721192841.GT14271@linux.ibm.com>
+        Mon, 22 Jul 2019 03:59:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49091 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfGVH7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 03:59:18 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M7wu903731236
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 22 Jul 2019 00:58:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M7wu903731236
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563782336;
+        bh=CzzuaM5KTsTa7pGd4DpJrQnLe4uNu9wxHmOTODrybJU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=wOJxCxgkyV2CxI3FtNObDvSYGtZ0OQeGrkZ77Tg8EJYsD0MAhT6/cxVE5UjVfj3UB
+         PRlCD94AvmAQ8JQcbDu1H64HuloakJhoyIgzzBOh3l4PFxSLUqSrpz21sqBhVWNyKa
+         YUeaYKW9Bqas1sbPXNEoJ7YWnzYfJgg4zc0bDzlAIU74XKzfADmeobtYglZYZsIzDW
+         +j15QNWLRWS8/fxNkPGK8iPQvxuJBY/1U9a7unSxio7uASDfbbABtTCUrADDt6VEEu
+         YOZ0uxV3/acTZBSdAzlRvvAie/ZDuOSPLwzUcJHBornOpsLMwc2o9BdXLAkNz2ACpH
+         TIKKiaINmngiw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M7wteL3731225;
+        Mon, 22 Jul 2019 00:58:55 -0700
+Date:   Mon, 22 Jul 2019 00:58:55 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-3f70915f5be935a145d11b5f46a26627066b6261@git.kernel.org>
+Cc:     mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
+          mathieu.desnoyers@efficios.com, tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/hotplug] cpu/hotplug: Cache number of online CPUs
+Git-Commit-ID: 3f70915f5be935a145d11b5f46a26627066b6261
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190721192841.GT14271@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 22 Jul 2019 07:56:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 12:28:41PM -0700, Paul E. McKenney wrote:
-> On Sun, Jul 21, 2019 at 01:53:23PM -0400, Michael S. Tsirkin wrote:
-> > On Sun, Jul 21, 2019 at 06:17:25AM -0700, Paul E. McKenney wrote:
-> > > On Sun, Jul 21, 2019 at 08:28:05AM -0400, Michael S. Tsirkin wrote:
-> > > > Hi Paul, others,
-> > > > 
-> > > > So it seems that vhost needs to call kfree_rcu from an ioctl. My worry
-> > > > is what happens if userspace starts cycling through lots of these
-> > > > ioctls.  Given we actually use rcu as an optimization, we could just
-> > > > disable the optimization temporarily - but the question would be how to
-> > > > detect an excessive rate without working too hard :) .
-> > > > 
-> > > > I guess we could define as excessive any rate where callback is
-> > > > outstanding at the time when new structure is allocated.  I have very
-> > > > little understanding of rcu internals - so I wanted to check that the
-> > > > following more or less implements this heuristic before I spend time
-> > > > actually testing it.
-> > > > 
-> > > > Could others pls take a look and let me know?
-> > > 
-> > > These look good as a way of seeing if there are any outstanding callbacks,
-> > > but in the case of Tree RCU, call_rcu_outstanding() would almost never
-> > > return false on a busy system.
-> > 
-> > Hmm, ok. Maybe I could rename this to e.g. call_rcu_busy
-> > and change the tree one to do rcu_segcblist_n_lazy_cbs > 1000?
-> 
-> Or the function could simply return the number of callbacks queued
-> on the current CPU, and let the caller decide how many is too many.
-> 
-> > > Here are some alternatives:
-> > > 
-> > > o	RCU uses some pieces of Rao Shoaib kfree_rcu() patches.
-> > > 	The idea is to make kfree_rcu() locally buffer requests into
-> > > 	batches of (say) 1,000, but processing smaller batches when RCU
-> > > 	is idle, or when some smallish amout of time has passed with
-> > > 	no more kfree_rcu() request from that CPU.  RCU than takes in
-> > > 	the batch using not call_rcu(), but rather queue_rcu_work().
-> > > 	The resulting batch of kfree() calls would therefore execute in
-> > > 	workqueue context rather than in softirq context, which should
-> > > 	be much easier on the system.
-> > > 
-> > > 	In theory, this would allow people to use kfree_rcu() without
-> > > 	worrying quite so much about overload.  It would also not be
-> > > 	that hard to implement.
-> > > 
-> > > o	Subsystems vulnerable to user-induced kfree_rcu() flooding use
-> > > 	call_rcu() instead of kfree_rcu().  Keep a count of the number
-> > > 	of things waiting for a grace period, and when this gets too
-> > > 	large, disable the optimization.  It will then drain down, at
-> > > 	which point the optimization can be re-enabled.
-> > > 
-> > > 	But please note that callbacks are -not- guaranteed to run on
-> > > 	the CPU that queued them.  So yes, you would need a per-CPU
-> > > 	counter, but you would need to periodically sum it up to check
-> > > 	against the global state.  Or keep track of the CPU that
-> > > 	did the call_rcu() so that you can atomically decrement in
-> > > 	the callback the same counter that was atomically incremented
-> > > 	just before the call_rcu().  Or any number of other approaches.
-> > 
-> > I'm really looking for something we can do this merge window
-> > and without adding too much code, and kfree_rcu is intended to
-> > fix a bug.
-> > Adding call_rcu and careful accounting is something that I'm not
-> > happy adding with merge window already open.
-> 
-> OK, then I suggest having the interface return you the number of
-> callbacks.  That allows you to experiment with the cutoff.
-> 
-> Give or take the ioctl overhead...
+Commit-ID:  3f70915f5be935a145d11b5f46a26627066b6261
+Gitweb:     https://git.kernel.org/tip/3f70915f5be935a145d11b5f46a26627066b6261
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Tue, 9 Jul 2019 16:23:40 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 22 Jul 2019 09:52:21 +0200
 
-OK - and for tiny just assume 1 is too much?
+cpu/hotplug: Cache number of online CPUs
 
+Re-evaluating the bitmap wheight of the online cpus bitmap in every
+invocation of num_online_cpus() over and over is a pretty useless
+exercise. Especially when num_online_cpus() is used in code paths
+like the IPI delivery of x86 or the membarrier code.
 
-> > > Also, the overhead is important.  For example, as far as I know,
-> > > current RCU gracefully handles close(open(...)) in a tight userspace
-> > > loop.  But there might be trouble due to tight userspace loops around
-> > > lighter-weight operations.
-> > > 
-> > > So an important question is "Just how fast is your ioctl?"  If it takes
-> > > (say) 100 microseconds to execute, there should be absolutely no problem.
-> > > On the other hand, if it can execute in 50 nanoseconds, this very likely
-> > > does need serious attention.
-> > > 
-> > > Other thoughts?
-> > > 
-> > > 							Thanx, Paul
-> > 
-> > Hmm the answer to this would be I'm not sure.
-> > It's setup time stuff we never tested it.
-> 
-> Is it possible to measure it easily?
-> 
-> 							Thanx, Paul
-> 
-> > > > Thanks!
-> > > > 
-> > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > 
-> > > > 
-> > > > diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
-> > > > index 477b4eb44af5..067909521d72 100644
-> > > > --- a/kernel/rcu/tiny.c
-> > > > +++ b/kernel/rcu/tiny.c
-> > > > @@ -125,6 +125,25 @@ void synchronize_rcu(void)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(synchronize_rcu);
-> > > > 
-> > > > +/*
-> > > > + * Helpful for rate-limiting kfree_rcu/call_rcu callbacks.
-> > > > + */
-> > > > +bool call_rcu_outstanding(void)
-> > > > +{
-> > > > +	unsigned long flags;
-> > > > +	struct rcu_data *rdp;
-> > > > +	bool outstanding;
-> > > > +
-> > > > +	local_irq_save(flags);
-> > > > +	rdp = this_cpu_ptr(&rcu_data);
-> > > > +	outstanding = rcu_segcblist_empty(&rdp->cblist);
-> > > > +	outstanding = rcu_ctrlblk.donetail != rcu_ctrlblk.curtail;
-> > > > +	local_irq_restore(flags);
-> > > > +
-> > > > +	return outstanding;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(call_rcu_outstanding);
-> > > > +
-> > > >  /*
-> > > >   * Post an RCU callback to be invoked after the end of an RCU grace
-> > > >   * period.  But since we have but one CPU, that would be after any
-> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > index a14e5fbbea46..d4b9d61e637d 100644
-> > > > --- a/kernel/rcu/tree.c
-> > > > +++ b/kernel/rcu/tree.c
-> > > > @@ -2482,6 +2482,24 @@ static void rcu_leak_callback(struct rcu_head *rhp)
-> > > >  {
-> > > >  }
-> > > > 
-> > > > +/*
-> > > > + * Helpful for rate-limiting kfree_rcu/call_rcu callbacks.
-> > > > + */
-> > > > +bool call_rcu_outstanding(void)
-> > > > +{
-> > > > +	unsigned long flags;
-> > > > +	struct rcu_data *rdp;
-> > > > +	bool outstanding;
-> > > > +
-> > > > +	local_irq_save(flags);
-> > > > +	rdp = this_cpu_ptr(&rcu_data);
-> > > > +	outstanding = rcu_segcblist_empty(&rdp->cblist);
-> > > > +	local_irq_restore(flags);
-> > > > +
-> > > > +	return outstanding;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(call_rcu_outstanding);
-> > > > +
-> > > >  /*
-> > > >   * Helper function for call_rcu() and friends.  The cpu argument will
-> > > >   * normally be -1, indicating "currently running CPU".  It may specify
-> > 
+Cache the number of online CPUs in the core and just return the cached
+variable. The accessor function provides only a snapshot when used without
+protection against concurrent CPU hotplug.
+
+The storage needs to use an atomic_t because the kexec and reboot code
+(ab)use set_cpu_online() in their 'shutdown' handlers without any form of
+serialization as pointed out by Mathieu. Regular CPU hotplug usage is
+properly serialized.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de
+
+---
+ include/linux/cpumask.h | 25 ++++++++++++++++---------
+ kernel/cpu.c            | 24 ++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 21755471b1c3..fdd627dbfa3a 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
++#include <linux/atomic.h>
+ #include <linux/bug.h>
+ 
+ /* Don't assign or return these: may not be this big! */
+@@ -95,8 +96,21 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+ #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+ 
++extern atomic_t __num_online_cpus;
++
+ #if NR_CPUS > 1
+-#define num_online_cpus()	cpumask_weight(cpu_online_mask)
++/**
++ * num_online_cpus() - Read the number of online CPUs
++ *
++ * Despite the fact that __num_online_cpus is of type atomic_t, this
++ * interface gives only a momentary snapshot and is not protected against
++ * concurrent CPU hotplug operations unless invoked from a cpuhp_lock held
++ * region.
++ */
++static inline unsigned int num_online_cpus(void)
++{
++	return atomic_read(&__num_online_cpus);
++}
+ #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
+ #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+@@ -805,14 +819,7 @@ set_cpu_present(unsigned int cpu, bool present)
+ 		cpumask_clear_cpu(cpu, &__cpu_present_mask);
+ }
+ 
+-static inline void
+-set_cpu_online(unsigned int cpu, bool online)
+-{
+-	if (online)
+-		cpumask_set_cpu(cpu, &__cpu_online_mask);
+-	else
+-		cpumask_clear_cpu(cpu, &__cpu_online_mask);
+-}
++void set_cpu_online(unsigned int cpu, bool online);
+ 
+ static inline void
+ set_cpu_active(unsigned int cpu, bool active)
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index e84c0873559e..3bf9881a3be5 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2295,6 +2295,9 @@ EXPORT_SYMBOL(__cpu_present_mask);
+ struct cpumask __cpu_active_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_active_mask);
+ 
++atomic_t __num_online_cpus __read_mostly;
++EXPORT_SYMBOL(__num_online_cpus);
++
+ void init_cpu_present(const struct cpumask *src)
+ {
+ 	cpumask_copy(&__cpu_present_mask, src);
+@@ -2310,6 +2313,27 @@ void init_cpu_online(const struct cpumask *src)
+ 	cpumask_copy(&__cpu_online_mask, src);
+ }
+ 
++void set_cpu_online(unsigned int cpu, bool online)
++{
++	/*
++	 * atomic_inc/dec() is required to handle the horrid abuse of this
++	 * function by the reboot and kexec code which invoke it from
++	 * IPI/NMI broadcasts when shutting down CPUs. Invocation from
++	 * regular CPU hotplug is properly serialized.
++	 *
++	 * Note, that the fact that __num_online_cpus is of type atomic_t
++	 * does not protect readers which are not serialized against
++	 * concurrent hotplug operations.
++	 */
++	if (online) {
++		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
++			atomic_inc(&__num_online_cpus);
++	} else {
++		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
++			atomic_dec(&__num_online_cpus);
++	}
++}
++
+ /*
+  * Activate the first processor.
+  */
