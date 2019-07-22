@@ -2,208 +2,120 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A830C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89F6C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA6721900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB9321900
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730534AbfGVMth (ORCPT
+        id S1728880AbfGVMwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:49:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36488 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729996AbfGVMtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:49:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 05:49:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,295,1559545200"; 
-   d="scan'208";a="252895503"
-Received: from sthiaga1-mobl1.amr.corp.intel.com (HELO [10.254.191.222]) ([10.254.191.222])
-  by orsmga001.jf.intel.com with ESMTP; 22 Jul 2019 05:49:34 -0700
-Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: use __u32 instead of uint32_t in
- uapi headers
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
-References: <20190721142308.30306-1-yamada.masahiro@socionext.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <de9e94ee-9c01-1c0c-4359-b637319a298f@linux.intel.com>
-Date:   Mon, 22 Jul 2019 07:49:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 08:52:23 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:58069 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfGVMwX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:52:23 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MysBI-1icPK53l90-00vyTP; Mon, 22 Jul 2019 14:51:48 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        akpm@linux-foundation.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] [v2] ubsan: build ubsan.c more conservatively
+Date:   Mon, 22 Jul 2019 14:50:44 +0200
+Message-Id: <20190722125139.1335385-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190721142308.30306-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ZbSfErMSYT0XZps8vqU+FdzxiZIIfdRsVbwo2+ZwWA6bzGC/I+J
+ KFdIEBcdZUW8aDO6RrtMhqauXy0rH/NfKjfGmJdkiNOSJ6sdejYtP9dfLjtgYCLslrunH9o
+ 19YhL4jj2fsSiGKT2n+rbI92yJSkhdQoS9MC8aZW/5hAa6/MYJaW1MjL7ikoW258MJ1j+PP
+ b0qBCormfF0Ay2Iq69rrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Fru7WA/0SPY=:vO4Aj/PjqBmpCCbNqTzdyt
+ Q6nVC4CU8ncCdVXbm8ukI4ZyQqE//Fg1Ah2aNRoJ4DfapUAnRfr1osMWBFxLya51TxOtb9NUk
+ GRz40FOeFIx80pOUfvhhF+tx/IhFoWY1cK9WEr39vVn62G6WnMIrhK4T5oq9yygamIX04E4yR
+ 3kFacJ7KQyfHeyqShHR9REb1f9viZ6l1kmal0m2hqrw9PEqJIWE5Bxjh+MOyVoPmw95XVh+OW
+ VrrwGM3ns9CIUB5rc+G1dMmIKeu6u+QQp845bHrq7/CUrcV7YHW4k710EaRMydfRBhSCaGCVP
+ NShVaXH78Fgcg580XfZm/K2WcFynGrXCTzNg8vRBlv0fSGb0BEQL46NMg6vndTS2vY2U215r/
+ qIF9/HM+mXd0mRbAyQdvmV+rCXPWw8p6Wp3eIswYqqjAmdJb7zjm836JsIf6bjqFNrXjuCbNo
+ jOQEmaLNsk/VnQE0An7GL9XlPpJXfMqIaL2xG0xYImPrxEIWPGKtXE+U/U5f10ZCxJDCEYgSs
+ vy2KkPtfigdXkAwDKmW61IgWgYn7r+Ptu1K2rXv9y9UsxbivKSGDx0zVfFpFoVYqUwLcNqlwH
+ gob87cPAZ07kHesQoQ/N52T+bj3X9YKlof11u9Ui/6L5f76bITDEdlluo6uRX0rCWjmpGSSM1
+ gmqdS4siGLsLPVxRZaVA0hJRPw0OtnP/hCs9JRG/UNiI1rbgwSOZKiJXXiEDrT+YvQRC+MZx0
+ qzcwZ+nCd8IvJ43W5K8v4dkSbNg7ahYvXvLqSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+objtool points out several conditions that it does not like, depending
+on the combination with other configuration options and compiler
+variants:
 
+stack protector:
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
 
-On 7/21/19 9:23 AM, Masahiro Yamada wrote:
-> When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
-> make sure they can be included from user-space.
-> 
-> Currently, header.h and fw.h are excluded from the test coverage.
-> To make them join the compile-test, we need to fix the build errors
-> attached below.
-> 
-> For a case like this, we decided to use __u{8,16,32,64} variable types
-> in this discussion:
-> 
->    https://lkml.org/lkml/2019/6/5/18
+stackleak plugin:
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
 
-these files are shared with the SOF project and used as is (with minor 
-formatting) for the firmware compilation. I am not sure I understand the 
-ask here, are you really asking SOF to use linux-specific type definitions?
+kasan:
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
 
-> 
-> Build log:
-> 
->    CC      usr/include/sound/sof/header.h.s
->    CC      usr/include/sound/sof/fw.h.s
-> In file included from <command-line>:32:0:
-> ./usr/include/sound/sof/header.h:19:2: error: unknown type name ‘uint32_t’
->    uint32_t magic;  /**< 'S', 'O', 'F', '\0' */
->    ^~~~~~~~
-> ./usr/include/sound/sof/header.h:20:2: error: unknown type name ‘uint32_t’
->    uint32_t type;  /**< component specific type */
->    ^~~~~~~~
-> ./usr/include/sound/sof/header.h:21:2: error: unknown type name ‘uint32_t’
->    uint32_t size;  /**< size in bytes of data excl. this struct */
->    ^~~~~~~~
-> ./usr/include/sound/sof/header.h:22:2: error: unknown type name ‘uint32_t’
->    uint32_t abi;  /**< SOF ABI version */
->    ^~~~~~~~
-> ./usr/include/sound/sof/header.h:23:2: error: unknown type name ‘uint32_t’
->    uint32_t reserved[4]; /**< reserved for future use */
->    ^~~~~~~~
-> ./usr/include/sound/sof/header.h:24:2: error: unknown type name ‘uint32_t’
->    uint32_t data[0]; /**< Component data - opaque to core */
->    ^~~~~~~~
-> In file included from <command-line>:32:0:
-> ./usr/include/sound/sof/fw.h:49:2: error: unknown type name ‘uint32_t’
->    uint32_t size;  /* bytes minus this header */
->    ^~~~~~~~
-> ./usr/include/sound/sof/fw.h:50:2: error: unknown type name ‘uint32_t’
->    uint32_t offset; /* offset from base */
->    ^~~~~~~~
-> ./usr/include/sound/sof/fw.h:64:2: error: unknown type name ‘uint32_t’
->    uint32_t size;  /* bytes minus this header */
->    ^~~~~~~~
-> ./usr/include/sound/sof/fw.h:65:2: error: unknown type name ‘uint32_t’
->    uint32_t num_blocks; /* number of blocks */
->    ^~~~~~~~
-> ./usr/include/sound/sof/fw.h:73:2: error: unknown type name ‘uint32_t’
->    uint32_t file_size; /* size of file minus this header */
->    ^~~~~~~~
-> ./usr/include/sound/sof/fw.h:74:2: error: unknown type name ‘uint32_t’
->    uint32_t num_modules; /* number of modules */
->    ^~~~~~~~
-> ./usr/include/sound/sof/fw.h:75:2: error: unknown type name ‘uint32_t’
->    uint32_t abi;  /* version of header format */
->    ^~~~~~~~
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->   include/uapi/sound/sof/fw.h     | 16 +++++++++-------
->   include/uapi/sound/sof/header.h | 14 ++++++++------
->   2 files changed, 17 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/uapi/sound/sof/fw.h b/include/uapi/sound/sof/fw.h
-> index 1afca973eb09..e9f697467a86 100644
-> --- a/include/uapi/sound/sof/fw.h
-> +++ b/include/uapi/sound/sof/fw.h
-> @@ -13,6 +13,8 @@
->   #ifndef __INCLUDE_UAPI_SOF_FW_H__
->   #define __INCLUDE_UAPI_SOF_FW_H__
->   
-> +#include <linux/types.h>
-> +
->   #define SND_SOF_FW_SIG_SIZE	4
->   #define SND_SOF_FW_ABI		1
->   #define SND_SOF_FW_SIG		"Reef"
-> @@ -46,8 +48,8 @@ enum snd_sof_fw_blk_type {
->   
->   struct snd_sof_blk_hdr {
->   	enum snd_sof_fw_blk_type type;
-> -	uint32_t size;		/* bytes minus this header */
-> -	uint32_t offset;	/* offset from base */
-> +	__u32 size;		/* bytes minus this header */
-> +	__u32 offset;		/* offset from base */
->   } __packed;
->   
->   /*
-> @@ -61,8 +63,8 @@ enum snd_sof_fw_mod_type {
->   
->   struct snd_sof_mod_hdr {
->   	enum snd_sof_fw_mod_type type;
-> -	uint32_t size;		/* bytes minus this header */
-> -	uint32_t num_blocks;	/* number of blocks */
-> +	__u32 size;		/* bytes minus this header */
-> +	__u32 num_blocks;	/* number of blocks */
->   } __packed;
->   
->   /*
-> @@ -70,9 +72,9 @@ struct snd_sof_mod_hdr {
->    */
->   struct snd_sof_fw_header {
->   	unsigned char sig[SND_SOF_FW_SIG_SIZE]; /* "Reef" */
-> -	uint32_t file_size;	/* size of file minus this header */
-> -	uint32_t num_modules;	/* number of modules */
-> -	uint32_t abi;		/* version of header format */
-> +	__u32 file_size;	/* size of file minus this header */
-> +	__u32 num_modules;	/* number of modules */
-> +	__u32 abi;		/* version of header format */
->   } __packed;
->   
->   #endif
-> diff --git a/include/uapi/sound/sof/header.h b/include/uapi/sound/sof/header.h
-> index 7868990b0d6f..5f4518e7a972 100644
-> --- a/include/uapi/sound/sof/header.h
-> +++ b/include/uapi/sound/sof/header.h
-> @@ -9,6 +9,8 @@
->   #ifndef __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
->   #define __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
->   
-> +#include <linux/types.h>
-> +
->   /*
->    * Header for all non IPC ABI data.
->    *
-> @@ -16,12 +18,12 @@
->    * Used by any bespoke component data structures or binary blobs.
->    */
->   struct sof_abi_hdr {
-> -	uint32_t magic;		/**< 'S', 'O', 'F', '\0' */
-> -	uint32_t type;		/**< component specific type */
-> -	uint32_t size;		/**< size in bytes of data excl. this struct */
-> -	uint32_t abi;		/**< SOF ABI version */
-> -	uint32_t reserved[4];	/**< reserved for future use */
-> -	uint32_t data[0];	/**< Component data - opaque to core */
-> +	__u32 magic;		/**< 'S', 'O', 'F', '\0' */
-> +	__u32 type;		/**< component specific type */
-> +	__u32 size;		/**< size in bytes of data excl. this struct */
-> +	__u32 abi;		/**< SOF ABI version */
-> +	__u32 reserved[4];	/**< reserved for future use */
-> +	__u32 data[0];		/**< Component data - opaque to core */
->   }  __packed;
->   
->   #endif
-> 
+The stackleak and kasan options just need to be disabled for this file
+as we do for other files already. For the stack protector, we already
+attempt to disable it, but this fails on clang because the check is
+mixed with the gcc specific -fno-conserve-stack option. According
+to Andrey Ryabinin, that option is not even needed, dropping it here
+fixes the stackprotector issue.
+
+Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
+Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
+Link: https://lore.kernel.org/lkml/20190722091050.2188664-1-arnd@arndb.de/t/
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2:
+- drop  -fno-conserve-stack
+- fix the Fixes: line
+---
+ lib/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/Makefile b/lib/Makefile
+index 095601ce371d..29c02a924973 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -279,7 +279,8 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string.o
+ obj-$(CONFIG_UBSAN) += ubsan.o
+ 
+ UBSAN_SANITIZE_ubsan.o := n
+-CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++KASAN_SANITIZE_ubsan.o := n
++CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
+ 
+ obj-$(CONFIG_SBITMAP) += sbitmap.o
+ 
+-- 
+2.20.0
+
