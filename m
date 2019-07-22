@@ -2,90 +2,151 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16125C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD99C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A202190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22C42190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfGVLlt (ORCPT
+        id S1729969AbfGVLly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:41:49 -0400
-Received: from app1.whu.edu.cn ([202.114.64.88]:44356 "EHLO whu.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728312AbfGVLlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:41:49 -0400
-Received: from localhost (unknown [111.202.192.5])
-        by email1 (Coremail) with SMTP id AQBjCgCXeTr2oDVdC7OvAA--.37111S2;
-        Mon, 22 Jul 2019 19:41:42 +0800 (CST)
-From:   Peng Wang <rocking@whu.edu.cn>
-To:     tj@kernel.org, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Wang <rocking@whu.edu.cn>
-Subject: [PATCH] cgroup: remove redundant assignment in while loop of cgroup_calc_subtree_ss_mask()
-Date:   Mon, 22 Jul 2019 19:39:23 +0800
-Message-Id: <20190722113923.16914-1-rocking@whu.edu.cn>
-X-Mailer: git-send-email 2.19.1
+        Mon, 22 Jul 2019 07:41:54 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:55713 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbfGVLlx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 07:41:53 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mlvr3-1iG1wW44iB-00j0GR; Mon, 22 Jul 2019 13:41:40 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexander Potapenko <glider@google.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [RESEND v2] structleak: disable STRUCTLEAK_BYREF in combination with KASAN_STACK
+Date:   Mon, 22 Jul 2019 13:41:20 +0200
+Message-Id: <20190722114134.3123901-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQBjCgCXeTr2oDVdC7OvAA--.37111S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtryxWFWDArWfKF1DZF48Crg_yoWkJrb_X3
-        W8Jr1q9rWxA34YyrsFvFsYvay0g3y5Wr1v9w1qgFWDXFyUJrW5J3Z3tF15Xr43uFs5trZr
-        tr93JFn3JF4qqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-        1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-        cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-        ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMxAI
-        w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
-        4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
-        rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
-        CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JU3-BNUUUUU=
-X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
+X-Provags-ID: V03:K1:URkxje0XIcwUJNU8iin9fvxldK+WJvgwEJJ/hdbLv3uYfhzFeyb
+ 877EltBbCblmGJzqDmMAErOtw1aWONQE6UOAZu6zvBgH9VCGRT/6VJ91tIMvgXSHWhF26Z7
+ bvDxkMeUtVHv+8JbSaS7fkNApOt8R6XXpvW961TkfIqckSE3QEC9Zxk+85n3Kglndvfj0AO
+ dH3RucquOIrbYTb87SXZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H8MEUjKd9/A=:4C6M7iBeU6O1m8CkfFVDlq
+ 0GD3UolWHsFZm6Qg5+qbJaQyeEbRZlGCzXtdeHRlhI9XAKXPWNxkciFroyzNOzYRW2U2yJPuU
+ 1YpR/oRuDsk8WhHWHwvBpwiQ+B+b0V6/ZssPAMe/2dNYXFJYYy7CXOGvGHTWIjI75+TG3SySp
+ 4+rBo7xgR9CiFw6Mgif8WloyXfRTDGW+K9+u/qQ1Kyqx1UVjshBT9EUjLsOjNVohq1OL/ypNc
+ 4gatrhEu3GZbQe1RXx85SAxLbixd/QHT7YGc9VfzxPh/ZoVJRzhL7eNvqw6m1ExRpjGsBhQRI
+ 2upP4NZVhA6481CD6ptkh/b0T5u5RH/t1pSbUFw6BUoM9sz5aoRJT+evBo3T70SazGG5BqLAf
+ CCZnZobPkmmaD8cnkwFPXO4weoXA+Tw6vdEN2ahpMiqrG4OA+4i6mnnZZLk2nBT2roHJQ4pJ9
+ l2298gN2f4eA9N/fLhePz8S0cAaMQe1YTph1zTEQrufh2FUDS5RGdS3Vcx9qgngAjc9Iw6i/o
+ 8h0WHJ/bwBJIYHXxeDyU7u92j33F0zqzXYTjHfjFmXUoCn1KLTpt2mMyiLpkqGhhuvGXS1vNQ
+ JK0i+payOea1S/bkt+n7rZA75ubOsA6HMhwJxYB/1gFb9+Fn5U51YssIdZOlnOa6ZKPYEszWr
+ TAf1q/+UsEd6ahkNWXRkPXLTtXhSxl9tbl0OLmloXjTfc570MWT6Ga1XC9RKrUo8CEv5HP9wK
+ nlrAzZbG9rzPyRpiVA1Dj4+Pz5bOFRR8+OhsEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-new_ss_mask is always not less than cur_ss_mask.
-We don not need to update it with cur_ss_mask's value.
+The combination of KASAN_STACK and GCC_PLUGIN_STRUCTLEAK_BYREF
+leads to much larger kernel stack usage, as seen from the warnings
+about functions that now exceed the 2048 byte limit:
 
-Signed-off-by: Peng Wang <rocking@whu.edu.cn>
+drivers/media/i2c/tvp5150.c:253:1: error: the frame size of 3936 bytes is larger than 2048 bytes
+drivers/media/tuners/r820t.c:1327:1: error: the frame size of 2816 bytes is larger than 2048 bytes
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_n.c:16552:1: error: the frame size of 3144 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+fs/ocfs2/aops.c:1892:1: error: the frame size of 2088 bytes is larger than 2048 bytes
+fs/ocfs2/dlm/dlmrecovery.c:737:1: error: the frame size of 2088 bytes is larger than 2048 bytes
+fs/ocfs2/namei.c:1677:1: error: the frame size of 2584 bytes is larger than 2048 bytes
+fs/ocfs2/super.c:1186:1: error: the frame size of 2640 bytes is larger than 2048 bytes
+fs/ocfs2/xattr.c:3678:1: error: the frame size of 2176 bytes is larger than 2048 bytes
+net/bluetooth/l2cap_core.c:7056:1: error: the frame size of 2144 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+net/bluetooth/l2cap_core.c: In function 'l2cap_recv_frame':
+net/bridge/br_netlink.c:1505:1: error: the frame size of 2448 bytes is larger than 2048 bytes
+net/ieee802154/nl802154.c:548:1: error: the frame size of 2232 bytes is larger than 2048 bytes
+net/wireless/nl80211.c:1726:1: error: the frame size of 2224 bytes is larger than 2048 bytes
+net/wireless/nl80211.c:2357:1: error: the frame size of 4584 bytes is larger than 2048 bytes
+net/wireless/nl80211.c:5108:1: error: the frame size of 2760 bytes is larger than 2048 bytes
+net/wireless/nl80211.c:6472:1: error: the frame size of 2112 bytes is larger than 2048 bytes
+
+The structleak plugin was previously disabled for CONFIG_COMPILE_TEST,
+but meant we missed some bugs, so this time we should address them.
+
+The frame size warnings are distracting, and risking a kernel stack
+overflow is generally not beneficial to performance, so it may be best
+to disallow that particular combination. This can be done by turning
+off either one. I picked the dependency in GCC_PLUGIN_STRUCTLEAK_BYREF
+and GCC_PLUGIN_STRUCTLEAK_BYREF_ALL, as this option is designed to
+make uninitialized stack usage less harmful when enabled on its own,
+but it also prevents KASAN from detecting those cases in which it was
+in fact needed.
+
+KASAN_STACK is currently implied by KASAN on gcc, but could be made a
+user selectable option if we want to allow combining (non-stack) KASAN
+with GCC_PLUGIN_STRUCTLEAK_BYREF.
+
+Note that it would be possible to specifically address the files that
+print the warning, but presumably the overall stack usage is still
+significantly higher than in other configurations, so this would not
+address the full problem.
+
+I could not test this with CONFIG_INIT_STACK_ALL, which may or may not
+suffer from a similar problem.
+
+Fixes: 81a56f6dcd20 ("gcc-plugins: structleak: Generalize to all variable types")
+Acked-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/lkml/20190628123819.2785504-1-arnd@arndb.de/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/cgroup/cgroup.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+[v2] do it for both GCC_PLUGIN_STRUCTLEAK_BYREF and GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 300b0c416341..2b8c39dabd26 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -1520,7 +1520,7 @@ static umode_t cgroup_file_mode(const struct cftype *cft)
-  */
- static u16 cgroup_calc_subtree_ss_mask(u16 subtree_control, u16 this_ss_mask)
- {
--	u16 cur_ss_mask = subtree_control;
-+	u16 cur_ss_mask = subtree_control, new_ss_mask;
- 	struct cgroup_subsys *ss;
- 	int ssid;
+Andrew, can you pick this up in -mm? It looks like nobody else
+wanted it in their trees even though there was agreement on the
+patch itself.
+---
+ security/Kconfig.hardening | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index a1ffe2eb4d5f..af4c979b38ee 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -61,6 +61,7 @@ choice
+ 	config GCC_PLUGIN_STRUCTLEAK_BYREF
+ 		bool "zero-init structs passed by reference (strong)"
+ 		depends on GCC_PLUGINS
++		depends on !(KASAN && KASAN_STACK=1)
+ 		select GCC_PLUGIN_STRUCTLEAK
+ 		help
+ 		  Zero-initialize any structures on the stack that may
+@@ -70,9 +71,15 @@ choice
+ 		  exposures, like CVE-2017-1000410:
+ 		  https://git.kernel.org/linus/06e7e776ca4d3654
  
-@@ -1528,9 +1528,8 @@ static u16 cgroup_calc_subtree_ss_mask(u16 subtree_control, u16 this_ss_mask)
- 
- 	cur_ss_mask |= cgrp_dfl_implicit_ss_mask;
- 
-+	new_ss_mask = cur_ss_mask;
- 	while (true) {
--		u16 new_ss_mask = cur_ss_mask;
--
- 		do_each_subsys_mask(ss, ssid, cur_ss_mask) {
- 			new_ss_mask |= ss->depends_on;
- 		} while_each_subsys_mask();
++		  As a side-effect, this keeps a lot of variables on the
++		  stack that can otherwise be optimized out, so combining
++		  this with CONFIG_KASAN_STACK can lead to a stack overflow
++		  and is disallowed.
++
+ 	config GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
+ 		bool "zero-init anything passed by reference (very strong)"
+ 		depends on GCC_PLUGINS
++		depends on !(KASAN && KASAN_STACK=1)
+ 		select GCC_PLUGIN_STRUCTLEAK
+ 		help
+ 		  Zero-initialize any stack variables that may be passed
 -- 
-2.19.1
+2.20.0
 
