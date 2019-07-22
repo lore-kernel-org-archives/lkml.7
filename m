@@ -2,148 +2,184 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2720C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4116C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE42921901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90CF21901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tFFSxg0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfGVTOm (ORCPT
+        id S1731920AbfGVTO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:14:42 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.35]:26606 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727219AbfGVTOm (ORCPT
+        Mon, 22 Jul 2019 15:14:59 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37208 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbfGVTO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:14:42 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 9C6A086512D
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:14:39 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id pdlfhHsjE2qH7pdlfhLaAQ; Mon, 22 Jul 2019 14:14:39 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:47790 helo=[192.168.1.79])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hpdlf-002gBj-3g; Mon, 22 Jul 2019 14:14:39 -0500
-Subject: Re: [PATCH] drm/amdgpu/gfx10: Fix missing break in switch statement
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kees Cook <keescook@chromium.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190721223949.GA13591@embeddedor>
- <CADnq5_NZNA3wCq4U4jbOU7BHfYgan5m=R6MbWmJ3Xp1oYMAUog@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <8a539933-bb59-0204-58a9-ab54fa6b1c94@embeddedor.com>
-Date:   Mon, 22 Jul 2019 14:14:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 15:14:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k0Aa1oppo5fgpAqfdlhMZ/Y4FyX3KZF6G5NCMud93Ao=; b=tFFSxg0Nh2G+2z2wXW0kiyQe9
+        pI4T7G3Po/BYJUF/dTPfTtYTgQHndHYOd2T3x5vPyfQZtBEJDEV7Xt5vAcjXDgaWEw4hezIOsAWe3
+        A2p+EpI6mVaVlp/IsZk/mF7nTueQPBJ6AbJtJqubeRcoEmKj/FJop4YqiSX6x8lknsw8kuXc0WRQb
+        nyIaiojxTFS93l+DLFa2hieuFTcZY00msSqMv6iMkyx2kCLXLEHLo8StTtaVB+666J8E/BchkXa4r
+        5Q13HKIfQNErihSnxd261MYESBOoNhZz9yo+v99LWxzP2Es2+1OW+GCzOXThbLpB1IJqJw8ZXTNka
+        kw4vEbxfw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpdlc-00068v-1I; Mon, 22 Jul 2019 19:14:36 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D99D6980C6E; Mon, 22 Jul 2019 21:14:33 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 21:14:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 4/9] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Message-ID: <20190722191433.GD6698@worktop.programming.kicks-ass.net>
+References: <20190719005837.4150-1-namit@vmware.com>
+ <20190719005837.4150-5-namit@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <CADnq5_NZNA3wCq4U4jbOU7BHfYgan5m=R6MbWmJ3Xp1oYMAUog@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.149.185
-X-Source-L: No
-X-Exim-ID: 1hpdlf-002gBj-3g
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink149-185.telefonia.intercable.net ([192.168.1.79]) [201.172.149.185]:47790
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719005837.4150-5-namit@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 18, 2019 at 05:58:32PM -0700, Nadav Amit wrote:
+> @@ -709,8 +716,9 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+>  	 * doing a speculative memory access.
+>  	 */
+>  	if (info->freed_tables) {
+> -		smp_call_function_many(cpumask, flush_tlb_func_remote,
+> -			       (void *)info, 1);
+> +		__smp_call_function_many(cpumask, flush_tlb_func_remote,
+> +					 flush_tlb_func_local,
+> +					 (void *)info, 1);
+>  	} else {
+>  		/*
+>  		 * Although we could have used on_each_cpu_cond_mask(),
+> @@ -737,7 +745,8 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+>  			if (tlb_is_not_lazy(cpu))
+>  				__cpumask_set_cpu(cpu, cond_cpumask);
+>  		}
+> -		smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
+> +		__smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
+> +					 flush_tlb_func_local,
+>  					 (void *)info, 1);
+>  	}
+>  }
 
+Do we really need that _local/_remote distinction? ISTR you had a patch
+that frobbed flush_tlb_info into the csd and that gave space
+constraints, but I'm not seeing that here (probably a wise, get stuff
+merged etc..).
 
-On 7/22/19 2:12 PM, Alex Deucher wrote:
-> On Sun, Jul 21, 2019 at 6:39 PM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
->> Add missing break statement in order to prevent the code from falling
->> through to case AMDGPU_IRQ_STATE_ENABLE.
->>
->> This bug was found thanks to the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Fixes: a644d85a5cd4 ("drm/amdgpu: add gfx v10 implementation (v10)")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Applied.  Thanks!
-> 
+struct __call_single_data {
+        struct llist_node          llist;                /*     0     8 */
+        smp_call_func_t            func;                 /*     8     8 */
+        void *                     info;                 /*    16     8 */
+        unsigned int               flags;                /*    24     4 */
 
-Awesome! Glad to help. :)
+        /* size: 32, cachelines: 1, members: 4 */
+        /* padding: 4 */
+        /* last cacheline: 32 bytes */
+};
 
-Thanks
---
-Gustavo
+struct flush_tlb_info {
+        struct mm_struct *         mm;                   /*     0     8 */
+        long unsigned int          start;                /*     8     8 */
+        long unsigned int          end;                  /*    16     8 */
+        u64                        new_tlb_gen;          /*    24     8 */
+        unsigned int               stride_shift;         /*    32     4 */
+        bool                       freed_tables;         /*    36     1 */
+
+        /* size: 40, cachelines: 1, members: 6 */
+        /* padding: 3 */
+        /* last cacheline: 40 bytes */
+};
+
+IIRC what you did was make void *__call_single_data::info the last
+member and a union until the full cacheline size (64). Given the above
+that would get us 24 bytes for csd, leaving us 40 for that
+flush_tlb_info.
+
+But then we can still do something like the below, which doesn't change
+things and still gets rid of that dual function crud, simplifying
+smp_call_function_many again.
+
+Index: linux-2.6/arch/x86/include/asm/tlbflush.h
+===================================================================
+--- linux-2.6.orig/arch/x86/include/asm/tlbflush.h
++++ linux-2.6/arch/x86/include/asm/tlbflush.h
+@@ -546,8 +546,9 @@ struct flush_tlb_info {
+ 	unsigned long		start;
+ 	unsigned long		end;
+ 	u64			new_tlb_gen;
+-	unsigned int		stride_shift;
+-	bool			freed_tables;
++	unsigned int		cpu;
++	unsigned short		stride_shift;
++	unsigned char		freed_tables;
+ };
+ 
+ #define local_flush_tlb() __flush_tlb()
+Index: linux-2.6/arch/x86/mm/tlb.c
+===================================================================
+--- linux-2.6.orig/arch/x86/mm/tlb.c
++++ linux-2.6/arch/x86/mm/tlb.c
+@@ -659,6 +659,27 @@ static void flush_tlb_func_remote(void *
+ 	flush_tlb_func_common(f, false, TLB_REMOTE_SHOOTDOWN);
+ }
+ 
++static void flush_tlb_func(void *info)
++{
++	const struct flush_tlb_info *f = info;
++	enum tlb_flush_reason reason = TLB_REMOTE_SHOOTDOWN;
++	bool local = false;
++
++	if (f->cpu == smp_processor_id()) {
++		local = true;
++		reason = (f->mm == NULL) ? TLB_LOCAL_SHOOTDOWN : TLB_LOCAL_MM_SHOOTDOWN;
++	} else {
++		inc_irq_stat(irq_tlb_count);
++
++		if (f->mm && f->mm != this_cpu_read(cpu_tlbstate.loaded_mm))
++			return;
++
++		count_vm_tlb_event(NR_TLB_REMOTE_FLUSH_RECEIVED);
++	}
++
++	flush_tlb_func_common(f, local, reason);
++}
++
+ static bool tlb_is_not_lazy(int cpu)
+ {
+ 	return !per_cpu(cpu_tlbstate_shared.is_lazy, cpu);
+
