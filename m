@@ -2,79 +2,78 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE008C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B90521900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C4C218B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TPiJKdZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbfGVUu6 (ORCPT
+        id S1730327AbfGVUwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 16:50:58 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44667 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfGVUu6 (ORCPT
+        Mon, 22 Jul 2019 16:52:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37932 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfGVUwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 16:50:58 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2D5EA1BF20A;
-        Mon, 22 Jul 2019 20:50:56 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 22:50:55 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 0/4] rtc: convert subsystem to i2c_new_dummy_device()
-Message-ID: <20190722205055.GE24911@piout.net>
-References: <20190722172618.4061-1-wsa+renesas@sang-engineering.com>
+        Mon, 22 Jul 2019 16:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZOg1aeuxZJaFRJcDsRuUUKvxXn015efnK/SXIIPlQmI=; b=TPiJKdZWiDSAbJ1qm7pO/uUbz
+        Gk+c2eqwI8tim/gYGiS0A9ux1cdl3GrmKTq8wiQ6kx39xW6HUZYkq91kJlX+rWNZuGPiD1qVdiQdZ
+        XYbXzvW3o8HnOJU5qnYzEsiY4B17OxvYzRkuKHOkUUCSfFBr9mAO/3LtL4hBuPbW7dVmpKxNXHpxS
+        V971ARy2t00/8WYUJZdtrovBoPgCbtq4kPln9u/dhb2KMGfYowuPG4WhVzZP/BzzkGrHQNXyekO8E
+        grBDZ/28XABr1nQ6ZXBLzA/axg2wnzFQPX3CszXtgAwZyKSHdTVQel9/VQg0wIArUbLBI0U521ck2
+        Tf78XiH4w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpfIR-0006yU-OJ; Mon, 22 Jul 2019 20:52:36 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 47888980D1F; Mon, 22 Jul 2019 22:52:27 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 22:52:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [RFC 3/7] x86/percpu: Use C for percpu accesses when possible
+Message-ID: <20190722205227.GK6698@worktop.programming.kicks-ass.net>
+References: <20190718174110.4635-1-namit@vmware.com>
+ <20190718174110.4635-4-namit@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722172618.4061-1-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190718174110.4635-4-namit@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/07/2019 19:26:14+0200, Wolfram Sang wrote:
-> This series is part of a tree-wide movement to replace the I2C API call
-> 'i2c_new_dummy' which returns NULL with its new counterpart returning an
-> ERRPTR.
-> 
-> The series was generated with coccinelle (audited afterwards, of course) and
-> build tested by me and by buildbot. No tests on HW have been performed.
-> 
-> The branch is based on v5.3-rc1. A branch (with some more stuff included) can
-> be found here:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/new_dummy
-> 
-> Some drivers still need to be manually converted. Patches for those will be
-> sent out individually.
-> 
-> 
-> Wolfram Sang (4):
->   rtc: isl12026: convert to i2c_new_dummy_device
->   rtc: max77686: convert to i2c_new_dummy_device
->   rtc: s35390a: convert to i2c_new_dummy_device
->   rtc: s5m: convert to i2c_new_dummy_device
-> 
->  drivers/rtc/rtc-isl12026.c | 6 +++---
->  drivers/rtc/rtc-max77686.c | 6 +++---
->  drivers/rtc/rtc-s35390a.c  | 6 +++---
->  drivers/rtc/rtc-s5m.c      | 6 +++---
->  4 files changed, 12 insertions(+), 12 deletions(-)
-> 
-All applied, thanks!
+On Thu, Jul 18, 2019 at 10:41:06AM -0700, Nadav Amit wrote:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
+> index 99a7fa9ab0a3..60f97b288004 100644
+> --- a/arch/x86/include/asm/preempt.h
+> +++ b/arch/x86/include/asm/preempt.h
+> @@ -91,7 +91,8 @@ static __always_inline void __preempt_count_sub(int val)
+>   */
+>  static __always_inline bool __preempt_count_dec_and_test(void)
+>  {
+> -	return GEN_UNARY_RMWcc("decl", __preempt_count, e, __percpu_arg([var]));
+> +	return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
+> +			       __percpu_arg([var]));
+>  }
+
+Should this be in the previous patch?
