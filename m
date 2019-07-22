@@ -2,113 +2,71 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CF2C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98819C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C692E204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GKo6Rs5S"
+	by mail.kernel.org (Postfix) with ESMTP id 753A6204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbfGVPTb (ORCPT
+        id S1728573AbfGVPUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:19:31 -0400
-Received: from ozlabs.org ([203.11.71.1]:60547 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbfGVPTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:19:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45sldW36T1z9sBF;
-        Tue, 23 Jul 2019 01:19:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563808768;
-        bh=bSZtbf5GaG1T1HT8834pDCpSu2DjDLDm/Ehs0z+A4qM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GKo6Rs5SBQBLgJ6YbZCb5Vux51qOFZx4CZulIlyVpfD57606ZlP6qSk7dXB/KQqii
-         CK5oKctOpQQjpzjLG5O4YR1CeVYJN4E5ylJNrydIGRyi7cI0H7jqcDcMA6EJuFuk4/
-         bCbICWQjZid/16sJml6Y6pFkaJBgQNaShjwkoZEoNZo0Dl7AYKj8xnwWfqFfaY8eVU
-         xW7itpZVX4UBIQ2j3g7oRMEbiyfMyombwNmNocKFa5K9pBvv4pogycPurd7iVo5/BF
-         v+Sad7eZtLsSMw8lSb7/SqgqptUwu+NdUS1LpXJPDvLEdih8VwCeZ1j23uLQxn2RKD
-         qOZu3JUYtO9Rg==
-Date:   Tue, 23 Jul 2019 01:19:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Tzung-Bi Shih <tzungbi@google.com>
-Subject: linux-next: Fixes tags need some work in the sound-asoc-fixes tree
-Message-ID: <20190723011920.78ade6dd@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3_/hqmPiRpU05D/=PH/cqin";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 22 Jul 2019 11:20:02 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:39691 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727036AbfGVPUC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:20:02 -0400
+X-Greylist: delayed 952 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 11:20:01 EDT
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x6MF2i0e032709;
+        Mon, 22 Jul 2019 18:02:44 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id DEFE561FD1; Mon, 22 Jul 2019 18:02:43 +0300 (IDT)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/2] hwrng: npcm: add NPCM RNG driver support
+Date:   Mon, 22 Jul 2019 18:02:39 +0300
+Message-Id: <20190722150241.345609-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3_/hqmPiRpU05D/=PH/cqin
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch set adds Randon Number Generator (RNG) support 
+for the Nuvoton NPCM Baseboard Management Controller (BMC).
 
-Hi all,
+The RNG driver we use power consumption when the RNG 
+is not required.
 
-In commit
+The NPCM RNG driver tested on NPCM750 evaluation board.
 
-  52db6685932e ("ASoC: simple_card_utils.h: care NULL dai at asoc_simple_de=
-bug_dai()")
+Tomer Maimon (2):
+  dt-binding: hwrng: add NPCM RNG documentation
+  hwrng: npcm: add NPCM RNG driver
 
-Fixes tag
+ .../bindings/rng/nuvoton,npcm-rng.txt         |  17 ++
+ drivers/char/hw_random/Kconfig                |  13 ++
+ drivers/char/hw_random/Makefile               |   1 +
+ drivers/char/hw_random/npcm-rng.c             | 207 ++++++++++++++++++
+ 4 files changed, 238 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+ create mode 100644 drivers/char/hw_random/npcm-rng.c
 
-  Fixes: commit 0580dde59438 ("ASoC: simple-card-utils: add asoc_simple_deb=
-ug_info()")
+-- 
+2.18.0
 
-has these problem(s):
-
-  - leading word 'commit' unexpected
-
-In commit
-
-  6cd249cfad68 ("ASoC: max98357a: use mdelay for sdmode-delay")
-
-Fixes tag
-
-  Fixes: cec5b01f8f1c ("ASoC: max98357a: avoid speaker pop when playback
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more tha one line. Also, do not have
-blank lines in with the tags, thanks.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3_/hqmPiRpU05D/=PH/cqin
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl010/gACgkQAVBC80lX
-0GzuTwf+ORbxIwJ/suZmP3jDL2AUrH1I2OAFkbB5D3HsbK0RKGCccPom9PbQvnrC
-kLmUJq6M6UYo/CcQN90ZPcfxpO3/TWYww2RWtD3Rnd2eHI0bQOxEXnaZN9ejxjmG
-fSvyhwuHj3U9cZRrNxeoMvg1xAT4OZSGcqRKSjACCbHtg1qISZOpVIHtP0JEbVIq
-usjvV3KGhBvPIDjuBvJxXgqhORnZhITHTeicAOQNhBzyYuEGKs/nuAmFuvM9sf/x
-3tvgVzF2m/HSjJXQNnVNmy4HwX3Ma0SZFjtXB0UwxgPAjBnbRHe332OLLp+i8e++
-8p4nLwNSz28IuNN/VapTWFa+bxVqpw==
-=Dl/n
------END PGP SIGNATURE-----
-
---Sig_/3_/hqmPiRpU05D/=PH/cqin--
