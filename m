@@ -2,134 +2,109 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846DDC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD060C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E6E204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8352021951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="N+T99F4u"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XQ0f5nx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfGVPOH (ORCPT
+        id S1728270AbfGVPOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:14:07 -0400
-Received: from mail-eopbgr760078.outbound.protection.outlook.com ([40.107.76.78]:38141
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727244AbfGVPOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:14:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AWMpBuRAh9mT3QBoyyw8KFGZxq5sVhpVFlx02GjvAPHmGE+LNYe+QaiPiKpnNpfbVyVFIaSlPmFIMfqVQY5FNj/8fUd0vCGn/WkUvB2VS+LHDsjQGGxyEKozZl8AYwzuh+JAtfgUZKIAED1Q/vaukuLaoEccwg0LRDG2YxLpSDV7OI189uWW2S5KjuzUQljTYgjff3qkaOeUPW2B+vjKxz28QR2P8vxU1ErAOKheQs+w5Kgx2mG3ST3YHqq9hBB1Dr9O2pe/Zz+2qVG/BDD1gkdA8qzgYSF/QwqQHdrXa9TGke9eVEVUfsEJRzmeCbqOmthYLR2ecDoobdrjFSRw9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAGAkhT9RuHcZlDpb+c3OrX5xbz57dFRw03Y7++xGBA=;
- b=VAOF2DCKvMaUtJ0RqcjIZI5SEz9klyYrzmeWfhcQ8IgbLUf/CXMV3k39ajglvEgfxp1hA/0YzzVJu/VA1qBdIE+bz9xhOGivZpMW4HbV107D94uj9/mMRDnFvOl50+3IlCc+VSLYq/Gp0fQbmdXQQGgKAHi1Urs7XDsNk3k9tJu05u87M1DOZCde9tMXqX98aFHAlMOCij9Bw9krNoE2c+GXwhoBr08+qEaFCFX2AXNFN//9j0A5wKC7U+YPuvX2tA0i2/Z32AUm4nxIKuijj5EEVKZZXa7niHOKo89bxBzYsAR+npnWBG6gWqeiLBkX2Un+v2M8k3N160cLcUkWrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
+        Mon, 22 Jul 2019 11:14:44 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:38046 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728128AbfGVPOn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:14:43 -0400
+Received: by mail-pf1-f181.google.com with SMTP id y15so17527619pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAGAkhT9RuHcZlDpb+c3OrX5xbz57dFRw03Y7++xGBA=;
- b=N+T99F4uaWxqYzy99W7cESJvzgjGqQjuaZGbELIpUyrKChJ7o+V1y7Eom5MunbUNMqFb7hX2T+wc7GSfy71vWhq+WttmTj+umxMpb8fPCVw91nwKS6Qfo8Il1BZB7SseVp/UUwVif3qO/3K5s2WAGZdoflBjIsSBqBdWKaRxlZ8=
-Received: from DM6PR12MB3241.namprd12.prod.outlook.com (20.179.105.153) by
- DM6PR12MB2953.namprd12.prod.outlook.com (20.179.104.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Mon, 22 Jul 2019 15:14:04 +0000
-Received: from DM6PR12MB3241.namprd12.prod.outlook.com
- ([fe80::2532:fffd:e1e1:3bdc]) by DM6PR12MB3241.namprd12.prod.outlook.com
- ([fe80::2532:fffd:e1e1:3bdc%6]) with mapi id 15.20.2094.017; Mon, 22 Jul 2019
- 15:14:04 +0000
-From:   "Liu, Shaoyun" <Shaoyun.Liu@amd.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Cox, Philip" <Philip.Cox@amd.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/amdkfd/kfd_mqd_manager_v10: Fix missing break in
- switch statement
-Thread-Topic: [PATCH] drm/amdkfd/kfd_mqd_manager_v10: Fix missing break in
- switch statement
-Thread-Index: AQHVQFzD0k60V1DuYEWlKWHlkB78W6bWv3YA
-Date:   Mon, 22 Jul 2019 15:14:04 +0000
-Message-ID: <c735a1cc-a545-50fb-44e7-c0ad93ee8ee7@amd.com>
-References: <20190721225920.GA18099@embeddedor>
-In-Reply-To: <20190721225920.GA18099@embeddedor>
-Accept-Language: en-CA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-x-clientproxiedby: YT1PR01CA0005.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::18)
- To DM6PR12MB3241.namprd12.prod.outlook.com (2603:10b6:5:186::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Shaoyun.Liu@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ac84dee-ad7e-46d2-5b11-08d70eb73bca
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2953;
-x-ms-traffictypediagnostic: DM6PR12MB2953:
-x-microsoft-antispam-prvs: <DM6PR12MB295324DE9FB007FD8B7A8685F4C40@DM6PR12MB2953.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:612;
-x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(54906003)(31686004)(486006)(110136005)(58126008)(71190400001)(14454004)(71200400001)(81166006)(81156014)(8676002)(99286004)(68736007)(66066001)(65806001)(6436002)(6512007)(65956001)(31696002)(6486002)(316002)(2616005)(256004)(7736002)(14444005)(305945005)(446003)(11346002)(6116002)(3846002)(86362001)(229853002)(476003)(53936002)(4326008)(25786009)(65826007)(478600001)(186003)(6246003)(36756003)(66476007)(64756008)(66446008)(66556008)(66946007)(8936002)(53546011)(6506007)(386003)(102836004)(64126003)(52116002)(2906002)(76176011)(26005)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2953;H:DM6PR12MB3241.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pqgE0mKTBGO3RemRmO5o0RFVb8vu+h/IgbXRMMf5jl+Jp+dmWQrblX5ZmLgYdcmXEscGYYftbvoWeC5Y5GN+sfWFj8xOIlrwR+Z7aORUV3S6hK5+epVDjnaYBJvFhmGZiP3gflqBNt5Jez65mKRD4EcbFlOZ+z0j1L9gHDW4FHV+PPCezZOf1e/+2+FRSR9OfBi3QXJoqGssUPLmehTvfdBlCma712VdRjm2E1wFOrGBQaqlhsvxl9EtO1Hyj3yf3Vsz7gu9sjxiCBElIAQindsqvBuQQjusCsbdCtQYGyADLOfFzcIeKgNFcNhiTPjTZL0MGk+cXRgcB/H5zjlGxa7bjiBx0xF+iv+dLra5WfE6YTNgJ/pmrUgv+C3D4rxKCxbRtyCbcTon+aHnDlza3KmqWaVliWGXzkRlz8vQilk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EF7AB8BDCFF06A40AF540B3EE9D7DA4C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i8M6AK4de9Ik8pIGK7ZSAo/fkLcx89Rz2FU4ueU7AtI=;
+        b=XQ0f5nx8fa3pklvdGG2u9IOZZJTUyDUTYVVk+sNJ3SCJPR77BhV8NbHcipLbVy1xvT
+         Slg0Se3QHTC0ZyO53T8oEMnYmpMj/IpwJ3J26/3ycCvlPIjGxwvchFbXcMJqk0o/mpqq
+         1Yt0CuEo1ILTMuVgHTe5nTzixjn08mjGXwYpQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i8M6AK4de9Ik8pIGK7ZSAo/fkLcx89Rz2FU4ueU7AtI=;
+        b=kMMGWakqY8C8r6vuIbg+GkXZDfZWTIEh0MzSdmIYczEQYybLNROXfe2AkWGl7ocGr6
+         vrP9J5owGTfdKVEsD7DdJHMgsZM2tHsi2zdaNvMNHzWT9dNk9jiKKvKOiQz87Xn9ANfD
+         nsq/+12DkY8V8QQbkywzuMw8m0PzKni+pd5sU3VQuA7+HM88DfJChc4fIvFGckkFIGtP
+         VHaUOhy2dvMN/62MobzIT7L+/FfvZXJ3EbJK3Ec2/c48GJhv6yv/FySpsW2jWIexoFN9
+         aRoqgn6WFwaCVbqyEqQXc6AiagX2CCISWlMXoCRCI9Q+WEGG4i+5FFPf0ovcraChDelN
+         DJ/w==
+X-Gm-Message-State: APjAAAV5LOhLtpz++uuBMkmr94N1C/G7/TucbywfH8tDSBYXyjSnf10j
+        uYCmU4Qf3ALAlbj5ykcHnXw=
+X-Google-Smtp-Source: APXvYqydSiyMRzj6QXFVzUWNzUL0LUUvnGotJgLD9n9VUjcgfggnl8W+/75TLlsXhUbwOLV6q6l9PQ==
+X-Received: by 2002:a63:1310:: with SMTP id i16mr71092692pgl.187.1563808481910;
+        Mon, 22 Jul 2019 08:14:41 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h1sm51944925pfg.55.2019.07.22.08.14.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 08:14:40 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:14:39 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>, aarcange@redhat.com,
+        akpm@linux-foundation.org, christian@brauner.io,
+        davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
+        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
+Message-ID: <20190722151439.GA247639@google.com>
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <20190721081933-mutt-send-email-mst@kernel.org>
+ <20190721131725.GR14271@linux.ibm.com>
+ <20190721210837.GC363@bombadil.infradead.org>
+ <20190721233113.GV14271@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ac84dee-ad7e-46d2-5b11-08d70eb73bca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 15:14:04.3744
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ShaoyunL@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2953
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190721233113.GV14271@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBvbmUgcHJvcGVybHkgaW4gcHVycG9zZSAsIFRoZSBtcWQgaW5pdCBmb3IgQ1AgYW5kwqAg
-Q09NUFVURSB3aWxsIA0KaGF2ZSB0aGUgc2FtZcKgIHJvdXRpbmUgLg0KDQpSZWdhcmQNCg0Kc3No
-YW95dW4ubGl1DQoNCk9uIDIwMTktMDctMjEgNjo1OSBwLm0uLCBHdXN0YXZvIEEuIFIuIFNpbHZh
-IHdyb3RlOg0KPiBBZGQgbWlzc2luZyBicmVhayBzdGF0ZW1lbnQgaW4gb3JkZXIgdG8gcHJldmVu
-dCB0aGUgY29kZSBmcm9tIGZhbGxpbmcNCj4gdGhyb3VnaCB0byBjYXNlIEtGRF9NUURfVFlQRV9D
-T01QVVRFLg0KPg0KPiBUaGlzIGJ1ZyB3YXMgZm91bmQgdGhhbmtzIHRvIHRoZSBvbmdvaW5nIGVm
-Zm9ydHMgdG8gZW5hYmxlDQo+IC1XaW1wbGljaXQtZmFsbHRocm91Z2guDQo+DQo+IEZpeGVzOiAx
-NDMyOGFhNThjZTUgKCJkcm0vYW1ka2ZkOiBBZGQgbmF2aTEwIHN1cHBvcnQgdG8gYW1ka2ZkLiAo
-djMpIikNCj4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogR3Vz
-dGF2byBBLiBSLiBTaWx2YSA8Z3VzdGF2b0BlbWJlZGRlZG9yLmNvbT4NCj4gLS0tDQo+ICAgZHJp
-dmVycy9ncHUvZHJtL2FtZC9hbWRrZmQva2ZkX21xZF9tYW5hZ2VyX3YxMC5jIHwgMSArDQo+ICAg
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vYW1kL2FtZGtmZC9rZmRfbXFkX21hbmFnZXJfdjEwLmMgYi9kcml2ZXJzL2dwdS9k
-cm0vYW1kL2FtZGtmZC9rZmRfbXFkX21hbmFnZXJfdjEwLmMNCj4gaW5kZXggNGY4YTZmZmM1Nzc1
-Li4xZDhiMTNhZDQ2ZjkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2Zk
-L2tmZF9tcWRfbWFuYWdlcl92MTAuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtm
-ZC9rZmRfbXFkX21hbmFnZXJfdjEwLmMNCj4gQEAgLTQzMCw2ICs0MzAsNyBAQCBzdHJ1Y3QgbXFk
-X21hbmFnZXIgKm1xZF9tYW5hZ2VyX2luaXRfdjEwKGVudW0gS0ZEX01RRF9UWVBFIHR5cGUsDQo+
-ICAgCXN3aXRjaCAodHlwZSkgew0KPiAgIAljYXNlIEtGRF9NUURfVFlQRV9DUDoNCj4gICAJCXBy
-X2RlYnVnKCIlc0AlaVxuIiwgX19mdW5jX18sIF9fTElORV9fKTsNCj4gKwkJYnJlYWs7DQo+ICAg
-CWNhc2UgS0ZEX01RRF9UWVBFX0NPTVBVVEU6DQo+ICAgCQlwcl9kZWJ1ZygiJXNAJWlcbiIsIF9f
-ZnVuY19fLCBfX0xJTkVfXyk7DQo+ICAgCQltcWQtPmFsbG9jYXRlX21xZCA9IGFsbG9jYXRlX21x
-ZDsNCg==
+[snip]
+> > Would it make sense to have call_rcu() check to see if there are many
+> > outstanding requests on this CPU and if so process them before returning?
+> > That would ensure that frequent callers usually ended up doing their
+> > own processing.
+
+Other than what Paul already mentioned about deadlocks, I am not sure if this
+would even work for all cases since call_rcu() has to wait for a grace
+period.
+
+So, if the number of outstanding requests are higher than a certain amount,
+then you *still* have to wait for some RCU configurations for the grace
+period duration and cannot just execute the callback in-line. Did I miss
+something?
+
+Can waiting in-line for a grace period duration be tolerated in the vhost case?
+
+thanks,
+
+ - Joel
+
