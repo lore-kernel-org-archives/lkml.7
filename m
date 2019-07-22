@@ -2,103 +2,120 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E3FC76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0CAC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D61621E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BE521E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:44:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h2ul/eMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfGVIn0 (ORCPT
+        id S1728646AbfGVIoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:43:26 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:39071 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727699AbfGVInZ (ORCPT
+        Mon, 22 Jul 2019 04:44:00 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34357 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727699AbfGVIn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:43:25 -0400
-Received: from [192.168.1.110] ([77.2.59.209]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N1fei-1iZipz0WpE-0123bs; Mon, 22 Jul 2019 10:43:19 +0200
-Subject: Re: [PATCH] leds: ktd2692: Fix a typo in the name of a constant
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190721210539.25669-1-christophe.jaillet@wanadoo.fr>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <578003f3-d4a6-1788-b819-166e4203744f@metux.net>
-Date:   Mon, 22 Jul 2019 10:43:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Jul 2019 04:43:59 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M8hr5X3745124
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 22 Jul 2019 01:43:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M8hr5X3745124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563785034;
+        bh=CS1azoszph5hEAVXSC7iyTdwY2pVw8kAHb+rJAfhovw=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=h2ul/eMbOwgT/QTtyeMCLgQGyEZLBPLI793O2tLGn7dr13QZw/ZaT7oBLCSjc821C
+         9rJPxtLs4UDzR1r65XeF3b9mdJ4YA5fsxqLxiwA3WLJVZUV9EftDLJQL6Ou/lV9gqJ
+         YHricN8LAjqt1OT1t52BCRzPh/b3hftnnSIxsANhGRhCeYS0EQsQBT+cuPgUuGlcxE
+         Nf12Oi6bQoi14+keG6ZFR7RJFoCD9S4zzRUG73JYHR2GaNY0WZPa3cXlVw22JeoO25
+         wyFebkHQHj3zs9+cxmeVKlxHxa1gHcEiXV3RLAJI0OXvtvEZmhK7PlY7RE6r8yv5Ol
+         nrqx6gtsiwHAA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M8hqN23745120;
+        Mon, 22 Jul 2019 01:43:52 -0700
+Date:   Mon, 22 Jul 2019 01:43:52 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Gayatri Kammela <tipbot@zytor.com>
+Message-ID: <tip-018ebca8bd704f18d56f8fff38e2c3d76d7d39fb@git.kernel.org>
+Cc:     mingo@kernel.org, hpa@zytor.com, gayatri.kammela@intel.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          gayatri.kammela@intel.com, hpa@zytor.com, mingo@kernel.org
+In-Reply-To: <20190717234632.32673-3-gayatri.kammela@intel.com>
+References: <20190717234632.32673-3-gayatri.kammela@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cpu] x86/cpufeatures: Enable a new AVX512 CPU feature
+Git-Commit-ID: 018ebca8bd704f18d56f8fff38e2c3d76d7d39fb
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190721210539.25669-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Fc6XiBlR0wgG0vzMRIlPu3KKCnfDzOs3R7oNh3F/j8qA2YUTDzl
- rXNj5GMUKeXGA79BCbOv8YBvTIEz5dVtHug15GpIwfI/+WxiaA/lyjOXxw8VtFEjWTHfReL
- +FSp28ZBMRy+u+Z9aTnk9npnup/JDP/n6mtO98ZmKDZrFcHodmuAYMdb/MIvYlXOLZb1Ocn
- cLDM8YZ8fvjdpFR598VnA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1CNsv0lf3/U=:g8QA9yuFimiZoPf+nOWzjJ
- AgjNWzKsfNfVx+TNv+toR4W40Fqh5krjJ6F5hglK/SjvnExWAt/K6BnAupJjha/pnxsUJ977B
- i3ZIM8AaVLyj/aOuYY318vWh9s+UobO9CVtH+WESzXWnO2WL799EzUYVfeeOC2RrhyhvisugH
- GVX7FN48oXe5emDOBWUrjIso6a0Y3wntqRrT1WDJLTwzVoQKUpH2NwEsSACM+BDY9mhPJssni
- LRTIiAvqXTsLln1ZfwfY/tC85Qx1CngDy9Y8WIQiAmFdbN+Pk4DdwSy+GMwi6j/ZWo6aKY7zK
- HMYuQBNa0PCxW3SuCJvccYjdzArtKz70TXs+h7KYUPHk+pyIKXB4v9ZtifgWxCWXFJ/PJYeks
- NRarzB3htAtCLtyxwzq+v34tbWp2jj/JMnU45HMi7xQj5bpcg2zwVYW+2NbK3PMI+KBIisRJ9
- vb5I1BAIqEYK/kxkCsT/48or/0L0wUkqdwVYhZg6VmCtm+gby4iFfnuW5NOrqVQUnQVNoNvA2
- 5CTKWAFChH4O/+PD3L6kjUHs2JKcRl+1MNIwkCK8ZqruJf+hM6Ltehfg97Kd9q0p876UpEUmq
- xuaUqrSZh/pnu2w/VUb/1HfeXtiSnCXLd0grmvStC0KGg0SgRGoaX9s7veXHMswmsb9PR9wUB
- J9Wqy0lF6gcaN8IUwcuS1BXEbcYd6f5qjOKY7/ioOTD0ldl/iCoHr7CT54LxyesblI9MNksZD
- cL2HV7/X0sxENu1+5TG1XLUV7IqdPhev4+2f+f/3Q7mqXM21OTJIb4tyjak=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.07.19 23:05, Christophe JAILLET wrote:
-> There is a typo in KTD2962_MM_MIN_CURR_THRESHOLD_SCALE. 6 and 9 are
-> switched in 2962.
-> 
-> Define and use KTD2692_MM_MIN_CURR_THRESHOLD_SCALE instead.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->   drivers/leds/leds-ktd2692.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-ktd2692.c b/drivers/leds/leds-ktd2692.c
-> index 45296aaca9da..44db748c570e 100644
-> --- a/drivers/leds/leds-ktd2692.c
-> +++ b/drivers/leds/leds-ktd2692.c
-> @@ -22,7 +22,7 @@
->   /* Value related the movie mode */
->   #define KTD2692_MOVIE_MODE_CURRENT_LEVELS	16
->   #define KTD2692_MM_TO_FL_RATIO(x)		((x) / 3)
-> -#define KTD2962_MM_MIN_CURR_THRESHOLD_SCALE	8
-> +#define KTD2692_MM_MIN_CURR_THRESHOLD_SCALE	8
->   
->   /* Value related the flash mode */
->   #define KTD2692_FLASH_MODE_TIMEOUT_LEVELS	8
-> @@ -253,7 +253,7 @@ static void ktd2692_setup(struct ktd2692_context *led)
->   	ktd2692_expresswire_reset(led);
->   	gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
->   
-> -	ktd2692_expresswire_write(led, (KTD2962_MM_MIN_CURR_THRESHOLD_SCALE - 1)
-> +	ktd2692_expresswire_write(led, (KTD2692_MM_MIN_CURR_THRESHOLD_SCALE - 1)
->   				 | KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE);
->   	ktd2692_expresswire_write(led, KTD2692_FLASH_MODE_CURR_PERCENT(45)
->   				 | KTD2692_REG_FLASH_CURRENT_BASE);
-> 
+Commit-ID:  018ebca8bd704f18d56f8fff38e2c3d76d7d39fb
+Gitweb:     https://git.kernel.org/tip/018ebca8bd704f18d56f8fff38e2c3d76d7d39fb
+Author:     Gayatri Kammela <gayatri.kammela@intel.com>
+AuthorDate: Wed, 17 Jul 2019 16:46:32 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 22 Jul 2019 10:38:25 +0200
 
-Reviewed-By: Enrico Weigelt <info@metux.net>
+x86/cpufeatures: Enable a new AVX512 CPU feature
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Add a new AVX512 instruction group/feature for enumeration in
+/proc/cpuinfo: AVX512_VP2INTERSECT.
+
+CPUID.(EAX=7,ECX=0):EDX[bit 8]  AVX512_VP2INTERSECT
+
+Detailed information of CPUID bits for this feature can be found in
+the Intel Architecture Intsruction Set Extensions Programming Reference
+document (refer to Table 1-2). A copy of this document is available at
+https://bugzilla.kernel.org/show_bug.cgi?id=204215.
+
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190717234632.32673-3-gayatri.kammela@intel.com
+
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/cpuid-deps.c   | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 998c2cc08363..56f53bf3bbbf 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -353,6 +353,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index 630a9f77fb6b..3cbe24ca80ab 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -64,6 +64,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_AVX512_4VNNIW,		X86_FEATURE_AVX512F   },
+ 	{ X86_FEATURE_AVX512_4FMAPS,		X86_FEATURE_AVX512F   },
+ 	{ X86_FEATURE_AVX512_VPOPCNTDQ,		X86_FEATURE_AVX512F   },
++	{ X86_FEATURE_AVX512_VP2INTERSECT,	X86_FEATURE_AVX512VL  },
+ 	{ X86_FEATURE_CQM_OCCUP_LLC,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_TOTAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
