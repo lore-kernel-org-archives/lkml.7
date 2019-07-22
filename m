@@ -2,111 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC2C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8460DC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313EC21951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:52:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="md8dIW/O"
+	by mail.kernel.org (Postfix) with ESMTP id 5A62621955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563832397;
+	bh=N/aG7525RXZijdwbJGyunKRAEhR9IYfXPRMh+ImE0p0=;
+	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
+	b=snNIIjKUyIBXJzqzIo9IsAvKDkblF+OoxZiLkp96xjdgmiEEjDb3nZNF/wAyCvxjw
+	 GooChGKohEH733Vz1ZAwWqY7cCSw3dTonQChrgHw3RXtmmsf4fxsXL+gdEegPNCSX2
+	 RxoC0uYR057Y9LpxA+3WBBQHhLH4+IiMZgAjc5kY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732941AbfGVVwG (ORCPT
+        id S1732962AbfGVVxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:52:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47003 "EHLO ozlabs.org"
+        Mon, 22 Jul 2019 17:53:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730704AbfGVVwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:52:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1730704AbfGVVxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:53:15 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45swLW1p2rz9s3Z;
-        Tue, 23 Jul 2019 07:52:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563832323;
-        bh=KUYmUF/AXBMZiStclARGa7trFqJYxkg3fV4Ml1kJIeU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=md8dIW/OaWB5mYoMv0qZmkujXr8Q8YuDL+yt1xD2jVHBg/QP3oLhWCZI6zOimBLRF
-         jEpuKzfcBmr0PYMeyaLuPj4ET7pWr1CnWkdW+tleaVwFEmiSsfA5qFqG7pB8OHYw6k
-         pPHP2bmbHMxM0t/g4M6u/9HddR3Hjckg7j5P4jHNJKI69KxTtaYlxn66wZduiy0Yl/
-         0mn/jJe9hp4hfksRYQx5KshAjTXVDpe1ttelitRL3ooOYBRpJxVHg56oDcjQG0RLjU
-         6P+RNlpI9x+xq9g2DRB3DIhVw0H6CjY0j8BtIfM88RnZoOdJoFrCRecw+/bNZwEawf
-         wXtzOBM+MIiBQ==
-Date:   Tue, 23 Jul 2019 07:52:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
-Message-ID: <20190723075201.60fa577c@canb.auug.org.au>
-In-Reply-To: <20190722195813.GA18127@embeddedor>
-References: <20190722195813.GA18127@embeddedor>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F4F121951;
+        Mon, 22 Jul 2019 21:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563832394;
+        bh=N/aG7525RXZijdwbJGyunKRAEhR9IYfXPRMh+ImE0p0=;
+        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
+        b=0YGM3auUNRWmWMAPu/v1w+jKC4qRGTLk5dziMHVPpoADcDlUxpDe/c2XaUgo82zCS
+         erm45DJexo99LqTONLo/8jZbPJtGKhtEDUCCabdGxcf0EV0XV+Ow4DBTEgRCUyeVLr
+         paPF8H1gVDBzIAzrUqcPSNq6aAuqYEV1iVkn+A7I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QSQEkZdd0A7Zm6r6d_7wylr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d1cd2b10-8fd4-f224-3bcd-5b938f72d249@wanadoo.fr>
+References: <20190701165020.19840-1-colin.king@canonical.com> <20190722212414.6EF8D21900@mail.kernel.org> <d1cd2b10-8fd4-f224-3bcd-5b938f72d249@wanadoo.fr>
+Subject: Re: [PATCH][next] clk: Si5341/Si5340: remove redundant assignment to n_den
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Colin King <colin.king@canonical.com>,
+        linux-clk@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 22 Jul 2019 14:53:13 -0700
+Message-Id: <20190722215314.9F4F121951@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QSQEkZdd0A7Zm6r6d_7wylr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Gustavo,
-
-On Mon, 22 Jul 2019 14:58:13 -0500 "Gustavo A. R. Silva" <gustavo@embeddedo=
-r.com> wrote:
->
-> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca=
-4b:
+Quoting Christophe JAILLET (2019-07-22 14:43:32)
+> Le 22/07/2019 =C3=A0 23:24, Stephen Boyd a =C3=A9crit=C2=A0:
+> > Please Cc authors of drivers so they can ack/review.
+> >
+> > Adding Mike to take a look.
+> >
+> > Quoting Colin King (2019-07-01 09:50:20)
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> The variable n_den is initialized however that value is never read
+> >> as n_den is re-assigned a little later in the two paths of a
+> >> following if-statement.  Remove the redundant assignment.
+> >>
+> >> Addresses-Coverity: ("Unused value")
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>   drivers/clk/clk-si5341.c | 1 -
+> >>   1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
+> >> index 72424eb7e5f8..6e780c2a9e6b 100644
+> >> --- a/drivers/clk/clk-si5341.c
+> >> +++ b/drivers/clk/clk-si5341.c
+> >> @@ -547,7 +547,6 @@ static int si5341_synth_clk_set_rate(struct clk_hw=
+ *hw, unsigned long rate,
+> >>          bool is_integer;
+> >>  =20
+> >>          n_num =3D synth->data->freq_vco;
+> >> -       n_den =3D rate;
+> >>  =20
+> >>          /* see if there's an integer solution */
+> >>          r =3D do_div(n_num, rate);
+> >
+> Hi,
 >=20
->   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> I got the same advise from some else no later than yesterday (i.e. email =
+
+> the author...)
+> Maybe 'get_maintainer.pl' could be improved to search for it and propose =
+
+> the mail automatically?
 >=20
-> are available in the Git repository at:
+> just my 2c.
 >=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags=
-/Wimplicit-fallthrough-5.3-rc2
->=20
-> for you to fetch changes up to bc512fd704a92e1be700c941c137d73c0f222eed:
->=20
->   Makefile: Globally enable fall-through warning (2019-07-22 14:50:20 -05=
-00)
 
-It may be that Linus has not seen your emails due to SPF errors.  I got
-the following error from your mail:
+Use --git option of get_maintainer.pl?
 
-Authentication-Results: ozlabs.org; spf=3Dpermerror (mailfrom) smtp.mailfro=
-m=3Dembeddedor.com (client-ip=3D192.185.49.184; helo=3Dgateway23.websitewel=
-come.com; envelope-from=3Dgustavo@embeddedor.com; receiver=3D<UNKNOWN>)
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/QSQEkZdd0A7Zm6r6d_7wylr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02MAEACgkQAVBC80lX
-0GypGwgAgblW53WxY+QcyrgaP8LM2Yy7/NXVFOw4/pmacNeKQV5l64i5pVz6m4YX
-ROKqHv2oILigAnGdoqGjdUH4K+K8x04Rvr+iGrMFnnCkHHM0iMO1I6axQCVhCF1H
-obDds6vIMZFjQ7A1yMKcuCeBYQc5wzs3XKtcvR6fz6TCAweBHbD3DygUvNue9WXk
-jPAUKMzPgRwwE2qPh92Y9qyP+7fFcDcn1aZRpQMBOIYJDrAHvzEVb8nV/nLa2fzS
-tfwjkla5yeboEyYsdYJRXupUHwl3pdvuf9Pf5Dk2PNHjlmxg+u8/PYroaGzLshDI
-7uYdAcdn2x4uPzqKzDjDWPQuszgrxw==
-=e7Q+
------END PGP SIGNATURE-----
-
---Sig_/QSQEkZdd0A7Zm6r6d_7wylr--
