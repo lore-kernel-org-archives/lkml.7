@@ -2,138 +2,432 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BFCC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC355C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFAB218A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3042218B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="Da2jcKUD"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="mgvA6dvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732533AbfGVUN2 (ORCPT
+        id S1732537AbfGVUNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 16:13:28 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36949 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbfGVUN0 (ORCPT
+        Mon, 22 Jul 2019 16:13:40 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46820 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729504AbfGVUNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 16:13:26 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so76806639iog.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:13:26 -0700 (PDT)
+        Mon, 22 Jul 2019 16:13:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so17891483pfb.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7l2Wn+FJ2BG0j9D1JF5TbgHPijVR0AsIZvIp2BLcK5g=;
-        b=Da2jcKUDozDPsXerQ0RRbZ0Kiy8fI8o4wDzBSauzAKL2ZDmDxnbuy57mb8AJZBI3Rj
-         UdTbSFpfOT8v/ncvU5jBApagtN/BgoEM5N8WV5Yh2POwDGHjoYOSysWJEbDGyKGyfKkb
-         BkpcRHyIo+/mU3nI8r658R5M3v18lRbVET3vE6PBKb/9usAwEp/IzE45DhfJJrip9uG1
-         I+7rvOP/0gtgv/BYXgwc5GWRYDCtyKdZAASvnnLIgmAXtEw0zVwgGpxeKv1WVRXY73SG
-         Opniqmwjov6YdZyINl32tlYFrbgGgCI4MX25cuAxXXnAkNaj/IoFJijL8IDSZxcC9KXl
-         g65A==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MBGXoEQOWEoS+pbE8WDgU6eaM9JwlPKYmsQ8uHe+ttk=;
+        b=mgvA6dvVpsSaAJwSrYoBJ8sO2zK9oMVEl920BIbYhhvZFMXbxZ63GL01SDviu+rqrx
+         wBW2IycmqAZWic5EYWRq0K5401vu4EJh7ECzEeZpfwNUZnUQUCQQpJi708i6pY65DF5u
+         EZS1vBkRR7DbQnsULHXCpZvzdvYiHduNLzt7My/NTa4Iow8ojUpcpwQRlQVYiSFTdiUZ
+         YEcxq0BqA6GfZgnv76apux2buXziZb4c0q5rBykIekW/Y4+wkgmlVA2qu3hiGskCO7XY
+         Dgv3dj1PeNR2Xv5033GQQQA7u54BCDoZIvD62U8CKBQ7iJK3G6RtKWAVXQcLt8AXl0pk
+         PLPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7l2Wn+FJ2BG0j9D1JF5TbgHPijVR0AsIZvIp2BLcK5g=;
-        b=gstG8347lSYDFHAkMLr8bobKjlpZ0tP6+EFJggCWZs/hoONW21webCBIWPh8lsdHdc
-         qg/vl76d5OVVjGk7nwQAypZ5/G5bpmq/J1TALUtrhd4iQbPVSwT+Zcc0Kp//OMPa+gNo
-         aUuTo9gJwanQuqEvaluJPi0jp/fn1xxIa8ok2BZvHBFcM/187jVVNooySHJmgb/L5Nzi
-         djkbiwzDB5lYaDS/rf44u5KmBYmIgIyWVHcteX/iapoMbb8WG/XoFpMOEqTP53CfRryg
-         plrPvx5XDzOmZjXlIUzFZfodROHMdNIY+HEZIskWoDH9+kDwCthZ6WTJxMPy6j8tydyk
-         Gheg==
-X-Gm-Message-State: APjAAAWsXMKEXpLncVvd9VA/eieZwFmmGiGgUCYBSDYID0Fi0mPpIc5O
-        +4fVNALHwF37drUmkjU9JNcxvqp+TtU9mpEQCu1gCeq59po=
-X-Google-Smtp-Source: APXvYqyiAVhxu4nXny5pvNFjsFJ+z38F8yOUB1vGVezA4DDforKOQu16+Eoz95HvdgDnQBbS1HWonhdzq+Y9/TyPPXs=
-X-Received: by 2002:a02:6a22:: with SMTP id l34mr76706311jac.126.1563826405473;
- Mon, 22 Jul 2019 13:13:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MBGXoEQOWEoS+pbE8WDgU6eaM9JwlPKYmsQ8uHe+ttk=;
+        b=l0Av5GI7zZQL5MsnEokhtUn/omveIM9oXLcS+bUc1zIlLxyIgXBLogJyz2bpAoE8ZU
+         cp10v8DR2F0mQuEAcIh//uOAe5YCYBoaArnnkOHB1JutSbmepUof3wT+HdgZYpu7OoNu
+         B13gwuAREq2OQTZjIVB8TZDFdBk1/TkMfx9L+PLq7SM1BR5KIueWorabsXVyzEjJWShC
+         dI1Sh/TTeenoqtEdnuxe8O0qowHufm4/pda+zpz7TlR6R7as8QzF8EcCsNV6S3jTC+tg
+         tuMIe2FdQTBgopd7T5K7tmt9y9/cI7RB3tQtoTN4zu5wQht+SRP4YTLnZzdRKqz7FkgD
+         xMtw==
+X-Gm-Message-State: APjAAAWQlRTEJREHlVzPF2mgYlQyA1sGKSGEsBx44YYhYsFIj3LgVlao
+        GfrA+ygLDXgQeXhnADNYHvA=
+X-Google-Smtp-Source: APXvYqw/Um+g/iT+9qb/uPFGojm/jNklGnE7v4+XD0EyF+itpqQx1L3l0yRsC/Xzq9vpOqzw8+BjBA==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr78935506pjz.117.1563826419241;
+        Mon, 22 Jul 2019 13:13:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:c914])
+        by smtp.gmail.com with ESMTPSA id 137sm50328560pfz.112.2019.07.22.13.13.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 13:13:38 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] psi: annotate refault stalls from IO submission
+Date:   Mon, 22 Jul 2019 16:13:37 -0400
+Message-Id: <20190722201337.19180-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190415202501.941196-1-arnd@arndb.de> <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
- <CACRpkdaJ+2bub_nDp9=5b4kyKjWDnOGKscWg3KsEVixDpk8rzA@mail.gmail.com>
- <20190503170613.GA1783@roeck-us.net> <d8d81aca-722d-8b5f-cd5f-30cc3e4e407b@kernel.org>
- <CAK8P3a0StV==jMq1L9k91qEsvRD1Cw2FB1V25wr1AQqzmjsTVw@mail.gmail.com>
-In-Reply-To: <CAK8P3a0StV==jMq1L9k91qEsvRD1Cw2FB1V25wr1AQqzmjsTVw@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 22 Jul 2019 13:13:14 -0700
-Message-ID: <CAOesGMjFgR3CWcVF__=nvhHzMsdBDriPJTLX6pqq4PHMDS_OxQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Ungerer <gerg@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        arm-soc <arm@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 7:44 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Sat, May 4, 2019 at 4:27 PM Greg Ungerer <gerg@kernel.org> wrote:
-> > On 4/5/19 3:06 am, Guenter Roeck wrote:
-> > > On Fri, May 03, 2019 at 08:16:05AM +0100, Linus Walleij wrote:
-> > >> On Fri, May 3, 2019 at 8:02 AM Greg Ungerer <gerg@uclinux.org> wrote:
-> > >>> Ultimately though I am left wondering if the ks8695 support in the
-> > >>> kernel is useful to anyone the way it is at the moment. With a minimal
-> > >>> kernel configuration I can boot up to a shell - but the system is
-> > >>> really unreliable if you try to interactively use it. I don't think
-> > >>> it is the hardware - it seems to run reliably with the old code
-> > >>> it has running from flash on it. I am only testing the new kernel,
-> > >>> running with the existing user space root filesystem on it (which
-> > >>> dates from 2004 :-)
-> > >>
-> > >> Personally I think it is a bad sign that this subarch and boards do
-> > >> not have active OpenWrt support, they are routers after all (right?)
-> > >> and any active use of networking equipment should use a recent
-> > >> userspace as well, given all the security bugs that popped up over
-> > >> the years.
->
-> Looking around on the internet, I found that Micrel at some point
-> had their own openwrt fork for ks8695, but I can't find a copy
-> any more, as the micrel.com domain is no longer used after the
-> acquisition by Microchip.
->
-> https://wikidevi.com/wiki/Micrel has a list of devices based on
-> ks8695, and it seems that most of these are rather memory
-> limited, which is a problem for recent openwrt builds.
->
-> Only two of the 17 listed devices have the absolute minimum of 4MB
-> flash and 32MB RAM for openwrt, two more have 8/32 and one
-> or two have 4/64, but all these configurations are too limited for the
-> web U/I now.
->
-> > >> With IXP4xx, Gemini and EP93xx we have found active users and
-> > >> companies selling the chips and reference designs and even
-> > >> recommending it for new products (!) at times.  If this is not the
-> > >> case with KS8695 and no hobbyists are willing to submit it
-> > >> to OpenWrt and modernize it to use device tree I think it should be
-> > >> deleted from the kernel.
-> > >>
-> > >
-> > > That may be the best approach if indeed no one is using it,
-> > > much less maintaining it.
-> >
-> > Well, I for one don't really use it any more. So I don't have a lot
-> > of motivation to maintain it any longer.
->
-> I came across my patches while rebasing my backlog to 5.3-rc1.
->
-> Should I save the (very small) trouble of sending them out again
-> and just remove the platform then?
+psi tracks the time tasks wait for refaulting pages to become
+uptodate, but it does not track the time spent submitting the IO. The
+submission part can be significant if backing storage is contended or
+when cgroup throttling (io.latency) is in effect - a lot of time is
+spent in submit_bio(). In that case, we underreport memory pressure.
 
-Given the lack of response/interest from users, I'm OK with removing it.
+Annotate the submit_bio() paths (or the indirection through readpage)
+for refaults and swapin to get proper psi coverage of delays there.
 
-If someone shows up wanting support, we'll have a good opportunity to
-discuss testing/modernization involving someone actively using the
-hardware.
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ fs/btrfs/extent_io.c | 14 ++++++++++++--
+ fs/ext4/readpage.c   |  9 +++++++++
+ fs/f2fs/data.c       |  8 ++++++++
+ fs/mpage.c           |  9 +++++++++
+ mm/filemap.c         | 20 ++++++++++++++++++++
+ mm/page_io.c         | 11 ++++++++---
+ mm/readahead.c       | 24 +++++++++++++++++++++++-
+ 7 files changed, 89 insertions(+), 6 deletions(-)
 
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 1eb671c16ff1..2d2b3239965a 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -13,6 +13,7 @@
+ #include <linux/pagevec.h>
+ #include <linux/prefetch.h>
+ #include <linux/cleancache.h>
++#include <linux/psi.h>
+ #include "extent_io.h"
+ #include "extent_map.h"
+ #include "ctree.h"
+@@ -4267,6 +4268,9 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
+ 	struct extent_io_tree *tree = &BTRFS_I(mapping->host)->io_tree;
+ 	int nr = 0;
+ 	u64 prev_em_start = (u64)-1;
++	int ret = 0;
++	bool refault = false;
++	unsigned long pflags;
+ 
+ 	while (!list_empty(pages)) {
+ 		u64 contig_end = 0;
+@@ -4281,6 +4285,10 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
+ 				put_page(page);
+ 				break;
+ 			}
++			if (PageWorkingset(page) && !refault) {
++				psi_memstall_enter(&pflags);
++				refault = true;
++			}
+ 
+ 			pagepool[nr++] = page;
+ 			contig_end = page_offset(page) + PAGE_SIZE - 1;
+@@ -4301,8 +4309,10 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
+ 		free_extent_map(em_cached);
+ 
+ 	if (bio)
+-		return submit_one_bio(bio, 0, bio_flags);
+-	return 0;
++		ret = submit_one_bio(bio, 0, bio_flags);
++	if (refault)
++		psi_memstall_leave(&pflags);
++	return ret;
+ }
+ 
+ /*
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index c916017db334..f28385900b64 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -44,6 +44,7 @@
+ #include <linux/backing-dev.h>
+ #include <linux/pagevec.h>
+ #include <linux/cleancache.h>
++#include <linux/psi.h>
+ 
+ #include "ext4.h"
+ 
+@@ -116,6 +117,8 @@ int ext4_mpage_readpages(struct address_space *mapping,
+ 	int length;
+ 	unsigned relative_block = 0;
+ 	struct ext4_map_blocks map;
++	bool refault = false;
++	unsigned long pflags;
+ 
+ 	map.m_pblk = 0;
+ 	map.m_lblk = 0;
+@@ -134,6 +137,10 @@ int ext4_mpage_readpages(struct address_space *mapping,
+ 			if (add_to_page_cache_lru(page, mapping, page->index,
+ 				  readahead_gfp_mask(mapping)))
+ 				goto next_page;
++			if (PageWorkingset(page) && !refault) {
++				psi_memstall_enter(&pflags);
++				refault = true;
++			}
+ 		}
+ 
+ 		if (page_has_buffers(page))
+@@ -291,5 +298,7 @@ int ext4_mpage_readpages(struct address_space *mapping,
+ 	BUG_ON(pages && !list_empty(pages));
+ 	if (bio)
+ 		submit_bio(bio);
++	if (refault)
++		psi_memstall_leave(&pflags);
+ 	return 0;
+ }
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 2d0a1a97d3fd..fe9c34247be4 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1699,6 +1699,8 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
+ 	sector_t last_block_in_bio = 0;
+ 	struct inode *inode = mapping->host;
+ 	struct f2fs_map_blocks map;
++	bool refault = false;
++	unsigned long pflags;
+ 	int ret = 0;
+ 
+ 	map.m_pblk = 0;
+@@ -1720,6 +1722,10 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
+ 						  page_index(page),
+ 						  readahead_gfp_mask(mapping)))
+ 				goto next_page;
++			if (PageWorkingset(page) && !refault) {
++				psi_memstall_enter(&pflags);
++				refault = true;
++			}
+ 		}
+ 
+ 		ret = f2fs_read_single_page(inode, page, nr_pages, &map, &bio,
+@@ -1736,6 +1742,8 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
+ 	BUG_ON(pages && !list_empty(pages));
+ 	if (bio)
+ 		__submit_bio(F2FS_I_SB(inode), bio, DATA);
++	if (refault)
++		psi_memstall_leave(&pflags);
+ 	return pages ? 0 : ret;
+ }
+ 
+diff --git a/fs/mpage.c b/fs/mpage.c
+index 436a85260394..f4ef57f1ea06 100644
+--- a/fs/mpage.c
++++ b/fs/mpage.c
+@@ -30,6 +30,7 @@
+ #include <linux/backing-dev.h>
+ #include <linux/pagevec.h>
+ #include <linux/cleancache.h>
++#include <linux/psi.h>
+ #include "internal.h"
+ 
+ /*
+@@ -389,6 +390,8 @@ mpage_readpages(struct address_space *mapping, struct list_head *pages,
+ 		.get_block = get_block,
+ 		.is_readahead = true,
+ 	};
++	bool refault = false;
++	unsigned long pflags;
+ 	unsigned page_idx;
+ 
+ 	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
+@@ -404,10 +407,16 @@ mpage_readpages(struct address_space *mapping, struct list_head *pages,
+ 			args.bio = do_mpage_readpage(&args);
+ 		}
+ 		put_page(page);
++		if (PageWorkingset(page) && !refault) {
++			psi_memstall_enter(&pflags);
++			refault = true;
++		}
+ 	}
+ 	BUG_ON(!list_empty(pages));
+ 	if (args.bio)
+ 		mpage_bio_submit(REQ_OP_READ, REQ_RAHEAD, args.bio);
++	if (refault)
++		psi_memstall_leave(&pflags);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(mpage_readpages);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 8129eaa5f257..667fbd3f7eb2 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2009,6 +2009,8 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 		pgoff_t end_index;
+ 		loff_t isize;
+ 		unsigned long nr, ret;
++		unsigned long pflags;
++		bool refault;
+ 
+ 		cond_resched();
+ find_page:
+@@ -2157,9 +2159,17 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 		 * PG_error will be set again if readpage fails.
+ 		 */
+ 		ClearPageError(page);
++
++		refault = PageWorkingset(page);
++		if (refault)
++			psi_memstall_enter(&pflags);
++
+ 		/* Start the actual read. The read will unlock the page. */
+ 		error = mapping->a_ops->readpage(filp, page);
+ 
++		if (refault)
++			psi_memstall_leave(&pflags);
++
+ 		if (unlikely(error)) {
+ 			if (error == AOP_TRUNCATED_PAGE) {
+ 				put_page(page);
+@@ -2753,11 +2763,14 @@ static struct page *do_read_cache_page(struct address_space *mapping,
+ 				void *data,
+ 				gfp_t gfp)
+ {
++	bool refault = false;
+ 	struct page *page;
+ 	int err;
+ repeat:
+ 	page = find_get_page(mapping, index);
+ 	if (!page) {
++		unsigned long pflags;
++
+ 		page = __page_cache_alloc(gfp);
+ 		if (!page)
+ 			return ERR_PTR(-ENOMEM);
+@@ -2770,12 +2783,19 @@ static struct page *do_read_cache_page(struct address_space *mapping,
+ 			return ERR_PTR(err);
+ 		}
+ 
++		refault = PageWorkingset(page);
+ filler:
++		if (refault)
++			psi_memstall_enter(&pflags);
++
+ 		if (filler)
+ 			err = filler(data, page);
+ 		else
+ 			err = mapping->a_ops->readpage(data, page);
+ 
++		if (refault)
++			psi_memstall_leave(&pflags);
++
+ 		if (err < 0) {
+ 			put_page(page);
+ 			return ERR_PTR(err);
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 24ee600f9131..e878e9559015 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -24,6 +24,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/uio.h>
+ #include <linux/sched/task.h>
++#include <linux/psi.h>
+ #include <asm/pgtable.h>
+ 
+ static struct bio *get_swap_bio(gfp_t gfp_flags,
+@@ -354,10 +355,14 @@ int swap_readpage(struct page *page, bool synchronous)
+ 	struct swap_info_struct *sis = page_swap_info(page);
+ 	blk_qc_t qc;
+ 	struct gendisk *disk;
++	unsigned long pflags;
+ 
+ 	VM_BUG_ON_PAGE(!PageSwapCache(page) && !synchronous, page);
+ 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 	VM_BUG_ON_PAGE(PageUptodate(page), page);
++
++	psi_memstall_enter(&pflags);
++
+ 	if (frontswap_load(page) == 0) {
+ 		SetPageUptodate(page);
+ 		unlock_page(page);
+@@ -371,7 +376,7 @@ int swap_readpage(struct page *page, bool synchronous)
+ 		ret = mapping->a_ops->readpage(swap_file, page);
+ 		if (!ret)
+ 			count_vm_event(PSWPIN);
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+@@ -382,7 +387,7 @@ int swap_readpage(struct page *page, bool synchronous)
+ 		}
+ 
+ 		count_vm_event(PSWPIN);
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	ret = 0;
+@@ -416,8 +421,8 @@ int swap_readpage(struct page *page, bool synchronous)
+ 	}
+ 	__set_current_state(TASK_RUNNING);
+ 	bio_put(bio);
+-
+ out:
++	psi_memstall_leave(&pflags);
+ 	return ret;
+ }
+ 
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 2fe72cd29b47..a89522a053ce 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -22,6 +22,7 @@
+ #include <linux/mm_inline.h>
+ #include <linux/blk-cgroup.h>
+ #include <linux/fadvise.h>
++#include <linux/psi.h>
+ 
+ #include "internal.h"
+ 
+@@ -92,6 +93,9 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
+ 	int ret = 0;
+ 
+ 	while (!list_empty(pages)) {
++		unsigned long pflags;
++		bool refault;
++
+ 		page = lru_to_page(pages);
+ 		list_del(&page->lru);
+ 		if (add_to_page_cache_lru(page, mapping, page->index,
+@@ -101,7 +105,15 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
+ 		}
+ 		put_page(page);
+ 
++		refault = PageWorkingset(page);
++		if (refault)
++			psi_memstall_enter(&pflags);
++
+ 		ret = filler(data, page);
++
++		if (refault)
++			psi_memstall_leave(&pflags);
++
+ 		if (unlikely(ret)) {
+ 			read_cache_pages_invalidate_pages(mapping, pages);
+ 			break;
+@@ -132,8 +144,18 @@ static int read_pages(struct address_space *mapping, struct file *filp,
+ 	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
+ 		struct page *page = lru_to_page(pages);
+ 		list_del(&page->lru);
+-		if (!add_to_page_cache_lru(page, mapping, page->index, gfp))
++		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
++			bool refault = PageWorkingset(page);
++			unsigned long pflags;
++
++			if (refault)
++				psi_memstall_enter(&pflags);
++
+ 			mapping->a_ops->readpage(filp, page);
++
++			if (refault)
++				psi_memstall_leave(&pflags);
++		}
+ 		put_page(page);
+ 	}
+ 	ret = 0;
+-- 
+2.22.0
 
--Olof
