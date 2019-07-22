@@ -2,119 +2,107 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA396C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD01C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956B921E70
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26ABE21F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="KKStXPWx"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aPmQCUAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfGVIVK (ORCPT
+        id S1728300AbfGVIWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:21:10 -0400
-Received: from mickerik.phytec.de ([195.145.39.210]:54576 "EHLO
-        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfGVIVJ (ORCPT
+        Mon, 22 Jul 2019 04:22:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49271 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbfGVIWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:21:09 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 04:21:09 EDT
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1563782766; x=1566374766;
-        h=From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:Mime-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ss020kHm3zmso5F8zIoSk4X3Nb0AGLoB67uKPMz/dNc=;
-        b=KKStXPWx8VbcB5yj+EeD+87ofoxB4pF1i6doZ/OSVff7Il6GTApsn29mLV0EXdBr
-        lMyGHIc1ZRTqLjqT+lFQKgd4snnC7p20kr4kVsZW4HDwQHgWQK/UGYQyiuTRku/x
-        6BDpBxLPippW/zKiP5g/eU7TiLIsfHFOr/KluAVQiQw=;
-X-AuditID: c39127d2-193ff70000001aee-c9-5d356e6ec6dd
-Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 85.1E.06894.E6E653D5; Mon, 22 Jul 2019 10:06:06 +0200 (CEST)
-Received: from llp-tremmet.phytec.de ([172.16.22.38])
-          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2019072210060565-391138 ;
-          Mon, 22 Jul 2019 10:06:05 +0200 
-Message-ID: <812cb14400ee43176c2118247c8c47230b9206c2.camel@phytec.de>
-Subject: Re: [PATCH] ARM: dts: am335x-wega.dtsi: fix wrong card detect pin
- level
-From:   Teresa Remmet <t.remmet@phytec.de>
-To:     Andreas Klinger <ak@it-klinger.de>, linux-omap@vger.kernel.org
-Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 22 Jul 2019 10:06:05 +0200
-In-Reply-To: <20190709183209.y64keopah5rkismc@arbad>
-References: <20190709183209.y64keopah5rkismc@arbad>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 22.07.2019 10:06:05,
-        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 22.07.2019 10:06:05,
-        Serialize complete at 22.07.2019 10:06:05
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="UTF-8"
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDLMWRmVeSWpSXmKPExsWyRoCBSzcvzzTWYO1uXovGaVvYLe7M/8tq
-        Mf/IOVaLy7vmsFnMXtLPYrH0+kUmi9a9R9gt9l/xcuDwWDNvDaPHt6+TWDze32hl95jw7Ra7
-        x6ZVnWwenzfJBbBFcdmkpOZklqUW6dslcGX0nhcpWMBRcWT7T+YGxjNsXYwcHBICJhLvdzB3
-        MXJxCAnsYJR48fcTG4RzkVHizK4tLF2MnBy8Am4Sz3p3g9nCAkES0z41soPYbAIaEk9XnGYC
-        sUUEnCQO3pzECNLMLNDPKLFr9jOwBhYBVYmp92+xgmzjBNp2pDsZxBQSMJZ4fr8cpEJCQEfi
-        7ak+FpAwr4CgxN8dwiBTJAQamSQOfu5jhagRkji9+CwziM0sIC+x/e0cKFtTonX7b/YJjIKz
-        ENpnIamahaRqASPzKkah3Mzk7NSizGy9gozKktRkvZTUTYzAGDg8Uf3SDsa+OR6HGJk4GA8x
-        SnAwK4nw5hmYxgrxpiRWVqUW5ccXleakFh9ilOZgURLn3cBbEiYkkJ5YkpqdmlqQWgSTZeLg
-        lGpg7HmtzXalwOy74jtT/SnRlYuus1lpblDtuxIUnf387ZuzxeJ6rut7SiuCZBmknUMr55jf
-        +dGy70vpUfMfCoFf81T4LQxdi49ZFOwPt/DKsDb0kLw951IW3+HfbKqc+VuWfzuZxbxh3bRF
-        /GIdNyKWcWnVCC6Nf3Hx6vXYVsO7fat5pTSrlauVWIozEg21mIuKEwGjwjijbwIAAA==
+        Mon, 22 Jul 2019 04:22:23 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M8M7Qx3738567
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 22 Jul 2019 01:22:07 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M8M7Qx3738567
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563783727;
+        bh=nFpwrdz1VhHsf706FAhPrB/XMWMkiW2mKtHJjosrQXY=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=aPmQCUAh30tRZ++lBoVTQZ1sohn72DmxY/m1d30G6yZdY/MaVEuuIlk0tHNzcXI3D
+         T0xCGS9zO80fIKRV2DJQUD00cy1PSKZ2JuhqaRUuyWTHFyFPjDFXJI4ahbTu8x9rI+
+         yvuFIbRcOB07qpEhjtzicTP9mCx6yDlWLLS8NrZv9axUctqxb5ANcvs7932tVfAFbX
+         UDYDH50Rqv+OUrIeW05G6+EPvvtsPeoaCslrNHHEtFoxvOOI/O4wrz/KwRfcRKSU+d
+         T6Ojb0DmKR/FPMLiMz4tdTCCPmLhDA+IMccvWCRoHSr7wJZEXE9ToCZAkMXz9bK8wb
+         UxBbeSgFo3/Og==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M8M6aC3738564;
+        Mon, 22 Jul 2019 01:22:06 -0700
+Date:   Mon, 22 Jul 2019 01:22:06 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Joerg Roedel <tipbot@zytor.com>
+Message-ID: <tip-51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
+        jroedel@suse.de
+Reply-To: hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
+          jroedel@suse.de, linux-kernel@vger.kernel.org,
+          dave.hansen@linux.intel.com
+In-Reply-To: <20190719184652.11391-2-joro@8bytes.org>
+References: <20190719184652.11391-2-joro@8bytes.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/mm: Check for pfn instead of page in
+ vmalloc_sync_one()
+Git-Commit-ID: 51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andreas,
+Commit-ID:  51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0
+Gitweb:     https://git.kernel.org/tip/51b75b5b563a2637f9d8dc5bd02a31b2ff9e5ea0
+Author:     Joerg Roedel <jroedel@suse.de>
+AuthorDate: Fri, 19 Jul 2019 20:46:50 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 22 Jul 2019 10:18:30 +0200
 
-Am Dienstag, den 09.07.2019, 20:32 +0200 schrieb Andreas Klinger:
-> mmc cards on mmc1 are not detected because of wrong card detect (cd)
-> level.
-> 
-> Change cd from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW.
-> 
-> This is necessary because of commit e63201f19438 ("mmc: omap_hsmmc:
-> Delete platform data GPIO CD and WP")
+x86/mm: Check for pfn instead of page in vmalloc_sync_one()
 
-Thanks for noticing. But the fix is already in master.
+Do not require a struct page for the mapped memory location because it
+might not exist. This can happen when an ioremapped region is mapped with
+2MB pages.
 
-Teresa
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-2-joro@8bytes.org
 
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  arch/arm/boot/dts/am335x-wega.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-wega.dtsi
-> b/arch/arm/boot/dts/am335x-wega.dtsi
-> index b7d28a20341f..84581fed3d06 100644
-> --- a/arch/arm/boot/dts/am335x-wega.dtsi
-> +++ b/arch/arm/boot/dts/am335x-wega.dtsi
-> @@ -157,7 +157,7 @@
->  	bus-width = <4>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&mmc1_pins>;
-> -	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
->  	status = "okay";
->  };
->  
-> -- 
-> 2.11.0
-> 
-> 
+---
+ arch/x86/mm/fault.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 6c46095cd0d9..e64173db4970 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -183,7 +183,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+ 	if (!pmd_present(*pmd))
+ 		set_pmd(pmd, *pmd_k);
+ 	else
+-		BUG_ON(pmd_page(*pmd) != pmd_page(*pmd_k));
++		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
+ 
+ 	return pmd_k;
+ }
