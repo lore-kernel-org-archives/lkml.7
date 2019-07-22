@@ -7,117 +7,156 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9534DC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B2EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9F421901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7449121901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563820173;
-	bh=+hifrCpXNdFDmg+2TTik5WppGirIpU+5Uvg26SzjKVE=;
+	s=default; t=1563820189;
+	bh=AannP34ISTyfCZ+bmQenOeogA+nA+MdR+5/JoZnEqyc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bh19zudVrZXhlk12OOxwBsQ9wyCRDuba7NSdk13LzS9837Ot6D8ZpuDSzygF3ya1s
-	 yBvovLzEWyCqUCs/TXSz7iv3ncjJQpmLrZXgYhVb+MJ+NyM2nPHYN0GmwJiVC/1DYM
-	 kvd3zsyDr+Ofu56qKd30iXenmDsdnZpTn+areT2A=
+	b=enFY2b2JbxgxR6AbrzyApYWm+6WKOIVACVdBgbTm0A4K02iXmaXI4ncv9uAeybR2Z
+	 aCBl7dVjx4pFAg+enACuUcCTkozkNrOecuF4xkdx0dCNEG10sn8DHWhJboVI9jVF5r
+	 wgCwgT3pbuj7RAxwjiYnX8Sel74P+42VUhEJzSl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfGVS3c (ORCPT
+        id S1729022AbfGVS3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbfGVS3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:29:31 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B079C21901;
-        Mon, 22 Jul 2019 18:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563820170;
-        bh=+hifrCpXNdFDmg+2TTik5WppGirIpU+5Uvg26SzjKVE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vhTa47Ce9ebRm+v7XyDzUzwiDS0FQgPMYhqKwa9e9Z4mpUb10rR+yojuJNMWvy1TQ
-         MsFuzBhgW67dm/N4kDZz4s+8RJPUtNax345vprI4ifpLfuDqsnmMzen4WCxkPSDygW
-         XbQ2jEfqPZ1eCmlLmVf182HY8+oQceSB7grwkJgo=
-Date:   Mon, 22 Jul 2019 13:29:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, bjorn@helgaas.com,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/3] ACPI: Remove acpi_has_method() call from acpi_adxl.c
-Message-ID: <20190722182929.GA203187@google.com>
-References: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
- <20190722023530.67676-2-skunberg.kelsey@gmail.com>
- <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
+        Mon, 22 Jul 2019 14:29:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46928 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGVS3s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 14:29:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so76047317iol.13;
+        Mon, 22 Jul 2019 11:29:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=45VBkdwbSdeHAF4CxCfsEpgQ0Hv/6sDXiE8u86RMzcI=;
+        b=IZIt2+RVNjyF2ssqvoKGkE6xxKzL5ipnDwP7ThDkQP07rUwEG5iUpyzH9iu8u6GTFU
+         uwyKZqDScUe68uRYqDrSrO91HrXRT1/W08BNhFnmGvT+n8U0AgC1AegeAp7POcp2K0j1
+         fOy5K37tatq3VxEu3ZxMtbG1lHC0YwfXEsvO/CS8tIsggk5cnWGfBV7QGodrRwh1recH
+         pjtJIffPGCvfi7U8d1xFDkmbA1o/7IaI6UFyOb5+bdYsvcqRcOmFwlueF9zZyd1Nzoke
+         /3swTKv+SeurkpGUXaPfV9jkOOrGAcRBelCSpua0ZPB6g/ahwHJOpgthhqnxtixEzSjw
+         qp4A==
+X-Gm-Message-State: APjAAAUBp6cV5ssiobizmzI64Q7GPxVcsx7NVuqQscrTMSuvKz2+MLIu
+        FTQXvoD8JExn9xgldXtAlg==
+X-Google-Smtp-Source: APXvYqy0/9HHdGzLDl2P0Oto77pOLJAS7xoNpItq0R4cBSAOfioLfzVoEKB8XKnU2bhgimfk2b6elw==
+X-Received: by 2002:a02:c6b8:: with SMTP id o24mr2514691jan.80.1563820186890;
+        Mon, 22 Jul 2019 11:29:46 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id d25sm33325592iom.52.2019.07.22.11.29.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 11:29:46 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 12:29:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, t-kristo@ti.com,
+        linux-crypto@vger.kernel.org, nm@ti.com
+Subject: Re: [RESEND PATCH 01/10] dt-bindings: crypto: k3: Add sa2ul bindings
+ documentation
+Message-ID: <20190722182945.GA24685@bogus>
+References: <20190628042745.28455-1-j-keerthy@ti.com>
+ <20190628042745.28455-2-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190628042745.28455-2-j-keerthy@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Tony (original author), Borislav (merged original patch)]
-
-On Mon, Jul 22, 2019 at 10:31:11AM +0200, Rafael J. Wysocki wrote:
-> On Mon, Jul 22, 2019 at 4:36 AM Kelsey Skunberg
-> <skunberg.kelsey@gmail.com> wrote:
-> >
-> > acpi_check_dsm() will already return an error if the DSM method does not
-> > exist. Checking if the DSM method exists before the acpi_check_dsm() call
-> > is not needed. Remove acpi_has_method() call to avoid additional work.
-> >
-> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > ---
-> >  drivers/acpi/acpi_adxl.c | 5 -----
-> >  1 file changed, 5 deletions(-)
-> >
-> > diff --git a/drivers/acpi/acpi_adxl.c b/drivers/acpi/acpi_adxl.c
-> > index 13c8f7b50c46..89aac15663fd 100644
-> > --- a/drivers/acpi/acpi_adxl.c
-> > +++ b/drivers/acpi/acpi_adxl.c
-> > @@ -148,11 +148,6 @@ static int __init adxl_init(void)
-> >                 return -ENODEV;
-> >         }
-> >
-> > -       if (!acpi_has_method(handle, "_DSM")) {
-> > -               pr_info("No DSM method\n");
+On Fri, Jun 28, 2019 at 09:57:36AM +0530, Keerthy wrote:
+> The series adds Crypto hardware accelerator support for SA2UL.
+> SA2UL stands for security accelerator ultra lite.
 > 
-> And why is printing the message not useful?
+> The Security Accelerator (SA2_UL) subsystem provides hardware
+> cryptographic acceleration for the following use cases:
+> • Encryption and authentication for secure boot
+> • Encryption and authentication of content in applications
+>   requiring DRM (digital rights management) and
+>   content/asset protection
+> The device includes one instantiation of SA2_UL named SA2_UL0
 > 
-> > -               return -ENODEV;
-> > -       }
-> > -
-> >         if (!acpi_check_dsm(handle, &adxl_guid, ADXL_REVISION,
-> >                             ADXL_IDX_GET_ADDR_PARAMS |
-> >                             ADXL_IDX_FORWARD_TRANSLATE)) {
+> SA2UL needs on tx channel and a pair of rx dma channels.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  .../devicetree/bindings/crypto/sa2ul.txt      | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/sa2ul.txt b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+> new file mode 100644
+> index 000000000000..81cc039673b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+> @@ -0,0 +1,47 @@
+> +K3 SoC SA2UL crypto module
+> +
+> +Required properties:
+> +
+> +- compatible : Should be:
+> +  - "ti,sa2ul-crypto"
 
-The next line of context (not included in the patch):
+Needs to be SoC specific.
 
-               pr_info("DSM method does not support forward translate\n");
+> +- reg : Offset and length of the register set for the module
+> +
+> +- dmas: DMA specifiers for tx and rx dma. sa2ul needs one tx channel
+> +	and 2 rx channels. First rx channel for < 256 bytes and
+> +	the other one for >=256 bytes. See the DMA client binding,
+> +        Documentation/devicetree/bindings/dma/dma.txt
+> +- dma-names: DMA request names has to have one tx and 2 rx names
+> +	corresponding to dmas abive.
+> +- ti,psil-config* - UDMA PSIL native Peripheral using packet mode.
+> +	SA2UL must have EPIB(Extended protocal information block)
+> +	and PSDATA(protocol specific data) properties.
 
-IMHO kernel messages that are just a constant string, with no context
-or variable part (device ID, path, error code, etc) are questionable
-in general.  Is there any dev_printk()-like thing that takes an
-acpi_handle?  Seems like that would be useful for cases like this.
+If ti,needs-epib is required, then why do you need to specify it in DT? 
+In any case, this all seems like channel config info that should be part 
+of the #dma-cells.
 
-This message *does* include an "ADXL: " prefix (from the pr_fmt
-definition), and from reading the code you can see that the only
-possible method is "\_SB.ADXL._DSM".
+Also, don't use vendor prefixes on node names.
 
-There's nothing an end user can do with these messages, so I suspect
-their value is for debugging during platform bringup, and it would be
-sufficient to drop the first one (as Kelsey's patch does) and change
-the second one like this:
-
--              pr_info("DSM method does not support forward translate\n");
-+              pr_info("%s DSM missing or does not support forward translate\n",
-+                      path);
+> +
+> +Example AM654 SA2UL:
+> +crypto: crypto@4E00000 {
+> +	compatible = "ti,sa2ul-crypto";
+> +	reg = <0x0 0x4E00000 0x0 0x1200>;
+> +	ti,psil-base = <0x4000>;
+> +
+> +	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
+> +		<&main_udmap &crypto 0 UDMA_DIR_RX>,
+> +		<&main_udmap &crypto 1 UDMA_DIR_RX>;
+> +	dma-names = "tx", "rx1", "rx2";
+> +
+> +	ti,psil-config0 {
+> +		linux,udma-mode = <UDMA_PKT_MODE>;
+> +		ti,needs-epib;
+> +		ti,psd-size = <64>;
+> +	};
+> +
+> +	ti,psil-config1 {
+> +		linux,udma-mode = <UDMA_PKT_MODE>;
+> +		ti,needs-epib;
+> +		ti,psd-size = <64>;
+> +	};
+> +
+> +	ti,psil-config2 {
+> +		linux,udma-mode = <UDMA_PKT_MODE>;
+> +		ti,needs-epib;
+> +		ti,psd-size = <64>;
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
