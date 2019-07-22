@@ -2,115 +2,99 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCB0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A307C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2735216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4152D218B0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HisDqRQ8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GOl+n50o";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ERr2t9Tz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbfGVTp4 (ORCPT
+        id S1732321AbfGVTq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:45:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38813 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729117AbfGVTp4 (ORCPT
+        Mon, 22 Jul 2019 15:46:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39782 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbfGVTq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:45:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so40656594wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:45:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mfiBWJ6PUSyYeyNIn03p58I6uVjr4C4bhbLtUD/MF24=;
-        b=HisDqRQ8k1WjU/x3HIxhOIEQ/GgP8RpDhBgwIc4s8Oe6o93ovR6m9/9CLIV+1e0QdW
-         siJ13CO2R7iog19lIb0a1mRoaN/UAPIO477hxU4ldqAs5Ps8VZB1B15vfBVkuh4kchiI
-         C2gfGJOLhK92tpsMa3qQT5cFTScaFZmSe5xTQCC7XXjwuGLQ8joydRhcGcm/rvl6GcjK
-         5XLDlsW2uwaX5A2MO1y5Mn+1NqD4cNqW+lWP4weAR3yGAPCb1bxqdKoL+mHUwjP33rad
-         XlEfN0KhVzezqCnwNTpyLTprCSWx6zZu0et0/K2oMSzEZTQOiSXkEWzw5Oc/KUGBxJ4B
-         6vYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mfiBWJ6PUSyYeyNIn03p58I6uVjr4C4bhbLtUD/MF24=;
-        b=ls0yL03rcp3a+LRZSVqtUJ94SYiInb7w0SOEmI87rGqD5Tly2hZsntF+HQgI4tOr8i
-         CGsg05OQhOHR4t+iMzBLU8hkSOdpTNnNqGTy2j+7+BUeShBu3fUgRWtq/OMk/fmlOv4k
-         fJdZsnLT0TcVJoAff4XDHvWJ+46bmNztmY+nnAElDuDuvHxNvdHaE+1XlLNXsu7x/bSv
-         gxEzpkHAxP6rTH8vLWGL+ZbmoyRudHFWw7eANV0gq9faFLsRosIkNtK5R5Yfn9auoLrc
-         LgO4238v6EFedf92NYYQz/F8lrrkSkej4Qtk6ShPsXi9B23qj7ihHGv691ajQuut9UHs
-         Ng6g==
-X-Gm-Message-State: APjAAAWi8RprdrbMiOrgoODW7I+NrutoFbbFvLJt2fFS1A6rOi/B51nk
-        OlthG9ABlrl2MiravdLPns0scxtX0r9Fo0IGxdE=
-X-Google-Smtp-Source: APXvYqwp8BppJPcCRhriZEJumGwE1sekMMaeeLUrBRhupTfg+HZOHh6ga8vSkcu3/oGVZmLUWryumMuE+gfVQhm+pCc=
-X-Received: by 2002:adf:f94a:: with SMTP id q10mr53387147wrr.341.1563824754148;
- Mon, 22 Jul 2019 12:45:54 -0700 (PDT)
+        Mon, 22 Jul 2019 15:46:27 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F15B960F3E; Mon, 22 Jul 2019 19:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563824786;
+        bh=7eD+eVqFrtz3xwFVMMyatV/ixJ3r8Kbtxeq9wzu5IKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GOl+n50oNJeKGpt1Z0Psg6IsQpupO2+uH9JxXDplcwwpU+dSKAJAmcg+8J3jGxpq5
+         qf1rHJQ3vBKSAIu45h5jk6LpUa070gZ6UF7xRH/U5v8uOjyfiZztRuGZmf5BH5NS3Z
+         DhVuipozaH1XgVVBX02F7knbBYhbfRQuML0OyNOs=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1808460E72;
+        Mon, 22 Jul 2019 19:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563824785;
+        bh=7eD+eVqFrtz3xwFVMMyatV/ixJ3r8Kbtxeq9wzu5IKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ERr2t9TzgA7dmFYQp6vEONA9i9/l5p8TslDfJQXB+JVAmLHefAc6cSxX7TYP2fcJD
+         +URQ4J+SrDUSabnJqEPXVI0x90iUETo84prVGXQIJYcVbXNO/6qe1IUaxJGpEMYxV8
+         uxKnXuhGMVwRqMziIXCugnf7xhWEK0byf4+wjnTs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1808460E72
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Mon, 22 Jul 2019 13:46:24 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Subject: Re: [PATCH 1/2] drivers: qcom: rpmh-rsc: simplify TCS locking
+Message-ID: <20190722194624.GA11589@codeaurora.org>
+References: <20190701152907.16407-1-ilina@codeaurora.org>
+ <5d3209e7.1c69fb81.5ef1.5195@mx.google.com>
+ <20190722162003.GG25567@codeaurora.org>
+ <5d35fdfb.1c69fb81.5fafa.aaa9@mx.google.com>
 MIME-Version: 1.0
-References: <20190721214935.GA910@embeddedor> <CADnq5_OTmx==m+1fJbf1PxPhPM0H0O8GRjq4eWeX6sw889YPrA@mail.gmail.com>
- <181c1bc9-4cf9-057f-a6e6-e6d62ddbc347@embeddedor.com>
-In-Reply-To: <181c1bc9-4cf9-057f-a6e6-e6d62ddbc347@embeddedor.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 22 Jul 2019 15:45:42 -0400
-Message-ID: <CADnq5_NRDy1jpa2MGefo7KbUB2vejuLwpnJh=vsqyp56yY31Sg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdkfd: Fix missing break in switch statement
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Philip Cox <Philip.Cox@amd.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kees Cook <keescook@chromium.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <5d35fdfb.1c69fb81.5fafa.aaa9@mx.google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 3:19 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
+On Mon, Jul 22 2019 at 12:18 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2019-07-22 09:20:03)
+>> On Fri, Jul 19 2019 at 12:20 -0600, Stephen Boyd wrote:
+>> >Quoting Lina Iyer (2019-07-01 08:29:06)
+>> >> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+>> >>
+>> >> tcs->lock was introduced to serialize access with in TCS group. But
+>> >> even without tcs->lock, drv->lock is serving the same purpose. So
+>> >> use a single drv->lock.
+>> >
+>> >Isn't the downside now that we're going to be serializing access to the
+>> >different TCSes when two are being written in parallel or waited on? I
+>> >thought that was the whole point of splitting the lock into a TCS lock
+>> >and a general "driver" lock that protects the global driver state vs.
+>> >the specific TCS state.
+>> >
+>> Yes but we were holding the drv->lock as well as tcs->lock for the most
+>> critical of the path anyways (writing to TCS). The added complexity
+>> doesn't seem to help reduce the latency that it expected to reduce.
 >
+>Ok. That sort of information should be in the commit text to explain why
+>it's not helping with reducing the latency or throughput of the API.
 >
->
-> On 7/22/19 2:10 PM, Alex Deucher wrote:
-> > On Sun, Jul 21, 2019 at 6:12 PM Gustavo A. R. Silva
-> > <gustavo@embeddedor.com> wrote:
-> >>
-> >> Add missing break statement in order to prevent the code from falling
-> >> through to case CHIP_NAVI10.
-> >>
-> >> This bug was found thanks to the ongoing efforts to enable
-> >> -Wimplicit-fallthrough.
-> >>
-> >> Fixes: 14328aa58ce5 ("drm/amdkfd: Add navi10 support to amdkfd. (v3)")
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> >
-> > Applied.  Thanks!
-> >
->
-> By the way, Alex, I'm planning to add these fixes to my tree. I want
-> to send a pull-request to Linus for v5.3-rc2 this afternoon. We want
-> to have the -Wimplicit-fallthrough option globally enabled in v5.3,
-> and these are some of the last fall-through warnings remaining in
-> the kernel.
->
-> Can I have your Ack or Signed-off-by for all these drm patches?
+Will add.
 
-I didn't realize you were sending these yourself. I was going to
-include them in my upcoming -fixes pull.  Feel free to add my RB to
-all three.
-
-Alex
+--Lina
