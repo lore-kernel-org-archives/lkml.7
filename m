@@ -2,79 +2,148 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E252C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715C2C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F90721911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542FD21911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbfGVLfG (ORCPT
+        id S1729913AbfGVLfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:35:06 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38285 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728824AbfGVLfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:35:05 -0400
-Received: by mail-qk1-f194.google.com with SMTP id a27so28299579qkk.5;
-        Mon, 22 Jul 2019 04:35:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L01qCkz8R2xosfyuEZvp1ctsvHkk0ZS7YXCL1fbHTTg=;
-        b=V1xDSGptsNrwk6a8CB9xAxQJOKSDbpUeYEDDId/RmKPnCpn7dzP2n5AYEed6GxEHvE
-         V9+J3BclTiHr/ztPgCUQxrCfb9gm+qCFMQ6mGlaUesqePuEu49l/SPGK+GkZP0abE3CE
-         BgmePsM1YMRIluOue31ZeUkYPPucZrQJcOVbozhLod9WeOY+Zm1zy9hk6fUz/I1y2pgu
-         nS0SGgHNwNHuaUKCd9bopZatU2Dxjr/A1JGxggaHyxoG4oQ9V4PGwScSCzPu/iYQkhP6
-         3Z+OR0JdUthnErx8/Oa/YvarAwegdP5VrIsA1dZWJrhBTzWjvOAQLMJgwzQYqhL06Dwu
-         XBAw==
-X-Gm-Message-State: APjAAAW/FSLcFxK1tRNoWxUwVm0gX7PqIGSF44rpYMw+5JO8DLT9sscF
-        613t+h7XWRLwTkuChxRcQ6DcspXav9bai5DyjDNSmF5N
-X-Google-Smtp-Source: APXvYqwRV3AHra+9bgdoKzmcZiOOOQxgoLcbky0BTTL3fo7ZF95gQIxNo++LmeKMMuuvz8KOxwtMm3o9h+tRgxz0bGg=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr44586497qka.138.1563795304533;
- Mon, 22 Jul 2019 04:35:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <87ftmys3un.fsf@oldenburg2.str.redhat.com>
-In-Reply-To: <87ftmys3un.fsf@oldenburg2.str.redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 22 Jul 2019 13:34:48 +0200
-Message-ID: <CAK8P3a0hC4wvjwCi4=DCET3C4qARMY6c58ffjwG3b1ZPM6kr-A@mail.gmail.com>
-Subject: Re: [PATCH glibc] Linux: Include <linux/sockios.h> in <bits/socket.h>
- under __USE_MISC
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     GNU C Library <libc-alpha@sourceware.org>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 22 Jul 2019 07:35:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:3457 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728034AbfGVLfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 07:35:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 04:35:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,294,1559545200"; 
+   d="scan'208";a="159853965"
+Received: from ngote-system-product-name.iind.intel.com ([10.106.124.92])
+  by orsmga007.jf.intel.com with ESMTP; 22 Jul 2019 04:35:33 -0700
+From:   NitinGote <nitin.r.gote@intel.com>
+To:     keescook@chromium.org
+Cc:     kernel-hardening@lists.openwall.com, paul@paul-moore.com,
+        sds@tycho.nsa.gov, eparis@parisplace.org, omosnace@redhat.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        NitinGote <nitin.r.gote@intel.com>
+Subject: [PATCH] selinux: convert struct sidtab count to refcount_t
+Date:   Mon, 22 Jul 2019 17:01:51 +0530
+Message-Id: <20190722113151.1584-1-nitin.r.gote@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 1:31 PM Florian Weimer <fweimer@redhat.com> wrote:
->
-> Historically, <asm/socket.h> (which is included from <bits/socket.h>)
-> provided ioctl operations for sockets.  User code accessed them
-> through <sys/socket.h>.  The kernel UAPI headers have removed these
-> definitions in favor of <linux/sockios.h>.  This commit makes them
-> available via <sys/socket.h> again.
+refcount_t type and corresponding API should be
+used instead of atomic_t when the variable is used as
+a reference counter. This allows to avoid accidental
+refcounter overflows that might lead to use-after-free
+situations.
 
-Looks good to me.
+Signed-off-by: NitinGote <nitin.r.gote@intel.com>
+---
+ security/selinux/ss/sidtab.c | 16 ++++++++--------
+ security/selinux/ss/sidtab.h |  2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-I wonder if we should still do these two changes in the kernel:
+diff --git a/security/selinux/ss/sidtab.c b/security/selinux/ss/sidtab.c
+index e63a90ff2728..20fe235c6c71 100644
+--- a/security/selinux/ss/sidtab.c
++++ b/security/selinux/ss/sidtab.c
+@@ -29,7 +29,7 @@ int sidtab_init(struct sidtab *s)
+ 	for (i = 0; i < SECINITSID_NUM; i++)
+ 		s->isids[i].set = 0;
 
-- include asm/socket.h from linux/socket.h for consistency
-- move the defines that got moved from asm/sockios.h to linux/sockios.h
-  back to the previous location to help anyone who is user
-  newer kernel headers with older glibc headers.
+-	atomic_set(&s->count, 0);
++	refcount_set(&s->count, 0);
 
-      Arnd
+ 	s->convert = NULL;
+
+@@ -130,7 +130,7 @@ static struct context *sidtab_do_lookup(struct sidtab *s, u32 index, int alloc)
+
+ static struct context *sidtab_lookup(struct sidtab *s, u32 index)
+ {
+-	u32 count = (u32)atomic_read(&s->count);
++	u32 count = refcount_read(&s->count);
+
+ 	if (index >= count)
+ 		return NULL;
+@@ -245,7 +245,7 @@ static int sidtab_reverse_lookup(struct sidtab *s, struct context *context,
+ 				 u32 *index)
+ {
+ 	unsigned long flags;
+-	u32 count = (u32)atomic_read(&s->count);
++	u32 count = (u32)refcount_read(&s->count);
+ 	u32 count_locked, level, pos;
+ 	struct sidtab_convert_params *convert;
+ 	struct context *dst, *dst_convert;
+@@ -272,7 +272,7 @@ static int sidtab_reverse_lookup(struct sidtab *s, struct context *context,
+ 	spin_lock_irqsave(&s->lock, flags);
+
+ 	convert = s->convert;
+-	count_locked = (u32)atomic_read(&s->count);
++	count_locked = (u32)refcount_read(&s->count);
+ 	level = sidtab_level_from_count(count_locked);
+
+ 	/* if count has changed before we acquired the lock, then catch up */
+@@ -315,7 +315,7 @@ static int sidtab_reverse_lookup(struct sidtab *s, struct context *context,
+ 		}
+
+ 		/* at this point we know the insert won't fail */
+-		atomic_set(&convert->target->count, count + 1);
++		refcount_set(&convert->target->count, count + 1);
+ 	}
+
+ 	if (context->len)
+@@ -328,7 +328,7 @@ static int sidtab_reverse_lookup(struct sidtab *s, struct context *context,
+ 	/* write entries before writing new count */
+ 	smp_wmb();
+
+-	atomic_set(&s->count, count + 1);
++	refcount_set(&s->count, count + 1);
+
+ 	rc = 0;
+ out_unlock:
+@@ -418,7 +418,7 @@ int sidtab_convert(struct sidtab *s, struct sidtab_convert_params *params)
+ 		return -EBUSY;
+ 	}
+
+-	count = (u32)atomic_read(&s->count);
++	count = (u32)refcount_read(&s->count);
+ 	level = sidtab_level_from_count(count);
+
+ 	/* allocate last leaf in the new sidtab (to avoid race with
+@@ -431,7 +431,7 @@ int sidtab_convert(struct sidtab *s, struct sidtab_convert_params *params)
+ 	}
+
+ 	/* set count in case no new entries are added during conversion */
+-	atomic_set(&params->target->count, count);
++	refcount_set(&params->target->count, count);
+
+ 	/* enable live convert of new entries */
+ 	s->convert = params;
+diff --git a/security/selinux/ss/sidtab.h b/security/selinux/ss/sidtab.h
+index bbd5c0d1f3bd..68dd96a5beba 100644
+--- a/security/selinux/ss/sidtab.h
++++ b/security/selinux/ss/sidtab.h
+@@ -70,7 +70,7 @@ struct sidtab_convert_params {
+
+ struct sidtab {
+ 	union sidtab_entry_inner roots[SIDTAB_MAX_LEVEL + 1];
+-	atomic_t count;
++	refcount_t count;
+ 	struct sidtab_convert_params *convert;
+ 	spinlock_t lock;
+
+--
+2.17.1
+
