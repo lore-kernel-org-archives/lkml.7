@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A085CC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2251C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEAC21926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C821421926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqsZZUdg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUC3JA5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfGVCgH (ORCPT
+        id S1728682AbfGVCgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:36:07 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38597 "EHLO
+        Sun, 21 Jul 2019 22:36:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34466 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbfGVCgG (ORCPT
+        with ESMTP id S1726233AbfGVCgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:36:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so38333870ioa.5;
-        Sun, 21 Jul 2019 19:36:05 -0700 (PDT)
+        Sun, 21 Jul 2019 22:36:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so70679985iot.1;
+        Sun, 21 Jul 2019 19:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MI5pP/95cljpGBtp/V+zUfk7+WS9iXpcoTov/fza3VQ=;
-        b=WqsZZUdgKSWyoWKGonBa2yNXkffaLLoPf8vielAdO/brV5Dxzos32yFbS22tNXe3EQ
-         o4qZLTLhYVkI/P/um8VToODECzHjfCQvVy63E/mlYqhXgLsO3AQw+NIP5xBETlFEsAE7
-         eskK4ne3pyMZdKCk3sEw2XRCi04JprsbCeNbaG8REVCqzfmpX4DuY5TjDkocVGX+QWZl
-         BqbSABPJ12QsZteMch3GW1XctVWANQwUqEsG+ZWoH+0IhGFgOfBcpqv0CbPDYuWxWchw
-         gtrxeVHE5WSc9aoZ/wZZrvNT3SIVaqSpOiGHw+ZlafdsFSA+Yhu9fuwvYArRvCKCa1WH
-         zgYA==
+        bh=AmpW1NFzohqIzwtUAGpOMfm6T7OXwekwb4pFafqF9Dc=;
+        b=MUC3JA5Xn+yntubO6se2+79QvncgFSj+T2OJH9lublNhM2xcqH47/HgWNnK0hU8KVO
+         cfdilWLHQa1IjPcodBoN4GNSo2oAuAgAsjrMN1G7E8sCKA1OnvKJAh0Ha78i0Xeq1bS6
+         AWzNXmimdYJMjuPWb7TaxkOnIDJmSEoZ36LZFjyVPkBFWUsKShRBxmg03d1pl/k4Cgmu
+         bc5hs6YjiXFbVLThIIrMas5ItGr+qjhO1Z2NycCJmV2+vhNLHbSlzubD9/nrI4pgE8GC
+         /tEBFH2Wu0W2F/vgsBkdqN0crqKbWkxTwwxeo73SZAkG0a9LbJaNPMjNtXd9ca58djqL
+         c2Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MI5pP/95cljpGBtp/V+zUfk7+WS9iXpcoTov/fza3VQ=;
-        b=cb3FE2GApnlK1h5t8Bq+wEsUmrkeDVfuVU7GS6WXEjqZnXMPZNd02J+RgGM6IFiKcB
-         9q6ec1VLU0Ljh02gP2UqQQMMK/cf0AGM9LvPiSEinNdkMA/RAhA/QW0PRFeiAnomzCEP
-         MgGvSAqMK0I+5/qA/JsseYL8GiRk9LGDn9lWC10HKx1DgoydBA/+aBH7KYKTy/kHH0KI
-         RUNU7QFVh6N6iyryxV7637vUVD83b2cvc5ofAKyTITXUJPwoCvSUPOAmfpkJ1mY6eu6G
-         AqThFT+ybVnhj9CaYIXd+9R5K8Vive9py+q9hjIJl5CZtiAmW2CowXABd2Qr2edjOFw9
-         ew8g==
-X-Gm-Message-State: APjAAAUV23p8FrPPH3ynsMQwhjfdyHRGqIJ8jA8c+Rk7HbOTKhdpxpEr
-        SfonKw/Nr/45TU4UfczkkpQ=
-X-Google-Smtp-Source: APXvYqyTOouutc91U2WNFG9MMczhWty7SVKMwuK87LZPlNkjDtGbeieUTQjIitnhIdCehXWun/S6rg==
-X-Received: by 2002:a6b:7401:: with SMTP id s1mr59037561iog.67.1563762965239;
-        Sun, 21 Jul 2019 19:36:05 -0700 (PDT)
+        bh=AmpW1NFzohqIzwtUAGpOMfm6T7OXwekwb4pFafqF9Dc=;
+        b=TqGgssxnh4H+u4H24YRtTX3qVxIM9GbXOfIc+DJ1u1yzAbULTQ6hpvwshPQ2bgxZFw
+         1LBIWdxJTzaMTUcRHDAvKDE4YIQQQhjbjZBUkeS6ibO3fYHSueVmBjWkIN6TcqIOHofB
+         NqVxYr9TghGFBH9lubnOuyT4TY0PgI5nHgMQaz4Xys3M16Rn23B/Z0tfXq7Fg10mDmYL
+         l7UkJ3cloAvrIIgEzaiPB0WWmzEIRsIXm41THxR9FLmTkhny2bp55cGwDxL+s72c7NU+
+         JqiCC9fM8zKd0zRCI11yTd9F7yP6pCx+p6Bh6eL/h2o6pDN2E9ydg4b6S9jJrvSSv9lW
+         /xog==
+X-Gm-Message-State: APjAAAWJHPh6u23BxIuZ3Ti8nfh3Hv1vqOurEGt1E13tsnzGqXpQKgpm
+        1DDru95mtjFgeimIjjyfLWI=
+X-Google-Smtp-Source: APXvYqwnw3FMQ08BVeB4mj8eeIiN/GmPetIS9K9cN7C9AvU/2eCuzbTYxkCEvWxQEkZRROch/r3Wcw==
+X-Received: by 2002:a6b:f906:: with SMTP id j6mr62115959iog.26.1563762962179;
+        Sun, 21 Jul 2019 19:36:02 -0700 (PDT)
 Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id e188sm32816577ioa.3.2019.07.21.19.36.04
+        by smtp.gmail.com with ESMTPSA id e188sm32816577ioa.3.2019.07.21.19.36.00
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 19:36:04 -0700 (PDT)
+        Sun, 21 Jul 2019 19:36:01 -0700 (PDT)
 From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
 To:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org, bjorn@helgaas.com,
         skunberg.kelsey@gmail.com
-Subject: [PATCH 3/3] ACPI: Remove acpi_has_method() calls from thermal.c
-Date:   Sun, 21 Jul 2019 20:35:30 -0600
-Message-Id: <20190722023530.67676-4-skunberg.kelsey@gmail.com>
+Subject: [PATCH 1/3] ACPI: Remove acpi_has_method() call from acpi_adxl.c
+Date:   Sun, 21 Jul 2019 20:35:28 -0600
+Message-Id: <20190722023530.67676-2-skunberg.kelsey@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
 References: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
@@ -76,46 +76,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following acpi_has_method() calls are unnecessary since
-acpi_execute_simple_method() and acpi_evaluate_reference() will return an
-error if the given method does not exist. Remove acpi_has_method() calls
-to avoid additional work.
+acpi_check_dsm() will already return an error if the DSM method does not
+exist. Checking if the DSM method exists before the acpi_check_dsm() call
+is not needed. Remove acpi_has_method() call to avoid additional work.
 
 Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- drivers/acpi/thermal.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/acpi/acpi_adxl.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-index 00f12a86ecbd..d831a61e0010 100644
---- a/drivers/acpi/thermal.c
-+++ b/drivers/acpi/thermal.c
-@@ -225,13 +225,9 @@ static int acpi_thermal_set_cooling_mode(struct acpi_thermal *tz, int mode)
- 	if (!tz)
- 		return -EINVAL;
- 
--	if (!acpi_has_method(tz->device->handle, "_SCP")) {
--		ACPI_DEBUG_PRINT((ACPI_DB_INFO, "_SCP not present\n"));
-+	if (ACPI_FAILURE(acpi_execute_simple_method(tz->device->handle,
-+						    "_SCP", mode)))
+diff --git a/drivers/acpi/acpi_adxl.c b/drivers/acpi/acpi_adxl.c
+index 13c8f7b50c46..89aac15663fd 100644
+--- a/drivers/acpi/acpi_adxl.c
++++ b/drivers/acpi/acpi_adxl.c
+@@ -148,11 +148,6 @@ static int __init adxl_init(void)
  		return -ENODEV;
--	} else if (ACPI_FAILURE(acpi_execute_simple_method(tz->device->handle,
--							   "_SCP", mode))) {
--		return -ENODEV;
--	}
- 
- 	return 0;
- }
-@@ -463,8 +459,7 @@ static int acpi_thermal_trips_update(struct acpi_thermal *tz, int flag)
- 			break;
  	}
  
--	if ((flag & ACPI_TRIPS_DEVICES)
--	    && acpi_has_method(tz->device->handle, "_TZD")) {
-+	if (flag & ACPI_TRIPS_DEVICES) {
- 		memset(&devices, 0, sizeof(devices));
- 		status = acpi_evaluate_reference(tz->device->handle, "_TZD",
- 						NULL, &devices);
+-	if (!acpi_has_method(handle, "_DSM")) {
+-		pr_info("No DSM method\n");
+-		return -ENODEV;
+-	}
+-
+ 	if (!acpi_check_dsm(handle, &adxl_guid, ADXL_REVISION,
+ 			    ADXL_IDX_GET_ADDR_PARAMS |
+ 			    ADXL_IDX_FORWARD_TRANSLATE)) {
 -- 
 2.20.1
 
