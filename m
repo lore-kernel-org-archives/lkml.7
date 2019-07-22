@@ -2,135 +2,102 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF991C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5050BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A865421900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A6E21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bswQh2za"
+	dkim=pass (1024-bit key) header.d=uievolution.onmicrosoft.com header.i=@uievolution.onmicrosoft.com header.b="LHUvzzCb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfGVXXN (ORCPT
+        id S1729088AbfGVXYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:23:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43899 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfGVXXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:23:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f25so18376136pgv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 16:23:12 -0700 (PDT)
+        Mon, 22 Jul 2019 19:24:35 -0400
+Received: from mail-eopbgr690052.outbound.protection.outlook.com ([40.107.69.52]:20289
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727200AbfGVXYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:24:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lmf5ugVadUvzsGwYemJvcr9mrQ9LpIYku0wDni2ohyasYTaKX/gdO26yZiRFR91B5KFpUjoJcuiLVwnN5t3shuMzNtfeyqzxGpaDN375VygfDQh4M0yykuoNE/Cjr/RMOGBzmSXxaBTqlG1Ydd0dHQhoSi2yd4/sWFFeC8DNlbM6aSVWSrQO5aaru7kPc8My6lAocweebLUzKuLP2iYN5IRt4Zt3mMHjUTR7DDeSAeHnKHUMqtueiVbmYutyzuZ+xEzqnZebh97VA8LWqSDhkwQgXBdb+1V5d4KPAtgc4iDfRM6D8dWnhC+kDQDjT4FwAPy+9Vjf3y9o+7jyu80yQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i7J4LkdGzJQQju767NL4PQJypnOWJ1P9GrW6dlDGgq0=;
+ b=kQnSpw/Yykguox23ixKVoUtJMqg+oPD7GZlTZd6wsi0P5TIvAV0V5peGcQO1KnUoObitZJZks+quNmN2wd81yv+8OJpIwaN1B4ZeUGfo910d/gCf035jZsfWgXMVlmU00d5ibhKWxhWVgaj6ns4znmXFIeH4g0Qr0jNLPrrauptNCy+Xx8GyQ8pk/NpiFbCoU/cuGA0BTRyZK4ZmwnxzUpbWk6ujWMVcc4OLAp3IjSF0AvwqnKxaYTwAKmOTfDCGos1cmtU6tS3LibYIkcHNdxDsjVAUf23Jn5/HMFWZoXCg6voguTO/zl/2hGtLwZGPGVou1rgQXpzj/5A4KSxWig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=xevo.com;dmarc=pass action=none header.from=xevo.com;dkim=pass
+ header.d=xevo.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SkLiXHjoGqjfEw9X0EGifhhb+KhqQv8+F1IP2BsxfY4=;
-        b=bswQh2zaokNmjpMmcJtfAxGTLcPm2xs57WvQHrvl2dvTqk/eF02SJ1mHs7QWhn0fke
-         dr7I6tQjr3Vfs5qt4hzMnj6xeCmH6bMThGiGVABRnHE4yf6OQHVH+gvafrTOJQLAFoy+
-         I2s+TAqGDPU1/O2wF9PGE02QrzkZR+xvPem/BoaSeDSOx17wBfqxACVvIgoZ/5r44JVr
-         ArjqocEAVUyOJGBFvCo30qwEHZsIZsIH7J/UPDOFqnMCOsOHzCxGIbZ9qF91PUEe4id5
-         amkhIjwFWrtA2aeLC7h0gxbU4ODm82YazVyb9HHinhsmHjrwj2vzFUxPPRJqQpuUg281
-         1+PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SkLiXHjoGqjfEw9X0EGifhhb+KhqQv8+F1IP2BsxfY4=;
-        b=qBUcQ/Unf+MAq5zDN+Vpg49knx0JNzNwBRgnwT/reLChJG83bL2Qwio4Me2y7VbCKB
-         95CCUDjZQ3f8tZeK/tcqpAxVl8pIe3/ROYbrwGPsGD1cQmOF4EnTduLsaeuOTJlj0OM6
-         /4KYx5DGEQ+1snlnaT18gAwPfYaep7zRrddBtOW4YpRZ6C2oZ2dSfa33LESR9mmGLalx
-         uFhtSTJgPd4S7t0+I8OtMv6i2gFFDSd6xw5DCkT60JRUfenWBYQZfJVidx7Cmaca2kTD
-         B+vdWEv0r7KhMjrHUImLIBmnwu6yqz4vls2IIZQr4PXbj0irk4RQKwGuA8AsXkbARqLQ
-         XBeg==
-X-Gm-Message-State: APjAAAUkjKUQCW+ccqYOY6RwS0YmQWZXuTCa3LP1QhyCxlWCW/4VTE5v
-        0ocU35khTN9p31V18/njwUWcx4rTTUA=
-X-Google-Smtp-Source: APXvYqxLurlZ+S3BELfmTb9cU6XqzknjzCTO2ipHWJ6uIUQiIvoYlcDJ/CvO5PFtBYIdX4wDFmwltQ==
-X-Received: by 2002:a63:4185:: with SMTP id o127mr34695446pga.82.1563837792374;
-        Mon, 22 Jul 2019 16:23:12 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r13sm51029776pfr.25.2019.07.22.16.23.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 16:23:11 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 16:23:09 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org, vkoul@kernel.org
-Subject: Re: [PATCH v5 0/5] soc: qcom: Add SoC info driver
-Message-ID: <20190722232309.GS30636@minitux>
-References: <20190711213911.23180-1-vaishali.thakkar@linaro.org>
+ d=uievolution.onmicrosoft.com; s=selector1-uievolution-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i7J4LkdGzJQQju767NL4PQJypnOWJ1P9GrW6dlDGgq0=;
+ b=LHUvzzCblumC5aIqXMbgMKO2P0iP87Vl9mvzGzF7NFboCf/P7teGtTzDc39qdkl/1B3i0tywPOrDUEy4Ru1AvavJ6LiSdLkdnXRdLi0uZ53kfIALGEc2F5E16pA/l1w4zCCevIDAW06irtswsx/3doIgyWct94Jv5gh55pcL1ts=
+Received: from DM5PR18MB2293.namprd18.prod.outlook.com (52.132.208.10) by
+ DM5PR18MB1290.namprd18.prod.outlook.com (10.173.209.136) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Mon, 22 Jul 2019 23:24:30 +0000
+Received: from DM5PR18MB2293.namprd18.prod.outlook.com
+ ([fe80::9402:86d2:af64:7938]) by DM5PR18MB2293.namprd18.prod.outlook.com
+ ([fe80::9402:86d2:af64:7938%7]) with mapi id 15.20.2094.011; Mon, 22 Jul 2019
+ 23:24:30 +0000
+From:   Brandon Darbro <bdarbro@xevo.com>
+To:     "tiwai@suse.de" <tiwai@suse.de>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "luca@coelho.fi" <luca@coelho.fi>,
+        "emmanuel.grumbach@intel.com" <emmanuel.grumbach@intel.com>,
+        "johannes.berg@intel.com" <johannes.berg@intel.com>,
+        "jwboyer@kernel.org" <jwboyer@kernel.org>,
+        "dor.shaish@intel.com" <dor.shaish@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
+Thread-Topic: Regression with the latest iwlwifi-9260-*-46.ucode
+Thread-Index: AQHVQOSbihGS2kcqiUKQc4exrvn+2g==
+Date:   Mon, 22 Jul 2019 23:24:29 +0000
+Message-ID: <adc640f5dc37e63283f48a9ce3c082cc8219638e.camel@xevo.com>
+In-Reply-To: <s5hmuh7xrqy.wl-tiwai@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.2-1 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bdarbro@xevo.com; 
+x-originating-ip: [2604:3d08:7781:6100:1d1c:4723:c04d:c569]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 35e411dd-23fb-4251-8268-08d70efbbf08
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR18MB1290;
+x-ms-traffictypediagnostic: DM5PR18MB1290:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM5PR18MB1290DD223F72B812AE6E837DDBC40@DM5PR18MB1290.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39840400004)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(186003)(486006)(5660300002)(91956017)(6916009)(305945005)(36756003)(229853002)(966005)(7736002)(99286004)(102836004)(76116006)(2501003)(14454004)(54906003)(6506007)(558084003)(64756008)(66946007)(66556008)(66476007)(66446008)(6116002)(2616005)(476003)(11346002)(25786009)(4326008)(46003)(8676002)(478600001)(71190400001)(71200400001)(81156014)(8936002)(6306002)(1730700003)(5640700003)(6246003)(81166006)(2351001)(58126008)(68736007)(256004)(316002)(118296001)(86362001)(53936002)(6436002)(6486002)(2906002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR18MB1290;H:DM5PR18MB2293.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xevo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gICG4NKeaQwgK5b3hg907y6ury4NBAD86MkBjvICw56H5kNyA2OBuPT6D3fpS0dADbk2Qr/ASdZvipLeNgfrRdL71ja9/xBtIB1hnD35abvRPJDyn2X5dnCJO/eIwDHgMgo2WhexLhUWPw981XDaYTxCfinS/gM9zBDZdZqzHAxrUxWBesC6ClKlX8YczNCoyNqxEkm/ZUDHegBKRUkxxbMHs6vnmqz/FSlMJKMeA+1/sRP0QNHuACBeEot8ROOZk2vIGwTCpnzWT53itE3I6gbEQd3zne+kWsppIHVgJOI4K9CO8tffUPzSokNvjQsXGa18GwW06CV1X5HEL5954rOWaQ5U3XLCKbo2Uss5Q4SrqfleNAUVpnfV2ZnCaMpS6ahcFyUvoVpzsxECVGksPIrR2V+0BODBeKjDfl/Wu3g=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0EFEE013751F6E4B904CE28D7484631A@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711213911.23180-1-vaishali.thakkar@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-OriginatorOrg: xevo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35e411dd-23fb-4251-8268-08d70efbbf08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 23:24:29.8711
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e0a7ca1f-2458-4cd6-a7c7-d733c07495ab
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bdarbro@xevo.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR18MB1290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11 Jul 14:39 PDT 2019, Vaishali Thakkar wrote:
-
-> This patchset adds SoC info driver which can provide information
-> such as Chip ID, Chip family and serial number about Qualcomm SoCs
-> to user space via sysfs. Furthermore, it allows userspace to get
-> information about custom attributes and various image version
-> information via debugfs.
-> 
-> The patchset cleanly applies on top of v5.2-rc7.
-
-Hi Vaishali,
-
-There's no context in the patches so they do not apply properly. Please
-resubmit them with appropriate context.
-
-Regards,
-Bjorn
-
-> 
-> Changes since v1:
->         - Align ifdefs to left, remove unnecessary debugfs dir
->           creation check and fix function signatures in patch 3
->         - Fix comment for teh case when serial number is not
->           available in patch 1
-> 
-> Changes since v2:
->         - Reorder patches [patch five -> patch two]
-> 
-> Changes since v3:
->         - Add reviewed-bys from Greg
->         - Fix build warning when debugfs is disabled
->         - Remove extra checks for dir creations in patch 5
-> 
-> Changes since v4:
-> 	- Added Reviewed-bys in multiple patches
-> 	- Bunch of nitpick fixes in patch 3
-> 	- Major refactoring for using core debugfs functions and
-> 	  eliminating duplicate code in patch 4 and 5 [detailed info
-> 	  can be found under --- in each patch]
-> 
-> Vaishali Thakkar (5):
->   base: soc: Add serial_number attribute to soc
->   base: soc: Export soc_device_register/unregister APIs
->   soc: qcom: Add socinfo driver
->   soc: qcom: socinfo: Expose custom attributes
->   soc: qcom: socinfo: Expose image information
-> 
->  Documentation/ABI/testing/sysfs-devices-soc |   7 +
->  drivers/base/soc.c                          |   9 +
->  drivers/soc/qcom/Kconfig                    |   8 +
->  drivers/soc/qcom/Makefile                   |   1 +
->  drivers/soc/qcom/smem.c                     |   9 +
->  drivers/soc/qcom/socinfo.c                  | 468 ++++++++++++++++++++
->  include/linux/sys_soc.h                     |   1 +
->  7 files changed, 503 insertions(+)
->  create mode 100644 drivers/soc/qcom/socinfo.c
-> 
-> -- 
-> 2.17.1
-> 
+VWJ1bnR1IGJ1ZyB0cmFja2luZyB0aGUgc2FtZSBpc3N1ZS4NCg0KaHR0cHM6Ly9idWdzLmxhdW5j
+aHBhZC5uZXQvdWJ1bnR1Lytzb3VyY2UvbGludXgtZmlybXdhcmUvK2J1Zy8xODM2OTg2DQoNCg==
