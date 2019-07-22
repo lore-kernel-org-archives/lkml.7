@@ -2,90 +2,115 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6370C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1595EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A432520840
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563839790;
-	bh=5Aig1OFWwSe0PxEpy5jpbRx1PToL6awKWzce7tnSvjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nUNaZbhYVZ1PqH3YYQ9wNSiqXDPYymEOMSc4ufuImBQn7ag5wx7sVJBaZfnNvDGMP
-	 I3UGiUzS4C0aOUdBwLRHGcQsV3AADoGiZ4wUkevPZbRjLOsCcYK86n616ZMRtMu5Qd
-	 7FhQJfxoLcTXrvYScxOdZl4JUAFjSVzlszq5CIic=
+	by mail.kernel.org (Postfix) with ESMTP id D7542218BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BwwNgGUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387550AbfGVX43 (ORCPT
+        id S2387551AbfGVX73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:56:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44694 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfGVX43 (ORCPT
+        Mon, 22 Jul 2019 19:59:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41657 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730693AbfGVX73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:56:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so77827554iob.11;
-        Mon, 22 Jul 2019 16:56:28 -0700 (PDT)
+        Mon, 22 Jul 2019 19:59:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x15so8081285pgg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 16:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yKJpc6b5YDtH8HQ6uiATAFLuSozdZCVilkIngvbXM5A=;
+        b=BwwNgGULwWCLx8dsVMfholYHHZtahSRNI4WRi8GeRE1cTEnEj7+QLHRFtS1OwD7OfL
+         PBhCf2HLH/xHTCrVy2tXcVrzcxjy/X/9XS3xE3DB5oNwZDSgYT1w2T1voSeXQoCgP+lE
+         YAbbno9nOKjFkhoG+ymLqQNzmX7kqXLBCtzVc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XUUEucdf5T/q+oP9Dd4eyb+UhdjwkWdUVolZWtaE55M=;
-        b=Pr2HiyiT+TCTywWpik6ujigtjeM+bOt7dbx/lPbkS5RVoc2uy7c55qcYdy/A2RSn+5
-         biZNZatNfSgg0N9IfYqLbOBJx6E8+wCjc/ueg/l3S/p1ePkvbjOJ75ma4x6YzbNtD3Pt
-         TBKn+KwDvTXXCIjObJcz15Kz37FSvjPYHPftbZTPXCGeYCeXuY4gQc9gIvMurgMgOtWr
-         02DtRV35LGA9Sv2JkVdhQLUcU61ZICuDPMFtv6ptepGWb2iaMNaLSKwqmlEbT7QXQ3vo
-         zidwCl/oIM4m0faFMNnbjWtagxC29WvSuRtLdAWpi26CG8QQtGEqCzFL+ayWcv/6dxEA
-         Vlew==
-X-Gm-Message-State: APjAAAUzDUjp5MbFO0wCFCqhIfUCkL82E0QkON10cVOyZdvjTHXdjitn
-        kO2EPvsMuMC361Nhy1CS2A==
-X-Google-Smtp-Source: APXvYqzG3dQHFCuA6ypYHdFZwx9UhmEjXjrpCvFnOpu8YvQ597D8wid4CFtIc1uEUSwyP3Pb43rAkQ==
-X-Received: by 2002:a6b:bf87:: with SMTP id p129mr59307174iof.253.1563839788473;
-        Mon, 22 Jul 2019 16:56:28 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id y20sm32775270ion.77.2019.07.22.16.56.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 16:56:27 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 17:56:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, leonard.crestez@nxp.com,
-        viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V4 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-Message-ID: <20190722235627.GA3749@bogus>
-References: <20190705085406.22483-1-Anson.Huang@nxp.com>
+        bh=yKJpc6b5YDtH8HQ6uiATAFLuSozdZCVilkIngvbXM5A=;
+        b=QfkzpF8je1blF3Z6Q+2goVUXeJw+37wN8HIp8eqUVUl5DWNYW7NAEUBO6bqN8tDvz1
+         AZ++EQQy+LqPTF4OjdDDrSEpOmSIRHXhCEWSPz+nz6kGYRd5kk+kqv4Xwcko8380YlTq
+         ekxN7TiXBDi7MgPv50Iqr41S6/Rh117YG50x9JJW5CFftrpgpeVhMfbjVG9oM25Czkk3
+         f/tiVxeWSOoTmTKtzHO2VJTwksEUpqDHjrEh9J3U5xtHH7Dzop1z5ZpDwL662C5bDjhN
+         VCgBicnzjDixpV8vL4/3eeJTPqwhRy5g7AoBBvQvq0MttswUuE+Gb1vunqdj1aYt+jEt
+         sQ6Q==
+X-Gm-Message-State: APjAAAVsX1C34FO6c+eFWpwlZ0qlBuujTIRIk04ytflZbPbxOcM+hCTH
+        fSkimR+Zwfd9AKtN5QrdOEMejg==
+X-Google-Smtp-Source: APXvYqylBuVwl7XZwxbVNxqA1DcLvAlMOG8gWbqhX7r0RR7aDWH3sQ/kfj0iiNgQmQOUzrSpDH2+kA==
+X-Received: by 2002:a63:4e60:: with SMTP id o32mr75155489pgl.68.1563839968519;
+        Mon, 22 Jul 2019 16:59:28 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id f88sm40294971pjg.5.2019.07.22.16.59.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 16:59:27 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 16:59:26 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] backlight: Expose brightness curve type through
+ sysfs
+Message-ID: <20190722235926.GA250418@google.com>
+References: <20190709190007.91260-1-mka@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190705085406.22483-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190709190007.91260-1-mka@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  5 Jul 2019 16:54:05 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Jul 09, 2019 at 12:00:03PM -0700, Matthias Kaehlcke wrote:
+> Backlight brightness curves can have different shapes. The two main
+> types are linear and non-linear curves. The human eye doesn't
+> perceive linearly increasing/decreasing brightness as linear (see
+> also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> linearly to human eye"), hence many backlights use non-linear (often
+> logarithmic) brightness curves. The type of curve is currently opaque
+> to userspace, so userspace often relies on more or less reliable
+> heuristics (like the number of brightness levels) to decide whether
+> to treat a backlight device as linear or non-linear.
 > 
-> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-> property and related info to support i.MX8MM.
+> Export the type of the brightness curve via a new sysfs attribute.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V3:
-> 	- Add comments to those reset indices to indicate which are NOT supported on i.MX8MM.
-> ---
->  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  6 +++--
->  include/dt-bindings/reset/imx8mq-reset.h           | 28 +++++++++++-----------
->  2 files changed, 18 insertions(+), 16 deletions(-)
+> Matthias Kaehlcke (4):
+>   MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+>   backlight: Expose brightness curve type through sysfs
+>   backlight: pwm_bl: Set scale type for CIE 1931 curves
+>   backlight: pwm_bl: Set scale type for brightness curves specified in
+>     the DT
 > 
+>  .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
+>  MAINTAINERS                                   |  2 ++
+>  drivers/video/backlight/backlight.c           | 19 ++++++++++
+>  drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
+>  include/linux/backlight.h                     |  8 +++++
+>  5 files changed, 89 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+ping, any comments on v3?
+
+Thanks
+
+Matthias
