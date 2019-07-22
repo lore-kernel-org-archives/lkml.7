@@ -2,102 +2,71 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1C0C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F38C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819E7219BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Mbw6mQ9K"
+	by mail.kernel.org (Postfix) with ESMTP id D54B021921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbfGVNoo (ORCPT
+        id S1730689AbfGVNon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:44:44 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52042 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728637AbfGVNon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jul 2019 09:44:43 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so35255524wma.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 06:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ut01oNwMX57rewfZ2xdsVgjWVgPo2hqv1zk7e2eNV1c=;
-        b=Mbw6mQ9KduwIta89J1LYlF6kc7o9GduaI0+z36i+2YY7oFXW+PCLPTx4jo/x6p2lrr
-         bmnE83LSxvIXiByTDGashJrMHQFIDsfkQOAym7PDLEp7mOrwZdITOnei15kO7/TIwW92
-         9UairCADBliTVQSS4u9xdgFDh3yLDQOsfhO4I+F1vjLKSAnjdyh+5v3xVb3mLqlS2zkV
-         YxV5QorVrwRlzvMhRYmTt8lY1h8nuFPSnpAeBJT0SLyrhCvYO8ZogPoIl0Huw6jxgnZ0
-         o+EJiIkgWqa6jBvcMAH+Cj6fVgT8sENWgCKGrQLxfOCYp7YQxrxvMQdxt/pxvso7qJf9
-         6s1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ut01oNwMX57rewfZ2xdsVgjWVgPo2hqv1zk7e2eNV1c=;
-        b=aPwe4+lw1slq5hrkmCvZ7hToW0V6uc7I/JgiH7j3BKyce9JolSHhqevZvFKBkQq70J
-         /k+5A7FzuaYFnOlDA1BoFnUe3XwYpcDwgqY9RDAQ4U/9iwylRJDn4aB6b5D7M6rCSeuU
-         o2ZdfdkV1NmT8dAs4L9hlfcDBY4MBczCBkaWUO2unOurMwgqUnFSZhg1ajfCeeAVEeTL
-         U14MF3bTHaWTwfWSFmfxw4BZvYqMJIhTKe1PqTnD4XDtqbhS7N2iC3kYgvbTEf+3qI9k
-         AypCcF3HgDknYqaGPRxlTGZzGiCz/0uP6X3oSQnI0NpbFn1wiFYetvGpQ5FjOrA9weYM
-         o6Zg==
-X-Gm-Message-State: APjAAAVeaax/IlY9Ikp0BheUspxYyR5og/o79BnGabp1JVFWcUWV1pgM
-        BgBT/5NvuqpJW8nfa+8KMu58Zfl3
-X-Google-Smtp-Source: APXvYqzqrhDn87TPfR0stSfqmLuYDN1SzTLtME8rAq3V9wDoFdme8RgMbrLtcH/C2F3SJsvmcaSLPA==
-X-Received: by 2002:a7b:cc86:: with SMTP id p6mr59100904wma.123.1563803081131;
-        Mon, 22 Jul 2019 06:44:41 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id p6sm40652484wrq.97.2019.07.22.06.44.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 06:44:40 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Lechner <david@lechnology.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 2/9] ARM: davinci_all_defconfig: enable GPIO backlight
-Date:   Mon, 22 Jul 2019 15:44:16 +0200
-Message-Id: <20190722134423.26555-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722134423.26555-1-brgl@bgdev.pl>
-References: <20190722134423.26555-1-brgl@bgdev.pl>
+Received: from mx1.redhat.com ([209.132.183.28]:40296 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729418AbfGVNom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 09:44:42 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EB874627A;
+        Mon, 22 Jul 2019 13:44:42 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4726B60497;
+        Mon, 22 Jul 2019 13:44:40 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, nd <nd@arm.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        "Sergei Trofimovich" <slyfox@gentoo.org>,
+        Networking <netdev@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH glibc] Linux: Include <linux/sockios.h> in <bits/socket.h> under __USE_MISC
+References: <87ftmys3un.fsf@oldenburg2.str.redhat.com>
+        <CAK8P3a0hC4wvjwCi4=DCET3C4qARMY6c58ffjwG3b1ZPM6kr-A@mail.gmail.com>
+        <2431941f-3aac-d31f-e6f5-8ed2ed7b2e5c@arm.com>
+Date:   Mon, 22 Jul 2019 15:44:39 +0200
+In-Reply-To: <2431941f-3aac-d31f-e6f5-8ed2ed7b2e5c@arm.com> (Szabolcs Nagy's
+        message of "Mon, 22 Jul 2019 13:41:07 +0000")
+Message-ID: <87lfwqqj3s.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 22 Jul 2019 13:44:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+* Szabolcs Nagy:
 
-Enable the GPIO backlight module in davinci_all_defconfig.
+> (note: in musl these ioctl macros are in sys/ioctl.h
+> which is not a posix header so namespace rules are
+> less strict than for sys/socket.h and users tend to
+> include it for ioctl())
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/configs/davinci_all_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+<sys/ioctl.h> can be confusing because some of the constants may depend
+on types that aren't declared by including the header.  This makes their
+macros unusable.  Defining ioctl constants in headers which also provide
+the matching types avoids that problem at least, also it can introduce
+namespace issues.
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 7c2a39305f2b..56c23f8d9f26 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -158,6 +158,7 @@ CONFIG_FB=y
- CONFIG_FIRMWARE_EDID=y
- CONFIG_FB_DA8XX=y
- CONFIG_BACKLIGHT_PWM=m
-+CONFIG_BACKLIGHT_GPIO=m
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
--- 
-2.21.0
-
+Thanks,
+Florian
