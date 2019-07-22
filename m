@@ -2,86 +2,158 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7598AC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D46C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4785421921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E0E2190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="DxrhCFr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfGVPdv (ORCPT
+        id S1729278AbfGVPeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:33:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37046 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728794AbfGVPdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:33:50 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 60CEE307D915;
-        Mon, 22 Jul 2019 15:33:50 +0000 (UTC)
-Received: from redhat.com (ovpn-124-54.rdu2.redhat.com [10.10.124.54])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 786F95D968;
-        Mon, 22 Jul 2019 15:33:44 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 11:33:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, hch@lst.de, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size call
-Message-ID: <20190722112704-mutt-send-email-mst@kernel.org>
-References: <20190722145509.1284-1-eric.auger@redhat.com>
- <20190722145509.1284-3-eric.auger@redhat.com>
+        Mon, 22 Jul 2019 11:34:09 -0400
+Received: from sonic315-54.consmr.mail.gq1.yahoo.com ([98.137.65.30]:36971
+        "EHLO sonic315-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729179AbfGVPeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:34:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563809646; bh=EOZah5kUC13bHcvzbSgLDufxhi1Qe63umVH2WdpN0zc=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=DxrhCFr0vEoGtuPSEwDUdKRq/z7am8XzmOEhxBQ5CcF7RRdcXbRXHw624852DQZYTJCRmVqL0XFOFwOMQjdmeIeaGqcZNTAd52g7yER4fSvvdjNwvFKqakZlgxliCe33kGPCgV5N0QiTNu85lWiKOlZ5eXOGa9xeC1yRd5rjpBPvUeSpL4GEaB2acJ7Gcbpw3ul2ZioPNlRleh8p/RBjpDTHwcrYre3BgNcY7D0LUj1PUongw01Bb/M+enFkJbM8S1R8sOT09nwG65+h4V055QjdmnNXJMWrgUpHonWrMkqkqHhwAJ9qN+t0muS5IKvgY4dPq9m2radPwtvZbOf1MA==
+X-YMail-OSG: npDf6yEVM1l7Au6.Y9Yh_F.QhiCu80KA5a5gBgLLnq1JMpXQ8nbGuncLU.ihvVs
+ 6Q0yj9DSCBoNXyHCMiky2sHeXEzdNdrXblp30TLaWVW2R4twm9RDb82qGFnlJmCMyykggZTveFAS
+ hoeOrUfypJKcIoaCkRO939wBppDieXbeNiLA0e0v2UCySWVRjtqun6uVhCfwiCzizTtpFrJDPXix
+ AnHnPotG6JJ4nw5scbOcqzIEsqBEhtXvPzP6IQKq6nUqOGMTEmKZL1yif1Nhkgcu1DCQIcjSsD6o
+ YjMbQwsb1M8OvaYfS0H5DCyp_zxgy55vcT.4wH8ywzZqcQulh4n4AK1TwWklOn.06WF3tp4zfAMm
+ xnCWKvtZ1VymMxZqcht9D2ZMM9FiSA94JgQsP_0GRdz6n_OUEK3qGQToV9d4OihZm0Dh4pFx2tRz
+ 1cKRxnO8xzq3JrUqoeHGG49NsyiVOLDZqQtO7WyvYAzdxKnwea.hFpddwUXVV5bhTAQ4OHK2wJ4L
+ bADYE6BZfEUVLJlTkGzRWK9ieZtwYZKx8iqorSrof.yONKWselSGlX9MT16UGc8JHb0J0lEc4i3E
+ JeRRvayuQb74P5Rfqb0SLGrhewwXr6yRqUDX7SKH9.REnopvMEBElllg.8q02NNRVk0EQRTFwvyJ
+ Tnkk6lfDJU2oHQARdJ9y.jijtVf.WBMXhkI4FZOu70u63CY6S9s.hicMwUxa5HybU6xt.hJ5lmDn
+ Ush0VkPYJpl5MZ7pBkf4omcfdTBvf5vFkJPYa2UiFuvyYgFrfb95XpB4Flt2Htn5O8Jge0sZNuRo
+ mg5qgdLxlPE4BBBuam28749g6L0dJAk2oNUThJaaknYZ_DTFF_2Qen5KWvrJ26U35FoLa2_idsTT
+ rMG3M5E5Jg1GAZbVJnV7I3am6.KQ41Wn5KU4RitPSg08ZmwGTspQjWAFj.aDrGx0OdIMa02sEqZ8
+ zumJf7lvMJzZOlfitRgFSD0p0tjWdsqDoPDnIEcUOM4IwN6_6pJYSvnZxeCj9sRyc3y.LR2PfApp
+ 6gxE.YkwFRl5tt7bep8s2idFnrEzKSdUemabNWb3oel3ELwpL38YYblKhnACGk06XBvw9fPdOO.r
+ ly3EY3DVgBCl92GHVbypxGep.W_OJm6q3j.JqzFvMqoQbV_JkPzcNo7PPZZqxrdnUJEwG9pfe5OZ
+ xjnWCXnGGAyHr_eth18VYfXJVcnOiHmBLxiiGDnoo6qnkezzmKh7vSqEXLtvsDGdRwA_pXT0-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Mon, 22 Jul 2019 15:34:06 +0000
+Received: by smtp415.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 7d543092b26e4fc618ecf41b7b8d639f;
+          Mon, 22 Jul 2019 15:34:04 +0000 (UTC)
+Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Amir Goldstein <amir73il@gmail.com>
+Cc:     devel@driverdev.osuosl.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miao Xie <miaoxie@huawei.com>, linux-erofs@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190722025043.166344-1-gaoxiang25@huawei.com>
+ <20190722025043.166344-13-gaoxiang25@huawei.com>
+ <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
+ <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
+ <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
+ <20190722104048.463397a0@gandalf.local.home>
+From:   Gao Xiang <hsiangkao@aol.com>
+Message-ID: <0c2cdd4f-8fe7-6084-9c2d-c2e475e6806e@aol.com>
+Date:   Mon, 22 Jul 2019 23:33:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722145509.1284-3-eric.auger@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 22 Jul 2019 15:33:50 +0000 (UTC)
+In-Reply-To: <20190722104048.463397a0@gandalf.local.home>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:55:09PM +0200, Eric Auger wrote:
-> Do not call dma_max_mapping_size for devices that have no DMA
-> mask set, otherwise we can hit a NULL pointer dereference.
-> 
-> This occurs when a virtio-blk-pci device is protected with
-> a virtual IOMMU.
-> 
-> Fixes: e6d6dd6c875e ("virtio: Introduce virtio_max_dma_size()")
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Suggested-by: Christoph Hellwig <hch@lst.de>
+Hi Steven,
 
-Christoph, I wonder why did you suggest this?
-The connection between dma_mask and dma_max_mapping_size
-is far from obvious.  The documentation doesn't exist.
-Do we really have to teach all users about this hack?
-Why not just make dma_max_mapping_size DTRT?
-
-> ---
->  drivers/virtio/virtio_ring.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 2019/7/22 ????10:40, Steven Rostedt wrote:
+>>> and I'm not sure Al could accept __fdget conversion (I just wanted to give a example then...)
+>>>
+>>> Therefore, I tend to keep silence and just promote EROFS... some better ideas?...
+>>>  
+>> Writing example conversion patches to demonstrate cleaner code
+>> and perhaps reduce LOC seems the best way.
+> Yes, I would be more interested in seeing patches that clean up the
+> code than just talking about it.
 > 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index c8be1c4f5b55..37c143971211 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -262,7 +262,7 @@ size_t virtio_max_dma_size(struct virtio_device *vdev)
->  {
->  	size_t max_segment_size = SIZE_MAX;
->  
-> -	if (vring_use_dma_api(vdev))
-> +	if (vring_use_dma_api(vdev) && vdev->dev.dma_mask)
->  		max_segment_size = dma_max_mapping_size(&vdev->dev);
->  
->  	return max_segment_size;
-> -- 
-> 2.20.1
+
+I guess that is related to me, though I didn't plan to promote
+a generic tagged pointer implementation in this series...
+
+I try to describe what erofs met and my own implementation,
+assume that we have 3 tagged pointers, a, b, c, and one
+potential user only (no need to ACCESS_ONCE).
+
+One way is
+
+#define A_MASK		1
+#define B_MASK		1
+#define C_MASK		3
+
+/* now we have 3 mask there, A, B, C is simple,
+   the real name could be long... */
+
+void *a;
+void *b;
+void *c;		/* and some pointers */
+
+In order to decode the tag, we have to
+	((unsigned long)a & A_MASK)
+
+to decode the ptr, we have to
+	((unsigned long)a & ~A_MASK)
+
+In order to fold the tagged pointer...
+	(void *)((unsigned long)a | tag)
+
+You can see the only meaning of these masks is the bitlength of tags,
+but there are many masks (or we have to do open-coded a & 3,
+if bitlength is changed, we have to fix them all)...
+
+therefore my approach is
+
+typedef tagptr1_t ta;	/* tagptr type a with 1-bit tag */
+typedef tagptr1_t tb;	/* tagptr type b with 1-bit tag */
+typedef tagptr2_t tc;	/* tagptr type c with 2-bit tag */
+
+and ta a; tb b; tc c;
+
+the type will represent its bitlength of tags and we can use ta, tb, tc
+to avoid masks or open-coded bitlength.
+
+In order to decode the tag, we can
+	tagptr_unfold_tags(a)
+
+In order to decode the ptr, we can
+	tagptr_unfold_ptr(a)
+
+In order to fold the tagged pointer...
+	a = tagptr_fold(ta, ptr, tag)
+
+
+ACCESS_ONCE stuff is another thing... If my approach seems cleaner,
+we could move to include/linux later after EROFS stuffs is done...
+Or I could use a better tagptr approach later if any...
+
+Thanks,
+Gao XIang
+
+
+
