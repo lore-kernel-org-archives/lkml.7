@@ -2,74 +2,119 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8577EC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB01C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4415521911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046E121911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfGVPAO (ORCPT
+        id S1726920AbfGVPAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfGVPAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:00:13 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 834302190F;
-        Mon, 22 Jul 2019 15:00:12 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 11:00:10 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [for-next][PATCH 12/16] kprobes: Initialize kprobes at
- postcore_initcall
-Message-ID: <20190722110010.7db27b06@gandalf.local.home>
-In-Reply-To: <20190722124202.GF60625@arrakis.emea.arm.com>
-References: <20190526191828.466305460@goodmis.org>
-        <20190526191848.266163206@goodmis.org>
-        <20190702165008.GC34718@lakrids.cambridge.arm.com>
-        <20190703100205.0b58f3bf@gandalf.local.home>
-        <20190703140832.GD48312@arrakis.emea.arm.com>
-        <20190709111520.5f098b22@gandalf.local.home>
-        <20190722124202.GF60625@arrakis.emea.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 22 Jul 2019 11:00:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:39053 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfGVPAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:00:41 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mn2Jj-1iF2Sg2Z0h-00k8ux; Mon, 22 Jul 2019 17:00:21 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Pravin B Shelar <pshelar@ovn.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Kangjie Lu <kjlu@umn.edu>, netdev@vger.kernel.org,
+        dev@openvswitch.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] ovs: datapath: hide clang frame-overflow warnings
+Date:   Mon, 22 Jul 2019 17:00:01 +0200
+Message-Id: <20190722150018.1156794-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:n38BZKXQeU4NCOj2u3jNETtHaDR3crTUgKISheti+Q/vGZ4iOf9
+ CEdgitQaFx19lylhbtU4GNob2+pIJoGxqHzfM/c0Y510k2PvKqagKwo4wxgp/wFzvEnZRAr
+ 2qeqnFJWkAh9FMW6vYDyHXBJNcfl7PNO94jSWeEaAbMwbH+nN2KT/eYVXpX++zZrxMCIB6M
+ 51tSASVvAUVMs9JjoCWzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BIxhja8daZY=:a3r2BQT8oflr6GgXt6Jes2
+ W45PjZlPErn72wTTrP4kq3o2NkWZx3eYlFz/FqMAlX1sEvyBzuIWG6sZ7I79ivukuKeDqt1Av
+ A86XaIJYB7L31S6LtCZVKbtFdi+PWSoyH+ZESd5Kmr5XYPBynuYAZM6xraW/LYqJvNtLWtwmg
+ Rc6jbSFKK0dGq0cFDK+ep7eUzrdRSTiHNhhDXzYH+CEnRxxgAlEgV9rCUFXjNVuyjTkkVSheg
+ c4/INjS1MBkLRutGKrPt0lAIqjUpMAQCk4Dpr0IGcCkEEQ7+JXlJanSpGiADdniVWM1NgEMrG
+ xLvDGBpVJO8TSRVS0O5bZTeB+WmDYauLUKaLYh6S7IYg/xrdb/bLOdkdohsQA/yFc7iiQv2HO
+ abpRQTVBawt6wp0uxxFjSmmUGwrQxeQ2QMg8SDDnZ1QbVLTavQTztwWawywRiwf20XEHNMIdv
+ 2qLG6QrhmQ+XgbY1UZqgxWznoLOe4dIeRglEJcXBTWj0nU310DWAcsSGhIJZlUlmYBohJGer0
+ HGRB8KD5gKnJEp0DAwUs0LmcD8SbfoKlWCswinBVQEUE3Fa81aVAaRY/r4BY62EG6zARO5OCO
+ U90PkOFax25c9cZ6DjGbqVbx86vJRLD2r8Rpr0XyDwUHkD8UJzW1m5iBu5Xjb4VwrMsfH8Z7i
+ M23qg4QUtWCPXitysMNbfZJV1LcBQ1s/KvA7UYDFJLxRZTEawnf+640BFZ59wprwt8OcDiKre
+ Qj6/B5iDFVB8GZdhrAtwY8eWJWrJG2Qxng66jw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 13:42:02 +0100
-Catalin Marinas <catalin.marinas@arm.com> wrote:
+Some functions in the datapath code are factored out so that each
+one has a stack frame smaller than 1024 bytes with gcc. However,
+when compiling with clang, the functions are inlined more aggressively
+and combined again so we get
 
-> > I agree with Masami, that the selftest actually caught a bug here. I
-> > think the arch code may need to change as the purpose of Masami's
-> > changes was to enable kprobes earlier in boot. The selftest failing
-> > means that an early kprobe will fail too.  
-> 
-> I just got back from holiday and catching up with emails. Do I still
-> need to merge the arm64 fix making the debug initialisation a
-> core_initcall()?
-> 
-> Can we actually get kprobes invoked before init_kprobes() has been
-> called?
+net/openvswitch/datapath.c:1124:12: error: stack frame size of 1528 bytes in function 'ovs_flow_cmd_set' [-Werror,-Wframe-larger-than=]
 
-Bah, I can't remember everything that we discussed. I thought there was
-some more patches that obsoleted my work around. Everything has been
-pushed to Linus, can you see if the upstream still has issues for you?
+Marking both get_flow_actions() and ovs_nla_init_match_and_action()
+as 'noinline_for_stack' gives us the same behavior that we see with
+gcc, and no warning. Note that this does not mean we actually use
+less stack, as the functions call each other, and we still get
+three copies of the large 'struct sw_flow_key' type on the stack.
 
-Thanks!
+The comment tells us that this was previously considered safe,
+presumably since the netlink parsing functions are called with
+a known backchain that does not also use a lot of stack space.
 
--- Steve
+Fixes: 9cc9a5cb176c ("datapath: Avoid using stack larger than 1024.")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ net/openvswitch/datapath.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
+index 892287d06c17..d01410e52097 100644
+--- a/net/openvswitch/datapath.c
++++ b/net/openvswitch/datapath.c
+@@ -1047,7 +1047,7 @@ static int ovs_flow_cmd_new(struct sk_buff *skb, struct genl_info *info)
+ }
+ 
+ /* Factor out action copy to avoid "Wframe-larger-than=1024" warning. */
+-static struct sw_flow_actions *get_flow_actions(struct net *net,
++static noinline_for_stack struct sw_flow_actions *get_flow_actions(struct net *net,
+ 						const struct nlattr *a,
+ 						const struct sw_flow_key *key,
+ 						const struct sw_flow_mask *mask,
+@@ -1081,12 +1081,13 @@ static struct sw_flow_actions *get_flow_actions(struct net *net,
+  * we should not to return match object with dangling reference
+  * to mask.
+  * */
+-static int ovs_nla_init_match_and_action(struct net *net,
+-					 struct sw_flow_match *match,
+-					 struct sw_flow_key *key,
+-					 struct nlattr **a,
+-					 struct sw_flow_actions **acts,
+-					 bool log)
++static noinline_for_stack int
++ovs_nla_init_match_and_action(struct net *net,
++			      struct sw_flow_match *match,
++			      struct sw_flow_key *key,
++			      struct nlattr **a,
++			      struct sw_flow_actions **acts,
++			      bool log)
+ {
+ 	struct sw_flow_mask mask;
+ 	int error = 0;
+-- 
+2.20.0
+
