@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FE7C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94EC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D9421993
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA69219BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbfGVPnd (ORCPT
+        id S1729894AbfGVPm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:43:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:40504 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 11:42:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:40294 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730006AbfGVPnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:43:14 -0400
+        id S1729862AbfGVPmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:42:54 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B3A328;
-        Mon, 22 Jul 2019 08:43:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98F461509;
+        Mon, 22 Jul 2019 08:42:53 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4F913F694;
-        Mon, 22 Jul 2019 08:43:10 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FAD03F694;
+        Mon, 22 Jul 2019 08:42:50 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,9 +44,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v9 17/21] x86: mm: Convert ptdump_walk_pgd_level_debugfs() to take an mm_struct
-Date:   Mon, 22 Jul 2019 16:42:06 +0100
-Message-Id: <20190722154210.42799-18-steven.price@arm.com>
+Subject: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
+Date:   Mon, 22 Jul 2019 16:41:59 +0100
+Message-Id: <20190722154210.42799-11-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
 References: <20190722154210.42799-1-steven.price@arm.com>
@@ -57,117 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable x86 to use the generic walk_page_range() function, the
-callers of ptdump_walk_pgd_level_debugfs() need to pass in the mm_struct.
+Exposing the pud/pgd levels of the page tables to walk_page_range() means
+we may come across the exotic large mappings that come with large areas
+of contiguous memory (such as the kernel's linear map).
 
-This means that ptdump_walk_pgd_level_core() is now always passed a
-valid pgd, so drop the support for pgd==NULL.
+For architectures that don't provide all p?d_leaf() macros, provide
+generic do nothing default that are suitable where there cannot be leaf
+pages that that level.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/x86/include/asm/pgtable.h |  3 ++-
- arch/x86/mm/debug_pagetables.c |  8 ++++----
- arch/x86/mm/dump_pagetables.c  | 14 ++++++--------
- 3 files changed, 12 insertions(+), 13 deletions(-)
+ include/asm-generic/pgtable.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 1a2b469f6e75..1b255987712e 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -30,7 +30,8 @@ extern pgd_t early_top_pgt[PTRS_PER_PGD];
- int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 75d9d68a6de7..46275896ca66 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1188,4 +1188,23 @@ static inline bool arch_has_pfn_modify_check(void)
+ #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
+ #endif
  
- void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
--void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user);
-+void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
-+				   bool user);
- void ptdump_walk_pgd_level_checkwx(void);
- void ptdump_walk_user_pgd_level_checkwx(void);
- 
-diff --git a/arch/x86/mm/debug_pagetables.c b/arch/x86/mm/debug_pagetables.c
-index 39001a401eff..d0efec713c6c 100644
---- a/arch/x86/mm/debug_pagetables.c
-+++ b/arch/x86/mm/debug_pagetables.c
-@@ -7,7 +7,7 @@
- 
- static int ptdump_show(struct seq_file *m, void *v)
- {
--	ptdump_walk_pgd_level_debugfs(m, NULL, false);
-+	ptdump_walk_pgd_level_debugfs(m, &init_mm, false);
- 	return 0;
- }
- 
-@@ -17,7 +17,7 @@ static int ptdump_curknl_show(struct seq_file *m, void *v)
- {
- 	if (current->mm->pgd) {
- 		down_read(&current->mm->mmap_sem);
--		ptdump_walk_pgd_level_debugfs(m, current->mm->pgd, false);
-+		ptdump_walk_pgd_level_debugfs(m, current->mm, false);
- 		up_read(&current->mm->mmap_sem);
- 	}
- 	return 0;
-@@ -30,7 +30,7 @@ static int ptdump_curusr_show(struct seq_file *m, void *v)
- {
- 	if (current->mm->pgd) {
- 		down_read(&current->mm->mmap_sem);
--		ptdump_walk_pgd_level_debugfs(m, current->mm->pgd, true);
-+		ptdump_walk_pgd_level_debugfs(m, current->mm, true);
- 		up_read(&current->mm->mmap_sem);
- 	}
- 	return 0;
-@@ -43,7 +43,7 @@ DEFINE_SHOW_ATTRIBUTE(ptdump_curusr);
- static int ptdump_efi_show(struct seq_file *m, void *v)
- {
- 	if (efi_mm.pgd)
--		ptdump_walk_pgd_level_debugfs(m, efi_mm.pgd, false);
-+		ptdump_walk_pgd_level_debugfs(m, &efi_mm, false);
- 	return 0;
- }
- 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 6f0d1296dee1..bcaf27b637e0 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -519,16 +519,12 @@ static inline bool is_hypervisor_range(int idx)
- static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 				       bool checkwx, bool dmesg)
- {
--	pgd_t *start = INIT_PGD;
-+	pgd_t *start = pgd;
- 	pgprotval_t prot, eff;
- 	int i;
- 	struct pg_state st = {};
- 
--	if (pgd) {
--		start = pgd;
--		st.to_dmesg = dmesg;
--	}
--
-+	st.to_dmesg = dmesg;
- 	st.check_wx = checkwx;
- 	st.seq = m;
- 	if (checkwx)
-@@ -573,8 +569,10 @@ void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm)
- 	ptdump_walk_pgd_level_core(m, mm->pgd, false, true);
- }
- 
--void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user)
-+void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
-+				   bool user)
- {
-+	pgd_t *pgd = mm->pgd;
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- 	if (user && boot_cpu_has(X86_FEATURE_PTI))
- 		pgd = kernel_to_user_pgdp(pgd);
-@@ -600,7 +598,7 @@ void ptdump_walk_user_pgd_level_checkwx(void)
- 
- void ptdump_walk_pgd_level_checkwx(void)
- {
--	ptdump_walk_pgd_level_core(NULL, NULL, true, false);
-+	ptdump_walk_pgd_level_core(NULL, INIT_PGD, true, false);
- }
- 
- static int __init pt_dump_init(void)
++/*
++ * p?d_leaf() - true if this entry is a final mapping to a physical address.
++ * This differs from p?d_huge() by the fact that they are always available (if
++ * the architecture supports large pages at the appropriate level) even
++ * if CONFIG_HUGETLB_PAGE is not defined.
++ */
++#ifndef pgd_leaf
++#define pgd_leaf(x)	0
++#endif
++#ifndef p4d_leaf
++#define p4d_leaf(x)	0
++#endif
++#ifndef pud_leaf
++#define pud_leaf(x)	0
++#endif
++#ifndef pmd_leaf
++#define pmd_leaf(x)	0
++#endif
++
+ #endif /* _ASM_GENERIC_PGTABLE_H */
 -- 
 2.20.1
 
