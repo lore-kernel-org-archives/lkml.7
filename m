@@ -2,102 +2,345 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91B5C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDFEC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1DE217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6639521911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbfGVL2D (ORCPT
+        id S1729711AbfGVLbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:28:03 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53251 "EHLO
+        Mon, 22 Jul 2019 07:31:05 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:54509 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfGVL2D (ORCPT
+        with ESMTP id S1726339AbfGVLbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:28:03 -0400
-Received: from [192.168.1.110] ([77.2.59.209]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MODeL-1i4gmS1upd-00OUzH; Mon, 22 Jul 2019 13:27:57 +0200
-Subject: Re: [PATCH 3/3] platform//x86/pcengines-apuv2: update gpio button
- definition
-To:     Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com,
-        info@metux.net, dvhart@infradead.org, andy@infradead.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <20190704090205.19400-4-fe@dev.tdt.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <cca95ba1-6ac0-a2eb-9ae6-914a8783c1ad@metux.net>
-Date:   Mon, 22 Jul 2019 13:27:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Jul 2019 07:31:05 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Ma1sQ-1hsuAI2CM0-00W26u; Mon, 22 Jul 2019 13:30:18 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jacky Hu <hengqing.hu@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: [PATCH] [v2 net-next] ipvs: reduce kernel stack usage
+Date:   Mon, 22 Jul 2019 13:29:15 +0200
+Message-Id: <20190722113009.2704377-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190704090205.19400-4-fe@dev.tdt.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:m8w2I/efKtMX8Bj3Zxwxo4ylumLdLVBWDdm0jN/TSvI90qhVQn7
- RH2M9cFAAOxds7X3KkynFxrBdsbmfJLL5VBfAvJelgdE2aOEkVVVfqEw5vBYktV2KhcFdSu
- XP1/7+F3L/KAOKb5/kRk0U1V4q9vdefrDZ+YoWh552py9hb4SZ6MHq1RHsdXeUNpyFiahLu
- 9q5/PmGvx+8/PrBFzUGQA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BaLexRi1z78=:EtsBshB8Y5Kb9YOFM9kiBs
- DQwv4x4K4KKvQSHtbSGqqPcZ2AbsWCebhYpO2wNQffbjDZbf1YBIFZQR3wZd+IJZM1osDAtcM
- 0fpwcKduYuby1YdFz3PmjgtseEPDbXub7phUWa2+G+lGH3YUJs1lNCj9K9XZZoxR6pne4iDWW
- 5s/uU/onXJ1jZ+nL3KxhTGTnKB1cquCcRbfvSE47he6tJxoQeP7Of5hHWTQcRrvn8oqmWEaWC
- 2SjjJoEAJodvOdExXdy9NSNmUMFYiRwJZAgMLxWGd5HZtp7ush4absHy8eOsO+luw2pNfig8+
- e+oexgzNW8V+MRztKD7mMPdBj9cGU/00wGLZb5drizXN+ULNpso09Oip6YOHzlC2mbRrAitD1
- EqrQHQq+6Rpl3Vi9Cv/hQCZdMOqSmv+FuLCDOZRKnfRPSBDcG6PhJIbP/G7AizftQ1PdY3eq1
- lx0+lguiiTdlD+VkNX1oxs2l/hwi/Fx9NjDr0pQAV061iuMwHHtUo0ga69K1si0Kd4m6cpR1+
- U4cr8AgqJhCjLJkcb7A6KvY5FZ1vuC5xvkFtcCxBFLUe+wxFKaEFprwcb4dd1ujeFgO7rZ8a1
- S0p/chLvSAOKn1ncxaj9hEhBFmyBsgfg8RLOypOMxFGwjJxOBqtczWlieVr/a0B+7oFiZMg3E
- j1XqGiZVz5WI5YgWwuwJ4kTYEBM19+PKg0Vo6OXyT+K32ohmsjKJjvlau2NDy05mybYvgyklj
- 7/m2V0j/Y1WhpLxmLsQ+UBU0kQE8iFrYHhuhPxDQBb9XPf1wxl9nAVhiIGM=
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:y3XJeLuIVIwDDFjOYme0R615KZno+fksxoAOMBCxrg5ZenG7LN0
+ nJKMuTmUfdqGadbzCkE2Aqs0mYkEhBeGU2jWQPkXOzXZZpx66GUJFOCNYwOjX3ruq89Qr8G
+ cFb9ukb/JA4/5++UL/TyYBIR9oFcNeQI5TdWR39Egkp637hp7XmPYkc6BYtxvfR4tJA6ae+
+ IceN6YVDlK0PfLpJgfj5w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Xm7c4Is20wA=:GabVLMs0HTem+IVzzzVHz8
+ JY8Bvnjg6eATuSV3EWFhcM3vbDj+Ddvy70dZLeRR097RCd/Zbs/axF/48GOy4M7SvRpasl76X
+ JhtqG2RhMowH0RlEapbGUjTozv8YD5cOdtZ4McOwUxzFGLMSEaPYRCZaxKUg3pdg55D8FOf50
+ 2jDSb9JEh8c44Lm9GktYsRfNJ7SQ9RvLj9YzZnMUiqkdl+GNlutXd59pl6U5bSp5FH2jqeYhn
+ Y4KWrFj307YgaKZAVXgBLhwJDfm1aHC5IgLIftH3NOt6baiOwFdgIrZUxm7GA+8lj7njqpy4C
+ VI1oj90Dbmw9pk7uS8ki3B5wF4OWHYAPM7bP2u5gSktGCK2+uQhQhVxsPq3evZov10+ZLKCp2
+ 8zNPnRKshh3vAOLifTi/18nW8aLMVhXsf3gQhz4IBZ6IGACEIZbPiFTmNLFB9ZDicj2xmCLtl
+ MHI4J7hbB2qBX6Vt2VYHWGsSHgnEt19dBpvyS5ewqhtZ+V/qg2h75tu5DgRxEti+sIvigscE2
+ 0NvBbSfo3fKWLbzItZ1eJ3/tDmRIe1TT87TN+c0pmY/+KXg/sDVVo3ki5Q2vkjmAczyXEHm9u
+ T7QDO7xznlwu9pqU1cv6u69wp3MhSvDY0fbHLKrjqvt+Zph4rBaI7C8qTPxErKd/MrBb02QxV
+ cllxwYsMwYLyyb+3iqkCP1JzqFPcKla14G3zfzxWEXkqN+hVobfbob9FtNqYcYbwKtew443BR
+ mhTViBJ9/+hxZ6ez+NU/ZOHjZNZG+tIDUTEvUQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.07.19 11:02, Florian Eckert wrote:
-> * Add the gpio number, so the button subsystem can find the right gpio.
-> * Change also the keycode from KEY_SETUP to KEY_RESTART, because it
->    seems more expressive to me and in the Alix-Board, which is the
->    predecessor, there isthis keycode defined too. I think this is also
->    intended by Pcengines. Also many embedded systems defined in the kernel
->    use this key code as well.
-> 
-> Signed-off-by: Florian Eckert <fe@dev.tdt.de>
-> ---
->   drivers/platform/x86/pcengines-apuv2.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-> index d50a50e9d34c..370fd2686d59 100644
-> --- a/drivers/platform/x86/pcengines-apuv2.c
-> +++ b/drivers/platform/x86/pcengines-apuv2.c
-> @@ -116,7 +116,8 @@ struct gpiod_lookup_table gpios_led_table = {
->   
->   static struct gpio_keys_button apu2_keys_buttons[] = {
->   	{
-> -		.code			= KEY_SETUP,
-> +		.code			= KEY_RESTART,
-> +		.gpio			= 508,
->   		.active_low		= 1,
->   		.desc			= "front button",
->   		.type			= EV_KEY,
-> 
+With the new CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL option, the stack
+usage in the ipvs debug output grows because each instance of
+IP_VS_DBG_BUF() now has its own buffer of 160 bytes that add up
+rather than reusing the stack slots:
 
-I'd like to ack only the keycode change, but not the deprecated .gpio 
-field. I'll post a separate patch for the keycode change only.
+net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_sched_persist':
+net/netfilter/ipvs/ip_vs_core.c:427:1: error: the frame size of 1052 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_new_conn_out':
+net/netfilter/ipvs/ip_vs_core.c:1231:1: error: the frame size of 1048 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_out':
+net/netfilter/ipvs/ip_vs_ftp.c:397:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_in':
+net/netfilter/ipvs/ip_vs_ftp.c:555:1: error: the frame size of 1200 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
+Since printk() already has a way to print IPv4/IPv6 addresses using
+the %pISc format string, use that instead, combined with a macro that
+creates a local sockaddr structure on the stack. These will still
+add up, but the stack frames are now under 200 bytes.
 
---mtx
+So far I have also only added three files that caused the warning
+messages to be reported. There are still a lot of other instances of
+IP_VS_DBG_BUF() that could be converted the same way after the
+basic idea is confirmed.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2:
+ - use compressed ipv6 format
+ - fix port number endianess
+---
+ include/net/ip_vs.h             | 59 ++++++++++++++++-----------------
+ net/netfilter/ipvs/ip_vs_core.c | 44 ++++++++++++------------
+ net/netfilter/ipvs/ip_vs_ftp.c  | 20 +++++------
+ 3 files changed, 60 insertions(+), 63 deletions(-)
+
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index 3759167f91f5..eace4374e69f 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -227,6 +227,16 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
+ 		       sizeof(ip_vs_dbg_buf), addr,			\
+ 		       &ip_vs_dbg_idx)
+ 
++#define IP_VS_DBG_SOCKADDR4(fam, addr, port)				\
++	(struct sockaddr*)&(struct sockaddr_in)				\
++	{ .sin_family = (fam), .sin_addr = (addr)->in, .sin_port = (port) }
++#define IP_VS_DBG_SOCKADDR6(fam, addr, port)				\
++	(struct sockaddr*)&(struct sockaddr_in6) \
++	{ .sin6_family = (fam), .sin6_addr = (addr)->in6, .sin6_port = (port) }
++#define IP_VS_DBG_SOCKADDR(fam, addr, port) (fam == AF_INET ?		\
++			IP_VS_DBG_SOCKADDR4(fam, addr, port) :		\
++			IP_VS_DBG_SOCKADDR6(fam, addr, port))
++
+ #define IP_VS_DBG(level, msg, ...)					\
+ 	do {								\
+ 		if (level <= ip_vs_get_debug_level())			\
+@@ -251,6 +261,7 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
+ #else	/* NO DEBUGGING at ALL */
+ #define IP_VS_DBG_BUF(level, msg...)  do {} while (0)
+ #define IP_VS_ERR_BUF(msg...)  do {} while (0)
++#define IP_VS_DBG_SOCKADDR(fam, addr, port) NULL
+ #define IP_VS_DBG(level, msg...)  do {} while (0)
+ #define IP_VS_DBG_RL(msg...)  do {} while (0)
+ #define IP_VS_DBG_PKT(level, af, pp, skb, ofs, msg)	do {} while (0)
+@@ -1244,31 +1255,23 @@ static inline void ip_vs_control_del(struct ip_vs_conn *cp)
+ {
+ 	struct ip_vs_conn *ctl_cp = cp->control;
+ 	if (!ctl_cp) {
+-		IP_VS_ERR_BUF("request control DEL for uncontrolled: "
+-			      "%s:%d to %s:%d\n",
+-			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+-			      ntohs(cp->cport),
+-			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+-			      ntohs(cp->vport));
++		pr_err("request control DEL for uncontrolled: "
++		       "%pISpc to %pISpcn",
++		       IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		       IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport));
+ 
+ 		return;
+ 	}
+ 
+-	IP_VS_DBG_BUF(7, "DELeting control for: "
+-		      "cp.dst=%s:%d ctl_cp.dst=%s:%d\n",
+-		      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+-		      ntohs(cp->cport),
+-		      IP_VS_DBG_ADDR(cp->af, &ctl_cp->caddr),
+-		      ntohs(ctl_cp->cport));
++	IP_VS_DBG(7, "DELeting control for: cp.dst=%pISpc ctl_cp.dst=%pISpc\n",
++		  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		  IP_VS_DBG_SOCKADDR(cp->af, &ctl_cp->caddr, ctl_cp->cport));
+ 
+ 	cp->control = NULL;
+ 	if (atomic_read(&ctl_cp->n_control) == 0) {
+-		IP_VS_ERR_BUF("BUG control DEL with n=0 : "
+-			      "%s:%d to %s:%d\n",
+-			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+-			      ntohs(cp->cport),
+-			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+-			      ntohs(cp->vport));
++		pr_err("BUG control DEL with n=0 : %pISpc to %pISpc\n",
++		       IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		       IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport));
+ 
+ 		return;
+ 	}
+@@ -1279,22 +1282,18 @@ static inline void
+ ip_vs_control_add(struct ip_vs_conn *cp, struct ip_vs_conn *ctl_cp)
+ {
+ 	if (cp->control) {
+-		IP_VS_ERR_BUF("request control ADD for already controlled: "
+-			      "%s:%d to %s:%d\n",
+-			      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+-			      ntohs(cp->cport),
+-			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+-			      ntohs(cp->vport));
++		pr_err("request control ADD for already controlled: "
++		       "%pISpc to %pISpc\n",
++		       IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		       IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport));
+ 
+ 		ip_vs_control_del(cp);
+ 	}
+ 
+-	IP_VS_DBG_BUF(7, "ADDing control for: "
+-		      "cp.dst=%s:%d ctl_cp.dst=%s:%d\n",
+-		      IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+-		      ntohs(cp->cport),
+-		      IP_VS_DBG_ADDR(cp->af, &ctl_cp->caddr),
+-		      ntohs(ctl_cp->cport));
++	IP_VS_DBG(7, "ADDing control for: "
++		  "cp.dst=%pISpc ctl_cp.dst=%pISpc\n",
++		  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		  IP_VS_DBG_SOCKADDR(cp->af, &ctl_cp->caddr, ctl_cp->cport));
+ 
+ 	cp->control = ctl_cp;
+ 	atomic_inc(&ctl_cp->n_control);
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index 46f06f92ab8f..06ab0bf9ae08 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -52,7 +52,6 @@
+ #include <net/ip_vs.h>
+ #include <linux/indirect_call_wrapper.h>
+ 
+-
+ EXPORT_SYMBOL(register_ip_vs_scheduler);
+ EXPORT_SYMBOL(unregister_ip_vs_scheduler);
+ EXPORT_SYMBOL(ip_vs_proto_name);
+@@ -295,11 +294,11 @@ ip_vs_sched_persist(struct ip_vs_service *svc,
+ #endif
+ 		snet.ip = src_addr->ip & svc->netmask;
+ 
+-	IP_VS_DBG_BUF(6, "p-schedule: src %s:%u dest %s:%u "
+-		      "mnet %s\n",
+-		      IP_VS_DBG_ADDR(svc->af, src_addr), ntohs(src_port),
+-		      IP_VS_DBG_ADDR(svc->af, dst_addr), ntohs(dst_port),
+-		      IP_VS_DBG_ADDR(svc->af, &snet));
++	IP_VS_DBG(6, "p-schedule: src %pISpc dest %pISpc "
++		      "mnet %pIS\n",
++		      IP_VS_DBG_SOCKADDR(svc->af, src_addr, src_port),
++		      IP_VS_DBG_SOCKADDR(svc->af, dst_addr, dst_port),
++		      IP_VS_DBG_SOCKADDR(svc->af, &snet, 0));
+ 
+ 	/*
+ 	 * As far as we know, FTP is a very complicated network protocol, and
+@@ -567,12 +566,12 @@ ip_vs_schedule(struct ip_vs_service *svc, struct sk_buff *skb,
+ 		}
+ 	}
+ 
+-	IP_VS_DBG_BUF(6, "Schedule fwd:%c c:%s:%u v:%s:%u "
+-		      "d:%s:%u conn->flags:%X conn->refcnt:%d\n",
++	IP_VS_DBG(6, "Schedule fwd:%c c:%pISpc v:%pISpc "
++		      "d:%pISp conn->flags:%X conn->refcnt:%d\n",
+ 		      ip_vs_fwd_tag(cp),
+-		      IP_VS_DBG_ADDR(cp->af, &cp->caddr), ntohs(cp->cport),
+-		      IP_VS_DBG_ADDR(cp->af, &cp->vaddr), ntohs(cp->vport),
+-		      IP_VS_DBG_ADDR(cp->daf, &cp->daddr), ntohs(cp->dport),
++		      IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		      IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport),
++		      IP_VS_DBG_SOCKADDR(cp->daf, &cp->daddr, cp->dport),
+ 		      cp->flags, refcount_read(&cp->refcnt));
+ 
+ 	ip_vs_conn_stats(cp, svc);
+@@ -886,8 +885,8 @@ static int handle_response_icmp(int af, struct sk_buff *skb,
+ 	/* Ensure the checksum is correct */
+ 	if (!skb_csum_unnecessary(skb) && ip_vs_checksum_complete(skb, ihl)) {
+ 		/* Failed checksum! */
+-		IP_VS_DBG_BUF(1, "Forward ICMP: failed checksum from %s!\n",
+-			      IP_VS_DBG_ADDR(af, snet));
++		IP_VS_DBG(1, "Forward ICMP: failed checksum from %pISc!\n",
++			      IP_VS_DBG_SOCKADDR(af, snet, 0));
+ 		goto out;
+ 	}
+ 
+@@ -1220,13 +1219,13 @@ struct ip_vs_conn *ip_vs_new_conn_out(struct ip_vs_service *svc,
+ 	ip_vs_conn_stats(cp, svc);
+ 
+ 	/* return connection (will be used to handle outgoing packet) */
+-	IP_VS_DBG_BUF(6, "New connection RS-initiated:%c c:%s:%u v:%s:%u "
+-		      "d:%s:%u conn->flags:%X conn->refcnt:%d\n",
+-		      ip_vs_fwd_tag(cp),
+-		      IP_VS_DBG_ADDR(cp->af, &cp->caddr), ntohs(cp->cport),
+-		      IP_VS_DBG_ADDR(cp->af, &cp->vaddr), ntohs(cp->vport),
+-		      IP_VS_DBG_ADDR(cp->af, &cp->daddr), ntohs(cp->dport),
+-		      cp->flags, refcount_read(&cp->refcnt));
++	IP_VS_DBG(6, "New connection RS-initiated:%c c:%pISpc v:%pISpc "
++		  "d:%pISp conn->flags:%X conn->refcnt:%d\n",
++		  ip_vs_fwd_tag(cp),
++		  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, cp->cport),
++		  IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr, cp->vport),
++		  IP_VS_DBG_SOCKADDR(cp->af, &cp->daddr, cp->dport),
++		  cp->flags, refcount_read(&cp->refcnt));
+ 	LeaveFunction(12);
+ 	return cp;
+ }
+@@ -1969,7 +1968,6 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ }
+ #endif
+ 
+-
+ /*
+  *	Check if it's for virtual services, look it up,
+  *	and send it on its way...
+@@ -1998,10 +1996,10 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 		      hooknum != NF_INET_LOCAL_OUT) ||
+ 		     !skb_dst(skb))) {
+ 		ip_vs_fill_iph_skb(af, skb, false, &iph);
+-		IP_VS_DBG_BUF(12, "packet type=%d proto=%d daddr=%s"
++		IP_VS_DBG(12, "packet type=%d proto=%d daddr=%pISc"
+ 			      " ignored in hook %u\n",
+ 			      skb->pkt_type, iph.protocol,
+-			      IP_VS_DBG_ADDR(af, &iph.daddr), hooknum);
++			      IP_VS_DBG_SOCKADDR(af, &iph.daddr, 0), hooknum);
+ 		return NF_ACCEPT;
+ 	}
+ 	/* ipvs enabled in this netns ? */
+diff --git a/net/netfilter/ipvs/ip_vs_ftp.c b/net/netfilter/ipvs/ip_vs_ftp.c
+index cf925906f59b..22099c42e184 100644
+--- a/net/netfilter/ipvs/ip_vs_ftp.c
++++ b/net/netfilter/ipvs/ip_vs_ftp.c
+@@ -306,9 +306,9 @@ static int ip_vs_ftp_out(struct ip_vs_app *app, struct ip_vs_conn *cp,
+ 					   &start, &end) != 1)
+ 			return 1;
+ 
+-		IP_VS_DBG_BUF(7, "EPSV response (%s:%u) -> %s:%u detected\n",
+-			      IP_VS_DBG_ADDR(cp->af, &from), ntohs(port),
+-			      IP_VS_DBG_ADDR(cp->af, &cp->caddr), 0);
++		IP_VS_DBG(7, "EPSV response (%pISpc) -> %pISc detected\n",
++			  IP_VS_DBG_SOCKADDR(cp->af, &from, port),
++			  IP_VS_DBG_SOCKADDR(cp->af, &cp->caddr, 0));
+ 	} else {
+ 		return 1;
+ 	}
+@@ -510,15 +510,15 @@ static int ip_vs_ftp_in(struct ip_vs_app *app, struct ip_vs_conn *cp,
+ 					  &to, &port, cp->af,
+ 					  &start, &end) == 1) {
+ 
+-		IP_VS_DBG_BUF(7, "EPRT %s:%u detected\n",
+-			      IP_VS_DBG_ADDR(cp->af, &to), ntohs(port));
++		IP_VS_DBG(7, "EPRT %pISpc detected\n",
++			  IP_VS_DBG_SOCKADDR(cp->af, &to, port));
+ 
+ 		/* Now update or create a connection entry for it */
+-		IP_VS_DBG_BUF(7, "protocol %s %s:%u %s:%u\n",
+-			      ip_vs_proto_name(ipvsh->protocol),
+-			      IP_VS_DBG_ADDR(cp->af, &to), ntohs(port),
+-			      IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+-			      ntohs(cp->vport)-1);
++		IP_VS_DBG(7, "protocol %s %pISpc %pISpc\n",
++			  ip_vs_proto_name(ipvsh->protocol),
++			  IP_VS_DBG_SOCKADDR(cp->af, &to, port),
++			  IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr,
++					     htons(ntohs(cp->vport)-1)));
+ 	} else {
+ 		return 1;
+ 	}
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.20.0
+
