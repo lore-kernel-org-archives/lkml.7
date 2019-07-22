@@ -2,175 +2,191 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1A3C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16177C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B158921926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D615321926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPH+Kevh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfGVK4n (ORCPT
+        id S1729776AbfGVK5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 06:56:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51210 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfGVK4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:56:43 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4AFE0308219F;
-        Mon, 22 Jul 2019 10:56:42 +0000 (UTC)
-Received: from work-vm (ovpn-117-221.ams2.redhat.com [10.36.117.221])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0992E60497;
-        Mon, 22 Jul 2019 10:56:32 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 11:56:30 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Collin Walling <walling@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        KVM list <kvm@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2 18/30] virtio_fs, dax: Set up virtio_fs dax_device
-Message-ID: <20190722105630.GC3035@work-vm>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-19-vgoyal@redhat.com>
- <20190717192725.25c3d146.pasic@linux.ibm.com>
- <20190718131532.GA13883@redhat.com>
- <CAPcyv4i+2nKJYqkbrdm3hWcjaMYkCKUxqLBq96HOZe6xOZzGGg@mail.gmail.com>
- <c519011e-1df3-3f35-8582-2cb58367ff8a@de.ibm.com>
+        Mon, 22 Jul 2019 06:57:34 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41470 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfGVK5e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 06:57:34 -0400
+Received: by mail-lj1-f196.google.com with SMTP id d24so37130088ljg.8;
+        Mon, 22 Jul 2019 03:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MfMbQo+3px3OA9BnZZv/vPC4tyxY+4Fa99yi+j6MVSs=;
+        b=IPH+KevhCcZGuzjzdQ0lz5atsUMe6SkDXi4+XrZuh259ziqgPwYr39ftyFmF6MozMv
+         0FuiimMJuXT9M81SWd6yIn7GIcsRO2RmTAtX+6bnHiQbOv6CwECBnCcQn24U29tC9Xws
+         mquHnECZoGFfUwH6Jio5Rzmdbcs9774hkOfwBqmbPm7kKpnmSXGk34iU98hZSsQEUap4
+         QKoCGxb7JqPUkku2oJcSC62tOPR1+ui6wKvZEXS38ZY8LeDbO+czhoikIFPROGbQrs7J
+         ijD5HKto3HhyrHLFZNx9EUkkKOsy/eJEEWb2LVMP3E+ldgpuVUcwQ1i5z4cfdG9hvJBw
+         RtSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MfMbQo+3px3OA9BnZZv/vPC4tyxY+4Fa99yi+j6MVSs=;
+        b=JORvly5QnOunbyYc67O8nK49l1EjjEx2ElqklyWyaTx8dS/QCQ555imF6PL9CaYp0c
+         ncrtydc/fRi+LAUcqzUW0glowBYDjYi22rid33tONB6Wl3tVaMDwrPrvE3fAdS0pdMoc
+         PKDE8Mc8i0XJzRhD5E7kMN/5bigYMux+Bt6l8Q9V72wKprMxpIlVF3X0q9dt+Fx2RPos
+         7qGr4Cb3yHir18JFhzQuzUXcDJklwqYzQetfffphrOB3c/FXill8kcTMwKLpeR/FFdom
+         kcbI6G7BaysxJurMc4B47Nmscy2J+18lSmfKs7TsxfcLS9VIotz77kpQ8qHwxdnNOkpF
+         vPZw==
+X-Gm-Message-State: APjAAAVMigEiMAdA5kYLskIBEH5GO+bn+k87CRgVluSoWC8qJG6mqOX1
+        q80npa0H7gzhqYAk2pqcDBGN8994
+X-Google-Smtp-Source: APXvYqxKBaaGhtcXgBX8AYLsoJaFMBoWGA/+yePSQ6iGvovI8f37U1Gps+nEDTjxrdgHmGvpFBkIbA==
+X-Received: by 2002:a2e:9117:: with SMTP id m23mr35967848ljg.134.1563793050348;
+        Mon, 22 Jul 2019 03:57:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id m4sm7464928ljc.56.2019.07.22.03.57.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 03:57:29 -0700 (PDT)
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+Date:   Mon, 22 Jul 2019 13:57:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c519011e-1df3-3f35-8582-2cb58367ff8a@de.ibm.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 22 Jul 2019 10:56:42 +0000 (UTC)
+In-Reply-To: <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Borntraeger (borntraeger@de.ibm.com) wrote:
+22.07.2019 13:13, Marc Zyngier пишет:
+> On 22/07/2019 10:54, Dmitry Osipenko wrote:
+>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>>
+>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+>>> for Tegra210.
+>>>
+>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+>>> interrupt controller suspend operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>>  1 file changed, 18 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>>> index e1f771c72fc4..851f88cef508 100644
+>>> --- a/drivers/irqchip/irq-tegra.c
+>>> +++ b/drivers/irqchip/irq-tegra.c
+>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>>  
+>>>  struct tegra_ictlr_soc {
+>>>  	unsigned int num_ictlrs;
+>>> +	bool supports_sc7;
+>>>  };
+>>>  
+>>>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>>>  
+>>>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+>>>  	.num_ictlrs = 6,
+>>> +	.supports_sc7 = true,
+>>>  };
+>>>  
+>>>  static const struct of_device_id ictlr_matches[] = {
+>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
+>>>  
+>>>  struct tegra_ictlr_info {
+>>>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>>> +	const struct tegra_ictlr_soc *soc;
+>>>  #ifdef CONFIG_PM_SLEEP
+>>>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+>>>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>>>  
+>>> -		/* Disable COP interrupts */
+>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>> +		/*
+>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>>> +		 *
+>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>>> +		 * system to go to SC7/LP0.
+>>> +		 *
+>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>>> +		 */
+>>> +		if (!lic->soc->supports_sc7)
+>>> +			/* Disable COP interrupts if SC7 is not supported */
+>>
+>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>> better here.
 > 
-> 
-> On 18.07.19 16:30, Dan Williams wrote:
-> > On Thu, Jul 18, 2019 at 6:15 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >>
-> >> On Wed, Jul 17, 2019 at 07:27:25PM +0200, Halil Pasic wrote:
-> >>> On Wed, 15 May 2019 15:27:03 -0400
-> >>> Vivek Goyal <vgoyal@redhat.com> wrote:
-> >>>
-> >>>> From: Stefan Hajnoczi <stefanha@redhat.com>
-> >>>>
-> >>>> Setup a dax device.
-> >>>>
-> >>>> Use the shm capability to find the cache entry and map it.
-> >>>>
-> >>>> The DAX window is accessed by the fs/dax.c infrastructure and must have
-> >>>> struct pages (at least on x86).  Use devm_memremap_pages() to map the
-> >>>> DAX window PCI BAR and allocate struct page.
-> >>>>
-> >>>
-> >>> Sorry for being this late. I don't see any more recent version so I will
-> >>> comment here.
-> >>>
-> >>> I'm trying to figure out how is this supposed to work on s390. My concern
-> >>> is, that on s390 PCI memory needs to be accessed by special
-> >>> instructions. This is taken care of by the stuff defined in
-> >>> arch/s390/include/asm/io.h. E.g. we 'override' __raw_writew so it uses
-> >>> the appropriate s390 instruction. However if the code does not use the
-> >>> linux abstractions for accessing PCI memory, but assumes it can be
-> >>> accessed like RAM, we have a problem.
-> >>>
-> >>> Looking at this patch, it seems to me, that we might end up with exactly
-> >>> the case described. For example AFAICT copy_to_iter() (3) resolves to
-> >>> the function in lib/iov_iter.c which does not seem to cater for s390
-> >>> oddities.
-> >>>
-> >>> I didn't have the time to investigate this properly, and since virtio-fs
-> >>> is virtual, we may be able to get around what is otherwise a
-> >>> limitation on s390. My understanding of these areas is admittedly
-> >>> shallow, and since I'm not sure I'll have much more time to
-> >>> invest in the near future I decided to raise concern.
-> >>>
-> >>> Any opinions?
-> >>
-> >> Hi Halil,
-> >>
-> >> I don't understand s390 and how PCI works there as well. Is there any
-> >> other transport we can use there to map IO memory directly and access
-> >> using DAX?
-> >>
-> >> BTW, is DAX supported for s390.
-> >>
-> >> I am also hoping somebody who knows better can chip in. Till that time,
-> >> we could still use virtio-fs on s390 without DAX.
-> > 
-> > s390 has so-called "limited" dax support, see CONFIG_FS_DAX_LIMITED.
-> > In practice that means that support for PTE_DEVMAP is missing which
-> > means no get_user_pages() support for dax mappings. Effectively it's
-> > only useful for execute-in-place as operations like fork() and ptrace
-> > of dax mappings will fail.
-> 
-> 
-> This is only true for the dcssblk device driver (drivers/s390/block/dcssblk.c
-> and arch/s390/mm/extmem.c). 
-> 
-> For what its worth, the dcssblk looks to Linux like normal memory (just above the
-> previously detected memory) that can be used like normal memory. In previous time
-> we even had struct pages for this memory - this was removed long ago (when it was
-> still xip) to reduce the memory footprint for large dcss blocks and small memory
-> guests.
-> Can the CONFIG_FS_DAX_LIMITED go away if we have struct pages for that memory?
-> 
-> Now some observations: 
-> - dcssblk is z/VM only (not KVM)
-> - Setting CONFIG_FS_DAX_LIMITED globally as a Kconfig option depending on wether
->   a device driver is compiled in or not seems not flexible enough in case if you
->   have device driver that does have struct pages and another one that doesn't
-> - I do not see a reason why we should not be able to map anything from QEMU
->   into the guest real memory via an additional KVM memory slot. 
->   We would need to handle that in the guest somehow (and not as a PCI bar),
->   register this with struct pages etc.
-> - we must then look how we can create the link between the guest memory and the
->   virtio-fs driver. For virtio-ccw we might be able to add a new ccw command or
->   whatever. Maybe we could also piggy-back on some memory hotplug work from David
->   Hildenbrand (add cc).
-> 
-> Regarding limitations on the platform:
-> - while we do have PCI, the virtio devices are usually plugged via the ccw bus.
->   That implies no PCI bars. I assume you use those PCI bars only to implicitely 
->   have the location of the shared memory
->   Correct?
+> If what you're saying is true, then the whole patch is wrong, and the
+> SC7 property should come from DT.
 
-Right.
+It should be safe to assume that all of existing Tegra210 devices use
+the firmware for SC7, hence I wouldn't say that the patch is entirely
+wrong. To me it's not entirely correct.
 
-> - no real memory mapped I/O. Instead there are instructions that work on the mmio.
->   As I understand things, this is of no concern regarding virtio-fs as you do not
->   need mmio in the sense that a memory access of the guest to such an address 
->   triggers an exit. You just need the shared memory as a mean to have the data
->   inside the guest. Any notification is done via normal virtqueue mechanisms
->   Correct?
-
-Yep.
-
+>>
+>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>
+>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>> pre-T210 at all, since COP is unused. This looks to me like it was
+>> cut-n-pasted from downstream kernel without a good reason and could be
+>> simply removed.
 > 
-> Adding Heiko, maybe he remembers some details of the dcssblk/xip history.
-> 
---
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+> Please verify that this is actually the case. Tegra-2 definitely needed
+> some level of poking, and I'm not keen on changing anything there until
+> you (or someone else) has verified it on actual HW (see e307cc8941fc).
+
+Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
+with all COP bits removed from the driver.
+
+AFAIK, the reason why downstream needed that disabling is that it uses
+proprietary firmware which is running on the COP and that firmware is
+usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
+interrupts after itself. That firmware is not applicable for the
+upstream kernel, hence there is no need to care about it.
+
+> Joseph, can you please shed some light here?
+
