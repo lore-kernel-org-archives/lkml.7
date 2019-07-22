@@ -2,253 +2,179 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B695DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7827C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9C521951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B066121BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzLi2KP2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JTKVwsYP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbfGVXfw (ORCPT
+        id S1731158AbfGVXgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:35:52 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42357 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfGVXfv (ORCPT
+        Mon, 22 Jul 2019 19:36:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51568 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfGVXgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:35:51 -0400
-Received: by mail-lf1-f65.google.com with SMTP id s19so27929811lfb.9;
-        Mon, 22 Jul 2019 16:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SyN4PMS8VdJuZtYAYv7/mZHuR7T+1K3l9M3mMacsc+A=;
-        b=AzLi2KP23pmRxkwmIXlrISi/NKbSONyUgYkBZNbaJO73EszX4dS22lkiDWZswJ8h0g
-         aqjGTP4d32ZROrCSBAGYEHTvhDDGgiJvAfswDyoqhbRm3auRD/2iqPYjf3vmjnfFyb8r
-         dk/UMF5YEMeE4+CwefO4LGjTZHLbknFadqOFc/V+rqJhrJlDmZWAO1kXNvluSP73gQNm
-         qDJPLf/3h9j5c4jISKA1CflIrbV/mfHQQnbCDlYoO/hVwqRVnJGGB/tzRefIsicJj1E4
-         HDOyiy5ScyHevG8RNYIoYCbaxNzzSneWSXfG7BNc8ZBBcO0TRtDvH8UIQdaZUSDBJ1if
-         isrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SyN4PMS8VdJuZtYAYv7/mZHuR7T+1K3l9M3mMacsc+A=;
-        b=MqkvhqpeC3GR8eng4IBZND9dt+2nvwXL5oefgNsg8NXcfskWOtIUoffYd74S+G2mE8
-         WFSXPkA569VYKavtwze8kyQdJiSEUCGpbM4gBWu34V4Vzl5r8ijOT/pLIgWSb9IXgi9Y
-         cwGA0zxJ5+OREWoI/P3iB2XQaXczB6jzkCsg9F6LzTZSiArOAuzdGN5JkW42nC01ZLxx
-         iohryfLYOkKCSG85fidg2nc+GKl7zyYaQhF28w9qNPENTyyAyWgi/gGjmmw5oicFkMFL
-         w3A/P41ktVszjp23rHhMdfzBrQ3z/Plg3mRPQK3XlEoWNwECm+mdTCOnoQVm+ARNyNjo
-         qrNw==
-X-Gm-Message-State: APjAAAUS5A4Wx96bb3E3jiKh0ydu3SDKQQnv4oSJJJv+trwxnPv2OKy7
-        jj0CTEnx50d6J803eRwc8ilHD5/2
-X-Google-Smtp-Source: APXvYqxnqujN01Dh+F4vReSd0zY91B9eV6mNZEOjyfpmuNHfRfxbCUMyYCnJzFeafdbDaOnXsdqYjg==
-X-Received: by 2002:a19:f00a:: with SMTP id p10mr32218584lfc.68.1563838547818;
-        Mon, 22 Jul 2019 16:35:47 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id b68sm8751413ljb.0.2019.07.22.16.35.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 16:35:46 -0700 (PDT)
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
- <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
- <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
- <20190722193838.0d7cd2ad@why>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
-Date:   Tue, 23 Jul 2019 02:35:44 +0300
+        Mon, 22 Jul 2019 19:36:52 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNXqjV001985;
+        Mon, 22 Jul 2019 23:36:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=egqqW/mZD3nk8a5ohX29bdMEufJeiEnpm1IdWpCZRK0=;
+ b=JTKVwsYPWPsu3AU08JPRXmOo/VtI5VqrdAtfGHg9VkamStKFb3mdvMwn4SkSdRQt6Um9
+ w/ahqK9ioeMad5i4KNM9oaUIttmsdZ8ZynR9NnVzp7WZbgmvDoJlTs+MwH0kcGthzE+D
+ gfgQewbXzP5bSVzNyuV3CYuxm8O+PQU9vWqp+c2slPWvJS2W1FqZwDisHWIFcxCtn+Q8
+ GDbsSeV04Iz/k3k6RV+gUjg0ttX8x1/EzePJ0SYK5VEiKtZsdlSxB+tw7gmVDrSEycxU
+ TMp4qotn+NZaQ0amJKm79LrCTkXeARDGkdlkxEyndOIHbclT2WNq6dCW+UmpjkVlN+9l hw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2tutwpadq8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 23:36:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNWYeR080720;
+        Mon, 22 Jul 2019 23:36:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tur2u2x3d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 23:36:24 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6MNaMkC003855;
+        Mon, 22 Jul 2019 23:36:22 GMT
+Received: from [192.168.1.14] (/180.165.87.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jul 2019 16:36:22 -0700
+Subject: Re: [PATCH] bfq: Check if bfqq is NULL in bfq_insert_request
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hsin-Yi Wang <hsinyi@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Doug Anderson <dianders@chromium.org>
+References: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
+ <20190722202920.GA18431@roeck-us.net>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <f3f2764a-90b4-e294-d364-a25156933a71@oracle.com>
+Date:   Tue, 23 Jul 2019 07:36:16 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190722193838.0d7cd2ad@why>
+In-Reply-To: <20190722202920.GA18431@roeck-us.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907220249
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907220249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-22.07.2019 21:38, Marc Zyngier пишет:
-> On Mon, 22 Jul 2019 09:21:21 -0700
-> Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
-> 
->> On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
->>> 22.07.2019 13:13, Marc Zyngier пишет:  
->>>> On 22/07/2019 10:54, Dmitry Osipenko wrote:  
->>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:  
->>>>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
->>>>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->>>>>>
->>>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
->>>>>> for Tegra210.
->>>>>>
->>>>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
->>>>>> interrupt controller suspend operation.
->>>>>>
->>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>> ---
->>>>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->>>>>>   1 file changed, 18 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
->>>>>> index e1f771c72fc4..851f88cef508 100644
->>>>>> --- a/drivers/irqchip/irq-tegra.c
->>>>>> +++ b/drivers/irqchip/irq-tegra.c
->>>>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->>>>>>   
->>>>>>   struct tegra_ictlr_soc {
->>>>>>   	unsigned int num_ictlrs;
->>>>>> +	bool supports_sc7;
->>>>>>   };
->>>>>>   
->>>>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
->>>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
->>>>>>   
->>>>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
->>>>>>   	.num_ictlrs = 6,
->>>>>> +	.supports_sc7 = true,
->>>>>>   };
->>>>>>   
->>>>>>   static const struct of_device_id ictlr_matches[] = {
->>>>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
->>>>>>   
->>>>>>   struct tegra_ictlr_info {
->>>>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
->>>>>> +	const struct tegra_ictlr_soc *soc;
->>>>>>   #ifdef CONFIG_PM_SLEEP
->>>>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->>>>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
->>>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->>>>>>   		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
->>>>>>   		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->>>>>>   
->>>>>> -		/* Disable COP interrupts */
->>>>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>>>> +		/*
->>>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
->>>>>> +		 *
->>>>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
->>>>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
->>>>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
->>>>>> +		 * system to go to SC7/LP0.
->>>>>> +		 *
->>>>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
->>>>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
->>>>>> +		 */
->>>>>> +		if (!lic->soc->supports_sc7)
->>>>>> +			/* Disable COP interrupts if SC7 is not supported */  
->>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->>>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
->>>>> better here.  
->>>> If what you're saying is true, then the whole patch is wrong, and the
->>>> SC7 property should come from DT.  
->>> It should be safe to assume that all of existing Tegra210 devices use
->>> the firmware for SC7, hence I wouldn't say that the patch is entirely
->>> wrong. To me it's not entirely correct.  
+On 7/23/19 4:29 AM, Guenter Roeck wrote:
+> On Mon, Jul 22, 2019 at 10:30:48AM -0700, Guenter Roeck wrote:
+>> In bfq_insert_request(), bfqq is initialized with:
+>> 	bfqq = bfq_init_rq(rq);
+>> In bfq_init_rq(), we find:
+>> 	if (unlikely(!rq->elv.icq))
+>> 		return NULL;
+>> Indeed, rq->elv.icq can be NULL if the memory allocation in
+>> create_task_io_context() failed.
 >>
->> Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and 
->> AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ 
->> to COP for SC7 entry fw execution.
-
-Okay, as I already wrote before, it looks to me that a more proper
-solution should be to just remove everything related to COP from this
-driver instead of adding custom quirks for T210.
-
-The disabling / restoring of COP interrupts should be relevant only for
-the multimedia firmware on older Tegra SoCs. That firmware won't be ever
-supported in the upstream simply because NVIDIA abandoned the support
-for older hardware in the downstream and because it is not possible due
-to some legal weirdness (IIUC). The only variant for upstream is
-reverse-engineering of hardware (not the firmware BLOB) and writing
-proper opensource drivers for the upstream kernel, which we're already
-doing and have success to a some extent.
-
-> That's not the question. Dmitry says that the SC7 support is not a
-> property of the SoC, but mostly a platform decision on whether the
-> firmware supports SC7 or not.
 > 
-> To me, that's a clear indication that this should not be hardcoded in
-> the driver, but instead obtained dynamically, via DT or otherwise.
-
-We already have an nvidia,suspend-mode property in the device-tree of
-the Power Management Controller node (all Tegra SoCs) which defines what
-suspending type is supported by a particular board.
-
->>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);  
->>>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
->>>>> pre-T210 at all, since COP is unused. This looks to me like it was
->>>>> cut-n-pasted from downstream kernel without a good reason and could be
->>>>> simply removed.  
->>>> Please verify that this is actually the case. Tegra-2 definitely needed
->>>> some level of poking, and I'm not keen on changing anything there until
->>>> you (or someone else) has verified it on actual HW (see e307cc8941fc).  
->>> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
->>> with all COP bits removed from the driver.
->>>
->>> AFAIK, the reason why downstream needed that disabling is that it uses
->>> proprietary firmware which is running on the COP and that firmware is
->>> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
->>> interrupts after itself. That firmware is not applicable for the
->>> upstream kernel, hence there is no need to care about it.
->>>  
->>>> Joseph, can you please shed some light here?  
+> The above function should have been ioc_create_icq(), sorry.
+> 
+> Guenter
+> 
+>> A comment in bfq_insert_request() suggests that bfqq is supposed to be
+>> non-NULL if 'at_head || blk_rq_is_passthrough(rq)' is false. Yet, as
+>> debugging and practical experience shows, this is not the case in the
+>> above situation.
 >>
->> SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the
->> one that actually loads SC7 entry firmware and triggers IRQ to
->> AVP/COP which causes COP to wakeup and run SC7 entry FW.
+>> This results in the following crash.
 >>
->> So when SC7 support is enabled, IRQ need to be kept enabled and when
->> SC7 FW starts execution, it will disable COP IRQ.
-> 
-> This looks like a lot of undocumented assumptions on what firmware
-> does, as well as what firmware *is*. What I gather from this thread is
-> that there is at least two versions of firmware (a "proprietary
-> firmware" for "downstream kernels", and another one for mainline), and
-> that they do different things.
-> 
-> Given that we cannot know what people actually run, I don't think we
-> can safely remove anything unless this gets tested on the full spectrum
-> of HW/FW combination.
+>> Unable to handle kernel NULL pointer dereference
+>> 	at virtual address 00000000000001b0
+>> ...
+>> Call trace:
+>>  bfq_setup_cooperator+0x44/0x134
+>>  bfq_insert_requests+0x10c/0x630
+>>  blk_mq_sched_insert_requests+0x60/0xb4
+>>  blk_mq_flush_plug_list+0x290/0x2d4
+>>  blk_flush_plug_list+0xe0/0x230
+>>  blk_finish_plug+0x30/0x40
+>>  generic_writepages+0x60/0x94
+>>  blkdev_writepages+0x24/0x30
+>>  do_writepages+0x74/0xac
+>>  __filemap_fdatawrite_range+0x94/0xc8
+>>  file_write_and_wait_range+0x44/0xa0
+>>  blkdev_fsync+0x38/0x68
+>>  vfs_fsync_range+0x68/0x80
+>>  do_fsync+0x44/0x80
+>>
+>> The problem is relatively easy to reproduce by running an image with
+>> failslab enabled, such as with:
+>>
+>> cd /sys/kernel/debug/failslab
+>> echo 10 > probability
+>> echo 300 > times
+>>
+>> Avoid the problem by checking if bfqq is NULL before using it. With the
+>> NULL check in place, requests with missing io context are queued
+>> immediately, and the crash is no longer seen.
+>>
 
-I'm not sure whether multiple firmware variations exist in the wild for
-Tegra210. Maybe Sowjanya or somebody else from NVIDIA could clarify. I
-think there should be some efforts in regards to a fully opensource
-firmware on Tegra210, but I'm not following it and have no idea about
-the status.
 
-You're right that there are multiple variants of suspend-resuming flow
-on Tegra SoCs. The older 32bit Tegra SoC generations have a variety of
-options in regards to suspend-resuming, including firmware-less variants
-on platforms that are having kernel running in secure mode (dev boards,
-most of Tegra20 consumer devices) and Trusted-Foundations firmware
-variant for insecure platforms (consumer devices). And yes, vendor
-firmware creates a lot of headache in regards to bringing support into
-upstream because it usually does a lot of odd undocumented things which
-may also vary depending on a firmware version (bootloader, etc) and it
-also usually difficult to replace it with an opensource alternative due
-to a crypto signing.
+What about other place use blk_init_rq()?
+E.g in bfq_request_merged():
+1897                 struct bfq_queue *bfqq = bfq_init_rq(req);
+1898                 struct bfq_data *bfqd = bfqq->bfqd;
+
+Which may have same Null-pointer bug?
+
+-Bob
+
+>> Fixes: 18e5a57d79878 ("block, bfq: postpone rq preparation to insert or merge")
+>> Reported-by: Hsin-Yi Wang  <hsinyi@google.com>
+>> Cc: Hsin-Yi Wang <hsinyi@google.com>
+>> Cc: Nicolas Boichat <drinkcat@chromium.org>
+>> Cc: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>  block/bfq-iosched.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+>> index 72860325245a..56f3f4227010 100644
+>> --- a/block/bfq-iosched.c
+>> +++ b/block/bfq-iosched.c
+>> @@ -5417,7 +5417,7 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+>>  
+>>  	spin_lock_irq(&bfqd->lock);
+>>  	bfqq = bfq_init_rq(rq);
+>> -	if (at_head || blk_rq_is_passthrough(rq)) {
+>> +	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
+>>  		if (at_head)
+>>  			list_add(&rq->queuelist, &bfqd->dispatch);
+>>  		else
+>> -- 
+>> 2.7.4
+>>
+
