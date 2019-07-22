@@ -2,95 +2,116 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D986C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285AAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C2721985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:51:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=reply2setup-com.20150623.gappssmtp.com header.i=@reply2setup-com.20150623.gappssmtp.com header.b="Er1whEjJ"
+	by mail.kernel.org (Postfix) with ESMTP id 071D221955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfGVSvu (ORCPT
+        id S1731844AbfGVSwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:51:50 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38554 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbfGVSvs (ORCPT
+        Mon, 22 Jul 2019 14:52:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38014 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727821AbfGVSwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:51:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id az7so19544290plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=reply2setup-com.20150623.gappssmtp.com; s=20150623;
-        h=to:subject:from:message-id:disposition-notification-to:date
-         :user-agent:mime-version:content-transfer-encoding:content-language;
-        bh=CkPTLp1+mLr2WEfeyAA98TPYjmGNdrnGzYHbmZtdlPc=;
-        b=Er1whEjJ4kNYucyXbVOdIhrBNUD6NqjK/gBR+omL5PT370IIwZKZtMupePvJy7ntqU
-         MuB3auJKkJSqLFoBHOumNxaIDprhkQOj5pPjReQvgDrZOLlp9Q3lNCelPfUaa4CeQ/g6
-         1KVpuHzOxxJk9ow3+gidRwjh9DT1XCEfx3HEJmisgfAdc7EYTfTPWy4RNLFBzLch1mmc
-         7xi6/0ewr5lpG7oA/3ZL96EZ5B8oEZoHxcbTPx8hiVQZa2K245djnaRYDaOod3QFplnW
-         uw2jRlb/UAPCh4eeWMtcq/Cyy+cQh8xvsabdMrUmiBQA2/xIaUIsO0h3MfDpo3XWWolE
-         RxYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:subject:from:message-id
-         :disposition-notification-to:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=CkPTLp1+mLr2WEfeyAA98TPYjmGNdrnGzYHbmZtdlPc=;
-        b=ktKzs9JClxXRRgZpOo+CfVKx52APKzT7ooBaekUHWxytjsP0MjLT48x/8mr5nyfw2C
-         zR7VuUDbCj+b0oFZdyXvU9pDOSD1AD2xjqtj931d2d6PSvzGHDbQjjHVdIs68ekNiGzj
-         SVtZmoY/dMp/FyAw8EqPHEs53VjmuBiYN19ii0Z+hyT6uZbEs3eZVKwErNEthlrGqeBC
-         0Iiqreg8tNtRcXTv6QlHwb/FlE0v6zZMInfq8R4XbevaACMLc5ZPN5z8pTRFXox5MPfr
-         UPe+pQZ4Yo/oipJBI0ZGJSCiuRcL4pzHW0gtln0ECKsB1WevfiGzwsNHmO9KKQndKDbP
-         TCaw==
-X-Gm-Message-State: APjAAAVs7oHCd4/oSbpxtBOf0p3v1Vw2D+BShRWxnMQo6NHX3JTL4265
-        mBIP+a1la5qbGquPrwf03208kn0G
-X-Google-Smtp-Source: APXvYqxm8U0feXuxfSWfxLubfRTvs1pbMHcnkOb4MXmMeW89K1c9aX+6YdjZMlDFY0s/NYZGQkQ9pg==
-X-Received: by 2002:a17:902:6b85:: with SMTP id p5mr73556286plk.225.1563821507341;
-        Mon, 22 Jul 2019 11:51:47 -0700 (PDT)
-Received: from [192.168.0.13] ([103.253.170.188])
-        by smtp.gmail.com with ESMTPSA id p67sm48316622pfg.124.2019.07.22.11.51.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 11:51:46 -0700 (PDT)
-To:     linux-kernel@vger.kernel.org
-Subject: Wine Enthusiasts
-From:   Leslie Arthur <larthur@reply2setup.com>
-Message-ID: <c54758c2-20be-ef3e-014b-5364844dfe95@reply2setup.com>
-Date:   Mon, 22 Jul 2019 13:43:48 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 14:52:08 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hpdPk-0002FA-Kc; Mon, 22 Jul 2019 20:52:00 +0200
+Date:   Mon, 22 Jul 2019 20:51:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nadav Amit <namit@vmware.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH v3 1/9] smp: Run functions concurrently in
+ smp_call_function_many()
+In-Reply-To: <91940019-826C-4F33-904B-0767D95A5E21@vmware.com>
+Message-ID: <alpine.DEB.2.21.1907222045101.1659@nanos.tec.linutronix.de>
+References: <20190719005837.4150-1-namit@vmware.com> <20190719005837.4150-2-namit@vmware.com> <20190722182159.GB6698@worktop.programming.kicks-ass.net> <alpine.DEB.2.21.1907222033200.1659@nanos.tec.linutronix.de>
+ <91940019-826C-4F33-904B-0767D95A5E21@vmware.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Antivirus: Avast (VPS 190722-4, 07/22/2019), Outbound message
-X-Antivirus-Status: Clean
+Content-Type: multipart/mixed; boundary="8323329-1903360966-1563821520=:1659"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hello,
+--8323329-1903360966-1563821520=:1659
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Would you be interested in acquiring an email list of "Wine Enthusiasts" from USA?
+On Mon, 22 Jul 2019, Nadav Amit wrote:
+> > On Jul 22, 2019, at 11:37 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > 
+> > On Mon, 22 Jul 2019, Peter Zijlstra wrote:
+> > 
+> >> On Thu, Jul 18, 2019 at 05:58:29PM -0700, Nadav Amit wrote:
+> >>> +/*
+> >>> + * Call a function on all processors.  May be used during early boot while
+> >>> + * early_boot_irqs_disabled is set.
+> >>> + */
+> >>> +static inline void on_each_cpu(smp_call_func_t func, void *info, int wait)
+> >>> +{
+> >>> +	on_each_cpu_mask(cpu_online_mask, func, info, wait);
+> >>> +}
+> >> 
+> >> I'm thinking that one if buggy, nothing protects online mask here.
+> > 
+> > The current implementation has preemption disabled before touching
+> > cpu_online_mask which at least protects against a CPU going away as that
+> > prevents the stomp machine thread from getting on the CPU. But it's not
+> > protected against a CPU coming online concurrently.
+> 
+> I still don’t understand. If you called cpu_online_mask() and did not
+> disable preemption before calling it, you are already (today) not protected
+> against another CPU coming online. Disabling preemption in on_each_cpu()
+> will not solve it.
 
-We also have data for Golfers, Alcohol Enthusiasts, Beer Enthusiasts, Chocolate Enthusiasts, Foodies, Travelers, Gift Buyers, Spa and Resort Visitors, Sports Enthusiasts, Android Users and many more..
+Disabling preemption _cannot_ protect against a CPU coming online. It only
+can protect against a CPU being offlined.
 
-Each record in the list contains Contact Name (First, Middle and Last Name), Mailing Address, List type and Opt-in email address.
+The current implementation of on_each_cpu() disables preemption _before_
+touching cpu_online_mask.
 
-All the contacts are opt-in verified, 100% permission based and can be used for unlimited multi-channel marketing.
+void on_each_cpu(void (*func) (void *info), void *info, int wait)
+{
+        unsigned long flags;
 
-Please let me know your thoughts towards procuring the Wine Enthusiasts List.
+        preempt_disable();
+	smp_call_function(func, info, wait);
 
-Best Regards,
-Leslie Arthur
-Research Analyst
+smp_call_function() has another preempt_disable as it can be called
+separately and it does:
 
-We respect your privacy, if you do not wish to receive any further emails from our end, please reply with a subject "Remove".
+        preempt_disable();
+        smp_call_function_many(cpu_online_mask, func, info, wait);
 
+Your new on_each_cpu() implementation does not. So there is a
+difference. Whether it matters or not is a different question, but that
+needs to be explained and documented.
+
+Thanks,
+
+	tglx
+
+--8323329-1903360966-1563821520=:1659--
