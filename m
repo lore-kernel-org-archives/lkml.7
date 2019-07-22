@@ -2,90 +2,130 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4223FC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A5C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD0E218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YIEEIbEn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CX2aHSFO"
+	by mail.kernel.org (Postfix) with ESMTP id F2A2A218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfGVPvU (ORCPT
+        id S1729990AbfGVPvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:51:20 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54366 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfGVPvU (ORCPT
+        Mon, 22 Jul 2019 11:51:48 -0400
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:60494 "EHLO
+        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfGVPvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:51:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E8BFA61C0D; Mon, 22 Jul 2019 15:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563810679;
-        bh=rBf/mqWfKN7U2zd3m4iikSbifwekc4iKWTNDZ8h6ew0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YIEEIbEnjVapuouGfIp/VVyD3UWeXPGlmGmS7uduHj1ndwiy57aLDm33fA7+E7G2H
-         /VgNuLDrHmbP0Qc7gwbqRYceNSU9WLkCYjjUYRoN+acgr2ABfp5PRy1LGPWDvPAJSm
-         X0ZQ4hZV18RLKgPnHY1A5aD9GBOkEdm8dTBzmAJs=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 726F161A49;
-        Mon, 22 Jul 2019 15:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563810677;
-        bh=rBf/mqWfKN7U2zd3m4iikSbifwekc4iKWTNDZ8h6ew0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CX2aHSFOyGUW+vWd/GPyfFBjHoOuvFbBvyUxT4wbTKtp9VHfWQBD5h0useAo9o9xz
-         ZUNntl2J84Wgkrc9WLOp9jYHAAuPQWH9dxvAZRuyChSNYqUjm57TKOmFzEznbkkItR
-         MeJ/DLLLU86CkmJMxnaWOTE6/sJthp7Q0ZFTlcdY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 726F161A49
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Mon, 22 Jul 2019 09:51:16 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org
-Subject: Re: [PATCH 2/2] drivers: qcom: rpmh-rsc: fix read back of trigger
- register
-Message-ID: <20190722155116.GF25567@codeaurora.org>
-References: <20190701152907.16407-1-ilina@codeaurora.org>
- <20190701152907.16407-2-ilina@codeaurora.org>
- <5d320a79.1c69fb81.17c57.b9ba@mx.google.com>
+        Mon, 22 Jul 2019 11:51:47 -0400
+Received: from [195.176.96.199] (helo=jupiter)
+        by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.92)
+        id 1hpa1O-0008AD-6i; Mon, 22 Jul 2019 17:14:38 +0200
+From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+To:     Moni Shoua <monis@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+Subject: [PATCH 08/10] Move responsibility of cleaning up pool elements
+Date:   Mon, 22 Jul 2019 17:14:24 +0200
+Message-Id: <20190722151426.5266-9-mplaneta@os.inf.tu-dresden.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
+References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d320a79.1c69fb81.17c57.b9ba@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19 2019 at 12:22 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-01 08:29:07)
->> When triggering a TCS to send its contents, reading back the trigger
->> value may return an incorrect value. That is because, writing the
->> trigger may raise an interrupt which could be handled immediately and
->> the trigger value could be reset in the interrupt handler. By doing a
->> read back we may end up spinning waiting for the value we wrote.
->
->Doesn't this need to be squashed into the patch that gets rid of the
->irqs disabled state of this code? It sounds an awful lot like this
->problem only happens now because the previous patch removed the
->irqsave/irqrestore code around this function.
->
+Specific implementations must finish off the cleanup of pool elements
+when it is the right moment. Reason for that is that a concreate cleanup
+function may want postpone and schedule part of object destruction to
+later time.
 
-True. Could be rolled into that fix.
+Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+---
+ drivers/infiniband/sw/rxe/rxe_cq.c    | 2 ++
+ drivers/infiniband/sw/rxe/rxe_mcast.c | 2 ++
+ drivers/infiniband/sw/rxe/rxe_mr.c    | 2 ++
+ drivers/infiniband/sw/rxe/rxe_pool.c  | 9 ++++++++-
+ drivers/infiniband/sw/rxe/rxe_pool.h  | 2 ++
+ 5 files changed, 16 insertions(+), 1 deletion(-)
 
---Lina
+diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
+index ad3090131126..5693986c8c1b 100644
+--- a/drivers/infiniband/sw/rxe/rxe_cq.c
++++ b/drivers/infiniband/sw/rxe/rxe_cq.c
+@@ -182,4 +182,6 @@ void rxe_cq_cleanup(struct rxe_pool_entry *arg)
+ 
+ 	if (cq->queue)
+ 		rxe_queue_cleanup(cq->queue);
++
++	rxe_elem_cleanup(arg);
+ }
+diff --git a/drivers/infiniband/sw/rxe/rxe_mcast.c b/drivers/infiniband/sw/rxe/rxe_mcast.c
+index 24ebc4ca1b99..6453ae97653f 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mcast.c
++++ b/drivers/infiniband/sw/rxe/rxe_mcast.c
+@@ -187,4 +187,6 @@ void rxe_mc_cleanup(struct rxe_pool_entry *arg)
+ 
+ 	rxe_drop_key(&grp->pelem);
+ 	rxe_mcast_delete(rxe, &grp->mgid);
++
++	rxe_elem_cleanup(arg);
+ }
+diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
+index 441b01e30afa..1c0940655df1 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@ -104,6 +104,8 @@ void rxe_mem_cleanup(struct rxe_pool_entry *arg)
+ 
+ 		kfree(mem->map);
+ 	}
++
++	rxe_elem_cleanup(arg);
+ }
+ 
+ static int rxe_mem_alloc(struct rxe_mem *mem, int num_buf)
+diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
+index 711d7d7f3692..3b14ab599662 100644
+--- a/drivers/infiniband/sw/rxe/rxe_pool.c
++++ b/drivers/infiniband/sw/rxe/rxe_pool.c
+@@ -462,9 +462,16 @@ void rxe_elem_release(struct kref *kref)
+ 
+ 	if (pool->cleanup)
+ 		pool->cleanup(elem);
++	else
++		rxe_elem_cleanup(elem);
++}
++
++void rxe_elem_cleanup(struct rxe_pool_entry *pelem)
++{
++	struct rxe_pool *pool = pelem->pool;
+ 
+ 	if (!(pool->flags & RXE_POOL_NO_ALLOC))
+-		kmem_cache_free(pool_cache(pool), elem);
++		kmem_cache_free(pool_cache(pool), pelem);
+ 	atomic_dec(&pool->num_elem);
+ 	ib_device_put(&pool->rxe->ib_dev);
+ 	rxe_pool_put(pool);
+diff --git a/drivers/infiniband/sw/rxe/rxe_pool.h b/drivers/infiniband/sw/rxe/rxe_pool.h
+index 1e3508c74dc0..84cfbc749a5c 100644
+--- a/drivers/infiniband/sw/rxe/rxe_pool.h
++++ b/drivers/infiniband/sw/rxe/rxe_pool.h
+@@ -160,6 +160,8 @@ void *rxe_pool_get_key(struct rxe_pool *pool, void *key);
+ /* cleanup an object when all references are dropped */
+ void rxe_elem_release(struct kref *kref);
+ 
++void rxe_elem_cleanup(struct rxe_pool_entry *pelem);
++
+ /* take a reference on an object */
+ static inline void rxe_add_ref(struct rxe_pool_entry *pelem) {
+ 	kref_get(&pelem->ref_cnt);
+-- 
+2.20.1
+
