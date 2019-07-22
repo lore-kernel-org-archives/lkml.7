@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F6BC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F473C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F339218F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B7F218F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbfGVMsz (ORCPT
+        id S1730279AbfGVMs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:48:55 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39446 "EHLO inva021.nxp.com"
+        Mon, 22 Jul 2019 08:48:59 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51358 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbfGVMsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:48:52 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9EE522002C8;
-        Mon, 22 Jul 2019 14:48:50 +0200 (CEST)
+        id S1727903AbfGVMs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:48:58 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C5251A01FE;
+        Mon, 22 Jul 2019 14:48:56 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9043E20004A;
-        Mon, 22 Jul 2019 14:48:50 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1F1E11A00AA;
+        Mon, 22 Jul 2019 14:48:56 +0200 (CEST)
 Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D52CD205DB;
-        Mon, 22 Jul 2019 14:48:49 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D54E205DB;
+        Mon, 22 Jul 2019 14:48:55 +0200 (CEST)
 From:   Daniel Baluta <daniel.baluta@nxp.com>
 To:     broonie@kernel.org
 Cc:     festevam@gmail.com, perex@perex.cz, tiwai@suse.com,
@@ -38,9 +38,9 @@ Cc:     festevam@gmail.com, perex@perex.cz, tiwai@suse.com,
         shengjiu.wang@nxp.com, angus@akkea.ca, kernel@pengutronix.de,
         l.stach@pengutronix.de, viorel.suman@nxp.com,
         Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 03/10] ASoC: fsl_sai: Add registers definition for multiple datalines
-Date:   Mon, 22 Jul 2019 15:48:26 +0300
-Message-Id: <20190722124833.28757-4-daniel.baluta@nxp.com>
+Subject: [PATCH 10/10] ASoC: fsl_sai: Add support for imx7ulp/imx8mq
+Date:   Mon, 22 Jul 2019 15:48:33 +0300
+Message-Id: <20190722124833.28757-11-daniel.baluta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722124833.28757-1-daniel.baluta@nxp.com>
 References: <20190722124833.28757-1-daniel.baluta@nxp.com>
@@ -50,198 +50,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SAI IP supports up to 8 data lines. The configuration of
-supported number of data lines is decided at SoC integration
-time.
+SAI module on imx7ulp/imx8m features 2 new registers (VERID and PARAM)
+at the beginning of register address space.
 
-This patch adds definitions for all related data TX/RX registers:
-	* TDR0..7, Transmit data register
-	* TFR0..7, Transmit FIFO register
-	* RDR0..7, Receive data register
-	* RFR0..7, Receive FIFO register
+On imx7ulp FIFOs can held up to 16 x 32 bit samples.
+On imx8mq FIFOs can held up to 128 x 32 bit samples.
 
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- sound/soc/fsl/fsl_sai.c | 76 +++++++++++++++++++++++++++++++++++------
- sound/soc/fsl/fsl_sai.h | 36 ++++++++++++++++---
- 2 files changed, 98 insertions(+), 14 deletions(-)
+ sound/soc/fsl/fsl_sai.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 1d1a447163e3..7f8823fe4b90 100644
+index f2441b84877e..b05837465b5a 100644
 --- a/sound/soc/fsl/fsl_sai.c
 +++ b/sound/soc/fsl/fsl_sai.c
-@@ -685,7 +685,14 @@ static struct reg_default fsl_sai_reg_defaults[] = {
- 	{FSL_SAI_TCR3, 0},
- 	{FSL_SAI_TCR4, 0},
- 	{FSL_SAI_TCR5, 0},
--	{FSL_SAI_TDR,  0},
-+	{FSL_SAI_TDR0, 0},
-+	{FSL_SAI_TDR1, 0},
-+	{FSL_SAI_TDR2, 0},
-+	{FSL_SAI_TDR3, 0},
-+	{FSL_SAI_TDR4, 0},
-+	{FSL_SAI_TDR5, 0},
-+	{FSL_SAI_TDR6, 0},
-+	{FSL_SAI_TDR7, 0},
- 	{FSL_SAI_TMR,  0},
- 	{FSL_SAI_RCR1, 0},
- 	{FSL_SAI_RCR2, 0},
-@@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_TCR3:
- 	case FSL_SAI_TCR4:
- 	case FSL_SAI_TCR5:
--	case FSL_SAI_TFR:
-+	case FSL_SAI_TFR0:
-+	case FSL_SAI_TFR1:
-+	case FSL_SAI_TFR2:
-+	case FSL_SAI_TFR3:
-+	case FSL_SAI_TFR4:
-+	case FSL_SAI_TFR5:
-+	case FSL_SAI_TFR6:
-+	case FSL_SAI_TFR7:
- 	case FSL_SAI_TMR:
- 	case FSL_SAI_RCSR:
- 	case FSL_SAI_RCR1:
-@@ -712,8 +726,22 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_RCR3:
- 	case FSL_SAI_RCR4:
- 	case FSL_SAI_RCR5:
--	case FSL_SAI_RDR:
--	case FSL_SAI_RFR:
-+	case FSL_SAI_RDR0:
-+	case FSL_SAI_RDR1:
-+	case FSL_SAI_RDR2:
-+	case FSL_SAI_RDR3:
-+	case FSL_SAI_RDR4:
-+	case FSL_SAI_RDR5:
-+	case FSL_SAI_RDR6:
-+	case FSL_SAI_RDR7:
-+	case FSL_SAI_RFR0:
-+	case FSL_SAI_RFR1:
-+	case FSL_SAI_RFR2:
-+	case FSL_SAI_RFR3:
-+	case FSL_SAI_RFR4:
-+	case FSL_SAI_RFR5:
-+	case FSL_SAI_RFR6:
-+	case FSL_SAI_RFR7:
- 	case FSL_SAI_RMR:
- 		return true;
- 	default:
-@@ -726,9 +754,30 @@ static bool fsl_sai_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case FSL_SAI_TCSR:
- 	case FSL_SAI_RCSR:
--	case FSL_SAI_TFR:
--	case FSL_SAI_RFR:
--	case FSL_SAI_RDR:
-+	case FSL_SAI_TFR0:
-+	case FSL_SAI_TFR1:
-+	case FSL_SAI_TFR2:
-+	case FSL_SAI_TFR3:
-+	case FSL_SAI_TFR4:
-+	case FSL_SAI_TFR5:
-+	case FSL_SAI_TFR6:
-+	case FSL_SAI_TFR7:
-+	case FSL_SAI_RFR0:
-+	case FSL_SAI_RFR1:
-+	case FSL_SAI_RFR2:
-+	case FSL_SAI_RFR3:
-+	case FSL_SAI_RFR4:
-+	case FSL_SAI_RFR5:
-+	case FSL_SAI_RFR6:
-+	case FSL_SAI_RFR7:
-+	case FSL_SAI_RDR0:
-+	case FSL_SAI_RDR1:
-+	case FSL_SAI_RDR2:
-+	case FSL_SAI_RDR3:
-+	case FSL_SAI_RDR4:
-+	case FSL_SAI_RDR5:
-+	case FSL_SAI_RDR6:
-+	case FSL_SAI_RDR7:
- 		return true;
- 	default:
- 		return false;
-@@ -744,7 +793,14 @@ static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_TCR3:
- 	case FSL_SAI_TCR4:
- 	case FSL_SAI_TCR5:
--	case FSL_SAI_TDR:
-+	case FSL_SAI_TDR0:
-+	case FSL_SAI_TDR1:
-+	case FSL_SAI_TDR2:
-+	case FSL_SAI_TDR3:
-+	case FSL_SAI_TDR4:
-+	case FSL_SAI_TDR5:
-+	case FSL_SAI_TDR6:
-+	case FSL_SAI_TDR7:
- 	case FSL_SAI_TMR:
- 	case FSL_SAI_RCSR:
- 	case FSL_SAI_RCR1:
-@@ -884,8 +940,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 				   MCLK_DIR(index));
- 	}
+@@ -1065,10 +1065,24 @@ static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
+ 	.reg_offset = 0,
+ };
  
--	sai->dma_params_rx.addr = res->start + FSL_SAI_RDR;
--	sai->dma_params_tx.addr = res->start + FSL_SAI_TDR;
-+	sai->dma_params_rx.addr = res->start + FSL_SAI_RDR0;
-+	sai->dma_params_tx.addr = res->start + FSL_SAI_TDR0;
- 	sai->dma_params_rx.maxburst = FSL_SAI_MAXBURST_RX;
- 	sai->dma_params_tx.maxburst = FSL_SAI_MAXBURST_TX;
- 
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 7c1ef671da28..4bb478041d67 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -20,8 +20,22 @@
- #define FSL_SAI_TCR3	0x0c /* SAI Transmit Configuration 3 */
- #define FSL_SAI_TCR4	0x10 /* SAI Transmit Configuration 4 */
- #define FSL_SAI_TCR5	0x14 /* SAI Transmit Configuration 5 */
--#define FSL_SAI_TDR	0x20 /* SAI Transmit Data */
--#define FSL_SAI_TFR	0x40 /* SAI Transmit FIFO */
-+#define FSL_SAI_TDR0	0x20 /* SAI Transmit Data 0 */
-+#define FSL_SAI_TDR1	0x24 /* SAI Transmit Data 1 */
-+#define FSL_SAI_TDR2	0x28 /* SAI Transmit Data 2 */
-+#define FSL_SAI_TDR3	0x2C /* SAI Transmit Data 3 */
-+#define FSL_SAI_TDR4	0x30 /* SAI Transmit Data 4 */
-+#define FSL_SAI_TDR5	0x34 /* SAI Transmit Data 5 */
-+#define FSL_SAI_TDR6	0x38 /* SAI Transmit Data 6 */
-+#define FSL_SAI_TDR7	0x3C /* SAI Transmit Data 7 */
-+#define FSL_SAI_TFR0	0x40 /* SAI Transmit FIFO 0 */
-+#define FSL_SAI_TFR1	0x44 /* SAI Transmit FIFO 1 */
-+#define FSL_SAI_TFR2	0x48 /* SAI Transmit FIFO 2 */
-+#define FSL_SAI_TFR3	0x4C /* SAI Transmit FIFO 3 */
-+#define FSL_SAI_TFR4	0x50 /* SAI Transmit FIFO 4 */
-+#define FSL_SAI_TFR5	0x54 /* SAI Transmit FIFO 5 */
-+#define FSL_SAI_TFR6	0x58 /* SAI Transmit FIFO 6 */
-+#define FSL_SAI_TFR7	0x5C /* SAI Transmit FIFO 7 */
- #define FSL_SAI_TMR	0x60 /* SAI Transmit Mask */
- #define FSL_SAI_RCSR	0x80 /* SAI Receive Control */
- #define FSL_SAI_RCR1	0x84 /* SAI Receive Configuration 1 */
-@@ -29,8 +43,22 @@
- #define FSL_SAI_RCR3	0x8c /* SAI Receive Configuration 3 */
- #define FSL_SAI_RCR4	0x90 /* SAI Receive Configuration 4 */
- #define FSL_SAI_RCR5	0x94 /* SAI Receive Configuration 5 */
--#define FSL_SAI_RDR	0xa0 /* SAI Receive Data */
--#define FSL_SAI_RFR	0xc0 /* SAI Receive FIFO */
-+#define FSL_SAI_RDR0	0xa0 /* SAI Receive Data 0 */
-+#define FSL_SAI_RDR1	0xa4 /* SAI Receive Data 1 */
-+#define FSL_SAI_RDR2	0xa8 /* SAI Receive Data 2 */
-+#define FSL_SAI_RDR3	0xac /* SAI Receive Data 3 */
-+#define FSL_SAI_RDR4	0xb0 /* SAI Receive Data 4 */
-+#define FSL_SAI_RDR5	0xb4 /* SAI Receive Data 5 */
-+#define FSL_SAI_RDR6	0xb8 /* SAI Receive Data 6 */
-+#define FSL_SAI_RDR7	0xbc /* SAI Receive Data 7 */
-+#define FSL_SAI_RFR0	0xc0 /* SAI Receive FIFO 0 */
-+#define FSL_SAI_RFR1	0xc4 /* SAI Receive FIFO 1 */
-+#define FSL_SAI_RFR2	0xc8 /* SAI Receive FIFO 2 */
-+#define FSL_SAI_RFR3	0xcc /* SAI Receive FIFO 3 */
-+#define FSL_SAI_RFR4	0xd0 /* SAI Receive FIFO 4 */
-+#define FSL_SAI_RFR5	0xd4 /* SAI Receive FIFO 5 */
-+#define FSL_SAI_RFR6	0xd8 /* SAI Receive FIFO 6 */
-+#define FSL_SAI_RFR7	0xdc /* SAI Receive FIFO 7 */
- #define FSL_SAI_RMR	0xe0 /* SAI Receive Mask */
- 
- #define FSL_SAI_xCSR(tx)	(tx ? FSL_SAI_TCSR : FSL_SAI_RCSR)
++static const struct fsl_sai_soc_data fsl_sai_imx7ulp_data = {
++	.use_imx_pcm = true,
++	.fifo_depth = 16,
++	.reg_offset = 8,
++};
++
++static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
++	.use_imx_pcm = true,
++	.fifo_depth = 128,
++	.reg_offset = 8,
++};
++
+ static const struct of_device_id fsl_sai_ids[] = {
+ 	{ .compatible = "fsl,vf610-sai", .data = &fsl_sai_vf610_data },
+ 	{ .compatible = "fsl,imx6sx-sai", .data = &fsl_sai_imx6sx_data },
+ 	{ .compatible = "fsl,imx6ul-sai", .data = &fsl_sai_imx6sx_data },
++	{ .compatible = "fsl,imx7ulp-sai", .data = &fsl_sai_imx7ulp_data },
++	{ .compatible = "fsl,imx8mq-sai", .data = &fsl_sai_imx8mq_data },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_sai_ids);
 -- 
 2.17.1
 
