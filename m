@@ -2,119 +2,121 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63C6C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B79C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67E02199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76712199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="jIClnpG6"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="gNQjjkQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbfGVVUx (ORCPT
+        id S1732236AbfGVVVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:20:53 -0400
-Received: from mail-eopbgr780045.outbound.protection.outlook.com ([40.107.78.45]:38816
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        Mon, 22 Jul 2019 17:21:47 -0400
+Received: from mail-eopbgr730100.outbound.protection.outlook.com ([40.107.73.100]:32192
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728441AbfGVVUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:20:52 -0400
+        id S1728441AbfGVVVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:21:47 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HE9G/G5HsihVHizAiDEWHLMV7Rxm+zFZCLYM6/XknYg+lV5bMztrjU4moFo/EsMHHIiMRcEKMbAjjclPyoYUEamEQ0IK1n5BTLkcjBFCifBqOt2IGmbOwd7FBmnQc6djKH0QvxZI+QU2JjdRd4yuk2AtSRSsnpS8Vvewq5d37tUzQpiDRzlEY3ubgkSVFBI3wpHe3xJaCtdiRHyxoUtwM0KnL9biw/qhiWSqOqK9CEG3uO7PTiJNY/AbuveMPbEe9EwgfxGXUF55GVRb6Gi4tJI2gixWK4TELhJmJXS5kG6D1PYsfN5WCsx971F7UwEKaybFEIEzcKMfOyM6NByLnQ==
+ b=Vt762uYVhnN7N9mo1pygdcvG1bALEvH6NTGX89jzdnTywS0nGFZsbvBjMRQVcTxzanHvXugUuaTpVpul+/+xp9OtNjUU+pYoO+jauIgmSrdR5LNFLa5rYn8yhVkW1cRTyVL2auAt1QvCbQc/yOaw/rzHK9BRE+tY+Qymdwd0DvksNkJoBamXpOXqR2NdJyCMArSBQIBpYrj7kaLjfwC0lQfRupOquGcwZ/T2BxNYy8FyctUKCBciH0mpOWqG8MbAOHorAFxfi+hKRNiteai2VW16VuhD7Yh1eW3w8Wx3FPtMf6zWAUeuSYf43Rnrmt7lDXYsRAXkZX3X/NaIdzktXw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8mCowyNd03zlCl6BHOR2vZ4QHbPAVX+x8wP5gGxNEYg=;
- b=Hf84zEjpD3chfpCmdi/xywaFwMzxXh1QFI7mcwLeNJc9NTW6sT3U+55DizJFQHGtcYXM1K2xDnsrizge4skSReTO0JvbcR2KArj7NQgFioDkyyN48+K4ipoo+w4tpUjEANT9Hgc7ZfbjSMceVDOoesY5lGcQd9L6Z+9EsIP22Ag/XkG8FqHL5wmIeEj52fG62N4855Nj478lNdBisC1u9KLN/ZpCMNMV3noj2mHt071+xLrYrcIob9NdfmiV3XuX3rO+9vbTa2EnNHoL+1eRH3cDikSyz3zbUFHpQA9uWCTGA4xAkSus1amUyoa+zjM6zM36pdaFXrUEKWffBMbP5A==
+ bh=DQCcBS447KnM1HD79qao1QUH7HNECQc77LWZoXVXA1M=;
+ b=bX1m6esW+i1n2eRTs0oqo0DPHmdh3mnwzIEPSkC0f3BVeejXvWIp1D9tdIpWZkmP6cVtw5QenO3T06XyR9tnV04+v0dzfmjYOgh88m2AzNQHsygvdlleBC1Jpo0Fytl3wX83WiYRiqGsIVrhdwtXUgtEv08W5a7IzI/eW+fLhz0XsvGDIvX6ftzYM9XslUnjazIclmnrUxmPEqRyMqb8BodSYzVDL4revl8eDZXx48ZnBdID4DoRKifSnnVG/Cly/xNaXkLyOTttHYFJI39TUYe3vqwoIuBG+B+zqpGDbzHZywNJk8rB1zNv/WM2tNt/hdFja8jC08+ix26AaBT7sQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=vmware.com;dmarc=pass action=none
- header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8mCowyNd03zlCl6BHOR2vZ4QHbPAVX+x8wP5gGxNEYg=;
- b=jIClnpG6g2I9P+RMKacRP9521I81Lmz+6eg9yKIaudZDsJIbbCXYbALAjBDwbPUHU6Q2LWNTWzOfc1jDXVrZs2E5OWfgTqIoqNYhquZl8To4821df651ZBDB5VB0ozzdn8YmvjWcs6/K7URQV3aHoXZyX4NCWerKdPOj74s+9dg=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6296.namprd05.prod.outlook.com (20.178.51.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.8; Mon, 22 Jul 2019 21:20:46 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2115.005; Mon, 22 Jul 2019
- 21:20:46 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [RFC 7/7] x86/current: Aggressive caching of current
-Thread-Topic: [RFC 7/7] x86/current: Aggressive caching of current
-Thread-Index: AQHVPc3icdeutwj3P0Cy0fu3DYyqBqbXJzcAgAAD0oA=
-Date:   Mon, 22 Jul 2019 21:20:46 +0000
-Message-ID: <9D1835AD-AB52-4B01-B783-67CB27CFEA9D@vmware.com>
-References: <20190718174110.4635-1-namit@vmware.com>
- <20190718174110.4635-8-namit@vmware.com>
- <20190722210704.GL6698@worktop.programming.kicks-ass.net>
-In-Reply-To: <20190722210704.GL6698@worktop.programming.kicks-ass.net>
+ bh=DQCcBS447KnM1HD79qao1QUH7HNECQc77LWZoXVXA1M=;
+ b=gNQjjkQbw0SqmJJ7i2yvVUFQnKvSP+/PhDBw1WeVnZafW0aY6yDD+sCGM1Vh6PqV/f53GECcbZI1Iv5i5WwdjXanPLOfLl6wQOx6/FSXvjzMkDJMaajyWy0wSrlYs5oYftZnQlBJLacjycaxZi0rVXrMq0NDBx+KCruFMTSE+E8=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1757.namprd22.prod.outlook.com (10.164.133.167) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.11; Mon, 22 Jul 2019 21:21:44 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::49d3:37f8:217:c83]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::49d3:37f8:217:c83%6]) with mapi id 15.20.2094.017; Mon, 22 Jul 2019
+ 21:21:44 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>, "od@zcrc.me" <od@zcrc.me>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 3/5] MIPS: Decouple CPU_SUPPORTS_HUGEPAGES from 64BIT
+Thread-Topic: [PATCH 3/5] MIPS: Decouple CPU_SUPPORTS_HUGEPAGES from 64BIT
+Thread-Index: AQHVO1Xt4RDEdfZ7wk+n1rhHxLuH/qbXMD0A
+Date:   Mon, 22 Jul 2019 21:21:44 +0000
+Message-ID: <MWHPR2201MB1277EF8CCF37DCBC460B157EC1C40@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190715214003.9714-3-paul@crapouillou.net>
+In-Reply-To: <20190715214003.9714-3-paul@crapouillou.net>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0047.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::24) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4c6538a-aece-472e-f50a-08d70eea7667
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB6296;
-x-ms-traffictypediagnostic: BYAPR05MB6296:
-x-microsoft-antispam-prvs: <BYAPR05MB629629620077117B00958B45D0C40@BYAPR05MB6296.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-office365-filtering-correlation-id: 2d80a4dd-e8c7-4fb7-0a73-08d70eea988a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1757;
+x-ms-traffictypediagnostic: MWHPR2201MB1757:
+x-microsoft-antispam-prvs: <MWHPR2201MB1757F6DEB63727259EC8BCA6C1C40@MWHPR2201MB1757.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
 x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(189003)(199004)(6116002)(3846002)(7736002)(305945005)(54906003)(66476007)(81166006)(8676002)(36756003)(66556008)(64756008)(66446008)(66946007)(76116006)(256004)(76176011)(71190400001)(8936002)(5660300002)(86362001)(81156014)(26005)(4326008)(71200400001)(66066001)(99286004)(6246003)(102836004)(11346002)(6512007)(2906002)(68736007)(25786009)(6486002)(2616005)(476003)(6916009)(6506007)(478600001)(53546011)(229853002)(14454004)(53936002)(316002)(446003)(33656002)(6436002)(486006)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6296;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39850400004)(346002)(136003)(366004)(199004)(189003)(66446008)(66476007)(3846002)(6116002)(4744005)(66556008)(66066001)(6436002)(64756008)(66946007)(52536014)(25786009)(14454004)(476003)(8676002)(6916009)(9686003)(305945005)(74316002)(7736002)(99286004)(71190400001)(52116002)(256004)(71200400001)(4326008)(6246003)(26005)(81156014)(68736007)(186003)(8936002)(81166006)(2906002)(478600001)(486006)(11346002)(446003)(5660300002)(55016002)(53936002)(316002)(54906003)(42882007)(33656002)(386003)(7696005)(6506007)(102836004)(76176011)(229853002)(44832011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1757;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NDcUow80DqlFxLhP/1eC6DMMcZpn5XAuafmcYeOrfBp4wzpBUNUhxpjrCONrqEgnBecWMczb8RMyJIFRvDIFKi0fTKrMw4vPm2WLTU4TNoq1LZ2RwRc/34IfowcKxkXm6zu2NUo1Bgle/xI8qDa7LzjcyOcChD1AFL2JyU9rZwadIZQjRpDiflxePsQMGdsM25JOg5rSGcSpgqHCSOCCtGuzL7UfMwJZQU+3WC6ypVK5wIdVHwJkEQJvwUQFn6e0ysjKHxTIhE5JmhVR7szpS1XG+UjkE6EuhBYO+sUq4P+eKrJbwOo1B7GyGg2DzgSr7tmeomV64qcrqdymAysJAE1ETgwoswmqpbDA2KcgSBkNpvopr0KkGY5AsZfe5fctvf+2Ox0yCXhmmmYcbn3m9P4RXu9p3rPMxk003wrqh4A=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <45819626B6928D4EA0BBC854CB148F12@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: BZd+m9ebGWyQ+O0pA7TkEV6mNwnNUUw4rcym7RghdoMnSBehO3yNoIk1UbY95vAQpA6CxLyZx1/GIAR+2FYVnBuWHQJGDgT3QjKACOkkiLxloU9R6EYIiK0MISfxpzs4KIuev5JjW83RuCGPC+B+GUqLlI5fw64GymbR2EC6jODv7lyZLTgDNWTxPXP1mLRV0tgz5m8Et5t41aKzwXTIAycZHjm9ZwYtmImYKuf+9bzYoXsj3zyBAV/5641kNR1GKKqCvQEeufViHDEgHFGT48Mi9qvy3Rtc9FmbjrZSEyGetBdOwpz2VPFPyIap9/8Zjt8FY903uKH05qVDkupqrlJ6dvy4+Q1VKSMPAPGJrwdQc+eeQtrB9AGFEGXcaiP+K+XM/4dxmTPF/oTe15H/lhXL1agHJFsCeZtBDRAFf5U=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4c6538a-aece-472e-f50a-08d70eea7667
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 21:20:46.6415
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d80a4dd-e8c7-4fb7-0a73-08d70eea988a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 21:21:44.3016
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6296
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1757
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdWwgMjIsIDIwMTksIGF0IDI6MDcgUE0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
-cmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBUaHUsIEp1bCAxOCwgMjAxOSBhdCAxMDo0MTox
-MEFNIC0wNzAwLCBOYWRhdiBBbWl0IHdyb3RlOg0KPj4gVGhlIGN1cnJlbnRfdGFzayBpcyBzdXBw
-b3NlZCB0byBiZSBjb25zdGFudCBpbiBlYWNoIHRocmVhZCBhbmQgdGhlcmVmb3JlDQo+PiBkb2Vz
-IG5vdCBuZWVkIHRvIGJlIHJlcmVhZC4gVGhlcmUgaXMgYWxyZWFkeSBhbiBhdHRlbXB0IHRvIGNh
-Y2hlIGl0DQo+PiB1c2luZyBpbmxpbmUgYXNzZW1ibHksIHVzaW5nIHRoaXNfY3B1X3JlYWRfc3Rh
-YmxlKCksIHdoaWNoIGhpZGVzIHRoZQ0KPj4gZGVwZW5kZW5jeSBvbiB0aGUgcmVhZCBtZW1vcnkg
-YWRkcmVzcy4NCj4gDQo+IElzIHRoYXQgd2hhdCBpdCBkb2VzPyEsIEkgbmV2ZXIgcXVpdGUgY291
-bGQgdW5kZXJzdGFuZA0KPiBwZXJjcHVfc3RhYmxlX29wKCkuDQoNClRoYXTigJlzIG15IHVuZGVy
-c3RhbmRpbmcuIEkgYW0gbm90IHRvbyBwbGVhc2VkIHRoYXQgSSBjb3VsZCBub3QgY29tZSB1cCB3
-aXRoDQphIGdlbmVyYWwgYWx0ZXJuYXRpdmUgdG8gdGhpc19jcHVfcmVhZF9zdGFibGUoKSwgbWFp
-bmx5IGJlY2F1c2UgZ2NjIGRvZXMgbm90DQpwcm92aWRlIGEgd2F5IHRvIGdldCB0aGUgdHlwZSB3
-aXRob3V0IHRoZSBzZWdtZW50IHF1YWxpZmllci4gQW55aG93LA0K4oCcY3VycmVudOKAnSBzZWVt
-cyB0byBiZSB0aGUgbWFpbiBwYWluLXBvaW50Lg0KDQpJIHRoaW5rIGEgc2ltaWxhciBjb25zdC1h
-bGlhcyBhcHByb2FjaCBjYW4gYWxzbyBiZSB1c2VkIGZvciBzdHVmZiBsaWtlDQpib290X2NwdV9o
-YXMoKS4gSSBoYXZlIHNvbWUgcGF0Y2hlcyBmb3IgdGhhdCBzb21ld2hlcmUsIGJ1dCB0aGUgaW1w
-YWN0IGlzDQpzbWFsbGVyLiBJIGRvIHNlZSBzb21lIHNtYWxsLCBidXQgbWVhc3VyYWJsZSBwZXJm
-b3JtYW5jZSBpbXByb3ZlbWVudHMgd2l0aA0KdGhpcyBzZXJpZXMuIEnigJlsbCB0cnkgdG8gaW5j
-b3Jwb3JhdGUgdGhlbSBpbiB2MSBvbmNlIEkgaGF2ZSB0aW1lLg==
+Hello,
+
+Paul Cercueil wrote:
+> From: Daniel Silsby <dansilsby@gmail.com>
+>=20
+> We now have partial 32-bit MIPS huge page support, so there's no need
+> to restrict these config options only to 64-bit systems.
+>=20
+> Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+
+Applied to mips-next.
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
