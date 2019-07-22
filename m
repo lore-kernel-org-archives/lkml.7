@@ -3,130 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E989FC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D075C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1707205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0105B21911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfGVK3R (ORCPT
+        id S1728508AbfGVKdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 06:29:17 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37606 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfGVK3R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:29:17 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d15so28154034qkl.4;
-        Mon, 22 Jul 2019 03:29:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0NOGeJyfbedSFMqRuTXzJhGJqhWVTfys7Td6+TiU9cU=;
-        b=K9uw9O5KERcJQL7dKmdtVhuZ5e+o96+Y/S4EABKI+CBZOfQIqgBp7xWcl0Lj/Oib/W
-         GcmWRhPF+Q5Uomtr95zpT9Od9UfXi12fSG6l+AA1209kNZezzO1B1a0pGYCS7L2UovzD
-         Sa+A7OZuDvzIUtpaNvTWwKHovS71pZPj6y/wEHH46rJFUOgRu8n8nbuGVltJTnFvXZ21
-         KpQ/nPHxsVm10rW1/YqqcuF9nrfqc6EZ6IkyYO1Gk+wkrn+owzEgP7BzzAX9cqeeCkvt
-         TUxjhyUJCFAanXYukj6jXuPfCsAhCUN9+6F5LoMniozVZ/G5yye0liv6G8PSULg4CEZI
-         wBMQ==
-X-Gm-Message-State: APjAAAX0t54w8cC5J7EMC/rHgrbjZdQbjAhN+HcwsR1w3Rl5UrwyGul0
-        Puj6Xtk7LnOySnh29PnpKdcdCZH4evj/AyQbwz4=
-X-Google-Smtp-Source: APXvYqzk3DuGvaGAEaTy+ImxITuZDO3qbOIA7saZZgJD0ZGnPw+qsE85yHCiUF55BTu2T15XmHYund5FGCRBFNzC2pc=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr44393855qka.138.1563791355964;
- Mon, 22 Jul 2019 03:29:15 -0700 (PDT)
+        Mon, 22 Jul 2019 06:33:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:35402 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbfGVKdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 06:33:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E54728;
+        Mon, 22 Jul 2019 03:33:40 -0700 (PDT)
+Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.197.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E90F3F71A;
+        Mon, 22 Jul 2019 03:33:39 -0700 (PDT)
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] arm64: Allow early timestamping of kernel log
+Date:   Mon, 22 Jul 2019 11:33:27 +0100
+Message-Id: <20190722103330.255312-1-marc.zyngier@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190628123819.2785504-1-arnd@arndb.de> <20190628123819.2785504-4-arnd@arndb.de>
- <CA+FuTSexLuu8e1XHaY0ObGi46CgZnBpELecBr+kMgCU29Fa_gw@mail.gmail.com>
-In-Reply-To: <CA+FuTSexLuu8e1XHaY0ObGi46CgZnBpELecBr+kMgCU29Fa_gw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 22 Jul 2019 12:28:59 +0200
-Message-ID: <CAK8P3a0xPDmNDbxRkN6ssobFLu1-JLvMG3MSai844hinj2Bs8A@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ipvs: reduce kernel stack usage
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Network Development <netdev@vger.kernel.org>,
-        lvs-devel@vger.kernel.org,
-        netfilter-devel <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 9:59 PM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
-> On Fri, Jun 28, 2019 at 8:40 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > With the new CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL option, the stack
-> > usage in the ipvs debug output grows because each instance of
-> > IP_VS_DBG_BUF() now has its own buffer of 160 bytes that add up
-> > rather than reusing the stack slots:
-> >
-> > net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_sched_persist':
-> > net/netfilter/ipvs/ip_vs_core.c:427:1: error: the frame size of 1052 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> > net/netfilter/ipvs/ip_vs_core.c: In function 'ip_vs_new_conn_out':
-> > net/netfilter/ipvs/ip_vs_core.c:1231:1: error: the frame size of 1048 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> > net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_out':
-> > net/netfilter/ipvs/ip_vs_ftp.c:397:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> > net/netfilter/ipvs/ip_vs_ftp.c: In function 'ip_vs_ftp_in':
-> > net/netfilter/ipvs/ip_vs_ftp.c:555:1: error: the frame size of 1200 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> >
-> > Since printk() already has a way to print IPv4/IPv6 addresses using
-> > the %pIS format string, use that instead,
->
-> since these are sockaddr_in and sockaddr_in6, should that have the 'n'
-> specifier to denote network byteorder?
+So far, we've let the arm64 kernel start its meaningful time stamping
+of the kernel log pretty late, which is caused by sched_clock() being
+initialised rather late compared to other architectures.
 
-I double-checked the implementation, and don't see that make any difference,
-as 'n' is the default.
+Pavel Tatashin proposed[1] to move the initialisation of sched_clock
+much earlier, which I had objections to. The reason for initialising
+sched_clock late is that a number of systems have broken counters, and
+we need to apply all kind of terrifying workarounds to avoid time
+going backward on the affected platforms. Being able to identify the
+right workaround comes pretty late in the kernel boot, and providing
+an unreliable sched_clock, even for a short period of time, isn't an
+appealing prospect.
 
-> >  include/net/ip_vs.h             | 71 +++++++++++++++++++--------------
-> >  net/netfilter/ipvs/ip_vs_core.c | 44 ++++++++++----------
-> >  net/netfilter/ipvs/ip_vs_ftp.c  | 20 +++++-----
-> >  3 files changed, 72 insertions(+), 63 deletions(-)
-> >
-> > diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> > index 3759167f91f5..3dfbeef67be6 100644
-> > --- a/include/net/ip_vs.h
-> > +++ b/include/net/ip_vs.h
-> > @@ -227,6 +227,16 @@ static inline const char *ip_vs_dbg_addr(int af, char *buf, size_t buf_len,
-> >                        sizeof(ip_vs_dbg_buf), addr,                     \
-> >                        &ip_vs_dbg_idx)
-> >
-> > +#define IP_VS_DBG_SOCKADDR4(fam, addr, port)                           \
-> > +       (struct sockaddr*)&(struct sockaddr_in)                         \
-> > +       { .sin_family = (fam), .sin_addr = (addr)->in, .sin_port = (port) }
->
-> might as well set .sin_family = AF_INET here and AF_INET6 below?
+To address this, I'm proposing that we allow an architecture to chose
+to (1) divorce time stamping and sched_clock during the early phase of
+booting, and (2) inherit the time stamping clock as the new epoch the
+first time a sched_sched clock gets registered.
 
-That would work just same, but I don't see any advantage. As the family
-and port members are the same between sockaddr_in and sockaddr_in6,
-the compiler can decide to set these regardless to the argument values
-regardless of the condition.
+(1) would allow arm64 to provide a time stamping clock, however
+unreliable it might be, while (2) would allow sched_clock to provide
+time stamps that are continuous with the time-stamping clock.
 
-       Arnd
+The last patch in the series adds the necessary logic to arm64,
+allowing the (potentially unreliable) time stamping of early kernel
+messages.
+
+Tested on a bunch of arm64 systems, both bare-metal and in VMs. Boot
+tested on a x86 guest.
+
+[1] https://lore.kernel.org/patchwork/patch/1015110/
+
+Marc Zyngier (3):
+  printk: Allow architecture-specific timestamping function
+  sched/clock: Allow sched_clock to inherit timestamp_clock epoch
+  arm64: Allow early time stamping
+
+ arch/arm64/Kconfig          |  3 +++
+ arch/arm64/kernel/setup.c   | 44 +++++++++++++++++++++++++++++++++++++
+ include/linux/sched/clock.h | 13 +++++++++++
+ kernel/printk/printk.c      |  4 ++--
+ kernel/time/sched_clock.c   | 10 +++++++++
+ 5 files changed, 72 insertions(+), 2 deletions(-)
+
+-- 
+2.20.1
+
