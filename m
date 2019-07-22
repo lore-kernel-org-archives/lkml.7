@@ -2,109 +2,95 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C85C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDD2C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184B621951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfSAj9ug"
+	by mail.kernel.org (Postfix) with ESMTP id D8CD621951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbfGVVnV (ORCPT
+        id S1732878AbfGVVnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:43:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36011 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728233AbfGVVnV (ORCPT
+        Mon, 22 Jul 2019 17:43:37 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:54152 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732873AbfGVVnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:43:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id o9so77420924iom.3;
-        Mon, 22 Jul 2019 14:43:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DKEAhS/uikfS3tuGBnrF3tOxR8a7NEWxciPtJNbuB4I=;
-        b=JfSAj9ugdtVl6OEkoUzepQEmicJQK8GpWKG2s+vG6iUdIXeSUt1rihBWoVTdYDTyUQ
-         3so7w+AxkdPrP/fETsa81ulrPPw0RwnjE13OzNfsXEhRRP071lUPgA7SHxDBoLq/kANS
-         tftYZDKrRA6/aw3s3FkxcGpMQckhREwhdPqB8GoqKR8SBFYVgnIQkAZ1plu4h2cXCd5X
-         PA426bL5v9lzDyec4oOJ/nd1ICXJKZWrgY2fqdf+g4WbtS6eXWm1sYrMoqLhMOf274xu
-         e8bKpV1Zt+DlcCnqSRLce8RoWRN5DcM5hh3c2bvwct1PtWIlMmZTgPrRNdWXUf13eYLt
-         fz8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DKEAhS/uikfS3tuGBnrF3tOxR8a7NEWxciPtJNbuB4I=;
-        b=ZDsyZQzyVxupikSwGKn6adsOkqLvo5LdFwLRBaQ2BqMXspwun6NNvulg/DhKakL5jh
-         Q4XT2UNTT7govgOc7DQT5OJKJ2JCpBotNJFqnJb8C3MBKi3/0/OOq8SeEROTbK9uAsU3
-         oketIVxdgJGVts+raokX+gL8kI29k4ibqoRLhiSr6DprrUDlct3/K9OVn3Pwz21lRyEp
-         UpLwpdgqeK5COxy0MAv8Iiz+riQAu5YhskhBUuH1PBN4Xwlx8XgYn1A+OXLsUiSg9LWe
-         NKW1mhbMMPEgEJJxpXqfyf9zFJHz3ilLDHCZnyVPeuW6o+CGrUfAhl58R1NWKg6pay9Y
-         tbkA==
-X-Gm-Message-State: APjAAAU6wFnq3X5Sx7/U+wuSsDEwH8/fnQaebz0nKW6Gw0x4m6560bKI
-        r2yiB6EVJizhinGPeHfKJyJDahiKXUAKGBR3KgU=
-X-Google-Smtp-Source: APXvYqzMRFruPTzm7SCJ42fgQ8+hSvHfXUmR8p3mTQFlBHgAD/rOyC9xpNN1igJ05SIYmGvclJebxHI6BwGirxMzVhE=
-X-Received: by 2002:a02:cc50:: with SMTP id i16mr43428363jaq.50.1563831800346;
- Mon, 22 Jul 2019 14:43:20 -0700 (PDT)
+        Mon, 22 Jul 2019 17:43:37 -0400
+Received: from [192.168.1.41] ([92.140.204.221])
+        by mwinf5d78 with ME
+        id fxjb200034n7eLC03xjbvD; Mon, 22 Jul 2019 23:43:35 +0200
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 22 Jul 2019 23:43:35 +0200
+X-ME-IP: 92.140.204.221
+Subject: Re: [PATCH][next] clk: Si5341/Si5340: remove redundant assignment to
+ n_den
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Colin King <colin.king@canonical.com>,
+        linux-clk@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Newsgroups: gmane.linux.kernel,gmane.linux.kernel.clk,gmane.linux.kernel.janitors
+References: <20190701165020.19840-1-colin.king@canonical.com>
+ <20190722212414.6EF8D21900@mail.kernel.org>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <d1cd2b10-8fd4-f224-3bcd-5b938f72d249@wanadoo.fr>
+Date:   Mon, 22 Jul 2019 23:43:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722163642.10417-2-stillcompiling@gmail.com>
- <20190722212613.24906-1-stillcompiling@gmail.com> <20190722212613.24906-3-stillcompiling@gmail.com>
- <f686e93180d2f91c78801be124e8aac36145d9b0.camel@perches.com>
-In-Reply-To: <f686e93180d2f91c78801be124e8aac36145d9b0.camel@perches.com>
-From:   Joshua Clayton <stillcompiling@gmail.com>
-Date:   Mon, 22 Jul 2019 15:43:08 -0600
-Message-ID: <CAMB+bfJ27UGD+-aYR5EPWyY3O=FJDw7r2D6VO_tce-Z9ziYP0g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] HID: core: only warn once of oversize hid report
-To:     Joe Perches <joe@perches.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722212414.6EF8D21900@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 3:30 PM Joe Perches <joe@perches.com> wrote:
+Le 22/07/2019 à 23:24, Stephen Boyd a écrit :
+> Please Cc authors of drivers so they can ack/review.
 >
-> On Mon, 2019-07-22 at 15:26 -0600, stillcompiling@gmail.com wrote:
-> > From: Joshua Clayton <stillcompiling@gmail.com>
+> Adding Mike to take a look.
 >
-> Thanks Joshua
+> Quoting Colin King (2019-07-01 09:50:20)
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> The variable n_den is initialized however that value is never read
+>> as n_den is re-assigned a little later in the two paths of a
+>> following if-statement.  Remove the redundant assignment.
+>>
+>> Addresses-Coverity: ("Unused value")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>   drivers/clk/clk-si5341.c | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
+>> index 72424eb7e5f8..6e780c2a9e6b 100644
+>> --- a/drivers/clk/clk-si5341.c
+>> +++ b/drivers/clk/clk-si5341.c
+>> @@ -547,7 +547,6 @@ static int si5341_synth_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+>>          bool is_integer;
+>>   
+>>          n_num = synth->data->freq_vco;
+>> -       n_den = rate;
+>>   
+>>          /* see if there's an integer solution */
+>>          r = do_div(n_num, rate);
 >
-> > On HP spectre x360 convertible the message:
-> > hid-sensor-hub 001F:8087:0AC2.0002: hid_field_extract() called with n (192) > 32! (kworker/1:2)
-> > is continually printed many times per second, crowding out all else
-> > Protect dmesg by printing the warning only one time.
-> []
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> []
-> > @@ -1311,8 +1311,8 @@ u32 hid_field_extract(const struct hid_device *hid, u8 *report,
-> >                       unsigned offset, unsigned n)
-> >  {
-> >       if (n > 32) {
-> > -             hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
-> > -                      n, current->comm);
-> > +             hid_warn_once(hid, "%s() called with n (%d) > 32! (%s)\n",
-> > +                           __func__ ,n , current->comm);
->
-> All the other bits are fine, but this line is oddly written
-> with unusual spacing around 'n'.
->
-> Normally it'd be something like:
->
->                 hid_warn_once(hid, "%s: called with n (%d) > 32! (%s)\n",
->                               __func__, n, current->comm);
-Gah!
-Not only that but I missed a semicolon in patch 1. Will fix, (compile)
-and send v3 pdq.
-Sorry about the extra noise.
->
->
+Hi,
+
+I got the same advise from some else no later than yesterday (i.e. email 
+the author...)
+Maybe 'get_maintainer.pl' could be improved to search for it and propose 
+the mail automatically?
+
+just my 2c.
+
+
+CJ
+
