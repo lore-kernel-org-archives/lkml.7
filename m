@@ -2,90 +2,130 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C1EC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB1BC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9482199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563831658;
-	bh=y0mcCIsdo0FcATXDcOqG1yEJ21Gs2qykOfjRdssCnxw=;
-	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
-	b=fcUFX1zwCpqlzW5lgVMdlvggHWCJy3oge9u999gGQVRInEXT714uZgrQjFKb0pWWn
-	 Cctqb2p5wr+qGu+7Lz/JBdf6kyfVqzMW4pK33Z0SH/Yqe+qbunpywY2UJPJhW/uJ8X
-	 8PYsemAWF+i5OGMgrqaOKmzv6tm22diXUtfpNFe0=
+	by mail.kernel.org (Postfix) with ESMTP id AE90A21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H2cyMu/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbfGVVkm (ORCPT
+        id S1732865AbfGVVle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732789AbfGVVkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:40:40 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D9F21951;
-        Mon, 22 Jul 2019 21:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563831640;
-        bh=y0mcCIsdo0FcATXDcOqG1yEJ21Gs2qykOfjRdssCnxw=;
-        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
-        b=LlEINdah35joUMLAd7h7JkAX4r+iajAkvWTpl0RJK1BI/wTmyCqxiaVOpZR6MmL5C
-         tShW8EN8CPJ5jy8e+ctwKH1V6MC+kxBVXl/FZNH8197I1dU170tYoYePP+4OsklIyt
-         GVBnYiV2pgosObI4Xw/E4i54QatiK2/6phwyLAlY=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 22 Jul 2019 17:41:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35581 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730789AbfGVVle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:41:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so19721217plp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UHgKF/faf+gKSnKAdZwRQ42YfMIcLjQkGrWNVDHMzzA=;
+        b=H2cyMu/ZFAlYdAKuXo8YXN2d2hW2DEgweE6r0eAihkbksCldk6lxhw2szgOWFREedO
+         ukPiQAopqTStPckMQ3klpifciyLZfM7Tz/iEPx0PxKk/QwyIaJZ1dTVTw9hyU6nQKOGH
+         RQ2p/OCdDXtm2osqt7tDX0hRSCbri+KmUD4jK3wQXhAy+/dZNayydvQ/mRvJRcXc+IHq
+         5O48jC3A1jCUrkGpeOUasqf7HKqWuDOSUjGJ8ZOSUmxwDaqIAQEvzajMpBrPoYQt3bVu
+         yXZgpG0ITR3yaSGrDfAYPpy18mHD6fIx1M79+8ghfv7kGRHSPHZG7QsswkJA5CpcXY8x
+         OUPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UHgKF/faf+gKSnKAdZwRQ42YfMIcLjQkGrWNVDHMzzA=;
+        b=EE5lUJse6NIvRRVv7a/vEBO4f5ScKFG7GhhVXtrU75J7jCag8X30ILHbWTppfCqe32
+         BKerHnpKjsn6DrRwL6xH7nPUXKvt+XhIO36nWmEIfZxQa4nY+f6qJoamDsjyYzGV8DQG
+         wQGn7b6PBWm+DvZ4twN83lO8Doj7+h2PO9+q85XDIQOB99VICVwCBj2tci7dTnDV56Mo
+         Anq0q3xrlNoY+RLu2kPNGrBBlxfMfTx7WtIqJp2+tqqSHvsDxuK6gcRkzd2LKW0i3PQn
+         D/owbBYPpwrR9uPt+8iDf7md7gywwGt72WxwYSJbPuKYFY6ZoI1V8bZFyBPKQwESLWpT
+         Tgaw==
+X-Gm-Message-State: APjAAAV78Sf2CLBaxqXiEhYfqzhjMxxsoj8TKBS8GHVT3Pu0XbN5fcEz
+        AQG5DYctbTJAJuD4g3Sgn2oIOjYR5h1gDHBFVhp5Uw==
+X-Google-Smtp-Source: APXvYqwdhXuSHTybL80N4tO/8K5uECQXQgdWPPjd++uRaFairNx8n+9ry/np/I3gr7/SbS1m0vlVXAz6f4dN30fv3f0=
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr74093089pld.119.1563831692996;
+ Mon, 22 Jul 2019 14:41:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190709182018.23193-2-gch981213@gmail.com>
-References: <20190709182018.23193-1-gch981213@gmail.com> <20190709182018.23193-2-gch981213@gmail.com>
-Subject: Re: [PATCH 1/5] MIPS: ralink: add dt binding header for mt7621-pll
-To:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Rob Herring <robh@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 22 Jul 2019 14:40:39 -0700
-Message-Id: <20190722214039.E9D9F21951@mail.kernel.org>
+References: <20190722213250.238685-1-ndesaulniers@google.com> <20190722213250.238685-3-ndesaulniers@google.com>
+In-Reply-To: <20190722213250.238685-3-ndesaulniers@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 22 Jul 2019 14:41:21 -0700
+Message-ID: <CAKwvOdnkaT+zQFoXtjmf+CE0B4RHPr1zuH2pVRpP6=aVjq7nCA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Support kexec/kdump for clang built kernel
+To:     Joe Perches <joe@perches.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The subject of this patch is confusing. Not sure what it has to do with
-"MIPS:" so maybe remove that and prefix it "dt-bindings: clock:"
-instead.
+Joe,
+Is it possible to have scripts/get_maintainer.pl always cc
+linux-kernel@vger.kernel.org?  I just sent out a series, and it seems
+the cover letter didn't get sent to LKML.  I usually use this shell
+function to send patches:
+```
+function kpatch () {
+  patch=$1
+  shift
+  git send-email \
+      --cc-cmd="./scripts/get_maintainer.pl --norolestats $patch" \
+        $@ $patch
+}
+```
 
-Quoting Chuanhong Guo (2019-07-09 11:20:14)
-> This patch adds dt binding header for mediatek,mt7621-pll
->=20
-> Signed-off-by: Weijie Gao <hackpascal@gmail.com>
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+Invoked via:
+```
+$ mkdir purgatory
+$ git format-patch HEAD~2 --cover-letter -o purgatory -v2
+$ kpatch purgatory/v2-000* --cc peterz@infradead.org --cc
+clang-built-linux@googlegroups.com
+```
+Maybe I should just add `--cc linux-kernel@vger.kernel.org` to my
+shell function?
 
-Otherwise looks ok to me. Should I apply it to clk tree?
+On Mon, Jul 22, 2019 at 2:33 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> 1. Reuse the implementation of memcpy and memset instead of relying on
+> __builtin_memcpy and __builtin_memset as it causes infinite recursion
+> in Clang (at any opt level) or GCC at -O2.
+> 2. Don't reset KBUILD_CFLAGS, rather filter CONFIG_FUNCTION_TRACER flags
+> via `CFLAGS_REMOVE_<file>.o = -pg`.
+>
+> The order of the patches are reversed; in case we ever need to bisect,
+> the memcpy/memset infinite recursion would occur with just patch 2/2
+> applied.
+>
+> V2 of: https://lkml.org/lkml/2019/7/17/755
+>
+> Nick Desaulniers (2):
+>   x86/purgatory: do not use __builtin_memcpy and __builtin_memset
+>   x86/purgatory: use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
+>
+>  arch/x86/purgatory/Makefile    | 15 ++++++++++-----
+>  arch/x86/purgatory/purgatory.c |  6 ++++++
+>  arch/x86/purgatory/string.c    | 23 -----------------------
+>  3 files changed, 16 insertions(+), 28 deletions(-)
+>  delete mode 100644 arch/x86/purgatory/string.c
+>
+> --
+> 2.22.0.657.g960e92d24f-goog
+>
 
->  include/dt-bindings/clock/mt7621-clk.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 include/dt-bindings/clock/mt7621-clk.h
->=20
+
+-- 
+Thanks,
+~Nick Desaulniers
