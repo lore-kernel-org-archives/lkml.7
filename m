@@ -2,130 +2,130 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88533C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA38C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE5E21E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13DE321E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iGDD/T/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfGVIkI (ORCPT
+        id S1728602AbfGVIkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:40:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48780 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728177AbfGVIjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:39:53 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 749F93E2D3;
-        Mon, 22 Jul 2019 08:39:52 +0000 (UTC)
-Received: from redhat.com (ovpn-120-233.rdu2.redhat.com [10.10.120.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B365B1001B09;
-        Mon, 22 Jul 2019 08:39:49 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 04:39:47 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     =?utf-8?B?5p2O6I+y?= <lifei.shirley@bytedance.com>
-Cc:     virtio-dev@lists.oasis-open.org, linux-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Fam Zheng <zhengfeiran@bytedance.com>
-Subject: Re: [External Email] Re: [PATCH v1 0/2] virtio-mmio: support
- multiple interrupt vectors
-Message-ID: <20190722043707-mutt-send-email-mst@kernel.org>
-References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
- <20190719110852-mutt-send-email-mst@kernel.org>
- <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
+        Mon, 22 Jul 2019 04:40:35 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41632 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfGVIkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:40:35 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6M8eOsg070238;
+        Mon, 22 Jul 2019 03:40:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563784824;
+        bh=TviAWhiRP3zQTB51r4gI+gZaJWkaHb/tZnv/A5V5Vec=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iGDD/T/krkpcQWBLx7cJN+bhSHCfkTJfr4zmFgdjTROeqVqtmjIOb2TjaQPaq+Ew+
+         xyJxkc12dBMvkmGrPryQRTAN9G3loNxthgqkCX4HiiAz/oKPGD8R6XUYsBor0MTDvW
+         BnRcmxfHPb/gfiXi3HEXO0qiVt4aFZyBll1kTGao=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6M8eOaw058289
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jul 2019 03:40:24 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 22
+ Jul 2019 03:40:23 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 22 Jul 2019 03:40:23 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6M8eIZk028120;
+        Mon, 22 Jul 2019 03:40:19 -0500
+Subject: Re: [PATCH] staging: media/davinci_vpfe: fix pinmux setup compilation
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Ioannis Valasakis <code@wizofe.uk>,
+        Arushi Singhal <arushisinghal19971997@gmail.com>,
+        <linux-media@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190722081243.2084226-1-arnd@arndb.de>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <35b6ec33-f3d7-54ec-e9a0-3748ee9eb343@ti.com>
+Date:   Mon, 22 Jul 2019 14:10:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 22 Jul 2019 08:39:52 +0000 (UTC)
+In-Reply-To: <20190722081243.2084226-1-arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:22:02AM +0800, 李菲 wrote:
-> On Fri, Jul 19, 2019 at 11:14 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Fri, Jul 19, 2019 at 09:31:33PM +0800, Fei Li wrote:
-> > > Hi,
-> > >
-> > > This patch series implements multiple interrupt vectors support for
-> > > virtio-mmio device. This is especially useful for multiqueue vhost-net
-> > > device when using firecracker micro-vms as the guest.
-> > >
-> > > Test result:
-> > > With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs can
-> > > receive 9 times more pps comparing with only one irq:
-> > > - 564830.38 rxpck/s for 8 irqs on
-> > > - 67665.06 rxpck/s for 1 irq on
-> > >
-> > > Please help to review, thanks!
-> > >
-> > > Have a nice day
-> > > Fei
-> >
-> >
-> > Interesting. The spec says though:
-> >
-> >         4.2.3.4
-> >         Notifications From The Device
-> >         The memory mapped virtio device is using a single, dedicated interrupt signal, which is asserted when at
-> >         least one of the bits described in the description of InterruptStatus is set. This is how the device sends a
-> >         used buffer notification or a configuration change notification to the device.
-> >
-> Yes, the spec needs to be updated if we want to use mult-irqs.
-> >
-> > So I'm guessing we need to change the host/guest interface?
-> Just to confirm, does the "the host/guest interface" you mentioned mean how to
-> pass the irq information from the user space tool to guest kernel?
-> In this patch, we do this by passing the [irq_start, irq_end]
-> interface via setting guest
-> kernel command line, that is done in vm_cmdline_set().
-> Also there is another way to do this: add two new registers describing irq info
-> (irq_start & irq_end OR irq_start & irq_numbers) to the virtio config space.
-> 
-> Which one do you prefer?
+Hi Arnd,
 
-I'm not sure - so far irq was passed on the command line, right?
+On 22/07/19 1:42 PM, Arnd Bergmann wrote:
+> The dm365_isif staging driver uses an odd method for configuring its
+> pin muxing by calling directly into low-level davinci platform specific
+> code, even when being compile-tested for other platforms.
+> 
+> As we want davinci to be part of a multi-platform kernel, this will
+> cause a build failure when those headers are no longer exported even
+> for davinci:
+> 
+> drivers/staging/media/davinci_vpfe/dm365_isif.c: In function 'vpfe_isif_init':
+> drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:2: error: implicit declaration of function 'davinci_cfg_reg'; did you mean 'omap_cfg_reg'? [-Werror=implicit-function-declaration]
+>   davinci_cfg_reg(DM365_VIN_CAM_WEN);
+>   ^~~~~~~~~~~~~~~
+>   omap_cfg_reg
+> drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:18: error: 'DM365_VIN_CAM_WEN' undeclared (first use in this function); did you mean 'DM365_ISIF_MAX_CLDC'?
+>   davinci_cfg_reg(DM365_VIN_CAM_WEN);
+>                   ^~~~~~~~~~~~~~~~~
+> 
+> Digging further, it seems that the platform data structures defined
+> in drivers/staging/media/davinci_vpfe/vpfe.h are an incompatible
+> version of the same structures in include/media/davinci/vpfe_capture.h,
+> which is the version that is used by the platform code, so the
+> combination that exists in the mainline kernel cannot be used.
+> 
+> The platform code already has an abstraction for the pinmux,
+> in the form of the dm365_isif_setup_pinmux() helper. If we want
+> to ever get to use the staging driver again, this needs to be
+> read from the platform data passed to this driver, or rewritten
+> to use the pinmux framework.
+> 
+> For the moment, pretend we pass the helper function in the
+> staging platform driver to get it to build cleanly. I could
+> not figure out how the staging driver relates to the code
+> in drivers/media/platform/davinci/, some clarification on that
+> would be helpful to decide what the long-term plan on this
+> should be to either remove the staging driver as obsolete or
+> integrate it with the rest in a way that actually works.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-The first step in implementing any spec change would be to update qemu
-code to virtio 1. Which is not a huge project but so far no one
-bothered.
+I looked at the history of updates on this driver over last 4 years.
+None of them are towards fixing some issue found with the driver during
+actual usage or for improving its design to move it out of staging.
 
+I think no one is really using it or working on moving it out of
+staging. Perhaps the right thing to do would be to delete it.
 
-> > If true pls cc virtio-dev.
-> Sure.
-> >
-> > Also, do we need to update dt bindings documentation?
-> You mean the following doc? Sure. :)
-> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/virtio/mmio.txt
-> 
-> Thanks for the review!
-> 
-> Have a nice day
-> Fei
-> 
-> 
-> >
-> > >
-> > > Fam Zheng (1):
-> > >   virtio-mmio: Process vrings more proactively
-> > >
-> > > Fei Li (1):
-> > >   virtio-mmio: support multiple interrupt vectors
-> > >
-> > >  drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++++++--------
-> > >  1 file changed, 196 insertions(+), 42 deletions(-)
-> > >
-> > > --
-> > > 2.11.0
+Thanks,
+Sekhar
