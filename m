@@ -2,217 +2,181 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0499BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C68C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B605A20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EC7216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U9iRHTWm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="x4c1PalM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732208AbfGVTgB (ORCPT
+        id S1732210AbfGVTia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:36:01 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33368 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728694AbfGVTgA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:36:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so17865394pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4YCihO/7Koy2r60RFeQGQUZoQFb417pW4LHMHBlCeRo=;
-        b=U9iRHTWmv+pJSdFVOWhUneFmNOOZdRWicg891weULE5j2GTGFoLwoSc+jhvtSiTs42
-         0v1/dXHcWI55rINbY9BoYX6qh7lXZ/NgQDaj8TXbC0xUBjpz8UWFgiDRqI6heSRI5g8x
-         6mlYyr8v6Hxk3Nj0foalQf74rQqwUeWAWz674=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4YCihO/7Koy2r60RFeQGQUZoQFb417pW4LHMHBlCeRo=;
-        b=oy7d1nbgqwt17OqFXFBZzIohsD0KcXle7bwtnE3WbP1HeqHwGEFIF2SOq1Rr14I8b8
-         zjOPZEa2vPGcS/PElq/StJJOsOxi0UHELwc6X7P9JxgT2w3ida1LiPCTuLark69Ia+kd
-         PoF/Lfg6UqjQ9z5B1rTDRCcQlX/F4VSxaUD7GnyIHeAk9p+pcd6yiJN2/HvIut1NvYXO
-         5YI8WMcay4WtJIkXxmo1kxi2KW+sUENddPbbPFY1zP+Z1yBvoHXVUrvsc7xnnq4uPn5j
-         2hUKIWe4xE8R5W1i8rTgDiS8OPEChaZxNlSVJihQh7FDkHf6hCrg3yUEw+lOoJnCefpq
-         Jp3A==
-X-Gm-Message-State: APjAAAWcw2TgTmJDkv7yYvtcObkKNK0IeWFRRBKWSm3A/0K71kYYlGkl
-        cFHKQheqatLeERkOKI59eRXPzA==
-X-Google-Smtp-Source: APXvYqy+/UnyrJ+ixuHf6Y++FFHuYLQzZqBYUYP3GyBs6c5/bt+MuYkZwR9cudKQkvHtBfCH/frckw==
-X-Received: by 2002:aa7:97bb:: with SMTP id d27mr1784411pfq.93.1563824159352;
-        Mon, 22 Jul 2019 12:35:59 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id t7sm33400668pjq.15.2019.07.22.12.35.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 12:35:57 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 12:35:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        linux-wireless@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        netdev@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        linux-mmc@vger.kernel.org, davem@davemloft.net,
-        Xinming Hu <huxinming820@gmail.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH 1/2] mmc: core: Add sdio_trigger_replug() API
-Message-ID: <20190722193555.GX250418@google.com>
-References: <20190716164209.62320-1-dianders@chromium.org>
- <20190716164209.62320-2-dianders@chromium.org>
+        Mon, 22 Jul 2019 15:38:30 -0400
+Received: from vern.gendns.com ([98.142.107.122]:35662 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726641AbfGVTia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 15:38:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LvrizSarOsPAb9vVguaC1c4EvHZiUvxBbSJXBNo806k=; b=x4c1PalMLmb8KUFfxSJm/lArFZ
+        dnwLGVd2J3S6mppK2s8QEl2Vv7AFYyYRClfoOIb1hekQzkFl7bzLZUptxb/Sd8sx1P8vfm2PqxLaB
+        qXfUiqAajT/Ey98TlS77KIrQ5cmJSUD4UpHxUY7ippIHI5LoWiC5ErEJk+TY13XefBPf+NwFoQbti
+        BsLk+6EJJGObuYxYCCHc93EfpIaw3pBq3d9+Dnk5I8L2whAqzvN7OnpRXc7frOzhWjs2TrkhSBXf+
+        QCEQiBDo1w9cS2drB8hhICauaYLW6iqCmEGycgr7IgfGeygnK6Z4tbg6U2XX+t0WFmA4Sy4M73DU9
+        wSXvKBBQ==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:51322 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hpe8h-007Oce-4U; Mon, 22 Jul 2019 15:38:27 -0400
+Subject: Re: [v5.3-rc1 regression] Hitting a kernel BUG() when trying to load
+ a module on DaVinci SoC
+To:     Jessica Yu <jeyu@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Jian Cheng <cj.chengjian@huawei.com>,
+        Nadav Amit <namit@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Adam Ford <aford173@gmail.com>
+References: <CAMRc=MdaLPcy4fJOEbcXAriHLHrXUZD6Bh5X2Eq+2OBvcC4cOQ@mail.gmail.com>
+ <20190722161006.GA4297@linux-8ccs>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <b822e119-2f80-6aa1-cd45-93cdd6cb2680@lechnology.com>
+Date:   Mon, 22 Jul 2019 14:38:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190716164209.62320-2-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190722161006.GA4297@linux-8ccs>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 09:42:08AM -0700, Douglas Anderson wrote:
-> When using Marvell WiFi SDIO cards, it is not uncommon for Linux WiFi
-> driver to fully lose the communication channel to the firmware running
-> on the card.  Presumably the firmware on the card has a bug or two in
-> it and occasionally crashes.
+On 7/22/19 11:10 AM, Jessica Yu wrote:
+> +++ Bartosz Golaszewski [22/07/19 14:12 +0200]:
+>> Hi,
+>>
+>> with v5.3-rc1 I'm hitting the following BUG() when trying to load the
+>> gpio-backlight module:
+>>
+>> kernel BUG at kernel/module.c:1919!
+>> Internal error: Oops - BUG: 0 [#1] PREEMPT ARM
+>> Modules linked in:
+>> CPU: 0 PID: 1 Comm: systemd Tainted: G        W
+>> 5.2.0-rc2-00005-g7dabaa5ce05a #19
+>> Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
+>> PC is at frob_text.constprop.16+0x2c/0x34
+>> LR is at load_module+0x1888/0x21b4
+>> pc : [<c0081bbc>]    lr : [<c0083c4c>]    psr: 20000013
+>> sp : c6837e58  ip : c6b4fa80  fp : bf00574c
+>> r10: c0601008  r9 : bf005740  r8 : c0493e38
+>> r7 : c00807f8  r6 : 00000000  r5 : 00000001  r4 : c6837f38
+>> r3 : 00000fff  r2 : bf000000  r1 : 00004b80  r0 : bf005818
+>> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+>> Control: 0005317f  Table: c6b78000  DAC: 00000051
+>> Process systemd (pid: 1, stack limit = 0x(ptrval))
+>> Stack: (0xc6837e58 to 0xc6838000)
+>> 7e40:                                                       bf005740 c6492a90
+>> 7e60: 00000001 c6bf5788 00000003 c6837f38 bf0058c0 bf0058a8 bf00a495 c0493e38
+>> 7e80: 00000000 c05368c0 00000001 00000000 c0580030 c0574b28 00000000 00000000
+>> 7ea0: 00000000 00000000 00000000 00000000 6e72656b 00006c65 00000000 00000000
+>> 7ec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> 7ee0: 00000000 00000000 00000000 aefb2bb8 7fffffff c0601008 00000000 00000004
+>> 7f00: b6cee714 c00091e4 c6836000 00000000 005bc668 c00847b0 7fffffff 00000000
+>> 7f20: 00000003 00000000 0000b2d0 c884e000 0000b2d0 00000000 c8852dcb c88533a0
+>> 7f40: c884e000 0000b2d0 c8858cb8 c8858b34 c88568d4 000058c0 00006190 000023b8
+>> 7f60: 00006713 00000000 00000000 00000000 000023a8 00000024 00000025 00000019
+>> 7f80: 0000001d 00000011 00000000 aefb2bb8 00000000 00000000 00000000 00000000
+>> 7fa0: 0000017b c0009000 00000000 00000000 00000004 b6cee714 00000000 00000000
+>> 7fc0: 00000000 00000000 00000000 0000017b 00000000 00000000 00000001 005bc668
+>> 7fe0: be907b00 be907af0 b6ce66b0 b6c3fac0 60000010 00000004 00000000 00000000
+>> [<c0081bbc>] (frob_text.constprop.16) from [<c0083c4c>]
+>> (load_module+0x1888/0x21b4)
+>> [<c0083c4c>] (load_module) from [<c00847b0>] (sys_finit_module+0xbc/0xdc)
+>> [<c00847b0>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/0x50)
+>> Exception stack(0xc6837fa8 to 0xc6837ff0)
+>> 7fa0:                   00000000 00000000 00000004 b6cee714 00000000 00000000
+>> 7fc0: 00000000 00000000 00000000 0000017b 00000000 00000000 00000001 005bc668
+>> 7fe0: be907b00 be907af0 b6ce66b0 b6c3fac0
+>> Code: e1a01621 e1a00002 eafe4531 e7f001f2 (e7f001f2)
+>> ---[ end trace 2cbefb0005882c52 ]---
+>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+>> ---[ end Kernel panic - not syncing: Attempted to kill init!
+>> exitcode=0x0000000b ]---
+>>
+>> I bisected it to commit 06bd260e836d ("modules: fix BUG when load
+>> module with rodata=n") with commit 7dabaa5ce05a ("modules: fix compile
+>> error if don't have strict module rwx") on top to make it build.
+>>
+>> Let me know if you need me to provide more info.
+>>
+>> Best regards,
+>> Bartosz Golaszewski
 > 
-> The Marvell WiFi driver attempts to recover from this problem.
-> Specifically the driver has the function mwifiex_sdio_card_reset()
-> which is called when communcation problems are found.  That function
-> attempts to reset the state of things by utilizing the mmc_hw_reset()
-> function.
+> Hi Bartosz,
 > 
-> The current solution is a bit complex because the Marvell WiFi driver
-> needs to manually deinit and reinit the WiFi driver around the reset
-> call.  This means it's going through a bunch of code paths that aren't
-> normally tested.  However, complexity isn't our only problem.  The
-> other (bigger) problem is that Marvell WiFi cards are often combo
-> WiFi/Bluetooth cards and Bluetooth runs on a second SDIO func.  While
-> the WiFi driver knows that it should re-init its own state around the
-> mmc_hw_reset() call there is no good way to inform the Bluetooth
-> driver.  That means that in Linux today when you reset the Marvell
-> WiFi driver you lose all Bluetooth communication.  Doh!
+> Thanks for reporting this, I was able to reproduce this on qemu.
 > 
-> One way to fix the above problems is to leverage a more standard way
-> to reset the Marvell WiFi card where we go through the same code paths
-> as card unplug and the card plug.  In this patch we introduce a new
-> API call for doing just that: sdio_trigger_replug().  This API call
-> will trigger an unplug of the SDIO card followed by a plug of the
-> card.  As part of this the card will be nicely reset.
+> This is due to hitting the BUG_ON() in frob_text() due to layout->base
+> and/or layout->text_size not being page-aligned. These values are
+> always page-aligned when CONFIG_STRICT_MODULE_RWX=y, but in commit
+> 2eef1399a86 ("modules: fix BUG when load module with rodata=n"), the
+> frob_text()+set_memory_x() calls got moved *outside* of the
+> STRICT_MODULE_RWX block since some arches (like x86 and arm64)
+> allocate non-executable module memory via module_alloc(), so naturally
+> the module text needed to be made executable at a later stage of
+> load_module(), regardless of whether STRICT_MODULE_RWX is set or not.
+> In your case, you must've had CONFIG_STRICT_MODULE_RWX=n and so we
+> were calling frob_text() with non-page-aligned values, triggering the
+> BUG_ON().
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+> In any case, could you please try and see if the following patch fixes
+> the issue for you?
 > 
->  drivers/mmc/core/core.c       | 28 ++++++++++++++++++++++++++--
->  drivers/mmc/core/sdio_io.c    | 20 ++++++++++++++++++++
->  include/linux/mmc/host.h      | 15 ++++++++++++++-
->  include/linux/mmc/sdio_func.h |  2 ++
->  4 files changed, 62 insertions(+), 3 deletions(-)
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 5933395af9a0..cd8df516666d 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -64,14 +64,9 @@
 > 
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 9020cb2490f7..48a7d23aed26 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -2164,6 +2164,12 @@ int mmc_sw_reset(struct mmc_host *host)
->  }
->  EXPORT_SYMBOL(mmc_sw_reset);
->  
-> +void mmc_trigger_replug(struct mmc_host *host)
-> +{
-> +	host->trigger_replug_state = MMC_REPLUG_STATE_UNPLUG;
-> +	_mmc_detect_change(host, 0, false);
-> +}
-> +
->  static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
->  {
->  	host->f_init = freq;
-> @@ -2217,6 +2223,11 @@ int _mmc_detect_card_removed(struct mmc_host *host)
->  	if (!host->card || mmc_card_removed(host->card))
->  		return 1;
->  
-> +	if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
-> +		mmc_card_set_removed(host->card);
-> +		return 1;
-> +	}
-> +
->  	ret = host->bus_ops->alive(host);
->  
->  	/*
-> @@ -2329,8 +2340,21 @@ void mmc_rescan(struct work_struct *work)
->  	mmc_bus_put(host);
->  
->  	mmc_claim_host(host);
-> -	if (mmc_card_is_removable(host) && host->ops->get_cd &&
-> -			host->ops->get_cd(host) == 0) {
-> +
-> +	/*
-> +	 * Move through the state machine if we're triggering an unplug
-> +	 * followed by a re-plug.
-> +	 */
-> +	if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
-> +		host->trigger_replug_state = MMC_REPLUG_STATE_PLUG;
-> +		_mmc_detect_change(host, 0, false);
-> +	} else if (host->trigger_replug_state == MMC_REPLUG_STATE_PLUG) {
-> +		host->trigger_replug_state = MMC_REPLUG_STATE_NONE;
-> +	}
-> +
-> +	if (host->trigger_replug_state == MMC_REPLUG_STATE_PLUG ||
-> +	    (mmc_card_is_removable(host) && host->ops->get_cd &&
-> +			host->ops->get_cd(host) == 0)) {
+> /*
+>   * Modules' sections will be aligned on page boundaries
+> - * to ensure complete separation of code and data, but
+> - * only when CONFIG_STRICT_MODULE_RWX=y
+> + * to ensure complete separation of code and data
+>   */
+> -#ifdef CONFIG_STRICT_MODULE_RWX
+> # define debug_align(X) ALIGN(X, PAGE_SIZE)
+> -#else
+> -# define debug_align(X) (X)
+> -#endif
+> 
+> /* If this is set, the section belongs in the init part of the module */
+> #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
 
-at first I was concerned there could be race conditions with the
-different invocations of mmc_rescan(), but IIUC all calls are through
-the host->detect work, so only one instance should be running at any
-time.
+Works for me.
 
->  		mmc_power_off(host);
->  		mmc_release_host(host);
->  		goto out;
-> diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
-> index 2ba00acf64e6..1c5c2a3ebe5e 100644
-> --- a/drivers/mmc/core/sdio_io.c
-> +++ b/drivers/mmc/core/sdio_io.c
-> @@ -811,3 +811,23 @@ void sdio_retune_release(struct sdio_func *func)
->  	mmc_retune_release(func->card->host);
->  }
->  EXPORT_SYMBOL_GPL(sdio_retune_release);
-> +
-> +/**
-> + *	sdio_trigger_replug - trigger an "unplug" + "plug" of the card
-> + *	@func: SDIO function attached to host
-> + *
-> + *	When you call this function we will schedule events that will
-> + *	make it look like the card contining the given SDIO func was
-
-nit: containing
-
-> + *	unplugged and then re-plugged-in.  This is as close as possible
-> + *	to a full reset of the card that can be achieved.
-> + *
-> + *	NOTE: routnine will temporarily make the card look as if it is
-
-nit: routine
-
-Other than the typos this looks sane to me, I don't claim to have a
-deep understanding of the MMC codebase though.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Tested-by: David Lechner <david@lechnology.com>
