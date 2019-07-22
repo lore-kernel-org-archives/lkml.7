@@ -2,76 +2,124 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8277AC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D3BC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5752E21E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EB121E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T5bfwCKQ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="5Bv3co0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfGVJYd (ORCPT
+        id S1728908AbfGVJZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:24:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56436 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbfGVJYd (ORCPT
+        Mon, 22 Jul 2019 05:25:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48747 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727797AbfGVJZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:24:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t3OOtdtvnUF+XIhRdblqC3W61fdm4p0+hRCO2GTass0=; b=T5bfwCKQxBqLdvGK7DUUv/qBF
-        A3kj9iXi8RBhf93TTorLkVtrw7BW16+3qcT/9BEB2Ga6jU6aEy0WklSkiV9ZxcBQiGgiIrC6CC2K5
-        fuVktxlCFh34qfa/DF37DbcFPYJXGrgM+3qTzGn3xiuQ884GfaRbjwSrqBRVHS0R8VgwSpASMod9X
-        XjtU86WIBrX8lLXvkgincw5Mh5dEeSvNQE7YvNezTP2r+yRPNY/ybN/Np+9Xhqnh+U6NqbtueEVv0
-        5ibmXk+6BFTEQkmKv66nwmKvr6BtbpDn6l0hEKNk1b4LnUXUrAJNZfZMul4QE8bj3Z7XnrsgqaDOo
-        xnZXpYI2Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpUYX-0000m2-Ao; Mon, 22 Jul 2019 09:24:29 +0000
-Date:   Mon, 22 Jul 2019 02:24:29 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Loic PALLARDY <loic.pallardy@st.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Clement Leger <cleger@kalray.eu>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
-Message-ID: <20190722092429.GB12167@infradead.org>
-References: <20190612095521.4703-1-cleger@kalray.eu>
- <20190701070245.32083-1-cleger@kalray.eu>
- <20190702132229.GA8100@infradead.org>
- <58c8b8bd30a949678c027eb42a1b1bbb@SFHDAG7NODE2.st.com>
- <20190708184546.GA20670@infradead.org>
- <20190719063250.GA9545@infradead.org>
- <3c2c98e785704969a862715ab52ce2de@SFHDAG7NODE2.st.com>
+        Mon, 22 Jul 2019 05:25:19 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M9P82q3761103
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 22 Jul 2019 02:25:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M9P82q3761103
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563787508;
+        bh=X+Gtu1qOe3apPaoAOpj10EDUufvYamuZC8/F4saLTf0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=5Bv3co0oWD58gfjHQ8qBSJZcMPm+G53OXBvnn6kpk53fJkFuz7KOOsCDtdzyHhVhG
+         SIHsZyC5WJi6jUHhNB1BYs4+cnB02I4jJT79zgRg7KxK4sCAnGSeZ3wGLcHjkzqp9R
+         sVTm/Q9x8VCcjOv7Y9ZaMGSFeUswopVg6FZvypo1JFszMdJMdnpfLG/3cZarJQjZy5
+         a69PmFOPw5QbUKh+Z8uxtDipYQyOdOuTVkmTa/Bgk9RJUE8/lNXDKhAfTEXM6RZC0o
+         WkRWDr9fCc29+ucj1n3THyVLhgJSW77iIB9LhSJ8Nzltlw9EMv5Ra8yZwas2JouZUC
+         MGC9IEneBWpSw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M9P7RI3761100;
+        Mon, 22 Jul 2019 02:25:07 -0700
+Date:   Mon, 22 Jul 2019 02:25:07 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Vasily Averin <tipbot@zytor.com>
+Message-ID: <tip-f9adc23ee91e6f561bb70c6147d8d45bd164d62f@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, vvs@virtuozzo.com,
+        hpa@zytor.com, mingo@kernel.org, tglx@linutronix.de
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, arnd@arndb.de, vvs@virtuozzo.com,
+          hpa@zytor.com
+In-Reply-To: <12bdaca8-99eb-e576-f842-5970ab1d6a92@virtuozzo.com>
+References: <12bdaca8-99eb-e576-f842-5970ab1d6a92@virtuozzo.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/urgent] futex: Cleanup generic SMP variant of
+ arch_futex_atomic_op_inuser()
+Git-Commit-ID: f9adc23ee91e6f561bb70c6147d8d45bd164d62f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <3c2c98e785704969a862715ab52ce2de@SFHDAG7NODE2.st.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 08:41:32AM +0000, Loic PALLARDY wrote:
-> Ongoing...
-> Two topics to clean up:
-> - Sub device creation and DMA ops inheritance --> need to use platform_device or device tree
-> - dma_declare_coherent_memory use --> it has been introduced to support internal memories declared via reg field.
-> I propose to migrate existing drivers on reserved memory usage and so remove dma_declare_coherent call from remoteproc core.
+Commit-ID:  f9adc23ee91e6f561bb70c6147d8d45bd164d62f
+Gitweb:     https://git.kernel.org/tip/f9adc23ee91e6f561bb70c6147d8d45bd164d62f
+Author:     Vasily Averin <vvs@virtuozzo.com>
+AuthorDate: Tue, 16 Jul 2019 09:22:03 +0300
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Mon, 22 Jul 2019 11:20:10 +0200
 
-I thought this was inter-related in that you needed the additional
-field with the manual memory region for the subdevs, but I guess I
-misunderstood.  Anyway, thanks for doing the work.
+futex: Cleanup generic SMP variant of arch_futex_atomic_op_inuser()
+
+The generic SMP variant of arch_futex_atomic_op_inuser() returns always
+-ENOSYS so the switch case and surrounding code are pointless. Remove it
+and just return -ENOSYS.
+
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lkml.kernel.org/r/12bdaca8-99eb-e576-f842-5970ab1d6a92@virtuozzo.com
+
+---
+ include/asm-generic/futex.h | 21 +--------------------
+ 1 file changed, 1 insertion(+), 20 deletions(-)
+
+diff --git a/include/asm-generic/futex.h b/include/asm-generic/futex.h
+index 8666fe7f35d7..02970b11f71f 100644
+--- a/include/asm-generic/futex.h
++++ b/include/asm-generic/futex.h
+@@ -118,26 +118,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ static inline int
+ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
+ {
+-	int oldval = 0, ret;
+-
+-	pagefault_disable();
+-
+-	switch (op) {
+-	case FUTEX_OP_SET:
+-	case FUTEX_OP_ADD:
+-	case FUTEX_OP_OR:
+-	case FUTEX_OP_ANDN:
+-	case FUTEX_OP_XOR:
+-	default:
+-		ret = -ENOSYS;
+-	}
+-
+-	pagefault_enable();
+-
+-	if (!ret)
+-		*oval = oldval;
+-
+-	return ret;
++	return -ENOSYS;
+ }
+ 
+ static inline int
