@@ -2,29 +2,29 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BB2C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85099C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B7B21951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D85B21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfGVCw1 (ORCPT
+        id S1729056AbfGVCwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:52:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2293 "EHLO huawei.com"
+        Sun, 21 Jul 2019 22:52:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2688 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728793AbfGVCvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:51:16 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B12F193055DEDD7BFB6D;
-        Mon, 22 Jul 2019 10:51:13 +0800 (CST)
+        id S1728761AbfGVCvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 22:51:10 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CCABB179C098679FE72B;
+        Mon, 22 Jul 2019 10:51:08 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 10:51:06 +0800
+ 2019 10:50:58 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,9 +39,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 11/24] erofs: introduce xattr & posixacl support
-Date:   Mon, 22 Jul 2019 10:50:30 +0800
-Message-ID: <20190722025043.166344-12-gaoxiang25@huawei.com>
+Subject: [PATCH v3 04/24] erofs: add raw address_space operations
+Date:   Mon, 22 Jul 2019 10:50:23 +0800
+Message-ID: <20190722025043.166344-5-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722025043.166344-1-gaoxiang25@huawei.com>
 References: <20190722025043.166344-1-gaoxiang25@huawei.com>
@@ -54,1166 +54,443 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This implements xattr and posixacl functionalities.
-
-1) Inline and shared xattrs are introduced for flexibility.
-
-   Specifically, if the same xattr is used for a large number of
-   inodes or the size of a xattr is so large that unsuitable to
-   inline, a shared xattr will be used instead in xattr meta.
-
-2) Add .get_acl() to read the file's acl from its xattrs to
-   make POSIX ACL usable.
-
-   Here is the on-disk detail,
-   fullname: system.posix_acl_access
-   struct erofs_xattr_entry:
-           .e_name_len = 0
-           .e_name_index = EROFS_XATTR_INDEX_POSIX_ACL_ACCESS (2)
-
-   fullname: system.posix_acl_default
-   struct erofs_xattr_entry:
-           .e_name_len = 0
-           .e_name_index = EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT (3)
+This commit adds functions for meta and raw data, and also
+provides address_space_operations for raw data access.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Kconfig    |  37 +++
- fs/erofs/Makefile   |   1 +
- fs/erofs/inode.c    |  14 +-
- fs/erofs/internal.h |  16 +
- fs/erofs/namei.c    |   6 +-
- fs/erofs/super.c    |  78 ++++-
- fs/erofs/xattr.c    | 700 ++++++++++++++++++++++++++++++++++++++++++++
- fs/erofs/xattr.h    |  93 ++++++
- 8 files changed, 942 insertions(+), 3 deletions(-)
- create mode 100644 fs/erofs/xattr.c
- create mode 100644 fs/erofs/xattr.h
+ fs/erofs/data.c | 423 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 423 insertions(+)
+ create mode 100644 fs/erofs/data.c
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index bcab58d3f709..b6a4384936b3 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -43,3 +43,40 @@ config EROFS_FS_IO_MAX_RETRIES
- 
- 	  If unsure, leave the default value (5 retries, 6 IOs at most).
- 
-+config EROFS_FS_XATTR
-+	bool "EROFS extended attributes"
-+	depends on EROFS_FS
-+	default y
-+	help
-+	  Extended attributes are name:value pairs associated with inodes by
-+	  the kernel or by users (see the attr(5) manual page, or visit
-+	  <http://acl.bestbits.at/> for details).
-+
-+	  If unsure, say N.
-+
-+config EROFS_FS_POSIX_ACL
-+	bool "EROFS Access Control Lists"
-+	depends on EROFS_FS_XATTR
-+	select FS_POSIX_ACL
-+	default y
-+	help
-+	  Posix Access Control Lists (ACLs) support permissions for users and
-+	  groups beyond the owner/group/world scheme.
-+
-+	  To learn more about Access Control Lists, visit the POSIX ACLs for
-+	  Linux website <http://acl.bestbits.at/>.
-+
-+	  If you don't know what Access Control Lists are, say N.
-+
-+config EROFS_FS_SECURITY
-+	bool "EROFS Security Labels"
-+	depends on EROFS_FS_XATTR
-+	help
-+	  Security labels provide an access control facility to support Linux
-+	  Security Models (LSMs) accepted by AppArmor, SELinux, Smack and TOMOYO
-+	  Linux. This option enables an extended attribute handler for file
-+	  security labels in the erofs filesystem, so that it requires enabling
-+	  the extended attribute support in advance.
-+
-+	  If you are not using a security module, say N.
-+
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index ec2795f33dc5..fc5d1cd3345f 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -6,4 +6,5 @@ ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
- 
- obj-$(CONFIG_EROFS_FS) += erofs.o
- erofs-objs := super.o inode.o data.o namei.o dir.o
-+erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
- 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 5a95cd076fcc..8fa5cdf6c0de 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -6,7 +6,7 @@
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
--#include "internal.h"
-+#include "xattr.h"
- 
- #include <trace/events/erofs.h>
- 
-@@ -300,15 +300,27 @@ int erofs_getattr(const struct path *path, struct kstat *stat,
- 
- const struct inode_operations erofs_generic_iops = {
- 	.getattr = erofs_getattr,
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	.listxattr = erofs_listxattr,
-+#endif
-+	.get_acl = erofs_get_acl,
- };
- 
- const struct inode_operations erofs_symlink_iops = {
- 	.get_link = page_get_link,
- 	.getattr = erofs_getattr,
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	.listxattr = erofs_listxattr,
-+#endif
-+	.get_acl = erofs_get_acl,
- };
- 
- const struct inode_operations erofs_fast_symlink_iops = {
- 	.get_link = simple_get_link,
- 	.getattr = erofs_getattr,
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	.listxattr = erofs_listxattr,
-+#endif
-+	.get_acl = erofs_get_acl,
- };
- 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index bc3d146580d8..fe7b908c1b76 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -63,6 +63,9 @@ typedef u32 erofs_blk_t;
- struct erofs_sb_info {
- 	u32 blocks;
- 	u32 meta_blkaddr;
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	u32 xattr_blkaddr;
-+#endif
- 
- 	/* inode slot unit size in bit shift */
- 	unsigned char islotbits;
-@@ -132,6 +135,8 @@ static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
- #define EROFS_I_SB(inode) ((struct erofs_sb_info *)(inode)->i_sb->s_fs_info)
- 
- /* Mount flags set via mount options or defaults */
-+#define EROFS_MOUNT_XATTR_USER		0x00000010
-+#define EROFS_MOUNT_POSIX_ACL		0x00000020
- #define EROFS_MOUNT_FAULT_INJECTION	0x00000040
- 
- #define clear_opt(sbi, option)	((sbi)->mount_opt &= ~EROFS_MOUNT_##option)
-@@ -164,13 +169,24 @@ static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
- 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
- }
- 
-+/* atomic flag definitions */
-+#define EROFS_V_EA_INITED_BIT	0
-+
-+/* bitlock definitions (arranged in reverse order) */
-+#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
- struct erofs_vnode {
- 	erofs_nid_t nid;
- 
-+	/* atomic flags (including bitlocks) */
-+	unsigned long flags;
-+
- 	unsigned char datamode;
- 	unsigned char inode_isize;
- 	unsigned short xattr_isize;
- 
-+	unsigned int xattr_shared_count;
-+	unsigned int *xattr_shared_xattrs;
-+
- 	erofs_blk_t raw_blkaddr;
- 	/* the corresponding vfs inode */
- 	struct inode vfs_inode;
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index 7665d3603503..0e9675dc4f37 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -6,7 +6,7 @@
-  *             http://www.huawei.com/
-  * Created by Gao Xiang <gaoxiang25@huawei.com>
-  */
--#include "internal.h"
-+#include "xattr.h"
- 
- #include <trace/events/erofs.h>
- 
-@@ -242,5 +242,9 @@ static struct dentry *erofs_lookup(struct inode *dir,
- const struct inode_operations erofs_dir_iops = {
- 	.lookup = erofs_lookup,
- 	.getattr = erofs_getattr,
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	.listxattr = erofs_listxattr,
-+#endif
-+	.get_acl = erofs_get_acl,
- };
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 3ed3b29edaf2..9ddb593aef47 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -11,7 +11,7 @@
- #include <linux/statfs.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
--#include "internal.h"
-+#include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/erofs.h>
-@@ -61,6 +61,8 @@ static void free_inode(struct inode *inode)
- 	if (is_inode_fast_symlink(inode))
- 		kfree(inode->i_link);
- 
-+	kfree(vi->xattr_shared_xattrs);
-+
- 	kmem_cache_free(erofs_inode_cachep, vi);
- }
- 
-@@ -118,6 +120,9 @@ static int superblock_read(struct super_block *sb)
- 
- 	sbi->blocks = le32_to_cpu(layout->blocks);
- 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	sbi->xattr_blkaddr = le32_to_cpu(layout->xattr_blkaddr);
-+#endif
- 	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
- 	sbi->root_nid = le16_to_cpu(layout->root_nid);
- 	sbi->inos = le64_to_cpu(layout->inos);
-@@ -195,14 +200,29 @@ static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
- /* set up default EROFS parameters */
- static void default_options(struct erofs_sb_info *sbi)
- {
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	set_opt(sbi, XATTR_USER);
-+#endif
-+
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+	set_opt(sbi, POSIX_ACL);
-+#endif
- }
- 
- enum {
-+	Opt_user_xattr,
-+	Opt_nouser_xattr,
-+	Opt_acl,
-+	Opt_noacl,
- 	Opt_fault_injection,
- 	Opt_err
- };
- 
- static match_table_t erofs_tokens = {
-+	{Opt_user_xattr, "user_xattr"},
-+	{Opt_nouser_xattr, "nouser_xattr"},
-+	{Opt_acl, "acl"},
-+	{Opt_noacl, "noacl"},
- 	{Opt_fault_injection, "fault_injection=%u"},
- 	{Opt_err, NULL}
- };
-@@ -226,6 +246,36 @@ static int parse_options(struct super_block *sb, char *options)
- 		token = match_token(p, erofs_tokens, args);
- 
- 		switch (token) {
-+#ifdef CONFIG_EROFS_FS_XATTR
-+		case Opt_user_xattr:
-+			set_opt(EROFS_SB(sb), XATTR_USER);
-+			break;
-+		case Opt_nouser_xattr:
-+			clear_opt(EROFS_SB(sb), XATTR_USER);
-+			break;
-+#else
-+		case Opt_user_xattr:
-+			infoln("user_xattr options not supported");
-+			break;
-+		case Opt_nouser_xattr:
-+			infoln("nouser_xattr options not supported");
-+			break;
-+#endif
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+		case Opt_acl:
-+			set_opt(EROFS_SB(sb), POSIX_ACL);
-+			break;
-+		case Opt_noacl:
-+			clear_opt(EROFS_SB(sb), POSIX_ACL);
-+			break;
-+#else
-+		case Opt_acl:
-+			infoln("acl options not supported");
-+			break;
-+		case Opt_noacl:
-+			infoln("noacl options not supported");
-+			break;
-+#endif
- 		case Opt_fault_injection:
- 			err = erofs_build_fault_attr(EROFS_SB(sb), args);
- 			if (err)
-@@ -271,6 +321,10 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	sb->s_op = &erofs_sops;
- 
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	sb->s_xattr = erofs_xattr_handlers;
-+#endif
-+
- 	/* set erofs default mount options */
- 	default_options(sbi);
- 
-@@ -281,6 +335,11 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (!silent)
- 		infoln("root inode @ nid %llu", ROOT_NID(sbi));
- 
-+	if (test_opt(sbi, POSIX_ACL))
-+		sb->s_flags |= SB_POSIXACL;
-+	else
-+		sb->s_flags &= ~SB_POSIXACL;
-+
- 	/* get the root inode */
- 	inode = erofs_iget(sb, ROOT_NID(sbi), true);
- 	if (IS_ERR(inode))
-@@ -394,6 +453,18 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- {
- 	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
- 
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	if (test_opt(sbi, XATTR_USER))
-+		seq_puts(seq, ",user_xattr");
-+	else
-+		seq_puts(seq, ",nouser_xattr");
-+#endif
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+	if (test_opt(sbi, POSIX_ACL))
-+		seq_puts(seq, ",acl");
-+	else
-+		seq_puts(seq, ",noacl");
-+#endif
- 	if (test_opt(sbi, FAULT_INJECTION))
- 		seq_printf(seq, ",fault_injection=%u",
- 			   erofs_get_fault_rate(sbi));
-@@ -412,6 +483,11 @@ static int erofs_remount(struct super_block *sb, int *flags, char *data)
- 	if (err)
- 		goto out;
- 
-+	if (test_opt(sbi, POSIX_ACL))
-+		sb->s_flags |= SB_POSIXACL;
-+	else
-+		sb->s_flags &= ~SB_POSIXACL;
-+
- 	*flags |= SB_RDONLY;
- 	return 0;
- out:
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
 new file mode 100644
-index 000000000000..4c48430af608
+index 000000000000..fcdb676f62e8
 --- /dev/null
-+++ b/fs/erofs/xattr.c
-@@ -0,0 +1,700 @@
++++ b/fs/erofs/data.c
+@@ -0,0 +1,423 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * linux/fs/erofs/xattr.c
++ * linux/fs/erofs/data.c
 + *
 + * Copyright (C) 2017-2018 HUAWEI, Inc.
 + *             http://www.huawei.com/
 + * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#include <linux/security.h>
-+#include "xattr.h"
++#include "internal.h"
++#include <linux/prefetch.h>
 +
-+struct xattr_iter {
-+	struct super_block *sb;
++#include <trace/events/erofs.h>
++
++static inline void read_endio(struct bio *bio)
++{
++	struct super_block *const sb = bio->bi_private;
++	struct bio_vec *bvec;
++	blk_status_t err = bio->bi_status;
++	struct bvec_iter_all iter_all;
++
++	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
++		erofs_show_injection_info(FAULT_READ_IO);
++		err = BLK_STS_IOERR;
++	}
++
++	bio_for_each_segment_all(bvec, bio, iter_all) {
++		struct page *page = bvec->bv_page;
++
++		/* page is already locked */
++		DBG_BUGON(PageUptodate(page));
++
++		if (unlikely(err))
++			SetPageError(page);
++		else
++			SetPageUptodate(page);
++
++		unlock_page(page);
++		/* page could be reclaimed now */
++	}
++	bio_put(bio);
++}
++
++/* prio -- true is used for dir */
++struct page *__erofs_get_meta_page(struct super_block *sb,
++				   erofs_blk_t blkaddr, bool prio, bool nofail)
++{
++	struct inode *const bd_inode = sb->s_bdev->bd_inode;
++	struct address_space *const mapping = bd_inode->i_mapping;
++	/* prefer retrying in the allocator to blindly looping below */
++	const gfp_t gfp = mapping_gfp_constraint(mapping, ~__GFP_FS) |
++		(nofail ? __GFP_NOFAIL : 0);
++	unsigned int io_retries = nofail ? EROFS_IO_MAX_RETRIES_NOFAIL : 0;
 +	struct page *page;
-+	void *kaddr;
-+
-+	erofs_blk_t blkaddr;
-+	unsigned int ofs;
-+};
-+
-+static inline void xattr_iter_end(struct xattr_iter *it, bool atomic)
-+{
-+	/* the only user of kunmap() is 'init_inode_xattrs' */
-+	if (unlikely(!atomic))
-+		kunmap(it->page);
-+	else
-+		kunmap_atomic(it->kaddr);
-+
-+	unlock_page(it->page);
-+	put_page(it->page);
-+}
-+
-+static inline void xattr_iter_end_final(struct xattr_iter *it)
-+{
-+	if (!it->page)
-+		return;
-+
-+	xattr_iter_end(it, true);
-+}
-+
-+static int init_inode_xattrs(struct inode *inode)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct xattr_iter it;
-+	unsigned int i;
-+	struct erofs_xattr_ibody_header *ih;
-+	struct super_block *sb;
-+	struct erofs_sb_info *sbi;
-+	bool atomic_map;
-+	int ret = 0;
-+
-+	/* the most case is that xattrs of this inode are initialized. */
-+	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
-+		return 0;
-+
-+	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
-+		return -ERESTARTSYS;
-+
-+	/* someone has initialized xattrs for us? */
-+	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
-+		goto out_unlock;
-+
-+	/*
-+	 * bypass all xattr operations if ->xattr_isize is not greater than
-+	 * sizeof(struct erofs_xattr_ibody_header), in detail:
-+	 * 1) it is not enough to contain erofs_xattr_ibody_header then
-+	 *    ->xattr_isize should be 0 (it means no xattr);
-+	 * 2) it is just to contain erofs_xattr_ibody_header, which is on-disk
-+	 *    undefined right now (maybe use later with some new sb feature).
-+	 */
-+	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
-+		errln("xattr_isize %d of nid %llu is not supported yet",
-+		      vi->xattr_isize, vi->nid);
-+		ret = -ENOTSUPP;
-+		goto out_unlock;
-+	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
-+		if (unlikely(vi->xattr_isize)) {
-+			DBG_BUGON(1);
-+			ret = -EIO;
-+			goto out_unlock;	/* xattr ondisk layout error */
-+		}
-+		ret = -ENOATTR;
-+		goto out_unlock;
-+	}
-+
-+	sb = inode->i_sb;
-+	sbi = EROFS_SB(sb);
-+	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
-+	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
-+
-+	it.page = erofs_get_inline_page(inode, it.blkaddr);
-+	if (IS_ERR(it.page)) {
-+		ret = PTR_ERR(it.page);
-+		goto out_unlock;
-+	}
-+
-+	/* read in shared xattr array (non-atomic, see kmalloc below) */
-+	it.kaddr = kmap(it.page);
-+	atomic_map = false;
-+
-+	ih = (struct erofs_xattr_ibody_header *)(it.kaddr + it.ofs);
-+
-+	vi->xattr_shared_count = ih->h_shared_count;
-+	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
-+						sizeof(uint), GFP_KERNEL);
-+	if (!vi->xattr_shared_xattrs) {
-+		xattr_iter_end(&it, atomic_map);
-+		ret = -ENOMEM;
-+		goto out_unlock;
-+	}
-+
-+	/* let's skip ibody header */
-+	it.ofs += sizeof(struct erofs_xattr_ibody_header);
-+
-+	for (i = 0; i < vi->xattr_shared_count; ++i) {
-+		if (unlikely(it.ofs >= EROFS_BLKSIZ)) {
-+			/* cannot be unaligned */
-+			BUG_ON(it.ofs != EROFS_BLKSIZ);
-+			xattr_iter_end(&it, atomic_map);
-+
-+			it.page = erofs_get_meta_page(sb, ++it.blkaddr,
-+						      S_ISDIR(inode->i_mode));
-+			if (IS_ERR(it.page)) {
-+				kfree(vi->xattr_shared_xattrs);
-+				vi->xattr_shared_xattrs = NULL;
-+				ret = PTR_ERR(it.page);
-+				goto out_unlock;
-+			}
-+
-+			it.kaddr = kmap_atomic(it.page);
-+			atomic_map = true;
-+			it.ofs = 0;
-+		}
-+		vi->xattr_shared_xattrs[i] =
-+			le32_to_cpu(*(__le32 *)(it.kaddr + it.ofs));
-+		it.ofs += sizeof(__le32);
-+	}
-+	xattr_iter_end(&it, atomic_map);
-+
-+	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
-+
-+out_unlock:
-+	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
-+	return ret;
-+}
-+
-+/*
-+ * the general idea for these return values is
-+ * if    0 is returned, go on processing the current xattr;
-+ *       1 (> 0) is returned, skip this round to process the next xattr;
-+ *    -err (< 0) is returned, an error (maybe ENOXATTR) occurred
-+ *                            and need to be handled
-+ */
-+struct xattr_iter_handlers {
-+	int (*entry)(struct xattr_iter *_it, struct erofs_xattr_entry *entry);
-+	int (*name)(struct xattr_iter *_it, unsigned int processed, char *buf,
-+		    unsigned int len);
-+	int (*alloc_buffer)(struct xattr_iter *_it, unsigned int value_sz);
-+	void (*value)(struct xattr_iter *_it, unsigned int processed, char *buf,
-+		      unsigned int len);
-+};
-+
-+static inline int xattr_iter_fixup(struct xattr_iter *it)
-+{
-+	if (it->ofs < EROFS_BLKSIZ)
-+		return 0;
-+
-+	xattr_iter_end(it, true);
-+
-+	it->blkaddr += erofs_blknr(it->ofs);
-+
-+	it->page = erofs_get_meta_page(it->sb, it->blkaddr, false);
-+	if (IS_ERR(it->page)) {
-+		int err = PTR_ERR(it->page);
-+
-+		it->page = NULL;
-+		return err;
-+	}
-+
-+	it->kaddr = kmap_atomic(it->page);
-+	it->ofs = erofs_blkoff(it->ofs);
-+	return 0;
-+}
-+
-+static int inline_xattr_iter_begin(struct xattr_iter *it,
-+				   struct inode *inode)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct erofs_sb_info *const sbi = EROFS_SB(inode->i_sb);
-+	unsigned int xattr_header_sz, inline_xattr_ofs;
-+
-+	xattr_header_sz = inlinexattr_header_size(inode);
-+	if (unlikely(xattr_header_sz >= vi->xattr_isize)) {
-+		BUG_ON(xattr_header_sz > vi->xattr_isize);
-+		return -ENOATTR;
-+	}
-+
-+	inline_xattr_ofs = vi->inode_isize + xattr_header_sz;
-+
-+	it->blkaddr = erofs_blknr(iloc(sbi, vi->nid) + inline_xattr_ofs);
-+	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
-+
-+	it->page = erofs_get_inline_page(inode, it->blkaddr);
-+	if (IS_ERR(it->page))
-+		return PTR_ERR(it->page);
-+
-+	it->kaddr = kmap_atomic(it->page);
-+	return vi->xattr_isize - xattr_header_sz;
-+}
-+
-+/*
-+ * Regardless of success or failure, `xattr_foreach' will end up with
-+ * `ofs' pointing to the next xattr item rather than an arbitrary position.
-+ */
-+static int xattr_foreach(struct xattr_iter *it,
-+			 const struct xattr_iter_handlers *op,
-+			 unsigned int *tlimit)
-+{
-+	struct erofs_xattr_entry entry;
-+	unsigned int value_sz, processed, slice;
 +	int err;
 +
-+	/* 0. fixup blkaddr, ofs, ipage */
-+	err = xattr_iter_fixup(it);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * 1. read xattr entry to the memory,
-+	 *    since we do EROFS_XATTR_ALIGN
-+	 *    therefore entry should be in the page
-+	 */
-+	entry = *(struct erofs_xattr_entry *)(it->kaddr + it->ofs);
-+	if (tlimit) {
-+		unsigned int entry_sz = EROFS_XATTR_ENTRY_SIZE(&entry);
-+
-+		BUG_ON(*tlimit < entry_sz);
-+		*tlimit -= entry_sz;
++repeat:
++	page = find_or_create_page(mapping, blkaddr, gfp);
++	if (unlikely(!page)) {
++		DBG_BUGON(nofail);
++		return ERR_PTR(-ENOMEM);
 +	}
++	DBG_BUGON(!PageLocked(page));
 +
-+	it->ofs += sizeof(struct erofs_xattr_entry);
-+	value_sz = le16_to_cpu(entry.e_value_size);
++	if (!PageUptodate(page)) {
++		struct bio *bio;
 +
-+	/* handle entry */
-+	err = op->entry(it, &entry);
-+	if (err) {
-+		it->ofs += entry.e_name_len + value_sz;
++		bio = erofs_grab_bio(sb, blkaddr, 1, sb, read_endio, nofail);
++		if (IS_ERR(bio)) {
++			DBG_BUGON(nofail);
++			err = PTR_ERR(bio);
++			goto err_out;
++		}
++
++		err = bio_add_page(bio, page, PAGE_SIZE, 0);
++		if (unlikely(err != PAGE_SIZE)) {
++			err = -EFAULT;
++			goto err_out;
++		}
++
++		__submit_bio(bio, REQ_OP_READ,
++			     REQ_META | (prio ? REQ_PRIO : 0));
++
++		lock_page(page);
++
++		/* this page has been truncated by others */
++		if (unlikely(page->mapping != mapping)) {
++unlock_repeat:
++			unlock_page(page);
++			put_page(page);
++			goto repeat;
++		}
++
++		/* more likely a read error */
++		if (unlikely(!PageUptodate(page))) {
++			if (io_retries) {
++				--io_retries;
++				goto unlock_repeat;
++			}
++			err = -EIO;
++			goto err_out;
++		}
++	}
++	return page;
++
++err_out:
++	unlock_page(page);
++	put_page(page);
++	return ERR_PTR(err);
++}
++
++static int erofs_map_blocks_flatmode(struct inode *inode,
++				     struct erofs_map_blocks *map,
++				     int flags)
++{
++	int err = 0;
++	erofs_blk_t nblocks, lastblk;
++	u64 offset = map->m_la;
++	struct erofs_vnode *vi = EROFS_V(inode);
++
++	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
++
++	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
++	lastblk = nblocks - is_inode_flat_inline(inode);
++
++	if (unlikely(offset >= inode->i_size)) {
++		/* leave out-of-bound access unmapped */
++		map->m_flags = 0;
++		map->m_plen = 0;
 +		goto out;
 +	}
 +
-+	/* 2. handle xattr name (ofs will finally be at the end of name) */
-+	processed = 0;
++	/* there is no hole in flatmode */
++	map->m_flags = EROFS_MAP_MAPPED;
 +
-+	while (processed < entry.e_name_len) {
-+		if (it->ofs >= EROFS_BLKSIZ) {
-+			BUG_ON(it->ofs > EROFS_BLKSIZ);
++	if (offset < blknr_to_addr(lastblk)) {
++		map->m_pa = blknr_to_addr(vi->raw_blkaddr) + map->m_la;
++		map->m_plen = blknr_to_addr(lastblk) - offset;
++	} else if (is_inode_flat_inline(inode)) {
++		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
++		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
 +
-+			err = xattr_iter_fixup(it);
-+			if (err)
-+				goto out;
-+			it->ofs = 0;
++		map->m_pa = iloc(sbi, vi->nid) + vi->inode_isize +
++			vi->xattr_isize + erofs_blkoff(map->m_la);
++		map->m_plen = inode->i_size - offset;
++
++		/* inline data should locate in one meta block */
++		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
++			DBG_BUGON(1);
++			err = -EIO;
++			goto err_out;
 +		}
 +
-+		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
-+			      entry.e_name_len - processed);
-+
-+		/* handle name */
-+		err = op->name(it, processed, it->kaddr + it->ofs, slice);
-+		if (err) {
-+			it->ofs += entry.e_name_len - processed + value_sz;
-+			goto out;
-+		}
-+
-+		it->ofs += slice;
-+		processed += slice;
-+	}
-+
-+	/* 3. handle xattr value */
-+	processed = 0;
-+
-+	if (op->alloc_buffer) {
-+		err = op->alloc_buffer(it, value_sz);
-+		if (err) {
-+			it->ofs += value_sz;
-+			goto out;
-+		}
-+	}
-+
-+	while (processed < value_sz) {
-+		if (it->ofs >= EROFS_BLKSIZ) {
-+			BUG_ON(it->ofs > EROFS_BLKSIZ);
-+
-+			err = xattr_iter_fixup(it);
-+			if (err)
-+				goto out;
-+			it->ofs = 0;
-+		}
-+
-+		slice = min_t(unsigned int, PAGE_SIZE - it->ofs,
-+			      value_sz - processed);
-+		op->value(it, processed, it->kaddr + it->ofs, slice);
-+		it->ofs += slice;
-+		processed += slice;
++		map->m_flags |= EROFS_MAP_META;
++	} else {
++		errln("internal error @ nid: %llu (size %llu), m_la 0x%llx",
++		      vi->nid, inode->i_size, map->m_la);
++		DBG_BUGON(1);
++		err = -EIO;
++		goto err_out;
 +	}
 +
 +out:
-+	/* xattrs should be 4-byte aligned (on-disk constraint) */
-+	it->ofs = EROFS_XATTR_ALIGN(it->ofs);
-+	return err < 0 ? err : 0;
++	map->m_llen = map->m_plen;
++
++err_out:
++	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
++	return err;
 +}
 +
-+struct getxattr_iter {
-+	struct xattr_iter it;
-+
-+	char *buffer;
-+	int buffer_size, index;
-+	struct qstr name;
-+};
-+
-+static int xattr_entrymatch(struct xattr_iter *_it,
-+			    struct erofs_xattr_entry *entry)
++int erofs_map_blocks(struct inode *inode,
++		     struct erofs_map_blocks *map, int flags)
 +{
-+	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
++	if (is_inode_layout_compression(inode))
++		return -ENOTSUPP;
 +
-+	return (it->index != entry->e_name_index ||
-+		it->name.len != entry->e_name_len) ? -ENOATTR : 0;
++	return erofs_map_blocks_flatmode(inode, map, flags);
 +}
 +
-+static int xattr_namematch(struct xattr_iter *_it,
-+			   unsigned int processed, char *buf, unsigned int len)
++static inline struct bio *erofs_read_raw_page(struct bio *bio,
++					      struct address_space *mapping,
++					      struct page *page,
++					      erofs_off_t *last_block,
++					      unsigned int nblocks,
++					      bool ra)
 +{
-+	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
-+
-+	return memcmp(buf, it->name.name + processed, len) ? -ENOATTR : 0;
-+}
-+
-+static int xattr_checkbuffer(struct xattr_iter *_it,
-+			     unsigned int value_sz)
-+{
-+	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
-+	int err = it->buffer_size < value_sz ? -ERANGE : 0;
-+
-+	it->buffer_size = value_sz;
-+	return !it->buffer ? 1 : err;
-+}
-+
-+static void xattr_copyvalue(struct xattr_iter *_it,
-+			    unsigned int processed,
-+			    char *buf, unsigned int len)
-+{
-+	struct getxattr_iter *it = container_of(_it, struct getxattr_iter, it);
-+
-+	memcpy(it->buffer + processed, buf, len);
-+}
-+
-+static const struct xattr_iter_handlers find_xattr_handlers = {
-+	.entry = xattr_entrymatch,
-+	.name = xattr_namematch,
-+	.alloc_buffer = xattr_checkbuffer,
-+	.value = xattr_copyvalue
-+};
-+
-+static int inline_getxattr(struct inode *inode, struct getxattr_iter *it)
-+{
-+	int ret;
-+	unsigned int remaining;
-+
-+	ret = inline_xattr_iter_begin(&it->it, inode);
-+	if (ret < 0)
-+		return ret;
-+
-+	remaining = ret;
-+	while (remaining) {
-+		ret = xattr_foreach(&it->it, &find_xattr_handlers, &remaining);
-+		if (ret != -ENOATTR)
-+			break;
-+	}
-+	xattr_iter_end_final(&it->it);
-+
-+	return ret ? ret : it->buffer_size;
-+}
-+
-+static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
++	struct inode *const inode = mapping->host;
 +	struct super_block *const sb = inode->i_sb;
-+	struct erofs_sb_info *const sbi = EROFS_SB(sb);
-+	unsigned int i;
-+	int ret = -ENOATTR;
++	erofs_off_t current_block = (erofs_off_t)page->index;
++	int err;
 +
-+	for (i = 0; i < vi->xattr_shared_count; ++i) {
-+		erofs_blk_t blkaddr =
-+			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
++	DBG_BUGON(!nblocks);
 +
-+		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
++	if (PageUptodate(page)) {
++		err = 0;
++		goto has_updated;
++	}
 +
-+		if (!i || blkaddr != it->it.blkaddr) {
-+			if (i)
-+				xattr_iter_end(&it->it, true);
++	if (cleancache_get_page(page) == 0) {
++		err = 0;
++		SetPageUptodate(page);
++		goto has_updated;
++	}
 +
-+			it->it.page = erofs_get_meta_page(sb, blkaddr, false);
-+			if (IS_ERR(it->it.page))
-+				return PTR_ERR(it->it.page);
++	/* note that for readpage case, bio also equals to NULL */
++	if (bio &&
++	    /* not continuous */
++	    *last_block + 1 != current_block) {
++submit_bio_retry:
++		__submit_bio(bio, REQ_OP_READ, 0);
++		bio = NULL;
++	}
 +
-+			it->it.kaddr = kmap_atomic(it->it.page);
-+			it->it.blkaddr = blkaddr;
++	if (!bio) {
++		struct erofs_map_blocks map = {
++			.m_la = blknr_to_addr(current_block),
++		};
++		erofs_blk_t blknr;
++		unsigned int blkoff;
++
++		err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
++		if (unlikely(err))
++			goto err_out;
++
++		/* zero out the holed page */
++		if (unlikely(!(map.m_flags & EROFS_MAP_MAPPED))) {
++			zero_user_segment(page, 0, PAGE_SIZE);
++			SetPageUptodate(page);
++
++			/* imply err = 0, see erofs_map_blocks */
++			goto has_updated;
 +		}
 +
-+		ret = xattr_foreach(&it->it, &find_xattr_handlers, NULL);
-+		if (ret != -ENOATTR)
-+			break;
-+	}
-+	if (vi->xattr_shared_count)
-+		xattr_iter_end_final(&it->it);
++		/* for RAW access mode, m_plen must be equal to m_llen */
++		DBG_BUGON(map.m_plen != map.m_llen);
 +
-+	return ret ? ret : it->buffer_size;
-+}
++		blknr = erofs_blknr(map.m_pa);
++		blkoff = erofs_blkoff(map.m_pa);
 +
-+static bool erofs_xattr_user_list(struct dentry *dentry)
-+{
-+	return test_opt(EROFS_SB(dentry->d_sb), XATTR_USER);
-+}
++		/* deal with inline page */
++		if (map.m_flags & EROFS_MAP_META) {
++			void *vsrc, *vto;
++			struct page *ipage;
 +
-+static bool erofs_xattr_trusted_list(struct dentry *dentry)
-+{
-+	return capable(CAP_SYS_ADMIN);
-+}
++			DBG_BUGON(map.m_plen > PAGE_SIZE);
 +
-+int erofs_getxattr(struct inode *inode, int index,
-+		   const char *name,
-+		   void *buffer, size_t buffer_size)
-+{
-+	int ret;
-+	struct getxattr_iter it;
++			ipage = erofs_get_meta_page(inode->i_sb, blknr, 0);
 +
-+	if (unlikely(!name))
-+		return -EINVAL;
++			if (IS_ERR(ipage)) {
++				err = PTR_ERR(ipage);
++				goto err_out;
++			}
 +
-+	ret = init_inode_xattrs(inode);
-+	if (ret)
-+		return ret;
++			vsrc = kmap_atomic(ipage);
++			vto = kmap_atomic(page);
++			memcpy(vto, vsrc + blkoff, map.m_plen);
++			memset(vto + map.m_plen, 0, PAGE_SIZE - map.m_plen);
++			kunmap_atomic(vto);
++			kunmap_atomic(vsrc);
++			flush_dcache_page(page);
 +
-+	it.index = index;
++			SetPageUptodate(page);
++			/* TODO: could we unlock the page earlier? */
++			unlock_page(ipage);
++			put_page(ipage);
 +
-+	it.name.len = strlen(name);
-+	if (it.name.len > EROFS_NAME_LEN)
-+		return -ERANGE;
-+	it.name.name = name;
-+
-+	it.buffer = buffer;
-+	it.buffer_size = buffer_size;
-+
-+	it.it.sb = inode->i_sb;
-+	ret = inline_getxattr(inode, &it);
-+	if (ret == -ENOATTR)
-+		ret = shared_getxattr(inode, &it);
-+	return ret;
-+}
-+
-+static int erofs_xattr_generic_get(const struct xattr_handler *handler,
-+				   struct dentry *unused, struct inode *inode,
-+				   const char *name, void *buffer, size_t size)
-+{
-+	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
-+
-+	switch (handler->flags) {
-+	case EROFS_XATTR_INDEX_USER:
-+		if (!test_opt(sbi, XATTR_USER))
-+			return -EOPNOTSUPP;
-+		break;
-+	case EROFS_XATTR_INDEX_TRUSTED:
-+		if (!capable(CAP_SYS_ADMIN))
-+			return -EPERM;
-+		break;
-+	case EROFS_XATTR_INDEX_SECURITY:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return erofs_getxattr(inode, handler->flags, name, buffer, size);
-+}
-+
-+const struct xattr_handler erofs_xattr_user_handler = {
-+	.prefix	= XATTR_USER_PREFIX,
-+	.flags	= EROFS_XATTR_INDEX_USER,
-+	.list	= erofs_xattr_user_list,
-+	.get	= erofs_xattr_generic_get,
-+};
-+
-+const struct xattr_handler erofs_xattr_trusted_handler = {
-+	.prefix	= XATTR_TRUSTED_PREFIX,
-+	.flags	= EROFS_XATTR_INDEX_TRUSTED,
-+	.list	= erofs_xattr_trusted_list,
-+	.get	= erofs_xattr_generic_get,
-+};
-+
-+#ifdef CONFIG_EROFS_FS_SECURITY
-+const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
-+	.prefix	= XATTR_SECURITY_PREFIX,
-+	.flags	= EROFS_XATTR_INDEX_SECURITY,
-+	.get	= erofs_xattr_generic_get,
-+};
-+#endif
-+
-+const struct xattr_handler *erofs_xattr_handlers[] = {
-+	&erofs_xattr_user_handler,
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+	&posix_acl_access_xattr_handler,
-+	&posix_acl_default_xattr_handler,
-+#endif
-+	&erofs_xattr_trusted_handler,
-+#ifdef CONFIG_EROFS_FS_SECURITY
-+	&erofs_xattr_security_handler,
-+#endif
-+	NULL,
-+};
-+
-+struct listxattr_iter {
-+	struct xattr_iter it;
-+
-+	struct dentry *dentry;
-+	char *buffer;
-+	int buffer_size, buffer_ofs;
-+};
-+
-+static int xattr_entrylist(struct xattr_iter *_it,
-+			   struct erofs_xattr_entry *entry)
-+{
-+	struct listxattr_iter *it =
-+		container_of(_it, struct listxattr_iter, it);
-+	unsigned int prefix_len;
-+	const char *prefix;
-+
-+	const struct xattr_handler *h =
-+		erofs_xattr_handler(entry->e_name_index);
-+
-+	if (!h || (h->list && !h->list(it->dentry)))
-+		return 1;
-+
-+	prefix = xattr_prefix(h);
-+	prefix_len = strlen(prefix);
-+
-+	if (!it->buffer) {
-+		it->buffer_ofs += prefix_len + entry->e_name_len + 1;
-+		return 1;
-+	}
-+
-+	if (it->buffer_ofs + prefix_len
-+		+ entry->e_name_len + 1 > it->buffer_size)
-+		return -ERANGE;
-+
-+	memcpy(it->buffer + it->buffer_ofs, prefix, prefix_len);
-+	it->buffer_ofs += prefix_len;
-+	return 0;
-+}
-+
-+static int xattr_namelist(struct xattr_iter *_it,
-+			  unsigned int processed, char *buf, unsigned int len)
-+{
-+	struct listxattr_iter *it =
-+		container_of(_it, struct listxattr_iter, it);
-+
-+	memcpy(it->buffer + it->buffer_ofs, buf, len);
-+	it->buffer_ofs += len;
-+	return 0;
-+}
-+
-+static int xattr_skipvalue(struct xattr_iter *_it,
-+			   unsigned int value_sz)
-+{
-+	struct listxattr_iter *it =
-+		container_of(_it, struct listxattr_iter, it);
-+
-+	it->buffer[it->buffer_ofs++] = '\0';
-+	return 1;
-+}
-+
-+static const struct xattr_iter_handlers list_xattr_handlers = {
-+	.entry = xattr_entrylist,
-+	.name = xattr_namelist,
-+	.alloc_buffer = xattr_skipvalue,
-+	.value = NULL
-+};
-+
-+static int inline_listxattr(struct listxattr_iter *it)
-+{
-+	int ret;
-+	unsigned int remaining;
-+
-+	ret = inline_xattr_iter_begin(&it->it, d_inode(it->dentry));
-+	if (ret < 0)
-+		return ret;
-+
-+	remaining = ret;
-+	while (remaining) {
-+		ret = xattr_foreach(&it->it, &list_xattr_handlers, &remaining);
-+		if (ret)
-+			break;
-+	}
-+	xattr_iter_end_final(&it->it);
-+	return ret ? ret : it->buffer_ofs;
-+}
-+
-+static int shared_listxattr(struct listxattr_iter *it)
-+{
-+	struct inode *const inode = d_inode(it->dentry);
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct super_block *const sb = inode->i_sb;
-+	struct erofs_sb_info *const sbi = EROFS_SB(sb);
-+	unsigned int i;
-+	int ret = 0;
-+
-+	for (i = 0; i < vi->xattr_shared_count; ++i) {
-+		erofs_blk_t blkaddr =
-+			xattrblock_addr(sbi, vi->xattr_shared_xattrs[i]);
-+
-+		it->it.ofs = xattrblock_offset(sbi, vi->xattr_shared_xattrs[i]);
-+		if (!i || blkaddr != it->it.blkaddr) {
-+			if (i)
-+				xattr_iter_end(&it->it, true);
-+
-+			it->it.page = erofs_get_meta_page(sb, blkaddr, false);
-+			if (IS_ERR(it->it.page))
-+				return PTR_ERR(it->it.page);
-+
-+			it->it.kaddr = kmap_atomic(it->it.page);
-+			it->it.blkaddr = blkaddr;
++			/* imply err = 0, see erofs_map_blocks */
++			goto has_updated;
 +		}
 +
-+		ret = xattr_foreach(&it->it, &list_xattr_handlers, NULL);
-+		if (ret)
-+			break;
-+	}
-+	if (vi->xattr_shared_count)
-+		xattr_iter_end_final(&it->it);
++		/* pa must be block-aligned for raw reading */
++		DBG_BUGON(erofs_blkoff(map.m_pa));
 +
-+	return ret ? ret : it->buffer_ofs;
-+}
++		/* max # of continuous pages */
++		if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
++			nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
++		if (nblocks > BIO_MAX_PAGES)
++			nblocks = BIO_MAX_PAGES;
 +
-+ssize_t erofs_listxattr(struct dentry *dentry,
-+			char *buffer, size_t buffer_size)
-+{
-+	int ret;
-+	struct listxattr_iter it;
-+
-+	ret = init_inode_xattrs(d_inode(dentry));
-+	if (ret)
-+		return ret;
-+
-+	it.dentry = dentry;
-+	it.buffer = buffer;
-+	it.buffer_size = buffer_size;
-+	it.buffer_ofs = 0;
-+
-+	it.it.sb = dentry->d_sb;
-+
-+	ret = inline_listxattr(&it);
-+	if (ret < 0 && ret != -ENOATTR)
-+		return ret;
-+	return shared_listxattr(&it);
-+}
-+
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+struct posix_acl *erofs_get_acl(struct inode *inode, int type)
-+{
-+	struct posix_acl *acl;
-+	int prefix, rc;
-+	char *value = NULL;
-+
-+	switch (type) {
-+	case ACL_TYPE_ACCESS:
-+		prefix = EROFS_XATTR_INDEX_POSIX_ACL_ACCESS;
-+		break;
-+	case ACL_TYPE_DEFAULT:
-+		prefix = EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT;
-+		break;
-+	default:
-+		return ERR_PTR(-EINVAL);
++		bio = erofs_grab_bio(sb, blknr, nblocks, sb,
++				     read_endio, false);
++		if (IS_ERR(bio)) {
++			err = PTR_ERR(bio);
++			bio = NULL;
++			goto err_out;
++		}
 +	}
 +
-+	rc = erofs_getxattr(inode, prefix, "", NULL, 0);
-+	if (rc > 0) {
-+		value = kmalloc(rc, GFP_KERNEL);
-+		if (!value)
-+			return ERR_PTR(-ENOMEM);
-+		rc = erofs_getxattr(inode, prefix, "", value, rc);
++	err = bio_add_page(bio, page, PAGE_SIZE, 0);
++	/* out of the extent or bio is full */
++	if (err < PAGE_SIZE)
++		goto submit_bio_retry;
++
++	*last_block = current_block;
++
++	/* shift in advance in case of it followed by too many gaps */
++	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
++		/* err should reassign to 0 after submitting */
++		err = 0;
++		goto submit_bio_out;
 +	}
 +
-+	if (rc == -ENOATTR)
-+		acl = NULL;
-+	else if (rc < 0)
-+		acl = ERR_PTR(rc);
-+	else
-+		acl = posix_acl_from_xattr(&init_user_ns, value, rc);
-+	kfree(value);
-+	return acl;
-+}
-+#endif
++	return bio;
 +
-diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
-new file mode 100644
-index 000000000000..186276225291
---- /dev/null
-+++ b/fs/erofs/xattr.h
-@@ -0,0 +1,93 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++err_out:
++	/* for sync reading, set page error immediately */
++	if (!ra) {
++		SetPageError(page);
++		ClearPageUptodate(page);
++	}
++has_updated:
++	unlock_page(page);
++
++	/* if updated manually, continuous pages has a gap */
++	if (bio)
++submit_bio_out:
++		__submit_bio(bio, REQ_OP_READ, 0);
++
++	return unlikely(err) ? ERR_PTR(err) : NULL;
++}
++
 +/*
-+ * linux/fs/erofs/xattr.h
-+ *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ * since we dont have write or truncate flows, so no inode
++ * locking needs to be held at the moment.
 + */
-+#ifndef __EROFS_XATTR_H
-+#define __EROFS_XATTR_H
-+
-+#include "internal.h"
-+#include <linux/posix_acl_xattr.h>
-+#include <linux/xattr.h>
-+
-+/* Attribute not found */
-+#define ENOATTR         ENODATA
-+
-+static inline unsigned int inlinexattr_header_size(struct inode *inode)
++static int erofs_raw_access_readpage(struct file *file, struct page *page)
 +{
-+	return sizeof(struct erofs_xattr_ibody_header) +
-+		sizeof(u32) * EROFS_V(inode)->xattr_shared_count;
-+}
++	erofs_off_t last_block;
++	struct bio *bio;
 +
-+static inline erofs_blk_t xattrblock_addr(struct erofs_sb_info *sbi,
-+					  unsigned int xattr_id)
-+{
-+#ifdef CONFIG_EROFS_FS_XATTR
-+	return sbi->xattr_blkaddr +
-+		xattr_id * sizeof(__u32) / EROFS_BLKSIZ;
-+#else
++	trace_erofs_readpage(page, true);
++
++	bio = erofs_read_raw_page(NULL, page->mapping,
++				  page, &last_block, 1, false);
++
++	if (IS_ERR(bio))
++		return PTR_ERR(bio);
++
++	DBG_BUGON(bio);	/* since we have only one bio -- must be NULL */
 +	return 0;
-+#endif
 +}
 +
-+static inline unsigned int xattrblock_offset(struct erofs_sb_info *sbi,
-+					     unsigned int xattr_id)
++static int erofs_raw_access_readpages(struct file *filp,
++				      struct address_space *mapping,
++				      struct list_head *pages,
++				      unsigned int nr_pages)
 +{
-+	return (xattr_id * sizeof(__u32)) % EROFS_BLKSIZ;
++	erofs_off_t last_block;
++	struct bio *bio = NULL;
++	gfp_t gfp = readahead_gfp_mask(mapping);
++	struct page *page = list_last_entry(pages, struct page, lru);
++
++	trace_erofs_readpages(mapping->host, page, nr_pages, true);
++
++	for (; nr_pages; --nr_pages) {
++		page = list_entry(pages->prev, struct page, lru);
++
++		prefetchw(&page->flags);
++		list_del(&page->lru);
++
++		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
++			bio = erofs_read_raw_page(bio, mapping, page,
++						  &last_block, nr_pages, true);
++
++			/* all the page errors are ignored when readahead */
++			if (IS_ERR(bio)) {
++				pr_err("%s, readahead error at page %lu of nid %llu\n",
++				       __func__, page->index,
++				       EROFS_V(mapping->host)->nid);
++
++				bio = NULL;
++			}
++		}
++
++		/* pages could still be locked */
++		put_page(page);
++	}
++	DBG_BUGON(!list_empty(pages));
++
++	/* the rare case (end in gaps) */
++	if (unlikely(bio))
++		__submit_bio(bio, REQ_OP_READ, 0);
++	return 0;
 +}
 +
-+#ifdef CONFIG_EROFS_FS_XATTR
-+extern const struct xattr_handler erofs_xattr_user_handler;
-+extern const struct xattr_handler erofs_xattr_trusted_handler;
-+#ifdef CONFIG_EROFS_FS_SECURITY
-+extern const struct xattr_handler erofs_xattr_security_handler;
-+#endif
-+
-+static inline const struct xattr_handler *erofs_xattr_handler(unsigned int idx)
++static int erofs_get_block(struct inode *inode, sector_t iblock,
++			   struct buffer_head *bh, int create)
 +{
-+static const struct xattr_handler *xattr_handler_map[] = {
-+	[EROFS_XATTR_INDEX_USER] = &erofs_xattr_user_handler,
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+	[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] = &posix_acl_access_xattr_handler,
-+	[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] =
-+		&posix_acl_default_xattr_handler,
-+#endif
-+	[EROFS_XATTR_INDEX_TRUSTED] = &erofs_xattr_trusted_handler,
-+#ifdef CONFIG_EROFS_FS_SECURITY
-+	[EROFS_XATTR_INDEX_SECURITY] = &erofs_xattr_security_handler,
-+#endif
++	struct erofs_map_blocks map = {
++		.m_la = iblock << 9,
++	};
++	int err;
++
++	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
++	if (err)
++		return err;
++
++	if (map.m_flags & EROFS_MAP_MAPPED)
++		bh->b_blocknr = erofs_blknr(map.m_pa);
++
++	return err;
++}
++
++static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
++{
++	struct inode *inode = mapping->host;
++
++	if (is_inode_flat_inline(inode)) {
++		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
++
++		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
++			return 0;
++	}
++
++	return generic_block_bmap(mapping, block, erofs_get_block);
++}
++
++/* for uncompressed (aligned) files and raw access for other files */
++const struct address_space_operations erofs_raw_access_aops = {
++	.readpage = erofs_raw_access_readpage,
++	.readpages = erofs_raw_access_readpages,
++	.bmap = erofs_bmap,
 +};
-+	return idx && idx < ARRAY_SIZE(xattr_handler_map) ?
-+		xattr_handler_map[idx] : NULL;
-+}
-+
-+extern const struct xattr_handler *erofs_xattr_handlers[];
-+
-+int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
-+ssize_t erofs_listxattr(struct dentry *, char *, size_t);
-+#else
-+static inline int erofs_getxattr(struct inode *inode, int index,
-+				 const char *name, void *buffer,
-+				 size_t buffer_size)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline ssize_t erofs_listxattr(struct dentry *dentry,
-+				      char *buffer, size_t buffer_size)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif
-+
-+#ifdef CONFIG_EROFS_FS_POSIX_ACL
-+struct posix_acl *erofs_get_acl(struct inode *inode, int type);
-+#else
-+#define erofs_get_acl	(NULL)
-+#endif
-+
-+#endif
 +
 -- 
 2.17.1
