@@ -2,144 +2,102 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32036C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36539C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B7E218BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B22218BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbfGVR6T (ORCPT
+        id S1731052AbfGVR6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:58:19 -0400
-Received: from smtprelay0011.hostedemail.com ([216.40.44.11]:56978 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbfGVR6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:58:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 57E742C88;
-        Mon, 22 Jul 2019 17:58:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: leg66_2b31318223726
-X-Filterd-Recvd-Size: 4181
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 22 Jul 2019 17:58:16 +0000 (UTC)
-Message-ID: <2c959c56c23d0052e5c35ecfa2f6051b17fb2798.camel@perches.com>
-Subject: Re: [RFC PATCH] string.h: Add stracpy/stracpy_pad (was: Re: [PATCH]
- checkpatch: Added warnings in favor of strscpy().)
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nitin Gote <nitin.r.gote@intel.com>, akpm@linux-foundation.org,
-        corbet@lwn.net, apw@canonical.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Date:   Mon, 22 Jul 2019 10:58:15 -0700
-In-Reply-To: <b9bb5550b264d4b29b2b20f7ff8b1b40d20def6a.camel@perches.com>
-References: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
-         <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
-         <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
-         <201907221031.8B87A9DE@keescook>
-         <b9bb5550b264d4b29b2b20f7ff8b1b40d20def6a.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 22 Jul 2019 13:58:47 -0400
+Received: from gate.crashing.org ([63.228.1.57]:36871 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfGVR6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:58:47 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6MHwIwq002804;
+        Mon, 22 Jul 2019 12:58:18 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6MHwH9G002785;
+        Mon, 22 Jul 2019 12:58:17 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 22 Jul 2019 12:58:17 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
+Message-ID: <20190722175817.GE20882@gate.crashing.org>
+References: <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr> <20190709064952.GA40851@archlinux-threadripper> <20190719032456.GA14108@archlinux-threadripper> <20190719152303.GA20882@gate.crashing.org> <20190719160455.GA12420@archlinux-threadripper> <20190721075846.GA97701@archlinux-threadripper> <20190721180150.GN20882@gate.crashing.org> <20190722024140.GA55142@archlinux-threadripper> <20190722061940.GZ20882@gate.crashing.org> <CAKwvOd=KRVsFkT8dLFoitky9OF8tKmbn00-OPi6kBygyx4QwHg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=KRVsFkT8dLFoitky9OF8tKmbn00-OPi6kBygyx4QwHg@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-22 at 10:43 -0700, Joe Perches wrote:
-> On Mon, 2019-07-22 at 10:33 -0700, Kees Cook wrote:
-> > On Thu, Jul 04, 2019 at 05:15:57PM -0700, Joe Perches wrote:
-> > > On Thu, 2019-07-04 at 13:46 -0700, Joe Perches wrote:
-> > > > On Thu, 2019-07-04 at 11:24 +0530, Nitin Gote wrote:
-> > > > > Added warnings in checkpatch.pl script to :
-> > > > > 
-> > > > > 1. Deprecate strcpy() in favor of strscpy().
-> > > > > 2. Deprecate strlcpy() in favor of strscpy().
-> > > > > 3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
-> > > > > 
-> > > > > Updated strncpy() section in Documentation/process/deprecated.rst
-> > > > > to cover strscpy_pad() case.
-> > > 
-> > > []
-> > > 
-> > > I sent a patch series for some strscpy/strlcpy misuses.
-> > > 
-> > > How about adding a macro helper to avoid the misuses like:
-> > > ---
-> > >  include/linux/string.h | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > > 
-> > > diff --git a/include/linux/string.h b/include/linux/string.h
-> > > index 4deb11f7976b..ef01bd6f19df 100644
-> > > --- a/include/linux/string.h
-> > > +++ b/include/linux/string.h
-> > > @@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
-> > >  /* Wraps calls to strscpy()/memset(), no arch specific code required */
-> > >  ssize_t strscpy_pad(char *dest, const char *src, size_t count);
-> > >  
-> > > +#define stracpy(to, from)					\
-> > > +({								\
-> > > +	size_t size = ARRAY_SIZE(to);				\
-> > > +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-> > > +								\
-> > > +	strscpy(to, from, size);				\
-> > > +})
-> > > +
-> > > +#define stracpy_pad(to, from)					\
-> > > +({								\
-> > > +	size_t size = ARRAY_SIZE(to);				\
-> > > +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-> > > +								\
-> > > +	strscpy_pad(to, from, size);				\
-> > > +})
-> > > +
-> > >  #ifndef __HAVE_ARCH_STRCAT
-> > >  extern char * strcat(char *, const char *);
-> > >  #endif
-> > 
-> > This seems like a reasonable addition, yes. I think Coccinelle might
-> > actually be able to find all the existing strscpy(dst, src, sizeof(dst))
-> > cases to jump-start this conversion.
+On Mon, Jul 22, 2019 at 10:21:07AM -0700, Nick Desaulniers wrote:
+> On Sun, Jul 21, 2019 at 11:19 PM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+> > On Sun, Jul 21, 2019 at 07:41:40PM -0700, Nathan Chancellor wrote:
+> > > On Sun, Jul 21, 2019 at 01:01:50PM -0500, Segher Boessenkool wrote:
+> > > > On Sun, Jul 21, 2019 at 12:58:46AM -0700, Nathan Chancellor wrote:
+> > > > > 0000017c clear_user_page:
+> > > > >      17c: 94 21 ff f0                     stwu 1, -16(1)
+> > > > >      180: 38 80 00 80                     li 4, 128
+> > > > >      184: 38 63 ff e0                     addi 3, 3, -32
+> > > > >      188: 7c 89 03 a6                     mtctr 4
+> > > > >      18c: 38 81 00 0f                     addi 4, 1, 15
+> > > > >      190: 8c c3 00 20                     lbzu 6, 32(3)
+> > > > >      194: 98 c1 00 0f                     stb 6, 15(1)
+> > > > >      198: 7c 00 27 ec                     dcbz 0, 4
+> > > > >      19c: 42 00 ff f4                     bdnz .+65524
+> > > >
+> > > > Uh, yeah, well, I have no idea what clang tried here, but that won't
+> > > > work.  It's copying a byte from each target cache line to the stack,
+> > > > and then does clears the cache line containing that byte on the stack.
+> > > >
+> > > > I *guess* this is about "Z" and not about "%y", but you'll have to ask
+> > > > the clang people.
+> > > >
+> > > > Or it may be that they do not treat inline asm operands as lvalues
+> > > > properly?  That rings some bells.  Yeah that looks like it.
+> >
+> > The code is
+> >   __asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
+> >
+> > so yeah it looks like clang took that  *(u8 *)addr  as rvalue, and
+> > stored that in stack, and then used *that* as memory.
 > 
-> I did that.  It works.  It's a lot of conversions.
-> 
-> $ cat str.cpy.cocci
-> @@
-> expression e1;
-> expression e2;
-> @@
-> 
-> - strscpy(e1, e2, sizeof(e1))
-> + stracpy(e1, e2)
-> 
-> @@
-> expression e1;
-> expression e2;
-> @@
-> 
-> - strlcpy(e1, e2, sizeof(e1))
-> + stracpy(e1, e2)
-> 
-> > Devil's advocate: this adds yet more string handling functions... will
-> > this cause even more confusion?
-> 
-> Documentation is good.
-> Actual in-kernel use and examples better.
+> What's the %y modifier supposed to mean here?
 
-btw: I just ran this again and it produces:
+It prints a memory address for an indexed operand.
 
-$ spatch --in-place -sp-file str.cpy.cocci .
-$ git checkout tools/
-$ git diff --shortstat
- 958 files changed, 2179 insertions(+), 2655 deletions(-)
+If you write just "%0" it prints addresses that are a single register
+as "0(r3)" instead of "0,r3".  Some instructions do not allow offset
+form.
+
+> addr is in the list of
+> inputs, so what's wrong with using it as an rvalue?
+
+It seems to use *(u8 *)addr as rvalue.  Asm operands are lvalues.  It
+matters a lot for memory operands.
+
+> > Maybe clang simply does not not to treat "Z" the same as "m"?  (And "Y"
+> > and "Q" and "es" and a whole bunch of "w*", what about those?)
 
 
+Segher
