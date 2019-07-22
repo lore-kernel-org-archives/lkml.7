@@ -2,28 +2,28 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5462FC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D457FC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E8321911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96DB21911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfGVNdb (ORCPT
+        id S1730627AbfGVNdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:33:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36524 "EHLO
+        Mon, 22 Jul 2019 09:33:33 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36560 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730554AbfGVNdX (ORCPT
+        with ESMTP id S1730585AbfGVNd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:33:23 -0400
+        Mon, 22 Jul 2019 09:33:26 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id F0F7728B079
+        with ESMTPSA id 1F1CB28AF32
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -45,11 +45,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Collabora kernel ML <kernel@collabora.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v5 09/11] mfd: cros_ec: Add convenience struct to define autodetectable CrOS EC subdevices
-Date:   Mon, 22 Jul 2019 15:32:55 +0200
-Message-Id: <20190722133257.9336-10-enric.balletbo@collabora.com>
+Subject: [PATCH v5 11/11] arm/arm64: defconfig: Update configs to use the new CROS_EC options
+Date:   Mon, 22 Jul 2019 15:32:57 +0200
+Message-Id: <20190722133257.9336-12-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722133257.9336-1-enric.balletbo@collabora.com>
 References: <20190722133257.9336-1-enric.balletbo@collabora.com>
@@ -60,192 +59,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CrOS EC is gaining lots of subdevices that are autodetectable by
-sending the EC_FEATURE_GET_CMD, it takes fair amount of boiler plate
-code to add those devices. So, add a struct that can be used to quickly
-add new subdevices without having to duplicate code.
+Recently we refactored the CrOS EC drivers moving part of the code from
+the MFD subsystem to the platform chrome subsystem. During this change
+we needed to rename some config options, so, update the defconfigs
+accordingly.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 Tested-by: Gwendal Grignou <gwendal@chromium.org>
 ---
 
 Changes in v5: None
 Changes in v4: None
-Changes in v3:
-- Use mfd_add_hotplug_devices helper (Gwendal)
-
+Changes in v3: None
 Changes in v2: None
 
- drivers/mfd/cros_ec_dev.c | 131 +++++++++++++++++++++-----------------
- 1 file changed, 73 insertions(+), 58 deletions(-)
+ arch/arm/configs/exynos_defconfig   | 3 ++-
+ arch/arm/configs/multi_v7_defconfig | 8 ++++----
+ arch/arm/configs/pxa_defconfig      | 8 ++++----
+ arch/arm/configs/tegra_defconfig    | 6 ++++--
+ arch/arm64/configs/defconfig        | 6 ++++--
+ 5 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index e0e18c0eb9f5..38627f6b78af 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -34,6 +34,18 @@ struct cros_feature_to_name {
- 	const char *desc;
- };
- 
-+/**
-+ * cros_feature_to_cells - CrOS feature id to mfd cells association.
-+ * @id: The feature identifier.
-+ * @mfd_cells: Pointer to the array of mfd cells that needs to be added.
-+ * @num_cells: Number of mfd cells into the array.
-+ */
-+struct cros_feature_to_cells {
-+	unsigned int id;
-+	const struct mfd_cell *mfd_cells;
-+	unsigned int num_cells;
-+};
-+
- static const struct cros_feature_to_name cros_mcu_devices[] = {
- 	{
- 		.id	= EC_FEATURE_FINGERPRINT,
-@@ -57,6 +69,48 @@ static const struct cros_feature_to_name cros_mcu_devices[] = {
- 	},
- };
- 
-+static const struct mfd_cell cros_ec_cec_cells[] = {
-+	{ .name = "cros-ec-cec", },
-+};
-+
-+static const struct mfd_cell cros_ec_rtc_cells[] = {
-+	{ .name = "cros-ec-rtc", },
-+};
-+
-+static const struct mfd_cell cros_usbpd_charger_cells[] = {
-+	{ .name = "cros-usbpd-charger", },
-+	{ .name = "cros-usbpd-logger", },
-+};
-+
-+static const struct cros_feature_to_cells cros_subdevices[] = {
-+	{
-+		.id		= EC_FEATURE_CEC,
-+		.mfd_cells	= cros_ec_cec_cells,
-+		.num_cells	= ARRAY_SIZE(cros_ec_cec_cells),
-+	},
-+	{
-+		.id		= EC_FEATURE_RTC,
-+		.mfd_cells	= cros_ec_rtc_cells,
-+		.num_cells	= ARRAY_SIZE(cros_ec_rtc_cells),
-+	},
-+	{
-+		.id		= EC_FEATURE_USB_PD,
-+		.mfd_cells	= cros_usbpd_charger_cells,
-+		.num_cells	= ARRAY_SIZE(cros_usbpd_charger_cells),
-+	},
-+};
-+
-+static const struct mfd_cell cros_ec_platform_cells[] = {
-+	{ .name = "cros-ec-chardev", },
-+	{ .name = "cros-ec-debugfs", },
-+	{ .name = "cros-ec-lightbar", },
-+	{ .name = "cros-ec-sysfs", },
-+};
-+
-+static const struct mfd_cell cros_ec_vbc_cells[] = {
-+	{ .name = "cros-ec-vbc", }
-+};
-+
- static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
- {
- 	struct cros_ec_command *msg;
-@@ -282,30 +336,6 @@ static void cros_ec_accel_legacy_register(struct cros_ec_dev *ec)
- 		dev_err(ec_dev->dev, "failed to add EC sensors\n");
- }
- 
--static const struct mfd_cell cros_ec_cec_cells[] = {
--	{ .name = "cros-ec-cec" }
--};
--
--static const struct mfd_cell cros_ec_rtc_cells[] = {
--	{ .name = "cros-ec-rtc" }
--};
--
--static const struct mfd_cell cros_usbpd_charger_cells[] = {
--	{ .name = "cros-usbpd-charger" },
--	{ .name = "cros-usbpd-logger" },
--};
--
--static const struct mfd_cell cros_ec_platform_cells[] = {
--	{ .name = "cros-ec-chardev" },
--	{ .name = "cros-ec-debugfs" },
--	{ .name = "cros-ec-lightbar" },
--	{ .name = "cros-ec-sysfs" },
--};
--
--static const struct mfd_cell cros_ec_vbc_cells[] = {
--	{ .name = "cros-ec-vbc" }
--};
--
- static int ec_device_probe(struct platform_device *pdev)
- {
- 	int retval = -ENOMEM;
-@@ -366,42 +396,27 @@ static int ec_device_probe(struct platform_device *pdev)
- 		/* Workaroud for older EC firmware */
- 		cros_ec_accel_legacy_register(ec);
- 
--	/* Check whether this EC instance has CEC host command support */
--	if (cros_ec_check_features(ec, EC_FEATURE_CEC)) {
--		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
--					 cros_ec_cec_cells,
--					 ARRAY_SIZE(cros_ec_cec_cells),
--					 NULL, 0, NULL);
--		if (retval)
--			dev_err(ec->dev,
--				"failed to add cros-ec-cec device: %d\n",
--				retval);
--	}
--
--	/* Check whether this EC instance has RTC host command support */
--	if (cros_ec_check_features(ec, EC_FEATURE_RTC)) {
--		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
--					 cros_ec_rtc_cells,
--					 ARRAY_SIZE(cros_ec_rtc_cells),
--					 NULL, 0, NULL);
--		if (retval)
--			dev_err(ec->dev,
--				"failed to add cros-ec-rtc device: %d\n",
--				retval);
--	}
--
--	/* Check whether this EC instance has the PD charge manager */
--	if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
--		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
--					 cros_usbpd_charger_cells,
--					 ARRAY_SIZE(cros_usbpd_charger_cells),
--					 NULL, 0, NULL);
--		if (retval)
--			dev_err(ec->dev,
--				"failed to add cros-usbpd-charger device: %d\n",
--				retval);
-+	/*
-+	 * The following subdevices can be detected by sending the
-+	 * EC_FEATURE_GET_CMD Embedded Controller device.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(cros_subdevices); i++) {
-+		if (cros_ec_check_features(ec, cros_subdevices[i].id)) {
-+			retval = mfd_add_hotplug_devices(ec->dev,
-+						cros_subdevices[i].mfd_cells,
-+						cros_subdevices[i].num_cells);
-+			if (retval)
-+				dev_err(ec->dev,
-+					"failed to add %s subdevice: %d\n",
-+					cros_subdevices[i].mfd_cells->name,
-+					retval);
-+		}
- 	}
- 
-+	/*
-+	 * The following subdevices cannot be detected by sending the
-+	 * EC_FEATURE_GET_CMD to the Embedded Controller device.
-+	 */
- 	retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
- 				 cros_ec_platform_cells,
- 				 ARRAY_SIZE(cros_ec_platform_cells),
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index 2e6a863d25aa..b2a1d8b03ff1 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -154,7 +154,6 @@ CONFIG_CPU_THERMAL=y
+ CONFIG_THERMAL_EMULATION=y
+ CONFIG_WATCHDOG=y
+ CONFIG_S3C2410_WATCHDOG=y
+-CONFIG_MFD_CROS_EC=y
+ CONFIG_MFD_MAX14577=y
+ CONFIG_MFD_MAX77686=y
+ CONFIG_MFD_MAX77693=y
+@@ -282,6 +281,8 @@ CONFIG_RTC_DRV_S5M=y
+ CONFIG_RTC_DRV_S3C=y
+ CONFIG_DMADEVICES=y
+ CONFIG_PL330_DMA=y
++CONFIG_CHROME_PLATFORMS=y
++CONFIG_CROS_EC=y
+ CONFIG_CROS_EC_I2C=y
+ CONFIG_CROS_EC_SPI=y
+ CONFIG_COMMON_CLK_MAX77686=y
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 6a40bc2ef271..5a309e4ae26b 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -511,10 +511,6 @@ CONFIG_MFD_BCM590XX=y
+ CONFIG_MFD_AC100=y
+ CONFIG_MFD_AXP20X_I2C=y
+ CONFIG_MFD_AXP20X_RSB=y
+-CONFIG_MFD_CROS_EC=m
+-CONFIG_CROS_EC_I2C=m
+-CONFIG_CROS_EC_SPI=m
+-CONFIG_MFD_CROS_EC_CHARDEV=m
+ CONFIG_MFD_DA9063=m
+ CONFIG_MFD_MAX14577=y
+ CONFIG_MFD_MAX77686=y
+@@ -899,6 +895,10 @@ CONFIG_SERIO_NVEC_PS2=y
+ CONFIG_NVEC_POWER=y
+ CONFIG_NVEC_PAZ00=y
+ CONFIG_STAGING_BOARD=y
++CONFIG_CHROME_PLATFORMS=y
++CONFIG_CROS_EC=m
++CONFIG_CROS_EC_I2C=m
++CONFIG_CROS_EC_SPI=m
+ CONFIG_COMMON_CLK_MAX77686=y
+ CONFIG_COMMON_CLK_RK808=m
+ CONFIG_COMMON_CLK_S2MPS11=m
+diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+index 787c3f9be414..af6426aae21f 100644
+--- a/arch/arm/configs/pxa_defconfig
++++ b/arch/arm/configs/pxa_defconfig
+@@ -393,9 +393,6 @@ CONFIG_SA1100_WATCHDOG=m
+ CONFIG_MFD_AS3711=y
+ CONFIG_MFD_BCM590XX=m
+ CONFIG_MFD_AXP20X=y
+-CONFIG_MFD_CROS_EC=m
+-CONFIG_CROS_EC_I2C=m
+-CONFIG_CROS_EC_SPI=m
+ CONFIG_MFD_ASIC3=y
+ CONFIG_PMIC_DA903X=y
+ CONFIG_HTC_EGPIO=y
+@@ -649,7 +646,10 @@ CONFIG_DMADEVICES=y
+ CONFIG_PXA_DMA=y
+ CONFIG_DW_DMAC=m
+ CONFIG_UIO=y
+-CONFIG_CROS_EC_CHARDEV=m
++CONFIG_CHROME_PLATFORMS=y
++CONFIG_CROS_EC=m
++CONFIG_CROS_EC_I2C=m
++CONFIG_CROS_EC_SPI=m
+ CONFIG_COMMON_CLK_S2MPS11=m
+ CONFIG_PM_DEVFREQ=y
+ CONFIG_EXTCON=y
+diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+index 8f5c6a5b444c..69fc64c70e9f 100644
+--- a/arch/arm/configs/tegra_defconfig
++++ b/arch/arm/configs/tegra_defconfig
+@@ -105,7 +105,6 @@ CONFIG_INPUT_JOYDEV=y
+ CONFIG_INPUT_EVDEV=y
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_TEGRA=y
+-CONFIG_KEYBOARD_CROS_EC=y
+ CONFIG_MOUSE_PS2_ELANTECH=y
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_TOUCHSCREEN_ATMEL_MXT=y
+@@ -147,7 +146,6 @@ CONFIG_SENSORS_LM95245=y
+ CONFIG_WATCHDOG=y
+ CONFIG_TEGRA_WATCHDOG=y
+ CONFIG_MFD_AS3722=y
+-CONFIG_MFD_CROS_EC=y
+ CONFIG_MFD_MAX8907=y
+ CONFIG_MFD_STMPE=y
+ CONFIG_MFD_PALMAS=y
+@@ -250,6 +248,10 @@ CONFIG_KEYBOARD_NVEC=y
+ CONFIG_SERIO_NVEC_PS2=y
+ CONFIG_NVEC_POWER=y
+ CONFIG_NVEC_PAZ00=y
++CONFIG_CHROME_PLATFORMS=y
++CONFIG_CROS_EC=m
++CONFIG_CROS_EC_I2C=m
++CONFIG_CROS_EC_SPI=m
+ CONFIG_TEGRA_IOMMU_GART=y
+ CONFIG_TEGRA_IOMMU_SMMU=y
+ CONFIG_ARCH_TEGRA_2x_SOC=y
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0e58ef02880c..c4df1999fe0d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -457,8 +457,7 @@ CONFIG_MFD_ALTERA_SYSMGR=y
+ CONFIG_MFD_BD9571MWV=y
+ CONFIG_MFD_AXP20X_I2C=y
+ CONFIG_MFD_AXP20X_RSB=y
+-CONFIG_MFD_CROS_EC=y
+-CONFIG_MFD_CROS_EC_CHARDEV=m
++CONFIG_MFD_CROS_EC_DEV=y
+ CONFIG_MFD_EXYNOS_LPASS=m
+ CONFIG_MFD_HI6421_PMIC=y
+ CONFIG_MFD_HI655X_PMIC=y
+@@ -668,8 +667,11 @@ CONFIG_VIRTIO_BALLOON=y
+ CONFIG_VIRTIO_MMIO=y
+ CONFIG_XEN_GNTDEV=y
+ CONFIG_XEN_GRANT_DEV_ALLOC=y
++CONFIG_CHROME_PLATFORMS=y
++CONFIG_CROS_EC=y
+ CONFIG_CROS_EC_I2C=y
+ CONFIG_CROS_EC_SPI=y
++CONFIG_CROS_EC_CHARDEV=m
+ CONFIG_COMMON_CLK_RK808=y
+ CONFIG_COMMON_CLK_SCPI=y
+ CONFIG_COMMON_CLK_CS2000_CP=y
 -- 
 2.20.1
 
