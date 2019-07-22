@@ -2,126 +2,150 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98480C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306DEC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B9421903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wrERNdA+"
+	by mail.kernel.org (Postfix) with ESMTP id 0EB2121903
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfGVPLP (ORCPT
+        id S1727247AbfGVPLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:11:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39288 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbfGVPLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:11:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so13527184pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=okW2ZRllj1UmKp04aEFvJhWydriFCMDOSg9DK6KAQaA=;
-        b=wrERNdA+k3qS3VTOu/hN4vusaATGstfPhZIORk2Dy9VxFSHX2bgxeEdSe8p6U0/EAv
-         +TXWdeDvyTIgsJ4XbeVIw+X09pvmBoQ3ajv70KQJYEhdDYwDidbw8LYOGhlJQL3xwb+s
-         IOpT++HqYP41y78gpqHYg5CYNIhrDoO62Gfot61zR6PWkMAqweRs35n3muoJfpFP5YSp
-         L9zChQWF00xKxHH7Z9eLKQhAvJmvACNyIsEGIQtl4pxeUoip+l2MRBlQXFsTZTvI3dYU
-         q+bDyjaWjSPhcLl81BiJs13VqpI+EZAevtwToHpvbTk/s9Ojfxg13Un8ZgmxCf08h8xE
-         4jtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=okW2ZRllj1UmKp04aEFvJhWydriFCMDOSg9DK6KAQaA=;
-        b=cbMTq3/d9txO4yk2Sq6ASX4LUl7IyuA2E10a0LIrAxCcpreU43MdOAZ2cssdiCR1hZ
-         Qww1xG+pLzC+XLWC1SJrUAcbjUUu+XkImrHRiSoy5ETSnF7g2IJYapLaZqMjH80q2amm
-         DSvJvU/HO+X09BhDz8GKTJxJYvs11QjS82zgHkoZ1S25QsaotMEGZcERBDHlux2qnXBo
-         HWXeQEHlevHbyk049JB9mXM5mEucHEiacUmLUr9yrz2IyKmFCnZhXJbkcAHxQE/HmR4o
-         rlDIKwEoqsW39lUUOt43df2LNiDTDnFDWP2Fg/WMqu6xTeHZHO6XJVPeSPlIFBF2h3Av
-         STPQ==
-X-Gm-Message-State: APjAAAXUy/tFrRZRodF+1bPlW+215DbjUeRthv18ShvMtWP4gdUP/j6i
-        Nsvp+Sk7PHJAwivqrfkS9qLvUw==
-X-Google-Smtp-Source: APXvYqyUMggcpHvQEIWA1uz/HQ0m+BWgq/e/QrwPKl6dVDM71u87KBblZBgc9PooMtK9Xla5oXXYZw==
-X-Received: by 2002:aa7:8189:: with SMTP id g9mr755670pfi.143.1563808274042;
-        Mon, 22 Jul 2019 08:11:14 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n140sm41835626pfd.132.2019.07.22.08.11.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 08:11:13 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 08:12:34 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] firmware: qcom_scm: fix error for incompatible pointer
-Message-ID: <20190722151234.GJ7234@tuxbook-pro>
-References: <20190719134303.7617-1-minwoo.im.dev@gmail.com>
- <7ea51e42-ab8a-e4e2-1833-651e2dabca3c@free.fr>
- <20190722093059.GA29538@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722093059.GA29538@lst.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Mon, 22 Jul 2019 11:11:35 -0400
+Received: from verein.lst.de ([213.95.11.211]:33093 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726554AbfGVPLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:11:34 -0400
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 9EAB168B20; Mon, 22 Jul 2019 17:11:30 +0200 (CEST)
+From:   Torsten Duwe <duwe@lst.de>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <<20190722150414.9F97668B20@verein.lst.de>>
+Subject: [PATCH v3 1/7] drm/bridge: move ANA78xx driver to analogix subdirectory
+Message-Id: <20190722151130.9EAB168B20@verein.lst.de>
+Date:   Mon, 22 Jul 2019 17:11:30 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22 Jul 02:30 PDT 2019, Christoph Hellwig wrote:
+From: Icenowy Zheng <icenowy@aosc.io>
 
-> On Mon, Jul 22, 2019 at 10:38:55AM +0200, Marc Gonzalez wrote:
-> > > In file included from drivers/firmware/qcom_scm.c:12:0:
-> > > ./include/linux/dma-mapping.h:636:21: note: expected ‘dma_addr_t * {aka long long unsigned int *}’ but argument is of type ‘phys_addr_t * {aka unsigned int *}’
-> > >  static inline void *dma_alloc_coherent(struct device *dev, size_t size,
-> > >                      ^~~~~~~~~~~~~~~~~~
-> > > ```
-> > > 
-> > > We just can cast phys_addr_t to dma_addr_t here.
-> > 
-> > IME, casting is rarely a proper solution.
-> 
-> *nod*
-> 
-> ptr_phys probably should be a dma_addr_t.  Unless this driver is so
-> magic that it really wants a physical and not a dma address, in which
-> case it needs to use alloc_pages instead of dma_alloc_coherent
-> and then call page_to_phys on the returned page, and a very big comment
-> explaining why it is so special.
+As ANA78xx chips are designed and produced by Analogix Semiconductor,
+Inc, move their driver codes into analogix subdirectory.
 
-The scm call takes physical addresses (which happens to be 1:1 with DMA
-addresses for this driver).
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+ drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
+ drivers/gpu/drm/bridge/Makefile                          |  4 ++--
+ drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
+ drivers/gpu/drm/bridge/analogix/Makefile                 |  1 +
+ drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c |  0
+ drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h |  0
+ 6 files changed, 13 insertions(+), 12 deletions(-)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
 
-This allocation started off (downstream) as a simple kmalloc(), but
-while the scm call is being executed an access from Linux will cause a
-security violation (that's not handled gracefully). The properties of
-dma_alloc is closer, so that's where the code is today.
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index ee777469293a..862789bf64a0 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
+ menu "Display Interface Bridges"
+ 	depends on DRM && DRM_BRIDGE
+ 
+-config DRM_ANALOGIX_ANX78XX
+-	tristate "Analogix ANX78XX bridge"
+-	select DRM_KMS_HELPER
+-	select REGMAP_I2C
+-	---help---
+-	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
+-	  designed for portable devices. The ANX78XX transforms
+-	  the HDMI output of an application processor to MyDP
+-	  or DisplayPort.
+-
+ config DRM_CDNS_DSI
+ 	tristate "Cadence DPI/DSI bridge"
+ 	select DRM_KMS_HELPER
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 4934fcf5a6f8..a6c7dd7727ea 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+@@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
+ obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
+ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+-obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+ obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+ obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+ obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
++
++obj-y += analogix/
+ obj-y += synopsys/
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+index e930ff9b5cd4..704fb0f41dc3 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -1,4 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++config DRM_ANALOGIX_ANX78XX
++	tristate "Analogix ANX78XX bridge"
++	select DRM_KMS_HELPER
++	select REGMAP_I2C
++	help
++	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
++	  designed for portable devices. The ANX78XX transforms
++	  the HDMI output of an application processor to MyDP
++	  or DisplayPort.
++
+ config DRM_ANALOGIX_DP
+ 	tristate
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+index fdbf3fd2f087..6fcbfd3ee560 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
++obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+similarity index 100%
+rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
+rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+-- 
+2.16.4
 
-Optimally this should be something like alloc_pages() and some mechanism
-for unmapping the pages during the call. But no one has come up with a
-suitable patch for that.
-
-
-But there's a patch from Stephen for this already (not doing a
-typecast).  Apparently I missed merging this, so I'll do that.
-
-https://lore.kernel.org/linux-arm-msm/20190517210923.202131-2-swboyd@chromium.org/
-
-Regards,
-Bjorn
