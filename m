@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115F8C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37CEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB8721BF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BCC21BF6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbfGVS5O (ORCPT
+        id S1732142AbfGVS5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:57:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38095 "EHLO
+        Mon, 22 Jul 2019 14:57:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38170 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731961AbfGVS5H (ORCPT
+        with ESMTP id S1732063AbfGVS5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:57:07 -0400
+        Mon, 22 Jul 2019 14:57:13 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hpdUf-0002Q8-Pz; Mon, 22 Jul 2019 20:57:05 +0200
-Message-Id: <20190722105220.000867773@linutronix.de>
+        id 1hpdUl-0002SO-Ku; Mon, 22 Jul 2019 20:57:11 +0200
+Message-Id: <20190722105220.768238809@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 22 Jul 2019 20:47:18 +0200
+Date:   Mon, 22 Jul 2019 20:47:26 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
@@ -34,7 +34,7 @@ Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>,
         Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [patch V3 13/25] x86/hotplug: Silence APIC and NMI when CPU is dead
+Subject: [patch V3 21/25] x86/smp: Enhance native_send_call_func_ipi()
 References: <20190722104705.550071814@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,166 +43,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support IPI/NMI broadcasting via the shorthand mechanism side
-effects of shorthands need to be mitigated:
+Nadav noticed that the cpumask allocations in native_send_call_func_ipi()
+are noticeable in microbenchmarks.
 
- Shorthand IPIs and NMIs hit all CPUs including unplugged CPUs
+Use the new cpumask_or_equal() function to simplify the decision whether
+the supplied target CPU mask is either equal to cpu_online_mask or equal to
+cpu_online_mask except for the CPU on which the function is invoked.
 
-Neither of those can be handled on unplugged CPUs for obvious reasons.
+cpumask_or_equal() or's the target mask and the cpumask of the current CPU
+together and compares it to cpu_online_mask.
 
-It would be trivial to just fully disable the APIC via the enable bit in
-MSR_APICBASE. But that's not possible because clearing that bit on systems
-based on the 3 wire APIC bus would require a hardware reset to bring it
-back as the APIC would lose track of bus arbitration. On systems with FSB
-delivery APICBASE could be disabled, but it has to be guaranteed that no
-interrupt is sent to the APIC while in that state and it's not clear from
-the SDM whether it still responds to INIT/SIPI messages.
+If the result is false, use the mask based IPI function, otherwise check
+whether the current CPU is set in the target mask and invoke either the
+send_IPI_all() or the send_IPI_allbutselt() APIC callback.
 
-Therefore stay on the safe side and switch the APIC into soft disabled mode
-so it won't deliver any regular vector to the CPU.
+Make the shorthand decision also depend on the static key which enables
+shorthand mode. That allows to remove the extra cpumask comparison with
+cpu_callout_mask.
 
-NMIs are still propagated to the 'dead' CPUs. To mitigate that add a per
-cpu variable which tells the NMI handler to ignore NMIs. Note, this cannot
-use the stop/restart_nmi() magic which is used in the alternatives code. A
-dead CPU cannot invoke nmi_enter() or anything else due to RCU and other
-reasons.
-
+Reported-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/apic.h      |    1 +
- arch/x86/include/asm/processor.h |    2 ++
- arch/x86/kernel/apic/apic.c      |   35 ++++++++++++++++++++++++-----------
- arch/x86/kernel/nmi.c            |    3 +++
- arch/x86/kernel/smpboot.c        |   13 ++++++++++++-
- 5 files changed, 42 insertions(+), 12 deletions(-)
+V2: New patch
+---
+ arch/x86/kernel/apic/ipi.c |   24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -136,6 +136,7 @@ extern int lapic_get_maxlvt(void);
- extern void clear_local_APIC(void);
- extern void disconnect_bsp_APIC(int virt_wire_setup);
- extern void disable_local_APIC(void);
-+extern void apic_soft_disable(void);
- extern void lapic_shutdown(void);
- extern void sync_Arb_IDs(void);
- extern void init_bsp_APIC(void);
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -428,6 +428,8 @@ DECLARE_PER_CPU_ALIGNED(struct stack_can
- DECLARE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
- #endif	/* X86_64 */
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -83,23 +83,21 @@ void native_send_call_func_single_ipi(in
  
-+DECLARE_PER_CPU(bool, cpu_ignore_nmi);
-+
- extern unsigned int fpu_kernel_xstate_size;
- extern unsigned int fpu_user_xstate_size;
- 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1182,25 +1182,38 @@ void clear_local_APIC(void)
- }
- 
- /**
-- * disable_local_APIC - clear and disable the local APIC
-+ * apic_soft_disable - Clears and software disables the local APIC on hotplug
-+ *
-+ * Contrary to disable_local_APIC() this does not touch the enable bit in
-+ * MSR_IA32_APICBASE. Clearing that bit on systems based on the 3 wire APIC
-+ * bus would require a hardware reset as the APIC would lose track of bus
-+ * arbitration. On systems with FSB delivery APICBASE could be disabled,
-+ * but it has to be guaranteed that no interrupt is sent to the APIC while
-+ * in that state and it's not clear from the SDM whether it still responds
-+ * to INIT/SIPI messages. Stay on the safe side and use software disable.
-  */
--void disable_local_APIC(void)
-+void apic_soft_disable(void)
+ void native_send_call_func_ipi(const struct cpumask *mask)
  {
--	unsigned int value;
--
--	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
--		return;
-+	u32 value;
+-	cpumask_var_t allbutself;
++	if (static_branch_likely(&apic_use_ipi_shorthand)) {
++		unsigned int cpu = smp_processor_id();
  
- 	clear_local_APIC();
- 
--	/*
--	 * Disable APIC (implies clearing of registers
--	 * for 82489DX!).
--	 */
-+	/* Soft disable APIC (implies clearing of registers for 82489DX!). */
- 	value = apic_read(APIC_SPIV);
- 	value &= ~APIC_SPIV_APIC_ENABLED;
- 	apic_write(APIC_SPIV, value);
-+}
+-	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
+-		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
++		if (!cpumask_or_equal(mask, cpumask_of(cpu), cpu_online_mask))
++			goto sendmask;
 +
-+/**
-+ * disable_local_APIC - clear and disable the local APIC
-+ */
-+void disable_local_APIC(void)
-+{
-+	/* APIC hasn't been mapped yet */
-+	if (!x2apic_mode && !apic_phys)
-+		return;
-+
-+	apic_soft_disable();
- 
- #ifdef CONFIG_X86_32
- 	/*
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -512,6 +512,9 @@ NOKPROBE_SYMBOL(is_debug_stack);
- dotraplinkage notrace void
- do_nmi(struct pt_regs *regs, long error_code)
- {
-+	if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_ignore_nmi))
-+		return;
-+
- 	if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
- 		this_cpu_write(nmi_state, NMI_LATCHED);
++		if (cpumask_test_cpu(cpu, mask))
++			apic->send_IPI_all(CALL_FUNCTION_VECTOR);
++		else if (num_online_cpus() > 1)
++			apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
  		return;
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -81,6 +81,9 @@
- #include <asm/spec-ctrl.h>
- #include <asm/hw_irq.h>
+ 	}
  
-+/* Flag for the NMI path telling it to ignore the NMI */
-+DEFINE_PER_CPU(bool, cpu_ignore_nmi);
-+
- /* representing HT siblings of each logical CPU */
- DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
- EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
-@@ -263,6 +266,8 @@ static void notrace start_secondary(void
- 	unlock_vector_lock();
- 	cpu_set_state_online(smp_processor_id());
- 	x86_platform.nmi_init();
-+	/* Reenable NMI handling */
-+	this_cpu_write(cpu_ignore_nmi, false);
- 
- 	/* enable local interrupts */
- 	local_irq_enable();
-@@ -1599,6 +1604,7 @@ void cpu_disable_common(void)
- 	unlock_vector_lock();
- 	fixup_irqs();
- 	lapic_offline();
-+	this_cpu_write(cpu_ignore_nmi, true);
+-	cpumask_copy(allbutself, cpu_online_mask);
+-	__cpumask_clear_cpu(smp_processor_id(), allbutself);
+-
+-	if (cpumask_equal(mask, allbutself) &&
+-	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
+-		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
+-	else
+-		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+-
+-	free_cpumask_var(allbutself);
++sendmask:
++	apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
  }
  
- int native_cpu_disable(void)
-@@ -1609,7 +1615,12 @@ int native_cpu_disable(void)
- 	if (ret)
- 		return ret;
- 
--	clear_local_APIC();
-+	/*
-+	 * Disable the local APIC. Otherwise IPI broadcasts will reach
-+	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
-+	 * messages.
-+	 */
-+	apic_soft_disable();
- 	cpu_disable_common();
- 
- 	return 0;
+ #endif /* CONFIG_SMP */
 
 
