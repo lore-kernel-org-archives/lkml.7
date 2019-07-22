@@ -6,121 +6,101 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1609BC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A036C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF36A2229C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF9321911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfGVHwQ (ORCPT
+        id S1727899AbfGVHxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:52:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45842 "EHLO mx1.redhat.com"
+        Mon, 22 Jul 2019 03:53:04 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18416 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfGVHwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:52:16 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1176F86668;
-        Mon, 22 Jul 2019 07:52:15 +0000 (UTC)
-Received: from redhat.com (ovpn-120-233.rdu2.redhat.com [10.10.120.233])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5B9085C221;
-        Mon, 22 Jul 2019 07:52:06 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 03:52:05 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, aarcange@redhat.com,
-        akpm@linux-foundation.org, christian@brauner.io,
-        davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
-Message-ID: <20190722035042-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081933-mutt-send-email-mst@kernel.org>
- <20190721131725.GR14271@linux.ibm.com>
- <20190721210837.GC363@bombadil.infradead.org>
- <20190721233113.GV14271@linux.ibm.com>
+        id S1726236AbfGVHxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 03:53:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 00:53:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,294,1559545200"; 
+   d="scan'208";a="180323256"
+Received: from unknown (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2019 00:53:02 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     huang ying <huang.ying.caritas@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>
+Subject: Re: kernel BUG at mm/swap_state.c:170!
+References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
+        <CAC=cRTMz5S636Wfqdn3UGbzwzJ+v_M46_juSfoouRLS1H62orQ@mail.gmail.com>
+        <CABXGCsOo-4CJicvTQm4jF4iDSqM8ic+0+HEEqP+632KfCntU+w@mail.gmail.com>
+Date:   Mon, 22 Jul 2019 15:52:53 +0800
+In-Reply-To: <CABXGCsOo-4CJicvTQm4jF4iDSqM8ic+0+HEEqP+632KfCntU+w@mail.gmail.com>
+        (Mikhail Gavrilov's message of "Mon, 22 Jul 2019 12:31:36 +0500")
+Message-ID: <878ssqbj56.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190721233113.GV14271@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 22 Jul 2019 07:52:15 +0000 (UTC)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 04:31:13PM -0700, Paul E. McKenney wrote:
-> On Sun, Jul 21, 2019 at 02:08:37PM -0700, Matthew Wilcox wrote:
-> > On Sun, Jul 21, 2019 at 06:17:25AM -0700, Paul E. McKenney wrote:
-> > > Also, the overhead is important.  For example, as far as I know,
-> > > current RCU gracefully handles close(open(...)) in a tight userspace
-> > > loop.  But there might be trouble due to tight userspace loops around
-> > > lighter-weight operations.
-> > 
-> > I thought you believed that RCU was antifragile, in that it would scale
-> > better as it was used more heavily?
-> 
-> You are referring to this?  https://paulmck.livejournal.com/47933.html
-> 
-> If so, the last few paragraphs might be worth re-reading.   ;-)
-> 
-> And in this case, the heuristics RCU uses to decide when to schedule
-> invocation of the callbacks needs some help.  One component of that help
-> is a time-based limit to the number of consecutive callback invocations
-> (see my crude prototype and Eric Dumazet's more polished patch).  Another
-> component is an overload warning.
-> 
-> Why would an overload warning be needed if RCU's callback-invocation
-> scheduling heurisitics were upgraded?  Because someone could boot a
-> 100-CPU system with the rcu_nocbs=0-99, bind all of the resulting
-> rcuo kthreads to (say) CPU 0, and then run a callback-heavy workload
-> on all of the CPUs.  Given the constraints, CPU 0 cannot keep up.
-> 
-> So warnings are required as well.
-> 
-> > Would it make sense to have call_rcu() check to see if there are many
-> > outstanding requests on this CPU and if so process them before returning?
-> > That would ensure that frequent callers usually ended up doing their
-> > own processing.
-> 
-> Unfortunately, no.  Here is a code fragment illustrating why:
-> 
-> 	void my_cb(struct rcu_head *rhp)
-> 	{
-> 		unsigned long flags;
-> 
-> 		spin_lock_irqsave(&my_lock, flags);
-> 		handle_cb(rhp);
-> 		spin_unlock_irqrestore(&my_lock, flags);
-> 	}
-> 
-> 	. . .
-> 
-> 	spin_lock_irqsave(&my_lock, flags);
-> 	p = look_something_up();
-> 	remove_that_something(p);
-> 	call_rcu(p, my_cb);
-> 	spin_unlock_irqrestore(&my_lock, flags);
-> 
-> Invoking the extra callbacks directly from call_rcu() would thus result
-> in self-deadlock.  Documentation/RCU/UP.txt contains a few more examples
-> along these lines.
+Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com> writes:
 
-We could add an option that simply fails if overloaded, right?
-Have caller recover...
+> On Mon, 22 Jul 2019 at 06:37, huang ying <huang.ying.caritas@gmail.com> wrote:
+>>
+>> I am trying to reproduce this bug.  Can you give me some information
+>> about your test case?
+>
+> It not easy, but I try to explain:
+>
+> 1. I have the system with 32Gb RAM, 64GB swap and after boot, I always
+> launch follow applications:
+>     a. Google Chrome dev channel
+>         Note: here you should have 3 windows full of tabs on my
+> monitor 118 tabs in each window.
+>         Don't worry modern Chrome browser is wise and load tabs only on demand.
+>         We will use this feature later (on the last step).
+>     b. Firefox Nightly ASAN this build with enabled address sanitizer.
+>     c. Virtual Machine Manager (virt-manager) and start a virtual
+> machine with Windows 10 (2048 MiB RAM allocated)
+>     d. Evolution
+>     e. Steam client
+>     f. Telegram client
+>     g. DeadBeef music player
+>
+> After all launched applications 15GB RAM should be allocated.
+>
+> 2. This step the most difficult, because we should by using Firefox
+> allocated 27-28GB RAM.
+>     I use the infinite scroll on sites Facebook, VK, Pinterest, Tumblr
+> and open many tabs in Firefox as I could.
+>     Note: our goal is 27-28GB allocated RAM in the system.
+>
+> 3. When we hit our goal in the second step now go to Google Chrome and
+> click as fast as you can on all unloaded tabs.
+>     As usual, after 60 tabs this issue usually happens. 100%
+> reproducible for me.
+>
+> Of course, I tried to simplify my workflow case by using stress-ng but
+> without success.
+>
+> I hope it will help to make autotests.
 
--- 
-MST
+Yes.  This is quite complex.  Is the transparent huge page enabled in
+your system?  You can check the output of
+
+$ cat /sys/kernel/mm/transparent_hugepage/enabled
+
+And, whether is the swap device you use a SSD or NVMe disk (not HDD)?
+
+Best Regards,
+Huang, Ying
+
+> --
+> Best Regards,
+> Mike Gavrilov.
