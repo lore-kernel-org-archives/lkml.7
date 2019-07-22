@@ -2,192 +2,144 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75CAC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32036C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E7F218BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Sx4UcjVm"
+	by mail.kernel.org (Postfix) with ESMTP id 11B7E218BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbfGVR4I (ORCPT
+        id S1730982AbfGVR6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:56:08 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:44024 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730640AbfGVR4H (ORCPT
+        Mon, 22 Jul 2019 13:58:19 -0400
+Received: from smtprelay0011.hostedemail.com ([216.40.44.11]:56978 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726272AbfGVR6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:56:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563818162; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XKJD/duDCCvxdTkR+BQPdr3qIw5J1rRyS9ahXmNoHHM=;
-        b=Sx4UcjVmZOcZJBKURHNEuJcaYaDx22Tu8czq/M/8UVBKQSEn21YPQeYsIgJKs2kgP9mPN0
-        jZZClXbw1CtUvF/mx+4qkQmzDMFxsHKommeJmFa3CPE1aaSiLdmfyPi8rS3lOmNCAqM2Io
-        SlZuFsBfL3kX8eojESgNpZ8HJHamgGc=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] MIPS: dts: ingenic: Add 'cpus' node
-Date:   Mon, 22 Jul 2019 13:55:48 -0400
-Message-Id: <20190722175548.18434-2-paul@crapouillou.net>
-In-Reply-To: <20190722175548.18434-1-paul@crapouillou.net>
-References: <20190722175548.18434-1-paul@crapouillou.net>
+        Mon, 22 Jul 2019 13:58:19 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 57E742C88;
+        Mon, 22 Jul 2019 17:58:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: leg66_2b31318223726
+X-Filterd-Recvd-Size: 4181
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 22 Jul 2019 17:58:16 +0000 (UTC)
+Message-ID: <2c959c56c23d0052e5c35ecfa2f6051b17fb2798.camel@perches.com>
+Subject: Re: [RFC PATCH] string.h: Add stracpy/stracpy_pad (was: Re: [PATCH]
+ checkpatch: Added warnings in favor of strscpy().)
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nitin Gote <nitin.r.gote@intel.com>, akpm@linux-foundation.org,
+        corbet@lwn.net, apw@canonical.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Date:   Mon, 22 Jul 2019 10:58:15 -0700
+In-Reply-To: <b9bb5550b264d4b29b2b20f7ff8b1b40d20def6a.camel@perches.com>
+References: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
+         <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
+         <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
+         <201907221031.8B87A9DE@keescook>
+         <b9bb5550b264d4b29b2b20f7ff8b1b40d20def6a.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi files.
+On Mon, 2019-07-22 at 10:43 -0700, Joe Perches wrote:
+> On Mon, 2019-07-22 at 10:33 -0700, Kees Cook wrote:
+> > On Thu, Jul 04, 2019 at 05:15:57PM -0700, Joe Perches wrote:
+> > > On Thu, 2019-07-04 at 13:46 -0700, Joe Perches wrote:
+> > > > On Thu, 2019-07-04 at 11:24 +0530, Nitin Gote wrote:
+> > > > > Added warnings in checkpatch.pl script to :
+> > > > > 
+> > > > > 1. Deprecate strcpy() in favor of strscpy().
+> > > > > 2. Deprecate strlcpy() in favor of strscpy().
+> > > > > 3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+> > > > > 
+> > > > > Updated strncpy() section in Documentation/process/deprecated.rst
+> > > > > to cover strscpy_pad() case.
+> > > 
+> > > []
+> > > 
+> > > I sent a patch series for some strscpy/strlcpy misuses.
+> > > 
+> > > How about adding a macro helper to avoid the misuses like:
+> > > ---
+> > >  include/linux/string.h | 16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/include/linux/string.h b/include/linux/string.h
+> > > index 4deb11f7976b..ef01bd6f19df 100644
+> > > --- a/include/linux/string.h
+> > > +++ b/include/linux/string.h
+> > > @@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
+> > >  /* Wraps calls to strscpy()/memset(), no arch specific code required */
+> > >  ssize_t strscpy_pad(char *dest, const char *src, size_t count);
+> > >  
+> > > +#define stracpy(to, from)					\
+> > > +({								\
+> > > +	size_t size = ARRAY_SIZE(to);				\
+> > > +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
+> > > +								\
+> > > +	strscpy(to, from, size);				\
+> > > +})
+> > > +
+> > > +#define stracpy_pad(to, from)					\
+> > > +({								\
+> > > +	size_t size = ARRAY_SIZE(to);				\
+> > > +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
+> > > +								\
+> > > +	strscpy_pad(to, from, size);				\
+> > > +})
+> > > +
+> > >  #ifndef __HAVE_ARCH_STRCAT
+> > >  extern char * strcat(char *, const char *);
+> > >  #endif
+> > 
+> > This seems like a reasonable addition, yes. I think Coccinelle might
+> > actually be able to find all the existing strscpy(dst, src, sizeof(dst))
+> > cases to jump-start this conversion.
+> 
+> I did that.  It works.  It's a lot of conversions.
+> 
+> $ cat str.cpy.cocci
+> @@
+> expression e1;
+> expression e2;
+> @@
+> 
+> - strscpy(e1, e2, sizeof(e1))
+> + stracpy(e1, e2)
+> 
+> @@
+> expression e1;
+> expression e2;
+> @@
+> 
+> - strlcpy(e1, e2, sizeof(e1))
+> + stracpy(e1, e2)
+> 
+> > Devil's advocate: this adds yet more string handling functions... will
+> > this cause even more confusion?
+> 
+> Documentation is good.
+> Actual in-kernel use and examples better.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 19 +++++++++++
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 29 ++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 47 ++++++++++++++++++++++++++
- 3 files changed, 95 insertions(+)
+btw: I just ran this again and it produces:
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 2beb78a62b7d..14d777dae87d 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -6,6 +6,25 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4740";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst-d0";
-+			reg = <0>;
-+			clocks = <&cgu JZ4740_CLK_CCLK>;
-+			clock-names = "cpu";
-+
-+			i-cache-size = <0x4000>;
-+			i-cache-block-size = <32>;
-+
-+			d-cache-size = <0x4000>;
-+			d-cache-block-size = <32>;
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 49ede6c14ff3..83ee526fbe10 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -7,6 +7,35 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4770";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst-d1";
-+			reg = <0>;
-+			clocks = <&cgu JZ4770_CLK_CCLK>;
-+			clock-names = "cpu";
-+
-+			i-cache-size = <0x4000>;
-+			i-cache-block-size = <32>;
-+
-+			d-cache-size = <0x4000>;
-+			d-cache-block-size = <32>;
-+
-+			next-level-cache = <&L2_cache>;
-+
-+			L2_cache: cache-controller {
-+				compatible = "cache";
-+				cache-unified;
-+				cache-level = <2>;
-+				cache-size = <0x40000>;
-+				cache-block-size = <32>;
-+			};
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..3339b37101c0 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,53 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst-e1";
-+			reg = <0>;
-+
-+			clocks = <&cgu JZ4780_CLK_CPU>;
-+			clock-names = "cpu";
-+
-+			i-cache-size = <0x8000>;
-+			i-cache-block-size = <32>;
-+
-+			d-cache-size = <0x8000>;
-+			d-cache-block-size = <32>;
-+
-+			next-level-cache = <&L2_cache>;
-+
-+			L2_cache: l2-cache {
-+				compatible = "cache";
-+				cache-unified;
-+				cache-level = <2>;
-+				cache-size = <0x80000>;
-+				cache-block-size = <32>;
-+			};
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst-e1";
-+			reg = <1>;
-+
-+			clocks = <&cgu JZ4780_CLK_CORE1>;
-+			clock-names = "cpu";
-+
-+			i-cache-size = <0x8000>;
-+			i-cache-block-size = <32>;
-+
-+			d-cache-size = <0x8000>;
-+			d-cache-block-size = <32>;
-+
-+			next-level-cache = <&L2_cache>;
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
--- 
-2.21.0.593.g511ec345e18
+$ spatch --in-place -sp-file str.cpy.cocci .
+$ git checkout tools/
+$ git diff --shortstat
+ 958 files changed, 2179 insertions(+), 2655 deletions(-)
+
 
