@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C69AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10C8C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099B820693
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2E620693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Thqb/v9o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHedMF5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbfGVTAt (ORCPT
+        id S1729050AbfGVTBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:00:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35002 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbfGVTAt (ORCPT
+        Mon, 22 Jul 2019 15:01:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42777 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727646AbfGVTBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:00:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so76367816ioo.2;
-        Mon, 22 Jul 2019 12:00:48 -0700 (PDT)
+        Mon, 22 Jul 2019 15:01:00 -0400
+Received: by mail-io1-f66.google.com with SMTP id e20so45966647iob.9;
+        Mon, 22 Jul 2019 12:00:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RBH9NIjlTcz6w4LQP6KUauPzdnEDTuEqG8uCadh2V7Y=;
-        b=Thqb/v9opT4RgtSlBn8G7N0zOcK1ag8GBp6HPcrEvHcGc825fInQRAIbtEyY6TOyQX
-         OjwvkJJH3hMBlWe2Q4luG2wAvSZSeAC868gukwHrydSCqGXgN8XnBcW/Na1NulFslp6U
-         C7VPDptL8vEv95huLfZmv0Kq73HXmz2C/3ixLVx+tQHXrOI9YLTbUHjd+ZO+jn7Uo50T
-         yA885eWYoCUP/J7IuSeiWKLF3O1zVPVTjqHqUWMR0YlnDe70o/JQDkjZlBg3hjWva58J
-         3+AC2lMMZkERGNFgv9t90jr9E9Xor1A9g378FxeRbRlZTqWLNvGoXDRLlrvlHR2WhRwG
-         f0mw==
+        bh=5TNbEmM0bmFmn/PtMVpfbgadZYUgBrg9u8KfcKSfMvY=;
+        b=sHedMF5g4mjzyJo2ODW/m2hldyGrftgzbXVENQmUvXt3UsDI4ko/s0ewJ62m5v56j0
+         Rq7uuQZCu+oBdRrMzOUcgpV6n8uVTtSsP7eJWbtsUbC/VGyobvOI/imXhBTqpe9MXyWs
+         vUnuEtULRBhWysA1b1k86KbLu9Son1LI37Sa12oTK5cdwi/gCJE+HavMytBLnb1n9Vv0
+         uXOnXTiKLudooXS7n+k8zXvB9qg+EVbolF5/KgjLzxOtxrAsGXl005OqyB+M4HncofD9
+         aEufMQ6TIOD3Iuz9tv/KseuygVfX32JUyiN7sLk1nrY0N+84PwWX/bPWsSXlKdBzduP/
+         RBQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RBH9NIjlTcz6w4LQP6KUauPzdnEDTuEqG8uCadh2V7Y=;
-        b=hQ8Xfeot23yyGTGw0Es1htsru7QSnAg00GGIkhlm9Byoe0BGPYgHo5OzTKcmMwW/lr
-         29m6QEIvwNdlI0ziv+LtZ+4oKE8uYcDTJ4a77JKjPWHczfBtBCQh4UZd/qNSgnpf2wXR
-         LtXOxvrsepbYDP2VDbWd7VbebvaJUaSyZYa3fTZ8pNji4qJ8dUoc0r4wmq6L0ciA1Wu3
-         rfMa7jFtFP56T5Fc3Ca+Gzfg5u/YH/J35x97RzBoEIQ2+ZWj3sRjTmAnm04RT40waAOe
-         3gPTUy1VGBGWZVGEQ7DVrMIq5MZEqaRbZG6UEd6SeNgvdCCkHZOcp0LcbeHR61791HS8
-         46Kg==
-X-Gm-Message-State: APjAAAXWm1VIYRjxi2ixl/u/kgm/4CGoQnLPX4+P7paqDfKoLew56zC8
-        pKIx4llIiRfCXYcpEYzZRWe1unwEI65XM1/t5IA=
-X-Google-Smtp-Source: APXvYqx0OklHPUoU4sLmJG1e2HuxNjh0YNPtvpHXVRBFrFvEF0pCtsqnsKShS1f8DVX91bEIxTnI/dP1zeP1s2AQF0w=
-X-Received: by 2002:a6b:b3c1:: with SMTP id c184mr20876106iof.222.1563822047914;
- Mon, 22 Jul 2019 12:00:47 -0700 (PDT)
+        bh=5TNbEmM0bmFmn/PtMVpfbgadZYUgBrg9u8KfcKSfMvY=;
+        b=JUyMYlNsxDEuLB4MdbqcyvEo9QxnnVN/YoQR1VDwVfxqHbNyGmdST1BJCcT6npf3CX
+         fF3Vmr4a530nQR3jkQjuhaDGJ6sDAo5DzT59tfmnT/O5vdQ70QZ7KQytdyl1y0UJemPY
+         2BBQdIYPvp7lTbvoHD+dUYOeQnPvx3O8To3E5GVcINYlmabHUJI51tBnJsHnqCZ6dbyb
+         McZdUIjsL4p8ExFfl/kn6KbmJMsHywEBbzaAPRLyVfwxdYfwPMYj66/8xi08LnWigbmr
+         Zyd/lyXSN/d6sY5q50fKlvpPkdh45/Uwe16c0L8eZ3KIq1P9DI25NzcCfLgow+KGNXJY
+         ZDqQ==
+X-Gm-Message-State: APjAAAXi6+jZZaC/YBPdIoXfsbd12SggXg6hE10pqQCk7aojonYeXWcx
+        gTqJbV8QvGQDoYtOi2RmQOVn5pWlLwKcAj2Jn5k=
+X-Google-Smtp-Source: APXvYqx/3kXuMN65MQnHQqozcmp/e0udPLZRabriswa5tWQW7Wk5lmTyneHexQF0KSoP3fMec5C3g6Ql6YHxDCf3vbM=
+X-Received: by 2002:a02:7f15:: with SMTP id r21mr76973749jac.120.1563822059347;
+ Mon, 22 Jul 2019 12:00:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190719081322eucas1p1f3114c43ca3c53b60766edf1846347cc@eucas1p1.samsung.com>
- <20190719081212.9249-1-m.szyprowski@samsung.com> <20190719081316.9298-1-m.szyprowski@samsung.com>
-In-Reply-To: <20190719081316.9298-1-m.szyprowski@samsung.com>
+References: <CGME20190719081334eucas1p1fd614e56c1ec0dfa654d0bb77f17ba5d@eucas1p1.samsung.com>
+ <20190719081212.9249-1-m.szyprowski@samsung.com> <20190719081326.9347-1-m.szyprowski@samsung.com>
+In-Reply-To: <20190719081326.9347-1-m.szyprowski@samsung.com>
 From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Tue, 23 Jul 2019 00:30:37 +0530
-Message-ID: <CANAwSgR3kdZsDn-x9FwynAPtVEf4ci0BfiGPr1NzJ-a1n5B_Ng@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] usb: core: phy: add support for PHY calibration
+Date:   Tue, 23 Jul 2019 00:30:48 +0530
+Message-ID: <CANAwSgQSQLVy=E3uzDq_sdmBR7Rcg=S1Tfr24o3DozHSP2wKiw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3: remove generic PHY calibrate() calls
 To:     Marek Szyprowski <m.szyprowski@samsung.com>
 Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
         linux-samsung-soc@vger.kernel.org,
@@ -80,11 +80,12 @@ Hi Marek,
 
 On Fri, 19 Jul 2019 at 13:43, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
 >
-> Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
-> done after every USB HCD reset. Generic PHY framework has been already
-> extended with phy_calibrate() function in commit 36914111e682 ("drivers:
-> phy: add calibrate method"). This patch adds support for it to generic
-> PHY handling code in USB HCD core.
+> Calls to USB2 generic PHY calibrate() method has been moved to HCD core,
+> which now successfully handles generic PHYs and their calibration after
+> every HCD reset. This fixes all the timing issues related to PHY
+> calibration done directly from DWC3 driver: incorrect operation after
+> system suspend/resume or USB3.0 detection failure when XHCI-plat driver
+> compiled as separate module.
 >
 
 Tested on my XU3 / XU4 / HC1
@@ -93,80 +94,29 @@ Tested-by: Anand Moon <linux.amoon@gmail.com>
 
 > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  drivers/usb/core/hcd.c |  7 +++++++
->  drivers/usb/core/phy.c | 21 +++++++++++++++++++++
->  drivers/usb/core/phy.h |  1 +
->  3 files changed, 29 insertions(+)
+>  drivers/usb/dwc3/core.c | 2 --
+>  1 file changed, 2 deletions(-)
 >
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index 88533938ce19..b89936c1df23 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -2291,6 +2291,9 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
->         hcd->state = HC_STATE_RESUMING;
->         status = hcd->driver->bus_resume(hcd);
->         clear_bit(HCD_FLAG_WAKEUP_PENDING, &hcd->flags);
-> +       if (status == 0)
-> +               status = usb_phy_roothub_calibrate(hcd->phy_roothub);
-> +
->         if (status == 0) {
->                 struct usb_device *udev;
->                 int port1;
-> @@ -2864,6 +2867,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
->         }
->         hcd->rh_pollable = 1;
->
-> +       retval = usb_phy_roothub_calibrate(hcd->phy_roothub);
-> +       if (retval)
-> +               goto err_hcd_driver_setup;
-> +
->         /* NOTE: root hub and controller capabilities may not be the same */
->         if (device_can_wakeup(hcd->self.controller)
->                         && device_can_wakeup(&hcd->self.root_hub->dev))
-> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-> index 7580493b867a..fb1588e7c282 100644
-> --- a/drivers/usb/core/phy.c
-> +++ b/drivers/usb/core/phy.c
-> @@ -151,6 +151,27 @@ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
->  }
->  EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
->
-> +int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub)
-> +{
-> +       struct usb_phy_roothub *roothub_entry;
-> +       struct list_head *head;
-> +       int err;
-> +
-> +       if (!phy_roothub)
-> +               return 0;
-> +
-> +       head = &phy_roothub->list;
-> +
-> +       list_for_each_entry(roothub_entry, head, list) {
-> +               err = phy_calibrate(roothub_entry->phy);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_phy_roothub_calibrate);
-> +
->  int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
->  {
->         struct usb_phy_roothub *roothub_entry;
-> diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
-> index dad564e2d2d4..20a267cd986b 100644
-> --- a/drivers/usb/core/phy.h
-> +++ b/drivers/usb/core/phy.h
-> @@ -18,6 +18,7 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
->
->  int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
->                              enum phy_mode mode);
-> +int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub);
->  int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
->  void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
->
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index c9bb93a2c81e..7dd6d419254d 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -168,7 +168,6 @@ static void __dwc3_set_mode(struct work_struct *work)
+>                                 otg_set_vbus(dwc->usb2_phy->otg, true);
+>                         phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+>                         phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
+> -                       phy_calibrate(dwc->usb2_generic_phy);
+>                 }
+>                 break;
+>         case DWC3_GCTL_PRTCAP_DEVICE:
+> @@ -1166,7 +1165,6 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
+>                                 dev_err(dev, "failed to initialize host\n");
+>                         return ret;
+>                 }
+> -               phy_calibrate(dwc->usb2_generic_phy);
+>                 break;
+>         case USB_DR_MODE_OTG:
+>                 INIT_WORK(&dwc->drd_work, __dwc3_set_mode);
 > --
 > 2.17.1
 >
