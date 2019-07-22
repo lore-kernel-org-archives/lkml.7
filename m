@@ -2,69 +2,71 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFADC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B0AC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A2B21BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BA320659
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FdsdVW5s"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="va4gVpxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfGVHVp (ORCPT
+        id S1727616AbfGVHXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:21:45 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37616 "EHLO
+        Mon, 22 Jul 2019 03:23:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33544 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGVHVp (ORCPT
+        with ESMTP id S1726130AbfGVHXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:21:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f17so34161051wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:21:42 -0700 (PDT)
+        Mon, 22 Jul 2019 03:23:05 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so28087903wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=/uN4Bc3kIZ2rmICOKDbVV+iUVYVaJWZxIfQmW0TiQTo=;
-        b=FdsdVW5sozWq6xKcD+p82jRCw0CFdqYjiPNN13uaaSAggVyl6jK4O8cBMNiE7ThPdg
-         T0eVuBODwE4W3xQYft6o6/cdaYP8Dwyc1Z5NK1mUuAinDjwYVk54nkG6s+h/O2EIrF2K
-         eS9PtSSor2dEI/TucvbZjMNX3qrg8mZQ/yn/xUYvGV2fv5q8SufOgohTF3oZrxoSROFB
-         3zcUTzawBmdZywPpJMksO1AjGC/uvV2sbvYNBmjxyvwkMCv9UTpOndJTPDrg8LIxVeGu
-         PBmGJjUNdN05ENCcd1vqaI9Z4WQhBsQ1A4cPL0zVXS9oIt7YS4YU5tCpPbFqev4RRSR4
-         Mpow==
+        bh=TOTv7uCWWUepqm6PfKM2SaT6Nn+hZ72/5dRfO/btysA=;
+        b=va4gVpxx8Ddp52uLp9QB6u/a0brtIiJ2SIZJbLGK3PBo54+H+XQR8wR7JnKWvAVUwa
+         pAfbrpRsa1SQZ21Kbn57lws3LZB9IwlZ7OBp3HYNRqp9dfrhmDhM5xiCEJbx1T05Wkmj
+         v9Aluh4fKHMNtAMmdqWK03vlkO8z6L5NzJiKJeihBRQSsiLrPYEyyjjhv3tNu3yTjx5T
+         jHqw/aIP/vfdvis8ESjj+R/pyB4QmoL1vzjndp+FaBULX6zfcElSaxSgVk2ErksNEIp6
+         0ti+qYoQuSCa8ObGz0wirVsxY8i+NsDFa5QEAKbkoktvPQS94P+zVZZ2+1fQt4QumJOQ
+         d9HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=/uN4Bc3kIZ2rmICOKDbVV+iUVYVaJWZxIfQmW0TiQTo=;
-        b=WsOBsKeCbXXRCbYnqwsJLwvgIpv8BJ0iIptE3v29BeuNCP+qfYLaK0dM4F3K0J+LoW
-         GfZCmz59sDUeaU6MhUIcUnIi3agzO2rzizO2Yf3J3h9sfZG2xcvNiisTHnKL7eBX0qvj
-         PitelrHo6QsvcsL9kwZvik/njt2oy25Xe2TGzl4OWsLqnlmdbv4bt975uTD2LX+4MeDe
-         vK3bNNYVQ5UA5Dy7gMrV9uuuCgr67eGoEnaDZgSWXWPO8Tx710qXjd+/Ibp3A3BE1J5F
-         +HJva4alWiQfaS0nkdDmBHoo66UHpiSIlt26sJx4AYOac+kwdrfj1N5U/mD9KSPYVA5H
-         v81Q==
-X-Gm-Message-State: APjAAAU0xM5JFqVP6PCK2APr5eTsKVQkXvHTdm4bMIELqgmg12tGWaNs
-        rTCGN4yCIPYl3tQ32EJ2CKwVUA==
-X-Google-Smtp-Source: APXvYqxHJMoX/AJVZnyecFIPziShhuLxAQbYIcMSqVEZwI4shO74WxTmMpxeoARK2lWee9MjA77jWA==
-X-Received: by 2002:a1c:1f4e:: with SMTP id f75mr60580636wmf.137.1563780102039;
-        Mon, 22 Jul 2019 00:21:42 -0700 (PDT)
+        bh=TOTv7uCWWUepqm6PfKM2SaT6Nn+hZ72/5dRfO/btysA=;
+        b=jXIz0NawB53I5vNxL86pgv/pwjfdgWkOg1YUeAfgZGLPcdA2ca6guKJbogtFgyuNaq
+         KuOPaglxPJXSWvlHT/Hc5DOibLPTTuBatBEovYOAUbh1qowoEUO0Pn+kUkMZ+MdPIa5i
+         F9BZus4mAjpOxgUFqzrTQrADSibdrT4RTuaCv81rxUkLElrZ70EIUs3vIEkoTbRIwi2i
+         GI56ldoNVowY/HAwCMlvUYNrB0CtW4l+bs0ywN9f13fcJBDP9rQjGeWTJ00+S81cfbky
+         xp6J5IwYq0Rcc6GcsM7w4GaQz5GuCGJdmbSBSpIhthSYe77gC52n5X2B62krmTKsIrm9
+         D+ng==
+X-Gm-Message-State: APjAAAWATQukLrLWV4oEvrcVDM8Ok2Ce5VRencCHcMbZe7ZmzCPTgsB2
+        TuB8DpdxYibSsJLJ7wb37TqKH9/Z/n8=
+X-Google-Smtp-Source: APXvYqzGk0j9+TvPzkwuBFE4N1gSCPq1qpQSdy3LSOZtUdshF70HtqPPtoN0CD2oModtTC9MP4w7kA==
+X-Received: by 2002:a1c:2d8b:: with SMTP id t133mr62088566wmt.57.1563780182154;
+        Mon, 22 Jul 2019 00:23:02 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id o20sm99364689wrh.8.2019.07.22.00.21.40
+        by smtp.gmail.com with ESMTPSA id s188sm30077096wmf.40.2019.07.22.00.23.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 00:21:41 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson: odroid-n2: keep SD card regulator
- always on
-To:     Xavier Ruppen <xruppen@gmail.com>, khilman@baylibre.com
+        Mon, 22 Jul 2019 00:23:01 -0700 (PDT)
+Subject: Re: [PATCH 10/12] phy: amlogic: G12A: Fix misuse of GENMASK macro
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kevin Hilman <khilman@baylibre.com>
 Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        martin.blumenstingl@googlemail.com
-References: <20190719192954.26481-1-xruppen@gmail.com>
+        Kishon Vijay Abraham I <kishon@ti.com>
+References: <cover.1562734889.git.joe@perches.com>
+ <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -117,12 +119,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <eadcf7ef-4aad-fa4f-3b1b-a5238f394b1e@baylibre.com>
-Date:   Mon, 22 Jul 2019 09:21:40 +0200
+Message-ID: <c6cabf9c-7edd-eea8-3388-df781163cddd@baylibre.com>
+Date:   Mon, 22 Jul 2019 09:23:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190719192954.26481-1-xruppen@gmail.com>
+In-Reply-To: <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -131,68 +133,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/07/2019 21:29, Xavier Ruppen wrote:
-> When powering off the Odroid N2, the tflash_vdd regulator is
-> automatically turned off by the kernel. This is a problem
-> when issuing the "reboot" command while using an SD card.
-> The boot ROM does not power this regulator back on, blocking
-> the reboot process at the boot ROM stage, preventing the
-> SD card from being detected.
+On 10/07/2019 07:04, Joe Perches wrote:
+> Arguments are supposed to be ordered high then low.
 > 
-> Adding the "regulator-always-on" property fixes the problem.
-> 
-> Signed-off-by: Xavier Ruppen <xruppen@gmail.com>
+> Signed-off-by: Joe Perches <joe@perches.com>
 > ---
+>  drivers/phy/amlogic/phy-meson-g12a-usb2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Here is what the boot ROM output looks like without this patch:
+> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
+> index 9065ffc85eb4..cd7eccab2649 100644
+> --- a/drivers/phy/amlogic/phy-meson-g12a-usb2.c
+> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
+> @@ -66,7 +66,7 @@
+>  #define PHY_CTRL_R14						0x38
+>  	#define PHY_CTRL_R14_I_RDP_EN				BIT(0)
+>  	#define PHY_CTRL_R14_I_RPU_SW1_EN			BIT(1)
+> -	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(2, 3)
+> +	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(3, 2)
+>  	#define PHY_CTRL_R14_PG_RSTN				BIT(4)
+>  	#define PHY_CTRL_R14_I_C2L_DATA_16_8			BIT(5)
+>  	#define PHY_CTRL_R14_I_C2L_ASSERT_SINGLE_EN_ZERO	BIT(6)
 > 
->     [root@alarm ~]# reboot 
->     [...]
->     [   24.275860] shutdown[1]: All loop devices detached.
->     [   24.278864] shutdown[1]: Detaching DM devices.
->     [   24.287105] kvm: exiting hardware virtualization
->     [   24.318776] reboot: Restarting system
->     bl31 reboot reason: 0xd
->     bl31 reboot reason: 0x0
->     system cmd  1.
->     G12B:BL:6e7c85:7898ac;FEAT:E0F83180:2000;POC:F;RCY:0;
->     EMMC:800;NAND:81;SD?:0;SD:400;USB:8;LOOP:1;EMMC:800;
->     NAND:81;SD?:0;SD:400;USB:8;LOOP:2;EMMC:800;NAND:81;
->     SD?:0;SD:400;USB:8;LOOP:3; [...]
-> 
-> Other people can be seen having this problem on the odroid
-> forum [1].
-> 
-> The cause of the problem was found by Martin Blumenstingl
-> on #linux-amlogic. We may want to add his Suggested-by tag
-> if he agrees.
-> 
-> [1] https://forum.odroid.com/viewtopic.php?f=176&t=33993
-> 
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 81780ffcc7f0..4e916e1f71f7 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -53,6 +53,7 @@
->  
->  		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
->  		enable-active-high;
-> +		regulator-always-on;
->  	};
->  
->  	tf_io: gpio-regulator-tf_io {
-> 
-
-Surely solves the situation, thanks !
-
-please add a comment on top of "regulator-always-on" to explain why we always enable it,
-note we should always enable it in case of watchdog reboot or other uncontrolled reset,
-this regulator must never be disabled.
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Thanks,
-Neil
