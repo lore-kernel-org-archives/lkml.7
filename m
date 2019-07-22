@@ -6,78 +6,79 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649C8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF344C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34BD221900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02B021900
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563833449;
-	bh=sOEVmSoROx0ts930Znd5c3Y6XDvWKTE3k0fASRXo1Ks=;
+	s=default; t=1563833499;
+	bh=n3NQlQWJeZaK7x57hw2d9h6vYXaG0yf9sI0vVprYEmo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h4oh/jo65/jwPmvxuSvqnpSEG1H+1OgpnHIBOvCR391v1hM76sCW3lC2S8sQ9yFxd
-	 VWIU+4745n5ne6Qjby3mDpFE+2VyKRhQf5CJ2sQIsl8ObbgqMRAIb0oZQuYsW1ObEm
-	 6CNLqKXQS6G2W2N4v9i4ZY7vep3Nr4vX9mP4BwA8=
+	b=IyVskCiJHiO7rcClj9gXYOIl4i3vVQPT68TSEpxAvSDYDH7tqoVUEMf31EpS/aAld
+	 ZE+XAqlNn0YjKtl4z5zStoRiNRoIIkSG4c1X3YOUSz1gjml19R0wOBMsiBsz2FSPAO
+	 N+cuSRYnRorO7ccO/Sx/ZbRiet/cRh05/lOjLfVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbfGVWKr (ORCPT
+        id S1733049AbfGVWLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:10:47 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39015 "EHLO
+        Mon, 22 Jul 2019 18:11:38 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38425 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfGVWKr (ORCPT
+        with ESMTP id S1726265AbfGVWLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:10:47 -0400
-Received: by mail-io1-f66.google.com with SMTP id f4so77500855ioh.6;
-        Mon, 22 Jul 2019 15:10:47 -0700 (PDT)
+        Mon, 22 Jul 2019 18:11:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id j6so2354810ioa.5;
+        Mon, 22 Jul 2019 15:11:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=so3TguXhHjajKSvaOLSucOk7rXy936Gzk4d2QA02XtA=;
-        b=WeuhNjzs2wAIAQW/8qBkGqSB2h29TZH5THjlzO9ICQdI7xu4sbIlo026bqCoNVNVm8
-         1g+U4wPGN8jiBo/ZO4rTEFBLqgXqRHM1W/6hJVUwSVeYVBsfAQMBnPDpSlbZ4C2EHiu5
-         JhreBc95egnz+hj3XPN2YUdmioHZPMjVPp1ly7VgbWwbNkLNfNhJ20WXpZWIZXEUnLH/
-         QWe6hoXuykHVjJRa2tAeqB/VfABZUPMpLSSPA9sFdr03fpwMcNThUcpwxaMAM0TqckwI
-         N1jX++oabOqCeaFMe9/Ob7FtXvsYvRTu91dubcsopuP+8PDBI2H3RewGNV0VyZyVwv7O
-         qRCA==
-X-Gm-Message-State: APjAAAWxHQw1zHF/DBCbjoXmf1FyIwEF7uoYusCjbcym5B3m+zTVBPy7
-        JNyinUQSRhk9uVb80GkFB00N8X8=
-X-Google-Smtp-Source: APXvYqwhN7RA27SVa6mIjcHdSIUhlwnMBkhE2+F2OczdEmCOQCiFU41dl37RKc0vjcv14UOGyFPR+g==
-X-Received: by 2002:a5d:8890:: with SMTP id d16mr20374962ioo.274.1563833446531;
-        Mon, 22 Jul 2019 15:10:46 -0700 (PDT)
+        bh=ZZjeYarbm2uHTbPqEU/SfJr1OMvMhmzpfbxIokfphLg=;
+        b=iyoViomBXRsT0hzKS5lfM4BtiPgou9p6Zud/l4XsJIq1hBWHBeyFdMDlEg2dwfZNE7
+         RMcKkF4ZJ/txXK8zBJKQbOE3IVPrOsdfkjMoQTz/lDLC9d8AMAeoEuhZhHqScYW/Ij6c
+         vdo/wurql6qxyys/W6qmt2gwB1IalzkttfTeaoqnuf/GxWndWulTt2NnW6C1plaFvqqE
+         YM1OqsuGzED8+I79LWZBRPfUrsiDh+Micy1maHHyulta99TPyuDfmBqdLdz6PkDZqQu4
+         bRzKzpboudriPzUJ9snGX3++EAPXRLd2XfqsCjZ0ug1FVPOZ6dpYUh/Ce7+xIUJ8RYGx
+         8Ltg==
+X-Gm-Message-State: APjAAAWrIo8/hbSy+hvVAv6sjCOsoC3omApqkfI2vyLX/WvidLHtqOf+
+        mha7RHpJF0jKaJRM7oWMnw==
+X-Google-Smtp-Source: APXvYqwybodqBsnRMzwxflKMmSxt7BwWQbvI4+93D/Ql0XrEVFvtTEtzmr5T6L7GyUnVm3y5riatKg==
+X-Received: by 2002:a02:a581:: with SMTP id b1mr4163149jam.84.1563833496727;
+        Mon, 22 Jul 2019 15:11:36 -0700 (PDT)
 Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id s2sm29616314ioj.8.2019.07.22.15.10.45
+        by smtp.gmail.com with ESMTPSA id p10sm58670815iob.54.2019.07.22.15.11.35
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 15:10:45 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 16:10:45 -0600
+        Mon, 22 Jul 2019 15:11:36 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 16:11:35 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC 05/11] dt-bindings: soc: amlogic: clk-measure: Add SM1
- compatible
-Message-ID: <20190722221045.GA30948@bogus>
+Subject: Re: [RFC 07/11] dt-bindings: media: meson-ao-cec: add SM1 compatible
+Message-ID: <20190722221135.GA32382@bogus>
 References: <20190701104705.18271-1-narmstrong@baylibre.com>
- <20190701104705.18271-6-narmstrong@baylibre.com>
+ <20190701104705.18271-8-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701104705.18271-6-narmstrong@baylibre.com>
+In-Reply-To: <20190701104705.18271-8-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  1 Jul 2019 12:46:59 +0200, Neil Armstrong wrote:
-> Add the Amlogic SM1 Compatible for the clk-measurer IP.
+On Mon,  1 Jul 2019 12:47:01 +0200, Neil Armstrong wrote:
+> Add AO-CEC compatible string for the Amlogic SM1 SoC family,
+> a derivate of the G12A AO-CECB controller.
 > 
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/media/meson-ao-cec.txt | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
