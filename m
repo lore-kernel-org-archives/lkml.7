@@ -2,83 +2,76 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16617C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B274DC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DF220578
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D6E2229A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfGVJIW (ORCPT
+        id S1727590AbfGVJIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:08:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:33942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727731AbfGVJIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:08:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D71A344;
-        Mon, 22 Jul 2019 02:08:21 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E6DF3F694;
-        Mon, 22 Jul 2019 02:08:19 -0700 (PDT)
-Subject: Re: [PATCH v9 2/8] sched/core: Streamlining calls to task_rq_unlock()
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tj@kernel.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
-        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
-        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
-        cgroups@vger.kernel.org
-References: <20190719140000.31694-1-juri.lelli@redhat.com>
- <20190719140000.31694-3-juri.lelli@redhat.com>
- <50f00347-ffb3-285c-5a7d-3a9c5f813950@arm.com>
- <20190722083214.GF25636@localhost.localdomain>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <b18f1ec3-46a1-e65e-2c6e-85729031c996@arm.com>
-Date:   Mon, 22 Jul 2019 11:08:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 22 Jul 2019 05:08:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36004 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfGVJIi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:08:38 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hpUJ7-0002P8-LI; Mon, 22 Jul 2019 11:08:33 +0200
+Date:   Mon, 22 Jul 2019 11:08:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+cc:     Maya Nakamura <m.maya.nakamura@gmail.com>, mikelley@microsoft.com,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] hv: vmbus: Replace page definition with Hyper-V
+ specific one
+In-Reply-To: <20190718022228.GF3079@sasha-vm>
+Message-ID: <alpine.DEB.2.21.1907221107010.1782@nanos.tec.linutronix.de>
+References: <cover.1562916939.git.m.maya.nakamura@gmail.com> <0d9e80ecabcc950dc279fdd2e39bea4060123ba4.1562916939.git.m.maya.nakamura@gmail.com> <20190718022228.GF3079@sasha-vm>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190722083214.GF25636@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/19 10:32 AM, Juri Lelli wrote:
-> On 22/07/19 10:21, Dietmar Eggemann wrote:
->> On 7/19/19 3:59 PM, Juri Lelli wrote:
->>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
->>
->> [...]
->>
->>> @@ -4269,8 +4269,8 @@ static int __sched_setscheduler(struct task_struct *p,
->>>  			 */
->>>  			if (!cpumask_subset(span, &p->cpus_allowed) ||
->>
->> This doesn't apply cleanly on v5.3-rc1 anymore due to commit
->> 3bd3706251ee ("sched/core: Provide a pointer to the valid CPU mask").
->>
->>>  			    rq->rd->dl_bw.bw == 0) {
->>> -				task_rq_unlock(rq, p, &rf);
->>> -				return -EPERM;
->>> +				retval = -EPERM;
->>> +				goto unlock;
->>>  			}
->>>  		}
->>>  #endif
-> 
-> Thanks for reporting. The set is based on cgroup/for-next (as of last
-> week), though. I can of course rebase on tip/sched/core or mainline if
-> needed.
+On Wed, 17 Jul 2019, Sasha Levin wrote:
 
-Not sure, there is another little issue on 3/8 since uclamp is in
-v5.3-rc1 as well commit 69842cba9ace8 ("sched/uclamp: Add CPU's clamp
-buckets refcounting").
+> On Fri, Jul 12, 2019 at 08:25:18AM +0000, Maya Nakamura wrote:
+> > Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
+> > not be 4096 on all architectures and Hyper-V always runs with a page
+> > size of 4096.
+> > 
+> > Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+> > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> Thomas, if you're taking this series, could you grab this patch as well
+> please (dependencies)?
+> 
+> 	Acked-by: Sasha Levin <sashal@kernel.org>
+
+Picked it up. The three commits are in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/hyperv
+
+If you have patches dependend on those either send them my way or pull the
+branch into your hyper-v tree.
+
+Thanks,
+
+	tglx
