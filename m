@@ -4,33 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307E1C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24AC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FAE218C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8BB218C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfGVR2Q (ORCPT
+        id S1730785AbfGVR2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:28:16 -0400
-Received: from sauhun.de ([88.99.104.3]:42304 "EHLO pokefinder.org"
+        Mon, 22 Jul 2019 13:28:21 -0400
+Received: from sauhun.de ([88.99.104.3]:42314 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731438AbfGVR01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:26:27 -0400
+        id S1731432AbfGVR00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:26:26 -0400
 Received: from localhost (p54B33E22.dip0.t-ipconnect.de [84.179.62.34])
-        by pokefinder.org (Postfix) with ESMTPSA id C43EE4A149D;
-        Mon, 22 Jul 2019 19:26:25 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id AE4F54A148F;
+        Mon, 22 Jul 2019 19:26:24 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/14] mfd: ab3100-core: convert to i2c_new_dummy_device
-Date:   Mon, 22 Jul 2019 19:26:10 +0200
-Message-Id: <20190722172623.4166-4-wsa+renesas@sang-engineering.com>
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/14] mfd: 88pm800: convert to i2c_new_dummy_device
+Date:   Mon, 22 Jul 2019 19:26:08 +0200
+Message-Id: <20190722172623.4166-2-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
 References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
@@ -49,25 +47,39 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 
- drivers/mfd/ab3100-core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mfd/88pm800.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/ab3100-core.c b/drivers/mfd/ab3100-core.c
-index e350ab64238e..7e007df857b8 100644
---- a/drivers/mfd/ab3100-core.c
-+++ b/drivers/mfd/ab3100-core.c
-@@ -896,10 +896,10 @@ static int ab3100_probe(struct i2c_client *client,
- 		 &ab3100->chip_name[0]);
+diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+index f2d9fb4c4e8e..4e8d0d6b9b5c 100644
+--- a/drivers/mfd/88pm800.c
++++ b/drivers/mfd/88pm800.c
+@@ -425,10 +425,10 @@ static int pm800_pages_init(struct pm80x_chip *chip)
+ 		return -ENODEV;
  
- 	/* Attach a second dummy i2c_client to the test register address */
--	ab3100->testreg_client = i2c_new_dummy(client->adapter,
-+	ab3100->testreg_client = i2c_new_dummy_device(client->adapter,
- 					       client->addr + 1);
--	if (!ab3100->testreg_client) {
--		err = -ENOMEM;
-+	if (IS_ERR(ab3100->testreg_client)) {
-+		err = PTR_ERR(ab3100->testreg_client);
- 		goto exit_no_testreg_client;
+ 	/* PM800 block power page */
+-	subchip->power_page = i2c_new_dummy(client->adapter,
++	subchip->power_page = i2c_new_dummy_device(client->adapter,
+ 					    subchip->power_page_addr);
+-	if (subchip->power_page == NULL) {
+-		ret = -ENODEV;
++	if (IS_ERR(subchip->power_page)) {
++		ret = PTR_ERR(subchip->power_page);
+ 		goto out;
+ 	}
+ 
+@@ -444,10 +444,10 @@ static int pm800_pages_init(struct pm80x_chip *chip)
+ 	i2c_set_clientdata(subchip->power_page, chip);
+ 
+ 	/* PM800 block GPADC */
+-	subchip->gpadc_page = i2c_new_dummy(client->adapter,
++	subchip->gpadc_page = i2c_new_dummy_device(client->adapter,
+ 					    subchip->gpadc_page_addr);
+-	if (subchip->gpadc_page == NULL) {
+-		ret = -ENODEV;
++	if (IS_ERR(subchip->gpadc_page)) {
++		ret = PTR_ERR(subchip->gpadc_page);
+ 		goto out;
  	}
  
 -- 
