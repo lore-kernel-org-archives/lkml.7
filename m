@@ -7,57 +7,60 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06D9C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DC7C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6836218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C50218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563798177;
-	bh=67EejbkCV0mSYfYWGHxNRZo81M1BiY6mIPtWIB92Pfw=;
+	s=default; t=1563798182;
+	bh=rms2M5SxuEn7/KfTAeXvbph+T4TGna77AobA6zsyTfE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=M1dxcLCP8ROpiMwMhu2Eazoi4PcMP4062IYcHCCiTLYHeNBUpBSFkDYA5VMcXAlpZ
-	 N9feodLfaREjtQLb34EGuNl2OuJqw6cOGtJCBAJF2iBbrXAkQ1hhwLYE1lbYZutAic
-	 ug/hyzz5g4ADu4Zt/rVL3dGFv4EpuDTa/6V1eTkg=
+	b=drRHttaRw7vZq0EKnNZ5aRBUMK31xXsNdkn/hAd85t/aamiDVSMC2GN+clZa9LKE3
+	 p4m7z3LJuC8smH6oLUDhmbosU0cF2Zc/Z3Ao4gzcHx7J8wPa+sp4KpFfU3+zIV251w
+	 OvkI9GGQ3YKWOe2Td6bHPPyvglMKAPBfBZiTPKnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfGVMWU (ORCPT
+        id S1730395AbfGVMXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:22:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58612 "EHLO
+        Mon, 22 Jul 2019 08:23:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58706 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730235AbfGVMWS (ORCPT
+        with ESMTP id S1730268AbfGVMWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:22:18 -0400
+        Mon, 22 Jul 2019 08:22:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=9h4twfMse+bpRdSQEbk2Fkn3CfXBXCZxKLlK6NUxSIw=; b=RboBkKS4GOdY
-        ufyFR4x+qnoRNAITBEszT10BFTm0/570Cp/M13jaPW6456e8h23orAj40KLXlrydLBXXojEB6yaFa
-        9s1PNf/21OdvzeCy7h0ZoSPd1Huo3S2JwPbXEb+gVkohsyu8U+P2FsHpLZXRVscr35aOoGV/B7zgI
-        sOPM8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=0z6U09rUZLECl28yvm3CexCUHnSb2sEGRkEG6GbfCPE=; b=dM9N4vrHnRKf
+        plA2tnQIkv+7kDgMz7isQk0oLs+mHmOfGRVJVbghqAVSjK3ZLKq4qDDRwwl155fzafR7aM0sb/4pI
+        F7LtADCLGCoWF4ibxFMuOaSwduO9R6arD+HzCmbboIlyqLRB7EAI0MvZ/cxDzgHwKy9RDFWMTo5aP
+        jHHng=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hpXKT-0007dZ-Vh; Mon, 22 Jul 2019 12:22:10 +0000
+        id 1hpXKQ-0007c8-QT; Mon, 22 Jul 2019 12:22:06 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6CBB02740463; Mon, 22 Jul 2019 13:22:09 +0100 (BST)
+        id 95EA72742C1A; Mon, 22 Jul 2019 13:22:05 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Joe Perches <joe@perches.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     alsa-devel@alsa-project.org,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        cychiang@chromium.org, dianders@chromium.org,
+        Heiko Stuebner <heiko@sntech.de>,
         Jaroslav Kysela <perex@perex.cz>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: wcd9335: Fix misuse of GENMASK macro" to the asoc tree
-In-Reply-To: <92e31a9f321fe731d428ec3ec9d4654ea8a16d1b.1562734889.git.joe@perches.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "SoC: rockchip-max98090: Remove MICBIAS as supply of input pin IN34" to the asoc tree
+In-Reply-To: <20190719180558.11459-1-enric.balletbo@collabora.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190722122209.6CBB02740463@ypsilon.sirena.org.uk>
-Date:   Mon, 22 Jul 2019 13:22:09 +0100 (BST)
+Message-Id: <20190722122205.95EA72742C1A@ypsilon.sirena.org.uk>
+Date:   Mon, 22 Jul 2019 13:22:05 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: wcd9335: Fix misuse of GENMASK macro
+   SoC: rockchip-max98090: Remove MICBIAS as supply of input pin IN34
 
 has been applied to the asoc tree at
 
@@ -90,33 +93,38 @@ to this mail.
 Thanks,
 Mark
 
-From f7408a3d5b5fd10571a653d1a81ce9167c62727f Mon Sep 17 00:00:00 2001
-From: Joe Perches <joe@perches.com>
-Date: Tue, 9 Jul 2019 22:04:25 -0700
-Subject: [PATCH] ASoC: wcd9335: Fix misuse of GENMASK macro
+From 03cc2c22a711080790c5dcb546dd073fe38add05 Mon Sep 17 00:00:00 2001
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Date: Fri, 19 Jul 2019 20:05:58 +0200
+Subject: [PATCH] SoC: rockchip-max98090: Remove MICBIAS as supply of input pin
+ IN34
 
-Arguments are supposed to be ordered high then low.
+Commit ec0d23b295b9 ("ASoC: rockchip-max98090: Fix the Headset Mic
+route.") moved the MICBIAS widget to supply Headset Mic but forget to
+remove the MICBIAS widget to supply IN34 which is not really needed, so
+remove that path so we have:
 
-Signed-off-by: Joe Perches <joe@perches.com>
-Link: https://lore.kernel.org/r/92e31a9f321fe731d428ec3ec9d4654ea8a16d1b.1562734889.git.joe@perches.com
+   IN34 <==== Headset MIC <==== MICBIAS
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20190719180558.11459-1-enric.balletbo@collabora.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/wcd-clsh-v2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/rockchip/rockchip_max98090.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wcd-clsh-v2.c b/sound/soc/codecs/wcd-clsh-v2.c
-index c397d713f01a..cc5a9c9b918b 100644
---- a/sound/soc/codecs/wcd-clsh-v2.c
-+++ b/sound/soc/codecs/wcd-clsh-v2.c
-@@ -65,7 +65,7 @@ struct wcd_clsh_ctrl {
- #define WCD9XXX_FLYBACK_EN_PWDN_WITH_DELAY			0
- #define WCD9XXX_RX_BIAS_FLYB_BUFF			WCD9335_REG(0x6, 0xC7)
- #define WCD9XXX_RX_BIAS_FLYB_VNEG_5_UA_MASK		GENMASK(7, 4)
--#define WCD9XXX_RX_BIAS_FLYB_VPOS_5_UA_MASK		GENMASK(0, 3)
-+#define WCD9XXX_RX_BIAS_FLYB_VPOS_5_UA_MASK		GENMASK(3, 0)
- #define WCD9XXX_HPH_L_EN				WCD9335_REG(0x6, 0xD3)
- #define WCD9XXX_HPH_CONST_SEL_L_MASK			GENMASK(7, 3)
- #define WCD9XXX_HPH_CONST_SEL_BYPASS			0
+diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
+index c5fc24675a33..d1c907631c2d 100644
+--- a/sound/soc/rockchip/rockchip_max98090.c
++++ b/sound/soc/rockchip/rockchip_max98090.c
+@@ -45,7 +45,6 @@ static const struct snd_soc_dapm_widget rk_dapm_widgets[] = {
+ 
+ static const struct snd_soc_dapm_route rk_audio_map[] = {
+ 	{"IN34", NULL, "Headset Mic"},
+-	{"IN34", NULL, "MICBIAS"},
+ 	{"Headset Mic", NULL, "MICBIAS"},
+ 	{"DMICL", NULL, "Int Mic"},
+ 	{"Headphone", NULL, "HPL"},
 -- 
 2.20.1
 
