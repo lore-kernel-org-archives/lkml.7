@@ -3,104 +3,213 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4B0C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7A4C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA8A21921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7C62084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfGVMyj (ORCPT
+        id S1729264AbfGVM4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:54:39 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:49366 "EHLO ajax.cs.uga.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfGVMyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:54:38 -0400
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x6MCsZkX013562
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 08:54:37 -0400
-Received: by mail-lf1-f48.google.com with SMTP id 62so21670281lfa.8;
-        Mon, 22 Jul 2019 05:54:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAUVtJrnlw7xYq8J1kpLJPP/+MnqLN9+2al5jfaWtr0pH8CzBDIh
-        4Z29ufzqpDyoPcDlC00bVbGB22kn6fH+65nCB9o=
-X-Google-Smtp-Source: APXvYqz4FayGl7GhjYqBZCRR2PNrf9fqpfgXxMkDxoQT1M5AKTCW0Ks6Rp2FxLNB0uqRaazJ2RdDpsYGTEtzckqhZ0s=
-X-Received: by 2002:ac2:4565:: with SMTP id k5mr31911521lfm.170.1563800075295;
- Mon, 22 Jul 2019 05:54:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <1563625366-3602-1-git-send-email-wang6495@umn.edu> <20190722123204.rvsqlqgynfgjcif7@oracle.com>
-In-Reply-To: <20190722123204.rvsqlqgynfgjcif7@oracle.com>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Mon, 22 Jul 2019 07:53:59 -0500
-X-Gmail-Original-Message-ID: <CAAa=b7cwJ-2wPNtH_j6saHiUWRj7zSwzZ8sGPWfgG9AyxWrOPg@mail.gmail.com>
-Message-ID: <CAAa=b7cwJ-2wPNtH_j6saHiUWRj7zSwzZ8sGPWfgG9AyxWrOPg@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: ebtables: compat: fix a memory leak bug
-To:     "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>,
-        "moderated list:ETHERNET BRIDGE" <bridge@lists.linux-foundation.org>,
-        "open list:ETHERNET BRIDGE" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 22 Jul 2019 08:56:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60624 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727164AbfGVM4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:56:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE413AC6C;
+        Mon, 22 Jul 2019 12:56:18 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 14:56:18 +0200
+Message-ID: <s5hftmy8byl.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>,
+        "Masahiro Yamada" <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: use __u32 instead of uint32_t in uapi headers
+In-Reply-To: <de9e94ee-9c01-1c0c-4359-b637319a298f@linux.intel.com>
+References: <20190721142308.30306-1-yamada.masahiro@socionext.com>
+        <de9e94ee-9c01-1c0c-4359-b637319a298f@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 7:34 AM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
->
-> Nice catch.  The code that exists is confusing due to newinfo->entries
-> being overwritten and then freed in the existing code path as you state
-> in your commit log.
->
-> * Wenwen Wang <wang6495@umn.edu> [190720 08:23]:
-> > From: Wenwen Wang <wenwen@cs.uga.edu>
+On Mon, 22 Jul 2019 14:49:34 +0200,
+Pierre-Louis Bossart wrote:
+> 
+> 
+> 
+> On 7/21/19 9:23 AM, Masahiro Yamada wrote:
+> > When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+> > make sure they can be included from user-space.
 > >
-> > In compat_do_replace(), a temporary buffer is allocated through vmalloc()
-> > to hold entries copied from the user space. The buffer address is firstly
-> > saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
-> > the entries in this temporary buffer is copied to the internal kernel
-> > structure through compat_copy_entries(). If this copy process fails,
-> > compat_do_replace() should be terminated. However, the allocated temporary
-> > buffer is not freed on this path, leading to a memory leak.
+> > Currently, header.h and fw.h are excluded from the test coverage.
+> > To make them join the compile-test, we need to fix the build errors
+> > attached below.
 > >
-> > To fix the bug, free the buffer before returning from compat_do_replace().
+> > For a case like this, we decided to use __u{8,16,32,64} variable types
+> > in this discussion:
 > >
-> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> >    https://lkml.org/lkml/2019/6/5/18
+> 
+> these files are shared with the SOF project and used as is (with minor
+> formatting) for the firmware compilation. I am not sure I understand
+> the ask here, are you really asking SOF to use linux-specific type
+> definitions?
+
+Actually this is linux-kernel UAPI header files, so yes, we should
+follow the convention there as much as possible.
+
+So far we haven't been strict about these types.  But now we have a
+unit test for checking it, so it's a good opportunity to address the
+issues.
+
+
+thanks,
+
+Takashi
+
+> 
+> >
+> > Build log:
+> >
+> >    CC      usr/include/sound/sof/header.h.s
+> >    CC      usr/include/sound/sof/fw.h.s
+> > In file included from <command-line>:32:0:
+> > ./usr/include/sound/sof/header.h:19:2: error: unknown type name ‘uint32_t’
+> >    uint32_t magic;  /**< 'S', 'O', 'F', '\0' */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/header.h:20:2: error: unknown type name ‘uint32_t’
+> >    uint32_t type;  /**< component specific type */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/header.h:21:2: error: unknown type name ‘uint32_t’
+> >    uint32_t size;  /**< size in bytes of data excl. this struct */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/header.h:22:2: error: unknown type name ‘uint32_t’
+> >    uint32_t abi;  /**< SOF ABI version */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/header.h:23:2: error: unknown type name ‘uint32_t’
+> >    uint32_t reserved[4]; /**< reserved for future use */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/header.h:24:2: error: unknown type name ‘uint32_t’
+> >    uint32_t data[0]; /**< Component data - opaque to core */
+> >    ^~~~~~~~
+> > In file included from <command-line>:32:0:
+> > ./usr/include/sound/sof/fw.h:49:2: error: unknown type name ‘uint32_t’
+> >    uint32_t size;  /* bytes minus this header */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/fw.h:50:2: error: unknown type name ‘uint32_t’
+> >    uint32_t offset; /* offset from base */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/fw.h:64:2: error: unknown type name ‘uint32_t’
+> >    uint32_t size;  /* bytes minus this header */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/fw.h:65:2: error: unknown type name ‘uint32_t’
+> >    uint32_t num_blocks; /* number of blocks */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/fw.h:73:2: error: unknown type name ‘uint32_t’
+> >    uint32_t file_size; /* size of file minus this header */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/fw.h:74:2: error: unknown type name ‘uint32_t’
+> >    uint32_t num_modules; /* number of modules */
+> >    ^~~~~~~~
+> > ./usr/include/sound/sof/fw.h:75:2: error: unknown type name ‘uint32_t’
+> >    uint32_t abi;  /* version of header format */
+> >    ^~~~~~~~
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > > ---
-> >  net/bridge/netfilter/ebtables.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-> > index 963dfdc..fd84b48e 100644
-> > --- a/net/bridge/netfilter/ebtables.c
-> > +++ b/net/bridge/netfilter/ebtables.c
-> > @@ -2261,8 +2261,10 @@ static int compat_do_replace(struct net *net, void __user *user,
-> >       state.buf_kern_len = size64;
+> >   include/uapi/sound/sof/fw.h     | 16 +++++++++-------
+> >   include/uapi/sound/sof/header.h | 14 ++++++++------
+> >   2 files changed, 17 insertions(+), 13 deletions(-)
 > >
-> >       ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
-> > -     if (WARN_ON(ret < 0))
-> > +     if (WARN_ON(ret < 0)) {
-> > +             vfree(entries_tmp);
-> >               goto out_unlock;
-> > +     }
->
->
-> Would it be worth adding a new goto label above out_unlock and free this
-> entries_tmp?  It could then be used in previous failure path as well.
-
-Yes, that would make the code much clearer and easier to understand.
-
-Thanks!
-Wenwen
+> > diff --git a/include/uapi/sound/sof/fw.h b/include/uapi/sound/sof/fw.h
+> > index 1afca973eb09..e9f697467a86 100644
+> > --- a/include/uapi/sound/sof/fw.h
+> > +++ b/include/uapi/sound/sof/fw.h
+> > @@ -13,6 +13,8 @@
+> >   #ifndef __INCLUDE_UAPI_SOF_FW_H__
+> >   #define __INCLUDE_UAPI_SOF_FW_H__
+> >   +#include <linux/types.h>
+> > +
+> >   #define SND_SOF_FW_SIG_SIZE	4
+> >   #define SND_SOF_FW_ABI		1
+> >   #define SND_SOF_FW_SIG		"Reef"
+> > @@ -46,8 +48,8 @@ enum snd_sof_fw_blk_type {
+> >     struct snd_sof_blk_hdr {
+> >   	enum snd_sof_fw_blk_type type;
+> > -	uint32_t size;		/* bytes minus this header */
+> > -	uint32_t offset;	/* offset from base */
+> > +	__u32 size;		/* bytes minus this header */
+> > +	__u32 offset;		/* offset from base */
+> >   } __packed;
+> >     /*
+> > @@ -61,8 +63,8 @@ enum snd_sof_fw_mod_type {
+> >     struct snd_sof_mod_hdr {
+> >   	enum snd_sof_fw_mod_type type;
+> > -	uint32_t size;		/* bytes minus this header */
+> > -	uint32_t num_blocks;	/* number of blocks */
+> > +	__u32 size;		/* bytes minus this header */
+> > +	__u32 num_blocks;	/* number of blocks */
+> >   } __packed;
+> >     /*
+> > @@ -70,9 +72,9 @@ struct snd_sof_mod_hdr {
+> >    */
+> >   struct snd_sof_fw_header {
+> >   	unsigned char sig[SND_SOF_FW_SIG_SIZE]; /* "Reef" */
+> > -	uint32_t file_size;	/* size of file minus this header */
+> > -	uint32_t num_modules;	/* number of modules */
+> > -	uint32_t abi;		/* version of header format */
+> > +	__u32 file_size;	/* size of file minus this header */
+> > +	__u32 num_modules;	/* number of modules */
+> > +	__u32 abi;		/* version of header format */
+> >   } __packed;
+> >     #endif
+> > diff --git a/include/uapi/sound/sof/header.h b/include/uapi/sound/sof/header.h
+> > index 7868990b0d6f..5f4518e7a972 100644
+> > --- a/include/uapi/sound/sof/header.h
+> > +++ b/include/uapi/sound/sof/header.h
+> > @@ -9,6 +9,8 @@
+> >   #ifndef __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
+> >   #define __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
+> >   +#include <linux/types.h>
+> > +
+> >   /*
+> >    * Header for all non IPC ABI data.
+> >    *
+> > @@ -16,12 +18,12 @@
+> >    * Used by any bespoke component data structures or binary blobs.
+> >    */
+> >   struct sof_abi_hdr {
+> > -	uint32_t magic;		/**< 'S', 'O', 'F', '\0' */
+> > -	uint32_t type;		/**< component specific type */
+> > -	uint32_t size;		/**< size in bytes of data excl. this struct */
+> > -	uint32_t abi;		/**< SOF ABI version */
+> > -	uint32_t reserved[4];	/**< reserved for future use */
+> > -	uint32_t data[0];	/**< Component data - opaque to core */
+> > +	__u32 magic;		/**< 'S', 'O', 'F', '\0' */
+> > +	__u32 type;		/**< component specific type */
+> > +	__u32 size;		/**< size in bytes of data excl. this struct */
+> > +	__u32 abi;		/**< SOF ABI version */
+> > +	__u32 reserved[4];	/**< reserved for future use */
+> > +	__u32 data[0];		/**< Component data - opaque to core */
+> >   }  __packed;
+> >     #endif
+> >
+> 
