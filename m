@@ -7,57 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DFCC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102CAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E3E218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37F7218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563798151;
-	bh=Vn99tqsuUqCrR9KMDkXnfx6rT0Xazq+4lGxL4AT/0DI=;
+	s=default; t=1563798153;
+	bh=9JEd6p/mNC5aeDqbQFcHjeOt4A2xZJdIX/jIWc2lBss=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=aoz+GVjqvLu9qsgvXk0PrPdVULf4/tOoiTsvIx3fxA1joPys1z6WmCCyl4rSblAu1
-	 9OTDr00l7ec4z8jDkeXiFV7qWME+5DbPHWcpIQdUCTYpmiY7BzGNjGjv1sDD8dJkJS
-	 mKwoLfIZDd6Ry7nNxJAa5FR6Nsc1ffAa/8BD+HGw=
+	b=zj+Txro1UjdIyQIe8aPLxXTJaP+Bn/CcAMIgKSawvLi57kwbYfRoBlm0Es/fK6Sbu
+	 zYvff/iJjUN6TWvSraXVXR26I/SyMf5lOLwh++7+sqtMMpLfG3rm3W4Qf4wNNRYvAz
+	 d7AFyW/izQBy05+NbzSParUkooJIUjtQ1x9uCdec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfGVMWa (ORCPT
+        id S1730339AbfGVMWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:22:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58690 "EHLO
+        Mon, 22 Jul 2019 08:22:32 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58702 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730261AbfGVMWU (ORCPT
+        with ESMTP id S1730265AbfGVMWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:22:20 -0400
+        Mon, 22 Jul 2019 08:22:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=7M7lfxWMFFVq8j0P/G4KjJPLxGJ0Xmx4Exm43dS/2gQ=; b=mzGDl9CLEFH+
-        xj8Kc54ODYAuIM97N1LZlwA7PAiqB1VWeNZoD2+/R8MufkpBoEF7KV0A0G+GTff6Kg90+FLXank9D
-        LkLhQVzhIzlDSfG+nKTXhqlmVF2EAQMbowy8IjBINdHFl+ZwvvqAiiUGh9+HDk9VMKod3WpffgWX5
-        BpzqA=;
+        List-Archive; bh=brwYyd/mdAFQv8m6PrOABtOpnnjtQSc8YcFxHRBTDcw=; b=f1kI6xHaw31A
+        HVc0hZjdlNAYkyovwme/GVsbXqQvApX2sqn9DnHDq9wPJ+Nxj6rNaVextspNX5qsGOXLWdE2Dfky8
+        LbcHlej9urkYXiaiKYTQ12qwISV8/9VpTQWHxmIh+n8JSCRa/RwBFq/E87VudOECFvGYNaBha0Oza
+        uXj0w=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hpXKR-0007cO-G3; Mon, 22 Jul 2019 12:22:07 +0000
+        id 1hpXKU-0007dx-PO; Mon, 22 Jul 2019 12:22:10 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EEFF22742C38; Mon, 22 Jul 2019 13:22:06 +0100 (BST)
+        id 4D13627429D9; Mon, 22 Jul 2019 13:22:10 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     fengchunguo <chunguo.feng@amlogic.com>
-Cc:     alsa-devel@alsa-project.org, bleung@chromium.org,
-        broonie@kernel.org, chunguo.feng@amlogic.com,
-        grundler@chromium.org, lgirdwood@gmail.com,
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     alsa-devel@alsa-project.org, brian.austin@cirrus.com,
+        broonie@kernel.org, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        perex@perex.cz, pierre-louis.bossart@linux.intel.com,
-        RyanS.Lee@maximintegrated.com, tiwai@suse.com
-Subject: Applied "ASoC: max98383: fix i2c probe failure" to the asoc tree
-In-Reply-To: <20190715095556.1614-1-chunguo.feng@amlogic.com>
+        Paul.Handrigan@cirrus.com, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: cs42xx8: Fix MFREQ selection issue for async mode" to the asoc tree
+In-Reply-To: <20190716094547.46787-1-shengjiu.wang@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190722122206.EEFF22742C38@ypsilon.sirena.org.uk>
-Date:   Mon, 22 Jul 2019 13:22:06 +0100 (BST)
+Message-Id: <20190722122210.4D13627429D9@ypsilon.sirena.org.uk>
+Date:   Mon, 22 Jul 2019 13:22:10 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: max98383: fix i2c probe failure
+   ASoC: cs42xx8: Fix MFREQ selection issue for async mode
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,114 +88,201 @@ to this mail.
 Thanks,
 Mark
 
-From 1eac7bb88ae5a4c45283de1dc1f93e9da9278a7f Mon Sep 17 00:00:00 2001
-From: fengchunguo <chunguo.feng@amlogic.com>
-Date: Mon, 15 Jul 2019 17:55:56 +0800
-Subject: [PATCH] ASoC: max98383: fix i2c probe failure
+From 48dfd37a0f85400610153101c72222bf01523699 Mon Sep 17 00:00:00 2001
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Date: Tue, 16 Jul 2019 17:45:47 +0800
+Subject: [PATCH] ASoC: cs42xx8: Fix MFREQ selection issue for async mode
 
-Added reset_gpio configuration for i2c probe successfully.
-If not,i2c address can't be found rightly.
+When sample rate of TX is different with sample rate of RX in
+async mode, the MFreq selection will be wrong.
 
-Error information:
-max98373 3-0031: Failed to read: 0x21FF
+For example, sysclk = 24.576MHz, TX rate = 96000Hz, RX rate = 48000Hz.
+Then ratio of TX = 256, ratio of RX = 512, For MFreq is shared by TX
+and RX instance, the correct value of MFreq is 2 for both TX and RX.
 
-Fixed:
-[3.761299@3] max98373 3-0031: MAX98373 revisionID: 0x43
-[3.828911@3] asoc-aml-card auge_sound: max98373-aif1 <-> TDM-B mapping ok
+But original method will cause MFreq = 0 for TX, MFreq = 2 for RX.
+If TX is started after RX, RX will be impacted, RX work abnormal with
+MFreq = 0.
 
-Signed-off-by: fengchunguo <chunguo.feng@amlogic.com>
-Link: https://lore.kernel.org/r/20190715095556.1614-1-chunguo.feng@amlogic.com
+This patch is to select proper MFreq value according to TX rate and
+RX rate.
+
+Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver support for CS42448/CS42888")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Link: https://lore.kernel.org/r/20190716094547.46787-1-shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/max98373.c | 34 ++++++++++++++++++++++++++++++----
- sound/soc/codecs/max98373.h |  1 +
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ sound/soc/codecs/cs42xx8.c | 116 +++++++++++++++++++++++++++++++------
+ 1 file changed, 97 insertions(+), 19 deletions(-)
 
-diff --git a/sound/soc/codecs/max98373.c b/sound/soc/codecs/max98373.c
-index 528695cd6a1c..9a1eb7222357 100644
---- a/sound/soc/codecs/max98373.c
-+++ b/sound/soc/codecs/max98373.c
-@@ -12,6 +12,7 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <linux/gpio.h>
-+#include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <sound/tlv.h>
- #include "max98373.h"
-@@ -895,6 +896,17 @@ static void max98373_slot_config(struct i2c_client *i2c,
- 	else
- 		max98373->i_slot = 1;
+diff --git a/sound/soc/codecs/cs42xx8.c b/sound/soc/codecs/cs42xx8.c
+index 6203f54d9f25..5b049fcdba20 100644
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -47,6 +47,7 @@ struct cs42xx8_priv {
+ 	unsigned long sysclk;
+ 	u32 tx_channels;
+ 	struct gpio_desc *gpiod_reset;
++	u32 rate[2];
+ };
  
-+	max98373->reset_gpio = of_get_named_gpio(dev->of_node,
-+						"maxim,reset-gpio", 0);
-+	if (!gpio_is_valid(max98373->reset_gpio)) {
-+		dev_err(dev, "Looking up %s property in node %s failed %d\n",
-+			"maxim,reset-gpio", dev->of_node->full_name,
-+			max98373->reset_gpio);
-+	} else {
-+		dev_dbg(dev, "maxim,reset-gpio=%d",
-+			max98373->reset_gpio);
-+	}
+ /* -127.5dB to 0dB with step of 0.5dB */
+@@ -176,21 +177,27 @@ static const struct snd_soc_dapm_route cs42xx8_adc3_dapm_routes[] = {
+ };
+ 
+ struct cs42xx8_ratios {
+-	unsigned int ratio;
+-	unsigned char speed;
+-	unsigned char mclk;
++	unsigned int mfreq;
++	unsigned int min_mclk;
++	unsigned int max_mclk;
++	unsigned int ratio[3];
+ };
+ 
++/*
++ * According to reference mannual, define the cs42xx8_ratio struct
++ * MFreq2 | MFreq1 | MFreq0 |     Description     | SSM | DSM | QSM |
++ * 0      | 0      | 0      |1.029MHz to 12.8MHz  | 256 | 128 |  64 |
++ * 0      | 0      | 1      |1.536MHz to 19.2MHz  | 384 | 192 |  96 |
++ * 0      | 1      | 0      |2.048MHz to 25.6MHz  | 512 | 256 | 128 |
++ * 0      | 1      | 1      |3.072MHz to 38.4MHz  | 768 | 384 | 192 |
++ * 1      | x      | x      |4.096MHz to 51.2MHz  |1024 | 512 | 256 |
++ */
+ static const struct cs42xx8_ratios cs42xx8_ratios[] = {
+-	{ 64, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_256(4) },
+-	{ 96, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_384(4) },
+-	{ 128, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_512(4) },
+-	{ 192, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_768(4) },
+-	{ 256, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_256(1) },
+-	{ 384, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_384(1) },
+-	{ 512, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_512(1) },
+-	{ 768, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_768(1) },
+-	{ 1024, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_1024(1) }
++	{ 0, 1029000, 12800000, {256, 128, 64} },
++	{ 2, 1536000, 19200000, {384, 192, 96} },
++	{ 4, 2048000, 25600000, {512, 256, 128} },
++	{ 6, 3072000, 38400000, {768, 384, 192} },
++	{ 8, 4096000, 51200000, {1024, 512, 256} },
+ };
+ 
+ static int cs42xx8_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+@@ -257,14 +264,68 @@ static int cs42xx8_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct cs42xx8_priv *cs42xx8 = snd_soc_component_get_drvdata(component);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+-	u32 ratio = cs42xx8->sysclk / params_rate(params);
+-	u32 i, fm, val, mask;
++	u32 ratio[2];
++	u32 rate[2];
++	u32 fm[2];
++	u32 i, val, mask;
++	bool condition1, condition2;
+ 
+ 	if (tx)
+ 		cs42xx8->tx_channels = params_channels(params);
+ 
++	rate[tx]  = params_rate(params);
++	rate[!tx] = cs42xx8->rate[!tx];
 +
- 	if (!device_property_read_u32(dev, "maxim,spkfb-slot-no", &value))
- 		max98373->spkfb_slot = value & 0xF;
- 	else
-@@ -923,7 +935,6 @@ static int max98373_i2c_probe(struct i2c_client *i2c,
- 	else
- 		max98373->interleave_mode = false;
- 
--
- 	/* regmap initialization */
- 	max98373->regmap
- 		= devm_regmap_init_i2c(i2c, &max98373_regmap);
-@@ -934,6 +945,24 @@ static int max98373_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	/* voltage/current slot & gpio configuration */
-+	max98373_slot_config(i2c, max98373);
++	ratio[tx] = rate[tx] > 0 ? cs42xx8->sysclk / rate[tx] : 0;
++	ratio[!tx] = rate[!tx] > 0 ? cs42xx8->sysclk / rate[!tx] : 0;
 +
-+	/* Power on device */
-+	if (gpio_is_valid(max98373->reset_gpio)) {
-+		ret = gpio_request(max98373->reset_gpio, "MAX98373_RESET");
-+		if (ret) {
-+			dev_err(&i2c->dev, "%s: Failed to request gpio %d\n",
-+				__func__, max98373->reset_gpio);
-+			gpio_free(max98373->reset_gpio);
-+			return -EINVAL;
++	/* Get functional mode for tx and rx according to rate */
++	for (i = 0; i < 2; i++) {
++		if (cs42xx8->slave_mode) {
++			fm[i] = CS42XX8_FM_AUTO;
++		} else {
++			if (rate[i] < 50000) {
++				fm[i] = CS42XX8_FM_SINGLE;
++			} else if (rate[i] > 50000 && rate[i] < 100000) {
++				fm[i] = CS42XX8_FM_DOUBLE;
++			} else if (rate[i] > 100000 && rate[i] < 200000) {
++				fm[i] = CS42XX8_FM_QUAD;
++			} else {
++				dev_err(component->dev,
++					"unsupported sample rate\n");
++				return -EINVAL;
++			}
 +		}
-+		gpio_direction_output(max98373->reset_gpio, 0);
-+		msleep(50);
-+		gpio_direction_output(max98373->reset_gpio, 1);
-+		msleep(20);
 +	}
 +
- 	/* Check Revision ID */
- 	ret = regmap_read(max98373->regmap,
- 		MAX98373_R21FF_REV_ID, &reg);
-@@ -944,9 +973,6 @@ static int max98373_i2c_probe(struct i2c_client *i2c,
+ 	for (i = 0; i < ARRAY_SIZE(cs42xx8_ratios); i++) {
+-		if (cs42xx8_ratios[i].ratio == ratio)
++		/* Is the ratio[tx] valid ? */
++		condition1 = ((fm[tx] == CS42XX8_FM_AUTO) ?
++			(cs42xx8_ratios[i].ratio[0] == ratio[tx] ||
++			cs42xx8_ratios[i].ratio[1] == ratio[tx] ||
++			cs42xx8_ratios[i].ratio[2] == ratio[tx]) :
++			(cs42xx8_ratios[i].ratio[fm[tx]] == ratio[tx])) &&
++			cs42xx8->sysclk >= cs42xx8_ratios[i].min_mclk &&
++			cs42xx8->sysclk <= cs42xx8_ratios[i].max_mclk;
++
++		if (!ratio[tx])
++			condition1 = true;
++
++		/* Is the ratio[!tx] valid ? */
++		condition2 = ((fm[!tx] == CS42XX8_FM_AUTO) ?
++			(cs42xx8_ratios[i].ratio[0] == ratio[!tx] ||
++			cs42xx8_ratios[i].ratio[1] == ratio[!tx] ||
++			cs42xx8_ratios[i].ratio[2] == ratio[!tx]) :
++			(cs42xx8_ratios[i].ratio[fm[!tx]] == ratio[!tx]));
++
++		if (!ratio[!tx])
++			condition2 = true;
++
++		/*
++		 * Both ratio[tx] and ratio[!tx] is valid, then we get
++		 * a proper MFreq.
++		 */
++		if (condition1 && condition2)
+ 			break;
  	}
- 	dev_info(&i2c->dev, "MAX98373 revisionID: 0x%02X\n", reg);
  
--	/* voltage/current slot configuration */
--	max98373_slot_config(i2c, max98373);
--
- 	/* codec registeration */
- 	ret = devm_snd_soc_register_component(&i2c->dev, &soc_codec_dev_max98373,
- 		max98373_dai, ARRAY_SIZE(max98373_dai));
-diff --git a/sound/soc/codecs/max98373.h b/sound/soc/codecs/max98373.h
-index f6a37aa02f26..533d2053f608 100644
---- a/sound/soc/codecs/max98373.h
-+++ b/sound/soc/codecs/max98373.h
-@@ -203,6 +203,7 @@
+@@ -273,15 +334,31 @@ static int cs42xx8_hw_params(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
  
- struct max98373_priv {
- 	struct regmap *regmap;
-+	int reset_gpio;
- 	unsigned int v_slot;
- 	unsigned int i_slot;
- 	unsigned int spkfb_slot;
+-	mask = CS42XX8_FUNCMOD_MFREQ_MASK;
+-	val = cs42xx8_ratios[i].mclk;
++	cs42xx8->rate[tx] = params_rate(params);
+ 
+-	fm = cs42xx8->slave_mode ? CS42XX8_FM_AUTO : cs42xx8_ratios[i].speed;
++	mask = CS42XX8_FUNCMOD_MFREQ_MASK;
++	val = cs42xx8_ratios[i].mfreq;
+ 
+ 	regmap_update_bits(cs42xx8->regmap, CS42XX8_FUNCMOD,
+ 			   CS42XX8_FUNCMOD_xC_FM_MASK(tx) | mask,
+-			   CS42XX8_FUNCMOD_xC_FM(tx, fm) | val);
++			   CS42XX8_FUNCMOD_xC_FM(tx, fm[tx]) | val);
++
++	return 0;
++}
++
++static int cs42xx8_hw_free(struct snd_pcm_substream *substream,
++			   struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct cs42xx8_priv *cs42xx8 = snd_soc_component_get_drvdata(component);
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 
++	/* Clear stored rate */
++	cs42xx8->rate[tx] = 0;
++
++	regmap_update_bits(cs42xx8->regmap, CS42XX8_FUNCMOD,
++			   CS42XX8_FUNCMOD_xC_FM_MASK(tx),
++			   CS42XX8_FUNCMOD_xC_FM(tx, CS42XX8_FM_AUTO));
+ 	return 0;
+ }
+ 
+@@ -302,6 +379,7 @@ static const struct snd_soc_dai_ops cs42xx8_dai_ops = {
+ 	.set_fmt	= cs42xx8_set_dai_fmt,
+ 	.set_sysclk	= cs42xx8_set_dai_sysclk,
+ 	.hw_params	= cs42xx8_hw_params,
++	.hw_free	= cs42xx8_hw_free,
+ 	.digital_mute	= cs42xx8_digital_mute,
+ };
+ 
 -- 
 2.20.1
 
