@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6160C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDCC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A9B21E70
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5998E2238B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfGVPmu (ORCPT
+        id S1729864AbfGVPmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:42:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:40236 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 11:42:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:40264 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfGVPms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:42:48 -0400
+        id S1729797AbfGVPmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:42:51 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D49F1596;
-        Mon, 22 Jul 2019 08:42:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE1BE15A2;
+        Mon, 22 Jul 2019 08:42:50 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41F493F694;
-        Mon, 22 Jul 2019 08:42:45 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 430953F694;
+        Mon, 22 Jul 2019 08:42:48 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,11 +44,10 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: [PATCH v9 08/21] sparc: mm: Add p?d_leaf() definitions
-Date:   Mon, 22 Jul 2019 16:41:57 +0100
-Message-Id: <20190722154210.42799-9-steven.price@arm.com>
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v9 09/21] x86: mm: Add p?d_leaf() definitions
+Date:   Mon, 22 Jul 2019 16:41:58 +0100
+Message-Id: <20190722154210.42799-10-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
 References: <20190722154210.42799-1-steven.price@arm.com>
@@ -64,36 +63,58 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For sparc 64 bit, pmd_large() and pud_large() are already provided, so
-add macros to provide the p?d_leaf names required by the generic code.
+For x86 we already have p?d_large() functions, so simply add macros to
+provide the generic p?d_leaf() names for the generic code.
 
-CC: "David S. Miller" <davem@davemloft.net>
-CC: sparclinux@vger.kernel.org
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/sparc/include/asm/pgtable_64.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/pgtable.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 1599de730532..a78b968ae3fa 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -683,6 +683,7 @@ static inline unsigned long pte_special(pte_t pte)
- 	return pte_val(pte) & _PAGE_SPECIAL;
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 0bc530c4eb13..6986a451619e 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -239,6 +239,7 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
+ 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
  }
  
-+#define pmd_leaf	pmd_large
- static inline unsigned long pmd_large(pmd_t pmd)
++#define p4d_leaf	p4d_large
+ static inline int p4d_large(p4d_t p4d)
  {
- 	pte_t pte = __pte(pmd_val(pmd));
-@@ -867,6 +868,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
- /* only used by the stubbed out hugetlb gup code, should never be called */
- #define pgd_page(pgd)			NULL
+ 	/* No 512 GiB pages yet */
+@@ -247,6 +248,7 @@ static inline int p4d_large(p4d_t p4d)
+ 
+ #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
+ 
++#define pmd_leaf	pmd_large
+ static inline int pmd_large(pmd_t pte)
+ {
+ 	return pmd_flags(pte) & _PAGE_PSE;
+@@ -874,6 +876,7 @@ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
+ 	return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(address);
+ }
  
 +#define pud_leaf	pud_large
- static inline unsigned long pud_large(pud_t pud)
+ static inline int pud_large(pud_t pud)
  {
- 	pte_t pte = __pte(pud_val(pud));
+ 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
+@@ -885,6 +888,7 @@ static inline int pud_bad(pud_t pud)
+ 	return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+ }
+ #else
++#define pud_leaf	pud_large
+ static inline int pud_large(pud_t pud)
+ {
+ 	return 0;
+@@ -1233,6 +1237,7 @@ static inline bool pgdp_maps_userspace(void *__ptr)
+ 	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
+ }
+ 
++#define pgd_leaf	pgd_large
+ static inline int pgd_large(pgd_t pgd) { return 0; }
+ 
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
 -- 
 2.20.1
 
