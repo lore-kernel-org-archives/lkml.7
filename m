@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BD8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98A8C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951E62199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA642199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732192AbfGVS62 (ORCPT
+        id S1731431AbfGVS5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:58:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38040 "EHLO
+        Mon, 22 Jul 2019 14:57:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38025 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731878AbfGVS5C (ORCPT
+        with ESMTP id S1727821AbfGVS5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:57:02 -0400
+        Mon, 22 Jul 2019 14:57:00 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hpdUa-0002Ok-ED; Mon, 22 Jul 2019 20:57:00 +0200
-Message-Id: <20190722105219.252225936@linutronix.de>
+        id 1hpdUY-0002OO-43; Mon, 22 Jul 2019 20:56:58 +0200
+Message-Id: <20190722105218.855189979@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 22 Jul 2019 20:47:10 +0200
+Date:   Mon, 22 Jul 2019 20:47:06 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
@@ -34,7 +34,7 @@ Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>,
         Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [patch V3 05/25] x86/apic: Move IPI inlines into ipi.c
+Subject: [patch V3 01/25] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
 References: <20190722104705.550071814@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,74 +43,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No point in having them in an header file.
+apic->send_IPI_allbutself() takes a vector number as argument.
 
+APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
+outside the vector space.
+
+Use NMI_VECTOR instead as that's what it is intended to be.
+
+Fixes: 82da3ff89dc2 ("x86: kgdb support")
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/include/asm/ipi.h |   19 -------------------
- arch/x86/kernel/apic/ipi.c |   16 +++++++++++++---
- 2 files changed, 13 insertions(+), 22 deletions(-)
+Link: https://lkml.kernel.org/r/20190704155608.347938562@linutronix.de
 
---- a/arch/x86/include/asm/ipi.h
-+++ b/arch/x86/include/asm/ipi.h
-@@ -71,27 +71,8 @@ extern void default_send_IPI_mask_sequen
- extern void default_send_IPI_mask_allbutself_phys(const struct cpumask *mask,
- 							 int vector);
- 
--/* Avoid include hell */
--#define NMI_VECTOR 0x02
--
- extern int no_broadcast;
- 
--static inline void __default_local_send_IPI_allbutself(int vector)
--{
--	if (no_broadcast || vector == NMI_VECTOR)
--		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
--	else
--		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector, apic->dest_logical);
--}
--
--static inline void __default_local_send_IPI_all(int vector)
--{
--	if (no_broadcast || vector == NMI_VECTOR)
--		apic->send_IPI_mask(cpu_online_mask, vector);
--	else
--		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector, apic->dest_logical);
--}
--
- #ifdef CONFIG_X86_32
- extern void default_send_IPI_mask_sequence_logical(const struct cpumask *mask,
- 							 int vector);
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -198,15 +198,25 @@ void default_send_IPI_allbutself(int vec
- 	 * if there are no other CPUs in the system then we get an APIC send
- 	 * error if we try to broadcast, thus avoid sending IPIs in this case.
- 	 */
--	if (!(num_online_cpus() > 1))
-+	if (num_online_cpus() < 2)
- 		return;
- 
--	__default_local_send_IPI_allbutself(vector);
-+	if (no_broadcast || vector == NMI_VECTOR) {
-+		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
-+	} else {
-+		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector,
-+					    apic->dest_logical);
-+	}
- }
- 
- void default_send_IPI_all(int vector)
+---
+V2: New patch
+---
+ arch/x86/kernel/kgdb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -416,7 +416,7 @@ static void kgdb_disable_hw_debug(struct
+  */
+ void kgdb_roundup_cpus(void)
  {
--	__default_local_send_IPI_all(vector);
-+	if (no_broadcast || vector == NMI_VECTOR) {
-+		apic->send_IPI_mask(cpu_online_mask, vector);
-+	} else {
-+		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector,
-+					    apic->dest_logical);
-+	}
+-	apic->send_IPI_allbutself(APIC_DM_NMI);
++	apic->send_IPI_allbutself(NMI_VECTOR);
  }
+ #endif
  
- void default_send_IPI_self(int vector)
 
 
