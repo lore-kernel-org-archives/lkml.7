@@ -2,87 +2,65 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A941EC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51658C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FF3222F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:31:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="S7p6JMCx"
+	by mail.kernel.org (Postfix) with ESMTP id 36D30222F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfGVJbC (ORCPT
+        id S1729003AbfGVJbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:31:02 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:10722 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728969AbfGVJa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:30:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1563787857;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Dv/zMXLNc2LBJs14qIfW45fwOAU8bZrhI21MX9TcRdI=;
-        b=S7p6JMCx1TwPACpx6jZwjS/DXdWONjNqWGH15VZMV3VsEM4d4WF5MXTeLmLrWLS0sS
-        OMfrq+Tgb+8MtseZqrPVLoPM1aqQS8FrvumqMZGlFkNOMXlaAUJJSi7WkQfcHfGnxzz2
-        HSBKqp3QJOCyK98WARc7kPo34zVhYMFDzLIpOWpksVDdDYIPIvxKu6TOwkBg7VSZLNfI
-        lf5VKe+imU+lQ4RoKSFJnOkQVTR40q6AZ62XLa8u3iTQ1y3fTJ95M0/S+8UWhTx1oamB
-        pdycMYf2ONRsSC5hBfD43XIlFl1M1sR/pp7kt2ucsXiCLnL1Mak45QZTaPm5eisyXIXM
-        rnjg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxP4G6N/EiB"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id m0a13fv6M9OlObw
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 22 Jul 2019 11:24:47 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [RFC PATCH v2 1/4] dt-bindings: vendor-prefixes: Add Longcheer Technology Co., Ltd.
-Date:   Mon, 22 Jul 2019 11:22:08 +0200
-Message-Id: <20190722092211.100586-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190722092211.100586-1-stephan@gerhold.net>
-References: <20190722092211.100586-1-stephan@gerhold.net>
+        Mon, 22 Jul 2019 05:31:05 -0400
+Received: from verein.lst.de ([213.95.11.211]:58727 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728991AbfGVJbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:31:03 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2FC9B68BFE; Mon, 22 Jul 2019 11:31:00 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 11:30:59 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] firmware: qcom_scm: fix error for incompatible pointer
+Message-ID: <20190722093059.GA29538@lst.de>
+References: <20190719134303.7617-1-minwoo.im.dev@gmail.com> <7ea51e42-ab8a-e4e2-1833-651e2dabca3c@free.fr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ea51e42-ab8a-e4e2-1833-651e2dabca3c@free.fr>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the "longcheer" vendor prefix for Longcheer Technology Co., Ltd.,
-an "industry-leading service provider of mobile phone design
-and product delivery". (http://www.longcheer.com)
+On Mon, Jul 22, 2019 at 10:38:55AM +0200, Marc Gonzalez wrote:
+> > In file included from drivers/firmware/qcom_scm.c:12:0:
+> > ./include/linux/dma-mapping.h:636:21: note: expected ‘dma_addr_t * {aka long long unsigned int *}’ but argument is of type ‘phys_addr_t * {aka unsigned int *}’
+> >  static inline void *dma_alloc_coherent(struct device *dev, size_t size,
+> >                      ^~~~~~~~~~~~~~~~~~
+> > ```
+> > 
+> > We just can cast phys_addr_t to dma_addr_t here.
+> 
+> IME, casting is rarely a proper solution.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+*nod*
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6992bbbbffab..7bcf340b6f38 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -529,6 +529,8 @@ patternProperties:
-     description: Linear Technology Corporation
-   "^logicpd,.*":
-     description: Logic PD, Inc.
-+  "^longcheer,.*":
-+    description: Longcheer Technology (Shanghai) Co., Ltd.
-   "^lsi,.*":
-     description: LSI Corp. (LSI Logic)
-   "^lwn,.*":
--- 
-2.22.0
-
+ptr_phys probably should be a dma_addr_t.  Unless this driver is so
+magic that it really wants a physical and not a dma address, in which
+case it needs to use alloc_pages instead of dma_alloc_coherent
+and then call page_to_phys on the returned page, and a very big comment
+explaining why it is so special.
