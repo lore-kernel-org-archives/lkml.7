@@ -2,57 +2,72 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF6CC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520E6C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4B321E70
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3356A21E70
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfGVITu (ORCPT
+        id S1728279AbfGVIVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:19:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35806 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfGVITt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:19:49 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hpTXi-0001Ce-9t; Mon, 22 Jul 2019 10:19:34 +0200
-Date:   Mon, 22 Jul 2019 10:19:32 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Joerg Roedel <jroedel@suse.de>
-cc:     Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 3/3] mm/vmalloc: Sync unmappings in vunmap_page_range()
-In-Reply-To: <20190722081115.GH19068@suse.de>
-Message-ID: <alpine.DEB.2.21.1907221018460.1782@nanos.tec.linutronix.de>
-References: <20190719184652.11391-1-joro@8bytes.org> <20190719184652.11391-4-joro@8bytes.org> <20190722081115.GH19068@suse.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 22 Jul 2019 04:21:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:33424 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726944AbfGVIVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:21:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7C41344;
+        Mon, 22 Jul 2019 01:21:04 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CC003F71F;
+        Mon, 22 Jul 2019 01:21:02 -0700 (PDT)
+Subject: Re: [PATCH v9 2/8] sched/core: Streamlining calls to task_rq_unlock()
+To:     Juri Lelli <juri.lelli@redhat.com>, peterz@infradead.org,
+        mingo@redhat.com, rostedt@goodmis.org, tj@kernel.org
+Cc:     linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
+        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
+        longman@redhat.com, cgroups@vger.kernel.org
+References: <20190719140000.31694-1-juri.lelli@redhat.com>
+ <20190719140000.31694-3-juri.lelli@redhat.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <50f00347-ffb3-285c-5a7d-3a9c5f813950@arm.com>
+Date:   Mon, 22 Jul 2019 10:21:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190719140000.31694-3-juri.lelli@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019, Joerg Roedel wrote:
+On 7/19/19 3:59 PM, Juri Lelli wrote:
+> From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> Srewed up the subject :(, it needs to be
+[...]
 
-Un-Srewed it :)
-   ^^^^^^
+> @@ -4269,8 +4269,8 @@ static int __sched_setscheduler(struct task_struct *p,
+>  			 */
+>  			if (!cpumask_subset(span, &p->cpus_allowed) ||
+
+This doesn't apply cleanly on v5.3-rc1 anymore due to commit
+3bd3706251ee ("sched/core: Provide a pointer to the valid CPU mask").
+
+>  			    rq->rd->dl_bw.bw == 0) {
+> -				task_rq_unlock(rq, p, &rf);
+> -				return -EPERM;
+> +				retval = -EPERM;
+> +				goto unlock;
+>  			}
+>  		}
+>  #endif
+
+[...]
