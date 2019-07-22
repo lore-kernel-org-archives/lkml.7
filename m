@@ -2,102 +2,116 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77855C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8DCC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5062F21903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34B121985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817162;
-	bh=CAvAH48QRVNAQK8ckY/NBzrah1VdPNSSirFJCkaDOT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yyMRwQEcWYXJMP1xbUy/Y5eNn/8L4PizgdvvOlk/Zca9OoAM15fuRiU1LFPwgKD81
-	 P7I6xzhq97ORu+FBn4JrP7rayO5Un9kyyoIAHIVpH8q98uFTUj1lmpMzR5vZWZmC9S
-	 HR57QajZWsen9ldpSP/c17+noYG+OoyobW6dEtFU=
+	s=default; t=1563817166;
+	bh=5LkOgcPDaLCwL5UVlzn70Wlc+nI4zLnqaopdl77+VnM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mVI6NHpWplcNbqw03td2b7yeml3XHHd2xbKUh7Pdpyn7JZO817eGWI4+SYVmBAZbS
+	 1IosTFkbVQn6QPNSTHfSH/O381UT4QqLYw1So8qBeuCgLJ3Oa1baH+M+pQkp1v7V4u
+	 UrH1xTzFYCxCPVfLE0UWhotV1SYLuldMKl8TX49E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfGVRjV (ORCPT
+        id S1729399AbfGVRjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:39:21 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41693 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbfGVRjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:39:18 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so71613042ioj.8;
-        Mon, 22 Jul 2019 10:39:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wjVlpYQpZUbO09orLG9AZ6U1/SPFAZfxcKpbcS0Hb5E=;
-        b=FWyOqNxQHH7yho5+sxcTPAFyritixUoY/nXnHNostYsp18cwcctYEQk+a1vStNnnPZ
-         a+mvCp7tDpE0/mG9WjqQnt6VUkFN2vxATdVPMRknLw5dPkHN83jHT6/fs1u7IYCSac2l
-         yMclkySkffkugDl8nWKJskoLJsbk2znLfMfsw3aunc/THlxpRVIymyenv7Bkk70L4JhZ
-         aSs9TSAXM0g4n/qHr1IkbmVshp6KoY8ziIU8vriDhnWeWDtikMphXRHJHPgdP7hKQ+15
-         mTCwCCXaVOqlokSEKkRYVhFFQuvgjox2jLO1gDdGdJa2XfeeiTbvfaqBn0rjJhoDlkom
-         yrBQ==
-X-Gm-Message-State: APjAAAV/WY767og7vclfWdaa2khjyiSVHr4s3BWxpffaD/cyUhdACm7o
-        tfZgC7zQgIIQACyVtCkmGw==
-X-Google-Smtp-Source: APXvYqxApqbNIx0zyoWtwrvfuA/FYi/DJQeGo5LXD2cSKwEdYujoOCwjHXvKo/HVr55kQ3JiI42Arg==
-X-Received: by 2002:a6b:7606:: with SMTP id g6mr11597267iom.288.1563817157557;
-        Mon, 22 Jul 2019 10:39:17 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id z19sm52082738ioh.12.2019.07.22.10.39.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 10:39:16 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 11:39:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [v3 1/4] dt-bindngs: display: panel: Add BOE tv101wum-n16 panel
- bindings
-Message-ID: <20190722173916.GA26308@bogus>
-References: <20190626025400.109567-1-jitao.shi@mediatek.com>
- <20190626025400.109567-2-jitao.shi@mediatek.com>
+        Mon, 22 Jul 2019 13:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbfGVRjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:39:23 -0400
+Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8763B21901;
+        Mon, 22 Jul 2019 17:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563817162;
+        bh=5LkOgcPDaLCwL5UVlzn70Wlc+nI4zLnqaopdl77+VnM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PM9jGfr7QDFj6nn6N73X+7gD5uE7V4YDQdZrr/C77Ly08okqCZ2PVwJriLeWAJHqZ
+         ADB/JuCJqEab7h1m4Pm94gRGSbMexdzoxLSjTPVdv0OfmK09LvhrMspIs4ic3IDWGY
+         Vp/HPfmhraonqCmtuHr20g78EqdIfhRfMnwuX5wg=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>
+Subject: [PATCH 04/37] perf trace: Add pointer to BPF object containing __augmented_syscalls__
+Date:   Mon, 22 Jul 2019 14:38:06 -0300
+Message-Id: <20190722173839.22898-5-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
+References: <20190722173839.22898-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626025400.109567-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 10:53:57 +0800, Jitao Shi wrote:
-> Add documentation for boe tv101wum-n16 panel.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
-> 
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So that we can use it when looking for other components of that object
+file, such as other programs to add to the BPF_MAP_TYPE_PROG_ARRAY and
+use with bpf_tail_call().
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-1ibmz7ouv6llqxajy7m8igtd@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-trace.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4f0bbffee05f..6aa080845a84 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -96,6 +96,7 @@ struct trace {
+ 	struct perf_evlist	*evlist;
+ 	struct machine		*host;
+ 	struct thread		*current;
++	struct bpf_object	*bpf_obj;
+ 	struct cgroup		*cgroup;
+ 	u64			base_time;
+ 	FILE			*output;
+@@ -3895,6 +3896,20 @@ int cmd_trace(int argc, const char **argv)
+ 
+ 	if (evsel) {
+ 		trace.syscalls.events.augmented = evsel;
++
++		evsel = perf_evlist__find_tracepoint_by_name(trace.evlist, "raw_syscalls:sys_enter");
++		if (evsel == NULL) {
++			pr_err("ERROR: raw_syscalls:sys_enter not found in the augmented BPF object\n");
++			goto out;
++		}
++
++		if (evsel->bpf_obj == NULL) {
++			pr_err("ERROR: raw_syscalls:sys_enter not associated to a BPF object\n");
++			goto out;
++		}
++
++		trace.bpf_obj = evsel->bpf_obj;
++
+ 		trace__set_bpf_map_filtered_pids(&trace);
+ 		trace__set_bpf_map_syscalls(&trace);
+ 	}
+-- 
+2.21.0
+
