@@ -2,116 +2,98 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CB6C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AB4C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1FE21E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B1621BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfGVFSU (ORCPT
+        id S1726862AbfGVFVj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:18:20 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58252 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725795AbfGVFSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:18:20 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 393D483F44B3A87A86CF;
-        Mon, 22 Jul 2019 13:02:06 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 13:01:58 +0800
-Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
-To:     Amir Goldstein <amir73il@gmail.com>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-13-gaoxiang25@huawei.com>
- <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
-Date:   Mon, 22 Jul 2019 13:01:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 22 Jul 2019 01:21:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15257 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbfGVFVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:21:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jul 2019 22:21:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,293,1559545200"; 
+   d="scan'208";a="174125977"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga006.jf.intel.com with ESMTP; 21 Jul 2019 22:21:37 -0700
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 21 Jul 2019 22:21:37 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
+ ORSMSX155.amr.corp.intel.com ([169.254.7.34]) with mapi id 14.03.0439.000;
+ Sun, 21 Jul 2019 22:21:37 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: RE: [PATCH 1/1] iommu/vt-d: Correctly check format of page table in
+ debugfs
+Thread-Topic: [PATCH 1/1] iommu/vt-d: Correctly check format of page table
+ in debugfs
+Thread-Index: AQHVPp8ipwYNQGhYs0KyxJ8SpXgi1qbWGSVg
+Date:   Mon, 22 Jul 2019 05:21:37 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F4F9354AF@ORSMSX114.amr.corp.intel.com>
+References: <20190720020126.9974-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20190720020126.9974-1-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjg4NWZmYjQtYjJlZS00NWM1LTlhZWMtYjRkN2Q3MWE0OGFiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWkw4aDBPbTZ2NklUZFwvUDFjdkNXWk9VQWNkWlMxa2F1QitpSm5WazRLRmhJRXkwQWhzeFBPNjRudFwvRllCdUVCIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amir,
+Hi Allen,
 
-On 2019/7/22 12:39, Amir Goldstein wrote:
-> On Mon, Jul 22, 2019 at 5:54 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
->>
->> Currently kernel has scattered tagged pointer usages
->> hacked by hand in plain code, without a unique and
->> portable functionset to highlight the tagged pointer
->> itself and wrap these hacked code in order to clean up
->> all over meaningless magic masks.
->>
->> This patch introduces simple generic methods to fold
->> tags into a pointer integer. Currently it supports
->> the last n bits of the pointer for tags, which can be
->> selected by users.
->>
->> In addition, it will also be used for the upcoming EROFS
->> filesystem, which heavily uses tagged pointer pproach
->>  to reduce extra memory allocation.
->>
->> Link: https://en.wikipedia.org/wiki/Tagged_pointer
+> diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-
+> iommu-debugfs.c
+> index 73a552914455..e31c3b416351 100644
+> --- a/drivers/iommu/intel-iommu-debugfs.c
+> +++ b/drivers/iommu/intel-iommu-debugfs.c
+> @@ -235,7 +235,7 @@ static void ctx_tbl_walk(struct seq_file *m, struct
+> intel_iommu *iommu, u16 bus)
+>  		tbl_wlk.ctx_entry = context;
+>  		m->private = &tbl_wlk;
 > 
-> Well, it won't do much good for other kernel users in fs/erofs/ ;-)
+> -		if (pasid_supported(iommu) && is_pasid_enabled(context)) {
+> +		if (dmar_readq(iommu->reg + DMAR_RTADDR_REG) &
+> DMA_RTADDR_SMT) {
 
-Thanks for your reply and interest in this patch.... :)
+Thanks for adding this, I do believe this is a good addition but I also think that we might 
+need "is_pasid_enabled()" as well. It checks if PASIDE bit in context entry is enabled or not.
 
-Sigh... since I'm not sure kernel folks could have some interests in that stuffs.
+I am thinking that even though DMAR might be using scalable root and context table, the entry 
+itself should have PASIDE bit set. Did I miss something here?
 
-Actually at the time once I coded EROFS I found tagged pointer had 2 main advantages:
-1) it saves an extra field;
-2) it can keep the whole stuff atomicly...
-And I observed the current kernel uses tagged pointer all around but w/o a proper wrapper...
-and EROFS heavily uses tagged pointer... So I made a simple tagged pointer wrapper
-to avoid meaningless magic masks and type casts in the code...
+And I also think a macro would be better so that it could reused elsewhere (if need be).
 
-> 
-> I think now would be a right time to promote this facility to
-> include/linux as you initially proposed.
-> I don't recall you got any objections. No ACKs either, but I think
-> that was the good kind of silence (?)
-
-Yes, no NAK no ACK...(it seems the ordinary state for all EROFS stuffs... :'( sigh...)
-Therefore I decided to leave it in fs/erofs/ in this series...
-
-> 
-> You might want to post the __fdget conversion patch [1] as a
-> bonus patch on top of your series.
-
-I am not sure if another potential users could be quite happy with my ("sane?" or not)
-implementation... (Is there some use scenerios in overlayfs and fanotify?...)
-
-and I'm not sure Al could accept __fdget conversion (I just wanted to give a example then...)
-
-Therefore, I tend to keep silence and just promote EROFS... some better ideas?...
-
-Thanks,
-Gao Xiang
+Regards,
+Sai
