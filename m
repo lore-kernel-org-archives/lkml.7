@@ -2,71 +2,121 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F38C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A913C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54B021921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F12E21921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="jDRY8s9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730689AbfGVNon (ORCPT
+        id S1730655AbfGVNol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:44:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40296 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfGVNom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:44:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2EB874627A;
-        Mon, 22 Jul 2019 13:44:42 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4726B60497;
-        Mon, 22 Jul 2019 13:44:40 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, nd <nd@arm.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        "Sergei Trofimovich" <slyfox@gentoo.org>,
-        Networking <netdev@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH glibc] Linux: Include <linux/sockios.h> in <bits/socket.h> under __USE_MISC
-References: <87ftmys3un.fsf@oldenburg2.str.redhat.com>
-        <CAK8P3a0hC4wvjwCi4=DCET3C4qARMY6c58ffjwG3b1ZPM6kr-A@mail.gmail.com>
-        <2431941f-3aac-d31f-e6f5-8ed2ed7b2e5c@arm.com>
-Date:   Mon, 22 Jul 2019 15:44:39 +0200
-In-Reply-To: <2431941f-3aac-d31f-e6f5-8ed2ed7b2e5c@arm.com> (Szabolcs Nagy's
-        message of "Mon, 22 Jul 2019 13:41:07 +0000")
-Message-ID: <87lfwqqj3s.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 22 Jul 2019 09:44:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38123 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728637AbfGVNol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 09:44:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so39498139wrr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 06:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6OE2vgUPZ5yWbUkDxF2/EfNu3Dftuv+SUPLz3txgSn0=;
+        b=jDRY8s9DB/0Rdp9EuXO3MDPJTyhubw2FhY+I8rkA7gKejbLftYHvixid1ZPoPkn7ts
+         A9Nt0ELbEQ+/mnmPAbuZJmaKi0ux4J1MO9XL/EyAnVRDeRvZfwqvUc++Ubl3EYf8e3Sy
+         5kQgt3VZWaBETd569WwmaFNrKER5ta73sPjxhbRBvYk4TMIt9TU1tH/jJx/xRDpxl6ND
+         cqVIo0A69rGe/3GNQFG+6aa4luSVqjzMBWjvzxHiwouptlDVdrwOcKzz1Xa7JljTKa+m
+         /AEYM3KnHHCq1RbWGM9tJ6BQTPX5Jy7r16BNc/owfeuNU3e+zArBIS8uq8uVLMstI3w2
+         M4Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6OE2vgUPZ5yWbUkDxF2/EfNu3Dftuv+SUPLz3txgSn0=;
+        b=RKxfIhvZUMprbI4MyvA3iJLObHJsnBp/UBuqZJUomHwst0n2Rv3Y0FIBa4LLRWurAE
+         VVZoGwIVXpjoX29jqj1Z9pLj/QtP2tY2oTpwHnCu6mmzrg9GcJtqGJIMkIeSwL5LqTmL
+         Xc3Wp2z4zrL9uOPlJpoQSSdslvUWpBTmzDkgin+/aCV2WVAqsBh+/vaTzRHz/7+LNXFu
+         l7nkuBzKkk2ayKhU8Km9nogKY9zm+fQ+0rdRmdU+azO6cs8HHiegg2cSdgWIQFeFrTgF
+         7sA98FCtCSjAraPPTqwetvP1AIxAhOiOoHiOXQ5/pY0fvlukTDJ7NBWTKGEjxSKpAdwU
+         W4Bg==
+X-Gm-Message-State: APjAAAVnKKjN73+lag1ezwoGvWPFx8eAv5818imoNzL0iv9ooWcnUYmQ
+        1ILr4KAG6PN8iiS40LhXWW0=
+X-Google-Smtp-Source: APXvYqwvf5snwzuBm1QlzKK/QuN97vn9/tXDk4UIUnMrk9mGyCSxLMLSb1VOWE60YCYGqOxJSBkzkg==
+X-Received: by 2002:adf:f246:: with SMTP id b6mr47585965wrp.92.1563803079035;
+        Mon, 22 Jul 2019 06:44:39 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id p6sm40652484wrq.97.2019.07.22.06.44.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 06:44:38 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Lechner <david@lechnology.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/9] ARM: davinci: da850-evm: remove more legacy GPIO calls
+Date:   Mon, 22 Jul 2019 15:44:14 +0200
+Message-Id: <20190722134423.26555-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 22 Jul 2019 13:44:42 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Szabolcs Nagy:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> (note: in musl these ioctl macros are in sys/ioctl.h
-> which is not a posix header so namespace rules are
-> less strict than for sys/socket.h and users tend to
-> include it for ioctl())
+This is another small step on the path to liberating davinci from legacy
+GPIO API calls and shrinking the davinci GPIO driver by not having to
+support the base GPIO number anymore.
 
-<sys/ioctl.h> can be confusing because some of the constants may depend
-on types that aren't declared by including the header.  This makes their
-macros unusable.  Defining ioctl constants in headers which also provide
-the matching types avoids that problem at least, also it can introduce
-namespace issues.
+This time we're removing the legacy calls used indirectly by the LCDC
+fbdev driver.
 
-Thanks,
-Florian
+First two patches enable the GPIO backlight driver in
+davinci_all_defconfig.
+
+Patch 3/12 models the backlight GPIO as an actual GPIO backlight device.
+
+Patches 4-6 extend the fbdev driver with regulator support and convert
+the da850-evm board file to using it.
+
+Last three patches are improvements to the da8xx fbdev driver since
+we're already touching it in this series.
+
+v1 -> v2:
+- dopped the gpio-backlight patches from this series as since v5.3-rc1 we
+  can probe the module with neither the OF node nor platform data
+- collected review and ack tags
+- rebased on top of v5.3-rc1
+
+Bartosz Golaszewski (9):
+  ARM: davinci: refresh davinci_all_defconfig
+  ARM: davinci_all_defconfig: enable GPIO backlight
+  ARM: davinci: da850-evm: model the backlight GPIO as an actual device
+  fbdev: da8xx: add support for a regulator
+  ARM: davinci: da850-evm: switch to using a fixed regulator for lcdc
+  fbdev: da8xx: remove panel_power_ctrl() callback from platform data
+  fbdev: da8xx-fb: use devm_platform_ioremap_resource()
+  fbdev: da8xx-fb: drop a redundant if
+  fbdev: da8xx: use resource management for dma
+
+ arch/arm/configs/davinci_all_defconfig  |  27 ++----
+ arch/arm/mach-davinci/board-da850-evm.c |  90 +++++++++++++-----
+ drivers/video/fbdev/da8xx-fb.c          | 118 +++++++++++++-----------
+ include/video/da8xx-fb.h                |   1 -
+ 4 files changed, 141 insertions(+), 95 deletions(-)
+
+-- 
+2.21.0
+
