@@ -2,161 +2,90 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD78CC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB28C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E54521E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QNaHBbC6"
+	by mail.kernel.org (Postfix) with ESMTP id EC76622296
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfGVIwO (ORCPT
+        id S1728553AbfGVIx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:52:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54461 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728311AbfGVIwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:52:14 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M8q6V73748923
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 22 Jul 2019 01:52:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M8q6V73748923
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563785526;
-        bh=GNjQxzTPFOrev1+HUrSm86YVIVKBA1iCM6sgkS8a170=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=QNaHBbC69lfOrUm/ibr446TXxo3bQXRFhJzuIvhONc4iAMJ118VPDW6S3rSvJeBbJ
-         I8YpOeD9bAd2LxLbq/LvwxMWZXA2f6SuUnraP6UbS0okWXl5CsTr9eFIJrl9rb5Kpz
-         t4dvERWA7N5bAI+kfNVZ2Q7x/68397VRPjOLS4+oDgRa2N+9ohKO2Sj5X++Svkfvqr
-         SQ1ApmfLA4geZE18Y6Mxe0GcN3PcE2tzth5gHf+ne7UfDe8VUprIgQkOwL684S/vVo
-         u1zuvSQ8oJLz/2hmDiUgGgoiT7nNAXubHiShEW1FWRKr8f4qAGGE5UJa6pWUj2Xp+t
-         lbNe3/rYkWt6A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M8q51Y3748920;
-        Mon, 22 Jul 2019 01:52:05 -0700
-Date:   Mon, 22 Jul 2019 01:52:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Hans de Goede <tipbot@zytor.com>
-Message-ID: <tip-d02f1aa39189e0619c3525d5cd03254e61bf606a@git.kernel.org>
-Cc:     tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org,
-        hdegoede@redhat.com, linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
-In-Reply-To: <20190721152418.11644-1-hdegoede@redhat.com>
-References: <20190721152418.11644-1-hdegoede@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/sysfb_efi: Add quirks for some devices with
- swapped width and height
-Git-Commit-ID: d02f1aa39189e0619c3525d5cd03254e61bf606a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 22 Jul 2019 04:53:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56386 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfGVIx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:53:28 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 69A6D30BC57D;
+        Mon, 22 Jul 2019 08:53:28 +0000 (UTC)
+Received: from localhost (ovpn-117-250.ams2.redhat.com [10.36.117.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A4E65DA2E;
+        Mon, 22 Jul 2019 08:53:25 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 09:53:19 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v4 3/5] vsock/virtio: fix locking in
+ virtio_transport_inc_tx_pkt()
+Message-ID: <20190722085319.GC24934@stefanha-x1.localdomain>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-4-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
 Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-4-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 22 Jul 2019 08:53:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d02f1aa39189e0619c3525d5cd03254e61bf606a
-Gitweb:     https://git.kernel.org/tip/d02f1aa39189e0619c3525d5cd03254e61bf606a
-Author:     Hans de Goede <hdegoede@redhat.com>
-AuthorDate: Sun, 21 Jul 2019 17:24:18 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 22 Jul 2019 10:47:11 +0200
 
-x86/sysfb_efi: Add quirks for some devices with swapped width and height
+--Clx92ZfkiYIKRjnr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Some Lenovo 2-in-1s with a detachable keyboard have a portrait screen but
-advertise a landscape resolution and pitch, resulting in a messed up
-display if the kernel tries to show anything on the efifb (because of the
-wrong pitch).
+On Wed, Jul 17, 2019 at 01:30:28PM +0200, Stefano Garzarella wrote:
+> fwd_cnt and last_fwd_cnt are protected by rx_lock, so we should use
+> the same spinlock also if we are in the TX path.
+>=20
+> Move also buf_alloc under the same lock.
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  include/linux/virtio_vsock.h            | 2 +-
+>  net/vmw_vsock/virtio_transport_common.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-Fix this by adding a new DMI match table for devices which need to have
-their width and height swapped.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-At first it was tried to use the existing table for overriding some of the
-efifb parameters, but some of the affected devices have variants with
-different LCD resolutions which will not work with hardcoded override
-values.
+--Clx92ZfkiYIKRjnr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1730783
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190721152418.11644-1-hdegoede@redhat.com
+-----BEGIN PGP SIGNATURE-----
 
----
- arch/x86/kernel/sysfb_efi.c | 46 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl01eX8ACgkQnKSrs4Gr
+c8jE7AgAs5N6O7elzpZi4u/g75m8dfsiRpiyEG+NXL6ahFUWKw98b80S/q2RNHZR
+udZDGbmyVjnwH1pok2YnjdwcqCq515JelqAdv7CdhhzzRZdwiHGMQh8uqHYDfzGZ
+R2V0hSJAiSG21HxP+RBG6VoWCoBUeQU/vce3jkYsxT6F64tUqeqxJd/C+AcRHOKk
+dxxTmtn2NdRRs6Hofl5nW0ulYG/wxRRtN3dTf+V/FKkXLYv1197AD0+JXZnTRw2s
+159FbLvqqdFzBGt2HORUTR+7aTcBuILeDuLW8gJT6JrFF2MIw1B0VaSB0Lbv0mN6
+tuZAmnZlcurH5zz8i5XOJ5mugHY72w==
+=VeGT
+-----END PGP SIGNATURE-----
 
-diff --git a/arch/x86/kernel/sysfb_efi.c b/arch/x86/kernel/sysfb_efi.c
-index 8eb67a670b10..653b7f617b61 100644
---- a/arch/x86/kernel/sysfb_efi.c
-+++ b/arch/x86/kernel/sysfb_efi.c
-@@ -230,9 +230,55 @@ static const struct dmi_system_id efifb_dmi_system_table[] __initconst = {
- 	{},
- };
- 
-+/*
-+ * Some devices have a portrait LCD but advertise a landscape resolution (and
-+ * pitch). We simply swap width and height for these devices so that we can
-+ * correctly deal with some of them coming with multiple resolutions.
-+ */
-+static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
-+	{
-+		/*
-+		 * Lenovo MIIX310-10ICR, only some batches have the troublesome
-+		 * 800x1280 portrait screen. Luckily the portrait version has
-+		 * its own BIOS version, so we match on that.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "MIIX 310-10ICR"),
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1HCN44WW"),
-+		},
-+	},
-+	{
-+		/* Lenovo MIIX 320-10ICR with 800x1280 portrait screen */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
-+					"Lenovo MIIX 320-10ICR"),
-+		},
-+	},
-+	{
-+		/* Lenovo D330 with 800x1280 or 1200x1920 portrait screen */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
-+					"Lenovo ideapad D330-10IGM"),
-+		},
-+	},
-+	{},
-+};
-+
- __init void sysfb_apply_efi_quirks(void)
- {
- 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI ||
- 	    !(screen_info.capabilities & VIDEO_CAPABILITY_SKIP_QUIRKS))
- 		dmi_check_system(efifb_dmi_system_table);
-+
-+	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI &&
-+	    dmi_check_system(efifb_dmi_swap_width_height)) {
-+		u16 temp = screen_info.lfb_width;
-+
-+		screen_info.lfb_width = screen_info.lfb_height;
-+		screen_info.lfb_height = temp;
-+		screen_info.lfb_linelength = 4 * screen_info.lfb_width;
-+	}
- }
+--Clx92ZfkiYIKRjnr--
