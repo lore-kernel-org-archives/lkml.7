@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE623C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA33BC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A5A21E72
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C266821955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ym0q0ag5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAeg5YAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfGVF5O (ORCPT
+        id S1727620AbfGVF5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:57:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36206 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfGVF5J (ORCPT
+        Mon, 22 Jul 2019 01:57:20 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44855 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfGVF5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:57:09 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k21so39509961edq.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 22:57:07 -0700 (PDT)
+        Mon, 22 Jul 2019 01:57:17 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so39452486edr.11
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 22:57:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=iMlH/BYqbAh4REkdZXe54Nv2D1l55hhhpJHFooXoPH0=;
-        b=Ym0q0ag5yqQqLX/IsCxjkPoRHUyTN5NoYbQvyfK8War1pID/3YChEiEjhavjfOk3UU
-         2ykmSz5cS7SUuhYcviJls6J1SwWLuAQozyFl1lXn7Awk2IYQmToDgSOhw8qghRymhnJ+
-         yC8j4IXCGIeWw1c4wIrc8J2n8KlcuXue6fVtgFwgRGuS10SkWQTNQGdwmNHviffDqn4b
-         c7n92Eb+7LSQDkmb8h4XS5doko3q2Jt4Dw34cE2cboG+vI1SvVRDYCOcumcawJbCjcrJ
-         77UzTovNf3hqYxkmeGmoVEYrtnx9HFdeywFbU08/Th/PXjFIUxz17lQGZlciBrB9eZxp
-         yIuQ==
+        bh=JWav04oSOMMfjnrIfRfnbnhq134i7LRODNuQ+JDA4d8=;
+        b=iAeg5YAbgEc4aYUgaNNECEsRpX+e9jc1I5YBQtLvCy5UcbJE62lDIR8qMw5Uo0URLB
+         OR5S1U843vWDtFQk2NDReGy4Qxb7N98CbYzYs19BsFtoqLD5DWV07b8V1JPSFcBXbjyW
+         HWYtON8kw3CBY7KNYNNyGUBHFOA2grIb+ldo42JgaM/4i3ZcSJ6dGqY8b5ov1FKoVBoE
+         u87X+cv6T+p3shg/9BvIHVmZMWjV6L+fwDaG0iRgxd82oLNaJqJYY0HpMvnJNy+GF4+3
+         1xdSCLtQ22Jf1yyhsfFqpq9MU4Nvy6SLNJPh91tNdAwCOX3JwyfS85HihQlxDN91dRgF
+         e32w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=iMlH/BYqbAh4REkdZXe54Nv2D1l55hhhpJHFooXoPH0=;
-        b=ufHE1vRVGS3C2gricxJbyQLKWMXYaQh67KmFV2C3A//TYBuwuA9j2eYAqMg5qzmHq7
-         HA/PnPqKn9oJCigEvMHuGp+zO4K3YINAc/j/E+ZjfUHnbyrUHikBnlbVFI08O7HZ+/xx
-         fESm4m972OgYoN3Xp0bp7JjpRl+NKzfSCYd1UXAmFWa0NJy5J+ktVlzNwDOoLcrfalqi
-         O4sAc0ixTP9HDP6MpTFWUCxWLMy9kiChlqC7pK3QMSMz8WzMiXn6eKuy5dmZxyiPFH8I
-         Qx4OKqXndeHgDPkxzSUeuKcA7s3LWuyxUdl1yw2FEHnp+vthx9Dty8/EMdzvunMrOGmj
-         NRUA==
-X-Gm-Message-State: APjAAAWyhBXfUKgmpdx+CA4pRvEvsX9vGQA6BCdOtK+lLw4F1smr/Clr
-        o18wrqHjYov6n1Rux7L/zKY=
-X-Google-Smtp-Source: APXvYqyMcOm1g8pB9ctwTxhdfq5bvQ4iIn4xrBML8nSEMEUpaszUlrmNnvVIPgwihnggFB/zjxendA==
-X-Received: by 2002:a50:9999:: with SMTP id m25mr59306263edb.183.1563775027233;
-        Sun, 21 Jul 2019 22:57:07 -0700 (PDT)
+        bh=JWav04oSOMMfjnrIfRfnbnhq134i7LRODNuQ+JDA4d8=;
+        b=YS5qXYoHfhcKQ3jUpe/uVMzXsKdv8mzwWZohJLguGg+GV2cke1lhVfkQyUE4do8RQ/
+         3PkAebFArLNKML2ibOf/Bn9PpP9YfVSduFlm4kKE19ulr0eO/i3JSrUndNLY7RfB+0Oy
+         i4lBbc/26GSFdBvmUP0QUlzFsNpXNZtwCVXqmj65o90sA5x3+jAnmALG14G2W+mk/Do7
+         2rq4lhq7v19WEiZY3EXkMjZGDxLV4AQvHfIaf4m578oGxu4Y5un2nlc3BSz8c8hvr+g7
+         4G75ocab8tUieKBr2xlCy+NutgvR1FruCfxAFr1I1eSStMOW4kEIZ/MoVxC90Lhzenii
+         u85w==
+X-Gm-Message-State: APjAAAU8T3AutSwTd1Lf51Hv0ZLoKvJjlArCPcFsLp4BOR5WBl7eckU7
+        SQu/o2QYZsZaMRpRDnM9ttE=
+X-Google-Smtp-Source: APXvYqzUeEvZzXubeuDVswHFU5kKDVfDWDqDmcg24fW79naD2l793eQa7IXung57mhGRdtZ8MAtoew==
+X-Received: by 2002:a50:89b4:: with SMTP id g49mr58295914edg.39.1563775036035;
+        Sun, 21 Jul 2019 22:57:16 -0700 (PDT)
 Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
-        by smtp.gmail.com with ESMTPSA id a6sm10351725eds.19.2019.07.21.22.57.05
+        by smtp.gmail.com with ESMTPSA id a6sm10351725eds.19.2019.07.21.22.57.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 22:57:06 -0700 (PDT)
+        Sun, 21 Jul 2019 22:57:15 -0700 (PDT)
 From:   shiva.linuxworks@gmail.com
 X-Google-Original-From: sshivamurthy@micron.com
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -72,9 +72,9 @@ To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Jeff Kletsky <git-commits@allycomm.com>,
         Chuanhong Guo <gch981213@gmail.com>,
         liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [PATCH 4/8] mtd: spinand: enabled parameter page support
-Date:   Mon, 22 Jul 2019 07:56:17 +0200
-Message-Id: <20190722055621.23526-5-sshivamurthy@micron.com>
+Subject: [PATCH 8/8] mtd: spinand: micron: Enable micron flashes with multi-die
+Date:   Mon, 22 Jul 2019 07:56:21 +0200
+Message-Id: <20190722055621.23526-9-sshivamurthy@micron.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722055621.23526-1-sshivamurthy@micron.com>
 References: <20190722055621.23526-1-sshivamurthy@micron.com>
@@ -85,192 +85,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shivamurthy Shastri <sshivamurthy@micron.com>
 
-Some of the SPI NAND devices has parameter page, which is similar to
-ONFI table.
-
-But, it may not be self sufficient to propagate all the required
-parameters. Fixup function has been added in struct manufacturer to
-accommodate this.
+Some of the Micron flashes has multi-die, and need to select the die
+each time while accessing it.
 
 Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
 ---
- drivers/mtd/nand/spi/core.c | 134 ++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spinand.h |   3 +
- 2 files changed, 137 insertions(+)
+ drivers/mtd/nand/spi/micron.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 89f6beefb01c..7ae76dab9141 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -400,6 +400,131 @@ static int spinand_lock_block(struct spinand_device *spinand, u8 lock)
- 	return spinand_write_reg_op(spinand, REG_BLOCK_LOCK, lock);
+diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+index 1e28ea3d1362..fa2b43caf39d 100644
+--- a/drivers/mtd/nand/spi/micron.c
++++ b/drivers/mtd/nand/spi/micron.c
+@@ -90,6 +90,19 @@ static int micron_ecc_get_status(struct spinand_device *spinand,
+ 	return -EINVAL;
  }
  
-+/**
-+ * spinand_read_param_page_op - Read parameter page operation
-+ * @spinand: the spinand
-+ * @page: page number where parameter page tables can be found
-+ * @buf: buffer used to store the parameter page
-+ * @len: length of the buffer
-+ *
-+ * Read parameter page
-+ *
-+ * Returns 0 on success, a negative error code otherwise.
-+ */
-+static int spinand_parameter_page_read(struct spinand_device *spinand,
-+				       u8 page, void *buf, unsigned int len)
++static int micron_select_target(struct spinand_device *spinand,
++				unsigned int target)
 +{
-+	struct spi_mem_op pread_op = SPINAND_PAGE_READ_OP(page);
-+	struct spi_mem_op pread_cache_op =
-+				SPINAND_PAGE_READ_FROM_CACHE_OP(false,
-+								0,
-+								1,
-+								buf,
-+								len);
-+	u8 feature;
-+	u8 status;
-+	int ret;
++	struct spi_mem_op op = SPINAND_SET_FEATURE_OP(0xd0,
++						      spinand->scratchbuf);
 +
-+	if (len && !buf)
-+		return -EINVAL;
++	if (target == 1)
++		target = 0x40;
 +
-+	ret = spinand_read_reg_op(spinand, REG_CFG,
-+				  &feature);
-+	if (ret)
-+		return ret;
-+
-+	/* CFG_OTP_ENABLE is used to enable parameter page access */
-+	feature |= CFG_OTP_ENABLE;
-+
-+	spinand_write_reg_op(spinand, REG_CFG, feature);
-+
-+	ret = spi_mem_exec_op(spinand->spimem, &pread_op);
-+	if (ret)
-+		return ret;
-+
-+	ret = spinand_wait(spinand, &status);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = spi_mem_exec_op(spinand->spimem, &pread_cache_op);
-+	if (ret)
-+		return ret;
-+
-+	ret = spinand_read_reg_op(spinand, REG_CFG,
-+				  &feature);
-+	if (ret)
-+		return ret;
-+
-+	feature &= ~CFG_OTP_ENABLE;
-+
-+	spinand_write_reg_op(spinand, REG_CFG, feature);
-+
-+	return 0;
++	*spinand->scratchbuf = target;
++	return spi_mem_exec_op(spinand->spimem, &op);
 +}
 +
-+static int spinand_param_page_detect(struct spinand_device *spinand)
-+{
-+	struct mtd_info *mtd = spinand_to_mtd(spinand);
-+	struct nand_memory_organization *memorg;
-+	struct nand_onfi_params *p;
-+	struct nand_device *base = spinand_to_nand(spinand);
-+	int i, ret;
-+
-+	memorg = nanddev_get_memorg(base);
-+
-+	/* Allocate buffer to hold parameter page */
-+	p = kzalloc((sizeof(*p) * 3), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	ret = spinand_parameter_page_read(spinand, 0x01, p, sizeof(*p) * 3);
-+	if (ret) {
-+		ret = 0;
-+		goto free_param_page;
-+	}
-+
-+	for (i = 0; i < 3; i++) {
-+		if (onfi_crc16(ONFI_CRC_BASE, (u8 *)&p[i], 254) ==
-+				le16_to_cpu(p->crc)) {
-+			if (i)
-+				memcpy(p, &p[i], sizeof(*p));
-+			break;
-+		}
-+	}
-+
-+	if (i == 3) {
-+		const void *srcbufs[3] = {p, p + 1, p + 2};
-+
-+		pr_warn("Could not find a valid ONFI parameter page, trying bit-wise majority to recover it\n");
-+		nand_bit_wise_majority(srcbufs, ARRAY_SIZE(srcbufs), p,
-+				       sizeof(*p));
-+
-+		if (onfi_crc16(ONFI_CRC_BASE, (u8 *)p, 254) !=
-+				le16_to_cpu(p->crc)) {
-+			pr_err("ONFI parameter recovery failed, aborting\n");
-+			goto free_param_page;
-+		}
-+	}
-+
-+	parse_onfi_params(memorg, p);
-+
-+	mtd->writesize = memorg->pagesize;
-+	mtd->erasesize = memorg->pages_per_eraseblock * memorg->pagesize;
-+	mtd->oobsize = memorg->oobsize;
-+
-+	/* Manufacturers may interpret the parameter page differently */
-+	if (spinand->manufacturer->ops->fixup_param_page)
-+		spinand->manufacturer->ops->fixup_param_page(spinand, p);
-+
-+	/* Identification done, free the full parameter page and exit */
-+	ret = 1;
-+
-+free_param_page:
-+	kfree(p);
-+
-+	return ret;
-+}
-+
- static int spinand_check_ecc_status(struct spinand_device *spinand, u8 status)
+ static int micron_spinand_detect(struct spinand_device *spinand)
  {
- 	struct nand_device *nand = spinand_to_nand(spinand);
-@@ -911,6 +1036,15 @@ static int spinand_detect(struct spinand_device *spinand)
- 		return ret;
- 	}
+ 	const struct spi_mem_op *op;
+@@ -105,6 +118,7 @@ static int micron_spinand_detect(struct spinand_device *spinand)
+ 	spinand->flags = 0;
+ 	spinand->eccinfo.get_status = micron_ecc_get_status;
+ 	spinand->eccinfo.ooblayout = &micron_ooblayout_ops;
++	spinand->select_target = micron_select_target;
  
-+	if (!spinand->base.memorg.pagesize) {
-+		ret = spinand_param_page_detect(spinand);
-+		if (ret <= 0) {
-+			dev_err(dev, "no parameter page for %*phN\n",
-+				SPINAND_MAX_ID_LEN, spinand->id.data);
-+			return -ENODEV;
-+		}
-+	}
-+
- 	if (nand->memorg.ntargets > 1 && !spinand->select_target) {
- 		dev_err(dev,
- 			"SPI NANDs with more than one die must implement ->select_target()\n");
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 4ea558bd3c46..fea820a20bc9 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -15,6 +15,7 @@
- #include <linux/mtd/nand.h>
- #include <linux/spi/spi.h>
- #include <linux/spi/spi-mem.h>
-+#include <linux/mtd/onfi.h>
- 
- /**
-  * Standard SPI NAND flash operations
-@@ -209,6 +210,8 @@ struct spinand_manufacturer_ops {
- 	int (*detect)(struct spinand_device *spinand);
- 	int (*init)(struct spinand_device *spinand);
- 	void (*cleanup)(struct spinand_device *spinand);
-+	void (*fixup_param_page)(struct spinand_device *spinand,
-+				 struct nand_onfi_params *p);
- };
- 
- /**
+ 	op = spinand_select_op_variant(spinand,
+ 				       &read_cache_variants);
 -- 
 2.17.1
 
