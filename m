@@ -6,44 +6,73 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A91C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57E4C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73DD2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909452171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfGVPoD (ORCPT
+        id S1728154AbfGVPqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:44:03 -0400
-Received: from 8bytes.org ([81.169.241.247]:44834 "EHLO theia.8bytes.org"
+        Mon, 22 Jul 2019 11:46:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34138 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbfGVPoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:44:03 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 29EA11F2; Mon, 22 Jul 2019 17:44:02 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 17:44:00 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] iommu/vt-d: Don't queue_iova() if there is no flush
- queue
-Message-ID: <20190722154400.GF12009@8bytes.org>
-References: <20190716213806.20456-1-dima@arista.com>
+        id S1727123AbfGVPqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:46:06 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1BC5F3082AF2;
+        Mon, 22 Jul 2019 15:46:06 +0000 (UTC)
+Received: from [10.36.116.45] (ovpn-116-45.ams2.redhat.com [10.36.116.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A6C3E5C21F;
+        Mon, 22 Jul 2019 15:46:01 +0000 (UTC)
+Subject: Re: [PATCH 1/2] dma-mapping: Protect dma_addressing_limited against
+ NULL dma_mask
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     eric.auger.pro@gmail.com, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190722145509.1284-1-eric.auger@redhat.com>
+ <20190722145509.1284-2-eric.auger@redhat.com> <20190722152637.GA3780@lst.de>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <e1e02286-ccf9-3335-28c8-0c6b122b05a1@redhat.com>
+Date:   Mon, 22 Jul 2019 17:46:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716213806.20456-1-dima@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190722152637.GA3780@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 22 Jul 2019 15:46:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:38:05PM +0100, Dmitry Safonov wrote:
->  BUG: spinlock bad magic on CPU#6, swapper/0/1
+Hi Christoph,
 
-Applied both patches to iommu/fixes.
+On 7/22/19 5:26 PM, Christoph Hellwig wrote:
+>>  static inline bool dma_addressing_limited(struct device *dev)
+>>  {
+>> -	return min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
+>> -		dma_get_required_mask(dev);
+>> +	return WARN_ON_ONCE(!dev->dma_mask) ? false :
+>> +		min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
+>> +			dma_get_required_mask(dev);
+> 
+> This should really use a separate if statement, but I can fix that
+> up when applying it.
+> 
+Just wondering why we don't use the dma_get_mask() accessor which
+returns DMA_BIT_MASK(32) in case the dma_mask is not set.
+
+Do you foresee any issue and would it still mandate to add dma_mask
+checks on each call sites?
+
+Thanks
+
+Eric
