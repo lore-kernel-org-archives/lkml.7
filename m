@@ -2,112 +2,122 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50C9C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9534DC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C1E21901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hnn/4QnM"
+	by mail.kernel.org (Postfix) with ESMTP id 6D9F421901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563820173;
+	bh=+hifrCpXNdFDmg+2TTik5WppGirIpU+5Uvg26SzjKVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bh19zudVrZXhlk12OOxwBsQ9wyCRDuba7NSdk13LzS9837Ot6D8ZpuDSzygF3ya1s
+	 yBvovLzEWyCqUCs/TXSz7iv3ncjJQpmLrZXgYhVb+MJ+NyM2nPHYN0GmwJiVC/1DYM
+	 kvd3zsyDr+Ofu56qKd30iXenmDsdnZpTn+areT2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfGVS3L (ORCPT
+        id S1728914AbfGVS3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:29:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38031 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfGVS3K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:29:10 -0400
-Received: by mail-pl1-f195.google.com with SMTP id az7so19521773plb.5;
-        Mon, 22 Jul 2019 11:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CgLso7wg/n5mvTltOdlePC8HRWHW/pb6Dm2YlkFggU0=;
-        b=Hnn/4QnM6mEZ7DymuKl5WfL9uvJKGhXBLXxlARWVVfnpHIezbDzvDi2QLEagA7PoWm
-         dBDpHgkofgPzofwa72tXzw8O5HI/2CcRYx6vy2/K4UoUJ3RiN8fg8jIsvZZTHzz2yzhM
-         5Iw6YvSVuJEB0ZvrXMM7LnoKaoaGnnzj/TTp/FBSdR+FRyg/AJIYilsGEPwZBvvG9Mvi
-         9h3Y4B27dWw1j1Ec+S8icbg1jhe+hQgzuhsT8DZhsTrqW6wWrYYp4J/4UJFYVnkzN1QW
-         NL6q9hBNG3ThRNma4INTm71vKxUbiG8xVcfazMEgIsDd5T/Rh4YC7IFl5k8+Oa/hhdUj
-         dqkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CgLso7wg/n5mvTltOdlePC8HRWHW/pb6Dm2YlkFggU0=;
-        b=HfsyTM9/1M3X9GDl+UJUPulo+XsS/puvk9KZPYSPAMRRFU3IDy1lQp3UHNwvfuqFsL
-         OWVLa+dargrUOw7qyEbWbm9LPfuw2qUncCNTkkEH7uzx2LS3tegwzSj4k8W1RRmp9/mw
-         AwxBJDNo0Fym5/R+dOnmRmNYN0MrbM1ZC8vYyi5WmMppYDU88DvAMwGn0GDgz6JNwI/h
-         OYwRN8OQqI4j9711tWVnll5nBDcpp16QfC8VV3jgy9juFUll31iHWimkOvVG1gYJjawz
-         VGuQkLiRm6fAQaU6IOQHl1xkuxdmkqTIEkJUON555dTfP/yUm3OmekfSmTQ0sf5PvzSw
-         /uHA==
-X-Gm-Message-State: APjAAAXHUb/m1p6r4ONarAFrrovCbsVW7QQVbiuYQlEHcf3fNyI6gC/r
-        7/qQJO+Ix7H9adthbiXV1kPoPehM
-X-Google-Smtp-Source: APXvYqxAj6rNc3sJLjKGthaS4k4zkIVSq605Sp7sZLQWPaiythj0NWc5k7hSux9BVkLdxpIfdF9IdQ==
-X-Received: by 2002:a17:902:b28b:: with SMTP id u11mr73256494plr.11.1563820150125;
-        Mon, 22 Jul 2019 11:29:10 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b16sm62760306pfo.54.2019.07.22.11.29.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 11:29:09 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 11:29:08 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] hwmon: smm665: convert to i2c_new_dummy_device
-Message-ID: <20190722182908.GA16788@roeck-us.net>
-References: <20190722172611.3797-1-wsa+renesas@sang-engineering.com>
- <20190722172611.3797-3-wsa+renesas@sang-engineering.com>
+        Mon, 22 Jul 2019 14:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbfGVS3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 14:29:31 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B079C21901;
+        Mon, 22 Jul 2019 18:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563820170;
+        bh=+hifrCpXNdFDmg+2TTik5WppGirIpU+5Uvg26SzjKVE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vhTa47Ce9ebRm+v7XyDzUzwiDS0FQgPMYhqKwa9e9Z4mpUb10rR+yojuJNMWvy1TQ
+         MsFuzBhgW67dm/N4kDZz4s+8RJPUtNax345vprI4ifpLfuDqsnmMzen4WCxkPSDygW
+         XbQ2jEfqPZ1eCmlLmVf182HY8+oQceSB7grwkJgo=
+Date:   Mon, 22 Jul 2019 13:29:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, bjorn@helgaas.com,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/3] ACPI: Remove acpi_has_method() call from acpi_adxl.c
+Message-ID: <20190722182929.GA203187@google.com>
+References: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
+ <20190722023530.67676-2-skunberg.kelsey@gmail.com>
+ <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722172611.3797-3-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 07:26:09PM +0200, Wolfram Sang wrote:
-> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
-> ERRPTR which we use in error handling.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+[+cc Tony (original author), Borislav (merged original patch)]
 
-Applied to hwmon-next.
+On Mon, Jul 22, 2019 at 10:31:11AM +0200, Rafael J. Wysocki wrote:
+> On Mon, Jul 22, 2019 at 4:36 AM Kelsey Skunberg
+> <skunberg.kelsey@gmail.com> wrote:
+> >
+> > acpi_check_dsm() will already return an error if the DSM method does not
+> > exist. Checking if the DSM method exists before the acpi_check_dsm() call
+> > is not needed. Remove acpi_has_method() call to avoid additional work.
+> >
+> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > ---
+> >  drivers/acpi/acpi_adxl.c | 5 -----
+> >  1 file changed, 5 deletions(-)
+> >
+> > diff --git a/drivers/acpi/acpi_adxl.c b/drivers/acpi/acpi_adxl.c
+> > index 13c8f7b50c46..89aac15663fd 100644
+> > --- a/drivers/acpi/acpi_adxl.c
+> > +++ b/drivers/acpi/acpi_adxl.c
+> > @@ -148,11 +148,6 @@ static int __init adxl_init(void)
+> >                 return -ENODEV;
+> >         }
+> >
+> > -       if (!acpi_has_method(handle, "_DSM")) {
+> > -               pr_info("No DSM method\n");
+> 
+> And why is printing the message not useful?
+> 
+> > -               return -ENODEV;
+> > -       }
+> > -
+> >         if (!acpi_check_dsm(handle, &adxl_guid, ADXL_REVISION,
+> >                             ADXL_IDX_GET_ADDR_PARAMS |
+> >                             ADXL_IDX_FORWARD_TRANSLATE)) {
 
-Thanks,
-Guenter
+The next line of context (not included in the patch):
 
-> ---
-> 
-> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
-> 
->  drivers/hwmon/smm665.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/smm665.c b/drivers/hwmon/smm665.c
-> index d8c91c2cb8cf..6eff14fe395d 100644
-> --- a/drivers/hwmon/smm665.c
-> +++ b/drivers/hwmon/smm665.c
-> @@ -586,10 +586,10 @@ static int smm665_probe(struct i2c_client *client,
->  
->  	data->client = client;
->  	data->type = id->driver_data;
-> -	data->cmdreg = i2c_new_dummy(adapter, (client->addr & ~SMM665_REGMASK)
-> +	data->cmdreg = i2c_new_dummy_device(adapter, (client->addr & ~SMM665_REGMASK)
->  				     | SMM665_CMDREG_BASE);
-> -	if (!data->cmdreg)
-> -		return -ENOMEM;
-> +	if (IS_ERR(data->cmdreg))
-> +		return PTR_ERR(data->cmdreg);
->  
->  	switch (data->type) {
->  	case smm465:
+               pr_info("DSM method does not support forward translate\n");
+
+IMHO kernel messages that are just a constant string, with no context
+or variable part (device ID, path, error code, etc) are questionable
+in general.  Is there any dev_printk()-like thing that takes an
+acpi_handle?  Seems like that would be useful for cases like this.
+
+This message *does* include an "ADXL: " prefix (from the pr_fmt
+definition), and from reading the code you can see that the only
+possible method is "\_SB.ADXL._DSM".
+
+There's nothing an end user can do with these messages, so I suspect
+their value is for debugging during platform bringup, and it would be
+sufficient to drop the first one (as Kelsey's patch does) and change
+the second one like this:
+
+-              pr_info("DSM method does not support forward translate\n");
++              pr_info("%s DSM missing or does not support forward translate\n",
++                      path);
