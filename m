@@ -2,29 +2,30 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B94C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1786C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB6921921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D0621921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfGVCwF (ORCPT
+        id S1728849AbfGVCvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:52:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2693 "EHLO huawei.com"
+        Sun, 21 Jul 2019 22:51:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38960 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728865AbfGVCvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:51:25 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CECCE58111D8BFF58C41;
-        Mon, 22 Jul 2019 10:51:23 +0800 (CST)
+        id S1728817AbfGVCvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 22:51:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C448758C99ED0B635294;
+        Mon, 22 Jul 2019 10:51:18 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 10:51:14 +0800
+ 2019 10:51:08 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,9 +40,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 17/24] erofs: introduce per-CPU buffers implementation
-Date:   Mon, 22 Jul 2019 10:50:36 +0800
-Message-ID: <20190722025043.166344-18-gaoxiang25@huawei.com>
+Subject: [PATCH v3 12/24] erofs: introduce tagged pointer
+Date:   Mon, 22 Jul 2019 10:50:31 +0800
+Message-ID: <20190722025043.166344-13-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722025043.166344-1-gaoxiang25@huawei.com>
 References: <20190722025043.166344-1-gaoxiang25@huawei.com>
@@ -54,110 +55,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces per-CPU buffers in order for
-the upcoming generic decompression framework to use.
+Currently kernel has scattered tagged pointer usages
+hacked by hand in plain code, without a unique and
+portable functionset to highlight the tagged pointer
+itself and wrap these hacked code in order to clean up
+all over meaningless magic masks.
 
-Note that I tried to use in-kernel per-CPU buffer or
-per-CPU page approaches to clean up further, however
-noticeable performanace regression (about 2% for
-sequential read) was observed.
+This patch introduces simple generic methods to fold
+tags into a pointer integer. Currently it supports
+the last n bits of the pointer for tags, which can be
+selected by users.
 
-Let's leave it as-is for now.
+In addition, it will also be used for the upcoming EROFS
+filesystem, which heavily uses tagged pointer pproach
+ to reduce extra memory allocation.
+
+Link: https://en.wikipedia.org/wiki/Tagged_pointer
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Kconfig    | 14 ++++++++++++++
- fs/erofs/internal.h | 24 ++++++++++++++++++++++++
- fs/erofs/utils.c    | 12 ++++++++++++
- 3 files changed, 50 insertions(+)
+ fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 fs/erofs/tagptr.h
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 71d0f992f43f..19d11cf45480 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -89,3 +89,17 @@ config EROFS_FS_ZIP
- 
- 	  If you don't want to enable compression feature, say N.
- 
-+config EROFS_FS_CLUSTER_PAGE_LIMIT
-+	int "EROFS Cluster Pages Hard Limit"
-+	depends on EROFS_FS_ZIP
-+	range 1 256
-+	default "1"
-+	help
-+	  Indicates maximum # of pages of a compressed
-+	  physical cluster.
+diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
+new file mode 100644
+index 000000000000..121403cff2a3
+--- /dev/null
++++ b/fs/erofs/tagptr.h
+@@ -0,0 +1,110 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Tagged pointer implementation
++ *
++ * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_TAGPTR_H
++#define __EROFS_TAGPTR_H
 +
-+	  For example, if files in a image were compressed
-+	  into 8k-unit, hard limit should not be configured
-+	  less than 2. Otherwise, the image will be refused
-+	  to mount on this kernel.
++#include <linux/types.h>
++#include <linux/build_bug.h>
 +
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 2f11c1b5dab2..dc5c6c5e4885 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -222,6 +222,15 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
- 	return v;
- }
- #endif
++/*
++ * the name of tagged pointer types are tagptr{1, 2, 3...}_t
++ * avoid directly using the internal structs __tagptr{1, 2, 3...}
++ */
++#define __MAKE_TAGPTR(n) \
++typedef struct __tagptr##n {	\
++	uintptr_t v;	\
++} tagptr##n##_t;
 +
-+#ifdef CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT
-+#define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
-+#else
-+#define Z_EROFS_CLUSTER_MAX_PAGES       1
++__MAKE_TAGPTR(1)
++__MAKE_TAGPTR(2)
++__MAKE_TAGPTR(3)
++__MAKE_TAGPTR(4)
++
++#undef __MAKE_TAGPTR
++
++extern void __compiletime_error("bad tagptr tags")
++	__bad_tagptr_tags(void);
++
++extern void __compiletime_error("bad tagptr type")
++	__bad_tagptr_type(void);
++
++/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
++#define __tagptr_mask_1(ptr, n)	\
++	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
++		(1UL << (n)) - 1 :
++
++#define __tagptr_mask(ptr)	(\
++	__tagptr_mask_1(ptr, 1) ( \
++	__tagptr_mask_1(ptr, 2) ( \
++	__tagptr_mask_1(ptr, 3) ( \
++	__tagptr_mask_1(ptr, 4) ( \
++	__bad_tagptr_type(), 0)))))
++
++/* generate a tagged pointer from a raw value */
++#define tagptr_init(type, val) \
++	((typeof(type)){ .v = (uintptr_t)(val) })
++
++/*
++ * directly cast a tagged pointer to the native pointer type, which
++ * could be used for backward compatibility of existing code.
++ */
++#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
++
++/* encode tagged pointers */
++#define tagptr_fold(type, ptr, _tags) ({ \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
++		__bad_tagptr_tags(); \
++tagptr_init(type, (uintptr_t)(ptr) | tags); })
++
++/* decode tagged pointers */
++#define tagptr_unfold_ptr(tptr) \
++	((void *)((tptr).v & ~__tagptr_mask(tptr)))
++
++#define tagptr_unfold_tags(tptr) \
++	((tptr).v & __tagptr_mask(tptr))
++
++/* operations for the tagger pointer */
++#define tagptr_eq(_tptr1, _tptr2) ({ \
++	typeof(_tptr1) tptr1 = (_tptr1); \
++	typeof(_tptr2) tptr2 = (_tptr2); \
++	(void)(&tptr1 == &tptr2); \
++(tptr1).v == (tptr2).v; })
++
++/* lock-free CAS operation */
++#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	typeof(_o) o = (_o); \
++	typeof(_n) n = (_n); \
++	(void)(&o == &n); \
++	(void)(&o == ptptr); \
++tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
++
++/* wrap WRITE_ONCE if atomic update is needed */
++#define tagptr_replace_tags(_ptptr, tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
++*ptptr; })
++
++#define tagptr_set_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v |= tags; \
++*ptptr; })
++
++#define tagptr_clear_tags(_ptptr, _tags) ({ \
++	typeof(_ptptr) ptptr = (_ptptr); \
++	const typeof(_tags) tags = (_tags); \
++	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
++		__bad_tagptr_tags(); \
++	ptptr->v &= ~tags; \
++*ptptr; })
++
 +#endif
-+#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
-+#else
-+#define EROFS_PCPUBUF_NR_PAGES          0
- #endif
- 
- /* we strictly follow PAGE_SIZE and no buffer head yet */
-@@ -486,6 +495,21 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- extern const struct file_operations erofs_dir_fops;
- 
- /* utils.c */
-+#if (EROFS_PCPUBUF_NR_PAGES > 0)
-+void *erofs_get_pcpubuf(unsigned int pagenr);
-+#define erofs_put_pcpubuf(buf) do { \
-+	(void)&(buf);	\
-+	preempt_enable();	\
-+} while (0)
-+#else
-+static inline void *erofs_get_pcpubuf(unsigned int pagenr)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
 +
-+#define erofs_put_pcpubuf(buf) do {} while (0)
-+#endif
-+
- #ifdef CONFIG_EROFS_FS_ZIP
- int erofs_workgroup_put(struct erofs_workgroup *grp);
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index 45fd780e6429..c430790a02e0 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -9,6 +9,18 @@
- #include "internal.h"
- #include <linux/pagevec.h>
- 
-+#if (EROFS_PCPUBUF_NR_PAGES > 0)
-+static struct {
-+	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
-+} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
-+
-+void *erofs_get_pcpubuf(unsigned int pagenr)
-+{
-+	preempt_disable();
-+	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
-+}
-+#endif
-+
- #ifdef CONFIG_EROFS_FS_ZIP
- /* global shrink count (for all mounted EROFS instances) */
- static atomic_long_t erofs_global_shrink_cnt;
 -- 
 2.17.1
 
