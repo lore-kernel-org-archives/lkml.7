@@ -2,139 +2,199 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160BDC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EF4C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE526219BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61AA219BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Gu4Oq1cj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YP4q1pfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfGVFrT (ORCPT
+        id S1727348AbfGVFs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:47:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39092 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfGVFrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:47:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 07D73AE8C;
-        Mon, 22 Jul 2019 05:47:17 +0000 (UTC)
-Subject: Re: [PATCH] scsi: fcoe: fix a typo
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190721125039.13268-1-christophe.jaillet@wanadoo.fr>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <0f7ab496-5905-eb18-ee3c-666affe428e3@suse.de>
-Date:   Mon, 22 Jul 2019 07:47:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 22 Jul 2019 01:48:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33670 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfGVFs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:48:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0436161791; Mon, 22 Jul 2019 05:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563774506;
+        bh=NU8ZN7RCXpkbFXfaEAk2r5vNN1g36wgevgLSQbO3cMg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Gu4Oq1cjbcuZyc4LoWfO3pG1/cCZgRQ6LtnyayNUz20wtbDBKJDM2HBH2v9+9uiBh
+         wDn0QL9SWBLdxWm0VpN9MNTM/75gMP4pMyYiIV1Y0csvrFW3J2SCc6JSfxztr3IvDZ
+         iGGkzRdZBPu8CharE/wFibedeDT9yK7FXxa8loWs=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3DDCD6043F;
+        Mon, 22 Jul 2019 05:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563774504;
+        bh=NU8ZN7RCXpkbFXfaEAk2r5vNN1g36wgevgLSQbO3cMg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YP4q1pfw79TVf26gWKKYcYUgfHkh3h80Qms6HqnKL12k8BlVHza26unX+PgIxko/m
+         RxMdb4W26v1FDTcACBXBOFbx8FzBBuC+72DU9zV8zz5D8sC2m6SLraPzjSuuoE87WI
+         ZkeOUI637eQPbvzYfxxTLon7MORl/MpeVplNWw98=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3DDCD6043F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCHv8 5/5] coresight: cpu-debug: Add support for Qualcomm Kryo
+To:     Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <e2c4cc7c6ccaa5695f25af20c8e487ac53b39955.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <20190717165602.GA4271@xps15> <20190721143553.GA25136@leoy-ThinkPad-X240s>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <c4d88fb1-15ae-6e08-bd74-0ffee5a35e1c@codeaurora.org>
+Date:   Mon, 22 Jul 2019 11:18:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190721125039.13268-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190721143553.GA25136@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/19 2:50 PM, Christophe JAILLET wrote:
-> #define relative to FCOE CTLR start with FCOE_CTLR, except
-> FCOE_CTRL_SOL_TOV.
+On 7/21/2019 8:05 PM, Leo Yan wrote:
+> On Wed, Jul 17, 2019 at 10:56:02AM -0600, Mathieu Poirier wrote:
+>> On Fri, Jul 12, 2019 at 07:46:27PM +0530, Sai Prakash Ranjan wrote:
+>>> Add support for coresight CPU debug module on Qualcomm
+>>> Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
+>>> found on MSM8996 which shares the same PIDs as ETMs.
+>>>
+>>> Without this, below error is observed on MSM8996:
+>>>
+>>> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
+>>> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
+>>> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
+>>> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
+>>> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
+>>> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
+>>> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
+>>> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
+>>> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
+>>> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
+>>> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
+>>> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+>>>
+>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> ---
+>>>   .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
+>>>   drivers/hwtracing/coresight/coresight-priv.h  | 10 +++---
+>>>   2 files changed, 21 insertions(+), 22 deletions(-)
+>>>
+>>> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+>>> index 2463aa7ab4f6..96544b348c27 100644
+>>> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+>>> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+>>> @@ -646,24 +646,23 @@ static int debug_remove(struct amba_device *adev)
+>>>   	return 0;
+>>>   }
+>>>   
+>>> +static const struct amba_cs_uci_id uci_id_debug[] = {
+>>> +	{
+>>> +		/*  CPU Debug UCI data */
+>>> +		.devarch	= 0x47706a15,
+>>> +		.devarch_mask	= 0xfff0ffff,
+>>> +		.devtype	= 0x00000015,
+>>> +	}
+>>> +};
+>>> +
+>>>   static const struct amba_id debug_ids[] = {
+>>> -	{       /* Debug for Cortex-A53 */
+>>> -		.id	= 0x000bbd03,
+>>> -		.mask	= 0x000fffff,
+>>> -	},
+>>> -	{       /* Debug for Cortex-A57 */
+>>> -		.id	= 0x000bbd07,
+>>> -		.mask	= 0x000fffff,
+>>> -	},
+>>> -	{       /* Debug for Cortex-A72 */
+>>> -		.id	= 0x000bbd08,
+>>> -		.mask	= 0x000fffff,
+>>> -	},
+>>> -	{       /* Debug for Cortex-A73 */
+>>> -		.id	= 0x000bbd09,
+>>> -		.mask	= 0x000fffff,
+>>> -	},
+>>> -	{ 0, 0 },
+>>> +	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
+>>> +	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
+>>> +	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
+>>> +	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
+>>> +	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
+>>> +	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
+>>> +	{},
+>>>   };
+>>>   
+>>>   static struct amba_driver debug_driver = {
+>>> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+>>> index 7d401790dd7e..41ae5863104d 100644
+>>> --- a/drivers/hwtracing/coresight/coresight-priv.h
+>>> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+>>> @@ -185,11 +185,11 @@ static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
+>>>   	}
+>>>   
+>>>   /* coresight AMBA ID, full UCI structure: id table entry. */
+>>> -#define CS_AMBA_UCI_ID(pid, uci_ptr)	\
+>>> -	{				\
+>>> -		.id	= pid,		\
+>>> -		.mask	= 0x000fffff,	\
+>>> -		.data	= uci_ptr	\
+>>> +#define CS_AMBA_UCI_ID(pid, uci_ptr)		\
+>>> +	{					\
+>>> +		.id	= pid,			\
+>>> +		.mask	= 0x000fffff,		\
+>>> +		.data	= (void *)uci_ptr	\
+>>>   	}
+>>
+>> I will pickup this patch - it will show up in my next tree when rc1 comes out.
 > 
-> This is likely a typo and CTRL should be CTLR here as well.
+> I tested this patch on the mainline kernel with latest commit
+> f1a3b43cc1f5 ("Merge branch 'for-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input"). FWIW:
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
->  include/scsi/libfcoe.h        | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> Tested-by: Leo Yan <leo.yan@linaro.org>
 > 
-> diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-> index 0d7770d07405..5aaa3298de6f 100644
-> --- a/drivers/scsi/fcoe/fcoe_ctlr.c
-> +++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-> @@ -1019,7 +1019,7 @@ static void fcoe_ctlr_recv_adv(struct fcoe_ctlr *fip, struct sk_buff *skb)
->  {
->  	struct fcoe_fcf *fcf;
->  	struct fcoe_fcf new;
-> -	unsigned long sol_tov = msecs_to_jiffies(FCOE_CTRL_SOL_TOV);
-> +	unsigned long sol_tov = msecs_to_jiffies(FCOE_CTLR_SOL_TOV);
->  	int first = 0;
->  	int mtu_valid;
->  	int found = 0;
-> diff --git a/include/scsi/libfcoe.h b/include/scsi/libfcoe.h
-> index c50fb297e265..dc14b52577f7 100644
-> --- a/include/scsi/libfcoe.h
-> +++ b/include/scsi/libfcoe.h
-> @@ -31,7 +31,7 @@
->   * FIP tunable parameters.
->   */
->  #define FCOE_CTLR_START_DELAY	2000	/* mS after first adv. to choose FCF */
-> -#define FCOE_CTRL_SOL_TOV	2000	/* min. solicitation interval (mS) */
-> +#define FCOE_CTLR_SOL_TOV	2000	/* min. solicitation interval (mS) */
->  #define FCOE_CTLR_FCF_LIMIT	20	/* max. number of FCF entries */
->  #define FCOE_CTLR_VN2VN_LOGIN_LIMIT 3	/* max. VN2VN rport login retries */
->  
+> P.s. Acutally I tested this patch for 5.2-rcx a few days ago and found
+> a regression for CPU debug module: I observed the CPU debug module
+> panic dump will stuck.  After I pulled to latest kernel code base the
+> CPU debug module can work well; also works well with this patch.  F.Y.I.
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.com>
 
-Cheers,
+Thanks Leo.
 
-Hannes
+-Sai
+
 -- 
-Dr. Hannes Reinecke		   Teamlead Storage & Networking
-hare@suse.de			               +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
