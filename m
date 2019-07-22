@@ -2,176 +2,184 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFFAC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F116C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463E6222F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DX0005aq"
+	by mail.kernel.org (Postfix) with ESMTP id 4A3762199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbfGVJvy (ORCPT
+        id S1729288AbfGVJwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:51:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40278 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729003AbfGVJun (ORCPT
+        Mon, 22 Jul 2019 05:52:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58370 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728129AbfGVJwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:50:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QL/0SYWiR6C25cou03spGMO5E9EMENslX5CyuOQ1xdQ=; b=DX0005aqvUGWmaQ85RsDdUNbo7
-        OGjmkm4ghe4w85xh6CDJUJdMyg/1bA7CRJ9df4sqBsCLwcpflo6mkaZ5KyhFcMm6mJqJidIVDu3oM
-        MRyVV4X3ixTRjLBaqvslnuRb3hazZhW8VWFaCKJxaIUY6drj+6LFeVEr0/NHNFaxLCpBO5J+Nhtrn
-        S8pDTris/r0/MWo8PDH/ZyOp746nLBlpYFjtJ4CyJHjMwuhjkQ3pYFIlm2CfAeBCx0osagHlh4//z
-        ZZR9W8oKo+/ajYCdnSRlwp2brDupIBpvREU1+VxXWubyF2qHEwFVTro1Wfgaaq1gRDDiVOO2j7YT/
-        ik3qMJOw==;
-Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpUxs-0005cX-0Z; Mon, 22 Jul 2019 09:50:40 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 05/12] xfs: turn io_append_trans into an io_private void pointer
-Date:   Mon, 22 Jul 2019 11:50:17 +0200
-Message-Id: <20190722095024.19075-6-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722095024.19075-1-hch@lst.de>
-References: <20190722095024.19075-1-hch@lst.de>
-MIME-Version: 1.0
+        Mon, 22 Jul 2019 05:52:50 -0400
+X-UUID: 4416e42ecd35467192de92f81e192f6f-20190722
+X-UUID: 4416e42ecd35467192de92f81e192f6f-20190722
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1042474360; Mon, 22 Jul 2019 17:52:43 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 22 Jul 2019 17:52:42 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 22 Jul 2019 17:52:42 +0800
+Message-ID: <1563789162.31223.3.camel@mtksdccf07>
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+CC:     Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Mon, 22 Jul 2019 17:52:42 +0800
+In-Reply-To: <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+         <1560447999.15814.15.camel@mtksdccf07>
+         <1560479520.15814.34.camel@mtksdccf07>
+         <1560744017.15814.49.camel@mtksdccf07>
+         <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
+         <1560774735.15814.54.camel@mtksdccf07>
+         <1561974995.18866.1.camel@mtksdccf07>
+         <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+         <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
+         <1562640832.9077.32.camel@mtksdccf07>
+         <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
+         <1562839579.5846.12.camel@mtksdccf07>
+         <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
+         <1563160001.4793.4.camel@mtksdccf07>
+         <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for moving the ioend structure to common code we need
-to get rid of the xfs-specific xfs_trans type.  Just make it a file
-system private void pointer instead.
+On Thu, 2019-07-18 at 19:11 +0300, Andrey Ryabinin wrote:
+> 
+> On 7/15/19 6:06 AM, Walter Wu wrote:
+> > On Fri, 2019-07-12 at 13:52 +0300, Andrey Ryabinin wrote:
+> >>
+> >> On 7/11/19 1:06 PM, Walter Wu wrote:
+> >>> On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
+> >>>>
+> >>>> On 7/9/19 5:53 AM, Walter Wu wrote:
+> >>>>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
+> >>>>>>
+> >>>>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
+> >>>>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> >>>>
+> >>>>>>>
+> >>>>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
+> >>>>>>> promise any dates because the next week I am on a conference, then
+> >>>>>>> again a backlog and an intern starting...
+> >>>>>>>
+> >>>>>>> Andrey, do you still have concerns re this patch? This change allows
+> >>>>>>> to print the free stack.
+> >>>>>>
+> >>>>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
+> >>>>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
+> >>>>>> Same for previously used tags for better use-after-free identification.
+> >>>>>>
+> >>>>>
+> >>>>> Hi Andrey,
+> >>>>>
+> >>>>> We ever tried to use object itself to determine use-after-free
+> >>>>> identification, but tag-based KASAN immediately released the pointer
+> >>>>> after call kfree(), the original object will be used by another
+> >>>>> pointer, if we use object itself to determine use-after-free issue, then
+> >>>>> it has many false negative cases. so we create a lite quarantine(ring
+> >>>>> buffers) to record recent free stacks in order to avoid those false
+> >>>>> negative situations.
+> >>>>
+> >>>> I'm telling that *more* than one free stack and also tags per object can be stored.
+> >>>> If object reused we would still have information about n-last usages of the object.
+> >>>> It seems like much easier and more efficient solution than patch you proposing.
+> >>>>
+> >>> To make the object reused, we must ensure that no other pointers uses it
+> >>> after kfree() release the pointer.
+> >>> Scenario:
+> >>> 1). The object reused information is valid when no another pointer uses
+> >>> it.
+> >>> 2). The object reused information is invalid when another pointer uses
+> >>> it.
+> >>> Do you mean that the object reused is scenario 1) ?
+> >>> If yes, maybe we can change the calling quarantine_put() location. It
+> >>> will be fully use that quarantine, but at scenario 2) it looks like to
+> >>> need this patch.
+> >>> If no, maybe i miss your meaning, would you tell me how to use invalid
+> >>> object information? or?
+> >>>
+> >>
+> >>
+> >> KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
+> >> This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
+> >> It could be extended to record more free stacktraces and also record previously used tags which will allow you
+> >> to identify use-after-free and extract right free stacktrace.
+> > 
+> > Thanks for your explanation.
+> > 
+> > For extend slub object, if one record is 9B (sizeof(u8)+ sizeof(struct
+> > kasan_track)) and add five records into slub object, every slub object
+> > may add 45B usage after the system runs longer. 
+> > Slub object number is easy more than 1,000,000(maybe it may be more
+> > bigger), then the extending object memory usage should be 45MB, and
+> > unfortunately it is no limit. The memory usage is more bigger than our
+> > patch.
+> 
+> No, it's not necessarily more.
+> And there are other aspects to consider such as performance, how simple reliable the code is.
+> 
+> > 
+> > We hope tag-based KASAN advantage is smaller memory usage. If it’s
+> > possible, we should spend less memory in order to identify
+> > use-after-free. Would you accept our patch after fine tune it?
+> 
+> Sure, if you manage to fix issues and demonstrate that performance penalty of your
+> patch is close to zero.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_aops.c | 26 +++++++++++++-------------
- fs/xfs/xfs_aops.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 8a1cd562a358..12f42922251c 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -150,7 +150,7 @@ xfs_setfilesize_trans_alloc(
- 	if (error)
- 		return error;
- 
--	ioend->io_append_trans = tp;
-+	ioend->io_private = tp;
- 
- 	/*
- 	 * We may pass freeze protection with a transaction.  So tell lockdep
-@@ -217,7 +217,7 @@ xfs_setfilesize_ioend(
- 	int			error)
- {
- 	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
--	struct xfs_trans	*tp = ioend->io_append_trans;
-+	struct xfs_trans	*tp = ioend->io_private;
- 
- 	/*
- 	 * The transaction may have been allocated in the I/O submission thread,
-@@ -282,10 +282,10 @@ xfs_end_ioend(
- 	else if (ioend->io_type == IOMAP_UNWRITTEN)
- 		error = xfs_iomap_write_unwritten(ip, offset, size, false);
- 	else
--		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_append_trans);
-+		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_private);
- 
- done:
--	if (ioend->io_append_trans)
-+	if (ioend->io_private)
- 		error = xfs_setfilesize_ioend(ioend, error);
- 	xfs_destroy_ioends(ioend, error);
- 	memalloc_nofs_restore(nofs_flag);
-@@ -318,13 +318,13 @@ xfs_ioend_can_merge(
-  * as it is guaranteed to be clean.
-  */
- static void
--xfs_ioend_merge_append_transactions(
-+xfs_ioend_merge_private(
- 	struct xfs_ioend	*ioend,
- 	struct xfs_ioend	*next)
- {
--	if (!ioend->io_append_trans) {
--		ioend->io_append_trans = next->io_append_trans;
--		next->io_append_trans = NULL;
-+	if (!ioend->io_private) {
-+		ioend->io_private = next->io_private;
-+		next->io_private = NULL;
- 	} else {
- 		xfs_setfilesize_ioend(next, -ECANCELED);
- 	}
-@@ -346,8 +346,8 @@ xfs_ioend_try_merge(
- 			break;
- 		list_move_tail(&next->io_list, &ioend->io_list);
- 		ioend->io_size += next->io_size;
--		if (next->io_append_trans)
--			xfs_ioend_merge_append_transactions(ioend, next);
-+		if (next->io_private)
-+			xfs_ioend_merge_private(ioend, next);
- 	}
- }
- 
-@@ -410,7 +410,7 @@ xfs_end_bio(
- 
- 	if (ioend->io_fork == XFS_COW_FORK ||
- 	    ioend->io_type == IOMAP_UNWRITTEN ||
--	    ioend->io_append_trans != NULL) {
-+	    ioend->io_private) {
- 		spin_lock_irqsave(&ip->i_ioend_lock, flags);
- 		if (list_empty(&ip->i_ioend_list))
- 			WARN_ON_ONCE(!queue_work(mp->m_unwritten_workqueue,
-@@ -675,7 +675,7 @@ xfs_submit_ioend(
- 	    (ioend->io_fork == XFS_COW_FORK ||
- 	     ioend->io_type != IOMAP_UNWRITTEN) &&
- 	    xfs_ioend_is_append(ioend) &&
--	    !ioend->io_append_trans)
-+	    !ioend->io_private)
- 		status = xfs_setfilesize_trans_alloc(ioend);
- 
- 	memalloc_nofs_restore(nofs_flag);
-@@ -724,7 +724,7 @@ xfs_alloc_ioend(
- 	ioend->io_inode = inode;
- 	ioend->io_size = 0;
- 	ioend->io_offset = offset;
--	ioend->io_append_trans = NULL;
-+	ioend->io_private = NULL;
- 	ioend->io_bio = bio;
- 	return ioend;
- }
-diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
-index 4af8ec0115cd..6a45d675dcba 100644
---- a/fs/xfs/xfs_aops.h
-+++ b/fs/xfs/xfs_aops.h
-@@ -18,7 +18,7 @@ struct xfs_ioend {
- 	struct inode		*io_inode;	/* file being written to */
- 	size_t			io_size;	/* size of the extent */
- 	xfs_off_t		io_offset;	/* offset in the file */
--	struct xfs_trans	*io_append_trans;/* xact. for size update */
-+	void			*io_private;	/* file system private data */
- 	struct bio		*io_bio;	/* bio being built */
- 	struct bio		io_inline_bio;	/* MUST BE LAST! */
- };
--- 
-2.20.1
+I remember that there are already the lists which you concern. Maybe we
+can try to solve those problems one by one.
+
+1. deadlock issue? cause by kmalloc() after kfree()?
+2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
+3. check whether slim 48 bytes (sizeof (qlist_object) +
+sizeof(kasan_alloc_meta)) and additional unique stacktrace in
+stackdepot?
+4. duplicate struct 'kasan_track' information in two different places
+
+Would you have any other concern? or?
+
+
+
 
