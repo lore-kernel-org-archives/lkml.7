@@ -2,179 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80BBC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF8CC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B954121921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469FE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="MFQ8IqvX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E/But+Yu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbfGVNnb (ORCPT
+        id S1730600AbfGVNnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:43:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45533 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbfGVNnb (ORCPT
+        Mon, 22 Jul 2019 09:43:43 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:34072 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730575AbfGVNnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:43:31 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u10so26645727lfm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 06:43:30 -0700 (PDT)
+        Mon, 22 Jul 2019 09:43:42 -0400
+Received: by mail-vk1-f194.google.com with SMTP id v68so4107498vkd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 06:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2eG7XaPVAlrCye8/1z4ZcsR1LBzuaJDGOK1lSLduhTA=;
-        b=MFQ8IqvXcdMYGQ4zHiorDbSZYUKiXuPvw+Y39O6Ug8JUHCExyrAYZ6mFd70KuCGsWu
-         Ro3lGp0PIcYG6UjQS9pHEejeii+F6ZhzgIwJP56RegyUDObsN6zfJJKCTFqdZZuF1Fpu
-         mROnF6Kt0YBbooW2gli6pgsvK+P4qwi7W3YWkJK9N5CorF5g/c6VN/AGgXh3zhas4br1
-         /EyJXSAJBK9J2bk3+gam8RjcZRTMZ6dX+aFfPerYdsOONEPSrEeTSaP89Uc8COdNQJ51
-         UtIZz4TImneMpqLtzSS1m5dUwM5W679zahXLkBMBPBy5GqMhqS2C0ddZF+N4Zv9WIbzv
-         +ndA==
+         :cc;
+        bh=JfWmDXv4BPNqOTEY9hU9q6gKX1IYDQYRoMyC7yt2MNI=;
+        b=E/But+YuUKIzOcn6HUyy4svfKw8XGm9k9ye+AQjkaG9X/TWQ3EMinTa8z7xp3u05Ky
+         JWLgAuxe+lrOiI6YgBbO1YHkcwMk6k9b1ZRdkUtPGe/4LwAz1LutDwQ5KqLZ7Z3lJ5Yv
+         6Aab+564w4FX4UBEEuWjzVfV67IBm1INTk5+0MvliPxcuFfyrM6BdfkDALKnY9IIkVKq
+         qjRaHqKPO3eI5FFDdjleOVM/8YI/580dxzUMI/vSffxY/2VAgjXK7Azfvw9IQUmo+Ise
+         qXJvgJTr3m1dzRR0XTuq6QeYuVikSCmxtlV7q25GKKMyCmReGzDEOYl/7YtUodEuC0UN
+         UtOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2eG7XaPVAlrCye8/1z4ZcsR1LBzuaJDGOK1lSLduhTA=;
-        b=MT2tcdWDXsHCkSEtLVOQNMqGCdFtsplrFGmeIQE9KMH/fVShr1kclZnzQRn2gC1kg7
-         2JFiRChnBaKjdLMVGqEmAwuURr8dMz5aS/MNZfdIC/iUvRK3JdM0EYGlUl1UAsniWAHA
-         soTGMjpFIWL6ZAiORKS7TOldSL/UjnsHf+3hCJ8yGS52A5ywaafpWQU32iqlUGfNhFgE
-         WkkeQZOJ9x3JSTZHKjWM3QwvvmOeOZETE6zTl6fxsK5d8buypW/3cpCR2i0qPb551bBJ
-         zcURpmYIHQRoApo2fsuFrU18Zw6YrOUBm3YyDnHf6tIpFvNM77cs0uh+S8cbsPG9TCll
-         5FiA==
-X-Gm-Message-State: APjAAAVw8PvY7WP+bsYUbkZWDOp6q1RxADdKs6doydE5NHPbzpeEQTPQ
-        4SltoUtfEmF7/36qfdxggnzXBiyCjzod/1biOZAzcg==
-X-Google-Smtp-Source: APXvYqwyNWb9iHgAKI0DUSIdjf5QwgPISRe3Bpiwe+ysWhtEbDDI+5P2Fr2PNgoReoQpIIbhnT+cRwRd48QH5Q4PeIo=
-X-Received: by 2002:ac2:4c84:: with SMTP id d4mr31806487lfl.1.1563803009167;
- Mon, 22 Jul 2019 06:43:29 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=JfWmDXv4BPNqOTEY9hU9q6gKX1IYDQYRoMyC7yt2MNI=;
+        b=ozQTYBSCpHA2S0b34wj/YNnx8+dWEYm8o0mApfhoPowycgKvB8n2cYCErAorabFhf6
+         4LyT/JyPrz+G5rDmf0+CutcLmf67D8byRTiJL4hm9zlZqUlIZEA6w55eOSaxjTnDrqfq
+         gkp0F+y6x2SgF5KGODhqNysZCtk2CUHvr+ghJPy0jaHqRpDqRBTTqtbsrwyuf6SXWKv9
+         KpVXR1S3pL58JLV2i/VNoGC0Gr8YBF9tvYlrleFdRh67WKvJQEVKEQtekfGlRIfmyb2Q
+         +cQZ10F/f/V8s1FutK9oKAUiWvLY5SEPshUQ0PzVVLOG8gXrZKJXsehpMzPdFTvEb8+t
+         +xVA==
+X-Gm-Message-State: APjAAAWnvDAtfPOzpYOFBXM6yoalsh6Oxzp12s7w045V0a2IkPBQL9uT
+        yG3lYD8Wtpqu/8SSL6MVNrFkwVPmc7r2njqwdswOgQ==
+X-Google-Smtp-Source: APXvYqx14wMKbyhub1IcdyQKRP208Xy4cOVwN13tySgJSo9PZ3oI+ibBZ47r4EOcKXyhteGxLy3BIFkVyqio17fYhcQ=
+X-Received: by 2002:a1f:f282:: with SMTP id q124mr25220311vkh.4.1563803021647;
+ Mon, 22 Jul 2019 06:43:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
- <20190719110852-mutt-send-email-mst@kernel.org> <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
- <20190722043707-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190722043707-mutt-send-email-mst@kernel.org>
-From:   =?UTF-8?B?5p2O6I+y?= <lifei.shirley@bytedance.com>
-Date:   Mon, 22 Jul 2019 21:43:18 +0800
-Message-ID: <CA+=e4K7ViADDq84i6ve1+F1=CrgfQJrY-O8LeBVV7eP4gUg21Q@mail.gmail.com>
-Subject: Re: [External Email] Re: [PATCH v1 0/2] virtio-mmio: support multiple
- interrupt vectors
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtio-dev@lists.oasis-open.org, linux-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Fam Zheng <zhengfeiran@bytedance.com>
+References: <cover.1562734889.git.joe@perches.com> <94dcbeb13b08a67ae9f404aa590c1c1459bc5287.1562734889.git.joe@perches.com>
+In-Reply-To: <94dcbeb13b08a67ae9f404aa590c1c1459bc5287.1562734889.git.joe@perches.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 22 Jul 2019 15:43:05 +0200
+Message-ID: <CAPDyKFpmc3qkU4mXk7X0nGkOLnZ060e-n-en5T-Z7FXzcO5ymw@mail.gmail.com>
+Subject: Re: [PATCH 06/12] mmc: meson-mx-sdio: Fix misuse of GENMASK macro
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 4:39 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+On Wed, 10 Jul 2019 at 07:04, Joe Perches <joe@perches.com> wrote:
 >
-> On Mon, Jul 22, 2019 at 11:22:02AM +0800, =E6=9D=8E=E8=8F=B2 wrote:
-> > On Fri, Jul 19, 2019 at 11:14 PM Michael S. Tsirkin <mst@redhat.com> wr=
-ote:
-> > >
-> > > On Fri, Jul 19, 2019 at 09:31:33PM +0800, Fei Li wrote:
-> > > > Hi,
-> > > >
-> > > > This patch series implements multiple interrupt vectors support for
-> > > > virtio-mmio device. This is especially useful for multiqueue vhost-=
-net
-> > > > device when using firecracker micro-vms as the guest.
-> > > >
-> > > > Test result:
-> > > > With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs c=
-an
-> > > > receive 9 times more pps comparing with only one irq:
-> > > > - 564830.38 rxpck/s for 8 irqs on
-> > > > - 67665.06 rxpck/s for 1 irq on
-> > > >
-> > > > Please help to review, thanks!
-> > > >
-> > > > Have a nice day
-> > > > Fei
-> > >
-> > >
-> > > Interesting. The spec says though:
-> > >
-> > >         4.2.3.4
-> > >         Notifications From The Device
-> > >         The memory mapped virtio device is using a single, dedicated =
-interrupt signal, which is asserted when at
-> > >         least one of the bits described in the description of Interru=
-ptStatus is set. This is how the device sends a
-> > >         used buffer notification or a configuration change notificati=
-on to the device.
-> > >
-> > Yes, the spec needs to be updated if we want to use mult-irqs.
-> > >
-> > > So I'm guessing we need to change the host/guest interface?
-> > Just to confirm, does the "the host/guest interface" you mentioned mean=
- how to
-> > pass the irq information from the user space tool to guest kernel?
-> > In this patch, we do this by passing the [irq_start, irq_end]
-> > interface via setting guest
-> > kernel command line, that is done in vm_cmdline_set().
-> > Also there is another way to do this: add two new registers describing =
-irq info
-> > (irq_start & irq_end OR irq_start & irq_numbers) to the virtio config s=
-pace.
-> >
-> > Which one do you prefer?
+> Arguments are supposed to be ordered high then low.
 >
-> I'm not sure - so far irq was passed on the command line, right?
-Yes.
->
-> The first step in implementing any spec change would be to update qemu
-> code to virtio 1. Which is not a huge project but so far no one
-> bothered.
-Emm, actually I only did the test with using firecracker to start a
-micro-vm, but without qemu.
-To be honest, the reason why implementing multi-irq on virtio-mmio is
-mainly because the
-current firecracker using virtio-mmio device and it has no pci thing,
-thus no msi/msix to
-handle the interruptions.
-On the other hand, considering pci is well supported in qemu, I am
-wondering whether we
-still need this. If needed, we would like to do this. :)
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Have a nice day, thanks
-Fei
+Applied for fixes by adding a fixes+stable tag, thanks!
+
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/meson-mx-sdio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
+> diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+> index 2d736e416775..ba9a63db73da 100644
+> --- a/drivers/mmc/host/meson-mx-sdio.c
+> +++ b/drivers/mmc/host/meson-mx-sdio.c
+> @@ -73,7 +73,7 @@
+>         #define MESON_MX_SDIO_IRQC_IF_CONFIG_MASK               GENMASK(7, 6)
+>         #define MESON_MX_SDIO_IRQC_FORCE_DATA_CLK               BIT(8)
+>         #define MESON_MX_SDIO_IRQC_FORCE_DATA_CMD               BIT(9)
+> -       #define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK          GENMASK(10, 13)
+> +       #define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK          GENMASK(13, 10)
+>         #define MESON_MX_SDIO_IRQC_SOFT_RESET                   BIT(15)
+>         #define MESON_MX_SDIO_IRQC_FORCE_HALT                   BIT(30)
+>         #define MESON_MX_SDIO_IRQC_HALT_HOLE                    BIT(31)
+> --
+> 2.15.0
 >
-> > > If true pls cc virtio-dev.
-> > Sure.
-> > >
-> > > Also, do we need to update dt bindings documentation?
-> > You mean the following doc? Sure. :)
-> > https://github.com/torvalds/linux/blob/master/Documentation/devicetree/=
-bindings/virtio/mmio.txt
-> >
-> > Thanks for the review!
-> >
-> > Have a nice day
-> > Fei
-> >
-> >
-> > >
-> > > >
-> > > > Fam Zheng (1):
-> > > >   virtio-mmio: Process vrings more proactively
-> > > >
-> > > > Fei Li (1):
-> > > >   virtio-mmio: support multiple interrupt vectors
-> > > >
-> > > >  drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++=
-++++--------
-> > > >  1 file changed, 196 insertions(+), 42 deletions(-)
-> > > >
-> > > > --
-> > > > 2.11.0
