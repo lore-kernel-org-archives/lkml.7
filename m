@@ -2,114 +2,83 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B531C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B930C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA55B21901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:30:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKgJOdus"
+	by mail.kernel.org (Postfix) with ESMTP id 5018421901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfGVSaI (ORCPT
+        id S1729188AbfGVSbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:30:08 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41533 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfGVSaI (ORCPT
+        Mon, 22 Jul 2019 14:31:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37855 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfGVSbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:30:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so19452772pls.8;
-        Mon, 22 Jul 2019 11:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6Fzk71LNruyVJOHAIeh7BkqFWyiYQ59QlSCVLT+fsNA=;
-        b=MKgJOdusXQP0ZsRCepxrRGOtPW2Ge6aebl80NhRU/jNCDPjD+u2cVvYTSbCbuikg2J
-         pXtJBkW3JAtvNk9CeY/g8ZeaEtmJ4WNtPawH1WWMTTtNH6eJrx1jIYluNc2vaT0tvec+
-         ddXMkfpS10h0GRWeL94/KMI3DZRDqVcYGBabU/zWg/W6JMlZYsxQ64V3LFPsbSrV8grY
-         vTJd0EnP0lhgWgGW3Z6lbi2x/AYNJZbpHLlHcGJl8/T1uEAZ6jJ7VLN+gLYPxK7t+axR
-         W0MCNkOlsnWOuXOHuYZKpP3LKf5kMEhfBAfHYEW1XunYulNuuFdTcNPOR4iMPayMxtfx
-         imuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6Fzk71LNruyVJOHAIeh7BkqFWyiYQ59QlSCVLT+fsNA=;
-        b=rz82m+hYsK5VU+1+gxfULBcRy6ZUB8qxbPImXUbRaOcR54sOjUTZFMl7QTwrjDHPa2
-         5Br979KlXGr59dl5Y6MswbufxJUOFvpNbDDjwt6uQkMMT8yEALqOejeODRtDW3SQLdrD
-         4/oEYgjENEoc5MMbHldfX3YR2TMbyc1hfvOEQE+TUSxSVsDWlZ0pn3URLjIWHQkyBmIy
-         ghuVfRra00z6+ECQ9XolDVikX8VCUwvNkxiu9sOJoK9rHNyYXi5+j8l/3nO6gQ2K97uu
-         Q2e0wKtNjYtVIyFTcx9loBpPW1+mMcv1PXKUIgdM7xQGzUwRaMLBMKUaKuppBWxULZdX
-         XrNw==
-X-Gm-Message-State: APjAAAWl+DGs3ngkzBqvCmVyP1MEyCWtkW0nEG9YFB2MmDVYmeK1YtAP
-        0B8rP9qwMNoMfnYyXrW0bLrkxtHW
-X-Google-Smtp-Source: APXvYqyNEhkXXMSvHBEXK2arEDckcIF9ItV+P+YSbNUz1DptSnfT9hQa1buRMMKMUJjbEGyGzXonaA==
-X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr45716027plb.28.1563820207777;
-        Mon, 22 Jul 2019 11:30:07 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p15sm38150807pjf.27.2019.07.22.11.30.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 11:30:07 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 11:30:06 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] hwmon: w83781d: convert to i2c_new_dummy_device
-Message-ID: <20190722183006.GA16898@roeck-us.net>
-References: <20190722172611.3797-1-wsa+renesas@sang-engineering.com>
- <20190722172611.3797-4-wsa+renesas@sang-engineering.com>
+        Mon, 22 Jul 2019 14:31:44 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hpd5y-0001S0-83; Mon, 22 Jul 2019 20:31:34 +0200
+Date:   Mon, 22 Jul 2019 20:31:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Andy Lutomirski <luto@amacapital.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
+ on i386
+In-Reply-To: <201907221012.41504DCD@keescook>
+Message-ID: <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
+References: <20190719170343.GA13680@linux.intel.com> <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net> <201907221012.41504DCD@keescook>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722172611.3797-4-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 07:26:10PM +0200, Wolfram Sang wrote:
-> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
-> ERRPTR which we use in error handling.
+On Mon, 22 Jul 2019, Kees Cook wrote:
+> On Fri, Jul 19, 2019 at 01:40:13PM -0400, Andy Lutomirski wrote:
+> > > On Jul 19, 2019, at 1:03 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> > > 
+> > > The generic vDSO implementation, starting with commit
+> > > 
+> > >   7ac870747988 ("x86/vdso: Switch to generic vDSO implementation")
+> > > 
+> > > breaks seccomp-enabled userspace on 32-bit x86 (i386) kernels.  Prior to
+> > > the generic implementation, the x86 vDSO used identical code for both
+> > > x86_64 and i386 kernels, which worked because it did all calcuations using
+> > > structs with naturally sized variables, i.e. didn't use __kernel_timespec.
+> > > 
+> > > The generic vDSO does its internal calculations using __kernel_timespec,
+> > > which in turn requires the i386 fallback syscall to use the 64-bit
+> > > variation, __NR_clock_gettime64.
+> > 
+> > This is basically doomed to break eventually, right?
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Just so I'm understanding: the vDSO change introduced code to make an
+> actual syscall on i386, which for most seccomp filters would be rejected?
 
-Applied to hwmon-next.
+No. The old x86 specific VDSO implementation had a fallback syscall as
+well, i.e. clock_gettime(). On 32bit clock_gettime() uses the y2038
+endangered timespec.
+
+So when the VDSO was made generic we changed the internal data structures
+to be 2038 safe right away. As a consequence the fallback syscall is not
+clock_gettime(), it's clock_gettime64(). which seems to surprise seccomp.
 
 Thanks,
-Guenter
 
-> ---
-> 
-> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
-> 
->  drivers/hwmon/w83781d.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/w83781d.c b/drivers/hwmon/w83781d.c
-> index d2c04b6a3f2b..015f1ea31966 100644
-> --- a/drivers/hwmon/w83781d.c
-> +++ b/drivers/hwmon/w83781d.c
-> @@ -894,12 +894,12 @@ w83781d_detect_subclients(struct i2c_client *new_client)
->  	}
->  
->  	for (i = 0; i < num_sc; i++) {
-> -		data->lm75[i] = i2c_new_dummy(adapter, sc_addr[i]);
-> -		if (!data->lm75[i]) {
-> +		data->lm75[i] = i2c_new_dummy_device(adapter, sc_addr[i]);
-> +		if (IS_ERR(data->lm75[i])) {
->  			dev_err(&new_client->dev,
->  				"Subclient %d registration at address 0x%x failed.\n",
->  				i, sc_addr[i]);
-> -			err = -ENOMEM;
-> +			err = PTR_ERR(data->lm75[i]);
->  			if (i == 1)
->  				goto ERROR_SC_3;
->  			goto ERROR_SC_2;
+	tglx
