@@ -2,116 +2,132 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285AAC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42230C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071D221955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178162190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HArRmCgk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbfGVSwI (ORCPT
+        id S1731872AbfGVSx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:52:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38014 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbfGVSwI (ORCPT
+        Mon, 22 Jul 2019 14:53:56 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:3507 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727821AbfGVSx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:52:08 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hpdPk-0002FA-Kc; Mon, 22 Jul 2019 20:52:00 +0200
-Date:   Mon, 22 Jul 2019 20:51:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nadav Amit <namit@vmware.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH v3 1/9] smp: Run functions concurrently in
- smp_call_function_many()
-In-Reply-To: <91940019-826C-4F33-904B-0767D95A5E21@vmware.com>
-Message-ID: <alpine.DEB.2.21.1907222045101.1659@nanos.tec.linutronix.de>
-References: <20190719005837.4150-1-namit@vmware.com> <20190719005837.4150-2-namit@vmware.com> <20190722182159.GB6698@worktop.programming.kicks-ass.net> <alpine.DEB.2.21.1907222033200.1659@nanos.tec.linutronix.de>
- <91940019-826C-4F33-904B-0767D95A5E21@vmware.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 22 Jul 2019 14:53:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3606400002>; Mon, 22 Jul 2019 11:53:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 11:53:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 11:53:55 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 18:53:54 +0000
+Subject: Re: [PATCH 1/3] drivers/gpu/drm/via: convert put_page() to
+ put_user_page*()
+To:     Christoph Hellwig <hch@lst.de>, <john.hubbard@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, <netdev@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>,
+        <linux-rdma@vger.kernel.org>, <bpf@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190722043012.22945-1-jhubbard@nvidia.com>
+ <20190722043012.22945-2-jhubbard@nvidia.com> <20190722093355.GB29538@lst.de>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <397ff3e4-e857-037a-1aee-ff6242e024b2@nvidia.com>
+Date:   Mon, 22 Jul 2019 11:53:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1903360966-1563821520=:1659"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190722093355.GB29538@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563821632; bh=dVEAb2CGI+Rcq3kPxf1ySX9mPnHE1aqM1bmhIjbORUc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=HArRmCgkrni3Mv1zhHNTOrkORst1xu/RkKpSHN9NJ6eHvsCKnyilmR14o7Vu/72+2
+         KzGoGeJ5LPaTaA997Z1lTeEX5TN0QxgL9zU0E1stVph1kaJP/CjI3G/fZC7Su8uSDP
+         zQdMp40Hd3vz1tqkE44dAhr5RuD9olYTaUe61D28D1sEpt/q0j8DDbdv6B2ii7KaIW
+         3XKa/T3Q4mkn6zgOvtasGsucgAaQQ3F4SWgLkmtCnVrJI8UW8FhQBhBRF+eCjxAZDo
+         DjdQKgIytgBgEr6BmAqoJ/KeCGoQ826d60sYBB87S4A1fHrwdDnuUDjUmWCd/fqdhR
+         fU5s088Wpq8BA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1903360966-1563821520=:1659
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 22 Jul 2019, Nadav Amit wrote:
-> > On Jul 22, 2019, at 11:37 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > 
-> > On Mon, 22 Jul 2019, Peter Zijlstra wrote:
-> > 
-> >> On Thu, Jul 18, 2019 at 05:58:29PM -0700, Nadav Amit wrote:
-> >>> +/*
-> >>> + * Call a function on all processors.  May be used during early boot while
-> >>> + * early_boot_irqs_disabled is set.
-> >>> + */
-> >>> +static inline void on_each_cpu(smp_call_func_t func, void *info, int wait)
-> >>> +{
-> >>> +	on_each_cpu_mask(cpu_online_mask, func, info, wait);
-> >>> +}
-> >> 
-> >> I'm thinking that one if buggy, nothing protects online mask here.
-> > 
-> > The current implementation has preemption disabled before touching
-> > cpu_online_mask which at least protects against a CPU going away as that
-> > prevents the stomp machine thread from getting on the CPU. But it's not
-> > protected against a CPU coming online concurrently.
+On 7/22/19 2:33 AM, Christoph Hellwig wrote:
+> On Sun, Jul 21, 2019 at 09:30:10PM -0700, john.hubbard@gmail.com wrote:
+>>  		for (i = 0; i < vsg->num_pages; ++i) {
+>>  			if (NULL != (page = vsg->pages[i])) {
+>>  				if (!PageReserved(page) && (DMA_FROM_DEVICE == vsg->direction))
+>> -					SetPageDirty(page);
+>> -				put_page(page);
+>> +					put_user_pages_dirty(&page, 1);
+>> +				else
+>> +					put_user_page(page);
+>>  			}
 > 
-> I still don’t understand. If you called cpu_online_mask() and did not
-> disable preemption before calling it, you are already (today) not protected
-> against another CPU coming online. Disabling preemption in on_each_cpu()
-> will not solve it.
+> Can't just pass a dirty argument to put_user_pages?  Also do we really
 
-Disabling preemption _cannot_ protect against a CPU coming online. It only
-can protect against a CPU being offlined.
+Yes, and in fact that would help a lot more than the single page case,
+which is really just cosmetic after all.
 
-The current implementation of on_each_cpu() disables preemption _before_
-touching cpu_online_mask.
+> need a separate put_user_page for the single page case?
+> put_user_pages_dirty?
 
-void on_each_cpu(void (*func) (void *info), void *info, int wait)
-{
-        unsigned long flags;
+Not really. I'm still zeroing in on the ideal API for all these call sites,
+and I agree that the approach below is cleaner.
 
-        preempt_disable();
-	smp_call_function(func, info, wait);
+> 
+> Also the PageReserved check looks bogus, as I can't see how a reserved
+> page can end up here.  So IMHO the above snippled should really look
+> something like this:
+> 
+> 	put_user_pages(vsg->pages[i], vsg->num_pages,
+> 			vsg->direction == DMA_FROM_DEVICE);
+> 
+> in the end.
+> 
 
-smp_call_function() has another preempt_disable as it can be called
-separately and it does:
+Agreed.
 
-        preempt_disable();
-        smp_call_function_many(cpu_online_mask, func, info, wait);
-
-Your new on_each_cpu() implementation does not. So there is a
-difference. Whether it matters or not is a different question, but that
-needs to be explained and documented.
-
-Thanks,
-
-	tglx
-
---8323329-1903360966-1563821520=:1659--
+thanks,
+-- 
+John Hubbard
+NVIDIA
