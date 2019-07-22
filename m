@@ -2,76 +2,99 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B274DC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224DBC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D6E2229A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032B820578
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfGVJIi (ORCPT
+        id S1728806AbfGVJIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:08:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36004 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfGVJIi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:08:38 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hpUJ7-0002P8-LI; Mon, 22 Jul 2019 11:08:33 +0200
-Date:   Mon, 22 Jul 2019 11:08:32 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-cc:     Maya Nakamura <m.maya.nakamura@gmail.com>, mikelley@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] hv: vmbus: Replace page definition with Hyper-V
- specific one
-In-Reply-To: <20190718022228.GF3079@sasha-vm>
-Message-ID: <alpine.DEB.2.21.1907221107010.1782@nanos.tec.linutronix.de>
-References: <cover.1562916939.git.m.maya.nakamura@gmail.com> <0d9e80ecabcc950dc279fdd2e39bea4060123ba4.1562916939.git.m.maya.nakamura@gmail.com> <20190718022228.GF3079@sasha-vm>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 22 Jul 2019 05:08:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46514 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbfGVJIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:08:42 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 094C4C058CBD;
+        Mon, 22 Jul 2019 09:08:42 +0000 (UTC)
+Received: from localhost (ovpn-117-250.ams2.redhat.com [10.36.117.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DCD9D19D71;
+        Mon, 22 Jul 2019 09:08:36 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 10:08:35 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v4 0/5] vsock/virtio: optimizations to increase the
+ throughput
+Message-ID: <20190722090835.GF24934@stefanha-x1.localdomain>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0rSojgWGcpz+ezC3"
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-1-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 22 Jul 2019 09:08:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jul 2019, Sasha Levin wrote:
 
-> On Fri, Jul 12, 2019 at 08:25:18AM +0000, Maya Nakamura wrote:
-> > Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
-> > not be 4096 on all architectures and Hyper-V always runs with a page
-> > size of 4096.
-> > 
-> > Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-> > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> Thomas, if you're taking this series, could you grab this patch as well
-> please (dependencies)?
-> 
-> 	Acked-by: Sasha Levin <sashal@kernel.org>
+--0rSojgWGcpz+ezC3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Picked it up. The three commits are in
+On Wed, Jul 17, 2019 at 01:30:25PM +0200, Stefano Garzarella wrote:
+> This series tries to increase the throughput of virtio-vsock with slight
+> changes.
+> While I was testing the v2 of this series I discovered an huge use of mem=
+ory,
+> so I added patch 1 to mitigate this issue. I put it in this series in ord=
+er
+> to better track the performance trends.
+>=20
+> v4:
+> - rebased all patches on current master (conflicts is Patch 4)
+> - Patch 1: added Stefan's R-b
+> - Patch 3: removed lock when buf_alloc is written [David];
+>            moved this patch after "vsock/virtio: reduce credit update mes=
+sages"
+>            to make it clearer
+> - Patch 4: vhost_exceeds_weight() is recently introduced, so I've solved =
+some
+>            conflicts
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/hyperv
+Stefano: Do you want to continue experimenting before we merge this
+patch series?  The code looks functionally correct and the performance
+increases, so I'm happy for it to be merged.
 
-If you have patches dependend on those either send them my way or pull the
-branch into your hyper-v tree.
+--0rSojgWGcpz+ezC3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-	tglx
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl01fRMACgkQnKSrs4Gr
+c8jTLwgAkxfRp9mHdA/2v4fYnheHpBNa4CYfMPvJjwm3cV2wOPsoVqnPx6kFjNED
+LJ54+h1tVFruOGHKnjsMYU4e9U9Aw2oLYV2FfAXJqeX6QzGM5Fp/pP7uaJt84htO
+R/PUE2syWbEmd/O4BII7vdLSi6flpPHrnYE4qU585fU3C+zcSMa5J+cJKCQiE/ZD
+mDwIQulVhh7pRJktNHPsi1YndADEm9ycqXU5UJYIMfoOilnT5Bri68hLS5fK410+
+DMAONtomNK9EirCGpH8T6jNrLpJImwLFHsp6+VmAC6xcvDpQwR3WjIPlzkTlEb+X
+DilvYlXPjDGvW6KgTTp+X70lkoIDnQ==
+=2Juw
+-----END PGP SIGNATURE-----
+
+--0rSojgWGcpz+ezC3--
