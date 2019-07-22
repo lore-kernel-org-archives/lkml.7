@@ -2,37 +2,40 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66820C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05ACC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BC621985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B35218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbfGVPwR (ORCPT
+        id S1730491AbfGVPwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:52:17 -0400
-Received: from os.inf.tu-dresden.de ([141.76.48.99]:60566 "EHLO
+        Mon, 22 Jul 2019 11:52:21 -0400
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:60568 "EHLO
         os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730437AbfGVPwO (ORCPT
+        with ESMTP id S1730449AbfGVPwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:52:14 -0400
+        Mon, 22 Jul 2019 11:52:16 -0400
 Received: from [195.176.96.199] (helo=jupiter)
         by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.92)
-        id 1hpa1J-00089G-Jg; Mon, 22 Jul 2019 17:14:33 +0200
+        id 1hpa1N-0008A8-KD; Mon, 22 Jul 2019 17:14:37 +0200
 From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 To:     Moni Shoua <monis@mellanox.com>,
         Doug Ledford <dledford@redhat.com>,
         Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Subject: [PATCH 00/10] Refactor rxe driver to remove multiple race conditions
-Date:   Mon, 22 Jul 2019 17:14:16 +0200
-Message-Id: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
+Subject: [PATCH 07/10] Pass the return value of kref_put further
+Date:   Mon, 22 Jul 2019 17:14:23 +0200
+Message-Id: <20190722151426.5266-8-mplaneta@os.inf.tu-dresden.de>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
+References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,59 +43,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset helps to get rid of following race condition situations:
-                                             
-  1. Tasklet functions were incrementing reference counting after entering
-  running the tasklet.                       
-  2. Getting a pointer to reference counted object (kref) was done without
-  protecting kref_put with a lock.
-  3. QP cleanup was sometimes scheduling cleanup for later execution in
-  rxe_qp_do_cleaunpm, although this QP's memory could be freed immediately after
-  returning from rxe_qp_cleanup.
-  4. Non-atomic cleanup functions could be called in SoftIRQ context
-  5. Manipulating with reference counter inside a critical section could have
-  been done both inside and outside of SoftIRQ region. Such behavior may end up
-  in a deadlock.
+Used in a later patch.
 
-The easiest way to observe these problems is to compile the kernel with KASAN
-and lockdep and abruptly stop an application using SoftRoCE during the
-communication phase. For my system this often resulted in kernel crash of a
-deadlock inside the kernel.
+Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+---
+ drivers/infiniband/sw/rxe/rxe_pool.c | 3 ++-
+ drivers/infiniband/sw/rxe/rxe_pool.h | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-To fix the above mentioned problems, this patch does following things:
-
-  1. Replace tasklets with workqueues
-  2. Adds locks to kref_put
-  3. Aquires reference counting in an appropriate place
-
-As a shortcomming, the performance is slightly reduced, because instead of
-trying to execute tasklet function directly the new version always puts it onto
-the queue.
-
-TBH, I'm not sure that I removed all of the problems, but the driver
-deffinetely behaves much more stable now. I would be glad to get some
-help with additional testing.
-
- drivers/infiniband/sw/rxe/rxe_comp.c        |  38 ++----
- drivers/infiniband/sw/rxe/rxe_cq.c          |  17 ++-
- drivers/infiniband/sw/rxe/rxe_hw_counters.c |   1 -
- drivers/infiniband/sw/rxe/rxe_hw_counters.h |   1 -
- drivers/infiniband/sw/rxe/rxe_loc.h         |   3 +-
- drivers/infiniband/sw/rxe/rxe_mcast.c       |  22 ++--
- drivers/infiniband/sw/rxe/rxe_mr.c          |  10 +-
- drivers/infiniband/sw/rxe/rxe_net.c         |  21 ++-
- drivers/infiniband/sw/rxe/rxe_pool.c        |  40 ++++--
- drivers/infiniband/sw/rxe/rxe_pool.h        |  16 ++-
- drivers/infiniband/sw/rxe/rxe_qp.c          | 130 +++++++++---------
- drivers/infiniband/sw/rxe/rxe_recv.c        |   8 +-
- drivers/infiniband/sw/rxe/rxe_req.c         |  17 +--
- drivers/infiniband/sw/rxe/rxe_resp.c        |  54 ++++----
- drivers/infiniband/sw/rxe/rxe_task.c        | 139 +++++++-------------
- drivers/infiniband/sw/rxe/rxe_task.h        |  40 ++----
- drivers/infiniband/sw/rxe/rxe_verbs.c       |  81 ++++++------
- drivers/infiniband/sw/rxe/rxe_verbs.h       |   8 +-
- 18 files changed, 302 insertions(+), 344 deletions(-)
-
+diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
+index 30a887cf9200..711d7d7f3692 100644
+--- a/drivers/infiniband/sw/rxe/rxe_pool.c
++++ b/drivers/infiniband/sw/rxe/rxe_pool.c
+@@ -541,7 +541,7 @@ static void rxe_dummy_release(struct kref *kref)
+ {
+ }
+ 
+-void rxe_drop_ref(struct rxe_pool_entry *pelem)
++int rxe_drop_ref(struct rxe_pool_entry *pelem)
+ {
+ 	int res;
+ 	struct rxe_pool *pool = pelem->pool;
+@@ -553,4 +553,5 @@ void rxe_drop_ref(struct rxe_pool_entry *pelem)
+ 	if (res) {
+ 		rxe_elem_release(&pelem->ref_cnt);
+ 	}
++	return res;
+ }
+diff --git a/drivers/infiniband/sw/rxe/rxe_pool.h b/drivers/infiniband/sw/rxe/rxe_pool.h
+index b90cc84c5511..1e3508c74dc0 100644
+--- a/drivers/infiniband/sw/rxe/rxe_pool.h
++++ b/drivers/infiniband/sw/rxe/rxe_pool.h
+@@ -166,6 +166,6 @@ static inline void rxe_add_ref(struct rxe_pool_entry *pelem) {
+ }
+ 
+ /* drop a reference on an object */
+-void rxe_drop_ref(struct rxe_pool_entry *pelem);
++int rxe_drop_ref(struct rxe_pool_entry *pelem);
+ 
+ #endif /* RXE_POOL_H */
 -- 
 2.20.1
 
