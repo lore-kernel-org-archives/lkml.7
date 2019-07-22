@@ -2,148 +2,99 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3661FC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE18C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BC521738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:52:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lMVKoC32"
+	by mail.kernel.org (Postfix) with ESMTP id 82A7C21738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730930AbfGVQwf (ORCPT
+        id S1729542AbfGVQ44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:52:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38671 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730740AbfGVQwc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:52:32 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f5so9112882pgu.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 09:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D5i5eeVRTyq7Qm2OPmoZkgOgQ/VLsd39M3tEbxvABCE=;
-        b=lMVKoC32q6jdc5s52CXFaKProF9HEK95pIIg8BJ02KRdMo2T+G1UQFwnI3hhGF8+qU
-         sA+I2b5X4bmmD3l4DMPwDW82vI93F3KlS+ABw8rfpPxwGuJjlU4ikbVcjw+QJS8Ok0+k
-         NfKpy3LGpTZr6M9s+RV94qzCTTn8uIg1TOEHY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D5i5eeVRTyq7Qm2OPmoZkgOgQ/VLsd39M3tEbxvABCE=;
-        b=iXpB4/7p6fD+Om9j99UgrtoKdn7ABQQ/RaNKuwWSQpmFWi7lWCCForUPdULZDs3w72
-         RmVbdWltkU16gcSJlPgvWwnVP0sHP1dQSk04srq47b8ELrrAj8FBIep9VPFy04wx659T
-         t/7n6dREAVPWknH25xMxncpru+jYrJQQ/S53YjfNfJxW9GwjimesajMyomtOfEMAsENn
-         e1fmtxfg1Hjmx9mlTzPQ0NPZBqEUl5obSeiDNm8zXVFlqGqAKipmviTquK9mqbt99SnJ
-         4u3Y98Ub43wkt1bBbvBgImKfHFmcPP4zvnQokNnJ3tYXj9UDbZHRsnZ91QnDnJXJ3JUt
-         27cg==
-X-Gm-Message-State: APjAAAXSzfq7ng0ScwsfgpEZ4wCVvd4FMRGVlSBGgA+L0WIYPD4nYq3b
-        q8ruOXvivb0ztvfEEmCTb8fVdw==
-X-Google-Smtp-Source: APXvYqx5EPVBdAZB9hQMVYd5b0pm0ScpmGtAOsQZBAbG8Ghj6g8EOLpHTo6yIfQxYVdOh6K7G5nb9g==
-X-Received: by 2002:a63:7b4d:: with SMTP id k13mr70901703pgn.182.1563814351931;
-        Mon, 22 Jul 2019 09:52:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d8sm36678029pgh.45.2019.07.22.09.52.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jul 2019 09:52:31 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 09:52:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@google.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] [v2] drbd: dynamically allocate shash descriptor
-Message-ID: <201907220952.EA05EEE9FC@keescook>
-References: <20190722122647.351002-1-arnd@arndb.de>
+        Mon, 22 Jul 2019 12:56:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54194 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728343AbfGVQ44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 12:56:56 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C400C3082133;
+        Mon, 22 Jul 2019 16:56:55 +0000 (UTC)
+Received: from [10.36.116.45] (ovpn-116-45.ams2.redhat.com [10.36.116.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B74719D71;
+        Mon, 22 Jul 2019 16:56:51 +0000 (UTC)
+Subject: Re: [PATCH v2] dma-mapping: Use dma_get_mask in
+ dma_addressing_limited
+To:     eric.auger.pro@gmail.com, hch@lst.de, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190722165149.3763-1-eric.auger@redhat.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <77ba1061-08b6-421e-a6dd-d5db9851325b@redhat.com>
+Date:   Mon, 22 Jul 2019 18:56:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722122647.351002-1-arnd@arndb.de>
+In-Reply-To: <20190722165149.3763-1-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 22 Jul 2019 16:56:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 02:26:34PM +0200, Arnd Bergmann wrote:
-> Building with clang and KASAN, we get a warning about an overly large
-> stack frame on 32-bit architectures:
-> 
-> drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
->       [-Werror,-Wframe-larger-than=]
-> 
-> We already allocate other data dynamically in this function, so
-> just do the same for the shash descriptor, which makes up most of
-> this memory.
-> 
-> Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Christoph,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+On 7/22/19 6:51 PM, Eric Auger wrote:
+> We currently have cases where the dma_addressing_limited() gets
+> called with dma_mask unset. This causes a NULL pointer dereference.
+> 
+> Use dma_get_mask() accessor to prevent the crash.
+> 
+> Fixes: b866455423e0 ("dma-mapping: add a dma_addressing_limited helper")
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
--Kees
+As a follow-up of my last email, here is a patch featuring
+dma_get_mask(). But you don't have the WARN_ON_ONCE anymore, pointing
+out suspect users.
 
+Feel free to pick up your preferred approach
+
+Thanks
+
+Eric
+> 
 > ---
-> v2:
-> - don't try to zero a NULL descriptor pointer,
->   based on review from Roland Kammerer.
-> ---
->  drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-> index 90ebfcae0ce6..2b3103c30857 100644
-> --- a/drivers/block/drbd/drbd_receiver.c
-> +++ b/drivers/block/drbd/drbd_receiver.c
-> @@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
->  	unsigned int key_len;
->  	char secret[SHARED_SECRET_MAX]; /* 64 byte */
->  	unsigned int resp_size;
-> -	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-> +	struct shash_desc *desc;
->  	struct packet_info pi;
->  	struct net_conf *nc;
->  	int err, rv;
-> @@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
->  	memcpy(secret, nc->shared_secret, key_len);
->  	rcu_read_unlock();
->  
-> +	desc = kmalloc(sizeof(struct shash_desc) +
-> +		       crypto_shash_descsize(connection->cram_hmac_tfm),
-> +		       GFP_KERNEL);
-> +	if (!desc) {
-> +		rv = -1;
-> +		goto fail;
-> +	}
->  	desc->tfm = connection->cram_hmac_tfm;
->  
->  	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
-> @@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
->  	kfree(peers_ch);
->  	kfree(response);
->  	kfree(right_response);
-> -	shash_desc_zero(desc);
-> +	if (desc) {
-> +		shash_desc_zero(desc);
-> +		kfree(desc);
-> +	}
->  
->  	return rv;
+> v1 -> v2:
+> - was [PATCH 1/2] dma-mapping: Protect dma_addressing_limited
+>   against NULL dma_mask
+> - Use dma_get_mask
+> ---
+>  include/linux/dma-mapping.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index e11b115dd0e4..f7d1eea32c78 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -689,8 +689,8 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
+>   */
+>  static inline bool dma_addressing_limited(struct device *dev)
+>  {
+> -	return min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
+> -		dma_get_required_mask(dev);
+> +	return min_not_zero(dma_get_mask(dev), dev->bus_dma_mask) <
+> +			    dma_get_required_mask(dev);
 >  }
-> -- 
-> 2.20.0
+>  
+>  #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
 > 
-
--- 
-Kees Cook
