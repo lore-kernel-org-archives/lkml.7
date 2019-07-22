@@ -2,142 +2,140 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630ACC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9932C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B73C216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:03:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VyPi/Aq3"
+	by mail.kernel.org (Postfix) with ESMTP id C7C1C21921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfGVND0 (ORCPT
+        id S1730190AbfGVNDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:03:26 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:39772 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728924AbfGVNDZ (ORCPT
+        Mon, 22 Jul 2019 09:03:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37189 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730172AbfGVNDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:03:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6NOvK978jTbO8TXlnFh6/Tm0NPKVF1OLT2L5NyXRM34=; b=VyPi/Aq3EOU0jvEITInsyEvxc
-        1BimaMvj7ZOggQcbiVyO2s0GWPrwzTKzMcACXY2D5K3PeVo0gU/DisVwIB0ihePsV0Iryn9a0JQS6
-        AwYF8dgJwwpYoA4bRHQCkry4xu6U2VtlbO4F544uazbSHyldURAFlF61iiOVUOS5954lH8nrHukra
-        8VQBiR1Vd1QJT05UVJLKzvGNhyJxU40VQUDB8cg1CILbzPMhYk+CP22k2yg5YRmdHC50H/yaEXX72
-        PmzeQal8zzzVw9jGispleO3ih79ctPd9aAQ7Go2bvKgm5K9usKb67Mf0l77s7qvYJ8+9aum9noldm
-        HWFjIjLcQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:44332)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hpXyI-0005qV-UQ; Mon, 22 Jul 2019 14:03:19 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hpXyB-0002zY-7M; Mon, 22 Jul 2019 14:03:11 +0100
-Date:   Mon, 22 Jul 2019 14:03:11 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] printk: Allow architecture-specific timestamping
- function
-Message-ID: <20190722130311.GD1330@shell.armlinux.org.uk>
-References: <20190722103330.255312-1-marc.zyngier@arm.com>
- <20190722103330.255312-2-marc.zyngier@arm.com>
- <20190722112543.5quvqgerpyvfgbxq@pathway.suse.cz>
- <493e2c0b-9536-ce6d-b59e-d169693085da@arm.com>
+        Mon, 22 Jul 2019 09:03:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f17so35237835wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 06:03:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z0qoHRf6gBg774SquOndxWjyxuQj7ytfuhU1dKVmZIc=;
+        b=Tcrobu/0XhlllqYwY+s7scjKIWvTX/ZuAY42gpIPLmEkXCWVRTSp1YoIrRo2gOTSny
+         tvjGMOAULbQz3rr+qJQgyH+zQ8XGJX8cfqxS0PueYM3Vph2BrjNPnPruAbrA9Z/pZuPF
+         Mbi8A5IUVPxHZRS7n5DYZyMls5lWwPka4TzEeR83R7pMSTNxgPWcyY1acINpcOPGwN+m
+         2JZjjuiuU/EaOsEGk1uEV9WnGQeCDME9sgFtRvzrvqX89wj9IuoK2FxLL0EDVBHLUHKP
+         P8sUg5m3ftGIQ/n2sjwK52JKqxJWrT7BGMYZv+UVGuaq+uDCqYXqIravbdGiq1esX7ac
+         Q2oQ==
+X-Gm-Message-State: APjAAAXpfdv9uZzTXETXEwXRfrT4W5ScyHAxkEcgRLQqg2yYotQ5AEXP
+        T4uOc7iVClff4sHkGkfvwpGyIg==
+X-Google-Smtp-Source: APXvYqzTOF/7H9s7MbgAEDOE8F8AmztVnXM/YlmJCgptbmvdVMuZ26+JpP/iPrValHmryWWxfk9AGw==
+X-Received: by 2002:a1c:9a4b:: with SMTP id c72mr38257114wme.102.1563800608945;
+        Mon, 22 Jul 2019 06:03:28 -0700 (PDT)
+Received: from [192.168.1.13] ([90.168.169.92])
+        by smtp.gmail.com with ESMTPSA id j17sm58257486wrb.35.2019.07.22.06.03.27
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 06:03:28 -0700 (PDT)
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+Message-ID: <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
+Date:   Mon, 22 Jul 2019 15:03:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <493e2c0b-9536-ce6d-b59e-d169693085da@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:47:57PM +0100, Marc Zyngier wrote:
-> On 22/07/2019 12:25, Petr Mladek wrote:
-> > On Mon 2019-07-22 11:33:28, Marc Zyngier wrote:
-> >> printk currently relies on local_clock to time-stamp the kernel
-> >> messages. In order to allow the timestamping (and only that)
-> >> to be overridden by architecture-specific code, let's declare
-> >> a new timestamp_clock() function, which gets used by the printk
-> >> code. Architectures willing to make use of this facility will
-> >> have to define CONFIG_ARCH_HAS_TIMESTAMP_CLOCK.
-> >>
-> >> The default is of course to return local_clock(), so that the
-> >> existing behaviour stays unchanged.
-> >>
-> >> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> >> ---
-> >>  include/linux/sched/clock.h | 13 +++++++++++++
-> >>  kernel/printk/printk.c      |  4 ++--
-> >>  2 files changed, 15 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/include/linux/sched/clock.h b/include/linux/sched/clock.h
-> >> index 867d588314e0..3cf4b2a8ce18 100644
-> >> --- a/include/linux/sched/clock.h
-> >> +++ b/include/linux/sched/clock.h
-> >> @@ -98,4 +98,17 @@ static inline void enable_sched_clock_irqtime(void) {}
-> >>  static inline void disable_sched_clock_irqtime(void) {}
-> >>  #endif
-> >>  
-> >> +#ifdef CONFIG_ARCH_HAS_TIMESTAMP_CLOCK
-> >> +/* Special need architectures can provide their timestamping function */
-> > 
-> > The commit message and the above comment should be more specific
-> > about what are the special needs.
-> > 
-> > It must be clear how and why the clock differs from the other
-> > clocks, especially from lock_clock().
+Hello Kieran,
+
+On 7/10/19 9:39 PM, Kieran Bingham wrote:
+> I2C drivers match against an I2C ID table, an OF table, and an ACPI
+> table. It is now also possible to match against an OF table entry
+> without the vendor prefix to support backwards compatibility, and allow
+> simplification of the i2c probe functions.
 > 
-> Fair enough. How about something along the lines of:
+> As part of this matching, the probe function is being converted to
+> remove the need to specify the i2c_device_id table, but to support
+> module aliasing, we still require to have the MODULE_DEVICE_TABLE entry.
+>
+
+My opinion on this is that I2C drivers should register the tables of the
+firmware interfaces that support. That is, if a driver is only used in a
+platform that supports OF then it should only require an OF device table.
+
+But if the driver supports devices that can also be present in platforms
+that use ACPI, then should also require to have an ACPI device ID table.
+
+So there should be consistency about what table is used for both matching
+a device with a driver and reporting a modalias to user-space for module
+auto-loading. If a I2C device was instantiated by OF, then the OF table
+should be used for both reporting a modalias uevent and matching a driver.
+
+Now, the i2c_of_match_device() function attempts to match by first calling
+of_match_device() and if fails fallbacks to i2c_of_match_device_sysfs().
+
+The latter attempts to match the I2C device by striping the vendor prefix
+of the compatible strings on the OF device ID table. That means that you
+could instantiate an I2C device ID through the sysfs interface and the OF
+table would be used to match the driver.
+
+But i2c_device_uevent() would had reported an I2C modalias and not an OF
+modalias (since the registered device won't have an associated of_node) so
+there's inconsistency in that case since a table is used to match but no
+to report modaliases.
+
+> Facilitate generating the I2C aliases directly from the of_device_id
+> tables, by stripping the vendor prefix prefix from the compatible string
+> and using that as an alias just as the i2c-core supports.
 > 
-> "An architecture can override the timestamp clock (which defaults to
-> local_clock) if local_clock is not significant early enough (sched_clock
-> being available too late)."
 
-We have:
-1) the standard clocksource
-2) the sched_clock, which is _supposed_ to be initialised early
-3) persistent_clock
+I see two ways to solve this issue. One is with $SUBJECT since we can argue
+that if a OF-only driver is able to match devices that were instantiated
+through the sysfs interface that only have a device name, then a modalias
+of the form i2c:<foo> is needed. Since the compatible strings without the
+vendor prefix is used to match, then I think that makes sense to also use
+them without the vendor prefix to populate I2C modaliases as $SUBJECT does.
 
-Do we really need another clock?
+The other option is to remove i2c_of_match_device() and don't make OF match
+to fallback to i2c_of_match_device_sysfs(). This is what happens in the ACPI
+case, since i2c_device_match() just calls acpi_driver_match_device() directly
+and doesn't have a wrapper function that fallbacks to sysfs matching.
 
-Why not initialise sched_clock() early (as in, before sched_init(),
-which is where the first sched_clock() read occurs) ?
+In this case an I2C device ID table would be required if the devices have to
+be instantiated through sysfs. That way the I2C table would be used both for
+auto-loading and also to match the device when it doesn't have an of_node.
 
-We've already been around the argument that sched_clock() apparently
-can't be initialised early enough (which is the argument I had in reply
-to the sched_clock() situation on ARM32) then how does inventing
-timestamp_clock() solve this problem?
+If the former is the correct way to solve this then the patch looks good to me.
 
-Wouldn't timestamp_clock() also suffer from the very same "we can't
-initialise it early enough" issue, and it'll just be setup along side
-clocksources, just like sched_clock() has become?
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-I fail to see what adding yet another architecture specific clock
-implementation buys, apart from yet more complexity.
-
+Best regards,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
