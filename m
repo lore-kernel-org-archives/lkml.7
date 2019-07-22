@@ -2,109 +2,188 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E79FC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17559C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4655F21911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:31:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoRJLzf3"
+	by mail.kernel.org (Postfix) with ESMTP id DBDDF219BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbfGVNb3 (ORCPT
+        id S1729896AbfGVNdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:31:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45624 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbfGVNb2 (ORCPT
+        Mon, 22 Jul 2019 09:33:08 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36308 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbfGVNdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:31:28 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r1so17374968pfq.12;
-        Mon, 22 Jul 2019 06:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FtWmebQr/wwDVzYuQ8tfBuf24bqv7o93pgUzav6bNns=;
-        b=SoRJLzf3jqIxFN89WUU8v0XpYDZkWyMGBpFG1xyEIfvjC77P1XVzJM8oSgRUBcREIG
-         sjMuSodR/HQjIuAy1PK/4eTtd3BUTKqY+KHTtOM4lPWZ6qad/tK+mF28p8wRBG+pI4H5
-         FaSTdAmsBNCAV56GlnDfOyz/QkrjR020yXeLyUVT5Zh6AgakaFNylX+1li6MHdTCVLBl
-         fLSfuHgMkDCkoN4KeQlCXQN9jiBhBkVcFk4F9XwwHbZbH7pH0Zt2U3FLOaghG5ZoJKA0
-         vSyH98zDL4e9/Z3GAr+pi6CSG4/OMyslesq42wPMVqQWJGgJsdTvw3F4DWHC+Q26+74j
-         86JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FtWmebQr/wwDVzYuQ8tfBuf24bqv7o93pgUzav6bNns=;
-        b=tHqLhAGqg5JtpM/BCn9XrmCbAbMX0IvrTJcMLu/FABBN1NEJ8LQOJ0zOjNOs1WLv1G
-         8fo5kqjqSffMmD7cHhZbYXQv26vS037cHvDBmWC2HqMUORKZ73L56F24JDgtSKzD8w+B
-         oAtfEf7I6vhtN74q1CdyAiV7lb/JkB0RGKs2r8jEM+W0+9U1mGfFT8txa/rn+3fXuKeH
-         xN/0nDsw58uS71IAtACE5hLmpDEF3RzqyUYiL3jBY2c7w/HrhdE8uR1aQ4rS14uC5oHP
-         SmoDtGJuy3+sHXiXGUNKPjo47PRk0cK/zTiZx3RYn5OuztzyHDrNU5X0XBAWx7mICqPx
-         W1Mw==
-X-Gm-Message-State: APjAAAX1BlEdeSR3P+Jcx/xA26PSRh3e64YUQIdEauuE6IXI48SGGuYe
-        Ea0ebVfKMJKqH/v+trysmLQ=
-X-Google-Smtp-Source: APXvYqw1+KHz+tgFnb89K/ZYG+IR9nWp4KmDZ0ZzGC0vz2rI5rZ1NsiabvMNwseZQv1pp5ew8t8nRA==
-X-Received: by 2002:a62:be04:: with SMTP id l4mr272893pff.77.1563802287993;
-        Mon, 22 Jul 2019 06:31:27 -0700 (PDT)
-Received: from nishad (p3261240-ipngn21201hodogaya.kanagawa.ocn.ne.jp. [153.202.122.240])
-        by smtp.gmail.com with ESMTPSA id r15sm42601969pfh.121.2019.07.22.06.31.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jul 2019 06:31:27 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 19:01:17 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
+        Mon, 22 Jul 2019 09:33:08 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 20A5528AF32
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] hv: Use the correct style for SPDX License Identifier
-Message-ID: <20190722133112.GA7990@nishad>
+        Collabora kernel ML <kernel@collabora.com>
+Subject: [PATCH v5 00/11] Move part of cros-ec out of MFD subsystem
+Date:   Mon, 22 Jul 2019 15:32:46 +0200
+Message-Id: <20190722133257.9336-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in the trace header file related to Microsoft Hyper-V
-client drivers.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+Hi,
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
+Now that rc1 is released is time to send another patchset rebased on
+top. This is an attempt to clean up a bit more the cros-ec driver
+to have a better separation on what is part of the MFD subsystem and
+what is part of platform/chrome.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/hv/hv_trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The major changes introduced by this patchset are:
+1. Move the core driver to platform/chrome, as is not really related
+   to an MFD device driver.
+2. Create a new misc chardev driver to replace the chardev bits from
+   cros-ec-dev (MFD)
+3. Added some convenience structs on cros-ec-dev (MFD) to easy add
+   more subdrivers avoiding to add more boiler plate.
 
-diff --git a/drivers/hv/hv_trace.h b/drivers/hv/hv_trace.h
-index 999f80a63bff..e70783e33680 100644
---- a/drivers/hv/hv_trace.h
-+++ b/drivers/hv/hv_trace.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- 
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM hyperv
+Once applied we have moved all the code to platform/chrome except
+the cros-ec-dev driver, which is the one that instantiates the different
+subdrivers as cells of the MFD driver.
+
+I tested the following patches on Veyron, Kevin, Samus, Peach Pi and
+Peach Pit without noticing any problem, but they would need more
+tests.
+
+Thanks,
+  Enric
+
+Changes in v5:
+- Rebased on top of 5.3-rc1
+- Prefix the versions strings with CROS_EC_DEV_VERSION (Gwendal)
+
+Changes in v4:
+- Rebase again on top of for-mfd-next to avoid conflicts.
+
+Changes in v3:
+- Collect more acks an tested-by
+- Fix 'linux/mfd/cros_ec.h' is not exported (reported by lkp)
+- Use mfd_add_hotplug_devices helper (Gwendal)
+- Add a new patch to use mfd_add_hoplug_devices to register subdevices
+
+Changes in v2:
+- Collect acks received.
+- Remove '[PATCH 07/10] mfd: cros_ec: Update with SPDX Licence identifier
+  and fix description' to avoid conflicts with some tree-wide patches
+  that actually updates the Licence identifier.
+- Add '[PATCH 10/10] arm/arm64: defconfig: Update configs to use the new
+  CROS_EC options' to update the defconfigs after change some config
+  symbols.
+- Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
+- Remove dev_info in probe, anyway we will see the chardev or not if the
+  probe fails (Greg Kroah-Hartman)
+
+Enric Balletbo i Serra (11):
+  mfd / platform: cros_ec: Handle chained ECs as platform devices
+  mfd / platform: cros_ec: Move cros-ec core driver out from MFD
+  mfd / platform: cros_ec: Miscellaneous character device to talk with
+    the EC
+  mfd: cros_ec: Switch to use the new cros-ec-chardev driver
+  mfd / platform: cros_ec: Rename config to a better name
+  mfd / platform: cros_ec: Reorganize platform and mfd includes
+  mfd: cros_ec: Use kzalloc and cros_ec_cmd_xfer_status helper
+  mfd: cros_ec: Add convenience struct to define dedicated CrOS EC MCUs
+  mfd: cros_ec: Add convenience struct to define autodetectable CrOS EC
+    subdevices
+  mfd: cros_ec: Use mfd_add_hotplug_devices() helper
+  arm/arm64: defconfig: Update configs to use the new CROS_EC options
+
+ arch/arm/configs/exynos_defconfig             |   3 +-
+ arch/arm/configs/multi_v7_defconfig           |   8 +-
+ arch/arm/configs/pxa_defconfig                |   8 +-
+ arch/arm/configs/tegra_defconfig              |   6 +-
+ arch/arm64/configs/defconfig                  |   6 +-
+ drivers/extcon/Kconfig                        |   2 +-
+ drivers/extcon/extcon-usbc-cros-ec.c          |   3 +-
+ drivers/hid/Kconfig                           |   2 +-
+ drivers/hid/hid-google-hammer.c               |   4 +-
+ drivers/i2c/busses/Kconfig                    |   2 +-
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c       |   4 +-
+ drivers/iio/accel/cros_ec_accel_legacy.c      |   3 +-
+ drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
+ .../cros_ec_sensors/cros_ec_lid_angle.c       |   3 +-
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |   3 +-
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |   3 +-
+ drivers/iio/light/cros_ec_light_prox.c        |   3 +-
+ drivers/iio/pressure/cros_ec_baro.c           |   3 +-
+ drivers/input/keyboard/Kconfig                |   2 +-
+ drivers/input/keyboard/cros_ec_keyb.c         |   4 +-
+ drivers/media/platform/Kconfig                |   3 +-
+ .../media/platform/cros-ec-cec/cros-ec-cec.c  |   5 +-
+ drivers/mfd/Kconfig                           |  26 +-
+ drivers/mfd/Makefile                          |   4 +-
+ drivers/mfd/cros_ec_dev.c                     | 461 +++++-------------
+ drivers/platform/chrome/Kconfig               |  50 +-
+ drivers/platform/chrome/Makefile              |   2 +
+ drivers/{mfd => platform/chrome}/cros_ec.c    |  64 +--
+ drivers/platform/chrome/cros_ec_chardev.c     | 253 ++++++++++
+ drivers/platform/chrome/cros_ec_debugfs.c     |   3 +-
+ drivers/platform/chrome/cros_ec_i2c.c         |  12 +-
+ drivers/platform/chrome/cros_ec_ishtp.c       |   5 +-
+ drivers/platform/chrome/cros_ec_lightbar.c    |   3 +-
+ drivers/platform/chrome/cros_ec_lpc.c         |   7 +-
+ drivers/platform/chrome/cros_ec_proto.c       |   3 +-
+ drivers/platform/chrome/cros_ec_rpmsg.c       |   6 +-
+ drivers/platform/chrome/cros_ec_spi.c         |  12 +-
+ drivers/platform/chrome/cros_ec_sysfs.c       |   3 +-
+ drivers/platform/chrome/cros_ec_trace.c       |   2 +-
+ drivers/platform/chrome/cros_ec_trace.h       |   4 +-
+ drivers/platform/chrome/cros_ec_vbc.c         |   3 +-
+ drivers/platform/chrome/cros_usbpd_logger.c   |   5 +-
+ drivers/power/supply/Kconfig                  |   2 +-
+ drivers/power/supply/cros_usbpd-charger.c     |   5 +-
+ drivers/pwm/Kconfig                           |   2 +-
+ drivers/pwm/pwm-cros-ec.c                     |   4 +-
+ drivers/rtc/Kconfig                           |   2 +-
+ drivers/rtc/rtc-cros-ec.c                     |   3 +-
+ .../linux/iio/common/cros_ec_sensors_core.h   |   3 +-
+ include/linux/mfd/cros_ec.h                   | 292 -----------
+ .../{mfd => platform_data}/cros_ec_commands.h |   0
+ include/linux/platform_data/cros_ec_proto.h   | 317 ++++++++++++
+ .../uapi/linux/cros_ec_chardev.h              |   9 +-
+ sound/soc/codecs/Kconfig                      |   4 +-
+ sound/soc/codecs/cros_ec_codec.c              |   4 +-
+ sound/soc/qcom/Kconfig                        |   2 +-
+ 56 files changed, 901 insertions(+), 758 deletions(-)
+ rename drivers/{mfd => platform/chrome}/cros_ec.c (84%)
+ create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
+ rename include/linux/{mfd => platform_data}/cros_ec_commands.h (100%)
+ create mode 100644 include/linux/platform_data/cros_ec_proto.h
+ rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (80%)
+
 -- 
-2.17.1
+2.20.1
 
