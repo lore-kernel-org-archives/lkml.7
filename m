@@ -2,99 +2,148 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A54DC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D69CC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472EF2190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5699521911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3Jj7gG+H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZYBmpd+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfGVSRU (ORCPT
+        id S1731325AbfGVSSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:17:20 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36564 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730013AbfGVSRU (ORCPT
+        Mon, 22 Jul 2019 14:18:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36969 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGVSSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:17:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=keKKeydik4bS+64TTpgAMtBX2rjNWqKMPt/hZd7gMIY=; b=3Jj7gG+Hb4FIjHDviO3i+DrFh
-        A0gM4s5VsEj0u/byh4R+8ttqnd1FeXKAiVhNXZC3AvShhDQ+Yc78Oygio2hEnct+/IqcP2YLucqYU
-        C7iQ/1Tud84LYi5tZxrw+x7rS84gb0nBBPb70rpEufvTBZElG144wh34V35St2tuCFYBZjCJdSIiW
-        4TCHh3LVX1Z3ftOI2uwFQNNeQHZS5ws3d4c+Quwi8slujv/wj6QyfnbULQq7zUltF9fy65D8lyXdL
-        D7fQns8qhCHDbQMUPYNNI8oNJIBvySpyF2o1LOTH+p3EesyKlWINJf2m6d2znhPP3ce9q0VgGWx2s
-        fi/X7ricw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpcrt-0005ZB-VH; Mon, 22 Jul 2019 18:17:02 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6736E980D20; Mon, 22 Jul 2019 20:16:58 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 20:16:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH v3 1/9] smp: Run functions concurrently in
- smp_call_function_many()
-Message-ID: <20190722181658.GA6698@worktop.programming.kicks-ass.net>
-References: <20190719005837.4150-1-namit@vmware.com>
- <20190719005837.4150-2-namit@vmware.com>
- <c02833c8-8c68-4331-03c7-d9e5eb2f285c@intel.com>
+        Mon, 22 Jul 2019 14:18:14 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b3so19529823plr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=f+EvBU2cPVBzM8PQ0FPDkzwG1E5GGkfBBtHwRsmRpjI=;
+        b=ZYBmpd+QBrrVXlTK80i48wnPMVkuOFnOheaJJPa7CGBslM3kfiEjlsUUileul+y/aT
+         sIyTmJA3zTEgA4futpEx4QeCiF58mu2sy2Plk5rYoLOT56z9exBHdAGcoW7XCL2HrC6I
+         eghfkV6cAjTGylFDeXx6QQkUYPxrumHx0+ts4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=f+EvBU2cPVBzM8PQ0FPDkzwG1E5GGkfBBtHwRsmRpjI=;
+        b=hn3xBFWXKYkuY5gLOz3N0Xn9P5yQwiZFFqy1hbgfUBrNfHP7fpz+c6nLbJfjWqlQSw
+         gE3OqyvZWsc7HCjnfVRdPOKfQQCA5l6zr/x6td7hTKQKfK7gLVDsTLeRu7E7MFU9xVzN
+         kvq8akD1Y+tMa1yPxSbXx5qsTIiLd5E3H6Hdrj01aM+pa59LS+LwDtAIIqhf20zfYYSe
+         I3buoKfCHPPpdXVy28FgfMXX+Z100i7GPpcDwjE+4+OsG2lMK5oCf6bPjmW18lvJ1SeK
+         xRFMoay2m9HTuPIz+kvzdk85tjelvcrDKJL/pbNaoOJICVpRWfLHhwB3LsQt4rJJ5EuK
+         ExkQ==
+X-Gm-Message-State: APjAAAXvH1c7wbGUTfIxLGqdVyE4Rq18gl8Ja8OOO8gZSAY7BL+TGwdo
+        CsVQOfgqeRDhJvmm4PWshiAdHg==
+X-Google-Smtp-Source: APXvYqzKgLF223uw/JHxlrlAFM0A7p9yaZS2vEzbwf0/Z3V+zNZe1QVoP/BadRa/bU48/bFGR0+qBQ==
+X-Received: by 2002:a17:902:744c:: with SMTP id e12mr76102154plt.287.1563819493921;
+        Mon, 22 Jul 2019 11:18:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r18sm30269979pfg.77.2019.07.22.11.18.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jul 2019 11:18:13 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:18:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        tobin@kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] libata: zpodd: Fix small read overflow in
+ zpodd_get_mech_type()
+Message-ID: <201907221117.254D219F9E@keescook>
+References: <201907192038.AEF9B52@keescook>
+ <CAKwvOdkkqhwHz_yLN5VjAdENj3qtwdJ080QKpQ9vr--F1xQPhA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c02833c8-8c68-4331-03c7-d9e5eb2f285c@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdkkqhwHz_yLN5VjAdENj3qtwdJ080QKpQ9vr--F1xQPhA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 11:23:06AM -0700, Dave Hansen wrote:
-> On 7/18/19 5:58 PM, Nadav Amit wrote:
-> > @@ -624,16 +622,11 @@ EXPORT_SYMBOL(on_each_cpu);
-> >  void on_each_cpu_mask(const struct cpumask *mask, smp_call_func_t func,
-> >  			void *info, bool wait)
-> >  {
-> > -	int cpu = get_cpu();
-> > +	preempt_disable();
-> >  
-> > -	smp_call_function_many(mask, func, info, wait);
-> > -	if (cpumask_test_cpu(cpu, mask)) {
-> > -		unsigned long flags;
-> > -		local_irq_save(flags);
-> > -		func(info);
-> > -		local_irq_restore(flags);
-> > -	}
-> > -	put_cpu();
-> > +	__smp_call_function_many(mask, func, func, info, wait);
-> > +
-> > +	preempt_enable();
-> >  }
+On Mon, Jul 22, 2019 at 10:40:40AM -0700, Nick Desaulniers wrote:
+> On Fri, Jul 19, 2019 at 8:41 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+> > eject_tray()"), this fixes a cdb[] buffer length, this time in
+> > zpodd_get_mech_type():
+> >
+> > We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+> > ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+> >
+> > The KASAN report was:
+> >
+> > BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+> > Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+> > ...
+> > The buggy address belongs to the variable:
+> >  cdb.48319+0x0/0x40
+> >
+> > Reported-by: Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+> > Fixes: afe759511808c ("libata: identify and init ZPODD devices")
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
-> The get_cpu() was missing it too, but it would be nice to add some
-> comments about why preempt needs to be off.  I was also thinking it
-> might make sense to do:
-> 
-> 	cfd = get_cpu_var(cfd_data);
-> 	__smp_call_function_many(cfd, ...);
-> 	put_cpu_var(cfd_data);
-> 	
-> instead of the explicit preempt_enable/disable(), but I don't feel too
-> strongly about it.
+> Interesting, both initializer lists are less than ATAPI_CDB_LEN (16)
+> elements, yet ata_exec_internal_sg() in drivers/ata/libata-core.c very
+> clearly has a ATAPI_CDB_LEN byte memcpy on that element.  Probably
+> both initializer lists should just lead off the trailing zero's or
+> provide the entire 16 elements.  For now, thank you for the patch.
 
-It is also required for cpu hotplug.
+Yup, with the specific size added it'll be zero-padded.
+
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+Thanks!
+
+-Kees
+
+> 
+> > ---
+> >  drivers/ata/libata-zpodd.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+> > index 173e6f2dd9af..eefda51f97d3 100644
+> > --- a/drivers/ata/libata-zpodd.c
+> > +++ b/drivers/ata/libata-zpodd.c
+> > @@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+> >         unsigned int ret;
+> >         struct rm_feature_desc *desc;
+> >         struct ata_taskfile tf;
+> > -       static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
+> > +       static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
+> >                         2,      /* only 1 feature descriptor requested */
+> >                         0, 3,   /* 3, removable medium feature */
+> >                         0, 0, 0,/* reserved */
+> > --
+> > 2.17.1
+> >
+> >
+> > --
+> > Kees Cook
+> 
+> 
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
+
+-- 
+Kees Cook
