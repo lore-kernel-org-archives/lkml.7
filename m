@@ -2,242 +2,178 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BC9C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4945C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A782190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D872190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:13:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VUmF1WXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbfGVSMs (ORCPT
+        id S1731180AbfGVSNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:12:48 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.108]:34360 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726343AbfGVSMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:12:47 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 5AB5B5112
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:12:46 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id pcnmhxewm4FKppcnmh8nn6; Mon, 22 Jul 2019 13:12:46 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:46522 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hpcnk-002AEO-VS; Mon, 22 Jul 2019 13:12:45 -0500
-Date:   Mon, 22 Jul 2019 13:12:44 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] drm/i915: Mark expected switch fall-throughs
-Message-ID: <20190722181244.GA2085@embeddedor>
+        Mon, 22 Jul 2019 14:13:33 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:28961 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbfGVSNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 14:13:32 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 45sqSp55k8zB2;
+        Mon, 22 Jul 2019 20:12:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1563819130; bh=XAqN9Z5GxdiKSFRY+TjZ30AKda1Zi0HoeytkimFExzg=;
+        h=Date:From:Subject:To:Cc:From;
+        b=VUmF1WXMgsySLjvOQ7XaBW90KRpV2Je+SmLh3ozn3p9r/56qOyGCEs0ygxClmPZkS
+         d4cpubEzQvYKotIyK1jv431l3Aw0WzVd4GTPhK/4a829t7vN6OyBlJHomXNbgBZ3Oc
+         065juQKAW7MEl/bSpbVKBNkVHopXtRlGIYk4ZBnaupX50hfafiXt0r19BX8NZVN0y2
+         ze5q8a5tuFgx8j0x6FH7bikaqTpHK/m0mBGGdYzCOopthQQ3rTDeXOnrGw0v5zbi5+
+         pqv2zrWrh9Fe3Hw5e0k6jGGjwVL4BUctyFgECB4XS1CG7Iu771+LYdkWQdYeGzGO2R
+         op/4AU3DSJqoA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.100.3 at mail
+Date:   Mon, 22 Jul 2019 20:13:29 +0200
+Message-Id: <d02d7285ef26f59ce43a3097e342eea081b98444.1563819128.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] regulator: act8865: support regulator-pull-down property
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.149.185
-X-Source-L: No
-X-Exim-ID: 1hpcnk-002AEO-VS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink149-185.telefonia.intercable.net (embeddedor) [201.172.149.185]:46522
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+To:     linux-kernel@vger.kernel.org
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+AC8865 has internal 1.5k pull-down resistor that can be enabled when LDO
+is shut down.
 
-This patch fixes the following warnings:
-
-drivers/gpu/drm/i915/gem/i915_gem_mman.c: In function ‘i915_gem_fault’:
-drivers/gpu/drm/i915/gem/i915_gem_mman.c:342:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (!i915_terminally_wedged(i915))
-      ^
-drivers/gpu/drm/i915/gem/i915_gem_mman.c:345:2: note: here
-  case -EAGAIN:
-  ^~~~
-
-drivers/gpu/drm/i915/gem/i915_gem_pages.c: In function ‘i915_gem_object_map’:
-./include/linux/compiler.h:78:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
- # define unlikely(x) __builtin_expect(!!(x), 0)
-                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/bug.h:136:2: note: in expansion of macro ‘unlikely’
-  unlikely(__ret_warn_on);     \
-  ^~~~~~~~
-drivers/gpu/drm/i915/i915_utils.h:49:25: note: in expansion of macro ‘WARN’
- #define MISSING_CASE(x) WARN(1, "Missing case (%s == %ld)\n", \
-                         ^~~~
-drivers/gpu/drm/i915/gem/i915_gem_pages.c:270:3: note: in expansion of macro ‘MISSING_CASE’
-   MISSING_CASE(type);
-   ^~~~~~~~~~~~
-drivers/gpu/drm/i915/gem/i915_gem_pages.c:272:2: note: here
-  case I915_MAP_WB:
-  ^~~~
-
-drivers/gpu/drm/i915/i915_gpu_error.c: In function ‘error_record_engine_registers’:
-./include/linux/compiler.h:78:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
- # define unlikely(x) __builtin_expect(!!(x), 0)
-                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/bug.h:136:2: note: in expansion of macro ‘unlikely’
-  unlikely(__ret_warn_on);     \
-  ^~~~~~~~
-drivers/gpu/drm/i915/i915_utils.h:49:25: note: in expansion of macro ‘WARN’
- #define MISSING_CASE(x) WARN(1, "Missing case (%s == %ld)\n", \
-                         ^~~~
-drivers/gpu/drm/i915/i915_gpu_error.c:1196:5: note: in expansion of macro ‘MISSING_CASE’
-     MISSING_CASE(engine->id);
-     ^~~~~~~~~~~~
-drivers/gpu/drm/i915/i915_gpu_error.c:1197:4: note: here
-    case RCS0:
-    ^~~~
-
-drivers/gpu/drm/i915/display/intel_dp.c: In function ‘intel_dp_get_fia_supported_lane_count’:
-./include/linux/compiler.h:78:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
- # define unlikely(x) __builtin_expect(!!(x), 0)
-                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/bug.h:136:2: note: in expansion of macro ‘unlikely’
-  unlikely(__ret_warn_on);     \
-  ^~~~~~~~
-drivers/gpu/drm/i915/i915_utils.h:49:25: note: in expansion of macro ‘WARN’
- #define MISSING_CASE(x) WARN(1, "Missing case (%s == %ld)\n", \
-                         ^~~~
-drivers/gpu/drm/i915/display/intel_dp.c:233:3: note: in expansion of macro ‘MISSING_CASE’
-   MISSING_CASE(lane_info);
-   ^~~~~~~~~~~~
-drivers/gpu/drm/i915/display/intel_dp.c:234:2: note: here
-  case 1:
-  ^~~~
-
-drivers/gpu/drm/i915/display/intel_display.c: In function ‘check_digital_port_conflicts’:
-  CC [M]  drivers/gpu/drm/nouveau/nvkm/engine/disp/cursgv100.o
-drivers/gpu/drm/i915/display/intel_display.c:12043:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (WARN_ON(!HAS_DDI(to_i915(dev))))
-       ^
-drivers/gpu/drm/i915/display/intel_display.c:12046:3: note: here
-   case INTEL_OUTPUT_DP:
-   ^~~~
-
-Also, notice that the Makefile is modified in order to stop
-ignoring fall-through warnings. The -Wimplicit-fallthrough
-option will be enabled globally in v5.3.
-
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/gpu/drm/i915/Makefile                | 1 -
- drivers/gpu/drm/i915/display/intel_display.c | 2 +-
- drivers/gpu/drm/i915/display/intel_dp.c      | 1 +
- drivers/gpu/drm/i915/gem/i915_gem_mman.c     | 2 +-
- drivers/gpu/drm/i915/gem/i915_gem_pages.c    | 2 +-
- drivers/gpu/drm/i915/i915_gpu_error.c        | 1 +
- 6 files changed, 5 insertions(+), 4 deletions(-)
+ * against broonie/regulator/for-next tree
 
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index 91355c2ea8a5..8cace65f50ce 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -16,7 +16,6 @@ subdir-ccflags-y := -Wall -Wextra
- subdir-ccflags-y += $(call cc-disable-warning, unused-parameter)
- subdir-ccflags-y += $(call cc-disable-warning, type-limits)
- subdir-ccflags-y += $(call cc-disable-warning, missing-field-initializers)
--subdir-ccflags-y += $(call cc-disable-warning, implicit-fallthrough)
- subdir-ccflags-y += $(call cc-disable-warning, unused-but-set-variable)
- # clang warnings
- subdir-ccflags-y += $(call cc-disable-warning, sign-compare)
-diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index 8592a7d422de..30b97ded6fdd 100644
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -12042,7 +12042,7 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
- 		case INTEL_OUTPUT_DDI:
- 			if (WARN_ON(!HAS_DDI(to_i915(dev))))
- 				break;
--			/* else: fall through */
-+			/* else, fall through */
- 		case INTEL_OUTPUT_DP:
- 		case INTEL_OUTPUT_HDMI:
- 		case INTEL_OUTPUT_EDP:
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 4336df46fe78..d0fc34826771 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -231,6 +231,7 @@ static int intel_dp_get_fia_supported_lane_count(struct intel_dp *intel_dp)
- 	switch (lane_info) {
- 	default:
- 		MISSING_CASE(lane_info);
-+		/* fall through */
- 	case 1:
- 	case 2:
- 	case 4:
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_mman.c b/drivers/gpu/drm/i915/gem/i915_gem_mman.c
-index 391621ee3cbb..39a661927d8e 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_mman.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_mman.c
-@@ -341,7 +341,7 @@ vm_fault_t i915_gem_fault(struct vm_fault *vmf)
- 		 */
- 		if (!i915_terminally_wedged(i915))
- 			return VM_FAULT_SIGBUS;
--		/* else: fall through */
-+		/* else, fall through */
- 	case -EAGAIN:
- 		/*
- 		 * EAGAIN means the gpu is hung and we'll wait for the error
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-index b36ad269f4ea..65eb430cedba 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-@@ -268,7 +268,7 @@ static void *i915_gem_object_map(const struct drm_i915_gem_object *obj,
- 	switch (type) {
- 	default:
- 		MISSING_CASE(type);
--		/* fallthrough to use PAGE_KERNEL anyway */
-+		/* fallthrough - to use PAGE_KERNEL anyway */
- 	case I915_MAP_WB:
- 		pgprot = PAGE_KERNEL;
- 		break;
-diff --git a/drivers/gpu/drm/i915/i915_gpu_error.c b/drivers/gpu/drm/i915/i915_gpu_error.c
-index b7e9fddef270..41a511d5267f 100644
---- a/drivers/gpu/drm/i915/i915_gpu_error.c
-+++ b/drivers/gpu/drm/i915/i915_gpu_error.c
-@@ -1194,6 +1194,7 @@ static void error_record_engine_registers(struct i915_gpu_state *error,
- 			switch (engine->id) {
- 			default:
- 				MISSING_CASE(engine->id);
-+				/* fall through */
- 			case RCS0:
- 				mmio = RENDER_HWS_PGA_GEN7;
- 				break;
+---
+ drivers/regulator/act8865-regulator.c | 45 ++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index cf72d7c6b8c9..921f8f03b84e 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -112,6 +112,8 @@
+  * Field Definitions.
+  */
+ #define	ACT8865_ENA		0x80	/* ON - [7] */
++#define	ACT8865_DIS		0x40	/* DIS - [6] */
++
+ #define	ACT8865_VSEL_MASK	0x3F	/* VSET - [5:0] */
+ 
+ 
+@@ -228,12 +230,23 @@ static const struct regulator_ops act8865_ops = {
+ };
+ 
+ static const struct regulator_ops act8865_ldo_ops = {
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.map_voltage		= regulator_map_voltage_linear_range,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
+ 	.is_enabled		= regulator_is_enabled_regmap,
++	.set_pull_down		= regulator_set_pull_down_regmap,
+ };
+ 
+-#define ACT88xx_REG(_name, _family, _id, _vsel_reg, _supply)		\
++static const struct regulator_ops act8865_fixed_ldo_ops = {
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= regulator_is_enabled_regmap,
++};
++
++#define ACT88xx_REG_(_name, _family, _id, _vsel_reg, _supply, _ops)	\
+ 	[_family##_ID_##_id] = {					\
+ 		.name			= _name,			\
+ 		.of_match		= of_match_ptr(_name),		\
+@@ -241,7 +254,7 @@ static const struct regulator_ops act8865_ldo_ops = {
+ 		.supply_name		= _supply,			\
+ 		.id			= _family##_ID_##_id,		\
+ 		.type			= REGULATOR_VOLTAGE,		\
+-		.ops			= &act8865_ops,			\
++		.ops			= _ops,				\
+ 		.n_voltages		= ACT8865_VOLTAGE_NUM,		\
+ 		.linear_ranges		= act8865_voltage_ranges,	\
+ 		.n_linear_ranges	= ARRAY_SIZE(act8865_voltage_ranges), \
+@@ -249,9 +262,17 @@ static const struct regulator_ops act8865_ldo_ops = {
+ 		.vsel_mask		= ACT8865_VSEL_MASK,		\
+ 		.enable_reg		= _family##_##_id##_CTRL,	\
+ 		.enable_mask		= ACT8865_ENA,			\
++		.pull_down_reg		= _family##_##_id##_CTRL,	\
++		.pull_down_mask		= ACT8865_DIS,			\
+ 		.owner			= THIS_MODULE,			\
+ 	}
+ 
++#define ACT88xx_REG(_name, _family, _id, _vsel_reg, _supply) \
++	ACT88xx_REG_(_name, _family, _id, _vsel_reg, _supply, &act8865_ops)
++
++#define ACT88xx_LDO(_name, _family, _id, _vsel_reg, _supply) \
++	ACT88xx_REG_(_name, _family, _id, _vsel_reg, _supply, &act8865_ldo_ops)
++
+ static const struct regulator_desc act8600_regulators[] = {
+ 	ACT88xx_REG("DCDC1", ACT8600, DCDC1, VSET, "vp1"),
+ 	ACT88xx_REG("DCDC2", ACT8600, DCDC2, VSET, "vp2"),
+@@ -281,7 +302,7 @@ static const struct regulator_desc act8600_regulators[] = {
+ 		.of_match = of_match_ptr("LDO_REG9"),
+ 		.regulators_node = of_match_ptr("regulators"),
+ 		.id = ACT8600_ID_LDO9,
+-		.ops = &act8865_ldo_ops,
++		.ops = &act8865_fixed_ldo_ops,
+ 		.type = REGULATOR_VOLTAGE,
+ 		.n_voltages = 1,
+ 		.fixed_uV = 3300000,
+@@ -294,7 +315,7 @@ static const struct regulator_desc act8600_regulators[] = {
+ 		.of_match = of_match_ptr("LDO_REG10"),
+ 		.regulators_node = of_match_ptr("regulators"),
+ 		.id = ACT8600_ID_LDO10,
+-		.ops = &act8865_ldo_ops,
++		.ops = &act8865_fixed_ldo_ops,
+ 		.type = REGULATOR_VOLTAGE,
+ 		.n_voltages = 1,
+ 		.fixed_uV = 1200000,
+@@ -323,20 +344,20 @@ static const struct regulator_desc act8865_regulators[] = {
+ 	ACT88xx_REG("DCDC_REG1", ACT8865, DCDC1, VSET1, "vp1"),
+ 	ACT88xx_REG("DCDC_REG2", ACT8865, DCDC2, VSET1, "vp2"),
+ 	ACT88xx_REG("DCDC_REG3", ACT8865, DCDC3, VSET1, "vp3"),
+-	ACT88xx_REG("LDO_REG1", ACT8865, LDO1, VSET, "inl45"),
+-	ACT88xx_REG("LDO_REG2", ACT8865, LDO2, VSET, "inl45"),
+-	ACT88xx_REG("LDO_REG3", ACT8865, LDO3, VSET, "inl67"),
+-	ACT88xx_REG("LDO_REG4", ACT8865, LDO4, VSET, "inl67"),
++	ACT88xx_LDO("LDO_REG1", ACT8865, LDO1, VSET, "inl45"),
++	ACT88xx_LDO("LDO_REG2", ACT8865, LDO2, VSET, "inl45"),
++	ACT88xx_LDO("LDO_REG3", ACT8865, LDO3, VSET, "inl67"),
++	ACT88xx_LDO("LDO_REG4", ACT8865, LDO4, VSET, "inl67"),
+ };
+ 
+ static const struct regulator_desc act8865_alt_regulators[] = {
+ 	ACT88xx_REG("DCDC_REG1", ACT8865, DCDC1, VSET2, "vp1"),
+ 	ACT88xx_REG("DCDC_REG2", ACT8865, DCDC2, VSET2, "vp2"),
+ 	ACT88xx_REG("DCDC_REG3", ACT8865, DCDC3, VSET2, "vp3"),
+-	ACT88xx_REG("LDO_REG1", ACT8865, LDO1, VSET, "inl45"),
+-	ACT88xx_REG("LDO_REG2", ACT8865, LDO2, VSET, "inl45"),
+-	ACT88xx_REG("LDO_REG3", ACT8865, LDO3, VSET, "inl67"),
+-	ACT88xx_REG("LDO_REG4", ACT8865, LDO4, VSET, "inl67"),
++	ACT88xx_LDO("LDO_REG1", ACT8865, LDO1, VSET, "inl45"),
++	ACT88xx_LDO("LDO_REG2", ACT8865, LDO2, VSET, "inl45"),
++	ACT88xx_LDO("LDO_REG3", ACT8865, LDO3, VSET, "inl67"),
++	ACT88xx_LDO("LDO_REG4", ACT8865, LDO4, VSET, "inl67"),
+ };
+ 
+ #ifdef CONFIG_OF
 -- 
-2.22.0
+2.20.1
 
