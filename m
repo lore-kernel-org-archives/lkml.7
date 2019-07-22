@@ -2,86 +2,143 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1A8C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CA8C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD0821F26
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73A622297
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YP5cgo1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfGVFZX (ORCPT
+        id S1727304AbfGVF2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:25:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41392 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbfGVFZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:25:23 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8750EAB3666A593AD324;
-        Mon, 22 Jul 2019 13:25:20 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 13:25:13 +0800
-Subject: Re: [PATCH v3 01/24] erofs: add on-disk layout
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-2-gaoxiang25@huawei.com>
- <20190722132616.60edd141@canb.auug.org.au> <20190722050522.GA11993@kroah.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <98b70190-a7d8-6251-84d9-599ca115f42b@huawei.com>
-Date:   Mon, 22 Jul 2019 13:24:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 22 Jul 2019 01:28:17 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46980 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfGVF2Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:28:16 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so10574770ote.13;
+        Sun, 21 Jul 2019 22:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h+i9jewAdtfLLPC8niA+t9B34gWGVVKpI03gRjn4UC4=;
+        b=YP5cgo1NXLokkSmA5Uny5czJ4oMGoZzdhA5iLLo2LGpPM9lK51oPdM0XpbE6kFY4IG
+         dKTTBfv4Q/vMXZDkJCsMKl/wYz8EhY1oq/hd9WAKSgsgtlvN/cNYMEvUH4VJpMcFNkIl
+         XSMW51LZlAS1UccY1dyCXYunK+TuB5aMzjvBfdoefq0Lbu0SFMndRVNvQeBjBmgDvFY6
+         wIcdh7UaTLjAYdoXGkW7QIClzl38FXzcVyKAk8VALPaD+ByDIHS41Ud7z8KSwOpo3VC9
+         CYJfN/P91Q6zan0O7G4hV2VolOuX7bQefZi9trxu8zBDoALAwC1twBtFXR5KqhYYtlgS
+         LOQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h+i9jewAdtfLLPC8niA+t9B34gWGVVKpI03gRjn4UC4=;
+        b=hapCmWCtfHZq1ZndKEecYyiFUrz9zgOW1X3SqdJeOqDVYxCGPV3blaYQFbkJRjNpEm
+         k5Tv9VhrVssa+EjgG8S6iq7qFGbRZHIhSiUcCdM/v/HAK5Xzj6C5RKvSViHgzfqdfW48
+         /oQPmr+/AwopxfvMe6Fd60hh+smHQ5HDbHsvOoh04PXjPPgLuZ2vuglv/yvD8mne41Sr
+         VBKu/E+AvXj5PN9WSx6wCMfv/QSVzfwkvfMDLuoaHPJOjWXKo33dkdJiHjKytFC/yFbJ
+         cVAsqI7BNXzItelJnbfjpWRr8OBzheBTnRfGa51nYOS+Xp/5Y4bJ5Ote6o1mc++VbQ6h
+         SrmA==
+X-Gm-Message-State: APjAAAWWrPJh+p0Mb0DiPfVpx1mijariloRiLVakQAZsZNI+NY8RMxEo
+        dlYS+/mQnsyzG28oNochxN3bEZQfIkHFafgniQfhGqcQ
+X-Google-Smtp-Source: APXvYqz2TdTBO+yorxieSvfbToEVUV2J9chaylFyyRANU8W4nVYKtGry30Vq/MI+Jkkr4dNHSPuVU0C7JDwuIx6htOg=
+X-Received: by 2002:a9d:4590:: with SMTP id x16mr373173ote.254.1563773295708;
+ Sun, 21 Jul 2019 22:28:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190722050522.GA11993@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+References: <1562917140-12035-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1562917140-12035-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 22 Jul 2019 13:28:07 +0800
+Message-ID: <CANRm+CwfjQfjS4SvUGnCLG-JNVyBLM=NB+Eu5u-=z1KiATjFKw@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/2] KVM: LAPIC: Add pv ipi tracepoint
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On 2019/7/22 13:05, Greg Kroah-Hartman wrote:
-> On Mon, Jul 22, 2019 at 01:26:16PM +1000, Stephen Rothwell wrote:
->> Hi Gao,
->>
->> On Mon, 22 Jul 2019 10:50:20 +0800 Gao Xiang <gaoxiang25@huawei.com> wrote:
->>>
->>> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
->>> new file mode 100644
->>> index 000000000000..e418725abfd6
->>> --- /dev/null
->>> +++ b/fs/erofs/erofs_fs.h
->>> @@ -0,0 +1,316 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
->>
->> I think the preferred tag is now GPL-2.0-only (assuming that is what is
->> intended).
-> 
-> Either is fine, see the LICENSE/preferred/GPL-2.0 file for the list of
-> valid ones.
-
-Yes, I noticed the LICENSE text before and I can do in the either way (use
-GPL-2.0 or GPL-2.0-only). This modification won't take too much time...
-If it is needed, I am happy to do that... That is fine :)
-
-Thanks,
-Gao Xiang
+ping,
+On Fri, 12 Jul 2019 at 15:39, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> Add pv ipi tracepoint.
+>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c |  2 ++
+>  arch/x86/kvm/trace.h | 25 +++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 42da7eb..403ae3f 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -562,6 +562,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ip=
+i_bitmap_low,
+>         irq.level =3D (icr & APIC_INT_ASSERT) !=3D 0;
+>         irq.trig_mode =3D icr & APIC_INT_LEVELTRIG;
+>
+> +       trace_kvm_pv_send_ipi(irq.vector, min, ipi_bitmap_low, ipi_bitmap=
+_high);
+> +
+>         if (icr & APIC_DEST_MASK)
+>                 return -KVM_EINVAL;
+>         if (icr & APIC_SHORT_MASK)
+> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+> index b5c831e..ce6ee34 100644
+> --- a/arch/x86/kvm/trace.h
+> +++ b/arch/x86/kvm/trace.h
+> @@ -1462,6 +1462,31 @@ TRACE_EVENT(kvm_hv_send_ipi_ex,
+>                   __entry->vector, __entry->format,
+>                   __entry->valid_bank_mask)
+>  );
+> +
+> +/*
+> + * Tracepoints for kvm_pv_send_ipi.
+> + */
+> +TRACE_EVENT(kvm_pv_send_ipi,
+> +       TP_PROTO(u32 vector, u32 min, unsigned long ipi_bitmap_low, unsig=
+ned long ipi_bitmap_high),
+> +       TP_ARGS(vector, min, ipi_bitmap_low, ipi_bitmap_high),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(u32, vector)
+> +               __field(u32, min)
+> +               __field(unsigned long, ipi_bitmap_low)
+> +               __field(unsigned long, ipi_bitmap_high)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->vector =3D vector;
+> +               __entry->min =3D min;
+> +               __entry->ipi_bitmap_low =3D ipi_bitmap_low;
+> +               __entry->ipi_bitmap_high =3D ipi_bitmap_high;
+> +       ),
+> +
+> +       TP_printk("vector %d min 0x%x ipi_bitmap_low 0x%lx ipi_bitmap_hig=
+h 0x%lx",
+> +                 __entry->vector, __entry->min, __entry->ipi_bitmap_low,=
+ __entry->ipi_bitmap_high)
+> +);
+>  #endif /* _TRACE_KVM_H */
+>
+>  #undef TRACE_INCLUDE_PATH
+> --
+> 2.7.4
+>
