@@ -2,172 +2,164 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3309FC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F6AC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D3821BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1A321BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljAal1kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfGVGbY (ORCPT
+        id S1727407AbfGVGcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 02:31:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2734 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726862AbfGVGbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 02:31:24 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AA586B09DC79AE9496BF;
-        Mon, 22 Jul 2019 14:31:21 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 14:31:14 +0800
-Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
-To:     Amir Goldstein <amir73il@gmail.com>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-13-gaoxiang25@huawei.com>
- <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
- <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
- <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <a9d4920c-cfb0-50c7-a1f3-3e3c0e581bd7@huawei.com>
-Date:   Mon, 22 Jul 2019 14:31:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 22 Jul 2019 02:32:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44299 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfGVGcu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 02:32:50 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so36382591ljc.11;
+        Sun, 21 Jul 2019 23:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h55/At6J9CPBgcZi6TKTS0lA6V1xQY/1tTGwqlNw1zk=;
+        b=ljAal1kR5KGX+wRGnJq40om8Wl6IjXl+mVeajXd6ZNkrv5WYeb/JSG92+Q9ONBeUKX
+         nBuuAkie/JgNdn8zNBfGXXrqIvIdyNTTIjeVr6JOtXoywGlgnFB4Y81VoWbO7ClfTuB5
+         nMcKjQfncwK9oeXbxZH8JdVbR9uBCObC+VVV0RFJFng7B/p1dLIBCvRWVZ3DoaEEdOlx
+         hBBRRwxUNssFpFuarPIf6HLegHch0ZvMs9NCZEXLI87SvA4qRkL/Pz/TGXSKLQK9Zlag
+         /5EbwMv//4zhY7t83O0eHxErifgAgoLjuLBtP8Gb4XwirGW5lPy5CvU483MMCyPavjD1
+         aG9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h55/At6J9CPBgcZi6TKTS0lA6V1xQY/1tTGwqlNw1zk=;
+        b=kaJg1NbQZC5kf+TP4vYWTLLxIUKha0Atm8zBtn5W7uGeapD6rfV2LIhX8bD7x7j+fi
+         51adyD3tYuQtcRxdJhDQ43lz5g3V6ymzaBvRRwn/d71uhKwhNwW3t3QlBgVqq54K1ibi
+         aIv4YtEcsvi/qqF8PpkYz7i4o8U1agUa2chlRs+XlhbuDFbnlXLsPX0JBBJuyFSbpJvb
+         pDaZjEBt9xNlwUCEYDHdAvub9g2yux+R7nnOSfVJ34lLPZtBAzsCH89Ryja/gB3k0dwh
+         T3eQSYh+27JYLxOy/hb/JAvqu+fUGQkaPru/hk2K6sazIYOgTxCkf5NxriI6oZmC/Hwo
+         8ptg==
+X-Gm-Message-State: APjAAAXdUNvm0q0KbsqvLW96RnxVYeClYMeO26cVCvXfhSg2Rw2OKSHL
+        71b7j1NRL5jrksqyuVtjgV2AdqM0
+X-Google-Smtp-Source: APXvYqz17T7X33n+IASByssuuS0S1B+eW/snQjI/d/9WOVA9iXgDePtDVEGadkagJbxazhQvIpl5Cw==
+X-Received: by 2002:a2e:9ac6:: with SMTP id p6mr18888797ljj.100.1563777167013;
+        Sun, 21 Jul 2019 23:32:47 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id e12sm5824916lfb.66.2019.07.21.23.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 23:32:45 -0700 (PDT)
+Subject: Re: [PATCH V6 09/21] clk: tegra: clk-super: Fix to enable PLLP
+ branches to CPU
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-10-git-send-email-skomatineni@nvidia.com>
+ <0c86cd7f-81b5-40c5-6f1e-796e8f13b522@gmail.com>
+ <042f4b43-7b9c-533d-2548-d903b34363da@nvidia.com>
+ <7933a83c-3208-b551-d41d-70285ae528e3@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f6ac50af-c3a5-1fef-2e0d-a9ecadeb2495@gmail.com>
+Date:   Mon, 22 Jul 2019 09:32:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+In-Reply-To: <7933a83c-3208-b551-d41d-70285ae528e3@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/22 14:16, Amir Goldstein wrote:
-> On Mon, Jul 22, 2019 at 8:02 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
+22.07.2019 6:17, Sowjanya Komatineni пишет:
+> 
+> On 7/21/19 3:39 PM, Sowjanya Komatineni wrote:
 >>
->> Hi Amir,
->>
->> On 2019/7/22 12:39, Amir Goldstein wrote:
->>> On Mon, Jul 22, 2019 at 5:54 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
+>> On 7/21/19 2:16 PM, Dmitry Osipenko wrote:
+>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>>> This patch has a fix to enable PLLP branches to CPU before changing
+>>>> the CPU clusters clock source to PLLP for Gen5 Super clock.
 >>>>
->>>> Currently kernel has scattered tagged pointer usages
->>>> hacked by hand in plain code, without a unique and
->>>> portable functionset to highlight the tagged pointer
->>>> itself and wrap these hacked code in order to clean up
->>>> all over meaningless magic masks.
+>>>> During system suspend entry and exit, CPU source will be switched
+>>>> to PLLP and this needs PLLP branches to be enabled to CPU prior to
+>>>> the switch.
 >>>>
->>>> This patch introduces simple generic methods to fold
->>>> tags into a pointer integer. Currently it supports
->>>> the last n bits of the pointer for tags, which can be
->>>> selected by users.
+>>>> On system resume, warmboot code enables PLLP branches to CPU and
+>>>> powers up the CPU with PLLP clock source.
 >>>>
->>>> In addition, it will also be used for the upcoming EROFS
->>>> filesystem, which heavily uses tagged pointer pproach
->>>>  to reduce extra memory allocation.
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/clk/tegra/clk-super.c            | 11 +++++++++++
+>>>>   drivers/clk/tegra/clk-tegra-super-gen4.c |  4 ++--
+>>>>   drivers/clk/tegra/clk.h                  |  4 ++++
+>>>>   3 files changed, 17 insertions(+), 2 deletions(-)
 >>>>
->>>> Link: https://en.wikipedia.org/wiki/Tagged_pointer
->>>
->>> Well, it won't do much good for other kernel users in fs/erofs/ ;-)
->>
->> Thanks for your reply and interest in this patch.... :)
->>
->> Sigh... since I'm not sure kernel folks could have some interests in that stuffs.
->>
->> Actually at the time once I coded EROFS I found tagged pointer had 2 main advantages:
->> 1) it saves an extra field;
->> 2) it can keep the whole stuff atomicly...
->> And I observed the current kernel uses tagged pointer all around but w/o a proper wrapper...
->> and EROFS heavily uses tagged pointer... So I made a simple tagged pointer wrapper
->> to avoid meaningless magic masks and type casts in the code...
->>
->>>
->>> I think now would be a right time to promote this facility to
->>> include/linux as you initially proposed.
->>> I don't recall you got any objections. No ACKs either, but I think
->>> that was the good kind of silence (?)
->>
->> Yes, no NAK no ACK...(it seems the ordinary state for all EROFS stuffs... :'( sigh...)
->> Therefore I decided to leave it in fs/erofs/ in this series...
->>
->>>
->>> You might want to post the __fdget conversion patch [1] as a
->>> bonus patch on top of your series.
->>
->> I am not sure if another potential users could be quite happy with my ("sane?" or not)
->> implementation...
+>>>> diff --git a/drivers/clk/tegra/clk-super.c
+>>>> b/drivers/clk/tegra/clk-super.c
+>>>> index 39ef31b46df5..d73c587e4853 100644
+>>>> --- a/drivers/clk/tegra/clk-super.c
+>>>> +++ b/drivers/clk/tegra/clk-super.c
+>>>> @@ -28,6 +28,9 @@
+>>>>   #define super_state_to_src_shift(m, s) ((m->width * s))
+>>>>   #define super_state_to_src_mask(m) (((1 << m->width) - 1))
+>>>>   +#define CCLK_SRC_PLLP_OUT0 4
+>>>> +#define CCLK_SRC_PLLP_OUT4 5
+>>>> +
+>>>>   static u8 clk_super_get_parent(struct clk_hw *hw)
+>>>>   {
+>>>>       struct tegra_clk_super_mux *mux = to_clk_super_mux(hw);
+>>>> @@ -97,6 +100,14 @@ static int clk_super_set_parent(struct clk_hw
+>>>> *hw, u8 index)
+>>>>           if (index == mux->div2_index)
+>>>>               index = mux->pllx_index;
+>>>>       }
+>>>> +
+>>>> +    /*
+>>>> +     * Enable PLLP branches to CPU before selecting PLLP source
+>>>> +     */
+>>>> +    if ((mux->flags & TEGRA_CPU_CLK) &&
+>>>> +        ((index == CCLK_SRC_PLLP_OUT0) || (index ==
+>>>> CCLK_SRC_PLLP_OUT4)))
+>>>> +        tegra_clk_set_pllp_out_cpu(true);
+>>> Should somewhere here be tegra_clk_set_pllp_out_cpu(false) when
+>>> switching from PLLP?
+>> PLLP may be used for other CPU clusters.
 > 
-> Well, let's ask potential users then.
+> Though to avoid flag and check needed to make sure other CPU is not
+> using before disabling PLLP branch to CPU.
 > 
-> CC kernel/trace maintainers for RB_PAGE_HEAD/RB_PAGE_UPDATE
-> and kernel/locking maintainers for RT_MUTEX_HAS_WAITERS
+> But leaving it enabled shouldn't impact much as clock source mux is
+> after this in design anyway.
 > 
->> (Is there some use scenerios in overlayfs and fanotify?...)
-> 
-> We had one in overlayfs once. It is gone now.
-> 
->>
->> and I'm not sure Al could accept __fdget conversion (I just wanted to give a example then...)
->>
->> Therefore, I tend to keep silence and just promote EROFS... some better ideas?...
->>
-> 
-> Writing example conversion patches to demonstrate cleaner code
-> and perhaps reduce LOC seems the best way.
-> 
-> Also pointing out that fixing potential bugs in one implementation is preferred
-> to having to patch all copied implementations.
-> 
-> I wonder if tagptr_unfold_tags() doesn't need READ_ONCE() as per:
-> 1be5d4fa0af3 locking/rtmutex: Use READ_ONCE() in rt_mutex_owner()
-> 
-> rb_list_head() doesn't have READ_ONCE()
-> Nor does hlist_bl_first() and BPF_MAP_PTR().
-> 
-> Are those all safe due to safe call sites? or potentially broken?
+> But can add as well if its clear that way.
 
-...Add a word (maybe not too ralated with this topic), I heard something
-before from compiler guys like that the pointer type will be kept in atomic
-by compilers during accessing, I personally think that makes sense
-for pointer type.
+The TRM doc says "The CPU subsystem supports a switch-cluster mode
+meaning that only one of the clusters can be active at any given time".
 
-However, in EROFS implementation (not in this patch) I tend to use
-WRITE_ONCE / READ_ONCE in order to access once and as a hint to tell
-compiler it should be access once in case of getting rare broken
-generated code...
+Given that cluster-switching isn't supported in upstream, I don't think
+that you need to care about the other cluster at all, at least for now.
 
-I cannot trust compiler all the time due to code optimization since
-1) I have no idea it will generate in atomic for all cases...
-2) I have no idea it will be accessed more than one time somewhere...
+The cluster-switching implementation in upstream is very complicated
+because it requires a special "hotplugging" CPU governor, which
+apparently no other platform needs.
 
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Amir.
-> 
+[snip]
