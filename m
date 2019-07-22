@@ -2,103 +2,124 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA6BC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98817C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F927219BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5E021951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563832899;
+	bh=tNmfUezDHq+a7BuWrXqmVdnoKGw19y2xJZRBgPWqAas=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YMGyBjqxOFQQltJG9LTxaQhg8ffqQwJ7S/qz2n4MFodKNgpBnsQxyZdLEns9M7Uet
+	 gAsLJUZBxzs8X3hkOrmFOm+xQtADvNfW96RS7+YlLCiCtYd/G7VTwCoEis7Z63eQU5
+	 kbN00Ruzj4RFVKvEuAsZqttKdZrvyXu9KAjsXIcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732925AbfGVWAf (ORCPT
+        id S1732939AbfGVWBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:00:35 -0400
-Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:39278
-        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731495AbfGVWAd (ORCPT
+        Mon, 22 Jul 2019 18:01:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34180 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732797AbfGVWBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:00:33 -0400
-Received: from list by blaine.gmane.org with local (Exim 4.89)
-        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
-        id 1hpgMB-000FcE-GA
-        for linux-kernel@vger.kernel.org; Tue, 23 Jul 2019 00:00:31 +0200
-X-Injected-Via-Gmane: http://gmane.org/
-To:     linux-kernel@vger.kernel.org
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH][next] clk: Si5341/Si5340: remove redundant assignment to
- n_den
-Date:   Tue, 23 Jul 2019 00:00:24 +0200
-Message-ID: <a92ca50d-b33e-8779-294c-301535d0f0d5@wanadoo.fr>
-References: <20190701165020.19840-1-colin.king@canonical.com>
- <20190722212414.6EF8D21900@mail.kernel.org>
- <d1cd2b10-8fd4-f224-3bcd-5b938f72d249@wanadoo.fr>
- <20190722215314.9F4F121951@mail.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-In-Reply-To: <20190722215314.9F4F121951@mail.kernel.org>
-Content-Language: en-US
-Cc:     linux-clk@vger.kernel.org, kernel-janitors@vger.kernel.org
+        Mon, 22 Jul 2019 18:01:37 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so77497551iot.1;
+        Mon, 22 Jul 2019 15:01:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=317qAQxotsgQLMyHaOatEPkOpAMyuma68l0S3IPmCaI=;
+        b=EcfolNmWHKOs07TusFtE8Xttqyv9FzRhG8syMXj0+af/nARq1kziopo4MdR3KWeUQN
+         5PdZ7eVxNyDMyWwG/gwIpmBBtUcq0psMyVyyYE0fAj9rVzUiFrGtdI2uVefbf7wVpcuI
+         PeJfuAWiZv6Rn5fsTsD6XHi4qxpV7ZqyCCrI7NsNkmNg+13g3qCD4TKKdJU6aKLlBQPz
+         sQXrAzXqt4W65f5pM/rczCu46acbx/+HOmA42Sx53BD9CGORCogsNjX0DXN8AX3ppefW
+         10laOp4O29f9cpWMZuY3XetaTzOpRkrcJQnx/VGAzedBfgIzCxyINT+9nn2WwyetKueU
+         6GbQ==
+X-Gm-Message-State: APjAAAVcFz4zQGCzSWgqUWZF+/D27JZBz4Jb4wbpxh4IpiSspkZgmSNq
+        PXQyPNCqK7VfMskTen8k9S63wgE=
+X-Google-Smtp-Source: APXvYqztwogHmK5lyRPBzlOeroG5MXmFrVdx5UE5txZpgI4VvzYvgFsczv8iMCAnS69d8QVpaTBpZw==
+X-Received: by 2002:a5d:9643:: with SMTP id d3mr70534966ios.227.1563832896219;
+        Mon, 22 Jul 2019 15:01:36 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id c81sm63005975iof.28.2019.07.22.15.01.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 15:01:35 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 16:01:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Manish Narani <manish.narani@xilinx.com>
+Cc:     ulf.hansson@linaro.org, mark.rutland@arm.com, heiko@sntech.de,
+        michal.simek@xilinx.com, adrian.hunter@intel.com,
+        christoph.muellner@theobroma-systems.com,
+        philipp.tomsich@theobroma-systems.com, viresh.kumar@linaro.org,
+        scott.branden@broadcom.com, ayaka@soulik.info, kernel@esmil.dk,
+        tony.xie@rock-chips.com, rajan.vaja@xilinx.com,
+        jolly.shah@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org,
+        olof@lixom.net, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 07/11] dt-bindings: mmc: arasan: Add optional
+ properties for Arasan SDHCI
+Message-ID: <20190722220134.GA8281@bogus>
+References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+ <1561958991-21935-8-git-send-email-manish.narani@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561958991-21935-8-git-send-email-manish.narani@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190722220024.7Fb8B1VMHGMqGFSgX1iGnowV3z037SNZ73H4ZTTRTsY@z>
 
-Le 22/07/2019 à 23:53, Stephen Boyd a écrit :
-> Quoting Christophe JAILLET (2019-07-22 14:43:32)
->> Le 22/07/2019 à 23:24, Stephen Boyd a écrit :
->>> Please Cc authors of drivers so they can ack/review.
->>>
->>> Adding Mike to take a look.
->>>
->>> Quoting Colin King (2019-07-01 09:50:20)
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> The variable n_den is initialized however that value is never read
->>>> as n_den is re-assigned a little later in the two paths of a
->>>> following if-statement.  Remove the redundant assignment.
->>>>
->>>> Addresses-Coverity: ("Unused value")
->>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>> ---
->>>>    drivers/clk/clk-si5341.c | 1 -
->>>>    1 file changed, 1 deletion(-)
->>>>
->>>> diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
->>>> index 72424eb7e5f8..6e780c2a9e6b 100644
->>>> --- a/drivers/clk/clk-si5341.c
->>>> +++ b/drivers/clk/clk-si5341.c
->>>> @@ -547,7 +547,6 @@ static int si5341_synth_clk_set_rate(struct clk_hw *hw, unsigned long rate,
->>>>           bool is_integer;
->>>>    
->>>>           n_num = synth->data->freq_vco;
->>>> -       n_den = rate;
->>>>    
->>>>           /* see if there's an integer solution */
->>>>           r = do_div(n_num, rate);
->> Hi,
->>
->> I got the same advise from some else no later than yesterday (i.e. email
->> the author...)
->> Maybe 'get_maintainer.pl' could be improved to search for it and propose
->> the mail automatically?
->>
->> just my 2c.
->>
-> Use --git option of get_maintainer.pl?
->
->
-I don't use it explicitly, but the suggestions I get include some git 
-history, so I guess that it is on by default.
+On Mon, Jul 01, 2019 at 10:59:47AM +0530, Manish Narani wrote:
+> Add optional propeties for Arasan SDHCI which are used to set clk delays
+> for different speed modes in the controller.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 7c79496..7425d52 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -49,6 +49,21 @@ Optional Properties:
+>      properly. Test mode can be used to force the controller to function.
+>    - xlnx,int-clock-stable-broken: when present, the controller always reports
+>      that the internal clock is stable even when it is not.
+> +  - clk-phase-legacy: Input/Output Clock Delay pair in degrees for Legacy Mode.
+> +  - clk-phase-mmc-hs: Input/Output Clock Delay pair degrees for MMC HS.
+> +  - clk-phase-sd-hs: Input/Output Clock Delay pair in degrees for SD HS.
+> +  - clk-phase-uhs-sdr12: Input/Output Clock Delay pair in degrees for SDR12.
+> +  - clk-phase-uhs-sdr25: Input/Output Clock Delay pair in degrees for SDR25.
+> +  - clk-phase-uhs-sdr50: Input/Output Clock Delay pair in degrees for SDR50.
+> +  - clk-phase-uhs-sdr104: Input/Output Clock Delay pair in degrees for SDR104.
+> +  - clk-phase-uhs-ddr50: Input/Output Clock Delay pair in degrees for SD DDR50.
+> +  - clk-phase-mmc-ddr52: Input/Output Clock Delay pair in degrees for MMC DDR52.
+> +  - clk-phase-mmc-hs200: Input/Output Clock Delay pair in degrees for MMC HS200.
+> +  - clk-phase-mmc-hs400: Input/Output Clock Delay pair in degrees for MMC HS400.
 
-I was thinking at parsing files to see if MODULE_AUTHOR includes an email.
+Either these need vendor prefixes or be added as common properties if 
+that makes sense.
 
-CJ
+Rob
 
-
-
+> +
+> +  Above mentioned are the clock (phase) delays which are to be configured in the
+> +  controller while switching to particular speed mode. If not specified, driver
+> +  will configure the default value defined for particular mode in it.
+>  
+>  Example:
+>  	sdhci@e0100000 {
+> -- 
+> 2.1.1
+> 
