@@ -2,182 +2,101 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7577C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21032C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A6721955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C0921955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1UeEi17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfGVVSh (ORCPT
+        id S1730761AbfGVVTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:18:37 -0400
-Received: from 8.mo178.mail-out.ovh.net ([46.105.74.227]:47687 "EHLO
-        8.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728441AbfGVVSg (ORCPT
+        Mon, 22 Jul 2019 17:19:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50960 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728441AbfGVVTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:18:36 -0400
-X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 17:18:35 EDT
-Received: from player735.ha.ovh.net (unknown [10.109.143.183])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 9C1F572F9C
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 23:01:13 +0200 (CEST)
-Received: from sk2.org (gw.sk2.org [88.186.243.14])
-        (Authenticated sender: steve@sk2.org)
-        by player735.ha.ovh.net (Postfix) with ESMTPSA id 51167836AA7B;
-        Mon, 22 Jul 2019 21:01:03 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 23:01:02 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com, corbet@lwn.net,
-        linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH] checkpatch: Added warnings in favor of strscpy().
-Message-ID: <20190722230102.442137dc@heffalump.sk2.org>
-In-Reply-To: <15f2be3cde69321f4f3a48d60645b303d66a600b.camel@perches.com>
-References: <1561722948-28289-1-git-send-email-nitin.r.gote@intel.com>
-        <20190629181537.7d524f7d@sk2.org>
-        <201907021024.D1C8E7B2D@keescook>
-        <20190706144204.15652de7@heffalump.sk2.org>
-        <201907221047.4895D35B30@keescook>
-        <15f2be3cde69321f4f3a48d60645b303d66a600b.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 22 Jul 2019 17:19:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so36556118wml.0;
+        Mon, 22 Jul 2019 14:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lcHpQo876d02CYFiHQVItlAaSl/jfjKPiU6RN4TFprw=;
+        b=I1UeEi17GMEIe6au5rGLh3RvbccB2FY6dbNa1E9vsdRutTAF/j5zsxlFYgg12ObK85
+         u81bgOZDMP5ZBKa4ky4ep7OZgij8yIoNiw9ZNh4oH/XoqwCwDRnq/J6nxwpvlv6GRMrI
+         Ljsn6kcmeb5e/RdA+MlQ4AIUgSZMvzHQH6N0RRHnRcBrAy5c65FKe+6IL3CUSJa1R7Mv
+         qn1BkFvwOSGXF74VZsKGyEyaSwuA81rwkQTSIzlqFBI+w+tLgLCL3MgoZOOwo01o7ozR
+         OB0yw7PZRW75RY0lVv0FzfXdTrlkOVlTNcpE++qbI2eTPr2sIQE+njdtr8mljRzka2Nk
+         Nq5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lcHpQo876d02CYFiHQVItlAaSl/jfjKPiU6RN4TFprw=;
+        b=RBRy/WqKR/PKQfVZJxYFEUkxfm2Qlmo/oFsDKJjrIKraJ83pWvtwA6N6V+6CNALgEU
+         9PSa8spHn0quXUF7999i/kw1RQayYQ4moUmw/S6gyKT6/tuxnUJga84cPFbc097BpMn6
+         zQMI/Tus7OPio3KQp2+l8H+P7KPfTHSC4zbFedbomyj7QMhptJFfMGMAL4aaJLxa7GxK
+         dMlGtHoDgdQOj2vZf8iOFHJ7kr3rjrlAbnl0pfL2CZWADX85fkgzuvbmt0TvXea3GAUi
+         U+YOpenRuIl5LmIGmStTFed18cnFrgorEX5Jd6wbWg/7AcZt9iQS7+xGqpAQqiBBa0Op
+         TzCA==
+X-Gm-Message-State: APjAAAXEkDrpMEfdGyc/8AIbKWy7l0NKat8CMSs67W+AQARZtz+cJt0G
+        W2y/xRwRsg3onBjU1zQ8PK/+JZXE+YZuXg/oIK0=
+X-Google-Smtp-Source: APXvYqz7N07i6ohLv6+0gi1iEmrCQkPrVsOixoIwNWebkS9RIprupSjMey4srEFKt2qONF8zx4PlqSB9BaObesJr6Ck=
+X-Received: by 2002:a1c:c188:: with SMTP id r130mr61772280wmf.73.1563830358070;
+ Mon, 22 Jul 2019 14:19:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/_Z99aAs_wWSXS_RmNzhv7m="; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 2601110263553084917
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrjeeggdduiedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+References: <20190625123407.15888-1-andradanciu1997@gmail.com>
+ <20190718035523.GD11324@X250> <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>
+ <20190722020345.GR3738@dragon> <042F8805D2046347BB8420BEAE397A40749E9BDA@WILL-MAIL002.REu.RohmEu.com>
+In-Reply-To: <042F8805D2046347BB8420BEAE397A40749E9BDA@WILL-MAIL002.REu.RohmEu.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 23 Jul 2019 00:19:06 +0300
+Message-ID: <CAEnQRZDDjvMA5imQK5cEfycMUm3DiJ6i=0uuoHma2PfY3cqS-Q@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Andra Danciu <andradanciu1997@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "vabhav.sharma@nxp.com" <vabhav.sharma@nxp.com>,
+        "pankaj.bansal@nxp.com" <pankaj.bansal@nxp.com>,
+        "bhaskar.upadhaya@nxp.com" <bhaskar.upadhaya@nxp.com>,
+        "ping.bai@nxp.com" <ping.bai@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Richard Hu <richard.hu@technexion.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_Z99aAs_wWSXS_RmNzhv7m=
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 22, 2019 at 9:30 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+>
+> Sorry for top posting. I'm replying using mobile phone and outlook web app...
+>
+> gpio_intr is not needed. Irq must be given using the standard irq property. gpio_intr has been used in an old draft driver - I assume the dts originates from NXP bsp which used the old driver.
 
-On Mon, 22 Jul 2019 10:59:00 -0700, Joe Perches <joe@perches.com> wrote:
-> On Mon, 2019-07-22 at 10:50 -0700, Kees Cook wrote:
-> > On Sat, Jul 06, 2019 at 02:42:04PM +0200, Stephen Kitt wrote: =20
-> > > On Tue, 2 Jul 2019 10:25:04 -0700, Kees Cook <keescook@chromium.org>
-> > > wrote: =20
-> > > > On Sat, Jun 29, 2019 at 06:15:37PM +0200, Stephen Kitt wrote: =20
-> > > > > On Fri, 28 Jun 2019 17:25:48 +0530, Nitin Gote
-> > > > > <nitin.r.gote@intel.com> wrote:   =20
-> > > > > > 1. Deprecate strcpy() in favor of strscpy().   =20
-> > > > >=20
-> > > > > This isn=E2=80=99t a comment =E2=80=9Cagainst=E2=80=9D this patch=
-, but something I=E2=80=99ve been
-> > > > > wondering recently and which raises a question about how to handle
-> > > > > strcpy=E2=80=99s deprecation in particular. There is still one sc=
-enario
-> > > > > where strcpy is useful: when GCC replaces it with its builtin,
-> > > > > inline version...
-> > > > >=20
-> > > > > Would it be worth introducing a macro for
-> > > > > strcpy-from-constant-string, which would check that GCC=E2=80=99s=
- builtin
-> > > > > is being used (when building with GCC), and fall back to strscpy
-> > > > > otherwise?   =20
-> > > >=20
-> > > > How would you suggest it operate? A separate API, or something like
-> > > > the existing overloaded strcpy() macros in string.h? =20
-> > >=20
-> > > The latter; in my mind the point is to simplify the thought process f=
-or
-> > > developers, so strscpy should be the =E2=80=9Cobvious=E2=80=9D choice=
- in all cases,
-> > > even when dealing with constant strings in hot paths. Something like
-> > >=20
-> > > __FORTIFY_INLINE ssize_t strscpy(char *dest, const char *src, size_t
-> > > count) {
-> > > 	size_t dest_size =3D __builtin_object_size(dest, 0);
-> > > 	size_t src_size =3D __builtin_object_size(src, 0);
-> > > 	if (__builtin_constant_p(count) &&
-> > > 	    __builtin_constant_p(src_size) &&
-> > > 	    __builtin_constant_p(dest_size) &&
-> > > 	    src_size <=3D count &&
-> > > 	    src_size <=3D dest_size &&
-> > > 	    src[src_size - 1] =3D=3D '\0') {
-> > > 		strcpy(dest, src);
-> > > 		return src_size - 1;
-> > > 	} else {
-> > > 		return __strscpy(dest, src, count);
-> > > 	}
-> > > }
-> > >=20
-> > > with the current strscpy renamed to __strscpy. I imagine it=E2=80=99s=
- not
-> > > necessary to tie this to FORTIFY =E2=80=94 __OPTIMIZE__ should be suf=
-ficient,
-> > > shouldn=E2=80=99t it? Although building on top of the fortified strcp=
-y is
-> > > reassuring, and I might be missing something. I=E2=80=99m also not su=
-re how to
-> > > deal with the backing strscpy: weak symbol, or something else... At
-> > > least there aren=E2=80=99t (yet) any arch-specific implementations of=
- strscpy
-> > > to deal with, but obviously they=E2=80=99d still need to be supportab=
-le.
-> > >=20
-> > > In my tests, this all gets optimised away, and we end up with code su=
-ch
-> > > as
-> > >=20
-> > > 	strscpy(raead.type, "aead", sizeof(raead.type));
-> > >=20
-> > > being compiled down to
-> > >=20
-> > > 	movl    $1684104545, 4(%rsp)
-> > >=20
-> > > on x86-64, and non-constant code being compiled down to a direct
-> > > __strscpy call. =20
-> >=20
-> > Thanks for the details! Yeah, that seems nice. I wonder if there is a
-> > sensible way to combine these also with the stracpy*() proposal[1], so =
-the
-> > call in your example above could just be:
-> >=20
-> > 	stracpy(raead.type, "aead");
-> >=20
-> > (It seems both proposals together would have the correct result...)
-> >=20
-> > [1] https://lkml.kernel.org/r/201907221031.8B87A9DE@keescook =20
->=20
-> Easy enough to do.
+Thanks Matti for your observation! We already fixed this as we are now
+on v6 of the patches for review :).
 
-How about you submit your current patch set, and I follow up with the above
-adapted to stracpy?
+yes the dts originates form TechNexion bsp tree which is based on NXP tree :).
 
-Regards,
-
-Stephen
-
---Sig_/_Z99aAs_wWSXS_RmNzhv7m=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl02JA4ACgkQgNMC9Yht
-g5ycxg//VDIjlBNpWaXHad+UEWucVHIXXVMmCChalfG8jqBFBwzmxOYy0Gkyh3mQ
-RwEkCBJSrsj/VltKzQRW6B5E6RDqujOEnuq03U54o9FAVTp35OSaaIuLSudEI5/b
-jh19jnx8NDX25EMQoUjP2vOt76pdnVg1ClJ92JKxFfXfVJGNpTqXpJrXlxK+RYkV
-79SLtnJHpjdIjsSY6emwayV4ueOXgnF2RsxYQPqR3+QwWw6u94xIhl9Kb21r8/5d
-+QyAxX+fXLSy43MBr/uAHIx7sqG6FSf0F917PjoP0A+Ki7IHUyKmonQXOPxx2aHJ
-S0a8ZMdcAsHmF4nrcgPxAtrTS4jJA6HRAZ+ExgsYcGjaw6mD6jIYbO0pnpsWzZtr
-jDQJB+0qlnMhxSGM/kd31yu8qgG/B+HNBA09u17+A+/p+PRMUXIsJ0G6A4Tp3YqW
-VPQ01Zf0FUGczzZtB5uPvbLFIYhFaBec4Awj3MCQu9YYxCroLzkDqSrthgvPvw26
-Ry/Que1fEFOCPEtK4l3KXu2sZlYUR+1VuOKW5Dshy/fPONtl2KgRHFZl2sykEcp0
-gksTutJ/icOkzoGj0rM7OZiFogS5nv7YnfJJ56pvIi99tLVf6IlZ8sylxvn0arXr
-RVHS3wjbHNK9gHUSrQvmGsRWiIZjQ4t7giNhdC/hKgQazQ0QOts=
-=da33
------END PGP SIGNATURE-----
-
---Sig_/_Z99aAs_wWSXS_RmNzhv7m=--
+Daniel.
