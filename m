@@ -2,110 +2,144 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B05C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09775C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B162239F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aHJnx8Iq"
+	by mail.kernel.org (Postfix) with ESMTP id CB203218B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbfGVT4O (ORCPT
+        id S1732234AbfGVT6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:56:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38532 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729700AbfGVT4O (ORCPT
+        Mon, 22 Jul 2019 15:58:15 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.234]:41794 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729232AbfGVT6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:56:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OGtQKQCt9khEkE8et59U9zQKandJb/SEJEAAfyIeOb4=; b=aHJnx8Iqh/XfDZqqNQ6GJLyYI
-        tfjoh1xVn33wxYQvWAZVI8WUPVBPClZQROz4SxMdJYtuctwG2nKiFc8X20XqUsJQYolgEGyU/+7S+
-        Ms4r6hT+aBIG5FQ5fEfPQR0EfgjvjpeBOqchoAzulewc8e0pg3NDtU220sZSw1NiDe7VTFYxtA3YC
-        y8ilQjovM84gTUlCY8zU/2ggKMf1nqHDMjtnnIAYnq+dKnvPR1igpCWKAB67sO+dwpYZexK3SSseb
-        1MV8zMX6jfidtITgnDeeh10sLH39UtABcKnviMCCaY5GtDkLjwsdXDj9IzVAwQgMIHeGyjUkxdj7i
-        1V0EaXtdA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpePo-0006rj-Iw; Mon, 22 Jul 2019 19:56:09 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B4A49980C59; Mon, 22 Jul 2019 21:56:05 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 21:56:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Fox <afox@redhat.com>,
-        Stephen Johnston <sjohnsto@redhat.com>,
+        Mon, 22 Jul 2019 15:58:15 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id A93D420C9E4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:58:14 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id peRqhmRzYiQerpeRqhCrsi; Mon, 22 Jul 2019 14:58:14 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:47902 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hpeRp-0032XC-D0; Mon, 22 Jul 2019 14:58:13 -0500
+Date:   Mon, 22 Jul 2019 14:58:13 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alex Deucher <alexdeucher@gmail.com>,
         linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>
-Subject: Re: [PATCH] sched/cputime: make scale_stime() more precise
-Message-ID: <20190722195605.GI6698@worktop.programming.kicks-ass.net>
-References: <20190718131834.GA22211@redhat.com>
- <20190719110349.GG3419@hirez.programming.kicks-ass.net>
- <20190719134727.GV3463@hirez.programming.kicks-ass.net>
- <20190719143742.GA32243@redhat.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
+Message-ID: <20190722195813.GA18127@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190719143742.GA32243@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.149.185
+X-Source-L: No
+X-Exim-ID: 1hpeRp-0032XC-D0
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink149-185.telefonia.intercable.net (embeddedor) [201.172.149.185]:47902
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 42
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 04:37:42PM +0200, Oleg Nesterov wrote:
-> On 07/19, Peter Zijlstra wrote:
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
-> > But I'm still confused, since in the long run, it should still end up
-> > with a proportionally divided user/system, irrespective of some short
-> > term wobblies.
-> 
-> Why?
-> 
-> Yes, statistically the numbers are proportionally divided.
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-This; due to the loss in precision the distribution is like a step
-function around the actual s:u ratio line, but on average it still is
-s:u.
+are available in the Git repository at:
 
-Even if it were a perfect function, we'd still see increments in stime even
-if the current program state never does syscalls, simply because it
-needs to stay on that s:u line.
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc2
 
-> but you will (probably) never see the real stime == 1000 && utime == 10000
-> numbers if you watch incrementally.
+for you to fetch changes up to bc512fd704a92e1be700c941c137d73c0f222eed:
 
-See, there are no 'real' stime and utime numbers. What we have are user
-and system samples -- tick based.
+  Makefile: Globally enable fall-through warning (2019-07-22 14:50:20 -0500)
 
-If the tick lands in the kernel, we get a system sample, if the tick
-lands in userspace we get a user sample.
+----------------------------------------------------------------
+Wimplicit-fallthrough patches for 5.3-rc2
 
-What we do have is an accurate (ns) based runtime accounting, and we
-(re)construct stime and utime from this; we divide the total known
-runtime in stime and utime pro-rata.
+Hi Linus,
 
-Sure, we take a shortcut, it wobbles a bit, but seriously, the samples
-are inaccurate anyway, so who bloody cares :-)
+Please, pull the following patches that mark switch cases where we are
+expecting to fall through. These patches are part of the ongoing efforts
+to enable -Wimplicit-fallthrough. Most of them have been baking in linux-next
+for a whole development cycle.
 
-You can construct a program that runs 99% in userspace but has all
-system samples. All you need to do is make sure you're in a system call
-when the tick lands.
+Also, pull the Makefile patch that globally enables the
+-Wimplicit-fallthrough option.
 
-> Just in case... yes I know that these numbers can only "converge" to the
-> reality, only their sum is correct. But people complain.
+Finally, some missing-break fixes that have been tagged for -stable:
 
-People always complain, just tell em to go pound sand :-)
+ - drm/amdkfd: Fix missing break in switch statement
+ - drm/amdgpu/gfx10: Fix missing break in switch statement
 
+Notice that with these changes, we completely get rid of all the
+fall-through warnings in the kernel.
+
+Thanks
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (11):
+      firewire: mark expected switch fall-throughs
+      can: mark expected switch fall-throughs
+      afs: yfsclient: Mark expected switch fall-throughs
+      afs: fsclient: Mark expected switch fall-throughs
+      mtd: onenand_base: Mark expected switch fall-through
+      perf/x86/intel: Mark expected switch fall-throughs
+      drm/amdkfd: Fix missing break in switch statement
+      drm/amdgpu/gfx10: Fix missing break in switch statement
+      drm/amdkfd/kfd_mqd_manager_v10: Avoid fall-through warning
+      drm/i915: Mark expected switch fall-throughs
+      Makefile: Globally enable fall-through warning
+
+ Documentation/process/deprecated.rst             | 14 ++++++
+ Makefile                                         |  3 ++
+ arch/x86/events/intel/core.c                     |  2 +
+ drivers/firewire/core-device.c                   |  2 +-
+ drivers/firewire/core-iso.c                      |  2 +-
+ drivers/firewire/core-topology.c                 |  1 +
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c           |  1 +
+ drivers/gpu/drm/amd/amdkfd/kfd_crat.c            |  1 +
+ drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c |  1 -
+ drivers/gpu/drm/i915/Makefile                    |  1 -
+ drivers/gpu/drm/i915/display/intel_display.c     |  2 +-
+ drivers/gpu/drm/i915/display/intel_dp.c          |  1 +
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c         |  2 +-
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c        |  2 +-
+ drivers/gpu/drm/i915/i915_gpu_error.c            |  1 +
+ drivers/mtd/nand/onenand/onenand_base.c          |  1 +
+ drivers/net/can/at91_can.c                       |  6 ++-
+ drivers/net/can/peak_canfd/peak_pciefd_main.c    |  2 +-
+ drivers/net/can/spi/mcp251x.c                    |  3 +-
+ drivers/net/can/usb/peak_usb/pcan_usb.c          |  2 +-
+ fs/afs/fsclient.c                                | 51 ++++++++++++++--------
+ fs/afs/yfsclient.c                               | 54 +++++++++++++++---------
+ 22 files changed, 106 insertions(+), 49 deletions(-)
