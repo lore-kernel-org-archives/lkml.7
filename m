@@ -2,90 +2,77 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC00BC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE16C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAAB21911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487B721911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbfGVLbQ (ORCPT
+        id S1729887AbfGVLds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:31:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:21629 "EHLO mx1.redhat.com"
+        Mon, 22 Jul 2019 07:33:48 -0400
+Received: from shell.v3.sk ([90.176.6.54]:59556 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbfGVLbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:31:15 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 733C58535C;
-        Mon, 22 Jul 2019 11:31:15 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D73EF9CD3;
-        Mon, 22 Jul 2019 11:31:13 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     libc-alpha@sourceware.org, Sergei Trofimovich <slyfox@gentoo.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>, mtk.manpages@gmail.com,
-        linux-man@vger.kernel.org
-Subject: [PATCH glibc] Linux: Include <linux/sockios.h> in <bits/socket.h> under __USE_MISC
-Date:   Mon, 22 Jul 2019 13:31:12 +0200
-Message-ID: <87ftmys3un.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        id S1728823AbfGVLdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 07:33:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id A7EA9493BC;
+        Mon, 22 Jul 2019 13:33:44 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XcO2OS7kd5o7; Mon, 22 Jul 2019 13:33:41 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 8462D493BD;
+        Mon, 22 Jul 2019 13:33:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id SDNL2wXi2afC; Mon, 22 Jul 2019 13:33:40 +0200 (CEST)
+Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 5D13B493BC;
+        Mon, 22 Jul 2019 13:33:40 +0200 (CEST)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] media: marvell-ccic: mmp: add MODULE_DEVICE_TABLE
+Date:   Mon, 22 Jul 2019 13:33:10 +0200
+Message-Id: <20190722113310.719399-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 22 Jul 2019 11:31:15 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Historically, <asm/socket.h> (which is included from <bits/socket.h>)
-provided ioctl operations for sockets.  User code accessed them
-through <sys/socket.h>.  The kernel UAPI headers have removed these
-definitions in favor of <linux/sockios.h>.  This commit makes them
-available via <sys/socket.h> again.
+This fixes autoloading the module by the OF compatible string.
 
-[[[
-This is related to this thread:
+Fixes: 83c40e6611ec ("media: marvell-ccic/mmp: add devicetree support")
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/media/platform/marvell-ccic/mmp-driver.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-From: Sergei Trofimovich <slyfox@gentoo.org>
-Subject: linux-headers-5.2 and proper use of SIOCGSTAMP
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Cc: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
- mtk.manpages@gmail.com, linux-man@vger.kernel.org
-Date: Sat, 20 Jul 2019 17:48:44 +0100 (1 day, 18 hours, 40 minutes ago)
-Message-ID: <20190720174844.4b989d34@sf>
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
+edia/platform/marvell-ccic/mmp-driver.c
+index 10559492e09ed..92b92255dac66 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -372,6 +372,7 @@ static const struct of_device_id mmpcam_of_match[] =3D=
+ {
+ 	{ .compatible =3D "marvell,mmp2-ccic", },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, mmpcam_of_match);
+=20
+ static struct platform_driver mmpcam_driver =3D {
+ 	.probe		=3D mmpcam_probe,
+--=20
+2.21.0
 
-I have tried to verify this against our 3.10 kernel headers and the 5.2
-headers, and I do not see any failures in glibc itself (the latter with
-build-many-glibcs.py).  Impact on application code is unclear at this
-point, of course.
-
-This patch depends on the earlier Linux 5.2 compatibility patch which
-introduced <bits/socket-constants.h>.
-]]]
-
-2019-07-22  Florian Weimer  <fweimer@redhat.com>
-
-	* sysdeps/unix/sysv/linux/bits/socket.h [__USE_MISC]: Include
-	<linux/sockios.h>.
-
-diff --git a/sysdeps/unix/sysv/linux/bits/socket.h b/sysdeps/unix/sysv/linux/bits/socket.h
-index 082f8b9031..ff5b705f41 100644
---- a/sysdeps/unix/sysv/linux/bits/socket.h
-+++ b/sysdeps/unix/sysv/linux/bits/socket.h
-@@ -352,6 +352,7 @@ struct ucred
- #ifdef __USE_MISC
- # include <bits/types/time_t.h>
- # include <asm/socket.h>
-+# include <linux/sockios.h>
- #else
- # define SO_DEBUG 1
- # include <bits/socket-constants.h>
