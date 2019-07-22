@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3FDC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D2EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2866B2199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AB52190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817353;
-	bh=NhXQarjctVferxtZwkYTQOXsbKNlEMmpQOdze78Ejts=;
+	s=default; t=1563817358;
+	bh=q1DbIInn9askfcnlT4d9h4V4aMp7JEtDvvjVLjwdUHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ac9IiD9vd5Y4PnQn8HTEL61KyKZGOg/wxvvuFi9J+/B2yrZZU1Q0dUXha+4Usfj3O
-	 lXK2ZUhWCxhbtp1OGisCQzpN2KCGWGUEsvU38G8XY1/tEhOtmkQcfkND3NS1ORPnQK
-	 iW4o5KJMwlwdTYQ1AXmommwEBdrOJ/iCOXkJkb28=
+	b=I9WTIFsybLK/gIttzHcydlzaClJDJ9C+arVuTOff2BM7esbF57W6bRkTwOgZ+TIQ2
+	 6svSfN/T+A5y0E1UjjogtorWC9A5c/w6mVxfBtNhtpBquyy426I79nEzGmobZpdTn2
+	 XeeLN8sNv5RrGxD2e8JSj1qLigkuXyUyQWSBPsa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfGVRmc (ORCPT
+        id S1731992AbfGVRmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47528 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfGVRmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:42:31 -0400
+        id S1731777AbfGVRkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:40:37 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DE9D2190D;
-        Mon, 22 Jul 2019 17:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 565DD2190D;
+        Mon, 22 Jul 2019 17:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817350;
-        bh=NhXQarjctVferxtZwkYTQOXsbKNlEMmpQOdze78Ejts=;
+        s=default; t=1563817236;
+        bh=q1DbIInn9askfcnlT4d9h4V4aMp7JEtDvvjVLjwdUHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbEdAd/zx635AjiLlMtpcp483Ndqm65Kqrm9SLTLq9kaO3i24+8y6CS3WgH4G9KpW
-         J8gPdkOY3e93TeLdQ+X8YfN59gX1cSt1/Z+tjlWXuxxS08nB9iF5kFiTL4MopQTtFH
-         gtIllJJdghBuRxzqz2i37skTUudgiIv1LWAh+SAI=
+        b=aAZ8AA/sjOzCH80MjV0O/iUdP94obyXx1KHs8qvyZYrtTz1Z9dwbGr5AnGqFSgXUE
+         gnaSlxRuqQ1pzxcok1AqbIpn15lqMnDUAcMw024xngqqzJrIvu4TEqis8WLQlzfb7A
+         8WiEZbiOH3Xx4nyVq1xdvxNv+nd4Zi4rgH1b+kGk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,12 +47,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 32/37] perf trace: Preallocate the syscall table
-Date:   Mon, 22 Jul 2019 14:38:34 -0300
-Message-Id: <20190722173839.22898-33-acme@kernel.org>
+Subject: [PATCH 15/37] perf augmented_raw_syscalls: Rename augmented_args_filename to augmented_args_payload
+Date:   Mon, 22 Jul 2019 14:38:17 -0300
+Message-Id: <20190722173839.22898-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
@@ -66,127 +65,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We'll continue reading its details from tracefs as we need it, but
-preallocate the whole thing otherwise we may realloc and end up with
-pointers to the previous buffer.
-
-I.e. in an upcoming algorithm we'll look for syscalls that have function
-signatures that are similar to a given syscall to see if we can reuse
-its BPF augmenter, so we may be at syscall 42, having a 'struct syscall'
-pointing to that slot in trace->syscalls.table[] and try to read the
-slot for an yet unread syscall, which would realloc that table to read
-the info for syscall 43, say, which would trigger a realoc of
-trace->syscalls.table[], and then the pointer we had for syscall 42
-would be pointing to the previous block of memory. b00m.
+It'll get other stuff in there than just filenames, starting with
+sockaddr for 'connect' and 'bind'.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-m3cjzzifibs13imafhkk77a0@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bsexidtsn91ehdpzcd6n5fm9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c   | 29 +++++++----------------------
- tools/perf/util/syscalltbl.c |  1 +
- tools/perf/util/syscalltbl.h |  1 +
- 3 files changed, 9 insertions(+), 22 deletions(-)
+ .../examples/bpf/augmented_raw_syscalls.c     | 22 ++++++++++---------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 765b998755ce..d8565c9a18a2 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -79,7 +79,6 @@ struct trace {
- 	struct perf_tool	tool;
- 	struct syscalltbl	*sctbl;
- 	struct {
--		int		max;
- 		struct syscall  *table;
- 		struct bpf_map  *map;
- 		struct { // per syscall BPF_MAP_TYPE_PROG_ARRAY
-@@ -1493,21 +1492,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	struct syscall *sc;
- 	const char *name = syscalltbl__name(trace->sctbl, id);
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index df52d92e1c69..77bb6a0edce3 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -67,13 +67,15 @@ struct augmented_filename {
  
--	if (id > trace->syscalls.max) {
--		struct syscall *nsyscalls = realloc(trace->syscalls.table, (id + 1) * sizeof(*sc));
--
--		if (nsyscalls == NULL)
-+	if (trace->syscalls.table == NULL) {
-+		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
-+		if (trace->syscalls.table == NULL)
- 			return -ENOMEM;
--
--		if (trace->syscalls.max != -1) {
--			memset(nsyscalls + trace->syscalls.max + 1, 0,
--			       (id - trace->syscalls.max) * sizeof(*sc));
--		} else {
--			memset(nsyscalls, 0, (id + 1) * sizeof(*sc));
--		}
--
--		trace->syscalls.table = nsyscalls;
--		trace->syscalls.max   = id;
- 	}
+ pid_filter(pids_filtered);
  
- 	sc = trace->syscalls.table + id;
-@@ -1819,11 +1807,11 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+-struct augmented_args_filename {
++struct augmented_args_payload {
+        struct syscall_enter_args args;
+-       struct augmented_filename filename;
+-       struct augmented_filename filename2;
++       struct {
++	       struct augmented_filename filename;
++	       struct augmented_filename filename2;
++       };
+ };
  
- 	err = -EINVAL;
+-bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
++bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
  
--	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
--	    (err = trace__read_syscall_info(trace, id)) != 0)
-+	if (id > trace->sctbl->syscalls.max_id)
- 		goto out_cant_read;
+ static inline
+ unsigned int augmented_filename__read(struct augmented_filename *augmented_filename,
+@@ -111,7 +113,7 @@ int syscall_unaugmented(struct syscall_enter_args *args)
  
--	if (id > trace->syscalls.max)
-+	if ((trace->syscalls.table == NULL || trace->syscalls.table[id].name == NULL) &&
-+	    (err = trace__read_syscall_info(trace, id)) != 0)
- 		goto out_cant_read;
+ /*
+  * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
+- * augmented_filename_map what was read by that raw_syscalls:sys_enter and go
++ * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
+  * on from there, reading the first syscall arg as a string, i.e. open's
+  * filename.
+  */
+@@ -119,7 +121,7 @@ SEC("!syscalls:sys_enter_open")
+ int sys_enter_open(struct syscall_enter_args *args)
+ {
+ 	int key = 0;
+-	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+ 	const void *filename_arg = (const void *)args->args[0];
+ 	unsigned int len = sizeof(augmented_args->args);
  
- 	if (trace->syscalls.table[id].name == NULL) {
-@@ -1838,7 +1826,7 @@ static struct syscall *trace__syscall_info(struct trace *trace,
- 	if (verbose > 0) {
- 		char sbuf[STRERR_BUFSIZE];
- 		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err, str_error_r(-err, sbuf, sizeof(sbuf)));
--		if (id <= trace->syscalls.max && trace->syscalls.table[id].name != NULL)
-+		if (id <= trace->sctbl->syscalls.max_id && trace->syscalls.table[id].name != NULL)
- 			fprintf(trace->output, "(%s)", trace->syscalls.table[id].name);
- 		fputs(" information\n", trace->output);
- 	}
-@@ -3922,9 +3910,6 @@ int cmd_trace(int argc, const char **argv)
- 		NULL
- 	};
- 	struct trace trace = {
--		.syscalls = {
--			. max = -1,
--		},
- 		.opts = {
- 			.target = {
- 				.uid	   = UINT_MAX,
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index 022a9c670338..820fceeb19a9 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -79,6 +79,7 @@ static int syscalltbl__init_native(struct syscalltbl *tbl)
+@@ -136,7 +138,7 @@ SEC("!syscalls:sys_enter_openat")
+ int sys_enter_openat(struct syscall_enter_args *args)
+ {
+ 	int key = 0;
+-	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+ 	const void *filename_arg = (const void *)args->args[1];
+ 	unsigned int len = sizeof(augmented_args->args);
  
- 	qsort(tbl->syscalls.entries, nr_entries, sizeof(struct syscall), syscallcmp);
- 	tbl->syscalls.nr_entries = nr_entries;
-+	tbl->syscalls.max_id	 = syscalltbl_native_max_id;
- 	return 0;
- }
+@@ -153,7 +155,7 @@ SEC("!syscalls:sys_enter_renameat")
+ int sys_enter_renameat(struct syscall_enter_args *args)
+ {
+ 	int key = 0;
+-	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+ 	const void *oldpath_arg = (const void *)args->args[1],
+ 		   *newpath_arg = (const void *)args->args[3];
+ 	unsigned int len = sizeof(augmented_args->args), oldpath_len;
+@@ -171,7 +173,7 @@ int sys_enter_renameat(struct syscall_enter_args *args)
+ SEC("raw_syscalls:sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
+-	struct augmented_args_filename *augmented_args;
++	struct augmented_args_payload *augmented_args;
+ 	/*
+ 	 * We start len, the amount of data that will be in the perf ring
+ 	 * buffer, if this is not filtered out by one of pid_filter__has(),
+@@ -185,7 +187,7 @@ int sys_enter(struct syscall_enter_args *args)
+ 	struct syscall *syscall;
+ 	int key = 0;
  
-diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
-index c8e7e9ce0f01..9172613028d0 100644
---- a/tools/perf/util/syscalltbl.h
-+++ b/tools/perf/util/syscalltbl.h
-@@ -6,6 +6,7 @@ struct syscalltbl {
- 	union {
- 		int audit_machine;
- 		struct {
-+			int max_id;
- 			int nr_entries;
- 			void *entries;
- 		} syscalls;
+-        augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++        augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
+         if (augmented_args == NULL)
+                 return 1;
+ 
 -- 
 2.21.0
 
