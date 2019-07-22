@@ -2,86 +2,87 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DCCC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD2FC76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A423D218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AC72190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563788509;
+	bh=jauXQmrxA9a72OrrDn+WjHiK7lIIU0c1xKoYSvyMSrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DPbfD7m7T243ZX9gU8Jx5ktDTBC6X8J23m5IzEYlM5aums8bdOrTlGG03x4N6L0t1
+	 ZwSdmVSe6p/tCZsjFfFDVwwd1Ktu0z571u+hVSvidMEmAnCnXUOTPOquoxWRABqhFd
+	 QdPTgr7MDF+rE9Z9dEymfdsi0iBvz6+4KIo/tRRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfGVJlk (ORCPT
+        id S1729099AbfGVJls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:41:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36121 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728311AbfGVJlk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:41:40 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hpUp0-0003F7-7p; Mon, 22 Jul 2019 11:41:30 +0200
-Date:   Mon, 22 Jul 2019 11:41:29 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pingfan Liu <kernelfans@gmail.com>
-cc:     x86@kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] smp: force all cpu to boot once under maxcpus option
-In-Reply-To: <1562747823-16972-1-git-send-email-kernelfans@gmail.com>
-Message-ID: <alpine.DEB.2.21.1907221137090.1782@nanos.tec.linutronix.de>
-References: <1562747823-16972-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 22 Jul 2019 05:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728265AbfGVJls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:41:48 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557A1218EA;
+        Mon, 22 Jul 2019 09:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563788507;
+        bh=jauXQmrxA9a72OrrDn+WjHiK7lIIU0c1xKoYSvyMSrM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i9S0FprbkqfyWctXsZA1Cd2EZn1UqTyHuNPYd3xevoBzGz2iC/9Q8PkX3qUESdT6E
+         akdBvvhER/yP1ZuvfuQyoQuZmvqG0ZjLipX41kySe+h0cGT3Yz6YONppDnqmfjyJuo
+         IpL3qZTrZTilrO9HikY/dNScwqWR7VfIhsD9emg4=
+Date:   Mon, 22 Jul 2019 10:41:41 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, arnd@arndb.de, linux@armlinux.org.uk,
+        daniel.lezcano@linaro.org, tglx@linutronix.de, salyzyn@android.com,
+        pcc@google.com, 0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
+        huw@codeweavers.com, sthotton@marvell.com, andre.przywara@arm.com,
+        luto@kernel.org, john.stultz@linaro.org, naohiro.aota@wdc.com,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2] arm64: vdso: Cleanup Makefiles
+Message-ID: <20190722094140.giv5vivoqm4bzl5t@willie-the-truck>
+References: <20190712153746.5dwwptgrle3z25m7@willie-the-truck>
+ <20190719101018.1984-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719101018.1984-1-vincenzo.frascino@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Pingfan Liu wrote:
->  
-> +static inline bool maxcpus_allowed(unsigned int cpu)
-> +{
-> +	/* maxcpus only takes effect during system bootup */
-> +	if (smp_boot_done)
-> +		return true;
-> +	if (num_online_cpus() < setup_max_cpus)
-> +		return true;
-> +	/*
-> +	 * maxcpus should allow cpu to set CR4.MCE asap, otherwise the set may
-> +	 * be deferred indefinitely.
-> +	 */
-> +	if (!per_cpu(cpuhp_state, cpu).booted_once)
-> +		return true;
+On Fri, Jul 19, 2019 at 11:10:18AM +0100, Vincenzo Frascino wrote:
+> The recent changes to the vdso library for arm64 and the introduction of
+> the compat vdso library have generated some misalignment in the
+> Makefiles.
+> 
+> Cleanup the Makefiles for vdso and vdso32 libraries:
+>   * Removing unused rules.
+>   * Unifying the displayed compilation messages.
+>   * Simplifying the generic library inclusion path for
+>     arm64 vdso.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm64/kernel/vdso/Makefile   |  9 +++------
+>  arch/arm64/kernel/vdso32/Makefile | 10 +++++-----
+>  2 files changed, 8 insertions(+), 11 deletions(-)
 
-As this is a x86 only issue, you cannot inflict this magic on every
-architecture.
+Thanks, I'll queue this for -rc2.
 
-Aside of that this does not solve the problem at all because smp_init()
-still does:
-
-        for_each_present_cpu(cpu) {
-                if (num_online_cpus() >= setup_max_cpus)
-                        break;
-                if (!cpu_online(cpu))
-                        cpu_up(cpu);
-        }
-
-So the remaining CPUs are not onlined at all.
-
-Thanks,
-
-	tglx
+Will
