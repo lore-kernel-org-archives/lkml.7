@@ -2,60 +2,83 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398CEC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F1CC76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7CD2199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC00621BD9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:50:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s9+Tevtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbfGVJux (ORCPT
+        id S1728569AbfGVJu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:50:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:34572 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbfGVJus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:50:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB82128;
-        Mon, 22 Jul 2019 02:50:47 -0700 (PDT)
-Received: from [10.162.41.186] (p8cg001049571a15.blr.arm.com [10.162.41.186])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C5EB3F694;
-        Mon, 22 Jul 2019 02:50:46 -0700 (PDT)
-Subject: Re: [PATCH] memremap: move from kernel/ to mm/
-To:     Christoph Hellwig <hch@lst.de>, dan.j.williams@intel.com,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        Mon, 22 Jul 2019 05:50:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40388 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729392AbfGVJuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:50:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=SpguMOgP64q3S/6QCHJEfscBzFkq6HOvoNAGTjnQTsU=; b=s9+TevtzrWqSpQscxSbz2ln9lg
+        tlbzqox7sU0tf3sEQETNXCuIZhCdb45M6SRAiOT9mq/C46MDN0UTpMUd7iKUf8PN9BFD9MVhEooH9
+        d5JGgVCa8Q6jeeAZRSUftOoMRxDXQMmJIh6GHW0Cp6aTLOhLHPM++x790nzEY1N5Ua8l/5ecChF1k
+        BDiJe5nTGt84lX/SGqrzRWkpBUC8JGR/kD7BALEegd9DsfOqHT5PS9UaUrBpjzYmvQVPUt3Uvw3Ez
+        OvB0ddw/x3oRLYcQ5uJLL9Fj+97cvq9XbmssbW+Je/qXpA41qoICE1WNjz2EbH7znExSaya/R+oAA
+        7lC/pg6w==;
+Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpUy4-0005gY-K9; Mon, 22 Jul 2019 09:50:53 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190722094143.18387-1-hch@lst.de>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <9cd09b82-ec86-b0c0-79d5-e26ed5ed0b23@arm.com>
-Date:   Mon, 22 Jul 2019 15:21:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Subject: [PATCH 10/12] iomap: warn on inline maps in iomap_writepage_map
+Date:   Mon, 22 Jul 2019 11:50:22 +0200
+Message-Id: <20190722095024.19075-11-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722095024.19075-1-hch@lst.de>
+References: <20190722095024.19075-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190722094143.18387-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+And inline mapping should never mark the page dirty and thus never end up
+in writepages.  Add a check for that condition and warn if it happens.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/iomap/buffered-io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 07/22/2019 03:11 PM, Christoph Hellwig wrote:
-> memremap.c implements MM functionality for ZONE_DEVICE, so it really
-> should be in the mm/ directory, not the kernel/ one.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 16f2ea46a238..91a9796f8a7c 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1422,6 +1422,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 		error = wpc->ops->map_blocks(wpc, inode, file_offset);
+ 		if (error)
+ 			break;
++		if (WARN_ON_ONCE(wpc->iomap.type == IOMAP_INLINE))
++			continue;
+ 		if (wpc->iomap.type == IOMAP_HOLE)
+ 			continue;
+ 		iomap_add_to_ioend(inode, file_offset, page, iop, wpc, wbc,
+-- 
+2.20.1
 
-This always made sense.
-
-FWIW
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
