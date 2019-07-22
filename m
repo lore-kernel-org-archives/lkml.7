@@ -2,130 +2,251 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA38C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B22FC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13DE321E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iGDD/T/k"
+	by mail.kernel.org (Postfix) with ESMTP id E103621E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbfGVIkf (ORCPT
+        id S1728446AbfGVIlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:40:35 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41632 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfGVIkf (ORCPT
+        Mon, 22 Jul 2019 04:41:40 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:31504 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbfGVIlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:40:35 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6M8eOsg070238;
-        Mon, 22 Jul 2019 03:40:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563784824;
-        bh=TviAWhiRP3zQTB51r4gI+gZaJWkaHb/tZnv/A5V5Vec=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iGDD/T/krkpcQWBLx7cJN+bhSHCfkTJfr4zmFgdjTROeqVqtmjIOb2TjaQPaq+Ew+
-         xyJxkc12dBMvkmGrPryQRTAN9G3loNxthgqkCX4HiiAz/oKPGD8R6XUYsBor0MTDvW
-         BnRcmxfHPb/gfiXi3HEXO0qiVt4aFZyBll1kTGao=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6M8eOaw058289
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Jul 2019 03:40:24 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 22
- Jul 2019 03:40:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 22 Jul 2019 03:40:23 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6M8eIZk028120;
-        Mon, 22 Jul 2019 03:40:19 -0500
-Subject: Re: [PATCH] staging: media/davinci_vpfe: fix pinmux setup compilation
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ioannis Valasakis <code@wizofe.uk>,
-        Arushi Singhal <arushisinghal19971997@gmail.com>,
-        <linux-media@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190722081243.2084226-1-arnd@arndb.de>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <35b6ec33-f3d7-54ec-e9a0-3748ee9eb343@ti.com>
-Date:   Mon, 22 Jul 2019 14:10:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190722081243.2084226-1-arnd@arndb.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 22 Jul 2019 04:41:40 -0400
+Date:   22 Jul 2019 17:41:37 +0900
+X-IronPort-AV: E=Sophos;i="5.64,294,1559487600"; 
+   d="scan'208";a="21832982"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 22 Jul 2019 17:41:37 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 284394006DFB;
+        Mon, 22 Jul 2019 17:41:37 +0900 (JST)
+Message-ID: <87a7d6h3b2.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <twischer@de.adit-jv.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/3] ASoC: rsnd: Allow reconfiguration of clock rate
+In-Reply-To: <20190722072403.11008-3-jiada_wang@mentor.com>
+References: <20190722072403.11008-1-jiada_wang@mentor.com>
+        <20190722072403.11008-3-jiada_wang@mentor.com>
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-On 22/07/19 1:42 PM, Arnd Bergmann wrote:
-> The dm365_isif staging driver uses an odd method for configuring its
-> pin muxing by calling directly into low-level davinci platform specific
-> code, even when being compile-tested for other platforms.
-> 
-> As we want davinci to be part of a multi-platform kernel, this will
-> cause a build failure when those headers are no longer exported even
-> for davinci:
-> 
-> drivers/staging/media/davinci_vpfe/dm365_isif.c: In function 'vpfe_isif_init':
-> drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:2: error: implicit declaration of function 'davinci_cfg_reg'; did you mean 'omap_cfg_reg'? [-Werror=implicit-function-declaration]
->   davinci_cfg_reg(DM365_VIN_CAM_WEN);
->   ^~~~~~~~~~~~~~~
->   omap_cfg_reg
-> drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:18: error: 'DM365_VIN_CAM_WEN' undeclared (first use in this function); did you mean 'DM365_ISIF_MAX_CLDC'?
->   davinci_cfg_reg(DM365_VIN_CAM_WEN);
->                   ^~~~~~~~~~~~~~~~~
-> 
-> Digging further, it seems that the platform data structures defined
-> in drivers/staging/media/davinci_vpfe/vpfe.h are an incompatible
-> version of the same structures in include/media/davinci/vpfe_capture.h,
-> which is the version that is used by the platform code, so the
-> combination that exists in the mainline kernel cannot be used.
-> 
-> The platform code already has an abstraction for the pinmux,
-> in the form of the dm365_isif_setup_pinmux() helper. If we want
-> to ever get to use the staging driver again, this needs to be
-> read from the platform data passed to this driver, or rewritten
-> to use the pinmux framework.
-> 
-> For the moment, pretend we pass the helper function in the
-> staging platform driver to get it to build cleanly. I could
-> not figure out how the staging driver relates to the code
-> in drivers/media/platform/davinci/, some clarification on that
-> would be helpful to decide what the long-term plan on this
-> should be to either remove the staging driver as obsolete or
-> integrate it with the rest in a way that actually works.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Jiada
 
-I looked at the history of updates on this driver over last 4 years.
-None of them are towards fixing some issue found with the driver during
-actual usage or for improving its design to move it out of staging.
+The solution looks very over-kill to me,
+especiallyq [3/3] patch is too much to me.
 
-I think no one is really using it or working on moving it out of
-staging. Perhaps the right thing to do would be to delete it.
+1st, can we start clock at .hw_param, instead of .prepare ?
+and stop it at .hw_free ?
 
-Thanks,
-Sekhar
+2nd, can we keep usrcnt setup as-is ?
+I guess we can just avoid rsnd_ssi_master_clk_start() if ssi->rate was not 0 ?
+similar for rsnd_ssi_master_clk_stop()
+
+	static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
+				     struct rsnd_dai_stream *io)
+	{
+		...
+		if (ssi->rate)
+			return 0;
+		...
+	}
+
+	static void rsnd_ssi_master_clk_stop(struct rsnd_mod *mod,
+				     struct rsnd_dai_stream *io)
+	{
+		...
+-		if (ssi->usrcnt > 1)
++		if (ssi->rate == 0)
+			return;
+		...
+	}
+
+
+> From: Timo Wischer <twischer@de.adit-jv.com>
+> 
+> Currently after clock rate is started in .prepare reconfiguration
+> of clock rate is not allowed, unless the stream is stopped.
+> 
+> But there is use case in Gstreamer ALSA sink, in case of changed caps
+> Gsreatmer reconfigs and it calls snd_pcm_hw_free() before snd_pcm_prepre().
+> See gstreamer1.0-plugins-base/
+> gst-libs/gst/audio/gstaudiobasesink.c: gst_audio_base_sink_setcaps():
+> - gst_audio_ring_buffer_release()
+> - gst_audio_sink_ring_buffer_release()
+> - gst_alsasink_unprepare()
+> - snd_pcm_hw_free()
+> is called before
+> - gst_audio_ring_buffer_acquire()
+> - gst_audio_sink_ring_buffer_acquire()
+> - gst_alsasink_prepare()
+> - set_hwparams()
+> - snd_pcm_hw_params()
+> - snd_pcm_prepare()
+> 
+> The issue mentioned in this commit can be reproduced with the following
+> aplay patch:
+> 
+>     >diff --git a/aplay/aplay.c b/aplay/aplay.c
+>     >@@ -2760,6 +2760,8 @@ static void playback_go(int fd, size_t loaded,
+>     >      header(rtype, name);
+>     >      set_params();
+>     >+     hwparams.rate = (hwparams.rate == 48000) ? 44100 : 48000;
+>     >+     set_params();
+>     >
+>     >      while (loaded > chunk_bytes && written < count && !in_aborting)
+>     >      {
+>     >              if (pcm_write(audiobuf + written, chunk_size) <= 0)
+> 
+> $ aplay -Dplughw:0,0,0 -c8 -fS24_LE -r48000 /dev/zero
+> rcar_sound ec500000.sound: SSI parent/child should use same rate
+> rcar_sound ec500000.sound: ssi[3] : prepare error -22
+> rcar_sound ec500000.sound: ASoC: cpu DAI prepare error: -22
+> rsnd_link0: ASoC: prepare FE rsnd_link0 failed
+> 
+> this patch address the issue by stop clock in .hw_free,
+> to allow reconfiguration of clock rate without stop of the stream.
+> 
+> Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
+>  sound/soc/sh/rcar/ssi.c | 53 +++++++++++++++++++++++++++++------------
+>  1 file changed, 38 insertions(+), 15 deletions(-)
+> 
+> diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+> index f6a7466622ea..f43937d2c588 100644
+> --- a/sound/soc/sh/rcar/ssi.c
+> +++ b/sound/soc/sh/rcar/ssi.c
+> @@ -286,7 +286,7 @@ static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
+>  	if (rsnd_ssi_is_multi_slave(mod, io))
+>  		return 0;
+>  
+> -	if (ssi->usrcnt > 0) {
+> +	if (ssi->rate) {
+>  		if (ssi->rate != rate) {
+>  			dev_err(dev, "SSI parent/child should use same rate\n");
+>  			return -EINVAL;
+> @@ -471,13 +471,9 @@ static int rsnd_ssi_init(struct rsnd_mod *mod,
+>  			 struct rsnd_dai_stream *io,
+>  			 struct rsnd_priv *priv)
+>  {
+> -	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+> -
+>  	if (!rsnd_ssi_is_run_mods(mod, io))
+>  		return 0;
+>  
+> -	ssi->usrcnt++;
+> -
+>  	rsnd_mod_power_on(mod);
+>  
+>  	rsnd_ssi_config_init(mod, io);
+> @@ -505,18 +501,8 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+>  		return -EIO;
+>  	}
+>  
+> -	rsnd_ssi_master_clk_stop(mod, io);
+> -
+>  	rsnd_mod_power_off(mod);
+>  
+> -	ssi->usrcnt--;
+> -
+> -	if (!ssi->usrcnt) {
+> -		ssi->cr_own	= 0;
+> -		ssi->cr_mode	= 0;
+> -		ssi->wsr	= 0;
+> -	}
+> -
+>  	return 0;
+>  }
+>  
+> @@ -525,6 +511,7 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+>  			      struct snd_pcm_substream *substream,
+>  			      struct snd_pcm_hw_params *params)
+>  {
+> +	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+>  	struct rsnd_dai *rdai = rsnd_io_to_rdai(io);
+>  	unsigned int fmt_width = snd_pcm_format_width(params_format(params));
+>  
+> @@ -536,6 +523,11 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (!rsnd_ssi_is_run_mods(mod, io))
+> +		return 0;
+> +
+> +	ssi->usrcnt++;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -913,6 +905,35 @@ static int rsnd_ssi_prepare(struct rsnd_mod *mod,
+>  	return rsnd_ssi_master_clk_start(mod, io);
+>  }
+>  
+> +static int rsnd_ssi_hw_free(struct rsnd_mod *mod, struct rsnd_dai_stream *io,
+> +			    struct snd_pcm_substream *substream)
+> +{
+> +	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+> +
+> +	if (!rsnd_ssi_is_run_mods(mod, io))
+> +		return 0;
+> +
+> +	if (!ssi->usrcnt) {
+> +		struct rsnd_priv *priv = rsnd_mod_to_priv(mod);
+> +		struct device *dev = rsnd_priv_to_dev(priv);
+> +
+> +		dev_err(dev, "%s usrcnt error\n", rsnd_mod_name(mod));
+> +		return -EIO;
+> +	}
+> +
+> +	rsnd_ssi_master_clk_stop(mod, io);
+> +
+> +	ssi->usrcnt--;
+> +
+> +	if (!ssi->usrcnt) {
+> +		ssi->cr_own	= 0;
+> +		ssi->cr_mode	= 0;
+> +		ssi->wsr	= 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
+>  	.name		= SSI_NAME,
+>  	.probe		= rsnd_ssi_common_probe,
+> @@ -926,6 +947,7 @@ static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
+>  	.pcm_new	= rsnd_ssi_pcm_new,
+>  	.hw_params	= rsnd_ssi_hw_params,
+>  	.prepare	= rsnd_ssi_prepare,
+> +	.hw_free	= rsnd_ssi_hw_free,
+>  	.get_status	= rsnd_ssi_get_status,
+>  };
+>  
+> @@ -1012,6 +1034,7 @@ static struct rsnd_mod_ops rsnd_ssi_dma_ops = {
+>  	.pcm_new	= rsnd_ssi_pcm_new,
+>  	.fallback	= rsnd_ssi_fallback,
+>  	.hw_params	= rsnd_ssi_hw_params,
+> +	.hw_free	= rsnd_ssi_hw_free,
+>  	.prepare	= rsnd_ssi_prepare,
+>  	.get_status	= rsnd_ssi_get_status,
+>  };
+> -- 
+> 2.19.2
+> 
