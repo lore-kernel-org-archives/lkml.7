@@ -2,170 +2,314 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB53C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA27AC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38EF1218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936FB218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfGVPwr (ORCPT
+        id S1730235AbfGVPyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:52:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728596AbfGVPwq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:52:46 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6MFq4D3091081
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:52:45 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tweg5dvau-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:52:45 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 22 Jul 2019 16:52:44 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 22 Jul 2019 16:52:35 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6MFqYJI47055222
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 15:52:34 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90AB8B2068;
-        Mon, 22 Jul 2019 15:52:34 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E140B205F;
-        Mon, 22 Jul 2019 15:52:34 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.189.166])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jul 2019 15:52:34 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id BB14116C9087; Mon, 22 Jul 2019 08:52:35 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 08:52:35 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, aarcange@redhat.com,
-        akpm@linux-foundation.org, christian@brauner.io,
-        davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jasowang@redhat.com,
-        jglisse@redhat.com, keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: RFC: call_rcu_outstanding (was Re: WARNING in __mmdrop)
-Reply-To: paulmck@linux.ibm.com
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081933-mutt-send-email-mst@kernel.org>
- <20190721131725.GR14271@linux.ibm.com>
- <20190721210837.GC363@bombadil.infradead.org>
- <20190721233113.GV14271@linux.ibm.com>
- <20190722035042-mutt-send-email-mst@kernel.org>
- <20190722115149.GY14271@linux.ibm.com>
- <20190722134152.GA13013@ziepe.ca>
+        Mon, 22 Jul 2019 11:54:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47366 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728596AbfGVPyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:54:23 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F13F13083047;
+        Mon, 22 Jul 2019 15:54:22 +0000 (UTC)
+Received: from krava (ovpn-204-85.brq.redhat.com [10.40.204.85])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B9955601B6;
+        Mon, 22 Jul 2019 15:54:18 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 17:54:17 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 23/79] libperf: Make libperf.a part of the build
+Message-ID: <20190722155417.GA2121@krava>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <20190721112506.12306-24-jolsa@kernel.org>
+ <20190722123924.GA28864@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722134152.GA13013@ziepe.ca>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19072215-2213-0000-0000-000003B4493B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011475; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01235877; UDB=6.00651336; IPR=6.01017228;
- MB=3.00027839; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-22 15:52:42
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072215-2214-0000-0000-00005F585F3F
-Message-Id: <20190722155235.GF14271@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-22_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=624 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907220176
+In-Reply-To: <20190722123924.GA28864@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 22 Jul 2019 15:54:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:41:52AM -0300, Jason Gunthorpe wrote:
-> On Mon, Jul 22, 2019 at 04:51:49AM -0700, Paul E. McKenney wrote:
+On Mon, Jul 22, 2019 at 09:39:24AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, Jul 21, 2019 at 01:24:10PM +0200, Jiri Olsa escreveu:
+> > Adding empty libperf.a under toos/perf/lib and
+> > linking it with perf.
 > 
-> > > > > Would it make sense to have call_rcu() check to see if there are many
-> > > > > outstanding requests on this CPU and if so process them before returning?
-> > > > > That would ensure that frequent callers usually ended up doing their
-> > > > > own processing.
-> > > > 
-> > > > Unfortunately, no.  Here is a code fragment illustrating why:
+> So, I noticed you created a subdirectory under tools/perf/, while I
+> first thought you would have it in tools/lib/perf/, why not move it
+> there?
+
+yea I started like this, and then there was only one reason
+I could think of ;-) I mentioned it in the cover letter:
+  - move under tools/lib after the interface is more stable-ish
+
+if you insist to move it there now, would it be ok
+to make it under separate patch afterwards? it would
+safe me zillions of small changes ;-)
+
+thanks,
+jirka
+
 > 
-> That is only true in the general case though, kfree_rcu() doesn't have
-> this problem since we know what the callback is doing. In general a
-> caller of kfree_rcu() should not need to hold any locks while calling
-> it.
-
-Good point, at least as long as the slab allocators don't call kfree_rcu()
-while holding any of the slab locks.
-
-However, that would require a separate list for the kfree_rcu() callbacks,
-and concurrent access to those lists of kfree_rcu() callbacks.  So this
-might work, but would add some complexity and also yet another restriction
-between RCU and another kernel subsystem.  So I would like to try the
-other approaches first, for example, the time-based approach in my
-prototype and Eric Dumazet's more polished patch.
-
-But the immediate-invocation possibility is still there if needed.
-
-> We could apply the same idea more generally and have some
-> 'call_immediate_or_rcu()' which has restrictions on the caller's
-> context.
+> - Arnaldo
+>  
+> > It can also be built separately with:
+> > 
+> >   $ cd tools/perf/lib && make
+> >     CC       core.o
+> >     LD       libperf-in.o
+> >     AR       libperf.a
+> >     LINK     libperf.so
+> > 
+> > Link: http://lkml.kernel.org/n/tip-lzrlfu3hutepbeqyntjks3za@git.kernel.org
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/Makefile.config |  1 +
+> >  tools/perf/Makefile.perf   | 30 ++++++++--------
+> >  tools/perf/lib/Build       |  1 +
+> >  tools/perf/lib/Makefile    | 74 ++++++++++++++++++++++++++++++++++++++
+> >  tools/perf/lib/core.c      |  0
+> >  5 files changed, 92 insertions(+), 14 deletions(-)
+> >  create mode 100644 tools/perf/lib/Build
+> >  create mode 100644 tools/perf/lib/Makefile
+> >  create mode 100644 tools/perf/lib/core.c
+> > 
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 89ac5a1f1550..e4988f49ea79 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -277,6 +277,7 @@ ifeq ($(DEBUG),0)
+> >    endif
+> >  endif
+> >  
+> > +INC_FLAGS += -I$(src-perf)/lib/include
+> >  INC_FLAGS += -I$(src-perf)/util/include
+> >  INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
+> >  INC_FLAGS += -I$(srctree)/tools/include/uapi
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index 0fffd2bb6cd9..6e7e7d44ffac 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -224,6 +224,7 @@ LIB_DIR         = $(srctree)/tools/lib/api/
+> >  TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
+> >  BPF_DIR         = $(srctree)/tools/lib/bpf/
+> >  SUBCMD_DIR      = $(srctree)/tools/lib/subcmd/
+> > +LIBPERF_DIR     = $(srctree)/tools/perf/lib/
+> >  
+> >  # Set FEATURE_TESTS to 'all' so all possible feature checkers are executed.
+> >  # Without this setting the output feature dump file misses some features, for
+> > @@ -272,6 +273,7 @@ ifneq ($(OUTPUT),)
+> >    TE_PATH=$(OUTPUT)
+> >    BPF_PATH=$(OUTPUT)
+> >    SUBCMD_PATH=$(OUTPUT)
+> > +  LIBPERF_PATH=$(OUTPUT)
+> >  ifneq ($(subdir),)
+> >    API_PATH=$(OUTPUT)/../lib/api/
+> >  else
+> > @@ -282,6 +284,7 @@ else
+> >    API_PATH=$(LIB_DIR)
+> >    BPF_PATH=$(BPF_DIR)
+> >    SUBCMD_PATH=$(SUBCMD_DIR)
+> > +  LIBPERF_PATH=$(LIBPERF_DIR)
+> >  endif
+> >  
+> >  LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
+> > @@ -303,6 +306,8 @@ LIBBPF = $(BPF_PATH)libbpf.a
+> >  
+> >  LIBSUBCMD = $(SUBCMD_PATH)libsubcmd.a
+> >  
+> > +LIBPERF = $(LIBPERF_PATH)libperf.a
+> > +
+> >  # python extension build directories
+> >  PYTHON_EXTBUILD     := $(OUTPUT)python_ext_build/
+> >  PYTHON_EXTBUILD_LIB := $(PYTHON_EXTBUILD)lib/
+> > @@ -348,9 +353,7 @@ endif
+> >  
+> >  export PERL_PATH
+> >  
+> > -LIBPERF_A=$(OUTPUT)libperf.a
+> > -
+> > -PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD)
+> > +PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD) $(LIBPERF)
+> >  ifndef NO_LIBBPF
+> >    PERFLIBS += $(LIBBPF)
+> >  endif
+> > @@ -583,8 +586,6 @@ JEVENTS_IN    := $(OUTPUT)pmu-events/jevents-in.o
+> >  
+> >  PMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
+> >  
+> > -LIBPERF_IN := $(OUTPUT)libperf-in.o
+> > -
+> >  export JEVENTS
+> >  
+> >  build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+> > @@ -601,12 +602,9 @@ $(JEVENTS): $(JEVENTS_IN)
+> >  $(PMU_EVENTS_IN): $(JEVENTS) FORCE
+> >  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+> >  
+> > -$(LIBPERF_IN): prepare FORCE
+> > -	$(Q)$(MAKE) $(build)=libperf
+> > -
+> > -$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
+> > +$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
+> >  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS) \
+> > -		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBPERF_IN) $(LIBS) -o $@
+> > +		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
+> >  
+> >  $(GTK_IN): FORCE
+> >  	$(Q)$(MAKE) $(build)=gtk
+> > @@ -727,9 +725,6 @@ endif
+> >  
+> >  $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
+> >  
+> > -$(LIBPERF_A): $(LIBPERF_IN)
+> > -	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN) $(LIB_OBJS)
+> > -
+> >  LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
+> >  
+> >  $(LIBTRACEEVENT): FORCE
+> > @@ -762,6 +757,13 @@ $(LIBBPF)-clean:
+> >  	$(call QUIET_CLEAN, libbpf)
+> >  	$(Q)$(MAKE) -C $(BPF_DIR) O=$(OUTPUT) clean >/dev/null
+> >  
+> > +$(LIBPERF): FORCE
+> > +	$(Q)$(MAKE) -C $(LIBPERF_DIR) O=$(OUTPUT) $(OUTPUT)libperf.a
+> > +
+> > +$(LIBPERF)-clean:
+> > +	$(call QUIET_CLEAN, libperf)
+> > +	$(Q)$(MAKE) -C $(LIBPERF_DIR) O=$(OUTPUT) clean >/dev/null
+> > +
+> >  $(LIBSUBCMD): FORCE
+> >  	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) $(OUTPUT)libsubcmd.a
+> >  
+> > @@ -948,7 +950,7 @@ config-clean:
+> >  python-clean:
+> >  	$(python-clean)
+> >  
+> > -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean config-clean fixdep-clean python-clean
+> > +clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean config-clean fixdep-clean python-clean
+> >  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-with-kcore $(LANG_BINDINGS)
+> >  	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+> >  	$(Q)$(RM) $(OUTPUT).config-detected
+> > diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+> > new file mode 100644
+> > index 000000000000..5196958cec01
+> > --- /dev/null
+> > +++ b/tools/perf/lib/Build
+> > @@ -0,0 +1 @@
+> > +libperf-y += core.o
+> > diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+> > new file mode 100644
+> > index 000000000000..e6f2eb702aaa
+> > --- /dev/null
+> > +++ b/tools/perf/lib/Makefile
+> > @@ -0,0 +1,74 @@
+> > +# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> > +# Most of this file is copied from tools/lib/bpf/Makefile
+> > +
+> > +MAKEFLAGS += --no-print-directory
+> > +
+> > +ifeq ($(srctree),)
+> > +srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+> > +srctree := $(patsubst %/,%,$(dir $(srctree)))
+> > +srctree := $(patsubst %/,%,$(dir $(srctree)))
+> > +#$(info Determined 'srctree' to be $(srctree))
+> > +endif
+> > +
+> > +include $(srctree)/tools/scripts/Makefile.include
+> > +include $(srctree)/tools/scripts/Makefile.arch
+> > +
+> > +ifeq ("$(origin V)", "command line")
+> > +  VERBOSE = $(V)
+> > +endif
+> > +ifndef VERBOSE
+> > +  VERBOSE = 0
+> > +endif
+> > +
+> > +ifeq ($(VERBOSE),1)
+> > +  Q =
+> > +else
+> > +  Q = @
+> > +endif
+> > +
+> > +# Set compile option CFLAGS
+> > +ifdef EXTRA_CFLAGS
+> > +  CFLAGS := $(EXTRA_CFLAGS)
+> > +else
+> > +  CFLAGS := -g -Wall
+> > +endif
+> > +
+> > +INCLUDES = -I. -Iinclude -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/
+> > +
+> > +# Append required CFLAGS
+> > +override CFLAGS += $(EXTRA_WARNINGS)
+> > +override CFLAGS += -Werror -Wall
+> > +override CFLAGS += -fPIC
+> > +override CFLAGS += $(INCLUDES)
+> > +override CFLAGS += -fvisibility=hidden
+> > +
+> > +all:
+> > +
+> > +export srctree OUTPUT CC LD CFLAGS V
+> > +include $(srctree)/tools/build/Makefile.include
+> > +
+> > +LIBPERF_SO := $(OUTPUT)libperf.so
+> > +LIBPERF_A  := $(OUTPUT)libperf.a
+> > +LIBPERF_IN := $(OUTPUT)libperf-in.o
+> > +
+> > +$(LIBPERF_IN): FORCE
+> > +	$(Q)$(MAKE) $(build)=libperf
+> > +
+> > +$(LIBPERF_A): $(LIBPERF_IN)
+> > +	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN)
+> > +
+> > +$(LIBPERF_SO): $(LIBPERF_IN)
+> > +	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so $^ -o $@
+> > +
+> > +libs: $(LIBPERF_A) $(LIBPERF_SO)
+> > +
+> > +all: fixdep
+> > +	$(Q)$(MAKE) libs
+> > +
+> > +clean:
+> > +	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
+> > +                *.o *~ *.a *.so .*.d .*.cmd LIBPERF-CFLAGS
+> > +
+> > +FORCE:
+> > +
+> > +.PHONY: all install clean FORCE
+> > diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
+> > new file mode 100644
+> > index 000000000000..e69de29bb2d1
+> > -- 
+> > 2.21.0
 > 
-> I think if we have some kind of problem here it would be better to
-> handle it inside the core code and only require that callers use the
-> correct RCU API.
-
-Agreed.  Especially given that there are a number of things that can
-be done within RCU.
-
-> I can think of many places where kfree_rcu() is being used under user
-> control..
-
-And same for call_rcu().
-
-And this is not the first time we have run into this.  The last time
-was about 15 years ago, if I remember correctly, and that one led to
-some of the quiescent-state forcing and callback-invocation batch size
-tricks still in use today.  My only real surprise is that it took so
-long for this to come up again.  ;-)
-
-Please note also that in the common case on default configurations,
-callback invocation is done on the CPU that posted the callback.
-This means that callback invocation normally applies backpressure
-to the callback-happy workload.
-
-So why then is there a problem?
-
-The problem is not the lack of backpressure, but rather that the
-scheduling of callback invocation needs to be a bit more considerate
-of the needs of the rest of the system.  In the common case, that is.
-Except that the uncommon case is real-time configurations, in which care
-is needed anyway.  But I am in the midst of helping those out as well,
-details on the "dev" branch of -rcu.
-
-							Thanx, Paul
-
+> -- 
+> 
+> - Arnaldo
