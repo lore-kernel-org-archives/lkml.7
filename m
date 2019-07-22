@@ -2,76 +2,99 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6564C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2AAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FA42190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1172921951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfGVOz2 (ORCPT
+        id S1726687AbfGVO4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:55:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48972 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfGVOzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:55:24 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 64F94308A968;
-        Mon, 22 Jul 2019 14:55:24 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-45.ams2.redhat.com [10.36.116.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1002A60A9F;
-        Mon, 22 Jul 2019 14:55:21 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com, mst@redhat.com,
-        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size call
-Date:   Mon, 22 Jul 2019 16:55:09 +0200
-Message-Id: <20190722145509.1284-3-eric.auger@redhat.com>
-In-Reply-To: <20190722145509.1284-1-eric.auger@redhat.com>
-References: <20190722145509.1284-1-eric.auger@redhat.com>
+        Mon, 22 Jul 2019 10:56:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:39631 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfGVO4q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:56:46 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MK5BG-1i8jzE0TaY-00LSju; Mon, 22 Jul 2019 16:56:38 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [RESEND] ARM: bcm47094: add missing #cells for mdio-bus-mux
+Date:   Mon, 22 Jul 2019 16:55:52 +0200
+Message-Id: <20190722145618.1155492-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 22 Jul 2019 14:55:24 +0000 (UTC)
+X-Provags-ID: V03:K1:58kYNxdp/4/OvhkcephOLG0lrEtZe2zmOjPbxM1QiGret2IP62K
+ Do1CrdRVKb3+q8wqTdH7sLCUMztu0hZBtmcPCx2tU5t1bN6fqmAX5v7tFL5dTerwRm7NA78
+ vBDVQPQJEQJr+H8tE7RL7zNIElfZINbjxoqrt3+SrLnqTjtOs72amePfZHcm3eh+Mva1jPh
+ R6XjmO6j/3/U8K6YpL3fQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wKqZgt1dv0Q=:6PmNuljPMLdDh28rDeVivF
+ OIkrLJ8ck2n9NBA9aF9puJX5cKE2GwHKs8yWZoMQhdvRJWx3YtzPYW93AezeahKzZ+FrdyGTY
+ 2d8EU5ssFXVht9gwbWC0rabvnKxcMSUg0SIsZtaQlHE2z2OTUrNKwgFuHxPV0ln3AZBkMtiy/
+ MW86BXbXaFkrjFGxlNaFiezYwBNZj9XlDk581sTpfH/TLoeYQuaA8AwHdW28zdc6q6PFqo9l/
+ qH+yzwdMi4hyfpzGR1vy/K6s7sYlh5iqr4R1ILEWgQ/IvWMnPCEnkiARJGQ4BYRdBOuQ7dUbR
+ CoWJaQ50nf3kyQ7RWFHbx5usz/syTZyjKnoo1BL4DB0H1joXwbsQgvHRrhr88WvPfcKwimLP9
+ YQmTk6/G7eT7YHZjtVt+x0NjO0TGKpOoCfg92EALVOtaYBR9BR2jnq9wwNXmyEqh2MTILgxpW
+ 15ivrfMNoJJYf4jU0aJ3BVgMPNMHPW1/XWT2gCJzcULM32KAQQFX1L1fv4qe4Z0wXRFJM/sEs
+ qxu3D9H7fJTn/Xty1lgo01Tte8iaEp6rJ8rnRfBtYxk4ua3PaI+tHj6urOmpCukAIM93blLR/
+ PfHzLFb8Sm0gn8xfJdKee7hp7BKpAMMDRZ7vQh95hSDKpR6DqaJY9ZGhHdGxnomSJwPV/5snS
+ GBY/lJtCJZzp/LnetfqnTXyzS+Kohh+yF4IWXn4v8PM2nB2GJOdw+YhO9ZfHmaCKkimR5eHmt
+ Wab3l4aEr9owkWzpYtmUxyF0l9N1ULaK3PNbyw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not call dma_max_mapping_size for devices that have no DMA
-mask set, otherwise we can hit a NULL pointer dereference.
+The mdio-bus-mux has no #address-cells/#size-cells property,
+which causes a few dtc warnings:
 
-This occurs when a virtio-blk-pci device is protected with
-a virtual IOMMU.
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
 
-Fixes: e6d6dd6c875e ("virtio: Introduce virtio_max_dma_size()")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Suggested-by: Christoph Hellwig <hch@lst.de>
+Add the normal cell numbers.
+
+Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/virtio/virtio_ring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As Florian is apparently on vacation at the moment, let's merge this
+as a bugfix through arm-soc directly to get closer to clean allmodconfig
+build.
+---
+ arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index c8be1c4f5b55..37c143971211 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -262,7 +262,7 @@ size_t virtio_max_dma_size(struct virtio_device *vdev)
- {
- 	size_t max_segment_size = SIZE_MAX;
+diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
+index 18d0ae46e76c..0faae8950375 100644
+--- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
++++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
+@@ -124,6 +124,9 @@
+ 	};
  
--	if (vring_use_dma_api(vdev))
-+	if (vring_use_dma_api(vdev) && vdev->dev.dma_mask)
- 		max_segment_size = dma_max_mapping_size(&vdev->dev);
- 
- 	return max_segment_size;
+ 	mdio-bus-mux {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
+ 		/* BIT(9) = 1 => external mdio */
+ 		mdio_ext: mdio@200 {
+ 			reg = <0x200>;
 -- 
-2.20.1
+2.20.0
 
