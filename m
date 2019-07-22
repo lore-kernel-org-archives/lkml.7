@@ -2,134 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBDAC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EDCC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E620E21926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D3021993
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="eNbCOiRw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NLjOKntL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfGVC2h (ORCPT
+        id S1728637AbfGVCb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:28:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45153 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfGVC2h (ORCPT
+        Sun, 21 Jul 2019 22:31:58 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:37192 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfGVCb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:28:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o13so16892502pgp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 19:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Fc57iZooFUGdv6qNrbOBvEc0PY3/VGgAe5H9TF7JjL8=;
-        b=eNbCOiRwDs+ySw54XbIGNe3yKnxSpAvCJByMktDNBQJmkKii1iQYRQiY1AYCvzWAe8
-         2pxXCq92+EgtgIfKi8csHLFAQUjiSIZfZXZ7ekfCCopi+tVshPOLYGaNZjj5u2BUhhKL
-         2bRyhV+Oej0UbyZkuYM0w9QZyKUJ5Ec/kJ+UR5lbVFy4OA1cqGy6q1XCo1sWI9+vukql
-         mhFOUPapCB7uZa0tFV+TcTpoHdop3E+mKwOQzCJ0Ob7xWf1nJNyrW6m4sh5OJhGA75Wu
-         /SEjlbE3X5sWXkhsUVp8bA0ahpSep600frH1R29pav1HpFjdbTjAE+3RvFFICEEQ/9r5
-         Swbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Fc57iZooFUGdv6qNrbOBvEc0PY3/VGgAe5H9TF7JjL8=;
-        b=Sphi1SkzO5XDD1Jpu0N+YFWfhv1VVdaKSbbDgczBOh4gELxem0YYRdtFSpFddWPjK3
-         He1bXW7z4Jm3BV/R2nfyyjtDNZkvW42Jm7UpclHYlW2lvxDSzx0x/ySFeE0/TxOhs3pE
-         +GF06+MVjp4s0Cz/Yp3gNY7srD1OCNj5qkJEgOMuNNdwFEOWgsgTFrSp3GDQlUh62DyB
-         I7dl6Jh0yUFAy/1bJU7uD1WU+f5gx8Rye+pfvOfL4L4EzlS7L+8Q0S0D2d9bCroDvOIf
-         ove1Y4QZljaZWxOFBxulvcxOBxI1sVB3K9twVJBCYlP37ekvj7jQN4VAL8sd6gzZhuS8
-         Gu5A==
-X-Gm-Message-State: APjAAAVal6h8cpJkht5H4CQE5yQ6zuQ1O9Zvpb4Gnox5TxltdJurkQkQ
-        gjH+6jPkfVBZ58uqVaRQ6vhx0Q==
-X-Google-Smtp-Source: APXvYqwTxu3VG5Bi11QcKHVnH3qmZ+80hSignczcoWr0IHvVOzsdHhCWBCQHVZh6fidkGg/U/k61gw==
-X-Received: by 2002:a63:6f81:: with SMTP id k123mr70534951pgc.12.1563762516382;
-        Sun, 21 Jul 2019 19:28:36 -0700 (PDT)
-Received: from [10.2.194.19] ([61.120.150.70])
-        by smtp.gmail.com with ESMTPSA id v184sm37517750pfb.82.2019.07.21.19.28.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Jul 2019 19:28:35 -0700 (PDT)
-Subject: Re: [External Email] Re: [PATCH 1/2] virtio-mmio: Process vrings more
- proactively
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Fei Li <lifei.shirley@bytedance.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
- <20190719133135.32418-2-lifei.shirley@bytedance.com>
- <20190719111440-mutt-send-email-mst@kernel.org>
-From:   Fam Zheng <zhengfeiran@bytedance.com>
-Message-ID: <5b29804b-528b-61bd-1ab6-4e442d360cf9@bytedance.com>
-Date:   Mon, 22 Jul 2019 10:28:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 21 Jul 2019 22:31:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563762715; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=W4Y3xNv8DzGeNbpxDkocLZEsOwkzbTg/G7OrEllTF/c=;
+        b=NLjOKntL3Kzim+iZ5XNGr5PfQ4EJPM51BlW52U9IuigpRFYVqe1BqnQNiq8qL5CeM3dl9e
+        dpaBULyfwAB58wkqpiBl2FuHOWkZUJNxjW6e7zrB8dDt4uIZZ4e1zPcjzCmvj86yahLtmy
+        WkhInAClnHeD1rz0icZzgsexKsGejBA=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/3] dt-bindings: Document JZ47xx VPU auxiliary processor
+Date:   Sun, 21 Jul 2019 22:31:38 -0400
+Message-Id: <20190722023140.14701-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20190719111440-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+Ingenic is a second Xburst MIPS CPU very similar to the main core.
+This document describes the devicetree bindings for this auxiliary
+processor.
 
-On 7/19/19 11:17 PM, Michael S. Tsirkin wrote:
-> On Fri, Jul 19, 2019 at 09:31:34PM +0800, Fei Li wrote:
->> From: Fam Zheng <zhengfeiran@bytedance.com>
->>
->> This allows the backend to _not_ trap mmio read of the status register
->> after injecting IRQ in the data path, which can improve the performance
->> significantly by avoiding a vmexit for each interrupt.
->>
->> More importantly it also makes it possible for Firecracker to hook up
->> virtio-mmio with vhost-net, in which case there isn't a way to implement
->> proper status register handling.
->>
->> For a complete backend that does set either INT_CONFIG bit or INT_VRING
->> bit upon generating irq, what happens hasn't changed.
->>
->> Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
-> This has a side effect of skipping vring callbacks
-> if they trigger at the same time with a config
-> interrupt.
-> I don't see why this is safe.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/remoteproc/ingenic,vpu.txt       | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
 
-Good point! I think the block can be moved out from the else block and 
-run unconditionally then.
+diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+new file mode 100644
+index 000000000000..fde86ad5a008
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+@@ -0,0 +1,36 @@
++* Ingenic JZ47xx auxiliary processor
++
++Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from Ingenic
++is a second Xburst MIPS CPU very similar to the main core.
++This document describes the devicetree bindings for this auxiliary processor.
++
++Required properties:
++- compatible: Should be "ingenic,jz4770-vpu-rproc"
++- reg: Must contain the registers location and length for:
++  * the auxiliary processor,
++  * the Tightly Coupled Shared Memory 0 (TCSM0),
++  * the Tightly Coupled Shared Memory 1 (TCSM1),
++  * the shared SRAM.
++- reg-names: Must contain "aux", "tcsm0", "tcsm1", "sram".
++- clocks: Clock specifier for the AUX and VPU clocks.
++- clock-names: Must contain "aux", "vpu".
++- interrupts: Interrupt specifier for the VPU hardware block.
++
++Example:
++
++vpu: cpu@132a0000 {
++	compatible = "ingenic,jz4770-vpu-rproc";
++
++	reg = <0x132a0000 0x20 /* AUX */
++		   0xf4000000 0x4000 /* TCSM0 */
++		   0x132c0000 0xc000 /* TCSM1 */
++		   0x132f0000 0x7000 /* SRAM */
++	>;
++	reg-names = "aux", "tcsm0", "tcsm1", "sram";
++
++	clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
++	clock-names = "aux", "vpu";
++
++	interrupt-parent = <&cpuintc>;
++	interrupts = <3>;
++};
+-- 
+2.21.0.593.g511ec345e18
 
-Fam
-
-
->
->
->> ---
->>   drivers/virtio/virtio_mmio.c | 4 +---
->>   1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
->> index e09edb5c5e06..9b42502b2204 100644
->> --- a/drivers/virtio/virtio_mmio.c
->> +++ b/drivers/virtio/virtio_mmio.c
->> @@ -295,9 +295,7 @@ static irqreturn_t vm_interrupt(int irq, void *opaque)
->>   	if (unlikely(status & VIRTIO_MMIO_INT_CONFIG)) {
->>   		virtio_config_changed(&vm_dev->vdev);
->>   		ret = IRQ_HANDLED;
->> -	}
->> -
->> -	if (likely(status & VIRTIO_MMIO_INT_VRING)) {
->> +	} else {
->>   		spin_lock_irqsave(&vm_dev->lock, flags);
->>   		list_for_each_entry(info, &vm_dev->virtqueues, node)
->>   			ret |= vring_interrupt(irq, info->vq);
->> -- 
->> 2.11.0
