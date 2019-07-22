@@ -2,144 +2,184 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EA7C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF47C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342802190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2153F2199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CG+CS0Vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbfGVRLe (ORCPT
+        id S1730820AbfGVRMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:11:34 -0400
-Received: from smtprelay0124.hostedemail.com ([216.40.44.124]:42271 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727880AbfGVRLd (ORCPT
+        Mon, 22 Jul 2019 13:12:49 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:34365 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729058AbfGVRMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:11:33 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3F99C182CED2A;
-        Mon, 22 Jul 2019 17:11:32 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: skirt20_47526e5f3694d
-X-Filterd-Recvd-Size: 4087
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 22 Jul 2019 17:11:30 +0000 (UTC)
-Message-ID: <95b640fd89baacb0817126ddfb5a762d522eebea.camel@perches.com>
-Subject: Re: [PATCH 1/2] HID: core: Add hid printk_once macros
-From:   Joe Perches <joe@perches.com>
-To:     stillcompiling@gmail.com, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 22 Jul 2019 10:11:28 -0700
-In-Reply-To: <20190722163642.10417-1-stillcompiling@gmail.com>
-References: <20190722163642.10417-1-stillcompiling@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 22 Jul 2019 13:12:48 -0400
+Received: by mail-ua1-f68.google.com with SMTP id c4so15641488uad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 10:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+/7qP7jvywDgUOnDrqW3s3gPrXQy1DnJ3/b8YOX2Xm0=;
+        b=CG+CS0VkW7IV0MTyVH2DoKwvqm9q+2Ohhf4rMaEYTs9M6RQI41CbUnCa0kn2f7DS+w
+         zg0AYXKfOZmm3BHsSpXtYDFz7wuslXfO5SdvtSb/KLoKOwwuQfkKa5P2ILbARPSEzu6G
+         VZvKc546XGL+WLulGQxbWlhsng9QD4cMwVqfJg9cem68DGSqIXNzs70VjDJECccp6BZY
+         kS14+5n9pJXJmx7JBH/Fm0KJk67GpKNZYY4mDy0X95Xou5J9jLuiDBh9MDN99B3bCUzQ
+         eacl/MMGcCUSJn0yfIBVNqzT1g6ADYSQNX5x+PaRa3MF5xgl4dWiaQuyvSNxdD5mu962
+         SkbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+/7qP7jvywDgUOnDrqW3s3gPrXQy1DnJ3/b8YOX2Xm0=;
+        b=X6QfjPXjpRyC2WK1h0j/BB0EbdyHzPvdcxYJCnsMag3azrL91QTCN07qGbBGP4M+eB
+         IMeWDXUqR1SUXHpN1LTPH7LJpk8y1cUuW2WFW6NtrDPiYJ0Sk7ClL8iYkQzuQaB4AqQj
+         8gB3q8ZGahoQuQGWvzwBEHQmZte3N0G1F8qRZLqd+wU8obOQYIEVkz0MxDsf3DWuBoS+
+         5zOY6PcbHmr8LRm4LJyiPsHZyyGKSHTolhw427vM3Nksd/lOmfSOHZEUXu+D8Enqe41z
+         WY91y5qCKDg4T9vGFzX3+PVVZDJjOuuDSDBIQ3x32hRHNPQTmVnv/rkkys8UwR/d5AtK
+         W32Q==
+X-Gm-Message-State: APjAAAVxxqQwon3Q5Dksj1VcHsWPuWhdDGjoRSnpVp5b4/7EeVbIyQR8
+        PeAeHcL4QfVNY5vqApTM02A88l4cMvNdfi5B1B3EtA==
+X-Google-Smtp-Source: APXvYqyCVwQAKobrSpwYTL5J9hPGdkQqBJ2Pj9kKE2dnQpZaKItfGFexxXsFaZqRVZZvMzh4FrAQXXT/hdzxKPIh0dw=
+X-Received: by 2002:ab0:2746:: with SMTP id c6mr2180464uap.76.1563815567103;
+ Mon, 22 Jul 2019 10:12:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-9-brijesh.singh@amd.com>
+ <alpine.DEB.2.21.1907211354220.58367@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.21.1907211354220.58367@chino.kir.corp.google.com>
+From:   Cfir Cohen <cfir@google.com>
+Date:   Mon, 22 Jul 2019 10:12:35 -0700
+Message-ID: <CAEU=KTGRCWQH-XxmH+cwMHiXmq7px+qcNMr_6ByO=WvsOewQpA@mail.gmail.com>
+Subject: Re: [PATCH v3 08/11] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+To:     David Rientjes <rientjes@google.com>
+Cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-22 at 10:36 -0600, stillcompiling@gmail.com wrote:
-> From: Joshua Clayton <stillcompiling@gmail.com>
-> 
-> Make available printk_once variants to hid_warn() etc
-> 
-> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
-
-This seems OK, but I suggest a slightly different style:
-
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-[]
-> @@ -1179,4 +1179,23 @@ do {									\
->  #define hid_dbg(hid, fmt, arg...)			\
->  	dev_dbg(&(hid)->dev, fmt, ##arg)
->  
-> +#define hid_level_once(level, hid, fmt, arg...)		\
-> +	dev_level_once(level, &(hid)->dev, fmt, ##arg)
-
-This one is probably not useful in actual code.
-
-> +#define hid_emerg_once(hid, fmt, arg...)		\
-> +	dev_emerg_once(&(hid)->dev, fmt, ##arg)
-
-Even though I introduced those macros originally,
-it's now a more common style to use:
-
-#define hid_emerg_once(hid, fmt, ...)				\
-	dev_emerg_once(&(hid)->dev, fmt, ##__VA_ARGS__)
-
-etc...
-
-And trivially:
-
-hid_printk, hid_emerg, hid_crit, and hid_alert aren't
-used at all and could all be removed.
-
-I'm not sure there is a use case for any of them.
-
-Perhaps:
----
- include/linux/hid.h | 39 +++++++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
-
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index d770ab1a0479..5d2c4b63954f 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -1160,23 +1160,26 @@ do {									\
- 		printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);	\
- } while (0)
- 
--#define hid_printk(level, hid, fmt, arg...)		\
--	dev_printk(level, &(hid)->dev, fmt, ##arg)
--#define hid_emerg(hid, fmt, arg...)			\
--	dev_emerg(&(hid)->dev, fmt, ##arg)
--#define hid_crit(hid, fmt, arg...)			\
--	dev_crit(&(hid)->dev, fmt, ##arg)
--#define hid_alert(hid, fmt, arg...)			\
--	dev_alert(&(hid)->dev, fmt, ##arg)
--#define hid_err(hid, fmt, arg...)			\
--	dev_err(&(hid)->dev, fmt, ##arg)
--#define hid_notice(hid, fmt, arg...)			\
--	dev_notice(&(hid)->dev, fmt, ##arg)
--#define hid_warn(hid, fmt, arg...)			\
--	dev_warn(&(hid)->dev, fmt, ##arg)
--#define hid_info(hid, fmt, arg...)			\
--	dev_info(&(hid)->dev, fmt, ##arg)
--#define hid_dbg(hid, fmt, arg...)			\
--	dev_dbg(&(hid)->dev, fmt, ##arg)
-+#define hid_err(hid, fmt, ...)						\
-+	dev_err(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_notice(hid, fmt, ...)					\
-+	dev_notice(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_warn(hid, fmt, ...)						\
-+	dev_warn(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_info(hid, fmt, ...)						\
-+	dev_info(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_dbg(hid, fmt, ...)						\
-+	dev_dbg(&(hid)->dev, fmt, ##__VA_ARGS__)
-+
-+#define hid_err_once(hid, fmt, ...)					\
-+	dev_err_once(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_notice_once(hid, fmt, ...)					\
-+	dev_notice_once(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_warn_once(hid, fmt, ...)					\
-+	dev_warn_once(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_info_once(hid, fmt, ...)					\
-+	dev_info_once(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_dbg_once(hid, fmt, ...)					\
-+	dev_dbg_once(&(hid)->dev, fmt, ##__VA_ARGS__)
- 
- #endif
+In addition, it seems that svm_page_enc_status_hc() accepts 'gpa',
+'npages', 'enc' directly from the guest, and so these can take
+arbitrary values. A very large 'npages' could lead to an int overflow
+in 'gfn_end = gfn_start + npages', making gfn_end < gfn_start. This
+could an OOB access in the bitmap. Concrete example: gfn_start = 2,
+npages = -1, gfn_end = 2+(-1) = 1, sev_resize_page_enc_bitmap
+allocates a bitmap for a single page (new_size=1), __bitmap_set access
+offset gfn_end - gfn_start = -1.
 
 
+On Sun, Jul 21, 2019 at 1:57 PM David Rientjes <rientjes@google.com> wrote:
+>
+> On Wed, 10 Jul 2019, Singh, Brijesh wrote:
+>
+> > diff --git a/Documentation/virtual/kvm/hypercalls.txt b/Documentation/virtual/kvm/hypercalls.txt
+> > index da24c138c8d1..94f0611f4d88 100644
+> > --- a/Documentation/virtual/kvm/hypercalls.txt
+> > +++ b/Documentation/virtual/kvm/hypercalls.txt
+> > @@ -141,3 +141,17 @@ a0 corresponds to the APIC ID in the third argument (a2), bit 1
+> >  corresponds to the APIC ID a2+1, and so on.
+> >
+> >  Returns the number of CPUs to which the IPIs were delivered successfully.
+> > +
+> > +7. KVM_HC_PAGE_ENC_STATUS
+> > +-------------------------
+> > +Architecture: x86
+> > +Status: active
+> > +Purpose: Notify the encryption status changes in guest page table (SEV guest)
+> > +
+> > +a0: the guest physical address of the start page
+> > +a1: the number of pages
+> > +a2: encryption attribute
+> > +
+> > +   Where:
+> > +     * 1: Encryption attribute is set
+> > +     * 0: Encryption attribute is cleared
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index 26d1eb83f72a..b463a81dc176 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1199,6 +1199,8 @@ struct kvm_x86_ops {
+> >       uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
+> >
+> >       bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
+> > +     int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+> > +                               unsigned long sz, unsigned long mode);
+> >  };
+> >
+> >  struct kvm_arch_async_pf {
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index 3089942f6630..431718309359 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -135,6 +135,8 @@ struct kvm_sev_info {
+> >       int fd;                 /* SEV device fd */
+> >       unsigned long pages_locked; /* Number of pages locked */
+> >       struct list_head regions_list;  /* List of registered regions */
+> > +     unsigned long *page_enc_bmap;
+> > +     unsigned long page_enc_bmap_size;
+> >  };
+> >
+> >  struct kvm_svm {
+> > @@ -1910,6 +1912,8 @@ static void sev_vm_destroy(struct kvm *kvm)
+> >
+> >       sev_unbind_asid(kvm, sev->handle);
+> >       sev_asid_free(kvm);
+> > +
+> > +     kvfree(sev->page_enc_bmap);
+> >  }
+> >
+> >  static void avic_vm_destroy(struct kvm *kvm)
+>
+> Adding Cfir who flagged this kvfree().
+>
+> Other freeing of sev->page_enc_bmap in this patch also set
+> sev->page_enc_bmap_size to 0 and neither set sev->page_enc_bmap to NULL
+> after freeing it.
+>
+> For extra safety, is it possible to sev->page_enc_bmap = NULL anytime the
+> bitmap is kvfreed?
+>
+> > @@ -2084,6 +2088,7 @@ static void avic_set_running(struct kvm_vcpu *vcpu, bool is_run)
+> >
+> >  static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> >  {
+> > +     struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
+> >       struct vcpu_svm *svm = to_svm(vcpu);
+> >       u32 dummy;
+> >       u32 eax = 1;
+> > @@ -2105,6 +2110,12 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> >
+> >       if (kvm_vcpu_apicv_active(vcpu) && !init_event)
+> >               avic_update_vapic_bar(svm, APIC_DEFAULT_PHYS_BASE);
+> > +
+> > +     /* reset the page encryption bitmap */
+> > +     if (sev_guest(vcpu->kvm)) {
+> > +             kvfree(sev->page_enc_bmap);
+> > +             sev->page_enc_bmap_size = 0;
+> > +     }
+> >  }
+> >
+> >  static int avic_init_vcpu(struct vcpu_svm *svm)
+>
+> What is protecting sev->page_enc_bmap and sev->page_enc_bmap_size in calls
+> to svm_vcpu_reset()?
