@@ -2,121 +2,173 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EBFC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7BCC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49CB2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FCA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="NpyIgKdV"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DcmH5FOQ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="urhKwHuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbfGVO0D (ORCPT
+        id S1730854AbfGVO0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:26:03 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56205 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfGVO0C (ORCPT
+        Mon, 22 Jul 2019 10:26:49 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:42190 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725907AbfGVO0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:26:02 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so35389849wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 07:26:00 -0700 (PDT)
+        Mon, 22 Jul 2019 10:26:49 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A2CD7C0BEB;
+        Mon, 22 Jul 2019 14:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563805608; bh=yf4ny+/hsZlJfNHrMFejK+0BN2OuzmeE+srXkH6X24Q=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=DcmH5FOQ9FGLIHrcLoOfY0MnUz0o4EJZaZLlHzHYR6zxVe77V6w9GoVtYHYGaybBW
+         E6NvKUxX7i1rnbfiyk7g20uZI3W7309/9QxBsoOMefAvilXkD+dCImhm9ymhdQKf7q
+         uHjoSERflfFDLaMJF4eATdiIGtC8Zvdw0rghaEczBIau9L5gEaeWCsf4uvtsug+tap
+         e+roaeHiGZ3A+bSEYdJZ1eELKgLii7ivxLLOfDFL/bjnaxRDjfkrtulM/7zmv539mn
+         ccyCWFrrcwkMIRwXjr0un7mkr12WY3y1v/XFQcURCKw6ZkRV2GcCTXpwcE9FyppWDF
+         8ozlrESHOnFhA==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 62BC1A023B;
+        Mon, 22 Jul 2019 14:26:48 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 22 Jul 2019 07:26:48 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 22 Jul 2019 07:26:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JgKV+skFisrtNGUoGNWvnT3HCEEekdjLTFQErV2nRruqs8aDUNDvsPKAVxOe/9ySqLeRjZxnLYkJMsKP1EgGw7jx3krSZ6OocbbPn88UJKW0nsoK68sUX9MtYWUh45de59QL5BKzTtLK0AkzRjAmZ3Q7kFepILI5W/pK8GKaMOGbPzmAOPWskJi+OzBIU0gvF47oN2swmo3ietHCsw2O/jNhz4DE42h/ogxUa+pSPdCuS0eulNWCOASZpnwOPLgTDEXLC5y9YEk6aw8cJSdR3JPtT04A+i2j/XBYoiL60mrI5DKDfL2uqwdZXRQ/WKqtqKG8b05inSTZWnU5b8ryfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yf4ny+/hsZlJfNHrMFejK+0BN2OuzmeE+srXkH6X24Q=;
+ b=dYe1yE2UkNweoD5PDUIE7Esk9QI7Ou2F7YAJ2ibCAWzmh/FwTEWT1uMrHRkoLutGYAqQKnlU9LiwfO0zpTdzv/BHouvd4likXa6Eha34jKSgLnxOsPpVxixEgmDFahdz3KCzveDtqxxb7hNTfnr75mhJMWurjrD/x4x9oKNA4xRD/eyOKycQfakKhIakzxvZospo6gMihqCrqcAtaf5a7nyLRdSYllEjKOzyZfHLXmSFgfIdihAvVwLKFSE0kWFb/bty1L1Fz/pWzpjv0miGIMkIW/hDkCAsvn/kkKF4Zk43P00+yr3dSBuLjr5sR7LJzJoix8D99LxOFiCZbpYX8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=synopsys.com;dmarc=pass action=none
+ header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MSSG+/SPzy4dXqjSfDAF61vds83VEHomtFtlG6NVWCM=;
-        b=NpyIgKdV7f7bde7xQbG/M3QiHf9/GjR0/rkrYOmJXU1I5elJ8P9PaSvQIxo+ZYHGSq
-         vaDOB4Ht6EywdynGGeXW0KxBvlepXQnmdxhncg1tajY8pqZD7vD+Z5IWQ+70JEGjbCs8
-         nOFjvRpLwdCpUbrZ63fIWeP1nEeAi7jxrKf+ZDupj06EaGQzWoPi4LeqNC7i9NY5Jy1J
-         zlHts0hamZwcT653XwN1lghUIzuhDWZZDqqZVCShutAQ/Df8TVZ734qi0pmQhE/dc75b
-         njomznYmB7pXlQ4tU1pYmv/JiS15gw3VrrUOkhRD96P/NWjSviyc1acQeIGNIJqUyNOn
-         2BjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MSSG+/SPzy4dXqjSfDAF61vds83VEHomtFtlG6NVWCM=;
-        b=VnKUjw7gOiM17ox+aZyR1V214dIpBIYowbMOC3ZEh54zg+w7hs7tqxAIm0PQysjuYu
-         RrKCXbvY4i7D7IDiTSp8xyrkLx6iEgEs+b0KWY1Fs5fsib6dr2kSEVaUoeEvxJ2moVSa
-         /67GxUMaqKXWJ+eRmbBojerKLBHj2EWb6svKNpPEtKjs4jQUn5NoRfMfNPtDBG3L1UX4
-         S4zE6C0fqNcXAVNWeFII7vwPXFdwSvvoREJ/ojulaQbQ4cQ2yXnmLTDJRw7Rx8/PkJCF
-         3vjVdad/YJt498jes5Ejm9Twr9zC8JHbM1qUlNgF9MMP5vnJDAkJA8jcsvooY32ApcNd
-         9xgA==
-X-Gm-Message-State: APjAAAWm8bVwGR43jMgUajF8109zpzttfFj1UMmKQ1mHCgMx6EJTrvj9
-        J5ST0jri/DiyKZC1JbJ/ttc=
-X-Google-Smtp-Source: APXvYqzcX3cd8YqK8GLkwwC4FaQWzXKuFq07UGXLTjQWfd0zeJDrfqoVabNOYoUrs4LwXjPuL3e9lQ==
-X-Received: by 2002:a05:600c:20d:: with SMTP id 13mr64401057wmi.141.1563805559521;
-        Mon, 22 Jul 2019 07:25:59 -0700 (PDT)
-Received: from localhost.localdomain ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id x185sm28552203wmg.46.2019.07.22.07.25.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 07:25:58 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com, surenb@google.com,
-        joel@joelfernandes.org
-Subject: [GIT PULL] pidfd fixes
-Date:   Mon, 22 Jul 2019 16:22:41 +0200
-Message-Id: <20190722142238.16129-1-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yf4ny+/hsZlJfNHrMFejK+0BN2OuzmeE+srXkH6X24Q=;
+ b=urhKwHuLkuaVwYG1F7obdqq6Ki8KH1KdaS98YhGRHNWPsWs7x1ig5dBWrRNdRCV8Oq97s1AmDihLv3D+5XSsVJSFaGYe4Au1Qf6V3wDGEXveOZHfsIW4GWRECcBL1pXUKeo+A3KL68uMJr0PoZq1hvb7XtaA+nUU7toaCHVXSY0=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3427.namprd12.prod.outlook.com (20.178.211.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Mon, 22 Jul 2019 14:26:46 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
+ 14:26:46 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     =?iso-8859-2?Q?Ond=F8ej_Jirman?= <megi@xff.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: RE: [PATCH net-next 0/3] net: stmmac: Convert to phylink
+Thread-Topic: [PATCH net-next 0/3] net: stmmac: Convert to phylink
+Thread-Index: AQHVIGkCReoXsI1ev0mBbW+MAvwZAqbW1RMAgAALU8CAAATNgIAAAL0ggAAKQYCAAAF88A==
+Date:   Mon, 22 Jul 2019 14:26:45 +0000
+Message-ID: <BN8PR12MB3266BEC39374BE3E9CD2647DD3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+ <20190722124240.464e73losonwb356@core.my.home>
+ <BN8PR12MB32660B12F8E2617ED42249BBD3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190722134023.GD8972@lunn.ch>
+ <BN8PR12MB3266678A3ABD0EBF429C9766D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190722141943.GE8972@lunn.ch>
+In-Reply-To: <20190722141943.GE8972@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d056a55a-5b60-4d4a-8e27-08d70eb0a02b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3427;
+x-ms-traffictypediagnostic: BN8PR12MB3427:
+x-microsoft-antispam-prvs: <BN8PR12MB3427021A0DB21D4F8F8C0BE3D3C40@BN8PR12MB3427.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(54906003)(486006)(110136005)(71190400001)(14454004)(71200400001)(81166006)(81156014)(8676002)(33656002)(68736007)(99286004)(66066001)(9686003)(6436002)(55016002)(316002)(7416002)(256004)(7736002)(305945005)(74316002)(446003)(11346002)(6116002)(3846002)(86362001)(229853002)(6636002)(476003)(53936002)(4326008)(25786009)(478600001)(186003)(6246003)(66476007)(64756008)(66446008)(66556008)(76116006)(66946007)(8936002)(6506007)(102836004)(52536014)(2906002)(76176011)(7696005)(26005)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3427;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gCAWwKWZ537NjSgWiEKKOGAvqVgVIe/M+PfCANbYBvmM5hsJKlPPEqEa+3377XCxMC7rfCIth2nMFa62lqEoa9SeP+fKiI5USM4c9jSuj9+sVaS1tt8ssZ2MwYC6y5KMRj8NYuFFNZXNsrS9bgV0+5lgtRaXGk0wTQHqrnbHRAUMLvJcQTvLWwpHB/JrT5ggt4Tiqk1RuMa70S2OO2SRtZmlqTr+Fd4EVFl0a7ySWDTy5s+Ix5Z73NS/QSARbON93+c19RJGxLG0pQ8MEF9geRCjTJlYuKD3T+w+SSMLuKtwo70hz6BgNCzMxJ3evURySrXtU+3h79c5PxSLPd2mWFiVZrqwJRAHf2sXQbkRWwqxdEbu2vkrnZ/vzMU6NH9h2Fmruw5fGD8evt5jfso6xVrywO5bd+sqLjYJad9XhTI=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: d056a55a-5b60-4d4a-8e27-08d70eb0a02b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 14:26:45.8857
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3427
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Jul/22/2019, 15:19:43 (UTC+00:00)
 
-This contains a fix for pidfd polling. It ensures that the task's exit
-state is visible to all waiters:
+> On Mon, Jul 22, 2019 at 01:58:20PM +0000, Jose Abreu wrote:
+> > From: Andrew Lunn <andrew@lunn.ch>
+> > Date: Jul/22/2019, 14:40:23 (UTC+00:00)
+> >=20
+> > > Does this mean that all stmmac variants support 1G? There are none
+> > > which just support Fast Ethernet?
+> >=20
+> > This glue logic drivers sometimes reflect a custom IP that's Synopsys=20
+> > based but modified by customer, so I can't know before-hand what's the=
+=20
+> > supported max speed. There are some old versions that don't support 1G=
+=20
+> > but I expect that PHY driver limits this ...
+>=20
+> If a Fast PHY is used, then yes, it would be limited. But sometimes a
+> 1G PHY is used because they are cheaper than a Fast PHY.
+> =20
+> > > I'm also not sure the change fits the problem. Why did it not
+> > > negotiate 100FULL rather than 10Half? You are only moving the 1G
+> > > speeds around, so 100 speeds should of been advertised and selected.
+> >=20
+> > Hmm, now that I'm looking at it closer I agree with you. Maybe link=20
+> > partner or PHY doesn't support 100M ?
+>=20
+> In the working case, ethtool shows the link partner supports 10, 100,
+> and 1G. So something odd is going on here.
+>=20
+> You fix does seems reasonable, and it has been reported to fix the
+> issue, but it would be good to understand what is going on here.
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+Agreed!
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Ondrej, can you please share dmesg log and ethtool output with the fixed=20
+patch ?
 
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190722
-
-for you to fetch changes up to b191d6491be67cef2b3fa83015561caca1394ab9:
-
-  pidfd: fix a poll race when setting exit_state (2019-07-22 16:02:03 +0200)
-
-/* Summary */
-The pidfd polling code suffered from a race condition. A waiter could be
-notified via do_notify_pidfd() without the task's exit state being set and
-thus not visible to the waiter. This would cause the waiter to be blocked
-indefinitely. The following schematic illustrates how this could happen:
-
-    CPU 0                            CPU 1
-    ------------------------------------------------
-    exit_notify
-      do_notify_parent
-        do_notify_pidfd
-                                       pidfd_poll
-                                          if (tsk->exit_state)
-      tsk->exit_state = EXIT_DEAD
-
-This is fixed by ensuring that the task's exit state is set before calling
-into do_notify_pidfd(). 
-
-Please consider pulling from the signed for-linus-20190722 tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-for-linus-20190722
-
-----------------------------------------------------------------
-Suren Baghdasaryan (1):
-      pidfd: fix a poll race when setting exit_state
-
- kernel/exit.c | 1 +
- 1 file changed, 1 insertion(+)
+---
+Thanks,
+Jose Miguel Abreu
