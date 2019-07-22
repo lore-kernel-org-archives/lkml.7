@@ -2,59 +2,93 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0500CC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CC7C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0ED21951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DADA21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfGVDmR (ORCPT
+        id S1728087AbfGVDoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 23:42:17 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38278 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfGVDmR (ORCPT
+        Sun, 21 Jul 2019 23:44:54 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:44419 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726106AbfGVDoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 23:42:17 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 75E5714EC8285;
-        Sun, 21 Jul 2019 20:42:16 -0700 (PDT)
-Date:   Sun, 21 Jul 2019 20:41:56 -0700 (PDT)
-Message-Id: <20190721.204156.403753211415246792.davem@davemloft.net>
-To:     haiyangz@microsoft.com
-Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] hv_netvsc: Fix extra rcu_read_unlock in
- netvsc_recv_callback()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1563557581-17669-1-git-send-email-haiyangz@microsoft.com>
-References: <1563557581-17669-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 21 Jul 2019 20:42:16 -0700 (PDT)
+        Sun, 21 Jul 2019 23:44:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TXSDwvJ_1563767088;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TXSDwvJ_1563767088)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 22 Jul 2019 11:44:49 +0800
+Subject: Re: [PATCH 4/4] numa: introduce numa cling feature
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        Mel Gorman <mgorman@suse.de>, riel@surriel.com
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <9a440936-1e5d-d3bb-c795-ef6f9839a021@linux.alibaba.com>
+ <20190711142728.GF3402@hirez.programming.kicks-ass.net>
+ <82f42063-ce51-dd34-ba95-5b32ee733de7@linux.alibaba.com>
+ <20190712075318.GM3402@hirez.programming.kicks-ass.net>
+ <0a5066be-ac10-5dce-c0a6-408725bc0784@linux.alibaba.com>
+Message-ID: <c85b5868-150f-7114-18cd-a5e9cd55f406@linux.alibaba.com>
+Date:   Mon, 22 Jul 2019 11:44:48 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <0a5066be-ac10-5dce-c0a6-408725bc0784@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
-Date: Fri, 19 Jul 2019 17:33:51 +0000
 
-> There is an extra rcu_read_unlock left in netvsc_recv_callback(),
-> after a previous patch that removes RCU from this function.
-> This patch removes the extra RCU unlock.
+
+On 2019/7/12 下午4:58, 王贇 wrote:
+[snip]
 > 
-> Fixes: 345ac08990b8 ("hv_netvsc: pass netvsc_device to receive callback")
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> I see, we should not override the decision of select_idle_sibling().
+> 
+> Actually the original design we try to achieve is:
+> 
+>   let wake affine select the target
+>   try find idle sibling of target
+>   if got one
+> 	pick it
+>   else if task cling to prev
+> 	pick prev
+> 
+> That is to consider wake affine superior to numa cling.
+> 
+> But after rethinking maybe this is not necessary, since numa cling is
+> also some kind of strong wake affine hint, actually maybe even a better
+> one to filter out the bad cases.
+> 
+> I'll try change @target instead and give a retest then.
 
-Applied and queued up for -stable.
+We now leave select_idle_sibling() untouched, instead prevent numa swap
+with task cling to dst, and stop wake affine when curr & prev cpu are on
+different node and wakee cling to prev.
+
+Retesting show a even better results, benchmark like dbench also show 1%~5%
+improvement, not stable but always improved now :-)
+
+Regards,
+Michael Wang
+
+> 
+> Regards,
+> Michael Wang
+> 
