@@ -2,152 +2,177 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746E0C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF80C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF2121BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1B222305
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:09:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="XI2HK1hY";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZI6epbgG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKGNxMh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfGVHHq (ORCPT
+        id S1727721AbfGVHJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:07:46 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:58572 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727222AbfGVHHq (ORCPT
+        Mon, 22 Jul 2019 03:09:13 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33478 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfGVHJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:07:46 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6M755IX008859;
-        Mon, 22 Jul 2019 00:07:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=proofpoint;
- bh=t9AbwECXfbv88byPQQ27afOo04WT9VATBZioP8DZL/0=;
- b=XI2HK1hYuBf5NRJCB+3PTOyuZ688A61yeIOQQjzZas1UBXl5GgahpKH5DScHdCd4uFfK
- 6v/Q8ECmXOZJgp7r8BEjqOg3HYDTlJiIl+l0Cc+ZR5fq43MX1TBkCC/yI9jMzWvv9LHU
- oLGIFwsevWqclrF1fGbqFJkstS3jaSFC89zuwCmRhkV0drg8CZTwxuLxzOnlIZkU62Zx
- GLrFXOT3vFgXXToRZJdDsrJgK++Ifiz6TPsecIpUTs3JNCGjAFGd1Kzx/IwSMAGHdl4I
- OY93cVt6qoIekmY+EQrYYsAPzHX9w/MC8fQU+WthL82/QnKti64u67ALkpwKz0Kb6HWE 6A== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=jank@cadence.com
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2052.outbound.protection.outlook.com [104.47.42.52])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2tuxhwdt2t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jul 2019 00:07:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OB5ARnEbx3FSqlg6Fw/Dk8yTZ1Jq0PeJKXI65CzRGLN4uKg74DRQGhW1+skn1JDhUoKYsa3lJlulvf+hY+iTGD8UIC47BGtKjH9coA99dmpRs1CiYoSw82fQBrkIRUSELDsNWLBz/2x5OKfHD9qpKDWM8IiGs1fzS5tw0+qTMmoCWQN1qkLI/Pum2TwPXx8TODxLxfstchEvRUOJhyXxZSDaQhfqHqDkNID5HoP18VYErYOXZMMC8FiXOhphZq4IXwAwOLplq/8TxvShYyDPd/Oba+cr4ZOpofAtEzW10gH+tiZKtZzYs1Nfx1qTyXN9XCEpyXyC7Wy32CxhDJMZAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t9AbwECXfbv88byPQQ27afOo04WT9VATBZioP8DZL/0=;
- b=aZkezevFAUFOk8efffN6PRuDoLkT3+2fJZav+Wyuki7YPZEsCE2Rh/ElI5BFkj+St5FR0qSqviZK9SyLzl1fnYRFmZmdjSHUyTu3eMCheisDLkPIofFI/nGJOYo9LpN9qTs/IS+V0DKTfdQAd1gt/3YdxbyA91T2nfiBci8aMflKAGCG85knXHkKvUFsFzpcGqtBjlDWWqjh5kLrlQcny5W2sMm8+tkgf3NLxggML/P/e7NPBjjzFIEqnBncLcN2VFftt4j+hSSZrZ0XpmnBDaCBmwMK7IXdNgw0T5fwMXKXcLLlv0s7uzTMxkOM/SgsgXEdjQ3X9BDbSsy+4nwaQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=cadence.com;dmarc=pass action=none
- header.from=cadence.com;dkim=pass header.d=cadence.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t9AbwECXfbv88byPQQ27afOo04WT9VATBZioP8DZL/0=;
- b=ZI6epbgGsnB/VgdjJzZfDu3urK7/ewB//iGwQB4pqicd1cLYJ3aHCCpawbvhv8OYGTTzElQLddNDiD77mpC7EvuSL6BH8AD/wVzNqTM2pEui4aHcZzU/+CD/iOSvU/4JMMBuoN9MAPWs7kd/N0B+FyzAHGhN0XsLwNbpAUrRZag=
-Received: from CY1PR07MB2521.namprd07.prod.outlook.com (10.167.16.12) by
- CY1PR07MB2729.namprd07.prod.outlook.com (10.166.205.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Mon, 22 Jul 2019 07:07:33 +0000
-Received: from CY1PR07MB2521.namprd07.prod.outlook.com
- ([fe80::ac78:3ee1:c7d6:763]) by CY1PR07MB2521.namprd07.prod.outlook.com
- ([fe80::ac78:3ee1:c7d6:763%6]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
- 07:07:33 +0000
-From:   Jan Kotas <jank@cadence.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     Jan Kotas <jank@cadence.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
-Thread-Topic: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
-Thread-Index: AQHVPVo5HHj6Bdr/tkW3/v69X+Pq+qbTLtCAgAMOv4A=
-Date:   Mon, 22 Jul 2019 07:07:33 +0000
-Message-ID: <AF5297BE-EE52-4652-8DE6-6A3F4E855480@global.cadence.com>
-References: <20190718111509.29924-1-jank@cadence.com>
- <20190718111509.29924-4-jank@cadence.com>
- <20190720082559.pk3odkf5hztgvpif@flea>
-In-Reply-To: <20190720082559.pk3odkf5hztgvpif@flea>
-Accept-Language: en-US, pl-PL
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 941bf537-491b-4fe3-a273-08d70e734509
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY1PR07MB2729;
-x-ms-traffictypediagnostic: CY1PR07MB2729:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY1PR07MB2729192665F94334D5B66FA2D0C40@CY1PR07MB2729.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(36092001)(199004)(189003)(66446008)(6506007)(53546011)(86362001)(64756008)(66476007)(66556008)(102836004)(76176011)(186003)(5660300002)(256004)(26005)(53936002)(6246003)(6306002)(6512007)(66946007)(91956017)(76116006)(11346002)(446003)(476003)(4326008)(2906002)(486006)(14454004)(966005)(478600001)(68736007)(81156014)(81166006)(6436002)(8936002)(25786009)(66066001)(7736002)(305945005)(6916009)(6116002)(3846002)(229853002)(8676002)(33656002)(316002)(54906003)(99286004)(71190400001)(71200400001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2729;H:CY1PR07MB2521.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: e21DDOPG/Lb1LCK6O2soV8zji39ADUpbBknCkEGd77e2KAr/auHoRBaEdVkouQgKtDcLx08Uo8RmbE8iiucvOqATRQ2+FXMWYp04VyXjZOJp94sMv8gUtMBxnnsqn1HO8Jaw67k2uI3x9RyTUuJFVjzIFKavX3iyBHBe63hNThtwBQDEj95PYGHADeXypRLU8+FvW8He/e0K7Hd9BVT9qyoXCckA72COUCSSQUh8NUSq8s1FSCX6nKvAwudqoj3qvg7+cJMRguKEK87pvH+UusH59OI+qAChjxe1l2ajynwP5BoHeJVhcMmHQ8HAXfKTrbZ9NnD8mTi09vM2GHs2EuGymRdAdhoGNli5xpPSmhH5y2fYamsSejchu8mYee1jWqmaxciewyxJfYsVycJ3Ab2A1zPRInelFbHbF8jJqwc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <73B7B35BAB48B647A849C30917595FFE@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 22 Jul 2019 03:09:13 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x3so25898044lfc.0;
+        Mon, 22 Jul 2019 00:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X97ALT2dwZb1nlOyv2R/lJmcMkDzP4lwhhkJyiaa0KQ=;
+        b=kKGNxMh0JiZtLsSrrZjhq1MHDfpZvNWNgwictQVgnvSNZ2460NAsOar2+eBIK0cJPh
+         C//sfrn4HoV6qEym7pmSHfEqmBLavCOmqw5Tg15QNg++2rrpY2bCwSd+vEw8p9CIijAv
+         W7z1OnDunBJfVxJ9D9SIh12UqxAkPNI0EnePuTiANPiYaU6aUZTnw1b9aEPu3WECp9F6
+         X+fUC1KPpxNeN/qJDQzhkt8AIF/4UT8R8QIJngJpFMAOFiCKekSnJN1KU6Wn9M1/aQ5p
+         hObcuM0dINI8ZvIQV+oHZlYIACXN4kMt0xG1G+KTZen7GSr+hiWakKSLoXkeoQ0Mo0Da
+         EBDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X97ALT2dwZb1nlOyv2R/lJmcMkDzP4lwhhkJyiaa0KQ=;
+        b=P8a84WLFsq3pabgiM7gYZ1grF41M60mm3eR6KYSXDS/r8PrMygnDY7wGpi4L4fYSft
+         WF6IlhgNL54y9k/Pp8QSxWGT26vDqosylQcdMgm1gPZXxJ9qM71zLTCaT0kEIaRQvllT
+         6XG8pZd5rXbwf5P0O6Xsh3X8mfCRdQgHv88z/Bt4w3eFvUpBZ1Hz6NzEFiy6GLvIWiFX
+         dszucApE14+Jt8GCw8LonjTPFHF55OCmjEWjj94Bjdfvi3UWRM/piBxVkI+gF4KG7gtc
+         wGSNCRl/HorM/sHqhDoa7vCmd6Hbj2K12Mv5N4M7E7Oqwz/PcqW47xFK/sKe8sBgxlDd
+         /FAw==
+X-Gm-Message-State: APjAAAWFCW09IRmXqtHe9Ng4emJ8Pl1CHLmXNPHHGqgGmkLDSijZjPSn
+        SFPai+ramKspu/c4Wbe/WdmUvuD+
+X-Google-Smtp-Source: APXvYqwHr5VnqLHRX48A5TA3ejhuPLGltYRnoKB1MAKSvFTwGtFcVYfu5jiJecndRZaWY4Dd8WnmZQ==
+X-Received: by 2002:ac2:5492:: with SMTP id t18mr32201449lfk.41.1563779350248;
+        Mon, 22 Jul 2019 00:09:10 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id g4sm5944696lfb.31.2019.07.22.00.09.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 00:09:09 -0700 (PDT)
+Subject: Re: [PATCH V6 14/21] clk: tegra210: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-15-git-send-email-skomatineni@nvidia.com>
+ <e683b417-66fb-38dc-c16b-dab616583a88@gmail.com>
+ <88da46d2-b90d-f57e-7611-b8653b56bdf6@nvidia.com>
+ <ceedb802-7561-488f-3a89-67bee19f2fea@gmail.com>
+ <e2d0e8cc-b4ea-1148-4af1-fee6bb266cca@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5054f178-db27-9286-d123-3e2b2a885717@gmail.com>
+Date:   Mon, 22 Jul 2019 10:09:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 941bf537-491b-4fe3-a273-08d70e734509
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 07:07:33.7140
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jank@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2729
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-22_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=832 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907220085
+In-Reply-To: <e2d0e8cc-b4ea-1148-4af1-fee6bb266cca@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gMjAgSnVsIDIwMTksIGF0IDEwOjI1LCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGJvb3RsaW4uY29tPiB3cm90ZToNCj4gDQo+IEhpLA0KPiANCj4gT24gVGh1LCBKdWwgMTgs
-IDIwMTkgYXQgMTI6MTU6MDlQTSArMDEwMCwgSmFuIEtvdGFzIHdyb3RlOg0KPj4gCS8qIFB1dCBv
-dXIgbGFuZXMgKGNsb2NrIGFuZCBkYXRhKSBvdXQgb2YgcmVzZXQgKi8NCj4+IAlyZWcgPSBDU0ky
-VFhfRFBIWV9DRkdfQ0xLX1JFU0VUIHwgQ1NJMlRYX0RQSFlfQ0ZHX01PREVfTFBEVDsNCj4+IAlm
-b3IgKGkgPSAwOyBpIDwgY3NpMnR4LT5udW1fbGFuZXM7IGkrKykNCj4+IC0JCXJlZyB8PSBDU0ky
-VFhfRFBIWV9DRkdfTEFORV9SRVNFVChjc2kydHgtPmxhbmVzW2ldKTsNCj4+ICsJCXJlZyB8PSBD
-U0kyVFhfRFBIWV9DRkdfTEFORV9SRVNFVChjc2kydHgtPmxhbmVzW2ldIC0gMSk7DQo+IA0KPiBU
-aGlzIGxvb2tzIGxpa2UgYSBzZXBhcmF0ZSBjaGFuZ2U/DQo+IA0KPj4gCXdyaXRlbChyZWcsIGNz
-aTJ0eC0+YmFzZSArIENTSTJUWF9EUEhZX0NGR19SRUcpOw0KPj4gDQo+PiAtCXVkZWxheSgxMCk7
-DQo+PiArCWNzaTJ0eF9kcGh5X2luaXRfZmluaXNoKGNzaTJ0eCwgcmVnKTsNCj4+ICt9DQo+PiAN
-Cj4+IC0JLyogRW5hYmxlIG91ciAoY2xvY2sgYW5kIGRhdGEpIGxhbmVzICovDQo+PiAtCXJlZyB8
-PSBDU0kyVFhfRFBIWV9DRkdfQ0xLX0VOQUJMRTsNCj4+IC0JZm9yIChpID0gMDsgaSA8IGNzaTJ0
-eC0+bnVtX2xhbmVzOyBpKyspDQo+PiAtCQlyZWcgfD0gQ1NJMlRYX0RQSFlfQ0ZHX0xBTkVfRU5B
-QkxFKGNzaTJ0eC0+bGFuZXNbaV0pOw0KPiANCj4gQW5kIHlvdSBoYXZlIGEgc2ltaWxhciBjaGFu
-Z2UgaGVyZSB0aGF0IHNob3VsZCBiZSBpbiBhIHNlcGFyYXRlIHBhdGNoLA0KPiB3aXRoIGEgcHJv
-cGVyIGV4cGxhbmF0aW9uLg0KPiANCj4gT3RoZXJ3aXNlLCB0aGUgcmVzdCBsb29rcyBnb29kLg0K
-DQpPSywgSeKAmWxsIGNyZWF0ZSBhIHNlcGFyYXRlIHBhdGNoIHdpdGggdGhpcyBtb2RpZmljYXRp
-b24uDQpKYW4NCg0KPiBNYXhpbWUNCj4gDQo+IC0tDQo+IE1heGltZSBSaXBhcmQsIEJvb3RsaW4N
-Cj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRwczovL2Jvb3Rs
-aW4uY29tDQoNCg==
+22.07.2019 9:52, Sowjanya Komatineni пишет:
+> 
+> On 7/21/19 11:10 PM, Dmitry Osipenko wrote:
+>> 22.07.2019 1:45, Sowjanya Komatineni пишет:
+>>> On 7/21/19 2:38 PM, Dmitry Osipenko wrote:
+>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>>>
+>>>>> All the CAR controller settings are lost on suspend when core
+>>>>> power goes off.
+>>>>>
+>>>>> This patch has implementation for saving and restoring all PLLs
+>>>>> and clocks context during system suspend and resume to have the
+>>>>> clocks back to same state for normal operation.
+>>>>>
+>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>    drivers/clk/tegra/clk-tegra210.c | 68
+>>>>> ++++++++++++++++++++++++++++++++++++++--
+>>>>>    drivers/clk/tegra/clk.c          | 14 +++++++++
+>>>>>    drivers/clk/tegra/clk.h          |  1 +
+>>>>>    3 files changed, 80 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
+>>>>> b/drivers/clk/tegra/clk-tegra210.c
+>>>>> index 55a88c0824a5..68271873acc1 100644
+>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>> @@ -9,6 +9,7 @@
+>>>>>    #include <linux/clkdev.h>
+>>>>>    #include <linux/of.h>
+>>>>>    #include <linux/of_address.h>
+>>>>> +#include <linux/syscore_ops.h>
+>>>>>    #include <linux/delay.h>
+>>>>>    #include <linux/export.h>
+>>>>>    #include <linux/mutex.h>
+>>>>> @@ -220,11 +221,15 @@
+>>>>>    #define CLK_M_DIVISOR_SHIFT 2
+>>>>>    #define CLK_M_DIVISOR_MASK 0x3
+>>>>>    +#define CLK_MASK_ARM    0x44
+>>>>> +#define MISC_CLK_ENB    0x48
+>>>>> +
+>>>>>    #define RST_DFLL_DVCO 0x2f4
+>>>>>    #define DVFS_DFLL_RESET_SHIFT 0
+>>>>>      #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>>>    #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>      #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>    #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>> @@ -2825,6 +2830,7 @@ static int tegra210_enable_pllu(void)
+>>>>>        struct tegra_clk_pll_freq_table *fentry;
+>>>>>        struct tegra_clk_pll pllu;
+>>>>>        u32 reg;
+>>>>> +    int ret;
+>>>>>          for (fentry = pll_u_freq_table; fentry->input_rate;
+>>>>> fentry++) {
+>>>>>            if (fentry->input_rate == pll_ref_freq)
+>>>>> @@ -2853,9 +2859,8 @@ static int tegra210_enable_pllu(void)
+>>>>>        reg |= PLL_ENABLE;
+>>>>>        writel(reg, clk_base + PLLU_BASE);
+>>>>>    -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>>>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
+>>>>> -    if (!(reg & PLL_BASE_LOCK)) {
+>>>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>>>>> +    if (ret) {
+>>>> Why this is needed? Was there a bug?
+>>>>
+>>> during resume pllu init is needed and to use same terga210_init_pllu,
+>>> poll_timeout_atomic can't be used as its ony for atomic context.
+>>>
+>>> So changed to use wait_for_mask which should work in both cases.
+>> Atomic variant could be used from any context, not sure what do you
+>> mean. The 'atomic' part only means that function won't cause scheduling
+>> and that's it.
+> 
+> Sorry, replied incorrect. readx_poll_timeout_atomic uses ktime_get() and
+> during resume timekeeping suspend/resume happens later than clock
+> suspend/resume. So using tegra210_wait_for_mask.
+> 
+> both timekeeping and clk-tegra210 drivers are registered as syscore but
+> not ordered.
+
+Okay, thank you for the clarification.
+
+[snip]
