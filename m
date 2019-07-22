@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C22C76198
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8758FC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A2221951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DC921951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbfGVCvV (ORCPT
+        id S1729017AbfGVCwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:51:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2294 "EHLO huawei.com"
+        Sun, 21 Jul 2019 22:52:20 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2689 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728791AbfGVCvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:51:16 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BABD8EADEDC1789ECC34;
-        Mon, 22 Jul 2019 10:51:13 +0800 (CST)
+        id S1728821AbfGVCvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 22:51:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E36BCE527CBB1AE6A704;
+        Mon, 22 Jul 2019 10:51:18 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 10:51:04 +0800
+ 2019 10:51:13 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,9 +39,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 09/24] erofs: support tracepoint
-Date:   Mon, 22 Jul 2019 10:50:28 +0800
-Message-ID: <20190722025043.166344-10-gaoxiang25@huawei.com>
+Subject: [PATCH v3 16/24] erofs: introduce workstation for decompression
+Date:   Mon, 22 Jul 2019 10:50:35 +0800
+Message-ID: <20190722025043.166344-17-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722025043.166344-1-gaoxiang25@huawei.com>
 References: <20190722025043.166344-1-gaoxiang25@huawei.com>
@@ -54,262 +54,349 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic tracepoints for ->readpage{,s}, ->lookup,
-->destroy_inode, fill_inode and map_blocks.
+This patch introduces another concept used by decompress
+subsystem called 'workstation'. It can be seen as
+a sparse array that stores pointers pointed to data
+structures related to the corresponding physical clusters.
+
+All lookups are protected by RCU read lock. Besides,
+reference count and spin_lock are also introduced
+to manage its lifetime and serialize all update
+operations.
+
+`workstation' is currently implemented on the in-kernel
+radix tree approach for backward compatibility. With the
+evolution of linux kernel, it will be migrated into
+new XArray implementation in the future.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- include/trace/events/erofs.h | 241 +++++++++++++++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
- create mode 100644 include/trace/events/erofs.h
+ fs/erofs/internal.h |  83 ++++++++++++++++++++++
+ fs/erofs/super.c    |   4 ++
+ fs/erofs/utils.c    | 168 +++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 253 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-new file mode 100644
-index 000000000000..188c28e48289
---- /dev/null
-+++ b/include/trace/events/erofs.h
-@@ -0,0 +1,241 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM erofs
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 7d4939463518..2f11c1b5dab2 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -66,6 +66,9 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
+ 
++	/* the dedicated workstation for compression */
++	struct radix_tree_root workstn_tree;
 +
-+#if !defined(_TRACE_EROFS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_EROFS_H
+ 	unsigned int shrinker_run_no;
+ #endif
+ 	u32 blocks;
+@@ -150,6 +153,77 @@ static inline void *erofs_kmalloc(struct erofs_sb_info *sbi,
+ #define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
+ #define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++#define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
 +
-+#include <linux/tracepoint.h>
++/* basic unit of the workstation of a super_block */
++struct erofs_workgroup {
++	/* the workgroup index in the workstation */
++	pgoff_t index;
 +
-+#define show_dev(dev)		MAJOR(dev), MINOR(dev)
-+#define show_dev_nid(entry)	show_dev(entry->dev), entry->nid
++	/* overall workgroup reference count */
++	atomic_t refcount;
++};
 +
-+#define show_file_type(type)						\
-+	__print_symbolic(type,						\
-+		{ 0,		"FILE" },				\
-+		{ 1,		"DIR" })
++#if defined(CONFIG_SMP)
++static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
++						 int val)
++{
++	preempt_disable();
++	if (val != atomic_cmpxchg(&grp->refcount, val, EROFS_LOCKED_MAGIC)) {
++		preempt_enable();
++		return false;
++	}
++	return true;
++}
 +
-+#define show_map_flags(flags) __print_flags(flags, "|",	\
-+	{ EROFS_GET_BLOCKS_RAW,	"RAW" })
++static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
++					    int orig_val)
++{
++	/*
++	 * other observers should notice all modifications
++	 * in the freezing period.
++	 */
++	smp_mb();
++	atomic_set(&grp->refcount, orig_val);
++	preempt_enable();
++}
 +
-+#define show_mflags(flags) __print_flags(flags, "",	\
-+	{ EROFS_MAP_MAPPED,	"M" },			\
-+	{ EROFS_MAP_META,	"I" })
++static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
++{
++	return atomic_cond_read_relaxed(&grp->refcount,
++					VAL != EROFS_LOCKED_MAGIC);
++}
++#else
++static inline bool erofs_workgroup_try_to_freeze(struct erofs_workgroup *grp,
++						 int val)
++{
++	preempt_disable();
++	/* no need to spin on UP platforms, let's just disable preemption. */
++	if (val != atomic_read(&grp->refcount)) {
++		preempt_enable();
++		return false;
++	}
++	return true;
++}
 +
-+TRACE_EVENT(erofs_lookup,
++static inline void erofs_workgroup_unfreeze(struct erofs_workgroup *grp,
++					    int orig_val)
++{
++	preempt_enable();
++}
 +
-+	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
++static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
++{
++	int v = atomic_read(&grp->refcount);
 +
-+	TP_ARGS(dir, dentry, flags),
++	/* workgroup is never freezed on uniprocessor systems */
++	DBG_BUGON(v == EROFS_LOCKED_MAGIC);
++	return v;
++}
++#endif
++#endif
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(const char *,	name	)
-+		__field(unsigned int,	flags	)
-+	),
+ /* we strictly follow PAGE_SIZE and no buffer head yet */
+ #define LOG_BLOCK_SIZE		PAGE_SHIFT
+ 
+@@ -413,6 +487,15 @@ extern const struct file_operations erofs_dir_fops;
+ 
+ /* utils.c */
+ #ifdef CONFIG_EROFS_FS_ZIP
++int erofs_workgroup_put(struct erofs_workgroup *grp);
++struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
++					     pgoff_t index, bool *tag);
++int erofs_register_workgroup(struct super_block *sb,
++			     struct erofs_workgroup *grp, bool tag);
++unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
++				       unsigned long nr_shrink, bool cleanup);
++static inline void erofs_workgroup_free_rcu(struct erofs_workgroup *grp) {}
 +
-+	TP_fast_assign(
-+		__entry->dev	= dir->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(dir)->nid;
-+		__entry->name	= dentry->d_name.name;
-+		__entry->flags	= flags;
-+	),
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+ int __init erofs_init_shrinker(void);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 6d0a383527b6..5758dfc284f3 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -340,6 +340,10 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
++#ifdef CONFIG_EROFS_FS_ZIP
++	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
++#endif
 +
-+	TP_printk("dev = (%d,%d), pnid = %llu, name:%s, flags:%x",
-+		show_dev_nid(__entry),
-+		__entry->name,
-+		__entry->flags)
-+);
+ 	/* get the root inode */
+ 	inode = erofs_iget(sb, ROOT_NID(sbi), true);
+ 	if (IS_ERR(inode))
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index 727d3831b5c9..45fd780e6429 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -7,11 +7,175 @@
+  * Created by Gao Xiang <gaoxiang25@huawei.com>
+  */
+ #include "internal.h"
++#include <linux/pagevec.h>
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
++#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
++#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
 +
-+TRACE_EVENT(erofs_fill_inode,
-+	TP_PROTO(struct inode *inode, int isdir),
-+	TP_ARGS(inode, isdir),
++static int erofs_workgroup_get(struct erofs_workgroup *grp)
++{
++	int o;
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(erofs_blk_t,	blkaddr )
-+		__field(unsigned int,	ofs	)
-+		__field(int,		isdir	)
-+	),
++repeat:
++	o = erofs_wait_on_workgroup_freezed(grp);
++	if (unlikely(o <= 0))
++		return -1;
 +
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->nid		= EROFS_V(inode)->nid;
-+		__entry->blkaddr	= erofs_blknr(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->ofs		= erofs_blkoff(iloc(EROFS_I_SB(inode), __entry->nid));
-+		__entry->isdir		= isdir;
-+	),
++	if (unlikely(atomic_cmpxchg(&grp->refcount, o, o + 1) != o))
++		goto repeat;
 +
-+	TP_printk("dev = (%d,%d), nid = %llu, blkaddr %u ofs %u, isdir %d",
-+		  show_dev_nid(__entry),
-+		  __entry->blkaddr, __entry->ofs,
-+		  __entry->isdir)
-+);
++	/* decrease refcount paired by erofs_workgroup_put */
++	if (unlikely(o == 1))
++		atomic_long_dec(&erofs_global_shrink_cnt);
++	return 0;
++}
 +
-+TRACE_EVENT(erofs_readpage,
++struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
++					     pgoff_t index, bool *tag)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
++	struct erofs_workgroup *grp;
 +
-+	TP_PROTO(struct page *page, bool raw),
++repeat:
++	rcu_read_lock();
++	grp = radix_tree_lookup(&sbi->workstn_tree, index);
++	if (grp) {
++		*tag = xa_pointer_tag(grp);
++		grp = xa_untag_pointer(grp);
 +
-+	TP_ARGS(page, raw),
++		if (erofs_workgroup_get(grp)) {
++			/* prefer to relax rcu read side */
++			rcu_read_unlock();
++			goto repeat;
++		}
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,    nid     )
-+		__field(int,		dir	)
-+		__field(pgoff_t,	index	)
-+		__field(int,		uptodate)
-+		__field(bool,		raw	)
-+	),
++		DBG_BUGON(index != grp->index);
++	}
++	rcu_read_unlock();
++	return grp;
++}
 +
-+	TP_fast_assign(
-+		__entry->dev	= page->mapping->host->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(page->mapping->host)->nid;
-+		__entry->dir	= S_ISDIR(page->mapping->host->i_mode);
-+		__entry->index	= page->index;
-+		__entry->uptodate = PageUptodate(page);
-+		__entry->raw = raw;
-+	),
++int erofs_register_workgroup(struct super_block *sb,
++			     struct erofs_workgroup *grp,
++			     bool tag)
++{
++	struct erofs_sb_info *sbi;
++	int err;
 +
-+	TP_printk("dev = (%d,%d), nid = %llu, %s, index = %lu, uptodate = %d "
-+		"raw = %d",
-+		show_dev_nid(__entry),
-+		show_file_type(__entry->dir),
-+		(unsigned long)__entry->index,
-+		__entry->uptodate,
-+		__entry->raw)
-+);
++	/* grp shouldn't be broken or used before */
++	if (unlikely(atomic_read(&grp->refcount) != 1)) {
++		DBG_BUGON(1);
++		return -EINVAL;
++	}
 +
-+TRACE_EVENT(erofs_readpages,
++	err = radix_tree_preload(GFP_NOFS);
++	if (err)
++		return err;
 +
-+	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
-+		bool raw),
++	sbi = EROFS_SB(sb);
 +
-+	TP_ARGS(inode, page, nrpage, raw),
++	xa_lock(&sbi->workstn_tree);
++	grp = xa_tag_pointer(grp, tag);
 +
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev	)
-+		__field(erofs_nid_t,	nid	)
-+		__field(pgoff_t,	start	)
-+		__field(unsigned int,	nrpage	)
-+		__field(bool,		raw	)
-+	),
++	/*
++	 * Bump up reference count before making this workgroup
++	 * visible to other users in order to avoid potential UAF
++	 * without serialized by erofs_workstn_lock.
++	 */
++	__erofs_workgroup_get(grp);
 +
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+		__entry->start	= page->index;
-+		__entry->nrpage	= nrpage;
-+		__entry->raw	= raw;
-+	),
++	err = radix_tree_insert(&sbi->workstn_tree,
++				grp->index, grp);
++	if (unlikely(err))
++		/*
++		 * it's safe to decrease since the workgroup isn't visible
++		 * and refcount >= 2 (cannot be freezed).
++		 */
++		__erofs_workgroup_put(grp);
 +
-+	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
-+		show_dev_nid(__entry),
-+		(unsigned long)__entry->start,
-+		__entry->nrpage,
-+		__entry->raw)
-+);
++	xa_unlock(&sbi->workstn_tree);
++	radix_tree_preload_end();
++	return err;
++}
 +
-+DECLARE_EVENT_CLASS(erofs__map_blocks_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags),
++static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
++{
++	atomic_long_dec(&erofs_global_shrink_cnt);
++	erofs_workgroup_free_rcu(grp);
++}
 +
-+	TP_ARGS(inode, map, flags),
++int erofs_workgroup_put(struct erofs_workgroup *grp)
++{
++	int count = atomic_dec_return(&grp->refcount);
 +
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(	erofs_off_t,	la		)
-+		__field(	u64,		llen		)
-+		__field(	unsigned int,	flags		)
-+	),
++	if (count == 1)
++		atomic_long_inc(&erofs_global_shrink_cnt);
++	else if (!count)
++		__erofs_workgroup_free(grp);
++	return count;
++}
 +
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->la	= map->m_la;
-+		__entry->llen	= map->m_llen;
-+		__entry->flags	= flags;
-+	),
++/* for nocache case, no customized reclaim path at all */
++static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
++					   struct erofs_workgroup *grp,
++					   bool cleanup)
++{
++	int cnt = atomic_read(&grp->refcount);
 +
-+	TP_printk("dev = (%d,%d), nid = %llu, la %llu llen %llu flags %s",
-+		  show_dev_nid(__entry),
-+		  __entry->la, __entry->llen,
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL")
-+);
++	DBG_BUGON(cnt <= 0);
++	DBG_BUGON(cleanup && cnt != 1);
 +
-+DEFINE_EVENT(erofs__map_blocks_enter, erofs_map_blocks_flatmode_enter,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags),
++	if (cnt > 1)
++		return false;
 +
-+	TP_ARGS(inode, map, flags)
-+);
++	DBG_BUGON(xa_untag_pointer(radix_tree_delete(&sbi->workstn_tree,
++						     grp->index)) != grp);
 +
-+DECLARE_EVENT_CLASS(erofs__map_blocks_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned int flags, int ret),
++	/* (rarely) could be grabbed again when freeing */
++	erofs_workgroup_put(grp);
++	return true;
++}
 +
-+	TP_ARGS(inode, map, flags, ret),
 +
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+		__field(        unsigned int,   flags           )
-+		__field(	erofs_off_t,	la		)
-+		__field(	erofs_off_t,	pa		)
-+		__field(	u64,		llen		)
-+		__field(	u64,		plen		)
-+		__field(        unsigned int,	mflags		)
-+		__field(	int,		ret		)
-+	),
++unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
++				       unsigned long nr_shrink,
++				       bool cleanup)
++{
++	pgoff_t first_index = 0;
++	void *batch[PAGEVEC_SIZE];
++	unsigned int freed = 0;
 +
-+	TP_fast_assign(
-+		__entry->dev    = inode->i_sb->s_dev;
-+		__entry->nid    = EROFS_V(inode)->nid;
-+		__entry->flags	= flags;
-+		__entry->la	= map->m_la;
-+		__entry->pa	= map->m_pa;
-+		__entry->llen	= map->m_llen;
-+		__entry->plen	= map->m_plen;
-+		__entry->mflags	= map->m_flags;
-+		__entry->ret	= ret;
-+	),
++	int i, found;
++repeat:
++	xa_lock(&sbi->workstn_tree);
 +
-+	TP_printk("dev = (%d,%d), nid = %llu, flags %s "
-+		  "la %llu pa %llu llen %llu plen %llu mflags %s ret %d",
-+		  show_dev_nid(__entry),
-+		  __entry->flags ? show_map_flags(__entry->flags) : "NULL",
-+		  __entry->la, __entry->pa, __entry->llen, __entry->plen,
-+		  show_mflags(__entry->mflags), __entry->ret)
-+);
++	found = radix_tree_gang_lookup(&sbi->workstn_tree,
++				       batch, first_index, PAGEVEC_SIZE);
 +
-+DEFINE_EVENT(erofs__map_blocks_exit, erofs_map_blocks_flatmode_exit,
-+	TP_PROTO(struct inode *inode, struct erofs_map_blocks *map,
-+		 unsigned flags, int ret),
++	for (i = 0; i < found; ++i) {
++		struct erofs_workgroup *grp = xa_untag_pointer(batch[i]);
 +
-+	TP_ARGS(inode, map, flags, ret)
-+);
++		first_index = grp->index + 1;
 +
-+TRACE_EVENT(erofs_destroy_inode,
-+	TP_PROTO(struct inode *inode),
++		/* try to shrink each valid workgroup */
++		if (!erofs_try_to_release_workgroup(sbi, grp, cleanup))
++			continue;
 +
-+	TP_ARGS(inode),
++		++freed;
++		if (unlikely(!--nr_shrink))
++			break;
++	}
++	xa_unlock(&sbi->workstn_tree);
 +
-+	TP_STRUCT__entry(
-+		__field(	dev_t,		dev		)
-+		__field(	erofs_nid_t,	nid		)
-+	),
++	if (i && nr_shrink)
++		goto repeat;
++	return freed;
++}
 +
-+	TP_fast_assign(
-+		__entry->dev	= inode->i_sb->s_dev;
-+		__entry->nid	= EROFS_V(inode)->nid;
-+	),
-+
-+	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
-+);
-+
-+#endif /* _TRACE_EROFS_H */
-+
-+ /* This part must be outside protection */
-+#include <trace/define_trace.h>
+ /* protected by 'erofs_sb_list_lock' */
+ static unsigned int shrinker_run_no;
+ 
+@@ -35,7 +199,7 @@ void erofs_shrinker_unregister(struct super_block *sb)
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 
+ 	mutex_lock(&sbi->umount_mutex);
+-	/* will add shrink final handler here */
++	erofs_shrink_workstation(EROFS_SB(sb), ~0UL, true);
+ 
+ 	spin_lock(&erofs_sb_list_lock);
+ 	list_del(&sbi->list);
+@@ -84,7 +248,7 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
+ 		spin_unlock(&erofs_sb_list_lock);
+ 		sbi->shrinker_run_no = run_no;
+ 
+-		/* will add shrink handler here */
++		freed += erofs_shrink_workstation(sbi, nr, false);
+ 
+ 		spin_lock(&erofs_sb_list_lock);
+ 		/* Get the next list element before we move this one */
 -- 
 2.17.1
 
