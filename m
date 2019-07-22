@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F98FC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D9FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D8E21BF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCAD2199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5kBznP9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJjV5yjM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfGVS7v (ORCPT
+        id S1727366AbfGVS74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:59:51 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38041 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfGVS7u (ORCPT
+        Mon, 22 Jul 2019 14:59:56 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42931 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfGVS7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:59:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id az7so19551720plb.5;
-        Mon, 22 Jul 2019 11:59:49 -0700 (PDT)
+        Mon, 22 Jul 2019 14:59:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so17807021pff.9;
+        Mon, 22 Jul 2019 11:59:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+BPPPji4KmMPm/LztN/u6Pt6WF0WdMzxA5bRmk4V+jc=;
-        b=K5kBznP9TrTX6mK2UwTBWA0b1ZHBf7PBwvgbGv7SGT6Nsob+xzS03qXm7sk3xh7GkJ
-         0NKg2BQA9BWzMFULMSN7zIkCox5HpecJKFh3NqUuX/6m0dvv39wieOWOS32YFBobK2zy
-         Agb4M74KgFJ3FjCkVbOa7kQVLmC0q9MjQxrMeKhki4T4g5u3y9epGkMBjNMzesVIGa8v
-         yCxzI9qV7+5q7xgF9rLiSzpWeaEPJz/tP10MfgPkTlAQRDigFJG1HX/TCt57t/UL2Ox+
-         +TNodYNdPctkqKX3JvAt7F7tHA7wOPpRBgQdJjtHGI3VsLiNXHRqkkRAtB3hu0DU9g1f
-         RoxQ==
+        bh=/gER2LLimplLra53LgK/rnRcfXZIC+CQ7D3TqLh+KSw=;
+        b=pJjV5yjMe02NhQ3bEXBOGJ6gbi/w396J1CJqb/pC8BkzUjSnxK0ShHcCjRDGUnMGwD
+         zJuAwDy++CHBprRUYbUjeZFMvsBpV++VRfjlvTbihaoWDqxGBWT9ah8WfraLzFa/X+H5
+         y75ii/JdnvxE7UY4/FCUrPJqfPyRW/JIzE0IFx/lhjGforNYO9T3JQTCroJD4n6MlqOC
+         hZV4nmFTHdaBmM2cHRMm6yr2Gcl/6KmPw92h7BNdI649e8AowRhsrzh/akHYkdQy1kwa
+         Hliwuq9C5dOx1EoV2MfFPt65vvxU9tTlYLQXQ+E7bSN8IxfO5bxLtPfDh00Ww+fDcHba
+         9NkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+BPPPji4KmMPm/LztN/u6Pt6WF0WdMzxA5bRmk4V+jc=;
-        b=DWK+/Zk70m+P3LmQ6ThhypuR2pRs3XN192WC5UUGtB2ggM6ZHzGhyuWV9sXGJvG5Fi
-         /e8eggswSKWhu7nTyyaaSBdo7rWXaJjWc2KxKiTRMiJtWqH0e8H95MypLIJeqTXnUbMw
-         9yAlPM8Reppmcu/QFYfskqMw0o3DiecjBiLKmVrQdLIvjyWGZraPoIYrFR/t/NWcHwql
-         REQwDjSiib3DJZ9jAAcn8mrnhJm6qyydswXs/UR7sh5RRRVFp8/lblA3IScz7HwWTOta
-         INw2SWfndWT8bpHiocY119V50MJY/17BddUVW/OLSzUpawcBZ2xIBRTK4vUQditqAJny
-         Ovxg==
-X-Gm-Message-State: APjAAAV7CrC/fRlzPMbiRTTJhzC0A+Eai68sQ1iS4WVDNZfdyZRRsOR5
-        aZQDTRwR5QzNcXATmsgI0QlYCCKjo70=
-X-Google-Smtp-Source: APXvYqxmBWHEKsY7z47iIqt7mkTYxNQkFloTQSjYLhZvsRcNoJkjHyvFOCmLFzxEi7Lf3myeENUJ2A==
-X-Received: by 2002:a17:902:ba96:: with SMTP id k22mr78590271pls.44.1563821989510;
-        Mon, 22 Jul 2019 11:59:49 -0700 (PDT)
+        bh=/gER2LLimplLra53LgK/rnRcfXZIC+CQ7D3TqLh+KSw=;
+        b=XrlZrQ6OQkPPkqSkWscp1iB6XhRVmhPQrDOkNiwX2vq/4su6B0FOnBXgAiA5kCCsq9
+         zWbUQCw6U2p1dpEPBZkjllJ2DR0zwL9IWkZh06P43qQgj6yvU3Si9dyHgLTdSjMCfJ5U
+         SNfksR/rRGcRDLVJKOzLyCjHUNz0bI7Eoccqe4+KJU4b/zvGeS/jqLAbIg9A143Wxw/y
+         efTduIBKvDj+WRNfZqKde72XwVZKXUlPdkyRVCfu0at3eswbccGsFg+zOS3FEaxd5frB
+         YwirAqiDSoiYZ68z24zodGfkrc3+XL6iGWTCGrqwrkYUw0q8VMVIYAbH1yVPCwMh56Cs
+         Tbgg==
+X-Gm-Message-State: APjAAAUWjN4bngxat3eB5UX91vmeFMjdG9OZn3svyuWdJcMMZe9A2GxB
+        N3Mg1LQwX0Ucn7BoQzd3IV2d0JlOa/w=
+X-Google-Smtp-Source: APXvYqz+z95RCeo9mRoNfWnHGolQodU0RqnIuj6kGs1oNVW/IeXDDkxoMFwG1vGy/N2WBXyK9jW2ww==
+X-Received: by 2002:a63:7a06:: with SMTP id v6mr73572823pgc.115.1563821992488;
+        Mon, 22 Jul 2019 11:59:52 -0700 (PDT)
 Received: from localhost.localdomain ([103.51.73.174])
-        by smtp.gmail.com with ESMTPSA id h1sm30777675pgv.93.2019.07.22.11.59.46
+        by smtp.gmail.com with ESMTPSA id h1sm30777675pgv.93.2019.07.22.11.59.49
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 11:59:49 -0700 (PDT)
+        Mon, 22 Jul 2019 11:59:52 -0700 (PDT)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
@@ -65,9 +65,9 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Anand Moon <linux.amoon@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [RFC/RFT 1/5] phy: exynos5-usbdrd: read from correct offset of xhci linksystem
-Date:   Tue, 23 Jul 2019 00:29:34 +0530
-Message-Id: <20190722185938.9043-2-linux.amoon@gmail.com>
+Subject: [RFC/RFT 2/5] phy: exynos5-usbdrd: add missing tuning of the phyutmi signal
+Date:   Tue, 23 Jul 2019 00:29:35 +0530
+Message-Id: <20190722185938.9043-3-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190722185938.9043-1-linux.amoon@gmail.com>
 References: <20190722185938.9043-1-linux.amoon@gmail.com>
@@ -78,27 +78,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read from linksystem offset to update the xhci version.
+Add missing tuning of phyutmi controls to enter suspend and
+resume state.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 32 ++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 646259bee909..3c14bf7718c1 100644
+index 3c14bf7718c1..135114d51bc1 100644
 --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
 +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -397,7 +397,8 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
- 	 * Setting the Frame length Adj value[6:1] to default 0x20
- 	 * See xHCI 1.0 spec, 5.2.4
- 	 */
--	reg =	LINKSYSTEM_XHCI_VERSION_CONTROL |
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
-+	reg |=	LINKSYSTEM_XHCI_VERSION_CONTROL |
+@@ -42,7 +42,13 @@
+ 
+ #define EXYNOS5_DRD_PHYUTMI			0x08
+ 
++#define PHYUTMI_TXBITSTUFFENH			BIT(8)
++#define PHYUTMI_TXBITSTUFFEN			BIT(7)
+ #define PHYUTMI_OTGDISABLE			BIT(6)
++#define PHYUTMI_IDPULLUP			BIT(5)
++#define PHYUTMI_DRVVBUS				BIT(4)
++#define PHYUTMI_DPPULLDOWN                      BIT(3)
++#define PHYUTMI_DMPULLDOWN                      BIT(2)
+ #define PHYUTMI_FORCESUSPEND			BIT(1)
+ #define PHYUTMI_FORCESLEEP			BIT(0)
+ 
+@@ -402,6 +408,23 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
  		LINKSYSTEM_FLADJ(0x20);
  	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
  
++	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
++	/* High-Byte Transmit Bit-Stuffing Enable */
++	reg |= PHYUTMI_TXBITSTUFFENH;
++	/* Low-Byte Transmit Bit-Stuffing Enable */
++	reg |= PHYUTMI_TXBITSTUFFEN;
++	/* release force_sleep & force_suspend */
++	reg &= ~(PHYUTMI_FORCESLEEP | PHYUTMI_FORCESUSPEND);
++	/* DP/DM Pull Down Disable */
++	reg &= ~(PHYUTMI_DMPULLDOWN | PHYUTMI_DPPULLDOWN);
++	/* drvvbus controller signal controls the VBUS valid comparator */
++	reg &= ~PHYUTMI_OTGDISABLE;
++	/* controller signal controls the VBUS Valid comparator */
++	reg |= PHYUTMI_DRVVBUS;
++	/* Enable ID Sampling */
++	reg |= PHYUTMI_IDPULLUP;
++	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
++
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+ 	/* Select PHY CLK source */
+ 	reg &= ~PHYPARAM0_REF_USE_PAD;
+@@ -452,9 +475,14 @@ static int exynos5_usbdrd_phy_exit(struct phy *phy)
+ 	if (ret)
+ 		return ret;
+ 
+-	reg =	PHYUTMI_OTGDISABLE |
++	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
++	reg |=	PHYUTMI_OTGDISABLE |
+ 		PHYUTMI_FORCESUSPEND |
+-		PHYUTMI_FORCESLEEP;
++		PHYUTMI_FORCESLEEP |
++		PHYUTMI_DMPULLDOWN |
++		PHYUTMI_DPPULLDOWN;
++	reg &= ~(PHYUTMI_DRVVBUS | PHYUTMI_IDPULLUP |
++		PHYUTMI_TXBITSTUFFENH | PHYUTMI_TXBITSTUFFEN);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
+ 
+ 	/* Resetting the PHYCLKRST enable bits to reduce leakage current */
 -- 
 2.22.0
 
