@@ -2,72 +2,72 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9D4C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA16C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675E5218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563805679;
-	bh=ufpO/cIg3vENg49rkm26FM8UPrXHskQcxA4RS4RtOzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nzWl72F18KbPZAlWpE8oyETQoKkomZc6oo190YYzdLHFdQZUks6xcNtVW7398rMyk
-	 +fOhaVUmQj0N5xx6nByLBCFRGj09LOdusbyl5JDb+TcKMbjLlupU+9xPGwUs1juZvr
-	 SHXjf1kJq9G2dWsxJcSDkUAtMLMuUriXfnLcwMjI=
+	by mail.kernel.org (Postfix) with ESMTP id 62DEA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730880AbfGVO16 (ORCPT
+        id S1730892AbfGVO2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 10:28:37 -0400
+Received: from 8bytes.org ([81.169.241.247]:44796 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfGVO15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:27:57 -0400
-Received: from localhost (unknown [223.226.98.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AECDA2171F;
-        Mon, 22 Jul 2019 14:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563805677;
-        bh=ufpO/cIg3vENg49rkm26FM8UPrXHskQcxA4RS4RtOzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zO3kDJZaiGx8OQDtAjQvGwDZPunpQ/sSohn2V0muKqiKEah1PmCQL0RhtF8hTbMfm
-         XkJJm1SjcHiYH1EXldkxTarOlVtfukaZBeBOrwVgp3LLWq50ZNu6G7LtEwEzUWij+f
-         ueScCxv6eEOdLQtPDsu/pe/RDOnvJgSBEh4g22y4=
-Date:   Mon, 22 Jul 2019 19:56:44 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stefan Wahren <wahrenst@gmx.net>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: bcm2835: Print error in case setting DMA mask
- fails
-Message-ID: <20190722142644.GW12733@vkoul-mobl.Dlink>
-References: <1563297318-4900-1-git-send-email-wahrenst@gmx.net>
+        id S1725907AbfGVO2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:28:37 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id E226C1F2; Mon, 22 Jul 2019 16:28:34 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 16:28:33 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Joe Perches <joe@perches.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iommu: add support for drivers that manage iommu
+ explicitly
+Message-ID: <20190722142833.GB12009@8bytes.org>
+References: <20190702202631.32148-2-robdclark@gmail.com>
+ <20190710182844.25032-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563297318-4900-1-git-send-email-wahrenst@gmx.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190710182844.25032-1-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-07-19, 19:15, Stefan Wahren wrote:
-> During enabling of the RPi 4, we found out that the driver doesn't provide
-> a helpful error message in case setting DMA mask fails. So add one.
+On Wed, Jul 10, 2019 at 11:28:30AM -0700, Rob Clark wrote:
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -282,7 +282,8 @@ struct device_driver {
+>  	struct module		*owner;
+>  	const char		*mod_name;	/* used for built-in modules */
+>  
+> -	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
+> +	bool suppress_bind_attrs:1;	/* disables bind/unbind via sysfs */
+> +	bool driver_manages_iommu:1;	/* driver manages IOMMU explicitly */
 
-Applied, thanks
+Who will set this bit?
 
--- 
-~Vinod
+
+Regards,
+
+	Joerg
