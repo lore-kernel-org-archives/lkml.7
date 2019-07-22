@@ -2,93 +2,92 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B824C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BA7C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF8521901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B14218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfGVNVw (ORCPT
+        id S1729332AbfGVNWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:21:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:37402 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 09:22:45 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35839 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbfGVNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:21:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 417BC344;
-        Mon, 22 Jul 2019 06:21:51 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE9013F71A;
-        Mon, 22 Jul 2019 06:21:48 -0700 (PDT)
-Subject: Re: [PATCH v9 4/8] sched/deadline: Fix bandwidth accounting at all
- levels after offline migration
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tj@kernel.org, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
-        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
-        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
-        cgroups@vger.kernel.org
-References: <20190719140000.31694-1-juri.lelli@redhat.com>
- <20190719140000.31694-5-juri.lelli@redhat.com>
- <5da6abab-00ff-9bb4-f24b-0bf5dfcd4c35@arm.com>
- <20190722122828.GG25636@localhost.localdomain>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <07a45864-07bf-aa5d-3ff7-a300326b9040@arm.com>
-Date:   Mon, 22 Jul 2019 15:21:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1728819AbfGVNWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 09:22:44 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 45sj2n4jwQz9s8m; Mon, 22 Jul 2019 23:22:41 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     linuxppc-dev@ozlabs.org
+Cc:     christian@brauner.io, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: Wire up clone3 syscall
+Date:   Mon, 22 Jul 2019 23:22:31 +1000
+Message-Id: <20190722132231.10169-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190722122828.GG25636@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/19 2:28 PM, Juri Lelli wrote:
-> On 22/07/19 13:07, Dietmar Eggemann wrote:
->> On 7/19/19 3:59 PM, Juri Lelli wrote:
->>
->> [...]
->>
->>> @@ -557,6 +558,38 @@ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p
->>>  		double_lock_balance(rq, later_rq);
->>>  	}
->>>  
->>> +	if (p->dl.dl_non_contending || p->dl.dl_throttled) {
->>> +		/*
->>> +		 * Inactive timer is armed (or callback is running, but
->>> +		 * waiting for us to release rq locks). In any case, when it
->>> +		 * will file (or continue), it will see running_bw of this
->>
->> s/file/fire ?
-> 
-> Yep.
-> 
->>> +		 * task migrated to later_rq (and correctly handle it).
->>
->> Is this because of dl_task_timer()->enqueue_task_dl()->task_contending()
->> setting dl_se->dl_non_contending = 0 ?
-> 
-> No, this is related to inactive_task_timer() callback. Since the task is
-> migrated (by this function calling set_task_cpu()) because a CPU hotplug
-> operation happened, we need to reflect this w.r.t. running_bw, or
-> inactive_task_timer() might sub from the new CPU and cause running_bw to
-> underflow.
+Wire up the new clone3 syscall added in commit 7f192e3cd316 ("fork:
+add clone3").
 
-I was more referring to the '... it will see running_bw of thus task
-migrated to later_rq ...) and specifically to the HOW the timer
-callback can detect this. I should have made this clearer.
-inactive_task_timer() checks if (dl_se->dl_non_contending == 0) so I
-thought I have to find the place where dl_se->dl_non_contending is set 0?
+This requires a ppc_clone3 wrapper, in order to save the non-volatile
+GPRs before calling into the generic syscall code. Otherwise we hit
+the BUG_ON in CHECK_FULL_REGS in copy_thread().
 
+Lightly tested using Christian's test code on a Power8 LE VM.
 
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/include/asm/unistd.h        | 1 +
+ arch/powerpc/kernel/entry_64.S           | 5 +++++
+ arch/powerpc/kernel/syscalls/syscall.tbl | 1 +
+ 3 files changed, 7 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
+index 68473c3c471c..b0720c7c3fcf 100644
+--- a/arch/powerpc/include/asm/unistd.h
++++ b/arch/powerpc/include/asm/unistd.h
+@@ -49,6 +49,7 @@
+ #define __ARCH_WANT_SYS_FORK
+ #define __ARCH_WANT_SYS_VFORK
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ #endif		/* __ASSEMBLY__ */
+ #endif /* _ASM_POWERPC_UNISTD_H_ */
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index d9105fcf4021..0a0b5310f54a 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -487,6 +487,11 @@ _GLOBAL(ppc_clone)
+ 	bl	sys_clone
+ 	b	.Lsyscall_exit
+ 
++_GLOBAL(ppc_clone3)
++       bl      save_nvgprs
++       bl      sys_clone3
++       b       .Lsyscall_exit
++
+ _GLOBAL(ppc32_swapcontext)
+ 	bl	save_nvgprs
+ 	bl	compat_sys_swapcontext
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index f2c3bda2d39f..6886ecb590d5 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -516,3 +516,4 @@
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
+ 434	common	pidfd_open			sys_pidfd_open
++435	common	clone3				ppc_clone3
+-- 
+2.20.1
 
