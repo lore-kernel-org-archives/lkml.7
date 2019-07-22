@@ -2,106 +2,191 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D89C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DAAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B33E217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2483217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfGVKNT (ORCPT
+        id S1729510AbfGVKNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 06:13:19 -0400
-Received: from viti.kaiser.cx ([85.214.81.225]:49862 "EHLO viti.kaiser.cx"
+        Mon, 22 Jul 2019 06:13:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:35016 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfGVKNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:13:19 -0400
-Received: from martin by viti.kaiser.cx with local (Exim 4.89)
-        (envelope-from <martin@viti.kaiser.cx>)
-        id 1hpVJg-00073S-I5; Mon, 22 Jul 2019 12:13:12 +0200
-Date:   Mon, 22 Jul 2019 12:13:12 +0200
-From:   Martin Kaiser <lists@kaiser.cx>
-To:     Yang Yingliang <yangyingliang@huawei.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: next-20190722, imx25: Oops when loading a module
-Message-ID: <20190722101312.2nakxrfy7yn4a4ro@viti.kaiser.cx>
+        id S1726846AbfGVKNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 06:13:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 236F328;
+        Mon, 22 Jul 2019 03:13:22 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73BB73F71A;
+        Mon, 22 Jul 2019 03:13:17 -0700 (PDT)
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+Date:   Mon, 22 Jul 2019 11:13:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On 22/07/2019 10:54, Dmitry Osipenko wrote:
+> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>
+>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+>> for Tegra210.
+>>
+>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+>> interrupt controller suspend operation.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>  1 file changed, 18 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>> index e1f771c72fc4..851f88cef508 100644
+>> --- a/drivers/irqchip/irq-tegra.c
+>> +++ b/drivers/irqchip/irq-tegra.c
+>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>  
+>>  struct tegra_ictlr_soc {
+>>  	unsigned int num_ictlrs;
+>> +	bool supports_sc7;
+>>  };
+>>  
+>>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>>  
+>>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+>>  	.num_ictlrs = 6,
+>> +	.supports_sc7 = true,
+>>  };
+>>  
+>>  static const struct of_device_id ictlr_matches[] = {
+>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
+>>  
+>>  struct tegra_ictlr_info {
+>>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>> +	const struct tegra_ictlr_soc *soc;
+>>  #ifdef CONFIG_PM_SLEEP
+>>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+>>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>>  
+>> -		/* Disable COP interrupts */
+>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>> +		/*
+>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>> +		 *
+>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>> +		 * system to go to SC7/LP0.
+>> +		 *
+>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>> +		 */
+>> +		if (!lic->soc->supports_sc7)
+>> +			/* Disable COP interrupts if SC7 is not supported */
+> 
+> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+> better here.
 
-I run next-20190722 on an arm imx25 system and came across an issue that might
-be worth reporting. I am no sure to whom, though. Please let me know if I got
-that wrong.
+If what you're saying is true, then the whole patch is wrong, and the
+SC7 property should come from DT.
 
-Loading a module, no matter which one, causes a segfault and a dump such as
+> 
+>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+> 
+> Secondly, I'm also not sure why COP interrupts need to be disabled for
+> pre-T210 at all, since COP is unused. This looks to me like it was
+> cut-n-pasted from downstream kernel without a good reason and could be
+> simply removed.
 
-[root@host ]# insmod /mnt/kernel/iio/potentiometer/max5432.ko
-[   63.043683] Internal error: Oops - undefined instruction: 0 [#1] ARM
-[   63.050123] Modules linked in:
-[   63.053266] CPU: 0 PID: 170 Comm: insmod Tainted: G        W         5.3.0-rc1-next-20190722+ #3104
-[   63.062344] Hardware name: Freescale i.MX25 (Device Tree Support)
-[   63.068529] PC is at frob_text.constprop.15+0x2c/0x40
-[   63.073639] LR is at load_module+0x10dc/0x125c
-[   63.078115] pc : [<c0072ffc>]    lr : [<c0071f8c>]    psr: 00000013
-[   63.084407] sp : d3303e30  ip : d3303e40  fp : d3303e3c
-[   63.089654] r10: 00000000  r9 : d3303e98  r8 : 00000018
-[   63.094903] r7 : 00000001  r6 : bf0006cc  r5 : d3303f20  r4 : bf0006c0
-[   63.101454] r3 : bf000000  r2 : 18000000  r1 : 00000180  r0 : bf0007a0
-[   63.108013] Flags: nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[   63.115176] Control: 0005317f  Table: 93330000  DAC: 00000051
-[   63.120961] Process insmod (pid: 170, stack limit = 0x90da5324)
-[   63.126917] Stack: (0xd3303e30 to 0xd3304000)
-[   63.131318] 3e20:                                     d3303f0c d3303e40 c0071f8c c0072fe0
-[   63.139546] 3e40: bf0006c0 d3309920 00002cc0 ffffffff 00000002 00000002 d3309900 00000000
-[   63.147776] 3e60: 001a77e2 bf00289b bf0008a0 c067c9c8 0000025f c07df990 d3303ecc d3303e88
-[   63.155999] 3e80: c00d7688 c00d689c 00000000 00000000 00000000 00000000 00000000 00000000
-[   63.164225] 3ea0: 6e72656b 00006c65 00000000 00000000 00000000 00000000 00000000 00000000
-[   63.172453] 3ec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 ba520d2b
-[   63.180681] 3ee0: c00721a8 00001aed 0120abad 00000000 c0883028 d4c17aed 001a77e2 d3302000
-[   63.188912] 3f00: d3303fa4 d3303f10 c0072270 c0070ec0 c0034324 c0677478 d32f1640 00000051
-[   63.197142] 3f20: d4c16788 d4c16a80 d4c16000 00001aed d4c16dd8 d4c16cd5 d4c177f0 000008a0
-[   63.205368] 3f40: 00000950 00000850 000009b4 00000000 00000000 00000000 00000840 0000001b
-[   63.213590] 3f60: 0000001c 00000011 0000000d 00000009 00000000 ba520d2b c01030f4 00000000
-[   63.221819] 3f80: 00000000 00001aed 00000080 c00091e4 d3302000 00000000 00000000 d3303fa8
-[   63.230046] 3fa0: c0009000 c007211c 00000000 00000000 012090c0 00001aed 001a77e2 00000000
-[   63.238273] 3fc0: 00000000 00000000 00001aed 00000080 00000001 be90de0c 001a77e2 00000000
-[   63.246499] 3fe0: be90dac0 be90dab0 0001ec34 00009b30 60000010 012090c0 00000000 00000000
-[   63.254694] Backtrace:
-[   63.257232] [<c0072fd0>] (frob_text.constprop.15) from [<c0071f8c>] (load_module+0x10dc/0x125c)
-[   63.265999] [<c0070eb0>] (load_module) from [<c0072270>] (sys_init_module+0x164/0x194)
-[   63.273970]  r10:d3302000 r9:001a77e2 r8:d4c17aed r7:c0883028 r6:00000000 r5:0120abad
-[   63.281823]  r4:00001aed
-[   63.284410] [<c007210c>] (sys_init_module) from [<c0009000>] (ret_fast_syscall+0x0/0x50)
-[   63.292529] Exception stack(0xd3303fa8 to 0xd3303ff0)
-[   63.297624] 3fa0:                   00000000 00000000 012090c0 00001aed 001a77e2 00000000
-[   63.305851] 3fc0: 00000000 00000000 00001aed 00000080 00000001 be90de0c 001a77e2 00000000
-[   63.314067] 3fe0: be90dac0 be90dab0 0001ec34 00009b30
-[   63.319170]  r10:00000000 r9:d3302000 r8:c00091e4 r7:00000080 r6:00001aed r5:00000000
-[   63.327021]  r4:00000000
-[   63.329603] Code: 1a000002 e5901008 e1b02a01 0a000000 (e7f001f2)
-[   63.335742] ---[ end trace c38bbcd6af0938a2 ]---
-Segmentation fault
-[root@host ]#
+Please verify that this is actually the case. Tegra-2 definitely needed
+some level of poking, and I'm not keen on changing anything there until
+you (or someone else) has verified it on actual HW (see e307cc8941fc).
 
-It seems that this is realated to strict module rwx.
-The config below crashes:
+Joseph, can you please shed some light here?
 
-CONFIG_ARCH_HAS_STRICT_MODULE_RWX=y
-# CONFIG_STRICT_MODULE_RWX is not set
-
-If I enable CONFIG_STRICT_MODULE_RWX, modules can be loaded and unloaded without problems.
-
-Best regards,
-
-   Martin
+	M.
+-- 
+Jazz is not dead. It just smells funny...
