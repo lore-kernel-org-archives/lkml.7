@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47822C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CC1C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F05821921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A946A218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563798161;
-	bh=deKhYXbCDNNUNEbETE0R3l9JOsmSntCU8he+5YUYcKM=;
+	s=default; t=1563798163;
+	bh=bQvqC9Cmb/Xddyvg21Yx5M+SznzbM5zUr0cMoVsVp8U=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=d3pQ8O/0pHprRtOq75Yyd6cNWclQdgzx/xFz6Q3v1Jr9dpmYY259apcDlEZfcmr71
-	 gz4Cr6VHlCif50AmexcVUpopg/c6JpbqNc2iBSnoDilydMDJWMl+bMbsyiCdHh8Zfl
-	 rLE87wqT2jxKY4wc2CJAXH4mxDTynCwN+i01omY4=
+	b=PeMY1gO9839T6HJIGUdTkJ1INWrmYru0XCGhki4aA5eZMgqAu82TLxNYlIoQcDdp2
+	 UyGw2GYoBolPH23XYIm+Yd3CV4ZU23U30fgqN2PA4l4HYhJblgbiiGnAbGSemBAJ21
+	 loBnuMIuPO4KzHXZS574xz0hbYvwdJuAUkYIxYIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbfGVMW3 (ORCPT
+        id S1730357AbfGVMWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:22:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58652 "EHLO
+        Mon, 22 Jul 2019 08:22:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58882 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730259AbfGVMWT (ORCPT
+        with ESMTP id S1730297AbfGVMWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:22:19 -0400
+        Mon, 22 Jul 2019 08:22:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=kFFhP1m/SJsYy3wFd8EeoLTWfc7nLb+MzjoAq1XU1bM=; b=uz9pO8Z/7NtG
-        lu1qjUtfzRiNE343/nvMj2YiSSy6zYZ9lGxUygPB/XEgYeQ1W+jNARZiQ9L1/O4s7zYu7tvvKgZuR
-        Jz2sa/epXyN7tE90GSdB8tSB/cQOZarY/Xc84VAiYBmSK/Rx9es3E/ivT+9LuXUal6XTd5jDLmQi4
-        bNoXg=;
+        List-Archive; bh=rbq4z9FIHUxfRqS1kr/ag+iCawHd1ro5ob0Hwbc6bws=; b=no7LZiAil3YZ
+        1Wm0MIGdBM2BW72hSwNthuJRdgDI5UH63s6uX/jCq9o0lnZp6Gm8qp4RExJgQfcYIR2YmgJOIZRel
+        BM6rxu9N5Lt44jqWgWwwH2k4eEMzKqWVrH4A2S5i3fMgDcbHdlHvuFZFWy9DXGkDkmvMKfUsywn3J
+        TA24I=;
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hpXKT-0007d4-2y; Mon, 22 Jul 2019 12:22:09 +0000
+        id 1hpXKf-0007ge-Sq; Mon, 22 Jul 2019 12:22:21 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 514A1274046A; Mon, 22 Jul 2019 13:22:08 +0100 (BST)
+        id 4CCCE27416CB; Mon, 22 Jul 2019 13:22:21 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     alsa-devel@alsa-project.org, bcm-kernel-feedback-list@broadcom.com,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "sound: soc: bcm: cygnus-pcm: Unneeded variable: "ret"." to the asoc tree
-In-Reply-To: <20190709184236.GA7873@hari-Inspiron-1545>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Applied "spi: pxa2xx: Balance runtime PM enable/disable on error" to the spi tree
+In-Reply-To: <20190719122713.3444318-1-lkundrak@v3.sk>
 X-Patchwork-Hint: ignore
-Message-Id: <20190722122208.514A1274046A@ypsilon.sirena.org.uk>
-Date:   Mon, 22 Jul 2019 13:22:08 +0100 (BST)
+Message-Id: <20190722122221.4CCCE27416CB@ypsilon.sirena.org.uk>
+Date:   Mon, 22 Jul 2019 13:22:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   sound: soc: bcm: cygnus-pcm: Unneeded variable: "ret".
+   spi: pxa2xx: Balance runtime PM enable/disable on error
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,66 +89,49 @@ to this mail.
 Thanks,
 Mark
 
-From a08c1037c2c04bd0ba691c109e3af51817707fe0 Mon Sep 17 00:00:00 2001
-From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Date: Wed, 10 Jul 2019 00:12:37 +0530
-Subject: [PATCH] sound: soc: bcm: cygnus-pcm: Unneeded variable: "ret".
+From 1274204542f683e1d8491ebe9cc86284d5a8ebcc Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Fri, 19 Jul 2019 14:27:13 +0200
+Subject: [PATCH] spi: pxa2xx: Balance runtime PM enable/disable on error
 
-This patch fixes below issues reported by coccicheck
+Don't undo the PM initialization if we error out before we managed to
+initialize it. The call to pm_runtime_disable() without being preceded
+by pm_runtime_enable() would disturb the balance of the Force.
 
-sound/soc/bcm/cygnus-pcm.c:642:5-8: Unneeded variable: "ret". Return "0"
-on line 650
-sound/soc/bcm/cygnus-pcm.c:671:5-8: Unneeded variable: "ret". Return "0"
-on line 696
+In practice, this happens if we fail to allocate any of the GPIOS ("cs",
+"ready") due to -EPROBE_DEFER because we're getting probled before the
+GPIO driver.
 
-We cannot change return type of these functions as they are callback
-functions of snd_pcm_ops
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Link: https://lore.kernel.org/r/20190709184236.GA7873@hari-Inspiron-1545
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20190719122713.3444318-1-lkundrak@v3.sk
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/bcm/cygnus-pcm.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/bcm/cygnus-pcm.c b/sound/soc/bcm/cygnus-pcm.c
-index 123ecf5479d7..8966b02844dc 100644
---- a/sound/soc/bcm/cygnus-pcm.c
-+++ b/sound/soc/bcm/cygnus-pcm.c
-@@ -639,7 +639,6 @@ static int cygnus_pcm_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct cygnus_aio_port *aio;
--	int ret = 0;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index fc7ab4b26880..22513caf2000 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1831,14 +1831,16 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ 	status = devm_spi_register_controller(&pdev->dev, controller);
+ 	if (status != 0) {
+ 		dev_err(&pdev->dev, "problem registering spi controller\n");
+-		goto out_error_clock_enabled;
++		goto out_error_pm_runtime_enabled;
+ 	}
  
- 	aio = cygnus_dai_get_dma_data(substream);
- 	dev_dbg(rtd->cpu_dai->dev, "%s  port %d\n", __func__, aio->portnum);
-@@ -647,7 +646,7 @@ static int cygnus_pcm_hw_params(struct snd_pcm_substream *substream,
- 	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
- 	runtime->dma_bytes = params_buffer_bytes(params);
+ 	return status;
  
--	return ret;
-+	return 0;
- }
+-out_error_clock_enabled:
++out_error_pm_runtime_enabled:
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++
++out_error_clock_enabled:
+ 	clk_disable_unprepare(ssp->clk);
  
- static int cygnus_pcm_hw_free(struct snd_pcm_substream *substream)
-@@ -668,7 +667,6 @@ static int cygnus_pcm_prepare(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct cygnus_aio_port *aio;
- 	unsigned long bufsize, periodsize;
--	int ret = 0;
- 	bool is_play;
- 	u32 start;
- 	struct ringbuf_regs *p_rbuf = NULL;
-@@ -693,7 +691,7 @@ static int cygnus_pcm_prepare(struct snd_pcm_substream *substream)
- 	ringbuf_set_initial(aio->cygaud->audio, p_rbuf, is_play, start,
- 				periodsize, bufsize);
- 
--	return ret;
-+	return 0;
- }
- 
- static snd_pcm_uframes_t cygnus_pcm_pointer(struct snd_pcm_substream *substream)
+ out_error_dma_irq_alloc:
 -- 
 2.20.1
 
