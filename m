@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EDCC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2EBC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D3021993
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B200421926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NLjOKntL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="bsY/Jv3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfGVCb6 (ORCPT
+        id S1728655AbfGVCcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:31:58 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:37192 "EHLO
+        Sun, 21 Jul 2019 22:32:06 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:37242 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfGVCb5 (ORCPT
+        with ESMTP id S1726233AbfGVCcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:31:57 -0400
+        Sun, 21 Jul 2019 22:32:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563762715; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1563762718; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=W4Y3xNv8DzGeNbpxDkocLZEsOwkzbTg/G7OrEllTF/c=;
-        b=NLjOKntL3Kzim+iZ5XNGr5PfQ4EJPM51BlW52U9IuigpRFYVqe1BqnQNiq8qL5CeM3dl9e
-        dpaBULyfwAB58wkqpiBl2FuHOWkZUJNxjW6e7zrB8dDt4uIZZ4e1zPcjzCmvj86yahLtmy
-        WkhInAClnHeD1rz0icZzgsexKsGejBA=
+         in-reply-to:in-reply-to:references:references;
+        bh=w1ttHd0DZJge1NYqB4oQSXeX1uqJ5KJEtmBJu2KS2Pk=;
+        b=bsY/Jv3KmgH3Iq/AhEMDRRJ0luM4Cpc/nTBiX7kN1xGHKtb2+o+EWBe20F0t4D1Bzzm+tk
+        3B9pMu4cJH2Nr0dpHD0X1iKjJmX3qRRaQIKQGWyXgRp3DSDvUO2lVaunG8Hl5T+t3IDf/x
+        frxf5FavboFLinOqG8Wk1qXZavAu9ag=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -38,9 +39,11 @@ To:     Ohad Ben-Cohen <ohad@wizery.com>,
 Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, od@zcrc.me,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/3] dt-bindings: Document JZ47xx VPU auxiliary processor
-Date:   Sun, 21 Jul 2019 22:31:38 -0400
-Message-Id: <20190722023140.14701-1-paul@crapouillou.net>
+Subject: [PATCH 2/3] remoteproc: Add prepare/unprepare callbacks
+Date:   Sun, 21 Jul 2019 22:31:39 -0400
+Message-Id: <20190722023140.14701-2-paul@crapouillou.net>
+In-Reply-To: <20190722023140.14701-1-paul@crapouillou.net>
+References: <20190722023140.14701-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,59 +51,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
-Ingenic is a second Xburst MIPS CPU very similar to the main core.
-This document describes the devicetree bindings for this auxiliary
-processor.
+The .prepare() callback is called before the firmware is loaded to
+memory. This is useful for instance in the case where some setup is
+required for the memory to be accessible.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../bindings/remoteproc/ingenic,vpu.txt       | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+ drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
+ include/linux/remoteproc.h           |  4 ++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
-new file mode 100644
-index 000000000000..fde86ad5a008
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
-@@ -0,0 +1,36 @@
-+* Ingenic JZ47xx auxiliary processor
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 3c5fbbbfb0f1..68faad3ef0c1 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1300,11 +1300,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+ 	struct device *dev = &rproc->dev;
+ 	int ret;
+ 
++	if (rproc->ops->prepare) {
++		ret = rproc->ops->prepare(rproc);
++		if (ret) {
++			dev_err(dev, "Failed to prepare rproc: %d\n", ret);
++			return ret;
++		}
++	}
 +
-+Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from Ingenic
-+is a second Xburst MIPS CPU very similar to the main core.
-+This document describes the devicetree bindings for this auxiliary processor.
+ 	/* load the ELF segments to memory */
+ 	ret = rproc_load_segments(rproc, fw);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to load program segments: %d\n", ret);
+-		return ret;
++		goto unprepare_rproc;
+ 	}
+ 
+ 	/*
+@@ -1355,6 +1363,9 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+ 	rproc_unprepare_subdevices(rproc);
+ reset_table_ptr:
+ 	rproc->table_ptr = rproc->cached_table;
++unprepare_rproc:
++	if (rproc->ops->unprepare)
++		rproc->ops->unprepare(rproc);
+ 
+ 	return ret;
+ }
+@@ -1484,6 +1495,9 @@ static int rproc_stop(struct rproc *rproc, bool crashed)
+ 
+ 	rproc->state = RPROC_OFFLINE;
+ 
++	if (rproc->ops->unprepare)
++		rproc->ops->unprepare(rproc);
 +
-+Required properties:
-+- compatible: Should be "ingenic,jz4770-vpu-rproc"
-+- reg: Must contain the registers location and length for:
-+  * the auxiliary processor,
-+  * the Tightly Coupled Shared Memory 0 (TCSM0),
-+  * the Tightly Coupled Shared Memory 1 (TCSM1),
-+  * the shared SRAM.
-+- reg-names: Must contain "aux", "tcsm0", "tcsm1", "sram".
-+- clocks: Clock specifier for the AUX and VPU clocks.
-+- clock-names: Must contain "aux", "vpu".
-+- interrupts: Interrupt specifier for the VPU hardware block.
-+
-+Example:
-+
-+vpu: cpu@132a0000 {
-+	compatible = "ingenic,jz4770-vpu-rproc";
-+
-+	reg = <0x132a0000 0x20 /* AUX */
-+		   0xf4000000 0x4000 /* TCSM0 */
-+		   0x132c0000 0xc000 /* TCSM1 */
-+		   0x132f0000 0x7000 /* SRAM */
-+	>;
-+	reg-names = "aux", "tcsm0", "tcsm1", "sram";
-+
-+	clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
-+	clock-names = "aux", "vpu";
-+
-+	interrupt-parent = <&cpuintc>;
-+	interrupts = <3>;
-+};
+ 	dev_info(dev, "stopped remote processor %s\n", rproc->name);
+ 
+ 	return 0;
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index 16ad66683ad0..be65c2a92c58 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -355,6 +355,8 @@ enum rsc_handling_status {
+ 
+ /**
+  * struct rproc_ops - platform-specific device handlers
++ * @prepare:	prepare the device for power up (before the firmware is loaded)
++ * @unprepare:	unprepare the device after it is stopped
+  * @start:	power on the device and boot it
+  * @stop:	power off the device
+  * @kick:	kick a virtqueue (virtqueue id given as a parameter)
+@@ -371,6 +373,8 @@ enum rsc_handling_status {
+  * @get_boot_addr:	get boot address to entry point specified in firmware
+  */
+ struct rproc_ops {
++	int (*prepare)(struct rproc *rproc);
++	void (*unprepare)(struct rproc *rproc);
+ 	int (*start)(struct rproc *rproc);
+ 	int (*stop)(struct rproc *rproc);
+ 	void (*kick)(struct rproc *rproc, int vqid);
 -- 
 2.21.0.593.g511ec345e18
 
