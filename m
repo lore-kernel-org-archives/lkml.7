@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928FBC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9616AC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B4E21926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742B021926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbfGVPwC (ORCPT
+        id S1730396AbfGVPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:52:02 -0400
-Received: from os.inf.tu-dresden.de ([141.76.48.99]:60508 "EHLO
+        Mon, 22 Jul 2019 11:52:10 -0400
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:60542 "EHLO
         os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730324AbfGVPv6 (ORCPT
+        with ESMTP id S1730364AbfGVPwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:51:58 -0400
+        Mon, 22 Jul 2019 11:52:09 -0400
 Received: from [195.176.96.199] (helo=jupiter)
         by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256) (Exim 4.92)
-        id 1hpa1K-00089V-PC; Mon, 22 Jul 2019 17:14:34 +0200
+        id 1hpa1O-0008AN-OI; Mon, 22 Jul 2019 17:14:38 +0200
 From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 To:     Moni Shoua <monis@mellanox.com>,
         Doug Ledford <dledford@redhat.com>,
         Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
-Subject: [PATCH 02/10] Remove counter that does not have a meaning anymore
-Date:   Mon, 22 Jul 2019 17:14:18 +0200
-Message-Id: <20190722151426.5266-3-mplaneta@os.inf.tu-dresden.de>
+Subject: [PATCH 09/10] Consolidate resetting of QP's tasks into one place
+Date:   Mon, 22 Jul 2019 17:14:25 +0200
+Message-Id: <20190722151426.5266-10-mplaneta@os.inf.tu-dresden.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
 References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
@@ -43,59 +43,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After putting all tasks to schedule, this counter does not have a
-meaning anymore.
+Used in a later patch.
 
 Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
 ---
- drivers/infiniband/sw/rxe/rxe_comp.c        | 6 ------
- drivers/infiniband/sw/rxe/rxe_hw_counters.c | 1 -
- drivers/infiniband/sw/rxe/rxe_hw_counters.h | 1 -
- 3 files changed, 8 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_loc.h  |  1 +
+ drivers/infiniband/sw/rxe/rxe_qp.c   | 17 +----------------
+ drivers/infiniband/sw/rxe/rxe_req.c  |  1 +
+ drivers/infiniband/sw/rxe/rxe_resp.c | 25 ++++++++++++++-----------
+ 4 files changed, 17 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_comp.c b/drivers/infiniband/sw/rxe/rxe_comp.c
-index ad09bd9d0a82..5f3a43cfeb63 100644
---- a/drivers/infiniband/sw/rxe/rxe_comp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_comp.c
-@@ -148,14 +148,8 @@ void retransmit_timer(struct timer_list *t)
- 
- void rxe_comp_queue_pkt(struct rxe_qp *qp, struct sk_buff *skb)
- {
--	int must_sched;
--
- 	skb_queue_tail(&qp->resp_pkts, skb);
- 
--	must_sched = skb_queue_len(&qp->resp_pkts) > 1;
--	if (must_sched != 0)
--		rxe_counter_inc(SKB_TO_PKT(skb)->rxe, RXE_CNT_COMPLETER_SCHED);
--
- 	rxe_run_task(&qp->comp.task);
+diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
+index b7159d9d5107..e37adde2bced 100644
+--- a/drivers/infiniband/sw/rxe/rxe_loc.h
++++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+@@ -205,6 +205,7 @@ static inline int rcv_wqe_size(int max_sge)
  }
  
-diff --git a/drivers/infiniband/sw/rxe/rxe_hw_counters.c b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
-index 636edb5f4cf4..9bc762b0e66a 100644
---- a/drivers/infiniband/sw/rxe/rxe_hw_counters.c
-+++ b/drivers/infiniband/sw/rxe/rxe_hw_counters.c
-@@ -41,7 +41,6 @@ static const char * const rxe_counter_name[] = {
- 	[RXE_CNT_RCV_RNR]             =  "rcvd_rnr_err",
- 	[RXE_CNT_SND_RNR]             =  "send_rnr_err",
- 	[RXE_CNT_RCV_SEQ_ERR]         =  "rcvd_seq_err",
--	[RXE_CNT_COMPLETER_SCHED]     =  "ack_deferred",
- 	[RXE_CNT_RETRY_EXCEEDED]      =  "retry_exceeded_err",
- 	[RXE_CNT_RNR_RETRY_EXCEEDED]  =  "retry_rnr_exceeded_err",
- 	[RXE_CNT_COMP_RETRY]          =  "completer_retry_err",
-diff --git a/drivers/infiniband/sw/rxe/rxe_hw_counters.h b/drivers/infiniband/sw/rxe/rxe_hw_counters.h
-index 72c0d63c79e0..cfe19159a77f 100644
---- a/drivers/infiniband/sw/rxe/rxe_hw_counters.h
-+++ b/drivers/infiniband/sw/rxe/rxe_hw_counters.h
-@@ -45,7 +45,6 @@ enum rxe_counters {
- 	RXE_CNT_RCV_RNR,
- 	RXE_CNT_SND_RNR,
- 	RXE_CNT_RCV_SEQ_ERR,
--	RXE_CNT_COMPLETER_SCHED,
- 	RXE_CNT_RETRY_EXCEEDED,
- 	RXE_CNT_RNR_RETRY_EXCEEDED,
- 	RXE_CNT_COMP_RETRY,
+ void free_rd_atomic_resource(struct rxe_qp *qp, struct resp_res *res);
++void cleanup_rd_atomic_resources(struct rxe_qp *qp);
+ 
+ static inline void rxe_advance_resp_resource(struct rxe_qp *qp)
+ {
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index 7cd929185581..2fccdede8869 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -161,7 +161,7 @@ void free_rd_atomic_resource(struct rxe_qp *qp, struct resp_res *res)
+ 	res->type = 0;
+ }
+ 
+-static void cleanup_rd_atomic_resources(struct rxe_qp *qp)
++void cleanup_rd_atomic_resources(struct rxe_qp *qp)
+ {
+ 	int i;
+ 	struct resp_res *res;
+@@ -526,21 +526,6 @@ static void rxe_qp_reset(struct rxe_qp *qp)
+ 
+ 	/* cleanup attributes */
+ 	atomic_set(&qp->ssn, 0);
+-	qp->req.opcode = -1;
+-	qp->req.need_retry = 0;
+-	qp->req.noack_pkts = 0;
+-	qp->resp.msn = 0;
+-	qp->resp.opcode = -1;
+-	qp->resp.drop_msg = 0;
+-	qp->resp.goto_error = 0;
+-	qp->resp.sent_psn_nak = 0;
+-
+-	if (qp->resp.mr) {
+-		rxe_drop_ref(&qp->resp.mr->pelem);
+-		qp->resp.mr = NULL;
+-	}
+-
+-	cleanup_rd_atomic_resources(qp);
+ 
+ 	/* reenable tasks */
+ 	rxe_enable_task(&qp->resp.task);
+diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+index c63e66873757..3bb9afdeaee1 100644
+--- a/drivers/infiniband/sw/rxe/rxe_req.c
++++ b/drivers/infiniband/sw/rxe/rxe_req.c
+@@ -599,6 +599,7 @@ int rxe_requester(void *arg)
+ 		goto exit;
+ 
+ 	if (unlikely(qp->req.state == QP_STATE_RESET)) {
++		qp->req.noack_pkts = 0;
+ 		qp->req.wqe_index = consumer_index(qp->sq.queue);
+ 		qp->req.opcode = -1;
+ 		qp->req.need_rd_atomic = 0;
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 7be8a362d2ef..eaee68d718ce 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -1214,19 +1214,10 @@ int rxe_responder(void *arg)
+ 
+ 	qp->resp.aeth_syndrome = AETH_ACK_UNLIMITED;
+ 
+-	if (!qp->valid) {
+-		ret = -EINVAL;
+-		goto done;
+-	}
+-
+-	switch (qp->resp.state) {
+-	case QP_STATE_RESET:
++	if (!qp->valid || qp->resp.state == QP_STATE_RESET) {
+ 		state = RESPST_RESET;
+-		break;
+-
+-	default:
++	} else {
+ 		state = RESPST_GET_REQ;
+-		break;
+ 	}
+ 
+ 	while (1) {
+@@ -1374,6 +1365,18 @@ int rxe_responder(void *arg)
+ 		case RESPST_RESET:
+ 			rxe_drain_req_pkts(qp, false);
+ 			qp->resp.wqe = NULL;
++			qp->resp.msn = 0;
++			qp->resp.opcode = -1;
++			qp->resp.drop_msg = 0;
++			qp->resp.goto_error = 0;
++			qp->resp.sent_psn_nak = 0;
++
++			if (qp->resp.mr) {
++				rxe_drop_ref(&qp->resp.mr->pelem);
++				qp->resp.mr = NULL;
++			}
++
++			cleanup_rd_atomic_resources(qp);
+ 			goto exit;
+ 
+ 		case RESPST_ERROR:
 -- 
 2.20.1
 
