@@ -2,72 +2,119 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520E6C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA396C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3356A21E70
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956B921E70
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:21:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="KKStXPWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfGVIVF (ORCPT
+        id S1728293AbfGVIVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:21:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:33424 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbfGVIVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:21:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7C41344;
-        Mon, 22 Jul 2019 01:21:04 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CC003F71F;
-        Mon, 22 Jul 2019 01:21:02 -0700 (PDT)
-Subject: Re: [PATCH v9 2/8] sched/core: Streamlining calls to task_rq_unlock()
-To:     Juri Lelli <juri.lelli@redhat.com>, peterz@infradead.org,
-        mingo@redhat.com, rostedt@goodmis.org, tj@kernel.org
-Cc:     linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
-        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
-        longman@redhat.com, cgroups@vger.kernel.org
-References: <20190719140000.31694-1-juri.lelli@redhat.com>
- <20190719140000.31694-3-juri.lelli@redhat.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <50f00347-ffb3-285c-5a7d-3a9c5f813950@arm.com>
-Date:   Mon, 22 Jul 2019 10:21:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190719140000.31694-3-juri.lelli@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+        Mon, 22 Jul 2019 04:21:10 -0400
+Received: from mickerik.phytec.de ([195.145.39.210]:54576 "EHLO
+        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbfGVIVJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:21:09 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 04:21:09 EDT
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
+        q=dns/txt; i=@phytec.de; t=1563782766; x=1566374766;
+        h=From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:Mime-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Ss020kHm3zmso5F8zIoSk4X3Nb0AGLoB67uKPMz/dNc=;
+        b=KKStXPWx8VbcB5yj+EeD+87ofoxB4pF1i6doZ/OSVff7Il6GTApsn29mLV0EXdBr
+        lMyGHIc1ZRTqLjqT+lFQKgd4snnC7p20kr4kVsZW4HDwQHgWQK/UGYQyiuTRku/x
+        6BDpBxLPippW/zKiP5g/eU7TiLIsfHFOr/KluAVQiQw=;
+X-AuditID: c39127d2-193ff70000001aee-c9-5d356e6ec6dd
+Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
+        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 85.1E.06894.E6E653D5; Mon, 22 Jul 2019 10:06:06 +0200 (CEST)
+Received: from llp-tremmet.phytec.de ([172.16.22.38])
+          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
+          with ESMTP id 2019072210060565-391138 ;
+          Mon, 22 Jul 2019 10:06:05 +0200 
+Message-ID: <812cb14400ee43176c2118247c8c47230b9206c2.camel@phytec.de>
+Subject: Re: [PATCH] ARM: dts: am335x-wega.dtsi: fix wrong card detect pin
+ level
+From:   Teresa Remmet <t.remmet@phytec.de>
+To:     Andreas Klinger <ak@it-klinger.de>, linux-omap@vger.kernel.org
+Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 22 Jul 2019 10:06:05 +0200
+In-Reply-To: <20190709183209.y64keopah5rkismc@arbad>
+References: <20190709183209.y64keopah5rkismc@arbad>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
+ 22.07.2019 10:06:05,
+        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
+ 22.07.2019 10:06:05,
+        Serialize complete at 22.07.2019 10:06:05
+X-TNEFEvaluated: 1
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDLMWRmVeSWpSXmKPExsWyRoCBSzcvzzTWYO1uXovGaVvYLe7M/8tq
+        Mf/IOVaLy7vmsFnMXtLPYrH0+kUmi9a9R9gt9l/xcuDwWDNvDaPHt6+TWDze32hl95jw7Ra7
+        x6ZVnWwenzfJBbBFcdmkpOZklqUW6dslcGX0nhcpWMBRcWT7T+YGxjNsXYwcHBICJhLvdzB3
+        MXJxCAnsYJR48fcTG4RzkVHizK4tLF2MnBy8Am4Sz3p3g9nCAkES0z41soPYbAIaEk9XnGYC
+        sUUEnCQO3pzECNLMLNDPKLFr9jOwBhYBVYmp92+xgmzjBNp2pDsZxBQSMJZ4fr8cpEJCQEfi
+        7ak+FpAwr4CgxN8dwiBTJAQamSQOfu5jhagRkji9+CwziM0sIC+x/e0cKFtTonX7b/YJjIKz
+        ENpnIamahaRqASPzKkah3Mzk7NSizGy9gozKktRkvZTUTYzAGDg8Uf3SDsa+OR6HGJk4GA8x
+        SnAwK4nw5hmYxgrxpiRWVqUW5ccXleakFh9ilOZgURLn3cBbEiYkkJ5YkpqdmlqQWgSTZeLg
+        lGpg7HmtzXalwOy74jtT/SnRlYuus1lpblDtuxIUnf387ZuzxeJ6rut7SiuCZBmknUMr55jf
+        +dGy70vpUfMfCoFf81T4LQxdi49ZFOwPt/DKsDb0kLw951IW3+HfbKqc+VuWfzuZxbxh3bRF
+        /GIdNyKWcWnVCC6Nf3Hx6vXYVsO7fat5pTSrlauVWIozEg21mIuKEwGjwjijbwIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/19 3:59 PM, Juri Lelli wrote:
-> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Hello Andreas,
 
-[...]
+Am Dienstag, den 09.07.2019, 20:32 +0200 schrieb Andreas Klinger:
+> mmc cards on mmc1 are not detected because of wrong card detect (cd)
+> level.
+> 
+> Change cd from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW.
+> 
+> This is necessary because of commit e63201f19438 ("mmc: omap_hsmmc:
+> Delete platform data GPIO CD and WP")
 
-> @@ -4269,8 +4269,8 @@ static int __sched_setscheduler(struct task_struct *p,
->  			 */
->  			if (!cpumask_subset(span, &p->cpus_allowed) ||
+Thanks for noticing. But the fix is already in master.
 
-This doesn't apply cleanly on v5.3-rc1 anymore due to commit
-3bd3706251ee ("sched/core: Provide a pointer to the valid CPU mask").
+Teresa
 
->  			    rq->rd->dl_bw.bw == 0) {
-> -				task_rq_unlock(rq, p, &rf);
-> -				return -EPERM;
-> +				retval = -EPERM;
-> +				goto unlock;
->  			}
->  		}
->  #endif
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  arch/arm/boot/dts/am335x-wega.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-wega.dtsi
+> b/arch/arm/boot/dts/am335x-wega.dtsi
+> index b7d28a20341f..84581fed3d06 100644
+> --- a/arch/arm/boot/dts/am335x-wega.dtsi
+> +++ b/arch/arm/boot/dts/am335x-wega.dtsi
+> @@ -157,7 +157,7 @@
+>  	bus-width = <4>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc1_pins>;
+> -	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
+>  };
+>  
+> -- 
+> 2.11.0
+> 
+> 
 
-[...]
