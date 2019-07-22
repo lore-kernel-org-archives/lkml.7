@@ -2,184 +2,100 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4116C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF723C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90CF21901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFB021901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tFFSxg0N"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YEW6P3hO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfGVTO7 (ORCPT
+        id S1731971AbfGVTPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:14:59 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37208 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbfGVTO6 (ORCPT
+        Mon, 22 Jul 2019 15:15:10 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33205 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbfGVTPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:14:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k0Aa1oppo5fgpAqfdlhMZ/Y4FyX3KZF6G5NCMud93Ao=; b=tFFSxg0Nh2G+2z2wXW0kiyQe9
-        pI4T7G3Po/BYJUF/dTPfTtYTgQHndHYOd2T3x5vPyfQZtBEJDEV7Xt5vAcjXDgaWEw4hezIOsAWe3
-        A2p+EpI6mVaVlp/IsZk/mF7nTueQPBJ6AbJtJqubeRcoEmKj/FJop4YqiSX6x8lknsw8kuXc0WRQb
-        nyIaiojxTFS93l+DLFa2hieuFTcZY00msSqMv6iMkyx2kCLXLEHLo8StTtaVB+666J8E/BchkXa4r
-        5Q13HKIfQNErihSnxd261MYESBOoNhZz9yo+v99LWxzP2Es2+1OW+GCzOXThbLpB1IJqJw8ZXTNka
-        kw4vEbxfw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpdlc-00068v-1I; Mon, 22 Jul 2019 19:14:36 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D99D6980C6E; Mon, 22 Jul 2019 21:14:33 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 21:14:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 4/9] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Message-ID: <20190722191433.GD6698@worktop.programming.kicks-ass.net>
-References: <20190719005837.4150-1-namit@vmware.com>
- <20190719005837.4150-5-namit@vmware.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719005837.4150-5-namit@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 22 Jul 2019 15:15:10 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m8so27110580vsj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=4BuuPSvhQT5H67c4iK7jqEFJDfyC/RcpCWzQsK/Bagw=;
+        b=YEW6P3hOXzy+0zgf6FOEyZJgqFbPIbY+8dVXkWPS/LmqA3Ulr6DM8mLczZleAqHxPt
+         wI19rxN1CrY8o4DLllYJitWKTki8rbqyOJKYgGlVKlF3faV0WYzoNIXw4/pCgfh1WY0m
+         /9WGxd8Q7RpFCAgMQHd6hCBy7gT4tfVf4v97vc5+s+BPu84M/E4VfLjON4Nnq6TgYwdS
+         VozpLWc4YxcSstY2DUFEcf3FCSIvIj61UQSvLSvP/UfvmWljL/M8j6a2H3F+6hyiHckq
+         sPtt+oEoU/xgniNh+9bAROKrnl1wf+Lz3pHdT0vO2xDuLoHOXKqH9XLFBjribJFs/ws3
+         9Kfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4BuuPSvhQT5H67c4iK7jqEFJDfyC/RcpCWzQsK/Bagw=;
+        b=I8VSvPzbEtv+8KKO8zM+tICZ7PccHnu7mwYBZ+AHd6mHJMCqyLsUpf5Oe8ogXzXbcd
+         5xLuL+qPJ991+0aSVV3BOY64SznBtWXcfE0CqekEGVGGJ3lozXXcPtmOqjrBdk+ofUNM
+         CqGqgrCNPOZJ5RboJFCMoE7QXlfVY2OceZSnfXA4J2nXO2FZ5YhH5Eot1nalP+Nv+0QI
+         gHqgFIwgIxAYXWpuqWO88hjbjqLMkNQWIHEBz8ikpuo2zzyBUIRXZmv77Ejdzfk/zE+Y
+         zaFRZnJwZmsi3WjF0l1AYr5vyYSnGgudv6Kh1+0+ffJzayQegoA0MiO1xEAbMJSYcn0b
+         e08Q==
+X-Gm-Message-State: APjAAAWrBmGn6bObVVf0LUUtKt0vBU+msxqEN0e7HBbS6QMq5msMjLX2
+        L4ktEGHyQV3I/JGp05Mvh2h3WOjW8j+j/Q==
+X-Google-Smtp-Source: APXvYqxZlIpTi88Fqz4ibqiGDTpWCCB7h63uPWTKFXZaJF1FeJSDC0tq9HX1ZRxP8buTUrL2OdsQrA==
+X-Received: by 2002:a67:d46:: with SMTP id 67mr44695015vsn.181.1563822909007;
+        Mon, 22 Jul 2019 12:15:09 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 4sm7433056vsx.11.2019.07.22.12.15.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 12:15:08 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     daniel@ffwll.ch
+Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
+        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] drm: silence variable 'conn' set but not used
+Date:   Mon, 22 Jul 2019 15:14:46 -0400
+Message-Id: <1563822886-13570-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 05:58:32PM -0700, Nadav Amit wrote:
-> @@ -709,8 +716,9 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
->  	 * doing a speculative memory access.
->  	 */
->  	if (info->freed_tables) {
-> -		smp_call_function_many(cpumask, flush_tlb_func_remote,
-> -			       (void *)info, 1);
-> +		__smp_call_function_many(cpumask, flush_tlb_func_remote,
-> +					 flush_tlb_func_local,
-> +					 (void *)info, 1);
->  	} else {
->  		/*
->  		 * Although we could have used on_each_cpu_cond_mask(),
-> @@ -737,7 +745,8 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
->  			if (tlb_is_not_lazy(cpu))
->  				__cpumask_set_cpu(cpu, cond_cpumask);
->  		}
-> -		smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
-> +		__smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
-> +					 flush_tlb_func_local,
->  					 (void *)info, 1);
->  	}
->  }
+The "struct drm_connector" iteration cursor from
+"for_each_new_connector_in_state" is never used in atomic_remove_fb()
+which generates a compilation warning,
 
-Do we really need that _local/_remote distinction? ISTR you had a patch
-that frobbed flush_tlb_info into the csd and that gave space
-constraints, but I'm not seeing that here (probably a wise, get stuff
-merged etc..).
+drivers/gpu/drm/drm_framebuffer.c: In function 'atomic_remove_fb':
+drivers/gpu/drm/drm_framebuffer.c:838:24: warning: variable 'conn' set
+but not used [-Wunused-but-set-variable]
 
-struct __call_single_data {
-        struct llist_node          llist;                /*     0     8 */
-        smp_call_func_t            func;                 /*     8     8 */
-        void *                     info;                 /*    16     8 */
-        unsigned int               flags;                /*    24     4 */
+Silence it by marking "conn" __maybe_unused.
 
-        /* size: 32, cachelines: 1, members: 4 */
-        /* padding: 4 */
-        /* last cacheline: 32 bytes */
-};
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/gpu/drm/drm_framebuffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-struct flush_tlb_info {
-        struct mm_struct *         mm;                   /*     0     8 */
-        long unsigned int          start;                /*     8     8 */
-        long unsigned int          end;                  /*    16     8 */
-        u64                        new_tlb_gen;          /*    24     8 */
-        unsigned int               stride_shift;         /*    32     4 */
-        bool                       freed_tables;         /*    36     1 */
-
-        /* size: 40, cachelines: 1, members: 6 */
-        /* padding: 3 */
-        /* last cacheline: 40 bytes */
-};
-
-IIRC what you did was make void *__call_single_data::info the last
-member and a union until the full cacheline size (64). Given the above
-that would get us 24 bytes for csd, leaving us 40 for that
-flush_tlb_info.
-
-But then we can still do something like the below, which doesn't change
-things and still gets rid of that dual function crud, simplifying
-smp_call_function_many again.
-
-Index: linux-2.6/arch/x86/include/asm/tlbflush.h
-===================================================================
---- linux-2.6.orig/arch/x86/include/asm/tlbflush.h
-+++ linux-2.6/arch/x86/include/asm/tlbflush.h
-@@ -546,8 +546,9 @@ struct flush_tlb_info {
- 	unsigned long		start;
- 	unsigned long		end;
- 	u64			new_tlb_gen;
--	unsigned int		stride_shift;
--	bool			freed_tables;
-+	unsigned int		cpu;
-+	unsigned short		stride_shift;
-+	unsigned char		freed_tables;
- };
- 
- #define local_flush_tlb() __flush_tlb()
-Index: linux-2.6/arch/x86/mm/tlb.c
-===================================================================
---- linux-2.6.orig/arch/x86/mm/tlb.c
-+++ linux-2.6/arch/x86/mm/tlb.c
-@@ -659,6 +659,27 @@ static void flush_tlb_func_remote(void *
- 	flush_tlb_func_common(f, false, TLB_REMOTE_SHOOTDOWN);
- }
- 
-+static void flush_tlb_func(void *info)
-+{
-+	const struct flush_tlb_info *f = info;
-+	enum tlb_flush_reason reason = TLB_REMOTE_SHOOTDOWN;
-+	bool local = false;
-+
-+	if (f->cpu == smp_processor_id()) {
-+		local = true;
-+		reason = (f->mm == NULL) ? TLB_LOCAL_SHOOTDOWN : TLB_LOCAL_MM_SHOOTDOWN;
-+	} else {
-+		inc_irq_stat(irq_tlb_count);
-+
-+		if (f->mm && f->mm != this_cpu_read(cpu_tlbstate.loaded_mm))
-+			return;
-+
-+		count_vm_tlb_event(NR_TLB_REMOTE_FLUSH_RECEIVED);
-+	}
-+
-+	flush_tlb_func_common(f, local, reason);
-+}
-+
- static bool tlb_is_not_lazy(int cpu)
- {
- 	return !per_cpu(cpu_tlbstate_shared.is_lazy, cpu);
+diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+index 0b72468e8131..57564318ceea 100644
+--- a/drivers/gpu/drm/drm_framebuffer.c
++++ b/drivers/gpu/drm/drm_framebuffer.c
+@@ -835,7 +835,7 @@ static int atomic_remove_fb(struct drm_framebuffer *fb)
+ 	struct drm_device *dev = fb->dev;
+ 	struct drm_atomic_state *state;
+ 	struct drm_plane *plane;
+-	struct drm_connector *conn;
++	struct drm_connector *conn __maybe_unused;
+ 	struct drm_connector_state *conn_state;
+ 	int i, ret;
+ 	unsigned plane_mask;
+-- 
+1.8.3.1
 
