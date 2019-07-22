@@ -2,309 +2,155 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C95CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ECAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F2221903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29158218F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5mRcHLi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecUJKzI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbfGVU1m (ORCPT
+        id S1729594AbfGVU3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 16:27:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43577 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbfGVU1l (ORCPT
+        Mon, 22 Jul 2019 16:29:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44026 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727647AbfGVU3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 16:27:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p13so40713091wru.10;
-        Mon, 22 Jul 2019 13:27:39 -0700 (PDT)
+        Mon, 22 Jul 2019 16:29:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so18190966pgv.10;
+        Mon, 22 Jul 2019 13:29:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NOGW/IVGqsa+iMtHEoLvY2TRGYYlPNOEPkyNhSrlJ+E=;
-        b=b5mRcHLi7lLmkc4imKkbtuN7t4F+Uo/YY1hCFfszWQqec5junsbRxy/h9PfQrzMcTb
-         /PeXXth5H2x/7V9vmpdk4k1dDfpgprpBbFfif181yLxnwAPTvdnaIkQlcVQBtY8n8fhR
-         5VEbaqUypWIc4OQB8n6iLq+SfeRzCWDRQzPjlDbn4P53GDA3ujcLxxTqEethpRPoqp3b
-         oq7gRvcwQy3W5I43DEgNenCp2m0hWzEgnJ9DMPI0cNnKIbjnpy0egzD6WPyWPcd13ljo
-         eDo77o2hBJA1G0jkzzKZqxivhk2hZKslK/r1lI6G9EAKmr8kBQpLYwFqQyOUCSmUR+Yt
-         DOnw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nCZL8NW+CQJDJhz/9d6wrGsYH8X/ZdiJlsRqT5zJ18M=;
+        b=ecUJKzI5CGYU2VRUOO4wPZGQIFrlFq5mcssQY8loS7b4ri7Qe1ZADcezUwC6rRVJQM
+         6OcQd5eJ+/nhNQR8V/NrnmHBVc/3CsXte5tajITmvSn0qSuOdRBNXVwhOif2ic7wMMOa
+         AxG1LfiTrSJ60ExfVKPoYI2n6IayQ99hzmmhw3EggUgB86WoNH99RTAJmeCpp2Gbbziv
+         m569ffJb4oFVxs8PgmoLjP9k+90D21yWQfppvk90Xfs5w3BemdMTNLlO4GrSKWAUPh8j
+         V0dyokeaiCg7yWCo33r4TV0OBIJr1DQD7wtz9RzPX1oQ3gHah0qHHm8a2wjrpGq6ZhZT
+         Fe7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NOGW/IVGqsa+iMtHEoLvY2TRGYYlPNOEPkyNhSrlJ+E=;
-        b=jMhMFmBqCloB8/ZkawfcHl1+t85N5H7SZDdZwsTQVff3e+9Dct4ZUAEwxaoDC8E1Uq
-         VBBZ6nmPYD2EsaBIE+0yyK9EKwp+TNT2NR59WArSer7XudZz1664DeYWLMOyyMTNjxJo
-         HQnErOkUbN+CY+2EVzsk8pQ3UjJXsLzWGa95fsRY8l38qvQsogtGNJRWh7BUinYoucs1
-         C7lZu3cpCL1GOOUUCMBEz/HcH46op7xFmBvvvSasdFMtjIO47JNVOWbXWg96LX8lP8iq
-         MFra7TZLqVYKEEMzl3JvImQ7U973E6y2H2xzV+EYj/fWkrIHcgp43ORiYBf76szaufKS
-         Y2oA==
-X-Gm-Message-State: APjAAAVn90CLrdomMhM26NL87q1zQCaIBM0muXm5SkdPb0avhgSMyFVN
-        9fsAknfNYXmuweKMJx+uCg==
-X-Google-Smtp-Source: APXvYqzCmStbOQ9xRTnZUYEJqeYnBjL/1BPSPuFR2cN1GxC+3lypBg5iq4GBEFTsKAVW0Amlif70gw==
-X-Received: by 2002:adf:e552:: with SMTP id z18mr78342167wrm.45.1563827258353;
-        Mon, 22 Jul 2019 13:27:38 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.253.254])
-        by smtp.gmail.com with ESMTPSA id f1sm28028413wml.28.2019.07.22.13.27.37
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nCZL8NW+CQJDJhz/9d6wrGsYH8X/ZdiJlsRqT5zJ18M=;
+        b=asTsYQDXjcpw9OCe3AfgBxYcogrPb0ZMjMM5SSsr6L1FBckmnh7KETnCP1DM2dCvlZ
+         qeaeZ6ZzyMzy396ZQswBwBVG/adDacGpbm23LQgGNXUr9P12SmRGMZE1YecBirM72mSJ
+         wYimZkwI8AW1CWV5JRO16CkWsIez7K3KeaUGmjYtgxVAjaJ/oj+1nEVRiqlrrlJMiUZv
+         UghwJHX4+Z6EOaG58RkUloL5D2/Fu1YIbKGRB4yMBBZbWTPqlXBgNLYhbuttzN2niwsQ
+         hQFUwoHOXuXiqClrqkuOb3ImTdQsTuxIh+LdAFMHZrxfv3hXeMyqUf0yaRB7IiQKnULp
+         gqVA==
+X-Gm-Message-State: APjAAAUCCxyF7mmAlVjGMp/KFVNjvsEQR2XcIKfT4TL1q5pKXhC768Fi
+        oSa5UpSdBWWQar8gReRp3ylkZqQp
+X-Google-Smtp-Source: APXvYqzp0Fk1CGr9xMouwqONLh91BN1ApqCJEeFJcR6Md3Sy2g7vsRebMcZQNFqdER3Vrv6DPGoJjQ==
+X-Received: by 2002:a17:90a:c588:: with SMTP id l8mr77576503pjt.16.1563827362635;
+        Mon, 22 Jul 2019 13:29:22 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g18sm68596624pgm.9.2019.07.22.13.29.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 13:27:37 -0700 (PDT)
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, adobriyan@gmail.com,
-        linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net
-Subject: [PATCH 2/5] x86_64, -march=native: POPCNT support
-Date:   Mon, 22 Jul 2019 23:27:20 +0300
-Message-Id: <20190722202723.13408-2-adobriyan@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722202723.13408-1-adobriyan@gmail.com>
-References: <20190722202723.13408-1-adobriyan@gmail.com>
+        Mon, 22 Jul 2019 13:29:22 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 13:29:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hsin-Yi Wang <hsinyi@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] bfq: Check if bfqq is NULL in bfq_insert_request
+Message-ID: <20190722202920.GA18431@roeck-us.net>
+References: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detect POPCNT instruction support and inline hweigth*() functions
-if it is supported by CPU.
+On Mon, Jul 22, 2019 at 10:30:48AM -0700, Guenter Roeck wrote:
+> In bfq_insert_request(), bfqq is initialized with:
+> 	bfqq = bfq_init_rq(rq);
+> In bfq_init_rq(), we find:
+> 	if (unlikely(!rq->elv.icq))
+> 		return NULL;
+> Indeed, rq->elv.icq can be NULL if the memory allocation in
+> create_task_io_context() failed.
+> 
 
-Detect POPCNT at boot time and conditionally refuse to boot.
+The above function should have been ioc_create_icq(), sorry.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
- arch/x86/include/asm/arch_hweight.h           | 24 +++++++++++++++++++
- arch/x86/include/asm/segment.h                |  1 +
- arch/x86/kernel/verify_cpu.S                  |  8 +++++++
- arch/x86/lib/Makefile                         |  5 +++-
- .../drm/i915/display/intel_display_power.c    |  2 +-
- drivers/misc/sgi-gru/grumain.c                |  2 +-
- fs/btrfs/tree-checker.c                       |  4 ++--
- include/linux/bitops.h                        |  2 ++
- lib/Makefile                                  |  2 ++
- scripts/kconfig/cpuid.c                       |  7 ++++++
- scripts/march-native.sh                       |  2 ++
- 11 files changed, 54 insertions(+), 5 deletions(-)
+Guenter
 
-diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
-index ba88edd0d58b..3797aa57baa5 100644
---- a/arch/x86/include/asm/arch_hweight.h
-+++ b/arch/x86/include/asm/arch_hweight.h
-@@ -2,6 +2,28 @@
- #ifndef _ASM_X86_HWEIGHT_H
- #define _ASM_X86_HWEIGHT_H
- 
-+#ifdef CONFIG_MARCH_NATIVE_POPCNT
-+static inline unsigned int __arch_hweight64(uint64_t x)
-+{
-+	return __builtin_popcountll(x);
-+}
-+
-+static inline unsigned int __arch_hweight32(uint32_t x)
-+{
-+	return __builtin_popcount(x);
-+}
-+
-+static inline unsigned int __arch_hweight16(uint16_t x)
-+{
-+	return __builtin_popcount(x);
-+}
-+
-+static inline unsigned int __arch_hweight8(uint8_t x)
-+{
-+	return __builtin_popcount(x);
-+}
-+#else
-+
- #include <asm/cpufeatures.h>
- 
- #ifdef CONFIG_64BIT
-@@ -53,3 +75,5 @@ static __always_inline unsigned long __arch_hweight64(__u64 w)
- #endif /* CONFIG_X86_32 */
- 
- #endif
-+
-+#endif
-diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
-index ac3892920419..d314c6b9b632 100644
---- a/arch/x86/include/asm/segment.h
-+++ b/arch/x86/include/asm/segment.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/const.h>
- #include <asm/alternative.h>
-+#include <asm/cpufeatures.h>
- 
- /*
-  * Constructor for a conventional segment GDT (or LDT) entry.
-diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
-index a024c4f7ba56..a9be8904faa3 100644
---- a/arch/x86/kernel/verify_cpu.S
-+++ b/arch/x86/kernel/verify_cpu.S
-@@ -134,6 +134,14 @@ ENTRY(verify_cpu)
- 	movl $1,%eax
- 	ret
- .Lverify_cpu_sse_ok:
-+
-+#ifdef CONFIG_MARCH_NATIVE_POPCNT
-+	mov	$1, %eax
-+	cpuid
-+	bt	$23, %ecx
-+	jnc	.Lverify_cpu_no_longmode
-+#endif
-+
- 	popf				# Restore caller passed flags
- 	xorl %eax, %eax
- 	ret
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 5246db42de45..7dc0e71b0ef3 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -40,7 +40,10 @@ lib-$(CONFIG_RANDOMIZE_BASE) += kaslr.o
- lib-$(CONFIG_FUNCTION_ERROR_INJECTION)	+= error-inject.o
- lib-$(CONFIG_RETPOLINE) += retpoline.o
- 
--obj-y += msr.o msr-reg.o msr-reg-export.o hweight.o
-+obj-y += msr.o msr-reg.o msr-reg-export.o
-+ifneq ($(CONFIG_MARCH_NATIVE_POPCNT),y)
-+	obj-y += hweight.o
-+endif
- obj-y += iomem.o
- 
- ifeq ($(CONFIG_X86_32),y)
-diff --git a/drivers/gpu/drm/i915/display/intel_display_power.c b/drivers/gpu/drm/i915/display/intel_display_power.c
-index c93ad512014c..9066105f2fea 100644
---- a/drivers/gpu/drm/i915/display/intel_display_power.c
-+++ b/drivers/gpu/drm/i915/display/intel_display_power.c
-@@ -1570,7 +1570,7 @@ static void print_power_domains(struct i915_power_domains *power_domains,
- {
- 	enum intel_display_power_domain domain;
- 
--	DRM_DEBUG_DRIVER("%s (%lu):\n", prefix, hweight64(mask));
-+	DRM_DEBUG_DRIVER("%s (%u):\n", prefix, hweight64(mask));
- 	for_each_power_domain(domain, mask)
- 		DRM_DEBUG_DRIVER("%s use_count %d\n",
- 				 intel_display_power_domain_str(domain),
-diff --git a/drivers/misc/sgi-gru/grumain.c b/drivers/misc/sgi-gru/grumain.c
-index 40ac59dd018c..30cfeeb28e74 100644
---- a/drivers/misc/sgi-gru/grumain.c
-+++ b/drivers/misc/sgi-gru/grumain.c
-@@ -833,7 +833,7 @@ void gru_steal_context(struct gru_thread_state *gts)
- 	}
- 	gru_dbg(grudev,
- 		"stole gid %d, ctxnum %d from gts %p. Need cb %d, ds %d;"
--		" avail cb %ld, ds %ld\n",
-+		" avail cb %u, ds %u\n",
- 		gru->gs_gid, ctxnum, ngts, cbr, dsr, hweight64(gru->gs_cbr_map),
- 		hweight64(gru->gs_dsr_map));
- }
-diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
-index ccd5706199d7..2d33c6ae0e61 100644
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -478,7 +478,7 @@ static int check_block_group_item(struct extent_buffer *leaf,
- 	flags = btrfs_block_group_flags(&bgi);
- 	if (hweight64(flags & BTRFS_BLOCK_GROUP_PROFILE_MASK) > 1) {
- 		block_group_err(leaf, slot,
--"invalid profile flags, have 0x%llx (%lu bits set) expect no more than 1 bit set",
-+"invalid profile flags, have 0x%llx (%u bits set) expect no more than 1 bit set",
- 			flags & BTRFS_BLOCK_GROUP_PROFILE_MASK,
- 			hweight64(flags & BTRFS_BLOCK_GROUP_PROFILE_MASK));
- 		return -EUCLEAN;
-@@ -491,7 +491,7 @@ static int check_block_group_item(struct extent_buffer *leaf,
- 	    type != (BTRFS_BLOCK_GROUP_METADATA |
- 			   BTRFS_BLOCK_GROUP_DATA)) {
- 		block_group_err(leaf, slot,
--"invalid type, have 0x%llx (%lu bits set) expect either 0x%llx, 0x%llx, 0x%llx or 0x%llx",
-+"invalid type, have 0x%llx (%u bits set) expect either 0x%llx, 0x%llx, 0x%llx or 0x%llx",
- 			type, hweight64(type),
- 			BTRFS_BLOCK_GROUP_DATA, BTRFS_BLOCK_GROUP_METADATA,
- 			BTRFS_BLOCK_GROUP_SYSTEM,
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index cf074bce3eb3..655b120bba66 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -7,10 +7,12 @@
- #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
- #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
- 
-+#ifndef CONFIG_MARCH_NATIVE_POPCNT
- extern unsigned int __sw_hweight8(unsigned int w);
- extern unsigned int __sw_hweight16(unsigned int w);
- extern unsigned int __sw_hweight32(unsigned int w);
- extern unsigned long __sw_hweight64(__u64 w);
-+#endif
- 
- /*
-  * Include this here because some architectures need generic_ffs/fls in
-diff --git a/lib/Makefile b/lib/Makefile
-index 095601ce371d..32400f3a3328 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -114,7 +114,9 @@ obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
- 
- obj-y += logic_pio.o
- 
-+ifneq ($(CONFIG_MARCH_NATIVE_POPCNT),y)
- obj-$(CONFIG_GENERIC_HWEIGHT) += hweight.o
-+endif
- 
- obj-$(CONFIG_BTREE) += btree.o
- obj-$(CONFIG_INTERVAL_TREE) += interval_tree.o
-diff --git a/scripts/kconfig/cpuid.c b/scripts/kconfig/cpuid.c
-index 81b292382e26..9efc0d9464d8 100644
---- a/scripts/kconfig/cpuid.c
-+++ b/scripts/kconfig/cpuid.c
-@@ -43,6 +43,8 @@ static inline void cpuid2(uint32_t eax0, uint32_t ecx0, uint32_t *eax, uint32_t
- 	);
- }
- 
-+static bool popcnt	= false;
-+
- static uint32_t eax0_max;
- 
- static void intel(void)
-@@ -52,6 +54,10 @@ static void intel(void)
- 	if (eax0_max >= 1) {
- 		cpuid(1, &eax, &ecx, &edx, &ebx);
- //		printf("%08x %08x %08x %08x\n", eax, ecx, edx, ebx);
-+
-+		if (ecx & (1 << 23)) {
-+			popcnt = true;
-+		}
- 	}
- }
- 
-@@ -72,6 +78,7 @@ int main(int argc, char *argv[])
- 	}
- 
- #define _(x)	if (streq(opt, #x)) return x ? EXIT_SUCCESS : EXIT_FAILURE
-+	_(popcnt);
- #undef _
- 
- 	return EXIT_FAILURE;
-diff --git a/scripts/march-native.sh b/scripts/march-native.sh
-index 29a33c80b62b..c3059f93ed2b 100755
---- a/scripts/march-native.sh
-+++ b/scripts/march-native.sh
-@@ -41,6 +41,8 @@ COLLECT_GCC_OPTIONS=$(
- )
- echo "-march=native: $COLLECT_GCC_OPTIONS"
- 
-+"$CPUID" popcnt		&& option "CONFIG_MARCH_NATIVE_POPCNT"
-+
- for i in $COLLECT_GCC_OPTIONS; do
- 	case $i in
- 		*/cc1|-E|-quiet|-v|/dev/null|--param|-fstack-protector*)
--- 
-2.21.0
-
+> A comment in bfq_insert_request() suggests that bfqq is supposed to be
+> non-NULL if 'at_head || blk_rq_is_passthrough(rq)' is false. Yet, as
+> debugging and practical experience shows, this is not the case in the
+> above situation.
+> 
+> This results in the following crash.
+> 
+> Unable to handle kernel NULL pointer dereference
+> 	at virtual address 00000000000001b0
+> ...
+> Call trace:
+>  bfq_setup_cooperator+0x44/0x134
+>  bfq_insert_requests+0x10c/0x630
+>  blk_mq_sched_insert_requests+0x60/0xb4
+>  blk_mq_flush_plug_list+0x290/0x2d4
+>  blk_flush_plug_list+0xe0/0x230
+>  blk_finish_plug+0x30/0x40
+>  generic_writepages+0x60/0x94
+>  blkdev_writepages+0x24/0x30
+>  do_writepages+0x74/0xac
+>  __filemap_fdatawrite_range+0x94/0xc8
+>  file_write_and_wait_range+0x44/0xa0
+>  blkdev_fsync+0x38/0x68
+>  vfs_fsync_range+0x68/0x80
+>  do_fsync+0x44/0x80
+> 
+> The problem is relatively easy to reproduce by running an image with
+> failslab enabled, such as with:
+> 
+> cd /sys/kernel/debug/failslab
+> echo 10 > probability
+> echo 300 > times
+> 
+> Avoid the problem by checking if bfqq is NULL before using it. With the
+> NULL check in place, requests with missing io context are queued
+> immediately, and the crash is no longer seen.
+> 
+> Fixes: 18e5a57d79878 ("block, bfq: postpone rq preparation to insert or merge")
+> Reported-by: Hsin-Yi Wang  <hsinyi@google.com>
+> Cc: Hsin-Yi Wang <hsinyi@google.com>
+> Cc: Nicolas Boichat <drinkcat@chromium.org>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  block/bfq-iosched.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index 72860325245a..56f3f4227010 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -5417,7 +5417,7 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+>  
+>  	spin_lock_irq(&bfqd->lock);
+>  	bfqq = bfq_init_rq(rq);
+> -	if (at_head || blk_rq_is_passthrough(rq)) {
+> +	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
+>  		if (at_head)
+>  			list_add(&rq->queuelist, &bfqd->dispatch);
+>  		else
+> -- 
+> 2.7.4
+> 
