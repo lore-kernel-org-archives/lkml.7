@@ -2,120 +2,97 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A71C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357F3C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F1E2229A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563838771;
-	bh=0verszwHA31byT7KU88XfWaYVCtD0PN19wA00XDUSUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rXUvQ0sM1QJLpp7eEcPUjOBSHe8beFwXIiF9vx8RANpZq8/odul3U3yEbmxB3J520
-	 +cGof679ImimiyUT2QWN2u5HxytcZyBIcByNVZLOfAa0nF5AArrBJxjKdYWUVDuNgJ
-	 hlYQLn7Q5dRZEZF+YrC28fyI0Kt+C/d1Ya4eLV/E=
+	by mail.kernel.org (Postfix) with ESMTP id 138A521955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbfGVXja (ORCPT
+        id S1731373AbfGVXjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:39:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41705 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfGVXja (ORCPT
+        Mon, 22 Jul 2019 19:39:42 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:50818 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727021AbfGVXjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:39:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so73702646ioj.8;
-        Mon, 22 Jul 2019 16:39:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Re1ou/Cp7xqVBQ6KMFNH/nG+U/FTlL8aNd/MoRXidQw=;
-        b=cxPkIL7XTI2cYDEdYcTCa36BsGw4YgHXOrAd8LVuB7/lgrF1kG/AAEML/OqfsKoN3Y
-         yrtBXFsjLyFJYwUcu7UB0IkKQ5rch7fKqu8Qjllqv04ni0uJCX+soHTRKjqa8gekQsfD
-         FGQlF3yYudOkyvpe1Yko26qMbGCErd0pxs82zamULlF2rkzURtTVI3JwAiZJZsq1Nxck
-         21uJYjEuqtzrjnwCa88I6ecnjxzPHXKnM4bRsO/ES5rUeb4mYmQZh/RQtlIJk+r9r5Cg
-         rluHZMPj1l+a2Gp5CkKLOswqc5buFaAChpjD4RRRcAR5ektuNAilZ/kLbWWqC9ExCY9n
-         6lnA==
-X-Gm-Message-State: APjAAAX58XTZJImbZ/K+DN6Z8Zr1PXO6s03UTHzD09Qj6cGhvHd0Zp73
-        zchWriUMKW6zh0nJpIUUkw==
-X-Google-Smtp-Source: APXvYqyxJK+kQudxi2Yk/oKLLBxmi3+hhs+D/FKOwXSGcX6KV5xW7nMlE4AxnlDjZGyuwGpb+nx6qA==
-X-Received: by 2002:a5e:cb06:: with SMTP id p6mr67249208iom.79.1563838768762;
-        Mon, 22 Jul 2019 16:39:28 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id p10sm58868136iob.54.2019.07.22.16.39.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 16:39:28 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 17:39:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        sibis@codeaurora.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, kernel-team@android.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] dt-bindings: interconnect: Add
- interconnect-opp-table property
-Message-ID: <20190722233927.GA1353@bogus>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-6-saravanak@google.com>
+        Mon, 22 Jul 2019 19:39:42 -0400
+X-IronPort-AV: E=Sophos;i="5.64,296,1559512800"; 
+   d="scan'208";a="392905680"
+Received: from c-73-22-29-55.hsd1.il.comcast.net (HELO hadrien) ([73.22.29.55])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 01:39:37 +0200
+Date:   Mon, 22 Jul 2019 18:39:34 -0500 (CDT)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Paul Cercueil <paul@crapouillou.net>
+cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        himanshujha199640@gmail.com
+Subject: [PATCH] mtd: rawnand: ingenic: fix devm_platform_ioremap_resource.cocci
+ warnings
+Message-ID: <alpine.DEB.2.21.1907221834570.3471@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703011020.151615-6-saravanak@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 06:10:19PM -0700, Saravana Kannan wrote:
-> Add support for listing bandwidth OPP tables for each interconnect path
-> listed using the interconnects property.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> index 6f5d23a605b7..fc5b75b76a2c 100644
-> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> @@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
->  			 * dma-mem: Path from the device to the main memory of
->  			            the system
->  
-> +interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
-> +			that specify the OPPs for the interconnect paths listed
-> +			in the interconnects property. This property can only
-> +			point to OPP tables that belong to the device and are
-> +			listed in the device's operating-points-v2 property.
-> +
+From: kbuild test robot <lkp@intel.com>
 
-IMO, there's no need for this property. Which OPP is which should be 
-defined already as part of the device's binding. That's enough for the 
-driver to know which OPP applies to the interconnect.
+drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c:330:1-9: WARNING: Use devm_platform_ioremap_resource for cs -> base
 
->  Example:
->  
->  	sdhci@7864000 {
-> +		operating-points-v2 = <&sdhc_opp_table>, <&sdhc_mem_opp_table>;
->  		...
->  		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
->  		interconnect-names = "sdhc-mem";
-> +		interconnect-opp-table = <&sdhc_mem_opp_table>;
->  	};
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+ Use devm_platform_ioremap_resource helper which wraps
+ platform_get_resource() and devm_ioremap_resource() together.
+
+Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+
+Fixes: c403ec33b613 ("mtd: rawnand: ingenic: Fix ingenic_ecc dependency")
+CC: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+---
+
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   7b5cf701ea9c395c792e2a7e3b7caf4c68b87721
+commit: c403ec33b613a15d9fd8dde37f246b79cd56b5df mtd: rawnand: ingenic: Fix ingenic_ecc dependency
+:::::: branch date: 6 hours ago
+:::::: commit date: 3 weeks ago
+
+Please take the patch only if it's a positive warning. Thanks!
+
+ ingenic_nand_drv.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
++++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+@@ -310,7 +310,6 @@ static int ingenic_nand_init_chip(struct
+ 	struct device *dev = &pdev->dev;
+ 	struct ingenic_nand *nand;
+ 	struct ingenic_nand_cs *cs;
+-	struct resource *res;
+ 	struct nand_chip *chip;
+ 	struct mtd_info *mtd;
+ 	const __be32 *reg;
+@@ -326,8 +325,7 @@ static int ingenic_nand_init_chip(struct
+
+ 	jz4780_nemc_set_type(nfc->dev, cs->bank, JZ4780_NEMC_BANK_NAND);
+
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, chipnr);
+-	cs->base = devm_ioremap_resource(dev, res);
++	cs->base = devm_platform_ioremap_resource(pdev, chipnr);
+ 	if (IS_ERR(cs->base))
+ 		return PTR_ERR(cs->base);
+
