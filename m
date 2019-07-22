@@ -2,38 +2,34 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E435C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5C9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C5521897
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B87321897
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfGVR2y (ORCPT
+        id S1726253AbfGVR3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:28:54 -0400
-Received: from sauhun.de ([88.99.104.3]:42264 "EHLO pokefinder.org"
+        Mon, 22 Jul 2019 13:29:02 -0400
+Received: from sauhun.de ([88.99.104.3]:42188 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731306AbfGVR0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:26:20 -0400
+        id S1731377AbfGVR0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:26:18 -0400
 Received: from localhost (p54B33E22.dip0.t-ipconnect.de [84.179.62.34])
-        by pokefinder.org (Postfix) with ESMTPSA id 929F54A149B;
-        Mon, 22 Jul 2019 19:26:19 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id A83C44A1494;
+        Mon, 22 Jul 2019 19:26:16 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] rtc: isl12026: convert to i2c_new_dummy_device
-Date:   Mon, 22 Jul 2019 19:26:15 +0200
-Message-Id: <20190722172618.4061-2-wsa+renesas@sang-engineering.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] misc: convert subsystem to i2c_new_dummy_device()
+Date:   Mon, 22 Jul 2019 19:26:14 +0200
+Message-Id: <20190722172616.3982-1-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722172618.4061-1-wsa+renesas@sang-engineering.com>
-References: <20190722172618.4061-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,34 +37,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
-ERRPTR which we use in error handling.
+This series is part of a tree-wide movement to replace the I2C API call
+'i2c_new_dummy' which returns NULL with its new counterpart returning an
+ERRPTR.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+The series was generated with coccinelle (audited afterwards, of course) and
+build tested by me and by buildbot. No tests on HW have been performed.
 
-Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
+The branch is based on v5.3-rc1. A branch (with some more stuff included) can
+be found here:
 
- drivers/rtc/rtc-isl12026.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/new_dummy
 
-diff --git a/drivers/rtc/rtc-isl12026.c b/drivers/rtc/rtc-isl12026.c
-index 97f594f9667c..5b6b17fb6d62 100644
---- a/drivers/rtc/rtc-isl12026.c
-+++ b/drivers/rtc/rtc-isl12026.c
-@@ -454,9 +454,9 @@ static int isl12026_probe_new(struct i2c_client *client)
- 
- 	isl12026_force_power_modes(client);
- 
--	priv->nvm_client = i2c_new_dummy(client->adapter, ISL12026_EEPROM_ADDR);
--	if (!priv->nvm_client)
--		return -ENOMEM;
-+	priv->nvm_client = i2c_new_dummy_device(client->adapter, ISL12026_EEPROM_ADDR);
-+	if (IS_ERR(priv->nvm_client))
-+		return PTR_ERR(priv->nvm_client);
- 
- 	priv->rtc = devm_rtc_allocate_device(&client->dev);
- 	ret = PTR_ERR_OR_ZERO(priv->rtc);
+Some drivers still need to be manually converted. Patches for those will be
+sent out individually.
+
+
+Wolfram Sang (2):
+  misc: eeprom: ee1004: convert to i2c_new_dummy_device
+  misc: eeprom: max6875: convert to i2c_new_dummy_device
+
+ drivers/misc/eeprom/ee1004.c  | 6 +++---
+ drivers/misc/eeprom/max6875.c | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
 -- 
 2.20.1
 
