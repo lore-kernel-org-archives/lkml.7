@@ -2,108 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DC2C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B710AC76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FCF22296
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915612229B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="t1QcZOnJ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V8ICTnG6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dym/B+E1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbfGVI6V (ORCPT
+        id S1728634AbfGVJGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:58:21 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59571 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfGVI6U (ORCPT
+        Mon, 22 Jul 2019 05:06:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38880 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfGVJGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:58:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M8w7563750529
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 22 Jul 2019 01:58:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M8w7563750529
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563785888;
-        bh=ayJV2vNIGcNVbnd8QnIjhkvaE7cWRc8DCVz3ZkqOk78=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=t1QcZOnJbM9MvEXZsvWIwz1oFpD84L1QcygPaeryk0vry8Hqs83oOQAf5ICrcxgXW
-         9jHGKouIGvkYfUZ61oEMxqRCgf2wazh/Y7stNUACYMw+JGmvPLmDXNg8q+PJlGSgfY
-         QnVnAf95YynahP3pb8RHTtak0+rqcVBtwwZksHBaqwoKUPnkkLXW4/QfHcOOxtpMAN
-         U7SEcb/IptED7W2jk3YqdgTtsit9Fdm9FeuaOJNzEqu7MHqnLohQk8r99Hd1TRj+/A
-         uCffwF2svRnHZwlv26XKu0COauNY57Cj9KhcIvzm03SK/1DeHG9D2R8H+iGHMb8X4j
-         HifqPZshcTvaA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M8w6rQ3750526;
-        Mon, 22 Jul 2019 01:58:06 -0700
-Date:   Mon, 22 Jul 2019 01:58:06 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Cao jin <tipbot@zytor.com>
-Message-ID: <tip-385065734cd417b9d7739b2ebb62c960aeb3ccb5@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-        tglx@linutronix.de, caoj.fnst@cn.fujitsu.com
-Reply-To: tglx@linutronix.de, caoj.fnst@cn.fujitsu.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org
-In-Reply-To: <20190719081635.26528-1-caoj.fnst@cn.fujitsu.com>
-References: <20190719081635.26528-1-caoj.fnst@cn.fujitsu.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/irq/64: Update stale comment
-Git-Commit-ID: 385065734cd417b9d7739b2ebb62c960aeb3ccb5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Mon, 22 Jul 2019 05:06:13 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3010A61639; Mon, 22 Jul 2019 09:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563786372;
+        bh=Skk8yN1BQ/FRV8haTYnRCNUnzZEfrYwlXcy3MNbPGTc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V8ICTnG6m2z6JRboxwzE2LEsEW0LyBtM703/KrzBvKuhL3jRIxknD6rSZKhg8+ZG4
+         +BWbQE64bPivYzwUvJyWGz6eOzI1UPuwqyGdY2F6jZcRkfF40y1DEpeb/62Hpf62XE
+         VUX0H3jqxxzjHHl7vEx8HmFYzpT7RRU9zzdIlYAk=
+Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: amasule@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC3A0604BE;
+        Mon, 22 Jul 2019 09:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563786371;
+        bh=Skk8yN1BQ/FRV8haTYnRCNUnzZEfrYwlXcy3MNbPGTc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dym/B+E1dILyC4VTJuwmchUxq0cdrAFuk1RNAuZxJLKAVSEblp1dYGB+42NZduvaw
+         2WltOhXE9aEL4JAadwqDXkn1ecvvNZDAo7rGedykj0qgHPqjwnGLHfjwh8IKL9CjTP
+         gGXDDVsJL9Sk6RgYZqrzL7xGbFY+KyhvWaRRro2Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AC3A0604BE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
+From:   Aniket Masule <amasule@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
+Subject: [PATCH v6 0/4] media: venus: Update clock scaling and core selection
+Date:   Mon, 22 Jul 2019 14:35:56 +0530
+Message-Id: <1563786360-16467-1-git-send-email-amasule@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  385065734cd417b9d7739b2ebb62c960aeb3ccb5
-Gitweb:     https://git.kernel.org/tip/385065734cd417b9d7739b2ebb62c960aeb3ccb5
-Author:     Cao jin <caoj.fnst@cn.fujitsu.com>
-AuthorDate: Fri, 19 Jul 2019 16:16:35 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 22 Jul 2019 10:54:27 +0200
+In this patch series, clock scaling and core selection methods are
+updated. Current clock scaling and core selection methods are same
+for vpu4 and previous versions. Introducing load calculations using
+vpp cycles, which indicates the cycles required by video hardware to
+process each macroblock. Also adding vsp cycles, cycles require by
+stream processor. Clock scaling is now done more precisely using vpp
+and vsp cycles. Instance is assigned to core with minimum load, instead
+of static assignment.
 
-x86/irq/64: Update stale comment
+Changes since v5:
+ - Corrected load_per_core calculations.
 
-Commit e6401c130931 ("x86/irq/64: Split the IRQ stack into its own pages")
-missed to update one piece of comment as it did to its peer in Xen, which
-will confuse people who still need to read comment.
+Changes since v4:
+ - Added call to load_scale_clocks from venus_helper_vb2_buf_queue.
+ - Modified check to match core_id in core_selection.
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190719081635.26528-1-caoj.fnst@cn.fujitsu.com
+Changes since v3:
+ - vsp_cycles and vpp_cyles are now unsigned long.
+ - Core number counting aligned with VIDC_CORE_ID_.
+ - Aligned hardware overload handling of scale_clocks_v4 with scale_clocks.
+ - Added bitrate based clock scaling patch in this patch series.
+ - Instance state check is now moved from scale_clocks to load_scale_clocks.
 
----
- arch/x86/kernel/head_64.S | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Aniket Masule (4):
+  media: venus: Add codec data table
+  media: venus: Update clock scaling
+  media: venus: Update to bitrate based clock scaling
+  media: venus: Update core selection
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index a6342c899be5..f3d3e9646a99 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -193,10 +193,10 @@ ENTRY(secondary_startup_64)
- 
- 	/* Set up %gs.
- 	 *
--	 * The base of %gs always points to the bottom of the irqstack
--	 * union.  If the stack protector canary is enabled, it is
--	 * located at %gs:40.  Note that, on SMP, the boot cpu uses
--	 * init data section till per cpu areas are set up.
-+	 * The base of %gs always points to fixed_percpu_data. If the
-+	 * stack protector canary is enabled, it is located at %gs:40.
-+	 * Note that, on SMP, the boot cpu uses init data section until
-+	 * the per cpu areas are set up.
- 	 */
- 	movl	$MSR_GS_BASE,%ecx
- 	movl	initial_gs(%rip),%eax
+ drivers/media/platform/qcom/venus/core.c       |  13 ++
+ drivers/media/platform/qcom/venus/core.h       |  16 ++
+ drivers/media/platform/qcom/venus/helpers.c    | 215 +++++++++++++++++++++++--
+ drivers/media/platform/qcom/venus/helpers.h    |   3 +-
+ drivers/media/platform/qcom/venus/hfi_helper.h |   1 +
+ drivers/media/platform/qcom/venus/hfi_parser.h |   5 +
+ drivers/media/platform/qcom/venus/vdec.c       |   6 +-
+ drivers/media/platform/qcom/venus/venc.c       |   6 +-
+ 8 files changed, 252 insertions(+), 13 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
