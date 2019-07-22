@@ -2,132 +2,85 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42230C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732ADC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178162190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:53:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HArRmCgk"
+	by mail.kernel.org (Postfix) with ESMTP id 44C3E21955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbfGVSx4 (ORCPT
+        id S1731883AbfGVS5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:53:56 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3507 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbfGVSx4 (ORCPT
+        Mon, 22 Jul 2019 14:57:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38028 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbfGVS5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:53:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3606400002>; Mon, 22 Jul 2019 11:53:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jul 2019 11:53:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 11:53:55 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
- 2019 18:53:54 +0000
-Subject: Re: [PATCH 1/3] drivers/gpu/drm/via: convert put_page() to
- put_user_page*()
-To:     Christoph Hellwig <hch@lst.de>, <john.hubbard@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Yan Zheng <zyan@redhat.com>, <netdev@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>,
-        <linux-rdma@vger.kernel.org>, <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190722043012.22945-1-jhubbard@nvidia.com>
- <20190722043012.22945-2-jhubbard@nvidia.com> <20190722093355.GB29538@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <397ff3e4-e857-037a-1aee-ff6242e024b2@nvidia.com>
-Date:   Mon, 22 Jul 2019 11:53:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 14:57:00 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hpdUY-0002OR-K4; Mon, 22 Jul 2019 20:56:58 +0200
+Message-Id: <20190722105218.962517234@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Mon, 22 Jul 2019 20:47:07 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [patch V3 02/25] x86/apic: Invoke perf_events_lapic_init() after
+ enabling APIC
+References: <20190722104705.550071814@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190722093355.GB29538@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563821632; bh=dVEAb2CGI+Rcq3kPxf1ySX9mPnHE1aqM1bmhIjbORUc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HArRmCgkrni3Mv1zhHNTOrkORst1xu/RkKpSHN9NJ6eHvsCKnyilmR14o7Vu/72+2
-         KzGoGeJ5LPaTaA997Z1lTeEX5TN0QxgL9zU0E1stVph1kaJP/CjI3G/fZC7Su8uSDP
-         zQdMp40Hd3vz1tqkE44dAhr5RuD9olYTaUe61D28D1sEpt/q0j8DDbdv6B2ii7KaIW
-         3XKa/T3Q4mkn6zgOvtasGsucgAaQQ3F4SWgLkmtCnVrJI8UW8FhQBhBRF+eCjxAZDo
-         DjdQKgIytgBgEr6BmAqoJ/KeCGoQ826d60sYBB87S4A1fHrwdDnuUDjUmWCd/fqdhR
-         fU5s088Wpq8BA==
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/19 2:33 AM, Christoph Hellwig wrote:
-> On Sun, Jul 21, 2019 at 09:30:10PM -0700, john.hubbard@gmail.com wrote:
->>  		for (i = 0; i < vsg->num_pages; ++i) {
->>  			if (NULL != (page = vsg->pages[i])) {
->>  				if (!PageReserved(page) && (DMA_FROM_DEVICE == vsg->direction))
->> -					SetPageDirty(page);
->> -				put_page(page);
->> +					put_user_pages_dirty(&page, 1);
->> +				else
->> +					put_user_page(page);
->>  			}
-> 
-> Can't just pass a dirty argument to put_user_pages?  Also do we really
+If the APIC is soft disabled then unmasking an LVT entry does not work and
+the write is ignored. perf_events_lapic_init() tries to do so.
 
-Yes, and in fact that would help a lot more than the single page case,
-which is really just cosmetic after all.
+Move the invocation after the point where the APIC has been enabled.
 
-> need a separate put_user_page for the single page case?
-> put_user_pages_dirty?
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/apic/apic.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Not really. I'm still zeroing in on the ideal API for all these call sites,
-and I agree that the approach below is cleaner.
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1517,7 +1517,6 @@ static void setup_local_APIC(void)
+ 	int logical_apicid, ldr_apicid;
+ #endif
+ 
+-
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+ 		return;
+@@ -1532,8 +1531,6 @@ static void setup_local_APIC(void)
+ 		apic_write(APIC_ESR, 0);
+ 	}
+ #endif
+-	perf_events_lapic_init();
+-
+ 	/*
+ 	 * Double-check whether this APIC is really registered.
+ 	 * This is meaningless in clustered apic mode, so we skip it.
+@@ -1614,6 +1611,8 @@ static void setup_local_APIC(void)
+ 	value |= SPURIOUS_APIC_VECTOR;
+ 	apic_write(APIC_SPIV, value);
+ 
++	perf_events_lapic_init();
++
+ 	/*
+ 	 * Set up LVT0, LVT1:
+ 	 *
 
-> 
-> Also the PageReserved check looks bogus, as I can't see how a reserved
-> page can end up here.  So IMHO the above snippled should really look
-> something like this:
-> 
-> 	put_user_pages(vsg->pages[i], vsg->num_pages,
-> 			vsg->direction == DMA_FROM_DEVICE);
-> 
-> in the end.
-> 
 
-Agreed.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
