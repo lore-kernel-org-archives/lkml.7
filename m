@@ -2,108 +2,93 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044DFC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38250C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D6B21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0965F21911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="qYB90E9n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qVOsFplG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbfGVORJ (ORCPT
+        id S1729769AbfGVOTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:17:09 -0400
-Received: from sonic317-20.consmr.mail.gq1.yahoo.com ([98.137.66.146]:42769
-        "EHLO sonic317-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730810AbfGVORI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:17:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563805023; bh=xECj9m2xLSVUpudrwyR6+luhiAWEZ0tY/RvhMhV/bZQ=; h=Subject:To:References:From:Cc:Date:In-Reply-To:From:Subject; b=qYB90E9n9p2hxZA0lEfH/3+0P3CXOotPsRediTaJtnxRqX8rXbkm3N7rw6ACqGVj/xDOFFQO2lBfZKb/IYG8btDSRpHbuoEM1XkuXTGtFVHbmEW3w+fUsHaSZ6JlmvtoiY3qzILebk8kajRcTBlffJvyyEpNiRIhAIZo6B33VuXuvpr5XcvWbHCQzMl289vIkhLWBrRD4tnJ+18OKng5gGxcHrU0t6Yn3AaapcoWqDYyBULprIwuC2Xy5au5zcijJTZvsmYdc0tYoQcLagJxe43BLhArPD8T2jpVC4aF7S8nXOAPKmOGZev1nr6kHyCUhVctjAsxyukzYrmY+u+HaQ==
-X-YMail-OSG: H0aMGxQVM1mvOAgQM.BAOlrQE3d.1NSa3bvXBG0WEx9WjJxsItK445bMZKRUfVj
- 12opgBUymkaVs.u7jpTtxwwa_9GIYRGzyhxP6dFJwVGqa21crki_tZyomWJOspBHrkG9SPzOKRBm
- D7ufuipeZJ7UXSx_RvAPo1oddnINNrEZbgnso0SMh553gm4Xt3I2HWp8fvGcF6wC3PGdYKtMa9jb
- 578ArDg3h4v1MjhPDB6Yf2MNsqlnGKnShpZs.JY5Uv9ecp94VS.Xos8wHOoSC8S1EDaDh6IBNxvu
- uj7xNLnuYXObUN4PIY3VjFIDlpf_6R7gyqFs_MMqi4yvgBqOackLXCeycoj91kprPwdmyDJwqs.f
- qir7zoltA1FLl.Cj98THb5yimboDtcDxjbyuE.lCfxzOK4IYr2Vsv4uJbjBGzM7YKtqDwG6a1BFU
- 5vXXwcxGBSMoAOhO2E._UA.d4RMenZngT0tdB29RPSnv9XwU9TfnEJiPRL2LUnFhSc4FORGXT.2O
- cw69s15OhmZoJQ6f28ofqR521zU.v26Y4Iec1F9ToyPo_MGHv9TBwI02C7DES2z7rA6YAQ3Mgj8o
- oIjXLO3uZgny.L4lKW78IIxNLfaOgz_y67rH1D_M6H6M_O52G9R_M91TaCDFALRslgEEZDaglPFc
- ZKN5_BPt65jOgxl8gJjJxvb4XNdvsp6HqydGveyY.rPIDQrxpS1C2hQQSPEoiN1u1D8rfKmBF4jn
- J2ETvbcvpMU2zbc4y9tCM7LxVzANwro0rulZ3cyLrlQczLrV0cNkZ0mxaJggRaFnekjy.3Wo87wS
- .c.iEQfKP0Iy3QCR.ncEBd2t0meT1xzXtXPBSuCMzkntXiJhpB08vTX_vvdnZRd0PCDGU7lHiY0x
- D1oqCQA2kTK0XjqzjSs3QXiLWscRb6qoJUsNpRKzg70YDMsmpzUySjxHcKk4AxSE8Uzaxgsb6mV7
- yD2xECQ56Ln6ogsx6pNFVewDSl3s.WnSrg.94IsYLIrKYwzUnELlNev9aaC_Ln6eaWFZfudS4Qsg
- swka882uKsWuYoaxWR1boPTytRoNqgmNKZ0UTHudEkDFBqvOOxamSY7ar5_FpTaW7Sp7AEzyhS0F
- pW6c_6jmAxUWcSiXK_t6sBXTwuAyBb7AI2DYphKjPe.j6jJUobyHkSPyAi.Vkve0W1fMbwwRkGof
- PUhAMEvlKm0rhLQsm_SnAx4sgaAMGCWQ.psCllwsv4F8tC2Bc3YOlLiNWdu.ncQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.gq1.yahoo.com with HTTP; Mon, 22 Jul 2019 14:17:03 +0000
-Received: by smtp411.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 947e087edc5dc48dc717612cdbe533da;
-          Mon, 22 Jul 2019 14:16:59 +0000 (UTC)
-Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-24-gaoxiang25@huawei.com>
- <20190722101818.GN20977@twin.jikos.cz>
- <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
- <20190722132513.GA5172@mit.edu>
-From:   Gao Xiang <hsiangkao@aol.com>
-Cc:     dsterba@suse.cz, Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Message-ID: <db672675-c471-5bc8-af15-91c1859e9008@aol.com>
-Date:   Mon, 22 Jul 2019 22:16:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 10:19:47 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56162 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728228AbfGVOTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:19:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=w7liDE+E5Iu1xIHWqacl7h46/XlirlaNe/zw3/PBWCk=; b=qVOsFplGBuYk4ymZhAgzpL6i71
+        /wdEDJ7Aejf42R92mP3bplohaTlECg+3Zv96yKTaZH25VSn4ERUgQoNInz2f9W2vbWPA/xWF5eOhP
+        wUqPRaw0PMeLwHs3cj+Kw721melKrgtIO8rh8GvT5oTpSXOVQHFujFs7hLu3G+18ikIk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hpZAF-0003Dn-Fp; Mon, 22 Jul 2019 16:19:43 +0200
+Date:   Mon, 22 Jul 2019 16:19:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next 0/3] net: stmmac: Convert to phylink
+Message-ID: <20190722141943.GE8972@lunn.ch>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+ <20190722124240.464e73losonwb356@core.my.home>
+ <BN8PR12MB32660B12F8E2617ED42249BBD3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190722134023.GD8972@lunn.ch>
+ <BN8PR12MB3266678A3ABD0EBF429C9766D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190722132513.GA5172@mit.edu>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN8PR12MB3266678A3ABD0EBF429C9766D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
-
-On 2019/7/22 ????9:25, Theodore Y. Ts'o wrote,
-> On Mon, Jul 22, 2019 at 06:58:59PM +0800, Gao Xiang wrote:
->>> The number of individual Kconfig options is quite high, are you sure you
->>> need them to be split like that?
->>
->> You mean the above? these are 3 cache strategies, which impact the
->> runtime memory consumption and performance. I tend to leave the above
->> as it-is...
+On Mon, Jul 22, 2019 at 01:58:20PM +0000, Jose Abreu wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
+> Date: Jul/22/2019, 14:40:23 (UTC+00:00)
 > 
-> Unless cache strategies involve a huge amount of kernel code, I'd
-> recommend always compiling all of the cache strategies, and then have
-> a way to change the cache strategy via a mount option (and possibly
-> remount, although that can get tricky if there is already cached
-> information).  You could also specify a default in the erofs
-> superblock, you think that would be useful.
-OK, I will give a try. One point I think is how to deal with the case
-if there is already cached information when remounting as well as you said.
-
-As the first step, maybe the mount option can be defined as
-allowing/forbiding caching from now on, which can be refined later.
-
-Thanks,
-Gao Xiang
-
+> > Does this mean that all stmmac variants support 1G? There are none
+> > which just support Fast Ethernet?
 > 
-> 	    	      	   	    - Ted
+> This glue logic drivers sometimes reflect a custom IP that's Synopsys 
+> based but modified by customer, so I can't know before-hand what's the 
+> supported max speed. There are some old versions that don't support 1G 
+> but I expect that PHY driver limits this ...
+
+If a Fast PHY is used, then yes, it would be limited. But sometimes a
+1G PHY is used because they are cheaper than a Fast PHY.
+ 
+> > I'm also not sure the change fits the problem. Why did it not
+> > negotiate 100FULL rather than 10Half? You are only moving the 1G
+> > speeds around, so 100 speeds should of been advertised and selected.
 > 
+> Hmm, now that I'm looking at it closer I agree with you. Maybe link 
+> partner or PHY doesn't support 100M ?
+
+In the working case, ethtool shows the link partner supports 10, 100,
+and 1G. So something odd is going on here.
+
+You fix does seems reasonable, and it has been reported to fix the
+issue, but it would be good to understand what is going on here.
+
+    Andrew
