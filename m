@@ -2,118 +2,108 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D3DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7373EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F1C21903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7BD21901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817317;
-	bh=gyk/uNUCjw6HVImlT52nY3RTfy+IEFZ/OkfMZsNiwMU=;
+	s=default; t=1563817323;
+	bh=JKP2JhzEnsc9bYpk6Y10mwB1u8TREd4TKCmiXyAbUAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONeQ1kxewETYvgiqujk+tC1s3EuhyfAoAM2QEFld4mTcb0G5mYo979z4AW7lFQrsx
-	 6ZC5WdOrHLAMXkBNGJKYK2Rz86+vduQkRMF9faFknkousS5WW/xBI7fXhNr9njJhEj
-	 ZEO1PDwdB+k7olRa7XAfGuob1BqagjAG18IOA8ZQ=
+	b=kD6ZKlIu6rIOIqea0beqtCIrLNByDN0UNKaoY3I6Kk+aAuZ9pOyEsRDqN3/E4Nr6h
+	 1HXibbrjafziDP5jwK6kLuAdvrLlstFcdyhaGU+t3ljMpKzjRQDapZXrfO9HmppYt1
+	 Ras2oWmYSfjw5FPKqqzoHX/483Ds+v2LfZCV3AUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731924AbfGVRl4 (ORCPT
+        id S1731936AbfGVRmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47198 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfGVRlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:41:55 -0400
+        id S1728762AbfGVRmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:42:00 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8C521901;
-        Mon, 22 Jul 2019 17:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D7B2199C;
+        Mon, 22 Jul 2019 17:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817314;
-        bh=gyk/uNUCjw6HVImlT52nY3RTfy+IEFZ/OkfMZsNiwMU=;
+        s=default; t=1563817319;
+        bh=JKP2JhzEnsc9bYpk6Y10mwB1u8TREd4TKCmiXyAbUAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMZAhUxMIAx6EYFE9eZ8JXYqqvD4uXVEBg8e5qA0VkP3HP114JgGALMEQxQ892VFj
-         XB+EeH4cTEoC+JzXN1Y3/sTsXrr8YLneNkMdkT3sFIMzqlAoe8WLBVoBhOrOyDhbAz
-         2PuxxTttAGXLiv/lZWqmblF+/kH8mj2UbQmS1kOg=
+        b=UrUtYE51OZl0yT8nAivq7HBz7UYxspsLLxpgCngLMGIdKC7kdPXyV7+wn54r0sAUE
+         jlt0HzQm9UW9vz9QV0xhwwzYf/gtaF1kmV7VUiXe/jbJhk+mw2iHx50VhBqSafv+9W
+         vKHZIBaxArYL3q+5bKmEhomtuba3S4R/2I2jnRUw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>
-Subject: [PATCH 26/37] perf trace beauty: Beautify bind's sockaddr arg
-Date:   Mon, 22 Jul 2019 14:38:28 -0300
-Message-Id: <20190722173839.22898-27-acme@kernel.org>
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 27/37] perf stat: Always separate stalled cycles per insn
+Date:   Mon, 22 Jul 2019 14:38:29 -0300
+Message-Id: <20190722173839.22898-28-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-By reusing the "connect" BPF collector.
+The "stalled cycles per insn" is appended to "instructions" when the CPU
+has this hardware counter directly. We should always make it a separate
+line, which also aligns to the output when we hit the "if (total &&
+avg)" branch.
 
-Testing it system wide and stopping/starting sshd:
+Before:
 
-  # perf trace -e bind
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(247, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/10327 bind(258, { .family: PF_NETLINK }, 12)  = 0
-  :6507/6507 bind(24, { .family: PF_NETLINK }, 12)   = 0
-  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(242, { .family: PF_NETLINK }, 12)  = 0
-  sshd/6514 bind(3, { .family: PF_NETLINK }, 12)    = 0
-  sshd/6514 bind(5, { .family: PF_INET, port: 22, addr: 0.0.0.0 }, 16) = 0
-  sshd/6514 bind(7, { .family: PF_INET6, port: 22, addr: :: }, 28) = 0
-  DNS Res~er #18/10327 bind(229, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(231, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(229, { .family: PF_NETLINK }, 12)  = 0
-  ^C#
+  $ sudo perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  4565048704,,instructions,64114578096,100.00,1.34,insn per cycle,,
+  3396325133,,cycles,64146628546,100.00,,
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-m2hmxqrckxxw2ciki0tu889u@git.kernel.org
+After:
+
+  $ sudo ./tools/perf/perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  6721924,,instructions,24026790339,100.00,0.22,insn per cycle
+  ,,,,,0.00,stalled cycles per insn
+  30939953,,cycles,24025512526,100.00,,
+
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190517221039.8975-1-xiyou.wangcong@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 010aa9e9a561..d403b09812d1 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -710,8 +710,10 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_X86_ARCH_PRCTL_CODE, /* code */ },
- 		   [1] = { .scnprintf = SCA_PTR, /* arg2 */ }, }, },
- 	{ .name	    = "bind",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_connect", },
- 	  .arg = { [0] = { .scnprintf = SCA_INT, /* fd */ },
--		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ }, }, },
-+		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ },
-+		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
- 	{ .name	    = "bpf",
- 	  .arg = { [0] = STRARRAY(cmd, bpf_cmd), }, },
- 	{ .name	    = "brk",	    .hexret = true,
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 656065af4971..accb1bf1cfd8 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -819,7 +819,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					"stalled cycles per insn",
+ 					ratio);
+ 		} else if (have_frontend_stalled) {
+-			print_metric(config, ctxp, NULL, NULL,
++			out->new_line(config, ctxp);
++			print_metric(config, ctxp, NULL, "%7.2f ",
+ 				     "stalled cycles per insn", 0);
+ 		}
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
 -- 
 2.21.0
 
