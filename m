@@ -2,227 +2,118 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E81C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD94C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708972190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B982190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="TsqapSCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfGVPCR (ORCPT
+        id S1727244AbfGVPDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:02:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:33839 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbfGVPCQ (ORCPT
+        Mon, 22 Jul 2019 11:03:18 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43415 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfGVPDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:02:16 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N62mG-1iVD5437Oa-016OS8; Mon, 22 Jul 2019 17:02:06 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Erez Alfasi <ereza@mellanox.com>,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Eli Cohen <eli@mellanox.co.il>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH net-next] [net-next] mlx4: avoid large stack usage in mlx4_init_hca()
-Date:   Mon, 22 Jul 2019 17:01:55 +0200
-Message-Id: <20190722150204.1157315-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 22 Jul 2019 11:03:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so39751333wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DdufiTePFKOcw3PXCBBvJkARSPrI+OCusBaTYJELEjQ=;
+        b=TsqapSCFfaQBoVbpHKI/m+obmflr41GlOM1rPFV007j2Zv7OerhmRuJG21pozO+P1A
+         jTOHiU/zOVdxrV2v/bG8njldvSpnDW/pU1d6WXmgBNL+ZAnPJupgIR2OUZFCHmVY5JRO
+         NC6gJyFpSSdFodmwdDchaBFsttM8pha0dZkeDgf/TnHgkD16mDRERvJpAH/bTYE0OjoE
+         VlXyqbWGtjvdZfwHscynD/iZnEqcFwQZhNU5rNIDzLMje3EkV/XxY8ZMvwv/X28jazwS
+         NBASzJ6jmaUrYhaiWMIHR1bEPDSX8z4JsW9XGg0EN2DqxVK3oKAYiXwjq+EHr1zxllVK
+         pNCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DdufiTePFKOcw3PXCBBvJkARSPrI+OCusBaTYJELEjQ=;
+        b=sUu/qpu57aadW/ai1xpCG5oUnd5DjRc34+2/YLbaZXvqd5LPwbW4Z1R9medGW3LE3B
+         BBLhNwoQLXKwomsoRQI5HJrAt9OaDeVvcaVDWvT2dSKtECjUCECmA/h2rkUvwAcbD/1y
+         ODCK2WB270zGLswoaz6p+0LPd/4rWP0DXzwSSzIewZ2/kNUuEWaRPUezCf/cvGzRK5x1
+         jb4isu9eyOughLlc364pn+q64b5bE14HzXIS1aXcw+o3Ig3McrzW6CuiaorWjsDn3FHP
+         LHoYDeATC0J4PydnPxUvpf24lE/VK33Tx7pOEphRmOb27jvPqvPmVZhq6w8404wmjYoK
+         6Yrw==
+X-Gm-Message-State: APjAAAUNeG/UJVLlPrOAOFcvjxEbi6aFm5pBAKeJlz69GUOAcEYui3Xx
+        /m2DWpKvty1glFlk6k2DQlU=
+X-Google-Smtp-Source: APXvYqwoKpD/MpcmzIu1lOX2+THt1HzZrurirW2Y9G174HfbVtdYjcEwBdY78NR/Z3UWvwPmL5JvNA==
+X-Received: by 2002:a5d:5303:: with SMTP id e3mr60089734wrv.239.1563807795684;
+        Mon, 22 Jul 2019 08:03:15 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id v23sm36310460wmj.32.2019.07.22.08.03.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 08:03:15 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/7] backlight: gpio: simplify the driver
+Date:   Mon, 22 Jul 2019 17:02:55 +0200
+Message-Id: <20190722150302.29526-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6RlucjjmypJnt310jjgPEHPw68PZk7JE9z3FBrybaR+ep+3Cv2d
- TBKM7TP/YWkndjanU7YKLhR2TifdwV0foLbZ5UlTUO+hGYkMRh+C93ObXysjdI7QxSFPI2F
- pBJrTNZ7/Gm0SQFN5C4zfqhGJPUwg3M/RMwcAzAxb+UmuOcoA/EYDqk03djOZqCCEVHSmpX
- GFmCeJX+SdJ6/lH09y44g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QNMfdsxYVMU=:W+Eq/wKucjnDuLN9OlFSmC
- Cr6G9LVL6ma0mHIDCeKMSLOmtyhEJvZ0TLZ5vNuRgB/KwlCwWcxqNqEIGD1qgUSEv5xwWBD7Q
- kHRZmP3nZ/1zHDI2rHudA88kOuwoIJ6oGMsvhQf2mNZV4kimzFVvhGYhWyNVLL6hVGlduO/0b
- CFBl3ptJbN1h1ya5W3sLhi5O4Hhss0c5KUg/tETZRsET9SOCb54epamEHnIQT+Z7O2OdcN/Lb
- vbXZwqMLV7z8Z01+9Y17FSHs5fVr28upA4miQF+m7ccD+SQ3nIoX5DHusi1KyHsYL3Rvyk8ic
- gJSOppGWRwYjA96l3myhSAmRLhoUCjTY+vMzlA1yPtnYXwFJNiRmZxs0JXf8CmtVtM6vl0OjE
- g7vHpW/rfGWiayZXD9/YWIPgsr2Wtl72OrAtHrAGqeTctQIGYVlVSo/VB4hmzqjpPqoA/zyD+
- W4GdznEkaIYju5TeydC+hoDMzE277BoGkBZhKv08N3P/FN7VgfQFRQL8IX8fMQlRh92pC/C24
- QHhOx2uJFSvNLaLT1qBUlPs8xA3J9PideNF9lVbtCqqx+VAfzetGgirzxuEVcF+IQ6E3x2k5/
- C3AbsZT3jHSdFWLITSwbUO93WZbMtWhjUxKO4tPMtNqi1U2nbruv9l2azJDUA80xwGVMMqZ20
- mzfJDMvJd8UBG22Wp/htbIEzdtML913YzLPaOQVYk1F+A93zmLU1d/E35GI9xgZpriP1Tcfd6
- tQPwnb95MmkRSje2xZwCoujHY5E8Zem2gNcKOw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mlx4_dev_cap and mlx4_init_hca_param are really too large
-to be put on the kernel stack, as shown by this clang warning:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-drivers/net/ethernet/mellanox/mlx4/main.c:3304:12: error: stack frame size of 1088 bytes in function 'mlx4_load_one' [-Werror,-Wframe-larger-than=]
+While working on my other series related to gpio-backlight[1] I noticed
+that we could simplify the driver if we made the only user of platform
+data use GPIO lookups and device properties. This series tries to do
+that.
 
-With gcc, the problem is the same, but it does not warn because
-it does not inline this function, and therefore stays just below
-the warning limit, while clang is just above it.
+The first patch adds all necessary data structures to ecovec24. Patch
+2/7 unifies much of the code for both pdata and non-pdata cases. Patches
+3-4/7 remove unused platform data fields. Last three patches contain
+additional improvements for the GPIO backlight driver while we're already
+modifying it.
 
-Use kzalloc for dynamic allocation instead of putting them
-on stack. This gets the combined stack frame down to 424 bytes.
+I don't have access to this HW but hopefully this works. Only compile
+tested.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/mellanox/mlx4/main.c | 66 +++++++++++++----------
- 1 file changed, 39 insertions(+), 27 deletions(-)
+[1] https://lkml.org/lkml/2019/6/25/900
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index 1f6e16d5ea6b..07c204bd3fc4 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -2292,23 +2292,31 @@ static int mlx4_init_fw(struct mlx4_dev *dev)
- static int mlx4_init_hca(struct mlx4_dev *dev)
- {
- 	struct mlx4_priv	  *priv = mlx4_priv(dev);
-+	struct mlx4_init_hca_param *init_hca = NULL;
-+	struct mlx4_dev_cap	  *dev_cap = NULL;
- 	struct mlx4_adapter	   adapter;
--	struct mlx4_dev_cap	   dev_cap;
- 	struct mlx4_profile	   profile;
--	struct mlx4_init_hca_param init_hca;
- 	u64 icm_size;
- 	struct mlx4_config_dev_params params;
- 	int err;
- 
- 	if (!mlx4_is_slave(dev)) {
--		err = mlx4_dev_cap(dev, &dev_cap);
-+		dev_cap = kzalloc(sizeof(*dev_cap), GFP_KERNEL);
-+		init_hca = kzalloc(sizeof(*init_hca), GFP_KERNEL);
-+
-+		if (!dev_cap || !init_hca) {
-+			err = -ENOMEM;
-+			goto out_free;
-+		}
-+
-+		err = mlx4_dev_cap(dev, dev_cap);
- 		if (err) {
- 			mlx4_err(dev, "QUERY_DEV_CAP command failed, aborting\n");
--			return err;
-+			goto out_free;
- 		}
- 
--		choose_steering_mode(dev, &dev_cap);
--		choose_tunnel_offload_mode(dev, &dev_cap);
-+		choose_steering_mode(dev, dev_cap);
-+		choose_tunnel_offload_mode(dev, dev_cap);
- 
- 		if (dev->caps.dmfs_high_steer_mode == MLX4_STEERING_DMFS_A0_STATIC &&
- 		    mlx4_is_master(dev))
-@@ -2331,48 +2339,48 @@ static int mlx4_init_hca(struct mlx4_dev *dev)
- 		    MLX4_STEERING_MODE_DEVICE_MANAGED)
- 			profile.num_mcg = MLX4_FS_NUM_MCG;
- 
--		icm_size = mlx4_make_profile(dev, &profile, &dev_cap,
--					     &init_hca);
-+		icm_size = mlx4_make_profile(dev, &profile, dev_cap,
-+					     init_hca);
- 		if ((long long) icm_size < 0) {
- 			err = icm_size;
--			return err;
-+			goto out_free;
- 		}
- 
- 		dev->caps.max_fmr_maps = (1 << (32 - ilog2(dev->caps.num_mpts))) - 1;
- 
- 		if (enable_4k_uar || !dev->persist->num_vfs) {
--			init_hca.log_uar_sz = ilog2(dev->caps.num_uars) +
-+			init_hca->log_uar_sz = ilog2(dev->caps.num_uars) +
- 						    PAGE_SHIFT - DEFAULT_UAR_PAGE_SHIFT;
--			init_hca.uar_page_sz = DEFAULT_UAR_PAGE_SHIFT - 12;
-+			init_hca->uar_page_sz = DEFAULT_UAR_PAGE_SHIFT - 12;
- 		} else {
--			init_hca.log_uar_sz = ilog2(dev->caps.num_uars);
--			init_hca.uar_page_sz = PAGE_SHIFT - 12;
-+			init_hca->log_uar_sz = ilog2(dev->caps.num_uars);
-+			init_hca->uar_page_sz = PAGE_SHIFT - 12;
- 		}
- 
--		init_hca.mw_enabled = 0;
-+		init_hca->mw_enabled = 0;
- 		if (dev->caps.flags & MLX4_DEV_CAP_FLAG_MEM_WINDOW ||
- 		    dev->caps.bmme_flags & MLX4_BMME_FLAG_TYPE_2_WIN)
--			init_hca.mw_enabled = INIT_HCA_TPT_MW_ENABLE;
-+			init_hca->mw_enabled = INIT_HCA_TPT_MW_ENABLE;
- 
--		err = mlx4_init_icm(dev, &dev_cap, &init_hca, icm_size);
-+		err = mlx4_init_icm(dev, dev_cap, init_hca, icm_size);
- 		if (err)
--			return err;
-+			goto out_free;
- 
--		err = mlx4_INIT_HCA(dev, &init_hca);
-+		err = mlx4_INIT_HCA(dev, init_hca);
- 		if (err) {
- 			mlx4_err(dev, "INIT_HCA command failed, aborting\n");
- 			goto err_free_icm;
- 		}
- 
--		if (dev_cap.flags2 & MLX4_DEV_CAP_FLAG2_SYS_EQS) {
--			err = mlx4_query_func(dev, &dev_cap);
-+		if (dev_cap->flags2 & MLX4_DEV_CAP_FLAG2_SYS_EQS) {
-+			err = mlx4_query_func(dev, dev_cap);
- 			if (err < 0) {
- 				mlx4_err(dev, "QUERY_FUNC command failed, aborting.\n");
- 				goto err_close;
- 			} else if (err & MLX4_QUERY_FUNC_NUM_SYS_EQS) {
--				dev->caps.num_eqs = dev_cap.max_eqs;
--				dev->caps.reserved_eqs = dev_cap.reserved_eqs;
--				dev->caps.reserved_uars = dev_cap.reserved_uars;
-+				dev->caps.num_eqs = dev_cap->max_eqs;
-+				dev->caps.reserved_eqs = dev_cap->reserved_eqs;
-+				dev->caps.reserved_uars = dev_cap->reserved_uars;
- 			}
- 		}
- 
-@@ -2381,14 +2389,13 @@ static int mlx4_init_hca(struct mlx4_dev *dev)
- 		 * read HCA frequency by QUERY_HCA command
- 		 */
- 		if (dev->caps.flags2 & MLX4_DEV_CAP_FLAG2_TS) {
--			memset(&init_hca, 0, sizeof(init_hca));
--			err = mlx4_QUERY_HCA(dev, &init_hca);
-+			err = mlx4_QUERY_HCA(dev, init_hca);
- 			if (err) {
- 				mlx4_err(dev, "QUERY_HCA command failed, disable timestamp\n");
- 				dev->caps.flags2 &= ~MLX4_DEV_CAP_FLAG2_TS;
- 			} else {
- 				dev->caps.hca_core_clock =
--					init_hca.hca_core_clock;
-+					init_hca->hca_core_clock;
- 			}
- 
- 			/* In case we got HCA frequency 0 - disable timestamping
-@@ -2464,7 +2471,8 @@ static int mlx4_init_hca(struct mlx4_dev *dev)
- 	priv->eq_table.inta_pin = adapter.inta_pin;
- 	memcpy(dev->board_id, adapter.board_id, sizeof(dev->board_id));
- 
--	return 0;
-+	err = 0;
-+	goto out_free;
- 
- unmap_bf:
- 	unmap_internal_clock(dev);
-@@ -2483,6 +2491,10 @@ static int mlx4_init_hca(struct mlx4_dev *dev)
- 	if (!mlx4_is_slave(dev))
- 		mlx4_free_icms(dev);
- 
-+out_free:
-+	kfree(dev_cap);
-+	kfree(init_hca);
-+
- 	return err;
- }
- 
+v1 -> v2:
+- rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
+- added additional two patches with minor improvements
+
+Bartosz Golaszewski (7):
+  sh: ecovec24: add additional properties to the backlight device
+  backlight: gpio: simplify the platform data handling
+  sh: ecovec24: don't set unused fields in platform data
+  backlight: gpio: remove unused fields from platform data
+  backlight: gpio: remove dev from struct gpio_backlight
+  backlight: gpio: remove def_value from struct gpio_backlight
+  backlight: gpio: use a helper variable for &pdev->dev
+
+ arch/sh/boards/mach-ecovec24/setup.c         | 33 ++++++--
+ drivers/video/backlight/gpio_backlight.c     | 87 ++++++--------------
+ include/linux/platform_data/gpio_backlight.h |  3 -
+ 3 files changed, 48 insertions(+), 75 deletions(-)
+
 -- 
-2.20.0
+2.21.0
 
