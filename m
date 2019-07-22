@@ -2,152 +2,90 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7646CC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA20EC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6F12171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:46:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="jbyvO9Vw"
+	by mail.kernel.org (Postfix) with ESMTP id CCED52190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfGVPqf (ORCPT
+        id S1729947AbfGVPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:46:35 -0400
-Received: from vern.gendns.com ([98.142.107.122]:44142 "EHLO vern.gendns.com"
+        Mon, 22 Jul 2019 11:46:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45894 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729631AbfGVPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:46:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=References:In-Reply-To:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kQ5tjS0DIkzEg92Su0xvHHf6qFC0tM+cXFESZNk2Qdc=; b=jbyvO9Vwktsa0oeaEDu6oNfSj
-        INCGXxhiypFiIpWeSeDImMe5LuwmX7rafXTcyntH94Je6nsqmfpGS7aZ4hh1g8lXFlQwsK82ZlqE3
-        bnTOoJIZG8IiaQO805qBLpuwpPyXmpdId2mayyljDpBtoizsYIWxDjX9M7FAfzb/esCNcBZaBnf7S
-        GbpCp4NOr9Zxk8Ko4H5B4atYQF4mgHdgIW8kPMUJ6F+QgHHNG2Tn/wjzzNiURZWxNgO6VhsG66Q5p
-        RpTrrpCW6KrYehyuoL+HZ45UOkRVs28xsjazv3Ue2/mLDYP43lUmNpUrZgRZpIR2ZeVDf5sea6vLP
-        RXUFgkexA==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:44690 helo=freyr.lechnology.com)
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hpaW5-006p1O-Jl; Mon, 22 Jul 2019 11:46:21 -0400
-From:   David Lechner <david@lechnology.com>
-To:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     David Lechner <david@lechnology.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: am335x-boneblue: Enable eQEP
-Date:   Mon, 22 Jul 2019 10:45:38 -0500
-Message-Id: <20190722154538.5314-5-david@lechnology.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190722154538.5314-1-david@lechnology.com>
-References: <20190722154538.5314-1-david@lechnology.com>
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S1728681AbfGVPpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:45:35 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E684C034DF3;
+        Mon, 22 Jul 2019 15:45:35 +0000 (UTC)
+Received: from redhat.com (ovpn-124-54.rdu2.redhat.com [10.10.124.54])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 954295B681;
+        Mon, 22 Jul 2019 15:45:28 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 11:45:22 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        hch@lst.de, m.szyprowski@samsung.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size call
+Message-ID: <20190722114117-mutt-send-email-mst@kernel.org>
+References: <20190722145509.1284-1-eric.auger@redhat.com>
+ <20190722145509.1284-3-eric.auger@redhat.com>
+ <e4a288f2-a93a-5ce4-32da-f5434302551f@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4a288f2-a93a-5ce4-32da-f5434302551f@arm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 22 Jul 2019 15:45:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables the Enhanced Quadrature Encoder Pulse (eQEP) module for
-connectors E1, E2 and E3 on BeagleBone Blue.
+On Mon, Jul 22, 2019 at 04:36:09PM +0100, Robin Murphy wrote:
+> On 22/07/2019 15:55, Eric Auger wrote:
+> > Do not call dma_max_mapping_size for devices that have no DMA
+> > mask set, otherwise we can hit a NULL pointer dereference.
+> > 
+> > This occurs when a virtio-blk-pci device is protected with
+> > a virtual IOMMU.
+> > 
+> > Fixes: e6d6dd6c875e ("virtio: Introduce virtio_max_dma_size()")
+> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> > Suggested-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >   drivers/virtio/virtio_ring.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index c8be1c4f5b55..37c143971211 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -262,7 +262,7 @@ size_t virtio_max_dma_size(struct virtio_device *vdev)
+> >   {
+> >   	size_t max_segment_size = SIZE_MAX;
+> > -	if (vring_use_dma_api(vdev))
+> > +	if (vring_use_dma_api(vdev) && vdev->dev.dma_mask)
+> 
+> Hmm, might it make sense to roll that check up into vring_use_dma_api()
+> itself? After all, if the device has no mask then it's likely that other DMA
+> API ops wouldn't really work as expected either.
+> 
+> Robin.
 
-Signed-off-by: David Lechner <david@lechnology.com>
----
- arch/arm/boot/dts/am335x-boneblue.dts | 54 +++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+Nope, Eric pointed out it's just dma_addressing_limited that is broken.
 
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index 0257576d5d16..df3978ce061c 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -258,6 +258,30 @@
- 			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_OUTPUT, MUX_MODE7)		/* (M16) gmii1_rxd0.gpio2[21] */
- 		>;
- 	};
-+
-+	/* E1 */
-+	eqep0_pins: pinmux_eqep0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, PIN_INPUT, MUX_MODE1)		/* (B12) mcasp0_aclkr.eQEP0A_in */
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSR, PIN_INPUT, MUX_MODE1)		/* (C13) mcasp0_fsr.eQEP0B_in */
-+		>;
-+	};
-+
-+	/* E2 */
-+	eqep1_pins: pinmux_eqep1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA12, PIN_INPUT, MUX_MODE2)		/* (V2) lcd_data12.eQEP1A_in */
-+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA13, PIN_INPUT, MUX_MODE2)		/* (V3) lcd_data13.eQEP1B_in */
-+		>;
-+	};
-+
-+	/* E3 */
-+	eqep2_pins: pinmux_eqep2_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_INPUT, MUX_MODE4)		/* (T12) gpmc_ad12.eQEP2A_in */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT, MUX_MODE4)		/* (R12) gpmc_ad13.eQEP2B_in */
-+		>;
-+	};
- };
- 
- &uart0 {
-@@ -530,3 +554,33 @@
- 		line-name = "LS_BUF_EN";
- 	};
- };
-+
-+&epwmss0 {
-+	status = "okay";
-+};
-+
-+&eqep0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep0_pins>;
-+};
-+
-+&epwmss1 {
-+	status = "okay";
-+};
-+
-+&eqep1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep1_pins>;
-+};
-+
-+&epwmss2 {
-+	status = "okay";
-+};
-+
-+&eqep2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep2_pins>;
-+};
--- 
-2.17.1
+Other APIs call dma_get_mask which handles the NULL mask case fine.
 
+
+> >   		max_segment_size = dma_max_mapping_size(&vdev->dev);
+> >   	return max_segment_size;
+> > 
