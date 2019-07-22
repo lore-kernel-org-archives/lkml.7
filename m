@@ -6,32 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5447C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93782C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7AE217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67581217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfGVR0v (ORCPT
+        id S1731532AbfGVR0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:26:51 -0400
-Received: from sauhun.de ([88.99.104.3]:42386 "EHLO pokefinder.org"
+        Mon, 22 Jul 2019 13:26:39 -0400
+Received: from sauhun.de ([88.99.104.3]:42138 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731460AbfGVR03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:26:29 -0400
+        id S1731363AbfGVR0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:26:16 -0400
 Received: from localhost (p54B33E22.dip0.t-ipconnect.de [84.179.62.34])
-        by pokefinder.org (Postfix) with ESMTPSA id 923A94A14A2;
-        Mon, 22 Jul 2019 19:26:28 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id 9B19E4A1495;
+        Mon, 22 Jul 2019 19:26:14 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/14] mfd: max77843: convert to i2c_new_dummy_device
-Date:   Mon, 22 Jul 2019 19:26:15 +0200
-Message-Id: <20190722172623.4166-9-wsa+renesas@sang-engineering.com>
+        Kevin Tsai <ktsai@capellamicro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] iio: light: cm36651: convert to i2c_new_dummy_device
+Date:   Mon, 22 Jul 2019 19:26:11 +0200
+Message-Id: <20190722172613.3890-2-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
-References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190722172613.3890-1-wsa+renesas@sang-engineering.com>
+References: <20190722172613.3890-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,27 +52,37 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 
- drivers/mfd/max77843.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/light/cm36651.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/max77843.c b/drivers/mfd/max77843.c
-index 25cbb2242b26..209ee24d9ce1 100644
---- a/drivers/mfd/max77843.c
-+++ b/drivers/mfd/max77843.c
-@@ -70,11 +70,11 @@ static int max77843_chg_init(struct max77693_dev *max77843)
- {
- 	int ret;
+diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
+index 7702c2bcbcfa..1019d625adb1 100644
+--- a/drivers/iio/light/cm36651.c
++++ b/drivers/iio/light/cm36651.c
+@@ -646,18 +646,18 @@ static int cm36651_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, indio_dev);
  
--	max77843->i2c_chg = i2c_new_dummy(max77843->i2c->adapter, I2C_ADDR_CHG);
--	if (!max77843->i2c_chg) {
-+	max77843->i2c_chg = i2c_new_dummy_device(max77843->i2c->adapter, I2C_ADDR_CHG);
-+	if (IS_ERR(max77843->i2c_chg)) {
- 		dev_err(&max77843->i2c->dev,
- 				"Cannot allocate I2C device for Charger\n");
--		return -ENODEV;
-+		return PTR_ERR(max77843->i2c_chg);
+ 	cm36651->client = client;
+-	cm36651->ps_client = i2c_new_dummy(client->adapter,
++	cm36651->ps_client = i2c_new_dummy_device(client->adapter,
+ 						     CM36651_I2C_ADDR_PS);
+-	if (!cm36651->ps_client) {
++	if (IS_ERR(cm36651->ps_client)) {
+ 		dev_err(&client->dev, "%s: new i2c device failed\n", __func__);
+-		ret = -ENODEV;
++		ret = PTR_ERR(cm36651->ps_client);
+ 		goto error_disable_reg;
  	}
- 	i2c_set_clientdata(max77843->i2c_chg, max77843);
+ 
+-	cm36651->ara_client = i2c_new_dummy(client->adapter, CM36651_ARA);
+-	if (!cm36651->ara_client) {
++	cm36651->ara_client = i2c_new_dummy_device(client->adapter, CM36651_ARA);
++	if (IS_ERR(cm36651->ara_client)) {
+ 		dev_err(&client->dev, "%s: new i2c device failed\n", __func__);
+-		ret = -ENODEV;
++		ret = PTR_ERR(cm36651->ara_client);
+ 		goto error_i2c_unregister_ps;
+ 	}
  
 -- 
 2.20.1
