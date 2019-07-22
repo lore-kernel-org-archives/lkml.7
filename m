@@ -2,252 +2,219 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E85C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AA3C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4480921E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E6221E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfGVJco (ORCPT
+        id S1728387AbfGVJdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:32:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:34202 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfGVJcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:32:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3C6128;
-        Mon, 22 Jul 2019 02:32:42 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 674373F694;
-        Mon, 22 Jul 2019 02:32:42 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 1CB4468258A; Mon, 22 Jul 2019 10:32:41 +0100 (BST)
-Date:   Mon, 22 Jul 2019 10:32:41 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Wen He <wen.he_1@nxp.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "brian.starkey@arm.com" <brian.starkey@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
- configuration for Mali DP500
-Message-ID: <20190722093241.GC15612@e110455-lin.cambridge.arm.com>
-References: <20190719095445.11575-1-wen.he_1@nxp.com>
- <20190719114624.GB16673@e110455-lin.cambridge.arm.com>
- <DB7PR04MB5195BD852798B113D4CB8BA4E2C40@DB7PR04MB5195.eurprd04.prod.outlook.com>
+        Mon, 22 Jul 2019 05:33:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60032 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726571AbfGVJdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 05:33:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4CD59B062;
+        Mon, 22 Jul 2019 09:33:15 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 11:33:14 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     jikos@kernel.org, jpoimboe@redhat.com, joe.lawrence@redhat.com,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+Message-ID: <20190722093314.reobkfhdzqb7ch2d@pathway.suse.cz>
+References: <20190719122840.15353-1-mbenes@suse.cz>
+ <20190719122840.15353-3-mbenes@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB7PR04MB5195BD852798B113D4CB8BA4E2C40@DB7PR04MB5195.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190719122840.15353-3-mbenes@suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 02:12:08AM +0000, Wen He wrote:
+On Fri 2019-07-19 14:28:40, Miroslav Benes wrote:
+> Josh reported a bug:
 > 
+>   When the object to be patched is a module, and that module is
+>   rmmod'ed and reloaded, it fails to load with:
 > 
-> > -----Original Message-----
-> > From: Liviu Dudau <liviu.dudau@arm.com>
-> > Sent: 2019年7月19日 19:46
-> > To: Wen He <wen.he_1@nxp.com>
-> > Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org;
-> > brian.starkey@arm.com; airlied@linux.ie; daniel@ffwll.ch; Leo Li
-> > <leoyang.li@nxp.com>
-> > Subject: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
-> > configuration for Mali DP500
-> > 
-> > Caution: EXT Email
-> > 
-> > On Fri, Jul 19, 2019 at 05:54:45PM +0800, Wen He wrote:
-> > > Configure the display Quality of service (QoS) levels priority if the
-> > > optional property node "arm,malidp-aqros-value" is defined in DTS file.
-> > >
-> > > QoS signaling using AQROS and AWQOS AXI interface signals, the AQROS
-> > > is driven from the "RQOS" register, so needed to program the RQOS
-> > > register to avoid the 4k resolution flicker issue on the LS1028A platform.
-> > >
-> > > Signed-off-by: Wen He <wen.he_1@nxp.com>
-> > > ---
-> > > change in v2:
-> > >         - modify some content based on feedback from maintainers
-> > >
-> > >  drivers/gpu/drm/arm/malidp_drv.c  |  6 ++++++
-> > >  drivers/gpu/drm/arm/malidp_hw.c   | 13 +++++++++++++
-> > >  drivers/gpu/drm/arm/malidp_hw.h   |  3 +++
-> > >  drivers/gpu/drm/arm/malidp_regs.h | 10 ++++++++++
-> > >  4 files changed, 32 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/arm/malidp_drv.c
-> > > b/drivers/gpu/drm/arm/malidp_drv.c
-> > > index f25ec4382277..61c49a0668a7 100644
-> > > --- a/drivers/gpu/drm/arm/malidp_drv.c
-> > > +++ b/drivers/gpu/drm/arm/malidp_drv.c
-> > > @@ -818,6 +818,12 @@ static int malidp_bind(struct device *dev)
-> > >
-> > >       malidp->core_id = version;
-> > >
-> > > +     ret = of_property_read_u32(dev->of_node,
-> > > +                                     "arm,malidp-arqos-value",
-> > > +                                     &hwdev->arqos_value);
-> > > +     if (ret)
-> > > +             hwdev->arqos_value = 0x0;
-> > 
-> > Is zero the default value that you want? I thought it was 0x00010001.
+>   module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc 00000000ba0302e9, val ffffffffa03e293c
+>   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
+>   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
 > 
-> Actually, the register default value always is 0x00010001(can be found in RM document).
+>   The livepatch module has a relocation which references a symbol
+>   in the _previous_ loading of nfsd. When apply_relocate_add()
+>   tries to replace the old relocation with a new one, it sees that
+>   the previous one is nonzero and it errors out.
+> 
+>   On ppc64le, we have a similar issue:
+> 
+>   module_64: livepatch_nfsd: Expected nop after call, got e8410018 at e_show+0x60/0x548 [livepatch_nfsd]
+>   livepatch: failed to initialize patch 'livepatch_nfsd' for module 'nfsd' (-8)
+>   livepatch: patch 'livepatch_nfsd' failed for module 'nfsd', refusing to load module 'nfsd'
+> 
+> He also proposed three different solutions. We could remove the error
+> check in apply_relocate_add() introduced by commit eda9cec4c9a1
+> ("x86/module: Detect and skip invalid relocations"). However the check
+> is useful for detecting corrupted modules.
+> 
+> We could also deny the patched modules to be removed. If it proved to be
+> a major drawback for users, we could still implement a different
+> approach. The solution would also complicate the existing code a lot.
+> 
+> We thus decided to reverse the relocation patching (clear all relocation
+> targets on x86_64, or return back nops on powerpc). The solution is not
+> universal and is too much arch-specific, but it may prove to be simpler
+> in the end.
+> 
+> Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> ---
+>  arch/powerpc/kernel/Makefile    |  1 +
+>  arch/powerpc/kernel/livepatch.c | 75 +++++++++++++++++++++++++++++++++
+>  arch/powerpc/kernel/module.h    | 15 +++++++
+>  arch/powerpc/kernel/module_64.c |  7 +--
+>  arch/x86/kernel/livepatch.c     | 67 +++++++++++++++++++++++++++++
+>  include/linux/livepatch.h       |  5 +++
+>  kernel/livepatch/core.c         | 17 +++++---
+>  7 files changed, 176 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/powerpc/kernel/livepatch.c
+>  create mode 100644 arch/powerpc/kernel/module.h
+> 
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 0ea6c4aa3a20..639000f78dc3 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -154,6 +154,7 @@ endif
+>  
+>  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+> +obj-$(CONFIG_LIVEPATCH)	+= livepatch.o
+>  
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/livepatch.c b/arch/powerpc/kernel/livepatch.c
+> new file mode 100644
+> index 000000000000..6f2468c60695
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/livepatch.c
+> @@ -0,0 +1,75 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * livepatch.c - powerpc-specific Kernel Live Patching Core
+> + */
+> +
+> +#include <linux/livepatch.h>
+> +#include <asm/code-patching.h>
+> +#include "module.h"
+> +
+> +void arch_klp_free_object_loaded(struct klp_patch *patch,
+> +				 struct klp_object *obj)
 
-Exactly, but with your code you are overwriting it to 0 if the DT doesn't have
-the arm,malidp-arqos-value property.
+If I get it correctly then this functions reverts changes done by
+klp_write_object_relocations(). Therefore it should get called
+klp_clear_object_relocations() or so.
 
-> 
-> > 
-> > > +
-> > >       /* set the number of lines used for output of RGB data */
-> > >       ret = of_property_read_u8_array(dev->of_node,
-> > >                                       "arm,malidp-output-port-lines",
-> > > diff --git a/drivers/gpu/drm/arm/malidp_hw.c
-> > > b/drivers/gpu/drm/arm/malidp_hw.c index 50af399d7f6f..323683b1e9f7
-> > > 100644
-> > > --- a/drivers/gpu/drm/arm/malidp_hw.c
-> > > +++ b/drivers/gpu/drm/arm/malidp_hw.c
-> > > @@ -374,6 +374,19 @@ static void malidp500_modeset(struct
-> > malidp_hw_device *hwdev, struct videomode *
-> > >               malidp_hw_setbits(hwdev, MALIDP_DISP_FUNC_ILACED,
-> > MALIDP_DE_DISPLAY_FUNC);
-> > >       else
-> > >               malidp_hw_clearbits(hwdev, MALIDP_DISP_FUNC_ILACED,
-> > > MALIDP_DE_DISPLAY_FUNC);
-> > > +
-> > > +     /*
-> > > +      * Program the RQoS register to avoid 4k resolution flicker
-> > > +      * on the LS1028A.
-> > > +      */
-> > > +     if (hwdev->arqos_value) {
-> > > +             val = hwdev->arqos_value;
-> > > +
-> > > +             if (mode->pixelclock == 594000000)
-> > 
-> > If I remember correctly, you declare the pixelclocks in the device tree, so I
-> > wonder if this is needed here. We should just set what value was in the DT
-> > regardless of the pixelclock, and then you manipulate the DT to choose one of
-> > your fixed resolutions and also set the QoS value.
-> 
-> Yes, you remember correctly, but
-> 1. declare the pixelclocks in the device tree.
-> About this, I was hoping to discuss it with you. I want to implement another patch
-> that just declare 27MHz reference clock in the device tree and add a fake clock subsystem
-> to enable/display prepare to set PLL. I am thinking what to do next.
-> As I remember, I sent out a patch that "Disable checking for required pixel clock",
-> I think should be cancel it.
-> 
-> 2. declare the fixed resolutions list in DTS.
-> Yes, Although I put four resolutions for supported list in DTS file, but this just a
-> workaround that If not enable EDID OR EDID is not available. Once EDID is enabled,
-> these resolutions list declare will be remove in DTS. so we can't use it as a condition
-> to set the QoS value. 
-
-3. Actually enable the clock provider. I've had a look at the public
-documentation and it looks like the the pixelclock is provided by an IDT VersaClock 5
-generator, for which there is a kernel driver. I've started playing with it but got 
-pulled back by other more immediate tasks.
-
-Anyway, what I was trying to hint was that putting in the code the exact pixelclock
-value might not be the best thing. In my view, pixelclock reflects the need for
-a certain bandwidth, with is usually a product of output (number of pixels) and
-refresh frequency. I'm guessing going above 4k@60 will also trigger the
-flicker, but with your patch we will not react correctly.
-
-Best regards,
-Liviu
+There is also arch_klp_init_object_loaded() but it does different
+things, for example it applies alternatives or paravirt instructions.
+Do we need to revert these as well?
 
 
-> 
-> Best Regards,
-> Wen
-> 
-> > 
-> > Best regards,
-> > Liviu
-> > 
-> > > +                     malidp_hw_setbits(hwdev, val,
-> > MALIDP500_RQOS_QUALITY);
-> > > +             else
-> > > +                     malidp_hw_clearbits(hwdev, val,
-> > MALIDP500_RQOS_QUALITY);
-> > > +     }
-> > >  }
-> > >
-> > >  int malidp_format_get_bpp(u32 fmt)
-> > > diff --git a/drivers/gpu/drm/arm/malidp_hw.h
-> > > b/drivers/gpu/drm/arm/malidp_hw.h index 968a65eed371..e4c36bc90bda
-> > > 100644
-> > > --- a/drivers/gpu/drm/arm/malidp_hw.h
-> > > +++ b/drivers/gpu/drm/arm/malidp_hw.h
-> > > @@ -251,6 +251,9 @@ struct malidp_hw_device {
-> > >
-> > >       /* size of memory used for rotating layers, up to two banks available
-> > */
-> > >       u32 rotation_memory[2];
-> > > +
-> > > +     /* priority level of RQOS register used for driven the ARQOS signal */
-> > > +     u32 arqos_value;
-> > >  };
-> > >
-> > >  static inline u32 malidp_hw_read(struct malidp_hw_device *hwdev, u32
-> > > reg) diff --git a/drivers/gpu/drm/arm/malidp_regs.h
-> > > b/drivers/gpu/drm/arm/malidp_regs.h
-> > > index 993031542fa1..514c50dcb74d 100644
-> > > --- a/drivers/gpu/drm/arm/malidp_regs.h
-> > > +++ b/drivers/gpu/drm/arm/malidp_regs.h
-> > > @@ -210,6 +210,16 @@
-> > >  #define MALIDP500_CONFIG_VALID               0x00f00
-> > >  #define MALIDP500_CONFIG_ID          0x00fd4
-> > >
-> > > +/*
-> > > + * The quality of service (QoS) register on the DP500. RQOS register
-> > > +values
-> > > + * are driven by the ARQOS signal, using AXI transacations, dependent
-> > > +on the
-> > > + * FIFO input level.
-> > > + * The RQOS register can also set QoS levels for:
-> > > + *    - RED_ARQOS   @ A 4-bit signal value for close to underflow
-> > conditions
-> > > + *    - GREEN_ARQOS @ A 4-bit signal value for normal conditions
-> > > + */
-> > > +#define MALIDP500_RQOS_QUALITY          0x00500
-> > > +
-> > >  /* register offsets and bits specific to DP550/DP650 */
-> > >  #define MALIDP550_ADDR_SPACE_SIZE    0x10000
-> > >  #define MALIDP550_DE_CONTROL         0x00010
-> > > --
-> > > 2.17.1
-> > >
-> > 
-> > --
-> > ====================
-> > | I would like to |
-> > | fix the world,  |
-> > | but they're not |
-> > | giving me the   |
-> >  \ source code!  /
-> >   ---------------
-> >     ¯\_(ツ)_/¯
+> +{
+> +	const char *objname, *secname, *symname;
+> +	char sec_objname[MODULE_NAME_LEN];
+> +	struct klp_modinfo *info;
+> +	Elf64_Shdr *s;
+> +	Elf64_Rela *rel;
+> +	Elf64_Sym *sym;
+> +	void *loc;
+> +	u32 *instruction;
+> +	int i, cnt;
+> +
+> +	info = patch->mod->klp_info;
+> +	objname = klp_is_module(obj) ? obj->name : "vmlinux";
+> +
+> +	/* See livepatch core code for BUILD_BUG_ON() explanation */
+> +	BUILD_BUG_ON(MODULE_NAME_LEN < 56 || KSYM_NAME_LEN != 128);
+> +
+> +	/* For each klp relocation section */
+> +	for (s = info->sechdrs; s < info->sechdrs + info->hdr.e_shnum; s++) {
+> +		if (!(s->sh_flags & SHF_RELA_LIVEPATCH))
+> +			continue;
+> +
+> +		/*
+> +		 * Format: .klp.rela.sec_objname.section_name
+> +		 */
+> +		secname = info->secstrings + s->sh_name;
+> +		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
+> +		if (cnt != 1) {
+> +			pr_err("section %s has an incorrectly formatted name\n",
+> +			       secname);
+> +			continue;
+> +		}
+> +
+> +		if (strcmp(objname, sec_objname))
+> +			continue;
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+The above code seems to be arch-independent. Please, move it into
+klp_clear_object_relocations() or so.
+
+> +		rel = (void *)s->sh_addr;
+> +		for (i = 0; i < s->sh_size / sizeof(*rel); i++) {
+> +			loc = (void *)info->sechdrs[s->sh_info].sh_addr
+> +				+ rel[i].r_offset;
+> +			sym = (Elf64_Sym *)info->sechdrs[info->symndx].sh_addr
+> +				+ ELF64_R_SYM(rel[i].r_info);
+> +			symname = patch->mod->core_kallsyms.strtab
+> +				+ sym->st_name;
+> +
+> +			if (ELF64_R_TYPE(rel[i].r_info) != R_PPC_REL24)
+> +				continue;
+> +
+> +			if (sym->st_shndx != SHN_UNDEF &&
+> +			    sym->st_shndx != SHN_LIVEPATCH)
+> +				continue;
+
+The above check is livepatch-specific. But in principle, this should
+revert changes done by apply_relocate_add(). I would implement
+apply_relocation_clear() or apply_relocation_del() or ...
+and call it from the generic klp_clear_object_relocations().
+
+The code should be put into the same source files as
+apply_relocate_add(). It will increase the chance that
+any changes will be in sync.
+
+Of course, it is possible that there was a reason for the
+livepatch-specific filtering that I am not aware of.
+
+> +
+> +			instruction = (u32 *)loc;
+> +			if (is_mprofile_mcount_callsite(symname, instruction))
+> +				continue;
+> +
+> +			if (!instr_is_relative_link_branch(*instruction))
+> +				continue;
+> +
+> +			instruction += 1;
+> +			*instruction = PPC_INST_NOP;
+> +		}
+> +	}
+> +}
+
+Otherwise, this approach looks fine to me. I believe that this area
+is pretty stable and the maintenance should be rather cheap.
+
+Best Regards,
+Petr
+acceptable.
