@@ -2,380 +2,244 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A149C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FD8C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E5B21BF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC1021E70
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lb0q+hf1";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Z/2jrmzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbfGVNdM (ORCPT
+        id S1730184AbfGVNdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:33:12 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36338 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbfGVNdJ (ORCPT
+        Mon, 22 Jul 2019 09:33:14 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:59106 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728343AbfGVNdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:33:09 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AEFC728B0BE
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
+        Mon, 22 Jul 2019 09:33:10 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 129F7C1D2B;
+        Mon, 22 Jul 2019 13:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563802389; bh=GyiIghw1ImCcnG2NT3Jt2fVOpLzrGh9QQUzKn6E6qko=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=lb0q+hf1H9pd/gbGDcbmlXBijDUY4bte3q17yO4VleHIa5FFtsLMFn4Z9q9clB9h1
+         6p0El6hJWoW4u0VNQ4+VCzvEnO7DGh/Yil4tlm4Oa96c1/Af7v7kFNYcm55g0CrfMP
+         vbaZVNRa+YXZBVb6TMy3DyBJbW7JLODLUb7sMl7t4M6DZcCfjSiJlxGzdZxZEf1lcM
+         Llu1Wu7mWvmhccTOEfWemoDVYUq14DmXXUuj/268vGhWL/v7sJPK8gxUQWE1XVCPG1
+         kR+AmFcyoOm7BPfZIcKHHErb7kqxX8H7CeFg/puC30dNSA477Pepm8Gx53NMMLTvas
+         z8ECbMEuXGq1Q==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id EAD20A023C;
+        Mon, 22 Jul 2019 13:33:07 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 22 Jul 2019 06:33:07 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 22 Jul 2019 06:33:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U9kDfKpqSa07fqtf0kFBL4SpMspovxZZWng6x0Kn12hUkVEWf8Irv35RUbIh3C0YgnSkhlDjCIFb15AfuKJnzCghMeVuLm/7Nd2B+Zzmbi/mVMglqeGTeGieFdquunFqYwJcdzFgExZlx7CKIwf/WehbYMyYlp8q8q8IFcS4ftgJbzFhj+DBT3DMp6ICkJk9CjSipo9loCNRBorLGJ7fPAPl+j5KcP6plcrCu5Dpov3V8No8lj3l3rgiYkTE2WvmgFm61UAE/MUhgP15Fy0O6J4zJmBDPrwrZnwDKeMFPdNm7g21NWbpaC2DCH3nilWy/B105xuXMWK6ApErk8f6nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bMTKoyvF6m10AbnI5tzVYW5as07qHK9MxoJ0uhwT7bw=;
+ b=fqQTLeB7NmFX5uIcCba0VX+aKOf5lPtzhZspzWjeaUIuFWhZ74ucsH0G2y3a7wXFcnXSzRyyUml+jpBLR9TbOv/DkzPTaUrSDVvXi4PvBqt+YttjFsU1Khcg4THBqneSyysYkL5YTjma/pQb7OeXufYb5GVVIcC2uyIIPECA45uSLrkmIIzQGWUybqYf0JqGixPGSpG+80KwueYKX7zA86aldCyyfCoCtKDtqqIvWjbCss80c5N56qcayjtqLYigVT/M/VvvuKuusb8Icg2sm9sajMHt5057beMwvZhjIhdO9wej/Ee2opoZF1irGkIntZ9ztX4GAJeIb0V0orXy+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=synopsys.com;dmarc=pass action=none
+ header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bMTKoyvF6m10AbnI5tzVYW5as07qHK9MxoJ0uhwT7bw=;
+ b=Z/2jrmzIE+gnsWah3ze/qd8sSllJsB975WJSdJjLdqKIa/SMPFre1CPRVFIUqh0coPgBP5BOI1kCVoNX+yhsvxwubMnyPp62QQspJWLjK+RFr1aHiQlFwJZwuSz/NnTrHr9NcrZzabfrTXgeFweP+NXaXzdZNP4eQivVhnk2VvA=
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
+ DM6PR12MB2666.namprd12.prod.outlook.com (20.176.116.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Mon, 22 Jul 2019 13:33:05 +0000
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::1508:71eb:20f6:b4e6]) by DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::1508:71eb:20f6:b4e6%6]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
+ 13:33:05 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v5 01/11] mfd / platform: cros_ec: Handle chained ECs as platform devices
-Date:   Mon, 22 Jul 2019 15:32:47 +0200
-Message-Id: <20190722133257.9336-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722133257.9336-1-enric.balletbo@collabora.com>
-References: <20190722133257.9336-1-enric.balletbo@collabora.com>
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] [v2] dmaengine: dw-edma: fix unnecessary stack usage
+Thread-Topic: [PATCH 1/3] [v2] dmaengine: dw-edma: fix unnecessary stack usage
+Thread-Index: AQHVQItq2Fyi7Wm2WUKRvn5haPwUB6bWotVw
+Date:   Mon, 22 Jul 2019 13:33:05 +0000
+Message-ID: <DM6PR12MB4010F8ADBA3F9E92E8762279DAC40@DM6PR12MB4010.namprd12.prod.outlook.com>
+References: <20190722124457.1093886-1-arnd@arndb.de>
+In-Reply-To: <20190722124457.1093886-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTNhNWJiZWZiLWFjODUtMTFlOS05ODhjLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFwzYTViYmVmZC1hYzg1LTExZTktOTg4Yy1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjEzNTAiIHQ9IjEzMjA4Mjc1OTgzMTM2?=
+ =?us-ascii?Q?OTEzOSIgaD0ibjVRTEptUlRhZFBNWVhoa3hPUldZTWlNSzRrPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFD?=
+ =?us-ascii?Q?enRiUDhrVURWQWQrbXloVXN5TnpSMzZiS0ZTekkzTkVPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6a0e578e-03d6-4f8b-8a26-08d70ea92080
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB2666;
+x-ms-traffictypediagnostic: DM6PR12MB2666:
+x-microsoft-antispam-prvs: <DM6PR12MB266617026C0464337597A667DAC40@DM6PR12MB2666.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(396003)(366004)(346002)(39860400002)(189003)(199004)(76176011)(66066001)(4326008)(3846002)(7696005)(5660300002)(14454004)(6436002)(6116002)(25786009)(52536014)(316002)(33656002)(81156014)(81166006)(8936002)(53936002)(76116006)(6246003)(7736002)(305945005)(66446008)(74316002)(446003)(66476007)(66556008)(64756008)(55016002)(9686003)(66946007)(476003)(11346002)(71200400001)(71190400001)(86362001)(6506007)(102836004)(53546011)(229853002)(26005)(486006)(186003)(99286004)(110136005)(8676002)(54906003)(2906002)(256004)(14444005)(68736007)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB2666;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 48MVfPfml+/+C3Ar6N97LckrOZ09ZtO/4A80a2cPqk5GS6m+LX4yu6m3m57XgsB+lMzEQTeV9K/yNN2tpe5p9Xh0XG8+TRsb6jPSs6tMK5KzMZ0iFrSJf1ZETb0N/1tCF6cnkneq8rupzzFOyF77Kj2RbH16PoAVHXWRpQTsWJSbw1uN5Xmr2b9s9WqslW1JOv7IEw4qW9KWA8U2Trx0+x/rn3XZiA3lvhuA2VQiu9VCuN6kOeSghPLHObWw6Goo/CrHQ2jhyQVmEZF4cEPDZp5R3rDTMiCPnCIZxTuOm6pZ3SYfNYmuE4675LumAgejKxUL2k/n8Pik/XwkHcCCFIy6NnHZ06rwHpjzXgYvJOc4miy6rWyItIIIapB15mbb8BtVKoNBSth1lpo6k3J8aDRxFZDVUdmeeqrGwZsJAaQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0e578e-03d6-4f8b-8a26-08d70ea92080
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 13:33:05.2621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gustavo@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2666
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An MFD is a device that contains several sub-devices (cells). For instance,
-the ChromeOS EC fits in this description as usually contains a charger and
-can have other devices with different functions like a Real-Time Clock,
-an Audio codec, a Real-Time Clock, ...
+On Mon, Jul 22, 2019 at 13:44:43, Arnd Bergmann <arnd@arndb.de> wrote:
 
-If you look at the driver, though, we're doing something odd. We have
-two MFD cros-ec drivers where one of them (cros-ec-core) instantiates
-another MFD driver as sub-driver (cros-ec-dev), and the latest
-instantiates the different sub-devices (Real-Time Clock, Audio codec,
-etc).
+> Putting large constant data on the stack causes unnecessary overhead
+> and stack usage:
+>=20
+> drivers/dma/dw-edma/dw-edma-v0-debugfs.c:285:6: error: stack frame size o=
+f 1376 bytes in function 'dw_edma_v0_debugfs_on' [-Werror,-Wframe-larger-th=
+an=3D]
+>=20
+> Mark the variable 'static const' in order for the compiler to move it
+> into the .rodata section where it does no such harm.
+>=20
+> Fixes: 305aebeff879 ("dmaengine: Add Synopsys eDMA IP version 0 debugfs s=
+upport")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: unchanged
+> ---
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-ed=
+ma/dw-edma-v0-debugfs.c
+> index 3226f528cc11..5728b6fe938c 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> @@ -48,7 +48,7 @@ static struct {
+>  } lim[2][EDMA_V0_MAX_NR_CH];
+> =20
+>  struct debugfs_entries {
+> -	char					name[24];
+> +	const char				*name;
+>  	dma_addr_t				*reg;
+>  };
+> =20
+> --=20
+> 2.20.0
 
-                  MFD
-------------------------------------------
-   cros-ec-core
-       |___ mfd-cellA (cros-ec-dev)
-       |       |__ mfd-cell0
-       |       |__ mfd-cell1
-       |       |__ ...
-       |
-       |___ mfd-cellB (cros-ec-dev)
-               |__ mfd-cell0
-               |__ mfd-cell1
-               |__ ...
 
-The problem that was trying to solve is to describe some kind of topology for
-the case where we have an EC (cros-ec) chained with another EC
-(cros-pd). Apart from that this extends the bounds of what MFD was
-designed to do we might be interested on have other kinds of topology that
-can't be implemented in that way.
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-Let's prepare the code to move the cros-ec-core part from MFD to
-platform/chrome as this is clearly a platform specific thing non-related
-to a MFD device.
-
-  platform/chrome  |         MFD
-------------------------------------------
-                   |
-   cros-ec ________|___ cros-ec-dev
-                   |       |__ mfd-cell0
-                   |       |__ mfd-cell1
-                   |       |__ ...
-                   |
-   cros-pd ________|___ cros-ec-dev
-                   |        |__ mfd-cell0
-                   |        |__ mfd-cell1
-                   |        |__ ...
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
----
-
-Changes in v5:
-- Rebased on top of 5.3-rc1
-
-Changes in v4:
-- Rebase again on top of for-mfd-next to avoid conflicts.
-
-Changes in v3:
-- Collect more acks an tested-by
-
-Changes in v2:
-- Collect acks received.
-- Remove '[PATCH 07/10] mfd: cros_ec: Update with SPDX Licence identifier
-  and fix description' to avoid conflicts with some tree-wide patches
-  that actually updates the Licence identifier.
-- Add '[PATCH 10/10] arm/arm64: defconfig: Update configs to use the new
-  CROS_EC options' to update the defconfigs after change some config
-  symbols.
-
- drivers/mfd/cros_ec.c                   | 61 +++++++++++++------------
- drivers/platform/chrome/cros_ec_i2c.c   |  8 ++++
- drivers/platform/chrome/cros_ec_lpc.c   |  3 +-
- drivers/platform/chrome/cros_ec_rpmsg.c |  2 +
- drivers/platform/chrome/cros_ec_spi.c   |  8 ++++
- include/linux/mfd/cros_ec.h             | 18 ++++++++
- 6 files changed, 69 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-index 2a9ac5213893..a54ad47c7b02 100644
---- a/drivers/mfd/cros_ec.c
-+++ b/drivers/mfd/cros_ec.c
-@@ -13,7 +13,6 @@
- #include <linux/interrupt.h>
- #include <linux/slab.h>
- #include <linux/module.h>
--#include <linux/mfd/core.h>
- #include <linux/mfd/cros_ec.h>
- #include <linux/suspend.h>
- #include <asm/unaligned.h>
-@@ -31,18 +30,6 @@ static struct cros_ec_platform pd_p = {
- 	.cmd_offset = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX),
- };
- 
--static const struct mfd_cell ec_cell = {
--	.name = "cros-ec-dev",
--	.platform_data = &ec_p,
--	.pdata_size = sizeof(ec_p),
--};
--
--static const struct mfd_cell ec_pd_cell = {
--	.name = "cros-ec-dev",
--	.platform_data = &pd_p,
--	.pdata_size = sizeof(pd_p),
--};
--
- static irqreturn_t ec_irq_thread(int irq, void *data)
- {
- 	struct cros_ec_device *ec_dev = data;
-@@ -154,38 +141,42 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
- 		}
- 	}
- 
--	err = devm_mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO, &ec_cell,
--				   1, NULL, ec_dev->irq, NULL);
--	if (err) {
--		dev_err(dev,
--			"Failed to register Embedded Controller subdevice %d\n",
--			err);
--		return err;
-+	/* Register a platform device for the main EC instance */
-+	ec_dev->ec = platform_device_register_data(ec_dev->dev, "cros-ec-dev",
-+					PLATFORM_DEVID_AUTO, &ec_p,
-+					sizeof(struct cros_ec_platform));
-+	if (IS_ERR(ec_dev->ec)) {
-+		dev_err(ec_dev->dev,
-+			"Failed to create CrOS EC platform device\n");
-+		return PTR_ERR(ec_dev->ec);
- 	}
- 
- 	if (ec_dev->max_passthru) {
- 		/*
--		 * Register a PD device as well on top of this device.
-+		 * Register a platform device for the PD behind the main EC.
- 		 * We make the following assumptions:
- 		 * - behind an EC, we have a pd
- 		 * - only one device added.
- 		 * - the EC is responsive at init time (it is not true for a
--		 *   sensor hub.
-+		 *   sensor hub).
- 		 */
--		err = devm_mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO,
--				      &ec_pd_cell, 1, NULL, ec_dev->irq, NULL);
--		if (err) {
--			dev_err(dev,
--				"Failed to register Power Delivery subdevice %d\n",
--				err);
--			return err;
-+		ec_dev->pd = platform_device_register_data(ec_dev->dev,
-+					"cros-ec-dev",
-+					PLATFORM_DEVID_AUTO, &pd_p,
-+					sizeof(struct cros_ec_platform));
-+		if (IS_ERR(ec_dev->pd)) {
-+			dev_err(ec_dev->dev,
-+				"Failed to create CrOS PD platform device\n");
-+			platform_device_unregister(ec_dev->ec);
-+			return PTR_ERR(ec_dev->pd);
- 		}
- 	}
- 
- 	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
- 		err = devm_of_platform_populate(dev);
- 		if (err) {
--			mfd_remove_devices(dev);
-+			platform_device_unregister(ec_dev->pd);
-+			platform_device_unregister(ec_dev->ec);
- 			dev_err(dev, "Failed to register sub-devices\n");
- 			return err;
- 		}
-@@ -206,6 +197,16 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
- }
- EXPORT_SYMBOL(cros_ec_register);
- 
-+int cros_ec_unregister(struct cros_ec_device *ec_dev)
-+{
-+	if (ec_dev->pd)
-+		platform_device_unregister(ec_dev->pd);
-+	platform_device_unregister(ec_dev->ec);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cros_ec_unregister);
-+
- #ifdef CONFIG_PM_SLEEP
- int cros_ec_suspend(struct cros_ec_device *ec_dev)
- {
-diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chrome/cros_ec_i2c.c
-index 61d75395f86d..6bb82dfa7dae 100644
---- a/drivers/platform/chrome/cros_ec_i2c.c
-+++ b/drivers/platform/chrome/cros_ec_i2c.c
-@@ -307,6 +307,13 @@ static int cros_ec_i2c_probe(struct i2c_client *client,
- 	return 0;
- }
- 
-+static int cros_ec_i2c_remove(struct i2c_client *client)
-+{
-+	struct cros_ec_device *ec_dev = i2c_get_clientdata(client);
-+
-+	return cros_ec_unregister(ec_dev);
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static int cros_ec_i2c_suspend(struct device *dev)
- {
-@@ -357,6 +364,7 @@ static struct i2c_driver cros_ec_driver = {
- 		.pm	= &cros_ec_i2c_pm_ops,
- 	},
- 	.probe		= cros_ec_i2c_probe,
-+	.remove		= cros_ec_i2c_remove,
- 	.id_table	= cros_ec_i2c_id,
- };
- 
-diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-index 2c44c7f3322a..5939c4a5869c 100644
---- a/drivers/platform/chrome/cros_ec_lpc.c
-+++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -421,6 +421,7 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
- 
- static int cros_ec_lpc_remove(struct platform_device *pdev)
- {
-+	struct cros_ec_device *ec_dev = platform_get_drvdata(pdev);
- 	struct acpi_device *adev;
- 
- 	adev = ACPI_COMPANION(&pdev->dev);
-@@ -428,7 +429,7 @@ static int cros_ec_lpc_remove(struct platform_device *pdev)
- 		acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
- 					   cros_ec_lpc_acpi_notify);
- 
--	return 0;
-+	return cros_ec_unregister(ec_dev);
- }
- 
- static const struct acpi_device_id cros_ec_lpc_acpi_device_ids[] = {
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index 5d3fb2abad1d..520e507bfa54 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -233,6 +233,8 @@ static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
- 	struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
- 	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
- 
-+	cros_ec_unregister(ec_dev);
-+
- 	cancel_work_sync(&ec_rpmsg->host_event_work);
- }
- 
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index 006a8ff64057..2e21f2776063 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -785,6 +785,13 @@ static int cros_ec_spi_probe(struct spi_device *spi)
- 	return 0;
- }
- 
-+static int cros_ec_spi_remove(struct spi_device *spi)
-+{
-+	struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
-+
-+	return cros_ec_unregister(ec_dev);
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static int cros_ec_spi_suspend(struct device *dev)
- {
-@@ -823,6 +830,7 @@ static struct spi_driver cros_ec_driver_spi = {
- 		.pm	= &cros_ec_spi_pm_ops,
- 	},
- 	.probe		= cros_ec_spi_probe,
-+	.remove		= cros_ec_spi_remove,
- 	.id_table	= cros_ec_spi_id,
- };
- 
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index 77805c3f2de7..bcccda0257ff 100644
---- a/include/linux/mfd/cros_ec.h
-+++ b/include/linux/mfd/cros_ec.h
-@@ -121,6 +121,10 @@ struct cros_ec_command {
-  * @event_data: Raw payload transferred with the MKBP event.
-  * @event_size: Size in bytes of the event data.
-  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
-+ * @ec: The platform_device used by the mfd driver to interface with the
-+ *      main EC.
-+ * @pd: The platform_device used by the mfd driver to interface with the
-+ *      PD behind an EC.
-  */
- struct cros_ec_device {
- 	/* These are used by other drivers that want to talk to the EC */
-@@ -157,6 +161,10 @@ struct cros_ec_device {
- 	int event_size;
- 	u32 host_event_wake_mask;
- 	u32 last_resume_result;
-+
-+	/* The platform devices used by the mfd driver */
-+	struct platform_device *ec;
-+	struct platform_device *pd;
- };
- 
- /**
-@@ -291,6 +299,16 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-  */
- int cros_ec_register(struct cros_ec_device *ec_dev);
- 
-+/**
-+ * cros_ec_unregister() - Remove a ChromeOS EC.
-+ * @ec_dev: Device to unregister.
-+ *
-+ * Call this to deregister a ChromeOS EC, then clean up any private data.
-+ *
-+ * Return: 0 on success or negative error code.
-+ */
-+int cros_ec_unregister(struct cros_ec_device *ec_dev);
-+
- /**
-  * cros_ec_query_all() -  Query the protocol version supported by the
-  *         ChromeOS EC.
--- 
-2.20.1
 
