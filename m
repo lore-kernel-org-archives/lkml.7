@@ -2,112 +2,111 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0988BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC2C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BDA2199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563832298;
-	bh=sJhnAkadNzZPHZKBNq0Nth2LENsL/9MwlV66EhJeax4=;
-	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
-	b=VKrmOpfIGqXquh43Gi8SQwiQITig2BV1jIz7alMLKO0IM7fvpTJeegx3TDgm9BAkx
-	 ZQfwzXOiUtmTdoCAFgKASvoa0zV35dvTJLs5+qtl4ZEdgTjnCmJERIblaYuuO9s+Oc
-	 CNSC+eLO0IMPn4M82a3fhuKdC011ntlk/K7UGeWE=
+	by mail.kernel.org (Postfix) with ESMTP id 313EC21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:52:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="md8dIW/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732940AbfGVVvi (ORCPT
+        id S1732941AbfGVVwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42102 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 17:52:06 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47003 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732855AbfGVVvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:51:37 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730704AbfGVVwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:52:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC9121951;
-        Mon, 22 Jul 2019 21:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563832296;
-        bh=sJhnAkadNzZPHZKBNq0Nth2LENsL/9MwlV66EhJeax4=;
-        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
-        b=TZjRSGF1zvC/ZiV2R1+IyRjkYyVgKiy8vjM8qITMYo2tw8iESWFGq/kARKNKC/QkT
-         n8D6HH0qXKGK+zKkyLDPAuPxOKlKf4kFuapJSEfKQ7o0NOoVUYOeXWgl4I+tQGhr1p
-         uCOVtsPHAthaALMHPgkTTrveFCpduGBxc7xY1kqk=
-Content-Type: text/plain; charset="utf-8"
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45swLW1p2rz9s3Z;
+        Tue, 23 Jul 2019 07:52:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563832323;
+        bh=KUYmUF/AXBMZiStclARGa7trFqJYxkg3fV4Ml1kJIeU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=md8dIW/OaWB5mYoMv0qZmkujXr8Q8YuDL+yt1xD2jVHBg/QP3oLhWCZI6zOimBLRF
+         jEpuKzfcBmr0PYMeyaLuPj4ET7pWr1CnWkdW+tleaVwFEmiSsfA5qFqG7pB8OHYw6k
+         pPHP2bmbHMxM0t/g4M6u/9HddR3Hjckg7j5P4jHNJKI69KxTtaYlxn66wZduiy0Yl/
+         0mn/jJe9hp4hfksRYQx5KshAjTXVDpe1ttelitRL3ooOYBRpJxVHg56oDcjQG0RLjU
+         6P+RNlpI9x+xq9g2DRB3DIhVw0H6CjY0j8BtIfM88RnZoOdJoFrCRecw+/bNZwEawf
+         wXtzOBM+MIiBQ==
+Date:   Tue, 23 Jul 2019 07:52:01 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
+Message-ID: <20190723075201.60fa577c@canb.auug.org.au>
+In-Reply-To: <20190722195813.GA18127@embeddedor>
+References: <20190722195813.GA18127@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190709182018.23193-4-gch981213@gmail.com>
-References: <20190709182018.23193-1-gch981213@gmail.com> <20190709182018.23193-4-gch981213@gmail.com>
-Subject: Re: [PATCH 3/5] dt: bindings: add mt7621-pll dt binding documentation
-To:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>,
-        Chuanhong Guo <gch981213@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 22 Jul 2019 14:51:35 -0700
-Message-Id: <20190722215136.1FC9121951@mail.kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/QSQEkZdd0A7Zm6r6d_7wylr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chuanhong Guo (2019-07-09 11:20:16)
-> This commit adds device tree binding documentation for MT7621
-> PLL controller.
->=20
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> ---
->  .../bindings/clock/mediatek,mt7621-pll.txt    | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt76=
-21-pll.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.=
-txt b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
-> new file mode 100644
-> index 000000000000..05c15062cd20
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
-> @@ -0,0 +1,19 @@
-> +Binding for Mediatek MT7621 PLL controller
-> +
-> +The PLL controller provides the 2 main clocks of the SoC: CPU and BUS.
-> +
-> +Required Properties:
-> +- compatible: has to be "mediatek,mt7621-pll"
-> +- #clock-cells: has to be one
-> +
-> +Optional properties:
-> +- clock-output-names: should be "cpu", "bus"
-> +
-> +Example:
-> +       pll {
-> +               compatible =3D "mediatek,mt7621-pll", "syscon";
+--Sig_/QSQEkZdd0A7Zm6r6d_7wylr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Why is this a syscon and not just part of some larger mt7621 clk
-provider node?
+Hi Gustavo,
 
-> +
-> +               #clock-cells =3D <1>;
-> +               clock-output-names =3D "cpu", "bus";
-> +       };
-> +
+On Mon, 22 Jul 2019 14:58:13 -0500 "Gustavo A. R. Silva" <gustavo@embeddedo=
+r.com> wrote:
+>
+> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca=
+4b:
+>=20
+>   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags=
+/Wimplicit-fallthrough-5.3-rc2
+>=20
+> for you to fetch changes up to bc512fd704a92e1be700c941c137d73c0f222eed:
+>=20
+>   Makefile: Globally enable fall-through warning (2019-07-22 14:50:20 -05=
+00)
+
+It may be that Linus has not seen your emails due to SPF errors.  I got
+the following error from your mail:
+
+Authentication-Results: ozlabs.org; spf=3Dpermerror (mailfrom) smtp.mailfro=
+m=3Dembeddedor.com (client-ip=3D192.185.49.184; helo=3Dgateway23.websitewel=
+come.com; envelope-from=3Dgustavo@embeddedor.com; receiver=3D<UNKNOWN>)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/QSQEkZdd0A7Zm6r6d_7wylr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02MAEACgkQAVBC80lX
+0GypGwgAgblW53WxY+QcyrgaP8LM2Yy7/NXVFOw4/pmacNeKQV5l64i5pVz6m4YX
+ROKqHv2oILigAnGdoqGjdUH4K+K8x04Rvr+iGrMFnnCkHHM0iMO1I6axQCVhCF1H
+obDds6vIMZFjQ7A1yMKcuCeBYQc5wzs3XKtcvR6fz6TCAweBHbD3DygUvNue9WXk
+jPAUKMzPgRwwE2qPh92Y9qyP+7fFcDcn1aZRpQMBOIYJDrAHvzEVb8nV/nLa2fzS
+tfwjkla5yeboEyYsdYJRXupUHwl3pdvuf9Pf5Dk2PNHjlmxg+u8/PYroaGzLshDI
+7uYdAcdn2x4uPzqKzDjDWPQuszgrxw==
+=e7Q+
+-----END PGP SIGNATURE-----
+
+--Sig_/QSQEkZdd0A7Zm6r6d_7wylr--
