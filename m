@@ -6,31 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B6DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B39C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96764218B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207B421897
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731741AbfGVR2j (ORCPT
+        id S1731747AbfGVR2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:28:39 -0400
-Received: from sauhun.de ([88.99.104.3]:42188 "EHLO pokefinder.org"
+        Mon, 22 Jul 2019 13:28:43 -0400
+Received: from sauhun.de ([88.99.104.3]:42116 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731403AbfGVR0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:26:22 -0400
+        id S1731401AbfGVR0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:26:21 -0400
 Received: from localhost (p54B33E22.dip0.t-ipconnect.de [84.179.62.34])
-        by pokefinder.org (Postfix) with ESMTPSA id B25334A1498;
+        by pokefinder.org (Postfix) with ESMTPSA id 27C744A1494;
         Mon, 22 Jul 2019 19:26:20 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] rtc: s35390a: convert to i2c_new_dummy_device
-Date:   Mon, 22 Jul 2019 19:26:17 +0200
-Message-Id: <20190722172618.4061-4-wsa+renesas@sang-engineering.com>
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH 2/4] rtc: max77686: convert to i2c_new_dummy_device
+Date:   Mon, 22 Jul 2019 19:26:16 +0200
+Message-Id: <20190722172618.4061-3-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722172618.4061-1-wsa+renesas@sang-engineering.com>
 References: <20190722172618.4061-1-wsa+renesas@sang-engineering.com>
@@ -49,29 +52,28 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 
- drivers/rtc/rtc-s35390a.c | 6 +++---
+ drivers/rtc/rtc-max77686.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index 84806ff763cf..5826209a3f30 100644
---- a/drivers/rtc/rtc-s35390a.c
-+++ b/drivers/rtc/rtc-s35390a.c
-@@ -450,12 +450,12 @@ static int s35390a_probe(struct i2c_client *client,
- 
- 	/* This chip uses multiple addresses, use dummy devices for them */
- 	for (i = 1; i < 8; ++i) {
--		s35390a->client[i] = i2c_new_dummy(client->adapter,
-+		s35390a->client[i] = i2c_new_dummy_device(client->adapter,
- 					client->addr + i);
--		if (!s35390a->client[i]) {
-+		if (IS_ERR(s35390a->client[i])) {
- 			dev_err(dev, "Address %02x unavailable\n",
- 				client->addr + i);
--			err = -EBUSY;
-+			err = PTR_ERR(s35390a->client[i]);
- 			goto exit_dummy;
- 		}
+diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+index 4aff349ae301..d04fd1024697 100644
+--- a/drivers/rtc/rtc-max77686.c
++++ b/drivers/rtc/rtc-max77686.c
+@@ -693,11 +693,11 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ 		goto add_rtc_irq;
  	}
+ 
+-	info->rtc = i2c_new_dummy(parent_i2c->adapter,
++	info->rtc = i2c_new_dummy_device(parent_i2c->adapter,
+ 				  info->drv_data->rtc_i2c_addr);
+-	if (!info->rtc) {
++	if (IS_ERR(info->rtc)) {
+ 		dev_err(info->dev, "Failed to allocate I2C device for RTC\n");
+-		return -ENODEV;
++		return PTR_ERR(info->rtc);
+ 	}
+ 
+ 	info->rtc_regmap = devm_regmap_init_i2c(info->rtc,
 -- 
 2.20.1
 
