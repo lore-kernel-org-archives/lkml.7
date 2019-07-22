@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31575C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69C8C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F2721903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9663E2190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817188;
-	bh=x/wdaYnu+HnppXR7un8ZPC5OfdP3CmOn74wa8zzZwMI=;
+	s=default; t=1563817197;
+	bh=Xf/wX2ohg/gTko7xy9JBaxdRaYjDHUz6ncXm9zQnIqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZYu/LTsLG2RB09NJnPheiccVgUsKr6Sv0UieEZ0TlE4i0ToMYDAy2c/W3b9zOOs1G
-	 q2AeZo5SFADpY+2+ekZpwGTiXFucPqcZzBKCq44YZmegIBIMTjQ+sSx66Nlopmaw3t
-	 SNFgj4GuEUpi452XCeC3xzGSgh4AXlZDnqYHZ8NM=
+	b=2XAFBnUqKYMwOuY6nRfhJbU90XA37knal8UFylAkNAVpqqpHSc+KFhXuWrCx2fLl0
+	 FJTsS+HBdogj8tIhLuZlnFv+WPrSdVv9BSVazg6vONSz/8XZLff3lVV8ER4leBU2e8
+	 iASVmusWxk0TPZrI05AU6fkcj1i2Q8O/MbX0aJIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbfGVRjq (ORCPT
+        id S1729683AbfGVRj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:39:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:39:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729589AbfGVRjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:39:43 -0400
+        id S1726653AbfGVRjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:39:55 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6326E2190D;
-        Mon, 22 Jul 2019 17:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28BAA21955;
+        Mon, 22 Jul 2019 17:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817183;
-        bh=x/wdaYnu+HnppXR7un8ZPC5OfdP3CmOn74wa8zzZwMI=;
+        s=default; t=1563817194;
+        bh=Xf/wX2ohg/gTko7xy9JBaxdRaYjDHUz6ncXm9zQnIqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXmTFPF9yvsN45SkI/BqI52AhHv0Zo4IZ9DDOufmMVVS9ZtvuX4GmP5+86W62eGNb
-         XzY6AL8Fu1d5rWjG7ZM9gsCOqklAG961uEbv1rMhZYltNofZ3XRjo1Ix+8gd3b1BCt
-         lKjqkjGQVZ35AT0wusyT0+OQ4vDqEWaThw0dVjaI=
+        b=OZu0OeAsZn4MKHnXFTbGDwoEFw8C3+nBAhTgBFvcbzb+si+Fx6fXx5r046vtDlOb+
+         EuAh1slBtJjPFA/jECx/JyXoMSUXclUpUhvKcMxBgZbaLrGvaYApSXJ6FVOx4OiJtV
+         Z/QNVcmPEZgI6czChh0N4GlksaBJ4PzsYVZfDJIk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 07/37] perf trace: Add BPF handler for unaugmented syscalls
-Date:   Mon, 22 Jul 2019 14:38:09 -0300
-Message-Id: <20190722173839.22898-8-acme@kernel.org>
+Subject: [PATCH 08/37] perf trace: Allow specifying the bpf prog to augment specific syscalls
+Date:   Mon, 22 Jul 2019 14:38:10 -0300
+Message-Id: <20190722173839.22898-9-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
@@ -65,107 +65,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Will be used to assign to syscalls that don't need augmentation, i.e.
-those with just integer args.
+This is a step in the direction of being able to use a
+BPF_MAP_TYPE_PROG_ARRAY to handle syscalls that need to copy pointer
+payloads in addition to the raw tracepoint syscall args.
 
-All syscalls will be in a BPF_MAP_TYPE_PROG_ARRAY, and the
-bpf_tail_call() keyed by the syscall id will either find nothing in
-place, which means the syscall is being filtered, or a function that
-will either add things like filenames to the ring buffer, right after
-the raw syscall args, or be this unaugmented handler that will just
-return 1, meaning don't filter the original
-raw_syscalls:sys_{enter,exit} tracepoint.
+There is a first example in
+tools/perf/examples/bpf/augmented_raw_syscalls.c for the 'open' syscall.
 
-For now it is not really being used, this is just leg work to break the
-patch into smaller pieces.
-
-It introduces a trace__find_bpf_program_by_title() helper that in turn
-uses libbpf's bpf_object__find_program_by_title() on the BPF object with
-the __augmented_syscalls__ map. "title" is how libbpf calls the SEC()
-argument for functions, i.e. the ELF section that follows a convention
-to specify what BPF program (a function with this SEC() marking) should
-be connected to which tracepoint, kprobes, etc.
-
-In perf anything that is of the form SEC("sys:event_name") will be
-connected to that tracepoint by perf's BPF loader.
-
-In this case its something that will be bpf_tail_call()ed from either
-the "raw_syscalls:sys_enter" or "raw_syscall:sys_exit" tracepoints, so
-its named "!raw_syscalls:unaugmented" to convey that idea, i.e. its not
-going to be directly attached to a tracepoint, thus it starts with a
-"!".
+Next step is to introduce the prog array map and use this 'open'
+augmenter, then use that augmenter in other syscalls that also only copy
+the first arg as a string, and then show how to use with a syscall that
+reads more than one filename, like 'rename', etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-meucpjx2u0slpkayx56lxqq6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-pys4v57x5qqrybb4cery2mc8@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c                       | 16 ++++++++++++++++
- tools/perf/examples/bpf/augmented_raw_syscalls.c |  6 ++++++
- 2 files changed, 22 insertions(+)
+ tools/perf/builtin-trace.c                    | 50 ++++++++++++++++++-
+ .../examples/bpf/augmented_raw_syscalls.c     | 23 +++++++++
+ 2 files changed, 71 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 9bd5ecd6a8dd..07df952a0d7f 100644
+index 07df952a0d7f..6cc696edf24a 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -88,6 +88,7 @@ struct trace {
- 					  *sys_exit,
- 					  *augmented;
- 		}		events;
-+		struct bpf_program *unaugmented_prog;
- 	} syscalls;
- 	struct {
- 		struct bpf_map *map;
-@@ -2733,6 +2734,14 @@ static int trace__set_ev_qualifier_tp_filter(struct trace *trace)
+@@ -690,6 +690,10 @@ struct syscall_arg_fmt {
+ static struct syscall_fmt {
+ 	const char *name;
+ 	const char *alias;
++	struct {
++		const char *sys_enter,
++			   *sys_exit;
++	}	   bpf_prog_name;
+ 	struct syscall_arg_fmt arg[6];
+ 	u8	   nr_args;
+ 	bool	   errpid;
+@@ -823,6 +827,7 @@ static struct syscall_fmt {
+ 	{ .name	    = "newfstatat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
+ 	{ .name	    = "open",
++	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_open", },
+ 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "open_by_handle_at",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+@@ -967,6 +972,10 @@ struct syscall {
+ 	struct tep_event    *tp_format;
+ 	int		    nr_args;
+ 	int		    args_size;
++	struct {
++		struct bpf_program *sys_enter,
++				   *sys_exit;
++	}		    bpf_prog;
+ 	bool		    is_exit;
+ 	bool		    is_open;
+ 	struct tep_format_field *args;
+@@ -2742,6 +2751,39 @@ static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace,
+ 	return bpf_object__find_program_by_title(trace->bpf_obj, name);
  }
  
- #ifdef HAVE_LIBBPF_SUPPORT
-+static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace, const char *name)
++static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, struct syscall *sc,
++							const char *prog_name, const char *type)
 +{
-+	if (trace->bpf_obj == NULL)
-+		return NULL;
++	struct bpf_program *prog;
 +
-+	return bpf_object__find_program_by_title(trace->bpf_obj, name);
++	if (prog_name == NULL)
++		goto out_unaugmented;
++
++	prog = trace__find_bpf_program_by_title(trace, prog_name);
++	if (prog != NULL)
++		return prog;
++
++	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
++		 prog_name, type, sc->name);
++out_unaugmented:
++	return trace->syscalls.unaugmented_prog;
++}
++
++static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
++{
++	struct syscall *sc = trace__syscall_info(trace, NULL, id);
++
++	if (sc == NULL)
++		return;
++
++	if (sc->fmt != NULL) {
++		sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_enter, "enter");
++		sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_exit,  "exit");
++	} else {
++		sc->bpf_prog.sys_enter = sc->bpf_prog.sys_exit = trace->syscalls.unaugmented_prog;
++	}
 +}
 +
  static void trace__init_bpf_map_syscall_args(struct trace *trace, int id, struct bpf_map_syscall_entry *entry)
  {
  	struct syscall *sc = trace__syscall_info(trace, NULL, id);
-@@ -2814,6 +2823,12 @@ static int trace__init_syscalls_bpf_map(struct trace *trace __maybe_unused)
- {
- 	return 0;
- }
-+
-+static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace __maybe_unused,
-+							    const char *name __maybe_unused)
-+{
-+	return NULL;
-+}
- #endif // HAVE_LIBBPF_SUPPORT
+@@ -2773,8 +2815,10 @@ static int trace__set_ev_qualifier_bpf_filter(struct trace *trace)
+ 	for (i = 0; i < trace->ev_qualifier_ids.nr; ++i) {
+ 		int key = trace->ev_qualifier_ids.entries[i];
  
- static int trace__set_ev_qualifier_filter(struct trace *trace)
-@@ -3914,6 +3929,7 @@ int cmd_trace(int argc, const char **argv)
+-		if (value.enabled)
++		if (value.enabled) {
+ 			trace__init_bpf_map_syscall_args(trace, key, &value);
++			trace__init_syscall_bpf_progs(trace, key);
++		}
  
- 		trace__set_bpf_map_filtered_pids(&trace);
- 		trace__set_bpf_map_syscalls(&trace);
-+		trace.syscalls.unaugmented_prog = trace__find_bpf_program_by_title(&trace, "!raw_syscalls:unaugmented");
- 	}
+ 		err = bpf_map_update_elem(fd, &key, &value, BPF_EXIST);
+ 		if (err)
+@@ -2793,8 +2837,10 @@ static int __trace__init_syscalls_bpf_map(struct trace *trace, bool enabled)
+ 	int err = 0, key;
  
- 	err = bpf__setup_stdout(trace.evlist);
+ 	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
+-		if (enabled)
++		if (enabled) {
+ 			trace__init_bpf_map_syscall_args(trace, key, &value);
++			trace__init_syscall_bpf_progs(trace, key);
++		}
+ 
+ 		err = bpf_map_update_elem(fd, &key, &value, BPF_ANY);
+ 		if (err)
 diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 2f822bb51717..48a536b1be6d 100644
+index 48a536b1be6d..66b33b299349 100644
 --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
 +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -88,6 +88,12 @@ unsigned int augmented_filename__read(struct augmented_filename *augmented_filen
- 	return len;
+@@ -94,6 +94,29 @@ int syscall_unaugmented(struct syscall_enter_args *args)
+ 	return 1;
  }
  
-+SEC("!raw_syscalls:unaugmented")
-+int syscall_unaugmented(struct syscall_enter_args *args)
++/*
++ * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
++ * augmented_filename_map what was read by that raw_syscalls:sys_enter and go
++ * on from there, reading the first syscall arg as a string, i.e. open's
++ * filename.
++ */
++SEC("!syscalls:sys_enter_open")
++int sys_enter_open(struct syscall_enter_args *args)
 +{
-+	return 1;
++	int key = 0;
++	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
++	const void *filename_arg = (const void *)args->args[0];
++	unsigned int len = sizeof(augmented_args->args);
++
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	len += augmented_filename__read(&augmented_args->filename, filename_arg, sizeof(augmented_args->filename.value));
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
 +}
 +
  SEC("raw_syscalls:sys_enter")
