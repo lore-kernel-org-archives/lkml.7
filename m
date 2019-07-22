@@ -2,110 +2,111 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E77C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF4FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5812190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="PDoIL05i"
+	by mail.kernel.org (Postfix) with ESMTP id D5A002190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563813130;
+	bh=frq9DOUL5vdSJjqBWz6x6F5L0v9cgIKb9CKdMsYQ8SU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C7WqE/vi6XoAXj8nZ26q6qH50XfMK3u/m4OdIXomD4O3DbrMjHLIOylhBM0Mpia3z
+	 JP6ohVfcxoaJsCuRskOQuA5VLd2Ga9gTSu0fefWUV2UdazAwg7xNxnUN7tJVEosVwP
+	 ZNU4NgbupXZxLNDP6YvOCK3nUoifxpQ1G8tgW08g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbfGVQ1i (ORCPT
+        id S1730943AbfGVQcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:27:38 -0400
-Received: from sonic313-20.consmr.mail.ir2.yahoo.com ([77.238.179.187]:40750
-        "EHLO sonic313-20.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730077AbfGVQ1h (ORCPT
+        Mon, 22 Jul 2019 12:32:09 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54876 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728270AbfGVQcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:27:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563812854; bh=4tmyXeIY4oqFIVBQrFKdjj4C+ZBVcIroyn01PfQ/hHM=; h=Subject:To:References:Cc:From:Date:In-Reply-To:From:Subject; b=PDoIL05iiWF7UEY97RncX2mn5BEWGfVbh0EBTCk+45qefwCsQpBR2hdpoCu8ra+Rq7LpAqFFBDtGTpQLo755H+QAUR0z4wVOqck/uIIUQx3QFItccWtsyWCbwVWSnKGLnQ3VxEFLUhnPvJcdusnTGubs3PL/fpwTP+xwPYxU4KMA7vffNm7EPA0T0qPt3Fc+J2nhWqoaJ6c6Y1IY6vOGomAMTJen3YQZ43yHk5s3co8rnEUS/YfU4F7l+dpVsvoN8n25j8u2x8yOgBWwm5o2kDH/6E3BJ2hjuMPDUQDAPcCtPuj2lfJ/GsQy9QiFjdrR/NoXXYWmYF0aQhQumIn1vQ==
-X-YMail-OSG: kJzK8G0VM1nKSd0411aaQcR1cgN1N9H0NE1Il2FHTI9KnNHDofM4LaONFl1lApv
- Vyh8jk3edFw5qprRvl.92gaApjmfttnN6y6CGP4kx9ocxQZaKSqZhXvwaPQNMlXNucX3wwKllt4w
- ODZNWYmjZ3Fa7uqIkti4UqNl2Sn91EqI1VvpI.ikwSGpZZu1MhspOgtBFXeXaZJkZ5gHctBAHwit
- mR2dN2bgXHnJrPar5iqNYwTKPZL01Npgc6.UXOHl8wE7zcCTBfiMXVeVGbYqXsq3XmPYXlsQV_rA
- oXQ2bGuGeMmN5sxLIMim7NEf3Q86k7WiMy4ffi8wE2sxBzRoovZQadl7Tj9U0iRTgx4QHHA4w99S
- KQuBrfrz64khcZHTHb_sphzRQRUhwxefMk7hnc2PQkIqZsKPMKnkH7OMr3sR_8SrZq5CF4lbmELu
- 587MFziqA8Ug9HW4B1zxBAJOPhtEyj947WCxnh928ne3N_2KUd5MM3shSC34PdMLfF1RLFbW_vFt
- AQK9V_6DepeByE_YTaVKrf9dlBrhGojuoYGcTwWd5zOL_K68f1woziDex_YkysKi_cIXOibYqa7f
- CHVlk.8BCFkQx0yMVfg.jQfyCoH0eYlmKJfhBx.A00Lv5LFf.0A5Tij_BMmx8C4uaiVOWielMJUg
- rF6BvW3eIWef2ANZCPqDq0SxfR00jWyf3g1Bj95Vg3mB1N1mo9rrrAeRFqTWFssZk_aDLuozfhP6
- wIT9sroPknqhOUale6sVeiGF6AvrOJE48TVytuKrJId0nuO9rzH9DgTIWOYCrS_2zTfg4wx0JJES
- eWpnGNG7zMPhfp2nVTqchZ0EpsWiLlITLbmW482a3NNarNeXIlZlmniBMarD6ogDqVA9qhrbWeBF
- CGkMFZUucrpZbUY.gBPxxdJjiCnrmdAyIL5h5XV9TyWvZjt4QodE9g8iv0NBnS_Auej3beTB7L06
- RA9M8eaKOrqGb96ad_um_DaY43jI08vs8MOrpIJrKms2MDOJGJBtOhWB8LZ4TFZ_oGz2DI6XcFID
- qF_4caa_d3B5OUL9LK4ovobNaOEH4js3T9nOIx92H4yJxzxYbiytPbr9T8dzgi_PBdD43zDA5GDL
- 95qStHVJx7L.Mhqt31dJX.hnzthMVcuBOg3ekPH4ogu4uBh0Ux_F0xYTkTs6ESPA1vqkYyeIB0eg
- GGo3CZH2oGWdDwcfjbxNpINjZWASZbLgkk5ViHqc5k3821Ds0hZ8X77Q-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ir2.yahoo.com with HTTP; Mon, 22 Jul 2019 16:27:34 +0000
-Received: by smtp420.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 0f3571226556d2a71ae3b00089e7ff33;
-          Mon, 22 Jul 2019 16:27:30 +0000 (UTC)
-Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-24-gaoxiang25@huawei.com>
- <20190722101818.GN20977@twin.jikos.cz>
- <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
- <20190722132513.GA5172@mit.edu>
- <db672675-c471-5bc8-af15-91c1859e9008@aol.com>
- <20190722151226.GC5172@mit.edu>
-Cc:     dsterba@suse.cz, Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <a5001fe8-217a-42bc-9257-45bef544762e@aol.com>
-Date:   Tue, 23 Jul 2019 00:27:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 12:32:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m8yZMwUEiFcccV1SSNyMVjuNbCe2CWQuQkyxqZQmz/A=; b=XDKGkgBe4UhiABZFc+jlkWPgv
+        IRYyV0OE3GgSpmospTKxfgN3IIF1fRIZAQbQ80NQqoYjXS4RJ1tjX00qEGdgQhsourEy4GVhJ4MC0
+        VBXWaXryk8xLmDNTgkZ4zgaXagftmA07e/ooktiXKx7PYDCqk+nOJhctcnbU6sKqne3o0=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hpbEK-0000DV-3R; Mon, 22 Jul 2019 16:32:04 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D594D27416F9; Mon, 22 Jul 2019 17:32:02 +0100 (BST)
+Date:   Mon, 22 Jul 2019 17:32:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH 1/4][V3] spi: Add optional stall delay between cs_change
+ transfers
+Message-ID: <20190722163202.GG4756@sirena.org.uk>
+References: <20190722124747.4792-1-alexandru.ardelean@analog.com>
+ <20190722124747.4792-2-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20190722151226.GC5172@mit.edu>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="B8ONY/mu/bqBak9m"
+Content-Disposition: inline
+In-Reply-To: <20190722124747.4792-2-alexandru.ardelean@analog.com>
+X-Cookie: No skis take rocks like rental skis!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--B8ONY/mu/bqBak9m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2019/7/22 ????11:12, Theodore Y. Ts'o wrote:
-> On Mon, Jul 22, 2019 at 10:16:44PM +0800, Gao Xiang wrote:
->> OK, I will give a try. One point I think is how to deal with the case
->> if there is already cached information when remounting as well as you said.
->>
->> As the first step, maybe the mount option can be defined as
->> allowing/forbiding caching from now on, which can be refined later.
-> 
-> Yes; possible solutions include ignoring the issue (assuming that
-> cached data structures that "shouldn't" be in the cache given the new
-> cache strategy will fall out of the cache over time), forcibly
-> flushing the cache when the caching strategy has changed, and of
-> course, forbidding caching strategy change at remount time.
+On Mon, Jul 22, 2019 at 03:47:44PM +0300, Alexandru Ardelean wrote:
+> Some devices like the ADIS16460 IMU require a longer period between
+> transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> default value of 10us is not enough. This change makes the delay
+> configurable for when the next CS change goes active, allowing the default
+> to remain 10us is case it is unspecified.
 
-Okay, thanks for your kindly suggestion :)
+For the third time:
 
-will do, hopefully resend this week (I agree less bugs with less
-kernel configs.).
+| This looks like cs_change_delay.
 
-Thanks,
-Gao Xiang
+>  #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
+>  	u8		bits_per_word;
+>  	u8		word_delay_usecs;
+> +	u8		cs_change_delay;
+>  	u16		delay_usecs;
+>  	u32		speed_hz;
+>  	u16		word_delay;
 
-> 
-> Cheers,
-> 
-> 					- Ted
-> 
+This patch doesn't apply and even if it did it won't compile because you
+are trying to add a field with the same name as an existing one.
+
+--B8ONY/mu/bqBak9m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl015QIACgkQJNaLcl1U
+h9D5fwf/Wo4+Hmy98fxnDeg7DpbiGSC8Ran91cmRVruDQ85ReTVXSyjGLF7QuDPU
+h5eXuOE2jwzrDrqVmX1CK8kXQCF5k9I9SiLWZZlPBxVAFGQmOBufa2voUWHN3zr7
+lhESGw8Ayl7JzHYF6KRvtGSIFq5vJ2fhLLFH+lDZ0ewq7A92U99OqyjaZD0gZCo7
+Nb3YJ2wASgP37haiibEHvpddA585QtGgcCjqdxybeoIxAqkez/2RTijc3DBRcXeb
+VsseUyF20RRXnICBpBgUnonhzzwN7jwf1VIOM4aKGiWIIXGRqiKO3OD9akqXodSG
+owJ6FsifVUS4oEXPHb76eFpu1x5A0g==
+=+XeL
+-----END PGP SIGNATURE-----
+
+--B8ONY/mu/bqBak9m--
