@@ -2,61 +2,73 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5130DC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48496C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2331B218B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E5D218B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GGeXaV2U"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lbzR2JAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbfGVUyY (ORCPT
+        id S1730502AbfGVU53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 16:54:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38638 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbfGVUyW (ORCPT
+        Mon, 22 Jul 2019 16:57:29 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44640 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729475AbfGVU53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 16:54:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f5so9406738pgu.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:54:21 -0700 (PDT)
+        Mon, 22 Jul 2019 16:57:29 -0400
+Received: by mail-io1-f67.google.com with SMTP id s7so76986426iob.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aHUdEX2ULV+TDjjhsxnkJoyyNmoo7KbS8aN0PdtSzBA=;
-        b=GGeXaV2UIdvQLIYZetuz+R47tXFQa2bSV4X/3q7FX28x5V7fMw1Zf0JaF+D3OcoujM
-         VoZ8HXGilcEUvYhpUDnJWW6U7SNJ4bf6O6iuULjnhWMB0kJx4c5spqUUgPN5D5q3czIz
-         1Z/WCCz0fXtchf4xoANXGVOI+rcG1Jz0phIiE=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kjNVdtHkZg8It4YZUOH939LIztpaI1Zp3lcG00+nZjU=;
+        b=lbzR2JAR1Xj8v+LEHhuv9HHjJ4d7YIm5QqhsKkrwvOifG5eoDrfVRRllHmnKA/7Yzt
+         GT2JF5v9TVpFuX926EjboYL5oSVmwjs2vMtLRG5M2AubrOtCPSaVg9JbP6cVUcJcOEgA
+         55/inpf42lOPhWucflo/PmL7+VtgqwdmQAQiU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aHUdEX2ULV+TDjjhsxnkJoyyNmoo7KbS8aN0PdtSzBA=;
-        b=igocKC47Xoww7J5a4ZFXxs48oXsBt0jM+KX4QQbYEjTtZrpxqQ2BQ1xnkFPDsKt/09
-         8fxptQYALKqBd+JMzHwBySIa4wZTYRphtz1e8OLxyCqyp5BOQJZLq2d4ZsD8XGdzypvP
-         Rn7htE/URk6JHH7JXjatfH3g9MuCl3dA72cvQj0/ipFbX44kixm0tmXdKFBCZMOXpCqu
-         EOe9FMGnfwAgQ0WaXqzQXNUNYAOiFtsmlRZLyqMPYBDuGtnKJY6GetgQqkprBncCkIMy
-         6FAGB9S9qdNDTUoArRA1URSspEesLgo7nWk5j4opLuz0evEjq+Hm/d49Osqv+eT5kdgA
-         2lYA==
-X-Gm-Message-State: APjAAAUGyz8GJCNBru9H32Y4ODhx3XQj5oxogprCsgLSUneTCJK9B/9o
-        tCOI8rsi0Dhi2jCp3hfh1kp6zg==
-X-Google-Smtp-Source: APXvYqzCFNwpofDCIDkf3fwqg29xodZS2cLtFiiYiDDdohkscENChmgwkkiOnJjfaFyz/OroSmmFeg==
-X-Received: by 2002:a65:5c02:: with SMTP id u2mr3592167pgr.367.1563828861466;
-        Mon, 22 Jul 2019 13:54:21 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id c8sm45616120pjq.2.2019.07.22.13.54.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 13:54:20 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 13:54:19 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kjNVdtHkZg8It4YZUOH939LIztpaI1Zp3lcG00+nZjU=;
+        b=prtMsqCsOpvDH7KSE+mXw3Oo5xZ8byya163eLAbf4exKUeqdVwlLcA678jOGjhEOpG
+         23TQJ8SP0eL+X9GJsDpNFGN7ehNKirf6urj+kaGjx6m3EUOK2b6WPnR4ozLj7U5hSXrR
+         l0rSx8EumIHgdz0hgqLRyGkITuC9vih5KiXONP35eaFOvJuc1DLlU+npKC0untUrouBn
+         dvpzdk8P0KJPHHjlMEC9tuM1YhX00pX2OV7IdLc/ehkf/d1tvHAmCfYCAeC4BhFjTBFu
+         eudZPfMJL6qM8REcxD2leLPvgJrWtB3iaEcMqYOk4ww3oFQ6Mxm58FPmG79hVDxZPvxp
+         cjqw==
+X-Gm-Message-State: APjAAAWx3vhhNOMwLxDRsjPTUXYipsM5c1sI4a3FEiQt9Cm1101eqZ7z
+        biVH3jrC1CINBuay6s0l1Joid3sX5fQ=
+X-Google-Smtp-Source: APXvYqw9siN4W47oYQ1eT9CCdXmInxuAOzEX4m8AqMGe3WveRuRMRdCrXd5aWCRo028NFJQzt2NNlA==
+X-Received: by 2002:a6b:691d:: with SMTP id e29mr19372395ioc.96.1563829048352;
+        Mon, 22 Jul 2019 13:57:28 -0700 (PDT)
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
+        by smtp.gmail.com with ESMTPSA id p3sm59241508iom.7.2019.07.22.13.57.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 13:57:27 -0700 (PDT)
+Received: by mail-io1-f48.google.com with SMTP id g20so77062140ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 13:57:26 -0700 (PDT)
+X-Received: by 2002:a6b:5103:: with SMTP id f3mr62856397iob.142.1563829045931;
+ Mon, 22 Jul 2019 13:57:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190722181945.244395-1-mka@chromium.org> <20190722202426.GL104440@art_vandelay>
+In-Reply-To: <20190722202426.GL104440@art_vandelay>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 22 Jul 2019 13:57:14 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vk5V+gJhW8=6ZFfgV6LdN2U3-VkZvqn7QWDw-215-Z1Q@mail.gmail.com>
+Message-ID: <CAD=FV=Vk5V+gJhW8=6ZFfgV6LdN2U3-VkZvqn7QWDw-215-Z1Q@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the
+ internal I2C controller
+To:     Sean Paul <sean@poorly.run>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -65,98 +77,61 @@ Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Jose Abreu <Jose.Abreu@synopsys.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Adam Jackson <ajax@redhat.com>
-Subject: Re: [PATCH v2] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the
- internal I2C controller
-Message-ID: <20190722205419.GY250418@google.com>
-References: <20190722181945.244395-1-mka@chromium.org>
- <CAD=FV=XP=3z9GWPU+K15jmzHeOWT9uzqgaC6zL3M+Wm7b4jOhQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XP=3z9GWPU+K15jmzHeOWT9uzqgaC6zL3M+Wm7b4jOhQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:12:40PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Jul 22, 2019 at 11:19 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
+Hi,
+
+On Mon, Jul 22, 2019 at 1:24 PM Sean Paul <sean@poorly.run> wrote:
+>
+> On Mon, Jul 22, 2019 at 11:19:45AM -0700, Matthias Kaehlcke wrote:
 > > The DDC/CI protocol involves sending a multi-byte request to the
 > > display via I2C, which is typically followed by a multi-byte
 > > response. The internal I2C controller only allows single byte
 > > reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
 > > supported when the internal I2C controller is used. The I2C
-> > transfers complete without errors, however the data in the response
-> > is garbage. Abort transfers to/from slave address 0x37 (DDC) with
-> > -EOPNOTSUPP, to make it evident that the communication is failing.
-> >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Changes in v2:
-> > - changed DDC_I2C_ADDR to DDC_CI_ADDR
-> > ---
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > index 045b1b13fd0e..28933629f3c7 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > @@ -35,6 +35,7 @@
-> >
-> >  #include <media/cec-notifier.h>
-> >
-> > +#define DDC_CI_ADDR            0x37
-> >  #define DDC_SEGMENT_ADDR       0x30
-> >
-> >  #define HDMI_EDID_LEN          512
-> > @@ -322,6 +323,13 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
-> >         u8 addr = msgs[0].addr;
-> >         int i, ret = 0;
-> >
-> > +       if (addr == DDC_CI_ADDR)
-> > +               /*
-> > +                * The internal I2C controller does not support the multi-byte
-> > +                * read and write operations needed for DDC/CI.
-> > +                */
-> > +               return -EOPNOTSUPP;
-> > +
-> 
-> In theory we could also solve this by detecting (in other parts of the
-> function) the bad multi-byte read/write operations.  That would maybe
-> be more generic (AKA it would more properly handle random userspace
-> tools fiddling with i2c-dev) but add complexity to the code.
+>
+> This is very likely a stupid question, but I didn't see an answer for it, so
+> I'll just ask :)
+>
+> If the controller supports xfers of 8 bytes and 1 bytes, could you just split
+> up any of these transactions into len/8+len%8 transactions?
 
-But how do you know it's an unsupported operation, and not the driver
-knowing the wacky limitations doing something valid.
+It's not quite that easy, I think.  Specifically a 1-byte transfer
+isn't really a 1-byte transfer.
 
-E.g. you get the sequence:
+It always sticks this on the wire for a 1-byte write:
 
-0x01 0x0a 0x0b 0x0c 0x0d
+Start
+Slave address (7 bits) + write (1 bit)
+(wait ack)
+Register address
+1 byte of data
+wait for ack
+Stop
 
-This could be interpreted as "send the above bytes to the slave" or
-as "send 0x0a to address 0x01, 0x0b to 0x02, 0x0c to 0x03 and 0x0d to
-0x04" (at least by this driver ;-) . The latter could be intended.
+...or for a 1-byte read:
 
-> ...possibly a better long-term solution is to just totally stop
-> emulating a regular i2c adapter when the hardware just doesn't support
-> that.  In theory we could remove the "drm_get_edid()" call in
-> dw_hdmi_connector_get_modes() and replace it with a direct call to
-> drm_do_get_edid() if we're using the built-in adapter.  Possibly
-> "tda998x_drv.c" would be a good reference.  If we did that, we could
-> remove all the weird / hacky i2c code in this driver.
+Start
+Slave address (7 bits) + write (1 bit)
+(wait ack)
+Register address
+(wait ack)
+Repeated Start (1 bit)
+Slave address (7 bits) + read (1 bit)
+(read 1 byte of data)
+Ack
+Stop
 
-yes, that would be another and probably better option than trying to
-detect unsupported transaction.
+Putting more than one of those in a row is not the same thing as just
+doing a whole bunch of reads or a whole bunch of writes with no "stop"
+in between.
 
-> Since the bigger cleanup seems like a bit much to ask, I'm OK with
-> this as a stopgap to at least prevent userspace tools from getting
-> confused.  Thus:
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+As far as I could find out about DDC/CI it's part of the spec to _not_
+send the stop between the reads / writes.
 
-Thanks!
+
+-Doug
