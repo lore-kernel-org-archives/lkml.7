@@ -2,122 +2,216 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728E4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064A1C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406A721900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD658218F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="jPo3yttN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAtK0Y4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732603AbfGVVWM (ORCPT
+        id S1731442AbfGVVXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:22:12 -0400
-Received: from mail-eopbgr730127.outbound.protection.outlook.com ([40.107.73.127]:38141
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732574AbfGVVWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:22:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bo+t8QY4lAFO57tHqU2jUQxgzqORDrffqM6iTEU/yF012wS90c9WjRjbO/ME2rbJJMF2xtLtTgPAjizZE9WX9WMsAfKN/zmhoGFxCwg8lT4h9NLfKfkRwgIAYu1YX9l0p2uvdHV4VI4B/lGU4SPVUXxK6GQ3cdNXajVxQkQVEI8A2uToqevFL2K7cXF3iPT/Er4O0ELkTnumHlloJ6eEsno24wWrLu4MkMFo1fgAw9gYfDRSgCKyLLq+Z8+5+shHyAWJiiQZtobfG6bFGCdSjTOUoEjPdir/eR4d7okwGdAugQzJWDBzJeh8vU1j7pd+8FKBcF/55jPwiHikc9GTXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eP1F47k7v6w0gs5cw3weXd8Pf8jOX+jjksUNgU5Z/U4=;
- b=NwLQ1UvIFt06wTW5E6oYEuYg0QIrvWPdqZrsQlL6Xt5xhFDDHCItoZvSQIGVLpaiOoxfFZyy+GpbOUpcE3kxKFpP7ERITF4u9NdS/lxeXILrjL5asJwk1pcqu9Ea9045VMHolbqwJIe16npq5dB6vVa9RCHC5z3KE/wB2lYfDcwk547ZEZzBr5gWJOsjDFyjkQcF4RHd9N174Qh0uMe4WWlYTZpMoi29pSWBwkwLCMnBOBr5moYDSdEVVg38mwLr1JBGEIcl5K/ZeYWXDhlXy5M+AAHfnriFTw8we3yTYwsAAFE1RDWhaND5yEuzIIuKGd9Idf9coJDOCblvk9K0og==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eP1F47k7v6w0gs5cw3weXd8Pf8jOX+jjksUNgU5Z/U4=;
- b=jPo3yttNDtKXogcz3x8OGb+8JDOGSucsnN5Uj7I1yJG0sJLDyigqQdRMqd0bXwgbnzV3XiYbewrOhokJJh+BmUJ4+9RJ1y9uDfbfqmcc5kxV6G0gzuer7aR4p9ZOcLDRXSTt+klFNqfd4PaE5FKZFvVgv1WwJmTheGgFAKsl2Js=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1757.namprd22.prod.outlook.com (10.164.133.167) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.11; Mon, 22 Jul 2019 21:22:04 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::49d3:37f8:217:c83]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::49d3:37f8:217:c83%6]) with mapi id 15.20.2094.017; Mon, 22 Jul 2019
- 21:22:04 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH 2/3] MIPS: DTS: jz4740: Add node for the MMC driver
-Thread-Topic: [PATCH 2/3] MIPS: DTS: jz4740: Add node for the MMC driver
-Thread-Index: AQHUtOntLO/EgPGbyEyjPeWfCtJvS6bYPS6A
-Date:   Mon, 22 Jul 2019 21:22:04 +0000
-Message-ID: <MWHPR2201MB127739803859CA9A3917CFD8C1C40@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190125200927.21045-2-paul@crapouillou.net>
-In-Reply-To: <20190125200927.21045-2-paul@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0057.namprd07.prod.outlook.com
- (2603:10b6:a03:60::34) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66a96d5d-fba6-49a2-f5e0-08d70eeaa48d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1757;
-x-ms-traffictypediagnostic: MWHPR2201MB1757:
-x-microsoft-antispam-prvs: <MWHPR2201MB17574E3380C3EB51B44CD1E9C1C40@MWHPR2201MB1757.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39850400004)(346002)(136003)(366004)(199004)(189003)(66446008)(66476007)(3846002)(6116002)(66556008)(66066001)(6436002)(64756008)(66946007)(52536014)(25786009)(14454004)(558084003)(476003)(7416002)(8676002)(6916009)(9686003)(305945005)(74316002)(7736002)(99286004)(71190400001)(52116002)(256004)(71200400001)(4326008)(6246003)(26005)(81156014)(68736007)(186003)(8936002)(81166006)(2906002)(478600001)(486006)(11346002)(446003)(5660300002)(55016002)(53936002)(316002)(54906003)(42882007)(33656002)(386003)(7696005)(6506007)(102836004)(76176011)(229853002)(44832011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1757;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: btNdvlVYU5FXLy4+jBlOPIZsrb+AHblqkssVtOH26S49aiTvQDBIb1rZIBMcmHT4CLUiNbFUEQ8Z6tiyUR3+FMFVnZBxvpOxV+4EtqUZJMJ17fT0X8xXF8rDyIJxip+ZzR6sLkGDxwnXD3nAZySjjldIYFlar4iXTmyOarHwx1SF8nOBMna54T4N13dtOMogKjPsDnOCwfdwm3GzMg/3YOn2mgokdVNa2Y04j1Rr1yfVIe0gtVTs0ausDyFomYMOygNu4xRs5npGI7oocYDlYnOcnvQQuoyf+QYlO3oH9TbaIp8LbIDN1tp5oWAxVqjaWq18HsFZmikYU0PA5qyGNOJwvQKSbCkS0FfifV66TSqCuwMPywOSE0jRn5qlyaDDMcOptD8xAh2opZWogXGjZB5y+po/C1wHuFc8OilbWMA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 22 Jul 2019 17:23:23 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45930 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731360AbfGVVXW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:23:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so40843133wre.12;
+        Mon, 22 Jul 2019 14:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p343mkwLmV99Fv6hCvsCgnAo5cWZO0dGL5mohxRUU28=;
+        b=CAtK0Y4UPSXjEG6pRUFaUGUgc1eux/MqDI/a7uMvaec6q6XtbGihF8fnMxjApjfSjU
+         WeaSzbEynNBM+DXX3h3w8ifgV1YKUZBhYwS7oiLgf+fsETHUjvJSN1JZIvsHVdqZM3ky
+         L01WID4L0MMW1ypPNdhERJiaJUUTiApRKh6qFKbuD0jVmaRETMj7ai6aRJ5WmeNh0XVz
+         0FcBTiE9sgHE8S7Rfrre/sQUt6d4pEQc0qkL3ziPDD4tQsL1e0JtetPbIAhFpcoMik4n
+         WEW3xhNlXcdGM0Ac3hcxGx/aP67xMEUqAaYgGgC0q2mTVehSVYHATA2IZg1So3I89Ktp
+         NuPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=p343mkwLmV99Fv6hCvsCgnAo5cWZO0dGL5mohxRUU28=;
+        b=YCeYUHf2fboI5n2muDCVBnp0LU11jgkrxqlTPxkZM9ILE3OanIdYdHq0bABb0hGcFk
+         /TG0w/WNvYsCQES9bmkuNgd8uJQTJi9iRmHvMAARgrZodZrg2WTfk64pzVVlWj7qi9XL
+         XE9wuXX1zeZpI8B/2+mG2/b74BJv5+ROLSEgbU2uh2WlfvC5hRuPyXEPEyVGcQcDSucc
+         MlOmmdCkxiQp8/WnsshXD5WjObtT+ua1QihzDCKhDRJ/umToQ8MjGx+CTF9e4UjyGTYc
+         3wcrxwp2GbS/5KyN7gdngyfzJe+QTgPkFdEl/SfZJqYie2J18DfbAGz5+qzo8ogCox9m
+         jY9Q==
+X-Gm-Message-State: APjAAAUTX6kIWSP48ElfzSsjjTAkzZXr0J8qRKjJLudzD19sRIXOtp6+
+        qX5geIdKNp/vd9fv8TJcSxw=
+X-Google-Smtp-Source: APXvYqx4LCMhEFm35wdEAFLlf4YRN4TuKOAGIxp0bPug8mS8ruq3beRaWGsHkncb0GlbZZLX5rVLQQ==
+X-Received: by 2002:adf:9f0e:: with SMTP id l14mr71257158wrf.23.1563830600560;
+        Mon, 22 Jul 2019 14:23:20 -0700 (PDT)
+Received: from [192.168.1.19] (chg44.neoplus.adsl.tpnet.pl. [83.31.4.44])
+        by smtp.gmail.com with ESMTPSA id c78sm59127174wmd.16.2019.07.22.14.23.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 14:23:19 -0700 (PDT)
+Subject: Re: [PATCH v4 0/4] Add a generic driver for LED-based backlight
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
+References: <20190717141514.21171-1-jjhiblot@ti.com>
+ <283d9044-df2d-b176-bea9-7e1520d9cf56@gmail.com> <20190722070620.GD8402@dell>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
+ 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
+ aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
+ hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
+ T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
+ R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
+ rbYkgqOjDRE9NTC6b68iUUVUayEADWz80qChbDJ2R2/Spm5+eojI2NVnr3AVSc7ZCBkhSDei
+ TtSjQmlPflKEAR8LH67XbzvwvDwX/Lmi+/1Yxws0rxeJNYMqfOBBW/xi3QEc9hMDTl99EZwl
+ NqfEN7HHh2jzAGNtIYxhHHiPUw/UZeS1fxD8vRqVZHW3ENR6lOCEYED1ChU1w8Zzm/CiT4ea
+ ZakZChzFeUWVO/yFEcAzTJSiJHqLooNfP/VyFppjAlLVPISLcLBVTy+Ue76Z0IrC12fI38cm
+ lJJGVY6NUbNb883pu5B7qB8huQINBFWjfaEBEADDzcpgTaAlnNd1Oqjs7V6yCgVbCxmV6v8j
+ mkdp+4BWxQAg9E1O17h9lHJ8LzUfrkBcEq0amhHM19leoiMtgiE1yoOWL4Ndsp9PYE5mn7qC
+ MiqFNel7wt2mUENgZ9yztrET9I/zbjA/RpTt+6RwlUaSNgz8RRN/UzJtTy2x5wxvPpWapfna
+ TcFsPHQ2kYMl8di3ueNgnEwU+dlQnnlg7andjMDq+C4qGJXxnwKpsHMLnAXUxAVMZJUGjkd1
+ WyUMep7SNqAzgZTRr451Q82XvokRHeZeNJfjo02olrwRl5L+jiPsMeUxT6fgTOgE1PulMxUU
+ 1Fm4/i6lQPyTKmB0KdOGOB+RrY2xwmvGm0bwcCChL6cE8lmZX1z7afIEZTZsWJ+oEJU8hGQF
+ qHV8BOwhPisTZ6u2zx3i760p/GyzSuvNj6Exq9GNNG4LmC38rxMLg2HpNf4fWEl7R2gkdwhI
+ +C1NQeetRtY+xVWnmG1/WygQKMvxsQFvCeTtZ5psOxZ5Eh7sDv0A3tAjqDtEGettAn/SAVmB
+ 1uJtjNsoeffNZVGojHDTNpD4LCRWJaBaNlxp+pVlPQa1oxKDQ4R2bRfsmjxLsI2aOsf9xNk7
+ txOSY9FaVXBPVNWav36rg2O/ZdkSZ+RDaIDrOfj4tBo1aRGEFVn5tD0wsTTzszsxkeEAdwTR
+ bwARAQABiQIlBBgBCAAPBQJVo32hAhsMBQkJZgGAAAoJEL1qUBy3i3wmahsQAJVgVlb41OsY
+ +9BsHp4IqmGcJltYvIH0uEzYm0E/ykatM5AZxMICsF0W1aFt/KWFbhmucfyQ0DCQ6ywCdMKw
+ jkt18W0hwljpf5NmQ/TmsVHl6ujfjphk8362Lz1L1ktR8tOKvQA9XSGjDa7mUJr50X5DpNlA
+ 53AyINNeuvzUx4mCNPR+ZqVhqR5/9mk+nZqVcLqDPf6x5RebOagAKPebWdEFtgbSHHhvf622
+ JS+e8GkjDxePWsL8C0F+UYVqBfJj0uS7Aa11yoZosyLJ+NLS24tkbVo8w1oGWIrappqoo3gp
+ w7yEjeKif5wizuA44khrOfcOR0fpdJ8Hjw4TggOEWGaktXtgpcdVUpA1xaS93oGm3CLKiuwm
+ emtta/JV1aaOEZzJULJl2U50ceEmoxb1+z60YP9NgvNdXy34dq+TuYn/LCkOgSipR6broqKn
+ 4/8Pc9wdGkO9XuJ9czSQTtZHHc54pDywG6+4xoJAVF09ciYsKU30UK+ctlKNdiCbCsaIZzRV
+ WLSvF/0ektHXij462VrwJJZYCD3B4zItlWvMsCk4/yYHKVDuSjfdOj3+8sGSEnuym3HP6pxN
+ GIzz0qhTr6Hmbx3uhGQjFvfsWbGoqb5aqQckFVB51YNPSvWBb41AbAT3QvHn+mMIH0faOgJz
+ 5sZdKDFCF5AgguXPfX8yWP5PiQKtBBgBCAAgFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAlsK
+ ioYCGwIAgQkQvWpQHLeLfCZ2IAQZFggAHRYhBBTDHErITmX+em3wBGIQbFEb9KXbBQJbCoqG
+ AAoJEGIQbFEb9KXbxC4A/1Pst/4bM9GyIzECWNCy8TP6xWPVc9S+N/pUB14y9zD7AP9ZTZub
+ GopbGO2hQVScQM02vGQBlgXVWhqOigr4pgwfBu46D/48fqBjpnUaILO5hv/x/sPQ05wXz6Z3
+ 5HooqJBmKP/obljuVdAHPbU6mXhXP/7f2LmCZ8Fr0tEcfii9H093ofQUKOO7heMg4mSIlizY
+ eAIKbqdTFElbM+DIw9JVuoIbZy3BpSIKFR1tL7T1tZvYwE2MiUjhvzAtYg63GHKfblWJ+bSn
+ 5BHkDbKbhuokn0tKt7Wozyp09ZycTE8VTg9kVhCBn2lfUnK6LvdlQ/3gvv/CDUbIlkvd494T
+ iiAFeV0TSDRarc5GoD2AD/K+sJLI0o4dNX0kwaec8Y37CMFgw8w66oM8L/Nwr6y10VdzpRtQ
+ zVA2AOdqia+O6Wh+UDFph1uUzbqAV/Km+kVvxzNw8z4E/pfq9aT4zD37y9be3Ir2VKD7jc6M
+ haUEY+k71otmxhjECq8nmJLFxts4tvmrzBZy3pTsRnVGe459UiegG22uVi91a1wj/k1BOm2S
+ 4H8PJGGvEElz98rMnjCNLaKRxZ7QWfGtClwTbKqhQgVpkx138LH1tFYAZkbTzu3l1Qcm4ydV
+ VykdkWccEqvxqDV4f8q0V0MW3KWfkD9/07bbGxXSnImeLt7bPuVMGK2tAUbr2+dUYmUdsETZ
+ 1HgZ11moCVU5Ru0RwTv9oyThOsK3HQjI7NCIsDzVpolaGQPd9E7xwOVHhhDcXRqqNjLzHUSe
+ eGGiEQ==
+Message-ID: <9cbd9cf6-3422-85df-885f-904f52e9cabd@gmail.com>
+Date:   Mon, 22 Jul 2019 23:23:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66a96d5d-fba6-49a2-f5e0-08d70eeaa48d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 21:22:04.6391
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1757
+In-Reply-To: <20190722070620.GD8402@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 7/22/19 9:06 AM, Lee Jones wrote:
+> On Thu, 18 Jul 2019, Jacek Anaszewski wrote:
+> 
+>> On 7/17/19 4:15 PM, Jean-Jacques Hiblot wrote:
+>>> This series aims to add a led-backlight driver, similar to pwm-backlight,
+>>> but using a LED class device underneath.
+>>>
+>>> A few years ago (2015), Tomi Valkeinen posted a series implementing a
+>>> backlight driver on top of a LED device:
+>>> https://patchwork.kernel.org/patch/7293991/
+>>> https://patchwork.kernel.org/patch/7294001/
+>>> https://patchwork.kernel.org/patch/7293981/
+>>>
+>>> The discussion stopped because Tomi lacked the time to work on it.
+>>>
+>>> changes in v4:
+>>> - fix dev_err() messages and commit logs following the advices of Pavel
+>>> - cosmetic changes (indents, getting rid of  "? 1 : 0" in
+>>>   led_match_led_node())
+>>>
+>>> changes in v3:
+>>> - dt binding: don't limit the brightness range to 0-255. Use the range of
+>>>   the underlying LEDs. as a side-effect, all LEDs must now have the same
+>>>   range
+>>> - driver: Adapt to dt binding update.
+>>> - driver: rework probe() for clarity and remove the remaining goto.
+>>>
+>>> changes in v2:
+>>> - handle more than one LED.
+>>> - don't make the backlight device a child of the LED controller.
+>>> - make brightness-levels and default-brightness-level optional
+>>> - removed the option to use a GPIO enable.
+>>> - removed the option to use a regulator. It should be handled by the LED
+>>>   core
+>>> - don't make any change to the LED core (not needed anymore)
+>>>
+>>> Jean-Jacques Hiblot (2):
+>>>   leds: Add managed API to get a LED from a device driver
+>>>   dt-bindings: backlight: Add led-backlight binding
+>>>
+>>> Tomi Valkeinen (2):
+>>>   leds: Add of_led_get() and led_put()
+>>>   backlight: add led-backlight driver
+>>>
+>>>  .../bindings/leds/backlight/led-backlight.txt |  28 ++
+>>>  drivers/leds/led-class.c                      |  92 ++++++
+>>>  drivers/video/backlight/Kconfig               |   7 +
+>>>  drivers/video/backlight/Makefile              |   1 +
+>>>  drivers/video/backlight/led_bl.c              | 268 ++++++++++++++++++
+>>>  include/linux/leds.h                          |   6 +
+>>>  6 files changed, 402 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>>>  create mode 100644 drivers/video/backlight/led_bl.c
+>>>
+>>
+>> For the whole set:
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>
+>> Lee - we need to create immutable branch for this set since there will
+>> be some interfering changes in the LED core in this cycle.
+>>
+>> I can create the branch and send the pull request once we will
+>> obtain the ack from Rob for DT bindings, unless you have other
+>> preference.
+> 
+> We also require a review to be conducted by Daniel Thompson.
+> 
+> After which, an immutable branch sounds like a good idea.  I'd like to
+> create this myself if you don't mind.
 
-Paul Cercueil wrote:
-> Add a devicetree node for the jz4740-mmc driver.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Sure, thanks.
 
-Applied to mips-next.
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+-- 
+Best regards,
+Jacek Anaszewski
