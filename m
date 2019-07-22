@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7187CC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F6BC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC282190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FF82171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbfGVPnM (ORCPT
+        id S1730046AbfGVPnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:43:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:40440 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 11:43:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:40528 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfGVPnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:43:08 -0400
+        id S1730013AbfGVPnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:43:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B403715A2;
-        Mon, 22 Jul 2019 08:43:07 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16C1515A2;
+        Mon, 22 Jul 2019 08:43:16 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B07B3F694;
-        Mon, 22 Jul 2019 08:43:04 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8186F3F694;
+        Mon, 22 Jul 2019 08:43:13 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,9 +44,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v9 15/21] x86: mm: Point to struct seq_file from struct pg_state
-Date:   Mon, 22 Jul 2019 16:42:04 +0100
-Message-Id: <20190722154210.42799-16-steven.price@arm.com>
+Subject: [PATCH v9 18/21] x86: mm: Convert ptdump_walk_pgd_level_core() to take an mm_struct
+Date:   Mon, 22 Jul 2019 16:42:07 +0100
+Message-Id: <20190722154210.42799-19-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
 References: <20190722154210.42799-1-steven.price@arm.com>
@@ -57,227 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mm/dump_pagetables.c passes both struct seq_file and struct pg_state
-down the chain of walk_*_level() functions to be passed to note_page().
-Instead place the struct seq_file in struct pg_state and access it from
-struct pg_state (which is private to this file) in note_page().
+An mm_struct is needed to enable x86 to use of the generic
+walk_page_range() function.
+
+In the case of walking the user page tables (when
+CONFIG_PAGE_TABLE_ISOLATION is enabled), it is necessary to create a
+fake_mm structure because there isn't an mm_struct with a pointer
+to the pgd of the user page tables. This fake_mm structure is
+initialised with the minimum necessary for the generic page walk code.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/x86/mm/dump_pagetables.c | 69 ++++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 34 deletions(-)
+ arch/x86/mm/dump_pagetables.c | 36 ++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 95728027dd3b..fe21b57f629f 100644
+index bcaf27b637e0..546e28a7785c 100644
 --- a/arch/x86/mm/dump_pagetables.c
 +++ b/arch/x86/mm/dump_pagetables.c
-@@ -36,6 +36,7 @@ struct pg_state {
- 	bool to_dmesg;
- 	bool check_wx;
- 	unsigned long wx_pages;
-+	struct seq_file *seq;
+@@ -107,8 +107,6 @@ static struct addr_marker address_markers[] = {
+ 	[END_OF_SPACE_NR]	= { -1,			NULL }
  };
  
- struct addr_marker {
-@@ -265,11 +266,12 @@ static void note_wx(struct pg_state *st)
-  * of PTE entries; the next one is different so we need to
-  * print what we collected so far.
-  */
--static void note_page(struct seq_file *m, struct pg_state *st,
--		      pgprot_t new_prot, pgprotval_t new_eff, int level)
-+static void note_page(struct pg_state *st, pgprot_t new_prot,
-+		      pgprotval_t new_eff, int level)
- {
- 	pgprotval_t prot, cur, eff;
- 	static const char units[] = "BKMGTPE";
-+	struct seq_file *m = st->seq;
+-#define INIT_PGD	((pgd_t *) &init_top_pgt)
+-
+ #else /* CONFIG_X86_64 */
  
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
-@@ -355,8 +357,8 @@ static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
- 	       ((prot1 | prot2) & _PAGE_NX);
- }
+ enum address_markers_idx {
+@@ -143,8 +141,6 @@ static struct addr_marker address_markers[] = {
+ 	[END_OF_SPACE_NR]	= { -1,			NULL }
+ };
  
--static void walk_pte_level(struct seq_file *m, struct pg_state *st, pmd_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static void walk_pte_level(struct pg_state *st, pmd_t addr, pgprotval_t eff_in,
-+			   unsigned long P)
- {
- 	int i;
- 	pte_t *pte;
-@@ -367,7 +369,7 @@ static void walk_pte_level(struct seq_file *m, struct pg_state *st, pmd_t addr,
- 		pte = pte_offset_map(&addr, st->current_address);
- 		prot = pte_flags(*pte);
- 		eff = effective_prot(eff_in, prot);
--		note_page(m, st, __pgprot(prot), eff, 5);
-+		note_page(st, __pgprot(prot), eff, 5);
- 		pte_unmap(pte);
- 	}
- }
-@@ -380,22 +382,20 @@ static void walk_pte_level(struct seq_file *m, struct pg_state *st, pmd_t addr,
-  * us dozens of seconds (minutes for 5-level config) while checking for
-  * W+X mapping or reading kernel_page_tables debugfs file.
-  */
--static inline bool kasan_page_table(struct seq_file *m, struct pg_state *st,
--				void *pt)
-+static inline bool kasan_page_table(struct pg_state *st, void *pt)
- {
- 	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
- 	    (pgtable_l5_enabled() &&
- 			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
- 	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
- 		pgprotval_t prot = pte_flags(kasan_early_shadow_pte[0]);
--		note_page(m, st, __pgprot(prot), 0, 5);
-+		note_page(st, __pgprot(prot), 0, 5);
- 		return true;
- 	}
- 	return false;
- }
- #else
--static inline bool kasan_page_table(struct seq_file *m, struct pg_state *st,
--				void *pt)
-+static inline bool kasan_page_table(struct pg_state *st, void *pt)
- {
- 	return false;
- }
-@@ -403,7 +403,7 @@ static inline bool kasan_page_table(struct seq_file *m, struct pg_state *st,
+-#define INIT_PGD	(swapper_pg_dir)
+-
+ #endif /* !CONFIG_X86_64 */
  
- #if PTRS_PER_PMD > 1
- 
--static void walk_pmd_level(struct seq_file *m, struct pg_state *st, pud_t addr,
-+static void walk_pmd_level(struct pg_state *st, pud_t addr,
- 			   pgprotval_t eff_in, unsigned long P)
- {
- 	int i;
-@@ -417,27 +417,27 @@ static void walk_pmd_level(struct seq_file *m, struct pg_state *st, pud_t addr,
- 			prot = pmd_flags(*start);
- 			eff = effective_prot(eff_in, prot);
- 			if (pmd_large(*start) || !pmd_present(*start)) {
--				note_page(m, st, __pgprot(prot), eff, 4);
--			} else if (!kasan_page_table(m, st, pmd_start)) {
--				walk_pte_level(m, st, *start, eff,
-+				note_page(st, __pgprot(prot), eff, 4);
-+			} else if (!kasan_page_table(st, pmd_start)) {
-+				walk_pte_level(st, *start, eff,
- 					       P + i * PMD_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, st, __pgprot(0), 0, 4);
-+			note_page(st, __pgprot(0), 0, 4);
- 		start++;
- 	}
- }
- 
- #else
--#define walk_pmd_level(m,s,a,e,p) walk_pte_level(m,s,__pmd(pud_val(a)),e,p)
-+#define walk_pmd_level(s,a,e,p) walk_pte_level(s,__pmd(pud_val(a)),e,p)
- #define pud_large(a) pmd_large(__pmd(pud_val(a)))
- #define pud_none(a)  pmd_none(__pmd(pud_val(a)))
+ /* Multipliers for offsets within the PTEs */
+@@ -516,10 +512,10 @@ static inline bool is_hypervisor_range(int idx)
  #endif
- 
- #if PTRS_PER_PUD > 1
- 
--static void walk_pud_level(struct seq_file *m, struct pg_state *st, p4d_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static void walk_pud_level(struct pg_state *st, p4d_t addr, pgprotval_t eff_in,
-+			   unsigned long P)
- {
- 	int i;
- 	pud_t *start, *pud_start;
-@@ -451,33 +451,33 @@ static void walk_pud_level(struct seq_file *m, struct pg_state *st, p4d_t addr,
- 			prot = pud_flags(*start);
- 			eff = effective_prot(eff_in, prot);
- 			if (pud_large(*start) || !pud_present(*start)) {
--				note_page(m, st, __pgprot(prot), eff, 3);
--			} else if (!kasan_page_table(m, st, pud_start)) {
--				walk_pmd_level(m, st, *start, eff,
-+				note_page(st, __pgprot(prot), eff, 3);
-+			} else if (!kasan_page_table(st, pud_start)) {
-+				walk_pmd_level(st, *start, eff,
- 					       P + i * PUD_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, st, __pgprot(0), 0, 3);
-+			note_page(st, __pgprot(0), 0, 3);
- 
- 		start++;
- 	}
  }
  
- #else
--#define walk_pud_level(m,s,a,e,p) walk_pmd_level(m,s,__pud(p4d_val(a)),e,p)
-+#define walk_pud_level(s,a,e,p) walk_pmd_level(s,__pud(p4d_val(a)),e,p)
- #define p4d_large(a) pud_large(__pud(p4d_val(a)))
- #define p4d_none(a)  pud_none(__pud(p4d_val(a)))
- #endif
- 
--static void walk_p4d_level(struct seq_file *m, struct pg_state *st, pgd_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static void walk_p4d_level(struct pg_state *st, pgd_t addr, pgprotval_t eff_in,
-+			   unsigned long P)
+-static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
++static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
+ 				       bool checkwx, bool dmesg)
  {
- 	int i;
- 	p4d_t *start, *p4d_start;
+-	pgd_t *start = pgd;
++	pgd_t *start = mm->pgd;
  	pgprotval_t prot, eff;
+ 	int i;
+ 	struct pg_state st = {};
+@@ -566,39 +562,49 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
  
- 	if (PTRS_PER_P4D == 1)
--		return walk_pud_level(m, st, __p4d(pgd_val(addr)), eff_in, P);
-+		return walk_pud_level(st, __p4d(pgd_val(addr)), eff_in, P);
+ void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm)
+ {
+-	ptdump_walk_pgd_level_core(m, mm->pgd, false, true);
++	ptdump_walk_pgd_level_core(m, mm, false, true);
+ }
  
- 	p4d_start = start = (p4d_t *)pgd_page_vaddr(addr);
- 
-@@ -487,13 +487,13 @@ static void walk_p4d_level(struct seq_file *m, struct pg_state *st, pgd_t addr,
- 			prot = p4d_flags(*start);
- 			eff = effective_prot(eff_in, prot);
- 			if (p4d_large(*start) || !p4d_present(*start)) {
--				note_page(m, st, __pgprot(prot), eff, 2);
--			} else if (!kasan_page_table(m, st, p4d_start)) {
--				walk_pud_level(m, st, *start, eff,
-+				note_page(st, __pgprot(prot), eff, 2);
-+			} else if (!kasan_page_table(st, p4d_start)) {
-+				walk_pud_level(st, *start, eff,
- 					       P + i * P4D_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, st, __pgprot(0), 0, 2);
-+			note_page(st, __pgprot(0), 0, 2);
- 
- 		start++;
- 	}
-@@ -530,6 +530,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 	}
- 
- 	st.check_wx = checkwx;
-+	st.seq = m;
- 	if (checkwx)
- 		st.wx_pages = 0;
- 
-@@ -543,13 +544,13 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 			eff = prot;
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++static void ptdump_walk_pgd_level_user_core(struct seq_file *m,
++					    struct mm_struct *mm,
++					    bool checkwx, bool dmesg)
++{
++	struct mm_struct fake_mm = {
++		.pgd = kernel_to_user_pgdp(mm->pgd)
++	};
++	init_rwsem(&fake_mm.mmap_sem);
++	ptdump_walk_pgd_level_core(m, &fake_mm, checkwx, dmesg);
++}
++#endif
++
+ void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
+ 				   bool user)
+ {
+-	pgd_t *pgd = mm->pgd;
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ 	if (user && boot_cpu_has(X86_FEATURE_PTI))
+-		pgd = kernel_to_user_pgdp(pgd);
++		ptdump_walk_pgd_level_user_core(m, mm, false, false);
++	else
  #endif
- 			if (pgd_large(*start) || !pgd_present(*start)) {
--				note_page(m, &st, __pgprot(prot), eff, 1);
-+				note_page(&st, __pgprot(prot), eff, 1);
- 			} else {
--				walk_p4d_level(m, &st, *start, eff,
-+				walk_p4d_level(&st, *start, eff,
- 					       i * PGD_LEVEL_MULT);
- 			}
- 		} else
--			note_page(m, &st, __pgprot(0), 0, 1);
-+			note_page(&st, __pgprot(0), 0, 1);
+-	ptdump_walk_pgd_level_core(m, pgd, false, false);
++		ptdump_walk_pgd_level_core(m, mm, false, false);
+ }
+ EXPORT_SYMBOL_GPL(ptdump_walk_pgd_level_debugfs);
  
- 		cond_resched();
- 		start++;
-@@ -557,7 +558,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 
- 	/* Flush out the last page */
- 	st.current_address = normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT);
--	note_page(m, &st, __pgprot(0), 0, 0);
-+	note_page(&st, __pgprot(0), 0, 0);
- 	if (!checkwx)
+ void ptdump_walk_user_pgd_level_checkwx(void)
+ {
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+-	pgd_t *pgd = INIT_PGD;
+-
+ 	if (!(__supported_pte_mask & _PAGE_NX) ||
+ 	    !boot_cpu_has(X86_FEATURE_PTI))
  		return;
- 	if (st.wx_pages)
+ 
+ 	pr_info("x86/mm: Checking user space page tables\n");
+-	pgd = kernel_to_user_pgdp(pgd);
+-	ptdump_walk_pgd_level_core(NULL, pgd, true, false);
++	ptdump_walk_pgd_level_user_core(NULL, &init_mm, true, false);
+ #endif
+ }
+ 
+ void ptdump_walk_pgd_level_checkwx(void)
+ {
+-	ptdump_walk_pgd_level_core(NULL, INIT_PGD, true, false);
++	ptdump_walk_pgd_level_core(NULL, &init_mm, true, false);
+ }
+ 
+ static int __init pt_dump_init(void)
 -- 
 2.20.1
 
