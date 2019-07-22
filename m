@@ -2,150 +2,122 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77824C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D97C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F64216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E6A217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:51:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="gyNnb8Oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732349AbfGVTrY (ORCPT
+        id S1731708AbfGVTvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:47:24 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.93]:46630 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729117AbfGVTrY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:47:24 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id BF9E3197AB
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:47:22 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id peHKhyNUC2PzOpeHKh69cR; Mon, 22 Jul 2019 14:47:22 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:48504 helo=[192.168.1.79])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hpeHK-002xHf-9Y; Mon, 22 Jul 2019 14:47:22 -0500
-Subject: Re: [PATCH] drm/amdkfd: Fix missing break in switch statement
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Philip Cox <Philip.Cox@amd.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kees Cook <keescook@chromium.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190721214935.GA910@embeddedor>
- <CADnq5_OTmx==m+1fJbf1PxPhPM0H0O8GRjq4eWeX6sw889YPrA@mail.gmail.com>
- <181c1bc9-4cf9-057f-a6e6-e6d62ddbc347@embeddedor.com>
- <CADnq5_NRDy1jpa2MGefo7KbUB2vejuLwpnJh=vsqyp56yY31Sg@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <f9b47ccc-d8e8-e03b-dc0c-6c8f1fd36477@embeddedor.com>
-Date:   Mon, 22 Jul 2019 14:47:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CADnq5_NRDy1jpa2MGefo7KbUB2vejuLwpnJh=vsqyp56yY31Sg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 22 Jul 2019 15:51:48 -0400
+Received: from mail-eopbgr700078.outbound.protection.outlook.com ([40.107.70.78]:54881
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728505AbfGVTvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 15:51:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oCSoRZrYjL+/YUK132k6EXBUrhUe7PGo0tocfqVtSPtvw+Qk6Ks9lFXtwkjHfmVmU+L2aeqgMBH7QmI+Vzxs5WbWnmQPJvogk6uNI5r7EM9+JNPHOqAuBmR0vNj4f28hSAeeNw3HOtaVXkLwCU/0l8/Ow2WayM42Po//ZryCDpEFt7uizWqsL26oiov3zE6lm0gYud9XTfGIsBNoMFZTDnq1aBHlQlG2dwUHDrSUAobxAIKEg1MwA6wsPy5edsvyBODJCqa587IWR48hMPqbLXCPQ0SFE1mtW9vlJJR1TyRKlyXvoq3uEkjDpGHYy+RLn6/wnqV6RHNJqM90pCE/PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o9puGVnZbvFj1f6E2aQY9roiIV/BGcDdqJSYQuke9ek=;
+ b=Zp99NfTCpW9ipRhKVSLi0B3almYUBr9qnBAXfNwvA53Oo5GmHwCfE/zDvHM4wnj+rHfOJYXIKNuI88LsyUsEZembq7Q2ed6sC3YsYj2Q0qF0JKJESyERI8Z11Eynb7dmEm5DNxg5v9I5Nty2LWkoQKiz5D45cJ6SJCTX+FkbXkDRBGoIdShKAZU714A00zDDSc3rxisVHOFuY0m5kTvUNqzgPVOfR6EtqErsnsFSbZzDZHawuT+CkDouCoFlvTr4v+D0eBk6emltbMsB3E++4671UH+Wrhe3xLT4xkgT4eI7e0dkC7150cfiQXtUO7pMdylPLLldJGQQYYUdC9gNMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o9puGVnZbvFj1f6E2aQY9roiIV/BGcDdqJSYQuke9ek=;
+ b=gyNnb8Oe5lhHtZev5qUL15L7ElgGpXuFQ23TIeAE5slnPqQyUL1w68auVoI8TV/7VMdHrw3p0MNrF2qmgf11Bv2dRsRm4y8sytU1qcr8Y7OUqLyAgtydWnFWb81RbJpRdusXRbD/PTSEIZByvrHFsPl3I1f5hpsn57zGiDZivvM=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB6021.namprd05.prod.outlook.com (20.178.53.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.9; Mon, 22 Jul 2019 19:51:40 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2115.005; Mon, 22 Jul 2019
+ 19:51:40 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3 3/9] x86/mm/tlb: Open-code on_each_cpu_cond_mask() for
+ tlb_is_not_lazy()
+Thread-Topic: [PATCH v3 3/9] x86/mm/tlb: Open-code on_each_cpu_cond_mask() for
+ tlb_is_not_lazy()
+Thread-Index: AQHVPc0s+2522G+J006mLkslhMknOKbXENkAgAABTgA=
+Date:   Mon, 22 Jul 2019 19:51:40 +0000
+Message-ID: <4B53B286-C718-4ACF-B974-17D700F8D2E1@vmware.com>
+References: <20190719005837.4150-1-namit@vmware.com>
+ <20190719005837.4150-4-namit@vmware.com>
+ <40f86e4b-8426-1a71-2ab5-4c5523dba247@rasmusvillemoes.dk>
+In-Reply-To: <40f86e4b-8426-1a71-2ab5-4c5523dba247@rasmusvillemoes.dk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.149.185
-X-Source-L: No
-X-Exim-ID: 1hpeHK-002xHf-9Y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink149-185.telefonia.intercable.net ([192.168.1.79]) [201.172.149.185]:48504
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 36
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ec3d94c-3b10-47e5-b9cd-08d70ede03ce
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB6021;
+x-ms-traffictypediagnostic: BYAPR05MB6021:
+x-microsoft-antispam-prvs: <BYAPR05MB6021852D96292A8E6CBF08AED0C40@BYAPR05MB6021.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(346002)(376002)(136003)(199004)(189003)(66446008)(8936002)(486006)(11346002)(6916009)(76176011)(2906002)(2616005)(476003)(81166006)(81156014)(33656002)(6486002)(99286004)(446003)(4744005)(6436002)(6506007)(14454004)(229853002)(66066001)(53546011)(71200400001)(71190400001)(26005)(102836004)(186003)(4326008)(5660300002)(7416002)(53936002)(36756003)(86362001)(54906003)(3846002)(8676002)(6512007)(316002)(6116002)(68736007)(76116006)(66946007)(7736002)(25786009)(66476007)(6246003)(305945005)(66556008)(478600001)(14444005)(256004)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6021;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IQULxV4iULVL9wX0bcQGhYWY2oTMnWj9ZfOUE/iQzj+UrhCvddzQyVPfZkoe5LXY77DJ2vyZgJuFBzkoVLIC9LhpEHXPgTp0qjjfMcmHqaBg9J7tNCKZg427qCkmPduGhLxDkQZfNfd67mOCzJf6RHlDP7DT3MtgMT9TZOh3Rg/MKfncQHbODY0LPLMaslkuT0XemM5x7Y8oPYIuUBrTbI1KfmJVV9c/4aBnbJnUPRrHTggICnUgNkqJ5JNVTCvO/7iMf/2xLb4e3PSFIU4NjsY1xaZV2kC6QbHcij1moFK1k1Mnid0jCV2CTiA3W6BebA28oqsuyP77ZVb1+BEH2yD628w21V6CjDfYhJ8KMW0dCCsUF/qexdAj23uG+pThnz6Te0I8j9UnbVk/6lowJkXf1JvFpwz85r5ekHNvE1Y=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2FD006B09E679D43839307D6B2A3E00B@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ec3d94c-3b10-47e5-b9cd-08d70ede03ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 19:51:40.4463
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/22/19 2:45 PM, Alex Deucher wrote:
-
->>
->> By the way, Alex, I'm planning to add these fixes to my tree. I want
->> to send a pull-request to Linus for v5.3-rc2 this afternoon. We want
->> to have the -Wimplicit-fallthrough option globally enabled in v5.3,
->> and these are some of the last fall-through warnings remaining in
->> the kernel.
->>
->> Can I have your Ack or Signed-off-by for all these drm patches?
-> 
-> I didn't realize you were sending these yourself. I was going to
-> include them in my upcoming -fixes pull.  Feel free to add my RB to
-> all three.
-> 
-
-Awesome! :)
-
-Thanks
---
-Gustavo
+PiBPbiBKdWwgMjIsIDIwMTksIGF0IDEyOjQ3IFBNLCBSYXNtdXMgVmlsbGVtb2VzIDxsaW51eEBy
+YXNtdXN2aWxsZW1vZXMuZGs+IHdyb3RlOg0KPiANCj4gT24gMTkvMDcvMjAxOSAwMi41OCwgTmFk
+YXYgQW1pdCB3cm90ZToNCj4gDQo+PiAvKg0KPj4gQEAgLTg2NSw3ICs4OTMsNyBAQCB2b2lkIGFy
+Y2hfdGxiYmF0Y2hfZmx1c2goc3RydWN0IGFyY2hfdGxiZmx1c2hfdW5tYXBfYmF0Y2ggKmJhdGNo
+KQ0KPj4gCWlmIChjcHVtYXNrX3Rlc3RfY3B1KGNwdSwgJmJhdGNoLT5jcHVtYXNrKSkgew0KPj4g
+CQlsb2NrZGVwX2Fzc2VydF9pcnFzX2VuYWJsZWQoKTsNCj4+IAkJbG9jYWxfaXJxX2Rpc2FibGUo
+KTsNCj4+IC0JCWZsdXNoX3RsYl9mdW5jX2xvY2FsKCZmdWxsX2ZsdXNoX3RsYl9pbmZvKTsNCj4+
+ICsJCWZsdXNoX3RsYl9mdW5jX2xvY2FsKCh2b2lkICopJmZ1bGxfZmx1c2hfdGxiX2luZm8pOw0K
+Pj4gCQlsb2NhbF9pcnFfZW5hYmxlKCk7DQo+PiAJfQ0KPiANCj4gSSB0aGluayB0aGUgY29uZnVz
+aW9uIGNvdWxkIGJlIGNsZWFyZWQgdXAgaWYgeW91IG1vdmVkIHRoaXMgaHVuayB0bw0KPiBwYXRj
+aCAyIHdoZXJlIGl0IGJlbG9uZ3MgLSBpLmUuIHdoZXJlIHlvdSBjaGFuZ2UgdGhlIHByb3RvdHlw
+ZSBvZg0KPiBmbHVzaF90bGJfZnVuY19sb2NhbCgpIGFuZCBoZW5jZSBpbnRyb2R1Y2UgdGhlIHdh
+cm5pbmcuDQoNClllcywgdGhlcmUgaXMgYSBzbWFsbCBtZXNzIGhlcmUgLSB0aGUgY29uc3RpZmlj
+YXRpb24gc2hvdWxkIGFjdHVhbGx5IGdvDQp0byBhIGRpZmZlcmVudCBwYXRjaOKApiBJ4oCZbGwg
+Zml4IGl0Lg==
