@@ -2,64 +2,82 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90C1C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE078C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A6F2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E8F21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfGVOzT (ORCPT
+        id S1726619AbfGVOzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:55:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55560 "EHLO mx1.redhat.com"
+        Mon, 22 Jul 2019 10:55:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52432 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfGVOzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:55:19 -0400
+        id S1725899AbfGVOzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:55:21 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C8DD5C057F2C;
-        Mon, 22 Jul 2019 14:55:18 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id ADBC5308FE9A;
+        Mon, 22 Jul 2019 14:55:21 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-116-45.ams2.redhat.com [10.36.116.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6CAA60A9F;
-        Mon, 22 Jul 2019 14:55:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BFB060A9F;
+        Mon, 22 Jul 2019 14:55:18 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, hch@lst.de,
         m.szyprowski@samsung.com, robin.murphy@arm.com, mst@redhat.com,
         jasowang@redhat.com, virtualization@lists.linux-foundation.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Fix NULL pointer dereference with virtio-blk-pci and virtual IOMMU
-Date:   Mon, 22 Jul 2019 16:55:07 +0200
-Message-Id: <20190722145509.1284-1-eric.auger@redhat.com>
+Subject: [PATCH 1/2] dma-mapping: Protect dma_addressing_limited against NULL dma_mask
+Date:   Mon, 22 Jul 2019 16:55:08 +0200
+Message-Id: <20190722145509.1284-2-eric.auger@redhat.com>
+In-Reply-To: <20190722145509.1284-1-eric.auger@redhat.com>
+References: <20190722145509.1284-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 22 Jul 2019 14:55:19 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 22 Jul 2019 14:55:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running a guest featuring a virtio-blk-pci protected with a virtual
-IOMMU we hit a NULL pointer dereference.
+dma_addressing_limited() should not be called on a device with
+a NULL dma_mask. If this occurs let's WARN_ON_ONCE and immediately
+return. Existing call sites are updated separately.
 
-This series removes the dma_max_mapping_size() call in
-virtio_max_dma_size when the device does not have any dma_mask set.
-A check is also added to early return in dma_addressing_limited()
-if the dma_mask is NULL.
+Fixes: b866455423e0 ("dma-mapping: add a dma_addressing_limited helper")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
-Eric Auger (2):
-  dma-mapping: Protect dma_addressing_limited against NULL dma_mask
-  virtio/virtio_ring: Fix the dma_max_mapping_size call
+---
 
- drivers/virtio/virtio_ring.c | 2 +-
- include/linux/dma-mapping.h  | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+v1 -> v2:
+- add a WARN_ON_ONCE()
+- reword the commit message
+---
+ include/linux/dma-mapping.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index e11b115dd0e4..ef0cf9537abc 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -689,8 +689,9 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
+  */
+ static inline bool dma_addressing_limited(struct device *dev)
+ {
+-	return min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
+-		dma_get_required_mask(dev);
++	return WARN_ON_ONCE(!dev->dma_mask) ? false :
++		min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
++			dma_get_required_mask(dev);
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
 -- 
 2.20.1
 
