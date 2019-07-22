@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F50CC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05089C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F94C2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F3E21985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbfGVPnQ (ORCPT
+        id S1730105AbfGVPna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:43:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:40476 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 11:43:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:40618 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729982AbfGVPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:43:11 -0400
+        id S1730090AbfGVPnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:43:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F0791509;
-        Mon, 22 Jul 2019 08:43:10 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 880E715A2;
+        Mon, 22 Jul 2019 08:43:24 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E99833F694;
-        Mon, 22 Jul 2019 08:43:07 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F34383F694;
+        Mon, 22 Jul 2019 08:43:21 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,9 +44,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v9 16/21] x86: mm+efi: Convert ptdump_walk_pgd_level() to take a mm_struct
-Date:   Mon, 22 Jul 2019 16:42:05 +0100
-Message-Id: <20190722154210.42799-17-steven.price@arm.com>
+Subject: [PATCH v9 21/21] arm64: mm: Convert mm/dump.c to use walk_page_range()
+Date:   Mon, 22 Jul 2019 16:42:10 +0100
+Message-Id: <20190722154210.42799-22-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
 References: <20190722154210.42799-1-steven.price@arm.com>
@@ -57,78 +57,317 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable x86 to use the generic walk_page_range() function, the
-callers of ptdump_walk_pgd_level() need to pass an mm_struct rather
-than the raw pgd_t pointer. Luckily since commit 7e904a91bf60
-("efi: Use efi_mm in x86 as well as ARM") we now have an mm_struct
-for EFI on x86.
+Now walk_page_range() can walk kernel page tables, we can switch the
+arm64 ptdump code over to using it, simplifying the code.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/x86/include/asm/pgtable.h | 2 +-
- arch/x86/mm/dump_pagetables.c  | 4 ++--
- arch/x86/platform/efi/efi_32.c | 2 +-
- arch/x86/platform/efi/efi_64.c | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/Kconfig                 |   1 +
+ arch/arm64/Kconfig.debug           |  19 +----
+ arch/arm64/include/asm/ptdump.h    |   8 +-
+ arch/arm64/mm/Makefile             |   4 +-
+ arch/arm64/mm/dump.c               | 117 ++++++++++-------------------
+ arch/arm64/mm/ptdump_debugfs.c     |   2 +-
+ drivers/firmware/efi/arm-runtime.c |   2 +-
+ 7 files changed, 48 insertions(+), 105 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 6986a451619e..1a2b469f6e75 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -29,7 +29,7 @@
- extern pgd_t early_top_pgt[PTRS_PER_PGD];
- int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3adcec05b1f6..5a32c87f37c6 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -105,6 +105,7 @@ config ARM64
+ 	select GENERIC_IRQ_SHOW
+ 	select GENERIC_IRQ_SHOW_LEVEL
+ 	select GENERIC_PCI_IOMAP
++	select GENERIC_PTDUMP
+ 	select GENERIC_SCHED_CLOCK
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_STRNCPY_FROM_USER
+diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+index cf09010d825f..1c906d932d6b 100644
+--- a/arch/arm64/Kconfig.debug
++++ b/arch/arm64/Kconfig.debug
+@@ -1,22 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
  
--void ptdump_walk_pgd_level(struct seq_file *m, pgd_t *pgd);
-+void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user);
- void ptdump_walk_pgd_level_checkwx(void);
- void ptdump_walk_user_pgd_level_checkwx(void);
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index fe21b57f629f..6f0d1296dee1 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -568,9 +568,9 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 		pr_info("x86/mm: Checked W+X mappings: passed, no W+X pages found.\n");
- }
+-config ARM64_PTDUMP_CORE
+-	def_bool n
+-
+-config ARM64_PTDUMP_DEBUGFS
+-	bool "Export kernel pagetable layout to userspace via debugfs"
+-	depends on DEBUG_KERNEL
+-	select ARM64_PTDUMP_CORE
+-	select DEBUG_FS
+-        help
+-	  Say Y here if you want to show the kernel pagetable layout in a
+-	  debugfs file. This information is only useful for kernel developers
+-	  who are working in architecture specific areas of the kernel.
+-	  It is probably not a good idea to enable this feature in a production
+-	  kernel.
+-
+-	  If in doubt, say N.
+-
+ config PID_IN_CONTEXTIDR
+ 	bool "Write the current PID to the CONTEXTIDR register"
+ 	help
+@@ -42,7 +25,7 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
  
--void ptdump_walk_pgd_level(struct seq_file *m, pgd_t *pgd)
-+void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm)
- {
--	ptdump_walk_pgd_level_core(m, pgd, false, true);
-+	ptdump_walk_pgd_level_core(m, mm->pgd, false, true);
- }
+ config DEBUG_WX
+ 	bool "Warn on W+X mappings at boot"
+-	select ARM64_PTDUMP_CORE
++	select PTDUMP_CORE
+ 	---help---
+ 	  Generate a warning if any W+X mappings are found at boot.
  
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, pgd_t *pgd, bool user)
-diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
-index 9959657127f4..9175ceaa6e72 100644
---- a/arch/x86/platform/efi/efi_32.c
-+++ b/arch/x86/platform/efi/efi_32.c
-@@ -49,7 +49,7 @@ void efi_sync_low_kernel_mappings(void) {}
- void __init efi_dump_pagetable(void)
- {
- #ifdef CONFIG_EFI_PGT_DUMP
--	ptdump_walk_pgd_level(NULL, swapper_pg_dir);
-+	ptdump_walk_pgd_level(NULL, init_mm);
+diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
+index 0b8e7269ec82..38187f74e089 100644
+--- a/arch/arm64/include/asm/ptdump.h
++++ b/arch/arm64/include/asm/ptdump.h
+@@ -5,7 +5,7 @@
+ #ifndef __ASM_PTDUMP_H
+ #define __ASM_PTDUMP_H
+ 
+-#ifdef CONFIG_ARM64_PTDUMP_CORE
++#ifdef CONFIG_PTDUMP_CORE
+ 
+ #include <linux/mm_types.h>
+ #include <linux/seq_file.h>
+@@ -21,15 +21,15 @@ struct ptdump_info {
+ 	unsigned long			base_addr;
+ };
+ 
+-void ptdump_walk_pgd(struct seq_file *s, struct ptdump_info *info);
+-#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
++void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
++#ifdef CONFIG_PTDUMP_DEBUGFS
+ void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
+ #else
+ static inline void ptdump_debugfs_register(struct ptdump_info *info,
+ 					   const char *name) { }
  #endif
+ void ptdump_check_wx(void);
+-#endif /* CONFIG_ARM64_PTDUMP_CORE */
++#endif /* CONFIG_PTDUMP_CORE */
+ 
+ #ifdef CONFIG_DEBUG_WX
+ #define debug_checkwx()	ptdump_check_wx()
+diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+index 849c1df3d214..d91030f0ffee 100644
+--- a/arch/arm64/mm/Makefile
++++ b/arch/arm64/mm/Makefile
+@@ -4,8 +4,8 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
+ 				   ioremap.o mmap.o pgd.o mmu.o \
+ 				   context.o proc.o pageattr.o
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+-obj-$(CONFIG_ARM64_PTDUMP_CORE)	+= dump.o
+-obj-$(CONFIG_ARM64_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
++obj-$(CONFIG_PTDUMP_CORE)	+= dump.o
++obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
+ obj-$(CONFIG_NUMA)		+= numa.o
+ obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
+ KASAN_SANITIZE_physaddr.o	+= n
+diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+index 82b3a7fdb4a6..5cc71ad567b4 100644
+--- a/arch/arm64/mm/dump.c
++++ b/arch/arm64/mm/dump.c
+@@ -15,6 +15,7 @@
+ #include <linux/io.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
++#include <linux/ptdump.h>
+ #include <linux/sched.h>
+ #include <linux/seq_file.h>
+ 
+@@ -65,10 +66,11 @@ static const struct addr_marker address_markers[] = {
+  * dumps out a description of the range.
+  */
+ struct pg_state {
++	struct ptdump_state ptdump;
+ 	struct seq_file *seq;
+ 	const struct addr_marker *marker;
+ 	unsigned long start_address;
+-	unsigned level;
++	int level;
+ 	u64 current_prot;
+ 	bool check_wx;
+ 	unsigned long wx_pages;
+@@ -168,6 +170,10 @@ static struct pg_level pg_level[] = {
+ 		.name	= "PGD",
+ 		.bits	= pte_bits,
+ 		.num	= ARRAY_SIZE(pte_bits),
++	}, { /* p4d */
++		.name	= "P4D",
++		.bits	= pte_bits,
++		.num	= ARRAY_SIZE(pte_bits),
+ 	}, { /* pud */
+ 		.name	= (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
+ 		.bits	= pte_bits,
+@@ -230,11 +236,15 @@ static void note_prot_wx(struct pg_state *st, unsigned long addr)
+ 	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
  }
  
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 08ce8177c3af..47a4c6c70648 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -614,9 +614,9 @@ void __init efi_dump_pagetable(void)
+-static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+-				u64 val)
++static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
++				unsigned long val)
  {
- #ifdef CONFIG_EFI_PGT_DUMP
- 	if (efi_enabled(EFI_OLD_MEMMAP))
--		ptdump_walk_pgd_level(NULL, swapper_pg_dir);
-+		ptdump_walk_pgd_level(NULL, init_mm);
- 	else
--		ptdump_walk_pgd_level(NULL, efi_mm.pgd);
-+		ptdump_walk_pgd_level(NULL, efi_mm);
- #endif
++	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
+ 	static const char units[] = "KMGTPE";
+-	u64 prot = val & pg_level[level].mask;
++	u64 prot = 0;
++
++	if (level >= 0)
++		prot = val & pg_level[level].mask;
+ 
+ 	if (!st->level) {
+ 		st->level = level;
+@@ -282,85 +292,27 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+ 
  }
  
+-static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start,
+-		     unsigned long end)
+-{
+-	unsigned long addr = start;
+-	pte_t *ptep = pte_offset_kernel(pmdp, start);
+-
+-	do {
+-		note_page(st, addr, 4, READ_ONCE(pte_val(*ptep)));
+-	} while (ptep++, addr += PAGE_SIZE, addr != end);
+-}
+-
+-static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start,
+-		     unsigned long end)
+-{
+-	unsigned long next, addr = start;
+-	pmd_t *pmdp = pmd_offset(pudp, start);
+-
+-	do {
+-		pmd_t pmd = READ_ONCE(*pmdp);
+-		next = pmd_addr_end(addr, end);
+-
+-		if (pmd_none(pmd) || pmd_sect(pmd)) {
+-			note_page(st, addr, 3, pmd_val(pmd));
+-		} else {
+-			BUG_ON(pmd_bad(pmd));
+-			walk_pte(st, pmdp, addr, next);
+-		}
+-	} while (pmdp++, addr = next, addr != end);
+-}
+-
+-static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start,
+-		     unsigned long end)
++void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
+ {
+-	unsigned long next, addr = start;
+-	pud_t *pudp = pud_offset(pgdp, start);
+-
+-	do {
+-		pud_t pud = READ_ONCE(*pudp);
+-		next = pud_addr_end(addr, end);
+-
+-		if (pud_none(pud) || pud_sect(pud)) {
+-			note_page(st, addr, 2, pud_val(pud));
+-		} else {
+-			BUG_ON(pud_bad(pud));
+-			walk_pmd(st, pudp, addr, next);
+-		}
+-	} while (pudp++, addr = next, addr != end);
+-}
++	unsigned long end = ~0UL;
++	struct pg_state st;
+ 
+-static void walk_pgd(struct pg_state *st, struct mm_struct *mm,
+-		     unsigned long start)
+-{
+-	unsigned long end = (start < TASK_SIZE_64) ? TASK_SIZE_64 : 0;
+-	unsigned long next, addr = start;
+-	pgd_t *pgdp = pgd_offset(mm, start);
+-
+-	do {
+-		pgd_t pgd = READ_ONCE(*pgdp);
+-		next = pgd_addr_end(addr, end);
+-
+-		if (pgd_none(pgd)) {
+-			note_page(st, addr, 1, pgd_val(pgd));
+-		} else {
+-			BUG_ON(pgd_bad(pgd));
+-			walk_pud(st, pgdp, addr, next);
+-		}
+-	} while (pgdp++, addr = next, addr != end);
+-}
++	if (info->base_addr < TASK_SIZE_64)
++		end = TASK_SIZE_64;
+ 
+-void ptdump_walk_pgd(struct seq_file *m, struct ptdump_info *info)
+-{
+-	struct pg_state st = {
+-		.seq = m,
++	st = (struct pg_state){
++		.seq = s,
+ 		.marker = info->markers,
++		.ptdump = {
++			.note_page = note_page,
++			.range = (struct ptdump_range[]){
++				{info->base_addr, end},
++				{0, 0}
++			}
++		}
+ 	};
+ 
+-	walk_pgd(&st, info->mm, info->base_addr);
+-
+-	note_page(&st, 0, 0, 0);
++	ptdump_walk_pgd(&st.ptdump, info->mm);
+ }
+ 
+ static void ptdump_initialize(void)
+@@ -388,10 +340,17 @@ void ptdump_check_wx(void)
+ 			{ -1, NULL},
+ 		},
+ 		.check_wx = true,
++		.ptdump = {
++			.note_page = note_page,
++			.range = (struct ptdump_range[]) {
++				{VA_START, ~0UL},
++				{0, 0}
++			}
++		}
+ 	};
+ 
+-	walk_pgd(&st, &init_mm, VA_START);
+-	note_page(&st, 0, 0, 0);
++	ptdump_walk_pgd(&st.ptdump, &init_mm);
++
+ 	if (st.wx_pages || st.uxn_pages)
+ 		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
+ 			st.wx_pages, st.uxn_pages);
+diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+index 064163f25592..1f2eae3e988b 100644
+--- a/arch/arm64/mm/ptdump_debugfs.c
++++ b/arch/arm64/mm/ptdump_debugfs.c
+@@ -7,7 +7,7 @@
+ static int ptdump_show(struct seq_file *m, void *v)
+ {
+ 	struct ptdump_info *info = m->private;
+-	ptdump_walk_pgd(m, info);
++	ptdump_walk(m, info);
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(ptdump);
+diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
+index e2ac5fa5531b..1283685f9c20 100644
+--- a/drivers/firmware/efi/arm-runtime.c
++++ b/drivers/firmware/efi/arm-runtime.c
+@@ -27,7 +27,7 @@
+ 
+ extern u64 efi_system_table;
+ 
+-#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
++#if defined(CONFIG_PTDUMP_DEBUGFS) && defined(CONFIG_ARM64)
+ #include <asm/ptdump.h>
+ 
+ static struct ptdump_info efi_ptdump_info = {
 -- 
 2.20.1
 
