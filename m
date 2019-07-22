@@ -2,82 +2,97 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C392C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1FCC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA41121901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E402190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="osk9Sq49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbfGVSfi (ORCPT
+        id S1731554AbfGVSgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:35:38 -0400
-Received: from smtprelay0152.hostedemail.com ([216.40.44.152]:56129 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727744AbfGVSfh (ORCPT
+        Mon, 22 Jul 2019 14:36:11 -0400
+Received: from mail-vk1-f174.google.com ([209.85.221.174]:44934 "EHLO
+        mail-vk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731265AbfGVSgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:35:37 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 37ADE100E806B;
-        Mon, 22 Jul 2019 18:35:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sort55_4dc629887d118
-X-Filterd-Recvd-Size: 2243
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 22 Jul 2019 18:35:34 +0000 (UTC)
-Message-ID: <207e201cb7a36e38f032bcb66e79e2d4b9b63c7b.camel@perches.com>
-Subject: Re: [RFC PATCH] string.h: Add stracpy/stracpy_pad (was: Re: [PATCH]
- checkpatch: Added warnings in favor of strscpy().)
-From:   Joe Perches <joe@perches.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, akpm@linux-foundation.org,
-        corbet@lwn.net, apw@canonical.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Date:   Mon, 22 Jul 2019 11:35:33 -0700
-In-Reply-To: <20190722182703.GE363@bombadil.infradead.org>
-References: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
-         <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
-         <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
-         <201907221031.8B87A9DE@keescook>
-         <b9bb5550b264d4b29b2b20f7ff8b1b40d20def6a.camel@perches.com>
-         <2c959c56c23d0052e5c35ecfa2f6051b17fb2798.camel@perches.com>
-         <20190722182703.GE363@bombadil.infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 22 Jul 2019 14:36:11 -0400
+Received: by mail-vk1-f174.google.com with SMTP id w186so8104934vkd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AaGq+Qn5ipyvNclhgXPtbHGUf3PKYP2ypbtdsfvuGPE=;
+        b=osk9Sq49PC6jweSqvDPGNpTawDqfETyCe1tAbu9VOkLFzFTsAr+zL99VHezfFVOUWF
+         3YFzTuckiUTd/d0mXDXqH1R9tfxs9b1EljM+F3B0BoKUyUkupKr37Di0RpbFTk3+LnlC
+         pSrnYiutyvFubFi4x0xaJbbIpXT97zAd05k0WFYQ6oHIpMqOpkhI7Yxb/hdOCxZcDBV9
+         dxiYxnYhoJb9leiHgnlMbjMOPnPvG1au8vSgXPvNh74s8sPUxdGJiM/f/r8IVZlCbWKv
+         LMXx07kFL2gb6EnB9xQcZQR7mVet8ltHHkeK2Rr/ge8mbCaCnFpwvcDZsc5hkxe0p7mp
+         k1Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AaGq+Qn5ipyvNclhgXPtbHGUf3PKYP2ypbtdsfvuGPE=;
+        b=OaEWiSZD3Qhrd3auberE/W2E42KcRepkfKBZJ7t95gXt06BVKbi3VN9lkd+U0fHY2a
+         IFMCBh1pj4430w5gpskmqiGXYRqAhC4JB3mzybeT8sy1OWs7YomYfFPUJJQYJlBOz0JT
+         rnJi50kShEOK3pTdtYnAEAdwLS1IqMN7MHJTOa3n8r60w4Fh+V4E4Fjot6DfPXyt2J/a
+         BKnCJXWh9i/Gaj8NvOZaPhky+Yf03Q/rHxOnQ+SpZb7qT8zamIKFOFBCW4J8jUV0wF79
+         Xv0SV81holNpC1ZOR/c3b9BRLR4xu+cAQB0dpJouVdLp42CIiH0dBUSj+I51ed9O96+d
+         pMbw==
+X-Gm-Message-State: APjAAAVB8WlOt6Hs/yuFUx3J+X0vNgPhJqWcfLqkXH+KJ4CEWFa3qmlq
+        +Ff4EQUZSXyWA5gFieDXsn0+0w==
+X-Google-Smtp-Source: APXvYqzg05DBMl1FiOOEi+BcDj9oMatgFoRzOcxe2TWC1iSrYrMwZsPdQYO2OOGlW8dYgZ2eC5r1aA==
+X-Received: by 2002:a1f:5945:: with SMTP id n66mr26924124vkb.58.1563820570049;
+        Mon, 22 Jul 2019 11:36:10 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id w12sm15578233vso.32.2019.07.22.11.36.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jul 2019 11:36:09 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hpdAO-00068P-L1; Mon, 22 Jul 2019 15:36:08 -0300
+Date:   Mon, 22 Jul 2019 15:36:08 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     bmt@zurich.ibm.com, dledford@redhat.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] infiniband: siw: remove set but not used variables
+ 'rv'
+Message-ID: <20190722183608.GA23553@ziepe.ca>
+References: <20190719012938.100628-1-maowenan@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719012938.100628-1-maowenan@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-22 at 11:27 -0700, Matthew Wilcox wrote:
-> On Mon, Jul 22, 2019 at 10:58:15AM -0700, Joe Perches wrote:
-> > On Mon, 2019-07-22 at 10:43 -0700, Joe Perches wrote:
-> > > On Mon, 2019-07-22 at 10:33 -0700, Kees Cook wrote:
-> > > > On Thu, Jul 04, 2019 at 05:15:57PM -0700, Joe Perches wrote:
-> > > > > On Thu, 2019-07-04 at 13:46 -0700, Joe Perches wrote:
-[]
-> > > > > +#define stracpy(to, from)					\
-> > > > > +({								\
-> > > > > +	size_t size = ARRAY_SIZE(to);				\
-> > > > > +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-> > > > > +								\
-> > > > > +	strscpy(to, from, size);				\
-> > > > > +})
+On Fri, Jul 19, 2019 at 09:29:38AM +0800, Mao Wenan wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> Where does the 'a' in 'stracpy' come from?
+> drivers/infiniband/sw/siw/siw_cm.c: In function siw_cep_set_inuse:
+> drivers/infiniband/sw/siw/siw_cm.c:223:6: warning: variable rv set but not used [-Wunused-but-set-variable]
+> 
+> It is not used since commit 6c52fdc244b5("rdma/siw: connection management")
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/infiniband/sw/siw/siw_cm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-No place in particular.
+Applied to for-rc
 
-I used it because dst has to be an 'a'rray rather
-than a pointer.
-
-
+Thanks,
+Jason
