@@ -2,126 +2,132 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF01C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E986C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0CC2190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwvUZmA/"
+	by mail.kernel.org (Postfix) with ESMTP id 3ED5521985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfGVT2A (ORCPT
+        id S1732203AbfGVT3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:28:00 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37467 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbfGVT2A (ORCPT
+        Mon, 22 Jul 2019 15:29:40 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42793 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfGVT3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:28:00 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s20so41439190otp.4;
-        Mon, 22 Jul 2019 12:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uj1vF7RfJZlwyLj5jo8OvTSlBivPfV0p9Isy1dRx0cw=;
-        b=KwvUZmA/TFlsf8phNB1484k3noJJmOLRi7PMyWcFL7iLRMAw8JLGcicEhsiyWEeG85
-         UWKv5qSpR7cQZnotUdM1xDJzdqRipuzwYLEoZTPVESXEs/+KkcVmK4EOoO3oEWjD8rME
-         54H4HkxA02p5hNl1B/ZqOOITWqKPprYmPO/mt9VmA5rCtkOBjiiHiybObG3hllGwcCHJ
-         OUQL0rBNSt4IZh2VV1jLAUwMM3QsncDJktSA6kkP4qPx1TJNCTQVpF6fQDqOmJ2EWIMs
-         R9KUEUuae/vD5FRJ4g2/WoBC3064GdDTdNNDqCB7WQcIMTq9egSI/6ZAJmhs3ApIrMuw
-         qhmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uj1vF7RfJZlwyLj5jo8OvTSlBivPfV0p9Isy1dRx0cw=;
-        b=VgE91Vt8aQO20343T+Yi6zJ2z9OXAuKVEnZ1pD9TFoR1jVDMfkLoCoXbOVI2QtQUHl
-         ePjhIoHAz5R0EMnbpSdV7RLndRx5a4+SX3nyk6z18MEW/Y+joPPCZUYiUedjpzzuJV9C
-         6zL3Xm8cCkN1CTmCPXt4VOXqMImnp0ERo7eR0Vd4TEYhRc7IT3+mwHk5MZ9miW1pGq94
-         rrDAXrfIxpAnUGVNR/YIutnLqXU96ZxPx++8k9mHp9xRUvg746Z9NGNmD3ecL8/oDfue
-         7EbzHDwQ/8fF/BMSs3/v/1DimVmvY5pQ/IGCekhIxB5tT4dODqMCDIQfqiABOlBkKuvi
-         f7hg==
-X-Gm-Message-State: APjAAAVCt8GFM+HUufAnTb4egDQN11IzWGhZVR7N5LHj84bNFUbeT5Qr
-        qHL9ao7YbyqcGconu/IyJNqqxMxFz2njKhDSPQU=
-X-Google-Smtp-Source: APXvYqx0aUZdbJBV0PvmJlamscXhqR0+FSAVSRL+feAm2R6HHFb8oR+l2aPxYMzo5wnr+7alnBi0yDE/CrWJjhAszYw=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr27149286oto.207.1563823679323;
- Mon, 22 Jul 2019 12:27:59 -0700 (PDT)
+        Mon, 22 Jul 2019 15:29:39 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DA05DC0008;
+        Mon, 22 Jul 2019 19:29:36 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 21:29:34 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding for Lichee
+ Zero Plus core board
+Message-ID: <20190722192934.3jaf3r4rnyeslqyw@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-8-icenowy@aosc.io>
+ <20190720101318.cwrvv5r42wxx5k4r@flea>
+ <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
 MIME-Version: 1.0
-References: <20190722124747.4792-1-alexandru.ardelean@analog.com>
- <20190722124747.4792-2-alexandru.ardelean@analog.com> <20190722163202.GG4756@sirena.org.uk>
-In-Reply-To: <20190722163202.GG4756@sirena.org.uk>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Mon, 22 Jul 2019 22:27:47 +0300
-Message-ID: <CA+U=DspSkWzwVp38No9tGYb0_zc2yVP5jFcLsOd2aLi2WxaW-w@mail.gmail.com>
-Subject: Re: [PATCH 1/4][V3] spi: Add optional stall delay between cs_change transfers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vn42k7mlndfzfvev"
+Content-Disposition: inline
+In-Reply-To: <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 8:42 PM Mark Brown <broonie@kernel.org> wrote:
+
+--vn42k7mlndfzfvev
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Jul 20, 2019 at 07:39:08PM +0800, Icenowy Zheng wrote:
 >
-> On Mon, Jul 22, 2019 at 03:47:44PM +0300, Alexandru Ardelean wrote:
-> > Some devices like the ADIS16460 IMU require a longer period between
-> > transfers, i.e. between when the CS is de-asserted and re-asserted. The
-> > default value of 10us is not enough. This change makes the delay
-> > configurable for when the next CS change goes active, allowing the default
-> > to remain 10us is case it is unspecified.
 >
-> For the third time:
+> =E4=BA=8E 2019=E5=B9=B47=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+6:13:18, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
+> >On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
+> >> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+> >> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
+> >Flash.
+> >> It has a gold finger connector for expansion, and UART is available
+> >from
+> >> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+> >> Allwinner V3L SoCs.
+> >>
+> >> Add the device tree binding of the basic version of the core board --
+> >> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
+> >>
+> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >> ---
+> >> No changes since v3.
+> >>
+> >> Patch introduced in v2.
+> >>
+> >>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> >b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> >> index 000a00d12d6a..48c126a7a848 100644
+> >> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> >> @@ -353,6 +353,11 @@ properties:
+> >>            - const: licheepi,licheepi-zero
+> >>            - const: allwinner,sun8i-v3s
+> >>
+> >> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
+> >Flash)
+> >> +        items:
+> >> +          - const: sipeed,lichee-zero-plus
+> >> +          - const: allwinner,sun8i-s3
+> >
+> >If the S3 is just a rebranded V3, then we should have the v3 compatile
+> >in that list too.
 >
-> | This looks like cs_change_delay.
+> S3 is V3 with copackaged DDR3 DRAM.
 >
-> >  #define      SPI_NBITS_QUAD          0x04 /* 4bits transfer */
-> >       u8              bits_per_word;
-> >       u8              word_delay_usecs;
-> > +     u8              cs_change_delay;
-> >       u16             delay_usecs;
-> >       u32             speed_hz;
-> >       u16             word_delay;
->
-> This patch doesn't apply and even if it did it won't compile because you
-> are trying to add a field with the same name as an existing one.
+> It's pin incompatible w/ V3.
 
-oooohhhhhhhh
-now i see;
+Does it matter though?
 
-well, my fault here;
-i was basing my patchset on top of branch iio/togreg from Jonathan's
-tree for the IMU:
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=togreg
-[ typically that's the base branch for new IIO drivers ]
+If the only thing that changes is the package, we're not manipulating
+that, and any software that deals with the v3 can deal with the
+s3. Which is what the compatible is about.
 
-that one is a bit behind, and does not contain the cs_change_delay
-stuff you mentioned;
-also, i will admit that sometimes, some review comments are not
-completely obvious to me;
-i should have checked the SPI tree before opening my mouth, but this
-will [hopefully] serve me as a learning experience when sending
-multi-subsystem patches
-when sending to a single subsystem, it's clear; when sending to 2, i
-get a bit lost
+Maxime
 
-i do feel a bit bad for the noise i caused, but it's not the worst
-thing i did today
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-anyway: disregard this, and i will sync with Jonathan about how to
-proceed with this patch just for IIO;
+--vn42k7mlndfzfvev
+Content-Type: application/pgp-signature; name="signature.asc"
 
-thanks for your time and sorry for the noise
-Alex
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTYOngAKCRDj7w1vZxhR
+xd77AP9kxx/qXPETcP3fumpzmXSQrjjY9A81+Czl0ZPvauA4VQEA2qZwJBFD+6ml
+86ahAeLa2qt1k3eZZlcXhgNVqkXxygs=
+=9EZ6
+-----END PGP SIGNATURE-----
+
+--vn42k7mlndfzfvev--
