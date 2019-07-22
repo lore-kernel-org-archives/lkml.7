@@ -2,96 +2,95 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD83EC76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFE5C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF30D21E72
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42239222F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfGVG43 (ORCPT
+        id S1727558AbfGVG4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 02:56:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:40151 "EHLO
+        Mon, 22 Jul 2019 02:56:35 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:54985 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfGVG43 (ORCPT
+        with ESMTP id S1725920AbfGVG4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 02:56:29 -0400
+        Mon, 22 Jul 2019 02:56:34 -0400
 Received: from [192.168.1.110] ([77.2.59.209]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MQMm9-1i2I7Z2eBN-00MOVt; Mon, 22 Jul 2019 08:55:56 +0200
-Subject: Re: [PATCH] iio: sca3000: Fix a typo
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MOzCW-1i3efv0yMO-00PJWn; Mon, 22 Jul 2019 08:56:19 +0200
+Subject: Re: [PATCH] ia64: perfmon: Fix a typo
 To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, gustavo@embeddedor.com
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tony.luck@intel.com, fenghua.yu@intel.com, david@redhat.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        akpm@linux-foundation.org
+Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-References: <20190721105353.30504-1-christophe.jaillet@wanadoo.fr>
+References: <20190721165144.3152-1-christophe.jaillet@wanadoo.fr>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Organization: metux IT consult
-Message-ID: <0d698979-d0da-5225-6dc3-e2ddebb31279@metux.net>
-Date:   Mon, 22 Jul 2019 08:55:50 +0200
+Message-ID: <a08f8eff-5043-dcf5-b4e1-22c0512bd8d3@metux.net>
+Date:   Mon, 22 Jul 2019 08:56:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190721105353.30504-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20190721165144.3152-1-christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:jbeW2KE7dRGinHyZMgpPz8HUGa+WPHCRWrb39H5ZnK53XYC+xG0
- oEDKFlxKLjhX2jJ+E4j2QFm57yuYhw6ThBxjJHsZkFcfIJr3194KtHE3Y5AoAxyRyu5KoFx
- AH1gt1Ui1CHgKOjh+gaSDz8WkLVanfP4AygsCG4g0XpszQiprt7h6m33YWH2JFpWBNlYtS3
- SRFBsJ6e1PKj7RMdiYHcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KCwfldBYtuE=:B2E4He/sYzPrOa2E+sZCOD
- LYt9aqxGZ+QDSD/Y/SW0Hc7X3T6VxXSAZQnDsPhoNaFIZxmtFhUN9EOaV6/ydOxD0S5arTkgE
- aK7taMBwo0Cu5PHJAxhTLmZSJre4x5Gf63CRNPy6rBYEdG6qY11vNmqUY5LMEGI4ayXuFmNHz
- DW08a7XFqNaivRt+2UI/c6+/KVeArkwjBNaSwLpd0pPUe/pwn9lq190nYtH9TTLZKXovRj5Cb
- jK2d8L9L2nXN0nmFT4QgcJ7Vdi5kEI3VFiQ/r0vS3BfKuX+5MTXUhYdRGXsAwQMuSrNojfJDx
- NzrHYzq39NZKFrpqJb+8SyMP8t02Kdx2d9LM+UNEiTNSxWXGIu935INeGMqDBaHMNx38GCSVO
- z945k3iH+826NyPFbkywvIKU501Bxms6KwpnPMcB6JQpeY35K5ZVr71uGxPO0WP6VkAca9Njb
- c2sWlXEXY/4XN3lcjP7t5OlK+6RigqavipsJ7NTNKf5THUelPLhrLE/ecou5eUxtthcydDn3Z
- nnLn2vajeLRC85V9cp9Bljc4S2c/TbFh8B/gCGY2jQ3mj9MtcPopI854/Y7Bgd8ezkFcAnuWz
- U9MremWNxI2/7yeOMj1H4GLGUZgO34gh+0oJ3mmWg0hQeC1GfWwY2FCvyrIajFoM00XhL7B5M
- QJYm194D9fhkGrJ2uUuP4dJ+0DC5TFB3Bs6OWmVz6yZucerRZGbBgFl7nog5Bj5gPneAHKkR5
- G3IvO6n6YInFJDAlqHpDD3IyUakKVS+0SeDzJermyNwQ3cshnbx67NSbq8w=
+X-Provags-ID: V03:K1:K6xyMsoIN7d243CUu0mPcMW7cw/GTRFrllJlYrKeOtfB9PgbTxf
+ QjS3P6QtIGsuXAM2G6AofATlwsBkwq4OiIaAm23ZV9YPLmPaoc6hBl+azvjhyjB9l3eosyW
+ BA3JzycnYh1Y6jqEUwfLR8eSpimvyKILTYtUzx3AAyftKIQfOJ+jDxVfx5HGkJe0kCdTloG
+ OxAXtynS6tU0JATfxeX2A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z8W/lO/kXJQ=:g/MJhBhg7xPCEJDgc+BbQh
+ MXFdFiiJjoGCZKZcmyaNcgzmojhQhumgbCPNhzpKqdMcloz0EcNokgzaPu5CywxV/143i9nPC
+ 9Y1aLYXaKGQn5XFktHYMvfg0Us/ojRjzrk+UKMsI+IMsxJXf9glHPLhijnwuJU7x76p2HT7x7
+ MmB1xBpeokUWskJC8sOTc3Wc+2I8ETvbe3MazTEBCkEeOt+zFTSYbnj4lCYPpx/k6mhNI6jIS
+ jSHl5DGpAPs24hEqlx1rynWO0ZpD9VGCQBVvJ6HefQlgjYwlSKmgP6MLE0gbgx/7TDxOGblzB
+ 7C0OICHuce/ateEum3Lo9LkeG7xoGBsoycz1wq7J7fvjDEw1fJM3tJrJbH/zJhiBtj5Dwho/j
+ EgdRd+kN/Bo1UJFNO6G3PfxT1TDX5rKRABAh1akforwmMJGiDNK6ZuvooJf99VQZz/rC1lSxQ
+ PF0DR6+rsRUZQZ2tyaXLFCjvs4i0HtRIEADLuFP1jHuO4Ap/9RtWE4J9Xpn9NTTH5B+HPnSIB
+ siI/Ap+cml70HXbS74iG40M7qOQDN/SY9u9mi1D/6CIaCKCrwPQKRFZx01BA9adm54mep5O0U
+ GofiJH1tMsE8nSWwuBR1+cyCN/0F0Wk3kZKfp7ebRkJLpJRzHZ8UCMkXORfIjZu3P7Er0J05f
+ SR4NN3pCk0usc+3fw2xBLhM2nE57+N0yLD3ujDc+D+zhTBDlXkitAHd3PsI5rlK0uTw4m5V+x
+ pIywP7hOiboZvJ5T5NFAqG09aR0IEHht4pAFz6+aFxJSchc153tHldDjs6M=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.07.19 12:53, Christophe JAILLET wrote:
-> All #define are about SCA3000_... except the last one.
-> Make it consistent.
-> 
-> s/SAC3000/SCA3000/
-> 
-> This #define is apparently unused up to now.
+On 21.07.19 18:51, Christophe JAILLET wrote:
+> s/permfon.h/perfmon.h/
 > 
 > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->   drivers/iio/accel/sca3000.c | 2 +-
+> The reference to perfmon.h should maybe be just removed because I've found
+> no information about the increasing order to respect.
+> This is maybe now in another file?
+> ---
+>   arch/ia64/kernel/perfmon.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-> index 4964561595f5..537e9325bcc7 100644
-> --- a/drivers/iio/accel/sca3000.c
-> +++ b/drivers/iio/accel/sca3000.c
-> @@ -114,7 +114,7 @@
->   /* Currently unsupported */
->   #define SCA3000_MD_CTRL_AND_Y				BIT(3)
->   #define SCA3000_MD_CTRL_AND_X				BIT(4)
-> -#define SAC3000_MD_CTRL_AND_Z				BIT(5)
-> +#define SCA3000_MD_CTRL_AND_Z				BIT(5)
+> diff --git a/arch/ia64/kernel/perfmon.c b/arch/ia64/kernel/perfmon.c
+> index 58a6337c0690..22795b420b10 100644
+> --- a/arch/ia64/kernel/perfmon.c
+> +++ b/arch/ia64/kernel/perfmon.c
+> @@ -4550,7 +4550,7 @@ pfm_exit_thread(struct task_struct *task)
+>   }
 >   
 >   /*
->    * Some control registers of complex access methods requiring this register to
+> - * functions MUST be listed in the increasing order of their index (see permfon.h)
+> + * functions MUST be listed in the increasing order of their index (see perfmon.h)
+>    */
+>   #define PFM_CMD(name, flags, arg_count, arg_type, getsz) { name, #name, flags, arg_count, sizeof(arg_type), getsz }
+>   #define PFM_CMD_S(name, flags) { name, #name, flags, 0, 0, NULL }
 > 
-Reviewed-By: Enrico Weigelt <info@metux.net>
 
+Reviewed-By: Enrico Weigelt <info@metux.net>
 -- 
 Enrico Weigelt, metux IT consult
 Free software and Linux embedded engineering
