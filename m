@@ -6,95 +6,121 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2AAC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D09D3C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1172921951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1A921911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfGVO4r (ORCPT
+        id S1726759AbfGVO6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:56:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:39631 "EHLO
+        Mon, 22 Jul 2019 10:58:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:37285 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfGVO4q (ORCPT
+        with ESMTP id S1725899AbfGVO6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:56:46 -0400
+        Mon, 22 Jul 2019 10:58:45 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MK5BG-1i8jzE0TaY-00LSju; Mon, 22 Jul 2019 16:56:38 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M72Xn-1hmYIL10oB-008bY6; Mon, 22 Jul 2019 16:58:30 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [RESEND] ARM: bcm47094: add missing #cells for mdio-bus-mux
-Date:   Mon, 22 Jul 2019 16:55:52 +0200
-Message-Id: <20190722145618.1155492-1-arnd@arndb.de>
+To:     David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH net-next] rxrpc: shut up -Wframe-larger-than= warnings
+Date:   Mon, 22 Jul 2019 16:58:12 +0200
+Message-Id: <20190722145828.1156135-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:58kYNxdp/4/OvhkcephOLG0lrEtZe2zmOjPbxM1QiGret2IP62K
- Do1CrdRVKb3+q8wqTdH7sLCUMztu0hZBtmcPCx2tU5t1bN6fqmAX5v7tFL5dTerwRm7NA78
- vBDVQPQJEQJr+H8tE7RL7zNIElfZINbjxoqrt3+SrLnqTjtOs72amePfZHcm3eh+Mva1jPh
- R6XjmO6j/3/U8K6YpL3fQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wKqZgt1dv0Q=:6PmNuljPMLdDh28rDeVivF
- OIkrLJ8ck2n9NBA9aF9puJX5cKE2GwHKs8yWZoMQhdvRJWx3YtzPYW93AezeahKzZ+FrdyGTY
- 2d8EU5ssFXVht9gwbWC0rabvnKxcMSUg0SIsZtaQlHE2z2OTUrNKwgFuHxPV0ln3AZBkMtiy/
- MW86BXbXaFkrjFGxlNaFiezYwBNZj9XlDk581sTpfH/TLoeYQuaA8AwHdW28zdc6q6PFqo9l/
- qH+yzwdMi4hyfpzGR1vy/K6s7sYlh5iqr4R1ILEWgQ/IvWMnPCEnkiARJGQ4BYRdBOuQ7dUbR
- CoWJaQ50nf3kyQ7RWFHbx5usz/syTZyjKnoo1BL4DB0H1joXwbsQgvHRrhr88WvPfcKwimLP9
- YQmTk6/G7eT7YHZjtVt+x0NjO0TGKpOoCfg92EALVOtaYBR9BR2jnq9wwNXmyEqh2MTILgxpW
- 15ivrfMNoJJYf4jU0aJ3BVgMPNMHPW1/XWT2gCJzcULM32KAQQFX1L1fv4qe4Z0wXRFJM/sEs
- qxu3D9H7fJTn/Xty1lgo01Tte8iaEp6rJ8rnRfBtYxk4ua3PaI+tHj6urOmpCukAIM93blLR/
- PfHzLFb8Sm0gn8xfJdKee7hp7BKpAMMDRZ7vQh95hSDKpR6DqaJY9ZGhHdGxnomSJwPV/5snS
- GBY/lJtCJZzp/LnetfqnTXyzS+Kohh+yF4IWXn4v8PM2nB2GJOdw+YhO9ZfHmaCKkimR5eHmt
- Wab3l4aEr9owkWzpYtmUxyF0l9N1ULaK3PNbyw==
+X-Provags-ID: V03:K1:lfUDGrLpfiXr0926+j2P2OlmuIJ9NeSW7hz8xpL9W9/lJWhLyxr
+ nvy0gDbgeppmwx5SNKpsWc+kRWqKjri7P6sr1ev6Ni6JpuD6b9lOpGqjq9c/mOazV/kZO89
+ BhM/bodFV621uaH+Om47Oer2s95AQ9aOLPAg0UMDON68IcCMVTiV5llJknLtQnVDEQeonSM
+ Bne5lVBalJEvcLsf+iUrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FSBaxuTAGN0=:DC1HwUKvN32xA+BmgiSi7p
+ 5BlOr7hXovf7a2nSPKJT9fKI5oL3ewkotHvT7gChJ58N3ObJta+RX2z95PAIKvWuk7rnMGsfv
+ cCC5dupWpKlz2umtRlihopD5G69vxMzetqMDiZCvHq3kBhQNS+CLBqKtsCXTKR7/xkA5g2V2F
+ sJkqK8fwkMUGbflM593akcchF3u3g8FFRGvFxcoBmSH9uVlV3P8vtSezwQXtZwKmXsh2bpl+B
+ DhPEkEp+2Jye5oLjpcUDWpARuAbNbTI05mMFS+MKlYffblU0nOEYCgnywnccztSdw1MlSy2o4
+ P/VHWgYnRuNAkRyWUp4UYrBlEfvotJd4jrQpoCWebMCvOXEOu/7veqN4SdMc5VMllvJwBC/R8
+ d+JrNMSHEVbp6bYuZmmwXLVwl+PRXk3nxqRwgYLfyWHxEFJr+iOY1qaANkZ348iljRePrR1+F
+ 5mRdXtq/oGsDbALMLO8EITVqnD5HaGfPnSMxlP4XfUxjmOMW3Eu9e9WBXebZT8OsfB7o4wu1Q
+ 06+w6tVTGHhapGjBtibEN/LsZ5uz9UkR5X7oMNSfoD1RsrKPThoDR52oQYf6pCNYwfsqhMFXq
+ +8tAm1nyxr+xYaDzaDuSKYLL+8oY+KT/EbYd2ymalbQbVWKrp8YlSQgaeAwVBiD9Yn/1JlDYf
+ gliInbSQrx/vFOIz80D0jUg2N4k4D/zzJkm+km1/nqoV3eM+eNUib1KVsxXmzUKgpJG//rndn
+ T+Irze9420UQg0b97RVKHAZ1dKwPJuYld3rpxw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mdio-bus-mux has no #address-cells/#size-cells property,
-which causes a few dtc warnings:
+rxkad sometimes triggers a warning about oversized stack frames
+when building with clang for a 32-bit architecture:
 
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
+net/rxrpc/rxkad.c:243:12: error: stack frame size of 1088 bytes in function 'rxkad_secure_packet' [-Werror,-Wframe-larger-than=]
+net/rxrpc/rxkad.c:501:12: error: stack frame size of 1088 bytes in function 'rxkad_verify_packet' [-Werror,-Wframe-larger-than=]
 
-Add the normal cell numbers.
+The problem is the combination of SYNC_SKCIPHER_REQUEST_ON_STACK()
+in rxkad_verify_packet()/rxkad_secure_packet() with the relatively
+large scatterlist in rxkad_verify_packet_1()/rxkad_secure_packet_encrypt().
 
-Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
+The warning does not show up when using gcc, which does not inline
+the functions as aggressively, but the problem is still the same.
+
+Marking the inner functions as 'noinline_for_stack' makes clang
+behave the same way as gcc and avoids the warning.
+This may not be ideal as it leaves the underlying problem
+unchanged. If we want to actually reduce the stack usage here,
+the skcipher_request and scatterlist objects need to be moved
+off the stack.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-As Florian is apparently on vacation at the moment, let's merge this
-as a bugfix through arm-soc directly to get closer to clean allmodconfig
-build.
----
- arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ net/rxrpc/rxkad.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-index 18d0ae46e76c..0faae8950375 100644
---- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-+++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-@@ -124,6 +124,9 @@
- 	};
- 
- 	mdio-bus-mux {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
- 		/* BIT(9) = 1 => external mdio */
- 		mdio_ext: mdio@200 {
- 			reg = <0x200>;
+diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
+index ae8cd8926456..788e40a1679c 100644
+--- a/net/rxrpc/rxkad.c
++++ b/net/rxrpc/rxkad.c
+@@ -139,7 +139,7 @@ static int rxkad_prime_packet_security(struct rxrpc_connection *conn)
+ /*
+  * partially encrypt a packet (level 1 security)
+  */
+-static int rxkad_secure_packet_auth(const struct rxrpc_call *call,
++static noinline_for_stack int rxkad_secure_packet_auth(const struct rxrpc_call *call,
+ 				    struct sk_buff *skb,
+ 				    u32 data_size,
+ 				    void *sechdr,
+@@ -176,7 +176,7 @@ static int rxkad_secure_packet_auth(const struct rxrpc_call *call,
+ /*
+  * wholly encrypt a packet (level 2 security)
+  */
+-static int rxkad_secure_packet_encrypt(const struct rxrpc_call *call,
++static noinline_for_stack int rxkad_secure_packet_encrypt(const struct rxrpc_call *call,
+ 				       struct sk_buff *skb,
+ 				       u32 data_size,
+ 				       void *sechdr,
+@@ -311,7 +311,7 @@ static int rxkad_secure_packet(struct rxrpc_call *call,
+ /*
+  * decrypt partial encryption on a packet (level 1 security)
+  */
+-static int rxkad_verify_packet_1(struct rxrpc_call *call, struct sk_buff *skb,
++static noinline_for_stack int rxkad_verify_packet_1(struct rxrpc_call *call, struct sk_buff *skb,
+ 				 unsigned int offset, unsigned int len,
+ 				 rxrpc_seq_t seq,
+ 				 struct skcipher_request *req)
+@@ -397,7 +397,7 @@ static int rxkad_verify_packet_1(struct rxrpc_call *call, struct sk_buff *skb,
+ /*
+  * wholly decrypt a packet (level 2 security)
+  */
+-static int rxkad_verify_packet_2(struct rxrpc_call *call, struct sk_buff *skb,
++static noinline_for_stack int rxkad_verify_packet_2(struct rxrpc_call *call, struct sk_buff *skb,
+ 				 unsigned int offset, unsigned int len,
+ 				 rxrpc_seq_t seq,
+ 				 struct skcipher_request *req)
 -- 
 2.20.0
 
