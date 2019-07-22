@@ -2,103 +2,182 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C915C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DCCC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD082231F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE3F22305
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAh0Z3QD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8dkVWu4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfGVHLn (ORCPT
+        id S1727774AbfGVHMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:11:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43510 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfGVHLn (ORCPT
+        Mon, 22 Jul 2019 03:12:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36984 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbfGVHMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:11:43 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i189so16930129pfg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:11:42 -0700 (PDT)
+        Mon, 22 Jul 2019 03:12:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z28so36576606ljn.4;
+        Mon, 22 Jul 2019 00:12:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e1pJmXf06oFMwCzMyXmo4V3Hcs9L90I0Lgp7Zs+lizs=;
-        b=iAh0Z3QDrCqnhE6s5INTogxHKD1RMM0Afq5gQ9G5TTIv+84InCYsEJwIsWDmMzciYL
-         kF+ABGPCiz7nv6hIoX8J8Nmk2Ia2Pmn47cXlHbRFq4lon6dXVUeqycjg29Y1cV2zs7Ot
-         RjhwlEu0RliMS34cgKQSSQJTCZNet7811kRlvigJITVWiaii2cRdvxMqF3cx2axLKWx8
-         XF/EDjGBzXO0TaAucl3/mhya7x+4yNTW0HgmTGRfH9cHY3VPPTI49syz9CI1bbZ509m0
-         Zx4Hmg5zt4+boXTsyw14Nlq2iT+xb1E52Cju9XpqVQRUnK9aBiesTv8j6Ga+lU+6qYdY
-         uS3w==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mBKVeIVQCt2orG0fki4lpTf+aSp4EgOO+T725Y0RvfA=;
+        b=o8dkVWu4ivIVqOCEk5kZlnczdt5JHt9VKNdyrDYv883Gmz224pqtlZAhlWbcGPMFuN
+         w+NdPgL2u1mVGSsSQR5BRlKkbUozQF3VZiF+ceCzID3itV74lKhsFMjxSGUSJFIa8dnH
+         Hx32bzcTWs1usTBnGVGilZdd18ipYBxnJZ7XC0arnDtGmqnMJyL1FT/rI1lOZ44emSG9
+         IYTaOqlBFivlS0ZAagLXpVrP7hghLWBVmPHx0cSBb7AAK9I1jkbw348FlMF2Ru3vWEpI
+         hr3QCbncd269+l0vO+R0yKnA/CyvaB3cu6Y6dltdRHFtTXyvTBfBR36ODLS13CPBwnZ/
+         Oaeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=e1pJmXf06oFMwCzMyXmo4V3Hcs9L90I0Lgp7Zs+lizs=;
-        b=qrbfV0KvPeA/DSH2q4aGYGm13ivGupgFePsUuWx545sMbH/qV3mlpL6uLjcRGMRMrT
-         oQAhbRW5cu1j+HubL5Plc+YVEh8HN6gLaw5Ss47UirrmspCJmTzKzrm5WrkiWQbE6EhH
-         yU02SqbH2v5nA/gganigaW4aSU7+RUBXssvu6W0cp9KtTCNdoaraDFbEvO+zpprUi67n
-         q3KDNKb0QMvMdkEFORI/epAw7LSPXkPJbxjnBOQy1qlkJMx/wek/Y0iUlr/pPoPJZgrD
-         PuQu8sqyDvtgMGPbytwn2/VWg0fJhRyiHaO7rx8EhLpUfl4XAb1cTuxYepLqPw4WILN1
-         coPA==
-X-Gm-Message-State: APjAAAWbwdg7eO9kGvr2WO96zYVAkusTStFpQN6v321YKIguY09+l6cc
-        CEJNeqnX7SZ/alres2I/DXQ=
-X-Google-Smtp-Source: APXvYqw90pms2WbCzTCZEmaN/6pRv51JhveW4MUeNKwghaamFFptL7ODl0b6Urb5d753rcgiiBSEZQ==
-X-Received: by 2002:a65:6546:: with SMTP id a6mr15364250pgw.220.1563779502459;
-        Mon, 22 Jul 2019 00:11:42 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id q69sm53738861pjb.0.2019.07.22.00.11.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 00:11:41 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Lvqiang Huang <lvqiang.huang@unisoc.com>
-Subject: [PATCH] ARM: check stmfd instruction using right shift
-Date:   Mon, 22 Jul 2019 15:11:22 +0800
-Message-Id: <20190722071122.22434-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        bh=mBKVeIVQCt2orG0fki4lpTf+aSp4EgOO+T725Y0RvfA=;
+        b=l5L+m82FZ1V2nz2/3waMBnWCh6HYTck9u31WbqQGTYRfl69amKcidYUGTXFuTzKq6g
+         KQJUixwSDsfgX71Ij/Um8iFj9hWKm2m1ORDgRFEWQuHmZr7IV3FhHe4/+enTK4bb0ki5
+         Vs7DoC8VmVujLwW53IaVo7WbW/6TA8QfiOhmOtuUUY4gneE5v0U2EbCVH5tWX1GBXgLF
+         UXuaYnNROK+j+X49Y/DdsOiPjTf/jWp+hXps8T5FQTSXugWZBbufqtSpdjO5VRShS918
+         7GGyUGm90e5RTRSbUeFheoGcU2Ewe9+ZLYhy3IA5Lk9VvYMtDpcCdR5ggtEaK+9zSVp6
+         N+9A==
+X-Gm-Message-State: APjAAAVoeuDVNUIUnGHXsNvkHVhUkRWDOBV4t6GymZiIpWLBnz5+7MYv
+        3nmw2AouSrXyCj525NV0BIIbwzcb
+X-Google-Smtp-Source: APXvYqw+GSlCIsco7u9txxEB8qC5mgHLLuRe+V3r/zzJl+yOVFS0+qpTpVhaEes3WxjH7peyh14qYQ==
+X-Received: by 2002:a2e:96c3:: with SMTP id d3mr35208035ljj.68.1563779539117;
+        Mon, 22 Jul 2019 00:12:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id r5sm5929037lfn.89.2019.07.22.00.12.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 00:12:18 -0700 (PDT)
+Subject: Re: [PATCH V6 14/21] clk: tegra210: Add suspend and resume support
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-15-git-send-email-skomatineni@nvidia.com>
+ <e683b417-66fb-38dc-c16b-dab616583a88@gmail.com>
+ <88da46d2-b90d-f57e-7611-b8653b56bdf6@nvidia.com>
+ <ceedb802-7561-488f-3a89-67bee19f2fea@gmail.com>
+ <e2d0e8cc-b4ea-1148-4af1-fee6bb266cca@nvidia.com>
+ <5054f178-db27-9286-d123-3e2b2a885717@gmail.com>
+Message-ID: <8c259511-d8ea-51b2-0b1d-c85b964bc44c@gmail.com>
+Date:   Mon, 22 Jul 2019 10:12:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <5054f178-db27-9286-d123-3e2b2a885717@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lvqiang Huang <Lvqiang.Huang@unisoc.com>
+22.07.2019 10:09, Dmitry Osipenko пишет:
+> 22.07.2019 9:52, Sowjanya Komatineni пишет:
+>>
+>> On 7/21/19 11:10 PM, Dmitry Osipenko wrote:
+>>> 22.07.2019 1:45, Sowjanya Komatineni пишет:
+>>>> On 7/21/19 2:38 PM, Dmitry Osipenko wrote:
+>>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>>>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>>>>
+>>>>>> All the CAR controller settings are lost on suspend when core
+>>>>>> power goes off.
+>>>>>>
+>>>>>> This patch has implementation for saving and restoring all PLLs
+>>>>>> and clocks context during system suspend and resume to have the
+>>>>>> clocks back to same state for normal operation.
+>>>>>>
+>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>    drivers/clk/tegra/clk-tegra210.c | 68
+>>>>>> ++++++++++++++++++++++++++++++++++++++--
+>>>>>>    drivers/clk/tegra/clk.c          | 14 +++++++++
+>>>>>>    drivers/clk/tegra/clk.h          |  1 +
+>>>>>>    3 files changed, 80 insertions(+), 3 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
+>>>>>> b/drivers/clk/tegra/clk-tegra210.c
+>>>>>> index 55a88c0824a5..68271873acc1 100644
+>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>>> @@ -9,6 +9,7 @@
+>>>>>>    #include <linux/clkdev.h>
+>>>>>>    #include <linux/of.h>
+>>>>>>    #include <linux/of_address.h>
+>>>>>> +#include <linux/syscore_ops.h>
+>>>>>>    #include <linux/delay.h>
+>>>>>>    #include <linux/export.h>
+>>>>>>    #include <linux/mutex.h>
+>>>>>> @@ -220,11 +221,15 @@
+>>>>>>    #define CLK_M_DIVISOR_SHIFT 2
+>>>>>>    #define CLK_M_DIVISOR_MASK 0x3
+>>>>>>    +#define CLK_MASK_ARM    0x44
+>>>>>> +#define MISC_CLK_ENB    0x48
+>>>>>> +
+>>>>>>    #define RST_DFLL_DVCO 0x2f4
+>>>>>>    #define DVFS_DFLL_RESET_SHIFT 0
+>>>>>>      #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>>>>    #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>>      #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>>    #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>>> @@ -2825,6 +2830,7 @@ static int tegra210_enable_pllu(void)
+>>>>>>        struct tegra_clk_pll_freq_table *fentry;
+>>>>>>        struct tegra_clk_pll pllu;
+>>>>>>        u32 reg;
+>>>>>> +    int ret;
+>>>>>>          for (fentry = pll_u_freq_table; fentry->input_rate;
+>>>>>> fentry++) {
+>>>>>>            if (fentry->input_rate == pll_ref_freq)
+>>>>>> @@ -2853,9 +2859,8 @@ static int tegra210_enable_pllu(void)
+>>>>>>        reg |= PLL_ENABLE;
+>>>>>>        writel(reg, clk_base + PLLU_BASE);
+>>>>>>    -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>>>>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
+>>>>>> -    if (!(reg & PLL_BASE_LOCK)) {
+>>>>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>>>>>> +    if (ret) {
+>>>>> Why this is needed? Was there a bug?
+>>>>>
+>>>> during resume pllu init is needed and to use same terga210_init_pllu,
+>>>> poll_timeout_atomic can't be used as its ony for atomic context.
+>>>>
+>>>> So changed to use wait_for_mask which should work in both cases.
+>>> Atomic variant could be used from any context, not sure what do you
+>>> mean. The 'atomic' part only means that function won't cause scheduling
+>>> and that's it.
+>>
+>> Sorry, replied incorrect. readx_poll_timeout_atomic uses ktime_get() and
+>> during resume timekeeping suspend/resume happens later than clock
+>> suspend/resume. So using tegra210_wait_for_mask.
+>>
+>> both timekeeping and clk-tegra210 drivers are registered as syscore but
+>> not ordered.
+> 
+> Okay, thank you for the clarification.
+> 
+> [snip]
+> 
 
-In the commit ef41b5c92498 ("ARM: make kernel oops easier to read"),
--               .word   0xe92d0000 >> 10        @ stmfd sp!, {}
-+               .word   0xe92d0000 >> 11        @ stmfd sp!, {}
-then the shift need to change to 11.
-
-Signed-off-by: Lvqiang Huang <Lvqiang.Huang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
----
- arch/arm/lib/backtrace.S |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
-index 7d7952e..926851b 100644
---- a/arch/arm/lib/backtrace.S
-+++ b/arch/arm/lib/backtrace.S
-@@ -70,7 +70,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
- 
- 1003:		ldr	r2, [sv_pc, #-4]	@ if stmfd sp!, {args} exists,
- 		ldr	r3, .Ldsi+4		@ adjust saved 'pc' back one
--		teq	r3, r2, lsr #10		@ instruction
-+		teq	r3, r2, lsr #11		@ instruction
- 		subne	r0, sv_pc, #4		@ allow for mov
- 		subeq	r0, sv_pc, #8		@ allow for mov + stmia
- 
--- 
-1.7.9.5
-
+You should remove the 'iopoll.h' then, since it's not used anymore.
