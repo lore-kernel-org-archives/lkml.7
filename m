@@ -2,96 +2,74 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FCC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF8EC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E580021911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595AD217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfGVOT7 (ORCPT
+        id S1730554AbfGVOWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:19:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49126 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbfGVOT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:19:58 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 25C563C91A;
-        Mon, 22 Jul 2019 14:19:58 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C31360BF1;
-        Mon, 22 Jul 2019 14:19:48 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 22:19:41 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     axboe@kernel.dk, adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com, arnd@arndb.de,
-        linus.walleij@linaro.org, vincent.guittot@linaro.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: [RFC PATCH 1/7] blk-mq: Export blk_mq_hctx_has_pending() function
-Message-ID: <20190722141940.GA26528@ming.t460p>
-References: <cover.1563782844.git.baolin.wang@linaro.org>
- <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
+        Mon, 22 Jul 2019 10:22:25 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36215 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730178AbfGVOWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:22:25 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g18so28711308qkl.3;
+        Mon, 22 Jul 2019 07:22:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uTmepm+1wfFxfhcjqWinIonpHuVFe0DnWusOLHAhtlk=;
+        b=O2P7n+PBhpJokVp9oQM6s23hqF4JXmFo3u8AHdqz9P8n+bgxM6BY4V49t5WLXT0/7v
+         /lRizT9pXBmDtcPrf4YdCjyUtwNa4+YemX8UbpKVRpK0VnMLwfZLlIuf8r6Jkmeyb0il
+         O6bYtWe7/w1uNqhx0Gaam2CnG+0fDQ8siSEYBXKXZukZTz5NF9E4gjz5mC1XUZDEyLtc
+         V261YPJ3Iu0B5y/uRQGTzA8xK1Dz3ovRi7NPJsANjtU1OqEuS554RwnvCitUkhfhQaAW
+         2Ekj0B7l9tCv/bba+QLRgxhqlm5g5HbcKH2AQMXem+tBezsekPc928D8qCkc1rBxJ7GE
+         gRVg==
+X-Gm-Message-State: APjAAAWUbpU5tuGlxXswNSyvAqYCV3a7WVMjD0vRjisHfKKgycqgqHTF
+        +DJmRlbYoH+ESjnhFQoLuCZqzdaGLxgDdk1AWXM=
+X-Google-Smtp-Source: APXvYqyRl/V5f/dWzvRYci6j6FaJpVCVBePMszoWUP6PKN73YEOIAlkXQ8DgddVWxMgoli8YQHbOJLf6Q2SbjJgx0cU=
+X-Received: by 2002:a37:ad12:: with SMTP id f18mr2798435qkm.3.1563805344006;
+ Mon, 22 Jul 2019 07:22:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 22 Jul 2019 14:19:58 +0000 (UTC)
+References: <20190722081705.2084961-1-arnd@arndb.de> <20190722141240.GT12733@vkoul-mobl.Dlink>
+In-Reply-To: <20190722141240.GT12733@vkoul-mobl.Dlink>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 22 Jul 2019 16:22:08 +0200
+Message-ID: <CAK8P3a0tHRyjwwHk3tGFA=3dByH4g7R4FobrGC874bW5DJCnNw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] [RESEND] dmaengine: omap-dma: make omap_dma_filter_fn private
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 09:09:36PM +0800, Baolin Wang wrote:
-> Some SD/MMC host controllers can support packed command or packed request,
-> that means we can package several requests to host controller at one time
-> to improve performence. And this patch set will introduce MMC packed function
-> to support this feature by following patches.
-> 
-> To support MMC packed function, the MMC layer need to know if there are
-> requests are pending now in hardware queue to help to combine requests
-> as much as possible. If we know there are requests pending in hardware
-> queue, then we should not package requests to host controller immediately,
-> instead we should collect more requests into MMC packed queue to be packed
-> to host controller with packed condition.
-> 
-> Thus export this function for MMC packed function.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  block/blk-mq.c         |    3 ++-
->  include/linux/blk-mq.h |    1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index b038ec6..5bd4ef9 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -63,12 +63,13 @@ static int blk_mq_poll_stats_bkt(const struct request *rq)
->   * Check if any of the ctx, dispatch list or elevator
->   * have pending work in this hardware queue.
->   */
-> -static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
-> +bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
->  {
->  	return !list_empty_careful(&hctx->dispatch) ||
->  		sbitmap_any_bit_set(&hctx->ctx_map) ||
->  			blk_mq_sched_has_work(hctx);
->  }
-> +EXPORT_SYMBOL_GPL(blk_mq_hctx_has_pending);
+On Mon, Jul 22, 2019 at 4:13 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 22-07-19, 10:16, Arnd Bergmann wrote:
+> > With the audio driver no longer referring to this function, it
+> > can be made private to the dmaengine driver itself, and the
+> > header file removed.
+> >
+> > Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > Link: https://lore.kernel.org/lkml/20190307151646.1016966-1-arnd@arndb.de/
+>
+> This seems to point to older rev, my script updated it to latest one.
 
-Just wondering why you don't use the 'last' field of 'struct blk_mq_queue_data',
-which is passed to .queue_rq(), and supposed for implementing batch submission.
-	
+That was intentional, to see the replies to the last time it got
+posted. I'm not sure if that's the best way to do it, would you
+rather not have that included?
 
-Thanks,
-Ming
+       Arnd
