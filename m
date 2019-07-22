@@ -2,137 +2,71 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081A0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC696C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAC621951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnoDBrth"
+	by mail.kernel.org (Postfix) with ESMTP id 79F6D21951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:50:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732913AbfGVVsr (ORCPT
+        id S1731510AbfGVVuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:48:47 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34446 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730274AbfGVVsn (ORCPT
+        Mon, 22 Jul 2019 17:50:14 -0400
+Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:54912 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728303AbfGVVuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:48:43 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so7115350edb.1;
-        Mon, 22 Jul 2019 14:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZbTATclhVfBlGWFDB5efjA9W9vf6/Py4hi06i3erHPU=;
-        b=AnoDBrthgsI3o8DGAH7++2JDKpO82XDtupaff6mpz+ogj/++m9LBhYgjzm5kZJkgeJ
-         NGtdFGN3lGgpql95xFsgGsh0Wom2dUDyrglnt4RNWBFy7aNU5veBR7Vbpscp67hceA4i
-         N42ClwCCBIvusI0evmnIdaWNN5TOIWZC+f1PuT8JonpTCccV8zWWC403k9ixwjL1STCf
-         wAq+EK/I3Us34HitRF6oj1Yf0eRD0V/n4K1mD5kRZEbw5Xrc4pSaPcmkSZPY0yzHqWpa
-         lHcVIbPb4ZRVLJnbbFQER1Jgt9sTFsbwLhbpiKlk+t0wmhPKJbTaUjkkKC21dIpfWLEJ
-         3lyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZbTATclhVfBlGWFDB5efjA9W9vf6/Py4hi06i3erHPU=;
-        b=PEXk9YTtgtDvcZZsnv6jyEUauXg94WcttO8V4GrNzTPh/V7RYoJ2D5vgNNci4Y/NZx
-         pd2KLB5plvy9WH2F24A4ZcR/4o3/GG653tG9i6DnHtztNNMEFkO1B5LMWyu4rIVm8RR4
-         Z5m2x1TNl5FWDBnUzG8W1PhVaPFZSy3cjVnC1RttqxPdtvX+hBaOtcYuECAuosoZFhrk
-         IOaRd85r321dZ47f1OdG5evJspjlVhflo8i+3HpqhkD9dfx2Q/UbatM5qMy2l/lAY6Ef
-         i0mViu6MeN/NZeSVB3e5+NATylSkA7EPfOLb3nWsS4GAkhCnLtT7SbYpRIKCaDQyDwej
-         F8Iw==
-X-Gm-Message-State: APjAAAWfnnXbPsBo41/qFad6kBrPM5iKH8hDwiY5k3Ax1GJgGJA3f9XW
-        +x0ySQUxdM+jgeMPdBwK1Gc=
-X-Google-Smtp-Source: APXvYqwPv/bMIzABFLEfvw6u9o5ZuTRHhGYUL6UWFvdaMSvHKjs0ttQnmpA18+gun2JCC71272dLlw==
-X-Received: by 2002:a17:906:ad86:: with SMTP id la6mr52067941ejb.43.1563832121287;
-        Mon, 22 Jul 2019 14:48:41 -0700 (PDT)
-Received: from localhost.localdomain ([65.154.66.198])
-        by smtp.gmail.com with ESMTPSA id d4sm11315617edb.4.2019.07.22.14.48.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 14:48:40 -0700 (PDT)
-From:   stillcompiling@gmail.com
-To:     Joe Perches <joe@perches.com>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org (open list:HID CORE LAYER),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v3 1/3] HID: core: reformat and reduce hid_printk macros
-Date:   Mon, 22 Jul 2019 15:48:25 -0600
-Message-Id: <20190722214827.29257-1-stillcompiling@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722163642.10417-2-stillcompiling@gmail.com>
-References: <20190722163642.10417-2-stillcompiling@gmail.com>
+        Mon, 22 Jul 2019 17:50:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id C6E5F181D3377;
+        Mon, 22 Jul 2019 21:50:12 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: net82_1eb9f15d55954
+X-Filterd-Recvd-Size: 1676
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 22 Jul 2019 21:50:11 +0000 (UTC)
+Message-ID: <d96cf801c5cf68e785e8dfd9dba0994fcff20017.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: Added warnings in favor of strscpy().
+From:   Joe Perches <joe@perches.com>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com, corbet@lwn.net,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Date:   Mon, 22 Jul 2019 14:50:09 -0700
+In-Reply-To: <20190722230102.442137dc@heffalump.sk2.org>
+References: <1561722948-28289-1-git-send-email-nitin.r.gote@intel.com>
+         <20190629181537.7d524f7d@sk2.org> <201907021024.D1C8E7B2D@keescook>
+         <20190706144204.15652de7@heffalump.sk2.org>
+         <201907221047.4895D35B30@keescook>
+         <15f2be3cde69321f4f3a48d60645b303d66a600b.camel@perches.com>
+         <20190722230102.442137dc@heffalump.sk2.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joshua Clayton <stillcompiling@gmail.com>
+On Mon, 2019-07-22 at 23:01 +0200, Stephen Kitt wrote:
+> How about you submit your current patch set, and I follow up with the above
+> adapted to stracpy?
 
-Reformat hid_printk macros to use standard __VA_ARGS__ syntax
-Remove hid_printk(), hid_emerg(), hid_crit(), and hid_alert().
-Per Joe Perches these unused and likely never to be used.
+OK, I will shortly after I figure out how to add kernel-doc
+for stracpy/stracpy_pad to lib/string.c.
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
- include/linux/hid.h | 32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+It doesn't seem appropriate to add the kernel-doc to string.h
+as it would be separated from the others in string.c
 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index d770ab1a0479..e6c7efdb0458 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -1154,29 +1154,21 @@ int hid_pidff_init(struct hid_device *hid);
- #define hid_pidff_init NULL
- #endif
- 
--#define dbg_hid(format, arg...)						\
-+#define dbg_hid(fmt, ...)						\
- do {									\
- 	if (hid_debug)							\
--		printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);	\
-+		printk(KERN_DEBUG "%s: " fmt, __FILE__, ##__VA_ARGS__);	\
- } while (0)
- 
--#define hid_printk(level, hid, fmt, arg...)		\
--	dev_printk(level, &(hid)->dev, fmt, ##arg)
--#define hid_emerg(hid, fmt, arg...)			\
--	dev_emerg(&(hid)->dev, fmt, ##arg)
--#define hid_crit(hid, fmt, arg...)			\
--	dev_crit(&(hid)->dev, fmt, ##arg)
--#define hid_alert(hid, fmt, arg...)			\
--	dev_alert(&(hid)->dev, fmt, ##arg)
--#define hid_err(hid, fmt, arg...)			\
--	dev_err(&(hid)->dev, fmt, ##arg)
--#define hid_notice(hid, fmt, arg...)			\
--	dev_notice(&(hid)->dev, fmt, ##arg)
--#define hid_warn(hid, fmt, arg...)			\
--	dev_warn(&(hid)->dev, fmt, ##arg)
--#define hid_info(hid, fmt, arg...)			\
--	dev_info(&(hid)->dev, fmt, ##arg)
--#define hid_dbg(hid, fmt, arg...)			\
--	dev_dbg(&(hid)->dev, fmt, ##arg)
-+#define hid_err(hid, fmt, ...)				\
-+	dev_err(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_notice(hid, fmt, ...)			\
-+	dev_notice(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_warn(hid, fmt, ...)				\
-+	dev_warn(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_info(hid, fmt, ...)				\
-+	dev_info(&(hid)->dev, fmt, ##__VA_ARGS__)
-+#define hid_dbg(hid, fmt, ...)				\
-+	dev_dbg(&(hid)->dev, fmt, ##__VA_ARGS__)
- 
- #endif
--- 
-2.21.0
+Anyone got a clue here?  Jonathan?
+
+
 
