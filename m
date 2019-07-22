@@ -2,413 +2,110 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEA1C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B05C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5617421985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B162239F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+YlBCa7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aHJnx8Iq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbfGVTxi (ORCPT
+        id S1730124AbfGVT4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:53:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40110 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732390AbfGVTxe (ORCPT
+        Mon, 22 Jul 2019 15:56:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38532 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729700AbfGVT4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:53:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so40654272wrl.7;
-        Mon, 22 Jul 2019 12:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IX8qAPZ5ga7jjpfsQbccNQpSlMQzcP4rHdYTapv0mIc=;
-        b=M+YlBCa7A8B8GaqJ4NYdHnOtuHzpjNo4WuNL/EroG4kVslfTkKmaCoovF0W1jCCIt4
-         BS3W+NkIjcdwIbrMYSyCfBjZ1+hv6PgwvELhEakF8b0GwUTIILmaEutRD1MKxAX7du1v
-         rLq4fouat5b53q8AaX/AEcZAl5Ey4nYxk3XdXQJ4RQLOlaaOBgObgFiJIk41XdOuS+at
-         jLcQ6U+HpvIvZvUSq5MdHH9Sp5qSJ5UShDqKM13Dnruq4qj2sRjpEs0mWBAycbVjVB9D
-         caOIo5wA/OCVJAfE9lMBZMRpE2SxeVTEc05aIe0W4ibcwZekzfasyXg8AuG9lQDcitbT
-         aEtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IX8qAPZ5ga7jjpfsQbccNQpSlMQzcP4rHdYTapv0mIc=;
-        b=dTf42ZwG0BG9h0Js6ZpkxJt3H96mYozQchK/LJastb4sVVlkl6VVEmAgMLvNWD9QBe
-         H8iecRyrlB7qTWkuc8r7qpBf5V4Qj0p6kO3GiZ0Q07DFpsYuKNc4vTOZ/W0Mw3oJSZPU
-         Au5Z/WTCnTxsiJV02Wj7M/011PPGurt9CKUZrOW2qYUtRdZ8V0S+zOYIPrS6ArR8nNU+
-         2LjJihSPmB21g67KYKBai1ds0x9MLjAQ+rp1EyChr5eMsxyYcBYhHkWA9WNAjaMcoF57
-         JoYY4H69PiYKXgyCQuf2KlCIx9E1gMVufrPCwH0GsVMj3jsN7nhLGIG7lbJEa8DxGBRn
-         kuiw==
-X-Gm-Message-State: APjAAAVlWlaMAQ1sNP+oFGDC0woFoVtnH8WNYxUwgvoVKfqPdfCP/ZyT
-        dPPvZVDoAqHSIhzq07RCv7s=
-X-Google-Smtp-Source: APXvYqykdwrFiIPBMnWje+j85w+VcW3cLfV+djpTPk/RQoTUSiLvLyiyGnJYWtnDT9ipOdxoP5qfvA==
-X-Received: by 2002:adf:dcc2:: with SMTP id x2mr63805568wrm.55.1563825211750;
-        Mon, 22 Jul 2019 12:53:31 -0700 (PDT)
-Received: from localhost.localdomain (nat-113.starnet.cz. [178.255.168.113])
-        by smtp.googlemail.com with ESMTPSA id c65sm37382975wma.44.2019.07.22.12.53.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 12:53:31 -0700 (PDT)
-From:   Evgeny Kolesnikov <evgenyz@gmail.com>
-Cc:     Evgeny Kolesnikov <evgenyz@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 5/5] ARM: dts: armada385-wd-mcex2u: Add DTS file for WD My Cloud EX2 Ultra
-Date:   Mon, 22 Jul 2019 21:53:05 +0200
-Message-Id: <fd2a97d627c21a7e92a9a1aa15cf26c608d1e383.1563822216.git.evgenyz@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1563822216.git.evgenyz@gmail.com>
-References: <cover.1563822216.git.evgenyz@gmail.com>
+        Mon, 22 Jul 2019 15:56:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OGtQKQCt9khEkE8et59U9zQKandJb/SEJEAAfyIeOb4=; b=aHJnx8Iqh/XfDZqqNQ6GJLyYI
+        tfjoh1xVn33wxYQvWAZVI8WUPVBPClZQROz4SxMdJYtuctwG2nKiFc8X20XqUsJQYolgEGyU/+7S+
+        Ms4r6hT+aBIG5FQ5fEfPQR0EfgjvjpeBOqchoAzulewc8e0pg3NDtU220sZSw1NiDe7VTFYxtA3YC
+        y8ilQjovM84gTUlCY8zU/2ggKMf1nqHDMjtnnIAYnq+dKnvPR1igpCWKAB67sO+dwpYZexK3SSseb
+        1MV8zMX6jfidtITgnDeeh10sLH39UtABcKnviMCCaY5GtDkLjwsdXDj9IzVAwQgMIHeGyjUkxdj7i
+        1V0EaXtdA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpePo-0006rj-Iw; Mon, 22 Jul 2019 19:56:09 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B4A49980C59; Mon, 22 Jul 2019 21:56:05 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 21:56:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>
+Subject: Re: [PATCH] sched/cputime: make scale_stime() more precise
+Message-ID: <20190722195605.GI6698@worktop.programming.kicks-ass.net>
+References: <20190718131834.GA22211@redhat.com>
+ <20190719110349.GG3419@hirez.programming.kicks-ass.net>
+ <20190719134727.GV3463@hirez.programming.kicks-ass.net>
+ <20190719143742.GA32243@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719143742.GA32243@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DTS file to describe the Western Digital My Cloud EX2 Ultra NAS.
+On Fri, Jul 19, 2019 at 04:37:42PM +0200, Oleg Nesterov wrote:
+> On 07/19, Peter Zijlstra wrote:
 
-Signed-off-by: Evgeny Kolesnikov <evgenyz@gmail.com>
----
- arch/arm/boot/dts/armada-385-wd-mcex2u.dts | 313 +++++++++++++++++++++
- 1 file changed, 313 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-385-wd-mcex2u.dts
+> > But I'm still confused, since in the long run, it should still end up
+> > with a proportionally divided user/system, irrespective of some short
+> > term wobblies.
+> 
+> Why?
+> 
+> Yes, statistically the numbers are proportionally divided.
 
-diff --git a/arch/arm/boot/dts/armada-385-wd-mcex2u.dts b/arch/arm/boot/dts/armada-385-wd-mcex2u.dts
-new file mode 100644
-index 000000000000..018e66adbb93
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-385-wd-mcex2u.dts
-@@ -0,0 +1,313 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Device Tree file for Western Digital My Cloud EX2 Ultra
-+ * (BVBZ/Ranger Peak)
-+ *
-+ * Copyright (C) 2019 Evgeny Kolesnikov <evgenyz@gmail.com>
-+ *
-+ * Based on the code from:
-+ *
-+ * Copyright (C) 2016 Martin Mueller <mm@sig21.net>
-+ * Copyright (C) 2013 Gregory CLEMENT <gregory.clement@free-electrons.com>
-+ * Copyright (C) 2013 Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "armada-385.dtsi"
-+
-+/ {
-+	model = "WD My Cloud EX2 Ultra (BVBZ/Ranger Peak)";
-+	compatible = "wd,mcex2u", "marvell,armada385", "marvell,armada380";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+		bootargs = "console=ttyS0,115200";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x40000000>; /* 1024 MB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
-+			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
-+			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000
-+			  MBUS_ID(0x0c, 0x04) 0 0xf1200000 0x100000>;
-+
-+		internal-regs {
-+			timer@c200 {
-+				status = "disabled";
-+			};
-+
-+			i2c0: i2c@11000 {
-+				status = "okay";
-+				clock-frequency = <100000>;
-+			};
-+
-+			i2c1: i2c@11100 {
-+				status = "okay";
-+				clock-frequency = <100000>;
-+			};
-+
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			/* Connected to Welltrend 6703F-OG240WT MCU
-+			 * which controls power, fan and other things
-+			 */
-+			serial@12100 {
-+				status = "okay";
-+			};
-+
-+			poweroff@12100 {
-+				compatible = "uart-poweroff";
-+				reg = <0x12100 0x100>;
-+				clocks = <&coreclk 0>;
-+				baud = <19200>;
-+				cmd = [fa 03 03 01 00 00 fb];
-+				status = "okay";
-+			};
-+
-+			restart@12100 {
-+				compatible = "uart-restart";
-+				reg = <0x12100 0x100>;
-+				clocks = <&coreclk 0>;
-+				baud = <19200>;
-+				cmd = [fa 03 03 02 00 00 fb];
-+				override;
-+				status = "okay";
-+			};
-+
-+			pinctrl@18000 {
-+				uart1_pins: uart-pins-1 {
-+					marvell,pins = "mpp19";
-+					marvell,function = "ua1";
-+				};
-+
-+				xhci0_vbus_pins: xhci0-vbus-pins {
-+					marvell,pins = "mpp26";
-+					marvell,function = "gpio";
-+				};
-+
-+				xhci1_vbus_pins: xhci1-vbus-pins {
-+					marvell,pins = "mpp27";
-+					marvell,function = "gpio";
-+				};
-+
-+				sata0_pins: sata-pins-0 {
-+					marvell,pins = "mpp55";
-+					marvell,function = "sata0";
-+				};
-+
-+				sata1_pins: sata-pins-1 {
-+					marvell,pins = "mpp56";
-+					marvell,function = "sata1";
-+				};
-+
-+				sata_leds: sata-leds {
-+					marvell,pins = "mpp43", "mpp52",
-+						       "mpp53", "mpp54";
-+					marvell,function = "gpio";
-+				};
-+
-+				btn_pins: btn-pins {
-+					marvell,pins = "mpp50";
-+					marvell,function = "gpio";
-+				};
-+			};
-+
-+			ethernet@34000 {
-+				phy = <&phy0>;
-+				phy-mode = "sgmii";
-+				buffer-manager = <&bm>;
-+				bm,pool-long = <0>;
-+				bm,pool-short = <1>;
-+				status = "okay";
-+			};
-+
-+			usb@58000 {
-+				status = "okay";
-+			};
-+
-+			mdio@72004 {
-+				phy0: ethernet-phy@0 {
-+					/* Init ETH LEDs */
-+					marvell,reg-init = <3 16 0 0x101e>;
-+					reg = <0>;
-+				};
-+			};
-+
-+			crypto@9d000 {
-+				status = "okay";
-+			};
-+
-+			rtc@a3800 {
-+				status = "okay";
-+			};
-+
-+			sata@a8000 {
-+				status = "okay";
-+			};
-+
-+			bm@c8000 {
-+				status = "okay";
-+			};
-+
-+			nand-controller@d0000 {
-+				status = "okay";
-+
-+				nand: nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					marvell,nand-keep-config;
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0000000 {
-+							label = "U-Boot";
-+							reg = <0x00000000 0x00500000>;
-+							read-only;
-+						};
-+						partition@0500000 {
-+							label = "kernel";
-+							reg = <0x00500000 0x00500000>;
-+						};
-+						partition@0a00000 {
-+							label = "uRamdisk";
-+							reg = <0x00a00000 0x00500000>;
-+							read-only;
-+						};
-+						partition@0f00000 {
-+							label = "ubi";
-+							reg = <0x00f00000 0x0b900000>;
-+						};
-+						partition@c800000 {
-+							label = "Recovery";
-+							reg = <0x0c800000 0x00f00000>;
-+							read-only;
-+						};
-+						partition@d700000 {
-+							label = "config";
-+							reg = <0x0d700000 0x01400000>;
-+						};
-+						partition@eb00000 {
-+							label = "reserve1";
-+							reg = <0x0eb00000 0x00a00000>;
-+							read-only;
-+						};
-+						partition@f500000 {
-+							label = "reserve2";
-+							reg = <0x0f500000 0x00a00000>;
-+							read-only;
-+						};
-+					};
-+				};
-+			};
-+
-+			sdhci@d8000 {
-+				status = "disabled";
-+			};
-+
-+			usb3@f0000 {
-+				usb-phy = <&usb3_0_phy>;
-+				status = "okay";
-+			};
-+
-+			usb3@f8000 {
-+				usb-phy = <&usb3_1_phy>;
-+				status = "okay";
-+			};
-+		};
-+
-+		bm-bppi {
-+			status = "okay";
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sata_leds>;
-+
-+		sata1-red-led {
-+			label = "wdmcex2u:red:hdd1";
-+			gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
-+		};
-+		sata2-red-led {
-+			label = "wdmcex2u:red:hdd2";
-+			gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
-+		};
-+		sata1-blue-led {
-+			label = "wdmcex2u:blue:hdd1";
-+			gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+		sata2-blue-led {
-+			label = "wdmcex2u:blue:hdd2";
-+			gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&btn_pins>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reset {
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <60>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	usb3_0_phy: usb3_0_phy {
-+		compatible = "usb-nop-xceiv";
-+		vcc-supply = <&reg_usb3_0_vbus>;
-+	};
-+
-+	usb3_1_phy: usb3_1_phy {
-+		compatible = "usb-nop-xceiv";
-+		vcc-supply = <&reg_usb3_1_vbus>;
-+	};
-+
-+	reg_usb3_0_vbus: usb3-vbus0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb3-vbus0";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&xhci0_vbus_pins>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		regulator-always-on;
-+		gpio = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reg_usb3_1_vbus: usb3-vbus1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb3-vbus1";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&xhci1_vbus_pins>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		regulator-always-on;
-+		gpio = <&gpio0 27 GPIO_ACTIVE_HIGH>;
-+	};
-+};
--- 
-2.21.0
+This; due to the loss in precision the distribution is like a step
+function around the actual s:u ratio line, but on average it still is
+s:u.
+
+Even if it were a perfect function, we'd still see increments in stime even
+if the current program state never does syscalls, simply because it
+needs to stay on that s:u line.
+
+> but you will (probably) never see the real stime == 1000 && utime == 10000
+> numbers if you watch incrementally.
+
+See, there are no 'real' stime and utime numbers. What we have are user
+and system samples -- tick based.
+
+If the tick lands in the kernel, we get a system sample, if the tick
+lands in userspace we get a user sample.
+
+What we do have is an accurate (ns) based runtime accounting, and we
+(re)construct stime and utime from this; we divide the total known
+runtime in stime and utime pro-rata.
+
+Sure, we take a shortcut, it wobbles a bit, but seriously, the samples
+are inaccurate anyway, so who bloody cares :-)
+
+You can construct a program that runs 99% in userspace but has all
+system samples. All you need to do is make sure you're in a system call
+when the tick lands.
+
+> Just in case... yes I know that these numbers can only "converge" to the
+> reality, only their sum is correct. But people complain.
+
+People always complain, just tell em to go pound sand :-)
 
