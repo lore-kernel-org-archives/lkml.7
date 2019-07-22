@@ -2,179 +2,199 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7827C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE839C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B066121BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA0E21955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JTKVwsYP"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="BnpxOcMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbfGVXgw (ORCPT
+        id S1731206AbfGVXhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:36:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51568 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfGVXgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:36:52 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNXqjV001985;
-        Mon, 22 Jul 2019 23:36:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=egqqW/mZD3nk8a5ohX29bdMEufJeiEnpm1IdWpCZRK0=;
- b=JTKVwsYPWPsu3AU08JPRXmOo/VtI5VqrdAtfGHg9VkamStKFb3mdvMwn4SkSdRQt6Um9
- w/ahqK9ioeMad5i4KNM9oaUIttmsdZ8ZynR9NnVzp7WZbgmvDoJlTs+MwH0kcGthzE+D
- gfgQewbXzP5bSVzNyuV3CYuxm8O+PQU9vWqp+c2slPWvJS2W1FqZwDisHWIFcxCtn+Q8
- GDbsSeV04Iz/k3k6RV+gUjg0ttX8x1/EzePJ0SYK5VEiKtZsdlSxB+tw7gmVDrSEycxU
- TMp4qotn+NZaQ0amJKm79LrCTkXeARDGkdlkxEyndOIHbclT2WNq6dCW+UmpjkVlN+9l hw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tutwpadq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 23:36:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNWYeR080720;
-        Mon, 22 Jul 2019 23:36:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tur2u2x3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 23:36:24 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6MNaMkC003855;
-        Mon, 22 Jul 2019 23:36:22 GMT
-Received: from [192.168.1.14] (/180.165.87.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Jul 2019 16:36:22 -0700
-Subject: Re: [PATCH] bfq: Check if bfqq is NULL in bfq_insert_request
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hsin-Yi Wang <hsinyi@google.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
- <20190722202920.GA18431@roeck-us.net>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <f3f2764a-90b4-e294-d364-a25156933a71@oracle.com>
-Date:   Tue, 23 Jul 2019 07:36:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190722202920.GA18431@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
+        Mon, 22 Jul 2019 19:37:32 -0400
+Received: from mail-eopbgr10100.outbound.protection.outlook.com ([40.107.1.100]:3072
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727157AbfGVXhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:37:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lHUN8NMEf0QoMOJfs+fCc2PQOMSK+JMHIEUoKu5XQnuo1CsPmjc/40lyaE0i4iuBbXoyDmrcvyqvs+zjpPYGT2v2OvL9KpXEOLtYBgE7taHh7Cok2A9zsFpwHnjz5cWfw3nZehP2OsHQ7H99YR//EqvvHBe1IGT5WNwAJKb3dV0Ewolf8An5wZuk0KqifbIWYOMD6R+/7s1zauwdTO40f1D3Rgkw5pMt9Shtipq3MXp6LSnkWE+aXGAlNHqDGggk3Ehhh375bh61ZMFxwomN+qei6gbeOPR0nyLJEZjF6Psdca+cltOpxcVNSBiJX4ZMRlUDj7/d1FeMSx22eUdwBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xf1y9NnJPfLfpGCw7T86Mfp07+a9O1k9qAw2U/lmaGI=;
+ b=IExPE4ovFs4jvIBENidAjzHYOBzqftvHGcsXaE0Zgfl76vnHBZGSIpMDDqxH18WfUA7PNkyU6hkTMZutM7yOj2GlDfV5qSzmSacC5bRweZm64Mb0Lm6/9Kpj6Cd3kZnRsrmnAaGFjkZnijMaqeeeZP+oyMq+9GJPnuS941n5eMclbwReFX8bvMcwFfGfldva3T6OsMW8vPcpFGywOmnzDYkSH8V9m29KnKuHPMbYy3/vsi/QwJdXxUh/sG/dLEyDxMn8vWOl6BIAlVyX8YZsdWUP2/RdfG4bFDZcaF03DR5MajXrDCiV4PW+OaVn+t4bSEfJWalbvr2yPJetbVKDcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=prevas.se;dmarc=pass action=none
+ header.from=prevas.dk;dkim=pass header.d=prevas.dk;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xf1y9NnJPfLfpGCw7T86Mfp07+a9O1k9qAw2U/lmaGI=;
+ b=BnpxOcMD1aPjIBIJt0F/jQKYybTSP00sBXRStJwkbFcAQ2zztO4Q9eYTnNQhN6QQ6pIcZS9yxLe9wdIVEZeDQoy3VHAj9e9V3Lrni+7Nd/qe9hM4zlNaJoEWpUnN/OYvUyZVLPg7HQ4GTbJVrlyHZV7JtSO1Amm2rZlxR8gK498=
+Received: from AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM (10.186.175.83) by
+ AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM (10.186.175.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Mon, 22 Jul 2019 23:37:26 +0000
+Received: from AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9451:861a:85cc:daa0]) by AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9451:861a:85cc:daa0%2]) with mapi id 15.20.2094.017; Mon, 22 Jul 2019
+ 23:37:26 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: dsa: mv88e6xxx: avoid some redundant vtu
+ load/purge operations
+Thread-Topic: [PATCH net-next] net: dsa: mv88e6xxx: avoid some redundant vtu
+ load/purge operations
+Thread-Index: AQHVQOZrz5Mh4qk+xE+98wWJgclwEQ==
+Date:   Mon, 22 Jul 2019 23:37:26 +0000
+Message-ID: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907220249
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907220249
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5P194CA0017.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:203:8f::27) To AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:15e::19)
+x-mailer: git-send-email 2.20.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [5.186.115.35]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b2abd304-0cfd-4639-e029-08d70efd8dd3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM0PR10MB3617;
+x-ms-traffictypediagnostic: AM0PR10MB3617:
+x-microsoft-antispam-prvs: <AM0PR10MB361770CD9B83E5667E63B4BF8AC40@AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:513;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(39850400004)(136003)(346002)(189003)(199004)(42882007)(476003)(66066001)(5660300002)(8676002)(2616005)(53936002)(36756003)(305945005)(508600001)(26005)(186003)(6512007)(7736002)(25786009)(6436002)(14454004)(386003)(102836004)(71446004)(6486002)(6506007)(68736007)(4326008)(52116002)(6116002)(486006)(71190400001)(316002)(66446008)(66476007)(256004)(14444005)(99286004)(44832011)(1076003)(66946007)(64756008)(66556008)(71200400001)(2906002)(81156014)(81166006)(8936002)(50226002)(54906003)(110136005)(8976002)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR10MB3617;H:AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: soRwpb58/sEF1fsGWv561DRZSpYziYhKCP5tajoX5j8OafUcf3VdnVAQjmzCC2R9eYGS2saH1GBjZDEjjnBPspbhSOSQLE/UB6BIUVQCRfGGC502H64T25WbTEe4spB3JcqyMndbOWS8buHe06b+ildjXw2dyk3juID/bkCOf+CkxGCDFg20UBUf/x1CVhZtXka69dI3xiQRk1ZNpaFR4pO6OFCGHHqLWGBrIW8mHyqBdSncPkyLAACktBzHLl2bx0YH0URXpMWfq/Dr9g8KhgpzJ+jopMxkJ0F7dGWX/aLcakxugbU7sRWSEmLK3WiyfKUi7wnbr3QHb28dnuzxOmCuWaNG6Mdm98gcwVSGUMsMCD+4uwDzlHxkRrxhX8Z7krCOnJc5WLM3D+r0DQWBLkRq5/BpJjWJSoYUviVIlfo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2abd304-0cfd-4639-e029-08d70efd8dd3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 23:37:26.7293
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3617
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/19 4:29 AM, Guenter Roeck wrote:
-> On Mon, Jul 22, 2019 at 10:30:48AM -0700, Guenter Roeck wrote:
->> In bfq_insert_request(), bfqq is initialized with:
->> 	bfqq = bfq_init_rq(rq);
->> In bfq_init_rq(), we find:
->> 	if (unlikely(!rq->elv.icq))
->> 		return NULL;
->> Indeed, rq->elv.icq can be NULL if the memory allocation in
->> create_task_io_context() failed.
->>
-> 
-> The above function should have been ioc_create_icq(), sorry.
-> 
-> Guenter
-> 
->> A comment in bfq_insert_request() suggests that bfqq is supposed to be
->> non-NULL if 'at_head || blk_rq_is_passthrough(rq)' is false. Yet, as
->> debugging and practical experience shows, this is not the case in the
->> above situation.
->>
->> This results in the following crash.
->>
->> Unable to handle kernel NULL pointer dereference
->> 	at virtual address 00000000000001b0
->> ...
->> Call trace:
->>  bfq_setup_cooperator+0x44/0x134
->>  bfq_insert_requests+0x10c/0x630
->>  blk_mq_sched_insert_requests+0x60/0xb4
->>  blk_mq_flush_plug_list+0x290/0x2d4
->>  blk_flush_plug_list+0xe0/0x230
->>  blk_finish_plug+0x30/0x40
->>  generic_writepages+0x60/0x94
->>  blkdev_writepages+0x24/0x30
->>  do_writepages+0x74/0xac
->>  __filemap_fdatawrite_range+0x94/0xc8
->>  file_write_and_wait_range+0x44/0xa0
->>  blkdev_fsync+0x38/0x68
->>  vfs_fsync_range+0x68/0x80
->>  do_fsync+0x44/0x80
->>
->> The problem is relatively easy to reproduce by running an image with
->> failslab enabled, such as with:
->>
->> cd /sys/kernel/debug/failslab
->> echo 10 > probability
->> echo 300 > times
->>
->> Avoid the problem by checking if bfqq is NULL before using it. With the
->> NULL check in place, requests with missing io context are queued
->> immediately, and the crash is no longer seen.
->>
+We have an ERPS (Ethernet Ring Protection Switching) setup involving
+mv88e6250 switches which we're in the process of switching to a BSP
+based on the mainline driver. Breaking any link in the ring works as
+expected, with the ring reconfiguring itself quickly and traffic
+continuing with almost no noticable drops. However, when plugging back
+the cable, we see 5+ second stalls.
 
+This has been tracked down to the userspace application in charge of
+the protocol missing a few CCM messages on the good link (the one that
+was not unplugged), causing it to broadcast a "signal fail". That
+message eventually reaches its link partner, which responds by
+blocking the port. Meanwhile, the first node has continued to block
+the port with the just plugged-in cable, breaking the network. And the
+reason for those missing CCM messages has in turn been tracked down to
+the VTU apparently being too busy servicing load/purge operations that
+the normal lookups are delayed.
 
-What about other place use blk_init_rq()?
-E.g in bfq_request_merged():
-1897                 struct bfq_queue *bfqq = bfq_init_rq(req);
-1898                 struct bfq_data *bfqd = bfqq->bfqd;
+Initial state, the link between C and D is blocked in software.
 
-Which may have same Null-pointer bug?
+     _____________________
+    /                     \
+   |                       |
+   A ----- B ----- C *---- D
 
--Bob
+Unplug the cable between C and D.
 
->> Fixes: 18e5a57d79878 ("block, bfq: postpone rq preparation to insert or merge")
->> Reported-by: Hsin-Yi Wang  <hsinyi@google.com>
->> Cc: Hsin-Yi Wang <hsinyi@google.com>
->> Cc: Nicolas Boichat <drinkcat@chromium.org>
->> Cc: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>  block/bfq-iosched.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->> index 72860325245a..56f3f4227010 100644
->> --- a/block/bfq-iosched.c
->> +++ b/block/bfq-iosched.c
->> @@ -5417,7 +5417,7 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
->>  
->>  	spin_lock_irq(&bfqd->lock);
->>  	bfqq = bfq_init_rq(rq);
->> -	if (at_head || blk_rq_is_passthrough(rq)) {
->> +	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
->>  		if (at_head)
->>  			list_add(&rq->queuelist, &bfqd->dispatch);
->>  		else
->> -- 
->> 2.7.4
->>
+     _____________________
+    /                     \
+   |                       |
+   A ----- B ----- C *   * D
+
+Reestablish the link between C and D.
+     _____________________
+    /                     \
+   |                       |
+   A ----- B ----- C *---- D
+
+Somehow, enough VTU/ATU operations happen inside C that prevents
+the application from receving the CCM messages from B in a timely
+manner, so a Signal Fail message is sent by C. When B receives
+that, it responds by blocking its port.
+
+     _____________________
+    /                     \
+   |                       |
+   A ----- B *---* C *---- D
+
+Very shortly after this, the signal fail condition clears on the
+BC link (some CCM messages finally make it through), so C
+unblocks the port. However, a guard timer inside B prevents it
+from removing the blocking before 5 seconds have elapsed.
+
+It is not unlikely that our userspace ERPS implementation could be
+smarter and/or is simply buggy. However, this patch fixes the symptoms
+we see, and is a small optimization that should not break anything
+(knock wood). The idea is simply to avoid doing an VTU load of an
+entry identical to the one already present. To do that, we need to
+know whether mv88e6xxx_vtu_get() actually found an existing entry, or
+has just prepared a struct mv88e6xxx_vtu_entry for us to load. To that
+end, let vlan->valid be an output parameter. The other two callers of
+mv88e6xxx_vtu_get() are not affected by this patch since they pass
+new=3Dfalse.
+
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/c=
+hip.c
+index 6b17cd961d06..2e500428670c 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -1423,7 +1423,6 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *c=
+hip, u16 vid,
+=20
+ 		/* Initialize a fresh VLAN entry */
+ 		memset(entry, 0, sizeof(*entry));
+-		entry->valid =3D true;
+ 		entry->vid =3D vid;
+=20
+ 		/* Exclude all ports */
+@@ -1618,6 +1617,9 @@ static int _mv88e6xxx_port_vlan_add(struct mv88e6xxx_=
+chip *chip, int port,
+ 	if (err)
+ 		return err;
+=20
++	if (vlan.valid && vlan.member[port] =3D=3D member)
++		return 0;
++	vlan.valid =3D true;
+ 	vlan.member[port] =3D member;
+=20
+ 	err =3D mv88e6xxx_vtu_loadpurge(chip, &vlan);
+--=20
+2.20.1
 
