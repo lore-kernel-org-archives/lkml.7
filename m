@@ -2,124 +2,148 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09C7C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2720C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8414921901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H4APkLXJ"
+	by mail.kernel.org (Postfix) with ESMTP id AE42921901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731896AbfGVTOP (ORCPT
+        id S1728426AbfGVTOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:14:15 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34459 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730882AbfGVTOO (ORCPT
+        Mon, 22 Jul 2019 15:14:42 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.35]:26606 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727219AbfGVTOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:14:14 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so19599899plt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O9BbPnmI+pHoI/NQDPXVHcO4RcOKDp2TZ+FeQcswyuI=;
-        b=H4APkLXJRK/q7ukCstH9qo49f7JrC1BR5KVMbG+8RY+d6vqMcg1vyfHihn4f1tfloM
-         WuNKUwAJlufYR0Qn0fAu83Z8xx1H7ZanZPEpW13uQ6ahzZm+rU5ixiOOUe+MRjd5xa+l
-         kzekOMj36vdf9V0CWtNVbnu6PnNGDIpzEkEiU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O9BbPnmI+pHoI/NQDPXVHcO4RcOKDp2TZ+FeQcswyuI=;
-        b=LPOXHx/Xlypdf5dj7auVF6nWBXpiMu8xSCWeZ2B6kBbt/Wf/qWrgNtsZF67uhwYrW9
-         LGmrqvy0PLghoGrQgGUo49ufpoTWvEcEk1t/YoIfZkUFtDmHnQhFt3NoulON1OQtj2mz
-         wBcb4ZwUfS2E/AcRRrNUa/0zTyxyU8Tt5UbHaiZObRtK7gR/qJjf/vC8pxpsGg9jF/ud
-         G4KKY4kI2SJLKyH+2ikL2vjjVxoT9VtPbOF5AANoug3UOfjXHoh36GPLtGvGYB9Vu73v
-         SjIYdf1crWv+a0ODoeKkpLCDDDOuU4ZcogHE9K6rmDC2/sGO4y5jU6WM/BszrkQ0aC8t
-         iyaw==
-X-Gm-Message-State: APjAAAX6c47rQEALH29QQ6r5kYfDz79NQKB4+4EWjc5qT291H7ycKoSM
-        ruiPLO9BIR1Xuc+KJwmKBA894A==
-X-Google-Smtp-Source: APXvYqye8KADnaKfIO2xcVLE1cwxtty5tPY77LPyY5ryPz/+MASHRSWvD9J4mt/y+V4sUlO4fxKuxg==
-X-Received: by 2002:a17:902:aa5:: with SMTP id 34mr79416847plp.166.1563822854072;
-        Mon, 22 Jul 2019 12:14:14 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id t96sm36367885pjb.1.2019.07.22.12.14.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 12:14:13 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 12:14:11 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-Message-ID: <20190722191411.GW250418@google.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-6-mka@chromium.org>
- <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
- <20190703232331.GL250418@google.com>
- <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
- <20190722171418.GV250418@google.com>
- <20190722190133.GF8972@lunn.ch>
+        Mon, 22 Jul 2019 15:14:42 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 9C6A086512D
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 14:14:39 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id pdlfhHsjE2qH7pdlfhLaAQ; Mon, 22 Jul 2019 14:14:39 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:47790 helo=[192.168.1.79])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hpdlf-002gBj-3g; Mon, 22 Jul 2019 14:14:39 -0500
+Subject: Re: [PATCH] drm/amdgpu/gfx10: Fix missing break in switch statement
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Hawking Zhang <Hawking.Zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190721223949.GA13591@embeddedor>
+ <CADnq5_NZNA3wCq4U4jbOU7BHfYgan5m=R6MbWmJ3Xp1oYMAUog@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <8a539933-bb59-0204-58a9-ab54fa6b1c94@embeddedor.com>
+Date:   Mon, 22 Jul 2019 14:14:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CADnq5_NZNA3wCq4U4jbOU7BHfYgan5m=R6MbWmJ3Xp1oYMAUog@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190722190133.GF8972@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.149.185
+X-Source-L: No
+X-Exim-ID: 1hpdlf-002gBj-3g
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink149-185.telefonia.intercable.net ([192.168.1.79]) [201.172.149.185]:47790
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
 
-On Mon, Jul 22, 2019 at 09:01:33PM +0200, Andrew Lunn wrote:
-> On Mon, Jul 22, 2019 at 10:14:18AM -0700, Matthias Kaehlcke wrote:
-> > I'm working on a generic binding.
-> > 
-> > I wonder what is the best process for reviewing/landing it, I'm
-> > doubting between two options:
-> > 
-> > a) only post the binding doc and the generic PHY code that reads
-> >    the configuration from the DT. Post Realtek patches once
-> >    the binding/generic code has been acked.
-> > 
-> >    pros: no churn from Realtek specific patches
-> >    cons: initially no (real) user of the new binding
-> > 
-> > b) post generic and Realtek changes together
-> > 
-> >    pros: the binding has a user initially
-> >    cons: churn from Realtek specific patches
-> > 
-> > I can do either, depending on what maintainers/reviewers prefer. I'm
-> > slightly inclined towards a)
+
+On 7/22/19 2:12 PM, Alex Deucher wrote:
+> On Sun, Jul 21, 2019 at 6:39 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> Add missing break statement in order to prevent the code from falling
+>> through to case AMDGPU_IRQ_STATE_ENABLE.
+>>
+>> This bug was found thanks to the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Fixes: a644d85a5cd4 ("drm/amdgpu: add gfx v10 implementation (v10)")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > 
-> Hi Matthias
+> Applied.  Thanks!
 > 
-> It is normal to include one user of any generic API which is added,
-> just to make is clear how an API should be used.
 
-as of now it isn't even an API, the phy_device populates a new array
-in its struct with the values from the DT. PHY drivers access the
-array directly. Is it still preferable to post everything together?
-
-(maybe I'm too concerned about 'noise' from the driver patches while
- we are figuring out what exactly the binding should be).
+Awesome! Glad to help. :)
 
 Thanks
-
-Matthias
+--
+Gustavo
