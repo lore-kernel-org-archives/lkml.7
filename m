@@ -2,108 +2,101 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8ADC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4390C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD0D219BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsBronzy"
+	by mail.kernel.org (Postfix) with ESMTP id AA34721955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563830149;
+	bh=AIZzoT5ZYNcjgOzxp5tAPR6+/rNuqLReT3uMdcYoavY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GzNl/tbcJkCtjqEGqQwKNoIzksuzRdJXH2zv3PDK8VTkknO/dCgz+vAJVmqdo8Wa6
+	 DG387Ock0dFIa+oECY+fU2UTKtQMBEt4ulEnbo4Vy029/C0ZHFCTNuX72++1A9QaTx
+	 8tXRZyco4R0U23bNbNHh3Z2Uju6RKI/j9UawcJG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbfGVVPo (ORCPT
+        id S1731057AbfGVVPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:15:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44167 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729697AbfGVVPo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:15:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p17so40830286wrf.11;
-        Mon, 22 Jul 2019 14:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=crKMdXKm0yhfd6kgwLJaqoMEk1zISLXs4pt7dLx4DM4=;
-        b=QsBronzycOTGBRlgTUJewFHEs0Q6Hp3JmMAuhkKCDYigtQJ7U9CnEfU28gydAvRW7/
-         xURrnwVKU6Qy2ej28Up9iAXXJUZRDzeBw0d3j7f0BOsCS2zWPwSuaeVtFljFpruZi3r3
-         /3+A9jbi5l0noRSr1MqproZV+dXUMd4W0FlfKftgieeTeq9eYreiL5+jLBwRycJFD7bC
-         sgrPUFXq6Jf9S3bZ5Vko1liRJVeNmVxCASGdNrzug54oMrtoSgL4LOPWzikmgj/XT5eH
-         9G7Kb4VsQid9mtr1NYDP5tkqpGwhb3FYZotKSVt6buQeZrrgJ4/nZLJMj3trUnwJtGsG
-         BOtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=crKMdXKm0yhfd6kgwLJaqoMEk1zISLXs4pt7dLx4DM4=;
-        b=H0ALL2j6Yc9lj8V5uimMxL5uk0lUfaPeIsm/vMm4vJzH4B/9l0fbhHAfXex34BGTKz
-         +vdUVLSlhjxURZtZZfjTb5a3lqO/I2bz6ShzTyRYTucoiczCkskXoW0ksdq1JWizaYMT
-         wwGo0euNvRtDQvJE0r4Aty6YiE+k5NdrI/Q6pOwr2AeOBDs30aJddsNf6xflXuG46lvB
-         nCDhY/xhB8V1sqG3lt2YVpsjmtGN5NLzX9Bd6o77IQRGirM2EUmVMgNDRcCkL2PQKLYF
-         AwvwhoQe9Wtzq4sWSjoJ+SPL1Iu805kGjLT0dG2g9zEJn3+bBScJJ3f4Aw4kuw4v4NTr
-         Qq+A==
-X-Gm-Message-State: APjAAAW23HktA2H9DrtDzOMmCCbdUr3SD4uMXivAZhODOrd3IjK2ycWM
-        5GiBEzFrViXpSLh19kmVXw==
-X-Google-Smtp-Source: APXvYqzdSBAMYwgWOibr6gFIJRcXsHprVu4TGfJ2odnSTDeies63zALht889LLUpzA+xIACrrZCivw==
-X-Received: by 2002:a5d:52c5:: with SMTP id r5mr57089753wrv.146.1563830142580;
-        Mon, 22 Jul 2019 14:15:42 -0700 (PDT)
-Received: from avx2 ([46.53.253.254])
-        by smtp.gmail.com with ESMTPSA id i66sm67233628wmi.11.2019.07.22.14.15.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 14:15:42 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 00:15:39 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net
-Subject: Re: [PATCH 2/5] x86_64, -march=native: POPCNT support
-Message-ID: <20190722211539.GA29979@avx2>
-References: <20190722202723.13408-1-adobriyan@gmail.com>
- <20190722202723.13408-2-adobriyan@gmail.com>
- <20190722211210.GN6698@worktop.programming.kicks-ass.net>
+        Mon, 22 Jul 2019 17:15:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729697AbfGVVPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:15:46 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1822221955;
+        Mon, 22 Jul 2019 21:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563830145;
+        bh=AIZzoT5ZYNcjgOzxp5tAPR6+/rNuqLReT3uMdcYoavY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iRJji6EcKDZ3rNaenkThR3bEKTYeoPbgWZ5Em5QbX6S3sLNUNEmwShKrkD3Iz3et3
+         fsrBVi68W2MImveoLTFgx5nNRgtbWMIZ1mkJwIql8NEci4tBOmN/WV7j/Dk+txETd1
+         yDQ84WnlNQ4e7tkMX4/PwhqFjwh4AxDCeiZyQqhA=
+Date:   Mon, 22 Jul 2019 16:15:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "Gustavo.Pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 6/8] PCI: al: Add support for DW based driver type
+Message-ID: <20190722211542.GB203187@google.com>
+References: <20190718094531.21423-1-jonnyc@amazon.com>
+ <20190718094718.25083-2-jonnyc@amazon.com>
+ <DM6PR12MB4010913E5408349A600762CADACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
+ <d323007c6bf14cb9f90a497a26b66dac151164fc.camel@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722211210.GN6698@worktop.programming.kicks-ass.net>
+In-Reply-To: <d323007c6bf14cb9f90a497a26b66dac151164fc.camel@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:12:10PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 22, 2019 at 11:27:20PM +0300, Alexey Dobriyan wrote:
-> > Detect POPCNT instruction support and inline hweigth*() functions
-> > if it is supported by CPU.
-> > 
-> > Detect POPCNT at boot time and conditionally refuse to boot.
-> > 
-> > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> > ---
-> >  arch/x86/include/asm/arch_hweight.h           | 24 +++++++++++++++++++
-> >  arch/x86/include/asm/segment.h                |  1 +
-> >  arch/x86/kernel/verify_cpu.S                  |  8 +++++++
-> >  arch/x86/lib/Makefile                         |  5 +++-
-> >  .../drm/i915/display/intel_display_power.c    |  2 +-
-> >  drivers/misc/sgi-gru/grumain.c                |  2 +-
-> >  fs/btrfs/tree-checker.c                       |  4 ++--
-> >  include/linux/bitops.h                        |  2 ++
-> >  lib/Makefile                                  |  2 ++
-> >  scripts/kconfig/cpuid.c                       |  7 ++++++
-> >  scripts/march-native.sh                       |  2 ++
-> >  11 files changed, 54 insertions(+), 5 deletions(-)
-> 
-> *WHY* ?
-> 
-> AFAICT this just adds lines and complexity and wins aboslutely nothing.
+On Sun, Jul 21, 2019 at 03:08:18PM +0000, Chocron, Jonathan wrote:
+> On Fri, 2019-07-19 at 08:55 +0000, Gustavo Pimentel wrote:
+> > On Thu, Jul 18, 2019 at 10:47:16, Jonathan Chocron <jonnyc@amazon.com> wrote:
 
-If CPU is know to have POPCNT, it doesn't make sense to go through RDI.
-Additionally some CPUs (still?) have fake dependency on the destination,
-so "popcnt rax, rdi" is suboptimal.
+> > > +static int al_pcie_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct al_pcie *al_pcie;
+> > > +	struct dw_pcie *pci;
+> > > +	struct resource *dbi_res;
+> > > +	struct resource *controller_res;
+> > > +	struct resource *ecam_res;
+> > > +	int ret;
+> > 
+> > Please sort the variables following the reverse tree order.
+> > 
+> Done. 
+> 
+> I'd think that it would make sense to group variables which have a
+> common characteristic (e.g. resources read from the DT), even if it
+> mildly breaks the convention (as long as the general frame is longest
+> to shortest). Does this sound ok?
+> 
+> BTW, I couldn't find any documentation regarding the reverse-tree
+> convention, do you have a pointer to some?
+
+What I personally do is sort declarations in the order they're used.
