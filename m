@@ -2,100 +2,68 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87388C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F60C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A9D21900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uCq5/5ck"
+	by mail.kernel.org (Postfix) with ESMTP id BACB521951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732762AbfGVVfj (ORCPT
+        id S1732766AbfGVVhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:35:39 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45405 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbfGVVfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:35:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45svzW6TQRz9sBZ;
-        Tue, 23 Jul 2019 07:35:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563831336;
-        bh=L80NI8xzhTtIgcmhZBig5LBwXSPMVdF1dSa76Kz0qZY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uCq5/5ckzLldaxfM3EQOng/bIaMOpcshjYbk2GoVLWLYscsTU3QjsvwxJTbdVUS+Z
-         sI9iQzl5x8t465P8Ny1jO+mH8Qg6wIE92GhoFkd2M2+G4KUDKzrYK1NkGnx7AcESHv
-         vYQXingTSwAkKcsn8GVES1Bpwl58SR2LAL/cQD4nVaL4QXra1LG9e8U/Vb1elk5s7c
-         TatZJuuW3BPvAM/83HFLZbKWXRS0PYhwKeUMmSSKyZhBxctGOCW9YCQmUZbd+wnXv8
-         vWHlaWYp7s79QZOCGKkV++zwTUSE8lGwnL9xuFNsYoxnxCP7T8eb1QwWT7e3y9RXK9
-         51dV53GgtpJDQ==
-Date:   Tue, 23 Jul 2019 07:35:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maciej =?UTF-8?B?xbtlbmN6?= =?UTF-8?B?eWtvd3NraQ==?= 
-        <maze@google.com>
-Subject: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20190723073518.59fa66e0@canb.auug.org.au>
+        Mon, 22 Jul 2019 17:37:25 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:56641 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729004AbfGVVhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:37:24 -0400
+Received: from localhost.localdomain ([92.140.204.221])
+        by mwinf5d78 with ME
+        id fxdM200024n7eLC03xdMiE; Mon, 22 Jul 2019 23:37:22 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 22 Jul 2019 23:37:22 +0200
+X-ME-IP: 92.140.204.221
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     nsekhar@ti.com, bgolaszewski@baylibre.com, linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] ARM: davinci: dm646x: Fix a typo in the comment
+Date:   Mon, 22 Jul 2019 23:36:57 +0200
+Message-Id: <20190722213657.27175-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lFBGb0vxewojfyG=A0Rc5=N";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lFBGb0vxewojfyG=A0Rc5=N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The driver is dedicated to DM646x. So update the description in the top
+most comment accordingly.
 
-Hi all,
+It must have been derived from dm644x.c, but looks DM646 speecific now.
 
-In commit
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ arch/arm/mach-davinci/dm646x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  66b5f1c43984 ("net-ipv6-ndisc: add support for RFC7710 RA Captive Portal =
-Identifier")
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index 62ca952fe161..4c58510e5792 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -1,5 +1,5 @@
+ /*
+- * TI DaVinci DM644x chip specific setup
++ * TI DaVinci DM646x chip specific setup
+  *
+  * Author: Kevin Hilman, Deep Root Systems, LLC
+  *
+-- 
+2.20.1
 
-Fixes tag
-
-  Fixes: e35f30c131a56
-
-has these problem(s):
-
-  - missing subject
-
-Did you mean
-
-Fixes: e35f30c131a5 ("Treat ND option 31 as userland (DNSSL support)")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lFBGb0vxewojfyG=A0Rc5=N
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02LBYACgkQAVBC80lX
-0Gw8Nwf/VOjsejY1Z6g6NK+bOt7as3NHUho/x9gL6y3Bxg99UraEbJjWKBvvvf7y
-wvE8Vr56Q+yw1qdixQDP+yg5LOjXpO+7lo5z921mPTd4n8kOieK61GFk1WecayiW
-wI8IyWlSUnq5DKMBCxxGnObQSKLas0Fn+oMXd+/x+39iUleGoNnvzrAQZ+SWNbL7
-bIg4mRvV9i6WLsn4J4YScvhMh+hJzru25OXktl9UJXWVH3fzqtMetCwV8X7rkgEq
-8lqKzWXP6h0I1bFab9kA2B1WSplAG6WN35UyTgDJKN0IWP8taETODT4yQOo5Ef45
-IBzFiJWaXoSgnZRcF0RCGbr+wjPwOQ==
-=BZZl
------END PGP SIGNATURE-----
-
---Sig_/lFBGb0vxewojfyG=A0Rc5=N--
