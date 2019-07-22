@@ -2,140 +2,96 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9932C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C11C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C1C21921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF7B216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfGVNDb (ORCPT
+        id S1730193AbfGVNEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:03:31 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37189 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730172AbfGVNDa (ORCPT
+        Mon, 22 Jul 2019 09:04:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59695 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728619AbfGVNEY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:03:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f17so35237835wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 06:03:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z0qoHRf6gBg774SquOndxWjyxuQj7ytfuhU1dKVmZIc=;
-        b=Tcrobu/0XhlllqYwY+s7scjKIWvTX/ZuAY42gpIPLmEkXCWVRTSp1YoIrRo2gOTSny
-         tvjGMOAULbQz3rr+qJQgyH+zQ8XGJX8cfqxS0PueYM3Vph2BrjNPnPruAbrA9Z/pZuPF
-         Mbi8A5IUVPxHZRS7n5DYZyMls5lWwPka4TzEeR83R7pMSTNxgPWcyY1acINpcOPGwN+m
-         2JZjjuiuU/EaOsEGk1uEV9WnGQeCDME9sgFtRvzrvqX89wj9IuoK2FxLL0EDVBHLUHKP
-         P8sUg5m3ftGIQ/n2sjwK52JKqxJWrT7BGMYZv+UVGuaq+uDCqYXqIravbdGiq1esX7ac
-         Q2oQ==
-X-Gm-Message-State: APjAAAXpfdv9uZzTXETXEwXRfrT4W5ScyHAxkEcgRLQqg2yYotQ5AEXP
-        T4uOc7iVClff4sHkGkfvwpGyIg==
-X-Google-Smtp-Source: APXvYqzTOF/7H9s7MbgAEDOE8F8AmztVnXM/YlmJCgptbmvdVMuZ26+JpP/iPrValHmryWWxfk9AGw==
-X-Received: by 2002:a1c:9a4b:: with SMTP id c72mr38257114wme.102.1563800608945;
-        Mon, 22 Jul 2019 06:03:28 -0700 (PDT)
-Received: from [192.168.1.13] ([90.168.169.92])
-        by smtp.gmail.com with ESMTPSA id j17sm58257486wrb.35.2019.07.22.06.03.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 06:03:28 -0700 (PDT)
-Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-Message-ID: <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
-Date:   Mon, 22 Jul 2019 15:03:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 22 Jul 2019 09:04:24 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hpXz6-0005yy-7y; Mon, 22 Jul 2019 15:04:08 +0200
+Message-ID: <1563800647.2311.13.camel@pengutronix.de>
+Subject: Re: [PATCH 10/10] ASoC: fsl_sai: Add support for imx7ulp/imx8mq
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Daniel Baluta <daniel.baluta@nxp.com>, broonie@kernel.org
+Cc:     festevam@gmail.com, perex@perex.cz, tiwai@suse.com,
+        Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com, timur@kernel.org,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        shengjiu.wang@nxp.com, angus@akkea.ca, kernel@pengutronix.de,
+        viorel.suman@nxp.com
+Date:   Mon, 22 Jul 2019 15:04:07 +0200
+In-Reply-To: <20190722124833.28757-11-daniel.baluta@nxp.com>
+References: <20190722124833.28757-1-daniel.baluta@nxp.com>
+         <20190722124833.28757-11-daniel.baluta@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Kieran,
-
-On 7/10/19 9:39 PM, Kieran Bingham wrote:
-> I2C drivers match against an I2C ID table, an OF table, and an ACPI
-> table. It is now also possible to match against an OF table entry
-> without the vendor prefix to support backwards compatibility, and allow
-> simplification of the i2c probe functions.
+Am Montag, den 22.07.2019, 15:48 +0300 schrieb Daniel Baluta:
+> SAI module on imx7ulp/imx8m features 2 new registers (VERID and PARAM)
+> at the beginning of register address space.
 > 
-> As part of this matching, the probe function is being converted to
-> remove the need to specify the i2c_device_id table, but to support
-> module aliasing, we still require to have the MODULE_DEVICE_TABLE entry.
->
-
-My opinion on this is that I2C drivers should register the tables of the
-firmware interfaces that support. That is, if a driver is only used in a
-platform that supports OF then it should only require an OF device table.
-
-But if the driver supports devices that can also be present in platforms
-that use ACPI, then should also require to have an ACPI device ID table.
-
-So there should be consistency about what table is used for both matching
-a device with a driver and reporting a modalias to user-space for module
-auto-loading. If a I2C device was instantiated by OF, then the OF table
-should be used for both reporting a modalias uevent and matching a driver.
-
-Now, the i2c_of_match_device() function attempts to match by first calling
-of_match_device() and if fails fallbacks to i2c_of_match_device_sysfs().
-
-The latter attempts to match the I2C device by striping the vendor prefix
-of the compatible strings on the OF device ID table. That means that you
-could instantiate an I2C device ID through the sysfs interface and the OF
-table would be used to match the driver.
-
-But i2c_device_uevent() would had reported an I2C modalias and not an OF
-modalias (since the registered device won't have an associated of_node) so
-there's inconsistency in that case since a table is used to match but no
-to report modaliases.
-
-> Facilitate generating the I2C aliases directly from the of_device_id
-> tables, by stripping the vendor prefix prefix from the compatible string
-> and using that as an alias just as the i2c-core supports.
+> On imx7ulp FIFOs can held up to 16 x 32 bit samples.
+> On imx8mq FIFOs can held up to 128 x 32 bit samples.
 > 
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  sound/soc/fsl/fsl_sai.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> index f2441b84877e..b05837465b5a 100644
+> --- a/sound/soc/fsl/fsl_sai.c
+> +++ b/sound/soc/fsl/fsl_sai.c
+> @@ -1065,10 +1065,24 @@ static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
+> >  	.reg_offset = 0,
+>  };
+>  
+> +static const struct fsl_sai_soc_data fsl_sai_imx7ulp_data = {
+> > +	.use_imx_pcm = true,
+> > +	.fifo_depth = 16,
+> > +	.reg_offset = 8,
+> +};
+> +
+> +static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
+> > +	.use_imx_pcm = true,
+> > +	.fifo_depth = 128,
+> > +	.reg_offset = 8,
+> +};
+> +
+>  static const struct of_device_id fsl_sai_ids[] = {
+> >  	{ .compatible = "fsl,vf610-sai", .data = &fsl_sai_vf610_data },
+> >  	{ .compatible = "fsl,imx6sx-sai", .data = &fsl_sai_imx6sx_data },
+> >  	{ .compatible = "fsl,imx6ul-sai", .data = &fsl_sai_imx6sx_data },
+> > +	{ .compatible = "fsl,imx7ulp-sai", .data = &fsl_sai_imx7ulp_data },
+> > +	{ .compatible = "fsl,imx8mq-sai", .data = &fsl_sai_imx8mq_data },
+> > 
+Those two new compatibles need to be documented in the DT bindings.
 
-I see two ways to solve this issue. One is with $SUBJECT since we can argue
-that if a OF-only driver is able to match devices that were instantiated
-through the sysfs interface that only have a device name, then a modalias
-of the form i2c:<foo> is needed. Since the compatible strings without the
-vendor prefix is used to match, then I think that makes sense to also use
-them without the vendor prefix to populate I2C modaliases as $SUBJECT does.
-
-The other option is to remove i2c_of_match_device() and don't make OF match
-to fallback to i2c_of_match_device_sysfs(). This is what happens in the ACPI
-case, since i2c_device_match() just calls acpi_driver_match_device() directly
-and doesn't have a wrapper function that fallbacks to sysfs matching.
-
-In this case an I2C device ID table would be required if the devices have to
-be instantiated through sysfs. That way the I2C table would be used both for
-auto-loading and also to match the device when it doesn't have an of_node.
-
-If the former is the correct way to solve this then the patch looks good to me.
-
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+Regards,
+Lucas
