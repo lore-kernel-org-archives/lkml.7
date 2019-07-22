@@ -2,112 +2,98 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0E0C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9FFC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B670D21BF1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDE521BD9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/VUEFE9"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="k2bbZ2b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfGVEjk (ORCPT
+        id S1727782AbfGVEkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 00:39:40 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34710 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfGVEjk (ORCPT
+        Mon, 22 Jul 2019 00:40:31 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41587 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfGVEka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 00:39:40 -0400
-Received: by mail-yw1-f67.google.com with SMTP id q128so15435671ywc.1;
-        Sun, 21 Jul 2019 21:39:39 -0700 (PDT)
+        Mon, 22 Jul 2019 00:40:30 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 62so20710505lfa.8
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 21:40:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OMqsPQOjQqPIEBmD3EIh4Qtw05vaz+UOfW4nYOJHTL4=;
-        b=t/VUEFE9R2TvEBxbMNvsYCoL2WZYdDc0V4kRWpaHd/rCAxdQIa436PxuYFihm/ifDL
-         H5FDSOR4DAcsJfHRaXAU2y1fOgiHivBPZDcNU+NKvX/KOFe0+TIojO7yzrLOaCpfSgyH
-         8w8H1swbhb7jAhafPPfws0q8ehyTp/OIOqdO5fSa9w6TNw/A3QFZcpZ7zIQOcFFirqf3
-         rRY81Z8vai/trJWZwFmj3nqB2pLuwZujCtzdqgYaUFY39SgnBtvz0FEizNU7qvcPe1iZ
-         9Cd4RFJF9WGz6EuAuJQeCzPQRQ2HfRrXe7rRYmw/vjWiISrRX9vt1y7X3WVeck0H9Ayf
-         1UGA==
+        bh=9ncs42SKDIyAXPYsF/YsHVruecC4cl/V7wjDZefhpkw=;
+        b=k2bbZ2b2oyVs0xaDgMXk4iGhoEBB5SNlDTYlq+jwwsMrg7WYd24sYe0mDHDlQSvoDX
+         vRx/T3SbjcAWD+kP5mFuzsgQ2m5N75YkNxvwp3OBsTs2n/LqG5cH18XvsLuHTHpeChRI
+         58rku89FNYqjt0vAT1GR0Om4Y1TenH7EpGIEbx1Rjn+gX6+YnEx8d5l5WmPSWmKkmcc0
+         Vy+VW7wLRHdd4wOYN58RXO07SK6yY7S7t8Es8IHlzBB6NdgENlcFfB3Hx77JdfFCB2mU
+         KMUBU0zBbQD8GI/T4Y0iRMawLQqjbap4/KZBz40ji+Kc3r6kVLxhakPmoLkXFytcFO/C
+         /vaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OMqsPQOjQqPIEBmD3EIh4Qtw05vaz+UOfW4nYOJHTL4=;
-        b=NEPa6hHNRQdxAqyHmFex++84zd5bg/a2MmgFt+4fiq/a0EwbUe1N3qU/NcLlQxjasj
-         YpYwlupQWTnM2xr7864s7iNZQreVL1P9NE/oJmBLhAJJO2NARKu6J946FfBkmTDsV5FH
-         MrEQfOxUZuYyAJ/tSVp//elG75nCGJkxlSmrryA9Y6bUJOwZd1Z103Ed+41IqY4Qii5+
-         7rM90Y+43Q36q2e08Qj1/FzjLl5Du+i2lcdzPf0irDJT6PF4lvB28pTeWVWTNFTgl3lV
-         EQ7nIIVthKORXQSr2g9iZA5DSJdTvPYM4WEK2h0nXgnQrEMaWziGdrqGqDQ20RhGYKW4
-         A+cw==
-X-Gm-Message-State: APjAAAUv3g1CWTIpOvfZ8V4Cs1vZm7jCWr5sUKmkxmDwH/Cfflt9nVsz
-        XTKA297oFdvdnawE5D6NfNebluBDuB0nPaxuaZQ=
-X-Google-Smtp-Source: APXvYqw2nuO6UwixpRbfaNpk9MK1Ao8/qBkIZzg+dLv0cDdjoBg3WbnEO02wQKi8/VMw4pkqKPvLqF4+21jZlLPQ/AY=
-X-Received: by 2002:a81:50d5:: with SMTP id e204mr39589702ywb.379.1563770379165;
- Sun, 21 Jul 2019 21:39:39 -0700 (PDT)
+        bh=9ncs42SKDIyAXPYsF/YsHVruecC4cl/V7wjDZefhpkw=;
+        b=tUuEtqK6G6jZs2iB3lba7rq2nRxQw8GfKiRt+IeYUfKKwV5Uwiq8ExQzDihIfdJZI2
+         9UZodCxIPJOmniCQyG/0lFIYdYSlder61rY+nlxfgv304HukL1Q4xldxDw9oJxRtEvpC
+         +3SDSixUVLkCJ7veXDS4h8gYG8r4m5ePODAgadd8dPHVfp4s/5QXqCTiHbwuk0j9kjfv
+         ciIsucjIPwJdW2NCEGh4Gi9FOp5T4qoigTaAmOXfVN+8EnPPhvDhEnWT1jt/rjOqAAlP
+         bG2m4heIW/7DjKiIqu5qXWcVk9ICTjVNgbMNiBpFvlekE1eUka2vkMIjnQApgxGHw4q+
+         DzoA==
+X-Gm-Message-State: APjAAAVZ7UyqMFi89+8+kJowaUiP/3RM4p/yvkxC1Gv7z5pvCwmTeTly
+        qKglLCmt2QT2Al+0HFnKuniDtFpeq+IpRwutmAdgxQ==
+X-Google-Smtp-Source: APXvYqwvAIdl55t6ZBi0sof5NGjfaHPKrALdFIaGt9ZEylIuJumZ5agEDn2OAQB5ZWTfVUpTC8ov8KSHgsYAMZ1msnk=
+X-Received: by 2002:a19:6602:: with SMTP id a2mr29671361lfc.25.1563770428381;
+ Sun, 21 Jul 2019 21:40:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190722025043.166344-1-gaoxiang25@huawei.com> <20190722025043.166344-13-gaoxiang25@huawei.com>
-In-Reply-To: <20190722025043.166344-13-gaoxiang25@huawei.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 22 Jul 2019 07:39:27 +0300
-Message-ID: <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+ <1563534631-15897-2-git-send-email-yash.shah@sifive.com> <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com>
+In-Reply-To: <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Mon, 22 Jul 2019 10:09:52 +0530
+Message-ID: <CAJ2_jOEHoh+D76VpAoVq3XnpAZEQxdQtaVX5eiKw5X4r+ypKVw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] macb: Update compatibility string for SiFive FU540-C000
+To:     Nicolas Ferre <Nicolas.Ferre@microchip.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 5:54 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
+On Fri, Jul 19, 2019 at 5:36 PM <Nicolas.Ferre@microchip.com> wrote:
 >
-> Currently kernel has scattered tagged pointer usages
-> hacked by hand in plain code, without a unique and
-> portable functionset to highlight the tagged pointer
-> itself and wrap these hacked code in order to clean up
-> all over meaningless magic masks.
+> On 19/07/2019 at 13:10, Yash Shah wrote:
+> > Update the compatibility string for SiFive FU540-C000 as per the new
+> > string updated in the binding doc.
+> > Reference: https://lkml.org/lkml/2019/7/17/200
 >
-> This patch introduces simple generic methods to fold
-> tags into a pointer integer. Currently it supports
-> the last n bits of the pointer for tags, which can be
-> selected by users.
+> Maybe referring to lore.kernel.org is better:
+> https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5KA-+rgww@mail.gmail.com/
+
+Sure. Will keep that in mind for future reference.
+
 >
-> In addition, it will also be used for the upcoming EROFS
-> filesystem, which heavily uses tagged pointer pproach
->  to reduce extra memory allocation.
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
 >
-> Link: https://en.wikipedia.org/wiki/Tagged_pointer
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Well, it won't do much good for other kernel users in fs/erofs/ ;-)
+Thanks.
 
-I think now would be a right time to promote this facility to
-include/linux as you initially proposed.
-I don't recall you got any objections. No ACKs either, but I think
-that was the good kind of silence (?)
-
-You might want to post the __fdget conversion patch [1] as a
-bonus patch on top of your series.
-
-Thanks,
-Amir.
-
-[1] https://lore.kernel.org/linux-fsdevel/1530543233-65279-2-git-send-email-gaoxiang25@huawei.com/
+- Yash
