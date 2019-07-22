@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A63BC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE8CC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8A22171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFB32171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbfGVPnE (ORCPT
+        id S1729976AbfGVPnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:43:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:40384 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 11:43:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:40416 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729886AbfGVPnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:43:02 -0400
+        id S1729966AbfGVPnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:43:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFE9E1509;
-        Mon, 22 Jul 2019 08:43:01 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C90AE15BF;
+        Mon, 22 Jul 2019 08:43:04 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66A7A3F694;
-        Mon, 22 Jul 2019 08:42:59 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3192C3F694;
+        Mon, 22 Jul 2019 08:43:02 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,9 +44,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v9 13/21] mm: pagewalk: Add test_p?d callbacks
-Date:   Mon, 22 Jul 2019 16:42:02 +0100
-Message-Id: <20190722154210.42799-14-steven.price@arm.com>
+Subject: [PATCH v9 14/21] x86: mm: Don't display pages which aren't present in debugfs
+Date:   Mon, 22 Jul 2019 16:42:03 +0100
+Message-Id: <20190722154210.42799-15-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
 References: <20190722154210.42799-1-steven.price@arm.com>
@@ -57,95 +57,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is useful to be able to skip parts of the page table tree even when
-walking without VMAs. Add test_p?d callbacks similar to test_walk but
-which are called just before a table at that level is walked. If the
-callback returns non-zero then the entire table is skipped.
+For the /sys/kernel/debug/page_tables/ files, rather than outputing a
+mostly empty line when a block of memory isn't present just skip the
+line. This keeps the output shorter and will help with a future change
+switching to using the generic page walk code as we no longer care about
+the 'level' that the page table holes are at.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- include/linux/mm.h | 11 +++++++++++
- mm/pagewalk.c      | 24 ++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ arch/x86/mm/dump_pagetables.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b22799129128..325a1ca6f820 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1447,6 +1447,11 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
-  *             value means "do page table walk over the current vma,"
-  *             and a negative one means "abort current page table walk
-  *             right now." 1 means "skip the current vma."
-+ * @test_pmd:  similar to test_walk(), but called for every pmd.
-+ * @test_pud:  similar to test_walk(), but called for every pud.
-+ * @test_p4d:  similar to test_walk(), but called for every p4d.
-+ *             Returning 0 means walk this part of the page tables,
-+ *             returning 1 means to skip this range.
-  * @mm:        mm_struct representing the target process of page table walk
-  * @vma:       vma currently walked (NULL if walking outside vmas)
-  * @private:   private data for callbacks' usage
-@@ -1471,6 +1476,12 @@ struct mm_walk {
- 			     struct mm_walk *walk);
- 	int (*test_walk)(unsigned long addr, unsigned long next,
- 			struct mm_walk *walk);
-+	int (*test_pmd)(unsigned long addr, unsigned long next,
-+			pmd_t *pmd_start, struct mm_walk *walk);
-+	int (*test_pud)(unsigned long addr, unsigned long next,
-+			pud_t *pud_start, struct mm_walk *walk);
-+	int (*test_p4d)(unsigned long addr, unsigned long next,
-+			p4d_t *p4d_start, struct mm_walk *walk);
- 	struct mm_struct *mm;
- 	struct vm_area_struct *vma;
- 	void *private;
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 1cbef99e9258..6bea79b95be3 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -32,6 +32,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 	unsigned long next;
- 	int err = 0;
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index ab67822fd2f4..95728027dd3b 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -301,8 +301,8 @@ static void note_page(struct seq_file *m, struct pg_state *st,
+ 		/*
+ 		 * Now print the actual finished series
+ 		 */
+-		if (!st->marker->max_lines ||
+-		    st->lines < st->marker->max_lines) {
++		if ((cur & _PAGE_PRESENT) && (!st->marker->max_lines ||
++		    st->lines < st->marker->max_lines)) {
+ 			pt_dump_seq_printf(m, st->to_dmesg,
+ 					   "0x%0*lx-0x%0*lx   ",
+ 					   width, st->start_address,
+@@ -318,7 +318,8 @@ static void note_page(struct seq_file *m, struct pg_state *st,
+ 			printk_prot(m, st->current_prot, st->level,
+ 				    st->to_dmesg);
+ 		}
+-		st->lines++;
++		if (cur & _PAGE_PRESENT)
++			st->lines++;
  
-+	if (walk->test_pmd) {
-+		err = walk->test_pmd(addr, end, pmd_offset(pud, 0UL), walk);
-+		if (err < 0)
-+			return err;
-+		if (err > 0)
-+			return 0;
-+	}
-+
- 	pmd = pmd_offset(pud, addr);
- 	do {
- again:
-@@ -82,6 +90,14 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 	unsigned long next;
- 	int err = 0;
- 
-+	if (walk->test_pud) {
-+		err = walk->test_pud(addr, end, pud_offset(p4d, 0UL), walk);
-+		if (err < 0)
-+			return err;
-+		if (err > 0)
-+			return 0;
-+	}
-+
- 	pud = pud_offset(p4d, addr);
- 	do {
-  again:
-@@ -124,6 +140,14 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
- 	unsigned long next;
- 	int err = 0;
- 
-+	if (walk->test_p4d) {
-+		err = walk->test_p4d(addr, end, p4d_offset(pgd, 0UL), walk);
-+		if (err < 0)
-+			return err;
-+		if (err > 0)
-+			return 0;
-+	}
-+
- 	p4d = p4d_offset(pgd, addr);
- 	do {
- 		next = p4d_addr_end(addr, end);
+ 		/*
+ 		 * We print markers for special areas of address space,
 -- 
 2.20.1
 
