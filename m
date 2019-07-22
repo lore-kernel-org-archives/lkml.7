@@ -2,91 +2,143 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0CDC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC88C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927B421E6A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563771927;
-	bh=WmJFcTVoRpT2HfWty1TJul+l+Y+NTZtVLnXF68wNGu4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rpDsNsYgBD9660FZUbyq0cZBk/81/RaAzk1JrUn/L9CD4UT0G3VMyg0v9B7HxH1OI
-	 xmk+KT+3TckXJCWlt0VUPQXMheK90y5mbVa3eoY3G1jy2/4za4kB8wi0NvCD54AxoW
-	 5bu6Bx8O+CiQ///vuhm8MIKTkdUqvYSFr+EJnhTg=
+	by mail.kernel.org (Postfix) with ESMTP id 616F521E73
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfGVFF0 (ORCPT
+        id S1726534AbfGVFNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 01:13:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22296 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbfGVFF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:05:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D7021BF6;
-        Mon, 22 Jul 2019 05:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563771925;
-        bh=WmJFcTVoRpT2HfWty1TJul+l+Y+NTZtVLnXF68wNGu4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ak4mYg1UNsFiHfLnKlHXXnNOcAWp3v+nzRjM9leUCIgt89qe+qhkmLoan3VmrsYiH
-         EMz6kdjmwweOgO/RfvTxxUGp5pBcxUjNKIiAEsGilqmDmgxxyuxKQmeQXe+QhH73E8
-         NACTwYpXXbzg05gtviLXQIgLM9U6xTUQfuWUn5vE=
-Date:   Mon, 22 Jul 2019 07:05:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        id S1725795AbfGVFNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:13:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jul 2019 22:13:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,293,1559545200"; 
+   d="scan'208";a="344308827"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 21 Jul 2019 22:13:45 -0700
+Date:   Sun, 21 Jul 2019 22:13:45 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v3 01/24] erofs: add on-disk layout
-Message-ID: <20190722050522.GA11993@kroah.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-2-gaoxiang25@huawei.com>
- <20190722132616.60edd141@canb.auug.org.au>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 1/3] mm: document zone device struct page field usage
+Message-ID: <20190722051345.GB6157@iweiny-DESK2.sc.intel.com>
+References: <20190719192955.30462-1-rcampbell@nvidia.com>
+ <20190719192955.30462-2-rcampbell@nvidia.com>
+ <20190721160204.GB363@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722132616.60edd141@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190721160204.GB363@bombadil.infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:26:16PM +1000, Stephen Rothwell wrote:
-> Hi Gao,
+On Sun, Jul 21, 2019 at 09:02:04AM -0700, Matthew Wilcox wrote:
+> On Fri, Jul 19, 2019 at 12:29:53PM -0700, Ralph Campbell wrote:
+> > Struct page for ZONE_DEVICE private pages uses the page->mapping and
+> > and page->index fields while the source anonymous pages are migrated to
+> > device private memory. This is so rmap_walk() can find the page when
+> > migrating the ZONE_DEVICE private page back to system memory.
+> > ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
+> > page->index fields when files are mapped into a process address space.
+> > 
+> > Restructure struct page and add comments to make this more clear.
 > 
-> On Mon, 22 Jul 2019 10:50:20 +0800 Gao Xiang <gaoxiang25@huawei.com> wrote:
-> >
-> > diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-> > new file mode 100644
-> > index 000000000000..e418725abfd6
-> > --- /dev/null
-> > +++ b/fs/erofs/erofs_fs.h
-> > @@ -0,0 +1,316 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
+> NAK.  I just got rid of this kind of foolishness from struct page,
+> and you're making it harder to understand, not easier.  The comments
+> could be improved, but don't lay it out like this again.
+
+Was V1 of Ralphs patch ok?  It seemed ok to me.
+
+Ira
+
 > 
-> I think the preferred tag is now GPL-2.0-only (assuming that is what is
-> intended).
-
-Either is fine, see the LICENSE/preferred/GPL-2.0 file for the list of
-valid ones.
-
-thanks,
-
-greg k-h
+> > @@ -76,13 +76,35 @@ struct page {
+> >  	 * avoid collision and false-positive PageTail().
+> >  	 */
+> >  	union {
+> > -		struct {	/* Page cache and anonymous pages */
+> > -			/**
+> > -			 * @lru: Pageout list, eg. active_list protected by
+> > -			 * pgdat->lru_lock.  Sometimes used as a generic list
+> > -			 * by the page owner.
+> > -			 */
+> > -			struct list_head lru;
+> > +		struct {	/* Page cache, anonymous, ZONE_DEVICE pages */
+> > +			union {
+> > +				/**
+> > +				 * @lru: Pageout list, e.g., active_list
+> > +				 * protected by pgdat->lru_lock. Sometimes
+> > +				 * used as a generic list by the page owner.
+> > +				 */
+> > +				struct list_head lru;
+> > +				/**
+> > +				 * ZONE_DEVICE pages are never on the lru
+> > +				 * list so they reuse the list space.
+> > +				 * ZONE_DEVICE private pages are counted as
+> > +				 * being mapped so the @mapping and @index
+> > +				 * fields are used while the page is migrated
+> > +				 * to device private memory.
+> > +				 * ZONE_DEVICE MEMORY_DEVICE_FS_DAX pages also
+> > +				 * use the @mapping and @index fields when pmem
+> > +				 * backed DAX files are mapped.
+> > +				 */
+> > +				struct {
+> > +					/**
+> > +					 * @pgmap: Points to the hosting
+> > +					 * device page map.
+> > +					 */
+> > +					struct dev_pagemap *pgmap;
+> > +					/** @zone_device_data: opaque data. */
+> > +					void *zone_device_data;
+> > +				};
+> > +			};
+> >  			/* See page-flags.h for PAGE_MAPPING_FLAGS */
+> >  			struct address_space *mapping;
+> >  			pgoff_t index;		/* Our offset within mapping. */
+> > @@ -155,12 +177,6 @@ struct page {
+> >  			spinlock_t ptl;
+> >  #endif
+> >  		};
+> > -		struct {	/* ZONE_DEVICE pages */
+> > -			/** @pgmap: Points to the hosting device page map. */
+> > -			struct dev_pagemap *pgmap;
+> > -			void *zone_device_data;
+> > -			unsigned long _zd_pad_1;	/* uses mapping */
+> > -		};
+> >  
+> >  		/** @rcu_head: You can use this to free a page by RCU. */
+> >  		struct rcu_head rcu_head;
+> > -- 
+> > 2.20.1
+> > 
+> 
