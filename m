@@ -2,125 +2,111 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3580C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68675C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F8421903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5w+mGxc"
+	by mail.kernel.org (Postfix) with ESMTP id 3825F21901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563817737;
+	bh=IFPxTgv+/38iCLXEQkCFgDfc3sGgooEMWOxpK/+OA+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RDtXXo6ThkDOZzb47lZaqoLycxnplhIEKQoUm4Rixtck5mdhio40RcpzlQ8zTKH4e
+	 jA27JWnYdG/Yrb59Wb01Zpujs/FiCGSuf/dZjjdGETsUU8568QpldP+nyUs4ZXPniT
+	 eQCuIsr46wTc/Z0czphAJZMJckdhCB2HB3/+FrzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfGVRrd (ORCPT
+        id S1729418AbfGVRs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:47:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33584 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfGVRrc (ORCPT
+        Mon, 22 Jul 2019 13:48:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46603 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfGVRsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:47:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g2so17732551pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 10:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ssliLyV8U+mhRbl4ipf9bRa3EL22Ezd5Zc9rGXszSvs=;
-        b=C5w+mGxcCfYenODdQNw1QcoLPL+bTkqpAf1/84e6VjiF/EoUBRTpVAR+fNjCytOAWp
-         odi5USyMM1CmgRscWbz7evmXa7roPGotsByCf0dCTZYoBvFSPOM8gPIGhpelZJSVH4kB
-         hmL7ht19DHj9QHK7nirEINAtPWdthi1fyy909XKPUyZ0sF2ocOcpxFB7WTDRSZe0K810
-         cFeY4feogogD3qQW80cDHyCXQa084E3fdKJZBNveSLtwkmItkyXKczLr82vjNBMn8GOC
-         D8FspNPt0fikrMjAzRzXpw3qh+0sRFbGrB73QY18Lv1wx61yQFRX5ooBCKklMPAlbkQs
-         BRdg==
+        Mon, 22 Jul 2019 13:48:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so75768956iol.13;
+        Mon, 22 Jul 2019 10:48:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ssliLyV8U+mhRbl4ipf9bRa3EL22Ezd5Zc9rGXszSvs=;
-        b=ilTg3cbrJPthqrjeBvBsaiwWw7NUmB1P75TNeQRGwSMNnmqdA75y7RQUqInpVj/oYy
-         oibgf23Sm9sZ5+s47MH4epvej4EL3sgs0veCZjod4vkFuErjeXpZ203qEG2RmbmEl/cx
-         u8L98xSl1rQoGyeBpgqSGhMLWjHH5JfsOwVTfiK9aNOfefAQZC6LRl8+9Vh5eSgDLwpB
-         rW9/NCdJBFj857akzBaS4JrKRRNvV/hXaOJkKXkZDKdmpzFkvBC9IHTJuIH6SYRhi2+O
-         h12Hses+jnwO+jMvTjLKEt2+i2Y8oVUg/6IjFq9oAs3x1i+EwXqoPFCmPndbttWbr6p3
-         CGuw==
-X-Gm-Message-State: APjAAAVoa1scazLPnzGVSNBKUnuPzoxm7PpACQXmK4bwtXwbQFdsTf+y
-        NiFsN3qIlgzmLvgWhI77qMk=
-X-Google-Smtp-Source: APXvYqytaXVkl+pZJk2sr2G9EcYG8eurkZ6Bh7OAgDsV2SsE5u3Auq7jbF2z3AZSzMtO7hgrslDQ9w==
-X-Received: by 2002:a62:fc0a:: with SMTP id e10mr1400314pfh.114.1563817652196;
-        Mon, 22 Jul 2019 10:47:32 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id w3sm35130886pgl.31.2019.07.22.10.47.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 10:47:31 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 23:17:25 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     arnd@arndb.de, sivanich@sgi.com, gregkh@linuxfoundation.org,
-        ira.weiny@intel.com, jglisse@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] sgi-gru: Convert put_page() to get_user_page*()
-Message-ID: <20190722174725.GA12278@bharath12345-Inspiron-5559>
-References: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
- <1563724685-6540-2-git-send-email-linux.bhar@gmail.com>
- <dae42533-7e71-0e41-54a2-58c459761b3e@nvidia.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CxrJ1h1Gj9qffdtw6gn6IuFX9kNT09jtgH+ckcJPTWk=;
+        b=CMvB803DUZ1IsKkDomdkjDfaomZ9p/zcCcdDhde2i62lFZ2wOaFo3u+jKPdWd5L9RV
+         I3i/gpUmVdOWno601py0CS9BzU9/iEctSNQCabBCvQN8EaZ2zzXG8socZDXqQz9lCJ2C
+         /WN2BamGmGw/fwFPljFSaAoLUcGOjNoZsB5BQclura6rRfkA3Pe5NLlmW3YHFpTpEDzE
+         dfbDmFiJKRAWhv2W3MIemXsqofWWAHiD4lBJ5CXvD+KC+OLSa58dIUU2o0eoHk8QTX2D
+         TRRzPpsfmDCvNwxo5vUN0GmbIs+Pi2brPGEdpxBcGQx47o76dTt3Y64xrTh1lKIphq6M
+         Pyfg==
+X-Gm-Message-State: APjAAAVT1CznYUZUUaTfl5TkgeBEwbOLERpj2NhBYV8NYTzAlpfEv3lX
+        cT2ByzxoWRGqDi0vhpgKiA==
+X-Google-Smtp-Source: APXvYqw0FDve9Mw/vkxriVI+KvJ+PlrXuiZ8o2qd7ioxmjQY7NUFYzDL8hVPS4tO0BHR0p8241W5WA==
+X-Received: by 2002:a02:90c8:: with SMTP id c8mr75947688jag.22.1563817734501;
+        Mon, 22 Jul 2019 10:48:54 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id c81sm62071726iof.28.2019.07.22.10.48.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 10:48:54 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:48:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/10] dt-bindings: display: Add max-res property for
+ mxsfb
+Message-ID: <20190722174853.GA31795@bogus>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+ <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dae42533-7e71-0e41-54a2-58c459761b3e@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 07:25:31PM -0700, John Hubbard wrote:
-> On 7/21/19 8:58 AM, Bharath Vedartham wrote:
-> > For pages that were retained via get_user_pages*(), release those pages
-> > via the new put_user_page*() routines, instead of via put_page().
-> > 
-> > This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> > ("mm: introduce put_user_page*(), placeholder versions").
-> > 
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Jérôme Glisse <jglisse@redhat.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Dimitri Sivanich <sivanich@sgi.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-mm@kvack.org
-> > Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> > ---
-> >  drivers/misc/sgi-gru/grufault.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
+On Wed, Jun 26, 2019 at 04:32:13PM +0300, Robert Chiras wrote:
+> Add new optional property 'max-res', to limit the maximum supported
+> resolution by the MXSFB_DRM driver.
+
+Bindings are for h/w description, not driver config.
+
 > 
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Thanks! 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> > diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-> > index 4b713a8..61b3447 100644
-> > --- a/drivers/misc/sgi-gru/grufault.c
-> > +++ b/drivers/misc/sgi-gru/grufault.c
-> > @@ -188,7 +188,7 @@ static int non_atomic_pte_lookup(struct vm_area_struct *vma,
-> >  	if (get_user_pages(vaddr, 1, write ? FOLL_WRITE : 0, &page, NULL) <= 0)
-> >  		return -EFAULT;
-> >  	*paddr = page_to_phys(page);
-> > -	put_page(page);
-> > +	put_user_page(page);
-> >  	return 0;
-> >  }
-> >  
-> > 
+> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
+> index 472e1ea..55e22ed 100644
+> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
+> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
+> @@ -17,6 +17,12 @@ Required properties:
+>  Required sub-nodes:
+>    - port: The connection to an encoder chip.
+>  
+> +Optional properties:
+> +- max-res:	an array with a maximum of two integers, representing the
+> +		maximum supported resolution, in the form of
+> +		<maxX>, <maxY>; if one of the item is <0>, the default
+> +		driver-defined maximum resolution for that axis is used
+
+I suppose what you are after is bandwidth limits? IIRC, there's already 
+some bindings expressing such limits. Also, wouldn't you need to account 
+for bpp and using the 2nd plane (IIRC that there is one).
+
+Rob
