@@ -2,183 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D45C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5217C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FABB20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563798196;
-	bh=knUUkoC4NZcZoIjGr30KdP1XfSCl+BHx5rWJuVgb6sg=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=0RimA29pxbQVM1xh+DwmxNpYCFAGtdXv/SkyL/KWSDXeLw0cSKRlTaTG2Ys0mLcZd
-	 5rVw4OtoGic/8B8MFzCvFDPvdulVy8bT/257JGLOVK7dPtu4Py2Ju3OTI4QZpdN5DV
-	 mdA2BZZxbzU40o3tt9OeLpvCpdvw8nZGoxuG5z/s=
+	by mail.kernel.org (Postfix) with ESMTP id A78A9218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbfGVMXO (ORCPT
+        id S1729017AbfGVMZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:23:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58654 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730260AbfGVMWT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:22:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+TMbBa7jX8uUjOd/fKTs9EqZROGbLGEuI+x5vkFsDS0=; b=V/2VuKZT47Kh
-        O+jYSXtZR1BrviwdbYuBXd1mQF0VUZH2JP3Z+jT3CZ6gMFbVN8syi62KcsbfETBfGrGFr2jUGdzO6
-        kvds68WwxTjwoWLNdiVLThez58ITzVgDJjsxY+OsiRtFpXmV4bbYy8bK5vliEAd2jcPd/tvavX1e3
-        ipIcE=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hpXKU-0007dq-JT; Mon, 22 Jul 2019 12:22:10 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 1A0462740463; Mon, 22 Jul 2019 13:22:10 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     alsa-devel@alsa-project.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        cychiang@chromium.org, dianders@chromium.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "SoC: rockchip: rockchip_max98090: Enable MICBIAS for headset keypress detection" to the asoc tree
-In-Reply-To: <20190719173929.24065-1-enric.balletbo@collabora.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190722122210.1A0462740463@ypsilon.sirena.org.uk>
-Date:   Mon, 22 Jul 2019 13:22:10 +0100 (BST)
+        Mon, 22 Jul 2019 08:25:19 -0400
+Received: from relay.sw.ru ([185.231.240.75]:41606 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbfGVMZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:25:19 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hpXNO-0001ko-UQ; Mon, 22 Jul 2019 15:25:11 +0300
+Subject: Re: [PATCH] ubsan: build ubsan.c more conservatively
+To:     Arnd Bergmann <arnd@arndb.de>, akpm@linux-foundation.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
+        Sodagudi Prasad <psodagud@codeaurora.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20190722091050.2188664-1-arnd@arndb.de>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <c7da8503-93bc-c130-2e50-918996abe6c7@virtuozzo.com>
+Date:   Mon, 22 Jul 2019 15:25:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190722091050.2188664-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   SoC: rockchip: rockchip_max98090: Enable MICBIAS for headset keypress detection
 
-has been applied to the asoc tree at
+On 7/22/19 12:10 PM, Arnd Bergmann wrote:
+> objtool points out several conditions that it does not like, depending
+> on the combination with other configuration options and compiler
+> variants:
+> 
+> stack protector:
+> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
+> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
+> 
+> stackleak plugin:
+> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+> 
+> kasan:
+> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
+> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
+> 
+> The stackleak and kasan options just need to be disabled for this file
+> as we do for other files already. For the stack protector, we already
+> attempt to disable it, but this fails on clang because the check is
+> mixed with the gcc specific -fno-conserve-stack option, so we need to
+> test them separately.
+> 
+> Fixes: 42440c1f9911 ("lib/ubsan: add type mismatch handler for new GCC/Clang")
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+There was no uaccess validataion at that time, so the right fixes line is probably this:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  lib/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 095601ce371d..320e3b632dd3 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -279,7 +279,8 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string.o
+>  obj-$(CONFIG_UBSAN) += ubsan.o
+>  
+>  UBSAN_SANITIZE_ubsan.o := n
+> -CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+> +KASAN_SANITIZE_ubsan.o := n
+> +CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack) $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+$(call cc-option, -fno-conserve-stack) can be removed entirely. It's just copy paste from kasan Makefile.
+It was added in kasan purely for performance reasons.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From f86621cd6c6f54edfdd62da347b2bbb8d7fddc8d Mon Sep 17 00:00:00 2001
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date: Fri, 19 Jul 2019 19:39:29 +0200
-Subject: [PATCH] SoC: rockchip: rockchip_max98090: Enable MICBIAS for headset
- keypress detection
-
-The TS3A227E says that the headset keypress detection needs the MICBIAS
-power in order to report the key events to ensure proper operation
-The headset keypress detection needs the MICBIAS power in order to report
-the key events all the time as long as MIC is present. So MICBIAS pin
-is forced on when a MICROPHONE is detected.
-
-On Veyron Minnie I observed that if the MICBIAS power is not present and
-the key press detection is activated (just because it is enabled when you
-insert a headset), it randomly reports a keypress on insert.
-E.g. (KEY_PLAYPAUSE)
-
- Event: (SW_HEADPHONE_INSERT), value 1
- Event: (SW_MICROPHONE_INSERT), value 1
- Event: -------------- SYN_REPORT ------------
- Event: (KEY_PLAYPAUSE), value 1
-
-Userspace thinks that KEY_PLAYPAUSE is pressed and produces the annoying
-effect that the media player starts a play/pause loop.
-
-Note that, although most of the time the key reported is the one
-associated with BTN_0, not always this is true. On my tests I also saw
-different keys reported
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Link: https://lore.kernel.org/r/20190719173929.24065-1-enric.balletbo@collabora.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/rockchip/rockchip_max98090.c | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index c5fc24675a33..782e534d4c0d 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -61,6 +61,37 @@ static const struct snd_kcontrol_new rk_mc_controls[] = {
- 	SOC_DAPM_PIN_SWITCH("Speaker"),
- };
- 
-+static int rk_jack_event(struct notifier_block *nb, unsigned long event,
-+			 void *data)
-+{
-+	struct snd_soc_jack *jack = (struct snd_soc_jack *)data;
-+	struct snd_soc_dapm_context *dapm = &jack->card->dapm;
-+
-+	if (event & SND_JACK_MICROPHONE)
-+		snd_soc_dapm_force_enable_pin(dapm, "MICBIAS");
-+	else
-+		snd_soc_dapm_disable_pin(dapm, "MICBIAS");
-+
-+	snd_soc_dapm_sync(dapm);
-+
-+	return 0;
-+}
-+
-+static struct notifier_block rk_jack_nb = {
-+	.notifier_call = rk_jack_event,
-+};
-+
-+static int rk_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	/*
-+	 * The jack has already been created in the rk_98090_headset_init()
-+	 * function.
-+	 */
-+	snd_soc_jack_notifier_register(&headset_jack, &rk_jack_nb);
-+
-+	return 0;
-+}
-+
- static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
- 			     struct snd_pcm_hw_params *params)
- {
-@@ -119,6 +150,7 @@ SND_SOC_DAILINK_DEFS(hifi,
- static struct snd_soc_dai_link rk_dailink = {
- 	.name = "max98090",
- 	.stream_name = "Audio",
-+	.init = rk_init,
- 	.ops = &rk_aif1_ops,
- 	/* set max98090 as slave */
- 	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
--- 
-2.20.1
-
+Not sure that it's needed even in kasan Makefile, the code which was
+the reason for adding fno-conserve-stack might not get into the final version of KASAN patches.
