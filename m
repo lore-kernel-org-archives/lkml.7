@@ -2,82 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D41EC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4B0C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E758A21900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA8A21921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfGVMxR (ORCPT
+        id S1729241AbfGVMyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:53:17 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41094 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfGVMxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:53:16 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d17so38266315qtj.8;
-        Mon, 22 Jul 2019 05:53:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dcEf8I7/m2lMn1t5WHBwpDegF2GOQrXyNgF8wvk2z0Q=;
-        b=FqLFWkRTyCAS0NIROtwaiSjsMQBtiRt0p3d1k/9KeXbIQD31RnCPxmtDz0UB5qUIsQ
-         9Qv2aDP5tbuPW5FQ8ZD3mhLjBGdoEUv2SLL7Q/rnACoiF5gkAyQKlfnpUKrElPOjALFP
-         3fbuDCgeVOT+3FXfkphKCVOk0e3cLnG+OjcAin5pkWi1Yiwx1Ul+PQlVKrkCOFJTyuQx
-         9XH2geu8dqLRNmQTAVI4/1sNKt7KiYOoZEqIc/G8nFftXfb7s0K1/qzXUvLt5ZIjw3h7
-         HvuCAU3h8Kud72x4pq6CrxPTM/uFscBHJjshbgzCA9wKWVd4lekd4v/rvNI+Qultn36A
-         XPgA==
-X-Gm-Message-State: APjAAAVZys5p/EFwPu4zW7CgOJtDXTBqBx0j6tnzlrqdfJI5MKZu8MgO
-        RvN/dC1VctK6cforbKzu2gSVWIhdKIa+FbBXZDQ=
-X-Google-Smtp-Source: APXvYqxqDHdi0SquqiGUp1jmtJ6plkYDpw3TvBRqjntxHoVSucjD+1OsWE4KYg7uhDAvNDxkwcP1eWfLsW0/NHDVaY4=
-X-Received: by 2002:a0c:b758:: with SMTP id q24mr50227938qve.45.1563799995616;
- Mon, 22 Jul 2019 05:53:15 -0700 (PDT)
+        Mon, 22 Jul 2019 08:54:39 -0400
+Received: from ajax.cs.uga.edu ([128.192.4.6]:49366 "EHLO ajax.cs.uga.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727164AbfGVMyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:54:38 -0400
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (authenticated bits=0)
+        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x6MCsZkX013562
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 08:54:37 -0400
+Received: by mail-lf1-f48.google.com with SMTP id 62so21670281lfa.8;
+        Mon, 22 Jul 2019 05:54:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAUVtJrnlw7xYq8J1kpLJPP/+MnqLN9+2al5jfaWtr0pH8CzBDIh
+        4Z29ufzqpDyoPcDlC00bVbGB22kn6fH+65nCB9o=
+X-Google-Smtp-Source: APXvYqz4FayGl7GhjYqBZCRR2PNrf9fqpfgXxMkDxoQT1M5AKTCW0Ks6Rp2FxLNB0uqRaazJ2RdDpsYGTEtzckqhZ0s=
+X-Received: by 2002:ac2:4565:: with SMTP id k5mr31911521lfm.170.1563800075295;
+ Mon, 22 Jul 2019 05:54:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190722091050.2188664-1-arnd@arndb.de> <c7da8503-93bc-c130-2e50-918996abe6c7@virtuozzo.com>
-In-Reply-To: <c7da8503-93bc-c130-2e50-918996abe6c7@virtuozzo.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 22 Jul 2019 14:52:59 +0200
-Message-ID: <CAK8P3a3pAEutcpfQJrCz+0m00LBEBn5qjxNnpRxK9HshnTjQww@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: build ubsan.c more conservatively
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Sodagudi Prasad <psodagud@codeaurora.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <1563625366-3602-1-git-send-email-wang6495@umn.edu> <20190722123204.rvsqlqgynfgjcif7@oracle.com>
+In-Reply-To: <20190722123204.rvsqlqgynfgjcif7@oracle.com>
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+Date:   Mon, 22 Jul 2019 07:53:59 -0500
+X-Gmail-Original-Message-ID: <CAAa=b7cwJ-2wPNtH_j6saHiUWRj7zSwzZ8sGPWfgG9AyxWrOPg@mail.gmail.com>
+Message-ID: <CAAa=b7cwJ-2wPNtH_j6saHiUWRj7zSwzZ8sGPWfgG9AyxWrOPg@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: ebtables: compat: fix a memory leak bug
+To:     "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
+        "open list:NETFILTER" <coreteam@netfilter.org>,
+        "moderated list:ETHERNET BRIDGE" <bridge@lists.linux-foundation.org>,
+        "open list:ETHERNET BRIDGE" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Wenwen Wang <wenwen@cs.uga.edu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 2:25 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
-> On 7/22/19 12:10 PM, Arnd Bergmann wrote:
-
+On Mon, Jul 22, 2019 at 7:34 AM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+>
+> Nice catch.  The code that exists is confusing due to newinfo->entries
+> being overwritten and then freed in the existing code path as you state
+> in your commit log.
+>
+> * Wenwen Wang <wang6495@umn.edu> [190720 08:23]:
+> > From: Wenwen Wang <wenwen@cs.uga.edu>
 > >
-> > Fixes: 42440c1f9911 ("lib/ubsan: add type mismatch handler for new GCC/Clang")
+> > In compat_do_replace(), a temporary buffer is allocated through vmalloc()
+> > to hold entries copied from the user space. The buffer address is firstly
+> > saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
+> > the entries in this temporary buffer is copied to the internal kernel
+> > structure through compat_copy_entries(). If this copy process fails,
+> > compat_do_replace() should be terminated. However, the allocated temporary
+> > buffer is not freed on this path, leading to a memory leak.
+> >
+> > To fix the bug, free the buffer before returning from compat_do_replace().
+> >
+> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> > ---
+> >  net/bridge/netfilter/ebtables.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+> > index 963dfdc..fd84b48e 100644
+> > --- a/net/bridge/netfilter/ebtables.c
+> > +++ b/net/bridge/netfilter/ebtables.c
+> > @@ -2261,8 +2261,10 @@ static int compat_do_replace(struct net *net, void __user *user,
+> >       state.buf_kern_len = size64;
+> >
+> >       ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
+> > -     if (WARN_ON(ret < 0))
+> > +     if (WARN_ON(ret < 0)) {
+> > +             vfree(entries_tmp);
+> >               goto out_unlock;
+> > +     }
 >
-> There was no uaccess validataion at that time, so the right fixes line is probably this:
 >
-> Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
->
-> > Link: > +CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack) $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
->
-> $(call cc-option, -fno-conserve-stack) can be removed entirely. It's just copy paste from kasan Makefile.
-> It was added in kasan purely for performance reasons.
+> Would it be worth adding a new goto label above out_unlock and free this
+> entries_tmp?  It could then be used in previous failure path as well.
 
-Ok, I addressed both of these and sent an updated patch, thanks for the review.
+Yes, that would make the code much clearer and easier to understand.
 
-       Arnd
+Thanks!
+Wenwen
