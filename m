@@ -2,74 +2,58 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF8EC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0EC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595AD217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47004217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730554AbfGVOWZ (ORCPT
+        id S1730629AbfGVOWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:22:25 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36215 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730178AbfGVOWZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:22:25 -0400
-Received: by mail-qk1-f193.google.com with SMTP id g18so28711308qkl.3;
-        Mon, 22 Jul 2019 07:22:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uTmepm+1wfFxfhcjqWinIonpHuVFe0DnWusOLHAhtlk=;
-        b=O2P7n+PBhpJokVp9oQM6s23hqF4JXmFo3u8AHdqz9P8n+bgxM6BY4V49t5WLXT0/7v
-         /lRizT9pXBmDtcPrf4YdCjyUtwNa4+YemX8UbpKVRpK0VnMLwfZLlIuf8r6Jkmeyb0il
-         O6bYtWe7/w1uNqhx0Gaam2CnG+0fDQ8siSEYBXKXZukZTz5NF9E4gjz5mC1XUZDEyLtc
-         V261YPJ3Iu0B5y/uRQGTzA8xK1Dz3ovRi7NPJsANjtU1OqEuS554RwnvCitUkhfhQaAW
-         2Ekj0B7l9tCv/bba+QLRgxhqlm5g5HbcKH2AQMXem+tBezsekPc928D8qCkc1rBxJ7GE
-         gRVg==
-X-Gm-Message-State: APjAAAWUbpU5tuGlxXswNSyvAqYCV3a7WVMjD0vRjisHfKKgycqgqHTF
-        +DJmRlbYoH+ESjnhFQoLuCZqzdaGLxgDdk1AWXM=
-X-Google-Smtp-Source: APXvYqyRl/V5f/dWzvRYci6j6FaJpVCVBePMszoWUP6PKN73YEOIAlkXQ8DgddVWxMgoli8YQHbOJLf6Q2SbjJgx0cU=
-X-Received: by 2002:a37:ad12:: with SMTP id f18mr2798435qkm.3.1563805344006;
- Mon, 22 Jul 2019 07:22:24 -0700 (PDT)
+        Mon, 22 Jul 2019 10:22:42 -0400
+Received: from 8bytes.org ([81.169.241.247]:44758 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730178AbfGVOWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:22:42 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 8CE321F2; Mon, 22 Jul 2019 16:22:40 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 16:22:38 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>, kevin.tian@intel.com,
+        ashok.raj@intel.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, cai@lca.pw,
+        jacob.jun.pan@intel.com
+Subject: Re: [PATCH v2 7/7] iommu/vt-d: Consolidate domain_init() to avoid
+ duplication
+Message-ID: <20190722142238.GA12009@8bytes.org>
+References: <20190612002851.17103-1-baolu.lu@linux.intel.com>
+ <20190612002851.17103-8-baolu.lu@linux.intel.com>
+ <20190718171615.2ed56280@x1.home>
+ <f56599a6-77ac-e1ef-4843-51167b1284b3@linux.intel.com>
+ <20190719091952.58255c47@x1.home>
+ <13294960-c040-c501-c279-aa61d780d25e@linux.intel.com>
 MIME-Version: 1.0
-References: <20190722081705.2084961-1-arnd@arndb.de> <20190722141240.GT12733@vkoul-mobl.Dlink>
-In-Reply-To: <20190722141240.GT12733@vkoul-mobl.Dlink>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 22 Jul 2019 16:22:08 +0200
-Message-ID: <CAK8P3a0tHRyjwwHk3tGFA=3dByH4g7R4FobrGC874bW5DJCnNw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] [RESEND] dmaengine: omap-dma: make omap_dma_filter_fn private
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13294960-c040-c501-c279-aa61d780d25e@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 4:13 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 22-07-19, 10:16, Arnd Bergmann wrote:
-> > With the audio driver no longer referring to this function, it
-> > can be made private to the dmaengine driver itself, and the
-> > header file removed.
-> >
-> > Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > Link: https://lore.kernel.org/lkml/20190307151646.1016966-1-arnd@arndb.de/
->
-> This seems to point to older rev, my script updated it to latest one.
+On Sat, Jul 20, 2019 at 09:15:58AM +0800, Lu Baolu wrote:
+> Okay. I agree wit you. Let's revert this commit first.
 
-That was intentional, to see the replies to the last time it got
-posted. I'm not sure if that's the best way to do it, would you
-rather not have that included?
+Reverted the patch and queued it to my iommu/fixes branch.
 
-       Arnd
+
+Regards,
+
+	Joerg
