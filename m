@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB01C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE623C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16A421955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A5A21E72
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txJ5ZWv3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ym0q0ag5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfGVF5L (ORCPT
+        id S1727580AbfGVF5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:57:11 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44834 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727510AbfGVF5H (ORCPT
+        Mon, 22 Jul 2019 01:57:14 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36206 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbfGVF5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:57:07 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so39452199edr.11
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 22:57:05 -0700 (PDT)
+        Mon, 22 Jul 2019 01:57:09 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k21so39509961edq.3
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 22:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=bhNuL7XR6WEpgsenxUTTXd4yjWX8/ASS+IMSViWNwpg=;
-        b=txJ5ZWv3UKmiuk5ssBeCveRyf9AJmr1QKUJybWC0DM2RF05KdMQrda6cmGBnCr/QLL
-         ri+3uMOvgMfnu5d9xee6QcqvW2HvouJ8Xbm2s8JGvAU2ttSe3kiq+gBc6Uvvk0yKhmpV
-         XwJ6dAmbOuW84v95gcIv4W5StOdwXDniKeA+ehK7WNVllMzF3y8a3/fT5lsOO+uyisDN
-         LR49ltmjpBVUcbybXcr+5ta4q7B/Q9GWSbi5kUwp2kNbgcGBQJ0hLPRfcKpeJlR0WNwr
-         tgkAJxU/LcV2m4fO6Dh+FsET5x4I8fmAYsKV6Ve4wm9jabUusrK0vFrJ28ybe257oVBA
-         IXtw==
+        bh=iMlH/BYqbAh4REkdZXe54Nv2D1l55hhhpJHFooXoPH0=;
+        b=Ym0q0ag5yqQqLX/IsCxjkPoRHUyTN5NoYbQvyfK8War1pID/3YChEiEjhavjfOk3UU
+         2ykmSz5cS7SUuhYcviJls6J1SwWLuAQozyFl1lXn7Awk2IYQmToDgSOhw8qghRymhnJ+
+         yC8j4IXCGIeWw1c4wIrc8J2n8KlcuXue6fVtgFwgRGuS10SkWQTNQGdwmNHviffDqn4b
+         c7n92Eb+7LSQDkmb8h4XS5doko3q2Jt4Dw34cE2cboG+vI1SvVRDYCOcumcawJbCjcrJ
+         77UzTovNf3hqYxkmeGmoVEYrtnx9HFdeywFbU08/Th/PXjFIUxz17lQGZlciBrB9eZxp
+         yIuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=bhNuL7XR6WEpgsenxUTTXd4yjWX8/ASS+IMSViWNwpg=;
-        b=CjqmwLirtPAGJx4wWBGqc8mdSKOaYNhzG7MAUqXxzq1ZQ1Eh65kQ+GVi20fn/bDlEz
-         m4L9jarbcjFlztWJvYieDgCDJMvbQMC62ZlqWClLlN4Qb08k/D+G/A+dQQ+HMsNNaDd2
-         FvEoftU1ZsVsC4T7nlOBoqAXd+5NbehqOOCbSjgMtuCMfSF1FgHYg2v22P/DtpNEcm4w
-         nqJw6lXtvGE1D2uNjxuP5jG9kRCmVrOFLsBKu12QmAMXbF8kLxjiImRn8W1zneXU24+T
-         bdPBvj682o4Ttm84mS0B77ATtmEUdlwe2rR5TYTuJ46cgoB6Q0LniOJOLVB/lyAChk8B
-         0MaA==
-X-Gm-Message-State: APjAAAW6BAN2cB5uP3QRLXXaVboqPvJoG1w2Ej2S1crv0CiRMbpig5BO
-        lMzISys0S5mXuU9xVUVz9Mg=
-X-Google-Smtp-Source: APXvYqxG50dPPkeMZPABlYE+bDSQXe0vmIiBeaCAjtUOw965SYgsTWI6lWdD9a3aFJBew6lyZc17xQ==
-X-Received: by 2002:a17:906:a481:: with SMTP id m1mr27835309ejz.87.1563775025026;
-        Sun, 21 Jul 2019 22:57:05 -0700 (PDT)
+        bh=iMlH/BYqbAh4REkdZXe54Nv2D1l55hhhpJHFooXoPH0=;
+        b=ufHE1vRVGS3C2gricxJbyQLKWMXYaQh67KmFV2C3A//TYBuwuA9j2eYAqMg5qzmHq7
+         HA/PnPqKn9oJCigEvMHuGp+zO4K3YINAc/j/E+ZjfUHnbyrUHikBnlbVFI08O7HZ+/xx
+         fESm4m972OgYoN3Xp0bp7JjpRl+NKzfSCYd1UXAmFWa0NJy5J+ktVlzNwDOoLcrfalqi
+         O4sAc0ixTP9HDP6MpTFWUCxWLMy9kiChlqC7pK3QMSMz8WzMiXn6eKuy5dmZxyiPFH8I
+         Qx4OKqXndeHgDPkxzSUeuKcA7s3LWuyxUdl1yw2FEHnp+vthx9Dty8/EMdzvunMrOGmj
+         NRUA==
+X-Gm-Message-State: APjAAAWyhBXfUKgmpdx+CA4pRvEvsX9vGQA6BCdOtK+lLw4F1smr/Clr
+        o18wrqHjYov6n1Rux7L/zKY=
+X-Google-Smtp-Source: APXvYqyMcOm1g8pB9ctwTxhdfq5bvQ4iIn4xrBML8nSEMEUpaszUlrmNnvVIPgwihnggFB/zjxendA==
+X-Received: by 2002:a50:9999:: with SMTP id m25mr59306263edb.183.1563775027233;
+        Sun, 21 Jul 2019 22:57:07 -0700 (PDT)
 Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
-        by smtp.gmail.com with ESMTPSA id a6sm10351725eds.19.2019.07.21.22.57.02
+        by smtp.gmail.com with ESMTPSA id a6sm10351725eds.19.2019.07.21.22.57.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 22:57:04 -0700 (PDT)
+        Sun, 21 Jul 2019 22:57:06 -0700 (PDT)
 From:   shiva.linuxworks@gmail.com
 X-Google-Original-From: sshivamurthy@micron.com
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -72,9 +72,9 @@ To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Jeff Kletsky <git-commits@allycomm.com>,
         Chuanhong Guo <gch981213@gmail.com>,
         liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [PATCH 3/8] mtd: nand: create ONFI table parsing instance
-Date:   Mon, 22 Jul 2019 07:56:16 +0200
-Message-Id: <20190722055621.23526-4-sshivamurthy@micron.com>
+Subject: [PATCH 4/8] mtd: spinand: enabled parameter page support
+Date:   Mon, 22 Jul 2019 07:56:17 +0200
+Message-Id: <20190722055621.23526-5-sshivamurthy@micron.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722055621.23526-1-sshivamurthy@micron.com>
 References: <20190722055621.23526-1-sshivamurthy@micron.com>
@@ -85,106 +85,192 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shivamurthy Shastri <sshivamurthy@micron.com>
 
-ONFI table parsing is common, as most of the variables are common
-between raw and SPI NAND. The parsing function is instantiated in
-onfi.c, which fills ONFI parameters into nand_memory_organization.
+Some of the SPI NAND devices has parameter page, which is similar to
+ONFI table.
+
+But, it may not be self sufficient to propagate all the required
+parameters. Fixup function has been added in struct manufacturer to
+accommodate this.
 
 Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
 ---
- drivers/mtd/nand/onfi.c          | 32 ++++++++++++++++++++++++++++++++
- drivers/mtd/nand/raw/nand_onfi.c | 22 ++--------------------
- include/linux/mtd/onfi.h         |  2 ++
- 3 files changed, 36 insertions(+), 20 deletions(-)
+ drivers/mtd/nand/spi/core.c | 134 ++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/spinand.h |   3 +
+ 2 files changed, 137 insertions(+)
 
-diff --git a/drivers/mtd/nand/onfi.c b/drivers/mtd/nand/onfi.c
-index 7aaf36dfc5e0..e78700894aea 100644
---- a/drivers/mtd/nand/onfi.c
-+++ b/drivers/mtd/nand/onfi.c
-@@ -87,3 +87,35 @@ void sanitize_string(u8 *s, size_t len)
- 	strim(s);
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 89f6beefb01c..7ae76dab9141 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -400,6 +400,131 @@ static int spinand_lock_block(struct spinand_device *spinand, u8 lock)
+ 	return spinand_write_reg_op(spinand, REG_BLOCK_LOCK, lock);
  }
- EXPORT_SYMBOL_GPL(sanitize_string);
-+
+ 
 +/**
-+ * fill_nand_memorg() - Parse ONFI table and fill memorg
-+ * @memorg: NAND memorg to be filled
-+ * @p: ONFI table to be parsed
++ * spinand_read_param_page_op - Read parameter page operation
++ * @spinand: the spinand
++ * @page: page number where parameter page tables can be found
++ * @buf: buffer used to store the parameter page
++ * @len: length of the buffer
 + *
++ * Read parameter page
++ *
++ * Returns 0 on success, a negative error code otherwise.
 + */
-+void parse_onfi_params(struct nand_memory_organization *memorg,
-+		       struct nand_onfi_params *p)
++static int spinand_parameter_page_read(struct spinand_device *spinand,
++				       u8 page, void *buf, unsigned int len)
 +{
-+	memorg->pagesize = le32_to_cpu(p->byte_per_page);
++	struct spi_mem_op pread_op = SPINAND_PAGE_READ_OP(page);
++	struct spi_mem_op pread_cache_op =
++				SPINAND_PAGE_READ_FROM_CACHE_OP(false,
++								0,
++								1,
++								buf,
++								len);
++	u8 feature;
++	u8 status;
++	int ret;
 +
-+	/*
-+	 * pages_per_block and blocks_per_lun may not be a power-of-2 size
-+	 * (don't ask me who thought of this...). MTD assumes that these
-+	 * dimensions will be power-of-2, so just truncate the remaining area.
-+	 */
-+	memorg->pages_per_eraseblock =
-+			1 << (fls(le32_to_cpu(p->pages_per_block)) - 1);
++	if (len && !buf)
++		return -EINVAL;
 +
-+	memorg->oobsize = le16_to_cpu(p->spare_bytes_per_page);
++	ret = spinand_read_reg_op(spinand, REG_CFG,
++				  &feature);
++	if (ret)
++		return ret;
 +
-+	memorg->luns_per_target = p->lun_count;
-+	memorg->planes_per_lun = 1 << p->interleaved_bits;
++	/* CFG_OTP_ENABLE is used to enable parameter page access */
++	feature |= CFG_OTP_ENABLE;
 +
-+	/* See erasesize comment */
-+	memorg->eraseblocks_per_lun =
-+		1 << (fls(le32_to_cpu(p->blocks_per_lun)) - 1);
-+	memorg->max_bad_eraseblocks_per_lun = le32_to_cpu(p->blocks_per_lun);
-+	memorg->bits_per_cell = p->bits_per_cell;
++	spinand_write_reg_op(spinand, REG_CFG, feature);
++
++	ret = spi_mem_exec_op(spinand->spimem, &pread_op);
++	if (ret)
++		return ret;
++
++	ret = spinand_wait(spinand, &status);
++	if (ret < 0)
++		return ret;
++
++	ret = spi_mem_exec_op(spinand->spimem, &pread_cache_op);
++	if (ret)
++		return ret;
++
++	ret = spinand_read_reg_op(spinand, REG_CFG,
++				  &feature);
++	if (ret)
++		return ret;
++
++	feature &= ~CFG_OTP_ENABLE;
++
++	spinand_write_reg_op(spinand, REG_CFG, feature);
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(parse_onfi_params);
-diff --git a/drivers/mtd/nand/raw/nand_onfi.c b/drivers/mtd/nand/raw/nand_onfi.c
-index 2e8edfa636ef..263796d3298c 100644
---- a/drivers/mtd/nand/raw/nand_onfi.c
-+++ b/drivers/mtd/nand/raw/nand_onfi.c
-@@ -181,30 +181,12 @@ int nand_onfi_detect(struct nand_chip *chip)
- 		goto free_onfi_param_page;
++
++static int spinand_param_page_detect(struct spinand_device *spinand)
++{
++	struct mtd_info *mtd = spinand_to_mtd(spinand);
++	struct nand_memory_organization *memorg;
++	struct nand_onfi_params *p;
++	struct nand_device *base = spinand_to_nand(spinand);
++	int i, ret;
++
++	memorg = nanddev_get_memorg(base);
++
++	/* Allocate buffer to hold parameter page */
++	p = kzalloc((sizeof(*p) * 3), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	ret = spinand_parameter_page_read(spinand, 0x01, p, sizeof(*p) * 3);
++	if (ret) {
++		ret = 0;
++		goto free_param_page;
++	}
++
++	for (i = 0; i < 3; i++) {
++		if (onfi_crc16(ONFI_CRC_BASE, (u8 *)&p[i], 254) ==
++				le16_to_cpu(p->crc)) {
++			if (i)
++				memcpy(p, &p[i], sizeof(*p));
++			break;
++		}
++	}
++
++	if (i == 3) {
++		const void *srcbufs[3] = {p, p + 1, p + 2};
++
++		pr_warn("Could not find a valid ONFI parameter page, trying bit-wise majority to recover it\n");
++		nand_bit_wise_majority(srcbufs, ARRAY_SIZE(srcbufs), p,
++				       sizeof(*p));
++
++		if (onfi_crc16(ONFI_CRC_BASE, (u8 *)p, 254) !=
++				le16_to_cpu(p->crc)) {
++			pr_err("ONFI parameter recovery failed, aborting\n");
++			goto free_param_page;
++		}
++	}
++
++	parse_onfi_params(memorg, p);
++
++	mtd->writesize = memorg->pagesize;
++	mtd->erasesize = memorg->pages_per_eraseblock * memorg->pagesize;
++	mtd->oobsize = memorg->oobsize;
++
++	/* Manufacturers may interpret the parameter page differently */
++	if (spinand->manufacturer->ops->fixup_param_page)
++		spinand->manufacturer->ops->fixup_param_page(spinand, p);
++
++	/* Identification done, free the full parameter page and exit */
++	ret = 1;
++
++free_param_page:
++	kfree(p);
++
++	return ret;
++}
++
+ static int spinand_check_ecc_status(struct spinand_device *spinand, u8 status)
+ {
+ 	struct nand_device *nand = spinand_to_nand(spinand);
+@@ -911,6 +1036,15 @@ static int spinand_detect(struct spinand_device *spinand)
+ 		return ret;
  	}
  
--	memorg->pagesize = le32_to_cpu(p->byte_per_page);
--	mtd->writesize = memorg->pagesize;
-+	parse_onfi_params(memorg, p);
++	if (!spinand->base.memorg.pagesize) {
++		ret = spinand_param_page_detect(spinand);
++		if (ret <= 0) {
++			dev_err(dev, "no parameter page for %*phN\n",
++				SPINAND_MAX_ID_LEN, spinand->id.data);
++			return -ENODEV;
++		}
++	}
++
+ 	if (nand->memorg.ntargets > 1 && !spinand->select_target) {
+ 		dev_err(dev,
+ 			"SPI NANDs with more than one die must implement ->select_target()\n");
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index 4ea558bd3c46..fea820a20bc9 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -15,6 +15,7 @@
+ #include <linux/mtd/nand.h>
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi-mem.h>
++#include <linux/mtd/onfi.h>
  
--	/*
--	 * pages_per_block and blocks_per_lun may not be a power-of-2 size
--	 * (don't ask me who thought of this...). MTD assumes that these
--	 * dimensions will be power-of-2, so just truncate the remaining area.
--	 */
--	memorg->pages_per_eraseblock =
--			1 << (fls(le32_to_cpu(p->pages_per_block)) - 1);
-+	mtd->writesize = memorg->pagesize;
- 	mtd->erasesize = memorg->pages_per_eraseblock * memorg->pagesize;
--
--	memorg->oobsize = le16_to_cpu(p->spare_bytes_per_page);
- 	mtd->oobsize = memorg->oobsize;
+ /**
+  * Standard SPI NAND flash operations
+@@ -209,6 +210,8 @@ struct spinand_manufacturer_ops {
+ 	int (*detect)(struct spinand_device *spinand);
+ 	int (*init)(struct spinand_device *spinand);
+ 	void (*cleanup)(struct spinand_device *spinand);
++	void (*fixup_param_page)(struct spinand_device *spinand,
++				 struct nand_onfi_params *p);
+ };
  
--	memorg->luns_per_target = p->lun_count;
--	memorg->planes_per_lun = 1 << p->interleaved_bits;
--
--	/* See erasesize comment */
--	memorg->eraseblocks_per_lun =
--		1 << (fls(le32_to_cpu(p->blocks_per_lun)) - 1);
--	memorg->max_bad_eraseblocks_per_lun = le32_to_cpu(p->blocks_per_lun);
--	memorg->bits_per_cell = p->bits_per_cell;
--
- 	if (le16_to_cpu(p->features) & ONFI_FEATURE_16_BIT_BUS)
- 		chip->options |= NAND_BUSWIDTH_16;
- 
-diff --git a/include/linux/mtd/onfi.h b/include/linux/mtd/onfi.h
-index 2c8a05a02bb0..4cacf4e9db6d 100644
---- a/include/linux/mtd/onfi.h
-+++ b/include/linux/mtd/onfi.h
-@@ -183,5 +183,7 @@ void nand_bit_wise_majority(const void **srcbufs,
- 			    void *dstbuf,
- 			    unsigned int bufsize);
- void sanitize_string(u8 *s, size_t len);
-+void parse_onfi_params(struct nand_memory_organization *memorg,
-+		       struct nand_onfi_params *p);
- 
- #endif /* __LINUX_MTD_ONFI_H */
+ /**
 -- 
 2.17.1
 
