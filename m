@@ -2,98 +2,184 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AB4C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90912C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B1621BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770B521BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfGVFVj convert rfc822-to-8bit (ORCPT
+        id S1726973AbfGVFWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:21:39 -0400
-Received: from mga04.intel.com ([192.55.52.120]:15257 "EHLO mga04.intel.com"
+        Mon, 22 Jul 2019 01:22:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60070 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfGVFVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:21:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jul 2019 22:21:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,293,1559545200"; 
-   d="scan'208";a="174125977"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jul 2019 22:21:37 -0700
-Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 21 Jul 2019 22:21:37 -0700
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
- ORSMSX155.amr.corp.intel.com ([169.254.7.34]) with mapi id 14.03.0439.000;
- Sun, 21 Jul 2019 22:21:37 -0700
-From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: RE: [PATCH 1/1] iommu/vt-d: Correctly check format of page table in
- debugfs
-Thread-Topic: [PATCH 1/1] iommu/vt-d: Correctly check format of page table
- in debugfs
-Thread-Index: AQHVPp8ipwYNQGhYs0KyxJ8SpXgi1qbWGSVg
-Date:   Mon, 22 Jul 2019 05:21:37 +0000
-Message-ID: <FFF73D592F13FD46B8700F0A279B802F4F9354AF@ORSMSX114.amr.corp.intel.com>
-References: <20190720020126.9974-1-baolu.lu@linux.intel.com>
-In-Reply-To: <20190720020126.9974-1-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjg4NWZmYjQtYjJlZS00NWM1LTlhZWMtYjRkN2Q3MWE0OGFiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWkw4aDBPbTZ2NklUZFwvUDFjdkNXWk9VQWNkWlMxa2F1QitpSm5WazRLRmhJRXkwQWhzeFBPNjRudFwvRllCdUVCIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725795AbfGVFWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:22:17 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 911E9335CF;
+        Mon, 22 Jul 2019 05:22:16 +0000 (UTC)
+Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B99D65DA2E;
+        Mon, 22 Jul 2019 05:22:03 +0000 (UTC)
+Subject: Re: WARNING in __mmdrop
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
+Date:   Mon, 22 Jul 2019 13:21:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190721044615-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 22 Jul 2019 05:22:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Allen,
 
-> diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-
-> iommu-debugfs.c
-> index 73a552914455..e31c3b416351 100644
-> --- a/drivers/iommu/intel-iommu-debugfs.c
-> +++ b/drivers/iommu/intel-iommu-debugfs.c
-> @@ -235,7 +235,7 @@ static void ctx_tbl_walk(struct seq_file *m, struct
-> intel_iommu *iommu, u16 bus)
->  		tbl_wlk.ctx_entry = context;
->  		m->private = &tbl_wlk;
-> 
-> -		if (pasid_supported(iommu) && is_pasid_enabled(context)) {
-> +		if (dmar_readq(iommu->reg + DMAR_RTADDR_REG) &
-> DMA_RTADDR_SMT) {
+On 2019/7/21 下午6:02, Michael S. Tsirkin wrote:
+> On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
+>> syzbot has bisected this bug to:
+>>
+>> commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+>> Author: Jason Wang <jasowang@redhat.com>
+>> Date:   Fri May 24 08:12:18 2019 +0000
+>>
+>>      vhost: access vq metadata through kernel virtual address
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
+>> start commit:   6d21a41b Add linux-next specific files for 20190718
+>> git tree:       linux-next
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
+>>
+>> Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
+>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
+>> address")
+>>
+>> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> OK I poked at this for a bit, I see several things that
+> we need to fix, though I'm not yet sure it's the reason for
+> the failures:
+>
+>
+> 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
+>     That's just a bad hack,
 
-Thanks for adding this, I do believe this is a good addition but I also think that we might 
-need "is_pasid_enabled()" as well. It checks if PASIDE bit in context entry is enabled or not.
 
-I am thinking that even though DMAR might be using scalable root and context table, the entry 
-itself should have PASIDE bit set. Did I miss something here?
+This is used to avoid holding lock when checking whether the addresses 
+are overlapped. Otherwise we need to take spinlock for each invalidation 
+request even if it was the va range that is not interested for us. This 
+will be very slow e.g during guest boot.
 
-And I also think a macro would be better so that it could reused elsewhere (if need be).
 
-Regards,
-Sai
+>   in particular I don't think device
+>     mutex is taken and so poking at two VQs will corrupt
+>     memory.
+
+
+The caller vhost_net_ioctl() (or scsi and vsock) will hold device mutex 
+before calling us.
+
+
+>     So what to do? How about a per vq notifier?
+>     Of course we also have synchronize_rcu
+>     in the notifier which is slow and is now going to be called twice.
+>     I think call_rcu would be more appropriate here.
+>     We then need rcu_barrier on module unload.
+
+
+So this seems unnecessary.
+
+
+>     OTOH if we make pages linear with map then we are good
+>     with kfree_rcu which is even nicer.
+
+
+It could be an optimization on top.
+
+
+>
+> 2. Doesn't map leak after vhost_map_unprefetch?
+>     And why does it poke at contents of the map?
+>     No one should use it right?
+
+
+Yes, it's not hard to fix just kfree map in this function.
+
+
+>
+> 3. notifier unregister happens last in vhost_dev_cleanup,
+>     but register happens first. This looks wrong to me.
+
+
+I'm not sure I get the the exact issue here.
+
+
+>
+> 4. OK so we use the invalidate count to try and detect that
+>     some invalidate is in progress.
+>     I am not 100% sure why do we care.
+>     Assuming we do, uaddr can change between start and end
+>     and then the counter can get negative, or generally
+>     out of sync.
+
+
+Yes, so the fix is as simple as zero the invalidate_count after 
+unregister  the mmu notifier in vhost_set_vring_num_addr().
+
+
+>
+> So what to do about all this?
+> I am inclined to say let's just drop the uaddr optimization
+> for now. E.g. kvm invalidates unconditionally.
+> 3 should be fixed independently.
+
+
+Maybe it's better to try to fix with the exist uaddr optimization first.
+
+I did spot two other issues:
+
+1) we don't check the return value mmu_register in vhost_set_vring_num()
+
+2) we try to setup vq address even if set_vring_addr() fail
+
+
+For the bug it self, it looks to me that the mm refcount was messed up 
+since we try to register and unregister MMU notifier. But I haven't 
+figured out why, will do more investigation.
+
+Thanks
+
+
+>
+>
