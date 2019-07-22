@@ -2,141 +2,98 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EC2C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE63EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E496F21985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CF121951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387516AbfGVXKT (ORCPT
+        id S1727123AbfGVXV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:10:19 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40264 "EHLO ale.deltatee.com"
+        Mon, 22 Jul 2019 19:21:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:58339 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733159AbfGVXJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:09:12 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQb-0002k0-Dk; Mon, 22 Jul 2019 17:09:11 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQV-0001Qt-MG; Mon, 22 Jul 2019 17:09:03 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Jul 2019 17:08:51 -0600
-Message-Id: <20190722230859.5436-7-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722230859.5436-1-logang@deltatee.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
+        id S1726120AbfGVXV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:21:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45syLF0b78z9s4Y;
+        Tue, 23 Jul 2019 09:21:57 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
+In-Reply-To: <20190722151801.GC20882@gate.crashing.org>
+References: <45hnfp6SlLz9sP0@ozlabs.org> <20190708191416.GA21442@archlinux-threadripper> <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr> <20190709064952.GA40851@archlinux-threadripper> <20190719032456.GA14108@archlinux-threadripper> <20190719152303.GA20882@gate.crashing.org> <20190719160455.GA12420@archlinux-threadripper> <20190721075846.GA97701@archlinux-threadripper> <20190721180150.GN20882@gate.crashing.org> <87imru74ul.fsf@concordia.ellerman.id.au> <20190722151801.GC20882@gate.crashing.org>
+Date:   Tue, 23 Jul 2019 09:21:53 +1000
+Message-ID: <875znt7izy.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 06/14] PCI/P2PDMA: Add whitelist support for Intel Host Bridges
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel devices do not have good support for P2P requests that span
-different host bridges as the transactions will cross the QPI/UPI bus
-and this does not perform well.
+Segher Boessenkool <segher@kernel.crashing.org> writes:
+> On Mon, Jul 22, 2019 at 08:15:14PM +1000, Michael Ellerman wrote:
+>> Segher Boessenkool <segher@kernel.crashing.org> writes:
+>> > On Sun, Jul 21, 2019 at 12:58:46AM -0700, Nathan Chancellor wrote:
+>> >> 0000017c clear_user_page:
+>> >>      17c: 94 21 ff f0                  	stwu 1, -16(1)
+>> >>      180: 38 80 00 80                  	li 4, 128
+>> >>      184: 38 63 ff e0                  	addi 3, 3, -32
+>> >>      188: 7c 89 03 a6                  	mtctr 4
+>> >>      18c: 38 81 00 0f                  	addi 4, 1, 15
+>> >>      190: 8c c3 00 20                  	lbzu 6, 32(3)
+>> >>      194: 98 c1 00 0f                  	stb 6, 15(1)
+>> >>      198: 7c 00 27 ec                  	dcbz 0, 4
+>> >>      19c: 42 00 ff f4                  	bdnz .+65524
+>> >
+>> > Uh, yeah, well, I have no idea what clang tried here, but that won't
+>> > work.  It's copying a byte from each target cache line to the stack,
+>> > and then does clears the cache line containing that byte on the stack.
+>> 
+>> So it seems like this is a clang bug.
+>> 
+>> None of the distros we support use clang, but we would still like to
+>> keep it working if we can.
+>
+> Which version?  Which versions *are* broken?
 
-Therefore, enable support for these devices only if the host bridges
-match.
+AFAIK clang 8 is the first version that we could build with, without
+hacks.
 
-Adds the Intel device's that have been tested to work. There are
-likely many others out there that will need to be tested and added.
+>> Looking at the original patch, the only upside is that the compiler
+>> can use both RA and RB to compute the address, rather than us forcing RA
+>> to 0.
+>> 
+>> But at least with my compiler here (GCC 8 vintage) I don't actually see
+>> GCC ever using both GPRs even with the patch. Or at least, there's no
+>> difference before/after the patch as far as I can see.
+>
+> The benefit is small, certainly.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/pci/p2pdma.c | 36 ++++++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+Zero is small, but I guess some things are smaller? :P
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index dfb802afc8ca..143e11d2a5c3 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -250,9 +250,28 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
- 	seq_buf_printf(buf, "%s;", pci_name(pdev));
- }
- 
--static bool __host_bridge_whitelist(struct pci_host_bridge *host)
-+static const struct pci_p2pdma_whitelist_entry {
-+	unsigned short vendor;
-+	unsigned short device;
-+	bool req_same_host_bridge;
-+} pci_p2pdma_whitelist[] = {
-+	/* AMD ZEN */
-+	{PCI_VENDOR_ID_AMD,	0x1450,	false},
-+
-+	/* Intel Xeon E5/Core i7 */
-+	{PCI_VENDOR_ID_INTEL,	0x3c00, true},
-+	{PCI_VENDOR_ID_INTEL,	0x3c01, true},
-+	/* Intel Xeon E7 v3/Xeon E5 v3/Core i7 */
-+	{PCI_VENDOR_ID_INTEL,	0x2f00, true},
-+	{PCI_VENDOR_ID_INTEL,	0x2f01, true},
-+	{}
-+};
-+
-+static bool __host_bridge_whitelist(struct pci_host_bridge *host,
-+				    bool same_host_bridge)
- {
- 	struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
-+	const struct pci_p2pdma_whitelist_entry *entry;
- 	unsigned short vendor, device;
- 
- 	if (!root)
-@@ -262,9 +281,14 @@ static bool __host_bridge_whitelist(struct pci_host_bridge *host)
- 	device = root->device;
- 	pci_dev_put(root);
- 
--	/* AMD ZEN host bridges can do peer to peer */
--	if (vendor == PCI_VENDOR_ID_AMD && device == 0x1450)
-+	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
-+		if (vendor != entry->vendor || device != entry->device)
-+			continue;
-+		if (entry->req_same_host_bridge && !same_host_bridge)
-+			return false;
-+
- 		return true;
-+	}
- 
- 	return false;
- }
-@@ -281,7 +305,11 @@ static bool host_bridge_whitelist(struct pci_dev *a, struct pci_dev *b)
- 	if (iommu_present(a->dev.bus) || iommu_present(b->dev.bus))
- 		return false;
- 
--	if (__host_bridge_whitelist(host_a) && __host_bridge_whitelist(host_b))
-+	if (host_a == host_b)
-+		return __host_bridge_whitelist(host_a, true);
-+
-+	if (__host_bridge_whitelist(host_a, false) &&
-+	    __host_bridge_whitelist(host_b, false))
- 		return true;
- 
- 	return false;
--- 
-2.20.1
+>> So my inclination is to revert the original patch. We can try again in a
+>> few years :D
+>> 
+>> Thoughts?
+>
+> I think you should give the clang people time to figure out what is
+> going on.
 
+Yeah fair enough, will wait and see what their diagnosis is.
+
+cheers
