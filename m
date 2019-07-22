@@ -2,82 +2,164 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E4FC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE140C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1AE21904
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563761055;
-	bh=u4GMHX419j+/fLtW5nJhQiv+DYaZYYSo6Ud74Se+32w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NH/T48Nk47i22foH1xarTNKDuvDcSLG6D6vOMehCKs0F3JaK1fYFsY0JL2Daut3Ku
-	 7IsL7h5PjsF9fJfghRX/qO8eFt3M2CQwHbxElsRQnVWGWK8Uz1vLOSyLD1G94LVj3k
-	 ESpYdKUiGRMBkcC2QqOXTymsajCaRGhEKvRP1xQE=
+	by mail.kernel.org (Postfix) with ESMTP id B09D621903
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfGVCEO (ORCPT
+        id S1728621AbfGVCFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:04:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfGVCEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:04:13 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56D2321903;
-        Mon, 22 Jul 2019 02:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563761052;
-        bh=u4GMHX419j+/fLtW5nJhQiv+DYaZYYSo6Ud74Se+32w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z4eZt8wEZuLZ+mtO0Xva01Eg3MwbuxFhCt6ub0uXmg4C8u8iJAf8GLjXsippu5hrw
-         YmNDMAbU8IQpsERrOC1lKDFqKbnCLjQwhjdUMgjdWqT65aZLeH2FmptVZNFhPt7B9a
-         2KUM0geVCoZk8PCaG0aSXV1AzqaSd9MlsCWPV5Yc=
-Date:   Mon, 22 Jul 2019 10:03:46 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com,
-        Fabio Estevam <festevam@gmail.com>, aisheng.dong@nxp.com,
-        l.stach@pengutronix.de, angus@akkea.ca, vabhav.sharma@nxp.com,
-        pankaj.bansal@nxp.com, bhaskar.upadhaya@nxp.com, ping.bai@nxp.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Richard Hu <richard.hu@technexion.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        matti.vaittinen@fi.rohmeurope.com, linux-imx@nxp.com,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the
- PICO-PI-IMX8M
-Message-ID: <20190722020345.GR3738@dragon>
-References: <20190625123407.15888-1-andradanciu1997@gmail.com>
- <20190718035523.GD11324@X250>
- <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>
+        Sun, 21 Jul 2019 22:05:09 -0400
+Received: from anchovy1.45ru.net.au ([203.30.46.145]:58337 "EHLO
+        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfGVCFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 22:05:08 -0400
+Received: (qmail 5710 invoked by uid 5089); 22 Jul 2019 02:05:06 -0000
+Received: by simscan 1.2.0 ppid: 5644, pid: 5645, t: 0.0519s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy1.45ru.net.au with ESMTPA; 22 Jul 2019 02:05:05 -0000
+Subject: Re: [PATCH 1/2] [PATCH] gpio: Replace usage of bare 'unsigned' with
+ 'unsigned int'
+To:     Hennie Muller <hm@bitlabs.co.za>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190721125259.13990-1-hm@bitlabs.co.za>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <61045f29-73ca-cb62-ba6f-5b12970735a9@electromag.com.au>
+Date:   Mon, 22 Jul 2019 10:05:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190721125259.13990-1-hm@bitlabs.co.za>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 02:12:10PM +0300, Andra Danciu wrote:
-...
-> > > +     pmic: pmic@4b {
-> > > +             reg = <0x4b>;
-> > > +             compatible = "rohm,bd71837";
-> > > +             /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> > > +             pinctrl-0 = <&pinctrl_pmic>;
-> > > +             gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-> >
-> > Where is the bindings for this property?
-> Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+G'day Hennie,
 
-I do not see property 'gpio_intr' in there.
+patch title should be:
+gpio: viperboard: Replace usage of bare 'unsigned' with 'unsigned int'
 
-Shawn
+On 21/07/2019 20:52, Hennie Muller wrote:
+> Fixes a couple of warnings by checkpatch and sparse.
+> 
+> Signed-off-by: Hennie Muller <hm@bitlabs.co.za>
+> ---
+>   drivers/gpio/gpio-viperboard.c | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-viperboard.c b/drivers/gpio/gpio-viperboard.c
+> index 9b604f13e302..c301c1d56dd2 100644
+> --- a/drivers/gpio/gpio-viperboard.c
+> +++ b/drivers/gpio/gpio-viperboard.c
+> @@ -79,7 +79,7 @@ MODULE_PARM_DESC(gpioa_freq,
+>   /* ----- begin of gipo a chip -------------------------------------------- */
+>   
+>   static int vprbrd_gpioa_get(struct gpio_chip *chip,
+> -		unsigned offset)
+> +		unsigned int offset)
+
+I've encountered these checkpatch warnings as well.
+
+However 'struct gpio_chip' callbacks define the function signatures
+as 'unsigned', not 'unsigned int'. So I've also left them as is, to explicitly
+match the struct definition.
+
+Be interested to know what the official take on this is.
+
+
+>   {
+>   	int ret, answer, error = 0;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> @@ -129,7 +129,7 @@ static int vprbrd_gpioa_get(struct gpio_chip *chip,
+>   }
+>   
+>   static void vprbrd_gpioa_set(struct gpio_chip *chip,
+> -		unsigned offset, int value)
+> +		unsigned int offset, int value)
+>   {
+>   	int ret;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> @@ -170,7 +170,7 @@ static void vprbrd_gpioa_set(struct gpio_chip *chip,
+>   }
+>   
+>   static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
+> -			unsigned offset)
+> +			unsigned int offset)
+>   {
+>   	int ret;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> @@ -207,7 +207,7 @@ static int vprbrd_gpioa_direction_input(struct gpio_chip *chip,
+>   }
+>   
+>   static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
+> -			unsigned offset, int value)
+> +			unsigned int offset, int value)
+>   {
+>   	int ret;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> @@ -251,8 +251,8 @@ static int vprbrd_gpioa_direction_output(struct gpio_chip *chip,
+>   
+>   /* ----- begin of gipo b chip -------------------------------------------- */
+>   
+> -static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
+> -	unsigned dir)
+> +static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned int offset,
+> +	unsigned int dir)
+>   {
+>   	struct vprbrd_gpiob_msg *gbmsg = (struct vprbrd_gpiob_msg *)vb->buf;
+>   	int ret;
+> @@ -273,7 +273,7 @@ static int vprbrd_gpiob_setdir(struct vprbrd *vb, unsigned offset,
+>   }
+>   
+>   static int vprbrd_gpiob_get(struct gpio_chip *chip,
+> -		unsigned offset)
+> +		unsigned int offset)
+>   {
+>   	int ret;
+>   	u16 val;
+> @@ -305,7 +305,7 @@ static int vprbrd_gpiob_get(struct gpio_chip *chip,
+>   }
+>   
+>   static void vprbrd_gpiob_set(struct gpio_chip *chip,
+> -		unsigned offset, int value)
+> +		unsigned int offset, int value)
+>   {
+>   	int ret;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> @@ -338,7 +338,7 @@ static void vprbrd_gpiob_set(struct gpio_chip *chip,
+>   }
+>   
+>   static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
+> -			unsigned offset)
+> +			unsigned int offset)
+>   {
+>   	int ret;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> @@ -359,7 +359,7 @@ static int vprbrd_gpiob_direction_input(struct gpio_chip *chip,
+>   }
+>   
+>   static int vprbrd_gpiob_direction_output(struct gpio_chip *chip,
+> -			unsigned offset, int value)
+> +			unsigned int offset, int value)
+>   {
+>   	int ret;
+>   	struct vprbrd_gpio *gpio = gpiochip_get_data(chip);
+> 
+
+
+-- 
+Regards
+Phil Reid
