@@ -2,134 +2,113 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC776C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA52C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8073F21903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:33:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZowcOjJM"
+	by mail.kernel.org (Postfix) with ESMTP id 057BA21900
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfGVRdm (ORCPT
+        id S1727604AbfGVReB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:33:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43712 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfGVRdl (ORCPT
+        Mon, 22 Jul 2019 13:34:01 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:37644 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfGVReB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:33:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so12498909pld.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 10:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ax8I1mb7UwIFxfCmMJfuzkJQZA4WbZ7Ek1Ds9PvMQYU=;
-        b=ZowcOjJMdxosv2QSzqf2eI08qVemvBx1XFUBmEfS4sU/PraJBWF671A5zObKnz4TfD
-         zk/CQmr2CoQ/bq7hFwV/jk7C4Zl+sLHE/NGWoR8qwxKIwHpxQQ4RjoUJThjmRHvGEZgo
-         CUZMefdwNypT9GNU3PI/XXImbp4GU9RlYE3TQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ax8I1mb7UwIFxfCmMJfuzkJQZA4WbZ7Ek1Ds9PvMQYU=;
-        b=KVo+nXE+hp5FPOScIxMKTnRSVG73khxbi/wVvjfMEBRR9D4Lr+Mpv9PfKHRlUNKZ2I
-         zxQ48c0hjrislQJ8ae153p92TUj3BTUSyYtJhmKB/Ar8PC/vH2zXUj4Vpc/lDfTBecPw
-         T0Ljz75HDmV8f6st7NAXUQdvvo5Kq9HPPoBnjZ7Oo6bWZK3fDgeg66xzOLshG/C73BSU
-         +e2Zq/fHHW+vumHA3eYElKKoe60VZh2IoRiDFQ39DUh3Kt6vUyljRkOvdfM8PbJ0e/yb
-         2zz8ldQt5c8ATV+jiTF/1t3sfPbQv220htnxXZUuCWNDrPC96g7xWSAy7zMeXfN+iIbP
-         LXLw==
-X-Gm-Message-State: APjAAAVJBR/EZ8lrFhP+T8JMS+5SzuVQegD6nP11YnQ8+TD3tZOiNPII
-        FSqjlvW0bFTyel4xaQ1s458Z2g==
-X-Google-Smtp-Source: APXvYqyX5Rkq79yH7MiGBYeJZggeb9zVsBWnRCFtyBj046jkmfMHzDiZGrpNESNeWOyNSE0LXKj3OA==
-X-Received: by 2002:a17:902:7043:: with SMTP id h3mr48081374plt.10.1563816821309;
-        Mon, 22 Jul 2019 10:33:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n98sm41097264pjc.26.2019.07.22.10.33.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jul 2019 10:33:40 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 10:33:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Nitin Gote <nitin.r.gote@intel.com>, akpm@linux-foundation.org,
-        corbet@lwn.net, apw@canonical.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [RFC PATCH] string.h: Add stracpy/stracpy_pad (was: Re: [PATCH]
- checkpatch: Added warnings in favor of strscpy().)
-Message-ID: <201907221031.8B87A9DE@keescook>
-References: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
- <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
- <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
+        Mon, 22 Jul 2019 13:34:01 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hpcC7-0003HL-TG; Mon, 22 Jul 2019 13:33:51 -0400
+From:   Rik van Riel <riel@surriel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
+        peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
+        tglx@linutronix.de, mgorman@techsingularity.net,
+        vincent.guittot@linaro.org
+Subject: [PATCH RFC v3 0/14] sched,fair: flatten CPU controller runqueues
+Date:   Mon, 22 Jul 2019 13:33:34 -0400
+Message-Id: <20190722173348.9241-1-riel@surriel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 05:15:57PM -0700, Joe Perches wrote:
-> On Thu, 2019-07-04 at 13:46 -0700, Joe Perches wrote:
-> > On Thu, 2019-07-04 at 11:24 +0530, Nitin Gote wrote:
-> > > Added warnings in checkpatch.pl script to :
-> > > 
-> > > 1. Deprecate strcpy() in favor of strscpy().
-> > > 2. Deprecate strlcpy() in favor of strscpy().
-> > > 3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
-> > > 
-> > > Updated strncpy() section in Documentation/process/deprecated.rst
-> > > to cover strscpy_pad() case.
-> 
-> []
-> 
-> I sent a patch series for some strscpy/strlcpy misuses.
-> 
-> How about adding a macro helper to avoid the misuses like:
-> ---
->  include/linux/string.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index 4deb11f7976b..ef01bd6f19df 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
->  /* Wraps calls to strscpy()/memset(), no arch specific code required */
->  ssize_t strscpy_pad(char *dest, const char *src, size_t count);
->  
-> +#define stracpy(to, from)					\
-> +({								\
-> +	size_t size = ARRAY_SIZE(to);				\
-> +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-> +								\
-> +	strscpy(to, from, size);				\
-> +})
-> +
-> +#define stracpy_pad(to, from)					\
-> +({								\
-> +	size_t size = ARRAY_SIZE(to);				\
-> +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-> +								\
-> +	strscpy_pad(to, from, size);				\
-> +})
-> +
->  #ifndef __HAVE_ARCH_STRCAT
->  extern char * strcat(char *, const char *);
->  #endif
+The current implementation of the CPU controller uses hierarchical
+runqueues, where on wakeup a task is enqueued on its group's runqueue,
+the group is enqueued on the runqueue of the group above it, etc.
 
-This seems like a reasonable addition, yes. I think Coccinelle might
-actually be able to find all the existing strscpy(dst, src, sizeof(dst))
-cases to jump-start this conversion.
+This increases a fairly large amount of overhead for workloads that
+do a lot of wakeups a second, especially given that the default systemd
+hierarchy is 2 or 3 levels deep.
 
-Devil's advocate: this adds yet more string handling functions... will
-this cause even more confusion?
+This patch series is an attempt at reducing that overhead, by placing
+all the tasks on the same runqueue, and scaling the task priority by
+the priority of the group, which is calculated periodically.
 
--- 
-Kees Cook
+My main TODO items for the next period of time are likely going to
+be testing, testing, and testing. I hope to find and flush out any
+corner case I can find, and make sure performance does not regress
+with any workloads, and hopefully improves some.
+
+Other TODO items:
+- More code cleanups.
+- Remove some more now unused code.
+- Reimplement CONFIG_CFS_BANDWIDTH.
+
+Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
+- When a cgroup gets throttled, mark the cgroup and its children
+  as throttled.
+- When pick_next_entity finds a task that is on a throttled cgroup,
+  stash it on the cgroup runqueue (which is not used for runnable
+  tasks any more). Leave the vruntime unchanged, and adjust that
+  runqueue's vruntime to be that of the left-most task.
+- When a cgroup gets unthrottled, and has tasks on it, place it on
+  a vruntime ordered heap separate from the main runqueue.
+- Have pick_next_task_fair grab one task off that heap every time it
+  is called, and the min vruntime of that heap is lower than the
+  vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
+- Place that selected task on the CPU's cfs_rq, renormalizing its
+  vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
+  interleave the already runnable tasks with the recently unthrottled
+  group, and prevent thundering herd issues.
+- If the group gets throttled again before all of its task had a chance
+  to run, vruntime sorting ensures all the tasks in the throttled cgroup
+  get a chance to run over time.
+
+
+Changes from v2:
+- fixed the web server performance regression, in a way vaguely similar
+  to what Josef Bacik suggested (blame me for the implementation)
+- removed some code duplication so the diffstat is redder than before
+- propagate sum_exec_runtime up the tree, in preparation for CFS_BANDWIDTH
+- small cleanups left and right
+
+Changes from v1:
+- use task_se_h_weight instead of task_se_h_load in calc_delta_fair
+  and sched_slice, this seems to improve performance a little, but
+  I still have some remaining regression to chase with our web server
+  workload
+- implement a number of the changes suggested by Dietmar Eggemann
+  (still holding out for a better name for group_cfs_rq_of_parent)
+
+This series applies on top of 5.2
+
+ include/linux/sched.h |    7 
+ kernel/sched/core.c   |    3 
+ kernel/sched/debug.c  |   17 -
+ kernel/sched/fair.c   |  780 ++++++++++++++++++++------------------------------
+ kernel/sched/pelt.c   |   69 ++--
+ kernel/sched/pelt.h   |    3 
+ kernel/sched/sched.h  |   11 
+ 7 files changed, 372 insertions(+), 518 deletions(-)
+
+
