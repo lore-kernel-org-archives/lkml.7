@@ -2,193 +2,100 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6C0C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59927C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB7EB21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F45B21955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DOsklcpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbfGVSiq convert rfc822-to-8bit (ORCPT
+        id S1731715AbfGVSjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:38:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:43464 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728798AbfGVSiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:38:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A810344;
-        Mon, 22 Jul 2019 11:38:45 -0700 (PDT)
-Received: from why (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96F263F71A;
-        Mon, 22 Jul 2019 11:38:41 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 19:38:38 +0100
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>,
-        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Message-ID: <20190722193838.0d7cd2ad@why>
-In-Reply-To: <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
-        <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
-        <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-        <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
-        <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
-        <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 22 Jul 2019 14:39:06 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32911 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728798AbfGVSjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 14:39:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c14so19495568plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=afjBQ4g1IUXo6zFCrmEJVVK94nPsD5XPtVTs3wYkEsM=;
+        b=DOsklcpWWHEHgtX/MFkcdhA/HFtRclgtibfG0Vnq7ElGVc6PXgFuMrUR8UodNp0eck
+         nfP+9FM6zeCJsAOiGLJxakLADdLMFsgc0wVFFrw1ETS7mdTgZ2wjqBG8KEydbQ3WjQXb
+         1APpm7tVwnUvMpOCHUdjCzgsUquGBBVdW5iPY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=afjBQ4g1IUXo6zFCrmEJVVK94nPsD5XPtVTs3wYkEsM=;
+        b=WEs7QnmnnsSjrDoaXYx8MOD0oqe3ve6DbFCxH5/gKzoJQhoHuREl9aFY+fLAocqq7Z
+         gs0vMNTdGVvi2dZxSFTuyb13xKIw/bDQ0Os3qgL1bkai5ffyM4h91m4irU6XdQ8E8F/f
+         i4tG11IjBXM0DaIH6s0pnorjBrhmsZ8+UlNjEOQ1a/4J2Nx3nGyFc6uKawsxPAq6Ag2p
+         6GY7CqhaWH2eU9aDKBoMxof3ZGEQefdOhlB19dAo3dt0uQg57Jnfd4OEIva+MQuLsoBA
+         4oChs1atM4paT1QCKE1l3ZslCHOZI+syuGGsUqZAXqNwOagc+G0nzZpJI11a9wfRIFKm
+         nUuQ==
+X-Gm-Message-State: APjAAAXWj14rsKPwp8P1x6sYvT1zLZVKLAVAt9h1YjuMABhBEOO6SI4Q
+        Dv1/Jk75uPfGXCfnUp6KAMriLQ==
+X-Google-Smtp-Source: APXvYqxOYw+6ay19uiXshqpTfMuapAEG62UyetZAjMPrfJmQVvNv5uMBQqK4dT6PpTS0Barpxj2BQw==
+X-Received: by 2002:a17:902:20e9:: with SMTP id v38mr77533322plg.62.1563820745282;
+        Mon, 22 Jul 2019 11:39:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u70sm4087577pgb.20.2019.07.22.11.39.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jul 2019 11:39:04 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 11:39:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
+ on i386
+Message-ID: <201907221135.2C2D262D8@keescook>
+References: <20190719170343.GA13680@linux.intel.com>
+ <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
+ <201907221012.41504DCD@keescook>
+ <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 09:21:21 -0700
-Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
-
-> On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
-> > 22.07.2019 13:13, Marc Zyngier пишет:  
-> >> On 22/07/2019 10:54, Dmitry Osipenko wrote:  
-> >>> 21.07.2019 22:40, Sowjanya Komatineni пишет:  
-> >>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-> >>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
-> >>>>
-> >>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-> >>>> for Tegra210.
-> >>>>
-> >>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-> >>>> interrupt controller suspend operation.
-> >>>>
-> >>>> Acked-by: Thierry Reding <treding@nvidia.com>
-> >>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> >>>> ---
-> >>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
-> >>>>   1 file changed, 18 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-> >>>> index e1f771c72fc4..851f88cef508 100644
-> >>>> --- a/drivers/irqchip/irq-tegra.c
-> >>>> +++ b/drivers/irqchip/irq-tegra.c
-> >>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
-> >>>>   
-> >>>>   struct tegra_ictlr_soc {
-> >>>>   	unsigned int num_ictlrs;
-> >>>> +	bool supports_sc7;
-> >>>>   };
-> >>>>   
-> >>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
-> >>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
-> >>>>   
-> >>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
-> >>>>   	.num_ictlrs = 6,
-> >>>> +	.supports_sc7 = true,
-> >>>>   };
-> >>>>   
-> >>>>   static const struct of_device_id ictlr_matches[] = {
-> >>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
-> >>>>   
-> >>>>   struct tegra_ictlr_info {
-> >>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
-> >>>> +	const struct tegra_ictlr_soc *soc;
-> >>>>   #ifdef CONFIG_PM_SLEEP
-> >>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
-> >>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
-> >>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
-> >>>>   		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
-> >>>>   		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
-> >>>>   
-> >>>> -		/* Disable COP interrupts */
-> >>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> >>>> +		/*
-> >>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
-> >>>> +		 *
-> >>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
-> >>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
-> >>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
-> >>>> +		 * system to go to SC7/LP0.
-> >>>> +		 *
-> >>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
-> >>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
-> >>>> +		 */
-> >>>> +		if (!lic->soc->supports_sc7)
-> >>>> +			/* Disable COP interrupts if SC7 is not supported */  
-> >>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-> >>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
-> >>> better here.  
-> >> If what you're saying is true, then the whole patch is wrong, and the
-> >> SC7 property should come from DT.  
-> > It should be safe to assume that all of existing Tegra210 devices use
-> > the firmware for SC7, hence I wouldn't say that the patch is entirely
-> > wrong. To me it's not entirely correct.  
+On Mon, Jul 22, 2019 at 08:31:32PM +0200, Thomas Gleixner wrote:
+> On Mon, 22 Jul 2019, Kees Cook wrote:
+> > Just so I'm understanding: the vDSO change introduced code to make an
+> > actual syscall on i386, which for most seccomp filters would be rejected?
 > 
-> Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and 
-> AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ 
-> to COP for SC7 entry fw execution.
-
-That's not the question. Dmitry says that the SC7 support is not a
-property of the SoC, but mostly a platform decision on whether the
-firmware supports SC7 or not.
-
-To me, that's a clear indication that this should not be hardcoded in
-the driver, but instead obtained dynamically, via DT or otherwise.
-
+> No. The old x86 specific VDSO implementation had a fallback syscall as
+> well, i.e. clock_gettime(). On 32bit clock_gettime() uses the y2038
+> endangered timespec.
 > 
-> 
-> >>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);  
-> >>> Secondly, I'm also not sure why COP interrupts need to be disabled for
-> >>> pre-T210 at all, since COP is unused. This looks to me like it was
-> >>> cut-n-pasted from downstream kernel without a good reason and could be
-> >>> simply removed.  
-> >> Please verify that this is actually the case. Tegra-2 definitely needed
-> >> some level of poking, and I'm not keen on changing anything there until
-> >> you (or someone else) has verified it on actual HW (see e307cc8941fc).  
-> > Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
-> > with all COP bits removed from the driver.
-> >
-> > AFAIK, the reason why downstream needed that disabling is that it uses
-> > proprietary firmware which is running on the COP and that firmware is
-> > usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
-> > interrupts after itself. That firmware is not applicable for the
-> > upstream kernel, hence there is no need to care about it.
-> >  
-> >> Joseph, can you please shed some light here?  
-> 
-> SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the
-> one that actually loads SC7 entry firmware and triggers IRQ to
-> AVP/COP which causes COP to wakeup and run SC7 entry FW.
-> 
-> So when SC7 support is enabled, IRQ need to be kept enabled and when
-> SC7 FW starts execution, it will disable COP IRQ.
+> So when the VDSO was made generic we changed the internal data structures
+> to be 2038 safe right away. As a consequence the fallback syscall is not
+> clock_gettime(), it's clock_gettime64(). which seems to surprise seccomp.
 
-This looks like a lot of undocumented assumptions on what firmware
-does, as well as what firmware *is*. What I gather from this thread is
-that there is at least two versions of firmware (a "proprietary
-firmware" for "downstream kernels", and another one for mainline), and
-that they do different things.
+Okay, it's didn't add a syscall, it just changed it. Results are the
+same: conservative filters suddenly start breaking due to the different
+call. (And now I see why Andy's alias suggestion would help...)
 
-Given that we cannot know what people actually run, I don't think we
-can safely remove anything unless this gets tested on the full spectrum
-of HW/FW combination.
+I'm not sure which direction to do with this. It seems like an alias
+list is a large hammer for this case, and a "seccomp-bypass when calling
+from vDSO" solution seems too fragile?
 
-Thanks,
-
-	M.
 -- 
-Without deviation from the norm, progress is not possible.
+Kees Cook
