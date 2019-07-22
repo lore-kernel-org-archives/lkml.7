@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F5DC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6160C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90FE22296
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A9B21E70
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:42:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfGVPms (ORCPT
+        id S1729832AbfGVPmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:42:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:40204 "EHLO foss.arm.com"
+        Mon, 22 Jul 2019 11:42:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:40236 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729752AbfGVPmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:42:45 -0400
+        id S1729797AbfGVPms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:42:48 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BDA01509;
-        Mon, 22 Jul 2019 08:42:45 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D49F1596;
+        Mon, 22 Jul 2019 08:42:48 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 257E33F694;
-        Mon, 22 Jul 2019 08:42:42 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41F493F694;
+        Mon, 22 Jul 2019 08:42:45 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -45,12 +45,10 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v9 07/21] s390: mm: Add p?d_leaf() definitions
-Date:   Mon, 22 Jul 2019 16:41:56 +0100
-Message-Id: <20190722154210.42799-8-steven.price@arm.com>
+        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Subject: [PATCH v9 08/21] sparc: mm: Add p?d_leaf() definitions
+Date:   Mon, 22 Jul 2019 16:41:57 +0100
+Message-Id: <20190722154210.42799-9-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722154210.42799-1-steven.price@arm.com>
 References: <20190722154210.42799-1-steven.price@arm.com>
@@ -66,38 +64,36 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For s390, pud_large() and pmd_large() are already implemented as static
-inline functions. Add a macro to provide the p?d_leaf names for the
-generic code to use.
+For sparc 64 bit, pmd_large() and pud_large() are already provided, so
+add macros to provide the p?d_leaf names required by the generic code.
 
-CC: Martin Schwidefsky <schwidefsky@de.ibm.com>
-CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-CC: linux-s390@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+CC: sparclinux@vger.kernel.org
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/s390/include/asm/pgtable.h | 2 ++
+ arch/sparc/include/asm/pgtable_64.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 9b274fcaacb6..f99a5f546e5e 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -674,6 +674,7 @@ static inline int pud_none(pud_t pud)
- 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
- }
- 
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
- {
- 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
-@@ -691,6 +692,7 @@ static inline unsigned long pud_pfn(pud_t pud)
- 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
+diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+index 1599de730532..a78b968ae3fa 100644
+--- a/arch/sparc/include/asm/pgtable_64.h
++++ b/arch/sparc/include/asm/pgtable_64.h
+@@ -683,6 +683,7 @@ static inline unsigned long pte_special(pte_t pte)
+ 	return pte_val(pte) & _PAGE_SPECIAL;
  }
  
 +#define pmd_leaf	pmd_large
- static inline int pmd_large(pmd_t pmd)
+ static inline unsigned long pmd_large(pmd_t pmd)
  {
- 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
+ 	pte_t pte = __pte(pmd_val(pmd));
+@@ -867,6 +868,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+ /* only used by the stubbed out hugetlb gup code, should never be called */
+ #define pgd_page(pgd)			NULL
+ 
++#define pud_leaf	pud_large
+ static inline unsigned long pud_large(pud_t pud)
+ {
+ 	pte_t pte = __pte(pud_val(pud));
 -- 
 2.20.1
 
