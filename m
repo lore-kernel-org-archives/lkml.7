@@ -2,147 +2,80 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CFCC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86345C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78FE217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pZJzayND"
+	by mail.kernel.org (Postfix) with ESMTP id 564F321926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563798954;
+	bh=oSGvrhvOENtQr2vmF9xUHJFiLqNbNOh8MfytEV3Eyhg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=s43aPO+tSkTYaU4Ngj+qtFShOo7HU2dktiS4+DoTKd95SgBqBf47ipilua9TfWms2
+	 6KWGEe5gEWmamiwAKL4/MUJfplp6VB2zBAAh5/6Fct/B9xP9SPNW+9WPT9paz1kjr9
+	 3P2uxowd51is4ZJNLV2N4v+l2MyhRh+kIjfXfXX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbfGVMfd (ORCPT
+        id S1730171AbfGVMfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:35:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55174 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728062AbfGVMfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:35:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MCNlXu128635;
-        Mon, 22 Jul 2019 12:34:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=+kLueem9WMUqNcxD9IjzUoxdJXL84wtAlV58iaOuVG8=;
- b=pZJzayND+wZiT/MVYESoo67JGHRPEK+kthwJ68ZZTcrUm2wEwsaBlPkLjhT003QT6uly
- oyj23H8uRmUneEhGyY0DtzgrK0kxHhQhMCDOe+VM/lMMARd0wUokg1i8WzYpN9RtEjHd
- I1XAZLJz8xwmdCX6WFbyJf1o5ExoOLZfWS1qstynV+OAQlbbVUUHkEBTw39sjU/m3mkh
- pSv+60Tyik4RjHhvl0y2luAxOVUo7+ZVgoHWKSLSLIP3GLXO1RFz8Kxtdrak56sO62Xk
- f/HSatw0p3r40NewVUZlqfEPNP8hU83F8NJbvu6mckMRrAB5yhuwKPjs6I1G/WZ9Ll6I zA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2tuukqe8yc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 12:34:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MCRbs2083749;
-        Mon, 22 Jul 2019 12:32:41 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tut9m87mk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 12:32:41 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6MCWbl4010722;
-        Mon, 22 Jul 2019 12:32:37 GMT
-Received: from oracle.com (/23.233.26.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Jul 2019 05:32:36 -0700
-Date:   Mon, 22 Jul 2019 08:32:33 -0400
-From:   "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>,
-        "moderated list:ETHERNET BRIDGE" <bridge@lists.linux-foundation.org>,
-        "open list:ETHERNET BRIDGE" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] netfilter: ebtables: compat: fix a memory leak bug
-Message-ID: <20190722123204.rvsqlqgynfgjcif7@oracle.com>
-Mail-Followup-To: Wenwen Wang <wang6495@umn.edu>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>,
-        "moderated list:ETHERNET BRIDGE" <bridge@lists.linux-foundation.org>,
-        "open list:ETHERNET BRIDGE" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1563625366-3602-1-git-send-email-wang6495@umn.edu>
+        Mon, 22 Jul 2019 08:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728062AbfGVMfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:35:53 -0400
+Received: from localhost.localdomain (unknown [223.226.98.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 538BF217D4;
+        Mon, 22 Jul 2019 12:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563798952;
+        bh=oSGvrhvOENtQr2vmF9xUHJFiLqNbNOh8MfytEV3Eyhg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WtjDF5W2xRraOLEwXIZ1rv9ZFWQ+0RT2/tCAhCmF6yi/hEcd/UWAu32vKfLe4nCI/
+         7MqSo28r55rmQDe230BcLcCPuT627cpgbO0WwbSbF/WgdmyLvlwAIWLULhQa4NaXes
+         uOOSSJEpxMfYLK2JE/CRmp8sSN1dqDgt2GV8rT80=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] arm64: dts: qcom: sdm845: Fix DTS warnings
+Date:   Mon, 22 Jul 2019 18:04:17 +0530
+Message-Id: <20190722123422.4571-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563625366-3602-1-git-send-email-wang6495@umn.edu>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9325 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907220147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9325 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907220147
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nice catch.  The code that exists is confusing due to newinfo->entries
-being overwritten and then freed in the existing code path as you state
-in your commit log.
+So this is an attempt to fix some warns on sdm845 dts. We still have bunch
+of warnings to fix after this series (dupplicate adress and node names
+having underscores etc).
 
-* Wenwen Wang <wang6495@umn.edu> [190720 08:23]:
-> From: Wenwen Wang <wenwen@cs.uga.edu>
-> 
-> In compat_do_replace(), a temporary buffer is allocated through vmalloc()
-> to hold entries copied from the user space. The buffer address is firstly
-> saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
-> the entries in this temporary buffer is copied to the internal kernel
-> structure through compat_copy_entries(). If this copy process fails,
-> compat_do_replace() should be terminated. However, the allocated temporary
-> buffer is not freed on this path, leading to a memory leak.
-> 
-> To fix the bug, free the buffer before returning from compat_do_replace().
-> 
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> ---
->  net/bridge/netfilter/ebtables.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-> index 963dfdc..fd84b48e 100644
-> --- a/net/bridge/netfilter/ebtables.c
-> +++ b/net/bridge/netfilter/ebtables.c
-> @@ -2261,8 +2261,10 @@ static int compat_do_replace(struct net *net, void __user *user,
->  	state.buf_kern_len = size64;
->  
->  	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
-> -	if (WARN_ON(ret < 0))
-> +	if (WARN_ON(ret < 0)) {
-> +		vfree(entries_tmp);
->  		goto out_unlock;
-> +	}
+lets get long hanging ones fixed, we can see the warns with W=1 or W=2
 
+Vinod Koul (5):
+  arm64: dts: qcom: sdm845: Add unit name to soc node
+  arm64: dts: qcom: sdm845: remove unnecessary properties for dsi nodes
+  arm64: dts: qcom: sdm845: remove unit name for thermal trip points
+  arm64: dts: qcom: sdm845: remove macro from unit name
+  arm64: dts: qcom: sdm845-cheza: remove macro from unit name
 
-Would it be worth adding a new goto label above out_unlock and free this
-entries_tmp?  It could then be used in previous failure path as well.
+ arch/arm64/boot/dts/qcom/pm8998.dtsi       |  2 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 ++--
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 66 ++++++++++------------
+ 3 files changed, 36 insertions(+), 42 deletions(-)
 
-Thanks,
-Liam
+Thanks
+-- 
+2.20.1
+
