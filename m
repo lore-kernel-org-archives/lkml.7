@@ -2,513 +2,174 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BCFC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA76C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B1421953
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE3321951
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIdr/rGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfGVCxA (ORCPT
+        id S1726748AbfGVDFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:53:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2686 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728717AbfGVCvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:51:06 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BDEECBC9F42E7ADF3979;
-        Mon, 22 Jul 2019 10:51:03 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 10:50:57 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 03/24] erofs: add super block operations
-Date:   Mon, 22 Jul 2019 10:50:22 +0800
-Message-ID: <20190722025043.166344-4-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190722025043.166344-1-gaoxiang25@huawei.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
+        Sun, 21 Jul 2019 23:05:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38672 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfGVDFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 23:05:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id j6so38443856ioa.5;
+        Sun, 21 Jul 2019 20:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3d0TsmehIUmq0qA3N9Vz5YuFrjv8Qaa0x6G/JzdD5+Q=;
+        b=PIdr/rGhuR3gElVXXEdhqxyDoPfQRzGzlzRsAzSQday/+3+zU5J3I9qZT6yMlM2fxC
+         A2ZisZVGcn44iTC+0t6mQPvcI95y5XP/aEe+4LQvNeGv1J+HYwuOdYmEqJOav62y++gS
+         zxOGTc3oSX5cc/upKn85TCm5IR5jvT3jGwbumY2ub48cdTQ6MmGd+YdDmBtSK5M6eFuB
+         Xrb8xZXXQHQ/NO/TeEABtAaz8tXI11OQrfCGbCzW0vjI7DrAO9YtPFvjkM1XFP/FeKOe
+         /dU0yTmQNTSoACdXOIIVGickG3YEmqPsuPg0aRctVXiHaOEol9vOSvh1Z+qtpOWddo68
+         H9qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3d0TsmehIUmq0qA3N9Vz5YuFrjv8Qaa0x6G/JzdD5+Q=;
+        b=OwwPwM93o/gfSctgktG8lwfCT87n1DiHahFe5ridOYPLMMznTKkTjMXcO7VpQRn59T
+         cJOciGpSfcRRRc1g85/FTmOpxrZsI+2Ioda7Ktm/0QWVYCdzK3KNhLx/xz6VMFk4oMV5
+         2hRTIWA+S16I6EVi1cbeeKvA4BvbxobIhKHLw6cusB/GN30IswoxrzaIp2G7q+MW/Q2o
+         vD2x3FaUEHVK6C5XU1DDX17p/g9ZxEXVjywG0YXpaU7Un1MkiTddvMC2PdZrsvV/zKei
+         jn4yADlGz3JSH+jSnfghpHvSucROHS75upLF1ikTafl/YP6yVIxeW3lmKo5EXKzFHT+j
+         uO1Q==
+X-Gm-Message-State: APjAAAVI+lVIVLo5l0J33KHmY8U0p4Us+nA8DJNSc69BCyZxcVlIAT1B
+        FPDZGs8T6N6geZxR2poZlZHvrIzGCgneQQ==
+X-Google-Smtp-Source: APXvYqzwrHss0BMfmADs2MwmQrZARNdK6NgwhQ1YV7GWuJj8TMtVG8AWad93ZKewi4L8d+CLLcB06Q==
+X-Received: by 2002:a6b:6f06:: with SMTP id k6mr53829059ioc.32.1563764734329;
+        Sun, 21 Jul 2019 20:05:34 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id i23sm27928326ioj.24.2019.07.21.20.05.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 21 Jul 2019 20:05:33 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
+        quan@os.amperecomputing.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn@helgaas.com, rjw@rjwysocki.net, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skunberg.kelsey@gmail.com
+Subject: [PATCH] drivers: net: xgene: Remove acpi_has_method() calls
+Date:   Sun, 21 Jul 2019 21:04:01 -0600
+Message-Id: <20190722030401.69563-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds erofs super block operations, including (u)mount,
-remount_fs, show_options, statfs, in addition to some private
-icache management functions.
+acpi_evaluate_object will already return an error if the needed method
+does not exist. Remove unnecessary acpi_has_method() calls and check the
+returned acpi_status for failure instead.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- fs/erofs/super.c | 438 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 438 insertions(+)
- create mode 100644 fs/erofs/super.c
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    |  7 +++----
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 10 +++++-----
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c |  9 ++++-----
+ 3 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-new file mode 100644
-index 000000000000..3ed3b29edaf2
---- /dev/null
-+++ b/fs/erofs/super.c
-@@ -0,0 +1,438 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * linux/fs/erofs/super.c
-+ *
-+ * Copyright (C) 2017-2018 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include <linux/module.h>
-+#include <linux/buffer_head.h>
-+#include <linux/statfs.h>
-+#include <linux/parser.h>
-+#include <linux/seq_file.h>
-+#include "internal.h"
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/erofs.h>
-+
-+static struct kmem_cache *erofs_inode_cachep __read_mostly;
-+
-+static void init_once(void *ptr)
-+{
-+	struct erofs_vnode *vi = ptr;
-+
-+	inode_init_once(&vi->vfs_inode);
-+}
-+
-+static int __init erofs_init_inode_cache(void)
-+{
-+	erofs_inode_cachep = kmem_cache_create("erofs_inode",
-+					       sizeof(struct erofs_vnode), 0,
-+					       SLAB_RECLAIM_ACCOUNT,
-+					       init_once);
-+
-+	return erofs_inode_cachep ? 0 : -ENOMEM;
-+}
-+
-+static void erofs_exit_inode_cache(void)
-+{
-+	kmem_cache_destroy(erofs_inode_cachep);
-+}
-+
-+static struct inode *alloc_inode(struct super_block *sb)
-+{
-+	struct erofs_vnode *vi =
-+		kmem_cache_alloc(erofs_inode_cachep, GFP_KERNEL);
-+
-+	if (!vi)
-+		return NULL;
-+
-+	/* zero out everything except vfs_inode */
-+	memset(vi, 0, offsetof(struct erofs_vnode, vfs_inode));
-+	return &vi->vfs_inode;
-+}
-+
-+static void free_inode(struct inode *inode)
-+{
-+	struct erofs_vnode *vi = EROFS_V(inode);
-+
-+	/* be careful RCU symlink path (see ext4_inode_info->i_data)! */
-+	if (is_inode_fast_symlink(inode))
-+		kfree(inode->i_link);
-+
-+	kmem_cache_free(erofs_inode_cachep, vi);
-+}
-+
-+static bool check_layout_compatibility(struct super_block *sb,
-+				       struct erofs_super_block *layout)
-+{
-+	const unsigned int requirements = le32_to_cpu(layout->requirements);
-+
-+	EROFS_SB(sb)->requirements = requirements;
-+
-+	/* check if current kernel meets all mandatory requirements */
-+	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
-+		errln("unidentified requirements %x, please upgrade kernel version",
-+		      requirements & ~EROFS_ALL_REQUIREMENTS);
-+		return false;
-+	}
-+	return true;
-+}
-+
-+static int superblock_read(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi;
-+	struct buffer_head *bh;
-+	struct erofs_super_block *layout;
-+	unsigned int blkszbits;
-+	int ret;
-+
-+	bh = sb_bread(sb, 0);
-+
-+	if (!bh) {
-+		errln("cannot read erofs superblock");
-+		return -EIO;
-+	}
-+
-+	sbi = EROFS_SB(sb);
-+	layout = (struct erofs_super_block *)((u8 *)bh->b_data
-+		 + EROFS_SUPER_OFFSET);
-+
-+	ret = -EINVAL;
-+	if (le32_to_cpu(layout->magic) != EROFS_SUPER_MAGIC_V1) {
-+		errln("cannot find valid erofs superblock");
-+		goto out;
-+	}
-+
-+	blkszbits = layout->blkszbits;
-+	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
-+	if (unlikely(blkszbits != LOG_BLOCK_SIZE)) {
-+		errln("blksize %u isn't supported on this platform",
-+		      1 << blkszbits);
-+		goto out;
-+	}
-+
-+	if (!check_layout_compatibility(sb, layout))
-+		goto out;
-+
-+	sbi->blocks = le32_to_cpu(layout->blocks);
-+	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
-+	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
-+	sbi->root_nid = le16_to_cpu(layout->root_nid);
-+	sbi->inos = le64_to_cpu(layout->inos);
-+
-+	sbi->build_time = le64_to_cpu(layout->build_time);
-+	sbi->build_time_nsec = le32_to_cpu(layout->build_time_nsec);
-+
-+	memcpy(&sb->s_uuid, layout->uuid, sizeof(layout->uuid));
-+	memcpy(sbi->volume_name, layout->volume_name,
-+	       sizeof(layout->volume_name));
-+
-+	ret = 0;
-+out:
-+	brelse(bh);
-+	return ret;
-+}
-+
-+#ifdef CONFIG_EROFS_FAULT_INJECTION
-+const char *erofs_fault_name[FAULT_MAX] = {
-+	[FAULT_KMALLOC]		= "kmalloc",
-+	[FAULT_READ_IO]		= "read IO error",
-+};
-+
-+static void __erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				     unsigned int rate)
-+{
-+	struct erofs_fault_info *ffi = &sbi->fault_info;
-+
-+	if (rate) {
-+		atomic_set(&ffi->inject_ops, 0);
-+		ffi->inject_rate = rate;
-+		ffi->inject_type = (1 << FAULT_MAX) - 1;
-+	} else {
-+		memset(ffi, 0, sizeof(struct erofs_fault_info));
-+	}
-+
-+	set_opt(sbi, FAULT_INJECTION);
-+}
-+
-+static int erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				  substring_t *args)
-+{
-+	int rate = 0;
-+
-+	if (args->from && match_int(args, &rate))
-+		return -EINVAL;
-+
-+	__erofs_build_fault_attr(sbi, rate);
-+	return 0;
-+}
-+
-+static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
-+{
-+	return sbi->fault_info.inject_rate;
-+}
-+#else
-+static void __erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				     unsigned int rate)
-+{
-+}
-+
-+static int erofs_build_fault_attr(struct erofs_sb_info *sbi,
-+				  substring_t *args)
-+{
-+	infoln("fault_injection options not supported");
-+	return 0;
-+}
-+
-+static unsigned int erofs_get_fault_rate(struct erofs_sb_info *sbi)
-+{
-+	return 0;
-+}
-+#endif
-+
-+/* set up default EROFS parameters */
-+static void default_options(struct erofs_sb_info *sbi)
-+{
-+}
-+
-+enum {
-+	Opt_fault_injection,
-+	Opt_err
-+};
-+
-+static match_table_t erofs_tokens = {
-+	{Opt_fault_injection, "fault_injection=%u"},
-+	{Opt_err, NULL}
-+};
-+
-+static int parse_options(struct super_block *sb, char *options)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	char *p;
-+	int err;
-+
-+	if (!options)
-+		return 0;
-+
-+	while ((p = strsep(&options, ","))) {
-+		int token;
-+
-+		if (!*p)
-+			continue;
-+
-+		args[0].to = args[0].from = NULL;
-+		token = match_token(p, erofs_tokens, args);
-+
-+		switch (token) {
-+		case Opt_fault_injection:
-+			err = erofs_build_fault_attr(EROFS_SB(sb), args);
-+			if (err)
-+				return err;
-+			break;
-+
-+		default:
-+			errln("Unrecognized mount option \"%s\" or missing value", p);
-+			return -EINVAL;
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+index 61a465097cb8..ef75a09069a8 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+@@ -694,6 +694,7 @@ bool xgene_ring_mgr_init(struct xgene_enet_pdata *p)
+ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ {
+ 	struct device *dev = &pdata->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(pdata))
+ 		return -ENODEV;
+@@ -712,11 +713,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ 		udelay(5);
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
+-			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
++		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_RST", NULL, NULL);
+-		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
+-					 "_INI")) {
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_INI", NULL, NULL);
+ 		}
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+index 6453fc2ebb1f..6237a2cfd703 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+@@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
+ static int xgene_enet_reset(struct xgene_enet_pdata *p)
+ {
+ 	struct device *dev = &p->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(p))
+ 		return -ENODEV;
+@@ -460,14 +461,13 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
+ 		}
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
+-			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
++		status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
++			 		      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
+ 					     "_INI", NULL, NULL);
 +		}
-+	}
-+	return 0;
-+}
-+
-+static int erofs_fill_super(struct super_block *sb, void *data, int silent)
-+{
-+	struct inode *inode;
-+	struct erofs_sb_info *sbi;
-+	int err;
-+
-+	infoln("read_super, device -> %s", sb->s_id);
-+	infoln("options -> %s", (char *)data);
-+
-+	sb->s_magic = EROFS_SUPER_MAGIC;
-+
-+	if (unlikely(!sb_set_blocksize(sb, EROFS_BLKSIZ))) {
-+		errln("failed to set erofs blksize");
-+		return -EINVAL;
-+	}
-+
-+	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+	if (unlikely(!sbi))
-+		return -ENOMEM;
-+
-+	sb->s_fs_info = sbi;
-+	err = superblock_read(sb);
-+	if (err)
-+		return err;
-+
-+	sb->s_flags |= SB_RDONLY | SB_NOATIME;
-+	sb->s_maxbytes = MAX_LFS_FILESIZE;
-+	sb->s_time_gran = 1;
-+
-+	sb->s_op = &erofs_sops;
-+
-+	/* set erofs default mount options */
-+	default_options(sbi);
-+
-+	err = parse_options(sb, data);
-+	if (unlikely(err))
-+		return err;
-+
-+	if (!silent)
-+		infoln("root inode @ nid %llu", ROOT_NID(sbi));
-+
-+	/* get the root inode */
-+	inode = erofs_iget(sb, ROOT_NID(sbi), true);
-+	if (IS_ERR(inode))
-+		return PTR_ERR(inode);
-+
-+	if (unlikely(!S_ISDIR(inode->i_mode))) {
-+		errln("rootino(nid %llu) is not a directory(i_mode %o)",
-+		      ROOT_NID(sbi), inode->i_mode);
-+		iput(inode);
-+		return -EINVAL;
-+	}
-+
-+	sb->s_root = d_make_root(inode);
-+	if (unlikely(!sb->s_root))
-+		return -ENOMEM;
-+
-+	if (!silent)
-+		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
-+	return 0;
-+}
-+
-+static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
-+				  const char *dev_name, void *data)
-+{
-+	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
-+}
-+
-+/*
-+ * could be triggered after deactivate_locked_super()
-+ * is called, thus including umount and failed to initialize.
-+ */
-+static void erofs_kill_sb(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi;
-+
-+	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
-+	infoln("unmounting erofs for %s", sb->s_id);
-+
-+	kill_block_super(sb);
-+
-+	sbi = EROFS_SB(sb);
-+	if (!sbi)
-+		return;
-+	kfree(sbi);
-+	sb->s_fs_info = NULL;
-+}
-+
-+static struct file_system_type erofs_fs_type = {
-+	.owner          = THIS_MODULE,
-+	.name           = "erofs",
-+	.mount          = erofs_mount,
-+	.kill_sb        = erofs_kill_sb,
-+	.fs_flags       = FS_REQUIRES_DEV,
-+};
-+MODULE_ALIAS_FS("erofs");
-+
-+static int __init erofs_module_init(void)
-+{
-+	int err;
-+
-+	erofs_check_ondisk_layout_definitions();
-+	infoln("initializing erofs " EROFS_VERSION);
-+
-+	err = erofs_init_inode_cache();
-+	if (err)
-+		goto icache_err;
-+
-+	err = register_filesystem(&erofs_fs_type);
-+	if (err)
-+		goto fs_err;
-+
-+	infoln("successfully to initialize erofs");
-+	return 0;
-+
-+fs_err:
-+	erofs_exit_inode_cache();
-+icache_err:
-+	return err;
-+}
-+
-+static void __exit erofs_module_exit(void)
-+{
-+	unregister_filesystem(&erofs_fs_type);
-+	erofs_exit_inode_cache();
-+	infoln("successfully finalize erofs");
-+}
-+
-+/* get filesystem statistics */
-+static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
-+{
-+	struct super_block *sb = dentry->d_sb;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	u64 id = huge_encode_dev(sb->s_bdev->bd_dev);
-+
-+	buf->f_type = sb->s_magic;
-+	buf->f_bsize = EROFS_BLKSIZ;
-+	buf->f_blocks = sbi->blocks;
-+	buf->f_bfree = buf->f_bavail = 0;
-+
-+	buf->f_files = ULLONG_MAX;
-+	buf->f_ffree = ULLONG_MAX - sbi->inos;
-+
-+	buf->f_namelen = EROFS_NAME_LEN;
-+
-+	buf->f_fsid.val[0] = (u32)id;
-+	buf->f_fsid.val[1] = (u32)(id >> 32);
-+	return 0;
-+}
-+
-+static int erofs_show_options(struct seq_file *seq, struct dentry *root)
-+{
-+	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
-+
-+	if (test_opt(sbi, FAULT_INJECTION))
-+		seq_printf(seq, ",fault_injection=%u",
-+			   erofs_get_fault_rate(sbi));
-+	return 0;
-+}
-+
-+static int erofs_remount(struct super_block *sb, int *flags, char *data)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	unsigned int org_mnt_opt = sbi->mount_opt;
-+	unsigned int org_inject_rate = erofs_get_fault_rate(sbi);
-+	int err;
-+
-+	DBG_BUGON(!sb_rdonly(sb));
-+	err = parse_options(sb, data);
-+	if (err)
-+		goto out;
-+
-+	*flags |= SB_RDONLY;
-+	return 0;
-+out:
-+	__erofs_build_fault_attr(sbi, org_inject_rate);
-+	sbi->mount_opt = org_mnt_opt;
-+
-+	return err;
-+}
-+
-+const struct super_operations erofs_sops = {
-+	.alloc_inode = alloc_inode,
-+	.free_inode = free_inode,
-+	.statfs = erofs_statfs,
-+	.show_options = erofs_show_options,
-+	.remount_fs = erofs_remount,
-+};
-+
-+module_init(erofs_module_init);
-+module_exit(erofs_module_exit);
-+
-+MODULE_DESCRIPTION("Enhanced ROM File System");
-+MODULE_AUTHOR("Gao Xiang, Chao Yu, Miao Xie, CONSUMER BG, HUAWEI Inc.");
-+MODULE_LICENSE("GPL");
-+
+ #endif
+-	}
+ 
+ 	if (!p->port_id) {
+ 		xgene_enet_ecc_init(p);
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+index 133eb91c542e..fede3bfe4d68 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+@@ -380,6 +380,7 @@ static void xgene_xgmac_tx_disable(struct xgene_enet_pdata *pdata)
+ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ {
+ 	struct device *dev = &pdata->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(pdata))
+ 		return -ENODEV;
+@@ -393,11 +394,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ 		udelay(5);
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
+-			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
+-					   "_INI")) {
++		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
++				 	      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_INI", NULL, NULL);
+ 		}
 -- 
-2.17.1
+2.20.1
 
