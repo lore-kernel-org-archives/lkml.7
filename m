@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF09C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442E1C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5838C21903
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B2F21985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817374;
-	bh=BY5qLLhXbHaOpnN4vy7dPRKfNlb0SY89m8uSlsUQNac=;
+	s=default; t=1563817379;
+	bh=+fJPmA0UFEDYLJBil4G+mAcx6gST7oFyFgdHHUMuk9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSxRxtkzET96vJZlCTu0NsCRzEOKq/qmKLArmWAWUOVvdFMsiY9Vug2HMVR99ZMd/
-	 261ZKqfGKPB/4CxEAeKKeVQcD4cV2IMl7Iag7aajEf4TJkPDGEwcDJEWcBqMcS1iz+
-	 um9glw2A66A8Avcy5Qo1V4ECqAjYt5jaAmqzzPD4=
+	b=GWdSqrO1J1xAF4TBre4r/GHUFJB1mMgzvOmJRBkMHuV/W5RUcugnBC0Zmfemgmynn
+	 GnoFl4QLFTwmkJZR8rD7JwoGeJ9HSwAS3KBXBSkXOVc2/1pgTsuThkUHTrx862pQap
+	 668lSkrYs8p8nF4sa7UDhBwG+/cgdU2qrVuWNofs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfGVRmx (ORCPT
+        id S1731041AbfGVRm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47804 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfGVRmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:42:50 -0400
+        id S1726130AbfGVRm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:42:56 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9B021955;
-        Mon, 22 Jul 2019 17:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F2321901;
+        Mon, 22 Jul 2019 17:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817370;
-        bh=BY5qLLhXbHaOpnN4vy7dPRKfNlb0SY89m8uSlsUQNac=;
+        s=default; t=1563817375;
+        bh=+fJPmA0UFEDYLJBil4G+mAcx6gST7oFyFgdHHUMuk9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=idP/J+jO8WAjqD0wf1MnGtDdVzPzKZwQxrlENO42QFHiPl0HaPV3qdaGDup3ceLBY
-         Xj2aOl1mz1InMQoodhozzY0Yfu42vKbnle7NrO+nXfZ4zV55ybdOj4eBjTffF5LYtB
-         VeoCCuHAS11LgrVF3dGLs4WVs0wqeFYj+LLltR74=
+        b=acpSCv0Rx1U36f55kY+MKqyJOkgb3kHLHaU4YdlWO/jhhZqhDiJljvGt6zj1ppvVO
+         uUCpQzSh6Lmut9MXkv+Lws0OJ6tI6OGVvK02Mx0TiSvIdntLVmJYGu5qBBg+0bHr7e
+         KTaVfbgSeIEs9mxIoB/ZymGn+9WpGPqiJbcaDoNM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 35/37] perf probe: Set pev->nargs to zero after freeing pev->args entries
-Date:   Mon, 22 Jul 2019 14:38:37 -0300
-Message-Id: <20190722173839.22898-36-acme@kernel.org>
+Subject: [PATCH 36/37] perf probe: Avoid calling freeing routine multiple times for same pointer
+Date:   Mon, 22 Jul 2019 14:38:38 -0300
+Message-Id: <20190722173839.22898-37-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
@@ -63,52 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that, when perf_add_probe_events() fails, like in:
-
-  # perf probe icmp_rcv:64 "type=icmph->type"
-  Failed to find 'icmph' in this function.
-    Error: Failed to add events.
-  Segmentation fault (core dumped)
-  #
-
-We don't segfault.
-
-clear_perf_probe_event() was zeroing the whole pev, and since the switch
-to zfree() for the members in the pev, that memset() was removed, which
-left nargs with its original value, in the above case 1.
-
-With the memset the same pev could be passed to clear_perf_probe_event()
-multiple times, since all it would have would be zeroes, and free()
-accepts zero, the loop would not happen and we would just memset it
-again to zeroes.
-
-Without it we got that segfault, so zero nargs to keep it like it was,
-next cset will avoid calling clear_perf_probe_event() for the same pevs
-in case of failure.
+When perf_add_probe_events() we call cleanup_perf_probe_events() for the
+pev pointer it receives, then, as part of handling this failure the main
+'perf probe' goes on and calls cleanup_params() and that will again call
+cleanup_perf_probe_events()for the same pointer, so just set nevents to
+zero when handling the failure of perf_add_probe_events() to avoid the
+double free.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: d8f9da240495 ("perf tools: Use zfree() where applicable")
-Link: https://lkml.kernel.org/n/tip-802f2jypnwqsvyavvivs8464@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-probe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 0c3b55d0617d..4acd3457d39d 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2219,6 +2219,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
- 			field = next;
- 		}
- 	}
-+	pev->nargs = 0;
- 	zfree(&pev->args);
- }
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 6418782951a4..3d0ffd41fb55 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -698,6 +698,16 @@ __cmd_probe(int argc, const char **argv)
  
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
++
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
 -- 
 2.21.0
 
