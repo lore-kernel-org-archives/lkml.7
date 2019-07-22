@@ -2,89 +2,149 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2580DC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B2DC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F358321951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7352190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfGVOwa (ORCPT
+        id S1726553AbfGVOxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:52:30 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:39183 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfGVOwa (ORCPT
+        Mon, 22 Jul 2019 10:53:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37306 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfGVOxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:52:30 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M6m5o-1hmpZg2zkM-008LEh; Mon, 22 Jul 2019 16:52:14 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org, Sekhar Nori <nsekhar@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [RESEND] ARM: davinci: fix sleep.S build error on ARMv4
-Date:   Mon, 22 Jul 2019 16:51:50 +0200
-Message-Id: <20190722145211.1154785-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 22 Jul 2019 10:53:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id BDD5428A146
+Subject: Re: [PATCH v4 1/4] iio: cros_ec: Add sign vector in core for backward
+ compatibility
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Cc:     bleung@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com, dianders@chromium.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190628191711.23584-1-gwendal@chromium.org>
+ <20190628191711.23584-2-gwendal@chromium.org>
+ <20190714173203.0b50d5c7@archlinux>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <3729385a-6628-22e1-da50-e22233737a4b@collabora.com>
+Date:   Mon, 22 Jul 2019 16:53:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iAtehMXXYnCWFJ5DNLwBwFTLws99i7fqpxPmtyH/yvfW6H8Ctwi
- Fi0td61Baqu91ONIbhZ60qL+AFXtUkL6w2fLXTYYdGUgr+KMERUmtOldY4oImOCN2gtBYUT
- VDZVT1cOtCr558emYVAisbXf3xuo2stca3tdRs4O93g2DXxsMxUwrBIktSa/7Wz1Apyj1un
- POdBB5yEFLkQJWrFmCzww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ib0Mi+4+ezs=:EsbpZag6xZFGxTQ4oiBoDR
- slk0vaCKD/n0SbnmPoRD1wTO8croA0WgKEYcN322V1kbu8eEqqnInDPjzuhy/VEoHkB6hvuYr
- yHzH2isYcdpIxIEJv4sb3yobdl47QB4wozEpob8Glf+KxRwy62df82t3t+c98Gi577RuskI6N
- VwRlraxQkFPWl3qkMBVQotGMVFT14/8BZUJVedKoqnWafWQ8/wjaPWk6Zmg7mK6eXayXQ9g4S
- gAYZKwULnMzqMEZVO0Ys+iaWaN0rGRmTHknuWy8TEK4VH8KSEQph7utWXwj67pJzesFFYjTKy
- ix8l4M9yjZlTperBVIbO5yAX9Hmvw0bVCYTo+glx6Qo937jys06/Wsh1IGbeIZaqNzR9qMV31
- gKNxLe9BRS8rvpm2pcmiPRtdi2C1R6I0nH/L9LxOJ+/ujgUXaHTXcQMjqr2U802CUoarSwabF
- +WUPS8XoMT0bsG0hgtB7AVjed4b3QW5GYQY6CpEXDQEpkckwVpIBQiCw3y907uBkP3/2lD4H8
- GM/h1Go8BZWshzky3ydC2BXq89GEMPSzS/SUM7xNL66UL00xVnL3ZbwsqUL2rEi875sgaiWcT
- 0p7DSh8Nn4fC4XaCR5DFf6XUeVKPeGQn5njpQvYQgLXDB0wgUZTn9cL1yCZ3gpvVQhnvcHeTg
- MnCOSgnzpt+4rt73V1ylSFTjHSU/HbvqKwlqqQwhgBW+NtUqIEj4u7i10phtWdRKBzMaIEfIa
- lNSDYK5+g4pNM+7gFadRP+vot3w3vfOX4aTymQ==
+In-Reply-To: <20190714173203.0b50d5c7@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building a multiplatform kernel that includes armv4 support,
-the default target CPU does not support the blx instruction,
-which leads to a build failure:
+Hi Jonathan,
 
-arch/arm/mach-davinci/sleep.S: Assembler messages:
-arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
+On 14/7/19 18:32, Jonathan Cameron wrote:
+> On Fri, 28 Jun 2019 12:17:08 -0700
+> Gwendal Grignou <gwendal@chromium.org> wrote:
+> 
+>> To allow cros_ec iio core library to be used with legacy device, add a
+>> vector to rotate sensor data if necessary: legacy devices are not
+>> reporting data in HTML5/Android sensor referential.
+>>
+>> Check the data is not rotated on recent chromebooks that use the HTML5
+>> standard to present sensor data.
+>>
+>> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> As I mentioned in one of the other series.  I've lost track of whether
+> anyone wants me to apply any of these through IIO, so will just ack
+> them as appropriate and assume someone will shout if they do want
+> me to pick them up ;)
+> 
 
-Add a .arch statement in the sources to make this file build.
+To try to give you a bit of light on this, all the required changes in
+chrome-platform are now in upstream so all the patches can go safely through
+your tree. The order to pick the patches is as follow:
 
-Acked-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-I forgot to pick this up for arm-soc, sending again so it
-ends up in the inbox
----
- arch/arm/mach-davinci/sleep.S | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
-index 05d03f09ff54..71262dcdbca3 100644
---- a/arch/arm/mach-davinci/sleep.S
-+++ b/arch/arm/mach-davinci/sleep.S
-@@ -24,6 +24,7 @@
- #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
- 
- 	.text
-+	.arch	armv5te
- /*
-  * Move DaVinci into deep sleep state
-  *
--- 
-2.20.0
+1096491 [v4,1/1] iio: common: cros_ec_sensors: determine protocol version
 
+1100922 [v6,1/4] iio: cros_ec: Add sign vector in core for backward
+                 compatibility
+1100924 [v6,3/4] iio: cros_ec_accel_legacy: Use cros_ec_sensors_core
+1100923 [v6,4/4] iio: cros_ec_accel_legacy: Add support for veyron-minnie
+
+1100982 [v5,1/1] iio: common: cros_ec_sensors: Expose cros_ec_sensors frequency
+                 range via iio sysfs
+
+But if you try to apply latest versions from patchwork you'll get some trivial
+conflicts. So, I fixed the problems, rebased on top of your testing branch,
+added my Rb tag to all the patches and put together in this branch [1]
+
+All the patches have your Ack, so should be fine if you apply all of them just
+replacing your Ack for your Signed-off
+
+I can also send a new patch series with those if you prefer this option.
+
+Hopefully is more clear now and sorry for that mess.
+~ Enric
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=for-iio-next
+
+
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>  drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c | 4 ++++
+>>  include/linux/iio/common/cros_ec_sensors_core.h           | 1 +
+>>  2 files changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> index 719a0df5aeeb..e8a4d78659c8 100644
+>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> @@ -66,6 +66,9 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  		}
+>>  		state->type = state->resp->info.type;
+>>  		state->loc = state->resp->info.location;
+>> +
+>> +		/* Set sign vector, only used for backward compatibility. */
+>> +		memset(state->sign, 1, CROS_EC_SENSOR_MAX_AXIS);
+>>  	}
+>>  
+>>  	return 0;
+>> @@ -254,6 +257,7 @@ static int cros_ec_sensors_read_data_unsafe(struct iio_dev *indio_dev,
+>>  		if (ret < 0)
+>>  			return ret;
+>>  
+>> +		*data *= st->sign[i];
+>>  		data++;
+>>  	}
+>>  
+>> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+>> index ce16445411ac..a1c85ad4df91 100644
+>> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+>> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+>> @@ -71,6 +71,7 @@ struct cros_ec_sensors_core_state {
+>>  	enum motionsensor_location loc;
+>>  
+>>  	s16 calib[CROS_EC_SENSOR_MAX_AXIS];
+>> +	s8 sign[CROS_EC_SENSOR_MAX_AXIS];
+>>  
+>>  	u8 samples[CROS_EC_SAMPLE_SIZE];
+>>  
+> 
