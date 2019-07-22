@@ -2,77 +2,125 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A3C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFF7C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0422120665
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6CC218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbfGVM0V (ORCPT
+        id S1729270AbfGVM1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:26:21 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43692 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGVM0V (ORCPT
+        Mon, 22 Jul 2019 08:27:02 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:44531 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfGVM1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:26:21 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 3A3328034D; Mon, 22 Jul 2019 14:26:08 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 14:26:17 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, jacek.anaszewski@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v2] leds: apu: fix error message on probing failure
-Message-ID: <20190722122617.GB12069@amd>
-References: <f54bb3f1-2699-1213-f568-b2c529488306@gmail.com>
- <1563797331-20993-1-git-send-email-info@metux.net>
+        Mon, 22 Jul 2019 08:27:02 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MS3rB-1i0ppS27tD-00TS5J; Mon, 22 Jul 2019 14:26:49 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@google.com>,
+        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] [v2] drbd: dynamically allocate shash descriptor
+Date:   Mon, 22 Jul 2019 14:26:34 +0200
+Message-Id: <20190722122647.351002-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
-Content-Disposition: inline
-In-Reply-To: <1563797331-20993-1-git-send-email-info@metux.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TUkJdt6WnOtvIKaR0C75bjyJONsAuTghX9dFPBuK/8hnMLggk3n
+ oaimOoXAU2Z5zyElT/gELYVsGJyidfA2ExueKc9APQYmKTBUXBWzq5pdcaRaVmUMkwDM8eK
+ 3TBy71px+BMkF5WdicIU/qxkzYwfULo/cL305TewpfFFQBaqDWboMCadDAH4olBURs/jRw1
+ q6sUBbFtTzs7Kvn0ZEUiw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c+P8+Y3Ft70=:cJiCb3/FiWtXQt/BwQwW7R
+ NFYvnQ8N1hPvLKZIghEf+kKVLp7/kYyBTvTNO8WRdxBLi6aZP1xjhkRrR0kMmjCvamRDEfSMs
+ gZJXxkU2vatLVaS2KQmDYMP4kGEuVjnlasytI3typK7ZlwrqSJ0NaCUqsTy7S333zZSGHs4we
+ a3lsh2QvQ9+Jlfcdwp4v7OMZ6FEsjpqMaXDc/oaUbLiuh+19kl0pHsbyKASPN2c6+TCY25h37
+ n6tWNAVq5qPl7ZWYUqCUpNg8bHxEic5Epqj2drDgWR2AR5syCs5UmqyyBf4puZkcwlf7ucH20
+ Hdx+GYhU6FKYnr+i1WUNPUpKQCYSM6q2Zrx9MaYRxHg3ouuZYDuccKneHpBCS54imGAe21V2v
+ ha+4JHczutkINYtlqy6nw/izraZz4BditGhG+wUcQ3N3LUDdt+FsixBVenTycVe4C4SlHiDPx
+ 7rO2CuGkxEe7xx9W8jU3EI9DjxPA9dte96y8Jp7VRRDTYgFnJ624Zn9GY7jnHggrs5plQwL4J
+ c3piWuVfYT7abyUKKFYAd1J3URNK6RaAm9pWQKo/mvw8Shagyp2waz26zy8ZDYdpFE5J+jByH
+ IsqSu8GRhkI2vZELyGUk7Ar/XDURoYk+OoZN4Myfw4LxBNIokSVNk/0g07x/2/5FsOC20P/5g
+ Zc0ys9eBkBw/gcZfRv0XEfBZ+uZo+Lo6QuVzJOttdiEFxMlllL4gKq4yB9Bj1wnlh+aOP6rtC
+ sfi5B0rcPguhvN9lACFtnrg2/8lpmleYob2zkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Building with clang and KASAN, we get a warning about an overly large
+stack frame on 32-bit architectures:
 
---E39vaYmALEf/7YXx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+      [-Werror,-Wframe-larger-than=]
 
-On Mon 2019-07-22 14:08:51, Enrico Weigelt, metux IT consult wrote:
-> From: Enrico Weigelt <info@metux.net>
->=20
-> The current error message on failed probing tends to be a bit
-> misleading. Fix it to tell exactly that an APU v1 was not found.
->=20
-> Signed-off-by: Enrico Weigelt <info@metux.net>
+We already allocate other data dynamically in this function, so
+just do the same for the shash descriptor, which makes up most of
+this memory.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2:
+- don't try to zero a NULL descriptor pointer,
+  based on review from Roland Kammerer.
+---
+ drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 90ebfcae0ce6..2b3103c30857 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	struct shash_desc *desc;
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
+ 
++	desc = kmalloc(sizeof(struct shash_desc) +
++		       crypto_shash_descsize(connection->cram_hmac_tfm),
++		       GFP_KERNEL);
++	if (!desc) {
++		rv = -1;
++		goto fail;
++	}
+ 	desc->tfm = connection->cram_hmac_tfm;
+ 
+ 	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
+@@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
++	if (desc) {
++		shash_desc_zero(desc);
++		kfree(desc);
++	}
+ 
+ 	return rv;
+ }
+-- 
+2.20.0
 
---E39vaYmALEf/7YXx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl01q2kACgkQMOfwapXb+vJUCwCfd48hXYfazmUEgv6Kxz5IaWBM
-Fo4AoKbRA/qApIJ5y1VubAMfRN40LgVl
-=7D1n
------END PGP SIGNATURE-----
-
---E39vaYmALEf/7YXx--
