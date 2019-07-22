@@ -2,114 +2,148 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914B6C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765DFC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765F721BF6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A2621E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfGVICZ (ORCPT
+        id S1727913AbfGVIFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:02:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59764 "EHLO mx1.redhat.com"
+        Mon, 22 Jul 2019 04:05:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:6792 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfGVICY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:02:24 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 269F7308424C;
-        Mon, 22 Jul 2019 08:02:24 +0000 (UTC)
-Received: from redhat.com (ovpn-120-233.rdu2.redhat.com [10.10.120.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D54DC610A6;
-        Mon, 22 Jul 2019 08:02:14 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 04:02:13 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190722035657-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
+        id S1726236AbfGVIFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:05:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 01:03:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,294,1559545200"; 
+   d="scan'208";a="170796484"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Jul 2019 01:03:09 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     David Sterba <dsterba@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>, <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [LKP] [btrfs] c8eaeac7b7: aim7.jobs-per-min -11.7% regression
+References: <20190513025004.GG31424@shao2-debian>
+        <87blzl7itt.fsf@yhuang-dev.intel.com>
+        <87v9xdymdg.fsf@yhuang-dev.intel.com>
+        <877e9fahmk.fsf@yhuang-dev.intel.com>
+        <20190625142242.oxltqbj2veuckoxo@MacBook-Pro-91.local>
+        <a80ab85b-635f-90fe-24da-5f746c613811@intel.com>
+        <20190626031726.dd457kxc3zyuekyf@MacBook-Pro-91.local>
+        <a8cd42e0-339d-f8a7-40f7-bc0cd4fe9bff@intel.com>
+        <87pnml0zrk.fsf@yhuang-dev.intel.com>
+Date:   Mon, 22 Jul 2019 16:03:09 +0800
+In-Reply-To: <87pnml0zrk.fsf@yhuang-dev.intel.com> (Ying Huang's message of
+        "Mon, 8 Jul 2019 15:08:31 +0800")
+Message-ID: <874l3ebio2.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 22 Jul 2019 08:02:24 +0000 (UTC)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:21:59PM +0800, Jason Wang wrote:
-> 
-> On 2019/7/21 下午6:02, Michael S. Tsirkin wrote:
-> > On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
-> > > syzbot has bisected this bug to:
-> > > 
-> > > commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
-> > > Author: Jason Wang <jasowang@redhat.com>
-> > > Date:   Fri May 24 08:12:18 2019 +0000
-> > > 
-> > >      vhost: access vq metadata through kernel virtual address
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
-> > > start commit:   6d21a41b Add linux-next specific files for 20190718
-> > > git tree:       linux-next
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
-> > > 
-> > > Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
-> > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
-> > > address")
-> > > 
-> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > 
-> > OK I poked at this for a bit, I see several things that
-> > we need to fix, though I'm not yet sure it's the reason for
-> > the failures:
-> > 
-> > 
-> > 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
-> >     That's just a bad hack,
-> 
-> 
-> This is used to avoid holding lock when checking whether the addresses are
-> overlapped. Otherwise we need to take spinlock for each invalidation request
-> even if it was the va range that is not interested for us. This will be very
-> slow e.g during guest boot.
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-KVM seems to do exactly that.
-I tried and guest does not seem to boot any slower.
-Do you observe any slowdown?
+> Rong Chen <rong.a.chen@intel.com> writes:
+>
+>> On 6/26/19 11:17 AM, Josef Bacik wrote:
+>>> On Wed, Jun 26, 2019 at 10:39:36AM +0800, Rong Chen wrote:
+>>>> On 6/25/19 10:22 PM, Josef Bacik wrote:
+>>>>> On Fri, Jun 21, 2019 at 08:48:03AM +0800, Huang, Ying wrote:
+>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>>>
+>>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>>>>
+>>>>>>>> Hi, Josef,
+>>>>>>>>
+>>>>>>>> kernel test robot <rong.a.chen@intel.com> writes:
+>>>>>>>>
+>>>>>>>>> Greeting,
+>>>>>>>>>
+>>>>>>>>> FYI, we noticed a -11.7% regression of aim7.jobs-per-min due to commit:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> commit: c8eaeac7b734347c3afba7008b7af62f37b9c140 ("btrfs: reserve
+>>>>>>>>> delalloc metadata differently")
+>>>>>>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>>>>>>>>
+>>>>>>>>> in testcase: aim7
+>>>>>>>>> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @
+>>>>>>>>> 3.00GHz with 384G memory
+>>>>>>>>> with following parameters:
+>>>>>>>>>
+>>>>>>>>> 	disk: 4BRD_12G
+>>>>>>>>> 	md: RAID0
+>>>>>>>>> 	fs: btrfs
+>>>>>>>>> 	test: disk_rr
+>>>>>>>>> 	load: 1500
+>>>>>>>>> 	cpufreq_governor: performance
+>>>>>>>>>
+>>>>>>>>> test-description: AIM7 is a traditional UNIX system level benchmark
+>>>>>>>>> suite which is used to test and measure the performance of multiuser
+>>>>>>>>> system.
+>>>>>>>>> test-url: https://sourceforge.net/projects/aimbench/files/aim-suite7/
+>>>>>>>> Here's another regression, do you have time to take a look at this?
+>>>>>>> Ping
+>>>>>> Ping again ...
+>>>>>>
+>>>>> Finally got time to look at this but I can't get the reproducer to work
+>>>>>
+>>>>> root@destiny ~/lkp-tests# bin/lkp run ~/job-aim.yaml
+>>>>> Traceback (most recent call last):
+>>>>>           11: from /root/lkp-tests/bin/run-local:18:in `<main>'
+>>>>>           10: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>>            9: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>>            8: from /root/lkp-tests/lib/yaml.rb:5:in `<top (required)>'
+>>>>>            7: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>>            6: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>>            5: from /root/lkp-tests/lib/common.rb:9:in `<top (required)>'
+>>>>>            4: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>>            3: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>>            2: from /root/lkp-tests/lib/array_ext.rb:3:in `<top (required)>'
+>>>>>            1: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+>>>>> /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require': cannot load such file -- active_support/core_ext/enumerable (LoadError)
+>>>> Hi Josef,
+>>>>
+>>>> I tried the latest lkp-tests, and didn't have the problem. Could you please
+>>>> update the lkp-tests repo and run "lkp install" again?
+>>>>
+>>> I updated it this morning, and I just updated it now, my tree is on
+>>>
+>>> 2c5b1a95b08dbe81bba64419c482a877a3b424ac
+>>>
+>>> lkp install says everything is installed except
+>>>
+>>> No match for argument: libipc-run-perl
+>>
+>> I've just fixed it. could you add "libipc-run-perl: perl-IPC-Run" to
+>> the end of distro/adaptation/fedora?
+>>
+>> Thanks,
+>> Rong Chen
+>>
+>>
+>>>
+>>> and it still doesn't run properly.  Thanks,
+>
+> Hi, Josef,
+>
+> Do you have time to try it again?  The latest lkp-tests code has the fix merged.
 
-Now I took a hard look at the uaddr hackery it really makes
-me nervious. So I think for this release we want something
-safe, and optimizations on top. As an alternative revert the
-optimization and try again for next merge window.
+Ping...
 
-
--- 
-MST
+Best Regards,
+Huang, Ying
