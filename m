@@ -2,156 +2,152 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C80C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746E0C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D26F522296
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF2121BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1V9ILuF"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="XI2HK1hY";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZI6epbgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfGVHGZ (ORCPT
+        id S1727624AbfGVHHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:06:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46085 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbfGVHGZ (ORCPT
+        Mon, 22 Jul 2019 03:07:46 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:58572 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727222AbfGVHHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:06:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so38113319wru.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7AKc4S2JdeQQN46PQF2XtG4Lb0wPXYNR/5uOmrJuwCI=;
-        b=n1V9ILuFGiEzUzu6vh751kEk3R4i+V91IXoSJlqrNELQuIg9OTOSXjvfRoFZMI+qUD
-         sOseYkxLIKd4eQl8a5NQ/NwTMJP+faWHBKb6arB5aWYQJ8Hk5Is5HkhGPzTSghZ2fzld
-         f4fU6UER4R681nXx7VKwHMCTJ6SR5cOEOzzGx/7wTBJejfu/IrYARxwWYhUnSkEpzo+l
-         Y2mV85siW50mM8hUNQWpTxhJw4ZqqcVhgG4ouq3XWIRjDymNdHITh9h62hFuRGkOvL9O
-         sLwaogitA6gF7TXq0HTDti5ZkYFk+g2ITjoZR8ThP5JY3QAnhjju10fFUm313K4f4CEs
-         eTFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7AKc4S2JdeQQN46PQF2XtG4Lb0wPXYNR/5uOmrJuwCI=;
-        b=ltjYAFajaD42dV3kfB+K6NyGMSgOx550lKjTxqJXXLvBSaAAPikNAqdC2s8sVpEZv0
-         93x52xttL4C/bl9ykxf1VNl3oOcQNy084ogC5FFoHAzCTERu/z2vFuVDPYa+2ZG6k6Ij
-         gy4ESOzraJkyp5uiadA/qF9JjhLKxf44DpSso36MDvrS4WLqR4BT0RlZc/9yLh1fPOZ0
-         AHDsexuzYKdO0da6e5tqvKo+sNLdkVYqZpQ1FR9r/CKdBhPRKmNUecsukGylGDzBEnB9
-         dYtLcJpJJQ1+d+QzEhVRFpbs/opzFgKEFCdVEAWEPPLUC3GzGdtxrTYPyHK3WRRPyG0W
-         NAgQ==
-X-Gm-Message-State: APjAAAUuo5z22kZ95qAQeGtSbBHm7Yv1f5dKxWaIGpA72VnSD4wPFagc
-        oLfWlklMKtlFimeXVGipdg89Fw==
-X-Google-Smtp-Source: APXvYqz1zNy/Suaraf0jDlZuuwYJiXQboZhBofok0+Dw6tTV/c6MAxCe+hyhocPGQ96oLQ/5Yf2ZSA==
-X-Received: by 2002:a5d:4211:: with SMTP id n17mr4118838wrq.137.1563779182766;
-        Mon, 22 Jul 2019 00:06:22 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id k17sm42778533wrq.83.2019.07.22.00.06.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jul 2019 00:06:22 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 08:06:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v4 0/4] Add a generic driver for LED-based backlight
-Message-ID: <20190722070620.GD8402@dell>
-References: <20190717141514.21171-1-jjhiblot@ti.com>
- <283d9044-df2d-b176-bea9-7e1520d9cf56@gmail.com>
+        Mon, 22 Jul 2019 03:07:46 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6M755IX008859;
+        Mon, 22 Jul 2019 00:07:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=proofpoint;
+ bh=t9AbwECXfbv88byPQQ27afOo04WT9VATBZioP8DZL/0=;
+ b=XI2HK1hYuBf5NRJCB+3PTOyuZ688A61yeIOQQjzZas1UBXl5GgahpKH5DScHdCd4uFfK
+ 6v/Q8ECmXOZJgp7r8BEjqOg3HYDTlJiIl+l0Cc+ZR5fq43MX1TBkCC/yI9jMzWvv9LHU
+ oLGIFwsevWqclrF1fGbqFJkstS3jaSFC89zuwCmRhkV0drg8CZTwxuLxzOnlIZkU62Zx
+ GLrFXOT3vFgXXToRZJdDsrJgK++Ifiz6TPsecIpUTs3JNCGjAFGd1Kzx/IwSMAGHdl4I
+ OY93cVt6qoIekmY+EQrYYsAPzHX9w/MC8fQU+WthL82/QnKti64u67ALkpwKz0Kb6HWE 6A== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=jank@cadence.com
+Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2052.outbound.protection.outlook.com [104.47.42.52])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2tuxhwdt2t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jul 2019 00:07:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OB5ARnEbx3FSqlg6Fw/Dk8yTZ1Jq0PeJKXI65CzRGLN4uKg74DRQGhW1+skn1JDhUoKYsa3lJlulvf+hY+iTGD8UIC47BGtKjH9coA99dmpRs1CiYoSw82fQBrkIRUSELDsNWLBz/2x5OKfHD9qpKDWM8IiGs1fzS5tw0+qTMmoCWQN1qkLI/Pum2TwPXx8TODxLxfstchEvRUOJhyXxZSDaQhfqHqDkNID5HoP18VYErYOXZMMC8FiXOhphZq4IXwAwOLplq/8TxvShYyDPd/Oba+cr4ZOpofAtEzW10gH+tiZKtZzYs1Nfx1qTyXN9XCEpyXyC7Wy32CxhDJMZAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t9AbwECXfbv88byPQQ27afOo04WT9VATBZioP8DZL/0=;
+ b=aZkezevFAUFOk8efffN6PRuDoLkT3+2fJZav+Wyuki7YPZEsCE2Rh/ElI5BFkj+St5FR0qSqviZK9SyLzl1fnYRFmZmdjSHUyTu3eMCheisDLkPIofFI/nGJOYo9LpN9qTs/IS+V0DKTfdQAd1gt/3YdxbyA91T2nfiBci8aMflKAGCG85knXHkKvUFsFzpcGqtBjlDWWqjh5kLrlQcny5W2sMm8+tkgf3NLxggML/P/e7NPBjjzFIEqnBncLcN2VFftt4j+hSSZrZ0XpmnBDaCBmwMK7IXdNgw0T5fwMXKXcLLlv0s7uzTMxkOM/SgsgXEdjQ3X9BDbSsy+4nwaQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=cadence.com;dmarc=pass action=none
+ header.from=cadence.com;dkim=pass header.d=cadence.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t9AbwECXfbv88byPQQ27afOo04WT9VATBZioP8DZL/0=;
+ b=ZI6epbgGsnB/VgdjJzZfDu3urK7/ewB//iGwQB4pqicd1cLYJ3aHCCpawbvhv8OYGTTzElQLddNDiD77mpC7EvuSL6BH8AD/wVzNqTM2pEui4aHcZzU/+CD/iOSvU/4JMMBuoN9MAPWs7kd/N0B+FyzAHGhN0XsLwNbpAUrRZag=
+Received: from CY1PR07MB2521.namprd07.prod.outlook.com (10.167.16.12) by
+ CY1PR07MB2729.namprd07.prod.outlook.com (10.166.205.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Mon, 22 Jul 2019 07:07:33 +0000
+Received: from CY1PR07MB2521.namprd07.prod.outlook.com
+ ([fe80::ac78:3ee1:c7d6:763]) by CY1PR07MB2521.namprd07.prod.outlook.com
+ ([fe80::ac78:3ee1:c7d6:763%6]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
+ 07:07:33 +0000
+From:   Jan Kotas <jank@cadence.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+CC:     Jan Kotas <jank@cadence.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
+Thread-Topic: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
+Thread-Index: AQHVPVo5HHj6Bdr/tkW3/v69X+Pq+qbTLtCAgAMOv4A=
+Date:   Mon, 22 Jul 2019 07:07:33 +0000
+Message-ID: <AF5297BE-EE52-4652-8DE6-6A3F4E855480@global.cadence.com>
+References: <20190718111509.29924-1-jank@cadence.com>
+ <20190718111509.29924-4-jank@cadence.com>
+ <20190720082559.pk3odkf5hztgvpif@flea>
+In-Reply-To: <20190720082559.pk3odkf5hztgvpif@flea>
+Accept-Language: en-US, pl-PL
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 941bf537-491b-4fe3-a273-08d70e734509
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY1PR07MB2729;
+x-ms-traffictypediagnostic: CY1PR07MB2729:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <CY1PR07MB2729192665F94334D5B66FA2D0C40@CY1PR07MB2729.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 01068D0A20
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(36092001)(199004)(189003)(66446008)(6506007)(53546011)(86362001)(64756008)(66476007)(66556008)(102836004)(76176011)(186003)(5660300002)(256004)(26005)(53936002)(6246003)(6306002)(6512007)(66946007)(91956017)(76116006)(11346002)(446003)(476003)(4326008)(2906002)(486006)(14454004)(966005)(478600001)(68736007)(81156014)(81166006)(6436002)(8936002)(25786009)(66066001)(7736002)(305945005)(6916009)(6116002)(3846002)(229853002)(8676002)(33656002)(316002)(54906003)(99286004)(71190400001)(71200400001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR07MB2729;H:CY1PR07MB2521.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e21DDOPG/Lb1LCK6O2soV8zji39ADUpbBknCkEGd77e2KAr/auHoRBaEdVkouQgKtDcLx08Uo8RmbE8iiucvOqATRQ2+FXMWYp04VyXjZOJp94sMv8gUtMBxnnsqn1HO8Jaw67k2uI3x9RyTUuJFVjzIFKavX3iyBHBe63hNThtwBQDEj95PYGHADeXypRLU8+FvW8He/e0K7Hd9BVT9qyoXCckA72COUCSSQUh8NUSq8s1FSCX6nKvAwudqoj3qvg7+cJMRguKEK87pvH+UusH59OI+qAChjxe1l2ajynwP5BoHeJVhcMmHQ8HAXfKTrbZ9NnD8mTi09vM2GHs2EuGymRdAdhoGNli5xpPSmhH5y2fYamsSejchu8mYee1jWqmaxciewyxJfYsVycJ3Ab2A1zPRInelFbHbF8jJqwc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73B7B35BAB48B647A849C30917595FFE@namprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <283d9044-df2d-b176-bea9-7e1520d9cf56@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 941bf537-491b-4fe3-a273-08d70e734509
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 07:07:33.7140
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jank@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR07MB2729
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-22_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=832 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907220085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019, Jacek Anaszewski wrote:
-
-> On 7/17/19 4:15 PM, Jean-Jacques Hiblot wrote:
-> > This series aims to add a led-backlight driver, similar to pwm-backlight,
-> > but using a LED class device underneath.
-> > 
-> > A few years ago (2015), Tomi Valkeinen posted a series implementing a
-> > backlight driver on top of a LED device:
-> > https://patchwork.kernel.org/patch/7293991/
-> > https://patchwork.kernel.org/patch/7294001/
-> > https://patchwork.kernel.org/patch/7293981/
-> > 
-> > The discussion stopped because Tomi lacked the time to work on it.
-> > 
-> > changes in v4:
-> > - fix dev_err() messages and commit logs following the advices of Pavel
-> > - cosmetic changes (indents, getting rid of  "? 1 : 0" in
-> >   led_match_led_node())
-> > 
-> > changes in v3:
-> > - dt binding: don't limit the brightness range to 0-255. Use the range of
-> >   the underlying LEDs. as a side-effect, all LEDs must now have the same
-> >   range
-> > - driver: Adapt to dt binding update.
-> > - driver: rework probe() for clarity and remove the remaining goto.
-> > 
-> > changes in v2:
-> > - handle more than one LED.
-> > - don't make the backlight device a child of the LED controller.
-> > - make brightness-levels and default-brightness-level optional
-> > - removed the option to use a GPIO enable.
-> > - removed the option to use a regulator. It should be handled by the LED
-> >   core
-> > - don't make any change to the LED core (not needed anymore)
-> > 
-> > Jean-Jacques Hiblot (2):
-> >   leds: Add managed API to get a LED from a device driver
-> >   dt-bindings: backlight: Add led-backlight binding
-> > 
-> > Tomi Valkeinen (2):
-> >   leds: Add of_led_get() and led_put()
-> >   backlight: add led-backlight driver
-> > 
-> >  .../bindings/leds/backlight/led-backlight.txt |  28 ++
-> >  drivers/leds/led-class.c                      |  92 ++++++
-> >  drivers/video/backlight/Kconfig               |   7 +
-> >  drivers/video/backlight/Makefile              |   1 +
-> >  drivers/video/backlight/led_bl.c              | 268 ++++++++++++++++++
-> >  include/linux/leds.h                          |   6 +
-> >  6 files changed, 402 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> >  create mode 100644 drivers/video/backlight/led_bl.c
-> > 
-> 
-> For the whole set:
-> 
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> 
-> Lee - we need to create immutable branch for this set since there will
-> be some interfering changes in the LED core in this cycle.
-> 
-> I can create the branch and send the pull request once we will
-> obtain the ack from Rob for DT bindings, unless you have other
-> preference.
-
-We also require a review to be conducted by Daniel Thompson.
-
-After which, an immutable branch sounds like a good idea.  I'd like to
-create this myself if you don't mind.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+DQoNCj4gT24gMjAgSnVsIDIwMTksIGF0IDEwOjI1LCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
+YXJkQGJvb3RsaW4uY29tPiB3cm90ZToNCj4gDQo+IEhpLA0KPiANCj4gT24gVGh1LCBKdWwgMTgs
+IDIwMTkgYXQgMTI6MTU6MDlQTSArMDEwMCwgSmFuIEtvdGFzIHdyb3RlOg0KPj4gCS8qIFB1dCBv
+dXIgbGFuZXMgKGNsb2NrIGFuZCBkYXRhKSBvdXQgb2YgcmVzZXQgKi8NCj4+IAlyZWcgPSBDU0ky
+VFhfRFBIWV9DRkdfQ0xLX1JFU0VUIHwgQ1NJMlRYX0RQSFlfQ0ZHX01PREVfTFBEVDsNCj4+IAlm
+b3IgKGkgPSAwOyBpIDwgY3NpMnR4LT5udW1fbGFuZXM7IGkrKykNCj4+IC0JCXJlZyB8PSBDU0ky
+VFhfRFBIWV9DRkdfTEFORV9SRVNFVChjc2kydHgtPmxhbmVzW2ldKTsNCj4+ICsJCXJlZyB8PSBD
+U0kyVFhfRFBIWV9DRkdfTEFORV9SRVNFVChjc2kydHgtPmxhbmVzW2ldIC0gMSk7DQo+IA0KPiBU
+aGlzIGxvb2tzIGxpa2UgYSBzZXBhcmF0ZSBjaGFuZ2U/DQo+IA0KPj4gCXdyaXRlbChyZWcsIGNz
+aTJ0eC0+YmFzZSArIENTSTJUWF9EUEhZX0NGR19SRUcpOw0KPj4gDQo+PiAtCXVkZWxheSgxMCk7
+DQo+PiArCWNzaTJ0eF9kcGh5X2luaXRfZmluaXNoKGNzaTJ0eCwgcmVnKTsNCj4+ICt9DQo+PiAN
+Cj4+IC0JLyogRW5hYmxlIG91ciAoY2xvY2sgYW5kIGRhdGEpIGxhbmVzICovDQo+PiAtCXJlZyB8
+PSBDU0kyVFhfRFBIWV9DRkdfQ0xLX0VOQUJMRTsNCj4+IC0JZm9yIChpID0gMDsgaSA8IGNzaTJ0
+eC0+bnVtX2xhbmVzOyBpKyspDQo+PiAtCQlyZWcgfD0gQ1NJMlRYX0RQSFlfQ0ZHX0xBTkVfRU5B
+QkxFKGNzaTJ0eC0+bGFuZXNbaV0pOw0KPiANCj4gQW5kIHlvdSBoYXZlIGEgc2ltaWxhciBjaGFu
+Z2UgaGVyZSB0aGF0IHNob3VsZCBiZSBpbiBhIHNlcGFyYXRlIHBhdGNoLA0KPiB3aXRoIGEgcHJv
+cGVyIGV4cGxhbmF0aW9uLg0KPiANCj4gT3RoZXJ3aXNlLCB0aGUgcmVzdCBsb29rcyBnb29kLg0K
+DQpPSywgSeKAmWxsIGNyZWF0ZSBhIHNlcGFyYXRlIHBhdGNoIHdpdGggdGhpcyBtb2RpZmljYXRp
+b24uDQpKYW4NCg0KPiBNYXhpbWUNCj4gDQo+IC0tDQo+IE1heGltZSBSaXBhcmQsIEJvb3RsaW4N
+Cj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRwczovL2Jvb3Rs
+aW4uY29tDQoNCg==
