@@ -2,45 +2,44 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5217C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B549C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78A9218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D6220665
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfGVMZT (ORCPT
+        id S1729084AbfGVM0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:25:19 -0400
-Received: from relay.sw.ru ([185.231.240.75]:41606 "EHLO relay.sw.ru"
+        Mon, 22 Jul 2019 08:26:07 -0400
+Received: from relay.sw.ru ([185.231.240.75]:41638 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfGVMZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:25:19 -0400
+        id S1727040AbfGVM0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:26:07 -0400
 Received: from [172.16.25.12]
         by relay.sw.ru with esmtp (Exim 4.92)
         (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hpXNO-0001ko-UQ; Mon, 22 Jul 2019 15:25:11 +0300
-Subject: Re: [PATCH] ubsan: build ubsan.c more conservatively
-To:     Arnd Bergmann <arnd@arndb.de>, akpm@linux-foundation.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        Sodagudi Prasad <psodagud@codeaurora.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20190722091050.2188664-1-arnd@arndb.de>
+        id 1hpXOG-0001lV-Ct; Mon, 22 Jul 2019 15:26:04 +0300
+Subject: Re: [PATCH] [v3] page flags: prioritize kasan bits over last-cpuid
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+References: <20190722115520.3743282-1-arnd@arndb.de>
 From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <c7da8503-93bc-c130-2e50-918996abe6c7@virtuozzo.com>
-Date:   Mon, 22 Jul 2019 15:25:12 +0300
+Message-ID: <40fa8d23-e53e-48c3-a2d9-1d1f8ecee0c1@virtuozzo.com>
+Date:   Mon, 22 Jul 2019 15:26:07 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190722091050.2188664-1-arnd@arndb.de>
+In-Reply-To: <20190722115520.3743282-1-arnd@arndb.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,56 +50,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/22/19 12:10 PM, Arnd Bergmann wrote:
-> objtool points out several conditions that it does not like, depending
-> on the combination with other configuration options and compiler
-> variants:
+On 7/22/19 2:55 PM, Arnd Bergmann wrote:
+> ARM64 randdconfig builds regularly run into a build error, especially
+> when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
 > 
-> stack protector:
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
+>  #error "KASAN: not enough bits in page flags for tag"
 > 
-> stackleak plugin:
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+> The last-cpuid bits are already contitional on the available space,
+> so the result of the calculation is a bit random on whether they
+> were already left out or not.
 > 
-> kasan:
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
-> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
+> Adding the kasan tag bits before last-cpuid makes it much more likely
+> to end up with a successful build here, and should be reliable for
+> randconfig at least, as long as that does not randomize NR_CPUS
+> or NODES_SHIFT but uses the defaults.
 > 
-> The stackleak and kasan options just need to be disabled for this file
-> as we do for other files already. For the stack protector, we already
-> attempt to disable it, but this fails on clang because the check is
-> mixed with the gcc specific -fno-conserve-stack option, so we need to
-> test them separately.
+> In order for the modified check to not trigger in the x86 vdso32 code
+> where all constants are wrong (building with -m32), enclose all the
+> definitions with an #ifdef.
 > 
-> Fixes: 42440c1f9911 ("lib/ubsan: add type mismatch handler for new GCC/Clang")
-
-There was no uaccess validataion at that time, so the right fixes line is probably this:
-
-Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
-
-> Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
-> Cc: stable@vger.kernel.org
+> Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
+> Link: https://lore.kernel.org/lkml/20190618095347.3850490-1-arnd@arndb.de/
+> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  lib/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 095601ce371d..320e3b632dd3 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -279,7 +279,8 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string.o
->  obj-$(CONFIG_UBSAN) += ubsan.o
->  
->  UBSAN_SANITIZE_ubsan.o := n
-> -CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-> +KASAN_SANITIZE_ubsan.o := n
-> +CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack) $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
 
-$(call cc-option, -fno-conserve-stack) can be removed entirely. It's just copy paste from kasan Makefile.
-It was added in kasan purely for performance reasons.
-
-Not sure that it's needed even in kasan Makefile, the code which was
-the reason for adding fno-conserve-stack might not get into the final version of KASAN patches.
+Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
