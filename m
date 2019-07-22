@@ -2,102 +2,80 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB326C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1825C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4F721985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UekWyx7k"
+	by mail.kernel.org (Postfix) with ESMTP id 68DA121985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563834269;
+	bh=RUAzHw0HpGhBGFpbCBz+OfMJci0eEv0tJXsUiAyM2b4=;
+	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
+	b=yONfOFYi2PzTLoj/S5WhR9nh1QOgITp+tWg4UlgPmByVrPJ3rXJgCH92A2NwKlV0W
+	 U6f39+1X3o/Q/qWQ/CUUmicCu2QGfGezvPzKI3vNsQFMFmqiSUt52V0eEFRVZ8HLZu
+	 fENVp81B1ju6CRGLRsOJrOT6a0sfV9fDg3V+6API=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733092AbfGVWXK (ORCPT
+        id S1733105AbfGVWY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:23:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52619 "EHLO ozlabs.org"
+        Mon, 22 Jul 2019 18:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfGVWXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:23:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726544AbfGVWY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 18:24:27 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45sx2L3hTyz9s8m;
-        Tue, 23 Jul 2019 08:23:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563834187;
-        bh=bMh3qU2PDCWNtEpKX7nuGKJnWnSwXYOvRFXJCbytzOA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UekWyx7kAiEFv0BZDBKPNF4ZjaVEdNtJBX10Uc29aD7wBbeq8qYyqILXxtnvh6M5A
-         37RbFWfPTJCuYExLNiM5KcrlrtZL+w3fuWFFKh22G2nkDJ6XeaiJBzwwOSFIzEfF0e
-         B9OzRYczNSmN1Qj8b59Kg01PJhY4/JMkTmAAqHcwDZqBa0IajsgVw3JoZgCJ/k89Xz
-         IZ1jz7BpS8oEcpn7sn4Pbez2H8L8tvdNL4ZMG90iE83O/ioEIsyygTXkDQrPzePf4D
-         i7wJY1GPdmIsAcRWSh842vu1RGQ9HdgWy5de3CcEPAtX+vQIMdMZIgp5u4zrHL8j+N
-         l6LWrJEfG1ISg==
-Date:   Tue, 23 Jul 2019 08:22:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: linux-next: build warning after merge of the char-misc.current tree
-Message-ID: <20190723082253.33b55afe@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4980221985;
+        Mon, 22 Jul 2019 22:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563834266;
+        bh=RUAzHw0HpGhBGFpbCBz+OfMJci0eEv0tJXsUiAyM2b4=;
+        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
+        b=07kCOgSUTdS6inhLNy0uXWAxPcaTixm+GwHsak258pxkb3aHsqvt495qaSZND9jWM
+         +6w2jVAkrag/ewmWIj0rrqBY29HHLqQlLv3Bs59eHQaatcXVMDRt7tjMpaFJaTBraH
+         d+riC4kTN0Uidc088dIa2S4lE1V79WAKBrEqCQjk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/g2ghnbiKxLvjyzxIm.zDC33";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a92ca50d-b33e-8779-294c-301535d0f0d5@wanadoo.fr>
+References: <20190701165020.19840-1-colin.king@canonical.com> <20190722212414.6EF8D21900@mail.kernel.org> <d1cd2b10-8fd4-f224-3bcd-5b938f72d249@wanadoo.fr> <20190722215314.9F4F121951@mail.kernel.org> <a92ca50d-b33e-8779-294c-301535d0f0d5@wanadoo.fr>
+Subject: Re: [PATCH][next] clk: Si5341/Si5340: remove redundant assignment to n_den
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Colin King <colin.king@canonical.com>,
+        linux-clk@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 22 Jul 2019 15:24:25 -0700
+Message-Id: <20190722222426.4980221985@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/g2ghnbiKxLvjyzxIm.zDC33
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Quoting Christophe JAILLET (2019-07-22 15:00:24)
+>
+> I don't use it explicitly, but the suggestions I get include some git=20
+> history, so I guess that it is on by default.
+>=20
+> I was thinking at parsing files to see if MODULE_AUTHOR includes an email.
+>=20
 
-Hi all,
+Ok. Feel free to write a patch. Just know that MODULE_AUTHOR isn't
+always there so it's not a substitute for looking at git history or git
+blame to figure out who wrote the code.
 
-After merging the char-misc.current tree, today's linux-next build
-(arm multi_v7_defconfig) produced this warning:
+I suspect it's better to try to work on code and infrastructure to make
+these sorts of patches and questions irrelevant by detecting these
+problems before the code is merged, instead of after, by trawling the
+mailing lists and trying to apply patches and test them for common
+problems and then notifying the people working on the code. I don't have
+unlimited time in my life, so getting patches like this just makes me
+spend more time doing mundane tasks I don't want to do.
 
-In file included from drivers/base/firmware_loader/main.c:41:
-drivers/base/firmware_loader/firmware.h:145:12: warning: 'fw_map_paged_buf'=
- defined but not used [-Wunused-function]
- static int fw_map_paged_buf(struct fw_priv *fw_priv) { return -ENXIO; }
-            ^~~~~~~~~~~~~~~~
-drivers/base/firmware_loader/firmware.h:144:12: warning: 'fw_grow_paged_buf=
-' defined but not used [-Wunused-function]
- static int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed) { =
-return -ENXIO; }
-            ^~~~~~~~~~~~~~~~~
+TL;DR: Please help automate this sort of stuff!
 
-Introduced by commit
-
-  c8917b8ff09e ("firmware: fix build errors in paged buffer handling code")
-
-These need to be inline (as well as static) ... :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/g2ghnbiKxLvjyzxIm.zDC33
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02Nz0ACgkQAVBC80lX
-0GyUuQf+NSccSUGLPC0eMEKL4nOrSREHMTHzhZYWfkZ3Qi1SAX9FjPpgCNXL6iPh
-Vb/b41jJBU/phXppk59gTC+g5F+tMoC7CC2G4bP8eP8OICmv2GmNXLWSaqbw2nzV
-R13qG2zAhZHTcBADHdDigQOeEuB9eXYzbDZvKxHuj4AEzed5OpwjTXR0ZLZip6Nt
-MAZ+b5tX3H1cd5q92iZQcSb1T0Sp4wbYN27eiElDSNNN/pQBJ9mHNUqdBSrhWvNh
-TP5cK0S+LlLUTKquEXkXbBsxWCXkJ+825B3uPBH7cPhq0GjkKEnW5hK5qrsSqh4u
-+MHXBfRjSHPV5739g5wkhDYQ83CWXg==
-=jI9h
------END PGP SIGNATURE-----
-
---Sig_/g2ghnbiKxLvjyzxIm.zDC33--
