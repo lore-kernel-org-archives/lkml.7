@@ -3,101 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8695C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1178CC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0363217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40B6217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfGVKPT (ORCPT
+        id S1729239AbfGVKRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 06:15:19 -0400
-Received: from ozlabs.org ([203.11.71.1]:56773 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfGVKPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:15:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45sctX3vfqz9s3l;
-        Mon, 22 Jul 2019 20:15:16 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Segher Boessenkool <segher@kernel.crashing.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
-In-Reply-To: <20190721180150.GN20882@gate.crashing.org>
-References: <c6ff2faba7fbb56a7f5b5f08cd3453f89fc0aaf4.1557480165.git.christophe.leroy@c-s.fr> <45hnfp6SlLz9sP0@ozlabs.org> <20190708191416.GA21442@archlinux-threadripper> <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr> <20190709064952.GA40851@archlinux-threadripper> <20190719032456.GA14108@archlinux-threadripper> <20190719152303.GA20882@gate.crashing.org> <20190719160455.GA12420@archlinux-threadripper> <20190721075846.GA97701@archlinux-threadripper> <20190721180150.GN20882@gate.crashing.org>
-Date:   Mon, 22 Jul 2019 20:15:14 +1000
-Message-ID: <87imru74ul.fsf@concordia.ellerman.id.au>
+        Mon, 22 Jul 2019 06:17:10 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45490 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728569AbfGVKRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 06:17:09 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s22so28165276qkj.12;
+        Mon, 22 Jul 2019 03:17:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7CJkKA7SZFRonSxwlZKyw8W6pgs5EdX5dwdC50uPvBs=;
+        b=IfyEGn1teOvseGqamLGm6eYMrp4kEADYmxLmuf3lwn47e7irJLZzzSadD5rA/AIBI9
+         goH41xTw+8mHRl1BZvXsR//j0Bkx/qgpjDwxg+U0Sgv/xiZjg8KtvmyTZALR9IWcaIXV
+         CkKHYuQh8zqpoaziifRWNQJj6IFlA4GCuNLjekCgFw/JORcJrYdvAW9z1V4W6KoM1wwm
+         VULx2b8vVGz68sAMPswtsad+XUrTWq6NgpiZCM1ZVw4TMgy/CGbdJbHgWLP86SU1dGvd
+         Z5pyX3CkxJbOlpaYN+NcMGuBrk11hsJl17wOl6wns3nwJxlMqgXlSlT1u12RZg1yhaEA
+         FtQA==
+X-Gm-Message-State: APjAAAXq6SoJbRtNpNdtsju6Iqd40f0IQCjpznLrKw1xRcgd1JB/roKO
+        6vLan+lWSBG81Y9PJP7R6HGzDTE7JDS31A46Yqg=
+X-Google-Smtp-Source: APXvYqy7ISax661sJxUrp3WbLhv5BC0kus4uGgZKznelHiJHcAGScOZIvY+BAP14dw/qwJzgUC+dnqfk8j1fG+ylzm4=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr44360140qka.138.1563790627957;
+ Mon, 22 Jul 2019 03:17:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190628123819.2785504-1-arnd@arndb.de> <20190628123819.2785504-4-arnd@arndb.de>
+ <alpine.LFD.2.21.1906302308280.3788@ja.home.ssi.bg>
+In-Reply-To: <alpine.LFD.2.21.1906302308280.3788@ja.home.ssi.bg>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 22 Jul 2019 12:16:51 +0200
+Message-ID: <CAK8P3a03wShPgL85K-0W3UUc3QJWLbbs+ZVAnkKLkqg00vVehw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ipvs: reduce kernel stack usage
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Networking <netdev@vger.kernel.org>, lvs-devel@vger.kernel.org,
+        netfilter-devel <netfilter-devel@vger.kernel.org>,
+        coreteam@netfilter.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Segher Boessenkool <segher@kernel.crashing.org> writes:
-> On Sun, Jul 21, 2019 at 12:58:46AM -0700, Nathan Chancellor wrote:
->> I have attached the disassembly of arch/powerpc/kernel/mem.o with
->> clear_page (working) and broken_clear_page (broken), along with the side
->> by side diff. My assembly knowledge is fairly limited as it stands and
->> it is certainly not up to snuff on PowerPC so I have no idea what I am
->> looking for. Please let me know if anything immediately looks off or if
->> there is anything else I can do to help out.
+On Sun, Jun 30, 2019 at 10:37 PM Julian Anastasov <ja@ssi.bg> wrote:
+> On Fri, 28 Jun 2019, Arnd Bergmann wrote:
+
+> >       struct ip_vs_conn *ctl_cp = cp->control;
+> >       if (!ctl_cp) {
+> > -             IP_VS_ERR_BUF("request control DEL for uncontrolled: "
+> > -                           "%s:%d to %s:%d\n",
+> > -                           IP_VS_DBG_ADDR(cp->af, &cp->caddr),
+> > -                           ntohs(cp->cport),
+> > -                           IP_VS_DBG_ADDR(cp->af, &cp->vaddr),
+> > -                           ntohs(cp->vport));
+> > +             pr_err("request control DEL for uncontrolled: "
+> > +                    "%pISp to %pISp\n",
+
+(replying a bit late)
+
+>         ip_vs_dbg_addr() used compact form (%pI6c), so it would be
+> better to use %pISc and %pISpc everywhere in IPVS...
+
+done
+
+>         Also, note that before now port was printed with %d and
+> ntohs() was used, now port should be in network order, so:
 >
-> You might want to use a disassembler that shows most simplified mnemonics,
-> and you crucially should show the relocations.  "objdump -dr" works nicely.
->
->> 0000017c clear_user_page:
->>      17c: 38 80 00 80                  	li 4, 128
->>      180: 7c 89 03 a6                  	mtctr 4
->>      184: 7c 00 1f ec                  	dcbz 0, 3
->>      188: 38 63 00 20                  	addi 3, 3, 32
->>      18c: 42 00 ff f8                  	bdnz .+65528
->
-> That offset is incorrectly disassembled, btw (it's a signed field, not
-> unsigned).
->
->> 0000017c clear_user_page:
->>      17c: 94 21 ff f0                  	stwu 1, -16(1)
->>      180: 38 80 00 80                  	li 4, 128
->>      184: 38 63 ff e0                  	addi 3, 3, -32
->>      188: 7c 89 03 a6                  	mtctr 4
->>      18c: 38 81 00 0f                  	addi 4, 1, 15
->>      190: 8c c3 00 20                  	lbzu 6, 32(3)
->>      194: 98 c1 00 0f                  	stb 6, 15(1)
->>      198: 7c 00 27 ec                  	dcbz 0, 4
->>      19c: 42 00 ff f4                  	bdnz .+65524
->
-> Uh, yeah, well, I have no idea what clang tried here, but that won't
-> work.  It's copying a byte from each target cache line to the stack,
-> and then does clears the cache line containing that byte on the stack.
+> - ntohs() should be removed
 
-So it seems like this is a clang bug.
+done
 
-None of the distros we support use clang, but we would still like to
-keep it working if we can.
+> - htons() should be added, if missing. At first look, this case
+> is not present in IPVS, we have only ntohs() usage
 
-Looking at the original patch, the only upside is that the compiler
-can use both RA and RB to compute the address, rather than us forcing RA
-to 0.
+I found one case in ip_vs_ftp_in() that needs it in order to subtract one:
 
-But at least with my compiler here (GCC 8 vintage) I don't actually see
-GCC ever using both GPRs even with the patch. Or at least, there's no
-difference before/after the patch as far as I can see.
+                IP_VS_DBG(7, "protocol %s %pISpc %pISpc\n",
+                          ip_vs_proto_name(ipvsh->protocol),
+-                         IP_VS_DBG_SOCKADDR(cp->af, &to, ntohs(port)),
++                         IP_VS_DBG_SOCKADDR(cp->af, &to, port),
+                          IP_VS_DBG_SOCKADDR(cp->af, &cp->vaddr,
+-                                             ntohs(cp->vport)-1));
++                                            htons(ntohs(cp->vport)-1)));
 
-So my inclination is to revert the original patch. We can try again in a
-few years :D
+Thanks for the review, I'll send a new patch after some more
+build testing on the new version.
 
-Thoughts?
-
-cheers
+       Arnd
