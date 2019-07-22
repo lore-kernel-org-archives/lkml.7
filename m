@@ -2,56 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D0CC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA05C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2418E2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C31214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfGVP1M (ORCPT
+        id S1729055AbfGVP2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:27:12 -0400
-Received: from verein.lst.de ([213.95.11.211]:33282 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbfGVP1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:27:12 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8D99068B20; Mon, 22 Jul 2019 17:27:10 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 17:27:10 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, hch@lst.de, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size
- call
-Message-ID: <20190722152710.GB3780@lst.de>
-References: <20190722145509.1284-1-eric.auger@redhat.com> <20190722145509.1284-3-eric.auger@redhat.com>
+        Mon, 22 Jul 2019 11:28:55 -0400
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:59090 "EHLO
+        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbfGVP2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:28:54 -0400
+X-Greylist: delayed 859 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jul 2019 11:28:53 EDT
+Received: from [195.176.96.199] (helo=[10.3.5.139])
+        by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.92)
+        id 1hpaFA-0008NN-TJ; Mon, 22 Jul 2019 17:28:52 +0200
+Subject: Re: [PATCH 04/10] Protect kref_put with the lock
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Moni Shoua <monis@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
+ <20190722151426.5266-5-mplaneta@os.inf.tu-dresden.de>
+ <20190722152559.GD7607@ziepe.ca>
+From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+Message-ID: <c2fdbf86-acea-aebb-48c4-8c2f85a68978@os.inf.tu-dresden.de>
+Date:   Mon, 22 Jul 2019 17:28:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722145509.1284-3-eric.auger@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190722152559.GD7607@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:55:09PM +0200, Eric Auger wrote:
-> Do not call dma_max_mapping_size for devices that have no DMA
-> mask set, otherwise we can hit a NULL pointer dereference.
-> 
-> This occurs when a virtio-blk-pci device is protected with
-> a virtual IOMMU.
-> 
-> Fixes: e6d6dd6c875e ("virtio: Introduce virtio_max_dma_size()")
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Suggested-by: Christoph Hellwig <hch@lst.de>
 
-Looks good.  virtio maintainers, let me know if you want to queue
-it up or if I should pick the patch up through the dma-mapping tree.
+
+On 22/07/2019 17:25, Jason Gunthorpe wrote:
+> On Mon, Jul 22, 2019 at 05:14:20PM +0200, Maksym Planeta wrote:
+>> Need to ensure that kref_put does not run concurrently with the loop
+>> inside rxe_pool_get_key.
+>>
+>> Signed-off-by: Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+>>   drivers/infiniband/sw/rxe/rxe_pool.c | 18 ++++++++++++++++++
+>>   drivers/infiniband/sw/rxe/rxe_pool.h |  4 +---
+>>   2 files changed, 19 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
+>> index efa9bab01e02..30a887cf9200 100644
+>> +++ b/drivers/infiniband/sw/rxe/rxe_pool.c
+>> @@ -536,3 +536,21 @@ void *rxe_pool_get_key(struct rxe_pool *pool, void *key)
+>>   	read_unlock_irqrestore(&pool->pool_lock, flags);
+>>   	return node ? elem : NULL;
+>>   }
+>> +
+>> +static void rxe_dummy_release(struct kref *kref)
+>> +{
+>> +}
+>> +
+>> +void rxe_drop_ref(struct rxe_pool_entry *pelem)
+>> +{
+>> +	int res;
+>> +	struct rxe_pool *pool = pelem->pool;
+>> +	unsigned long flags;
+>> +
+>> +	write_lock_irqsave(&pool->pool_lock, flags);
+>> +	res = kref_put(&pelem->ref_cnt, rxe_dummy_release);
+>> +	write_unlock_irqrestore(&pool->pool_lock, flags);
+> 
+> This doesn't make sense..
+> 
+> If something is making the kref go to 0 while the node is still in the
+> RB tree then that is a bug.
+> 
+> You should never need to add locking around a kref_put.
+> 
+
+ From https://www.kernel.org/doc/Documentation/kref.txt
+
+| The last rule (rule 3) is the nastiest one to handle.  Say, for
+| instance, you have a list of items that are each kref-ed, and you wish
+| to get the first one.  You can't just pull the first item off the list
+| and kref_get() it.  That violates rule 3 because you are not already
+| holding a valid pointer.  You must add a mutex (or some other lock).
+
+
+> Jason
+> 
+
+-- 
+Regards,
+Maksym Planeta
