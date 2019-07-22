@@ -2,153 +2,308 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A2C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DAEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280D5218BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563827218;
-	bh=rj/oDMHTdc2sn0j+S9jVqwOaKC+ElFvaZ+ApNh/+vt8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rXhsDOZHbSqPkyXMO75ccoEHeWOl8+AEX3w/Kha4UA0S5XYkkafx0Vy+tTHs98uJ5
-	 XLjDzqsRySSpPaAHW6VMS4wDMqZfW3GP/gskhla0+XLmQN1MBvwCiTXRrwjUq8xW50
-	 VHy34GEYkf/xHoF5sC25CZKOlayQjEJHGcJDrOag=
+	by mail.kernel.org (Postfix) with ESMTP id AE47F218BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 20:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2XRg6xD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732306AbfGVU04 (ORCPT
+        id S1732560AbfGVU1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 16:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbfGVU04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 16:26:56 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B32B218BE;
-        Mon, 22 Jul 2019 20:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563827215;
-        bh=rj/oDMHTdc2sn0j+S9jVqwOaKC+ElFvaZ+ApNh/+vt8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ywe94oQoJL0n6e8RNUPMtWMtTUnPYbUj8S1C5LmC740IA4NF1E885Xg2N6ogKXpKd
-         HXKNoryVBZCx++kJL2C2gBNiCtHYJam+LnGGvUcEy6cDu15xboZauPL9bnSNSl3ENB
-         bo3honQryvKcu7IIACy2b9VtkUVpfg80+B/0L3jQ=
-Subject: Re: [PATCH v2 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
-        stern@rowland.harvard.edu, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190705164355.14025-1-suwan.kim027@gmail.com>
- <20190705164355.14025-2-suwan.kim027@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d10b23b3-601d-c2c6-df2e-77b2ed9adc66@kernel.org>
-Date:   Mon, 22 Jul 2019 14:26:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 16:27:44 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43578 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730367AbfGVU1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 16:27:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p13so40713124wru.10;
+        Mon, 22 Jul 2019 13:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OsRCo9O41kpunRrut5RnGv9tjWQJ5UXpv8a16W7I/8M=;
+        b=b2XRg6xDby6kOPn9klBsepzblBvQL4b13k+1UBUsQ6nf0nWNNJ3ySqHA8kP56vmOC7
+         znv5lGzOOMK083EJ2eBHTIEmlxYe1Dcnj+3l5MA2tW54e7z59fnpyOg4i54tTLGoCXMr
+         PPYhi3HI0rtCyfB7NlWGTGW154PeeDpEmqaBoVBDXwPR4BgssR5oTeRW7el7WvtoSMrR
+         YmS1nH3yCsa9PA+J4iR1jALl6OGcEGzV+djScsR3SowUxQ5tDSqmFjIDV4yBU6A+V7C+
+         mOEoiBuDuqv7tYWSWqqMP/DiJwY6eXXmStN7W5cmklUSempYnTUshBsn/ls9fzEiVkZW
+         rPuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OsRCo9O41kpunRrut5RnGv9tjWQJ5UXpv8a16W7I/8M=;
+        b=H5RR1JjPcElbRq+NRfYKq+xwSwQ7PybBmKbt3H2khIAH43op6qQku7PTDvJIX3Yu8a
+         wU5lt0gfxjAL/aiVs5jS78ZNDXnSJaQNRoJc7Q4eKdeCbRnjvwvoBqcIn/tQ68bJQxc+
+         zQBBeHrdxWqyUwqdREJCkAKQF4Ohho6lTD8eUCHE3lM0yF7Qy03OyGhNJlO0bSfxs8DP
+         omTDxgG6dynCL0ljvRhjYqk86nXNaNZ9oWs0RfJcW99wS3JgVl/yjhGLr3gVhwKyEUgL
+         Zv8wd0P0sur3K6a9ODnIBHWjzyTI7NQsnvb3WQmJHRkyXxlM/rpOxKBkrH0u5Ytp+jkE
+         bBsg==
+X-Gm-Message-State: APjAAAW77Ocj7CDjvCghMra1dZCIoInloXKmTx75wnkCUsMyZx1xbVFn
+        clX+2ju1FqPX+HbnAly54uq7Szc=
+X-Google-Smtp-Source: APXvYqygGNZgHpB55spzsseM62K0dB+4Pjp/8IlLLWpQ0Rp2avWlf2DlqHQ8PxEaAjU+NyrDWPegdg==
+X-Received: by 2002:a5d:4041:: with SMTP id w1mr64621927wrp.199.1563827259343;
+        Mon, 22 Jul 2019 13:27:39 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.253.254])
+        by smtp.gmail.com with ESMTPSA id f1sm28028413wml.28.2019.07.22.13.27.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 13:27:38 -0700 (PDT)
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, adobriyan@gmail.com,
+        linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net
+Subject: [PATCH 3/5] x86_64, -march=native: REP MOVSB support
+Date:   Mon, 22 Jul 2019 23:27:21 +0300
+Message-Id: <20190722202723.13408-3-adobriyan@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190722202723.13408-1-adobriyan@gmail.com>
+References: <20190722202723.13408-1-adobriyan@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190705164355.14025-2-suwan.kim027@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suwan,
+Detect fast REP MOVSB support and use it for page copying.
 
-On 7/5/19 10:43 AM, Suwan Kim wrote:
-> vhci doesn’t do DMA for remote device. Actually, the real DMA
-> operation is done by network card driver. vhci just passes virtual
-> address of the buffer to the network stack, so vhci doesn’t use and
-> need dma address of the buffer of the URB.
-> 
-> When it comes to supporting SG for vhci, it is useful to use native
-> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
-> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
-> 
-> But HCD provides DMA mapping and unmapping function by default.
-> Moreover, it causes unnecessary DMA mapping and unmapping which
-> will be done again at the NIC driver and it wastes CPU cycles.
-> So, implement map_urb_for_dma and unmap_urb_for_dma function for
-> vhci in order to skip the DMA mapping and unmapping procedure.
-> 
-> To support SG, vhci_map_urb_for_dma() sets URB_DMA_MAP_SG flag in
-> urb->transfer_flags if URB has SG list and this flag will tell the
-> stub driver to use SG list.
-> 
-> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> ---
->   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> index 000ab7225717..14fc6d9f4e6a 100644
-> --- a/drivers/usb/usbip/vhci_hcd.c
-> +++ b/drivers/usb/usbip/vhci_hcd.c
-> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
->   	return 0;
->   }
->   
-> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> +			gfp_t mem_flags)
-> +{
-> +	dev_dbg(hcd->self.controller, "vhci does not map urb for dma\n");
-> +
-> +	if (urb->num_sgs)
-> +		urb->transfer_flags |= URB_DMA_MAP_SG;
-> +
+Inline copy_page(), this saves alternative entry and a function call
+overhead which should hopefully improve code generation.
 
-Shouldn't this be part of patch 2. The debug message saying "no map"
-and setting flag doesn't make sense.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
+ Makefile                             |  3 +++
+ arch/x86/include/asm/page_64.h       | 13 +++++++++++++
+ arch/x86/kernel/relocate_kernel_64.S | 15 +++++++++++++++
+ arch/x86/kernel/verify_cpu.S         | 12 ++++++++++++
+ arch/x86/lib/Makefile                |  5 ++++-
+ arch/x86/lib/memcpy_64.S             | 13 +++++++++++++
+ arch/x86/platform/pvh/head.S         |  4 ++++
+ scripts/kconfig/cpuid.c              |  9 +++++++++
+ scripts/march-native.sh              |  1 +
+ 9 files changed, 74 insertions(+), 1 deletion(-)
 
-> +       return 0;
+diff --git a/Makefile b/Makefile
+index 690f70afa74e..aa194c96d27c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -609,6 +609,9 @@ endif
+ ifdef CONFIG_MARCH_NATIVE
+ KBUILD_CFLAGS += -march=native
+ endif
++ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++KBUILD_CFLAGS += -mmemcpy-strategy=rep_byte:-1:align,rep_byte:-1:noalign
++endif
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+ # Objects we will link into vmlinux / subdirs we need to visit
+diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
+index 939b1cff4a7b..051da768273d 100644
+--- a/arch/x86/include/asm/page_64.h
++++ b/arch/x86/include/asm/page_64.h
+@@ -54,7 +54,20 @@ static inline void clear_page(void *page)
+ 			   : "cc", "memory", "rax", "rcx");
+ }
+ 
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++static __always_inline void copy_page(void *to, void *from)
++{
++	uint32_t len = PAGE_SIZE;
++	asm volatile (
++		"rep movsb"
++		: "+D" (to), "+S" (from), "+c" (len)
++		:
++		: "memory"
++	);
++}
++#else
+ void copy_page(void *to, void *from);
++#endif
+ 
+ #endif	/* !__ASSEMBLY__ */
+ 
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index c51ccff5cd01..822f7a3d035a 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -266,18 +266,33 @@ swap_pages:
+ 	movq	%rsi, %rax
+ 
+ 	movq	%r10, %rdi
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++	mov	$4096, %ecx
++	rep movsb
++#else
+ 	movl	$512, %ecx
+ 	rep ; movsq
++#endif
+ 
+ 	movq	%rax, %rdi
+ 	movq	%rdx, %rsi
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++	mov	$4096, %ecx
++	rep movsb
++#else
+ 	movl	$512, %ecx
+ 	rep ; movsq
++#endif
+ 
+ 	movq	%rdx, %rdi
+ 	movq	%r10, %rsi
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++	mov	$4096, %ecx
++	rep movsb
++#else
+ 	movl	$512, %ecx
+ 	rep ; movsq
++#endif
+ 
+ 	lea	PAGE_SIZE(%rax), %rsi
+ 	jmp	0b
+diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
+index a9be8904faa3..57b41dafc592 100644
+--- a/arch/x86/kernel/verify_cpu.S
++++ b/arch/x86/kernel/verify_cpu.S
+@@ -142,6 +142,18 @@ ENTRY(verify_cpu)
+ 	jnc	.Lverify_cpu_no_longmode
+ #endif
+ 
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++	xor	%eax, %eax
++	cpuid
++	cmp	$7, %eax
++	jb	.Lverify_cpu_no_longmode
++	mov	$7, %eax
++	xor	%ecx, %ecx
++	cpuid
++	bt	$9, %ebx
++	jnc	.Lverify_cpu_no_longmode
++#endif
++
+ 	popf				# Restore caller passed flags
+ 	xorl %eax, %eax
+ 	ret
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 7dc0e71b0ef3..fa24cc717fb1 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -59,7 +59,10 @@ endif
+ else
+         obj-y += iomap_copy_64.o
+         lib-y += csum-partial_64.o csum-copy_64.o csum-wrappers_64.o
+-        lib-y += clear_page_64.o copy_page_64.o
++        lib-y += clear_page_64.o
++ifneq ($(CONFIG_MARCH_NATIVE_REP_MOVSB),y)
++	lib-y += copy_page_64.o
++endif
+         lib-y += memmove_64.o memset_64.o
+         lib-y += copy_user_64.o
+ 	lib-y += cmpxchg16b_emu.o
+diff --git a/arch/x86/lib/memcpy_64.S b/arch/x86/lib/memcpy_64.S
+index 92748660ba51..ab5b9662b348 100644
+--- a/arch/x86/lib/memcpy_64.S
++++ b/arch/x86/lib/memcpy_64.S
+@@ -17,6 +17,18 @@
+ 
+ .weak memcpy
+ 
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++ENTRY(__memcpy)
++ENTRY(memcpy)
++	mov	%rdi, %rax
++	mov	%rdx, %rcx
++	rep movsb
++	ret
++ENDPROC(memcpy)
++ENDPROC(__memcpy)
++EXPORT_SYMBOL(memcpy)
++EXPORT_SYMBOL(__memcpy)
++#else
+ /*
+  * memcpy - Copy a memory block.
+  *
+@@ -183,6 +195,7 @@ ENTRY(memcpy_orig)
+ .Lend:
+ 	retq
+ ENDPROC(memcpy_orig)
++#endif
+ 
+ #ifndef CONFIG_UML
+ 
+diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
+index 1f8825bbaffb..2737f3e8c021 100644
+--- a/arch/x86/platform/pvh/head.S
++++ b/arch/x86/platform/pvh/head.S
+@@ -64,9 +64,13 @@ ENTRY(pvh_start_xen)
+ 	mov $_pa(pvh_start_info), %edi
+ 	mov %ebx, %esi
+ 	mov _pa(pvh_start_info_sz), %ecx
++#ifdef CONFIG_MARCH_NATIVE_REP_MOVSB
++	rep movsb
++#else
+ 	shr $2,%ecx
+ 	rep
+ 	movsl
++#endif
+ 
+ 	mov $_pa(early_stack_end), %esp
+ 
+diff --git a/scripts/kconfig/cpuid.c b/scripts/kconfig/cpuid.c
+index 9efc0d9464d8..2d78fba1dcc7 100644
+--- a/scripts/kconfig/cpuid.c
++++ b/scripts/kconfig/cpuid.c
+@@ -44,6 +44,7 @@ static inline void cpuid2(uint32_t eax0, uint32_t ecx0, uint32_t *eax, uint32_t
+ }
+ 
+ static bool popcnt	= false;
++static bool rep_movsb	= false;
+ 
+ static uint32_t eax0_max;
+ 
+@@ -59,6 +60,13 @@ static void intel(void)
+ 			popcnt = true;
+ 		}
+ 	}
++	if (eax0_max >= 7) {
++		cpuid2(7, 0, &eax, &ecx, &edx, &ebx);
++//		printf("%08x %08x %08x %08x\n", eax, ecx, edx, ebx);
++
++		if (ebx & (1 << 9))
++			rep_movsb = true;
++	}
+ }
+ 
+ int main(int argc, char *argv[])
+@@ -79,6 +87,7 @@ int main(int argc, char *argv[])
+ 
+ #define _(x)	if (streq(opt, #x)) return x ? EXIT_SUCCESS : EXIT_FAILURE
+ 	_(popcnt);
++	_(rep_movsb);
+ #undef _
+ 
+ 	return EXIT_FAILURE;
+diff --git a/scripts/march-native.sh b/scripts/march-native.sh
+index c3059f93ed2b..87f00cdb8e10 100755
+--- a/scripts/march-native.sh
++++ b/scripts/march-native.sh
+@@ -42,6 +42,7 @@ COLLECT_GCC_OPTIONS=$(
+ echo "-march=native: $COLLECT_GCC_OPTIONS"
+ 
+ "$CPUID" popcnt		&& option "CONFIG_MARCH_NATIVE_POPCNT"
++"$CPUID" rep_movsb	&& option "CONFIG_MARCH_NATIVE_REP_MOVSB"
+ 
+ for i in $COLLECT_GCC_OPTIONS; do
+ 	case $i in
+-- 
+2.21.0
 
-This should be a tab and no spaces btw. chekpatch isn't happy.
-
-> +}
-> +
-> +static void vhci_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
-> +{
-> +       dev_dbg(hcd->self.controller, "vhci does not unmap urb for dma\n");
-
-This should be a tab and no spaces btw. chekpatch isn't happy.
-
-
-WARNING: please, no spaces at the start of a line
-#144: FILE: drivers/usb/usbip/vhci_hcd.c:1299:
-+       return 0;$
-
-WARNING: please, no spaces at the start of a line
-#149: FILE: drivers/usb/usbip/vhci_hcd.c:1304:
-+       dev_dbg(hcd->self.controller, "vhci does not unmap urb for dma\n");$
-
-total: 0 errors, 2 warnings, 31 lines checked
-
-
-> +}
-> +
->   static const struct hc_driver vhci_hc_driver = {
->   	.description	= driver_name,
->   	.product_desc	= driver_desc,
-> @@ -1304,6 +1320,9 @@ static const struct hc_driver vhci_hc_driver = {
->   
->   	.get_frame_number = vhci_get_frame_number,
->   
-> +	.map_urb_for_dma = vhci_map_urb_for_dma,
-> +	.unmap_urb_for_dma = vhci_unmap_urb_for_dma,
-> +
->   	.hub_status_data = vhci_hub_status,
->   	.hub_control    = vhci_hub_control,
->   	.bus_suspend	= vhci_bus_suspend,
-> 
-
-thanks,
--- Shuah
