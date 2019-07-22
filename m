@@ -2,129 +2,143 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5C0C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FB3C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D503204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1922C204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SW2BLq/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfGVPWH (ORCPT
+        id S1728795AbfGVPWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:22:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:32148 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbfGVPWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:22:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 08:18:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,295,1559545200"; 
-   d="scan'208";a="177014956"
-Received: from agalla-mobl1.amr.corp.intel.com (HELO [10.254.103.46]) ([10.254.103.46])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jul 2019 08:18:25 -0700
-Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: use __u32 instead of uint32_t in
- uapi headers
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190721142308.30306-1-yamada.masahiro@socionext.com>
- <de9e94ee-9c01-1c0c-4359-b637319a298f@linux.intel.com>
- <s5hftmy8byl.wl-tiwai@suse.de>
- <ec306745-052d-f52c-2cce-d8915822d4ff@linux.intel.com>
- <CAK8P3a2tLuqu+upt0nW8dUzXc+t_kEJwVhLcqY8TXydHLb_nCw@mail.gmail.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <9a56ccdb-397b-3046-4043-49bc20aaa804@linux.intel.com>
-Date:   Mon, 22 Jul 2019 10:18:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 11:22:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40729 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbfGVPWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 11:22:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so35765569wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CjN06kskuSN63zvz3I8U6ASqKJRxwYLJel4cw/9K0lw=;
+        b=SW2BLq/I4O/PnHgn1NA2q1TeVho/oHOeDcYpL3qFIQggNojxG22k4aZiFGmAg3qjZw
+         sNH03/H7fUd1hP+JYWFhSUX8oVoTRU3bnRNRtsbc1lJviN3M++fuo80AkU9hWv+dRbu6
+         mg0kIKTw66qN8Z3uRv1t8IVBOT8WAVgLsmzb74vtLhqfx+4hcnmk6kNrJvkgbtcno8JY
+         0FDCNFNg9zgMDxr5NKN1TXvrZYwVniccPCYF6S1oN3eH/gHp9jUbauxk12vI4YbezNDT
+         UsyQt5Z+DG/nC780HdW0gYFTNsc/rKkiLemjOICIiX9L0i2dF+lRJlhDPXFtvtYGgReH
+         kIiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CjN06kskuSN63zvz3I8U6ASqKJRxwYLJel4cw/9K0lw=;
+        b=dWgQPSKD1JnCQyqOouY/7jIlOMzKkZXrjC8CiE9+cSFtBzrLTvAXe9pLQVcUm14TuO
+         AoYrSaPndJzlSqCscpDiZBWhana1s5E0xLgJgraQnbUeewLquiH6dzx/apTgCxdFCCas
+         2foPtUcFV0DAR2gWm5aS4zCSyGGpHER15QV6kkvzhawWgEz7OGo3FsBPBGMlHJGyWQL3
+         dhC8N16PAydoQSASgtQVMoXv6dUT1QydCVqfbsTUJ8g/vt/2L67VWj2xMaOKSvVyp4Bu
+         X3otbYARFewKdDSOIKw0dkArImHRc+vQdX8ECvlngCTvO750Fp/0VTMQc0deDco6Tv7F
+         Gd8Q==
+X-Gm-Message-State: APjAAAX58xbWrpH3rksQQI4y80VUKGr2iJz55vWZHIGn9+vfH7ocke8G
+        PMn6OTzkOPwtsn5XYtkSiRHoGw==
+X-Google-Smtp-Source: APXvYqxEqJt2WlO+GoY0nM0FoV0BovseVpbAQSrNlFd4NlDuP4uXJmvali/FscgOt4YbJnNBVzR6bg==
+X-Received: by 2002:a7b:c74a:: with SMTP id w10mr61057896wmk.99.1563808928497;
+        Mon, 22 Jul 2019 08:22:08 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id i18sm51360450wrp.91.2019.07.22.08.22.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 08:22:07 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 16:22:06 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 6/7] backlight: gpio: remove def_value from struct
+ gpio_backlight
+Message-ID: <20190722152206.bfjlws53yknq3xv4@holly.lan>
+References: <20190722150302.29526-1-brgl@bgdev.pl>
+ <20190722150302.29526-7-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2tLuqu+upt0nW8dUzXc+t_kEJwVhLcqY8TXydHLb_nCw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722150302.29526-7-brgl@bgdev.pl>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/22/19 8:34 AM, Arnd Bergmann wrote:
-> On Mon, Jul 22, 2019 at 3:16 PM Pierre-Louis Bossart
-> <pierre-louis.bossart@linux.intel.com> wrote:
->> On 7/22/19 7:56 AM, Takashi Iwai wrote:
->>> On Mon, 22 Jul 2019 14:49:34 +0200,
->>> Pierre-Louis Bossart wrote:
->>>>
->>>>
->>>>
->>>> On 7/21/19 9:23 AM, Masahiro Yamada wrote:
->>>>> When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
->>>>> make sure they can be included from user-space.
->>>>>
->>>>> Currently, header.h and fw.h are excluded from the test coverage.
->>>>> To make them join the compile-test, we need to fix the build errors
->>>>> attached below.
->>>>>
->>>>> For a case like this, we decided to use __u{8,16,32,64} variable types
->>>>> in this discussion:
->>>>>
->>>>>      https://lkml.org/lkml/2019/6/5/18
->>>>
->>>> these files are shared with the SOF project and used as is (with minor
->>>> formatting) for the firmware compilation. I am not sure I understand
->>>> the ask here, are you really asking SOF to use linux-specific type
->>>> definitions?
->>>
->>> Actually this is linux-kernel UAPI header files, so yes, we should
->>> follow the convention there as much as possible.
->>>
->>> So far we haven't been strict about these types.  But now we have a
->>> unit test for checking it, so it's a good opportunity to address the
->>> issues.
->>
->> Maybe a bit of background. For SOF we split the includes in 4 directories
->>
->> https://github.com/thesofproject/sof/tree/master/src/include
->>
->> - sof: internal includes for firmware only
->> - ipc: definitions of the structures for information exchanged over the
->> IPC channel. This directory is used as is by the Linux kernel and
->> mirrored in include/sound/sof
->> - user: definitions needed for firmware tools, e.g. to generate the
->> image or parse the trace. this directory is not used by the Linux kernel.
->> - kernel: definitions for the firmware format, needed for the loader to
->> parse the firmware files. This is not directly used by applications
->> running on the target, it really defines the content passed to the
->> kernel with request_firmware. This directory is mirrored in the Linux
->> include/uapi/sound/sof directory.
->>
->> Our goal is to minimize the differences and allow deltas e.g. for
->> license or comments. We could add a definition for __u32 when linux is
->> not used, I am just not sure if these two files really fall in the UAPI
->> category and if the checks make sense.
+On Mon, Jul 22, 2019 at 05:03:01PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> If you can build all the SOF user space without these headers being
-> installed to /usr/include/sound/sof/, you can move them from
-> include/uapi/sound/sof to include/sounds/sof and leave the types
-> unchanged.
+> This field is unused outside of probe(). There's no need to store it.
+> We can make it into a local variable.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-yes we don't need those files to build userspace stuff. The idea was 
-that these format definitions establish a contract between userspace 
-(more specifically the files stored in /lib/firmware) and the kernel. 
-IIRC we wanted to make sure that any changes would be tracked as 
-breaking userspace. If the consensus is that the uapi directory is 
-strictly used for builds then we should indeed move those files
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+> ---
+>  drivers/video/backlight/gpio_backlight.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
+> index 70882556f047..cd6a75bca9cc 100644
+> --- a/drivers/video/backlight/gpio_backlight.c
+> +++ b/drivers/video/backlight/gpio_backlight.c
+> @@ -21,7 +21,6 @@
+>  struct gpio_backlight {
+>  	struct device *fbdev;
+>  	struct gpio_desc *gpiod;
+> -	int def_value;
+>  };
+>  
+>  static int gpio_backlight_update_status(struct backlight_device *bl)
+> @@ -61,7 +60,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+>  	struct backlight_device *bl;
+>  	struct gpio_backlight *gbl;
+>  	enum gpiod_flags flags;
+> -	int ret;
+> +	int ret, def_value;
+>  
+>  	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
+>  	if (gbl == NULL)
+> @@ -70,8 +69,8 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+>  	if (pdata)
+>  		gbl->fbdev = pdata->fbdev;
+>  
+> -	gbl->def_value = device_property_read_bool(&pdev->dev, "default-on");
+> -	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+> +	def_value = device_property_read_bool(&pdev->dev, "default-on");
+> +	flags = def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+>  
+>  	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, flags);
+>  	if (IS_ERR(gbl->gpiod)) {
+> @@ -94,7 +93,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+>  		return PTR_ERR(bl);
+>  	}
+>  
+> -	bl->props.brightness = gbl->def_value;
+> +	bl->props.brightness = def_value;
+>  	backlight_update_status(bl);
+>  
+>  	platform_set_drvdata(pdev, bl);
+> -- 
+> 2.21.0
+> 
