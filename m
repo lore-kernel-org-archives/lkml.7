@@ -2,139 +2,196 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA54C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98360C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9FF21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641A52190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CySoueQw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jEwyS6U6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZeKcmgRL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730551AbfGVQUR (ORCPT
+        id S1730910AbfGVQUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:20:17 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45300 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728136AbfGVQUQ (ORCPT
+        Mon, 22 Jul 2019 12:20:49 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13460 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727743AbfGVQUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:20:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6BB4560E5A; Mon, 22 Jul 2019 16:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563812415;
-        bh=/fTWdA5sK7R3GGTlX+WLaXG3NYMeNG9JlI3aAlgldjs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CySoueQwWigAYEYnvtzBGVgk9F96erpDnj5JV7N2WtyjvYAVCX/m6wi1g4A7hGkdU
-         s9xipgdbvkoIGMVabaPWOwWDGUbwZ+nPls8aOgy2x0h003dINia/pg97VWNlcl2B8N
-         +Q/r+iEaFrVt/mD5CW82YAwvgxp9TGoFdyG8ewNk=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CABA160E3E;
-        Mon, 22 Jul 2019 16:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563812414;
-        bh=/fTWdA5sK7R3GGTlX+WLaXG3NYMeNG9JlI3aAlgldjs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jEwyS6U6SlafnSt6kmH0x8jwQ/v432h6vBEf/3yQ7zf2EMnY79/AabqlpE/UAjecy
-         qOcVd87lIt3E8emNLUGt7NiEo/ZbMEZcMmRd8QHCgvczIyELbWS2woZ41WdzjhQrY1
-         mN39p+0S/ycTTM2xHeDLQj74GqC3VLS9RQ5kyeIk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CABA160E3E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Mon, 22 Jul 2019 10:20:03 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Subject: Re: [PATCH 1/2] drivers: qcom: rpmh-rsc: simplify TCS locking
-Message-ID: <20190722162003.GG25567@codeaurora.org>
-References: <20190701152907.16407-1-ilina@codeaurora.org>
- <5d3209e7.1c69fb81.5ef1.5195@mx.google.com>
+        Mon, 22 Jul 2019 12:20:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d35e25c0000>; Mon, 22 Jul 2019 09:20:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 09:20:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 09:20:46 -0700
+Received: from [10.2.164.85] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 16:20:44 +0000
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+ <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
+Date:   Mon, 22 Jul 2019 09:21:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d3209e7.1c69fb81.5ef1.5195@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563812444; bh=KoPOkUCxjwGMbG3Gc8WkHlcbvUciHbZClFWJEPeqvKI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ZeKcmgRLqAEbKk/9mE2fo50mf6Mjn37p2pZwD5io4uj4T1brt7Eej/zHrd9sZDgTo
+         amTsFQ/aMMHwPtQQjnII++OF+hGNIwNn2FRRuZJ/Vf8AQ319NYmZbNNA6YGKIF7JhD
+         mm+Cn5O01FtI6GuCqCfVECWL0ds+VnuqIt+ukTiiC0qAU6lK1D6cXFSJn7fK81jICP
+         6k2XJqTj+VQEFI7x4F049l2w3z/2vv6h9ma4Zw6qh9fkkjrfVK/vtwQgvwSVToC1rg
+         avtfIzbPemIRLYP8bnEsT7Re6LOvJZcgdc0lj9GzWO0Mo3tAZOXgOZluQlI0WWDj/2
+         OKz3YiDwVLrCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19 2019 at 12:20 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-01 08:29:06)
->> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
->>
->> tcs->lock was introduced to serialize access with in TCS group. But
->> even without tcs->lock, drv->lock is serving the same purpose. So
->> use a single drv->lock.
->
->Isn't the downside now that we're going to be serializing access to the
->different TCSes when two are being written in parallel or waited on? I
->thought that was the whole point of splitting the lock into a TCS lock
->and a general "driver" lock that protects the global driver state vs.
->the specific TCS state.
->
-Yes but we were holding the drv->lock as well as tcs->lock for the most
-critical of the path anyways (writing to TCS). The added complexity
-doesn't seem to help reduce the latency that it expected to reduce.
->>
->> Other optimizations include -
->>  - Remove locking around clear_bit() in IRQ handler. clear_bit() is
->>    atomic.
->>  - Remove redundant read of TCS registers.
->>  - Use spin_lock instead of _irq variants as the locks are not held
->>    in interrupt context.
->
->Can you please split this patch up into 3 or 4 different patches? I'm
->not sure why any of these patches are marked with Fixes either. It's an
->optimization patch, not a fix patch, unless the optimization is really
->large somehow?
->
-Okay. I will try that.
->>
->> Fixes: 658628 ("drivers: qcom: rpmh-rsc: add RPMH controller for QCOM
->> SoCs")
->> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  drivers/soc/qcom/rpmh-internal.h |  2 --
->>  drivers/soc/qcom/rpmh-rsc.c      | 37 +++++++++++---------------------
->>  drivers/soc/qcom/rpmh.c          | 20 +++++++----------
->>  3 files changed, 21 insertions(+), 38 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
->> index a7bbbb67991c..969d5030860e 100644
->> --- a/drivers/soc/qcom/rpmh-internal.h
->> +++ b/drivers/soc/qcom/rpmh-internal.h
->> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
->> index e278fc11fe5c..92461311aef3 100644
->> --- a/drivers/soc/qcom/rpmh-rsc.c
->> +++ b/drivers/soc/qcom/rpmh-rsc.c
->> @@ -93,8 +93,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
->>
->>  static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
->>  {
->> -       return !test_bit(tcs_id, drv->tcs_in_use) &&
->> -              read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id, 0);
->> +       return !test_bit(tcs_id, drv->tcs_in_use);
->
->This can be a diffedjusted rent patch. Why is reading the tcs register
->redundant? Please put that information in the commit text.
->
-The tcs_in_use, is adjusted along with the DRV_STS and reading the
-tcs_in_use should be enough.
 
-Thanks for your review Stephen.
+On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
+> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 22/07/2019 10:54, Dmitry Osipenko wrote:
+>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 ent=
+ry
+>>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>>>
+>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequen=
+ce
+>>>> for Tegra210.
+>>>>
+>>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+>>>> interrupt controller suspend operation.
+>>>>
+>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>>>   1 file changed, 18 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>>>> index e1f771c72fc4..851f88cef508 100644
+>>>> --- a/drivers/irqchip/irq-tegra.c
+>>>> +++ b/drivers/irqchip/irq-tegra.c
+>>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>>>  =20
+>>>>   struct tegra_ictlr_soc {
+>>>>   	unsigned int num_ictlrs;
+>>>> +	bool supports_sc7;
+>>>>   };
+>>>>  =20
+>>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
+>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_so=
+c =3D {
+>>>>  =20
+>>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
+>>>>   	.num_ictlrs =3D 6,
+>>>> +	.supports_sc7 =3D true,
+>>>>   };
+>>>>  =20
+>>>>   static const struct of_device_id ictlr_matches[] =3D {
+>>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] =3D=
+ {
+>>>>  =20
+>>>>   struct tegra_ictlr_info {
+>>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>>>> +	const struct tegra_ictlr_soc *soc;
+>>>>   #ifdef CONFIG_PM_SLEEP
+>>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>>>   		lic->cop_ier[i] =3D readl_relaxed(ictlr + ICTLR_COP_IER);
+>>>>   		lic->cop_iep[i] =3D readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>>>>  =20
+>>>> -		/* Disable COP interrupts */
+>>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>>> +		/*
+>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>>>> +		 *
+>>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>>>> +		 * system to go to SC7/LP0.
+>>>> +		 *
+>>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>>>> +		 */
+>>>> +		if (!lic->soc->supports_sc7)
+>>>> +			/* Disable COP interrupts if SC7 is not supported */
+>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>>> better here.
+>> If what you're saying is true, then the whole patch is wrong, and the
+>> SC7 property should come from DT.
+> It should be safe to assume that all of existing Tegra210 devices use
+> the firmware for SC7, hence I wouldn't say that the patch is entirely
+> wrong. To me it's not entirely correct.
 
---Lina
+Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and=20
+AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ=20
+to COP for SC7 entry fw execution.
+
+
+>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>>> pre-T210 at all, since COP is unused. This looks to me like it was
+>>> cut-n-pasted from downstream kernel without a good reason and could be
+>>> simply removed.
+>> Please verify that this is actually the case. Tegra-2 definitely needed
+>> some level of poking, and I'm not keen on changing anything there until
+>> you (or someone else) has verified it on actual HW (see e307cc8941fc).
+> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
+> with all COP bits removed from the driver.
+>
+> AFAIK, the reason why downstream needed that disabling is that it uses
+> proprietary firmware which is running on the COP and that firmware is
+> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
+> interrupts after itself. That firmware is not applicable for the
+> upstream kernel, hence there is no need to care about it.
+>
+>> Joseph, can you please shed some light here?
+
+SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the one th=
+at actually loads SC7 entry firmware and triggers IRQ to AVP/COP which caus=
+es COP to wakeup and run SC7 entry FW.
+
+So when SC7 support is enabled, IRQ need to be kept enabled and when SC7 FW=
+ starts execution, it will disable COP IRQ.
+
+
