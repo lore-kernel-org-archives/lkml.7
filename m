@@ -2,148 +2,97 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D69CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA42C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5699521911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1BE2190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZYBmpd+Q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jD2XRByB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731325AbfGVSSO (ORCPT
+        id S1731387AbfGVSSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:18:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36969 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGVSSO (ORCPT
+        Mon, 22 Jul 2019 14:18:37 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37661 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731348AbfGVSSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:18:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so19529823plr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:18:14 -0700 (PDT)
+        Mon, 22 Jul 2019 14:18:37 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i70so7309583pgd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=f+EvBU2cPVBzM8PQ0FPDkzwG1E5GGkfBBtHwRsmRpjI=;
-        b=ZYBmpd+QBrrVXlTK80i48wnPMVkuOFnOheaJJPa7CGBslM3kfiEjlsUUileul+y/aT
-         sIyTmJA3zTEgA4futpEx4QeCiF58mu2sy2Plk5rYoLOT56z9exBHdAGcoW7XCL2HrC6I
-         eghfkV6cAjTGylFDeXx6QQkUYPxrumHx0+ts4=
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=bdmEyD1tHGaxY1ZlrNXktYNbDBoxT67t89iQedYViU4=;
+        b=jD2XRByB77jpz8oESlV2M8e2YqHA5OWvaY91DBJGZvAV4PUjKf0YAHrFyemyl1HZci
+         ZeR+SwU0zsOjunrxl82QuMicKE2IeCYMTuXzYubRB+ZpDsmnnH4cfbM9KX3lLytNKX5l
+         HWxcBaH3SKmXPuHrKGHwHLia2CN/JsZteix6U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f+EvBU2cPVBzM8PQ0FPDkzwG1E5GGkfBBtHwRsmRpjI=;
-        b=hn3xBFWXKYkuY5gLOz3N0Xn9P5yQwiZFFqy1hbgfUBrNfHP7fpz+c6nLbJfjWqlQSw
-         gE3OqyvZWsc7HCjnfVRdPOKfQQCA5l6zr/x6td7hTKQKfK7gLVDsTLeRu7E7MFU9xVzN
-         kvq8akD1Y+tMa1yPxSbXx5qsTIiLd5E3H6Hdrj01aM+pa59LS+LwDtAIIqhf20zfYYSe
-         I3buoKfCHPPpdXVy28FgfMXX+Z100i7GPpcDwjE+4+OsG2lMK5oCf6bPjmW18lvJ1SeK
-         xRFMoay2m9HTuPIz+kvzdk85tjelvcrDKJL/pbNaoOJICVpRWfLHhwB3LsQt4rJJ5EuK
-         ExkQ==
-X-Gm-Message-State: APjAAAXvH1c7wbGUTfIxLGqdVyE4Rq18gl8Ja8OOO8gZSAY7BL+TGwdo
-        CsVQOfgqeRDhJvmm4PWshiAdHg==
-X-Google-Smtp-Source: APXvYqzKgLF223uw/JHxlrlAFM0A7p9yaZS2vEzbwf0/Z3V+zNZe1QVoP/BadRa/bU48/bFGR0+qBQ==
-X-Received: by 2002:a17:902:744c:: with SMTP id e12mr76102154plt.287.1563819493921;
-        Mon, 22 Jul 2019 11:18:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r18sm30269979pfg.77.2019.07.22.11.18.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jul 2019 11:18:13 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 11:18:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        tobin@kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH] libata: zpodd: Fix small read overflow in
- zpodd_get_mech_type()
-Message-ID: <201907221117.254D219F9E@keescook>
-References: <201907192038.AEF9B52@keescook>
- <CAKwvOdkkqhwHz_yLN5VjAdENj3qtwdJ080QKpQ9vr--F1xQPhA@mail.gmail.com>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=bdmEyD1tHGaxY1ZlrNXktYNbDBoxT67t89iQedYViU4=;
+        b=Nx66zHeCoIiM383w7uoGcPMs2rzT9uMSQ30nVZPRa3RkrRaUKAdnX4nq8cAzvrh3KF
+         WwPS0TDrQJpsQgOWZ3rSerFBRqN46Du+GnUQZHizd9PSYNhO5zFjPjNIFGs6+1FL2cGB
+         x6FVjg1WVkBJqaJty7yegb/nuyk7DkwSB4K3PSKj5p8MN93EhnXRoA4rrVTjxMZnZxyo
+         0px5/4S0ufE2Yo5UYhjOmhouHUp9G5nPdhuqtqDimYoApLgDZpSLDX7gV8qcFLYxquD9
+         8epJMUopldb0dVf2L0h+j9V/JjWPCUUvLbo2P6qY/RE50KJyU7zDgRwaTnW2K/bDJ/pU
+         ++5A==
+X-Gm-Message-State: APjAAAVoEFnCtPCSPH7MRMGSO8whgugx0Xz4aIPcGB73LgB3btjH87Dn
+        d7uDmb/2moHwICmVtKoqDcpi2A==
+X-Google-Smtp-Source: APXvYqw1WCTEtPf/4QpZct5Z+fOYeJwNzW8DbpFLtGpuiaWS9d42/M5FHd2yC7A0VCS35fsC46+fHQ==
+X-Received: by 2002:aa7:9a8a:: with SMTP id w10mr1513108pfi.66.1563819516250;
+        Mon, 22 Jul 2019 11:18:36 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j1sm66969694pgl.12.2019.07.22.11.18.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 11:18:35 -0700 (PDT)
+Message-ID: <5d35fdfb.1c69fb81.5fafa.aaa9@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkkqhwHz_yLN5VjAdENj3qtwdJ080QKpQ9vr--F1xQPhA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190722162003.GG25567@codeaurora.org>
+References: <20190701152907.16407-1-ilina@codeaurora.org> <5d3209e7.1c69fb81.5ef1.5195@mx.google.com> <20190722162003.GG25567@codeaurora.org>
+Subject: Re: [PATCH 1/2] drivers: qcom: rpmh-rsc: simplify TCS locking
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 22 Jul 2019 11:18:34 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:40:40AM -0700, Nick Desaulniers wrote:
-> On Fri, Jul 19, 2019 at 8:41 PM Kees Cook <keescook@chromium.org> wrote:
+Quoting Lina Iyer (2019-07-22 09:20:03)
+> On Fri, Jul 19 2019 at 12:20 -0600, Stephen Boyd wrote:
+> >Quoting Lina Iyer (2019-07-01 08:29:06)
+> >> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+> >>
+> >> tcs->lock was introduced to serialize access with in TCS group. But
+> >> even without tcs->lock, drv->lock is serving the same purpose. So
+> >> use a single drv->lock.
 > >
-> > Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
-> > eject_tray()"), this fixes a cdb[] buffer length, this time in
-> > zpodd_get_mech_type():
+> >Isn't the downside now that we're going to be serializing access to the
+> >different TCSes when two are being written in parallel or waited on? I
+> >thought that was the whole point of splitting the lock into a TCS lock
+> >and a general "driver" lock that protects the global driver state vs.
+> >the specific TCS state.
 > >
-> > We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
-> > ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
-> >
-> > The KASAN report was:
-> >
-> > BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-> > Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
-> > ...
-> > The buggy address belongs to the variable:
-> >  cdb.48319+0x0/0x40
-> >
-> > Reported-by: Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
-> > Fixes: afe759511808c ("libata: identify and init ZPODD devices")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Interesting, both initializer lists are less than ATAPI_CDB_LEN (16)
-> elements, yet ata_exec_internal_sg() in drivers/ata/libata-core.c very
-> clearly has a ATAPI_CDB_LEN byte memcpy on that element.  Probably
-> both initializer lists should just lead off the trailing zero's or
-> provide the entire 16 elements.  For now, thank you for the patch.
+> Yes but we were holding the drv->lock as well as tcs->lock for the most
+> critical of the path anyways (writing to TCS). The added complexity
+> doesn't seem to help reduce the latency that it expected to reduce.
 
-Yup, with the specific size added it'll be zero-padded.
+Ok. That sort of information should be in the commit text to explain why
+it's not helping with reducing the latency or throughput of the API.
 
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Thanks!
-
--Kees
-
-> 
-> > ---
-> >  drivers/ata/libata-zpodd.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-> > index 173e6f2dd9af..eefda51f97d3 100644
-> > --- a/drivers/ata/libata-zpodd.c
-> > +++ b/drivers/ata/libata-zpodd.c
-> > @@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
-> >         unsigned int ret;
-> >         struct rm_feature_desc *desc;
-> >         struct ata_taskfile tf;
-> > -       static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
-> > +       static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
-> >                         2,      /* only 1 feature descriptor requested */
-> >                         0, 3,   /* 3, removable medium feature */
-> >                         0, 0, 0,/* reserved */
-> > --
-> > 2.17.1
-> >
-> >
-> > --
-> > Kees Cook
-> 
-> 
-> 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
-
--- 
-Kees Cook
