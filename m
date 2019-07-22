@@ -2,132 +2,101 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E986C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF40C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED5521985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599A52054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TqldDQQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732203AbfGVT3k (ORCPT
+        id S1728787AbfGVTdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:29:40 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42793 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfGVT3j (ORCPT
+        Mon, 22 Jul 2019 15:33:04 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37354 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfGVTdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:29:39 -0400
-X-Originating-IP: 90.89.68.76
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DA05DC0008;
-        Mon, 22 Jul 2019 19:29:36 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 21:29:34 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding for Lichee
- Zero Plus core board
-Message-ID: <20190722192934.3jaf3r4rnyeslqyw@flea>
-References: <20190713034634.44585-1-icenowy@aosc.io>
- <20190713034634.44585-8-icenowy@aosc.io>
- <20190720101318.cwrvv5r42wxx5k4r@flea>
- <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
+        Mon, 22 Jul 2019 15:33:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zw0OzLY2qkyLgMJYZmR8YfjGW2oVP8VhhsbR5Yd/A7w=; b=TqldDQQlZ5ZIvVudiXOATvg8+6
+        99A+Mn8ucymBMPFhYx39j7RhwEqzKlskYs7uBA2fXig+Bxy7FrABNjSPOmH4GIcSvZhdDn6/2+ZsJ
+        VUg6cZbX8pBbqtj2bpRyU9Hzp/nnIWZowUX2X0jd2bLQuCjO1IrSHkq7ZpEA2agi1YNRwmTRLLboh
+        67TOwpPTag0FdERZ4yZ/3XiWzg/K9OYALvLZ0986XmDMNqvH4LVlmKnnhtNsUUIsaVZ0eY6sn+2NN
+        AtPJRQxOZ5Fl/h2Qzpox5vkgD09aPBondQwxq2tWQ+ZSFyHsqkgVr0smD7+AfjWNC6hLNxOuTf5H+
+        UtPXJ1DA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpe3J-0006Hn-Eh; Mon, 22 Jul 2019 19:32:53 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A1F78980C59; Mon, 22 Jul 2019 21:32:51 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 21:32:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH v3 4/9] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Message-ID: <20190722193251.GF6698@worktop.programming.kicks-ass.net>
+References: <20190719005837.4150-1-namit@vmware.com>
+ <20190719005837.4150-5-namit@vmware.com>
+ <20190722191433.GD6698@worktop.programming.kicks-ass.net>
+ <58DA0841-33C2-4D16-A671-08064A15001C@vmware.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vn42k7mlndfzfvev"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <58DA0841-33C2-4D16-A671-08064A15001C@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 07:27:09PM +0000, Nadav Amit wrote:
+> > On Jul 22, 2019, at 12:14 PM, Peter Zijlstra <peterz@infradead.org> wrote:
 
---vn42k7mlndfzfvev
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > But then we can still do something like the below, which doesn't change
+> > things and still gets rid of that dual function crud, simplifying
+> > smp_call_function_many again.
 
-On Sat, Jul 20, 2019 at 07:39:08PM +0800, Icenowy Zheng wrote:
->
->
-> =E4=BA=8E 2019=E5=B9=B47=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-6:13:18, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
-> >On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
-> >> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
-> >> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
-> >Flash.
-> >> It has a gold finger connector for expansion, and UART is available
-> >from
-> >> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
-> >> Allwinner V3L SoCs.
-> >>
-> >> Add the device tree binding of the basic version of the core board --
-> >> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
-> >>
-> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> >> ---
-> >> No changes since v3.
-> >>
-> >> Patch introduced in v2.
-> >>
-> >>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >> index 000a00d12d6a..48c126a7a848 100644
-> >> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >> @@ -353,6 +353,11 @@ properties:
-> >>            - const: licheepi,licheepi-zero
-> >>            - const: allwinner,sun8i-v3s
-> >>
-> >> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
-> >Flash)
-> >> +        items:
-> >> +          - const: sipeed,lichee-zero-plus
-> >> +          - const: allwinner,sun8i-s3
-> >
-> >If the S3 is just a rebranded V3, then we should have the v3 compatile
-> >in that list too.
->
-> S3 is V3 with copackaged DDR3 DRAM.
->
-> It's pin incompatible w/ V3.
+> Nice! I will add it on top, if you don’t mind (instead squashing it).
 
-Does it matter though?
+Not at all.
 
-If the only thing that changes is the package, we're not manipulating
-that, and any software that deals with the v3 can deal with the
-s3. Which is what the compatible is about.
+> The original decision to have local/remote functions was mostly to provide
+> the generality.
+> 
+> I would change the last argument of __smp_call_function_many() from “wait”
+> to “flags” that would indicate whether to run the function locally, since I
+> don’t want to change the semantics of smp_call_function_many() and decide
+> whether to run the function locally purely based on the mask. Let me know if
+> you disagree.
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---vn42k7mlndfzfvev
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTYOngAKCRDj7w1vZxhR
-xd77AP9kxx/qXPETcP3fumpzmXSQrjjY9A81+Czl0ZPvauA4VQEA2qZwJBFD+6ml
-86ahAeLa2qt1k3eZZlcXhgNVqkXxygs=
-=9EZ6
------END PGP SIGNATURE-----
-
---vn42k7mlndfzfvev--
+Agreed.
