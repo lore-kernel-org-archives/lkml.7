@@ -6,138 +6,87 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03DEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130CAC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA059218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AD1218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfGVQIi (ORCPT
+        id S1730423AbfGVQJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:08:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59504 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727088AbfGVQIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:08:37 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5B78930715761749B0C3;
-        Tue, 23 Jul 2019 00:08:34 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 23 Jul 2019
- 00:08:25 +0800
-Subject: Re: About threaded interrupt handler CPU affinity
-To:     Thomas Gleixner <tglx@linutronix.de>
-References: <e0e9478e-62a5-ca24-3b12-58f7d056383e@huawei.com>
- <a98ba3d0-5596-664a-a1ee-5777cff0ddd9@kernel.org>
- <6fd4d706-b66d-6390-749a-8a06b17cb487@huawei.com>
- <alpine.DEB.2.21.1907221723450.2082@nanos.tec.linutronix.de>
-CC:     Marc Zyngier <maz@kernel.org>, <bigeasy@linutronix.de>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8e1201a7-3e69-e048-6aa3-3b87e86d55ac@huawei.com>
-Date:   Mon, 22 Jul 2019 17:08:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Mon, 22 Jul 2019 12:09:14 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52450 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727088AbfGVQJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 12:09:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 09:09:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,295,1559545200"; 
+   d="scan'208";a="180441409"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2019 09:09:10 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hpas8-00075M-KV; Mon, 22 Jul 2019 19:09:08 +0300
+Date:   Mon, 22 Jul 2019 19:09:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 7/7] backlight: gpio: use a helper variable for
+ &pdev->dev
+Message-ID: <20190722160908.GZ9224@smile.fi.intel.com>
+References: <20190722150302.29526-1-brgl@bgdev.pl>
+ <20190722150302.29526-8-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907221723450.2082@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722150302.29526-8-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/07/2019 16:34, Thomas Gleixner wrote:
-> John,
->
+On Mon, Jul 22, 2019 at 05:03:02PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Instead of dereferencing pdev each time, use a helper variable for
+> the associated device pointer.
 
-Hi Thomas,
+>  static int gpio_backlight_probe(struct platform_device *pdev)
+>  {
+> -	struct gpio_backlight_platform_data *pdata =
+> -		dev_get_platdata(&pdev->dev);
+> +	struct gpio_backlight_platform_data *pdata;
+>  	struct backlight_properties props;
+>  	struct backlight_device *bl;
+>  	struct gpio_backlight *gbl;
+>  	enum gpiod_flags flags;
+> +	struct device *dev;
 
-> On Mon, 22 Jul 2019, John Garry wrote:
->> On 22/07/2019 15:41, Marc Zyngier wrote:
->>> On 22/07/2019 15:14, John Garry wrote:
->>>> I have a question on commit cbf8699996a6 ("genirq: Let irq thread follow
->>>> the effective hard irq affinity"), if you could kindly check:
->>>>
->>>> Here we set the thread affinity to be the same as the hard interrupt
->>>> affinity. For an arm64 system with GIC ITS, this will be a single CPU,
->>>> the lowest in the interrupt affinity mask. So, in this case, effectively
->>>> the thread will be bound to a single CPU. I think APIC is the same for
->>>> this.
->>>>
->>>> The commit message describes the problem that we solve here is that the
->>>> thread may become affine to a different CPU to the hard interrupt - does
->>>> it mean that the thread CPU mask could not cover that of the hard
->>>> interrupt? I couldn't follow the reason.
->>>
->>> Assume a 4 CPU system. If the interrupt affinity is on CPU0-1, you could
->>> end up with the effective interrupt affinity on CPU0 (which would be
->>> typical of the ITS), and the thread running on CPU1. Not great.
->>
->> Sure, not great. But the thread can possibly still run on CPU0.
->
-> Sure. It could, but it's up to the scheduler to decide. In general it's the
-> right thing to run the threaded handler on the CPU which handles the
-> interrupt.
+Can't we do
 
-I'd agree.
+	struct device dev = &pdev->dev;
+	struct gpio_backlight_platform_data *pdata = dev_get_platdata(dev);
 
->With single CPU affinity thats surely a limitation.
->
->>>> We have experimented with fixing the thread mask to be the same as the
->>>> interrupt mask (we're using managed interrupts), like before, and get a
->>>> significant performance boost at high IO datarates on our storage
->>>> controller - like ~11%.
->>>
->>> My understanding is that this patch does exactly that. Does it result in
->>> a regression?
->>
->> Not in the strictest sense for us, I don't know about others. Currently we use
->> tasklets, and we find that the CPUs servicing the interrupts (and hence
->> tasklets) are heavily loaded. We experience the same for when experimenting
->> with threaded interrupt handlers - which would be as expected.
->>
->> But, when we make the change as mentioned, our IOPS goes from ~3M -> 3.4M.
->
-> So your interrupt is affined to more than one CPU, but due to the ITS
-> limitation the effective affinity is a single CPU, which in turn restricts
-> the thread handler affinity to the same single CPU.
+? It fits 80 nicely.
 
-Even though this is an ITS limitation, the same thing is effectively 
-done for x86 APIC as policy, right? I'm referring to commit fdba46ffb4c2 
-("x86/apic: Get rid of multi CPU affinity")
-
-  If you lift that
-> restriction and let it be affine to the full affinity set of the interrupt
-> then you get better performance, right?
-
-Right
-
-  Probably because the other CPU(s)
-> in the affinity set are less loaded than the one which handles the hard
-> interrupt.
-
-I will look to get some figures for CPU loading to back this up.
-
->
-> This is heavily use case dependent I assume, so making this a general
-> change is perhaps not a good idea, but we could surely make this optional.
-
-That sounds reasonable. So would the idea be to enable this optionally 
-at the request threaded irq call?
-
-Thanks,
-John
-
->
-> Thanks,
->
-> 	tglx
->
-> .
->
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
