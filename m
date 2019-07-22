@@ -2,97 +2,134 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1FCC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004CC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E402190D
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5930221901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="osk9Sq49"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OE9sSa6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbfGVSgL (ORCPT
+        id S1731087AbfGVSgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:36:11 -0400
-Received: from mail-vk1-f174.google.com ([209.85.221.174]:44934 "EHLO
-        mail-vk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731265AbfGVSgL (ORCPT
+        Mon, 22 Jul 2019 14:36:36 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:42134 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730788AbfGVSgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:36:11 -0400
-Received: by mail-vk1-f174.google.com with SMTP id w186so8104934vkd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:36:10 -0700 (PDT)
+        Mon, 22 Jul 2019 14:36:35 -0400
+Received: by mail-vs1-f65.google.com with SMTP id 190so26932740vsf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:36:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AaGq+Qn5ipyvNclhgXPtbHGUf3PKYP2ypbtdsfvuGPE=;
-        b=osk9Sq49PC6jweSqvDPGNpTawDqfETyCe1tAbu9VOkLFzFTsAr+zL99VHezfFVOUWF
-         3YFzTuckiUTd/d0mXDXqH1R9tfxs9b1EljM+F3B0BoKUyUkupKr37Di0RpbFTk3+LnlC
-         pSrnYiutyvFubFi4x0xaJbbIpXT97zAd05k0WFYQ6oHIpMqOpkhI7Yxb/hdOCxZcDBV9
-         dxiYxnYhoJb9leiHgnlMbjMOPnPvG1au8vSgXPvNh74s8sPUxdGJiM/f/r8IVZlCbWKv
-         LMXx07kFL2gb6EnB9xQcZQR7mVet8ltHHkeK2Rr/ge8mbCaCnFpwvcDZsc5hkxe0p7mp
-         k1Rg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=u4izuYmo+kNsiUwAXM6ygOEvVOhLNkyI5KbJVUzFn+o=;
+        b=OE9sSa6dSyW4rlvqEDZqiHHMx+zdjcFF4nHX2Nq43G5o3nY4FdO7e6I5aDPhCLSA63
+         ezt/SzN3dDHfet/eOU6H0EwFFnIcgIn8Mjfh66eKyeV5oWlAxjhxaTz0hE2HqekLlPSJ
+         v1t0e3jrQjruBL+j5X+5YBkMZzQSkFre1JrXIf1BtoMXFFST5cZ41eoq3IFLJDcmhC8t
+         1oxieSfa81Ww5oADkfMC4Cu5tYy3XVMCNC2nZ6OTdHqoW2hJVjoR5wCjqwHbAqZVVHrJ
+         GyOEtxyjdVMQIEQmZ7BdOdNO5pCQvhDFVVY1aWkta8d7V37HJuj2RG60UxVtTEfxsVrm
+         F7Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AaGq+Qn5ipyvNclhgXPtbHGUf3PKYP2ypbtdsfvuGPE=;
-        b=OaEWiSZD3Qhrd3auberE/W2E42KcRepkfKBZJ7t95gXt06BVKbi3VN9lkd+U0fHY2a
-         IFMCBh1pj4430w5gpskmqiGXYRqAhC4JB3mzybeT8sy1OWs7YomYfFPUJJQYJlBOz0JT
-         rnJi50kShEOK3pTdtYnAEAdwLS1IqMN7MHJTOa3n8r60w4Fh+V4E4Fjot6DfPXyt2J/a
-         BKnCJXWh9i/Gaj8NvOZaPhky+Yf03Q/rHxOnQ+SpZb7qT8zamIKFOFBCW4J8jUV0wF79
-         Xv0SV81holNpC1ZOR/c3b9BRLR4xu+cAQB0dpJouVdLp42CIiH0dBUSj+I51ed9O96+d
-         pMbw==
-X-Gm-Message-State: APjAAAVB8WlOt6Hs/yuFUx3J+X0vNgPhJqWcfLqkXH+KJ4CEWFa3qmlq
-        +Ff4EQUZSXyWA5gFieDXsn0+0w==
-X-Google-Smtp-Source: APXvYqzg05DBMl1FiOOEi+BcDj9oMatgFoRzOcxe2TWC1iSrYrMwZsPdQYO2OOGlW8dYgZ2eC5r1aA==
-X-Received: by 2002:a1f:5945:: with SMTP id n66mr26924124vkb.58.1563820570049;
-        Mon, 22 Jul 2019 11:36:10 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id w12sm15578233vso.32.2019.07.22.11.36.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jul 2019 11:36:09 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hpdAO-00068P-L1; Mon, 22 Jul 2019 15:36:08 -0300
-Date:   Mon, 22 Jul 2019 15:36:08 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     bmt@zurich.ibm.com, dledford@redhat.com,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u4izuYmo+kNsiUwAXM6ygOEvVOhLNkyI5KbJVUzFn+o=;
+        b=l0sKgXzQcseFVfwk7uZW6nO7wXZ81yLyDo7PPUGMjRV7N4y4o4tuu5t1Ye1pw9tcTh
+         To7uErwMjBfq5wfY1qI8xJuymnNnbIsN54SZCreUwg0y01O7ZBhmsbZyfKJNJQIRWvos
+         KTBjnrF5du1X5yMqBhOSeq0GGNfKNVev1x6hCX4i15PusrnprLbFkYpr70MZVypzitii
+         P727KUGIAfLCCWD88F/u/a234Pi7mQ/iAllH6V24q8VD6+VDEKkm/dbeiaksxsfk7x4+
+         SCmuisgvpgk+0FHKgW4wiuQ5gGl6mcXYFQuf7YdoF7evW0jly6r31gliDonF2Cjlkqm4
+         ErRQ==
+X-Gm-Message-State: APjAAAW4Ww8wAWDbnJZBq+2edxtikmCpiU6uwcLp8e2Qg270aVVjrZsD
+        27WXpAb/IvpFcAb3naVwKLAiW+35e06N5Q==
+X-Google-Smtp-Source: APXvYqy8GqANbo1n0A4eT5yNcA1w8us81IfhVKmDbX5eAg+yaJE5Y3SUHdM77HMytoD0nZomDxDIug==
+X-Received: by 2002:a67:8cc7:: with SMTP id o190mr44487527vsd.24.1563820594813;
+        Mon, 22 Jul 2019 11:36:34 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 10sm15371158vkl.33.2019.07.22.11.36.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 11:36:33 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     saeedm@mellanox.com, leonro@mellanox.com
+Cc:     yishaih@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
         linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] infiniband: siw: remove set but not used variables
- 'rv'
-Message-ID: <20190722183608.GA23553@ziepe.ca>
-References: <20190719012938.100628-1-maowenan@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190719012938.100628-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] net/mlx5: fix -Wtype-limits compilation warnings
+Date:   Mon, 22 Jul 2019 14:34:42 -0400
+Message-Id: <1563820482-10302-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 09:29:38AM +0800, Mao Wenan wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/infiniband/sw/siw/siw_cm.c: In function siw_cep_set_inuse:
-> drivers/infiniband/sw/siw/siw_cm.c:223:6: warning: variable rv set but not used [-Wunused-but-set-variable]
-> 
-> It is not used since commit 6c52fdc244b5("rdma/siw: connection management")
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/infiniband/sw/siw/siw_cm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+The commit b9a7ba556207 ("net/mlx5: Use event mask based on device
+capabilities") introduced a few compilation warnings due to it bumps
+MLX5_EVENT_TYPE_MAX from 0x27 to 0x100 which is always greater than
+an "struct {mlx5_eqe|mlx5_nb}.type" that is an "u8".
 
-Applied to for-rc
+drivers/net/ethernet/mellanox/mlx5/core/eq.c: In function
+'mlx5_eq_notifier_register':
+drivers/net/ethernet/mellanox/mlx5/core/eq.c:948:21: warning: comparison
+is always false due to limited range of data type [-Wtype-limits]
+  if (nb->event_type >= MLX5_EVENT_TYPE_MAX)
+                     ^~
+drivers/net/ethernet/mellanox/mlx5/core/eq.c: In function
+'mlx5_eq_notifier_unregister':
+drivers/net/ethernet/mellanox/mlx5/core/eq.c:959:21: warning: comparison
+is always false due to limited range of data type [-Wtype-limits]
+  if (nb->event_type >= MLX5_EVENT_TYPE_MAX)
 
-Thanks,
-Jason
+Fix them by removing unnecessary checkings.
+
+Fixes: b9a7ba556207 ("net/mlx5: Use event mask based on device capabilities")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/eq.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eq.c b/drivers/net/ethernet/mellanox/mlx5/core/eq.c
+index 41f25ea2e8d9..2df9aaa421c6 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eq.c
+@@ -215,11 +215,7 @@ static int mlx5_eq_async_int(struct notifier_block *nb,
+ 		 */
+ 		dma_rmb();
+ 
+-		if (likely(eqe->type < MLX5_EVENT_TYPE_MAX))
+-			atomic_notifier_call_chain(&eqt->nh[eqe->type], eqe->type, eqe);
+-		else
+-			mlx5_core_warn_once(dev, "notifier_call_chain is not setup for eqe: %d\n", eqe->type);
+-
++		atomic_notifier_call_chain(&eqt->nh[eqe->type], eqe->type, eqe);
+ 		atomic_notifier_call_chain(&eqt->nh[MLX5_EVENT_TYPE_NOTIFY_ANY], eqe->type, eqe);
+ 
+ 		++eq->cons_index;
+@@ -945,9 +941,6 @@ int mlx5_eq_notifier_register(struct mlx5_core_dev *dev, struct mlx5_nb *nb)
+ {
+ 	struct mlx5_eq_table *eqt = dev->priv.eq_table;
+ 
+-	if (nb->event_type >= MLX5_EVENT_TYPE_MAX)
+-		return -EINVAL;
+-
+ 	return atomic_notifier_chain_register(&eqt->nh[nb->event_type], &nb->nb);
+ }
+ EXPORT_SYMBOL(mlx5_eq_notifier_register);
+@@ -956,9 +949,6 @@ int mlx5_eq_notifier_unregister(struct mlx5_core_dev *dev, struct mlx5_nb *nb)
+ {
+ 	struct mlx5_eq_table *eqt = dev->priv.eq_table;
+ 
+-	if (nb->event_type >= MLX5_EVENT_TYPE_MAX)
+-		return -EINVAL;
+-
+ 	return atomic_notifier_chain_unregister(&eqt->nh[nb->event_type], &nb->nb);
+ }
+ EXPORT_SYMBOL(mlx5_eq_notifier_unregister);
+-- 
+1.8.3.1
+
