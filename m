@@ -2,64 +2,65 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A5EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEA6C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADB0219BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222C121911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563813626;
-	bh=H+NQvOM1+dDQd6srXFzkEL4AA3rhFJ6uWFwuT/ZncSk=;
+	s=default; t=1563813634;
+	bh=2Bqo/P90W7uqk5o/6r5NsYBHOHk80Oe86drp0IBH9Aw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=HsKxdtWkzqo/y6AtWcq0Hbu8XLBuF2e1eRVzICgwdnZXyNZo8NB4N6mCZqf1DJL/K
-	 QKnu9mxEf871E5+H2ZrrkRa2cW2fNsmTXwGvJRkF6uuQJXV+m/2SIgUq/lMNT4tZ/o
-	 twTqVbRbUxo6wvI83m4D+30xLy1LxxeyH5L7mK/A=
+	b=RfbLLmZn5D+EWVG1T4vZhSpQwQmNIg8UHEEPrtn8Njhg6JvniAz/jyGOozO3bZ4Hf
+	 MngvDkIvghYKtHygzRGN5aWZd+xbGFte8W3VdP0VMBOtWIaP5ohgF0or2IjU9+gVhO
+	 I+1HGkUuk7KrgZQKdZE7N8EGl7GthcZxh7KoIUxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfGVQkZ (ORCPT
+        id S1731122AbfGVQkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47838 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 12:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731045AbfGVQkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:40:24 -0400
-Subject: Re: [GIT] Networking
+        id S1731067AbfGVQk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 12:40:26 -0400
+Subject: Re: [GIT pull] sched/urgent for 5.3-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563813623;
-        bh=H+NQvOM1+dDQd6srXFzkEL4AA3rhFJ6uWFwuT/ZncSk=;
+        s=default; t=1563813625;
+        bh=2Bqo/P90W7uqk5o/6r5NsYBHOHk80Oe86drp0IBH9Aw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=queB2YVKxFIiW6pJCpnc2ecNKWNV6ksh/i/PWjDeAH2JZGWnFTaNjDLZJ50aw/hQg
-         lt+O17zvFumI4m8sx1L04vJ3dvJbxBMfB/HvJCrbcrhIVKGqUkh05wN1+BN/M9ntBY
-         urvyT4qBixvKZDzjpT/gqqwGlnSjh4d1treN4Dw8=
+        b=2VI3XgAVHABzRbYnMfG0BRah227wBJRnas7NkwlPvoG67Wnsv6lf98GpWP3RxYBLG
+         V+Clp5e++ZXhU6OMoSbY4Wfe6RAxC4S8CnvFJM4KVoDN9T6Cko6PxAqW1WaZHyZ3oF
+         IWPjewlSmiUz+2FpZHzaPdD3v27ULOXcAYNRbPF4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190721.211321.455757135945724538.davem@davemloft.net>
-References: <20190721.211321.455757135945724538.davem@davemloft.net>
+In-Reply-To: <alpine.DEB.2.21.1907221820570.1659@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907221820570.1659@nanos.tec.linutronix.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190721.211321.455757135945724538.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git refs/heads/master
-X-PR-Tracked-Commit-Id: b617158dc096709d8600c53b6052144d12b89fab
+X-PR-Tracked-Message-Id: <alpine.DEB.2.21.1907221820570.1659@nanos.tec.linutronix.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ sched-urgent-for-linus
+X-PR-Tracked-Commit-Id: b8d3349803ba34afda429e87a837fd95a99b2349
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 83768245a3b158b96d33012b22ab01d193afb2da
-Message-Id: <156381362388.340.10037090759727982516.pr-tracker-bot@kernel.org>
-Date:   Mon, 22 Jul 2019 16:40:23 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 7b5cf701ea9c395c792e2a7e3b7caf4c68b87721
+Message-Id: <156381362542.340.2941693919755926524.pr-tracker-bot@kernel.org>
+Date:   Mon, 22 Jul 2019 16:40:25 +0000
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 21 Jul 2019 21:13:21 -0700 (PDT):
+The pull request you sent on Mon, 22 Jul 2019 18:23:38 +0200 (CEST):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git refs/heads/master
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/83768245a3b158b96d33012b22ab01d193afb2da
+https://git.kernel.org/torvalds/c/7b5cf701ea9c395c792e2a7e3b7caf4c68b87721
 
 Thank you!
 
