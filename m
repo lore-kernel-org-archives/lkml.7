@@ -2,149 +2,156 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC9C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C80C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A02221921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26F522296
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1V9ILuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfGVG6d (ORCPT
+        id S1727686AbfGVHGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 02:58:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:33825 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfGVG6c (ORCPT
+        Mon, 22 Jul 2019 03:06:25 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46085 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfGVHGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 02:58:32 -0400
-Received: from [192.168.1.110] ([77.2.59.209]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mi2aH-1iK6C51qS1-00e5BX; Mon, 22 Jul 2019 08:58:28 +0200
-Subject: Re: [PATCH] ia64: tioca: fix spelling mistake in macros
- CA_APERATURE_{BASE|SIZE}
-To:     Colin King <colin.king@canonical.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190721205921.9960-1-colin.king@canonical.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <0c45cb73-f869-a1ae-e2b9-f2297a6db8e1@metux.net>
-Date:   Mon, 22 Jul 2019 08:58:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Jul 2019 03:06:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so38113319wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7AKc4S2JdeQQN46PQF2XtG4Lb0wPXYNR/5uOmrJuwCI=;
+        b=n1V9ILuFGiEzUzu6vh751kEk3R4i+V91IXoSJlqrNELQuIg9OTOSXjvfRoFZMI+qUD
+         sOseYkxLIKd4eQl8a5NQ/NwTMJP+faWHBKb6arB5aWYQJ8Hk5Is5HkhGPzTSghZ2fzld
+         f4fU6UER4R681nXx7VKwHMCTJ6SR5cOEOzzGx/7wTBJejfu/IrYARxwWYhUnSkEpzo+l
+         Y2mV85siW50mM8hUNQWpTxhJw4ZqqcVhgG4ouq3XWIRjDymNdHITh9h62hFuRGkOvL9O
+         sLwaogitA6gF7TXq0HTDti5ZkYFk+g2ITjoZR8ThP5JY3QAnhjju10fFUm313K4f4CEs
+         eTFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7AKc4S2JdeQQN46PQF2XtG4Lb0wPXYNR/5uOmrJuwCI=;
+        b=ltjYAFajaD42dV3kfB+K6NyGMSgOx550lKjTxqJXXLvBSaAAPikNAqdC2s8sVpEZv0
+         93x52xttL4C/bl9ykxf1VNl3oOcQNy084ogC5FFoHAzCTERu/z2vFuVDPYa+2ZG6k6Ij
+         gy4ESOzraJkyp5uiadA/qF9JjhLKxf44DpSso36MDvrS4WLqR4BT0RlZc/9yLh1fPOZ0
+         AHDsexuzYKdO0da6e5tqvKo+sNLdkVYqZpQ1FR9r/CKdBhPRKmNUecsukGylGDzBEnB9
+         dYtLcJpJJQ1+d+QzEhVRFpbs/opzFgKEFCdVEAWEPPLUC3GzGdtxrTYPyHK3WRRPyG0W
+         NAgQ==
+X-Gm-Message-State: APjAAAUuo5z22kZ95qAQeGtSbBHm7Yv1f5dKxWaIGpA72VnSD4wPFagc
+        oLfWlklMKtlFimeXVGipdg89Fw==
+X-Google-Smtp-Source: APXvYqz1zNy/Suaraf0jDlZuuwYJiXQboZhBofok0+Dw6tTV/c6MAxCe+hyhocPGQ96oLQ/5Yf2ZSA==
+X-Received: by 2002:a5d:4211:: with SMTP id n17mr4118838wrq.137.1563779182766;
+        Mon, 22 Jul 2019 00:06:22 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id k17sm42778533wrq.83.2019.07.22.00.06.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jul 2019 00:06:22 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 08:06:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v4 0/4] Add a generic driver for LED-based backlight
+Message-ID: <20190722070620.GD8402@dell>
+References: <20190717141514.21171-1-jjhiblot@ti.com>
+ <283d9044-df2d-b176-bea9-7e1520d9cf56@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190721205921.9960-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:pW3j4GvUOpOyHC+3k1Q37w9HoWfGi1ZoS4eS4SnudMZ/ZNW/OwG
- pF8S4K86INo3flLgyXk0udbAPuTqcK0thZJiTeUneU2EphH641SiW4pMjeET86aEkHGCAQj
- seMIcVrWsCOfcB189DBX0oecD0qjnBd2dol2KWKhdrJVObaPuLJ5TM6GwZkWzrkgHs2UhnY
- EEShaFWZeJ5uoak74B4NQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XSVY6tdZ90E=:byR3JslXxV+cM38n57Pffw
- CtBDBub7zBtRWYQ549EmtL2+LpLdjOKnZ3aWFGZGudezmhZYm9MJjGWpe/clG8zYjrbWvZyzr
- W6h5YuoCjje+fMTq2axi4EkEO4HyFAvTZrKLpR0SZ7w4UaPGKTV1S8nMLXm19x7Ldl8jcp5LM
- mMZYVo9xeXZE85OfJ5DWp4/C7A6NXDuSmel6mXIOj+DrX2YyWIdFSGa8o4tjvne1gT5S9o7LX
- nTfWKiQkXzMp+R5G8BtNQ5HrdjgUfWHOPq0C0cF8XS34J5Sse0n2of6WIRAL1YYOCAII3tsb9
- TeSyM/TfhOJbRsk9Jw3favTuwKRLGI/OPMt5xzJ9lAiQe3j3SKFPPkOboHsWAutvu6tVDTMSg
- CV7TAcbgvWhzlXqPGdgHQW+bG7raD0qj2vBeyqU3BM8NdiwVnn7+/8FqOAW5yKhIf/A3Rj2lx
- 1bHSzgFxcgqVMecByeg+BRSr9L7QOeKL2rODCHoPkcnwjcSqDwNQynKTW8FJrjo3gfziVsmU/
- CePNy7qM7vnqD4iCj37/Xa50YnsC+UwauBioMlxo08OHFGJr1cZwOU8EAeDVtOjqatROMNYit
- /sgWBY/N/YKi7kvfN0BCTNCXFTrs9Dc/1Mv682Dqpy7qGvFwH9ANLFzfjQgL+vKI7Kb8OI6TG
- kV1L/83fF1zPqiCl2pP9L1H9yA6dN1Rk9MXopHTuk28Gh+BpUq2vqXJqDSCiUbb/RTP0e9TVV
- 2PHu+09JBgPwvzHm09DAAH+PHBgh6zCK8zE81zHx+qZPlCwukT4rG4W73x0=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <283d9044-df2d-b176-bea9-7e1520d9cf56@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.07.19 22:59, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The two macros CA_APERATURE_BASE and CA_APERATURE_SIZE contain
-> a spelling mistake, APERATURE should be APERTURE, so fix these.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   arch/ia64/include/asm/sn/tioca.h  |  4 ++--
->   arch/ia64/sn/pci/tioca_provider.c | 14 +++++++-------
->   2 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/ia64/include/asm/sn/tioca.h b/arch/ia64/include/asm/sn/tioca.h
-> index 666222d7f0f6..4529fb11c86c 100644
-> --- a/arch/ia64/include/asm/sn/tioca.h
-> +++ b/arch/ia64/include/asm/sn/tioca.h
-> @@ -590,7 +590,7 @@ struct tioca {
->   #define CA_AGP_DIRECT_BASE	0x40000000UL	/* 2GB */
->   #define CA_AGP_DIRECT_SIZE	0x40000000UL
->   
-> -#define CA_APERATURE_BASE	(CA_AGP_MAPPED_BASE)
-> -#define CA_APERATURE_SIZE	(CA_AGP_MAPPED_SIZE+CA_PCI32_MAPPED_SIZE)
-> +#define CA_APERTURE_BASE	(CA_AGP_MAPPED_BASE)
-> +#define CA_APERTURE_SIZE	(CA_AGP_MAPPED_SIZE+CA_PCI32_MAPPED_SIZE)
->   
->   #endif  /* _ASM_IA64_SN_TIO_TIOCA_H */
-> diff --git a/arch/ia64/sn/pci/tioca_provider.c b/arch/ia64/sn/pci/tioca_provider.c
-> index a70b11fd57d6..07832f5e8718 100644
-> --- a/arch/ia64/sn/pci/tioca_provider.c
-> +++ b/arch/ia64/sn/pci/tioca_provider.c
-> @@ -55,7 +55,7 @@ tioca_gart_init(struct tioca_kernel *tioca_kern)
->   	 * Validate aperature size
->   	 */
->   
-> -	switch (CA_APERATURE_SIZE >> 20) {
-> +	switch (CA_APERTURE_SIZE >> 20) {
->   	case 4:
->   		ap_reg |= (0x3ff << CA_GART_AP_SIZE_SHFT);	/* 4MB */
->   		break;
-> @@ -90,8 +90,8 @@ tioca_gart_init(struct tioca_kernel *tioca_kern)
->   		ap_reg |= (0x000 << CA_GART_AP_SIZE_SHFT);	/* 4 GB */
->   		break;
->   	default:
-> -		printk(KERN_ERR "%s:  Invalid CA_APERATURE_SIZE "
-> -		       "0x%lx\n", __func__, (ulong) CA_APERATURE_SIZE);
-> +		printk(KERN_ERR "%s:  Invalid CA_APERTURE_SIZE "
-> +		       "0x%lx\n", __func__, (ulong) CA_APERTURE_SIZE);
->   		return -1;
->   	}
->   
-> @@ -106,8 +106,8 @@ tioca_gart_init(struct tioca_kernel *tioca_kern)
->   		tioca_kern->ca_ap_pagesize = 4096;
->   	}
->   
-> -	tioca_kern->ca_ap_size = CA_APERATURE_SIZE;
-> -	tioca_kern->ca_ap_bus_base = CA_APERATURE_BASE;
-> +	tioca_kern->ca_ap_size = CA_APERTURE_SIZE;
-> +	tioca_kern->ca_ap_bus_base = CA_APERTURE_BASE;
->   	tioca_kern->ca_gart_entries =
->   	    tioca_kern->ca_ap_size / tioca_kern->ca_ap_pagesize;
->   
-> @@ -141,7 +141,7 @@ tioca_gart_init(struct tioca_kernel *tioca_kern)
->   	 * Compute PCI/AGP convenience fields
->   	 */
->   
-> -	offset = CA_PCI32_MAPPED_BASE - CA_APERATURE_BASE;
-> +	offset = CA_PCI32_MAPPED_BASE - CA_APERTURE_BASE;
->   	tioca_kern->ca_pciap_base = CA_PCI32_MAPPED_BASE;
->   	tioca_kern->ca_pciap_size = CA_PCI32_MAPPED_SIZE;
->   	tioca_kern->ca_pcigart_start = offset / tioca_kern->ca_ap_pagesize;
-> @@ -159,7 +159,7 @@ tioca_gart_init(struct tioca_kernel *tioca_kern)
->   		return -1;
->   	}
->   
-> -	offset = CA_AGP_MAPPED_BASE - CA_APERATURE_BASE;
-> +	offset = CA_AGP_MAPPED_BASE - CA_APERTURE_BASE;
->   	tioca_kern->ca_gfxap_base = CA_AGP_MAPPED_BASE;
->   	tioca_kern->ca_gfxap_size = CA_AGP_MAPPED_SIZE;
->   	tioca_kern->ca_gfxgart_start = offset / tioca_kern->ca_ap_pagesize;
-> 
+On Thu, 18 Jul 2019, Jacek Anaszewski wrote:
 
-Reviewed-By: Enrico Weigelt <info@metux.net>
+> On 7/17/19 4:15 PM, Jean-Jacques Hiblot wrote:
+> > This series aims to add a led-backlight driver, similar to pwm-backlight,
+> > but using a LED class device underneath.
+> > 
+> > A few years ago (2015), Tomi Valkeinen posted a series implementing a
+> > backlight driver on top of a LED device:
+> > https://patchwork.kernel.org/patch/7293991/
+> > https://patchwork.kernel.org/patch/7294001/
+> > https://patchwork.kernel.org/patch/7293981/
+> > 
+> > The discussion stopped because Tomi lacked the time to work on it.
+> > 
+> > changes in v4:
+> > - fix dev_err() messages and commit logs following the advices of Pavel
+> > - cosmetic changes (indents, getting rid of  "? 1 : 0" in
+> >   led_match_led_node())
+> > 
+> > changes in v3:
+> > - dt binding: don't limit the brightness range to 0-255. Use the range of
+> >   the underlying LEDs. as a side-effect, all LEDs must now have the same
+> >   range
+> > - driver: Adapt to dt binding update.
+> > - driver: rework probe() for clarity and remove the remaining goto.
+> > 
+> > changes in v2:
+> > - handle more than one LED.
+> > - don't make the backlight device a child of the LED controller.
+> > - make brightness-levels and default-brightness-level optional
+> > - removed the option to use a GPIO enable.
+> > - removed the option to use a regulator. It should be handled by the LED
+> >   core
+> > - don't make any change to the LED core (not needed anymore)
+> > 
+> > Jean-Jacques Hiblot (2):
+> >   leds: Add managed API to get a LED from a device driver
+> >   dt-bindings: backlight: Add led-backlight binding
+> > 
+> > Tomi Valkeinen (2):
+> >   leds: Add of_led_get() and led_put()
+> >   backlight: add led-backlight driver
+> > 
+> >  .../bindings/leds/backlight/led-backlight.txt |  28 ++
+> >  drivers/leds/led-class.c                      |  92 ++++++
+> >  drivers/video/backlight/Kconfig               |   7 +
+> >  drivers/video/backlight/Makefile              |   1 +
+> >  drivers/video/backlight/led_bl.c              | 268 ++++++++++++++++++
+> >  include/linux/leds.h                          |   6 +
+> >  6 files changed, 402 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> >  create mode 100644 drivers/video/backlight/led_bl.c
+> > 
+> 
+> For the whole set:
+> 
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> 
+> Lee - we need to create immutable branch for this set since there will
+> be some interfering changes in the LED core in this cycle.
+> 
+> I can create the branch and send the pull request once we will
+> obtain the ack from Rob for DT bindings, unless you have other
+> preference.
+
+We also require a review to be conducted by Daniel Thompson.
+
+After which, an immutable branch sounds like a good idea.  I'd like to
+create this myself if you don't mind.
+
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
