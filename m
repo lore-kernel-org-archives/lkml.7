@@ -2,99 +2,114 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7554C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2D8C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807AA2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063462190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wamzhstl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oq1L146U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfGVPk1 (ORCPT
+        id S1728972AbfGVPls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:40:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37027 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfGVPk1 (ORCPT
+        Mon, 22 Jul 2019 11:41:48 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46209 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGVPlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:40:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so14852914wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:40:26 -0700 (PDT)
+        Mon, 22 Jul 2019 11:41:47 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d4so41059226edr.13;
+        Mon, 22 Jul 2019 08:41:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=IblV1eSdD9A1yoa0yRZtwaxbgDnglVW4LyJYr5t+VuA=;
-        b=Wamzhstl7EUeofLBKyeLwGnqzRZ7TvwFQIloQWCe/PoIjczEgqSP2CJBABLEsapW6H
-         cos00a/M7EqJWfbUejF6efPpC/dStb4dt/SxmW1WwunOP9obT81TQU8+FdMn2VKZTNUc
-         j2A3EqcFNWdXk4ktz7SNxoDAnU/6a4tG6i/gnpcC6waz7Fsl/y2Se7bLblbbNGsNcw+h
-         sV/yKXOkZo/wIFSX7Fw64GbwjJo0MGQcQ/u61AL1HnpmDvqr+Rm63lNss5QkNKisvPCf
-         4Xr9sQH+eKZTs4hd2UKrwc0QSD8SKOnbP9aoOXy3LhfrPQV6J3NyfIyYN9QdAoaU1DJD
-         LR9A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gbhi3M6mI+4oCuQkiXeYBwKqa8lehAmY1ApNgOUqhwo=;
+        b=oq1L146UMTM5yp1F87M46OMRVNjVPxNYCqBgriKVv6dMDXX08s6uRiySQkE09kcK1A
+         Ra2YvaKODVmITKUqtD7D1ZZBRTfaE2EIyiEpJokB2G8dfoqP1hIzdCqNe2owW2cN7JpK
+         /zkAUcT1M6a8ckcpVXXe7ckudGM6GLl5YeRMMzlKGUi8Cgv8GgmvLGEpveZ4wCxnc3C4
+         GLJFTrJWuI6GKBiuXFR8rfOXC8m6Lg7NcV5ejYFsiYQ+u0UPXpfbJ566t2UX28hlymTM
+         STU8X04EdUcw3iu9gaHq2Zbbe4WfrqN3U1tyLEkqb89i0xg7+i4TO2G0kFl8exgLi//U
+         0Dvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=IblV1eSdD9A1yoa0yRZtwaxbgDnglVW4LyJYr5t+VuA=;
-        b=UFgGtTIywcZ75V1m/S3NTZbTfTEt0rO63DUAtnD4I/134sloJe4KuYFw29neL2CtIp
-         45bFt2vemZoKwQNpkQQaa1QXAKkIDzq96qubgl7ffHH9yNuEgiw/yyC1jyvoQy1N644m
-         BS+oqvjJiAvJi/WIqswVNzFcvJBklG8+fuxSXE6CPS06iXrmbEtZHDrb1jUhSvOk4pCw
-         2mTD9l6dOOKjBL/2K8PFRVmkbNcs+UTAeuF8maFZpN0gVYISZCgvVpdJrkGBuJpHq4LN
-         DBhBqYz+FgjE/0iw2v0/UfOpHTKzz3MJLhPOUDSlxh64sT8TUSmSw8y2lKNGj7V38smM
-         XQFQ==
-X-Gm-Message-State: APjAAAW5wXtXkW3EH/LSfKn2kmM0X8xUULfSvJlv6HGWxgqyRoQRgH8T
-        ozB3pu8NB0d4APSF5wLjvXi1J+IHP3AziWWjiMk=
-X-Google-Smtp-Source: APXvYqzDRwQUp64/GbIyFgEq4eROYjDEz3ywrOLm9+d8RDgZNzODGeTNaiy30i/L3MSPmODwFLvhFTohsOy50SN9MME=
-X-Received: by 2002:a5d:498f:: with SMTP id r15mr71037233wrq.353.1563810025346;
- Mon, 22 Jul 2019 08:40:25 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gbhi3M6mI+4oCuQkiXeYBwKqa8lehAmY1ApNgOUqhwo=;
+        b=Yc7j6P8YglB/ovLHphmCVwKpZdsjQKgN3P+ivbpS9g/tcBa8D+9fHsORaiW/bbuN/H
+         QEN+nEHbVTJLrULMImPIOxc8dQWWuqIGmvZdnZmNRrPHX8YZ3CSWCHVDpz6mGCzVpMue
+         1//W5KQiPGbZtNexAf1OD+kZYht1DpobyUImeM/rfoOcgLSSjCTZf3/F232S9NiTUw1+
+         xoUGY1BAR5z350uBDa1pgLOE0YIbS1/tEDKeVCu17VuUkdHhQhGFelCuuyA1xy0F1zWN
+         4ltV5xUS3U6ZyQzecDGOq8fkHmgBEX7XQIoUDTSeSOzPPbFsc4aW+GAWVFTx8rEaTSxq
+         aofg==
+X-Gm-Message-State: APjAAAXKmsEVB++I2lTGRdfpVIbXhQDPrkCdQqL74aYE5CZD/hNOKxxX
+        ZzDbbMH+VI7vGujK2oqUyZhNgHlfrMtMXtTqfPQ=
+X-Google-Smtp-Source: APXvYqxAGVaQMLs79f0ezsPQ6fjGuLy15ZNhz+Hy27pbz3hAzVegkYLJIcY3Cz+18kjo6Re9A52+O183SrZvHqwPE8o=
+X-Received: by 2002:a50:8bfd:: with SMTP id n58mr60475682edn.272.1563810105719;
+ Mon, 22 Jul 2019 08:41:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de>
- <CA+icZUW5jNJY3L5EcxrtOttwpbdAWQ7=U_bZaLHcTogOdNuTcQ@mail.gmail.com> <CA+icZUUtNibYGbHEt+cqsu6cuKYF7=MobvPQ9mkXU1pJZhFw9w@mail.gmail.com>
-In-Reply-To: <CA+icZUUtNibYGbHEt+cqsu6cuKYF7=MobvPQ9mkXU1pJZhFw9w@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 22 Jul 2019 17:40:13 +0200
-Message-ID: <CA+icZUVbYL9RkcVqU=Z0HJgn0U=hYStr30rQDaZ_rcBr27Cv6Q@mail.gmail.com>
-Subject: Re: x86 - clang / objtool status
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        x86@kernel.org
+References: <20190702202631.32148-2-robdclark@gmail.com> <20190710182844.25032-1-robdclark@gmail.com>
+ <20190722142833.GB12009@8bytes.org>
+In-Reply-To: <20190722142833.GB12009@8bytes.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 22 Jul 2019 08:41:34 -0700
+Message-ID: <CAF6AEGvJc2RK3GkpcXiVKsuTX81D3oahnu=qWJ9LFst1eT3tMg@mail.gmail.com>
+Subject: Re: [PATCH v2] iommu: add support for drivers that manage iommu explicitly
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Joe Perches <joe@perches.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 3:48 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+On Mon, Jul 22, 2019 at 7:28 AM Joerg Roedel <joro@8bytes.org> wrote:
 >
-> > First of all I find out that it is possible to download and apply the
-> > series (here: v2) from patchwork (see [1]).
-> > I highly appreciate to have this in Josh's Git [2].
+> On Wed, Jul 10, 2019 at 11:28:30AM -0700, Rob Clark wrote:
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -282,7 +282,8 @@ struct device_driver {
+> >       struct module           *owner;
+> >       const char              *mod_name;      /* used for built-in modules */
 > >
+> > -     bool suppress_bind_attrs;       /* disables bind/unbind via sysfs */
+> > +     bool suppress_bind_attrs:1;     /* disables bind/unbind via sysfs */
+> > +     bool driver_manages_iommu:1;    /* driver manages IOMMU explicitly */
 >
-> There it is.
+> Who will set this bit?
 >
-> - sed@ -
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=objtool-many-fixes-v2
 
-next-20190722 has them.
+It is set by the driver:
 
-Parallely, I opened an CBL issue #617
-"drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:
-.altinstr_replacement+0x86: redundant UACCESS disable"
+https://patchwork.freedesktop.org/patch/315291/
 
-I hope Josh can look at this.
+(This doesn't really belong in devicetree, since it isn't a
+description of the hardware, so the driver is really the only place to
+set this.. which is fine because it is about a detail of how the
+driver works.)
 
-- Sedat -
-
-[1] https://github.com/ClangBuiltLinux/linux/issues/617
+BR,
+-R
