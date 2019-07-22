@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC32C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6E4C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D8322296
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D7F222F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gezfKoa3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qA6B8TEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfGVF51 (ORCPT
+        id S1727681AbfGVF5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:57:27 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37756 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfGVF5P (ORCPT
+        Mon, 22 Jul 2019 01:57:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46254 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfGVF5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:57:15 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w13so39506029eds.4
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 22:57:14 -0700 (PDT)
+        Mon, 22 Jul 2019 01:57:11 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d4so39511398edr.13
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 22:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=TqB0rOZLlIYh0a/SpSOrS2aG6wy2S7sHIDUEyeUZVZg=;
-        b=gezfKoa3qKy7xPyCUHoxaFJthIwAlw54R2fUek3dXgLyhqVEMHotVYj8+wwaIHrNjC
-         IYvfBBQU/JhMWxByqEbyyQipkJJ54h9RUgitieBUKDeIrPLVY7V3O+ZCwxnlxto2GTIb
-         UlZj2kUAdLp0mDSWbArVC1AiJO1iT7lxNdWDZdQ6U35CzScgzRWjVOJd16sg0WeTOc6e
-         R6fadiWy9m1YNkLIJ3JCB7mVUUuAh5EASppf0MiPR1eA9/fxkO4H0IiGWym1mYJgJu45
-         uGUXlOj3BVHEYF+D3xNbDQotLWAdcNhlTTsomh7E+7jYzNqmCSntkgR8PpAV36Coqcrq
-         jjKQ==
+        bh=kwPXLWN6H/COBfq884oPFZycA/+QGtJcjDeTrXDDWXs=;
+        b=qA6B8TEQd3lxAieBE5VShYd/sB2OekDZ7Wip64ey/4vmgfB2ZuTx5Ap++zZxQw2Bn2
+         VnNdRK4E+Zl2U/nHs8h5fpJY7tlpaTP18X0yd/07GmFPqNW+JVuJJMDFcP9HspjEyNvc
+         RpRpCL5sBViuPKHNPlChq6q5JBX3bpP9rqMaI0ypkwS4Pd1EtwU1CpAziFbkdwUG4LUK
+         0EiMpQhWAJAqEWrjvSa+awIR5dWOr+cdHvzSNaaCy66Kpj1ZXhq2lIcORgD8Ym8d+rZZ
+         6KPPC5qtiHV/EVhfWHBHAbfw6Mak4n6ZPBpI33URJsy2odYg4TlMSalo3jTmFMpORmwi
+         CCrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=TqB0rOZLlIYh0a/SpSOrS2aG6wy2S7sHIDUEyeUZVZg=;
-        b=Q2A6YkmbtkV0bK2aS9zY6RSkMgpSqUZNmfuNH25S+GPhqEvwYlBGQdXnyEB+GzO3v7
-         tzdWNx3n6unSAOP/rXUZ5ePaaRpUY7uTlPzlDK2KlE8Pl8lzfjREEdo41r6YwP3QGLLr
-         qXOJX72qYl8w63v2uKh+F6nQKt+2kshO/uExyQUZZaS7Q7oMMVjaAKTX4xUmTCXlq8sk
-         N/33HEet9qKgtXjNd+cxnqEPYyO6AZmTrha8IqEp48/A9Qx12ON6hrsVrSa2yFOu+NRL
-         n7jxd25TEoHz84MbuAqqEUSm+/GYg0H7f1ZzW2KYrXz0rcnoNMTbF6FuHUOwHUoEvNO9
-         aTwA==
-X-Gm-Message-State: APjAAAUEW5crx8f/e3mkjZgaSsh6GlIDjQQyE/D6aDw2JG2O3aVZrQu8
-        MMTuZF573SPcA4YKhRQuIrc=
-X-Google-Smtp-Source: APXvYqx6ImEFwf8Is2ljvvdc4l0y2Rhn6dNHfM+qK/yx45nzcqfiYPSyeBCbYyIS9F+jcjplkkTHxQ==
-X-Received: by 2002:a17:906:af86:: with SMTP id mj6mr6292915ejb.157.1563775033987;
-        Sun, 21 Jul 2019 22:57:13 -0700 (PDT)
+        bh=kwPXLWN6H/COBfq884oPFZycA/+QGtJcjDeTrXDDWXs=;
+        b=NE49jyCALVgOIX/vgK9DITyoJmRsVDEypJ2yHxbnJ7aWJLPxZLzsBF9gUswrIpO+i5
+         7JUdLP+8FF3KgApHUIgF1KwHDRUiKMOQJY8+c2a2i2n898IETaNsJqoyLRVP9femAmNd
+         ojdOZRK2W4uVG1G43jiVaoogiYQMgt4tz6HHcb6kCD9WToOsh97f2BvMse/jgI7GW5dJ
+         o0Pa9KgQpuvg+bj69ka3/zS5oaci+FfRmIe9IvIO/dk9I/ftJQqrgFWFmIBwjO1HzE+o
+         YNc8JA9SZESMuoUQBMjjgPzApvmkwuS/efTPuuOjAqY789n3GAccy8d/pQp3o4hsyZom
+         Wq5w==
+X-Gm-Message-State: APjAAAWAP98jG1MMfrqUZJZUqc8JYuzua14vTtLaJQLFBNw+hdcEifQi
+        ZzwQSKh9xViy0Oy7OJBYp5g=
+X-Google-Smtp-Source: APXvYqwCtu9XPj5RwCf+z9IbEvNwKl31zZN+U2AKja8o8344MGFPPgPlXldvB082TO9Ayxm07z1GJQ==
+X-Received: by 2002:a17:906:4bcb:: with SMTP id x11mr51998939ejv.1.1563775029720;
+        Sun, 21 Jul 2019 22:57:09 -0700 (PDT)
 Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
-        by smtp.gmail.com with ESMTPSA id a6sm10351725eds.19.2019.07.21.22.57.11
+        by smtp.gmail.com with ESMTPSA id a6sm10351725eds.19.2019.07.21.22.57.07
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 22:57:13 -0700 (PDT)
+        Sun, 21 Jul 2019 22:57:09 -0700 (PDT)
 From:   shiva.linuxworks@gmail.com
 X-Google-Original-From: sshivamurthy@micron.com
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -72,9 +72,9 @@ To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Jeff Kletsky <git-commits@allycomm.com>,
         Chuanhong Guo <gch981213@gmail.com>,
         liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [PATCH 7/8] mtd: spinand: micron: Fix read failure in Micron M70A flashes
-Date:   Mon, 22 Jul 2019 07:56:20 +0200
-Message-Id: <20190722055621.23526-8-sshivamurthy@micron.com>
+Subject: [PATCH 5/8] mtd: spinand: micron: prepare for generalizing driver
+Date:   Mon, 22 Jul 2019 07:56:18 +0200
+Message-Id: <20190722055621.23526-6-sshivamurthy@micron.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722055621.23526-1-sshivamurthy@micron.com>
 References: <20190722055621.23526-1-sshivamurthy@micron.com>
@@ -85,43 +85,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shivamurthy Shastri <sshivamurthy@micron.com>
 
-M70A series flashes by default enable continuous read feature (BIT0 in
-configuration register). This feature will not expose the ECC to host
-and causing read failure.
+Generalize OOB layout structure and function names.
 
 Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
 ---
- drivers/mtd/nand/spi/micron.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mtd/nand/spi/micron.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-index 6fde93ec23a1..1e28ea3d1362 100644
+index 7d7b1f7fcf71..95bc5264ebc1 100644
 --- a/drivers/mtd/nand/spi/micron.c
 +++ b/drivers/mtd/nand/spi/micron.c
-@@ -127,6 +127,15 @@ static int micron_spinand_detect(struct spinand_device *spinand)
- 	return 1;
+@@ -34,38 +34,38 @@ static SPINAND_OP_VARIANTS(update_cache_variants,
+ 		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
+ 		SPINAND_PROG_LOAD(false, 0, NULL, 0));
+ 
+-static int mt29f2g01abagd_ooblayout_ecc(struct mtd_info *mtd, int section,
+-					struct mtd_oob_region *region)
++static int micron_ooblayout_ecc(struct mtd_info *mtd, int section,
++				struct mtd_oob_region *region)
+ {
+ 	if (section)
+ 		return -ERANGE;
+ 
+-	region->offset = 64;
+-	region->length = 64;
++	region->offset = mtd->oobsize / 2;
++	region->length = mtd->oobsize / 2;
+ 
+ 	return 0;
  }
  
-+static int micron_spinand_init(struct spinand_device *spinand)
-+{
-+	/*
-+	 * Some of the Micron flashes enable this BIT by default,
-+	 * and there is a chance of read failure due to this.
-+	 */
-+	return spinand_upd_cfg(spinand, CFG_QUAD_ENABLE, 0);
-+}
-+
- static void micron_fixup_param_page(struct spinand_device *spinand,
- 				    struct nand_onfi_params *p)
+-static int mt29f2g01abagd_ooblayout_free(struct mtd_info *mtd, int section,
+-					 struct mtd_oob_region *region)
++static int micron_ooblayout_free(struct mtd_info *mtd, int section,
++				 struct mtd_oob_region *region)
  {
-@@ -150,6 +159,7 @@ static void micron_fixup_param_page(struct spinand_device *spinand,
+ 	if (section)
+ 		return -ERANGE;
  
- static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
- 	.detect = micron_spinand_detect,
-+	.init = micron_spinand_init,
- 	.fixup_param_page = micron_fixup_param_page,
+ 	/* Reserve 2 bytes for the BBM. */
+ 	region->offset = 2;
+-	region->length = 62;
++	region->length = (mtd->oobsize / 2) - 2;
+ 
+ 	return 0;
+ }
+ 
+-static const struct mtd_ooblayout_ops mt29f2g01abagd_ooblayout = {
+-	.ecc = mt29f2g01abagd_ooblayout_ecc,
+-	.free = mt29f2g01abagd_ooblayout_free,
++static const struct mtd_ooblayout_ops micron_ooblayout_ops = {
++	.ecc = micron_ooblayout_ecc,
++	.free = micron_ooblayout_free,
  };
  
+-static int mt29f2g01abagd_ecc_get_status(struct spinand_device *spinand,
+-					 u8 status)
++static int micron_ecc_get_status(struct spinand_device *spinand,
++				 u8 status)
+ {
+ 	switch (status & MICRON_STATUS_ECC_MASK) {
+ 	case STATUS_ECC_NO_BITFLIPS:
+@@ -98,8 +98,8 @@ static const struct spinand_info micron_spinand_table[] = {
+ 					      &write_cache_variants,
+ 					      &update_cache_variants),
+ 		     0,
+-		     SPINAND_ECCINFO(&mt29f2g01abagd_ooblayout,
+-				     mt29f2g01abagd_ecc_get_status)),
++		     SPINAND_ECCINFO(&micron_ooblayout_ops,
++				     micron_ecc_get_status)),
+ };
+ 
+ static int micron_spinand_detect(struct spinand_device *spinand)
 -- 
 2.17.1
 
