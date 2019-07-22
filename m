@@ -2,86 +2,101 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D40CC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 01:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA092C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 01:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37510218BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 01:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E41520659
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 01:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPo2tFvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfGVB1m (ORCPT
+        id S1728574AbfGVBhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 21:27:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:1716 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbfGVB1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 21:27:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jul 2019 18:27:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,292,1559545200"; 
-   d="scan'208";a="320541601"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jul 2019 18:27:39 -0700
-Date:   Mon, 22 Jul 2019 09:27:50 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "Chen, Rong A" <rong.a.chen@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shravan Kumar Ramani <sramani@mellanox.com>,
-        LKP <lkp@01.org>, David Woods <dwoods@mellanox.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [LKP] [gpio] f69e00bd21: unixbench.score -24.2% regression
-Message-ID: <20190722012750.GB50506@shbuild999.sh.intel.com>
-References: <20190710121518.GR17490@shao2-debian>
- <CACRpkdYmtgO_E-KKE8zjA04POawJ=4RN3xFUPY__7GF+gSNbNQ@mail.gmail.com>
+        Sun, 21 Jul 2019 21:37:50 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:36599 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfGVBht (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 21:37:49 -0400
+Received: by mail-ua1-f66.google.com with SMTP id v20so14697687uao.3
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 18:37:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/YkkaXfp503K6bLavwX+qLvL6w0rpc7OLS8RSOtuP+M=;
+        b=cPo2tFvmLuL6fLvqjzIrpG5LQd6ZWvV9aljHPmVYV9oIi91hq7SbO+hBg0Ef1tnZv/
+         y8Kpw/wqFcD4YVj4iq6eINMCPzxoCoeL556+nFs/cIezGZvZ26tghKRDHxKgo2v3m1P6
+         a3xfjEZCDBscay3d0wlHtY7gFCrahakcsuViTLI4gk2ISuSIXrCpN/fstZxpNPyaKp8p
+         HwfNUYROO68VNeFQ6QD8mC0YCspXYUWalaES/UqK7EPG5+Z8uh2drVV287yRExzoBTzG
+         X7GeixClBJda7OLDJWQQCK6lN3ZwIHtmTkBmnb8GWsbxRDOHRrKqV8FWLZQmEBR4pXmO
+         Ox5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/YkkaXfp503K6bLavwX+qLvL6w0rpc7OLS8RSOtuP+M=;
+        b=cFRXz0jVksUu2dvVcm5sH7i7y7WBivna7O7/yNE/HwCKPObhver8p07xfuAeKaKPr/
+         jmXSAraZAhxESAe4VjMRpm5+BhHnklPby0xl+MCjqv9DolsXGD8k9ZcKWfzkJeqWuirb
+         V3gJgpuKevXJj8zewBQmpwN5JL5/XZAOVMoqWnZYoNwd2ZhL1c0+Cwjs5AuTGB+n/df8
+         l6Yr3hzBQENhS42P5YAbGXJbcT2hRFbeMPAYiyqtt/C6tSx5HUuGcp1Kx/fHM2HURE6h
+         mecNZHJd9YPvrY8tEN9ReIrQ3m/gUy7ZZdsg87Nz21i7Ej97jU1+4j48tg6ndpQAvPlT
+         J9UQ==
+X-Gm-Message-State: APjAAAXaA7Fm5Cqa/gXKmYLwmM0Xs0S982Afl+s1Wzla57d+GrIoPRWG
+        lRRrDIMZlwy7u5xQ+DMfRkhe6LTAtvRGX57/7j0=
+X-Google-Smtp-Source: APXvYqxLgColy907bv+RwBJRyVN1Bx58/q3rCSAwiU5gvj3bLTrGLzMLnM+/DiRXaLqljPpql6cWCfolPagxy7+VP3s=
+X-Received: by 2002:ab0:70b1:: with SMTP id q17mr15913997ual.100.1563759468363;
+ Sun, 21 Jul 2019 18:37:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYmtgO_E-KKE8zjA04POawJ=4RN3xFUPY__7GF+gSNbNQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
+In-Reply-To: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
+From:   huang ying <huang.ying.caritas@gmail.com>
+Date:   Mon, 22 Jul 2019 09:37:37 +0800
+Message-ID: <CAC=cRTMz5S636Wfqdn3UGbzwzJ+v_M46_juSfoouRLS1H62orQ@mail.gmail.com>
+Subject: Re: kernel BUG at mm/swap_state.c:170!
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Huang Ying <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi, Mikhail,
 
-On Wed, Jul 17, 2019 at 05:42:15AM +0800, Linus Walleij wrote:
-> On Wed, Jul 10, 2019 at 2:15 PM kernel test robot <rong.a.chen@intel.com> wrote:
-> 
-> > FYI, we noticed a -24.2% regression of unixbench.score due to commit:
-> > commit: f69e00bd21aa6a1961c521b6eb199137fcb8a76a ("gpio: mmio: Support two direction registers")
-> > https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-> 
-> That's pretty bogus since the test doesn't even seem to be using GPIO.
-> Further AFAIK Intel chips don't even use that driver.
-> 
-> Can you provide some rootcausing?
+On Wed, May 29, 2019 at 12:05 PM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> Hi folks.
+> I am observed kernel panic after update to git tag 5.2-rc2.
+> This crash happens at memory pressing when swap being used.
+>
+> Unfortunately in journalctl saved only this:
+>
+> May 29 08:02:02 localhost.localdomain kernel: page:ffffe90958230000
+> refcount:1 mapcount:1 mapping:ffff8f3ffeb36949 index:0x625002ab2
+> May 29 08:02:02 localhost.localdomain kernel: anon
+> May 29 08:02:02 localhost.localdomain kernel: flags:
+> 0x17fffe00080034(uptodate|lru|active|swapbacked)
+> May 29 08:02:02 localhost.localdomain kernel: raw: 0017fffe00080034
+> ffffe90944640888 ffffe90956e208c8 ffff8f3ffeb36949
+> May 29 08:02:02 localhost.localdomain kernel: raw: 0000000625002ab2
+> 0000000000000000 0000000100000000 ffff8f41aeeff000
+> May 29 08:02:02 localhost.localdomain kernel: page dumped because:
+> VM_BUG_ON_PAGE(entry != page)
+> May 29 08:02:02 localhost.localdomain kernel: page->mem_cgroup:ffff8f41aeeff000
+> May 29 08:02:02 localhost.localdomain kernel: ------------[ cut here
+> ]------------
+> May 29 08:02:02 localhost.localdomain kernel: kernel BUG at mm/swap_state.c:170!
 
-We did some further check, and found this is a false alarm. That some recent 
-change to LKP itself has enabled the latencytop for newer kernel(post 5.1-rc1),
-and latencytop is known to bring extra system load to scheduling related
-benchmarks like unixbench, which caused this -24.7 difference of unixbench
-score. Sorry for the noise.
+I am trying to reproduce this bug.  Can you give me some information
+about your test case?
 
-Thanks,
-Feng
-
-
-> If you are using GPIOs from userspace in the test somehow I am
-> sure both me and Bartosz would be interested to hear how.
-> 
-> Yours,
-> Linus Walleij
-> _______________________________________________
-> LKP mailing list
-> LKP@lists.01.org
-> https://lists.01.org/mailman/listinfo/lkp
+Best Regards,
+Huang, Ying
