@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20D8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4183EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60812199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084B82199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbfGVS51 (ORCPT
+        id S1732097AbfGVS5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:57:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38200 "EHLO
+        Mon, 22 Jul 2019 14:57:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38156 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732076AbfGVS5Q (ORCPT
+        with ESMTP id S1732054AbfGVS5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:57:16 -0400
+        Mon, 22 Jul 2019 14:57:12 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hpdUo-0002TC-CO; Mon, 22 Jul 2019 20:57:14 +0200
-Message-Id: <20190722105221.134696837@linutronix.de>
+        id 1hpdUk-0002S0-6s; Mon, 22 Jul 2019 20:57:10 +0200
+Message-Id: <20190722105220.585449120@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 22 Jul 2019 20:47:30 +0200
+Date:   Mon, 22 Jul 2019 20:47:24 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
@@ -34,7 +34,7 @@ Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>,
         Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [patch V3 25/25] x86/apic/x2apic: Implement IPI shorthands support
+Subject: [patch V3 19/25] cpumask: Implement cpumask_or_equal()
 References: <20190722104705.550071814@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,79 +43,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All callers of apic->send_IPI_all() and apic->send_IPI_allbutself() contain
-the decision logic for shorthand invocation already and invoke
-send_IPI_mask() if the prereqisites are not satisfied.
+The IPI code of x86 needs to evaluate whether the target cpumask is equal
+to the cpu_online_mask or equal except for the calling CPU.
 
-Implement shorthand support for x2apic.
+To replace the current implementation which requires the usage of a
+temporary cpumask, which might involve allocations, add a new function
+which compares a cpumask to the result of two other cpumasks which are
+or'ed together before comparison.
+
+This allows to make the required decision in one go and the calling code
+then can check for the calling CPU being set in the target mask with
+cpumask_test_cpu().
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V2: Remove the decision logic now that it is already done in the callers
+V2: New patch
 ---
- arch/x86/kernel/apic/local.h          |    1 +
- arch/x86/kernel/apic/x2apic_cluster.c |    4 ++--
- arch/x86/kernel/apic/x2apic_phys.c    |   12 ++++++++++--
- 3 files changed, 13 insertions(+), 4 deletions(-)
+ include/linux/bitmap.h  |   23 +++++++++++++++++++++++
+ include/linux/cpumask.h |   14 ++++++++++++++
+ lib/bitmap.c            |   20 ++++++++++++++++++++
+ 3 files changed, 57 insertions(+)
 
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -23,6 +23,7 @@ unsigned int x2apic_get_apic_id(unsigned
- u32 x2apic_set_apic_id(unsigned int id);
- int x2apic_phys_pkg_id(int initial_apicid, int index_msb);
- void x2apic_send_IPI_self(int vector);
-+void __x2apic_send_IPI_shorthand(int vector, u32 which);
- 
- /* IPI */
- 
---- a/arch/x86/kernel/apic/x2apic_cluster.c
-+++ b/arch/x86/kernel/apic/x2apic_cluster.c
-@@ -82,12 +82,12 @@ x2apic_send_IPI_mask_allbutself(const st
- 
- static void x2apic_send_IPI_allbutself(int vector)
- {
--	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLBUT);
-+	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLBUT);
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -120,6 +120,10 @@ extern int __bitmap_empty(const unsigned
+ extern int __bitmap_full(const unsigned long *bitmap, unsigned int nbits);
+ extern int __bitmap_equal(const unsigned long *bitmap1,
+ 			  const unsigned long *bitmap2, unsigned int nbits);
++extern bool __pure __bitmap_or_equal(const unsigned long *src1,
++				     const unsigned long *src2,
++				     const unsigned long *src3,
++				     unsigned int nbits);
+ extern void __bitmap_complement(unsigned long *dst, const unsigned long *src,
+ 			unsigned int nbits);
+ extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+@@ -321,6 +325,25 @@ static inline int bitmap_equal(const uns
+ 	return __bitmap_equal(src1, src2, nbits);
  }
  
- static void x2apic_send_IPI_all(int vector)
- {
--	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLINC);
-+	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLINC);
- }
- 
- static u32 x2apic_calc_apicid(unsigned int cpu)
---- a/arch/x86/kernel/apic/x2apic_phys.c
-+++ b/arch/x86/kernel/apic/x2apic_phys.c
-@@ -75,12 +75,12 @@ static void
- 
- static void x2apic_send_IPI_allbutself(int vector)
- {
--	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLBUT);
-+	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLBUT);
- }
- 
- static void x2apic_send_IPI_all(int vector)
- {
--	__x2apic_send_IPI_mask(cpu_online_mask, vector, APIC_DEST_ALLINC);
-+	__x2apic_send_IPI_shorthand(vector, APIC_DEST_ALLINC);
- }
- 
- static void init_x2apic_ldr(void)
-@@ -112,6 +112,14 @@ void __x2apic_send_IPI_dest(unsigned int
- 	native_x2apic_icr_write(cfg, apicid);
- }
- 
-+void __x2apic_send_IPI_shorthand(int vector, u32 which)
++/**
++ * bitmap_or_equal - Check whether the or of two bitnaps is equal to a third
++ * @src1:	Pointer to bitmap 1
++ * @src2:	Pointer to bitmap 2 will be or'ed with bitmap 1
++ * @src3:	Pointer to bitmap 3. Compare to the result of *@src1 | *@src2
++ *
++ * Returns: True if (*@src1 | *@src2) == *@src3, false otherwise
++ */
++static inline bool bitmap_or_equal(const unsigned long *src1,
++				   const unsigned long *src2,
++				   const unsigned long *src3,
++				   unsigned int nbits)
 +{
-+	unsigned long cfg = __prepare_ICR(which, vector, 0);
++	if (!small_const_nbits(nbits))
++		return __bitmap_or_equal(src1, src2, src3, nbits);
 +
-+	x2apic_wrmsr_fence();
-+	native_x2apic_icr_write(cfg, 0);
++	return !(((*src1 | *src2) ^ *src3) & BITMAP_LAST_WORD_MASK(nbits));
 +}
 +
- unsigned int x2apic_get_apic_id(unsigned long id)
+ static inline int bitmap_intersects(const unsigned long *src1,
+ 			const unsigned long *src2, unsigned int nbits)
  {
- 	return id;
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -476,6 +476,20 @@ static inline bool cpumask_equal(const s
+ }
+ 
+ /**
++ * cpumask_or_equal - *src1p | *src2p == *src3p
++ * @src1p: the first input
++ * @src2p: the second input
++ * @src3p: the third input
++ */
++static inline bool cpumask_or_equal(const struct cpumask *src1p,
++				    const struct cpumask *src2p,
++				    const struct cpumask *src3p)
++{
++	return bitmap_or_equal(cpumask_bits(src1p), cpumask_bits(src2p),
++			       cpumask_bits(src3p), nr_cpumask_bits);
++}
++
++/**
+  * cpumask_intersects - (*src1p & *src2p) != 0
+  * @src1p: the first input
+  * @src2p: the second input
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -59,6 +59,26 @@ int __bitmap_equal(const unsigned long *
+ }
+ EXPORT_SYMBOL(__bitmap_equal);
+ 
++bool __bitmap_or_equal(const unsigned long *bitmap1,
++		       const unsigned long *bitmap2,
++		       const unsigned long *bitmap3,
++		       unsigned int bits)
++{
++	unsigned int k, lim = bits / BITS_PER_LONG;
++	unsigned long tmp;
++
++	for (k = 0; k < lim; ++k) {
++		if ((bitmap1[k] | bitmap2[k]) != bitmap3[k])
++			return false;
++	}
++
++	if (!(bits % BITS_PER_LONG))
++		return true;
++
++	tmp = (bitmap1[k] | bitmap2[k]) ^ bitmap3[k];
++	return (tmp & BITMAP_LAST_WORD_MASK(bits)) == 0;
++}
++
+ void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int bits)
+ {
+ 	unsigned int k, lim = BITS_TO_LONGS(bits);
 
 
