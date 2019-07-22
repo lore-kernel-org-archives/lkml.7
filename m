@@ -2,131 +2,110 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0864C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E77C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25342190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563812850;
-	bh=o12NqoZEmCj8E28uul2QfNlz/FhaMnYoQeuLJKQpsYk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tn5e7RfKHOn6Z1TcuUAS2O/sEWW/73CAGFAAPSJdI2E2B9LEXc62K1RpxHKuZJ18L
-	 O/lxsPqE/NlwyLZUrE0QggxuR6XULeg+N4ySgfL1WQLreHFNruXaSB8OYaSSUnIKL9
-	 muNykXwCbYe43jfot/xoXvySm1TPYbSRtIq6f+G0=
+	by mail.kernel.org (Postfix) with ESMTP id 5A5812190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:27:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="PDoIL05i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbfGVQ13 (ORCPT
+        id S1730951AbfGVQ1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:27:29 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40500 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfGVQ12 (ORCPT
+        Mon, 22 Jul 2019 12:27:38 -0400
+Received: from sonic313-20.consmr.mail.ir2.yahoo.com ([77.238.179.187]:40750
+        "EHLO sonic313-20.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730077AbfGVQ1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:27:28 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m8so4618154lji.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 09:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lrQN0yqvzQ5aGg/mBBhYNrYwwouTDYMSmlFKnTYPITM=;
-        b=R06cfJg6rDTpJOcz+/dVm6tW7Hg2Gq5+OJ2Mb79eMEPZzhTnacKiI8UjzVFFV5wx2t
-         jnSg0L3jIm0BpiWrW+x4+NW2zZyrwVpae2mExWlxkQFnymW9eYp7cCoaI1bzVCBRxful
-         DkyW4GKgJy/hPdl0FPq+YEQ0Wh0b8GkpoNGLk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lrQN0yqvzQ5aGg/mBBhYNrYwwouTDYMSmlFKnTYPITM=;
-        b=JIxa1qRBgkJn2r/wmumcOr7agdLmt4ZhJ7sfYStoPEGafv3HCoOIAGlEUp1VMLNmRb
-         uC1BhiujqmpWF12F8rMfuafLS8SHinlGcXr3vKPNztw/9CG0qdxumKmoikvHyGPn/XOx
-         dpmZC8njFo9WxGRtvP/tNs3U/UltCX/6sg47ypETyVqDjx5c3yQ9hk7A7YhuQVCpURaO
-         6irLgdDWwR8Xx/GjoiLBYmi9asFKpB5vf9fqTcEVFBrURsD8nqoDtBVnTUCw1Y57lsA7
-         4QWRaiW4llfQIyFF2AQzmTSKZQk7tX+Z0ciNdVeRR9NAT75lH9+dGuyBULWkna2YMBlM
-         iZBw==
-X-Gm-Message-State: APjAAAW5bm2Kej8ZTogI8LjmBjH7S9uC8OmNxxu38pzrT4/AC9nov1VD
-        bBpYGWR6B2kM8vEPzckC7g9hpr+/bXs=
-X-Google-Smtp-Source: APXvYqwQCWkM37Bsxh7KRM6d0TpCqVNK138Q2+XiATthIby+ACHkuTdeAzvo6QYrPmWwaDiU9KVtwA==
-X-Received: by 2002:a2e:80c8:: with SMTP id r8mr36695899ljg.168.1563812846142;
-        Mon, 22 Jul 2019 09:27:26 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id n10sm6114654lfe.24.2019.07.22.09.27.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 09:27:25 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id p17so38229193ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 09:27:24 -0700 (PDT)
-X-Received: by 2002:a2e:9192:: with SMTP id f18mr7117663ljg.52.1563812844686;
- Mon, 22 Jul 2019 09:27:24 -0700 (PDT)
+        Mon, 22 Jul 2019 12:27:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563812854; bh=4tmyXeIY4oqFIVBQrFKdjj4C+ZBVcIroyn01PfQ/hHM=; h=Subject:To:References:Cc:From:Date:In-Reply-To:From:Subject; b=PDoIL05iiWF7UEY97RncX2mn5BEWGfVbh0EBTCk+45qefwCsQpBR2hdpoCu8ra+Rq7LpAqFFBDtGTpQLo755H+QAUR0z4wVOqck/uIIUQx3QFItccWtsyWCbwVWSnKGLnQ3VxEFLUhnPvJcdusnTGubs3PL/fpwTP+xwPYxU4KMA7vffNm7EPA0T0qPt3Fc+J2nhWqoaJ6c6Y1IY6vOGomAMTJen3YQZ43yHk5s3co8rnEUS/YfU4F7l+dpVsvoN8n25j8u2x8yOgBWwm5o2kDH/6E3BJ2hjuMPDUQDAPcCtPuj2lfJ/GsQy9QiFjdrR/NoXXYWmYF0aQhQumIn1vQ==
+X-YMail-OSG: kJzK8G0VM1nKSd0411aaQcR1cgN1N9H0NE1Il2FHTI9KnNHDofM4LaONFl1lApv
+ Vyh8jk3edFw5qprRvl.92gaApjmfttnN6y6CGP4kx9ocxQZaKSqZhXvwaPQNMlXNucX3wwKllt4w
+ ODZNWYmjZ3Fa7uqIkti4UqNl2Sn91EqI1VvpI.ikwSGpZZu1MhspOgtBFXeXaZJkZ5gHctBAHwit
+ mR2dN2bgXHnJrPar5iqNYwTKPZL01Npgc6.UXOHl8wE7zcCTBfiMXVeVGbYqXsq3XmPYXlsQV_rA
+ oXQ2bGuGeMmN5sxLIMim7NEf3Q86k7WiMy4ffi8wE2sxBzRoovZQadl7Tj9U0iRTgx4QHHA4w99S
+ KQuBrfrz64khcZHTHb_sphzRQRUhwxefMk7hnc2PQkIqZsKPMKnkH7OMr3sR_8SrZq5CF4lbmELu
+ 587MFziqA8Ug9HW4B1zxBAJOPhtEyj947WCxnh928ne3N_2KUd5MM3shSC34PdMLfF1RLFbW_vFt
+ AQK9V_6DepeByE_YTaVKrf9dlBrhGojuoYGcTwWd5zOL_K68f1woziDex_YkysKi_cIXOibYqa7f
+ CHVlk.8BCFkQx0yMVfg.jQfyCoH0eYlmKJfhBx.A00Lv5LFf.0A5Tij_BMmx8C4uaiVOWielMJUg
+ rF6BvW3eIWef2ANZCPqDq0SxfR00jWyf3g1Bj95Vg3mB1N1mo9rrrAeRFqTWFssZk_aDLuozfhP6
+ wIT9sroPknqhOUale6sVeiGF6AvrOJE48TVytuKrJId0nuO9rzH9DgTIWOYCrS_2zTfg4wx0JJES
+ eWpnGNG7zMPhfp2nVTqchZ0EpsWiLlITLbmW482a3NNarNeXIlZlmniBMarD6ogDqVA9qhrbWeBF
+ CGkMFZUucrpZbUY.gBPxxdJjiCnrmdAyIL5h5XV9TyWvZjt4QodE9g8iv0NBnS_Auej3beTB7L06
+ RA9M8eaKOrqGb96ad_um_DaY43jI08vs8MOrpIJrKms2MDOJGJBtOhWB8LZ4TFZ_oGz2DI6XcFID
+ qF_4caa_d3B5OUL9LK4ovobNaOEH4js3T9nOIx92H4yJxzxYbiytPbr9T8dzgi_PBdD43zDA5GDL
+ 95qStHVJx7L.Mhqt31dJX.hnzthMVcuBOg3ekPH4ogu4uBh0Ux_F0xYTkTs6ESPA1vqkYyeIB0eg
+ GGo3CZH2oGWdDwcfjbxNpINjZWASZbLgkk5ViHqc5k3821Ds0hZ8X77Q-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ir2.yahoo.com with HTTP; Mon, 22 Jul 2019 16:27:34 +0000
+Received: by smtp420.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 0f3571226556d2a71ae3b00089e7ff33;
+          Mon, 22 Jul 2019 16:27:30 +0000 (UTC)
+Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+References: <20190722025043.166344-1-gaoxiang25@huawei.com>
+ <20190722025043.166344-24-gaoxiang25@huawei.com>
+ <20190722101818.GN20977@twin.jikos.cz>
+ <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
+ <20190722132513.GA5172@mit.edu>
+ <db672675-c471-5bc8-af15-91c1859e9008@aol.com>
+ <20190722151226.GC5172@mit.edu>
+Cc:     dsterba@suse.cz, Gao Xiang <gaoxiang25@huawei.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+From:   Gao Xiang <hsiangkao@aol.com>
+Message-ID: <a5001fe8-217a-42bc-9257-45bef544762e@aol.com>
+Date:   Tue, 23 Jul 2019 00:27:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722142238.16129-1-christian@brauner.io>
-In-Reply-To: <20190722142238.16129-1-christian@brauner.io>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Jul 2019 09:27:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com>
-Message-ID: <CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com>
-Subject: Re: [GIT PULL] pidfd fixes
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722151226.GC5172@mit.edu>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 7:26 AM Christian Brauner <christian@brauner.io> wrote:
->
-> This contains a fix for pidfd polling. It ensures that the task's exit
-> state is visible to all waiters:
 
-Hmm.
 
-I've pulled this, but the exit_state thing has been very fragile
-before, and I'm not entirely happy with how this just changes where it
-is set. I guess the movement here is all inside the tasklist_lock, so
-it's not that big of a deal, but still..
+On 2019/7/22 ????11:12, Theodore Y. Ts'o wrote:
+> On Mon, Jul 22, 2019 at 10:16:44PM +0800, Gao Xiang wrote:
+>> OK, I will give a try. One point I think is how to deal with the case
+>> if there is already cached information when remounting as well as you said.
+>>
+>> As the first step, maybe the mount option can be defined as
+>> allowing/forbiding caching from now on, which can be refined later.
+> 
+> Yes; possible solutions include ignoring the issue (assuming that
+> cached data structures that "shouldn't" be in the cache given the new
+> cache strategy will fall out of the cache over time), forcibly
+> flushing the cache when the caching strategy has changed, and of
+> course, forbidding caching strategy change at remount time.
 
-I would *really* like Oleg to take a look.
+Okay, thanks for your kindly suggestion :)
 
-Also, and the primary reason I write this email is that this basically
-makes the "EXIT_ZOMBIE / EXIT_DEAD" state handling look all kinds of
-crazy. You set it to EXIT_ZOMBIE potentially _twice_. Whaa?
+will do, hopefully resend this week (I agree less bugs with less
+kernel configs.).
 
-So if we set EXIT_ZOMBIE early, then I think we should change the
-EXIT_DEAD case too. IOW, do something like this on top:
+Thanks,
+Gao Xiang
 
-  --- a/kernel/exit.c
-  +++ b/kernel/exit.c
-  @@ -734,9 +734,10 @@ static void exit_notify(struct task_struct
-*tsk, int group_dead)
-                autoreap = true;
-        }
-
-  -     tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
-  -     if (tsk->exit_state == EXIT_DEAD)
-  +     if (autoreap) {
-  +             tsk->exit_state = EXIT_DEAD;
-                list_add(&tsk->ptrace_entry, &dead);
-  +     }
-
-        /* mt-exec, de_thread() is waiting for group leader */
-        if (unlikely(tsk->signal->notify_count < 0))
-
-where now the logic becomes "ok, we turned into a zombie above, and if
-we autoreap this thread then we turn the zombie into a fully dead
-thread".
-
-Because currently we end up having "first turn it into a zombie", then
-"set it to zombie or dead depending on autoreap" and then "if we
-turned it into dead, move it to the dead list".
-
-That just feels confused to me. Comments?
-
-              Linus
+> 
+> Cheers,
+> 
+> 					- Ted
+> 
