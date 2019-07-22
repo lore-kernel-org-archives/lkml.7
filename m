@@ -2,106 +2,72 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8FEC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8E1C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D184022305
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PP0eSpGL"
+	by mail.kernel.org (Postfix) with ESMTP id 6676D22322
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfGVHO1 (ORCPT
+        id S1727483AbfGVHRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:14:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43668 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfGVHO1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:14:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so16933516pfg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rKKwPKQ9nSH1uCbjpYY0QdQfAXfR9yy6okm4F8X7Kfk=;
-        b=PP0eSpGL9fJvYulXJ4voZq4Jh7vxlXxo8EL8ugM+R/prryBtWxNwVsTCyjZLqnSAgQ
-         /yyZ7O8UA5ScPZgjwDejQ/Yi0WSW6DkAl9fJLgeDXEBOCV0skgYrmsI0WmduD2xClwVw
-         krvoRSVZXy975cfdfS7S7STa/dD6nk4tUg0QSqA0ejwJ+mSVTARL+BwLWadmie6HaUKR
-         I7kBAxl70FYkvuwxVHT69BbMGtRgFiAFoVB2uNnGZkcA7yB5Li8kobWOj2HD9Plb5uT0
-         TKHUCDqEvI1WNiBAwiGTrO5mMhKs7bYFdb/f0Vjq3ytn16P6AVk4+Ox7fruON+gvujrZ
-         h8nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rKKwPKQ9nSH1uCbjpYY0QdQfAXfR9yy6okm4F8X7Kfk=;
-        b=rd5yepKoIU64pB3CZ1RH4fBHtem9QepzksY+aGa08m3bFYXCfPHmLSHGa6RZ0WnEhi
-         6+1fu1A8pq//+DQBOEXCOYgTG1WmHcxoTsIUOUzuKJwM2S6kzpSajlUIz8IrvBZaSoIu
-         HtdfUUJtEMhqpH69XJ+GQAqDiEaNRuFabWZJUKjpNbXjsVnX9TdeAFWl2iJr3K650xKc
-         NKmm1VB8yNM8bSBQyds/uQg7/rYPPhLDzsNhYER6j1Gl16/80CWNsYuuGXpEqL92otgQ
-         BCkwNtrsPafeo9UAqu/7idAX3H/p7a/x3bnhw2Q1gDB2YSieR+zCp6YjUP6m4xCEC7aM
-         aSqA==
-X-Gm-Message-State: APjAAAVMyWETW/NkDwxz+5/y1zFhm10y5oswOU8JtaF48UFKeRTfa5zQ
-        pMKJSKHSc2tXALtt2fHrKNo=
-X-Google-Smtp-Source: APXvYqxR6M9vTipkk84zlF3VH62Hs3fFypm9ayC0zj9LFqagpkrYFOqMSV+EYgBVLAjN5A6aykTdBQ==
-X-Received: by 2002:a63:5d45:: with SMTP id o5mr70953105pgm.40.1563779666597;
-        Mon, 22 Jul 2019 00:14:26 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 195sm61983642pfu.75.2019.07.22.00.14.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 00:14:25 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Lvqiang Huang <lvqiang.huang@unisoc.com>
-Subject: [PATCH] ARM: check stmfd instruction using right shift
-Date:   Mon, 22 Jul 2019 15:14:19 +0800
-Message-Id: <20190722071419.22535-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722071122.22434-1-zhang.lyra@gmail.com>
-References: <20190722071122.22434-1-zhang.lyra@gmail.com>
+        Mon, 22 Jul 2019 03:17:23 -0400
+Received: from relay.sw.ru ([185.231.240.75]:59240 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfGVHRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 03:17:22 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hpSZT-0000FE-Aq; Mon, 22 Jul 2019 10:17:19 +0300
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH] fuse: cleanup fuse_wait_on_page_writeback
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Miklos Szeredi <miklos@szeredi.hu>
+Message-ID: <64e2db3a-cf58-0158-e097-1a504a8bb496@virtuozzo.com>
+Date:   Mon, 22 Jul 2019 10:17:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lvqiang Huang <Lvqiang.Huang@unisoc.com>
+From: Maxim Patlasov <mpatlasov@virtuozzo.com>
+fuse_wait_on_page_writeback() always returns zero and nobody cares.
+Let's make it void.
 
-In the commit ef41b5c92498 ("ARM: make kernel oops easier to read"),
--               .word   0xe92d0000 >> 10        @ stmfd sp!, {}
-+               .word   0xe92d0000 >> 11        @ stmfd sp!, {}
-then the shift need to change to 11.
-
-Fixes: ef41b5c92498 ("ARM: make kernel oops easier to read")
-Signed-off-by: Lvqiang Huang <Lvqiang.Huang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Signed-off-by: Maxim Patlasov <mpatlasov@virtuozzo.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 ---
- arch/arm/lib/backtrace.S |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
-index 7d7952e..926851b 100644
---- a/arch/arm/lib/backtrace.S
-+++ b/arch/arm/lib/backtrace.S
-@@ -70,7 +70,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 5ae2828beb00..e076c2cf65b0 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -383,12 +383,11 @@ static inline bool fuse_page_is_writeback(struct inode *inode, pgoff_t index)
+  * Since fuse doesn't rely on the VM writeback tracking, this has to
+  * use some other means.
+  */
+-static int fuse_wait_on_page_writeback(struct inode *inode, pgoff_t index)
++static void fuse_wait_on_page_writeback(struct inode *inode, pgoff_t index)
+ {
+ 	struct fuse_inode *fi = get_fuse_inode(inode);
  
- 1003:		ldr	r2, [sv_pc, #-4]	@ if stmfd sp!, {args} exists,
- 		ldr	r3, .Ldsi+4		@ adjust saved 'pc' back one
--		teq	r3, r2, lsr #10		@ instruction
-+		teq	r3, r2, lsr #11		@ instruction
- 		subne	r0, sv_pc, #4		@ allow for mov
- 		subeq	r0, sv_pc, #8		@ allow for mov + stmia
+ 	wait_event(fi->page_waitq, !fuse_page_is_writeback(inode, index));
+-	return 0;
+ }
  
+ /*
 -- 
-1.7.9.5
+2.17.1
 
