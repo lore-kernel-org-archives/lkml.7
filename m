@@ -2,151 +2,162 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2A0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD85DC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B1F21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EB22190D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817279;
-	bh=zkc0AxRVk2GB+h/SsQ+smgKflL9ocWfJ7X0W37xKxpg=;
+	s=default; t=1563817285;
+	bh=6sFnxyB/QBz0w34YwHV+jid1lKjjURWsnBJV4eIHLZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r0vo8FsAmXdIXiE2t530Z7IP2A7KPpznkr9PAjM3wk2RP+b1yWySQegOruluJ0RY7
-	 nW5hWoGjneRySGYxVEr44uR2IOQMA1qs/UE9XNmyFGy7OWBHXp8uLlBmOaURnZTzcf
-	 z6f9mNz6y9lYv+SvDKqFOYUCPYry86RI/888/ocU=
+	b=tOE61ASygr/AQJ5KGPH4aLptEqLMwAz21U9ABY/ZWbCd5f9O6AWvLQ6yl0C9gix9S
+	 yNfL5dXrcBpl7qDokLl4wtIwbJyPW4Y+fk731997kK6wiV13McWNmqTpBdW74n1+iS
+	 wLLpT/B0SttubEwq/W6SPygXX5JieNXvHEE50k2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfGVRlS (ORCPT
+        id S1731879AbfGVRlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46796 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfGVRlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:41:18 -0400
+        id S1730037AbfGVRlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:41:24 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E7F621901;
-        Mon, 22 Jul 2019 17:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7655E21BE6;
+        Mon, 22 Jul 2019 17:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817277;
-        bh=zkc0AxRVk2GB+h/SsQ+smgKflL9ocWfJ7X0W37xKxpg=;
+        s=default; t=1563817283;
+        bh=6sFnxyB/QBz0w34YwHV+jid1lKjjURWsnBJV4eIHLZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JACHSfuMYG1DpUdBQjxJj34HG9gX3ZE/WZK1/KIIdU16zmc8MS/04zrERbjytbvZu
-         z6i2cGN8p0RdZZDEKg1Om8xHC+/ej2Sa3RgitklNOLGMLOdRx7tjBs28Ko5mMfh94y
-         R+KSJYatPx8q+tKJV4qKm6NUBEFRSQf/VT4ylJk4=
+        b=XsL6yGStlCXr/pXZ85jzlDQTzxC4f8YB9dvK5nWQm7KGvme5Aq6OSz/KI2Lk3sqnR
+         jrYgQR2SW+yDOwiGcRKWXhFXGMrAyfv0xv1yoIGnnJMS3zzIhREsqtTfqDkwXOBnGr
+         2i/Z7DOucvIsBAiBb0lh7a4ORIfpBvDEPMWR6hXo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@redhat.com>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Mark Drayton <mbd@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 20/37] perf stat: Fix segfault for event group in repeat mode
-Date:   Mon, 22 Jul 2019 14:38:22 -0300
-Message-Id: <20190722173839.22898-21-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>
+Subject: [PATCH 21/37] perf augmented_raw_syscalls: Augment sockaddr arg in 'connect'
+Date:   Mon, 22 Jul 2019 14:38:23 -0300
+Message-Id: <20190722173839.22898-22-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Numfor Mbiziwo-Tiapo reported segfault on stat of event group in repeat
-mode:
+We already had a beautifier for an augmented sockaddr payload, but that
+was when we were hooking on each syscalls:sys_enter_foo tracepoints,
+since now we're almost doing that by doing a tail call from
+raw_syscalls:sys_enter, its almost the same, we can reuse it straight
+away.
 
-  # perf stat -e '{cycles,instructions}' -r 10 ls
+  # perf trace -e connec* ssh www.bla.com
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(4<socket:[16604782]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 0x6e) = 0
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(5</etc/hosts>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(5</etc/hosts>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(5</etc/hosts>, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 0x10) = 0
+  connect(5</etc/hosts>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 0x10) = 0
+  connect(5</etc/hosts>, { .family: PF_INET6, port: 22, addr: ::ffff:146.112.61.108 }, 0x1c) = 0
+  ^C#
 
-It's caused by memory corruption due to not cleaned evsel's id array and
-index, which needs to be rebuilt in every stat iteration. Currently the
-ids index grows, while the array (which is also not freed) has the same
-size.
-
-Fixing this by releasing id array and zeroing ids index in
-perf_evsel__close function.
-
-We also need to keep the evsel_list alive for stat record (which is
-disabled in repeat mode).
-
-Reported-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Mark Drayton <mbd@fb.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190715142121.GC6032@krava
+Link: https://lkml.kernel.org/n/tip-5xkrbcpjsgnr3zt1aqdd7nvc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 9 ++++++++-
- tools/perf/util/evsel.c   | 2 ++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ .../examples/bpf/augmented_raw_syscalls.c     | 35 ++++++++++++++++---
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b55a534b4de0..352cf39d7c2f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -607,7 +607,13 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * group leaders.
- 	 */
- 	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
--	perf_evlist__close(evsel_list);
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 77bb6a0edce3..d7a292d7ee2f 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -16,6 +16,7 @@
+ 
+ #include <unistd.h>
+ #include <linux/limits.h>
++#include <linux/socket.h>
+ #include <pid_filter.h>
+ 
+ /* bpf-output associated map */
+@@ -69,10 +70,13 @@ pid_filter(pids_filtered);
+ 
+ struct augmented_args_payload {
+        struct syscall_enter_args args;
+-       struct {
+-	       struct augmented_filename filename;
+-	       struct augmented_filename filename2;
+-       };
++       union {
++		struct {
++			struct augmented_filename filename,
++						  filename2;
++		};
++		struct sockaddr_storage saddr;
++	};
+ };
+ 
+ bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
+@@ -112,11 +116,32 @@ int syscall_unaugmented(struct syscall_enter_args *args)
+ }
+ 
+ /*
+- * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
++ * These will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
+  * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
+  * on from there, reading the first syscall arg as a string, i.e. open's
+  * filename.
+  */
++SEC("!syscalls:sys_enter_connect")
++int sys_enter_connect(struct syscall_enter_args *args)
++{
++	int key = 0;
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
++	const void *sockaddr_arg = (const void *)args->args[1];
++	unsigned int socklen = args->args[2];
++	unsigned int len = sizeof(augmented_args->args);
 +
-+	/*
-+	 * We need to keep evsel_list alive, because it's processed
-+	 * later the evsel_list will be closed after.
-+	 */
-+	if (!STAT_RECORD)
-+		perf_evlist__close(evsel_list);
- 
- 	return WEXITSTATUS(status);
- }
-@@ -1997,6 +2003,7 @@ int cmd_stat(int argc, const char **argv)
- 			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
- 		}
- 
-+		perf_evlist__close(evsel_list);
- 		perf_session__delete(perf_stat.session);
- 	}
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index b787ec778049..7d1757a2ec46 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1292,6 +1292,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
- 	xyarray__delete(evsel->sample_id);
- 	evsel->sample_id = NULL;
- 	zfree(&evsel->id);
-+	evsel->ids = 0;
- }
- 
- static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
-@@ -2078,6 +2079,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
- 
- 	perf_evsel__close_fd(evsel);
- 	perf_evsel__free_fd(evsel);
-+	perf_evsel__free_id(evsel);
- }
- 
- int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	if (socklen > sizeof(augmented_args->saddr))
++		socklen = sizeof(augmented_args->saddr);
++
++	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
++}
++
+ SEC("!syscalls:sys_enter_open")
+ int sys_enter_open(struct syscall_enter_args *args)
+ {
 -- 
 2.21.0
 
