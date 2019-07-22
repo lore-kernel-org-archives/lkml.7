@@ -2,151 +2,141 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11585C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28777C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BFC21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563765589;
-	bh=o9ug2UGWvRNfm5yi/YzSxu10Y1TaJv2KLaYjJ/mfy0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rwcx7mt3ItvJTw52wTdrAl7lVg+KSXDmfFoUboGRpvM0O2flBGrBWF1JEpuJzZqxq
-	 BYgxXwpD+sSIwNOXByL3qVtnmZ7Jwz4sIFUTQeVyXam4/8PZ/xicKmB+9lV2zuJqAJ
-	 W+32/wh3AKLndeiPUKZOJEVYrOVYdo1La2G6EyUk=
+	by mail.kernel.org (Postfix) with ESMTP id 030CB21953
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:22:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="cDdCMvSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfGVDTr (ORCPT
+        id S1727805AbfGVDWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 23:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfGVDTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 23:19:47 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD48421926;
-        Mon, 22 Jul 2019 03:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563765585;
-        bh=o9ug2UGWvRNfm5yi/YzSxu10Y1TaJv2KLaYjJ/mfy0Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QgUn3Rj4Aed2n2RovpV4pioNUoW2LcC3GtRy+3THrGzonOpPTFoYCy02l7V5upYjT
-         atHVlacFtwY7jCkSzTBDM4UY73DNKHTkqhxA+s6CBDulL6HsPLWJqH6w3i81D94jKv
-         Vg2NwDzTz3Lub6sWRazgE01R03KHX6XW+KMCbV6Y=
-Date:   Mon, 22 Jul 2019 11:19:16 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC
- platforms
-Message-ID: <20190722031914.GU3738@dragon>
-References: <20190621070720.12395-1-Anson.Huang@nxp.com>
- <20190624022200.GN3800@dragon>
- <20190624022713.GO3800@dragon>
- <DB3PR0402MB39162662C69B45BDB948D002F5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190722020026.GQ3738@dragon>
- <AM6PR0402MB39113A76EE8A63F9C9F589C1F5C40@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+        Sun, 21 Jul 2019 23:22:15 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37299 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfGVDWP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 23:22:15 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c9so25461677lfh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 20:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aAm6iRQPlrqd77BVpOEOx8I7+PSe0NwGfNRgqs6nZII=;
+        b=cDdCMvSvKcnIW2NfjF1EyVuXtQjnzbihephboKIpmrwDerjhDGgQKdb/SnbaEVfSee
+         4ukWvo0ljAj17DWU4/xeE1Z3yHnsUu93h7dVOcq+3QLg7tNXviQxtnwI9fT9mDmPSo68
+         Xo1e8bSuPtgjuLwBJxduxee6B0j21J4FQ2EBWYF6dFYIihonnxuWrYEGMtm39LnmeX+C
+         5UfrJiUfVYOqwWUnpnuxClsg8vmQx4roUu/yl4FQmsQORNKs+b05js9CpsV7JdaZ1Ecw
+         kvEN1ynEMW7C+iX11ZeF1VC3ez/JQTlYhAQHK4gHyczkHflRb+Bgn7NcXb8dCA8hshDn
+         kKgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aAm6iRQPlrqd77BVpOEOx8I7+PSe0NwGfNRgqs6nZII=;
+        b=MkCf8Lw3e/RpGxWcN6W+6vyKD6XwuLHjdAB3F6ZoB7Z7Q5ALL8v46UxJ5Ew7qHxlWD
+         On7FB7QADFmo9sCaSjIqXgvfX+2aNXm8xGCvE/9nfXsVzRV6F5mZOdKtUUw9QIkOjSK4
+         OHToaGmbkYjZZWGzBtWR0u0kmNwGDQRDTqHfLbEHir5H9MYxF5vmkUDgq9YPWY/vIZ/+
+         /fardJb63ASbmaemdZ/XnLQs60aKb3cjDHyBvek7j1eoYGXjC04WcseNnwLdL6IZVw3r
+         X/JP4XIR9Xqgmx9LPy6AKC3HNf4VkGzeRpAKowkVUBj86HR+B4CFkU/MgpzdDNPYUhiW
+         5L5A==
+X-Gm-Message-State: APjAAAWCAH77aDzADZZfysJVDIBKYV0Mf4x11zso8+8LIkzmxLczpeRL
+        r0U+4PF6I5XEElkKdYsreVtEhJI4F1f54rn21t2CWQ==
+X-Google-Smtp-Source: APXvYqyNQFGODO1SuMBqEAOd91JrLxVN2pAN3l5K5e8lAiCRTWWBg8b2Me7gxUe9Dn1e/ZSWpTXjRWWu7Q9OKThwmzc=
+X-Received: by 2002:a19:ca4b:: with SMTP id h11mr29019214lfj.162.1563765733032;
+ Sun, 21 Jul 2019 20:22:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR0402MB39113A76EE8A63F9C9F589C1F5C40@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190719133135.32418-1-lifei.shirley@bytedance.com> <20190719110852-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190719110852-mutt-send-email-mst@kernel.org>
+From:   =?UTF-8?B?5p2O6I+y?= <lifei.shirley@bytedance.com>
+Date:   Mon, 22 Jul 2019 11:22:02 +0800
+Message-ID: <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
+Subject: Re: [External Email] Re: [PATCH v1 0/2] virtio-mmio: support multiple
+ interrupt vectors
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        virtio-dev@lists.oasis-open.org
+Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fam Zheng <zhengfeiran@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 02:15:10AM +0000, Anson Huang wrote:
-> Hi, Shawn
-> 
-> > On Mon, Jun 24, 2019 at 02:35:10AM +0000, Anson Huang wrote:
-> > > Hi, Shawn
-> > >
-> > > > -----Original Message-----
-> > > > From: Shawn Guo <shawnguo@kernel.org>
-> > > > Sent: Monday, June 24, 2019 10:27 AM
-> > > > To: Anson Huang <anson.huang@nxp.com>
-> > > > Cc: mark.rutland@arm.com; Aisheng Dong <aisheng.dong@nxp.com>;
-> > Peng
-> > > > Fan <peng.fan@nxp.com>; festevam@gmail.com; Jacky Bai
-> > > > <ping.bai@nxp.com>; devicetree@vger.kernel.org; sboyd@kernel.org;
-> > > > catalin.marinas@arm.com; s.hauer@pengutronix.de; linux-
-> > > > kernel@vger.kernel.org; Daniel Baluta <daniel.baluta@nxp.com>;
-> > > > linux- clk@vger.kernel.org; robh+dt@kernel.org; dl-linux-imx <linux-
-> > > > imx@nxp.com>; kernel@pengutronix.de; Leonard Crestez
-> > > > <leonard.crestez@nxp.com>; will@kernel.org; mturquette@baylibre.com;
-> > > > linux-arm-kernel@lists.infradead.org; Abel Vesa <abel.vesa@nxp.com>
-> > > > Subject: Re: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for
-> > > > ARCH_MXC platforms
-> > > >
-> > > > On Mon, Jun 24, 2019 at 10:22:01AM +0800, Shawn Guo wrote:
-> > > > > On Fri, Jun 21, 2019 at 03:07:17PM +0800, Anson.Huang@nxp.com
-> > wrote:
-> > > > > > From: Anson Huang <Anson.Huang@nxp.com>
-> > > > > >
-> > > > > > ARCH_MXC platforms needs system counter as broadcast timer to
-> > > > > > support cpuidle, enable it by default.
-> > > > > >
-> > > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > > > > ---
-> > > > > >  arch/arm64/Kconfig.platforms | 1 +
-> > > > > >  1 file changed, 1 insertion(+)
-> > > > > >
-> > > > > > diff --git a/arch/arm64/Kconfig.platforms
-> > > > > > b/arch/arm64/Kconfig.platforms index 4778c77..f5e623f 100644
-> > > > > > --- a/arch/arm64/Kconfig.platforms
-> > > > > > +++ b/arch/arm64/Kconfig.platforms
-> > > > > > @@ -173,6 +173,7 @@ config ARCH_MXC
-> > > > > >  	select PM
-> > > > > >  	select PM_GENERIC_DOMAINS
-> > > > > >  	select SOC_BUS
-> > > > > > +	select TIMER_IMX_SYS_CTR
-> > > > >
-> > > > > Where is that driver?
-> > > >
-> > > > Okay, just found it in the mailbox.  They seem to be sent in the wrong
-> > order.
-> > > > Really, you should send this series only after the driver lands on mainline.
-> > >
-> > > OK, just noticed that mainline does NOT have it, since I did it based on next
-> > tree.
-> > > I will resend the patch series after the system counter driver landing on
-> > mainline.
-> > 
-> > I just picked the series up, so no need to resend.
-> 
-> Something changed for this series, the system counter clock related implementation
-> are changed after some comments from maintainer, so I think you should picked up
-> below patch series instead, and drop this series,
-> 
-> https://patchwork.kernel.org/patch/11037953/
+On Fri, Jul 19, 2019 at 11:14 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Fri, Jul 19, 2019 at 09:31:33PM +0800, Fei Li wrote:
+> > Hi,
+> >
+> > This patch series implements multiple interrupt vectors support for
+> > virtio-mmio device. This is especially useful for multiqueue vhost-net
+> > device when using firecracker micro-vms as the guest.
+> >
+> > Test result:
+> > With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs can
+> > receive 9 times more pps comparing with only one irq:
+> > - 564830.38 rxpck/s for 8 irqs on
+> > - 67665.06 rxpck/s for 1 irq on
+> >
+> > Please help to review, thanks!
+> >
+> > Have a nice day
+> > Fei
+>
+>
+> Interesting. The spec says though:
+>
+>         4.2.3.4
+>         Notifications From The Device
+>         The memory mapped virtio device is using a single, dedicated interrupt signal, which is asserted when at
+>         least one of the bits described in the description of InterruptStatus is set. This is how the device sends a
+>         used buffer notification or a configuration change notification to the device.
+>
+Yes, the spec needs to be updated if we want to use mult-irqs.
+>
+> So I'm guessing we need to change the host/guest interface?
+Just to confirm, does the "the host/guest interface" you mentioned mean how to
+pass the irq information from the user space tool to guest kernel?
+In this patch, we do this by passing the [irq_start, irq_end]
+interface via setting guest
+kernel command line, that is done in vm_cmdline_set().
+Also there is another way to do this: add two new registers describing irq info
+(irq_start & irq_end OR irq_start & irq_numbers) to the virtio config space.
 
-Okay, dropped clk and dts patches.  arch/arm64/Kconfig.platforms one is kept.
+Which one do you prefer?
 
-Shawn
+> If true pls cc virtio-dev.
+Sure.
+>
+> Also, do we need to update dt bindings documentation?
+You mean the following doc? Sure. :)
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/virtio/mmio.txt
+
+Thanks for the review!
+
+Have a nice day
+Fei
+
+
+>
+> >
+> > Fam Zheng (1):
+> >   virtio-mmio: Process vrings more proactively
+> >
+> > Fei Li (1):
+> >   virtio-mmio: support multiple interrupt vectors
+> >
+> >  drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++++++--------
+> >  1 file changed, 196 insertions(+), 42 deletions(-)
+> >
+> > --
+> > 2.11.0
