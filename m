@@ -2,140 +2,134 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1F0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC776C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB875218B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8073F21903
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:33:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="q+g/GyIi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZowcOjJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfGVRck (ORCPT
+        id S1727496AbfGVRdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:32:40 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59751 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfGVRck (ORCPT
+        Mon, 22 Jul 2019 13:33:42 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43712 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfGVRdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:32:40 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190722173237euoutp0199dddaa5a060b119797553e01d57ecbb~zyw5PB6CM2844428444euoutp01O
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 17:32:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190722173237euoutp0199dddaa5a060b119797553e01d57ecbb~zyw5PB6CM2844428444euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563816757;
-        bh=85hIYZIUSz2sajlTBWW2bBjChuGeN2EeF//kqgRb2D0=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=q+g/GyIiCSk+dVn1nzJwAjrNZSpMtXOg1/tllmmhS+Sl5i/AI++KYFiXiYyibiv53
-         luWvZA4BcDUY9WYWRQNXBTHEtk4I7BgIuv8ZYVZ3DOItfhounaTih+HQ7jhVHCpsQH
-         htkEQ5CuzsBAJXSbtre8VCiCrk+9cKxD3SZkFt0M=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190722173237eucas1p16e96da4835c4f0ac84c47c31cefda747~zyw4Z8IC11305913059eucas1p1v;
-        Mon, 22 Jul 2019 17:32:37 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id C8.DC.04298.433F53D5; Mon, 22
-        Jul 2019 18:32:36 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190722173236eucas1p171299dfaa34f3124622df488bfe57a89~zyw3m9yeP0714007140eucas1p1l;
-        Mon, 22 Jul 2019 17:32:36 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190722173235eusmtrp1a484cb96a4f7d585c54b0134f26c21d9~zyw3Y7q9v0411704117eusmtrp1g;
-        Mon, 22 Jul 2019 17:32:35 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-73-5d35f334eb5c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 54.47.04146.333F53D5; Mon, 22
-        Jul 2019 18:32:35 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190722173235eusmtip1e2c9e2516c30587a1479aaf27bb423bc~zyw3DIbIi0484004840eusmtip15;
-        Mon, 22 Jul 2019 17:32:35 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2] phy: core: document phy_calibrate()
-Date:   Mon, 22 Jul 2019 19:32:23 +0200
-Message-Id: <20190722173223.19518-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRmVeSWpSXmKPExsWy7djPc7omn01jDQ4tNbDYOGM9q8WFpz1s
-        Fpd3zWGzmHF+H5PFomWtzBZrj9xld2Dz6NuyitHj+I3tTB6fN8kFMEdx2aSk5mSWpRbp2yVw
-        ZUy7OYelYBNnxZy7s1gbGG+xdzFyckgImEhM3nmRtYuRi0NIYAWjxK65z1kgnC+MEp8X3oPK
-        fGaUWPhxGStMy/nOzUwQieWMEhMbTyO0bNiwlwmkik3AUKLrbRcbiC0i4CCxZOkdNpAiZoH1
-        jBIrF38H2y4sYC4x4e9RMJtFQFWi988LRhCbV8BWYuW7WUwQ6+QlVm84wAzSLCGwh03i28of
-        UHe4SExo+gVVJCzx6vgWqJdkJE5P7mGBaGhmlHh4bi07hNPDKHG5aQYjRJW1xOHjII9zAN2k
-        KbF+lz5E2FFiTdt+dpCwhACfxI23giBhZiBz0rbpzBBhXomONiGIajWJWcfXwa09eOESVImH
-        RPNcdZCwkECsRM+T5ywTGOVmIaxawMi4ilE8tbQ4Nz212DAvtVyvODG3uDQvXS85P3cTIzDi
-        T/87/mkH49dLSYcYBTgYlXh4N+wxjRViTSwrrsw9xCjBwawkwptnABTiTUmsrEotyo8vKs1J
-        LT7EKM3BoiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAmNtpXhiw2+D63eMyIXE5zhFOpYx/
-        Q5UUxW2i3N9GdbPPcPoWvu/r7gQ1o0tnH88/VfDX5vhGPgV11W9P8316WPwlmy+dkp8uH29w
-        OyN9daS5pAz/qbhprz0FpzwNrv8c/OaLQKFfM0PaIXmjhRLnrpff90ncdksvj3lRiopol+Xs
-        a0Elc/SVWIozEg21mIuKEwEGbCqh9AIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsVy+t/xu7rGn01jDXY/NLfYOGM9q8WFpz1s
-        Fpd3zWGzmHF+H5PFomWtzBZrj9xld2Dz6NuyitHj+I3tTB6fN8kFMEfp2RTll5akKmTkF5fY
-        KkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZUy7OYelYBNnxZy7s1gbGG+x
-        dzFyckgImEic79zM1MXIxSEksJRRYvKZs2wQCRmJk9MaWCFsYYk/17rYIIo+MUrM3/YOLMEm
-        YCjR9bYLrEFEwEmic+1psCJmgY2MEk93XmUESQgLmEtM+HsUbB2LgKpE758XYHFeAVuJle9m
-        MUFskJdYveEA8wRGngWMDKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzECA23bsZ+bdzBe2hh8
-        iFGAg1GJh3fDHtNYIdbEsuLK3EOMEhzMSiK8eQZAId6UxMqq1KL8+KLSnNTiQ4ymQMsnMkuJ
-        JucDoyCvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAMj08RpOdnM
-        ht8Vs7mXrcucurDo/P0cbiFzr6kMs94stvv22k3t3KJdR+bum3HlbM6cvKJ1QcY8P840f4rI
-        X1t06p707F1SjqfrZZWVH71LfpqxNyPQsmzOEWcbWZNvsam9yrqvq1b3L9vY5BaRLiQ8bS67
-        8pQV/e8+Rr7Z8zb4MYOdgm2PvMIlJZbijERDLeai4kQA5ftaukoCAAA=
-X-CMS-MailID: 20190722173236eucas1p171299dfaa34f3124622df488bfe57a89
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190722173236eucas1p171299dfaa34f3124622df488bfe57a89
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190722173236eucas1p171299dfaa34f3124622df488bfe57a89
-References: <CGME20190722173236eucas1p171299dfaa34f3124622df488bfe57a89@eucas1p1.samsung.com>
+        Mon, 22 Jul 2019 13:33:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so12498909pld.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 10:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ax8I1mb7UwIFxfCmMJfuzkJQZA4WbZ7Ek1Ds9PvMQYU=;
+        b=ZowcOjJMdxosv2QSzqf2eI08qVemvBx1XFUBmEfS4sU/PraJBWF671A5zObKnz4TfD
+         zk/CQmr2CoQ/bq7hFwV/jk7C4Zl+sLHE/NGWoR8qwxKIwHpxQQ4RjoUJThjmRHvGEZgo
+         CUZMefdwNypT9GNU3PI/XXImbp4GU9RlYE3TQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ax8I1mb7UwIFxfCmMJfuzkJQZA4WbZ7Ek1Ds9PvMQYU=;
+        b=KVo+nXE+hp5FPOScIxMKTnRSVG73khxbi/wVvjfMEBRR9D4Lr+Mpv9PfKHRlUNKZ2I
+         zxQ48c0hjrislQJ8ae153p92TUj3BTUSyYtJhmKB/Ar8PC/vH2zXUj4Vpc/lDfTBecPw
+         T0Ljz75HDmV8f6st7NAXUQdvvo5Kq9HPPoBnjZ7Oo6bWZK3fDgeg66xzOLshG/C73BSU
+         +e2Zq/fHHW+vumHA3eYElKKoe60VZh2IoRiDFQ39DUh3Kt6vUyljRkOvdfM8PbJ0e/yb
+         2zz8ldQt5c8ATV+jiTF/1t3sfPbQv220htnxXZUuCWNDrPC96g7xWSAy7zMeXfN+iIbP
+         LXLw==
+X-Gm-Message-State: APjAAAVJBR/EZ8lrFhP+T8JMS+5SzuVQegD6nP11YnQ8+TD3tZOiNPII
+        FSqjlvW0bFTyel4xaQ1s458Z2g==
+X-Google-Smtp-Source: APXvYqyX5Rkq79yH7MiGBYeJZggeb9zVsBWnRCFtyBj046jkmfMHzDiZGrpNESNeWOyNSE0LXKj3OA==
+X-Received: by 2002:a17:902:7043:: with SMTP id h3mr48081374plt.10.1563816821309;
+        Mon, 22 Jul 2019 10:33:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n98sm41097264pjc.26.2019.07.22.10.33.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jul 2019 10:33:40 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 10:33:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Nitin Gote <nitin.r.gote@intel.com>, akpm@linux-foundation.org,
+        corbet@lwn.net, apw@canonical.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [RFC PATCH] string.h: Add stracpy/stracpy_pad (was: Re: [PATCH]
+ checkpatch: Added warnings in favor of strscpy().)
+Message-ID: <201907221031.8B87A9DE@keescook>
+References: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
+ <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
+ <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 36914111e682 ("drivers: phy: add calibrate method") added support
-for generic phy_calibrate() method, but it didn't explain in detail when
-such method is supposed to be called. Add some more documentation directly
-to the phy.h to make it clean that it is intended to be called after every
-host controller reset.
+On Thu, Jul 04, 2019 at 05:15:57PM -0700, Joe Perches wrote:
+> On Thu, 2019-07-04 at 13:46 -0700, Joe Perches wrote:
+> > On Thu, 2019-07-04 at 11:24 +0530, Nitin Gote wrote:
+> > > Added warnings in checkpatch.pl script to :
+> > > 
+> > > 1. Deprecate strcpy() in favor of strscpy().
+> > > 2. Deprecate strlcpy() in favor of strscpy().
+> > > 3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+> > > 
+> > > Updated strncpy() section in Documentation/process/deprecated.rst
+> > > to cover strscpy_pad() case.
+> 
+> []
+> 
+> I sent a patch series for some strscpy/strlcpy misuses.
+> 
+> How about adding a macro helper to avoid the misuses like:
+> ---
+>  include/linux/string.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 4deb11f7976b..ef01bd6f19df 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
+>  /* Wraps calls to strscpy()/memset(), no arch specific code required */
+>  ssize_t strscpy_pad(char *dest, const char *src, size_t count);
+>  
+> +#define stracpy(to, from)					\
+> +({								\
+> +	size_t size = ARRAY_SIZE(to);				\
+> +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
+> +								\
+> +	strscpy(to, from, size);				\
+> +})
+> +
+> +#define stracpy_pad(to, from)					\
+> +({								\
+> +	size_t size = ARRAY_SIZE(to);				\
+> +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
+> +								\
+> +	strscpy_pad(to, from, size);				\
+> +})
+> +
+>  #ifndef __HAVE_ARCH_STRCAT
+>  extern char * strcat(char *, const char *);
+>  #endif
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/phy/phy-core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+This seems like a reasonable addition, yes. I think Coccinelle might
+actually be able to find all the existing strscpy(dst, src, sizeof(dst))
+cases to jump-start this conversion.
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index e3880c4a15f2..b04f4fe85ac2 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -394,6 +394,16 @@ int phy_reset(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(phy_reset);
- 
-+/**
-+ * phy_calibrate() - Tunes the phy hw parameters for current configuration
-+ * @phy: the phy returned by phy_get()
-+ *
-+ * Used to calibrate phy hardware, typically by adjusting some parameters in
-+ * runtime, which are otherwise lost after host controller reset and cannot
-+ * be applied in phy_init() or phy_power_on().
-+ *
-+ * Returns: 0 if successful, an negative error code otherwise
-+ */
- int phy_calibrate(struct phy *phy)
- {
- 	int ret;
+Devil's advocate: this adds yet more string handling functions... will
+this cause even more confusion?
+
 -- 
-2.17.1
-
+Kees Cook
