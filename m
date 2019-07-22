@@ -2,130 +2,98 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31640C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B4BC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080ED2229A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE992199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d5YgKXtn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qU5ZgH7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfGVIXv (ORCPT
+        id S1727658AbfGVI0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:23:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50289 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfGVIXt (ORCPT
+        Mon, 22 Jul 2019 04:26:41 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35761 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfGVI0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:23:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6M8Nat33738684
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 22 Jul 2019 01:23:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6M8Nat33738684
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563783816;
-        bh=UnylQ2uIKauxwDTMbH02wxKZYqGV7EC4IvB+0V+WZ5g=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=d5YgKXtn7tTEDdQmzXUyng6+FfttbaRGYKhDd8pH3VA+ECBYQcsIG7VSMb8yfFK6u
-         QH8295Z0VAojeqrqEEu8xRo/hjlrbAzT872cbrvqgMjlfgSTOZwivQbFcuDxJs4OPB
-         w5A4rL3/qLuP9wlbcpbkUFAF92/RnhYUbp0i3OzMW8Rqyu6m6RtnHP3DqsJPxSZsqa
-         F6rsSMejUKNvzUCny2/iC6otKDtIIK+cTi8Ry287qPOIbcUJ2S/1PTR3EUa1K0fNd2
-         9mwNqg7iOgqp04xhEBS7QIyi/XuksWqkXWMUcjSiHOM5G1lyLZKPx8X0aU8+6rv7Az
-         gq5jTYVSHCc4Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6M8NZZO3738680;
-        Mon, 22 Jul 2019 01:23:35 -0700
-Date:   Mon, 22 Jul 2019 01:23:35 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Joerg Roedel <tipbot@zytor.com>
-Message-ID: <tip-3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167@git.kernel.org>
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, jroedel@suse.de,
-        dave.hansen@linux.intel.com, mingo@kernel.org, tglx@linutronix.de
-Reply-To: dave.hansen@linux.intel.com, tglx@linutronix.de,
-          mingo@kernel.org, jroedel@suse.de, linux-kernel@vger.kernel.org,
-          hpa@zytor.com
-In-Reply-To: <20190719184652.11391-4-joro@8bytes.org>
-References: <20190719184652.11391-4-joro@8bytes.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] mm/vmalloc: Sync unmappings in
- __purge_vmap_area_lazy()
-Git-Commit-ID: 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 22 Jul 2019 04:26:41 -0400
+Received: by mail-lf1-f65.google.com with SMTP id p197so25946094lfa.2;
+        Mon, 22 Jul 2019 01:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qfvfkEyZd+DLJr7SlSsxk5CR4wqlGHyDi7qXTnWxyjM=;
+        b=qU5ZgH7lnaBzI3Nk5qQNMvhVjMl1vZtjvP9SIy4aOn1q2RIFIL5sAukQ+3bhdueGsf
+         gF8gLTsZT604maLq0+AppwcO65gamoxEZLGspJOmgg4gf0xYYZ8jBYG5qwrYKk/BXyRJ
+         KOPx7ak3bgjRRiylLqULa2Dgx8dDTnjDL81skNMbTQktuIrwOxJUPGx4WI7O0GGObHJC
+         7ubrWYDhzeHI50ALl8xoEgp/omFiEBRd7mHRj5mB42vvJUoHH6GF3YybSOuAgSTSAxCO
+         gBb6cTwH9guFxUqHNDSlFxGiwrMrCoGUKv28FutneKRZuXRl8o3ZRFgKBxjx+VvqE2aY
+         msPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qfvfkEyZd+DLJr7SlSsxk5CR4wqlGHyDi7qXTnWxyjM=;
+        b=WMyN8m16HWBYr3crDlY2wSxBTWhWZWTDFUf+jzSz3eua0XsHKX1DbmJf4hrexOvP5+
+         hKXhA+u5CN7Hdqh/NA9XMSt0VBexfn2TEXosC6isT/OXmeeOdiSPiplwjL/YPCyWh0Y4
+         6LLdRDvzM39i+X2CAvXpiGRdvHwwTGgKzkiy71H+dzHR2xONeYOzpSrwZF8coZSEo2V3
+         Jm386ikwilOgcocVZ54SqUDI0XO8fWwK0z+FweTpNXxgssaq2POdxIL22W2JilMN7LL6
+         3JgFXueRwZTHgcv8qrYncDA36epZ8tMqexz/Bn+5WCP79afa0P2Mx+dcyb7aM/hbS4bo
+         THOQ==
+X-Gm-Message-State: APjAAAUczZppSdTwr2b+rDwLwJKUg0WSrZA68hoST1kwzGFO85ogPPkC
+        DZw9TqMbS3NczcXDgDfG60M10yLLPGpqLRo8+ns=
+X-Google-Smtp-Source: APXvYqwdhc62rde+BTL3HtJEfabYZbOQO1FtvdIwx9Mc0UCkMBYiG0Q9xBEQCHEmk0uZ9+MEutmP0pVQlvGMwM821Q8=
+X-Received: by 2002:ac2:568e:: with SMTP id 14mr31838975lfr.189.1563783998994;
+ Mon, 22 Jul 2019 01:26:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1562781795-3494-1-git-send-email-jrdr.linux@gmail.com>
+In-Reply-To: <1562781795-3494-1-git-send-email-jrdr.linux@gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Mon, 22 Jul 2019 13:56:27 +0530
+Message-ID: <CAFqt6zb-LmG4PrWCXfmDqor2bgxyFJRt5Yg0vmNgE9zvaw+S3Q@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: nvidia: Remove extra return
+To:     adaplas@gmail.com, b.zolnierkie@samsung.com
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167
-Gitweb:     https://git.kernel.org/tip/3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167
-Author:     Joerg Roedel <jroedel@suse.de>
-AuthorDate: Fri, 19 Jul 2019 20:46:52 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Mon, 22 Jul 2019 10:18:30 +0200
+On Wed, Jul 10, 2019 at 11:28 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> Minor cleanup to remove extra return statement.
+>
 
-mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
+Any comment on this patch ?
 
-On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
-between processes. This can cause mappings in the vmalloc/ioremap area to
-persist in some page-tables after the region is unmapped and released.
-
-When the region is re-used the processes with the old mappings do not fault
-in the new mappings but still access the old ones.
-
-This causes undefined behavior, in reality often data corruption, kernel
-oopses and panics and even spontaneous reboots.
-
-Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
-all page-tables in the system before the regions can be re-used.
-
-References: https://bugzilla.suse.com/show_bug.cgi?id=1118689
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
-
----
- mm/vmalloc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 4fa8d84599b0..e0fc963acc41 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1258,6 +1258,12 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
- 	if (unlikely(valist == NULL))
- 		return false;
- 
-+	/*
-+	 * First make sure the mappings are removed from all page-tables
-+	 * before they are freed.
-+	 */
-+	vmalloc_sync_all();
-+
- 	/*
- 	 * TODO: to calculate a flush range without looping.
- 	 * The list can be up to lazy_max_pages() elements.
-@@ -3038,6 +3044,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
- /*
-  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-  * have one.
-+ *
-+ * The purpose of this function is to make sure the vmalloc area
-+ * mappings are identical in all page-tables in the system.
-  */
- void __weak vmalloc_sync_all(void)
- {
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> ---
+>  drivers/video/fbdev/nvidia/nv_backlight.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/video/fbdev/nvidia/nv_backlight.c b/drivers/video/fbdev/nvidia/nv_backlight.c
+> index e705a78..2ce5352 100644
+> --- a/drivers/video/fbdev/nvidia/nv_backlight.c
+> +++ b/drivers/video/fbdev/nvidia/nv_backlight.c
+> @@ -123,8 +123,6 @@ void nvidia_bl_init(struct nvidia_par *par)
+>
+>         printk("nvidia: Backlight initialized (%s)\n", name);
+>
+> -       return;
+> -
+>  error:
+>         return;
+>  }
+> --
+> 1.9.1
+>
