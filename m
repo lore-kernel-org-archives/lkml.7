@@ -2,115 +2,162 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E11C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E938C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFD122387
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFA420693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 18:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfGVS5t (ORCPT
+        id S1732047AbfGVS6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 14:57:49 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:42067 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732052AbfGVS5L (ORCPT
+        Mon, 22 Jul 2019 14:58:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38105 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731977AbfGVS5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 14:57:11 -0400
-Received: by mail-vs1-f65.google.com with SMTP id 190so26989752vsf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 11:57:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G3LydhjrGZyGaJaE+altqgbzUT7GXQbjY/6XoX/pvZc=;
-        b=Rj0FpiVegyhkEFGvH5FwPsP+HS2oOwKd3h+1as5pPLM1XprqjfBJZax8/KoJAv6NEl
-         ATF9b5ukrKTAShLbuniOdv+bex1gZBZs5vunpMsmJWGm1MtMSEtdCW2Xmuqo/BTzkP0E
-         KeSaLDJayhuO0HqKXiJlVPbr0zXbj7kMddeSDB5eGSAoTwfmzxeoJB2gyYvoHXDAEljT
-         JYpagba4Ge7AzgtT21LwkiwmMmJfoxn3giE3jvKdaGKntkIwWMPfdgo4H5VJ5jwgt+cb
-         rfS0dARCYA1RQcofaWdW1fvgXPcboqkhIA1I4X+2rEJv1bzHo06eiXtc5AX5Y9FDUjuu
-         uEVg==
-X-Gm-Message-State: APjAAAWcp76wDlr/IR3nxAxV96KMUvGOmn6XLvQykbFgtXRC7JtjLSUb
-        NQxGIzgWokyCS/p5nlCUaWrqzw==
-X-Google-Smtp-Source: APXvYqzW0y3QVeCN9/3wXCNVqVYfu/ELakwZssJ444dY3sQr1CJFwY193H4yB3WcP4zsonz0yfKcug==
-X-Received: by 2002:a67:8c84:: with SMTP id o126mr44506592vsd.122.1563821830405;
-        Mon, 22 Jul 2019 11:57:10 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id l129sm38783525vki.45.2019.07.22.11.57.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 11:57:09 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 14:57:04 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, hch@lst.de, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dma-mapping: Use dma_get_mask in
- dma_addressing_limited
-Message-ID: <20190722145639-mutt-send-email-mst@kernel.org>
-References: <20190722165149.3763-1-eric.auger@redhat.com>
- <77ba1061-08b6-421e-a6dd-d5db9851325b@redhat.com>
+        Mon, 22 Jul 2019 14:57:08 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hpdUg-0002QL-9W; Mon, 22 Jul 2019 20:57:06 +0200
+Message-Id: <20190722105220.094613426@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Mon, 22 Jul 2019 20:47:19 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [patch V3 14/25] x86/apic: Remove dest argument from
+ __default_send_IPI_shortcut()
+References: <20190722104705.550071814@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77ba1061-08b6-421e-a6dd-d5db9851325b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 06:56:49PM +0200, Auger Eric wrote:
-> Hi Christoph,
-> 
-> On 7/22/19 6:51 PM, Eric Auger wrote:
-> > We currently have cases where the dma_addressing_limited() gets
-> > called with dma_mask unset. This causes a NULL pointer dereference.
-> > 
-> > Use dma_get_mask() accessor to prevent the crash.
-> > 
-> > Fixes: b866455423e0 ("dma-mapping: add a dma_addressing_limited helper")
-> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> 
-> As a follow-up of my last email, here is a patch featuring
-> dma_get_mask(). But you don't have the WARN_ON_ONCE anymore, pointing
-> out suspect users.
+The SDM states:
 
-OTOH these users then simply become okay so no need for WARN_ON_ONCE
-then :)
+  "The destination shorthand field of the ICR allows the delivery mode to be
+   by-passed in favor of broadcasting the IPI to all the processors on the
+   system bus and/or back to itself (see Section 10.6.1, Interrupt Command
+   Register (ICR)). Three destination shorthands are supported: self, all
+   excluding self, and all including self. The destination mode is ignored
+   when a destination shorthand is used."
 
-> Feel free to pick up your preferred approach
-> 
-> Thanks
-> 
-> Eric
-> > 
-> > ---
-> > 
-> > v1 -> v2:
-> > - was [PATCH 1/2] dma-mapping: Protect dma_addressing_limited
-> >   against NULL dma_mask
-> > - Use dma_get_mask
-> > ---
-> >  include/linux/dma-mapping.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> > index e11b115dd0e4..f7d1eea32c78 100644
-> > --- a/include/linux/dma-mapping.h
-> > +++ b/include/linux/dma-mapping.h
-> > @@ -689,8 +689,8 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
-> >   */
-> >  static inline bool dma_addressing_limited(struct device *dev)
-> >  {
-> > -	return min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
-> > -		dma_get_required_mask(dev);
-> > +	return min_not_zero(dma_get_mask(dev), dev->bus_dma_mask) <
-> > +			    dma_get_required_mask(dev);
-> >  }
-> >  
-> >  #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
-> > 
+So there is no point to supply the destination mode to the shorthand
+delivery function.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/apic/apic_flat_64.c |    6 ++----
+ arch/x86/kernel/apic/ipi.c          |   15 +++++++--------
+ arch/x86/kernel/apic/local.h        |    2 +-
+ arch/x86/kernel/apic/probe_64.c     |    2 +-
+ 4 files changed, 11 insertions(+), 14 deletions(-)
+
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -90,8 +90,7 @@ static void flat_send_IPI_allbutself(int
+ 			_flat_send_IPI_mask(mask, vector);
+ 		}
+ 	} else if (num_online_cpus() > 1) {
+-		__default_send_IPI_shortcut(APIC_DEST_ALLBUT,
+-					    vector, apic->dest_logical);
++		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
+ 	}
+ }
+ 
+@@ -100,8 +99,7 @@ static void flat_send_IPI_all(int vector
+ 	if (vector == NMI_VECTOR) {
+ 		flat_send_IPI_mask(cpu_online_mask, vector);
+ 	} else {
+-		__default_send_IPI_shortcut(APIC_DEST_ALLINC,
+-					    vector, apic->dest_logical);
++		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
+ 	}
+ }
+ 
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -16,7 +16,7 @@ static inline void __xapic_wait_icr_idle
+ 		cpu_relax();
+ }
+ 
+-void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest)
++void __default_send_IPI_shortcut(unsigned int shortcut, int vector)
+ {
+ 	/*
+ 	 * Subtle. In the case of the 'never do double writes' workaround
+@@ -33,9 +33,10 @@ void __default_send_IPI_shortcut(unsigne
+ 	__xapic_wait_icr_idle();
+ 
+ 	/*
+-	 * No need to touch the target chip field
++	 * No need to touch the target chip field. Also the destination
++	 * mode is ignored when a shorthand is used.
+ 	 */
+-	cfg = __prepare_ICR(shortcut, vector, dest);
++	cfg = __prepare_ICR(shortcut, vector, 0);
+ 
+ 	/*
+ 	 * Send the IPI. The write to APIC_ICR fires this off.
+@@ -202,8 +203,7 @@ void default_send_IPI_allbutself(int vec
+ 	if (no_broadcast || vector == NMI_VECTOR) {
+ 		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
+ 	} else {
+-		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector,
+-					    apic->dest_logical);
++		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
+ 	}
+ }
+ 
+@@ -212,14 +212,13 @@ void default_send_IPI_all(int vector)
+ 	if (no_broadcast || vector == NMI_VECTOR) {
+ 		apic->send_IPI_mask(cpu_online_mask, vector);
+ 	} else {
+-		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector,
+-					    apic->dest_logical);
++		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
+ 	}
+ }
+ 
+ void default_send_IPI_self(int vector)
+ {
+-	__default_send_IPI_shortcut(APIC_DEST_SELF, vector, apic->dest_logical);
++	__default_send_IPI_shortcut(APIC_DEST_SELF, vector);
+ }
+ 
+ /* must come after the send_IPI functions above for inlining */
+--- a/arch/x86/kernel/apic/local.h
++++ b/arch/x86/kernel/apic/local.h
+@@ -38,7 +38,7 @@ static inline unsigned int __prepare_ICR
+ 	return icr;
+ }
+ 
+-void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest);
++void __default_send_IPI_shortcut(unsigned int shortcut, int vector);
+ 
+ /*
+  * This is used to send an IPI with no shorthand notation (the destination is
+--- a/arch/x86/kernel/apic/probe_64.c
++++ b/arch/x86/kernel/apic/probe_64.c
+@@ -40,7 +40,7 @@ void __init default_setup_apic_routing(v
+ 
+ void apic_send_IPI_self(int vector)
+ {
+-	__default_send_IPI_shortcut(APIC_DEST_SELF, vector, APIC_DEST_PHYSICAL);
++	__default_send_IPI_shortcut(APIC_DEST_SELF, vector);
+ }
+ 
+ int __init default_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+
+
