@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93501C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2342C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7C821985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2D021955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563817342;
-	bh=EASSxj9sw+3zA2cPBdwt8kv9OFzKD98mWXpVd808xiQ=;
+	s=default; t=1563817348;
+	bh=nVoF7HQDXKKom6WszyBiiO+d/fSfn94PtvavAI2lHww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmyjUGwEFSAPC7R584yMpIOM/vGgrW7XK1la09uPdGWEOt8de84Uzt/DJdV4a8ZGm
-	 o2oDyL6+lAuGxzZLw3uAx/ESbbiSRuqfR1d2VfYj2eTz5oHSGI4hs5GIdQI/QiCM9H
-	 s8en5nVwLPkqoAaGrsnZ9mW2bU/dfoX/9l5TziP4=
+	b=h4wOs0y6i2DnP4KeZD7YBuznJbH+gJEZAnh9IzB50pGayRbnFL/9FWlqkbVGaQGpM
+	 XTF5c4g/3KYZZXePgtk1xTaiXEl+xLhFQRLTUCTp3vGmGHLoOIUqGRlP26CJoFwa2e
+	 IP8RpSzrUo9fGDbIx4ndK23VpMd2k9P56BzVhriY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731962AbfGVRmV (ORCPT
+        id S1731971AbfGVRm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:42:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 13:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfGVRmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:42:19 -0400
+        id S1728762AbfGVRmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:42:25 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D29F21955;
-        Mon, 22 Jul 2019 17:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BBD321901;
+        Mon, 22 Jul 2019 17:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563817338;
-        bh=EASSxj9sw+3zA2cPBdwt8kv9OFzKD98mWXpVd808xiQ=;
+        s=default; t=1563817344;
+        bh=nVoF7HQDXKKom6WszyBiiO+d/fSfn94PtvavAI2lHww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+6LpDrxQH+dFJZiLHiIwJ+0rtoHbsjRr+OemwpYx95k/DAn/jAJgoqg2aOnjhRVi
-         P7pgvr3p/furFT/p91sYIkDUOC1CU9ne3ApDT7C5pSx+2Wtk1OSsSzvbFVaB1xTBld
-         arrNxh1JyB1yIpZIuXHngEDkCmXYdm3J56ij6KDE=
+        b=rtu7Ttcq4y9uFnRX8lt9GrulaC+ndCfAfVaDVaxHTiYe6wb5CXCrxOXXZv3Qj/pnm
+         Bnq26PRvUvb0i1qIXTsMGYSmRgl8sKK2BT/cqi15gGWbJ8vyPyHKjrwZsQuWGQJ9aB
+         NghacmEW1g9UKKWivO1hKrO3wDKCfpPpqbSKSfKo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 30/37] perf trace: Forward error codes when trying to read syscall info
-Date:   Mon, 22 Jul 2019 14:38:32 -0300
-Message-Id: <20190722173839.22898-31-acme@kernel.org>
+Subject: [PATCH 31/37] perf trace: Mark syscall ids that are not allocated to avoid unnecessary error messages
+Date:   Mon, 22 Jul 2019 14:38:33 -0300
+Message-Id: <20190722173839.22898-32-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
@@ -65,110 +65,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We iterate thru the syscall table produced from the kernel syscall
-tables reading info, propagate the error and add to the debug message.
-
-This helps in fixing further bugs, such as failing to read the
-"sendfile" syscall info when it really should try the aliasm
-"sendfile64".
-
-  Problems reading syscall 40: 2 (No such file or directory)(sendfile) information
-
-  # grep sendfile /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
-	[40] = "sendfile",
-  #
-
-I.e. in the tracefs format file for the syscall tracepoints we have it
-as sendfile64:
-
-  # find /sys -type f -name format | grep sendfile
-  /sys/kernel/debug/tracing/events/syscalls/sys_enter_sendfile64/format
-  /sys/kernel/debug/tracing/events/syscalls/sys_exit_sendfile64/format
-  #
-
-But as "sendfile" in the file used to build the syscall table used in
-perf:
-
-  $ grep sendfile arch/x86/entry/syscalls/syscall_64.tbl
-  40	common	sendfile		__x64_sys_sendfile64
-  $
-
-So we need to add, in followup patches, aliases in 'perf trace' syscall
-data structures to cope with thie.
+There are holes in syscall tables with IDs not associated with any
+syscall, mark those when trying to read information for syscalls, which
+could happen when iterating thru all syscalls from 0 to the highest
+numbered syscall id.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-w3eluap63x9je0bb8o3t79tz@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-cku9mpcrcsqaiq0jepu86r68@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ tools/perf/builtin-trace.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d403b09812d1..5dae7b172291 100644
+index 5dae7b172291..765b998755ce 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1492,13 +1492,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+@@ -976,6 +976,7 @@ static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
+  * is_exit: is this "exit" or "exit_group"?
+  * is_open: is this "open" or "openat"? To associate the fd returned in sys_exit with the pathname in sys_enter.
+  * args_size: sum of the sizes of the syscall arguments, anything after that is augmented stuff: pathname for openat, etc.
++ * nonexistent: Just a hole in the syscall table, syscall id not allocated
+  */
+ struct syscall {
+ 	struct tep_event    *tp_format;
+@@ -987,6 +988,7 @@ struct syscall {
+ 	}		    bpf_prog;
+ 	bool		    is_exit;
+ 	bool		    is_open;
++	bool		    nonexistent;
+ 	struct tep_format_field *args;
+ 	const char	    *name;
+ 	struct syscall_fmt  *fmt;
+@@ -1491,9 +1493,6 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	struct syscall *sc;
  	const char *name = syscalltbl__name(trace->sctbl, id);
  
- 	if (name == NULL)
--		return -1;
-+		return -EINVAL;
- 
+-	if (name == NULL)
+-		return -EINVAL;
+-
  	if (id > trace->syscalls.max) {
  		struct syscall *nsyscalls = realloc(trace->syscalls.table, (id + 1) * sizeof(*sc));
  
- 		if (nsyscalls == NULL)
--			return -1;
-+			return -ENOMEM;
- 
- 		if (trace->syscalls.max != -1) {
- 			memset(nsyscalls + trace->syscalls.max + 1, 0,
-@@ -1525,10 +1525,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+@@ -1512,8 +1511,15 @@ static int trace__read_syscall_info(struct trace *trace, int id)
  	}
  
- 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ? 6 : sc->tp_format->format.nr_fields))
--		return -1;
-+		return -ENOMEM;
+ 	sc = trace->syscalls.table + id;
+-	sc->name = name;
++	if (sc->nonexistent)
++		return 0;
  
- 	if (IS_ERR(sc->tp_format))
--		return -1;
-+		return PTR_ERR(sc->tp_format);
++	if (name == NULL) {
++		sc->nonexistent = true;
++		return 0;
++	}
++
++	sc->name = name;
+ 	sc->fmt  = syscall_fmt__find(sc->name);
  
- 	sc->args = sc->tp_format->format.fields;
- 	/*
-@@ -1789,6 +1789,7 @@ typedef int (*tracepoint_handler)(struct trace *trace, struct perf_evsel *evsel,
- static struct syscall *trace__syscall_info(struct trace *trace,
- 					   struct perf_evsel *evsel, int id)
- {
-+	int err = 0;
- 
- 	if (id < 0) {
- 
-@@ -1811,9 +1812,10 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+ 	snprintf(tp_name, sizeof(tp_name), "sys_enter_%s", sc->name);
+@@ -1811,14 +1817,21 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+ 		return NULL;
  	}
- 
- 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
--	    trace__read_syscall_info(trace, id))
-+	    (err = trace__read_syscall_info(trace, id)) != 0)
- 		goto out_cant_read;
  
 +	err = -EINVAL;
- 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL))
++
+ 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
+ 	    (err = trace__read_syscall_info(trace, id)) != 0)
  		goto out_cant_read;
  
-@@ -1821,7 +1823,8 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+-	err = -EINVAL;
+-	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL))
++	if (id > trace->syscalls.max)
+ 		goto out_cant_read;
+ 
++	if (trace->syscalls.table[id].name == NULL) {
++		if (trace->syscalls.table[id].nonexistent)
++			return NULL;
++		goto out_cant_read;
++	}
++
+ 	return &trace->syscalls.table[id];
  
  out_cant_read:
- 	if (verbose > 0) {
--		fprintf(trace->output, "Problems reading syscall %d", id);
-+		char sbuf[STRERR_BUFSIZE];
-+		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err, str_error_r(-err, sbuf, sizeof(sbuf)));
- 		if (id <= trace->syscalls.max && trace->syscalls.table[id].name != NULL)
- 			fprintf(trace->output, "(%s)", trace->syscalls.table[id].name);
- 		fputs(" information\n", trace->output);
 -- 
 2.21.0
 
