@@ -2,143 +2,143 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FB3C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63342C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1922C204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBF62084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 15:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SW2BLq/I"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yy0am124"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfGVPWL (ORCPT
+        id S1728806AbfGVPXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 11:22:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40729 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbfGVPWK (ORCPT
+        Mon, 22 Jul 2019 11:23:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33333 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbfGVPXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 11:22:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so35765569wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:22:09 -0700 (PDT)
+        Mon, 22 Jul 2019 11:23:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so39939336wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 08:23:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CjN06kskuSN63zvz3I8U6ASqKJRxwYLJel4cw/9K0lw=;
-        b=SW2BLq/I4O/PnHgn1NA2q1TeVho/oHOeDcYpL3qFIQggNojxG22k4aZiFGmAg3qjZw
-         sNH03/H7fUd1hP+JYWFhSUX8oVoTRU3bnRNRtsbc1lJviN3M++fuo80AkU9hWv+dRbu6
-         mg0kIKTw66qN8Z3uRv1t8IVBOT8WAVgLsmzb74vtLhqfx+4hcnmk6kNrJvkgbtcno8JY
-         0FDCNFNg9zgMDxr5NKN1TXvrZYwVniccPCYF6S1oN3eH/gHp9jUbauxk12vI4YbezNDT
-         UsyQt5Z+DG/nC780HdW0gYFTNsc/rKkiLemjOICIiX9L0i2dF+lRJlhDPXFtvtYGgReH
-         kIiA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uNIXtMoWHaULzjujraJ7oGg3HCXmRUXf1Hrg+5gPseg=;
+        b=Yy0am124r9rOBj+kg/aTljeUfCtQ4wcSIbHJjqJalwkmicDObwQ/YjVsDhv3CjNRsw
+         XzngO8FH+3mjssmlknvKnaNiq6lUk8XBHDkyw4vjcCZ650BdJn5b0b1lnXQMh/lmJCpA
+         YtFG4I+MH6TlE9DPz70y5vKVrNXLN4sKzFb+C/aRPAwAm8OQWUB3EeaFPLDWITfKYL/H
+         uEIDU01tHxYtFak5OWPbRv2gqP0RlWUaS200C489PN4bSRYeObWs4uPIdBQD+1l9u0CP
+         bu4Bkz3oHYWLaEalTpJmMBvzPkpCihkXPLFu0UAXggsxQDcbxhy5c54bKxMLp/s0Ye9X
+         LhoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CjN06kskuSN63zvz3I8U6ASqKJRxwYLJel4cw/9K0lw=;
-        b=dWgQPSKD1JnCQyqOouY/7jIlOMzKkZXrjC8CiE9+cSFtBzrLTvAXe9pLQVcUm14TuO
-         AoYrSaPndJzlSqCscpDiZBWhana1s5E0xLgJgraQnbUeewLquiH6dzx/apTgCxdFCCas
-         2foPtUcFV0DAR2gWm5aS4zCSyGGpHER15QV6kkvzhawWgEz7OGo3FsBPBGMlHJGyWQL3
-         dhC8N16PAydoQSASgtQVMoXv6dUT1QydCVqfbsTUJ8g/vt/2L67VWj2xMaOKSvVyp4Bu
-         X3otbYARFewKdDSOIKw0dkArImHRc+vQdX8ECvlngCTvO750Fp/0VTMQc0deDco6Tv7F
-         Gd8Q==
-X-Gm-Message-State: APjAAAX58xbWrpH3rksQQI4y80VUKGr2iJz55vWZHIGn9+vfH7ocke8G
-        PMn6OTzkOPwtsn5XYtkSiRHoGw==
-X-Google-Smtp-Source: APXvYqxEqJt2WlO+GoY0nM0FoV0BovseVpbAQSrNlFd4NlDuP4uXJmvali/FscgOt4YbJnNBVzR6bg==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr61057896wmk.99.1563808928497;
-        Mon, 22 Jul 2019 08:22:08 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id i18sm51360450wrp.91.2019.07.22.08.22.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 08:22:07 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 16:22:06 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 6/7] backlight: gpio: remove def_value from struct
- gpio_backlight
-Message-ID: <20190722152206.bfjlws53yknq3xv4@holly.lan>
-References: <20190722150302.29526-1-brgl@bgdev.pl>
- <20190722150302.29526-7-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uNIXtMoWHaULzjujraJ7oGg3HCXmRUXf1Hrg+5gPseg=;
+        b=CVUWqWbx2JvAjJXtcWbiPwUodAg/VOFk0gfcFDE4RwtTTrdd+AxARkH2WiO6zarVMN
+         hicqxXHxwQNZcALoMTnuabJ8pArgVrA2Il5KdfKc1OHdGCL5jDlyewD4Aa0ytDh0g2xg
+         Askwv/b8cIEstweJVMpY0cD1d2dggOWGtmJMNkPJcIA3y5A8Dv9iE3xv9+LzAo+TllsJ
+         ZKrDTXQLunbTXSK6O+WLAUFldO/stpg4qAmC6stibMnSazTwJ5tFnPnDx6/UXh1QqG4/
+         dK0OJjGJ1MEwWU6tmKHr0fINjTU9nQVmD/Phvt8a9E8IbbRTYWxNIwG2DYtiv5ge/N6J
+         nVnA==
+X-Gm-Message-State: APjAAAUChSS7RAbYiXu2n8eT3/5Bp63kEjekwCfzvamEplGvEW3AIt78
+        fkp2EqKltruA59kt1QCa7ZgIwQGt/eBhT1zs7OOe3g==
+X-Google-Smtp-Source: APXvYqwTtSxr9PAJX9GCQlNlRd7RPOpeKWvqKIkFUyFkVxIfLUXksDf0pIpfWonDTV1oMZAtgfu1AnvjLd8DXlRdLLY=
+X-Received: by 2002:a5d:5388:: with SMTP id d8mr75033157wrv.299.1563809020856;
+ Mon, 22 Jul 2019 08:23:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722150302.29526-7-brgl@bgdev.pl>
-User-Agent: NeoMutt/20180716
+References: <20190722114134.3123901-1-arnd@arndb.de> <CAG_fn=UxowACw5w+erKaAPRr4SWk3WbLTfAgJj=cOL4HgZHK=Q@mail.gmail.com>
+ <CAK8P3a28c5V5VnsFrttgtCC5+i87yuAT-G5xx50KOsKUJ6-VKg@mail.gmail.com>
+In-Reply-To: <CAK8P3a28c5V5VnsFrttgtCC5+i87yuAT-G5xx50KOsKUJ6-VKg@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 22 Jul 2019 17:23:28 +0200
+Message-ID: <CAG_fn=U60gv-zWiVZS5Z++1fMcLwDmOgoF8gpJY3c+4dGHBhvw@mail.gmail.com>
+Subject: Re: [PATCH] [RESEND v2] structleak: disable STRUCTLEAK_BYREF in
+ combination with KASAN_STACK
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Dmitriy Vyukov <dvyukov@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 05:03:01PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This field is unused outside of probe(). There's no need to store it.
-> We can make it into a local variable.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, Jul 22, 2019 at 4:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Jul 22, 2019 at 3:43 PM Alexander Potapenko <glider@google.com> w=
+rote:
+> > On Mon, Jul 22, 2019 at 1:41 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > KASAN_STACK is currently implied by KASAN on gcc, but could be made a
+> > > user selectable option if we want to allow combining (non-stack) KASA=
+N
+> > > with GCC_PLUGIN_STRUCTLEAK_BYREF.
+> > >
+> > > Note that it would be possible to specifically address the files that
+> > > print the warning, but presumably the overall stack usage is still
+> > > significantly higher than in other configurations, so this would not
+> > > address the full problem.
+> > >
+> > > I could not test this with CONFIG_INIT_STACK_ALL, which may or may no=
+t
+> > > suffer from a similar problem.
+> > We would love to be able to run KASAN together with
+> > CONFIG_INIT_STACK_ALL on syzbot, as this will potentially reduce the
+> > number of flaky errors.
+>
+> Doesn't that just limit the usefulness of KASAN, as you no longer catch
+> actual accesses to unintialized variables that KASAN is designed to find?
+KASAN (unlike KMSAN) doesn't detect accesses to uninitialized variables.
+It can of course detect bugs induced by e.g. treating an uninitialized
+variable as a pointer or an array index.
+Depending on the pattern used to initialize those variables, this can
+indeed mask some bugs, but OTOH others will become more reproducible.
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+I'm not really sure KASAN+CONFIG_INIT_STACK_ALL is a problem right
+now, will need to take a look.
+> > Given that we already increase the stack size in KASAN builds, how big
+> > of a problem are these warnings?
+> > Perhaps it's better to disable them in this configuration, or push the =
+limit up?
+>
+> I'm really hoping to lower the per-function limit for 'allmodconfig' buil=
+ds,
+> since both a high limit and lots of bogus warnings prevent us from
+> noticing any newly introduced functions that use a lot of kernel stack
+> without KASAN.
+>
+> An allmodconfig build (and ideally also any randconfig build) should alwa=
+ys
+> complete without warnings to be useful for compile testing.
+>
+>        Arnd
 
-> ---
->  drivers/video/backlight/gpio_backlight.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-> index 70882556f047..cd6a75bca9cc 100644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -21,7 +21,6 @@
->  struct gpio_backlight {
->  	struct device *fbdev;
->  	struct gpio_desc *gpiod;
-> -	int def_value;
->  };
->  
->  static int gpio_backlight_update_status(struct backlight_device *bl)
-> @@ -61,7 +60,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
->  	enum gpiod_flags flags;
-> -	int ret;
-> +	int ret, def_value;
->  
->  	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
->  	if (gbl == NULL)
-> @@ -70,8 +69,8 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	if (pdata)
->  		gbl->fbdev = pdata->fbdev;
->  
-> -	gbl->def_value = device_property_read_bool(&pdev->dev, "default-on");
-> -	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
-> +	def_value = device_property_read_bool(&pdev->dev, "default-on");
-> +	flags = def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
->  
->  	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, flags);
->  	if (IS_ERR(gbl->gpiod)) {
-> @@ -94,7 +93,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  		return PTR_ERR(bl);
->  	}
->  
-> -	bl->props.brightness = gbl->def_value;
-> +	bl->props.brightness = def_value;
->  	backlight_update_status(bl);
->  
->  	platform_set_drvdata(pdev, bl);
-> -- 
-> 2.21.0
-> 
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
