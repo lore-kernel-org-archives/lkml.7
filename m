@@ -2,84 +2,126 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D8CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF47FC76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C369D21955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563839294;
-	bh=tve6vRGy1hYeRoFtLdpdlo7UJFc7CAK0i0NPXWvKs3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a2qZJMA+jynjKL8No8t49RLK3Ib99UxE3mTQoDf/PTN9eFXAuXEkiw7eXYzoXSG1l
-	 3+5FLthwvGDtjEpGXFN+o6M4dfgxuvlQa3udqe0zQR7wXDuJvV+mqMRJUaalX6jBf7
-	 //JlkR3+Mr3d86o2D75RhghnhyJwKVekTZGe/BsU=
+	by mail.kernel.org (Postfix) with ESMTP id B8E6621955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:51:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cUgjbkKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbfGVXsN (ORCPT
+        id S2387418AbfGVXvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:48:13 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37349 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731206AbfGVXsM (ORCPT
+        Mon, 22 Jul 2019 19:51:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37666 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731112AbfGVXvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:48:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so77894065iog.4;
-        Mon, 22 Jul 2019 16:48:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z5dGHdXeC8C6M1Pe5s8pfnDnKQmDihjKHC9kjuo+Il4=;
-        b=TPS9eLE75C/acSYjsS4+bFKW36G/Fb/TBuEi5+AokIIQuUohFur43qyJ0NM7ujDQsv
-         9clgZ+6SrkGYRaNY/hXful+4tSekd5EirifGwNtKOfe9RLQo9dO95ralMJ8ZLrYVtctI
-         idZkBWMW8f5kebV8iB9zS+WIlx0ZQyJ+Qht7E6FPI5v1vdtLJ8WDTBGikYNfAH1RGKmD
-         e2igpsn+3gL6H91palTq1uJAv6xOc0xV4lnXdq2SRVwFaou8fu2R1OFin74std090kPR
-         cexc1lh2e227HVE0lzeB39vRvesdZc8KKK+OXawrb+Cit/MyYpChnTO9asLqvyXxvHrZ
-         8msQ==
-X-Gm-Message-State: APjAAAVvMxu+5rZ/DZvCrW8Tdz63uWLRSweqhRH06hXpQ2sgdtB8nDpA
-        0tEfVPowZNesiKxMtDN3bg==
-X-Google-Smtp-Source: APXvYqw4b2UbLlSXGAhGzcm+i9ZSSI5DoDGtdkU/i/35wi+A6iRGqdOoCN9TZMz4vEDsJGzUqNOo0w==
-X-Received: by 2002:a02:bb08:: with SMTP id y8mr31151132jan.51.1563839291717;
-        Mon, 22 Jul 2019 16:48:11 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id j25sm53735053ioj.67.2019.07.22.16.48.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 16:48:11 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 17:48:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Message-ID: <20190722234810.GA22419@bogus>
-References: <20190703190230.12392-1-manivannan.sadhasivam@linaro.org>
- <20190703190230.12392-2-manivannan.sadhasivam@linaro.org>
+        Mon, 22 Jul 2019 19:51:50 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNikq2011913;
+        Mon, 22 Jul 2019 23:51:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=ovE6K7lxivhCfH9LRjGsrr23JzVy9SPekmo6Fjy51g8=;
+ b=cUgjbkKyVdRpvx2tHG2zrFgR+9AW8gnBau68E1hJds8h8ymnYlgHsks+r/9kWjEdf6jt
+ U3NWEI8fYjqOgCmOkf6kFWNoFjVw4zw9SFq1JUu/Va2fuGdJF5qTrOsUUPzwxX0OJo6Q
+ MuakUM9yQqEDLHhw3MAtBXajfcxRPuUNOcsBQZRA0wM1MC9IX2SeznwmmdDaRQdSy8ke
+ 4l69y3As1t+2EjR54fFT0nnLMvy2THQYOeVckczkSdf8Ek5dFwEsgknrTE1VSt2efOOM
+ JHNivp76NIpmx9cY9AFLOeh9PDwU05B9m/FIHphrz/I1gEZOHmhkcY6jR95ejCobIwsu nA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tutwpafs4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 23:51:46 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6MNhEEQ124720;
+        Mon, 22 Jul 2019 23:51:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tut9mma0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jul 2019 23:51:45 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6MNpi1t011900;
+        Mon, 22 Jul 2019 23:51:44 GMT
+Received: from [192.168.1.14] (/180.165.87.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Jul 2019 16:51:44 -0700
+Subject: Re: [PATCH 1/4] block: elevator.c: Remove now unused elevator=
+ argument
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+References: <20190714053453.1655-1-marcos.souza.org@gmail.com>
+ <20190714053453.1655-2-marcos.souza.org@gmail.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <e428794d-f02d-d47a-4e2a-12c99028cb7d@oracle.com>
+Date:   Tue, 23 Jul 2019 07:51:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703190230.12392-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190714053453.1655-2-marcos.souza.org@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907220251
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9326 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907220251
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  4 Jul 2019 00:32:28 +0530, Manivannan Sadhasivam wrote:
-> Add devicetree binding for IMX290 CMOS image sensor.
+On 7/14/19 1:34 PM, Marcos Paulo de Souza wrote:
+> Since the inclusion of blk-mq, elevator argument was not being
+> considered anymore, and it's utility died long with the legacy IO path,
+> now removed too.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 > ---
->  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+>  block/elevator.c | 14 --------------
+>  1 file changed, 14 deletions(-)
+> 
+> diff --git a/block/elevator.c b/block/elevator.c
+> index 2f17d66d0e61..f56d9c7d5cbc 100644
+> --- a/block/elevator.c
+> +++ b/block/elevator.c
+> @@ -135,20 +135,6 @@ static struct elevator_type *elevator_get(struct request_queue *q,
+>  	return e;
+>  }
+>  
+> -static char chosen_elevator[ELV_NAME_MAX];
+> -
+> -static int __init elevator_setup(char *str)
+> -{
+> -	/*
+> -	 * Be backwards-compatible with previous kernels, so users
+> -	 * won't get the wrong elevator.
+> -	 */
+> -	strncpy(chosen_elevator, str, sizeof(chosen_elevator) - 1);
+> -	return 1;
+> -}
+> -
+> -__setup("elevator=", elevator_setup);
+> -
+>  static struct kobj_type elv_ktype;
+>  
+>  struct elevator_queue *elevator_alloc(struct request_queue *q,
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+
