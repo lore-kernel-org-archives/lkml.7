@@ -2,184 +2,98 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90912C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3FBC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770B521BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7F421F26
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 05:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6E+Jh8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfGVFWS (ORCPT
+        id S1727157AbfGVFWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 01:22:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60070 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfGVFWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 01:22:17 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 911E9335CF;
-        Mon, 22 Jul 2019 05:22:16 +0000 (UTC)
-Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B99D65DA2E;
-        Mon, 22 Jul 2019 05:22:03 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
-Date:   Mon, 22 Jul 2019 13:21:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 01:22:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33141 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfGVFWt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 01:22:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n9so37982795wru.0;
+        Sun, 21 Jul 2019 22:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ETeKDbjRetNIkG5OkDbxDTHMEmZYmQYCFw58W5ps8kI=;
+        b=k6E+Jh8+h1HvEeKmiRMrOPlkvCdfNYHFktXRuqKSesuQRBdbAQahtbwYkCBsbvlssd
+         Ki21VARXSUeW1E6NV3uN+Tr+VZ1e3HBgE+B44thY/Q8luHf5fXezsxWBaJFljn0abtYz
+         FIOdJEEOh+JInSV+K2psDpY3EUjrsi2PttQH9nGuJEiEZlAzXtK9L7uwkMm3fSiDltR4
+         OPOV8lO94YOtNpO43frxDEUPjkO19jS5Wd08jFhRFaGfsIYeaH3YkkYRdvYBgCea+Btl
+         lHF5W1JKXhA5x0WxbDMoVqy/Xuz4N/wWXTtH3zar/fTifvkH9KIyv25jVTqkXGOOBaGj
+         9SjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ETeKDbjRetNIkG5OkDbxDTHMEmZYmQYCFw58W5ps8kI=;
+        b=gL9X43rjPSSgaOuSyzPQE1nzNJJzgvFIImOMG9rIqmlj2M5L7mFDPcjmQTKZCYX/xB
+         I8+9AWZ/T4Jrx+5B6GAk5EiQR0Eg0nFRTavVtN8EGGkIiAKeOUFzsE1lwBHiR5HvxiGU
+         qUWFtNDfoi0Ves0o0wGmEcQPjOgkGvTeNFyRdP3CPGETGoDBqBWXnpZc3jUkrhOEDt5s
+         F72KPk3vGmwBdk5ekXzgSugg078V7L41uy7cDsIRB+X3Do+ZEdcFd4wJjhbGvOyDbmca
+         MyljOHGO7t5KAGw1/qVYD/7XKyG/AcISfq6vvOmFpo3XUOC2j5rkXOfo5g7TXUrIj2rq
+         ksFA==
+X-Gm-Message-State: APjAAAVmtepC+FEir/7f4HyuPlcL2w7ew17qDshIKr6bIceOwcbCmaWi
+        DvWP+FROgNZQ+dRQo/hgHw==
+X-Google-Smtp-Source: APXvYqwZycQryK2Tn4hJi8ISfIaaufeRjt02D9pQywPF25eDjRGRtDqC6cQS510Filgr4by3xYnYgA==
+X-Received: by 2002:a5d:6b11:: with SMTP id v17mr22844937wrw.323.1563772967184;
+        Sun, 21 Jul 2019 22:22:47 -0700 (PDT)
+Received: from avx2 ([46.53.250.207])
+        by smtp.gmail.com with ESMTPSA id z5sm27075540wmf.48.2019.07.21.22.22.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jul 2019 22:22:46 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 08:22:44 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, axboe@kernel.dk, kvalo@codeaurora.org,
+        john.johansen@canonical.com, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] unaligned: delete 1-byte accessors
+Message-ID: <20190722052244.GA4235@avx2>
+References: <20190721215253.GA18177@avx2>
+ <1563750513.2898.4.camel@HansenPartnership.com>
 MIME-Version: 1.0
-In-Reply-To: <20190721044615-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 22 Jul 2019 05:22:17 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1563750513.2898.4.camel@HansenPartnership.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 08:08:33AM +0900, James Bottomley wrote:
+> On Mon, 2019-07-22 at 00:52 +0300, Alexey Dobriyan wrote:
+> > Each and every 1-byte access is aligned!
+> 
+> The design idea of this is for parsing descriptors.  We simply chunk up
+> the describing structure using get_unaligned for everything.  The
+> reason is because a lot of these structures come with reserved areas
+> which we may make use of later.  If we're using get_unaligned for
+> everything we can simply change a u8 to a u16 in the structure
+> absorbing the reserved padding.  With your change now I'd have to chase
+> down every byte access and replace it with get_unaligned instead of
+> simply changing the structure.
+> 
+> What's the significant advantage of this change that compensates for
+> the problems the above causes?
 
-On 2019/7/21 下午6:02, Michael S. Tsirkin wrote:
-> On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
->> syzbot has bisected this bug to:
->>
->> commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
->> Author: Jason Wang <jasowang@redhat.com>
->> Date:   Fri May 24 08:12:18 2019 +0000
->>
->>      vhost: access vq metadata through kernel virtual address
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
->> start commit:   6d21a41b Add linux-next specific files for 20190718
->> git tree:       linux-next
->> final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
->> dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
->>
->> Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
->> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
->> address")
->>
->> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> OK I poked at this for a bit, I see several things that
-> we need to fix, though I'm not yet sure it's the reason for
-> the failures:
->
->
-> 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
->     That's just a bad hack,
+HW descriptors have fixed endianness, you're supposed to use
+get_unaligned_be32() and friends.
 
-
-This is used to avoid holding lock when checking whether the addresses 
-are overlapped. Otherwise we need to take spinlock for each invalidation 
-request even if it was the va range that is not interested for us. This 
-will be very slow e.g during guest boot.
-
-
->   in particular I don't think device
->     mutex is taken and so poking at two VQs will corrupt
->     memory.
-
-
-The caller vhost_net_ioctl() (or scsi and vsock) will hold device mutex 
-before calling us.
-
-
->     So what to do? How about a per vq notifier?
->     Of course we also have synchronize_rcu
->     in the notifier which is slow and is now going to be called twice.
->     I think call_rcu would be more appropriate here.
->     We then need rcu_barrier on module unload.
-
-
-So this seems unnecessary.
-
-
->     OTOH if we make pages linear with map then we are good
->     with kfree_rcu which is even nicer.
-
-
-It could be an optimization on top.
-
-
->
-> 2. Doesn't map leak after vhost_map_unprefetch?
->     And why does it poke at contents of the map?
->     No one should use it right?
-
-
-Yes, it's not hard to fix just kfree map in this function.
-
-
->
-> 3. notifier unregister happens last in vhost_dev_cleanup,
->     but register happens first. This looks wrong to me.
-
-
-I'm not sure I get the the exact issue here.
-
-
->
-> 4. OK so we use the invalidate count to try and detect that
->     some invalidate is in progress.
->     I am not 100% sure why do we care.
->     Assuming we do, uaddr can change between start and end
->     and then the counter can get negative, or generally
->     out of sync.
-
-
-Yes, so the fix is as simple as zero the invalidate_count after 
-unregister  the mmu notifier in vhost_set_vring_num_addr().
-
-
->
-> So what to do about all this?
-> I am inclined to say let's just drop the uaddr optimization
-> for now. E.g. kvm invalidates unconditionally.
-> 3 should be fixed independently.
-
-
-Maybe it's better to try to fix with the exist uaddr optimization first.
-
-I did spot two other issues:
-
-1) we don't check the return value mmu_register in vhost_set_vring_num()
-
-2) we try to setup vq address even if set_vring_addr() fail
-
-
-For the bug it self, it looks to me that the mm refcount was messed up 
-since we try to register and unregister MMU notifier. But I haven't 
-figured out why, will do more investigation.
-
-Thanks
-
-
->
->
+For that matter, drivers/scsi/ has exactly 2 get_unaligned() calls one of
+which can be changed to get_unaligned_be32().
