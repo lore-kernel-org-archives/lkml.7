@@ -2,99 +2,90 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04B8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D107C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908472199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3452D21BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:33:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocTGL9Hq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EM1IgF0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733209AbfGVWba (ORCPT
+        id S1730449AbfGVWdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:31:30 -0400
-Received: from mail-vs1-f49.google.com ([209.85.217.49]:39134 "EHLO
-        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbfGVWb1 (ORCPT
+        Mon, 22 Jul 2019 18:33:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43077 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfGVWdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:31:27 -0400
-Received: by mail-vs1-f49.google.com with SMTP id u3so27477406vsh.6;
-        Mon, 22 Jul 2019 15:31:27 -0700 (PDT)
+        Mon, 22 Jul 2019 18:33:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i189so18054977pfg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 15:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
+        d=chromium.org; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=/o2k/7A4mi6mmVCfxJlOxqWAUX0Qz3CzagiJIcOlAnA=;
-        b=ocTGL9HqsouxSGJDhNyDgQr13NNckuh6VIqnEUF4wHJ+A0RcZpbG/y839YAhORxGx4
-         F0BPU+F98oJ/2PP+1iJKcxSclPf86oU7PrFUjzKb8z9rQPh41vckJFe35KS5XskRGj0x
-         FL85SBMfI7Q4+DpFA6vFzY3EPopMIp0mhI0VYsq0QJhb2HlNzm6gBfsgUhygwnBIE/Ra
-         CcFqsOGEqxX5+FEwCoqdZwX5PcmL9BgRKF2gmUHWenOHzNv6Nk/dJwxl8+oXku1s/kgF
-         KOikEn7y4LaVcIQXikNs9EamnVX3IiuOeTCxgZm4KEDiXNUli0L2YaPjz9Ovm6J3//hi
-         eeGw==
+        bh=OiNiLucFHzcy62Q/uV7Rl20nKJBchzgLzRjk8lPRvTI=;
+        b=EM1IgF0DVayCa3ZHqu5MQDHFJSfM22gDk5jlUi2ZxHVKw4BV+5cVEkxIY1MV8UfbfF
+         3rOaf+MSnOe8YwY66/Uptf55irntWYTmMTcnr0/ZptEkCnX6Gesp19VgY45q++QW2LbI
+         6yDY21e3Pb8fFwKbQEVg44xtGV5fQyPv6X3Tc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=/o2k/7A4mi6mmVCfxJlOxqWAUX0Qz3CzagiJIcOlAnA=;
-        b=CrCZBIN34noOnVvucAXlXFf+o4p2Vzp3PpWe9zyTODJD3umHxnpX/n+bc2RU5Z+KE0
-         OHno31xL3cyE4D+te9nrt46FSfoCR8vsU/l0sXmn0RkwjcQvj3l/xQY8yAmBzSI4Teod
-         G0enfnSUkq+xyy/VD8UMgC2h1bm5C00Wc3wzH1KozLdtZM59qe2QUJPbg82WtPShYF89
-         Bvtb/XexdOWBFqQilLOkdNykAR5+DjFr/aB55NLhfO5iiIyKXkgD+og/YI3BdcRmtet9
-         GScJt6Zje+rLlIgrGdEf/VFNN50TcnVMBJpwYW0rkmzzVj5/Tq/b3l7gr5op0SQMWK3T
-         Nsgg==
-X-Gm-Message-State: APjAAAUE7vDqQHuGRDITgrrkGbgyMWBQ192j0S8YN1n0wclCS3ZCKKWQ
-        pjCd/K/Z80/eyykXzu0Oi+O7peerrmfv1eyNsqg=
-X-Google-Smtp-Source: APXvYqxXptS2Hn9wtEsd9cf2MyXFHeX42usyQVwQ8ag2dnjeEQYrWkVQK3Ow5MBemIeDQz5A79cfTmLKrqvvSuC2xsg=
-X-Received: by 2002:a67:edcf:: with SMTP id e15mr45234565vsp.75.1563834687000;
- Mon, 22 Jul 2019 15:31:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OiNiLucFHzcy62Q/uV7Rl20nKJBchzgLzRjk8lPRvTI=;
+        b=NEC4F4kC7GnymlMIxUFn5pLN6UZHCaLjFwHFBY9VeOic0IVPdubweirhO5kYxmTHID
+         HVn+DKM//BS3+TShT2hH4g4rp1URy2XYbmHjEyVGtjjWg3czobZoJV45+MotCzqD76F/
+         oUTHpoSsdvW00U41ZoMiE51gcJVvcKzj5vX0/7YmzsrHUBzt7+fgkrPhzY20o+hwdwqh
+         TLykUxsfkVxxEc3sbaa6c5AY3LJToIcxj20J9Cx+IWm1ouLyxC5j+nWXL0wVGreOKpiQ
+         kYtZCEYKOM29m+bZZbl13vWFmvpzYKk9CROLi+LZ5c0amdxAlGKuwQBe0QqPfZLdymDS
+         drEA==
+X-Gm-Message-State: APjAAAWiVlAGEKdLUhLb8V05LI1o3SgfJv8xYXox6cjhHFdPfLNQmKJD
+        y9RohUnaMCA5FiYpprNPm8tJYg==
+X-Google-Smtp-Source: APXvYqyVI6/r2/2vccLiPS9z4xcidbOTHjITUeNO/JzPjKOnDzA7LRMstmsIGWAscqES/rL2AkAPiQ==
+X-Received: by 2002:a17:90a:cb8e:: with SMTP id a14mr30424267pju.124.1563834820452;
+        Mon, 22 Jul 2019 15:33:40 -0700 (PDT)
+Received: from ravisadineni0.mtv.corp.google.com ([2620:15c:202:1:98d2:1663:78dd:3593])
+        by smtp.gmail.com with ESMTPSA id k186sm20614285pga.68.2019.07.22.15.33.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 22 Jul 2019 15:33:39 -0700 (PDT)
+From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, rjw@rjwysocki.net, pavel@ucw.cz,
+        len.brown@intel.com, gregkh@linuxfoundation.org,
+        ravisadineni@chromium.org, bhe@redhat.com, dyoung@redhat.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        tbroch@chromium.org
+Subject: [PATCH 0/2] power: Refactor device level sysfs.
+Date:   Mon, 22 Jul 2019 15:33:35 -0700
+Message-Id: <20190722223337.36199-1-ravisadineni@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722182451.GB24412@kroah.com>
+References: <20190722182451.GB24412@kroah.com>
 MIME-Version: 1.0
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Mon, 22 Jul 2019 18:31:59 -0400
-Message-ID: <CAOGqxeVeEq803rrtGrnubRA8cP3dRCXsU15ss3pS1q6ik+k8Bw@mail.gmail.com>
-Subject: Issue with sequence to switch to HS400
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "cc: Adrian Hunter" <adrian.hunter@intel.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm having a problem with a new SD/MMC controller and PHY in our
-latest SoC's. The issue I'm seeing is that I can't switch into HS400
-mode. This looks like something the driver is doing that doesn't meet
-the JEDEC spec. In the "HS400 timing mode selection" section of the
-JEDEC spec , in step 7 it states:
+wakeup_abort_count and wakeup_count attributes print the
+same (wakeup_count) variable. Thus this patchset removes the
+duplicate wakeup_abort_count sysfs attribute. This patchset also
+exposes event_count as a sysfs attribute.
 
-7) Set the =E2=80=9CTiming Interface=E2=80=9D parameter in the HS_TIMING [1=
-85] field
-of the Extended CSD register to 0x1 to switch to High Speed mode and
-then set the clock frequency to a value not greater than 52 MHz.
+Ravi Chandra Sadineni (2):
+  power: sysfs: Remove wakeup_abort_count attribute.
+  power:sysfs: Expose device wakeup_event_count.
 
-In the function mmc_select_hs400() in mmc.c, I see that a switch
-command is done to set the eMMC device to HS mode and then
-mmc_set_timing(card->host, MMC_TIMING_MMC_HS) is used to change the
-controller to HS mode. The problem is that the "SD Host Controller
-Standard Specification" states that "UHS Mode Select" field of the
-"Host Control 2 Register" controls the mode when the "1.8V Signaling
-Enable" bit in the same register is set, so mmc_set_timing() is
-actually leaving the controller in SDR12 mode and mmc_select_hs400()
-will then set the clock to 52MHz. This causes our PHY to detect an
-illegal combination and return an error.
+ Documentation/ABI/testing/sysfs-devices-power | 36 +++++++++----------
+ drivers/base/power/sysfs.c                    | 27 +++++++-------
+ 2 files changed, 33 insertions(+), 30 deletions(-)
 
-I think the easiest fix would be to change mmc_set_timing(card->host,
-MMC_TIMING_MMC_HS) to mmc_set_timing(card->host,
-MMC_TIMING_UHS_SDR25). The other possibility would be to change
-mmc_set_timing to handle the "1.8V Signaling Enable" bit properly.
-I'll submit a patch based on the feedback I get.
+-- 
+2.20.1
 
-Thanks
-Al Cooper
