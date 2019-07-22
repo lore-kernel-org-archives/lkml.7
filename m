@@ -2,163 +2,128 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A6AC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7110C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF77A216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:40:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="DatuO7iF"
+	by mail.kernel.org (Postfix) with ESMTP id A2DDA21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbfGVTkF (ORCPT
+        id S1732237AbfGVTl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:40:05 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:33943 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfGVTkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:40:04 -0400
-Received: by mail-yb1-f195.google.com with SMTP id q5so3217300ybp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XiPi6NLGAihhHoJX1TQVxa/qSyYbhC/5nUBfiRfN5To=;
-        b=DatuO7iFd/gwaby0zE8VcAJc0UoFQHqT7eYDhZPJsVPEYuFar3ijTDWGJZ/oMnBCdn
-         NCp5AOREUGLNU/Dl5ElDs7B8Z7kfIDKXdHCT8XENb09BHD9P/OIaYVJ4LvZYQgqy3twJ
-         4VZ9Lx+eg6JJesZbxJFhpffym4RjzaZWqh8RchQ4bJWciVRW4DSxxFF1fVwXJngqdsji
-         efB18StPJsYCrMvpMIa7gFnp2t7n3WT/xrib079dw3FlU/KE03xS0q5vJO8MR/2y6IWI
-         U+0TeStphc7eDtcZZTx90NjrQ0y8Bv3ZJk6WPPbv+jhO6rFnmSUaNQEa40RruUxZGmWo
-         PeEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XiPi6NLGAihhHoJX1TQVxa/qSyYbhC/5nUBfiRfN5To=;
-        b=VgqlY8doPfZpJEevvyaXtg/3mqoa8mBGAuW6vLbcaUjqABqBBGkZTyt76CDg0jY+0b
-         DiWNI38mmhhqvJlEs13jkDkUbMVXUqbMF4q+6tQxT5WVrOxjH6anuqDC7uOpdHkb5Nkt
-         3NQJWYF+kvhhqOJH6WPjJqnDT60C6ysm4x83pg+h08Z18tnkEVtd01UR/PzgHCCCdYJq
-         Akv2X5xuwMnoLJynuk8K3vcZkaKh1B+emW0iR0MEa7JXkaBG3kpOj9gziW81f7sl+Csb
-         dU0Mpe+N4os6goiF5XDybMHdWZoouET70iqzXNFssqFgIkp7pN6rwcut95SSGmtHAexk
-         ZrKA==
-X-Gm-Message-State: APjAAAXCrMrLWOs/wApJ9cnQITkrVk2ri3C9s4jrVaejxzt8xYh19+gU
-        tAEHO5YPZgJbQM3aFjSV+gPpIQ==
-X-Google-Smtp-Source: APXvYqz5SZD7hxqVmR3c0a4NmWzRdFT0snKaXz6JaYvHegDZWvbV9kes8na9VWp1p6aIBtO6/WGxtg==
-X-Received: by 2002:a25:e003:: with SMTP id x3mr40966402ybg.225.1563824403688;
-        Mon, 22 Jul 2019 12:40:03 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id t201sm9586068ywc.87.2019.07.22.12.40.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 12:40:02 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 15:40:02 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: stop abusing dma_map/unmap for cache
-Message-ID: <20190722194002.GI104440@art_vandelay>
-References: <20190630124735.27786-1-robdclark@gmail.com>
+        Mon, 22 Jul 2019 15:41:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45964 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbfGVTl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 15:41:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6AE96308424C;
+        Mon, 22 Jul 2019 19:41:28 +0000 (UTC)
+Received: from x1.home (ovpn-116-35.phx2.redhat.com [10.3.116.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 522D0600C4;
+        Mon, 22 Jul 2019 19:41:25 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 13:41:24 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Lu, Kechen" <kechen.lu@intel.com>
+Cc:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zhang, Tina" <tina.zhang@intel.com>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>
+Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
+Message-ID: <20190722134124.16c55c2f@x1.home>
+In-Reply-To: <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+        <20190718155640.25928-3-kechen.lu@intel.com>
+        <20190719102516.60af527f@x1.home>
+        <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190630124735.27786-1-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 22 Jul 2019 19:41:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 05:47:22AM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> Recently splats like this started showing up:
-> 
->    WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
->    Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
->    CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
->    Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
->    Workqueue: msm msm_gem_free_work [msm]
->    pstate: 80c00005 (Nzcv daif +PAN +UAO)
->    pc : __iommu_dma_unmap+0xb8/0xc0
->    lr : __iommu_dma_unmap+0x54/0xc0
->    sp : ffff0000119abce0
->    x29: ffff0000119abce0 x28: 0000000000000000
->    x27: ffff8001f9946648 x26: ffff8001ec271068
->    x25: 0000000000000000 x24: ffff8001ea3580a8
->    x23: ffff8001f95ba010 x22: ffff80018e83ba88
->    x21: ffff8001e548f000 x20: fffffffffffff000
->    x19: 0000000000001000 x18: 00000000c00001fe
->    x17: 0000000000000000 x16: 0000000000000000
->    x15: ffff000015b70068 x14: 0000000000000005
->    x13: 0003142cc1be1768 x12: 0000000000000001
->    x11: ffff8001f6de9100 x10: 0000000000000009
->    x9 : ffff000015b78000 x8 : 0000000000000000
->    x7 : 0000000000000001 x6 : fffffffffffff000
->    x5 : 0000000000000fff x4 : ffff00001065dbc8
->    x3 : 000000000000000d x2 : 0000000000001000
->    x1 : fffffffffffff000 x0 : 0000000000000000
->    Call trace:
->     __iommu_dma_unmap+0xb8/0xc0
->     iommu_dma_unmap_sg+0x98/0xb8
->     put_pages+0x5c/0xf0 [msm]
->     msm_gem_free_work+0x10c/0x150 [msm]
->     process_one_work+0x1e0/0x330
->     worker_thread+0x40/0x438
->     kthread+0x12c/0x130
->     ret_from_fork+0x10/0x18
->    ---[ end trace afc0dc5ab81a06bf ]---
-> 
-> Not quite sure what triggered that, but we really shouldn't be abusing
-> dma_{map,unmap}_sg() for cache maint.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
+On Mon, 22 Jul 2019 05:28:35 +0000
+"Lu, Kechen" <kechen.lu@intel.com> wrote:
 
-Applied to -misc-fixes
-
-Thanks,
-
-Sean
-
-> ---
->  drivers/gpu/drm/msm/msm_gem.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi, 
 > 
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index d31d9f927887..3b84cbdcafa3 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -108,7 +108,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
->  		 * because display controller, GPU, etc. are not coherent:
->  		 */
->  		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
-> -			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
-> +			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
->  					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
->  	}
->  
-> @@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_object *obj)
->  			 * GPU, etc. are not coherent:
->  			 */
->  			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
-> -				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
-> +				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
->  					     msm_obj->sgt->nents,
->  					     DMA_BIDIRECTIONAL);
->  
-> -- 
-> 2.20.1
+> > -----Original Message-----
+> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > Sent: Saturday, July 20, 2019 12:25 AM
+> > To: Lu, Kechen <kechen.lu@intel.com>
+> > Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;
+> > kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan
+> > <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian, Kevin
+> > <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>
+> > Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
+> > 
+> > On Thu, 18 Jul 2019 23:56:36 +0800
+> > Kechen Lu <kechen.lu@intel.com> wrote:
+> >   
+> > > From: Tina Zhang <tina.zhang@intel.com>
+> > >
+> > > Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
+> > > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display
+> > >
+> > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > > ---
+> > >  include/uapi/linux/vfio.h | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > index be6adab4f759..df28b17a6e2e 100644
+> > > --- a/include/uapi/linux/vfio.h
+> > > +++ b/include/uapi/linux/vfio.h
+> > > @@ -469,6 +469,9 @@ struct vfio_irq_info_cap_type {
+> > >  	__u32 subtype;  /* type specific */
+> > >  };
+> > >
+> > > +#define VFIO_IRQ_TYPE_GFX				(1)
+> > > +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)
+> > > +  
+> > 
+> > Please include a description defining exactly what this IRQ is intended to signal.
+> > For instance, if another vGPU vendor wanted to implement this in their driver
+> > and didn't have the QEMU code for reference to what it does with the IRQ, what
+> > would they need to know?  Thanks,
+> > 
+> > Alex
+> >   
 > 
+> Yes, that makes more sense. I'll add the description for it at next version patch.
+> 
+> BTW, may I have one more question? In the current design ideas, we partitioned 
+> the vGPU display eventfd counted 8-byte value into at most 8 events to deliver 
+> multiple display events, so we need different increasement counter value to 
+> differentiate the events. As this is the exposed thing the QEMU has to know, we
+> plan adds a macro here VFIO_IRQ_SUBTYPE_GFX_DISPLAY_EVENTFD_BASE_SHIFT to
+> make sure the partitions shift in 1 byte, does it make sense putting here? Looking  
+> forward to your and Gerd's comments. Thanks!
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Couldn't you expose this as another capability within the IRQ_INFO
+return data?  If you were to define it as a macro, I assume that means
+it would be hard coded, in which case this probably becomes an Intel
+specific IRQ, rather than what appears to be framed as a generic
+graphics IRQ extension.  A new capability could instead allow the
+vendor to specify their own value, where we could define how userspace
+should interpret and make use of this value.  Thanks,
+
+Alex
