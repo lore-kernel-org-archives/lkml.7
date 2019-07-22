@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E366DC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE4C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA48A21BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7803121BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbfGVXJn (ORCPT
+        id S1733305AbfGVXJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:09:43 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40392 "EHLO ale.deltatee.com"
+        Mon, 22 Jul 2019 19:09:17 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:40274 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733311AbfGVXJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:09:20 -0400
+        id S1733209AbfGVXJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:09:14 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQb-0002k8-Dk; Mon, 22 Jul 2019 17:09:19 -0600
+        id 1hphQb-0002k5-Vz; Mon, 22 Jul 2019 17:09:13 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQX-0001RE-NH; Mon, 22 Jul 2019 17:09:05 -0600
+        id 1hphQW-0001R5-JS; Mon, 22 Jul 2019 17:09:04 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
@@ -40,8 +40,8 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Jul 2019 17:08:58 -0600
-Message-Id: <20190722230859.5436-14-logang@deltatee.com>
+Date:   Mon, 22 Jul 2019 17:08:55 -0600
+Message-Id: <20190722230859.5436-11-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722230859.5436-1-logang@deltatee.com>
 References: <20190722230859.5436-1-logang@deltatee.com>
@@ -50,7 +50,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 13/14] PCI/P2PDMA: Update documentation for pci_p2pdma_distance_many()
+Subject: [PATCH 10/14] PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,42 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comment describing pci_p2pdma_distance_many() still referred to
-the devices being behind the same root port. This no longer applies
-so reword the documentation.
+Factor out the bus only mapping into it's own static function.
+No functional changes. The original pci_p2pdma_map_sg_attrs() will
+be used to decide whether this is an appropriate way to map.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/pci/p2pdma.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/pci/p2pdma.c | 39 +++++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 053f9ad59d79..baf476039396 100644
+index d3ced8eee30a..5f43f92f9336 100644
 --- a/drivers/pci/p2pdma.c
 +++ b/drivers/pci/p2pdma.c
-@@ -496,15 +496,14 @@ static int upstream_bridge_distance_warn(struct pci_dev *provider,
-  * @num_clients: number of clients in the array
-  * @verbose: if true, print warnings for devices when we return -1
-  *
-- * Returns -1 if any of the clients are not compatible (behind the same
-- * root port as the provider), otherwise returns a positive number where
-- * a lower number is the preferable choice. (If there's one client
-- * that's the same as the provider it will return 0, which is best choice).
-+ * Returns -1 if any of the clients are not compatible, otherwise returns a
-+ * positive number where a lower number is the preferable choice. (If there's
-+ * one client that's the same as the provider it will return 0, which is best
-+ * choice).
-  *
-- * For now, "compatible" means the provider and the clients are all behind
-- * the same PCI root port. This cuts out cases that may work but is safest
-- * for the user. Future work can expand this to white-list root complexes that
-- * can safely forward between each ports.
-+ * "compatible" means the provider and the clients are either all behind
-+ * the same PCI root port or the host bridge connected to each of the devices
-+ * are is listed in the 'pci_p2pdma_whitelist'.
-  */
- int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
- 			     int num_clients, bool verbose)
+@@ -785,23 +785,9 @@ void pci_p2pmem_publish(struct pci_dev *pdev, bool publish)
+ }
+ EXPORT_SYMBOL_GPL(pci_p2pmem_publish);
+ 
+-/**
+- * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
+- * @dev: device doing the DMA request
+- * @sg: scatter list to map
+- * @nents: elements in the scatterlist
+- * @dir: DMA direction
+- * @attrs: dma attributes passed to dma_map_sg() (if called)
+- *
+- * Scatterlists mapped with this function should be unmapped using
+- * pci_p2pdma_unmap_sg_attrs().
+- *
+- * Returns the number of SG entries mapped or 0 on error.
+- */
+-int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+-		int nents, enum dma_data_direction dir, unsigned long attrs)
++static int __pci_p2pdma_map_sg(struct dev_pagemap *pgmap,
++		struct device *dev, struct scatterlist *sg, int nents)
+ {
+-	struct dev_pagemap *pgmap;
+ 	struct scatterlist *s;
+ 	phys_addr_t paddr;
+ 	int i;
+@@ -826,6 +812,27 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+ 
+ 	return nents;
+ }
++
++/**
++ * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
++ * @dev: device doing the DMA request
++ * @sg: scatter list to map
++ * @nents: elements in the scatterlist
++ * @dir: DMA direction
++ * @attrs: dma attributes passed to dma_map_sg() (if called)
++ *
++ * Scatterlists mapped with this function should be unmapped using
++ * pci_p2pdma_unmap_sg_attrs().
++ *
++ * Returns the number of SG entries mapped or 0 on error.
++ */
++int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
++		int nents, enum dma_data_direction dir, unsigned long attrs)
++{
++	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
++
++	return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
++}
+ EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
+ 
+ /**
 -- 
 2.20.1
 
