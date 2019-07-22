@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C001C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFF9C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673412199C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA64C222FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563781747;
-	bh=Tk06rDxfxwcnU8GxOBG3evUypupDiE24pVhJ+efr87Q=;
+	s=default; t=1563781759;
+	bh=Gr05QR1hL7O+2tzL84PlqgJUM44tyb63rrhJfu4GtP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBS3TkIUO+xmEp/eLT0c5/RUOCBUqwwVSPszoTiQp+Qlxo2hiGfkelqZMJyUJx9eo
-	 Tysvyp5wFn2Ds1FTtubHboChXhGX3iCkfD2DfG1in4yzKNYCWnMEuiWiZAjxWeeWvQ
-	 awZv6fiZG2zexeIpgQxPH78HXwHj6rRxlPnakt2I=
+	b=SAG99v5OIaNu/JmAxJA+5kl4tRMr74i7LWltyjcWlDndoKS3KQeqvnSsMhaqsp8I2
+	 +DjmY/oNHF5LVwFZxSoS591xtNH9oTckaxWVrac07ikgjJpu/pQKxb5r88wMJRYA75
+	 ShuSIUuFEH5unzw/aeG0XJp284cnIXE7KKSqVhEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfGVHtG (ORCPT
+        id S1728127AbfGVHtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33056 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 03:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfGVHtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:49:05 -0400
+        id S1727164AbfGVHtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 03:49:17 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178222199C;
-        Mon, 22 Jul 2019 07:49:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8AC12229C;
+        Mon, 22 Jul 2019 07:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563781744;
-        bh=Tk06rDxfxwcnU8GxOBG3evUypupDiE24pVhJ+efr87Q=;
+        s=default; t=1563781756;
+        bh=Gr05QR1hL7O+2tzL84PlqgJUM44tyb63rrhJfu4GtP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k2RwWlw1doena07PHahRUyGYZa0VJaFztH9ifYRFrwnG2z4+i8ZX/wdVTd75xnhUj
-         h9IaKFmJrYgQ40ce/Sya9pT/10O7hYnSrjJic1sqo5KxfFi+n68J3vkwnx5mcgEdw5
-         YGXWIJshFAiqwOYR8eOwPaODS6p53pItpfmbiDzM=
+        b=kEV7DJS52TP6EVFczUmwAz/ukrBdOqPydQi6XOdGzphoTVb3yaak3oCzZCV77IfJj
+         evHq82f+uz1VL5mxSm8qATXcNsScSVxwkn+ZxMlEtycjmBOFt+dO0mgYBp4IwApTmH
+         M1kKJ7/EOw8MMzNE4yEv4lihH/pwKzlZFz58dNWk=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>
@@ -50,9 +50,9 @@ Cc:     mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
         Anders Roxell <anders.roxell@linaro.org>,
         Daniel Diaz <daniel.diaz@linaro.org>,
         "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH v2 3/4] arm64: Make debug exception handlers visible from RCU
-Date:   Mon, 22 Jul 2019 16:48:58 +0900
-Message-Id: <156378173770.12011.3832608237079432765.stgit@devnote2>
+Subject: [PATCH v2 4/4] arm64: Remove unneeded rcu_read_lock from debug handlers
+Date:   Mon, 22 Jul 2019 16:49:11 +0900
+Message-Id: <156378175027.12011.5591853683946780785.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156378170297.12011.17385386326930403235.stgit@devnote2>
 References: <156378170297.12011.17385386326930403235.stgit@devnote2>
@@ -65,127 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make debug exceptions visible from RCU so that synchronize_rcu()
-correctly track the debug exception handler.
+Remove rcu_read_lock()/rcu_read_unlock() from debug exception
+handlers since we are sure those are not preemptible and
+interrupts are off.
 
-This also introduces sanity checks for user-mode exceptions as same
-as x86's ist_enter()/ist_exit().
-
-The debug exception can interrupt in idle task. For example, it warns
-if we put a kprobe on a function called from idle task as below.
-The warning message showed that the rcu_read_lock() caused this
-problem. But actually, this means the RCU is lost the context which
-is already in NMI/IRQ.
-
-  /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
-  /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
-  /sys/kernel/debug/tracing # [  135.122237]
-  [  135.125035] =============================
-  [  135.125310] WARNING: suspicious RCU usage
-  [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
-  [  135.125904] -----------------------------
-  [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
-  [  135.126839]
-  [  135.126839] other info that might help us debug this:
-  [  135.126839]
-  [  135.127410]
-  [  135.127410] RCU used illegally from idle CPU!
-  [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
-  [  135.128114] RCU used illegally from extended quiescent state!
-  [  135.128555] 1 lock held by swapper/0/0:
-  [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
-  [  135.130499]
-  [  135.130499] stack backtrace:
-  [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
-  [  135.131841] Hardware name: linux,dummy-virt (DT)
-  [  135.132224] Call trace:
-  [  135.132491]  dump_backtrace+0x0/0x140
-  [  135.132806]  show_stack+0x24/0x30
-  [  135.133133]  dump_stack+0xc4/0x10c
-  [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-  [  135.134171]  call_break_hook+0x170/0x178
-  [  135.134486]  brk_handler+0x28/0x68
-  [  135.134792]  do_debug_exception+0x90/0x150
-  [  135.135051]  el1_dbg+0x18/0x8c
-  [  135.135260]  default_idle_call+0x0/0x44
-  [  135.135516]  cpu_startup_entry+0x2c/0x30
-  [  135.135815]  rest_init+0x1b0/0x280
-  [  135.136044]  arch_call_rest_init+0x14/0x1c
-  [  135.136305]  start_kernel+0x4d4/0x500
-  [  135.136597]
-
-So make debug exception visible to RCU can fix this warning.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- arch/arm64/mm/fault.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ arch/arm64/kernel/debug-monitors.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 9568c116ac7f..a6b244240db6 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -777,6 +777,42 @@ void __init hook_debug_fault_code(int nr,
- 	debug_fault_info[nr].name	= name;
- }
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index f8719bd30850..48222a4760c2 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -207,16 +207,16 @@ static int call_step_hook(struct pt_regs *regs, unsigned int esr)
  
-+/*
-+ * In debug exception context, we explicitly disable preemption.
-+ * This serves two purposes: it makes it much less likely that we would
-+ * accidentally schedule in exception context and it will force a warning
-+ * if we somehow manage to schedule by accident.
-+ */
-+static void debug_exception_enter(struct pt_regs *regs)
-+{
-+	if (user_mode(regs)) {
-+		RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	} else {
-+		/*
-+		 * We might have interrupted pretty much anything.  In
-+		 * fact, if we're a debug exception, we can even interrupt
-+		 * NMI processing.  We don't want in_nmi() to return true,
-+		 * but we need to notify RCU.
-+		 */
-+		rcu_nmi_enter();
-+	}
-+
-+	preempt_disable();
-+
-+	/* This code is a bit fragile.  Test it. */
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "exception_enter didn't work");
-+}
-+NOKPROBE_SYMBOL(debug_exception_enter);
-+
-+static void debug_exception_exit(struct pt_regs *regs)
-+{
-+	preempt_enable_no_resched();
-+
-+	if (!user_mode(regs))
-+		rcu_nmi_exit();
-+}
-+NOKPROBE_SYMBOL(debug_exception_exit);
-+
- #ifdef CONFIG_ARM64_ERRATUM_1463225
- DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+ 	list = user_mode(regs) ? &user_step_hook : &kernel_step_hook;
  
-@@ -824,6 +860,8 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 	if (interrupts_enabled(regs))
- 		trace_hardirqs_off();
- 
-+	debug_exception_enter(regs);
-+
- 	if (user_mode(regs) && !is_ttbr0_addr(pc))
- 		arm64_apply_bp_hardening();
- 
-@@ -832,6 +870,8 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 				 inf->sig, inf->code, (void __user *)pc, esr);
+-	rcu_read_lock();
+-
++	/*
++	 * Since single-step exception disables interrupt, this function is
++	 * entirely not preemptible, and we can use rcu list safely here.
++	 */
+ 	list_for_each_entry_rcu(hook, list, node)	{
+ 		retval = hook->fn(regs, esr);
+ 		if (retval == DBG_HOOK_HANDLED)
+ 			break;
  	}
  
-+	debug_exception_exit(regs);
-+
- 	if (interrupts_enabled(regs))
- 		trace_hardirqs_on();
+-	rcu_read_unlock();
+-
+ 	return retval;
+ }
+ NOKPROBE_SYMBOL(call_step_hook);
+@@ -305,14 +305,16 @@ static int call_break_hook(struct pt_regs *regs, unsigned int esr)
+ 
+ 	list = user_mode(regs) ? &user_break_hook : &kernel_break_hook;
+ 
+-	rcu_read_lock();
++	/*
++	 * Since brk exception disables interrupt, this function is
++	 * entirely not preemptible, and we can use rcu list safely here.
++	 */
+ 	list_for_each_entry_rcu(hook, list, node) {
+ 		unsigned int comment = esr & ESR_ELx_BRK64_ISS_COMMENT_MASK;
+ 
+ 		if ((comment & ~hook->mask) == hook->imm)
+ 			fn = hook->fn;
+ 	}
+-	rcu_read_unlock();
+ 
+ 	return fn ? fn(regs, esr) : DBG_HOOK_ERROR;
  }
 
