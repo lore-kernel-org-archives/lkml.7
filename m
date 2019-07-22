@@ -3,103 +3,184 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD092C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6298CC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A36921901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4206421901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfGVOkx (ORCPT
+        id S1726291AbfGVOlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfGVOkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:40:52 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5BD32190D;
-        Mon, 22 Jul 2019 14:40:49 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 10:40:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mon, 22 Jul 2019 10:41:16 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41433 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726084AbfGVOlP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:41:15 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id pZUzhcGM80SBqpZV2hroIr; Mon, 22 Jul 2019 16:41:13 +0200
+Subject: Re: [PATCH v6 0/5] HEVC/H.265 stateless support for V4L2 and Cedrus
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Ingo Molnar <mingo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
-Message-ID: <20190722104048.463397a0@gandalf.local.home>
-In-Reply-To: <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
-        <20190722025043.166344-13-gaoxiang25@huawei.com>
-        <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
-        <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
-        <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>
+References: <20190614143837.15605-1-paul.kocialkowski@bootlin.com>
+ <20190722131734.GD1908@aptenodytes>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <3bac3bb7-c755-cb29-30f0-757c5efb548d@xs4all.nl>
+Date:   Mon, 22 Jul 2019 16:41:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190722131734.GD1908@aptenodytes>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNv9wZN6+Xa8NbwprCE9xJoYZFVdMSJxFGFuamwxJHvhzKVYlhn2rdzIbiQQ/i/fFvIAcXpu2paKDB5qFkvhDWDJy7BrP0qn/T0PCymB4PVMJGjMiiWO
+ tl8xSxac/vBdjIt3fBdaCe38nkM1Kqp6ntnaVp9kcSo+BahPl2rjqsrjSLytdUtlsgSZpkwDpbLvrv2U05RVYQvXoACavxCMksTpzwipMSkUgpBDUWv7RBog
+ BLqKE6TzlBSrc1FuG8GBG7KDJIQ9yePkqbuzPaInLtcSKUYW593CK1be7WJRQ0otzX3RWG8dyty0F4N3FXdM6PAUME2enFAOWVFHcwqHouhQgNHRORJUJ8Yy
+ fv3UiAbBR7zAVOtd5RcvNghWYKhYFTlhmoDDDjg5WZ32dADsxS6HYj+ToXhxPZ6oMYkDq3BmnTDCOy6s1dZI+t0PCPkF6UlJJKFKY2Y8yI3szLPmto7BtrHQ
+ T0iLV6RDABEPto00lMpPwB47LM8fHLDfs1TrYWIEkjvkEY6S72ALI4lXSYmCiXkZG1vTOnjkKNFe6p05xo1Ok/iz5klfk+gDuwi1Jn93HjWQoqh7UEEDe3CM
+ MTxqvZ2DY9Z80mGPFpcopKm8XOFzfW/iA8gfbFiUkBVziUm/kWeccnr6rkRnU8FbcrLuUMM6yg4Hq+We8yIlSBqiYMGvhNjNCRIi/8N2FSkHgtAa4+Zfm475
+ Jgviei8jhTYQOZPa03rDlJe3lXp4wfwApyCrhtw7SqZlasgNWsBdtRXSzCo5P2HXkax84+2vnstrUW7k7GUxDkcvQHiHKQEi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 09:16:22 +0300
-Amir Goldstein <amir73il@gmail.com> wrote:
-
-> CC kernel/trace maintainers for RB_PAGE_HEAD/RB_PAGE_UPDATE
-> and kernel/locking maintainers for RT_MUTEX_HAS_WAITERS
-
-Interesting.
-
+On 7/22/19 3:17 PM, Paul Kocialkowski wrote:
+> Hi,
 > 
-> > (Is there some use scenerios in overlayfs and fanotify?...)  
+> Any feedback on this series? I think it was pretty much ready for merge
+> regarding the comments received so far.
 > 
-> We had one in overlayfs once. It is gone now.
-> 
-> >
-> > and I'm not sure Al could accept __fdget conversion (I just wanted to give a example then...)
-> >
-> > Therefore, I tend to keep silence and just promote EROFS... some better ideas?...
-> >  
-> 
-> Writing example conversion patches to demonstrate cleaner code
-> and perhaps reduce LOC seems the best way.
+> I could craft a rebased v7, with or without additional changes, if needed.
 
-Yes, I would be more interested in seeing patches that clean up the
-code than just talking about it.
+Just gave feedback. A v7 is needed in any case since it needs to be rebased.
+
+Regards,
+
+	Hans
 
 > 
-> Also pointing out that fixing potential bugs in one implementation is preferred
-> to having to patch all copied implementations.
+> What do you think?
 > 
-> I wonder if tagptr_unfold_tags() doesn't need READ_ONCE() as per:
-> 1be5d4fa0af3 locking/rtmutex: Use READ_ONCE() in rt_mutex_owner()
+> Cheers,
 > 
-> rb_list_head() doesn't have READ_ONCE()
-
-Hmm, even if the compiler decided to reread the data, it would still
-need to clear the extra bits wouldn't it? Or am I missing something?
-
--- Steve
-
-> Nor does hlist_bl_first() and BPF_MAP_PTR().
+> Paul
 > 
-> Are those all safe due to safe call sites? or potentially broken?
+> On Fri 14 Jun 19, 16:38, Paul Kocialkowski wrote:
+>> This is early support for HEVC/H.265 stateless decoding in V4L2,
+>> including both definitions and driver support for the Cedrus VPU
+>> driver, which concerns Allwinner devices.
+>>
+>> A specific pixel format is introduced for the HEVC slice format and
+>> controls are provided to pass the bitstream metadata to the decoder.
+>> Some bitstream extensions are intentionally not supported at this point.
+>>
+>> Since this is the first proposal for stateless HEVC/H.265 support in
+>> V4L2, reviews and comments about the controls definitions are
+>> particularly welcome.
+>>
+>> On the Cedrus side, the H.265 implementation covers frame pictures
+>> with both uni-directional and bi-direction prediction modes (P/B
+>> slices). Field pictures (interleaved), scaling lists and 10-bit output
+>> are not supported at this point.
+>>
+>> This series is based upon the following series:
+>> * media: cedrus: Add H264 decoding support
+>>
+>> Changes since v5:
+>> * Rebased atop latest next media tree;
+>> * Moved to flags instead of u8 fields;
+>> * Added padding to ensure 64-bit alignment
+>>   (tested with GDB on 32 and 64-bit architectures);
+>> * Reworked cedrus H.265 driver support a bit for flags;
+>> * Split off codec-specific control validation and init;
+>> * Added HEVC controls fields cleanup at std_validate to allow reliable
+>>   control comparison with memcmp;
+>> * Fixed various misc reported mistakes.
+>>
+>> Changes since v4:
+>> * Rebased atop latest H.254 series.
+>>
+>> Changes since v3:
+>> * Updated commit messages;
+>> * Updated CID base to avoid conflicts;
+>> * Used cpu_to_le32 for packed le32 data;
+>> * Fixed misc minor issues in the drive code;
+>> * Made it clear in the docs that the API will evolve;
+>> * Made the pixfmt private and split commits about it.
+>>
+>> Changes since v2:
+>> * Moved headers to non-public API;
+>> * Added H265 capability for A64 and H5;
+>> * Moved docs to ext-ctrls-codec.rst;
+>> * Mentionned sections of the spec in the docs;
+>> * Added padding to control structures for 32-bit alignment;
+>> * Made write function use void/size in bytes;
+>> * Reduced the number of arguments to helpers when possible;
+>> * Removed PHYS_OFFSET since we already set PFN_OFFSET;
+>> * Added comments where suggested;
+>> * Moved to timestamp for references instead of index;
+>> * Fixed some style issues reported by checkpatch.
+>>
+>> Changes since v1:
+>> * Added a H.265 capability to whitelist relevant platforms;
+>> * Switched over to tags instead of buffer indices in the DPB
+>> * Declared variable in their reduced scope as suggested;
+>> * Added the H.265/HEVC spec to the biblio;
+>> * Used in-doc references to the spec and the required APIs;
+>> * Removed debugging leftovers.
+>>
+>> Cheers!
+>>
+>> Paul Kocialkowski (5):
+>>   media: v4l2-ctrls: Split off MPEG-2 controls validation
+>>   media: v4l2-ctrls: Split off MPEG-2 controls initialization
+>>   media: v4l: Add definitions for the HEVC slice controls
+>>   media: pixfmt: Document the HEVC slice pixel format
+>>   media: cedrus: Add HEVC/H.265 decoding support
+>>
+>>  Documentation/media/uapi/v4l/biblio.rst       |   9 +
+>>  .../media/uapi/v4l/ext-ctrls-codec.rst        | 474 +++++++++++++-
+>>  .../media/uapi/v4l/pixfmt-compressed.rst      |  21 +
+>>  .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
+>>  .../media/videodev2.h.rst.exceptions          |   3 +
+>>  drivers/media/v4l2-core/v4l2-ctrls.c          | 231 +++++--
+>>  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+>>  drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
+>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
+>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
+>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
+>>  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
+>>  .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
+>>  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
+>>  .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
+>>  include/media/hevc-ctrls.h                    | 197 ++++++
+>>  include/media/v4l2-ctrls.h                    |   7 +
+>>  17 files changed, 1860 insertions(+), 62 deletions(-)
+>>  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+>>  create mode 100644 include/media/hevc-ctrls.h
+>>
+>> -- 
+>> 2.21.0
+>>
+> 
 
