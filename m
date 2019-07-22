@@ -2,93 +2,116 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDC5C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0FEC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2F821993
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NlhbxYGZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7C4742147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 09:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbfGVJvA (ORCPT
+        id S1729510AbfGVJve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 05:51:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40446 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729403AbfGVJu5 (ORCPT
+        Mon, 22 Jul 2019 05:51:34 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58112 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729367AbfGVJuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 05:50:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=auG+WBB+E2ja85hNasZKDEATZdt3zPPsPEd9jG6xw9E=; b=NlhbxYGZJot8w6XK9LwZyefi0P
-        7pANqGTVVBxi1afdz7v8OUxYs3BG/lrjtRbA5C6zftOpNdiQNXNcFUhJ5FQxaiwjTuvSnJ+cyAoBa
-        vktF9Bq1wioEfxsR3Pox+8aklKUkRXG3ynpGM7xcXS1dKwzphqlBzdCMb3BJX/O2A8quLXKUi/WHH
-        35BjnNcyCfFH9+mngqVOg4+LajSeIBf9XCocndsSCGf/jeFPs1m7UovqtjyTJfK70dRIK1d5cU3dF
-        M+VUDT1byZsSkCm/nDYm8Cpg4/JrL8GG1sa5gs5xgE1YCSBLgBCAftD34BbQFmYrm69aI3j5IeRDK
-        Wja4NGmg==;
-Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpUy7-0005hf-1j; Mon, 22 Jul 2019 09:50:55 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 11/12] xfs: set IOMAP_F_NEW more carefully
-Date:   Mon, 22 Jul 2019 11:50:23 +0200
-Message-Id: <20190722095024.19075-12-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190722095024.19075-1-hch@lst.de>
-References: <20190722095024.19075-1-hch@lst.de>
+        Mon, 22 Jul 2019 05:50:52 -0400
+X-UUID: c45950b4dc394bb492ec60abafe0491e-20190722
+X-UUID: c45950b4dc394bb492ec60abafe0491e-20190722
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 208432879; Mon, 22 Jul 2019 17:50:44 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 22 Jul 2019 17:50:43 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 22 Jul 2019 17:50:42 +0800
+Message-ID: <1563789042.14676.3.camel@mtkswgap22>
+Subject: Re: [PATCH v4 0/3] MediaTek Security random number generator support
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Sean Wang" <sean.wang@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Mon, 22 Jul 2019 17:50:42 +0800
+In-Reply-To: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't set IOMAP_F_NEW if we COW over and existing allocated range, as
-these aren't strictly new allocations.  This is required to be able to
-use IOMAP_F_NEW to zero newly allocated blocks, which is required for
-the iomap code to fully support file systems that don't do delayed
-allocations or use unwritten extents.
+Dear Matthias, Rob, Mark,
+	Just gentle ping.
+	Thanks
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_iomap.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 951350ec025d..d340db666c06 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -707,9 +707,12 @@ xfs_file_iomap_begin_delay(
- 	 * Flag newly allocated delalloc blocks with IOMAP_F_NEW so we punch
- 	 * them out if the write happens to fail.
- 	 */
--	iomap_flags |= IOMAP_F_NEW;
--	trace_xfs_iomap_alloc(ip, offset, count, whichfork,
--			whichfork == XFS_DATA_FORK ? &imap : &cmap);
-+	if (whichfork == XFS_DATA_FORK) {
-+		iomap_flags |= IOMAP_F_NEW;
-+		trace_xfs_iomap_alloc(ip, offset, count, whichfork, &imap);
-+	} else {
-+		trace_xfs_iomap_alloc(ip, offset, count, whichfork, &cmap);
-+	}
- done:
- 	if (whichfork == XFS_COW_FORK) {
- 		if (imap.br_startoff > offset_fsb) {
--- 
-2.20.1
+On Mon, 2019-06-24 at 15:24 +0800, Neal Liu wrote:
+> These patch series introduce a generic rng driver for Trustzone
+> based kernel driver which would like to communicate with ATF
+> SIP services.
+> 
+> Patch #1 initials SMC fid table for Mediatek SIP interfaces and
+> adds HWRNG related SMC call.
+> 
+> Patch #2..3 adds mtk-sec-rng kernel driver for Trustzone based SoCs.
+> For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+> entropy sources is not accessible from normal world (linux) and
+> rather accessible from secure world (ATF/TEE) only. This driver aims
+> to provide a generic interface to ATF rng service.
+> 
+> 
+> changes since v1:
+> - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs
+> can reuse this driver.
+> - refine coding style and unnecessary check.
+> 
+> changes since v2:
+> - remove unused comments.
+> - remove redundant variable.
+> 
+> changes since v3:
+> - add dt-bindings for MediaTek rng with TrustZone enabled
+> - revise HWRNG SMC call fid
+> 
+> 
+> Neal Liu (3):
+>   soc: mediatek: add SMC fid table for SIP interface
+>   dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
+>   hwrng: add mtk-sec-rng driver
+> 
+>  .../devicetree/bindings/rng/mtk-sec-rng.txt   | 10 ++
+>  drivers/char/hw_random/Kconfig                | 16 +++
+>  drivers/char/hw_random/Makefile               |  1 +
+>  drivers/char/hw_random/mtk-sec-rng.c          | 97 +++++++++++++++++++
+>  include/linux/soc/mediatek/mtk_sip_svc.h      | 33 +++++++
+>  5 files changed, 157 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+>  create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
+>  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+> 
+
 
