@@ -2,149 +2,64 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B2DC76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90C1C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7352190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A6F2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfGVOxq (ORCPT
+        id S1726585AbfGVOzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:53:46 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37306 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfGVOxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:53:46 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id BDD5428A146
-Subject: Re: [PATCH v4 1/4] iio: cros_ec: Add sign vector in core for backward
- compatibility
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Cc:     bleung@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com, dianders@chromium.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190628191711.23584-1-gwendal@chromium.org>
- <20190628191711.23584-2-gwendal@chromium.org>
- <20190714173203.0b50d5c7@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <3729385a-6628-22e1-da50-e22233737a4b@collabora.com>
-Date:   Mon, 22 Jul 2019 16:53:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 Jul 2019 10:55:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55560 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbfGVOzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:55:19 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C8DD5C057F2C;
+        Mon, 22 Jul 2019 14:55:18 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-45.ams2.redhat.com [10.36.116.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6CAA60A9F;
+        Mon, 22 Jul 2019 14:55:11 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com, mst@redhat.com,
+        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Fix NULL pointer dereference with virtio-blk-pci and virtual IOMMU
+Date:   Mon, 22 Jul 2019 16:55:07 +0200
+Message-Id: <20190722145509.1284-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190714173203.0b50d5c7@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 22 Jul 2019 14:55:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+When running a guest featuring a virtio-blk-pci protected with a virtual
+IOMMU we hit a NULL pointer dereference.
 
-On 14/7/19 18:32, Jonathan Cameron wrote:
-> On Fri, 28 Jun 2019 12:17:08 -0700
-> Gwendal Grignou <gwendal@chromium.org> wrote:
-> 
->> To allow cros_ec iio core library to be used with legacy device, add a
->> vector to rotate sensor data if necessary: legacy devices are not
->> reporting data in HTML5/Android sensor referential.
->>
->> Check the data is not rotated on recent chromebooks that use the HTML5
->> standard to present sensor data.
->>
->> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
->> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> As I mentioned in one of the other series.  I've lost track of whether
-> anyone wants me to apply any of these through IIO, so will just ack
-> them as appropriate and assume someone will shout if they do want
-> me to pick them up ;)
-> 
+This series removes the dma_max_mapping_size() call in
+virtio_max_dma_size when the device does not have any dma_mask set.
+A check is also added to early return in dma_addressing_limited()
+if the dma_mask is NULL.
 
-To try to give you a bit of light on this, all the required changes in
-chrome-platform are now in upstream so all the patches can go safely through
-your tree. The order to pick the patches is as follow:
+Eric Auger (2):
+  dma-mapping: Protect dma_addressing_limited against NULL dma_mask
+  virtio/virtio_ring: Fix the dma_max_mapping_size call
 
+ drivers/virtio/virtio_ring.c | 2 +-
+ include/linux/dma-mapping.h  | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-1096491 [v4,1/1] iio: common: cros_ec_sensors: determine protocol version
+-- 
+2.20.1
 
-1100922 [v6,1/4] iio: cros_ec: Add sign vector in core for backward
-                 compatibility
-1100924 [v6,3/4] iio: cros_ec_accel_legacy: Use cros_ec_sensors_core
-1100923 [v6,4/4] iio: cros_ec_accel_legacy: Add support for veyron-minnie
-
-1100982 [v5,1/1] iio: common: cros_ec_sensors: Expose cros_ec_sensors frequency
-                 range via iio sysfs
-
-But if you try to apply latest versions from patchwork you'll get some trivial
-conflicts. So, I fixed the problems, rebased on top of your testing branch,
-added my Rb tag to all the patches and put together in this branch [1]
-
-All the patches have your Ack, so should be fine if you apply all of them just
-replacing your Ack for your Signed-off
-
-I can also send a new patch series with those if you prefer this option.
-
-Hopefully is more clear now and sorry for that mess.
-~ Enric
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=for-iio-next
-
-
-> Thanks,
-> 
-> Jonathan
-> 
->> ---
->>  drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c | 4 ++++
->>  include/linux/iio/common/cros_ec_sensors_core.h           | 1 +
->>  2 files changed, 5 insertions(+)
->>
->> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> index 719a0df5aeeb..e8a4d78659c8 100644
->> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->> @@ -66,6 +66,9 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->>  		}
->>  		state->type = state->resp->info.type;
->>  		state->loc = state->resp->info.location;
->> +
->> +		/* Set sign vector, only used for backward compatibility. */
->> +		memset(state->sign, 1, CROS_EC_SENSOR_MAX_AXIS);
->>  	}
->>  
->>  	return 0;
->> @@ -254,6 +257,7 @@ static int cros_ec_sensors_read_data_unsafe(struct iio_dev *indio_dev,
->>  		if (ret < 0)
->>  			return ret;
->>  
->> +		*data *= st->sign[i];
->>  		data++;
->>  	}
->>  
->> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
->> index ce16445411ac..a1c85ad4df91 100644
->> --- a/include/linux/iio/common/cros_ec_sensors_core.h
->> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
->> @@ -71,6 +71,7 @@ struct cros_ec_sensors_core_state {
->>  	enum motionsensor_location loc;
->>  
->>  	s16 calib[CROS_EC_SENSOR_MAX_AXIS];
->> +	s8 sign[CROS_EC_SENSOR_MAX_AXIS];
->>  
->>  	u8 samples[CROS_EC_SAMPLE_SIZE];
->>  
-> 
