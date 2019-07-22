@@ -2,90 +2,63 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB28C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DDAC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC76622296
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E5D2229B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbfGVIx3 (ORCPT
+        id S1728634AbfGVIxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:53:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56386 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfGVIx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:53:28 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 69A6D30BC57D;
-        Mon, 22 Jul 2019 08:53:28 +0000 (UTC)
-Received: from localhost (ovpn-117-250.ams2.redhat.com [10.36.117.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A4E65DA2E;
-        Mon, 22 Jul 2019 08:53:25 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 09:53:19 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v4 3/5] vsock/virtio: fix locking in
- virtio_transport_inc_tx_pkt()
-Message-ID: <20190722085319.GC24934@stefanha-x1.localdomain>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-4-sgarzare@redhat.com>
+        Mon, 22 Jul 2019 04:53:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35948 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbfGVIxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:53:42 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hpU4h-0001w3-Ec; Mon, 22 Jul 2019 10:53:39 +0200
+Date:   Mon, 22 Jul 2019 10:53:38 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Cao jin <caoj.fnst@cn.fujitsu.com>
+cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, luto@kernel.org
+Subject: Re: [PATCH] x86/irq/64: fix the missing update on comment
+In-Reply-To: <20190719081635.26528-1-caoj.fnst@cn.fujitsu.com>
+Message-ID: <alpine.DEB.2.21.1907221051580.1782@nanos.tec.linutronix.de>
+References: <20190719081635.26528-1-caoj.fnst@cn.fujitsu.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
-Content-Disposition: inline
-In-Reply-To: <20190717113030.163499-4-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 22 Jul 2019 08:53:28 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cao,
 
---Clx92ZfkiYIKRjnr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 19 Jul 2019, Cao jin wrote:
 
-On Wed, Jul 17, 2019 at 01:30:28PM +0200, Stefano Garzarella wrote:
-> fwd_cnt and last_fwd_cnt are protected by rx_lock, so we should use
-> the same spinlock also if we are in the TX path.
->=20
-> Move also buf_alloc under the same lock.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  include/linux/virtio_vsock.h            | 2 +-
->  net/vmw_vsock/virtio_transport_common.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+> Commit e6401c130931 ("x86/irq/64: Split the IRQ stack into its own pages")
+> missed to update one piece of comment as it did to its peer in Xen, which
+> will confuse people who still need to read comment.
+> 
+> A bonus fix to identation in ZO's linker script: spaces -> tab.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Please don't add 'bonus' changes. A patch which fixes a stale comment has
+nothing to do with a indentation change in an unrelated file.
 
---Clx92ZfkiYIKRjnr
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+	tglx
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl01eX8ACgkQnKSrs4Gr
-c8jE7AgAs5N6O7elzpZi4u/g75m8dfsiRpiyEG+NXL6ahFUWKw98b80S/q2RNHZR
-udZDGbmyVjnwH1pok2YnjdwcqCq515JelqAdv7CdhhzzRZdwiHGMQh8uqHYDfzGZ
-R2V0hSJAiSG21HxP+RBG6VoWCoBUeQU/vce3jkYsxT6F64tUqeqxJd/C+AcRHOKk
-dxxTmtn2NdRRs6Hofl5nW0ulYG/wxRRtN3dTf+V/FKkXLYv1197AD0+JXZnTRw2s
-159FbLvqqdFzBGt2HORUTR+7aTcBuILeDuLW8gJT6JrFF2MIw1B0VaSB0Lbv0mN6
-tuZAmnZlcurH5zz8i5XOJ5mugHY72w==
-=VeGT
------END PGP SIGNATURE-----
-
---Clx92ZfkiYIKRjnr--
