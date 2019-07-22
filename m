@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B0AC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60AAC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BA320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A0D2229C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="va4gVpxx"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="F74SsFtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfGVHXF (ORCPT
+        id S1727721AbfGVHXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:23:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33544 "EHLO
+        Mon, 22 Jul 2019 03:23:21 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53860 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGVHXF (ORCPT
+        with ESMTP id S1727620AbfGVHXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:23:05 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h19so28087903wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:23:02 -0700 (PDT)
+        Mon, 22 Jul 2019 03:23:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x15so34028597wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 00:23:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=TOTv7uCWWUepqm6PfKM2SaT6Nn+hZ72/5dRfO/btysA=;
-        b=va4gVpxx8Ddp52uLp9QB6u/a0brtIiJ2SIZJbLGK3PBo54+H+XQR8wR7JnKWvAVUwa
-         pAfbrpRsa1SQZ21Kbn57lws3LZB9IwlZ7OBp3HYNRqp9dfrhmDhM5xiCEJbx1T05Wkmj
-         v9Aluh4fKHMNtAMmdqWK03vlkO8z6L5NzJiKJeihBRQSsiLrPYEyyjjhv3tNu3yTjx5T
-         jHqw/aIP/vfdvis8ESjj+R/pyB4QmoL1vzjndp+FaBULX6zfcElSaxSgVk2ErksNEIp6
-         0ti+qYoQuSCa8ObGz0wirVsxY8i+NsDFa5QEAKbkoktvPQS94P+zVZZ2+1fQt4QumJOQ
-         d9HA==
+        bh=LD9GCw1eG9QEzwE6oFNEQIzVZACLaoYqLB+k/zbJCdM=;
+        b=F74SsFtcbnsipPjtAFo3nZeUH6oXlGCJDRP0xnmIpynir4g/z65Znh/Rxdd2tc3lki
+         wx0RAIVfTJIsG7ZTIfRtu2bdYa+BCBHz3OVhl8COPy1j3OnmhfseibhuazJJnFwc4sMn
+         PLrUS0kTR6HsNoSyBW3EEOG4Pfl0FhLObowRIh1kbW+zfjWnouJe1brgMeHF/LWG+Ncr
+         NHoZ233iLFrxLCi//oLTNEjrGvo+2+wva77zg9rRZjTwCqO2VULUGR53ys5IKvj31ey9
+         mdRsjJpQ8bQsS7Sc80nE9tMeweKFjVNI19QKv9GeLPDowm9rs3BZRoBwRngv6pEh3p4t
+         2g5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=TOTv7uCWWUepqm6PfKM2SaT6Nn+hZ72/5dRfO/btysA=;
-        b=jXIz0NawB53I5vNxL86pgv/pwjfdgWkOg1YUeAfgZGLPcdA2ca6guKJbogtFgyuNaq
-         KuOPaglxPJXSWvlHT/Hc5DOibLPTTuBatBEovYOAUbh1qowoEUO0Pn+kUkMZ+MdPIa5i
-         F9BZus4mAjpOxgUFqzrTQrADSibdrT4RTuaCv81rxUkLElrZ70EIUs3vIEkoTbRIwi2i
-         GI56ldoNVowY/HAwCMlvUYNrB0CtW4l+bs0ywN9f13fcJBDP9rQjGeWTJ00+S81cfbky
-         xp6J5IwYq0Rcc6GcsM7w4GaQz5GuCGJdmbSBSpIhthSYe77gC52n5X2B62krmTKsIrm9
-         D+ng==
-X-Gm-Message-State: APjAAAWATQukLrLWV4oEvrcVDM8Ok2Ce5VRencCHcMbZe7ZmzCPTgsB2
-        TuB8DpdxYibSsJLJ7wb37TqKH9/Z/n8=
-X-Google-Smtp-Source: APXvYqzGk0j9+TvPzkwuBFE4N1gSCPq1qpQSdy3LSOZtUdshF70HtqPPtoN0CD2oModtTC9MP4w7kA==
-X-Received: by 2002:a1c:2d8b:: with SMTP id t133mr62088566wmt.57.1563780182154;
-        Mon, 22 Jul 2019 00:23:02 -0700 (PDT)
+        bh=LD9GCw1eG9QEzwE6oFNEQIzVZACLaoYqLB+k/zbJCdM=;
+        b=dODZfkYKBEFe94QPvpYNtYDrG5NP4PK5hLxoo1nNSniR2LFDuPb+RzLNN9zfh/ww4e
+         0jF/Xik7wLlN/IA2sk8tBWUo/L6Q+iyMRJSmiIYEMBgGSTzWv8Ttb0pvuAyUqbFzq6s7
+         sYV0Woz/oTPB2/L3OPSEem3K6YR/MX5O4qqO5LLannfWwqjXdjhAIJ85vDCOQVctFGLg
+         c8wHMSU7MgQgNpXv9OPtLCqPEpJ0Ac2F3dRah5WgztaRcQLh2kwo4eXNwU2HP9o0Ke7K
+         TKydxIKGtdPOQTFDTO6aWVHZVG++5wpXEicgCCEGmBQziWZ4yuHwDC6gt2ZIfairKmNa
+         mYng==
+X-Gm-Message-State: APjAAAVD4VYUCzeuzUmd/HwXTCoO/aAs0EcHJYd5lVLUQLEPCoBTG/gd
+        tYzCogQoMWQl47jV2k3dRwk+7Q==
+X-Google-Smtp-Source: APXvYqzfS7FtcRA+07esTVYwytBlm7aKVdZY4D+n+4hAm1mqPLE6MFCdAZwiJjT7e6DFVVuG48UgJg==
+X-Received: by 2002:a1c:7f57:: with SMTP id a84mr60819167wmd.3.1563780197608;
+        Mon, 22 Jul 2019 00:23:17 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id s188sm30077096wmf.40.2019.07.22.00.23.01
+        by smtp.gmail.com with ESMTPSA id s10sm50309877wmf.8.2019.07.22.00.23.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 00:23:01 -0700 (PDT)
-Subject: Re: [PATCH 10/12] phy: amlogic: G12A: Fix misuse of GENMASK macro
+        Mon, 22 Jul 2019 00:23:17 -0700 (PDT)
+Subject: Re: [PATCH 06/12] mmc: meson-mx-sdio: Fix misuse of GENMASK macro
 To:     Joe Perches <joe@perches.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 References: <cover.1562734889.git.joe@perches.com>
- <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
+ <94dcbeb13b08a67ae9f404aa590c1c1459bc5287.1562734889.git.joe@perches.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -119,12 +120,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <c6cabf9c-7edd-eea8-3388-df781163cddd@baylibre.com>
-Date:   Mon, 22 Jul 2019 09:23:01 +0200
+Message-ID: <abf1a3b1-d221-6ad5-bdd1-98d7d1eefe83@baylibre.com>
+Date:   Mon, 22 Jul 2019 09:23:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <d149d2851f9aa2425c927cb8e311e20c4b83e186.1562734889.git.joe@perches.com>
+In-Reply-To: <94dcbeb13b08a67ae9f404aa590c1c1459bc5287.1562734889.git.joe@perches.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -138,22 +139,22 @@ On 10/07/2019 07:04, Joe Perches wrote:
 > 
 > Signed-off-by: Joe Perches <joe@perches.com>
 > ---
->  drivers/phy/amlogic/phy-meson-g12a-usb2.c | 2 +-
+>  drivers/mmc/host/meson-mx-sdio.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-> index 9065ffc85eb4..cd7eccab2649 100644
-> --- a/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
-> @@ -66,7 +66,7 @@
->  #define PHY_CTRL_R14						0x38
->  	#define PHY_CTRL_R14_I_RDP_EN				BIT(0)
->  	#define PHY_CTRL_R14_I_RPU_SW1_EN			BIT(1)
-> -	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(2, 3)
-> +	#define PHY_CTRL_R14_I_RPU_SW2_EN			GENMASK(3, 2)
->  	#define PHY_CTRL_R14_PG_RSTN				BIT(4)
->  	#define PHY_CTRL_R14_I_C2L_DATA_16_8			BIT(5)
->  	#define PHY_CTRL_R14_I_C2L_ASSERT_SINGLE_EN_ZERO	BIT(6)
+> diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+> index 2d736e416775..ba9a63db73da 100644
+> --- a/drivers/mmc/host/meson-mx-sdio.c
+> +++ b/drivers/mmc/host/meson-mx-sdio.c
+> @@ -73,7 +73,7 @@
+>  	#define MESON_MX_SDIO_IRQC_IF_CONFIG_MASK		GENMASK(7, 6)
+>  	#define MESON_MX_SDIO_IRQC_FORCE_DATA_CLK		BIT(8)
+>  	#define MESON_MX_SDIO_IRQC_FORCE_DATA_CMD		BIT(9)
+> -	#define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK		GENMASK(10, 13)
+> +	#define MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK		GENMASK(13, 10)
+>  	#define MESON_MX_SDIO_IRQC_SOFT_RESET			BIT(15)
+>  	#define MESON_MX_SDIO_IRQC_FORCE_HALT			BIT(30)
+>  	#define MESON_MX_SDIO_IRQC_HALT_HOLE			BIT(31)
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
