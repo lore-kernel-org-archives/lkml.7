@@ -2,128 +2,262 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7110C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529F0C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DDA21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EE6216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AfWp26av"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732237AbfGVTl3 (ORCPT
+        id S1732281AbfGVTle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:41:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45964 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfGVTl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:41:28 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6AE96308424C;
-        Mon, 22 Jul 2019 19:41:28 +0000 (UTC)
-Received: from x1.home (ovpn-116-35.phx2.redhat.com [10.3.116.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 522D0600C4;
-        Mon, 22 Jul 2019 19:41:25 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 13:41:24 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Lu, Kechen" <kechen.lu@intel.com>
-Cc:     "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zhang, Tina" <tina.zhang@intel.com>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>
-Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
-Message-ID: <20190722134124.16c55c2f@x1.home>
-In-Reply-To: <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
-References: <20190718155640.25928-1-kechen.lu@intel.com>
-        <20190718155640.25928-3-kechen.lu@intel.com>
-        <20190719102516.60af527f@x1.home>
-        <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
-Organization: Red Hat
+        Mon, 22 Jul 2019 15:41:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34082 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732241AbfGVTlb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 15:41:31 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so11928569pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=i2ydHyx146Gpo6F/4Mk5APlIfYtwAqU9vRc87LHJBOg=;
+        b=AfWp26av7d1R0GVQBZqmVDo36nl/ONdvumK8cBMcUztafl3YzMOQbj4/Ut6lsbwQYy
+         2IDNfw3efcHERFPIOzf68rMcvJlkJCPORgBDyZvs+wnOumbE/nmtn788576/X8Nxv7Ms
+         Q04HPAwn45lcvNsj0GEKx81i8tmNcG+fCQ1vI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=i2ydHyx146Gpo6F/4Mk5APlIfYtwAqU9vRc87LHJBOg=;
+        b=lOh+hupKiTAYvEWaO2v14XUuJTxsiUB2wxd+7PlPbEWxgwUf7PhiQh3IkKK26AjThR
+         K5XiYRQ0pLwPEPdFDkrK3oGbyMqFSeQeBsP0qxIs7mZJIhXVcbsXHe/NwnEFYYsvAuwP
+         aXiMeP0bJrQydnW3KH/E5pHup638kCx5L7A7BMe9jcwXetq1a10if0lMO0qAxMUm2CbV
+         C+Uqoi5wdqB1Kw63Ne/iJxGPZCLGl7EILwK7OarOMa6bBqeRZLMEqEliaCSJwOX7jGh3
+         9Qur4ow+s/2q/CNEnJxtlXO0svhJCZq/gkxxXe8Es46Fhx8n2M1FMzFy+Low/kS4oYEO
+         7k5A==
+X-Gm-Message-State: APjAAAUdWulLkGRvWkOt7+8okd/Q3gzS8pd9jTtFZSxvFIzwT99iqZ7E
+        nEGOiU0BEkK9QuFdAE4xoX6PRQ==
+X-Google-Smtp-Source: APXvYqxRbyCKEUMoA0Ph44+At0UA78EhAjWJ+Hp3Q5G6AQTNXv8xUqU98puubWwzR/JltKnz8oH/pQ==
+X-Received: by 2002:a63:1020:: with SMTP id f32mr43080141pgl.203.1563824490156;
+        Mon, 22 Jul 2019 12:41:30 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id z4sm29838803pgp.80.2019.07.22.12.41.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 12:41:29 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ganapathi Bhat <gbhat@marvell.com>, linux-wireless@vger.kernel.org,
+        Andreas Fenkart <afenkart@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        netdev@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        linux-mmc@vger.kernel.org, davem@davemloft.net,
+        Xinming Hu <huxinming820@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Subject: [PATCH v2 1/2] mmc: core: Add sdio_trigger_replug() API
+Date:   Mon, 22 Jul 2019 12:39:38 -0700
+Message-Id: <20190722193939.125578-2-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+In-Reply-To: <20190722193939.125578-1-dianders@chromium.org>
+References: <20190722193939.125578-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 22 Jul 2019 19:41:28 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 05:28:35 +0000
-"Lu, Kechen" <kechen.lu@intel.com> wrote:
+When using Marvell WiFi SDIO cards, it is not uncommon for Linux WiFi
+driver to fully lose the communication channel to the firmware running
+on the card.  Presumably the firmware on the card has a bug or two in
+it and occasionally crashes.
 
-> Hi, 
-> 
-> > -----Original Message-----
-> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > Sent: Saturday, July 20, 2019 12:25 AM
-> > To: Lu, Kechen <kechen.lu@intel.com>
-> > Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;
-> > kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan
-> > <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian, Kevin
-> > <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>
-> > Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
-> > 
-> > On Thu, 18 Jul 2019 23:56:36 +0800
-> > Kechen Lu <kechen.lu@intel.com> wrote:
-> >   
-> > > From: Tina Zhang <tina.zhang@intel.com>
-> > >
-> > > Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
-> > > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display
-> > >
-> > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> > > ---
-> > >  include/uapi/linux/vfio.h | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index be6adab4f759..df28b17a6e2e 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -469,6 +469,9 @@ struct vfio_irq_info_cap_type {
-> > >  	__u32 subtype;  /* type specific */
-> > >  };
-> > >
-> > > +#define VFIO_IRQ_TYPE_GFX				(1)
-> > > +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)
-> > > +  
-> > 
-> > Please include a description defining exactly what this IRQ is intended to signal.
-> > For instance, if another vGPU vendor wanted to implement this in their driver
-> > and didn't have the QEMU code for reference to what it does with the IRQ, what
-> > would they need to know?  Thanks,
-> > 
-> > Alex
-> >   
-> 
-> Yes, that makes more sense. I'll add the description for it at next version patch.
-> 
-> BTW, may I have one more question? In the current design ideas, we partitioned 
-> the vGPU display eventfd counted 8-byte value into at most 8 events to deliver 
-> multiple display events, so we need different increasement counter value to 
-> differentiate the events. As this is the exposed thing the QEMU has to know, we
-> plan adds a macro here VFIO_IRQ_SUBTYPE_GFX_DISPLAY_EVENTFD_BASE_SHIFT to
-> make sure the partitions shift in 1 byte, does it make sense putting here? Looking  
-> forward to your and Gerd's comments. Thanks!
+The Marvell WiFi driver attempts to recover from this problem.
+Specifically the driver has the function mwifiex_sdio_card_reset()
+which is called when communcation problems are found.  That function
+attempts to reset the state of things by utilizing the mmc_hw_reset()
+function.
 
-Couldn't you expose this as another capability within the IRQ_INFO
-return data?  If you were to define it as a macro, I assume that means
-it would be hard coded, in which case this probably becomes an Intel
-specific IRQ, rather than what appears to be framed as a generic
-graphics IRQ extension.  A new capability could instead allow the
-vendor to specify their own value, where we could define how userspace
-should interpret and make use of this value.  Thanks,
+The current solution is a bit complex because the Marvell WiFi driver
+needs to manually deinit and reinit the WiFi driver around the reset
+call.  This means it's going through a bunch of code paths that aren't
+normally tested.  However, complexity isn't our only problem.  The
+other (bigger) problem is that Marvell WiFi cards are often combo
+WiFi/Bluetooth cards and Bluetooth runs on a second SDIO func.  While
+the WiFi driver knows that it should re-init its own state around the
+mmc_hw_reset() call there is no good way to inform the Bluetooth
+driver.  That means that in Linux today when you reset the Marvell
+WiFi driver you lose all Bluetooth communication.  Doh!
 
-Alex
+One way to fix the above problems is to leverage a more standard way
+to reset the Marvell WiFi card where we go through the same code paths
+as card unplug and the card plug.  In this patch we introduce a new
+API call for doing just that: sdio_trigger_replug().  This API call
+will trigger an unplug of the SDIO card followed by a plug of the
+card.  As part of this the card will be nicely reset.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+
+Changes in v2:
+- s/routnine/routine (Brian Norris, Matthias Kaehlcke).
+- s/contining/containing (Matthias Kaehlcke).
+- Add Matthias Reviewed-by tag.
+
+ drivers/mmc/core/core.c       | 28 ++++++++++++++++++++++++++--
+ drivers/mmc/core/sdio_io.c    | 20 ++++++++++++++++++++
+ include/linux/mmc/host.h      | 15 ++++++++++++++-
+ include/linux/mmc/sdio_func.h |  2 ++
+ 4 files changed, 62 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 221127324709..5da365b1fdb4 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -2161,6 +2161,12 @@ int mmc_sw_reset(struct mmc_host *host)
+ }
+ EXPORT_SYMBOL(mmc_sw_reset);
+ 
++void mmc_trigger_replug(struct mmc_host *host)
++{
++	host->trigger_replug_state = MMC_REPLUG_STATE_UNPLUG;
++	_mmc_detect_change(host, 0, false);
++}
++
+ static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
+ {
+ 	host->f_init = freq;
+@@ -2214,6 +2220,11 @@ int _mmc_detect_card_removed(struct mmc_host *host)
+ 	if (!host->card || mmc_card_removed(host->card))
+ 		return 1;
+ 
++	if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
++		mmc_card_set_removed(host->card);
++		return 1;
++	}
++
+ 	ret = host->bus_ops->alive(host);
+ 
+ 	/*
+@@ -2326,8 +2337,21 @@ void mmc_rescan(struct work_struct *work)
+ 	mmc_bus_put(host);
+ 
+ 	mmc_claim_host(host);
+-	if (mmc_card_is_removable(host) && host->ops->get_cd &&
+-			host->ops->get_cd(host) == 0) {
++
++	/*
++	 * Move through the state machine if we're triggering an unplug
++	 * followed by a re-plug.
++	 */
++	if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
++		host->trigger_replug_state = MMC_REPLUG_STATE_PLUG;
++		_mmc_detect_change(host, 0, false);
++	} else if (host->trigger_replug_state == MMC_REPLUG_STATE_PLUG) {
++		host->trigger_replug_state = MMC_REPLUG_STATE_NONE;
++	}
++
++	if (host->trigger_replug_state == MMC_REPLUG_STATE_PLUG ||
++	    (mmc_card_is_removable(host) && host->ops->get_cd &&
++			host->ops->get_cd(host) == 0)) {
+ 		mmc_power_off(host);
+ 		mmc_release_host(host);
+ 		goto out;
+diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
+index 2ba00acf64e6..9b96267ac855 100644
+--- a/drivers/mmc/core/sdio_io.c
++++ b/drivers/mmc/core/sdio_io.c
+@@ -811,3 +811,23 @@ void sdio_retune_release(struct sdio_func *func)
+ 	mmc_retune_release(func->card->host);
+ }
+ EXPORT_SYMBOL_GPL(sdio_retune_release);
++
++/**
++ *	sdio_trigger_replug - trigger an "unplug" + "plug" of the card
++ *	@func: SDIO function attached to host
++ *
++ *	When you call this function we will schedule events that will
++ *	make it look like the card containing the given SDIO func was
++ *	unplugged and then re-plugged-in.  This is as close as possible
++ *	to a full reset of the card that can be achieved.
++ *
++ *	NOTE: routine will temporarily make the card look as if it is
++ *	removable even if it is marked non-removable.
++ *
++ *	This function should be called while the host is claimed.
++ */
++void sdio_trigger_replug(struct sdio_func *func)
++{
++	mmc_trigger_replug(func->card->host);
++}
++EXPORT_SYMBOL(sdio_trigger_replug);
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 4a351cb7f20f..40f21b3e6aaf 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -407,6 +407,12 @@ struct mmc_host {
+ 
+ 	bool			trigger_card_event; /* card_event necessary */
+ 
++	/* state machine for triggering unplug/replug */
++#define MMC_REPLUG_STATE_NONE	0		/* not doing unplug/replug */
++#define MMC_REPLUG_STATE_UNPLUG	1		/* do unplug next */
++#define MMC_REPLUG_STATE_PLUG	2		/* do plug next */
++	u8			trigger_replug_state;
++
+ 	struct mmc_card		*card;		/* device attached to this host */
+ 
+ 	wait_queue_head_t	wq;
+@@ -527,7 +533,12 @@ int mmc_regulator_get_supply(struct mmc_host *mmc);
+ 
+ static inline int mmc_card_is_removable(struct mmc_host *host)
+ {
+-	return !(host->caps & MMC_CAP_NONREMOVABLE);
++	/*
++	 * A non-removable card briefly looks removable if code has forced
++	 * a re-plug of the card.
++	 */
++	return host->trigger_replug_state != MMC_REPLUG_STATE_NONE ||
++		!(host->caps & MMC_CAP_NONREMOVABLE);
+ }
+ 
+ static inline int mmc_card_keep_power(struct mmc_host *host)
+@@ -580,4 +591,6 @@ static inline enum dma_data_direction mmc_get_dma_dir(struct mmc_data *data)
+ int mmc_send_tuning(struct mmc_host *host, u32 opcode, int *cmd_error);
+ int mmc_abort_tuning(struct mmc_host *host, u32 opcode);
+ 
++void mmc_trigger_replug(struct mmc_host *host);
++
+ #endif /* LINUX_MMC_HOST_H */
+diff --git a/include/linux/mmc/sdio_func.h b/include/linux/mmc/sdio_func.h
+index 5a177f7a83c3..0d6c73768ae3 100644
+--- a/include/linux/mmc/sdio_func.h
++++ b/include/linux/mmc/sdio_func.h
+@@ -173,4 +173,6 @@ extern void sdio_retune_crc_enable(struct sdio_func *func);
+ extern void sdio_retune_hold_now(struct sdio_func *func);
+ extern void sdio_retune_release(struct sdio_func *func);
+ 
++extern void sdio_trigger_replug(struct sdio_func *func);
++
+ #endif /* LINUX_MMC_SDIO_FUNC_H */
+-- 
+2.22.0.657.g960e92d24f-goog
+
