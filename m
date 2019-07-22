@@ -2,108 +2,181 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6777C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADA9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB8921951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563838505;
-	bh=ea7bbNWwRc2Jb5gKkCuC0BfPuCo9gTUGpILmdaKsYTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OATYoI4Qe63fMpfkfM/4t5xFVeqas29nRqf88PD2xh2VBXI4TWsX4NgNbgXefQZRv
-	 LEip77C09WSBz0E1OZFTKBCnMOyaI6bmWcwUFpiM+YgVfEIARcAWsv9L4DezT1w0rN
-	 oHaXwWJ99phjYtXNwOJrTz+XdEZL6KdkUGAROPZs=
+	by mail.kernel.org (Postfix) with ESMTP id 2B8DF2199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="U09JlmRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfGVXfE (ORCPT
+        id S1731112AbfGVXfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:35:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40178 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfGVXfE (ORCPT
+        Mon, 22 Jul 2019 19:35:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38854 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfGVXfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:35:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so77814041iom.7;
-        Mon, 22 Jul 2019 16:35:03 -0700 (PDT)
+        Mon, 22 Jul 2019 19:35:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f5so9576910pgu.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 16:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=85QgoVCMoUBXEV57x4G0PDzl0QhwTAJz3PR0yob8+QQ=;
+        b=U09JlmRF+1e0SXt1nVtPE+wsgbeVT+ODWkwh5EDZK/HI2W80i+GnSjYreZoZXSI25X
+         H/SgYIii0FLjAEyz5fr1WEYrj2sBL7nya8427TlnXTltUbOXOAlyW3PNZsaBZvxVlt9p
+         RgLWM5tK8Sx6N9INgAByIFLu9Ox5yaiWxUh//d2f8VulJfzD/2OGyTqkfx1tsYqpi2aZ
+         9pTGAYQZrPIxM09wjYq9BG2H+3Xk4U/1Xw1EXLWHs6+EyDzpF9FgQvWLD1cdX6f1bApk
+         +PT94ubpctMbcTGgGWiIX4I+Bn5Ly+Usy4Fm5gUH2puNJ6ZQxnG4w0K/QY7JYtZ7JJqP
+         eD4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+1l4y3t2UMkEkO+/MJw8aq8fSMYsxde02LarPu3Ozik=;
-        b=ZkUvj4cBeAW+x/BaVktMrSHfQkkWUySP21C/SpHbVPlPzwo7rJwqT4lYcClNpOAjRw
-         hv8FxCZWvOfyWFwFujwi16xOoyQgUQPDjJB8CfF7otkaDBU01GAm2Qx0OzllZtrVQgU2
-         6HMGS7cWwGiFeQz0kPUR+AQeCX3e/7FYqvcemPGlo9zmu6/zIPRp714BnKFY7ubpKAtr
-         4+PeYP2JQxsVKNhJYcc9LpNptQDiSl1WKU10loHDHwPC8ZALpb3W7nQnjSmaRatp6KrL
-         ic7LPdzafuyaEKfiqXs4PKeVHS5gqWp+5SQ8xjKjlnh+4VHTkEPDSciCFkf62HZVxiOi
-         ebSA==
-X-Gm-Message-State: APjAAAUHLw/nZcSp5IuZanQcy7hTEdi+fupBsDPgacyeRrbgrEYE4PSy
-        EeB0FULVJuHv/NSTfLgwzg==
-X-Google-Smtp-Source: APXvYqxPtT8L1B/fbW9iJFp4+RBI7uFqvTbw19TSSehSOpu+f76R4vtucET4OI7dIY9HOM2hAJhqNA==
-X-Received: by 2002:a6b:dd17:: with SMTP id f23mr55075087ioc.213.1563838503145;
-        Mon, 22 Jul 2019 16:35:03 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id v10sm36428164iob.43.2019.07.22.16.35.02
+        bh=85QgoVCMoUBXEV57x4G0PDzl0QhwTAJz3PR0yob8+QQ=;
+        b=oO7N6HpQJ5+ENwmRiH0/hF+LszVaYmhHKUs09cn+4S3yEK9fQ9+zeiyK+FvSmdjvvU
+         t7zWl2cKzTDHbnotUJ7jF1jdQ0nbSLAHnbHuZoUyT5vkfwlgae/EailLkZXPr1VtSi81
+         55vyEs0khZfJz82N16uwShwviFbKBaT6O7Mc7JXSE9cVvZ3rLDxot7JKOyenpIm+vxS0
+         7y9BKdNZUmWr1f42qQJmnZSEcEZcVfisi+YFYKI1NJJgNkpfaFL/KmG+44z0McCGr5+P
+         252z8F1iaIUlMJrD71haYXzfGOVozdivsQkPVhUSzLXdj8G0YcCg86s5B+Qo6/BxMy9a
+         IHHw==
+X-Gm-Message-State: APjAAAUg8+w4V68UMM6Pmex5KfDOgPLlKTZ5UAGyoDRMyK3qan1I64bo
+        sjtxuzRt+KSYLk3McOUwa8w=
+X-Google-Smtp-Source: APXvYqxd+2dzeBJuFB5qvEgV0O6zCpRw01LkZ+IA8kHWZ1vLbAH4HIeBFqUtXGy3QN5SDNyoAA0HPw==
+X-Received: by 2002:a63:188:: with SMTP id 130mr72665111pgb.231.1563838529829;
+        Mon, 22 Jul 2019 16:35:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::d1c7])
+        by smtp.gmail.com with ESMTPSA id l6sm40554336pga.72.2019.07.22.16.35.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 16:35:02 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 17:35:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Sibi Sankar <sibis@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
- opp-avg-KBps bindings
-Message-ID: <20190722233501.GA19594@bogus>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-2-saravanak@google.com>
- <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
- <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
+        Mon, 22 Jul 2019 16:35:29 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 19:35:27 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] psi: annotate refault stalls from IO submission
+Message-ID: <20190722233527.GA21594@cmpxchg.org>
+References: <20190722201337.19180-1-hannes@cmpxchg.org>
+ <20190722152607.dd175a9d517a5f6af06a8bdc@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190722152607.dd175a9d517a5f6af06a8bdc@linux-foundation.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:58:08AM -0700, Saravana Kannan wrote:
-> On Tue, Jul 16, 2019 at 10:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >
-> > Hey Saravana,
-> >
-> > https://patchwork.kernel.org/patch/10850815/
-> > There was already a discussion ^^ on how bandwidth bindings were to be
-> > named.
+On Mon, Jul 22, 2019 at 03:26:07PM -0700, Andrew Morton wrote:
+> On Mon, 22 Jul 2019 16:13:37 -0400 Johannes Weiner <hannes@cmpxchg.org> wrote:
 > 
-> Yes, I'm aware of that series. That series is trying to define a BW
-> mapping for an existing frequency OPP table. This patch is NOT about
-> adding a mapping to an existing table. This patch is about adding the
-> notion of BW OPP tables where BW is the "key" instead of "frequency".
+> > psi tracks the time tasks wait for refaulting pages to become
+> > uptodate, but it does not track the time spent submitting the IO. The
+> > submission part can be significant if backing storage is contended or
+> > when cgroup throttling (io.latency) is in effect - a lot of time is
+> > spent in submit_bio(). In that case, we underreport memory pressure.
 > 
-> So let's not mixed up these two series.
+> It's a somewhat broad patch.  How significant is this problem in the
+> real world?  Can we be confident that the end-user benefit is worth the
+> code changes?
 
-Maybe different reasons, but in the end we'd end up with 2 bandwidth 
-properties. We need to sort out how they'd overlap/coexist.
+The error scales with how aggressively IO is throttled compared to the
+device's capability.
 
-The same comment in that series about defining a standard unit suffix 
-also applies to this one.
+For example, we have system maintenance software throttled down pretty
+hard on IO compared to the workload. When memory is contended, the
+system software starts thrashing cache, but since the backing device
+is actually pretty fast, the majority of "io time" is from injected
+throttling delays during submit_bio().
 
-Rob
+As a result we barely see memory pressure, when the reality is that
+there is almost no progress due to the thrashing and we should be
+killing misbehaving stuff.
+
+> > Annotate the submit_bio() paths (or the indirection through readpage)
+> > for refaults and swapin to get proper psi coverage of delays there.
+> > 
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > ---
+> >  fs/btrfs/extent_io.c | 14 ++++++++++++--
+> >  fs/ext4/readpage.c   |  9 +++++++++
+> >  fs/f2fs/data.c       |  8 ++++++++
+> >  fs/mpage.c           |  9 +++++++++
+> >  mm/filemap.c         | 20 ++++++++++++++++++++
+> >  mm/page_io.c         | 11 ++++++++---
+> >  mm/readahead.c       | 24 +++++++++++++++++++++++-
+> 
+> We touch three filesystems.  Why these three?  Are all other
+> filesystems OK or will they need work as well?
+
+These are the ones that I found open-coding add_to_page_cache_lru()
+followed by submit_bio() instead of going through generic code like
+mpage, use read_cache_pages(), implement ->readpage only.
+
+> > @@ -2753,11 +2763,14 @@ static struct page *do_read_cache_page(struct address_space *mapping,
+> >  				void *data,
+> >  				gfp_t gfp)
+> >  {
+> > +	bool refault = false;
+> >  	struct page *page;
+> >  	int err;
+> >  repeat:
+> >  	page = find_get_page(mapping, index);
+> >  	if (!page) {
+> > +		unsigned long pflags;
+> > +
+> 
+> That was a bit odd.  This?
+> 
+> --- a/mm/filemap.c~psi-annotate-refault-stalls-from-io-submission-fix
+> +++ a/mm/filemap.c
+> @@ -2815,12 +2815,12 @@ static struct page *do_read_cache_page(s
+>  				void *data,
+>  				gfp_t gfp)
+>  {
+> -	bool refault = false;
+>  	struct page *page;
+>  	int err;
+>  repeat:
+>  	page = find_get_page(mapping, index);
+>  	if (!page) {
+> +		bool refault = false;
+>  		unsigned long pflags;
+>  
+>  		page = __page_cache_alloc(gfp);
+> _
+> 
+
+It's so that when we jump to 'filler:' from outside the branch, the
+'refault' variable is initialized from the first time through:
+
+	bool refault = false;
+	struct page *page;
+
+	page = find_get_page(mapping, index);
+	if (!page) {
+	   	__page_cache_alloc()
+		add_to_page_cache_lru()
+		refault = PageWorkingset(page);
+filler:
+		if (refault)
+			psi_memstall_enter(&pflags);
+
+		readpage()
+
+		if (refault)
+			psi_memstall_leave(&pflags);
+	}
+	lock_page()
+	if (PageUptodate())
+		goto out;
+	goto filler;
