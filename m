@@ -2,129 +2,114 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABFCC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276BAC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F9720449
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG/d5ZL9"
+	by mail.kernel.org (Postfix) with ESMTP id 03B422184E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfGVL4j (ORCPT
+        id S1730097AbfGVL4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:56:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44788 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbfGVL4i (ORCPT
+        Mon, 22 Jul 2019 07:56:50 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43020 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbfGVL4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:56:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p17so39075688wrf.11;
-        Mon, 22 Jul 2019 04:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=wYE/nhc4N92v6LXkAKkrTf5th+f3+Wju4vNytZnYrvI=;
-        b=eG/d5ZL9OmuTgooJTT+pydFaonxG+a382DSwnK4ARBiEKzpqc8uJp+Gt+clbJ+3Mb2
-         rtwAe3RAKfVf8UY8pZiISeKE9jslkDzt/oWJEbrmVtZoYePty2BMn89iOBFdtRHsyP20
-         Vf3shxoMhjh4ylWhkCKHQUmbIqLXivUhGtVEdRhtMRnhbHpoqpMaXLGvVb3xl1eKIFUl
-         NozVw7BjCzzLeHEMv9a8qdcoIMaISJLrMD3V/mXdbLMLeKAlVQcojiBflUjp8Ydc8wxQ
-         AboiJFtQ+Q6vG42RAt4p15H0Ju1eLnCFGb7k/LwBMmWyAg7NvuoJI2eS3o/1zkSIGQXA
-         dfPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=wYE/nhc4N92v6LXkAKkrTf5th+f3+Wju4vNytZnYrvI=;
-        b=o+E+tKRSYP+UC1JhMwcRTr2pZiiP3Bl+zYaLEPtIsV4pic5K2OWyX48RVm8QiYEkl5
-         cV3zGzwzgfpsp9PzF2vGIzepfLU/6Q2THOOk+uLG9ZGQCjvu9GQLzZ2d1X+05qvKqcmv
-         VmrOnYl9lAspRISlB+mcMC3qo81TkkUK/kBnz8oUtxgTEbQIAknPMYW3ZBesznMRNA/i
-         oqGlg6Wwl8lcBPy2bU0tC+4zFb8ajySwOLtKJokf4tSpTAV/Wq6exQNMJDPvJ6fwhwIF
-         xsjno0T0JF6uBCKKInRgwoJ5+Hua66qN/BuEhtZpGWYM6hOWLkNK8xF6hcDm22A8lPk+
-         vQsA==
-X-Gm-Message-State: APjAAAUcE/jzgGE6YqspEjELFRdAne+wBS9SUv7+HAccv/etcLINQb6A
-        TmQcxr5lT1QLNew5MpmRU1vQocb1Ag4=
-X-Google-Smtp-Source: APXvYqwcxM/LHAt08mGwsS9gTr/2RF7hUy13btsugqaeyPE/Sy+8S6Q0u0uu2Xa/F5Ka/uN8VO16LQ==
-X-Received: by 2002:adf:f68b:: with SMTP id v11mr10169330wrp.116.1563796595786;
-        Mon, 22 Jul 2019 04:56:35 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id m24sm24096366wmi.39.2019.07.22.04.56.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 04:56:35 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: [PATCH] Revert "kvm: x86: Use task structs fpu field for user"
-Date:   Mon, 22 Jul 2019 13:56:34 +0200
-Message-Id: <1563796594-25317-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 22 Jul 2019 07:56:49 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 828CF80342; Mon, 22 Jul 2019 13:56:35 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 13:56:45 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Pawel Laszczak <pawell@cadence.com>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "rogerq@ti.com" <rogerq@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>
+Subject: Re: [PATCH v10 0/6] Introduced new Cadence USBSS DRD Driver.
+Message-ID: <20190722115644.GA12069@amd>
+References: <1563733939-21214-1-git-send-email-pawell@cadence.com>
+ <20190721190335.GA19831@xo-6d-61-c0.localdomain>
+ <BYAPR07MB470904ACCD1ED91B10BB6BEFDDC40@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <20190722114839.GA10515@kroah.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Disposition: inline
+In-Reply-To: <20190722114839.GA10515@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
-("kvm: x86: Use task structs fpu field for user", 2018-11-06).
-The commit is broken and causes QEMU's FPU state to be destroyed
-when KVM_RUN is preempted.
 
-Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/include/asm/kvm_host.h | 7 ++++---
- arch/x86/kvm/x86.c              | 4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 0cc5b611a113..b2f1ffb937af 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -607,15 +607,16 @@ struct kvm_vcpu_arch {
- 
- 	/*
- 	 * QEMU userspace and the guest each have their own FPU state.
--	 * In vcpu_run, we switch between the user, maintained in the
--	 * task_struct struct, and guest FPU contexts. While running a VCPU,
--	 * the VCPU thread will have the guest FPU context.
-+	 * In vcpu_run, we switch between the user and guest FPU contexts.
-+	 * While running a VCPU, the VCPU thread will have the guest FPU
-+	 * context.
- 	 *
- 	 * Note that while the PKRU state lives inside the fpu registers,
- 	 * it is switched out separately at VMENTER and VMEXIT time. The
- 	 * "guest_fpu" state here contains the guest FPU context, with the
- 	 * host PRKU bits.
- 	 */
-+	struct fpu user_fpu;
- 	struct fpu *guest_fpu;
- 
- 	u64 xcr0;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 58305cf81182..cf2afdf8facf 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8270,7 +8270,7 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(&current->thread.fpu);
-+	copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
- 	/* PKRU is separately restored in kvm_x86_ops->run.  */
- 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
- 				~XFEATURE_MASK_PKRU);
-@@ -8287,7 +8287,7 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
- 	fpregs_lock();
- 
- 	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
--	copy_kernel_to_fpregs(&current->thread.fpu.state);
-+	copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
- 
- 	fpregs_mark_activate();
- 	fpregs_unlock();
--- 
-1.8.3.1
+Hi!
 
+> > >> This patch introduce new Cadence USBSS DRD driver to linux kernel.
+> > >>
+> > >> The Cadence USBSS DRD Controller is a highly configurable IP Core wh=
+ich
+> > >> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+> > >> Host Only (XHCI)configurations.
+> > >
+> > >I see you are using debugfs to select between DRD, peripheral-onlyh an=
+d XHCI...
+> > >
+> > >Is that good idea?
+> >=20
+> > Yes driver allows selecting dr_mode by debugfs. Controller also support=
+ such functionality=20
+> > so I don't understand why would it not be a good idea.=20
+> >=20
+> > I personally use this for testing but it can be used to limit controlle=
+r functionality without=20
+> > recompiling kernel.=20
+>=20
+> debugfs is ONLY for debugging, never rely on it being enabled, or
+> mounted, on a system in order to have any normal operation happen.
+>=20
+> So for testing, yes, this is fine.  If this is going to be the normal
+> api/interface for how to control this driver, no, that is not acceptable
+> at all.
+
+It makes a lot of sense for end-user to toggle this... for example
+when he is lacking right cable for proper otg detection. As it is
+third driver offering this functionality, I believe we should stop
+treating it as debugging.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl01pHwACgkQMOfwapXb+vIDNQCgwTTLQIqZhxOPwF0uWn3pcLMd
+9qQAnjloOlNoULIYu4F5WNb9967eMecO
+=BZoL
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
