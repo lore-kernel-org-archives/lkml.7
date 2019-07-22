@@ -2,174 +2,146 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA76C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC75AC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE3321951
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCBA21976
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIdr/rGh"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="vVp/xUv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfGVDFf (ORCPT
+        id S1727628AbfGVDMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 23:05:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38672 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfGVDFf (ORCPT
+        Sun, 21 Jul 2019 23:12:49 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45647 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfGVDMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 23:05:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so38443856ioa.5;
-        Sun, 21 Jul 2019 20:05:34 -0700 (PDT)
+        Sun, 21 Jul 2019 23:12:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u10so25457646lfm.12
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jul 2019 20:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3d0TsmehIUmq0qA3N9Vz5YuFrjv8Qaa0x6G/JzdD5+Q=;
-        b=PIdr/rGhuR3gElVXXEdhqxyDoPfQRzGzlzRsAzSQday/+3+zU5J3I9qZT6yMlM2fxC
-         A2ZisZVGcn44iTC+0t6mQPvcI95y5XP/aEe+4LQvNeGv1J+HYwuOdYmEqJOav62y++gS
-         zxOGTc3oSX5cc/upKn85TCm5IR5jvT3jGwbumY2ub48cdTQ6MmGd+YdDmBtSK5M6eFuB
-         Xrb8xZXXQHQ/NO/TeEABtAaz8tXI11OQrfCGbCzW0vjI7DrAO9YtPFvjkM1XFP/FeKOe
-         /dU0yTmQNTSoACdXOIIVGickG3YEmqPsuPg0aRctVXiHaOEol9vOSvh1Z+qtpOWddo68
-         H9qQ==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BoTOo2Q0hAaQhRV9S4lq8HdMSQdYs79oTvCprCzExNE=;
+        b=vVp/xUv+CtFzcPuAXowYe8wJhVlGxEwlkPGxO9uVGvr6WeSnEwgVsW6GAow0S9juzs
+         ai84cJL7ajD0+curTRmYC7lrWpicyEyd7Y4L3et7J1JmbfOXBkO+2kB7bhI9RMs3KR0e
+         h1+h/FM36KmpJoewzbcIMlKLQ/wjuoD/IAUUKgW1l55z3lLxy2Rh8FFQ46HuXy66nnmW
+         xF3U+cRwtK3tCNe1xQBvm1pILf/LQDvGi3CE4wiN/M57evG0vHGSCeWaC9g9rHZa6b8N
+         vV5llWLCjRZx40SqG5vZOJ6XqYBbGf5X364KyHxtQRFGiyPscfc+EPstVGNVxhGO7Tjp
+         9MUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3d0TsmehIUmq0qA3N9Vz5YuFrjv8Qaa0x6G/JzdD5+Q=;
-        b=OwwPwM93o/gfSctgktG8lwfCT87n1DiHahFe5ridOYPLMMznTKkTjMXcO7VpQRn59T
-         cJOciGpSfcRRRc1g85/FTmOpxrZsI+2Ioda7Ktm/0QWVYCdzK3KNhLx/xz6VMFk4oMV5
-         2hRTIWA+S16I6EVi1cbeeKvA4BvbxobIhKHLw6cusB/GN30IswoxrzaIp2G7q+MW/Q2o
-         vD2x3FaUEHVK6C5XU1DDX17p/g9ZxEXVjywG0YXpaU7Un1MkiTddvMC2PdZrsvV/zKei
-         jn4yADlGz3JSH+jSnfghpHvSucROHS75upLF1ikTafl/YP6yVIxeW3lmKo5EXKzFHT+j
-         uO1Q==
-X-Gm-Message-State: APjAAAVI+lVIVLo5l0J33KHmY8U0p4Us+nA8DJNSc69BCyZxcVlIAT1B
-        FPDZGs8T6N6geZxR2poZlZHvrIzGCgneQQ==
-X-Google-Smtp-Source: APXvYqzwrHss0BMfmADs2MwmQrZARNdK6NgwhQ1YV7GWuJj8TMtVG8AWad93ZKewi4L8d+CLLcB06Q==
-X-Received: by 2002:a6b:6f06:: with SMTP id k6mr53829059ioc.32.1563764734329;
-        Sun, 21 Jul 2019 20:05:34 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id i23sm27928326ioj.24.2019.07.21.20.05.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 20:05:33 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
-        quan@os.amperecomputing.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bjorn@helgaas.com, rjw@rjwysocki.net, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skunberg.kelsey@gmail.com
-Subject: [PATCH] drivers: net: xgene: Remove acpi_has_method() calls
-Date:   Sun, 21 Jul 2019 21:04:01 -0600
-Message-Id: <20190722030401.69563-1-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BoTOo2Q0hAaQhRV9S4lq8HdMSQdYs79oTvCprCzExNE=;
+        b=hEgJZkAb4a01IVnidDKOHlBGZOz1J7ckX/tu+aZna9XhwWWMXjMutDGP/sVEQ8JUO2
+         tpIg9MblJ77YUxpnwMSgqU1gKs2XZGb0ugEL0e+/+Rr+u6HVaFc4NY7Mw1PQ6JvfNmEw
+         9IXTsUBAVRs51GSWgae8q2lz90/ns7kXGLTrYHEegtsCSlPRxayWNIEjOi2fTygOSwh1
+         LwnaPOsTH39gqt0CuGQBMp0fnkWt+DcV4k/pJ0o2VOlqyq7kTPsD4D2nDQzknDUXfFk3
+         5cSC4YQathVl8AmvPZLX0zM2r1ydCIj9nUnCsY2COKNTDtGHyE1lScdKeSBcWNu6A6pU
+         GlrA==
+X-Gm-Message-State: APjAAAV15H0nBXYOUukDdx0p8sIgBawRq56x6ar31e4Juq5OrPiywvCn
+        tAnU2mgrwLUFI9l3k0IjBUU=
+X-Google-Smtp-Source: APXvYqxVa//VcmaIKYBFuFD504DvOuD2bhedQ6g47iO9335WFRXA8+Jy+FwxH+dmn5XOy5APicOWvg==
+X-Received: by 2002:a19:c1cc:: with SMTP id r195mr29910373lff.95.1563765166998;
+        Sun, 21 Jul 2019 20:12:46 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id e13sm7350247ljg.102.2019.07.21.20.12.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 21 Jul 2019 20:12:45 -0700 (PDT)
+Date:   Sun, 21 Jul 2019 20:07:04 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Leo Li <leoyang.li@nxp.com>
+Cc:     "arm@kernel.org" <arm@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "soc@kernel.org" <soc@kernel.org>
+Subject: Re: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+Message-ID: <20190722030704.jg23kwxksh7ge4vn@localhost>
+References: <20190605194511.12127-1-leoyang.li@nxp.com>
+ <20190617114948.7xxtpivve52c2jnb@localhost>
+ <VE1PR04MB668773AB42154134CE18A6AB8FEB0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <VE1PR04MB668750E96558796A2E81DB678FF60@VE1PR04MB6687.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB668750E96558796A2E81DB678FF60@VE1PR04MB6687.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-acpi_evaluate_object will already return an error if the needed method
-does not exist. Remove unnecessary acpi_has_method() calls and check the
-returned acpi_status for failure instead.
+On Mon, Jul 08, 2019 at 06:48:17PM +0000, Leo Li wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Leo Li
+> > Sent: Monday, June 17, 2019 8:29 AM
+> > To: Olof Johansson <olof@lixom.net>
+> > Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; shawnguo@kernel.org
+> > Subject: RE: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+> > 
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: Olof Johansson <olof@lixom.net>
+> > > Sent: Monday, June 17, 2019 6:50 AM
+> > > To: Leo Li <leoyang.li@nxp.com>
+> > > Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > > kernel@vger.kernel.org; shawnguo@kernel.org
+> > > Subject: Re: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+> > >
+> > > On Wed, Jun 05, 2019 at 02:45:11PM -0500, Li Yang wrote:
+> > > > Hi arm-soc maintainers,
+> > > >
+> > > > This is a rebase of patches that missed 5.2 merge window together
+> > > > with some new patches for QE.  Please help to review and merge it.
+> > > > We would like this to be merged earlier because there are other
+> > > > patches depending on patches in this pull request.  After this is
+> > > > merged in arm-soc, we can ask other sub-system maintainers to pull
+> > > > from this tag and apply additional patches.  Thanks.
+> > >
+> > > Li,
+> > >
+> > > You never followed up with a reply, or removed, the previous tag. So
+> > > when we process the pull requests that come in, we've already merged it.
+> > 
+> > Sorry about that.  Will reply the previous pull request and remove the old tag
+> > if update is needed next time.
+> > 
+> > >
+> > > So, I've merged the previous version. Can you send an incremental pull
+> > > request on top of that branch/tag instead of a rebase like this was, please?
+> > 
+> > Actually the new pull request is based on the old pull request this time.  I
+> > sent the new one as V2 hoping that you can see this first and avoid merging
+> > two times.  Since you have already merged the first one, you can merge the
+> > second pull request as an incremental pull request directly.
+> 
+> Hi Olof,
+> 
+> I was on vacation for the past two weeks to follow up on this.  Hope this is not too late for this merge window.  Like I mentioned, the new tag is on top of the previous tag (you merged) so that it should be able to be merged incrementally.  The only thing is that the description of the new tag also included patches you merged with old tag.  Do you want me to regenerate the tag before you can merge it?
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    |  7 +++----
- drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 10 +++++-----
- drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c |  9 ++++-----
- 3 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-index 61a465097cb8..ef75a09069a8 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-@@ -694,6 +694,7 @@ bool xgene_ring_mgr_init(struct xgene_enet_pdata *p)
- static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- {
- 	struct device *dev = &pdata->pdev->dev;
-+	acpi_status status;
- 
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
-@@ -712,11 +713,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 		udelay(5);
- 	} else {
- #ifdef CONFIG_ACPI
--		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
--			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
-+		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					     "_RST", NULL, NULL);
--		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
--					 "_INI")) {
-+		if (ACPI_FAILURE(status)) {
- 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					     "_INI", NULL, NULL);
- 		}
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-index 6453fc2ebb1f..6237a2cfd703 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-@@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
- static int xgene_enet_reset(struct xgene_enet_pdata *p)
- {
- 	struct device *dev = &p->pdev->dev;
-+	acpi_status status;
- 
- 	if (!xgene_ring_mgr_init(p))
- 		return -ENODEV;
-@@ -460,14 +461,13 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
- 		}
- 	} else {
- #ifdef CONFIG_ACPI
--		if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
--			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
--					     "_RST", NULL, NULL);
--		else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
-+		status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-+			 		      "_RST", NULL, NULL);
-+		if (ACPI_FAILURE(status)) {
- 			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
- 					     "_INI", NULL, NULL);
-+		}
- #endif
--	}
- 
- 	if (!p->port_id) {
- 		xgene_enet_ecc_init(p);
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-index 133eb91c542e..fede3bfe4d68 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-@@ -380,6 +380,7 @@ static void xgene_xgmac_tx_disable(struct xgene_enet_pdata *pdata)
- static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- {
- 	struct device *dev = &pdata->pdev->dev;
-+	acpi_status status;
- 
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
-@@ -393,11 +394,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 		udelay(5);
- 	} else {
- #ifdef CONFIG_ACPI
--		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
--			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
--					     "_RST", NULL, NULL);
--		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
--					   "_INI")) {
-+		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
-+				 	      "_RST", NULL, NULL);
-+		if (ACPI_FAILURE(status)) {
- 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					     "_INI", NULL, NULL);
- 		}
--- 
-2.20.1
+Hi,
 
+I've now merged v2 into arm/drivers for the 5.4 merge window. If you need to
+add more material on top for 5.4, feel free to use it as the base that you send
+incremental pull requests on top of.
+
+Next time, it's probably easier if you re-generate a new pull request
+like I asked for -- I missed revisiting this since it seemed like a side
+follow up and not new material to merge.
+
+
+-Olof
