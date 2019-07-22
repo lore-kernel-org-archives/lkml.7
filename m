@@ -2,122 +2,147 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367FBC76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FD5C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0797A21994
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A39219BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHUxNR/F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOdsVprS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfGVE2v (ORCPT
+        id S1727721AbfGVEaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 00:28:51 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39685 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfGVE2v (ORCPT
+        Mon, 22 Jul 2019 00:30:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33227 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfGVEaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 00:28:51 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r21so32777000otq.6;
-        Sun, 21 Jul 2019 21:28:50 -0700 (PDT)
+        Mon, 22 Jul 2019 00:30:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f20so7797551pgj.0;
+        Sun, 21 Jul 2019 21:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u9bIll45IkEv61GnSgi6Wk39bsONFi+netx8AhCfi7w=;
-        b=NHUxNR/FbcDIls4wN/7K5xWw6t8TG9WA5uwgNKY3twE8BQCdSpTorc48b0xlAnS14F
-         qUf7KXocl2+7NbhgxJd/93i5J81zHxQH/vSasc6+aKGXME0g61VTCydf1sfZTyGkQi41
-         du3UKdzrgvosoE3hO50QGf/6dVGjB9BfHLL7OMjoR7tnnZRRhZux2fYTAmF49Sz0VtSv
-         Ykp6WapqR6L55lEqWd7lzmc9YCMJvZrVEQbiF+Q02NuT2HeOcmfY1NGXjIr0DGNHUkMN
-         a3Im6biTl3Z/+kKKoSj64+QOG4Ah4XLhBUdUA36xDzxETxN4PPw3bzzQNbYRs7VCB4vh
-         2urA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JVt6ZsruZdEjCeuPEiZoevmx4LJB3+Wj53DW9JaZ1Yk=;
+        b=VOdsVprSu9cGW1iqrmfPQX3xmYU5Z1o9cHF6pOzbJltiYhuYCge33pdD6CwMEXjvNM
+         sFi5J1se+WaXJ91/TKlPNrLGUHwxnpIw4qn7UAwShRFJ/W8Nr1RUSKFA7n+45aPr6x5C
+         WXA+RxInAR0EH7vDnRS0n0aIDe479ShZenlcHSFgtmJCj4AKpuj0qM5VYVp+YAGkHdwE
+         O4cIZ7alr6idAM7ATqKQj8tHNYN+A4KH9dTbPVf+Boq9vCTQQ+AaVmGwBppTWRbLCXxn
+         GvquR0RX9Yva+IepmKTElD2ekCLJhgD/84GbCKePJ9GNR9JpwzZV3DJPl7z/yc4lJjwJ
+         ABng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u9bIll45IkEv61GnSgi6Wk39bsONFi+netx8AhCfi7w=;
-        b=Ykx0QjP1k4xxvpVsgucWns1cTR52mRGPcFAWT/8T1V15DmtA6ojMFRhlzGq6k4eB6n
-         Gkv0b1l3be/okOErOeUVosgju0Di+yPeh2QDymkzXgMzcTk0djCleLMOe8cihUc64z3p
-         /k/LEmD6PVynFjDHjOkEJgI7nvwYCvf614+zD4o8/PBvy4LO0z5Pzxq3o4bogOACSW2I
-         NQbzLj0BXThL5WTGr8p3tgSkn7ow9pNJpS4U/t7l5boWD+5ZVwawc3lnSieyizhIvxqp
-         lu1kIZZWvxtzs+Avi0Tvn7vAoQPoyBGfH0X2keFmc2QiuQMOgMO5mZG12mHQFj4qfi5v
-         /Eww==
-X-Gm-Message-State: APjAAAWccNWQWDWlTy4jQHDw44YrQciNUBj1zdiNKfokyHniuotFzBxx
-        G9mqbgWSB/PhUx8cGZgXrj29Hgpripg4M8/Aa24=
-X-Google-Smtp-Source: APXvYqyxpVloP1FtjqIXhMKYQbprE+yYhKEYjJOhaWjBcK4B/AL3PjudcWZ4D5hPMOwpbMl/tKjdl9D1Dt9gJ30lSqw=
-X-Received: by 2002:a9d:2c47:: with SMTP id f65mr50830747otb.185.1563769730249;
- Sun, 21 Jul 2019 21:28:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de>
- <CANRm+CxWbkr0=DB7DBdaQOsTTt0XS5vSk_BRL2iFeAAm81H8Bg@mail.gmail.com> <3ae96202-a121-70a9-fe00-4b5bb4970242@redhat.com>
-In-Reply-To: <3ae96202-a121-70a9-fe00-4b5bb4970242@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 22 Jul 2019 12:28:42 +0800
-Message-ID: <CANRm+CwiLn-FUM89t-rg-9za-e28KX9XQo5zVs3_XAq+Ya_0vA@mail.gmail.com>
-Subject: Re: [5.2 regression] x86/fpu changes cause crashes in KVM guest
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Lambertz <mail@thomaslambertz.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JVt6ZsruZdEjCeuPEiZoevmx4LJB3+Wj53DW9JaZ1Yk=;
+        b=NO+X1840YjipeTX9e7QqUJ5bnfCBv8G5tVALj6POnogMDhbSOxfyx25rbyNGowq+Ge
+         5LLDusijfx+tCQCF8qNDaZL+4bhish+XXw0kG737pMSnmMY8IUY6dRf+63C0hIPS7wx1
+         i/+q2QgQoSa2xXx5X68mM9PfTaKJA/hKii9Jvf3MZaF9k9GpTjfsWzGuTVxqAM3JPoOF
+         HfnmmJc4TeGs0V6/sv7VMzeKDDGEa9e64Ow2Uf2rSjwe5eYsRMgIdldMt5iRyhxQ9JPe
+         yeWvh/+TAiuu7jLu48XP7Rdv9KfJ5r4+n4NVYdS79e5qZTryhoTn7Bq7q8MILDTerkp8
+         eSZA==
+X-Gm-Message-State: APjAAAWEzM7bNSeu3wseysHDtBsEnFJsPBgxDli45BVSZcIJSRDE0agQ
+        YNKnQvWGyYLKGF9gSmh2KCU=
+X-Google-Smtp-Source: APXvYqztu+uwlucjHIzVmQ0L57MjZIIjZ2e8k8CcXoJiraVsvVA60l6ON4zhkWJGUUfJVOo89G9VTA==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr74049775pjz.140.1563769815699;
+        Sun, 21 Jul 2019 21:30:15 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id t96sm34285690pjb.1.2019.07.21.21.30.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 21 Jul 2019 21:30:15 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Radim Krcmar <rkrcmar@redhat.com>, kvm <kvm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marc Orr <marcorr@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 0/4] put_user_page: new put_user_page_dirty*() helpers
+Date:   Sun, 21 Jul 2019 21:30:09 -0700
+Message-Id: <20190722043012.22945-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jul 2019 at 19:09, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 19/07/19 10:59, Wanpeng Li wrote:
-> > https://lkml.org/lkml/2017/11/14/891, "The scheduler will save the
-> > guest fpu context when a vCPU thread is preempted, and restore it when
-> > it is scheduled back in." But I can't find any scheduler codes do
-> > this.
->
-> That's because applying commit 240c35a37 was completely wrong.  The idea
-> before commit 240c35a37 was that you have the following FPU states:
->
->                userspace (QEMU)             guest
-> ---------------------------------------------------------------------------
->                processor                    vcpu->arch.guest_fpu
-> >>> KVM_RUN: kvm_load_guest_fpu
->                vcpu->arch.user_fpu          processor
-> >>> preempt out
->                vcpu->arch.user_fpu          current->thread.fpu
-> >>> preempt in
->                vcpu->arch.user_fpu          processor
-> >>> back to userspace
-> >>> kvm_put_guest_fpu
->                processor                    vcpu->arch.guest_fpu
-> ---------------------------------------------------------------------------
->
-> After removing user_fpu, QEMU's FPU state is destroyed when KVM_RUN is
-> preempted.  So that's already messed up (I'll send a revert), and given
-> the diagram above your patch makes total sense.
->
-> With the new lazy model we want to hook into kvm_vcpu_arch_load and get
-> the state back to the processor from current->thread.fpu, and indeed
-> switch_fpu_return is essentially copy_kernel_to_fpregs(&current->thread.
-> fpu->state).
->
-> However I would keep the fpregs_assert_state_consistent in
-> kvm_arch_vcpu_load, and also
-> WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD)) in vcpu_enter_guest.
+From: John Hubbard <jhubbard@nvidia.com>
 
-Looks good to me, just send out two patches rebase on the revert.
+Hi,
 
-Regards,
-Wanpeng Li
+Here is the first small batch of call site conversions for put_page()
+to put_user_page().
+
+This batch includes some, but not all of the places that benefit from the
+two new put_user_page_dirty*() helper functions. (The ordering of call site
+conversion patch submission makes it better to wait until later, to convert
+the rest.)
+
+There are about 50+ patches in my tree [1], and I'll be sending out the
+remaining ones in a few more groups:
+
+    * The block/bio related changes (Jerome mostly wrote those, but I've
+      had to move stuff around extensively, and add a little code)
+
+    * mm/ changes
+
+    * other subsystem patches
+
+    * an RFC that shows the current state of the tracking patch set. That
+      can only be applied after all call sites are converted, but it's
+      good to get an early look at it.
+
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
+
+[1] https://github.com/johnhubbard/linux/tree/gup_dma_core
+
+John Hubbard (4):
+  drivers/gpu/drm/via: convert put_page() to put_user_page*()
+  net/xdp: convert put_page() to put_user_page*()
+  net/rds: convert put_page() to put_user_page*()
+  gup: new put_user_page_dirty*() helpers
+
+ drivers/gpu/drm/via/via_dmablit.c        |  5 +++--
+ drivers/infiniband/core/umem.c           |  2 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c |  2 +-
+ include/linux/mm.h                       | 10 ++++++++++
+ net/rds/info.c                           |  5 ++---
+ net/rds/message.c                        |  2 +-
+ net/rds/rdma.c                           | 15 +++++++--------
+ net/xdp/xdp_umem.c                       |  3 +--
+ 8 files changed, 26 insertions(+), 18 deletions(-)
+
+-- 
+2.22.0
+
