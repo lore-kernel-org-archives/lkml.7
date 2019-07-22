@@ -2,80 +2,86 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565F7C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE57BC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3222A21911
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8BD218BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfGVKs0 (ORCPT
+        id S1729753AbfGVKwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 06:48:26 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43244 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbfGVKs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:48:26 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m14so2522101qka.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 03:48:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ptJ26MvlaRt4VkcC7ihkvbPVm3VliBbM0BJH3L/2g2c=;
-        b=MY5OF7pAGl2WoETTngy0vBnHyYa2TmKcKvxvE1Zu7El1lCjkrNufWzkf5EiXJ4XxN5
-         9JNx91Dr1NFzNBxB/0tBDTiidrKOPIlfLuPqz1MUH54nNNNnUsvSc7xs8nov1X+y+Gy0
-         zl8bAisUGIW4su8kWAp0RudOq8lM/V51jtLMjK8f1Xo+0bmog8rIlYDDlXGTJN0Utg8B
-         e/CsgiCrR50aEZIzKe04dsnzzv5DvXEs+EX0hSMOZerf3WAvt4zGfY5r1vqhihCEx/DU
-         TsCjSVrUjQUclrFIrYGnmDIPK0mVMLfZxE5YmQbxyP5Ml22lvux6WkPUZkMuJDAnXfdl
-         8pdg==
-X-Gm-Message-State: APjAAAVytHnXdAcsy+slkE57WeBmQNAIjFRIVi/b/THHMMIK09vOEOJS
-        1G8L5BXztJwR6ya+3e2w88QnbSfcDS7WERc2XE4=
-X-Google-Smtp-Source: APXvYqzxtcAqz4bSxc8nm4TP5i62NaUmgS/Rlxiv4Sl82qujheNOGzRQ6t8AlZYNuaJ6qRprS++3xGM6vk966FnFKfk=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr44445628qka.138.1563792505294;
- Mon, 22 Jul 2019 03:48:25 -0700 (PDT)
+        Mon, 22 Jul 2019 06:52:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33862 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728317AbfGVKwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 06:52:45 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A766307D914;
+        Mon, 22 Jul 2019 10:52:45 +0000 (UTC)
+Received: from localhost (unknown [10.43.2.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E31905D9D3;
+        Mon, 22 Jul 2019 10:52:42 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 12:52:41 +0200
+From:   Stanislaw Gruszka <sgruszka@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] sched/cputime: make scale_stime() more precise
+Message-ID: <20190722105240.GA27219@redhat.com>
+References: <20190718131834.GA22211@redhat.com>
+ <20190719110349.GG3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190710130206.1670830-1-arnd@arndb.de> <33511b0e-6d7b-c156-c415-7a609b049567@arm.com>
- <CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com>
- <alpine.DEB.2.21.1907221207000.1782@nanos.tec.linutronix.de> <8f01be52-3235-644d-4afc-df979bfce25e@suse.com>
-In-Reply-To: <8f01be52-3235-644d-4afc-df979bfce25e@suse.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 22 Jul 2019 12:48:08 +0200
-Message-ID: <CAK8P3a0_rEkWYgH_Tc7jwpYOYMy5wA+X0zchQcsXYi62kUG61A@mail.gmail.com>
-Subject: Re: [PATCH] vsyscall: use __iter_div_u64_rem()
-To:     Jan Beulich <JBeulich@suse.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719110349.GG3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 22 Jul 2019 10:52:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 12:39 PM Jan Beulich <JBeulich@suse.com> wrote:
-> On 22.07.2019 12:10, Thomas Gleixner wrote:
-> > On Thu, 11 Jul 2019, Arnd Bergmann wrote:
-> "q" was used in that commit exclusively for byte sized operands, simply
-> because that _is_ the constraint to use in such cases. Using "r" is
-> wrong on 32-bit, as it would include inaccessible byte portions of %sp,
-> %bp, %si, and %di. This is how it's described in gcc sources / docs:
->
->   "Any register accessible as @code{@var{r}l}.  In 32-bit mode, @code{a},
->    @code{b}, @code{c}, and @code{d}; in 64-bit mode, any integer register."
->
-> What I'm struggling with is why clang would evaluate that asm() in the
-> first place when a 64-bit field (perf_ctr_virt_mask) is being accessed.
+On Fri, Jul 19, 2019 at 01:03:49PM +0200, Peter Zijlstra wrote:
+> > shows the problem even when sum_exec_runtime is not that big: 300000 secs.
+> > 
+> > The new implementation of scale_stime() does the additional div64_u64_rem()
+> > in a loop but see the comment, as long it is used by cputime_adjust() this
+> > can happen only once.
+> 
+> That only shows something after long long staring :/ There's no words on
+> what the output actually means or what would've been expected.
+> 
+> Also, your example is incomplete; the below is a test for scale_stime();
+> from this we can see that the division results in too large a number,
+> but, important for our use-case in cputime_adjust(), it is a step
+> function (due to loss in precision) and for every plateau we shift
+> runtime into the wrong bucket.
+> 
+> Your proposed function works; but is atrocious, esp. on 32bit. That
+> said, before we 'fixed' it, it had similar horrible divisions in, see
+> commit 55eaa7c1f511 ("sched: Avoid cputime scaling overflow").
+> 
+> Included below is also an x86_64 implementation in 2 instructions.
+> 
+> I'm still trying see if there's anything saner we can do...
 
-clang does the optimization and warning checking in a different order,
-in this case the argument type checks for the inline assembly is done
-before it eliminates the dead code.
+I was always proponent of removing scaling and export raw values
+and sum_exec_runtime. But that has obvious drawback, reintroduce
+'top hiding' issue.
 
-        Arnd
+But maybe we can export raw values in separate file i.e.
+/proc/[pid]/raw_cpu_times ? So applications that require more precise
+cputime values for very long-living processes can use this file.
+
+Stanislaw
