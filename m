@@ -2,146 +2,132 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCE1C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE166C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EA821926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC6A21926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="clhnYGa7";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="kfC+JV4p"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="JlbZHX8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730688AbfGVN60 (ORCPT
+        id S1730200AbfGVOEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:58:26 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:40974 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728637AbfGVN60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:58:26 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6F25AC01A1;
-        Mon, 22 Jul 2019 13:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563803905; bh=HgFtNavLipDNVv1A+94DLM7wbcSsuao5VrGfXlJZir0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=clhnYGa7ZZ3o4146qpTpXkf1yMllY0RBAhUs+Zrj8dvV4igBLnkNjyEkwSLo8zhaa
-         t9BtYZllt324Hi8I6f66AN65RJLrFa6BemSX3suMV7MAJjB3sAP/k2AZrH53aKgu2q
-         IKWA5sxV4AJu48vi5RLl8QjHYeEOzRatnyTmnsTInQfMIFAUQvYOF+5WdZizpqoBr+
-         P6N4/sd0gjh5tEK3ts5G4eUPdCKDQqvLl5zlyG7aJBJyHivA4n4GwJHUtCVhaDxcUl
-         RHE9a8ZIAExHbd57BDUIRtxzee9aw18nzZf2CyaIst90hnVnGtzQ0K6qc1VqpeVmBF
-         QKRnpx+Sqexzg==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 7A199A023B;
-        Mon, 22 Jul 2019 13:58:23 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 22 Jul 2019 06:58:23 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 22 Jul 2019 06:58:22 -0700
+        Mon, 22 Jul 2019 10:04:55 -0400
+Received: from mail-eopbgr80092.outbound.protection.outlook.com ([40.107.8.92]:52215
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728103AbfGVOEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:04:54 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=abo4NsCeTdsIkQ3yGKoqcI7oH4eRizG8eVNHNIs8l20GPKPuP06FW/kxkaSxqAza7RC1kiYzTjoDXL3Yy4Qfm4wjYWOIFL/kzrL+7BH0HiIztX8/ikIuLpQLzD6nb9vbbAi3Es2gc2m4QbzqdWnPjO980GU9zqXAHcqS32BLIVdhxtVOLF/tvTY4hvJ6h3HDVETrB19Hpy9OYS6We+7m0UXtCVKyHlNhd7MrABrRuO+TGlqcc0fFV4zoi2agZjUGGKI6lCTIlxCHn8+R+6IEJHyZoGwPGyhulT+KXVHVvANr4MpIlrd3tlqLPuWGKmdC5kh9o3VlPYiKYv+M0xGu3w==
+ b=Ud5JWfGli3NPzr0KPul6Y/FNA9JgdI8vfQbw4uaWJ6U/Nnufhs2xrZL78qotrTg3IXkNCU53TAYjG6ngLqu6i4LrqXimS1FAvu5HORvryxTL9NIjh50Xi8jQ6eg+FXok++iIk4/akWmzgGHTCXUEqw24ZYvNo873vHxb3XFCdVIWrjBy8gVfZ6CEqz480Bcz+EBe2NS1hjKqDkYxgY8+cJKfcR6MgaYipwR427xKupUAm1yweCXcNlsq8uiJ+Da/wPeEWWCmzdXjcxGH3m4MKeX68ySD8cosfvtV5m5DyxUp3xtmiM7vli6NM00ZxIGJxyYUuXUHrZkZheFveLoTVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgFtNavLipDNVv1A+94DLM7wbcSsuao5VrGfXlJZir0=;
- b=UoZsB9yMIXZKfbwq6iFGZVnvlh8QLjoZOYa+Y/k+5LkEMbLu/6oIQtCR1gebiHnCOfuoVTO3RTnR5aXT5EHj0jtrsf71EJMoreUTZlyWwFhr/SS9S62Cw9g0yPZNqj5o/IHPhn76xw0ofe12qVsVBIRhv/KlHtb1reOY/NYNL2xZdXtEbyZfH2LFJANmZX+WsJJ7uOiTuMRWBSwNW3mjZ4iE0JFDmaqA6DGSo7ASsNVeHOelTIdHIbyTmTs/IZ9a1z7fcE3sf1mCgIro8H8pORMgC9Ns7El52wHdJN85X0h1dOlYlyKeS63YAEIOpIm6TvSZYTxMB2Cl4RtQvEVPeg==
+ bh=ZHKspdx+I8ZD1HDDkmUUY9AEkfoPmAJos4U80EZgu8s=;
+ b=hwZhrVq8ZyUCydv5slVtARblDIRpaqtGXI5PIhcNJI8O5uNuk5E3m4pCSj8wyNHVKygcr9ti0eRchcE4/nn/Gog0GKTLr9vyR4/d458+jAZhs97O55jR1fO8+mFsj/SKK+IkP/uMNfy+lekW3eJ5nrVwpXcHrmkOwI7PqmV8X6QrJIqZ8aKFO9loWtm+QS52ijz7h3zJfCM8kvEJJGtk/Ubn+U4TRAcuBm/Cx1ekLdq9kDw49vUu/M+dfIPzlD8xXroufThGAKr1MMPY3QkcyJD7OiKur7nIIw2tI98gp6n1TiMvck2jzOlB/4qKCvHAtUD4e/x2EZTninZpFu/evQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ smtp.mailfrom=prevas.se;dmarc=pass action=none
+ header.from=prevas.dk;dkim=pass header.d=prevas.dk;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgFtNavLipDNVv1A+94DLM7wbcSsuao5VrGfXlJZir0=;
- b=kfC+JV4p3hIwY1RcGbpulkoun/4Vf7Cu5CUjvvjILf0YbYGfBsI0xNb5xZ3l1jwp4WlwNlAsHMB3Cq/vkvi2MzYVBN7FZfjWjMmu/8hSPWbxsimBmzPJWRz6625pe6zCZqcq1oCNEcZfPFxmWDgDSc4Gq32aAjzhECQrj2EKDQU=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB3187.namprd12.prod.outlook.com (20.179.64.212) with Microsoft SMTP
+ bh=ZHKspdx+I8ZD1HDDkmUUY9AEkfoPmAJos4U80EZgu8s=;
+ b=JlbZHX8+pIQmJEDpzzY4uWJ0vMYwJBUxd6ITh51qfAa4QRmK9pM0j/1k+riTCcMACIsWbM1EK3qlhGcARwBXEk4N2A5ipjSx039qRfetVE1hycEtx87OlWLy0KP3TycxszyJvm0DsS1v1PUunDRR9h3ObKzbh5qym24IoM536jY=
+Received: from AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM (10.186.175.83) by
+ AM0PR10MB3091.EURPRD10.PROD.OUTLOOK.COM (10.255.31.206) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Mon, 22 Jul 2019 13:58:21 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
- 13:58:21 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     =?utf-8?B?T25kxZllaiBKaXJtYW4=?= <megi@xff.cz>,
+ 15.20.2094.16; Mon, 22 Jul 2019 14:04:50 +0000
+Received: from AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9451:861a:85cc:daa0]) by AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9451:861a:85cc:daa0%2]) with mapi id 15.20.2094.017; Mon, 22 Jul 2019
+ 14:04:50 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: RE: [PATCH net-next 0/3] net: stmmac: Convert to phylink
-Thread-Topic: [PATCH net-next 0/3] net: stmmac: Convert to phylink
-Thread-Index: AQHVIGkCReoXsI1ev0mBbW+MAvwZAqbW1RMAgAALU8CAAATNgIAAAL0g
-Date:   Mon, 22 Jul 2019 13:58:20 +0000
-Message-ID: <BN8PR12MB3266678A3ABD0EBF429C9766D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <20190722124240.464e73losonwb356@core.my.home>
- <BN8PR12MB32660B12F8E2617ED42249BBD3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722134023.GD8972@lunn.ch>
-In-Reply-To: <20190722134023.GD8972@lunn.ch>
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        Willem de Bruijn <willemb@google.com>
+Subject: [PATCH v2] can: dev: call netif_carrier_off() in register_candev()
+Thread-Topic: [PATCH v2] can: dev: call netif_carrier_off() in
+ register_candev()
+Thread-Index: AQHVQJZtC69p4g+Gi0ut/NKwJq5HBA==
+Date:   Mon, 22 Jul 2019 14:04:50 +0000
+Message-ID: <20190722140429.19782-1-rasmus.villemoes@prevas.dk>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P191CA0051.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:209:7f::28) To AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:15e::19)
+x-mailer: git-send-email 2.20.1
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [81.216.59.226]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 835b6327-8e37-47e3-ef12-08d70eaca7f3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3187;
-x-ms-traffictypediagnostic: BN8PR12MB3187:
-x-microsoft-antispam-prvs: <BN8PR12MB3187846490C51FE83A340094D3C40@BN8PR12MB3187.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-office365-filtering-correlation-id: 2b78c812-ebcb-4073-ca5a-08d70ead8f77
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM0PR10MB3091;
+x-ms-traffictypediagnostic: AM0PR10MB3091:
+x-microsoft-antispam-prvs: <AM0PR10MB3091BDE89252AE3224CD097D8AC40@AM0PR10MB3091.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
 x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(366004)(376002)(199004)(189003)(11346002)(76176011)(8936002)(6636002)(476003)(81166006)(81156014)(33656002)(486006)(2906002)(99286004)(446003)(4744005)(6436002)(6506007)(14454004)(229853002)(71200400001)(71190400001)(26005)(102836004)(66066001)(186003)(7416002)(4326008)(5660300002)(55016002)(6246003)(53936002)(86362001)(54906003)(7696005)(3846002)(8676002)(9686003)(110136005)(316002)(68736007)(6116002)(7736002)(66946007)(25786009)(76116006)(52536014)(305945005)(74316002)(66476007)(66556008)(256004)(478600001)(66446008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3187;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(396003)(366004)(136003)(346002)(376002)(189003)(199004)(2616005)(8676002)(66066001)(476003)(5660300002)(36756003)(53936002)(305945005)(42882007)(508600001)(26005)(186003)(6512007)(7736002)(25786009)(52116002)(6436002)(14454004)(386003)(102836004)(6486002)(6506007)(68736007)(4326008)(316002)(486006)(71190400001)(66446008)(66556008)(66476007)(66946007)(256004)(99286004)(1076003)(44832011)(64756008)(71200400001)(2906002)(81156014)(81166006)(50226002)(4744005)(110136005)(54906003)(8936002)(3846002)(6116002)(8976002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR10MB3091;H:AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rOdIy68xsuL7MuslvCx0DXa5sN5hWV0NiSKo2NV2Kru70RBoZnjUBJxleXAQoJfkB3lWzoJDpAv/u9JomTXlpkBB+CsdiBs9EmbwhunT65v+Q2Jsnjtf8vZKWRaFvyTUdBIwVrb5vYgnDCr4J9hurS30mobVH7Q3HJmTLohmoS7sDQg+IDLEagZCRXN7m5osCTfSWj/BC3Da4z5rbvAvj6Xt3aql8JGIoPxQ7JU6CdAZ1wh3Kr3Tp8HZCl6xyAdPgqKHiZSiDBVxYqkycasmo5hU/vPPd6u4pXAl6tE0zvKNuQvXHsMtsTcsNy2nV6ejyIXp5/LLbi3rNedf51psIRi2DYKA5MJMyhlro70nNUSqlfZLjQ3tK4IPMALEuRnDCcc/f7+aI1yvs2Ud8zdJlpOejmRZxpDYZ/tIVmBuKq4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: RFkUEqEMaqRrhLMeaGCMo3Ncu2H89pGuoUmEUjfN1E3FwxnUY68XZ4tqelgpqLfzj7LDhO3ASnTj7slOMOqCpQRwdS12f0bv/5nhPaGMECKCktDjOqQRsjfUJHUejJVVUphf1BX324E1tHZFUfUw7sBsFUcATRkVXhk1k7brGeyIW1FqJa32DhiXYM4JAhtbCeveDQr/GwjMj5Vi9oMLQ/1FPVcOB/dhT/wLCEKnQU0UEeQZujfMVT6QQa7gtbA9TTfn9ccR+4P7HNN7rDmSMGozJ+zXTATyccJxwHOODGoeOBDwAzcHyvwHsyp041bBDaDvYOPGTYByOz7PmLppM4MBLyiHUb7d7kfsHizMkfK1V2LXkoqnsFJvBG4D0pCpCJH4yIU50qvQB2aLhk3xnDJP8TRcIqJhTUXs4nu/I4M=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 835b6327-8e37-47e3-ef12-08d70eaca7f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 13:58:20.9270
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b78c812-ebcb-4073-ca5a-08d70ead8f77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 14:04:50.1652
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3187
-X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KRGF0ZTogSnVsLzIyLzIwMTksIDE0
-OjQwOjIzIChVVEMrMDA6MDApDQoNCj4gRG9lcyB0aGlzIG1lYW4gdGhhdCBhbGwgc3RtbWFjIHZh
-cmlhbnRzIHN1cHBvcnQgMUc/IFRoZXJlIGFyZSBub25lDQo+IHdoaWNoIGp1c3Qgc3VwcG9ydCBG
-YXN0IEV0aGVybmV0Pw0KDQpUaGlzIGdsdWUgbG9naWMgZHJpdmVycyBzb21ldGltZXMgcmVmbGVj
-dCBhIGN1c3RvbSBJUCB0aGF0J3MgU3lub3BzeXMgDQpiYXNlZCBidXQgbW9kaWZpZWQgYnkgY3Vz
-dG9tZXIsIHNvIEkgY2FuJ3Qga25vdyBiZWZvcmUtaGFuZCB3aGF0J3MgdGhlIA0Kc3VwcG9ydGVk
-IG1heCBzcGVlZC4gVGhlcmUgYXJlIHNvbWUgb2xkIHZlcnNpb25zIHRoYXQgZG9uJ3Qgc3VwcG9y
-dCAxRyANCmJ1dCBJIGV4cGVjdCB0aGF0IFBIWSBkcml2ZXIgbGltaXRzIHRoaXMgLi4uDQoNCj4g
-SSdtIGFsc28gbm90IHN1cmUgdGhlIGNoYW5nZSBmaXRzIHRoZSBwcm9ibGVtLiBXaHkgZGlkIGl0
-IG5vdA0KPiBuZWdvdGlhdGUgMTAwRlVMTCByYXRoZXIgdGhhbiAxMEhhbGY/IFlvdSBhcmUgb25s
-eSBtb3ZpbmcgdGhlIDFHDQo+IHNwZWVkcyBhcm91bmQsIHNvIDEwMCBzcGVlZHMgc2hvdWxkIG9m
-IGJlZW4gYWR2ZXJ0aXNlZCBhbmQgc2VsZWN0ZWQuDQoNCkhtbSwgbm93IHRoYXQgSSdtIGxvb2tp
-bmcgYXQgaXQgY2xvc2VyIEkgYWdyZWUgd2l0aCB5b3UuIE1heWJlIGxpbmsgDQpwYXJ0bmVyIG9y
-IFBIWSBkb2Vzbid0IHN1cHBvcnQgMTAwTSA/DQoNCkl0J3Mgd29ya2luZyBmb3IgT25kcmVqIGJ1
-dCBJIGdvdCBjdXJpb3VzIG5vdyAuLi4NCg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3VlbCBBYnJl
-dQ0K
+CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
+trigger as suggested, there's a small inconsistency with the link
+property: The LED is on initially, stays on when the device is brought
+up, and then turns off (as expected) when the device is brought down.
+
+Make sure the LED always reflects the state of the CAN device.
+
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Acked-by: Willem de Bruijn <willemb@google.com>
+---
+v2: resending with proper subject (no net-next) and Willem's ack.
+
+ drivers/net/can/dev.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+index c05e4d50d43d..fad27ace6248 100644
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -1260,6 +1260,7 @@ int register_candev(struct net_device *dev)
+ 		return -EINVAL;
+=20
+ 	dev->rtnl_link_ops =3D &can_link_ops;
++	netif_carrier_off(dev);
+ 	return register_netdev(dev);
+ }
+ EXPORT_SYMBOL_GPL(register_candev);
+--=20
+2.20.1
+
