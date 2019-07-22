@@ -2,406 +2,180 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E474C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDF9C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D3C21926
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A1121926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Cgwv+/dz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TmwAzunX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfGVCcM (ORCPT
+        id S1728679AbfGVCck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:32:12 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:37272 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfGVCcL (ORCPT
+        Sun, 21 Jul 2019 22:32:40 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8431 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfGVCcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:32:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563762723; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NviPj5tGMbUgPhvnSUzQ3MD6HtSUYqiFXmwwpNr7sts=;
-        b=Cgwv+/dzkBFu/HWy8tyJ2iUgRR0QwEY9JhVuW31NAfkJOCTBZjzzElhHIxU5gmvq+09eUk
-        3f76l/BfqUwR1AeWatULThjj3+HTAj9Zi1a160vAi5WSLgmA6QnoVgabH4BDKOnzchTRtM
-        gnU+Pwk01MCtxPDgUK42jykNi2VAt9Q=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] remoteproc: ingenic: Added remoteproc driver
-Date:   Sun, 21 Jul 2019 22:31:40 -0400
-Message-Id: <20190722023140.14701-3-paul@crapouillou.net>
-In-Reply-To: <20190722023140.14701-1-paul@crapouillou.net>
-References: <20190722023140.14701-1-paul@crapouillou.net>
+        Sun, 21 Jul 2019 22:32:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d35204c0000>; Sun, 21 Jul 2019 19:32:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 21 Jul 2019 19:32:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 21 Jul 2019 19:32:37 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 02:32:37 +0000
+Subject: Re: [PATCH 3/3] sgi-gru: Use __get_user_pages_fast in
+ atomic_pte_lookup
+To:     Bharath Vedartham <linux.bhar@gmail.com>, <arnd@arndb.de>,
+        <sivanich@sgi.com>, <gregkh@linuxfoundation.org>
+CC:     <ira.weiny@intel.com>, <jglisse@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+References: <1563724685-6540-1-git-send-email-linux.bhar@gmail.com>
+ <1563724685-6540-4-git-send-email-linux.bhar@gmail.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c508330d-a5d0-fba3-9dd0-eb820a96ee09@nvidia.com>
+Date:   Sun, 21 Jul 2019 19:32:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1563724685-6540-4-git-send-email-linux.bhar@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563762764; bh=vM8Jy937nRvxwkL1bwsxA2+vqomr30+OXJGmeXYwzBo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TmwAzunX+5qzu07CrqhvBJCCV0jq5HpocZtWwYm//UJko8hKWxee+N31cImnRhrin
+         EyrgXUGITres3QieKC34H3xI8rXLDQPlsVzu/llAAo3hCd41vJy8AyIPDVAn/Y69Ou
+         Zm4yF5W0MsP7IKNY6LukPPWyYWc8+eNoYpR9YZPqtI9ttKO0fsWkmuArrVBf2U+sgQ
+         7wUrLDXfymWp/nPaElRVD6YtlVin5Q/u3+QC9rn7EBa+LLskeHBPMH65V+5SE2TLOB
+         wXsYIPbTNp7Pk0SsrBayUEyKeHliV6b8W0pVWuTGY84yZ3zCXoYaspXINWJlNlZI5I
+         t5GvpgJ3qo7fQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is used to boot, communicate with and load firmwares to the
-MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
-Ingenic.
+On 7/21/19 8:58 AM, Bharath Vedartham wrote:
+> *pte_lookup functions get the physical address for a given virtual
+> address by getting a physical page using gup and use page_to_phys to get
+> the physical address.
+>=20
+> Currently, atomic_pte_lookup manually walks the page tables. If this
+> function fails to get a physical page, it will fall back too
+> non_atomic_pte_lookup to get a physical page which uses the slow gup
+> path to get the physical page.
+>=20
+> Instead of manually walking the page tables use __get_user_pages_fast
+> which does the same thing and it does not fall back to the slow gup
+> path.
+>=20
+> This is largely inspired from kvm code. kvm uses __get_user_pages_fast
+> in hva_to_pfn_fast function which can run in an atomic context.
+>=20
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Dimitri Sivanich <sivanich@sgi.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> ---
+>  drivers/misc/sgi-gru/grufault.c | 39 +++++------------------------------=
+----
+>  1 file changed, 5 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufa=
+ult.c
+> index 75108d2..121c9a4 100644
+> --- a/drivers/misc/sgi-gru/grufault.c
+> +++ b/drivers/misc/sgi-gru/grufault.c
+> @@ -202,46 +202,17 @@ static int non_atomic_pte_lookup(struct vm_area_str=
+uct *vma,
+>  static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long v=
+addr,
+>  	int write, unsigned long *paddr, int *pageshift)
+>  {
+> -	pgd_t *pgdp;
+> -	p4d_t *p4dp;
+> -	pud_t *pudp;
+> -	pmd_t *pmdp;
+> -	pte_t pte;
+> -
+> -	pgdp =3D pgd_offset(vma->vm_mm, vaddr);
+> -	if (unlikely(pgd_none(*pgdp)))
+> -		goto err;
+> -
+> -	p4dp =3D p4d_offset(pgdp, vaddr);
+> -	if (unlikely(p4d_none(*p4dp)))
+> -		goto err;
+> -
+> -	pudp =3D pud_offset(p4dp, vaddr);
+> -	if (unlikely(pud_none(*pudp)))
+> -		goto err;
+> +	struct page *page;
+> =20
+> -	pmdp =3D pmd_offset(pudp, vaddr);
+> -	if (unlikely(pmd_none(*pmdp)))
+> -		goto err;
+> -#ifdef CONFIG_X86_64
+> -	if (unlikely(pmd_large(*pmdp)))
+> -		pte =3D *(pte_t *) pmdp;
+> -	else
+> -#endif
+> -		pte =3D *pte_offset_kernel(pmdp, vaddr);
+> +	*pageshift =3D is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+> =20
+> -	if (unlikely(!pte_present(pte) ||
+> -		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
+> +	if (!__get_user_pages_fast(vaddr, 1, write, &page))
+>  		return 1;
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/remoteproc/Kconfig         |   8 +
- drivers/remoteproc/Makefile        |   1 +
- drivers/remoteproc/ingenic_rproc.c | 302 +++++++++++++++++++++++++++++
- 3 files changed, 311 insertions(+)
- create mode 100644 drivers/remoteproc/ingenic_rproc.c
+Let's please use numeric, not boolean comparison, for the return value of=20
+gup.
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 28ed306982f7..a0be40e2098d 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -214,6 +214,14 @@ config STM32_RPROC
- 
- 	  This can be either built-in or a loadable module.
- 
-+config INGENIC_RPROC
-+	tristate "Ingenic JZ47xx VPU remoteproc support"
-+	depends on MIPS || COMPILE_TEST
-+	help
-+	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
-+	  This can be either built-in or a loadable module.
-+	  If unsure say N.
-+
- endif # REMOTEPROC
- 
- endmenu
-diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-index 00f09e658cb3..6eb0137abbc7 100644
---- a/drivers/remoteproc/Makefile
-+++ b/drivers/remoteproc/Makefile
-@@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
- remoteproc-y				+= remoteproc_virtio.o
- remoteproc-y				+= remoteproc_elf_loader.o
- obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
-+obj-$(CONFIG_INGENIC_RPROC)			+= ingenic_rproc.o
- obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
- obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
- obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
-diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
-new file mode 100644
-index 000000000000..a4963158bdd3
---- /dev/null
-+++ b/drivers/remoteproc/ingenic_rproc.c
-@@ -0,0 +1,302 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Ingenic JZ47xx remoteproc driver
-+ * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/remoteproc.h>
-+
-+#include "remoteproc_internal.h"
-+
-+#define REG_AUX_CTRL		0x0
-+#define REG_AUX_MSG_ACK		0x10
-+#define REG_AUX_MSG		0x14
-+#define REG_CORE_MSG_ACK	0x18
-+#define REG_CORE_MSG		0x1C
-+
-+#define AUX_CTRL_SLEEP		BIT(31)
-+#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
-+#define AUX_CTRL_NMI_RESETS	BIT(2)
-+#define AUX_CTRL_NMI		BIT(1)
-+#define AUX_CTRL_SW_RESET	BIT(0)
-+
-+struct vpu_mem_map {
-+	const char *name;
-+	unsigned int da;
-+	bool direct_io;
-+};
-+
-+struct vpu_mem_info {
-+	const struct vpu_mem_map *map;
-+	unsigned long len;
-+	void __iomem *base;
-+};
-+
-+static const struct vpu_mem_map vpu_mem_map[] = {
-+	{ "tcsm0", 0x132b0000, true },
-+	{ "tcsm1", 0xf4000000 },
-+	{ "sram",  0x132f0000 },
-+};
-+
-+/* Device data */
-+struct vpu {
-+	int irq;
-+	struct clk *vpu_clk;
-+	struct clk *aux_clk;
-+	void __iomem *aux_base;
-+	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
-+	struct device *dev;
-+};
-+
-+static int ingenic_rproc_prepare(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+	int ret;
-+
-+	ret = clk_prepare_enable(vpu->vpu_clk);
-+	if (ret) {
-+		dev_err(vpu->dev, "Unable to start VPU clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(vpu->aux_clk);
-+	if (ret) {
-+		dev_err(vpu->dev, "Unable to start AUX clock: %d\n", ret);
-+		goto err_disable_vpu_clk;
-+	}
-+
-+	return 0;
-+
-+err_disable_vpu_clk:
-+	clk_disable_unprepare(vpu->vpu_clk);
-+	return ret;
-+}
-+
-+static void ingenic_rproc_unprepare(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+
-+	clk_disable_unprepare(vpu->aux_clk);
-+	clk_disable_unprepare(vpu->vpu_clk);
-+}
-+
-+static int ingenic_rproc_start(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+	u32 ctrl;
-+
-+	enable_irq(vpu->irq);
-+
-+	/* Reset the AUX and enable message IRQ */
-+	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
-+	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
-+
-+	return 0;
-+}
-+
-+static int ingenic_rproc_stop(struct rproc *rproc)
-+{
-+	struct vpu *vpu = rproc->priv;
-+
-+	/* Keep AUX in reset mode */
-+	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
-+
-+	disable_irq_nosync(vpu->irq);
-+
-+	return 0;
-+}
-+
-+static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
-+{
-+	struct vpu *vpu = rproc->priv;
-+
-+	writel(vqid, vpu->aux_base + REG_CORE_MSG);
-+}
-+
-+static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+{
-+	struct vpu *vpu = rproc->priv;
-+	void __iomem *va = NULL;
-+	unsigned int i;
-+
-+	if (len <= 0)
-+		return NULL;
-+
-+	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-+		const struct vpu_mem_info *info = &vpu->mem_info[i];
-+		const struct vpu_mem_map *map = info->map;
-+
-+		if (da >= map->da && (da + len) < (map->da + info->len)) {
-+			va = info->base + (da - map->da);
-+			break;
-+		}
-+	}
-+
-+	return (__force void *)va;
-+}
-+
-+static struct rproc_ops ingenic_rproc_ops = {
-+	.prepare = ingenic_rproc_prepare,
-+	.unprepare = ingenic_rproc_unprepare,
-+	.start = ingenic_rproc_start,
-+	.stop = ingenic_rproc_stop,
-+	.kick = ingenic_rproc_kick,
-+	.da_to_va = ingenic_rproc_da_to_va,
-+};
-+
-+static irqreturn_t vpu_interrupt(int irq, void *data)
-+{
-+	struct rproc *rproc = data;
-+	struct vpu *vpu = rproc->priv;
-+	u32 vring;
-+
-+	vring = readl(vpu->aux_base + REG_AUX_MSG);
-+
-+	/* Ack the interrupt */
-+	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
-+
-+	return rproc_vq_interrupt(rproc, vring);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ingenic_rproc_of_matches[] = {
-+	{ .compatible = "ingenic,jz4770-vpu-rproc", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
-+#endif
-+
-+static void ingenic_rproc_free(void *rproc)
-+{
-+	rproc_free(rproc);
-+}
-+
-+static void ingenic_rproc_unregister(void *rproc)
-+{
-+	rproc_del(rproc);
-+	rproc_shutdown(rproc);
-+}
-+
-+static int ingenic_rproc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *mem;
-+	struct rproc *rproc;
-+	struct vpu *vpu;
-+	unsigned int i;
-+	int ret;
-+
-+	rproc = rproc_alloc(dev, "ingenic-vpu",
-+			    &ingenic_rproc_ops, NULL, sizeof(*vpu));
-+	if (!rproc)
-+		return -ENOMEM;
-+
-+	ret = devm_add_action_or_reset(dev, ingenic_rproc_free, rproc);
-+	if (ret) {
-+		dev_err(dev, "Unable to add action");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, rproc);
-+	vpu = rproc->priv;
-+	vpu->dev = &pdev->dev;
-+
-+	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
-+	vpu->aux_base = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(vpu->aux_base)) {
-+		dev_err(dev, "Failed to ioremap");
-+		return PTR_ERR(vpu->aux_base);
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-+		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   vpu_mem_map[i].name);
-+
-+		if (vpu_mem_map[i].direct_io) {
-+			/*
-+			 * Handle shared memories that cannot be iomapped.
-+			 * They can be read or written directly through their
-+			 * physical address.
-+			 */
-+			if (!devm_request_mem_region(dev, mem->start,
-+						     resource_size(mem),
-+						     dev_name(dev))) {
-+				dev_err(dev, "Unable to request memory region");
-+				return -EBUSY;
-+			}
-+
-+			vpu->mem_info[i].base = (void __iomem *)mem->start;
-+		} else {
-+			vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
-+			if (IS_ERR(vpu->mem_info[i].base)) {
-+				ret = PTR_ERR(vpu->mem_info[i].base);
-+				dev_err(dev, "Failed to ioremap");
-+				return ret;
-+			}
-+		}
-+
-+		vpu->mem_info[i].len = resource_size(mem);
-+		vpu->mem_info[i].map = &vpu_mem_map[i];
-+	}
-+
-+	vpu->vpu_clk = devm_clk_get(dev, "vpu");
-+	if (IS_ERR(vpu->vpu_clk)) {
-+		dev_err(dev, "Failed to get VPU clock");
-+		return PTR_ERR(vpu->vpu_clk);
-+	}
-+
-+	vpu->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(vpu->aux_clk)) {
-+		dev_err(dev, "Failed to get AUX clock");
-+		return PTR_ERR(vpu->aux_clk);
-+	}
-+
-+	vpu->irq = platform_get_irq(pdev, 0);
-+	if (vpu->irq < 0) {
-+		dev_err(dev, "Failed to get platform IRQ");
-+		return vpu->irq;
-+	}
-+
-+	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", rproc);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to request IRQ");
-+		return ret;
-+	}
-+
-+	disable_irq_nosync(vpu->irq);
-+
-+	ret = rproc_add(rproc);
-+	if (ret) {
-+		dev_err(dev, "Failed to register remote processor");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, ingenic_rproc_unregister, rproc);
-+	if (ret) {
-+		dev_err(dev, "Unable to add action");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ingenic_rproc_driver = {
-+	.probe = ingenic_rproc_probe,
-+	.driver = {
-+		.name = "ingenic-vpu",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
-+	},
-+};
-+module_platform_driver(ingenic_rproc_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
--- 
-2.21.0.593.g511ec345e18
+Also, optional: as long as you're there, atomic_pte_lookup() ought to
+either return a bool (true =3D=3D success) or an errno, rather than a
+numeric zero or one.
 
+Other than that, this looks like a good cleanup, I wonder how many
+open-coded gup implementations are floating around like this.=20
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
+
+> =20
+> -	*paddr =3D pte_pfn(pte) << PAGE_SHIFT;
+> -
+> -	*pageshift =3D is_vm_hugetlb_page(vma) ? HPAGE_SHIFT : PAGE_SHIFT;
+> +	*paddr =3D page_to_phys(page);
+> +	put_user_page(page);
+> =20
+>  	return 0;
+> -
+> -err:
+> -	return 1;
+>  }
+> =20
+>  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+>=20
