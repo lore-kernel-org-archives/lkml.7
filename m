@@ -2,121 +2,105 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFF9C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC018C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA64C222FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563781759;
-	bh=Gr05QR1hL7O+2tzL84PlqgJUM44tyb63rrhJfu4GtP0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAG99v5OIaNu/JmAxJA+5kl4tRMr74i7LWltyjcWlDndoKS3KQeqvnSsMhaqsp8I2
-	 +DjmY/oNHF5LVwFZxSoS591xtNH9oTckaxWVrac07ikgjJpu/pQKxb5r88wMJRYA75
-	 ShuSIUuFEH5unzw/aeG0XJp284cnIXE7KKSqVhEk=
+	by mail.kernel.org (Postfix) with ESMTP id 8E5712199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 07:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfGVHtR (ORCPT
+        id S1727860AbfGVHuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 03:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfGVHtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 03:49:17 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8AC12229C;
-        Mon, 22 Jul 2019 07:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563781756;
-        bh=Gr05QR1hL7O+2tzL84PlqgJUM44tyb63rrhJfu4GtP0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEV7DJS52TP6EVFczUmwAz/ukrBdOqPydQi6XOdGzphoTVb3yaak3oCzZCV77IfJj
-         evHq82f+uz1VL5mxSm8qATXcNsScSVxwkn+ZxMlEtycjmBOFt+dO0mgYBp4IwApTmH
-         M1kKJ7/EOw8MMzNE4yEv4lihH/pwKzlZFz58dNWk=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH v2 4/4] arm64: Remove unneeded rcu_read_lock from debug handlers
-Date:   Mon, 22 Jul 2019 16:49:11 +0900
-Message-Id: <156378175027.12011.5591853683946780785.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <156378170297.12011.17385386326930403235.stgit@devnote2>
-References: <156378170297.12011.17385386326930403235.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 22 Jul 2019 03:50:37 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36781 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfGVHug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 03:50:36 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 803AE80317; Mon, 22 Jul 2019 09:50:21 +0200 (CEST)
+Date:   Mon, 22 Jul 2019 09:50:32 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] Enable backlight when trigger is activated
+Message-ID: <20190722075032.GA27524@amd>
+References: <20190718190849.GA11409@amd>
+ <22d7eca4ad8aa2e73933c4f83c92221ce6e0945a.camel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Content-Disposition: inline
+In-Reply-To: <22d7eca4ad8aa2e73933c4f83c92221ce6e0945a.camel@collabora.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove rcu_read_lock()/rcu_read_unlock() from debug exception
-handlers since we are sure those are not preemptible and
-interrupts are off.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
----
- arch/arm64/kernel/debug-monitors.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index f8719bd30850..48222a4760c2 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -207,16 +207,16 @@ static int call_step_hook(struct pt_regs *regs, unsigned int esr)
- 
- 	list = user_mode(regs) ? &user_step_hook : &kernel_step_hook;
- 
--	rcu_read_lock();
--
-+	/*
-+	 * Since single-step exception disables interrupt, this function is
-+	 * entirely not preemptible, and we can use rcu list safely here.
-+	 */
- 	list_for_each_entry_rcu(hook, list, node)	{
- 		retval = hook->fn(regs, esr);
- 		if (retval == DBG_HOOK_HANDLED)
- 			break;
- 	}
- 
--	rcu_read_unlock();
--
- 	return retval;
- }
- NOKPROBE_SYMBOL(call_step_hook);
-@@ -305,14 +305,16 @@ static int call_break_hook(struct pt_regs *regs, unsigned int esr)
- 
- 	list = user_mode(regs) ? &user_break_hook : &kernel_break_hook;
- 
--	rcu_read_lock();
-+	/*
-+	 * Since brk exception disables interrupt, this function is
-+	 * entirely not preemptible, and we can use rcu list safely here.
-+	 */
- 	list_for_each_entry_rcu(hook, list, node) {
- 		unsigned int comment = esr & ESR_ELx_BRK64_ISS_COMMENT_MASK;
- 
- 		if ((comment & ~hook->mask) == hook->imm)
- 			fn = hook->fn;
- 	}
--	rcu_read_unlock();
- 
- 	return fn ? fn(regs, esr) : DBG_HOOK_ERROR;
- }
+Hi!
 
+> > Configuring backlight trigger from dts results in backlight off during
+> > boot. Machine looks dead upon boot, which is not good.
+> >=20
+> > Fix that by enabling LED on trigger activation.
+
+> > +++ b/drivers/leds/trigger/ledtrig-backlight.c
+> > @@ -114,6 +114,8 @@ static int bl_trig_activate(struct led_classdev *le=
+d)
+> >  	n->old_status =3D UNBLANK;
+> >  	n->notifier.notifier_call =3D fb_notifier_callback;
+> > =20
+> > +	led_set_brightness(led, LED_ON);
+> > +
+>=20
+> This looks fishy.
+>=20
+> Maybe you should use a default-state =3D "keep" instead? (and you'll have
+> to support it in the LED driver).
+>=20
+> That'll give you proper "don't touch the LED if it was turned on" behavio=
+r,
+> which is what you seem to want.
+
+Actually no, that's not what I want. LED should go on if the display
+is active, as soon as trigger is activated.
+
+Unfortunately, I have see no good way to tell if the display is
+active (and display is usually active when trigger is activated).
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl01asgACgkQMOfwapXb+vK9lgCbBcUNDD1pNFmswZowkerycBcz
+v80AoK7Dv7JR0+GNLhozQBGFuNFWTOIt
+=oVmU
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
