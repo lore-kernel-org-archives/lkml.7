@@ -2,30 +2,29 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906B7C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B94C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AB321921
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB6921921
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 02:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfGVCvv (ORCPT
+        id S1729006AbfGVCwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 22:51:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2732 "EHLO huawei.com"
+        Sun, 21 Jul 2019 22:52:05 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2693 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728915AbfGVCvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 22:51:31 -0400
+        id S1728865AbfGVCvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 22:51:25 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 73C21ABFF51F86BF5568;
-        Mon, 22 Jul 2019 10:51:29 +0800 (CST)
+        by Forcepoint Email with ESMTP id CECCE58111D8BFF58C41;
+        Mon, 22 Jul 2019 10:51:23 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 22 Jul
- 2019 10:51:19 +0800
+ 2019 10:51:14 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -40,9 +39,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v3 21/24] erofs: introduce LZ4 decompression inplace
-Date:   Mon, 22 Jul 2019 10:50:40 +0800
-Message-ID: <20190722025043.166344-22-gaoxiang25@huawei.com>
+Subject: [PATCH v3 17/24] erofs: introduce per-CPU buffers implementation
+Date:   Mon, 22 Jul 2019 10:50:36 +0800
+Message-ID: <20190722025043.166344-18-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190722025043.166344-1-gaoxiang25@huawei.com>
 References: <20190722025043.166344-1-gaoxiang25@huawei.com>
@@ -55,120 +54,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-compressed data will be usually loaded into last pages of
-the extent (the last page for 4k) for in-place decompression
-(more specifically, in-place IO), as ilustration below,
+This patch introduces per-CPU buffers in order for
+the upcoming generic decompression framework to use.
 
-         start of compressed logical extent
-           |                          end of this logical extent
-           |                           |
-     ______v___________________________v________
-... |  page 6  |  page 7  |  page 8  |  page 9  | ...
-    |__________|__________|__________|__________|
-           .                         ^ .        ^
-           .                         |compressed|
-           .                         |   data   |
-           .                           .        .
-           |<          dstsize        >|<margin>|
-                                       oend     iend
-           op                        ip
+Note that I tried to use in-kernel per-CPU buffer or
+per-CPU page approaches to clean up further, however
+noticeable performanace regression (about 2% for
+sequential read) was observed.
 
-Therefore, it's possible to do decompression inplace (thus no
-memcpy at all) if the margin is sufficient and safe enough [1],
-and it can be implemented only for fixed-size output compression
-compared with fixed-size input compression.
-
-No memcpy for most of in-place IO (about 99% of enwik9) after
-decompression inplace is implemented and sequential read will
-be improved of course (see the following patches for test results).
-
-[1] https://github.com/lz4/lz4/commit/b17f578a919b7e6b078cede2d52be29dd48c8e8c
-    https://github.com/lz4/lz4/commit/5997e139f53169fa3a1c1b4418d2452a90b01602
+Let's leave it as-is for now.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/decompressor.c | 36 ++++++++++++++++++++++++++++++++----
- fs/erofs/erofs_fs.h     |  2 +-
- 2 files changed, 33 insertions(+), 5 deletions(-)
+ fs/erofs/Kconfig    | 14 ++++++++++++++
+ fs/erofs/internal.h | 24 ++++++++++++++++++++++++
+ fs/erofs/utils.c    | 12 ++++++++++++
+ 3 files changed, 50 insertions(+)
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 2ee10bb7e440..18fcbd75423e 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -14,6 +14,9 @@
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 71d0f992f43f..19d11cf45480 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -89,3 +89,17 @@ config EROFS_FS_ZIP
+ 
+ 	  If you don't want to enable compression feature, say N.
+ 
++config EROFS_FS_CLUSTER_PAGE_LIMIT
++	int "EROFS Cluster Pages Hard Limit"
++	depends on EROFS_FS_ZIP
++	range 1 256
++	default "1"
++	help
++	  Indicates maximum # of pages of a compressed
++	  physical cluster.
++
++	  For example, if files in a image were compressed
++	  into 8k-unit, hard limit should not be configured
++	  less than 2. Otherwise, the image will be refused
++	  to mount on this kernel.
++
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 2f11c1b5dab2..dc5c6c5e4885 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -222,6 +222,15 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
+ 	return v;
+ }
+ #endif
++
++#ifdef CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT
++#define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
++#else
++#define Z_EROFS_CLUSTER_MAX_PAGES       1
++#endif
++#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
++#else
++#define EROFS_PCPUBUF_NR_PAGES          0
  #endif
  
- #define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
-+#ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
-+#define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
+ /* we strictly follow PAGE_SIZE and no buffer head yet */
+@@ -486,6 +495,21 @@ int erofs_namei(struct inode *dir, struct qstr *name,
+ extern const struct file_operations erofs_dir_fops;
+ 
+ /* utils.c */
++#if (EROFS_PCPUBUF_NR_PAGES > 0)
++void *erofs_get_pcpubuf(unsigned int pagenr);
++#define erofs_put_pcpubuf(buf) do { \
++	(void)&(buf);	\
++	preempt_enable();	\
++} while (0)
++#else
++static inline void *erofs_get_pcpubuf(unsigned int pagenr)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
++
++#define erofs_put_pcpubuf(buf) do {} while (0)
 +#endif
- 
- struct z_erofs_decompressor {
- 	/*
-@@ -112,7 +115,7 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- {
- 	unsigned int inputmargin, inlen;
- 	u8 *src;
--	bool copied;
-+	bool copied, support_0padding;
- 	int ret;
- 
- 	if (rq->inputsize > PAGE_SIZE)
-@@ -120,13 +123,38 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 
- 	src = kmap_atomic(*rq->in);
- 	inputmargin = 0;
-+	support_0padding = false;
 +
-+	/* decompression inplace is only safe when 0padding is enabled */
-+	if (EROFS_SB(rq->sb)->requirements & EROFS_REQUIREMENT_LZ4_0PADDING) {
-+		support_0padding = true;
-+
-+		while (!src[inputmargin & ~PAGE_MASK])
-+			if (!(++inputmargin & ~PAGE_MASK))
-+				break;
-+
-+		if (inputmargin >= rq->inputsize) {
-+			kunmap_atomic(src);
-+			return -EIO;
-+		}
-+	}
+ #ifdef CONFIG_EROFS_FS_ZIP
+ int erofs_workgroup_put(struct erofs_workgroup *grp);
+ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index 45fd780e6429..c430790a02e0 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -9,6 +9,18 @@
+ #include "internal.h"
+ #include <linux/pagevec.h>
  
- 	copied = false;
- 	inlen = rq->inputsize - inputmargin;
- 	if (rq->inplace_io) {
--		src = generic_copy_inplace_data(rq, src, inputmargin);
--		inputmargin = 0;
--		copied = true;
-+		const uint oend = (rq->pageofs_out +
-+				   rq->outputsize) & ~PAGE_MASK;
-+		const uint nr = PAGE_ALIGN(rq->pageofs_out +
-+					   rq->outputsize) >> PAGE_SHIFT;
++#if (EROFS_PCPUBUF_NR_PAGES > 0)
++static struct {
++	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
++} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
 +
-+		if (rq->partial_decoding || !support_0padding ||
-+		    rq->out[nr - 1] != rq->in[0] ||
-+		    rq->inputsize - oend <
-+		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
-+			src = generic_copy_inplace_data(rq, src, inputmargin);
-+			inputmargin = 0;
-+			copied = true;
-+		}
- 	}
- 
- 	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index e418725abfd6..8c64e78ceaca 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -17,7 +17,7 @@
-  * incompatible with this kernel version.
-  */
- #define EROFS_REQUIREMENT_LZ4_0PADDING	0x00000001
--#define EROFS_ALL_REQUIREMENTS		0
-+#define EROFS_ALL_REQUIREMENTS		EROFS_REQUIREMENT_LZ4_0PADDING
- 
- struct erofs_super_block {
- /*  0 */__le32 magic;           /* in the little endian */
++void *erofs_get_pcpubuf(unsigned int pagenr)
++{
++	preempt_disable();
++	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
++}
++#endif
++
+ #ifdef CONFIG_EROFS_FS_ZIP
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
 -- 
 2.17.1
 
