@@ -2,112 +2,130 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB3C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88533C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEAC21E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MuBz0WJ3"
+	by mail.kernel.org (Postfix) with ESMTP id 6AE5E21E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfGVIjx (ORCPT
+        id S1728582AbfGVIkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 22 Jul 2019 04:40:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728177AbfGVIjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jul 2019 04:39:53 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:45682 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbfGVIjw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:39:52 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E9E2BC0070;
-        Mon, 22 Jul 2019 08:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563784792; bh=5hkdNv+d4ulwOI3yH55Iw6BH1syqXjCwb21YV26gLjU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=MuBz0WJ31rRDWMQDsHazo4zP38yyAHMYpCgTWCGCnBq+/UCZdPTGSxxbIOApHBlqi
-         eJGhMcA6wLuv6WBfqoIP+2TbwKpnLPP8bkExyP8/0JFd7qynDHBdNCuFL/5/085hfs
-         M0H3D+0raSAcKMryfiHEmMDWgLBZY9ZPXE0jGOWZdT+rkOCUC1zMPsF+lv2zdhE38M
-         7AQ8t6zxRxnyL2NvregM1fLhQAMlCxFJUW/UvbmE4Z89yr18ch4a4ERdhN01g1fQgo
-         E/nG/Zn920b7LFfUSW23wM/5AIzQK30Ni+tRuLIDWUuU9qRGZW1BEzU6xBwQ3OrxFw
-         ayt1dGMD3Je4g==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 5FEB0A005C;
-        Mon, 22 Jul 2019 08:39:50 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 1/2] net: stmmac: RX Descriptors need to be clean before setting buffers
-Date:   Mon, 22 Jul 2019 10:39:30 +0200
-Message-Id: <00bfde6f589e60ba1a2d0671c8ba0fcd0964d6e7.1563784666.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1563784666.git.joabreu@synopsys.com>
-References: <cover.1563784666.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1563784666.git.joabreu@synopsys.com>
-References: <cover.1563784666.git.joabreu@synopsys.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 749F93E2D3;
+        Mon, 22 Jul 2019 08:39:52 +0000 (UTC)
+Received: from redhat.com (ovpn-120-233.rdu2.redhat.com [10.10.120.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B365B1001B09;
+        Mon, 22 Jul 2019 08:39:49 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 04:39:47 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     =?utf-8?B?5p2O6I+y?= <lifei.shirley@bytedance.com>
+Cc:     virtio-dev@lists.oasis-open.org, linux-kernel@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fam Zheng <zhengfeiran@bytedance.com>
+Subject: Re: [External Email] Re: [PATCH v1 0/2] virtio-mmio: support
+ multiple interrupt vectors
+Message-ID: <20190722043707-mutt-send-email-mst@kernel.org>
+References: <20190719133135.32418-1-lifei.shirley@bytedance.com>
+ <20190719110852-mutt-send-email-mst@kernel.org>
+ <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+=e4K5rn7-avNT3e07dfXkh=ZO2+RvthjqW15gZv-uFYrCs3A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 22 Jul 2019 08:39:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RX Descriptors are being cleaned after setting the buffers which may
-lead to buffer addresses being wiped out.
+On Mon, Jul 22, 2019 at 11:22:02AM +0800, 李菲 wrote:
+> On Fri, Jul 19, 2019 at 11:14 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Fri, Jul 19, 2019 at 09:31:33PM +0800, Fei Li wrote:
+> > > Hi,
+> > >
+> > > This patch series implements multiple interrupt vectors support for
+> > > virtio-mmio device. This is especially useful for multiqueue vhost-net
+> > > device when using firecracker micro-vms as the guest.
+> > >
+> > > Test result:
+> > > With 8 vcpus & 8 net queues set, one vhost-net device with 8 irqs can
+> > > receive 9 times more pps comparing with only one irq:
+> > > - 564830.38 rxpck/s for 8 irqs on
+> > > - 67665.06 rxpck/s for 1 irq on
+> > >
+> > > Please help to review, thanks!
+> > >
+> > > Have a nice day
+> > > Fei
+> >
+> >
+> > Interesting. The spec says though:
+> >
+> >         4.2.3.4
+> >         Notifications From The Device
+> >         The memory mapped virtio device is using a single, dedicated interrupt signal, which is asserted when at
+> >         least one of the bits described in the description of InterruptStatus is set. This is how the device sends a
+> >         used buffer notification or a configuration change notification to the device.
+> >
+> Yes, the spec needs to be updated if we want to use mult-irqs.
+> >
+> > So I'm guessing we need to change the host/guest interface?
+> Just to confirm, does the "the host/guest interface" you mentioned mean how to
+> pass the irq information from the user space tool to guest kernel?
+> In this patch, we do this by passing the [irq_start, irq_end]
+> interface via setting guest
+> kernel command line, that is done in vm_cmdline_set().
+> Also there is another way to do this: add two new registers describing irq info
+> (irq_start & irq_end OR irq_start & irq_numbers) to the virtio config space.
+> 
+> Which one do you prefer?
 
-Fix this by clearing earlier the RX Descriptors.
+I'm not sure - so far irq was passed on the command line, right?
 
-Fixes: 2af6106ae949 ("net: stmmac: Introducing support for Page Pool")
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+The first step in implementing any spec change would be to update qemu
+code to virtio 1. Which is not a huge project but so far no one
+bothered.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index c7c9e5f162e6..5f1294ce0216 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1295,6 +1295,8 @@ static int init_dma_rx_desc_rings(struct net_device *dev, gfp_t flags)
- 			  "(%s) dma_rx_phy=0x%08x\n", __func__,
- 			  (u32)rx_q->dma_rx_phy);
- 
-+		stmmac_clear_rx_descriptors(priv, queue);
-+
- 		for (i = 0; i < DMA_RX_SIZE; i++) {
- 			struct dma_desc *p;
- 
-@@ -1312,8 +1314,6 @@ static int init_dma_rx_desc_rings(struct net_device *dev, gfp_t flags)
- 		rx_q->cur_rx = 0;
- 		rx_q->dirty_rx = (unsigned int)(i - DMA_RX_SIZE);
- 
--		stmmac_clear_rx_descriptors(priv, queue);
--
- 		/* Setup the chained descriptor addresses */
- 		if (priv->mode == STMMAC_CHAIN_MODE) {
- 			if (priv->extend_desc)
--- 
-2.7.4
-
+> > If true pls cc virtio-dev.
+> Sure.
+> >
+> > Also, do we need to update dt bindings documentation?
+> You mean the following doc? Sure. :)
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/virtio/mmio.txt
+> 
+> Thanks for the review!
+> 
+> Have a nice day
+> Fei
+> 
+> 
+> >
+> > >
+> > > Fam Zheng (1):
+> > >   virtio-mmio: Process vrings more proactively
+> > >
+> > > Fei Li (1):
+> > >   virtio-mmio: support multiple interrupt vectors
+> > >
+> > >  drivers/virtio/virtio_mmio.c | 238 +++++++++++++++++++++++++++++++++++--------
+> > >  1 file changed, 196 insertions(+), 42 deletions(-)
+> > >
+> > > --
+> > > 2.11.0
