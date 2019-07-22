@@ -2,105 +2,111 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A96C76196
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FC3C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3717821953
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:13:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqPXqG/o"
+	by mail.kernel.org (Postfix) with ESMTP id A7EAC21926
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 03:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563765351;
+	bh=iHwdsrxcX1l8+hROd7iGKbMdgW9v39P58MFq4E2tEIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S9WcFBPF59ZY2Xg1JTOOar1ndhDy4YZKTzHtYAiJHv1KbjG3PdQLMc4MMLc/clKqU
+	 UrRlxBPyIx3sUHbXBW8zihmoZWbI6BMXDitgyz+Ff7zjoRVg7AWJS8AOxxSJwHqxTD
+	 /9pyKUsnTklVSYFoAtk0jT8tA+eK8Zn+HMlWbOxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfGVDNM (ORCPT
+        id S1727728AbfGVDPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Jul 2019 23:13:12 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39499 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfGVDNM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Jul 2019 23:13:12 -0400
-Received: by mail-io1-f65.google.com with SMTP id f4so70770176ioh.6;
-        Sun, 21 Jul 2019 20:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7nLJ3KhNlJhRRaXlyF42twki4b3rKtuNTKBPyNlE3IQ=;
-        b=jqPXqG/oPAGlVy92Sm9qnxD+OvIzZqFK5eI5gg2EDcOH+fuIgBpRB3K+O0TVYQ9BUs
-         f0ZAPiqWdLDOPmgiMCL/esg6SNd1n7RWeM4qY5CrHnpCAHQg10/UjMBpwpuEWB5gOEhh
-         h8yfJW67AIj3gAJAdRaj9vxjdowL1kYOy82T9vuSsBsmGeT2uh5aDh7egYxp1+kSrXqX
-         sInjrHwlgAo70nXuCe/5RKlbNuUOAmBZkePRiahz3SKXFGVrhPRlx3GdwOj4QtFbQy8H
-         6MgI7Y/uPERUg6gmQg0ddE/lsYI16gGqbMeLcmvFCj1zUr77zjoAavCDZEhGiMJAxiWu
-         Ed5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7nLJ3KhNlJhRRaXlyF42twki4b3rKtuNTKBPyNlE3IQ=;
-        b=gJ6uJCEV4wwXYP1sb6SYPhmh8MPGSPZIxmliB3ojnoR/YA/qXPSfimjotyO7qYBkQu
-         krz0o7Ql8O4Iq4Pd1Z920b0hBOPrEWCmnyDIEaLgJkJE5kx1D+bBo5q+9sKQ6BVWf12p
-         zNERbtEmw2cHh6QdY/ksWfVqYJdDIkfl2v5H+H6l/KWZ2UnOApPyuFlX2MpHr1vLZ0dN
-         4bd1G0rsZDYM4/Z83CRvtqHxPG1ZVldVGwu6kSsf2sA5s/7l4hGjiHHwXk9BgOVRyAU9
-         GMAKj2jIU7eloZTmjJm+tds0U7bI/4A1pnarNfuOdMdo41HQ7iNFMWql8O5lHf/jrnkE
-         9ilw==
-X-Gm-Message-State: APjAAAV0+HIJ8ll2MzynAM2U4emUQbe9j6gXbvLl5KNlDV6VaI1/Q/Hh
-        YpD264NBXPbVBA5Plp5S6Xo=
-X-Google-Smtp-Source: APXvYqx4gv53O6eTeHDOY1PKbA2BRqMTgy2yzBJlA/ATL/NszLULz/MF+bvCTd4ZGVSB638JAjyW+g==
-X-Received: by 2002:a5d:9c46:: with SMTP id 6mr2898495iof.6.1563765191710;
-        Sun, 21 Jul 2019 20:13:11 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id v13sm32107611ioq.13.2019.07.21.20.13.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 20:13:11 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     dvhart@infradead.org, andy@infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bjorn@helgaas.com, rjw@rjwysocki.net, skunberg.kelsey@gmail.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] platform: x86: Remove acpi_has_method() call in wmi.c
-Date:   Sun, 21 Jul 2019 21:11:58 -0600
-Message-Id: <20190722031158.70311-1-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 21 Jul 2019 23:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726106AbfGVDPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Jul 2019 23:15:50 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FB2D21953;
+        Mon, 22 Jul 2019 03:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563765349;
+        bh=iHwdsrxcX1l8+hROd7iGKbMdgW9v39P58MFq4E2tEIE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qniQws2tjKUSYdRtQdiJFVk6z4kPGNwz+PnxJBcBT2/cETkKr7R74TNXLMg6/sADP
+         D8+YqxAcK5x4aCtPbP1gPzKU3fmYv41MYgvZC5fJuYtB/esprxGLD1GO0fmgA0Y/Lp
+         +ygQa5xyNV9KIX2L9v3fZIl38Hv1qzVvjXzk63EI=
+Date:   Mon, 22 Jul 2019 11:15:18 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de,
+        abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com,
+        angus@akkea.ca, agx@sigxcpu.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V5 3/5] arm64: dts: imx8mm: Add system counter node
+Message-ID: <20190722031517.GT3738@dragon>
+References: <20190710063056.35689-1-Anson.Huang@nxp.com>
+ <20190710063056.35689-3-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710063056.35689-3-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-acpi_has_method() is unnecessary within __query_block() and should be
-removed to avoid extra work.
+On Wed, Jul 10, 2019 at 02:30:54PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Add i.MX8MM system counter node to enable timer-imx-sysctr
+> broadcast timer driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-wc_status is initialized to AE_ERROR before the acpi_has_method() call.
-acpi_has_method() and acpi_execute_simple_method() failing due to the
-method not existing will result in the same outcome from __query_block().
+Do I need to wait for patch #1 landing before I apply #3 ~ #5, or can
+they be applied independently (no breaking on anything)?
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/platform/x86/wmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Shawn
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 784cea8572c2..59e9aa0f9643 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -340,9 +340,7 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
- 		 * expensive, but have no corresponding WCxx method. So we
- 		 * should not fail if this happens.
- 		 */
--		if (acpi_has_method(handle, wc_method))
--			wc_status = acpi_execute_simple_method(handle,
--								wc_method, 1);
-+		wc_status = acpi_execute_simple_method(handle, wc_method, 1);
- 	}
- 
- 	strcpy(method, "WQ");
--- 
-2.20.1
-
+> ---
+> Changes since V4:
+> 	- update the clock info using fixed clock node;
+> 	- correct the reg range;
+> 	- update the interrupt number as the system counter driver ONLY uses 1 irq now.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index b5637f8..8cf7f34 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -560,6 +560,14 @@
+>  				#pwm-cells = <2>;
+>  				status = "disabled";
+>  			};
+> +
+> +			system_counter: timer@306a0000 {
+> +				compatible = "nxp,sysctr-timer";
+> +				reg = <0x306a0000 0x20000>;
+> +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&osc_24m>;
+> +				clock-names = "per";
+> +			};
+>  		};
+>  
+>  		aips3: bus@30800000 {
+> -- 
+> 2.7.4
+> 
