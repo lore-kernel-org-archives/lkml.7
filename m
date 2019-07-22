@@ -2,99 +2,111 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63606C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4A5C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D7420449
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 11:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E1F20449
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563796696;
-	bh=LvoZ3eBgImtY20Ybgdmi4DOSoPh6c+B62PWxPfsP0K8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tGSniTf7kxY2kMjvoi+0VZpwQ5E2RZCuC6YYC89IyasDKLxNq1ACaf4HBOl55gp/r
-	 YdCFHUrdlDmiHiM9aqXUMoUV4VtUPlF9DWCAthGo7Yi2R+ze8ZiTmKBULEhrpgiCsO
-	 SSfQMIeRaaaD6Xr4it3kANWWQCPS7NwwrQ15QMC0=
+	s=default; t=1563796822;
+	bh=FSHcNSS7eLlpKjxsa4Y9DUwXY6fDE0VgYbiQq4W8kMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kGNq1QhEAQcvf57zoPyeoLhonwM4v2a3WkHMNWxAPiPjX7gwPen/FKYHSBRbAzk6X
+	 Kg588iVUCL29lFz6lYwZwFylmn39tgkMESC8AbKFNaJZPhiRUDRG4vmbuGhEzzOQKB
+	 N4E4LpZCezg7GllNMyK7xE4CZQP2NLzfLmDSwHWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfGVL6P (ORCPT
+        id S1729335AbfGVMAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 07:58:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46766 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbfGVL6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 07:58:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=v7td3nWWRNlG2HczAYW9Qi9YQ6NEWJchNTHfCGIb9jo=; b=k8BPbqykZ8jqta8HU9VrbasPP
-        D3kewB08EtEDlnJtWoST5SfghSlxQborttFcItcRdPgN9VVlzdlyYkZtrDxUiurI/U7DOKxyhy8c5
-        PuumwvIOtXE3Cay4bwX44NS9mA4sZBkWh72UH7GicAD5Wm7oOBwH1+Knjgoy1AtdIMwbH9PtO3JCh
-        khQBua+WeocH9Qx4eIEn0d7ik31MU5s7Nxpf+xhRguqxZSc4KmW8j4QxUfmyJ8V5VawYLCHAE9ZXu
-        Hhn0Wv592z5grVqn7u+s1jtn1QGEevASp9jz49l70UpShQKabsI+5yL2/RwCiBOmLY8rWe8Yo9qwq
-        RhpsivLAw==;
-Received: from 177.157.124.3.dynamic.adsl.gvt.net.br ([177.157.124.3] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpWxG-000410-84; Mon, 22 Jul 2019 11:58:11 +0000
-Date:   Mon, 22 Jul 2019 08:58:06 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.3-rc1] media updates
-Message-ID: <20190722085806.2e775cd6@coco.lan>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 22 Jul 2019 08:00:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45998 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728269AbfGVMAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 08:00:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 905F2B048;
+        Mon, 22 Jul 2019 12:00:19 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 14:00:18 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     shakeelb@google.com, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        ktkhai@virtuozzo.com, guro@fb.com, hughd@google.com, cai@lca.pw,
+        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: check if mem cgroup is disabled or not
+ before calling memcg slab shrinker
+Message-ID: <20190722120018.GZ30461@dhcp22.suse.cz>
+References: <1563385526-20805-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563385526-20805-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu 18-07-19 01:45:26, Yang Shi wrote:
+> Shakeel Butt reported premature oom on kernel with
+> "cgroup_disable=memory" since mem_cgroup_is_root() returns false even
+> though memcg is actually NULL.  The drop_caches is also broken.
+> 
+> It is because commit aeed1d325d42 ("mm/vmscan.c: generalize shrink_slab()
+> calls in shrink_node()") removed the !memcg check before
+> !mem_cgroup_is_root().  And, surprisingly root memcg is allocated even
+> though memory cgroup is disabled by kernel boot parameter.
+> 
+> Add mem_cgroup_disabled() check to make reclaimer work as expected.
+> 
+> Fixes: aeed1d325d42 ("mm/vmscan.c: generalize shrink_slab() calls in shrink_node()")
+> Reported-by: Shakeel Butt <shakeelb@google.com>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: stable@vger.kernel.org  4.19+
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.3-2
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-For two regressions at media core:
+> ---
+>  mm/vmscan.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index f8e3dcd..c10dc02 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -684,7 +684,14 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+>  	unsigned long ret, freed = 0;
+>  	struct shrinker *shrinker;
+>  
+> -	if (!mem_cgroup_is_root(memcg))
+> +	/*
+> +	 * The root memcg might be allocated even though memcg is disabled
+> +	 * via "cgroup_disable=memory" boot parameter.  This could make
+> +	 * mem_cgroup_is_root() return false, then just run memcg slab
+> +	 * shrink, but skip global shrink.  This may result in premature
+> +	 * oom.
+> +	 */
+> +	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+>  		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+>  
+>  	if (!down_read_trylock(&shrinker_rwsem))
+> -- 
+> 1.8.3.1
 
-  - v4l2-subdev: fix regression in check_pad()
-  - videodev2.h: change V4L2_PIX_FMT_BGRA444 define: fourcc was already in use
-
-Regards,
-Mauro
-
-The following changes since commit f81cbfc4f82a75ca0a2dc181a9c93b88f0e6509d:
-
-  media: allegro: use new v4l2_m2m_ioctl_try_encoder_cmd funcs (2019-06-27 07:36:06 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.3-2
-
-for you to fetch changes up to 22be8233b34f4f468934c5fefcbe6151766fb8f2:
-
-  media: videodev2.h: change V4L2_PIX_FMT_BGRA444 define: fourcc was already in use (2019-07-11 09:00:38 -0400)
-
-----------------------------------------------------------------
-media updates for v5.3-rc1
-
-----------------------------------------------------------------
-Hans Verkuil (2):
-      media: v4l2-subdev: fix regression in check_pad()
-      media: videodev2.h: change V4L2_PIX_FMT_BGRA444 define: fourcc was already in use
-
- drivers/media/v4l2-core/v4l2-subdev.c | 2 +-
- include/uapi/linux/videodev2.h        | 8 +++++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
+-- 
+Michal Hocko
+SUSE Labs
