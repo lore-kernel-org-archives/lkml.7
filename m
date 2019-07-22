@@ -2,244 +2,378 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FD8C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69958C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC1021E70
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lb0q+hf1";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Z/2jrmzI"
+	by mail.kernel.org (Postfix) with ESMTP id 3906F21911
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 13:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfGVNdO (ORCPT
+        id S1730267AbfGVNdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 09:33:14 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:59106 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728343AbfGVNdK (ORCPT
+        Mon, 22 Jul 2019 09:33:16 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36364 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbfGVNdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:33:10 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 129F7C1D2B;
-        Mon, 22 Jul 2019 13:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563802389; bh=GyiIghw1ImCcnG2NT3Jt2fVOpLzrGh9QQUzKn6E6qko=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=lb0q+hf1H9pd/gbGDcbmlXBijDUY4bte3q17yO4VleHIa5FFtsLMFn4Z9q9clB9h1
-         6p0El6hJWoW4u0VNQ4+VCzvEnO7DGh/Yil4tlm4Oa96c1/Af7v7kFNYcm55g0CrfMP
-         vbaZVNRa+YXZBVb6TMy3DyBJbW7JLODLUb7sMl7t4M6DZcCfjSiJlxGzdZxZEf1lcM
-         Llu1Wu7mWvmhccTOEfWemoDVYUq14DmXXUuj/268vGhWL/v7sJPK8gxUQWE1XVCPG1
-         kR+AmFcyoOm7BPfZIcKHHErb7kqxX8H7CeFg/puC30dNSA477Pepm8Gx53NMMLTvas
-         z8ECbMEuXGq1Q==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id EAD20A023C;
-        Mon, 22 Jul 2019 13:33:07 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 22 Jul 2019 06:33:07 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 22 Jul 2019 06:33:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U9kDfKpqSa07fqtf0kFBL4SpMspovxZZWng6x0Kn12hUkVEWf8Irv35RUbIh3C0YgnSkhlDjCIFb15AfuKJnzCghMeVuLm/7Nd2B+Zzmbi/mVMglqeGTeGieFdquunFqYwJcdzFgExZlx7CKIwf/WehbYMyYlp8q8q8IFcS4ftgJbzFhj+DBT3DMp6ICkJk9CjSipo9loCNRBorLGJ7fPAPl+j5KcP6plcrCu5Dpov3V8No8lj3l3rgiYkTE2WvmgFm61UAE/MUhgP15Fy0O6J4zJmBDPrwrZnwDKeMFPdNm7g21NWbpaC2DCH3nilWy/B105xuXMWK6ApErk8f6nQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bMTKoyvF6m10AbnI5tzVYW5as07qHK9MxoJ0uhwT7bw=;
- b=fqQTLeB7NmFX5uIcCba0VX+aKOf5lPtzhZspzWjeaUIuFWhZ74ucsH0G2y3a7wXFcnXSzRyyUml+jpBLR9TbOv/DkzPTaUrSDVvXi4PvBqt+YttjFsU1Khcg4THBqneSyysYkL5YTjma/pQb7OeXufYb5GVVIcC2uyIIPECA45uSLrkmIIzQGWUybqYf0JqGixPGSpG+80KwueYKX7zA86aldCyyfCoCtKDtqqIvWjbCss80c5N56qcayjtqLYigVT/M/VvvuKuusb8Icg2sm9sajMHt5057beMwvZhjIhdO9wej/Ee2opoZF1irGkIntZ9ztX4GAJeIb0V0orXy+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bMTKoyvF6m10AbnI5tzVYW5as07qHK9MxoJ0uhwT7bw=;
- b=Z/2jrmzIE+gnsWah3ze/qd8sSllJsB975WJSdJjLdqKIa/SMPFre1CPRVFIUqh0coPgBP5BOI1kCVoNX+yhsvxwubMnyPp62QQspJWLjK+RFr1aHiQlFwJZwuSz/NnTrHr9NcrZzabfrTXgeFweP+NXaXzdZNP4eQivVhnk2VvA=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB2666.namprd12.prod.outlook.com (20.176.116.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Mon, 22 Jul 2019 13:33:05 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::1508:71eb:20f6:b4e6]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::1508:71eb:20f6:b4e6%6]) with mapi id 15.20.2094.013; Mon, 22 Jul 2019
- 13:33:05 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+        Mon, 22 Jul 2019 09:33:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6954F28B079
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora kernel ML <kernel@collabora.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] [v2] dmaengine: dw-edma: fix unnecessary stack usage
-Thread-Topic: [PATCH 1/3] [v2] dmaengine: dw-edma: fix unnecessary stack usage
-Thread-Index: AQHVQItq2Fyi7Wm2WUKRvn5haPwUB6bWotVw
-Date:   Mon, 22 Jul 2019 13:33:05 +0000
-Message-ID: <DM6PR12MB4010F8ADBA3F9E92E8762279DAC40@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <20190722124457.1093886-1-arnd@arndb.de>
-In-Reply-To: <20190722124457.1093886-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTNhNWJiZWZiLWFjODUtMTFlOS05ODhjLWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFwzYTViYmVmZC1hYzg1LTExZTktOTg4Yy1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjEzNTAiIHQ9IjEzMjA4Mjc1OTgzMTM2?=
- =?us-ascii?Q?OTEzOSIgaD0ibjVRTEptUlRhZFBNWVhoa3hPUldZTWlNSzRrPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFD?=
- =?us-ascii?Q?enRiUDhrVURWQWQrbXloVXN5TnpSMzZiS0ZTekkzTkVPQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a0e578e-03d6-4f8b-8a26-08d70ea92080
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB2666;
-x-ms-traffictypediagnostic: DM6PR12MB2666:
-x-microsoft-antispam-prvs: <DM6PR12MB266617026C0464337597A667DAC40@DM6PR12MB2666.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01068D0A20
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(396003)(366004)(346002)(39860400002)(189003)(199004)(76176011)(66066001)(4326008)(3846002)(7696005)(5660300002)(14454004)(6436002)(6116002)(25786009)(52536014)(316002)(33656002)(81156014)(81166006)(8936002)(53936002)(76116006)(6246003)(7736002)(305945005)(66446008)(74316002)(446003)(66476007)(66556008)(64756008)(55016002)(9686003)(66946007)(476003)(11346002)(71200400001)(71190400001)(86362001)(6506007)(102836004)(53546011)(229853002)(26005)(486006)(186003)(99286004)(110136005)(8676002)(54906003)(2906002)(256004)(14444005)(68736007)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB2666;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 48MVfPfml+/+C3Ar6N97LckrOZ09ZtO/4A80a2cPqk5GS6m+LX4yu6m3m57XgsB+lMzEQTeV9K/yNN2tpe5p9Xh0XG8+TRsb6jPSs6tMK5KzMZ0iFrSJf1ZETb0N/1tCF6cnkneq8rupzzFOyF77Kj2RbH16PoAVHXWRpQTsWJSbw1uN5Xmr2b9s9WqslW1JOv7IEw4qW9KWA8U2Trx0+x/rn3XZiA3lvhuA2VQiu9VCuN6kOeSghPLHObWw6Goo/CrHQ2jhyQVmEZF4cEPDZp5R3rDTMiCPnCIZxTuOm6pZ3SYfNYmuE4675LumAgejKxUL2k/n8Pik/XwkHcCCFIy6NnHZ06rwHpjzXgYvJOc4miy6rWyItIIIapB15mbb8BtVKoNBSth1lpo6k3J8aDRxFZDVUdmeeqrGwZsJAaQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v5 02/11] mfd / platform: cros_ec: Move cros-ec core driver out from MFD
+Date:   Mon, 22 Jul 2019 15:32:48 +0200
+Message-Id: <20190722133257.9336-3-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722133257.9336-1-enric.balletbo@collabora.com>
+References: <20190722133257.9336-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0e578e-03d6-4f8b-8a26-08d70ea92080
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2019 13:33:05.2621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gustavo@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2666
-X-OriginatorOrg: synopsys.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 13:44:43, Arnd Bergmann <arnd@arndb.de> wrote:
+Now, the ChromeOS EC core driver has nothing related to an MFD device, so
+move that driver from the MFD subsystem to the platform/chrome subsystem.
 
-> Putting large constant data on the stack causes unnecessary overhead
-> and stack usage:
->=20
-> drivers/dma/dw-edma/dw-edma-v0-debugfs.c:285:6: error: stack frame size o=
-f 1376 bytes in function 'dw_edma_v0_debugfs_on' [-Werror,-Wframe-larger-th=
-an=3D]
->=20
-> Mark the variable 'static const' in order for the compiler to move it
-> into the .rodata section where it does no such harm.
->=20
-> Fixes: 305aebeff879 ("dmaengine: Add Synopsys eDMA IP version 0 debugfs s=
-upport")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: unchanged
-> ---
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-ed=
-ma/dw-edma-v0-debugfs.c
-> index 3226f528cc11..5728b6fe938c 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> @@ -48,7 +48,7 @@ static struct {
->  } lim[2][EDMA_V0_MAX_NR_CH];
-> =20
->  struct debugfs_entries {
-> -	char					name[24];
-> +	const char				*name;
->  	dma_addr_t				*reg;
->  };
-> =20
-> --=20
-> 2.20.0
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Tested-by: Gwendal Grignou <gwendal@chromium.org>
+---
 
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+ drivers/extcon/Kconfig                     |  2 +-
+ drivers/hid/Kconfig                        |  2 +-
+ drivers/i2c/busses/Kconfig                 |  2 +-
+ drivers/iio/common/cros_ec_sensors/Kconfig |  2 +-
+ drivers/input/keyboard/Kconfig             |  2 +-
+ drivers/media/platform/Kconfig             |  3 +--
+ drivers/mfd/Kconfig                        | 15 ++-------------
+ drivers/mfd/Makefile                       |  2 --
+ drivers/platform/chrome/Kconfig            | 21 +++++++++++++++++----
+ drivers/platform/chrome/Makefile           |  1 +
+ drivers/{mfd => platform/chrome}/cros_ec.c |  0
+ drivers/power/supply/Kconfig               |  2 +-
+ drivers/pwm/Kconfig                        |  2 +-
+ drivers/rtc/Kconfig                        |  2 +-
+ sound/soc/codecs/Kconfig                   |  4 ++--
+ sound/soc/qcom/Kconfig                     |  2 +-
+ 16 files changed, 32 insertions(+), 32 deletions(-)
+ rename drivers/{mfd => platform/chrome}/cros_ec.c (100%)
 
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index fa1804460e8c..aac507bff135 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -181,7 +181,7 @@ config EXTCON_USB_GPIO
+ 
+ config EXTCON_USBC_CROS_EC
+ 	tristate "ChromeOS Embedded Controller EXTCON support"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	help
+ 	  Say Y here to enable USB Type C cable detection extcon support when
+ 	  using Chrome OS EC based USB Type-C ports.
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 3872e03d9a59..a958b9625bba 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -376,7 +376,7 @@ config HOLTEK_FF
+ 
+ config HID_GOOGLE_HAMMER
+ 	tristate "Google Hammer Keyboard"
+-	depends on USB_HID && LEDS_CLASS && MFD_CROS_EC
++	depends on USB_HID && LEDS_CLASS && CROS_EC
+ 	---help---
+ 	Say Y here if you have a Google Hammer device.
+ 
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 09367fc014c3..938fe1f2ce31 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -1345,7 +1345,7 @@ config I2C_SIBYTE
+ 
+ config I2C_CROS_EC_TUNNEL
+ 	tristate "ChromeOS EC tunnel I2C bus"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	help
+ 	  If you say yes here you get an I2C bus that will tunnel i2c commands
+ 	  through to the other side of the ChromeOS EC to the i2c bus
+diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig b/drivers/iio/common/cros_ec_sensors/Kconfig
+index bcb58fb76b9f..cdbb29cfb907 100644
+--- a/drivers/iio/common/cros_ec_sensors/Kconfig
++++ b/drivers/iio/common/cros_ec_sensors/Kconfig
+@@ -4,7 +4,7 @@
+ #
+ config IIO_CROS_EC_SENSORS_CORE
+ 	tristate "ChromeOS EC Sensors Core"
+-	depends on SYSFS && MFD_CROS_EC
++	depends on SYSFS && CROS_EC
+ 	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index 8e9c3ea9d5e7..861c7a2105a2 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -745,7 +745,7 @@ config KEYBOARD_W90P910
+ config KEYBOARD_CROS_EC
+ 	tristate "ChromeOS EC keyboard"
+ 	select INPUT_MATRIXKMAP
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	help
+ 	  Say Y here to enable the matrix keyboard used by ChromeOS devices
+ 	  and implemented on the ChromeOS EC. You must enable one bus option
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 8a19654b393a..98c3a9a6725e 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -547,10 +547,9 @@ if CEC_PLATFORM_DRIVERS
+ 
+ config VIDEO_CROS_EC_CEC
+ 	tristate "ChromeOS EC CEC driver"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	select CEC_CORE
+ 	select CEC_NOTIFIER
+-	select CHROME_PLATFORMS
+ 	select CROS_EC_PROTO
+ 	help
+ 	  If you say yes here you will get support for the
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index f129f9678940..d79882b608cf 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -211,21 +211,10 @@ config MFD_AXP20X_RSB
+ 	  components like regulators or the PEK (Power Enable Key) under the
+ 	  corresponding menus.
+ 
+-config MFD_CROS_EC
+-	tristate "ChromeOS Embedded Controller"
+-	select MFD_CORE
+-	select CHROME_PLATFORMS
+-	select CROS_EC_PROTO
+-	depends on X86 || ARM || ARM64 || COMPILE_TEST
+-	help
+-	  If you say Y here you get support for the ChromeOS Embedded
+-	  Controller (EC) providing keyboard, battery and power services.
+-	  You also need to enable the driver for the bus you are using. The
+-	  protocol for talking to the EC is defined by the bus driver.
+-
+ config MFD_CROS_EC_CHARDEV
+ 	tristate "Chrome OS Embedded Controller userspace device interface"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
++	select MFD_CORE
+ 	---help---
+ 	  This driver adds support to talk with the ChromeOS EC from userspace.
+ 
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f026ada68f6a..59ab5bf51b65 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -13,8 +13,6 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
+ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
+ obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
+-cros_ec_core-objs		:= cros_ec.o
+-obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec_core.o
+ obj-$(CONFIG_MFD_CROS_EC_CHARDEV) += cros_ec_dev.o
+ obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+ 
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 970679d0b6f6..eaeb04e07335 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -50,9 +50,22 @@ config CHROMEOS_TBMC
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called chromeos_tbmc.
+ 
++config CROS_EC
++	tristate "ChromeOS Embedded Controller"
++	select CROS_EC_PROTO
++	depends on X86 || ARM || ARM64 || COMPILE_TEST
++	help
++	  If you say Y here you get support for the ChromeOS Embedded
++	  Controller (EC) providing keyboard, battery and power services.
++	  You also need to enable the driver for the bus you are using. The
++	  protocol for talking to the EC is defined by the bus driver.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called cros_ec.
++
+ config CROS_EC_I2C
+ 	tristate "ChromeOS Embedded Controller (I2C)"
+-	depends on MFD_CROS_EC && I2C
++	depends on CROS_EC && I2C
+ 
+ 	help
+ 	  If you say Y here, you get support for talking to the ChromeOS
+@@ -62,7 +75,7 @@ config CROS_EC_I2C
+ 
+ config CROS_EC_RPMSG
+ 	tristate "ChromeOS Embedded Controller (rpmsg)"
+-	depends on MFD_CROS_EC && RPMSG && OF
++	depends on CROS_EC && RPMSG && OF
+ 	help
+ 	  If you say Y here, you get support for talking to the ChromeOS EC
+ 	  through rpmsg. This uses a simple byte-level protocol with a
+@@ -87,7 +100,7 @@ config CROS_EC_ISHTP
+ 
+ config CROS_EC_SPI
+ 	tristate "ChromeOS Embedded Controller (SPI)"
+-	depends on MFD_CROS_EC && SPI
++	depends on CROS_EC && SPI
+ 
+ 	---help---
+ 	  If you say Y here, you get support for talking to the ChromeOS EC
+@@ -97,7 +110,7 @@ config CROS_EC_SPI
+ 
+ config CROS_EC_LPC
+ 	tristate "ChromeOS Embedded Controller (LPC)"
+-	depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
++	depends on CROS_EC && ACPI && (X86 || COMPILE_TEST)
+ 	help
+ 	  If you say Y here, you get support for talking to the ChromeOS EC
+ 	  over an LPC bus, including the LPC Microchip EC (MEC) variant.
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index fd0af05cc14c..12ff8de5ac7a 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -6,6 +6,7 @@ CFLAGS_cros_ec_trace.o:=		-I$(src)
+ obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
+ obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
+ obj-$(CONFIG_CHROMEOS_TBMC)		+= chromeos_tbmc.o
++obj-$(CONFIG_CROS_EC)			+= cros_ec.o
+ obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
+ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
+ obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
+diff --git a/drivers/mfd/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+similarity index 100%
+rename from drivers/mfd/cros_ec.c
+rename to drivers/platform/chrome/cros_ec.c
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 5d91b5160b41..5e448b64393d 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -670,7 +670,7 @@ config CHARGER_RT9455
+ 
+ config CHARGER_CROS_USBPD
+ 	tristate "ChromeOS EC based USBPD charger"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	default n
+ 	help
+ 	  Say Y here to enable ChromeOS EC based USBPD charger
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index a7e57516959e..b0e632ba8590 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -145,7 +145,7 @@ config PWM_CRC
+ 
+ config PWM_CROS_EC
+ 	tristate "ChromeOS EC PWM driver"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	help
+ 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
+ 	  Controller.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index e72f65b61176..a45175fd8cc4 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1274,7 +1274,7 @@ config RTC_DRV_ZYNQMP
+ 
+ config RTC_DRV_CROS_EC
+ 	tristate "Chrome OS EC RTC driver"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	help
+ 	  If you say yes here you will get support for the
+ 	  Chrome OS Embedded Controller's RTC.
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 9f89a5346299..11fd97cd9ab4 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -51,7 +51,7 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_BT_SCO
+ 	select SND_SOC_BD28623
+ 	select SND_SOC_CQ0093VC
+-	select SND_SOC_CROS_EC_CODEC if MFD_CROS_EC
++	select SND_SOC_CROS_EC_CODEC if CROS_EC
+ 	select SND_SOC_CS35L32 if I2C
+ 	select SND_SOC_CS35L33 if I2C
+ 	select SND_SOC_CS35L34 if I2C
+@@ -474,7 +474,7 @@ config SND_SOC_CQ0093VC
+ 
+ config SND_SOC_CROS_EC_CODEC
+ 	tristate "codec driver for ChromeOS EC"
+-	depends on MFD_CROS_EC
++	depends on CROS_EC
+ 	help
+ 	  If you say yes here you will get support for the
+ 	  ChromeOS Embedded Controller's Audio Codec.
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 8e3e86619b35..60086858e920 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -99,7 +99,7 @@ config SND_SOC_MSM8996
+ 
+ config SND_SOC_SDM845
+ 	tristate "SoC Machine driver for SDM845 boards"
+-	depends on QCOM_APR && MFD_CROS_EC && I2C
++	depends on QCOM_APR && CROS_EC && I2C
+ 	select SND_SOC_QDSP6
+ 	select SND_SOC_QCOM_COMMON
+ 	select SND_SOC_RT5663
+-- 
+2.20.1
 
