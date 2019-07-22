@@ -2,105 +2,77 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E4AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4697C76194
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F7921901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p8X+3oiA"
+	by mail.kernel.org (Postfix) with ESMTP id 9561721901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 16:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbfGVQhI (ORCPT
+        id S1730993AbfGVQiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 12:37:08 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34688 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729363AbfGVQhF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 12:37:05 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so6361361edb.1;
-        Mon, 22 Jul 2019 09:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zv5P3sG9+ZJv6qEu/KaS4z9NGZFAnjaGhIzkAMUBCaQ=;
-        b=p8X+3oiA5+9ppo2rmXogrEYaTVh3IEWj+2bhdn9esGgRk+8YrGDY/DHD2Gm6l0Ts/G
-         TUbrIRr+61ggzklQQYF93B4cK7Hzdvd8KFUGRE+3tsHCv+Q2ujeQom297q4FVjYnzmaf
-         JJUx5h1jMLB8oeW6QJoZXeuXZ0cR+u49h5gbhRSycXg/pfK0hsqPU7/VUlW3RDEl+MMw
-         UI1aN/U5zygiNnOdWB3cL2Gk7d9dp3J2DTRgTQh04uFTDBVCRmfmf/kTjDqL2eb1iL6G
-         sgtbsqEwOsV4wLBMPGGPhzjYUfcOCcPfdYg8QrjQv6RXHL8OYQ0aup9+DGl5z556oPyK
-         68Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zv5P3sG9+ZJv6qEu/KaS4z9NGZFAnjaGhIzkAMUBCaQ=;
-        b=DoDEHicuc/IW9N0KCgLHFxIK0rMXZJ/aQ7KolwD8OHvNFBVvPO7dJhO604gjs8XigH
-         h5GTU1xk2ZwgI/HX/fJWkHXnARQfunIbmAziubwz5+tOS1LFv2Nqt/FBHT+2/UrT83CY
-         kKDrJzEv1xPzfvVaQABVHQ2Kjgj+6YLdQJIurSBBuSDlOixs3T85WTzeIJ1SfHnbeutR
-         UShozujQRcMSaylLiGsxFU4n6UWAjBCXzyB2jfioUNcoRZRjAs+alXpKWI74kC/N/QJZ
-         coTEJGtjHWotZWT9neL1+a14dxp/8yYrif+vByj2N5jSWkT/hqVaYR6zoB1zz3vZYgOG
-         ZqzA==
-X-Gm-Message-State: APjAAAWRdaKVpytdeF2er+1Eu7ui7mBQags8nF8iD46cBPz8QvO6ww2p
-        s4Lxv7d92ObqXNENFVnniEP03vFAxaYzXQ==
-X-Google-Smtp-Source: APXvYqy//6eYirJj9ENgnNsMtreAbzkSSZkTpUKSr9MlD7pQa27bKgIDs8spyOpldtk86kIMnEn5gA==
-X-Received: by 2002:a17:906:2409:: with SMTP id z9mr8411103eja.179.1563813423762;
-        Mon, 22 Jul 2019 09:37:03 -0700 (PDT)
-Received: from localhost.localdomain ([65.154.66.198])
-        by smtp.gmail.com with ESMTPSA id p23sm8058609ejl.43.2019.07.22.09.37.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 09:37:03 -0700 (PDT)
-From:   stillcompiling@gmail.com
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org (open list:HID CORE LAYER),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH 2/2] HID: core: only warn once of oversize hid report
-Date:   Mon, 22 Jul 2019 10:36:42 -0600
-Message-Id: <20190722163642.10417-2-stillcompiling@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190722163642.10417-1-stillcompiling@gmail.com>
-References: <20190722163642.10417-1-stillcompiling@gmail.com>
+        Mon, 22 Jul 2019 12:38:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:41824 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727731AbfGVQiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 12:38:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E72BF28;
+        Mon, 22 Jul 2019 09:38:16 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C3953F694;
+        Mon, 22 Jul 2019 09:38:14 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 17:38:12 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        aou@eecs.berkeley.edu, gary@garyguo.net,
+        Atish Patra <Atish.Patra@wdc.com>, hch@infradead.org,
+        paul.walmsley@sifive.com, rppt@linux.ibm.com,
+        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>, julien.thierry@arm.com,
+        Will Deacon <will.deacon@arm.com>, christoffer.dall@arm.com,
+        james.morse@arm.com, linux-csky@vger.kernel.org
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+Message-ID: <20190722163811.GJ60625@arrakis.emea.arm.com>
+References: <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
+ <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
+ <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
+ <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
+ <20190621141606.GF18954@arrakis.emea.arm.com>
+ <CAJF2gTTVUToRkRtxTmtWDotMGXy5YQCpL1h_2neTBuN3e6oz1w@mail.gmail.com>
+ <20190624153820.GH29120@arrakis.emea.arm.com>
+ <CAJF2gTRUzHUNV+nzECUp5n2L1akdy=Aovb6tSd+PNVnpasBrqw@mail.gmail.com>
+ <20190701091711.GA21774@arrakis.emea.arm.com>
+ <CAJF2gTTEbhA-pZCPGuUNqXT9F-vk8fSTyNJyEOpn=QE=toAN3g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJF2gTTEbhA-pZCPGuUNqXT9F-vk8fSTyNJyEOpn=QE=toAN3g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joshua Clayton <stillcompiling@gmail.com>
+On Tue, Jul 16, 2019 at 11:31:27AM +0800, Guo Ren wrote:
+> I saw arm64 to prevent speculation by temporarily setting TTBR0.el1 to
+> a zero page table. Is that used to prevent speculative execution user
+> space code or just prevent ld/st in copy_use_* ?
 
-On HP spectre x360 convertible the message:
-hid-sensor-hub 001F:8087:0AC2.0002: hid_field_extract() called with n (192) > 32! (kworker/1:2)
-is continually printed many times per second, crowding out all other kernel logs
-Protect dmesg by printing the warning only one time.
+Only to prevent explicit ld/st from user. On ARMv8.1+, we don't normally
+use the TTBR0 trick but rather disable user space access using the PAN
+(privileged access never) feature. However, I don't think PAN disables
+speculative accesses, only explicit loads/stores. Also, with ARMv8.2
+Linux uses the LDTR/STTR instructions in copy_*_user() which don't need
+to disable PAN explicitly.
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
- drivers/hid/hid-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 210b81a56e1a..7afd0422b280 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1311,7 +1311,7 @@ u32 hid_field_extract(const struct hid_device *hid, u8 *report,
- 			unsigned offset, unsigned n)
- {
- 	if (n > 32) {
--		hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
-+		hid_warn_once(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
- 			 n, current->comm);
- 		n = 32;
- 	}
 -- 
-2.21.0
-
+Catalin
