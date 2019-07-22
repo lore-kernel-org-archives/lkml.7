@@ -6,68 +6,98 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA16C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F8DC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DEA2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDB22171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 14:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbfGVO2h (ORCPT
+        id S1730903AbfGVO36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 10:28:37 -0400
-Received: from 8bytes.org ([81.169.241.247]:44796 "EHLO theia.8bytes.org"
+        Mon, 22 Jul 2019 10:29:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:38758 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfGVO2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 10:28:37 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E226C1F2; Mon, 22 Jul 2019 16:28:34 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 16:28:33 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Joe Perches <joe@perches.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iommu: add support for drivers that manage iommu
- explicitly
-Message-ID: <20190722142833.GB12009@8bytes.org>
-References: <20190702202631.32148-2-robdclark@gmail.com>
- <20190710182844.25032-1-robdclark@gmail.com>
+        id S1725907AbfGVO36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:29:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2370F344;
+        Mon, 22 Jul 2019 07:29:57 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51AC3F694;
+        Mon, 22 Jul 2019 07:29:54 -0700 (PDT)
+Subject: Re: [PATCH v9 4/8] sched/deadline: Fix bandwidth accounting at all
+ levels after offline migration
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        tj@kernel.org, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
+        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
+        cgroups@vger.kernel.org
+References: <20190719140000.31694-1-juri.lelli@redhat.com>
+ <20190719140000.31694-5-juri.lelli@redhat.com>
+ <5da6abab-00ff-9bb4-f24b-0bf5dfcd4c35@arm.com>
+ <20190722122828.GG25636@localhost.localdomain>
+ <07a45864-07bf-aa5d-3ff7-a300326b9040@arm.com>
+ <20190722133520.GH25636@localhost.localdomain>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <0e546906-01b1-b15b-7188-9ad2c4b30dc1@arm.com>
+Date:   Mon, 22 Jul 2019 16:29:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710182844.25032-1-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190722133520.GH25636@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:28:30AM -0700, Rob Clark wrote:
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -282,7 +282,8 @@ struct device_driver {
->  	struct module		*owner;
->  	const char		*mod_name;	/* used for built-in modules */
->  
-> -	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
-> +	bool suppress_bind_attrs:1;	/* disables bind/unbind via sysfs */
-> +	bool driver_manages_iommu:1;	/* driver manages IOMMU explicitly */
+On 7/22/19 3:35 PM, Juri Lelli wrote:
+> On 22/07/19 15:21, Dietmar Eggemann wrote:
+>> On 7/22/19 2:28 PM, Juri Lelli wrote:
+>>> On 22/07/19 13:07, Dietmar Eggemann wrote:
+>>>> On 7/19/19 3:59 PM, Juri Lelli wrote:
+>>>>
+>>>> [...]
+>>>>
+>>>>> @@ -557,6 +558,38 @@ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p
+>>>>>  		double_lock_balance(rq, later_rq);
+>>>>>  	}
+>>>>>  
+>>>>> +	if (p->dl.dl_non_contending || p->dl.dl_throttled) {
+>>>>> +		/*
+>>>>> +		 * Inactive timer is armed (or callback is running, but
+>>>>> +		 * waiting for us to release rq locks). In any case, when it
+>>>>> +		 * will file (or continue), it will see running_bw of this
+>>>>
+>>>> s/file/fire ?
+>>>
+>>> Yep.
+>>>
+>>>>> +		 * task migrated to later_rq (and correctly handle it).
+>>>>
+>>>> Is this because of dl_task_timer()->enqueue_task_dl()->task_contending()
+>>>> setting dl_se->dl_non_contending = 0 ?
+>>>
+>>> No, this is related to inactive_task_timer() callback. Since the task is
+>>> migrated (by this function calling set_task_cpu()) because a CPU hotplug
+>>> operation happened, we need to reflect this w.r.t. running_bw, or
+>>> inactive_task_timer() might sub from the new CPU and cause running_bw to
+>>> underflow.
+>>
+>> I was more referring to the '... it will see running_bw of thus task
+>> migrated to later_rq ...) and specifically to the HOW the timer
+>> callback can detect this.
+> 
+> Oh, it actually doesn't "actively" detect this condition. The problem is
+> that if it still sees dl_non_contending == 1, it will sub (from the
+> "new" rq to which task's running_bw hasn't been added - w/o this fix)
+> and cause the underflow.
 
-Who will set this bit?
+I was wrong ... enqueue_task_dl() is called with ENQUEUE_REPLENISH which
+doesn't call task_contending(). The comment makes sense to me now.
 
 
-Regards,
-
-	Joerg
