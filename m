@@ -6,82 +6,72 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB0C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEF9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D68521900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2562199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 21:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563831119;
-	bh=6+/sxagahL+li6jU6ojcB6SqYd6K9O6P+akg/i4q2+0=;
+	s=default; t=1563831137;
+	bh=4ePKRVOjuk0pdWmx57Jr5AQcVG8sUyMlkiLelXx84UU=;
 	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
-	b=0sZ0aRsywiMtWOk3Ump+aKF7MQWhh2nmHikEgg+8A1rFhQCejJnMEElcss/EXrtWJ
-	 +dz8swUg2A1GttGnNF7TkzyQSJoclx662tK7J/8A9GMDQ27TB7oTH/hjmdEaJaY6KF
-	 m446GCGU/wMItjQ/9ExtC2C55DsFF5Q8jd/IXcms=
+	b=bfY+0ZDkMvWTzyOp5AQnS4uK+E82CJbfX2BbbnDDgR3ARW1+ioccB/hRN8RkczS1K
+	 8P4Ppk4v9tuK45JzCSuq8YMKXJP4fMCEWiVoQj+jGpy2RWGhXZS13dsDeUHAnB2N3q
+	 M7S+LfMNfnFqZS5S/LfGXqCiSgr23/l0wKW56+JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732680AbfGVVb6 (ORCPT
+        id S1732690AbfGVVcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 17:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 17:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbfGVVb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 17:31:57 -0400
+        id S1728016AbfGVVcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 17:32:16 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8829E21900;
-        Mon, 22 Jul 2019 21:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B79B21900;
+        Mon, 22 Jul 2019 21:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563831116;
-        bh=6+/sxagahL+li6jU6ojcB6SqYd6K9O6P+akg/i4q2+0=;
+        s=default; t=1563831135;
+        bh=4ePKRVOjuk0pdWmx57Jr5AQcVG8sUyMlkiLelXx84UU=;
         h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
-        b=BfaltBBaR63zw809ajWmqfGQDl/yVbLLDWguStR5cYjWJ/GgzUzhXBEZgQklIYe5v
-         fyrtKZIvR7r6glea1WEmEK1XwPkZnPsKrbq4rytKZgyDLKVhQTIYVDHistTPyuxI9U
-         ycHtK1Mcc4LGRHW4fgBSqIZvVxVQHjs3kGuHabuM=
+        b=Qry+PWBd926llkTs47Y1tV3OpEOjUw9u7ySLBx4LyW+s/RNEWYd+7XCZcWVbnzgvd
+         pRua+Q7cWTp1cp6QJala2Xc5wxa4kurCzy4CCoSK5R4f4nMkd/i0MfbyLiJTYulo0x
+         kikV7uMfILBA+IHveio5Z7NYYXW7seS4wCy+tHGw=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <af07c26e-cef3-f0ff-48ff-68f99ccf4de9@microchip.com>
-References: <20190625091002.27567-1-codrin.ciubotariu@microchip.com> <af07c26e-cef3-f0ff-48ff-68f99ccf4de9@microchip.com>
+In-Reply-To: <20190625091002.27567-1-codrin.ciubotariu@microchip.com>
+References: <20190625091002.27567-1-codrin.ciubotariu@microchip.com>
 Subject: Re: [RESEND][PATCH] clk: at91: generated: Truncate divisor to GENERATED_MAX_DIV + 1
-To:     Codrin.Ciubotariu@microchip.com, Ludovic.Desroches@microchip.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        nicolas.ferre@microchip.com
 Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 From:   Stephen Boyd <sboyd@kernel.org>
 User-Agent: alot/0.8.1
-Date:   Mon, 22 Jul 2019 14:31:55 -0700
-Message-Id: <20190722213156.8829E21900@mail.kernel.org>
+Date:   Mon, 22 Jul 2019 14:32:14 -0700
+Message-Id: <20190722213215.9B79B21900@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nicolas.Ferre@microchip.com (2019-07-03 08:05:24)
-> On 25/06/2019 at 11:10, Codrin Ciubotariu wrote:
-> > In clk_generated_determine_rate(), if the divisor is greater than
-> > GENERATED_MAX_DIV + 1, then the wrong best_rate will be returned.
-> > If clk_generated_set_rate() will be called later with this wrong
-> > rate, it will return -EINVAL, so the generated clock won't change
-> > its value. Do no let the divisor be greater than GENERATED_MAX_DIV + 1.
-> >=20
-> > Fixes: 8c7aa6328947 ("clk: at91: clk-generated: remove useless divisor =
-loop")
-> > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> > Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > ---
-> >=20
-> > - The email-server was converting my patches to base64, so I resend it
-> >    using another server;
-> > - Added acked-bys from Nicolas and Ludovic;
+Quoting Codrin Ciubotariu (2019-06-25 02:10:02)
+> In clk_generated_determine_rate(), if the divisor is greater than
+> GENERATED_MAX_DIV + 1, then the wrong best_rate will be returned.
+> If clk_generated_set_rate() will be called later with this wrong
+> rate, it will return -EINVAL, so the generated clock won't change
+> its value. Do no let the divisor be greater than GENERATED_MAX_DIV + 1.
 >=20
-> Stephen,
->=20
-> I don't see this patch in linux-next and we're already late in the=20
-> development cycle: aka ping...
->=20
+> Fixes: 8c7aa6328947 ("clk: at91: clk-generated: remove useless divisor lo=
+op")
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> ---
 
-Sorry. I dropped this one. Will pick it up into fixes.
-
+Applied to clk-fixes
 
