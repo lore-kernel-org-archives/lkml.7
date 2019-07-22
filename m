@@ -2,134 +2,119 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD22C76197
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E818AC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2882821BD9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929342199C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 04:31:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjncIryv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="khaCly3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfGVEaU (ORCPT
+        id S1727957AbfGVEbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 00:30:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37583 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfGVEaT (ORCPT
+        Mon, 22 Jul 2019 00:31:08 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:45204 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfGVEbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 00:30:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so18574750plr.4;
-        Sun, 21 Jul 2019 21:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D+V1JOqHKw89xuQJyKyrQPxBPg1TKqg5mmM4KBGZiv0=;
-        b=ZjncIryvRUENukVshJFmndluvLLU2arKIPK+YYicUChsIoVAk47zJe62/xRGnaP5sO
-         2dIVuxokgzVnbQHvCzkTXpkUYAmteOI1byf9i0Eh4Nry32SQ9hACfIfRqzVmd9cJiRLV
-         K9HwOtYgSWbkF9G0wSK5xDI2GGAAixptvpE4fTe363E9YhkxmADQ/Mu9XRx8bTc2aorh
-         N1o7z9m3WHPe2EsrnhH9xUt6CS36Mz9r/OpIcDwkj8s1H6FUiNK+g6MeR3C2qRQdfIdw
-         al2E1lXQJ0Y1vWlKKViZ99Kmj6ELgJUAJ+cq1tdYD2dh7ezt2sYlt89O5gvFrEpEQJG1
-         ZAOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D+V1JOqHKw89xuQJyKyrQPxBPg1TKqg5mmM4KBGZiv0=;
-        b=GMJIw0P5FdXu0ek0WSxrDhJSr5mPvUasIBTqo69Y/u3LP7Wr/kIw/c9uCiWCUeNmX5
-         qx4Y6tijLjdRaqN1PGJ3oYZBNayJuQ5BHCgBY398BI7LSPseiKSPxiW/HMo5al1I8Irj
-         7k2jGaKZyX0SsF1f72yjfBq47rUjafvMn/2B4VeNlVk84DQh0pdBtkz/D+QkW/9Jqo5i
-         rNX+pWr4wT+52N5FeZZ9dyfavyd6ACiYx1cbtEgGuVoFgVtDEFgY/AMpTfPFkT/1c2MI
-         9oEz/gWVtGVyDIsxnrVmL1HmBCnpKgN0VHRZfzPzsYADODvIWic5rRA6Es8znQ8XhwFE
-         kZXQ==
-X-Gm-Message-State: APjAAAW4zxo5GC6SAZXbqJnpa0RVnUZ8TwTyvrXp3IfJyw9ejpAfcV7K
-        5aVGLTioIDtWv6mp+vH1iQE=
-X-Google-Smtp-Source: APXvYqxl80v/klDkLGiV/45cokVowIxuUImE7kMceTFkzRgYtQ9KqbkKZkwGuHiecTAs8feNRgDMBA==
-X-Received: by 2002:a17:902:6b86:: with SMTP id p6mr74936264plk.14.1563769818237;
-        Sun, 21 Jul 2019 21:30:18 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id t96sm34285690pjb.1.2019.07.21.21.30.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 21 Jul 2019 21:30:17 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 2/3] net/xdp: convert put_page() to put_user_page*()
-Date:   Sun, 21 Jul 2019 21:30:11 -0700
-Message-Id: <20190722043012.22945-3-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190722043012.22945-1-jhubbard@nvidia.com>
-References: <20190722043012.22945-1-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jul 2019 00:31:08 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190722043106epoutp01a92b90cb5128599a356e179fade842d5~zoGhzOeUk2876828768epoutp01y
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 04:31:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190722043106epoutp01a92b90cb5128599a356e179fade842d5~zoGhzOeUk2876828768epoutp01y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563769866;
+        bh=RbTQ+3lpnekzFW2aYFoQw11SgLg6H7uTq1TIF0rQZYg=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=khaCly3ksW1iq/+VDFdH6yEt7UqF86d/wfqTiADXuvENwcTYNBiK16uj/ErSUYp0D
+         Al4h4K0mvbyjDGtV2fo2jKhhOG5ETBB2IrLISiYF3ArYKBYo7ewWx5XmVJ0a44c38G
+         qKLAoK8ur1XhfzTT7hgsszC/gth4EQV1urwPRY70=
+Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20190722043105epcas2p169c6ca0a1a1494584cc12f67aaa01108~zoGhLSGK52303023030epcas2p1I;
+        Mon, 22 Jul 2019 04:31:05 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.187]) by
+        epsnrtp6.localdomain (Postfix) with ESMTP id 45sTFM12gJzMqYkW; Mon, 22 Jul
+        2019 04:31:03 +0000 (GMT)
+X-AuditID: b6c32a45-ddfff7000000103c-e2-5d353c05fb8f
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        80.A8.04156.50C353D5; Mon, 22 Jul 2019 13:31:02 +0900 (KST)
+Mime-Version: 1.0
+Subject: Re: [PATCH] lightnvm: introduce pr_fmt for the previx nvm
+Reply-To: minwoo.im@samsung.com
+From:   Minwoo Im <minwoo.im@samsung.com>
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        Matias Bjorling <mb@lightnvm.io>,
+        "javier@javigon.com" <javier@javigon.com>,
+        "birkelund@gmail.com" <birkelund@gmail.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <BYAPR04MB5749126EF9E68D94125BACB486CA0@BYAPR04MB5749.namprd04.prod.outlook.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190722043101epcms2p2645d83b2c4aca7fc446f8d9109342327@epcms2p2>
+Date:   Mon, 22 Jul 2019 13:31:01 +0900
+X-CMS-MailID: 20190722043101epcms2p2645d83b2c4aca7fc446f8d9109342327
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmhS6bjWmswfbzjBbnm/rZLWbdfs1i
+        0Xn6ApPF3lvaFpd3zWGzWLH9CIvFr05uB3aPnbPusns0L7jD4tF99Qejx+dNch7tB7qZAlij
+        cmwyUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgI5QUihL
+        zCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BQYGhboFSfmFpfmpesl5+daGRoYGJkCVSbk
+        ZHw584Gt4BJrxdGZ11gaGFewdDFyckgImEjcePyHqYuRi0NIYAejxKH1f5i7GDk4eAUEJf7u
+        EAapERZwkuh9dZwJJCwkIC/x45UBRFhT4t3uM6wgNpuAukTD1FcsIGNEBDYzSnQ8/QDmMAss
+        ZZR4tr+VHWIZr8SM9qdQi6Ulti/fyghicwrESuyZ+J4VIi4qcXP1W3YY+/2x+YwQtohE672z
+        zBC2oMSDn7sZQQ6SEJCQuPfODsKsl9iywgJkrYRAC6PEjTdroVr1JRqff2SBeMtXYu5kEZAw
+        i4CqxMQfK6BKXCReTDoHNp0Z6MXtb+eAQ4EZ6Mf1u/QhpitLHLnFAlHBJ9Fx+C/cTzvmPWGC
+        sJUlPh46BHWjpMTyS6/ZIGwPiQlv2tkhgXydUWLbljOMExgVZiHCeRaSxbMQFi9gZF7FKJZa
+        UJybnlpsVGCIHLWbGMHJUct1B+OMcz6HGAU4GJV4eG9sNokVYk0sK67MPcQowcGsJMKbZ2Aa
+        K8SbklhZlVqUH19UmpNafIjRFOj/icxSosn5wMSdVxJvaGpkZmZgaWphamZkoSTOu5n7ZoyQ
+        QHpiSWp2ampBahFMHxMHp1QD400Dlr2fHp3r079iXR2z7xv31oq/qtIrLX9n7l9jnxfqtXLy
+        To2kdykSpcX9mj/PRLLYWzsvdK6b6bZtw+SOe483Ki5YeHbdieP/g/TWfeHzmqHTPFd3ctm5
+        4if3pJzYNihtY25/KOry6Z55dqof76L+4NSX9w/tvJFV0i82x2/p7NqiqgyTBCWW4oxEQy3m
+        ouJEACt3SgikAwAA
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190720212747epcas1p4d3e17fefd1cbd2007a1a1a452dde9c55
+References: <BYAPR04MB5749126EF9E68D94125BACB486CA0@BYAPR04MB5749.namprd04.prod.outlook.com>
+        <20190720083043.23387-1-minwoo.im.dev@gmail.com>
+        <CGME20190720212747epcas1p4d3e17fefd1cbd2007a1a1a452dde9c55@epcms2p2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+> > @@ -1111,27 +1112,27 @@ static int nvm_init(struct nvm_dev *dev)
+> >   	int ret = -EINVAL;
+> >
+> >   	if (dev->ops->identity(dev)) {
+> > -		pr_err("nvm: device could not be identified\n");
+> > +		pr_err("device could not be identified\n");
+> >   		goto err;
+> >   	}
+> >
+> > -	pr_debug("nvm: ver:%u.%u nvm_vendor:%x\n",
+> > +	pr_debug("ver:%u.%u nvm_vendor:%x\n",
+> >   				geo->major_ver_id, geo->minor_ver_id,
+> >   				geo->vmnt);
+> The above last 2 lines can be squashed and pr_debug call can be made in
+> 2 lines since you have removed the "nvm:" which shortens the first line.
 
-For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page() or
-release_pages().
+Yeah Okay.  Will prepare V2 with this and also s/previx/prefix in the
+title.
 
-This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-("mm: introduce put_user_page*(), placeholder versions").
+Thanks for the review.
 
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- net/xdp/xdp_umem.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 83de74ca729a..9cbbb96c2a32 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -171,8 +171,7 @@ static void xdp_umem_unpin_pages(struct xdp_umem *umem)
- 	for (i = 0; i < umem->npgs; i++) {
- 		struct page *page = umem->pgs[i];
- 
--		set_page_dirty_lock(page);
--		put_page(page);
-+		put_user_pages_dirty_lock(&page, 1);
- 	}
- 
- 	kfree(umem->pgs);
--- 
-2.22.0
-
+Minwoo Im
