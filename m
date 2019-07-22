@@ -2,90 +2,133 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D24C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA5CC76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E193E20449
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2A8218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 12:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UCILmwMh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PNibAy43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfGVMBk (ORCPT
+        id S1730171AbfGVMFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 08:01:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48300 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbfGVMBk (ORCPT
+        Mon, 22 Jul 2019 08:05:44 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17436 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbfGVMFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:01:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9TwEeiv3tAVyHgkzTpEKGutIGiR1ezQhfTVqiOL+Sb0=; b=UCILmwMh4QosYLRTNnXrods3F
-        4KxY+e4JGnpRThW5geoeGaInPL7r1BXuS44bNjBBemcEa9ZgxZaHOE2oJQmNVQyO2WhH/943vstsT
-        w20+k6OAS4AjohS8FWHKG3aBodnj/zud/jY8BKK+ZsOGilYtq7YvghVnKnCIfiHm5VEhxTvaeebFP
-        0PuKLNenX5rDBPcOmj5B95w47dd5BwlcWN+uAQCA7islpDVX4F2cG38rTkqdvx8vnhGBYz7dcui53
-        7hEJbp2L3mZ2cJomjlLAH6VT6ZV2c9rQYdIjQBGDvlxrMIbVARj5DueGfxUtGnE9XEs1E8yyeD9JU
-        lsrmDoM5A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpX0U-0005w8-Q0; Mon, 22 Jul 2019 12:01:30 +0000
-Date:   Mon, 22 Jul 2019 05:01:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     John Hubbard <jhubbard@nvidia.com>, Pavel Machek <pavel@ucw.cz>,
-        Christoph Hellwig <hch@infradead.org>, john.hubbard@gmail.com,
-        SCheung@nvidia.com, akpm@linux-foundation.org,
-        aneesh.kumar@linux.vnet.ibm.com, benh@kernel.crashing.org,
-        bsingharora@gmail.com, dan.j.williams@intel.com,
-        dnellans@nvidia.com, ebaskakov@nvidia.com, hannes@cmpxchg.org,
-        jglisse@redhat.com, kirill.shutemov@linux.intel.com,
-        linux-kernel@vger.kernel.org, liubo95@huawei.com,
-        mhairgrove@nvidia.com, mhocko@kernel.org,
-        paulmck@linux.vnet.ibm.com, ross.zwisler@linux.intel.com,
-        sgutti@nvidia.com, torvalds@linux-foundation.org,
-        vdavydov.dev@gmail.com
-Subject: Re: [PATCH] mm/Kconfig: additional help text for HMM_MIRROR option
-Message-ID: <20190722120130.GA17178@infradead.org>
-References: <20190717074124.GA21617@amd>
- <20190719013253.17642-1-jhubbard@nvidia.com>
- <20190719055748.GA29082@infradead.org>
- <20190719105239.GA10627@amd>
- <20190719114853.GB15816@ziepe.ca>
- <20190719120043.GA15320@infradead.org>
- <20190719120432.GC11224@amd>
- <b5143eb4-f519-57bc-4058-4ed934596ee1@nvidia.com>
- <20190722115804.GB7607@ziepe.ca>
+        Mon, 22 Jul 2019 08:05:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d35a6970001>; Mon, 22 Jul 2019 05:05:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 05:05:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 05:05:43 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 12:05:40 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>, Lars Persson <lists@bofh.nu>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+ <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190722101830.GA24948@apalos>
+ <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
+ <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
+Date:   Mon, 22 Jul 2019 13:05:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722115804.GB7607@ziepe.ca>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563797144; bh=Wct+IzEygVqP6Q8TYVaAVumlDUN4cfz/yif6Gxo/tw8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PNibAy43DkOfCZXujQ+oIlkFaXMLgCtH1v+taBS8cGUIiU0evlUB7V9zOXN4sQOau
+         HlQ4f4dK9AZN04vDcSvwaokfFbBvcHTcgrGaBQ2jBm6uoQiDS6Fa/lqKjLCWaRnNYb
+         ZbQP59O2rdrAfbZZ5iYZozxEymBlIFVUaZb3A54R58A8Ank3/+p5eJ1IjTOOEJWqhf
+         G5QiV1aLp0nAtT9itlBMwOopzCCwzrSn7M57P/jxyOdqI+oyUDuYGo1YeNrwNsA7C0
+         AHKsFt8bngZn0DkdDvzgxQSKQyrv/4GjvvIwuxX3fJfXB7GM4SCwLoARbh5u+/SVCD
+         imJ38IlTHve3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 08:58:04AM -0300, Jason Gunthorpe wrote:
-> No one has given me a satisfactory answer about the restriction
-> either.
-> 
-> The only thing this kconfig controls that could possibly be arch
-> specific is the page walking code in hmm_range_snapshot and
-> related. 
-> 
-> Maybe there is/was some arch entanglement there?
 
-The page walking code is supposed to be platform independent.
-I did push a branch to the buildbot a few days ago to catch issues,
-and the only one found so far is an abuse of pte_index() that can be
-trivially fixed.  The other thing I noticed is that the use of some
-of the p??_none/protnone/present checks seems inconsistent, but I did
-not have time to audit that yet.
+On 22/07/2019 12:39, Jose Abreu wrote:
+> From: Lars Persson <lists@bofh.nu>
+> Date: Jul/22/2019, 12:11:50 (UTC+00:00)
+> 
+>> On Mon, Jul 22, 2019 at 12:18 PM Ilias Apalodimas
+>> <ilias.apalodimas@linaro.org> wrote:
+>>>
+>>> On Thu, Jul 18, 2019 at 07:48:04AM +0000, Jose Abreu wrote:
+>>>> From: Jon Hunter <jonathanh@nvidia.com>
+>>>> Date: Jul/17/2019, 19:58:53 (UTC+00:00)
+>>>>
+>>>>> Let me know if you have any thoughts.
+>>>>
+>>>> Can you try attached patch ?
+>>>>
+>>>
+>>> The log says  someone calls panic() right?
+>>> Can we trye and figure were that happens during the stmmac init phase?
+>>>
+>>
+>> The reason for the panic is hidden in this one line of the kernel logs:
+>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+>>
+>> The init process is killed by SIGSEGV (signal 11 = 0xb).
+>>
+>> I would suggest you look for data corruption bugs in the RX path. If
+>> the code is fetched from the NFS mount then a corrupt RX buffer can
+>> trigger a crash in userspace.
+>>
+>> /Lars
+> 
+> 
+> Jon, I'm not familiar with ARM. Are the buffer addresses being allocated 
+> in a coherent region ? Can you try attached patch which adds full memory 
+> barrier before the sync ?
+
+TBH I am not sure about the buffer addresses either. The attached patch
+did not help. Same problem persists.
+
+Jon
+
+-- 
+nvpublic
