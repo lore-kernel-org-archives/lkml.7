@@ -2,170 +2,164 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8D6C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2265EC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E29521BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DB321BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 06:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiMkqHsb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5Xnzq3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfGVGQf (ORCPT
+        id S1727499AbfGVGTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 02:16:35 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34318 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfGVGQe (ORCPT
+        Mon, 22 Jul 2019 02:19:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33012 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfGVGTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 02:16:34 -0400
-Received: by mail-yb1-f195.google.com with SMTP id q5so2447553ybp.1;
-        Sun, 21 Jul 2019 23:16:34 -0700 (PDT)
+        Mon, 22 Jul 2019 02:19:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g2so16870759pfq.0;
+        Sun, 21 Jul 2019 23:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mRiPNuu0IvHAFpeZVhrWYDUDjsfyID6dmrOBGytJQzY=;
-        b=GiMkqHsb2C/Jw1o6Ub4DsiHZBxr6ZPjhjLrbLjNZ2yaaHCKmZJ1LRjvX1tmJbGD7Bi
-         pKwqIfw1wbCFqysuExvOaGUzgDUJbvojSqnH4QGcuiaNSlyjpp5RKWyyR1HE1O2WkqZi
-         yuolp/P4xNqjATF+LaZi/qhcLf+/MwAI5U2b185js89KVnQ6DBKBKZJAYx134EMcx6zs
-         u2SEuK+hLnumxva+59nzjcpPKHmG1e17rGKrQ3hWlJllBtBmp/5XAu3LQAJRwL9QkU9F
-         h1YP5naXIsNxpmacnONf4p6UavV3n5TqvxfKBQCc5d9fMO2tL1tdauivTwdVkM8E6QnX
-         6NLw==
+        bh=rcdqlzHUQt7XBsK1hTFYKy/3r6Ehn237+Py48+xDn+I=;
+        b=j5Xnzq3f2Sv24VBWIqb1nn/Sc9eyDIWM0HZ3nuy+bUfm36rdxT1lnP5LJB2ozG+DLs
+         7UotDiVN2x4jODQLOoELRAhyqtYFnG563mF9bxZTGL+rtcoU0iKsuZorAfF7zHQQa/ZO
+         K+KdDHy+J1vA9/7eKqGT3+5gppO13c6sMJSfCDGDw83TTVYsrz+kbjF9kDR0wO26r/bB
+         an76d0akQuVgbBDWgxBeuvHEHcm4fLKcnDYWTVv/AJoGuqLmI8HlYLNpxOV9Lp7WuRj+
+         xEwxHhIbKySoh/3JUhSwqEECUxWUcOcoasL6i+dRxgw1Af3Nrt4Ny9fSLEjOTf+Mfupk
+         tf4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mRiPNuu0IvHAFpeZVhrWYDUDjsfyID6dmrOBGytJQzY=;
-        b=UvJ2h3vq1QZnXVPBWjQX83sg4jGAt3ddU9iy6KdUWzTz6HxfBIVtm18xGZ9qxGa6AM
-         K6nLGyPZb9kOHkMOIu3qpjmDPOd3iMbh5K5Keu6g7yk+3z2c4UmthTGsvHh3Ry8yraX4
-         e9DG5GpkG1a8Owa5CKFFO/htrvdV+Ls0pGNXP01iqn2r71pFlRa7piMpKw7xMCgJPGKZ
-         OBGf//NjgPVQoQkuJBqOF4sZy7ia5WHtpXm62k9f6SY8Pk4OTCEtFFWKHRvU9Qfr1os6
-         YbQAdjkf/HqNTVLNxjUBF2kW76HNac9I3scryjrLxlYZPEYWCMPBnB0iuXesJjR6NVxn
-         lS5w==
-X-Gm-Message-State: APjAAAWooo6IRUfshshHKmx3HhF0tTawlft1JfI3e5jYAqxihzju/pTL
-        0nygIkLO8Ou8BG/BxTOj3wTJ+XPEQ38U/n1ZTeA=
-X-Google-Smtp-Source: APXvYqzeP8dnmI9HUYEy65Jb64wblg41vjP3fcITilmmeXiO/XAUwrolXbZVlMRx1aCCChHAkomgV0wUhL20rNsxpvE=
-X-Received: by 2002:a25:9a08:: with SMTP id x8mr40685653ybn.439.1563776193646;
- Sun, 21 Jul 2019 23:16:33 -0700 (PDT)
+        bh=rcdqlzHUQt7XBsK1hTFYKy/3r6Ehn237+Py48+xDn+I=;
+        b=s5UpuqpFRxepfcTsYifP9PaPNfPpxHUOm23sbhMl2oPq64wDMweAv7XJH7SvZgkFLq
+         mr+3cfZ0DGzxUlU+Ti9BYbIvM1bIeM2BRmXEegJoaYnynZvNKLOm5omNOXvlCdMuTkb6
+         um6j4mx3Ps9hVQf4iYekmpRpdxA6WMw3pKos6pPOqHPpaGNhtEd1oLUv77auGUVwGTJB
+         EiNQ6t3MMXfQuFgGWBVHO9D8VhEWX4E+Jmc2zy4Xs21NG2I/wP9gXSs4aVzG3A2fl+zt
+         ponXXRpdTzK9pCZC0TESk+GlEBFq/Bfkn70eW26Ho430hyMyKM6sOFwA7Ot03bSrCRiv
+         H4ew==
+X-Gm-Message-State: APjAAAUWtQFMCAkpXAMyKJ6lUMP9a5IwirgbYP9SQKzdU/AOrK/+CJgS
+        mW5Vmpr3oCYrgiRrUUXXDNZ3XFMoIJPxC9bm15E=
+X-Google-Smtp-Source: APXvYqxz0Mn39ZLSrxozs58dILvVZm5lnQS4eXXcOSHdIi++AV8TVlWDaPY0Q2A8MQQK9hYQ1SNmdIOoNH6ZGUntmHU=
+X-Received: by 2002:a17:90a:9bca:: with SMTP id b10mr75184813pjw.90.1563776342120;
+ Sun, 21 Jul 2019 23:19:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-13-gaoxiang25@huawei.com> <CAOQ4uxh04gwbM4yFaVpWHVwmJ4BJo4bZaU8A4_NQh2bO_xCHJg@mail.gmail.com>
- <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
-In-Reply-To: <39fad3ab-c295-5f6f-0a18-324acab2f69e@huawei.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 22 Jul 2019 09:16:22 +0300
-Message-ID: <CAOQ4uxgo5kvgoEn7SbuwF9+B1W9Qg1-2jSUm5+iKZdT6-wDEog@mail.gmail.com>
-Subject: Re: [PATCH v3 12/24] erofs: introduce tagged pointer
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
+References: <20190617122000.22181-1-hch@lst.de> <20190617122000.22181-3-hch@lst.de>
+ <5d143a03-edd5-5878-780b-45d87313a813@acm.org> <CACVXFVMWM3xg6EEyoyNjkLPv=8+wQKiHj6erMS_gGX25f-Ot4g@mail.gmail.com>
+In-Reply-To: <CACVXFVMWM3xg6EEyoyNjkLPv=8+wQKiHj6erMS_gGX25f-Ot4g@mail.gmail.com>
+From:   Dexuan-Linux Cui <dexuan.linux@gmail.com>
+Date:   Sun, 21 Jul 2019 23:18:51 -0700
+Message-ID: <CAA42JLY4zWnCEMXbR+NNbixjOyKfnMqQ0ujJdP5_gus_tu88Jw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] scsi: take the DMA max mapping size into account
+To:     Ming Lei <tom.leiming@gmail.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>, v-lide@microsoft.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 8:02 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
+On Sun, Jul 21, 2019 at 11:01 PM Ming Lei <tom.leiming@gmail.com> wrote:
 >
-> Hi Amir,
->
-> On 2019/7/22 12:39, Amir Goldstein wrote:
-> > On Mon, Jul 22, 2019 at 5:54 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
-> >>
-> >> Currently kernel has scattered tagged pointer usages
-> >> hacked by hand in plain code, without a unique and
-> >> portable functionset to highlight the tagged pointer
-> >> itself and wrap these hacked code in order to clean up
-> >> all over meaningless magic masks.
-> >>
-> >> This patch introduces simple generic methods to fold
-> >> tags into a pointer integer. Currently it supports
-> >> the last n bits of the pointer for tags, which can be
-> >> selected by users.
-> >>
-> >> In addition, it will also be used for the upcoming EROFS
-> >> filesystem, which heavily uses tagged pointer pproach
-> >>  to reduce extra memory allocation.
-> >>
-> >> Link: https://en.wikipedia.org/wiki/Tagged_pointer
+> On Tue, Jun 18, 2019 at 4:57 AM Bart Van Assche <bvanassche@acm.org> wrote:
 > >
-> > Well, it won't do much good for other kernel users in fs/erofs/ ;-)
->
-> Thanks for your reply and interest in this patch.... :)
->
-> Sigh... since I'm not sure kernel folks could have some interests in that stuffs.
->
-> Actually at the time once I coded EROFS I found tagged pointer had 2 main advantages:
-> 1) it saves an extra field;
-> 2) it can keep the whole stuff atomicly...
-> And I observed the current kernel uses tagged pointer all around but w/o a proper wrapper...
-> and EROFS heavily uses tagged pointer... So I made a simple tagged pointer wrapper
-> to avoid meaningless magic masks and type casts in the code...
->
+> > On 6/17/19 5:19 AM, Christoph Hellwig wrote:
+> > > We need to limit the devices max_sectors to what the DMA mapping
+> > > implementation can support.  If not we risk running out of swiotlb
+> > > buffers easily.
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >   drivers/scsi/scsi_lib.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> > > index d333bb6b1c59..f233bfd84cd7 100644
+> > > --- a/drivers/scsi/scsi_lib.c
+> > > +++ b/drivers/scsi/scsi_lib.c
+> > > @@ -1768,6 +1768,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+> > >               blk_queue_max_integrity_segments(q, shost->sg_prot_tablesize);
+> > >       }
+> > >
+> > > +     shost->max_sectors = min_t(unsigned int, shost->max_sectors,
+> > > +                     dma_max_mapping_size(dev) << SECTOR_SHIFT);
+> > >       blk_queue_max_hw_sectors(q, shost->max_sectors);
+> > >       if (shost->unchecked_isa_dma)
+> > >               blk_queue_bounce_limit(q, BLK_BOUNCE_ISA);
 > >
-> > I think now would be a right time to promote this facility to
-> > include/linux as you initially proposed.
-> > I don't recall you got any objections. No ACKs either, but I think
-> > that was the good kind of silence (?)
+> > Does dma_max_mapping_size() return a value in bytes? Is
+> > shost->max_sectors a number of sectors? If so, are you sure that "<<
+> > SECTOR_SHIFT" is the proper conversion? Shouldn't that be ">>
+> > SECTOR_SHIFT" instead?
 >
-> Yes, no NAK no ACK...(it seems the ordinary state for all EROFS stuffs... :'( sigh...)
-> Therefore I decided to leave it in fs/erofs/ in this series...
+> Now the patch has been committed, '<< SECTOR_SHIFT' needs to be fixed.
 >
-> >
-> > You might want to post the __fdget conversion patch [1] as a
-> > bonus patch on top of your series.
+> Also the following kernel oops is triggered on qemu, and looks
+> device->dma_mask is NULL.
 >
-> I am not sure if another potential users could be quite happy with my ("sane?" or not)
-> implementation...
+> Ming Lei
 
-Well, let's ask potential users then.
+FYI: we also see the panic with a Linux kernel 5.2.0-next-20190719
+running on Hyper-V:
 
-CC kernel/trace maintainers for RB_PAGE_HEAD/RB_PAGE_UPDATE
-and kernel/locking maintainers for RT_MUTEX_HAS_WAITERS
-
-> (Is there some use scenerios in overlayfs and fanotify?...)
-
-We had one in overlayfs once. It is gone now.
-
->
-> and I'm not sure Al could accept __fdget conversion (I just wanted to give a example then...)
->
-> Therefore, I tend to keep silence and just promote EROFS... some better ideas?...
->
-
-Writing example conversion patches to demonstrate cleaner code
-and perhaps reduce LOC seems the best way.
-
-Also pointing out that fixing potential bugs in one implementation is preferred
-to having to patch all copied implementations.
-
-I wonder if tagptr_unfold_tags() doesn't need READ_ONCE() as per:
-1be5d4fa0af3 locking/rtmutex: Use READ_ONCE() in rt_mutex_owner()
-
-rb_list_head() doesn't have READ_ONCE()
-Nor does hlist_bl_first() and BPF_MAP_PTR().
-
-Are those all safe due to safe call sites? or potentially broken?
+[    7.429053] RIP: 0010:dma_direct_max_mapping_size+0x26/0x80
+[    7.429053] Code: 0f b6 c0 c3 0f 1f 44 00 00 55 48 89 e5 41 54 53
+48 89 fb e8 4c 14 00 00 84 c0 74 45 48 8b 83 28 02 00 00 4c 8b a3 38
+02 00 00 <48> 8b 00 48 85 c0 74 0c 4d 85 e4 74 36 49 39 c4 4c 0f 47 e0
+48 89
+[    7.429053] RSP: 0018:ffffc1d5005efbc0 EFLAGS: 00010202
+[    7.429053] RAX: 0000000000000000 RBX: ffff9cf86d24c428 RCX: 0000000000000000
+[    7.429053] RDX: ffff9cf86d12dd00 RSI: 0000000000000200 RDI: ffff9cf86d24c428
+[    7.429053] RBP: ffffc1d5005efbd0 R08: ffff9cf86fcaf0e0 R09: ffff9cf86e0072c0
+[    7.429053] R10: ffffc1d5005efa70 R11: 00000000000301a0 R12: 0000000000000000
+[    7.429053] R13: ffff9cf86d24c428 R14: 0000000000000400 R15: ffff9cf825cff000
+[    7.429053] FS:  0000000000000000(0000) GS:ffff9cf86fc80000(0000)
+knlGS:0000000000000000
+[    7.429053] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    7.429053] CR2: 0000000000000000 CR3: 00000003c700a001 CR4: 00000000003606e0
+[    7.456569] NET: Registered protocol family 17
+[    7.429053] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    7.469803] Key type dns_resolver registered
+[    7.429053] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    7.429053] Call Trace:
+[    7.429053]  dma_max_mapping_size+0x39/0x50
+[    7.429053]  __scsi_init_queue+0x7f/0x140
+[    7.429053]  scsi_mq_alloc_queue+0x38/0x60
+[    7.429053]  scsi_alloc_sdev+0x1da/0x2b0
+[    7.429053]  scsi_probe_and_add_lun+0x471/0xe60
+[    7.429053]  __scsi_scan_target+0xfc/0x610
+[    7.429053]  scsi_scan_channel+0x66/0xa0
+[    7.429053]  scsi_scan_host_selected+0xf3/0x160
+[    7.429053]  do_scsi_scan_host+0x93/0xa0
+[    7.429053]  do_scan_async+0x1c/0x190
+[    7.429053]  async_run_entry_fn+0x3c/0x150
+[    7.429053]  process_one_work+0x1f7/0x3f0
+[    7.429053]  worker_thread+0x34/0x400
+[    7.429053]  kthread+0x121/0x140
+[    7.429053]  ret_from_fork+0x35/0x40
+[    7.429053] Modules linked in:
+[    7.429053] CR2: 0000000000000000
+[    7.766122] BUG: kernel NULL pointer dereference, address: 0000000000000000
 
 Thanks,
-Amir.
+-- Dexuan
