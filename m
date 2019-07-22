@@ -2,31 +2,31 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984D0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EC2C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A77221985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E496F21985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfGVXKN (ORCPT
+        id S2387516AbfGVXKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:10:13 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:40258 "EHLO ale.deltatee.com"
+        Mon, 22 Jul 2019 19:10:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:40264 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfGVXJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:09:13 -0400
+        id S1733159AbfGVXJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 19:09:12 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQb-0002ju-Dj; Mon, 22 Jul 2019 17:09:11 -0600
+        id 1hphQb-0002k0-Dk; Mon, 22 Jul 2019 17:09:11 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hphQU-0001Qc-4e; Mon, 22 Jul 2019 17:09:02 -0600
+        id 1hphQV-0001Qt-MG; Mon, 22 Jul 2019 17:09:03 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org
@@ -40,15 +40,17 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Jul 2019 17:08:45 -0600
-Message-Id: <20190722230859.5436-1-logang@deltatee.com>
+Date:   Mon, 22 Jul 2019 17:08:51 -0600
+Message-Id: <20190722230859.5436-7-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722230859.5436-1-logang@deltatee.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, hch@lst.de, Christian.Koenig@amd.com, jgg@mellanox.com, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, dan.j.williams@intel.com, epilmore@gigaio.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 00/14] PCI/P2PDMA: Support transactions that hit the host bridge
+Subject: [PATCH 06/14] PCI/P2PDMA: Add whitelist support for Intel Host Bridges
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,57 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As discussed on the list previously, in order to fully support the
-whitelist Christian added with the IOMMU, we must ensure that we
-map any buffer going through the IOMMU with an aprropriate dma_map
-call. This patchset accomplishes this by cleaning up the output of
-upstream_bridge_distance() to better indicate the mapping requirements,
-caching these requirements in an xarray, then looking them up at map
-time and applying the appropriate mapping method.
+Intel devices do not have good support for P2P requests that span
+different host bridges as the transactions will cross the QPI/UPI bus
+and this does not perform well.
 
-After this patchset, it's possible to use the NVMe-of P2P support to
-transfer between devices without a switch on the whitelisted root
-complexes. A couple Intel device I have tested this on have also
-been added to the white list.
+Therefore, enable support for these devices only if the host bridges
+match.
 
-Most of the changes are contained within the p2pdma.c, but there are
-a few minor touches to other subsystems, mostly to add support
-to call an unmap function.
+Adds the Intel device's that have been tested to work. There are
+likely many others out there that will need to be tested and added.
 
-The final patch in this series demonstrates a possible
-pci_p2pdma_map_resource() function that I expect Christian will need
-but does not have any users at this time so I don't intend for it to be
-considered for merging.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/pci/p2pdma.c | 36 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
 
-This patchset is based on 5.3-rc1 and a git branch is available here:
-
-https://github.com/sbates130272/linux-p2pmem/ p2pdma_rc_map_v1
-
---
-
-Logan Gunthorpe (14):
-  PCI/P2PDMA: Add constants for not-supported result
-    upstream_bridge_distance()
-  PCI/P2PDMA: Factor out __upstream_bridge_distance()
-  PCI/P2PDMA: Apply host bridge white list for ACS
-  PCI/P2PDMA: Cache the result of upstream_bridge_distance()
-  PCI/P2PDMA: Factor out host_bridge_whitelist()
-  PCI/P2PDMA: Add whitelist support for Intel Host Bridges
-  PCI/P2PDMA: Add the provider's pci_dev to the dev_pgmap struct
-  PCI/P2PDMA: Add attrs argument to pci_p2pdma_map_sg()
-  PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()
-  PCI/P2PDMA: Factor out __pci_p2pdma_map_sg()
-  PCI/P2PDMA: dma_map P2PDMA map requests that traverse the host bridge
-  PCI/P2PDMA: No longer require no-mmu for host bridge whitelist
-  PCI/P2PDMA: Update documentation for pci_p2pdma_distance_many()
-  PCI/P2PDMA: Introduce pci_p2pdma_[un]map_resource()
-
- drivers/infiniband/core/rw.c |   6 +-
- drivers/nvme/host/pci.c      |  10 +-
- drivers/pci/p2pdma.c         | 400 +++++++++++++++++++++++++++--------
- include/linux/memremap.h     |   1 +
- include/linux/pci-p2pdma.h   |  28 ++-
- 5 files changed, 341 insertions(+), 104 deletions(-)
-
---
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index dfb802afc8ca..143e11d2a5c3 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -250,9 +250,28 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
+ 	seq_buf_printf(buf, "%s;", pci_name(pdev));
+ }
+ 
+-static bool __host_bridge_whitelist(struct pci_host_bridge *host)
++static const struct pci_p2pdma_whitelist_entry {
++	unsigned short vendor;
++	unsigned short device;
++	bool req_same_host_bridge;
++} pci_p2pdma_whitelist[] = {
++	/* AMD ZEN */
++	{PCI_VENDOR_ID_AMD,	0x1450,	false},
++
++	/* Intel Xeon E5/Core i7 */
++	{PCI_VENDOR_ID_INTEL,	0x3c00, true},
++	{PCI_VENDOR_ID_INTEL,	0x3c01, true},
++	/* Intel Xeon E7 v3/Xeon E5 v3/Core i7 */
++	{PCI_VENDOR_ID_INTEL,	0x2f00, true},
++	{PCI_VENDOR_ID_INTEL,	0x2f01, true},
++	{}
++};
++
++static bool __host_bridge_whitelist(struct pci_host_bridge *host,
++				    bool same_host_bridge)
+ {
+ 	struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
++	const struct pci_p2pdma_whitelist_entry *entry;
+ 	unsigned short vendor, device;
+ 
+ 	if (!root)
+@@ -262,9 +281,14 @@ static bool __host_bridge_whitelist(struct pci_host_bridge *host)
+ 	device = root->device;
+ 	pci_dev_put(root);
+ 
+-	/* AMD ZEN host bridges can do peer to peer */
+-	if (vendor == PCI_VENDOR_ID_AMD && device == 0x1450)
++	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
++		if (vendor != entry->vendor || device != entry->device)
++			continue;
++		if (entry->req_same_host_bridge && !same_host_bridge)
++			return false;
++
+ 		return true;
++	}
+ 
+ 	return false;
+ }
+@@ -281,7 +305,11 @@ static bool host_bridge_whitelist(struct pci_dev *a, struct pci_dev *b)
+ 	if (iommu_present(a->dev.bus) || iommu_present(b->dev.bus))
+ 		return false;
+ 
+-	if (__host_bridge_whitelist(host_a) && __host_bridge_whitelist(host_b))
++	if (host_a == host_b)
++		return __host_bridge_whitelist(host_a, true);
++
++	if (__host_bridge_whitelist(host_a, false) &&
++	    __host_bridge_whitelist(host_b, false))
+ 		return true;
+ 
+ 	return false;
+-- 
 2.20.1
+
