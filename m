@@ -2,120 +2,134 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76FBC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98CBC76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA68121901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECC721955
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qub/iKrF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="D7LBjEJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfGVTKf (ORCPT
+        id S1731294AbfGVTLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:10:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55888 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfGVTKf (ORCPT
+        Mon, 22 Jul 2019 15:11:03 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2390 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfGVTLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:10:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a15so36231712wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aVYcCckX+JiVpMSlYoHq4KH9qszVNVB70AhdXAa1wJQ=;
-        b=qub/iKrFGQDkwWhl+TYx1KEcXLO9fhwX0W3Mh/KuF+4I+fObmrUXyUTCnDVgRw7IxL
-         9R1o69vAhHi+rIbwOWA/3FRnYQxL/H8nti83VcnlUQuU12z7t2VFgPiI9XbZbxP+VEnj
-         o12Swo/OjV31OZho6aBoQHzug5tjcqwoKIMwNAFPZUyGJwzy0AbM9dTtk2bN3YZJB4oI
-         NaA3tTFtJQv93nmLTl6RrbeGTsUV3A9x5NuYFLhViv2m1hAU1lzyA3Ix6kFU8YAEmEf5
-         FB0aOnP9hEJobyKxxqnLyG/E/QtYCv6KhapPylSVoxaYv6edAddMdIpGq+XKT3cH6YbN
-         htCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aVYcCckX+JiVpMSlYoHq4KH9qszVNVB70AhdXAa1wJQ=;
-        b=m8gtvQPwJNQ3TN99jPevVjg/bmeBfcVL8+6K3JpPFY9yhX7YYsZFGUL4ybbe9iOCMV
-         5VVhx047GK9MaRUU/Bk0XLvhu9MUQp1D6JvEY2PkrFYdpWYYRFUtvU7FaK57PACxvkLX
-         CCH4hvd8rYMtYm/Pedagwgs1SWeUk27S+8EbPmtaJIW3vXGTfuYEhG37wp1Y8SJswdSp
-         KWnDk/q9VXTPhTWpasV9caoVdUjDx2Cw99Vfb1G5CK903DgzHihktTvn4StwozGah+kC
-         U0KeIzv8SvDvWxIKCklfBGkkTHjdeufXnlv0XCgxYOck0nRyzZjRNCS7gN0mdUV0zGg5
-         Kj4g==
-X-Gm-Message-State: APjAAAWFrDe50Bz9gpoJZrE9JkuRLHvTCAiLNsdGCxsYxV3heku3kzw+
-        EnjIqfH8S6PcyYxC7mFrotY1YYTfTxOzhpv4tsk=
-X-Google-Smtp-Source: APXvYqxOEcG0mMOrFl56XRrzHBF5u5axdSumScYcjEH9nwQRrxRPxxCVtT76ftWqC0vQG4IXEFFcHxbx9pdIOoye/Ak=
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr61322784wmc.34.1563822632926;
- Mon, 22 Jul 2019 12:10:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190721214935.GA910@embeddedor>
-In-Reply-To: <20190721214935.GA910@embeddedor>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 22 Jul 2019 15:10:20 -0400
-Message-ID: <CADnq5_OTmx==m+1fJbf1PxPhPM0H0O8GRjq4eWeX6sw889YPrA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdkfd: Fix missing break in switch statement
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Philip Cox <Philip.Cox@amd.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
+        Mon, 22 Jul 2019 15:11:03 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d360a4c0000>; Mon, 22 Jul 2019 12:11:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jul 2019 12:11:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 12:11:00 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 22 Jul
+ 2019 19:11:00 +0000
+Subject: Re: [PATCH 1/3] drivers/gpu/drm/via: convert put_page() to
+ put_user_page*()
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Christoph Hellwig <hch@lst.de>, <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Kees Cook <keescook@chromium.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, <netdev@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>,
+        <linux-rdma@vger.kernel.org>, <bpf@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20190722043012.22945-1-jhubbard@nvidia.com>
+ <20190722043012.22945-2-jhubbard@nvidia.com> <20190722093355.GB29538@lst.de>
+ <397ff3e4-e857-037a-1aee-ff6242e024b2@nvidia.com>
+ <20190722190722.GF363@bombadil.infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <14ac5f41-c27e-c5a7-e16a-4bd3cec0d31f@nvidia.com>
+Date:   Mon, 22 Jul 2019 12:10:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190722190722.GF363@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563822668; bh=83PVez7k7U0Zqxj86oJddwWoO6j61lIp1H42K6LCjdM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=D7LBjEJY+k3NOupyUsz3QkjUUcPJWsBWTBbYyETUfk0uHH7d3QLbvQ+9RZH/28ZUE
+         sJfBT4O7QJ8wM9JX4nHRXKapNOpAYRi9LOgtrRHvxKHk2NLSGEB1ERlJVKKI3k/JJy
+         7S/lE/NB7MHjzQXMBBvvHctHDvo+mZLnO7Aio3aCrObQZB+awPaHKMVSROauRYPr3X
+         BJA/hGGdnsjgC4xdOAmvtDqjNiZJqnIwrrWggp9zNKGaVihgNE1edJSfqnrDSygNyO
+         Yzm74sohYm7Fi77+N0T5ApyjJHRiN3SgO4JJxNpSypLaSrrE54eHRmL/LyJAWG2MRa
+         b+Oe1FCWdve2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 6:12 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> Add missing break statement in order to prevent the code from falling
-> through to case CHIP_NAVI10.
->
-> This bug was found thanks to the ongoing efforts to enable
-> -Wimplicit-fallthrough.
->
-> Fixes: 14328aa58ce5 ("drm/amdkfd: Add navi10 support to amdkfd. (v3)")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On 7/22/19 12:07 PM, Matthew Wilcox wrote:
+> On Mon, Jul 22, 2019 at 11:53:54AM -0700, John Hubbard wrote:
+>> On 7/22/19 2:33 AM, Christoph Hellwig wrote:
+>>> On Sun, Jul 21, 2019 at 09:30:10PM -0700, john.hubbard@gmail.com wrote:
+>>>>  		for (i = 0; i < vsg->num_pages; ++i) {
+>>>>  			if (NULL != (page = vsg->pages[i])) {
+>>>>  				if (!PageReserved(page) && (DMA_FROM_DEVICE == vsg->direction))
+>>>> -					SetPageDirty(page);
+>>>> -				put_page(page);
+>>>> +					put_user_pages_dirty(&page, 1);
+>>>> +				else
+>>>> +					put_user_page(page);
+>>>>  			}
+>>>
+>>> Can't just pass a dirty argument to put_user_pages?  Also do we really
+>>
+>> Yes, and in fact that would help a lot more than the single page case,
+>> which is really just cosmetic after all.
+>>
+>>> need a separate put_user_page for the single page case?
+>>> put_user_pages_dirty?
+>>
+>> Not really. I'm still zeroing in on the ideal API for all these call sites,
+>> and I agree that the approach below is cleaner.
+> 
+> so enum { CLEAN = 0, DIRTY = 1, LOCK = 2, DIRTY_LOCK = 3 };
+> ?
+> 
 
-Applied.  Thanks!
+Sure. In fact, I just applied something similar to bio_release_pages()
+locally, in order to reconcile Christoph's and Jerome's approaches 
+(they each needed to add a bool arg), so I'm all about the enums in the
+arg lists. :)
 
-Alex
+I'm going to post that one shortly, let's see how it goes over. heh.
 
-> ---
->  drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-> index 792371442195..4e3fc284f6ac 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-> @@ -668,6 +668,7 @@ static int kfd_fill_gpu_cache_info(struct kfd_dev *kdev,
->         case CHIP_RAVEN:
->                 pcache_info = raven_cache_info;
->                 num_of_cache_types = ARRAY_SIZE(raven_cache_info);
-> +               break;
->         case CHIP_NAVI10:
->                 pcache_info = navi10_cache_info;
->                 num_of_cache_types = ARRAY_SIZE(navi10_cache_info);
-> --
-> 2.22.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+thanks,
+-- 
+John Hubbard
+NVIDIA
