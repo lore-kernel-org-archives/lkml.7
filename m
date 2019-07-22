@@ -2,108 +2,90 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB23C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA56C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73892229A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGFPYI95"
+	by mail.kernel.org (Postfix) with ESMTP id 4A27821E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 08:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfGVIg6 (ORCPT
+        id S1728339AbfGVIi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 04:36:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45527 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbfGVIg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 04:36:57 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r1so17024113pfq.12;
-        Mon, 22 Jul 2019 01:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j6w1h6MOwLx1qltjlCykcB2n5pu6k9XFgBYb35I9b94=;
-        b=IGFPYI95Yb/GP16xfTIPeMHOM4JZYhsIMYXmvzlUFQvJnz8C2K2+EZLuYeSUXn3mh8
-         DnJ27UJRGlz9Wyi1P/MH7Qo72mdobaeMo9ZMOeg2dtwt0Aqt6WEe962Cx6bVt4rSkYZY
-         GmUbpGREiGiEZzhpOsCQnOCdxsqifZ/L6Nhldq9GuFCCDGOExgLtfzJseBGlWHyzkrxH
-         uZSQkqZozxEuT8aLxtVjcCEl8p13FwH/Ts2OKFHaKXakk8Oq4oywxPiND4DhYGSpTjVC
-         hSSNUSBKr1bmbMoKUiZ1pl78Z/MoXGBxLnaDhHVg+c39xcL00UpBW8hwevZiR2kBawGB
-         WEcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j6w1h6MOwLx1qltjlCykcB2n5pu6k9XFgBYb35I9b94=;
-        b=E/az6RSSyFS48IUhjgeJoGkg5AMjObZFWtSLHVRaoN97+wfeK3aCqom1tc18tul8qU
-         hSoBZXs3Nheen4x5ODl0z15UQua/8iZPfSmZjRMdjMonAfrGBLePEN9pIJUAz5n+C6pi
-         Tbm2Ets+76c5nxNKSGpChW4medlVbqvYLquBn6m/19meBNyP+/QiKWNtuH01rz2XZ4jk
-         q/sxyLj4ntEwF0atU57ODpppvTTwObDENlVcgjgTznqKaSWtyyKAgcQz3Qk2AsdvXwOA
-         Rc2iZNyycEdTy6BolULmeHZZo1nNy6D6ii1OzHNFHfiNTfCkYx1JhxxR5V57CjsRnBD2
-         dapw==
-X-Gm-Message-State: APjAAAW/RgHcgDFxNWRG6swmfntb/DLIWwGyPYLxt0CCOm+jSw/4pObX
-        WpZRxCG6eC68fP4x5NQpEtr7GL8f
-X-Google-Smtp-Source: APXvYqxE9h+fM7hcGw7JD2QwWIjJ8hmgwvIvIoFYZ/ar+5y04cBEhjutBjzwJdZVdcq4Aspr0xQZRA==
-X-Received: by 2002:a63:e901:: with SMTP id i1mr54098401pgh.451.1563784616653;
-        Mon, 22 Jul 2019 01:36:56 -0700 (PDT)
-Received: from [192.168.1.38] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id a3sm33784096pfl.145.2019.07.22.01.36.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 01:36:56 -0700 (PDT)
-Subject: Re: [PATCH V2 1/1] can: sja1000: f81601: add Fintek F81601 support
-To:     Marc Kleine-Budde <mkl@pengutronix.de>, wg@grandegger.com,
-        peter_hong@fintek.com.tw
-Cc:     davem@davemloft.net, f.suligoi@asem.it,
-        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-References: <1563776521-28317-1-git-send-email-hpeter+linux_kernel@gmail.com>
- <563b0d71-3c60-d32c-cf19-73611f68d45a@pengutronix.de>
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Message-ID: <b7c9026a-a887-bc84-3297-c319d18686c3@gmail.com>
-Date:   Mon, 22 Jul 2019 16:36:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Mon, 22 Jul 2019 04:38:58 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:48734 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfGVIi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 04:38:58 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3001C20598;
+        Mon, 22 Jul 2019 10:38:56 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 188EA200A6;
+        Mon, 22 Jul 2019 10:38:56 +0200 (CEST)
+Subject: Re: [PATCH] firmware: qcom_scm: fix error for incompatible pointer
+To:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Christoph Hellwig <hch@lst.de>
+References: <20190719134303.7617-1-minwoo.im.dev@gmail.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <7ea51e42-ab8a-e4e2-1833-651e2dabca3c@free.fr>
+Date:   Mon, 22 Jul 2019 10:38:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <563b0d71-3c60-d32c-cf19-73611f68d45a@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190719134303.7617-1-minwoo.im.dev@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Jul 22 10:38:56 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Adding people who have worked on drivers/firmware/qcom_scm.c or DMA
 
-Marc Kleine-Budde 於 2019/7/22 下午 04:15 寫道:
-> On 7/22/19 8:22 AM, Ji-Ze Hong (Peter Hong) wrote: >> +/* Probe F81601 based device for the SJA1000 chips and register each
->> + * available CAN channel to SJA1000 Socket-CAN subsystem.
->> + */
->> +static int f81601_pci_add_card(struct pci_dev *pdev,
->> +			       const struct pci_device_id *ent)
->> +{
->> +	struct sja1000_priv *priv;
->> +	struct net_device *dev;
->> +	struct f81601_pci_card *card;
->> +	int err, i, count;
->> +	u8 tmp;
->> +
->> +	if (pcim_enable_device(pdev) < 0) {
-> 
-> I'm missing a corresponding disable_device().
-> 
-I'm using managed pcim_enable_device(), Does it need call
-pci_disable_device() ??
+On 19/07/2019 15:43, Minwoo Im wrote:
 
-Thanks
--- 
-With Best Regards,
-Peter Hong
+> The following error can happen when trying to build it:
+> 
+> ```
+> drivers/firmware/qcom_scm.c: In function ‘qcom_scm_assign_mem’:
+> drivers/firmware/qcom_scm.c:460:47: error: passing argument 3 of ‘dma_alloc_coherent’ from incompatible pointer type [-Werror=incompatible-pointer-types]
+>   ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
+>                                                ^
+> In file included from drivers/firmware/qcom_scm.c:12:0:
+> ./include/linux/dma-mapping.h:636:21: note: expected ‘dma_addr_t * {aka long long unsigned int *}’ but argument is of type ‘phys_addr_t * {aka unsigned int *}’
+>  static inline void *dma_alloc_coherent(struct device *dev, size_t size,
+>                      ^~~~~~~~~~~~~~~~~~
+> ```
+> 
+> We just can cast phys_addr_t to dma_addr_t here.
+
+IME, casting is rarely a proper solution.
+
+
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 2ddc118dba1b..7f6c841fa200 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -457,7 +457,8 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>  	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+>  			ALIGN(dest_sz, SZ_64);
+>  
+> -	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
+> +	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, (dma_addr_t *) &ptr_phys,
+> +					GFP_KERNEL);
+>  	if (!ptr)
+>  		return -ENOMEM;
+>  
+
