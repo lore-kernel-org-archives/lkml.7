@@ -2,126 +2,76 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61300C76194
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA16C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E5C21985
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563834371;
-	bh=SaCZr/lqE3KBkwJxJ3lN9pVqMFlNvyqSapA1Iar2Yz4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y+2RHwfuGC9VXhh6WYDbHzeCxigA2C83tOARg/aR2T+Bfboeq3PlYOrQILGzDNPbY
-	 4XjFpU8wUha4kI8VnF6O5rFzES5FjX3Jjn0sGo9HfQUjFkG7kJVEh0aUkgt1nLjjKN
-	 ec2RGwXSQNtf2Xo3CBz6EU0G4PoMGH9H4mMjv7fw=
+	by mail.kernel.org (Postfix) with ESMTP id D333421985
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 22:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733132AbfGVW0K (ORCPT
+        id S1733137AbfGVW2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 18:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40010 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 18:28:06 -0400
+Received: from ms.lwn.net ([45.79.88.28]:43710 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbfGVW0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 18:26:09 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1727391AbfGVW2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 18:28:06 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 484D921985;
-        Mon, 22 Jul 2019 22:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563834368;
-        bh=SaCZr/lqE3KBkwJxJ3lN9pVqMFlNvyqSapA1Iar2Yz4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ogi3k+rE6tk0IM0RMI1sxYzidV8NLfAQfkbaqZqpx47sIH3rytjrFbF0L2h9+viUc
-         HXSYDvdHUkfN2kpbEa5fKWrQdie7drx8APmpPamwnuov0yvOqo0lk8hQ21R7nNODV1
-         D/z8/0j2BEGTqS2l1Mi4j87EjG/KCZECdTJfkpyY=
-Date:   Mon, 22 Jul 2019 15:26:07 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] psi: annotate refault stalls from IO submission
-Message-Id: <20190722152607.dd175a9d517a5f6af06a8bdc@linux-foundation.org>
-In-Reply-To: <20190722201337.19180-1-hannes@cmpxchg.org>
-References: <20190722201337.19180-1-hannes@cmpxchg.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by ms.lwn.net (Postfix) with ESMTPSA id 6579A7DA;
+        Mon, 22 Jul 2019 22:28:05 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 16:28:04 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Joe Perches <joe@perches.com>
+Cc:     Stephen Kitt <steve@sk2.org>, Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH] checkpatch: Added warnings in favor of strscpy().
+Message-ID: <20190722162804.754943bc@lwn.net>
+In-Reply-To: <512d8977fb0d0b3eef7b6ea1753fb4c33fbc43e8.camel@perches.com>
+References: <1561722948-28289-1-git-send-email-nitin.r.gote@intel.com>
+        <20190629181537.7d524f7d@sk2.org>
+        <201907021024.D1C8E7B2D@keescook>
+        <20190706144204.15652de7@heffalump.sk2.org>
+        <201907221047.4895D35B30@keescook>
+        <15f2be3cde69321f4f3a48d60645b303d66a600b.camel@perches.com>
+        <20190722230102.442137dc@heffalump.sk2.org>
+        <d96cf801c5cf68e785e8dfd9dba0994fcff20017.camel@perches.com>
+        <20190722155730.08dfd4e3@lwn.net>
+        <512d8977fb0d0b3eef7b6ea1753fb4c33fbc43e8.camel@perches.com>
+Organization: LWN.net
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 16:13:37 -0400 Johannes Weiner <hannes@cmpxchg.org> wrote:
+On Mon, 22 Jul 2019 15:24:33 -0700
+Joe Perches <joe@perches.com> wrote:
 
-> psi tracks the time tasks wait for refaulting pages to become
-> uptodate, but it does not track the time spent submitting the IO. The
-> submission part can be significant if backing storage is contended or
-> when cgroup throttling (io.latency) is in effect - a lot of time is
-> spent in submit_bio(). In that case, we underreport memory pressure.
-
-It's a somewhat broad patch.  How significant is this problem in the
-real world?  Can we be confident that the end-user benefit is worth the
-code changes?
-
-> Annotate the submit_bio() paths (or the indirection through readpage)
-> for refaults and swapin to get proper psi coverage of delays there.
+> > If the functions themselves are fully defined in the .h file, I'd just add
+> > the kerneldoc there as well.  That's how it's usually done, and you want
+> > to keep the documentation and the prototypes together.  
 > 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  fs/btrfs/extent_io.c | 14 ++++++++++++--
->  fs/ext4/readpage.c   |  9 +++++++++
->  fs/f2fs/data.c       |  8 ++++++++
->  fs/mpage.c           |  9 +++++++++
->  mm/filemap.c         | 20 ++++++++++++++++++++
->  mm/page_io.c         | 11 ++++++++---
->  mm/readahead.c       | 24 +++++++++++++++++++++++-
+> In this case, it's a macro and yes, the kernel-doc could
+> easily be set around the macro in the .h, but my desire
+> is to keep all the string function kernel-doc output
+> together so it should be added to lib/string.c
+> 
+> Are you suggesting I move all the lib/string.c kernel-doc
+> to include/linux/string.h ?
 
-We touch three filesystems.  Why these three?  Are all other
-filesystems OK or will they need work as well?
+If you want the *output* together, just put the kernel-doc directives
+together in the RST file that pulls it all in.  Or am I missing something
+here?
 
-> ...
->
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
->
-> ...
->
-> @@ -2753,11 +2763,14 @@ static struct page *do_read_cache_page(struct address_space *mapping,
->  				void *data,
->  				gfp_t gfp)
->  {
-> +	bool refault = false;
->  	struct page *page;
->  	int err;
->  repeat:
->  	page = find_get_page(mapping, index);
->  	if (!page) {
-> +		unsigned long pflags;
-> +
+Thanks,
 
-That was a bit odd.  This?
-
---- a/mm/filemap.c~psi-annotate-refault-stalls-from-io-submission-fix
-+++ a/mm/filemap.c
-@@ -2815,12 +2815,12 @@ static struct page *do_read_cache_page(s
- 				void *data,
- 				gfp_t gfp)
- {
--	bool refault = false;
- 	struct page *page;
- 	int err;
- repeat:
- 	page = find_get_page(mapping, index);
- 	if (!page) {
-+		bool refault = false;
- 		unsigned long pflags;
- 
- 		page = __page_cache_alloc(gfp);
-_
-
+jon
