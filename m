@@ -6,29 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D64C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7305C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2862D217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EE720828
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 17:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbfGVR1z (ORCPT
+        id S1729023AbfGVR2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 13:27:55 -0400
-Received: from sauhun.de ([88.99.104.3]:42398 "EHLO pokefinder.org"
+        Mon, 22 Jul 2019 13:28:05 -0400
+Received: from sauhun.de ([88.99.104.3]:42354 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbfGVR0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 13:26:31 -0400
+        id S1731448AbfGVR02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 13:26:28 -0400
 Received: from localhost (p54B33E22.dip0.t-ipconnect.de [84.179.62.34])
-        by pokefinder.org (Postfix) with ESMTPSA id AEA374A14A4;
-        Mon, 22 Jul 2019 19:26:29 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id E03F84A149F;
+        Mon, 22 Jul 2019 19:26:26 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Support Opensource <support.opensource@diasemi.com>,
         Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/14] mfd: max8925-i2c: convert to i2c_new_dummy_device
-Date:   Mon, 22 Jul 2019 19:26:17 +0200
-Message-Id: <20190722172623.4166-11-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 05/14] mfd: da9150-core: convert to i2c_new_dummy_device
+Date:   Mon, 22 Jul 2019 19:26:12 +0200
+Message-Id: <20190722172623.4166-6-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
 References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
@@ -47,38 +48,27 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 
- drivers/mfd/max8925-i2c.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/mfd/da9150-core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mfd/max8925-i2c.c b/drivers/mfd/max8925-i2c.c
-index 20bb19b71109..114e905bef25 100644
---- a/drivers/mfd/max8925-i2c.c
-+++ b/drivers/mfd/max8925-i2c.c
-@@ -176,18 +176,18 @@ static int max8925_probe(struct i2c_client *client,
- 	dev_set_drvdata(chip->dev, chip);
- 	mutex_init(&chip->io_lock);
- 
--	chip->rtc = i2c_new_dummy(chip->i2c->adapter, RTC_I2C_ADDR);
--	if (!chip->rtc) {
-+	chip->rtc = i2c_new_dummy_device(chip->i2c->adapter, RTC_I2C_ADDR);
-+	if (IS_ERR(chip->rtc)) {
- 		dev_err(chip->dev, "Failed to allocate I2C device for RTC\n");
+diff --git a/drivers/mfd/da9150-core.c b/drivers/mfd/da9150-core.c
+index 13033068721a..7f0aa1e8db96 100644
+--- a/drivers/mfd/da9150-core.c
++++ b/drivers/mfd/da9150-core.c
+@@ -420,10 +420,10 @@ static int da9150_probe(struct i2c_client *client,
+ 	qif_addr = da9150_reg_read(da9150, DA9150_CORE2WIRE_CTRL_A);
+ 	qif_addr = (qif_addr & DA9150_CORE_BASE_ADDR_MASK) >> 1;
+ 	qif_addr |= DA9150_QIF_I2C_ADDR_LSB;
+-	da9150->core_qif = i2c_new_dummy(client->adapter, qif_addr);
+-	if (!da9150->core_qif) {
++	da9150->core_qif = i2c_new_dummy_device(client->adapter, qif_addr);
++	if (IS_ERR(da9150->core_qif)) {
+ 		dev_err(da9150->dev, "Failed to attach QIF client\n");
 -		return -ENODEV;
-+		return PTR_ERR(chip->rtc);
++		return PTR_ERR(da9150->core_qif);
  	}
- 	i2c_set_clientdata(chip->rtc, chip);
  
--	chip->adc = i2c_new_dummy(chip->i2c->adapter, ADC_I2C_ADDR);
--	if (!chip->adc) {
-+	chip->adc = i2c_new_dummy_device(chip->i2c->adapter, ADC_I2C_ADDR);
-+	if (IS_ERR(chip->adc)) {
- 		dev_err(chip->dev, "Failed to allocate I2C device for ADC\n");
- 		i2c_unregister_device(chip->rtc);
--		return -ENODEV;
-+		return PTR_ERR(chip->adc);
- 	}
- 	i2c_set_clientdata(chip->adc, chip);
- 
+ 	i2c_set_clientdata(da9150->core_qif, da9150);
 -- 
 2.20.1
 
