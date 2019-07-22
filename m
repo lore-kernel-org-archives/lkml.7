@@ -2,294 +2,103 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE75EC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFE8C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B382121955
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08AC21901
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 19:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563823052;
+	bh=sj/NapaJkv7odoswmmfqtEZQCYs7mpK3iyrXxfrff9Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nJxj1WnRB6bDDxJlj57O55SwmpmDwhApmDf77XpfFQfElv8WpWro0Rjwy12LavmdG
+	 bA85a8lJFQhcC7AIXdxBaN5RdurNVNpcG64A4hqyMdqjKDuywoBOb8OBBAbahGj0l+
+	 iJ4ZjWmMUErqkmudzI3NHyvzvLgJAOHL40xT02No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732198AbfGVTRH (ORCPT
+        id S1732202AbfGVTRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 15:17:07 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:35147 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfGVTRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:17:06 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MGA0o-1hdaZz2K44-00Gd6p; Mon, 22 Jul 2019 21:16:51 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     netdev@vger.kernel.org, linux-serial@vger.kernel.org,
-        tglx@linutronix.de, davem@davemloft.net,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Michael Trensch <MTrensch@hilscher.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Robert Schwebel <r.schwebel@pengutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] uio: remove netx driver
-Date:   Mon, 22 Jul 2019 21:15:05 +0200
-Message-Id: <20190722191552.252805-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190722191552.252805-1-arnd@arndb.de>
-References: <20190722191552.252805-1-arnd@arndb.de>
+        Mon, 22 Jul 2019 15:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbfGVTRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 15:17:31 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5898C21955
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 19:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563823050;
+        bh=sj/NapaJkv7odoswmmfqtEZQCYs7mpK3iyrXxfrff9Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wDPM9sRsfT4Z3VAOL4IwXsXdy0yBnCeprDkV9C2Fvu/HFHhKafZkOkblS3nR65W/7
+         wq9VQHTLUsx5RbtNfdFAq9Yox67mhPbxnnbLzhcNZ7T8lg0OJHlKMYq7lXQcqTh7wK
+         1JhIUHB3BFwaRdJoExnULcR8fsZ9mJ7N4+TXJ8NQ=
+Received: by mail-wm1-f43.google.com with SMTP id s15so15025077wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 12:17:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAVHz/6ngPnKrYenHIBGLVGAoNF1f86EWWvLY4c5BOfkL3tLllNO
+        bT7fBAsvzCYKl64IL43n3SxHwwE4WMRmeWZraYB1sA==
+X-Google-Smtp-Source: APXvYqycSv3esUwwzzu9uIVNs59R9FpJBEWDcpoDitlz2jTCYunKkwsVqjuw0DjotF0Z5sn1ZMnEnQhE2VsPAJujKH8=
+X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr65360867wmk.79.1563823048881;
+ Mon, 22 Jul 2019 12:17:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:00sVbYfrpoKwOnMbAleVAvbSIJM5BWQIsOng1dX0ePzyszDnE0p
- /3CLzCNzgue1lSUEvLBSBh9c26J3ym78MdKTtcDg0lrr+o46P+hNSh3wqqiscPusb00Key4
- UCe3rn2D5Afu6oWjAERKqTSyhskx4M4nohjCLFwwLoN4pa3ThokAdgzMmYbtGn99Vx/YKlQ
- gLOx8kNwl8eEg5UlHQauA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fhQWfFvCMCo=:wffhrZiYImFmn2Ebqh2eut
- qNoDKZfsBLGfI5/BXxQX19GMz60sK5ODqBmu6HLHNTUUztRW+8tPq8+U1Ktl0VC/YTT+abX7M
- kqy7QoEDbS7R8ctvaluiw4ZmXxp6S5j//sAeBkgFjIhM1zsZbVA8RVlIDnbW8AUi67UmFBE/A
- aOaOKZ14IL/d+4HW4/LTL3J0yS7Oh7luk08OprbmQCV6RTj9dmtYplUBzTfAjkpuXuDFCQBNN
- lL1ig3SC0UAG+iTxnvod7R1tiCSP4qZIV4hqEuiF3UxUpI4y6RGFu2VEqNHGS86BTao1hUm0u
- 4sFSHPgdKO33h1sD5zYPcSTzPEBUpRcw6L2Msv4uqc8QIgecCf0rgdQXZZ0M6tfYcKqQsfnfP
- O/8zRj6bAwDmaVUJyTZs5nBHKceBGQdHY3F6aHs0mNZcsKOYvaJmVQnMZHaPF143Cl/RQzRoY
- iEeUpj1CotLsPmy+fTUgyKJp4JPgq1ppcnZv19+iX7I/9cA96P9nVwiYSfbmdeRF1sgnlrGFk
- BpJJdfZVOdcFot0QxISiIRvFToET6vc2/jJoT4n7Gt0oPnEuQ6StPdGyLFO628s8IGplYmqe3
- d60jBSh0tgkevXcVUoGQke5WBqjgV1Hyn6a2rE49SQwwv7+uj5vWZBwQXTD47xcB/HXDcEYdk
- rv6qJiHAY6VkA+Za2a7s4BlLhpCROJr2mDd43h4UW7KadYEJ4MTSY3aYkk7Rd56ddJYYjxmP0
- Rx00hifgbMI9DjhyvDKyMIw19H9hLELpxND/VQ==
+References: <20190719170343.GA13680@linux.intel.com> <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
+ <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
+ <201907221135.2C2D262D8@keescook>
+In-Reply-To: <201907221135.2C2D262D8@keescook>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 22 Jul 2019 12:17:16 -0700
+X-Gmail-Original-Message-ID: <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
+Message-ID: <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace on i386
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The netx platform got removed, so this driver is now
-useless.
+On Mon, Jul 22, 2019 at 11:39 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jul 22, 2019 at 08:31:32PM +0200, Thomas Gleixner wrote:
+> > On Mon, 22 Jul 2019, Kees Cook wrote:
+> > > Just so I'm understanding: the vDSO change introduced code to make an
+> > > actual syscall on i386, which for most seccomp filters would be rejected?
+> >
+> > No. The old x86 specific VDSO implementation had a fallback syscall as
+> > well, i.e. clock_gettime(). On 32bit clock_gettime() uses the y2038
+> > endangered timespec.
+> >
+> > So when the VDSO was made generic we changed the internal data structures
+> > to be 2038 safe right away. As a consequence the fallback syscall is not
+> > clock_gettime(), it's clock_gettime64(). which seems to surprise seccomp.
+>
+> Okay, it's didn't add a syscall, it just changed it. Results are the
+> same: conservative filters suddenly start breaking due to the different
+> call. (And now I see why Andy's alias suggestion would help...)
+>
+> I'm not sure which direction to do with this. It seems like an alias
+> list is a large hammer for this case, and a "seccomp-bypass when calling
+> from vDSO" solution seems too fragile?
+>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/uio/Kconfig    |  11 ---
- drivers/uio/Makefile   |   1 -
- drivers/uio/uio_netx.c | 178 -----------------------------------------
- 3 files changed, 190 deletions(-)
- delete mode 100644 drivers/uio/uio_netx.c
+I don't like the seccomp bypass at all.  If someone uses seccomp to
+disallow all clock_gettime() variants, there shouldn't be a back door
+to learn the time.
 
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 202ee81cfc2b..abc8dd97b474 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -94,17 +94,6 @@ config UIO_PCI_GENERIC
- 	  primarily, for virtualization scenarios.
- 	  If you compile this as a module, it will be called uio_pci_generic.
- 
--config UIO_NETX
--	tristate "Hilscher NetX Card driver"
--	depends on PCI
--	help
--	  Driver for Hilscher NetX based fieldbus cards (cifX, comX).
--	  This driver requires a userspace component that comes with the card
--	  or is available from Hilscher (http://www.hilscher.com).
--
--	  To compile this driver as a module, choose M here; the module
--	  will be called uio_netx.
--
- config UIO_FSL_ELBC_GPCM
- 	tristate "eLBC/GPCM driver"
- 	depends on FSL_LBC
-diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-index c285dd2a4539..d94012263a42 100644
---- a/drivers/uio/Makefile
-+++ b/drivers/uio/Makefile
-@@ -6,7 +6,6 @@ obj-$(CONFIG_UIO_DMEM_GENIRQ)	+= uio_dmem_genirq.o
- obj-$(CONFIG_UIO_AEC)	+= uio_aec.o
- obj-$(CONFIG_UIO_SERCOS3)	+= uio_sercos3.o
- obj-$(CONFIG_UIO_PCI_GENERIC)	+= uio_pci_generic.o
--obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
- obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
- obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
- obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
-diff --git a/drivers/uio/uio_netx.c b/drivers/uio/uio_netx.c
-deleted file mode 100644
-index 9ae29ffde410..000000000000
---- a/drivers/uio/uio_netx.c
-+++ /dev/null
-@@ -1,178 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * UIO driver for Hilscher NetX based fieldbus cards (cifX, comX).
-- * See http://www.hilscher.com for details.
-- *
-- * (C) 2007 Hans J. Koch <hjk@hansjkoch.de>
-- * (C) 2008 Manuel Traut <manut@linutronix.de>
-- *
-- */
--
--#include <linux/device.h>
--#include <linux/io.h>
--#include <linux/module.h>
--#include <linux/pci.h>
--#include <linux/slab.h>
--#include <linux/uio_driver.h>
--
--#define PCI_VENDOR_ID_HILSCHER		0x15CF
--#define PCI_DEVICE_ID_HILSCHER_NETX	0x0000
--#define PCI_DEVICE_ID_HILSCHER_NETPLC	0x0010
--#define PCI_SUBDEVICE_ID_NETPLC_RAM	0x0000
--#define PCI_SUBDEVICE_ID_NETPLC_FLASH	0x0001
--#define PCI_SUBDEVICE_ID_NXSB_PCA	0x3235
--#define PCI_SUBDEVICE_ID_NXPCA		0x3335
--
--#define DPM_HOST_INT_EN0	0xfff0
--#define DPM_HOST_INT_STAT0	0xffe0
--
--#define DPM_HOST_INT_MASK	0xe600ffff
--#define DPM_HOST_INT_GLOBAL_EN	0x80000000
--
--static irqreturn_t netx_handler(int irq, struct uio_info *dev_info)
--{
--	void __iomem *int_enable_reg = dev_info->mem[0].internal_addr
--					+ DPM_HOST_INT_EN0;
--	void __iomem *int_status_reg = dev_info->mem[0].internal_addr
--					+ DPM_HOST_INT_STAT0;
--
--	/* Is one of our interrupts enabled and active ? */
--	if (!(ioread32(int_enable_reg) & ioread32(int_status_reg)
--		& DPM_HOST_INT_MASK))
--		return IRQ_NONE;
--
--	/* Disable interrupt */
--	iowrite32(ioread32(int_enable_reg) & ~DPM_HOST_INT_GLOBAL_EN,
--		int_enable_reg);
--	return IRQ_HANDLED;
--}
--
--static int netx_pci_probe(struct pci_dev *dev,
--					const struct pci_device_id *id)
--{
--	struct uio_info *info;
--	int bar;
--
--	info = kzalloc(sizeof(struct uio_info), GFP_KERNEL);
--	if (!info)
--		return -ENOMEM;
--
--	if (pci_enable_device(dev))
--		goto out_free;
--
--	if (pci_request_regions(dev, "netx"))
--		goto out_disable;
--
--	switch (id->device) {
--	case PCI_DEVICE_ID_HILSCHER_NETX:
--		bar = 0;
--		info->name = "netx";
--		break;
--	case PCI_DEVICE_ID_HILSCHER_NETPLC:
--		bar = 0;
--		info->name = "netplc";
--		break;
--	default:
--		bar = 2;
--		info->name = "netx_plx";
--	}
--
--	/* BAR0 or 2 points to the card's dual port memory */
--	info->mem[0].addr = pci_resource_start(dev, bar);
--	if (!info->mem[0].addr)
--		goto out_release;
--	info->mem[0].internal_addr = ioremap(pci_resource_start(dev, bar),
--						pci_resource_len(dev, bar));
--
--	if (!info->mem[0].internal_addr)
--			goto out_release;
--
--	info->mem[0].size = pci_resource_len(dev, bar);
--	info->mem[0].memtype = UIO_MEM_PHYS;
--	info->irq = dev->irq;
--	info->irq_flags = IRQF_SHARED;
--	info->handler = netx_handler;
--	info->version = "0.0.1";
--
--	/* Make sure all interrupts are disabled */
--	iowrite32(0, info->mem[0].internal_addr + DPM_HOST_INT_EN0);
--
--	if (uio_register_device(&dev->dev, info))
--		goto out_unmap;
--
--	pci_set_drvdata(dev, info);
--	dev_info(&dev->dev, "Found %s card, registered UIO device.\n",
--				info->name);
--
--	return 0;
--
--out_unmap:
--	iounmap(info->mem[0].internal_addr);
--out_release:
--	pci_release_regions(dev);
--out_disable:
--	pci_disable_device(dev);
--out_free:
--	kfree(info);
--	return -ENODEV;
--}
--
--static void netx_pci_remove(struct pci_dev *dev)
--{
--	struct uio_info *info = pci_get_drvdata(dev);
--
--	/* Disable all interrupts */
--	iowrite32(0, info->mem[0].internal_addr + DPM_HOST_INT_EN0);
--	uio_unregister_device(info);
--	pci_release_regions(dev);
--	pci_disable_device(dev);
--	iounmap(info->mem[0].internal_addr);
--
--	kfree(info);
--}
--
--static struct pci_device_id netx_pci_ids[] = {
--	{
--		.vendor =	PCI_VENDOR_ID_HILSCHER,
--		.device =	PCI_DEVICE_ID_HILSCHER_NETX,
--		.subvendor =	0,
--		.subdevice =	0,
--	},
--	{
--		.vendor =       PCI_VENDOR_ID_HILSCHER,
--		.device =       PCI_DEVICE_ID_HILSCHER_NETPLC,
--		.subvendor =    PCI_VENDOR_ID_HILSCHER,
--		.subdevice =    PCI_SUBDEVICE_ID_NETPLC_RAM,
--	},
--	{
--		.vendor =       PCI_VENDOR_ID_HILSCHER,
--		.device =       PCI_DEVICE_ID_HILSCHER_NETPLC,
--		.subvendor =    PCI_VENDOR_ID_HILSCHER,
--		.subdevice =    PCI_SUBDEVICE_ID_NETPLC_FLASH,
--	},
--	{
--		.vendor =	PCI_VENDOR_ID_PLX,
--		.device =	PCI_DEVICE_ID_PLX_9030,
--		.subvendor =	PCI_VENDOR_ID_PLX,
--		.subdevice =	PCI_SUBDEVICE_ID_NXSB_PCA,
--	},
--	{
--		.vendor =	PCI_VENDOR_ID_PLX,
--		.device =	PCI_DEVICE_ID_PLX_9030,
--		.subvendor =	PCI_VENDOR_ID_PLX,
--		.subdevice =	PCI_SUBDEVICE_ID_NXPCA,
--	},
--	{ 0, }
--};
--
--static struct pci_driver netx_pci_driver = {
--	.name = "netx",
--	.id_table = netx_pci_ids,
--	.probe = netx_pci_probe,
--	.remove = netx_pci_remove,
--};
--
--module_pci_driver(netx_pci_driver);
--MODULE_DEVICE_TABLE(pci, netx_pci_ids);
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR("Hans J. Koch, Manuel Traut");
--- 
-2.20.0
+Here's the restart_syscall() logic that makes me want aliases: we have
+different syscall numbers for restart_syscall() on 32-bit and 64-bit.
+The logic to decide which one to use is dubious at best.  I'd like to
+introduce a restart_syscall2() that is identical to restart_syscall()
+except that it has the same number on both variants.
 
+--Andy
