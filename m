@@ -2,79 +2,135 @@ Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95D8C76188
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF925C76188
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBE8214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA99C214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 10:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XglgEILo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfGVKB3 (ORCPT
+        id S1729284AbfGVKDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 06:01:29 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47789 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfGVKB2 (ORCPT
+        Mon, 22 Jul 2019 06:03:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33338 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfGVKDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 06:01:28 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 68EB86000A;
-        Mon, 22 Jul 2019 10:01:26 +0000 (UTC)
-Date:   Mon, 22 Jul 2019 12:01:25 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jan Kotas <jank@cadence.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rafalc@cadence.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] media: Add support for Cadence CSI2TX version 2.1
-Message-ID: <20190722100125.y4ojf3quqopktncf@flea>
-References: <20190722082223.18693-1-jank@cadence.com>
+        Mon, 22 Jul 2019 06:03:14 -0400
+Received: by mail-io1-f66.google.com with SMTP id z3so72657244iog.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 03:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4b1uAwM9umv+IY8/HnGfteiZXrlo/NSOu+cIPVvp1h0=;
+        b=XglgEILo3rW9D3vL7A0pPJKvQjXuJIjm0yzulNQh37Bkvxk46652lpiq6aGUGfTvqS
+         yw0q33nv4FulOutDW8O8FtbPhemeCLLbAYWuW70qi6R2REVITVQutMEDuC8nDEwwuQy2
+         71fsmVuDZF+P22bgkOd7CkBLwBi3BR72dcaToUYSwGxNtZBS/EhMTh97Y/U+gqaXjS0f
+         cpN4sjsyi+45KjkuDxrVwCXMWuZVaruaBliF/iNo1DTN7yM+Hx5zEoTBg3uI8QtXP+Fp
+         80BlwxHoWTpLcQUd75TzDP2P3NzDsjA0DvhL8wj38b2ry2a2xMoPA2hq4TB8ye/C75XS
+         eEWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4b1uAwM9umv+IY8/HnGfteiZXrlo/NSOu+cIPVvp1h0=;
+        b=A4DuPh1MiNxPWyTMOKvXQeSBqtCGDnN8wJhPgLAeUPevffxSWnhXAmxMMV0pjcl8rn
+         26Mk09N3+RezJyQg6kHghF5PpF4Eg60NMTyUYFhIYXkFSGg6+Dk+yPgY0KXBgJId1IX+
+         aLewtZHHZ6zueZavRAsL4AMoX7sknUW6wLnIHPxpoVIxmFCI4sqlQEIYKYjc6RbTs2DH
+         nm3Qx6I+nD0t0V5nAMr/PYNNZv8PIiy2qMmXb85vk1kXMgcFyevaMcMMnXOMJYCtURPH
+         F5GiqI4TGISA7Ulw3hE2X5zfa9oFlIFue9unINU6sq9W12b6+UYEopciaX+w7pG3FAeE
+         4vRg==
+X-Gm-Message-State: APjAAAWrBs30ZYBNp4zDIdqKurrg+2u3Yl7MnXeVLvlAsvUuNJsxdtte
+        BgHA9DdP9aMIxirzcG6R9M+beg5wjlT6QL9g10P87w==
+X-Google-Smtp-Source: APXvYqwL+M8Rgssa2ucPdgR/HDa1HVbuVJ+QRBULwshbyX+2VreyyBzq+g0gTT09x68VANTfGl21EY1W9jWIvu2wAng=
+X-Received: by 2002:a6b:b556:: with SMTP id e83mr62253077iof.94.1563789793779;
+ Mon, 22 Jul 2019 03:03:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dgdhrvv3ycjgpmmt"
-Content-Disposition: inline
-In-Reply-To: <20190722082223.18693-1-jank@cadence.com>
-User-Agent: NeoMutt/20180716
+References: <20190705191055.GT26519@linux.ibm.com> <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com> <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com> <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714184915.GK26519@linux.ibm.com> <20190715132911.GG3419@hirez.programming.kicks-ass.net>
+ <CACT4Y+bmgdOExBHnLJ+jgWKWQzNK9CFT6_eTxFE3hoK=0YresQ@mail.gmail.com> <20190715134651.GI3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190715134651.GI3419@hirez.programming.kicks-ass.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 22 Jul 2019 12:03:02 +0200
+Message-ID: <CACT4Y+bGgyZWbRQ7QNCHRLU0Zq2+cONSbyaycfzwvToqMwiwBQ@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---dgdhrvv3ycjgpmmt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 22, 2019 at 09:22:19AM +0100, Jan Kotas wrote:
-> This patchset adds support for Cadence CSI2TX controller version 2.1.
-> Existing compatibility with v1.3 is updated and maintained.
+On Mon, Jul 15, 2019 at 3:46 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
+> On Mon, Jul 15, 2019 at 03:33:11PM +0200, Dmitry Vyukov wrote:
+> > On Mon, Jul 15, 2019 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Sun, Jul 14, 2019 at 11:49:15AM -0700, Paul E. McKenney wrote:
+> > > > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
+> > > > > But short term I don't see any other solution than stop testing
+> > > > > sched_setattr because it does not check arguments enough to prevent
+> > > > > system misbehavior. Which is a pity because syzkaller has found some
+> > > > > bad misconfigurations that were oversight on checking side.
+> > > > > Any other suggestions?
+> > > >
+> > > > Keep the times down to a few seconds?  Of course, that might also
+> > > > fail to find interesting bugs.
+> > >
+> > > Right, if syzcaller can put a limit on the period/deadline parameters
+> > > (and make sure to not write "-1" to
+> > > /proc/sys/kernel/sched_rt_runtime_us) then per the in-kernel
+> > > access-control should not allow these things to happen.
+> >
+> > Since we are racing with emails, could you suggest a 100% safe
+> > parameters? Because I only hear people saying "safe", "sane",
+> > "well-behaving" :)
+> > If we move the check to user-space, it does not mean that we can get
+> > away without actually defining what that means.
+>
+> Right, well, that's part of the problem. I think Paul just did the
+> reverse math and figured that 95% of X must not be larger than my
+> watchdog timeout and landed on 14 seconds.
+>
+> I'm thinking 4 seconds (or rather 4.294967296) would be a very nice
+> number.
+>
+> > Now thinking of this, if we come up with some simple criteria, could
+> > we have something like a sysctl that would allow only really "safe"
+> > parameters?
+>
+> I suppose we could do that, something like:
+> sysctl_deadline_period_{min,max}. I'll have to dig back a bit on where
+> we last talked about that and what the problems where.
+>
+> For one, setting the min is a lot harder, but I suppose we can start at
+> TICK_NSEC or something.
 
-For the whole series
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---dgdhrvv3ycjgpmmt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTWJdQAKCRDj7w1vZxhR
-xStlAQCn41vU+G6UpwEkOdIzsntf4crx4vpr3XFje6b3E/gn+AEAyOChzbyIRden
-akf239VnjvsQn3AU1/GEpWsF9jCc2wE=
-=YpCh
------END PGP SIGNATURE-----
-
---dgdhrvv3ycjgpmmt--
+Now syzkaller will drop CAP_SYS_NICE for the test process:
+https://github.com/google/syzkaller/commit/f3ad68446455acbe562e0057931e6256b8b991e8
+I will close this bug report as invalid once the change reaches all
+syzbot instances, if nobody plans any other on this bug.
