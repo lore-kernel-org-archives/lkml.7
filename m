@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41F5C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06712C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969A3218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C7A223A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390868AbfGWPQH (ORCPT
+        id S2390843AbfGWPQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:16:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59536 "EHLO inva021.nxp.com"
+        Tue, 23 Jul 2019 11:16:03 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50186 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfGWPQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:16:01 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 883192001D2;
+        id S1726791AbfGWPQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:16:00 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 19A9B1A026D;
         Tue, 23 Jul 2019 17:15:58 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A1992000FF;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0DEC41A0235;
         Tue, 23 Jul 2019 17:15:58 +0200 (CEST)
 Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CEE9205DD;
-        Tue, 23 Jul 2019 17:15:58 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A57EB205DD;
+        Tue, 23 Jul 2019 17:15:57 +0200 (CEST)
 From:   Claudiu Manoil <claudiu.manoil@nxp.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         alexandru.marginean@nxp.com, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/3] arm64: dts: ls1028a: Enable eth port1 on the ls1028a QDS board
-Date:   Tue, 23 Jul 2019 18:15:55 +0300
-Message-Id: <1563894955-545-4-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next 2/3] dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe endpoint
+Date:   Tue, 23 Jul 2019 18:15:54 +0300
+Message-Id: <1563894955-545-3-git-send-email-claudiu.manoil@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
 References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
@@ -46,102 +46,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LS1028a has one Ethernet management interface. On the QDS board, the
-MDIO signals are multiplexed to either on-board AR8035 PHY device or
-to 4 PCIe slots allowing for SGMII cards.
-To enable the Ethernet ENETC Port 1, which can only be connected to a
-RGMII PHY, the multiplexer needs to be configured to route the MDIO to
-the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
-board config register 0x54, and value 0 selects the on-board RGMII PHY.
-The FPGA board config registers are accessible on the i2c bus, at address
-0x66.
+The on-chip PCIe root complex that integrates the ENETC ethernet
+controllers also integrates a PCIe enpoint for the MDIO controller
+provinding for cetralized control of the ENETC mdio bus.
+Add bindings for this "central" MDIO Integrated PCIe Endpoit.
 
-The PF3 MDIO PCIe integrated endpoint device allows for centralized access
-to the MDIO bus.  Add the corresponding devicetree node and set it to be
-the MDIO bus parent.
-
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
 Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 ---
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- 2 files changed, 46 insertions(+)
+ .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..663c4b728c07 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -85,6 +85,26 @@
- 			system-clock-frequency = <25000000>;
- 		};
- 	};
-+
-+	mdio-mux {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mux 0>;
-+		mdio-parent-bus = <&enetc_mdio_pf3>;
-+		#address-cells=<1>;
-+		#size-cells = <0>;
-+
-+		/* on-board RGMII PHY */
-+		mdio@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			qds_phy1: ethernet-phy@5 {
-+				/* Atheros 8035 */
-+				reg = <5>;
-+			};
-+		};
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
+index 25fc687419db..c090f6df7a39 100644
+--- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
++++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
+@@ -11,7 +11,9 @@ Required properties:
+ 		  to parent node bindings.
+ - compatible	: Should be "fsl,enetc".
  
- &duart0 {
-@@ -164,6 +184,26 @@
- 			};
+-1) The ENETC external port is connected to a MDIO configurable phy:
++1. The ENETC external port is connected to a MDIO configurable phy
++
++1.1. Using the local ENETC Port MDIO interface
+ 
+ In this case, the ENETC node should include a "mdio" sub-node
+ that in turn should contain the "ethernet-phy" node describing the
+@@ -47,8 +49,42 @@ Example:
  		};
  	};
+ 
+-2) The ENETC port is an internal port or has a fixed-link external
+-connection:
++1.2. Using the central MDIO PCIe enpoint device
 +
-+	fpga@66 {
++In this case, the mdio node should be defined as another PCIe
++endpoint node, at the same level with the ENETC port nodes.
++
++Required properties:
++
++- reg		: Specifies PCIe Device Number and Function
++		  Number of the ENETC endpoint device, according
++		  to parent node bindings.
++- compatible	: Should be "fsl,enetc-mdio".
++
++The remaining required mdio bus properties are standard, their bindings
++already defined in Documentation/devicetree/bindings/net/mdio.txt.
++
++Example:
++
++	ethernet@0,0 {
++		compatible = "fsl,enetc";
++		reg = <0x000000 0 0 0 0>;
++		phy-handle = <&sgmii_phy0>;
++		phy-connection-type = "sgmii";
++	};
++
++	mdio@0,3 {
++		compatible = "fsl,enetc-mdio";
++		reg = <0x000300 0 0 0 0>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg = <0x66>;
-+
-+		mux: mux-controller {
-+			compatible = "reg-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
++		sgmii_phy0: ethernet-phy@2 {
++			reg = <0x2>;
 +		};
 +	};
 +
-+};
-+
-+&enetc_port1 {
-+	phy-handle = <&qds_phy1>;
-+	phy-connection-type = "rgmii-id";
- };
++2. The ENETC port is an internal port or has a fixed-link external
++connection
  
- &sai1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..de71153fda00 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -536,6 +536,12 @@
- 				compatible = "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 			};
-+			enetc_mdio_pf3: mdio@0,3 {
-+				compatible = "fsl,enetc-mdio";
-+				reg = <0x000300 0 0 0 0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 			ethernet@0,4 {
- 				compatible = "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
+ In this case, the ENETC port node defines a fixed link connection,
+ as specified by Documentation/devicetree/bindings/net/fixed-link.txt.
 -- 
 2.17.1
 
