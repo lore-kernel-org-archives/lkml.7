@@ -2,99 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC13EC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6C1C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBD320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="WhEx4Llm"
+	by mail.kernel.org (Postfix) with ESMTP id 7ECBF20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbfGWLdV (ORCPT
+        id S1730868AbfGWLmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:33:21 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:18690 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727619AbfGWLdV (ORCPT
+        Tue, 23 Jul 2019 07:42:54 -0400
+Received: from outbound-smtp35.blacknight.com ([46.22.139.218]:45974 "EHLO
+        outbound-smtp35.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726575AbfGWLmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:33:21 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x6NBWt04011714;
-        Tue, 23 Jul 2019 20:32:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6NBWt04011714
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563881576;
-        bh=U9G1sqgaI9eBqZZ/ibWdYn6wyolh8UQqV/1EGpHeVKk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WhEx4Llm5GThJ59mIjdpgE2bPlUMC4EZcg7e77CHlpks2hdf5kXS6Q5RL/9AQ8PjJ
-         ticuqdFNXkaBN3+e+nsy+F+UeQ+4/sjZ/4TizRT/z8k0hV1IUcApjOT5vxJq0NNzEm
-         OX6AcsOyG08WgkNRBq10shc1mO6qPbyQaoMTsqNpEPCNw/+dBskPKSblMJtGfABqQs
-         MzFd6PT+1ZdRgKVbRDrm6lSVhgieMpfjdpIO/iwJF3g2HQq+vgEApO6nmzesL0JILl
-         lSVYzQI4h84rze+AX2bBF29gPmBybgb0NwUdLuqa5sYP+h7v46hXmwbZbOkupoN861
-         cW/T4Z8nz4nPQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        linux-ia64@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ia64: remove unneeded uapi asm-generic wrappers
-Date:   Tue, 23 Jul 2019 20:32:52 +0900
-Message-Id: <20190723113252.14900-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jul 2019 07:42:53 -0400
+Received: from mail.blacknight.com (unknown [81.17.255.152])
+        by outbound-smtp35.blacknight.com (Postfix) with ESMTPS id 1FBC2E69
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:42:51 +0100 (IST)
+Received: (qmail 12414 invoked from network); 23 Jul 2019 11:42:50 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Jul 2019 11:42:50 -0000
+Date:   Tue, 23 Jul 2019 12:42:48 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3] sched/topology: Improve load balancing on AMD EPYC
+Message-ID: <20190723114248.GJ24383@techsingularity.net>
+References: <20190723104830.26623-1-matt@codeblueprint.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20190723104830.26623-1-matt@codeblueprint.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are listed in include/uapi/asm-generic/Kbuild, so Kbuild will
-automatically generate them.
+On Tue, Jul 23, 2019 at 11:48:30AM +0100, Matt Fleming wrote:
+> SD_BALANCE_{FORK,EXEC} and SD_WAKE_AFFINE are stripped in sd_init()
+> for any sched domains with a NUMA distance greater than 2 hops
+> (RECLAIM_DISTANCE). The idea being that it's expensive to balance
+> across domains that far apart.
+> 
+> However, as is rather unfortunately explained in
+> 
+>   commit 32e45ff43eaf ("mm: increase RECLAIM_DISTANCE to 30")
+> 
+> the value for RECLAIM_DISTANCE is based on node distance tables from
+> 2011-era hardware.
+> 
+> Current AMD EPYC machines have the following NUMA node distances:
+> 
+> node distances:
+> node   0   1   2   3   4   5   6   7
+>   0:  10  16  16  16  32  32  32  32
+>   1:  16  10  16  16  32  32  32  32
+>   2:  16  16  10  16  32  32  32  32
+>   3:  16  16  16  10  32  32  32  32
+>   4:  32  32  32  32  10  16  16  16
+>   5:  32  32  32  32  16  10  16  16
+>   6:  32  32  32  32  16  16  10  16
+>   7:  32  32  32  32  16  16  16  10
+> 
+> where 2 hops is 32.
+> 
+> The result is that the scheduler fails to load balance properly across
+> NUMA nodes on different sockets -- 2 hops apart.
+> 
+> For example, pinning 16 busy threads to NUMA nodes 0 (CPUs 0-7) and 4
+> (CPUs 32-39) like so,
+> 
+>   $ numactl -C 0-7,32-39 ./spinner 16
+> 
+> causes all threads to fork and remain on node 0 until the active
+> balancer kicks in after a few seconds and forcibly moves some threads
+> to node 4.
+> 
+> Override node_reclaim_distance for AMD Zen.
+> 
+> Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+> Cc: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+> Cc: Borislav Petkov <bp@alien8.de>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
- arch/ia64/include/uapi/asm/errno.h  | 2 --
- arch/ia64/include/uapi/asm/ioctl.h  | 2 --
- arch/ia64/include/uapi/asm/ioctls.h | 7 -------
- 3 files changed, 11 deletions(-)
- delete mode 100644 arch/ia64/include/uapi/asm/errno.h
- delete mode 100644 arch/ia64/include/uapi/asm/ioctl.h
- delete mode 100644 arch/ia64/include/uapi/asm/ioctls.h
+The only caveat I can think of is that a future generation of Zen might
+take a different magic number than 32 as their remote distance. If or
+when this happens, it'll need additional smarts but lacking a crystal
+ball, we can cross that bridge when we come to it.
 
-diff --git a/arch/ia64/include/uapi/asm/errno.h b/arch/ia64/include/uapi/asm/errno.h
-deleted file mode 100644
-index 9addba592646..000000000000
---- a/arch/ia64/include/uapi/asm/errno.h
-+++ /dev/null
-@@ -1,2 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#include <asm-generic/errno.h>
-diff --git a/arch/ia64/include/uapi/asm/ioctl.h b/arch/ia64/include/uapi/asm/ioctl.h
-deleted file mode 100644
-index b809c4566e5f..000000000000
---- a/arch/ia64/include/uapi/asm/ioctl.h
-+++ /dev/null
-@@ -1,2 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#include <asm-generic/ioctl.h>
-diff --git a/arch/ia64/include/uapi/asm/ioctls.h b/arch/ia64/include/uapi/asm/ioctls.h
-deleted file mode 100644
-index b86001940209..000000000000
---- a/arch/ia64/include/uapi/asm/ioctls.h
-+++ /dev/null
-@@ -1,7 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef _ASM_IA64_IOCTLS_H
--#define _ASM_IA64_IOCTLS_H
--
--#include <asm-generic/ioctls.h>
--
--#endif /* _ASM_IA64_IOCTLS_H */
 -- 
-2.17.1
-
+Mel Gorman
+SUSE Labs
