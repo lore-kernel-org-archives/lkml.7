@@ -2,177 +2,126 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEF0C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC3FC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009B721655
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA05218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUx+naFD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gy+LLjyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391689AbfGWTC3 (ORCPT
+        id S2391653AbfGWTDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 15:02:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36031 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391653AbfGWTC0 (ORCPT
+        Tue, 23 Jul 2019 15:03:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39612 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbfGWTDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 15:02:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g67so35319732wme.1;
-        Tue, 23 Jul 2019 12:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PZGRZ/1bTZIqKtrZnhZ3ITHiFSwsGywvp1sTvI99OFg=;
-        b=AUx+naFDyPAFyGTPbk7w+JiT6KzW2p85rD6jhqLRVg6fpXmYxEY3KMi9hEWVJdP7h+
-         IZLcK4qF8WeL/w6gdVpDLuEVJptXS678Jy12E78yboW+CasxqbObQ24bh7jtkrAybk6B
-         C4Dt8NQWhKKGLqVhws0GaO3vQZ6rEiV2DOB3HTFoRLjoef8jHmR0cQfuKEDg1KL3yyyv
-         9scytthxEMZ0oURskN4oggqtXf0EEqEMKQpYh/LI8QA2k39nKZrUnQ8QlQ63jGm1lpk3
-         zbQPyx//3oCvVjqlb4fO5oj8BHwnWTgsd3XxyQEC6U9MpQEaOfV5uJCh8g3KXzBn1wKv
-         mNnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=PZGRZ/1bTZIqKtrZnhZ3ITHiFSwsGywvp1sTvI99OFg=;
-        b=YfAElHuM1c0kiJz10hsf4mjLP9y+A1PrVfu9VYPY0yKx2tA9uJLhh6YsK1+2UtEDe9
-         9JMZEmanHJTVTwGseLsaWH7L3KlZgbbNZsoBXAtTsV2sqAjUeSinAAzDWMvNEH2FmR2I
-         27x9cMjCTRp1Wbu7s7oSVbn6XLw/8I9lqR+NzhmKBgg9gbXztu9gyJVusOP6r6C0o1F8
-         2yZRE6fcTiPLPb9pGEMWqm5vJMS8FNC5cm0vhavmqevYd17U9kyRoQYRvoUGEl1jCire
-         Jbe4x8CvBqE8g2/5UhWIa2MUPS+kFamN2LgzPtfPyrkkzStyfdE6D9OvePQtEYbFpBwB
-         jt2A==
-X-Gm-Message-State: APjAAAX1qJzxef+exAo11PoUvpkm3w7R3NKrPwptx1/uOhY1mZroAkvV
-        grwkxGCLCJpis6Jsmge0WxdDqqlA
-X-Google-Smtp-Source: APXvYqyEzo3WonSEYKOOJFPaPXBypSpFrkXOa0LwJulxwTb4CxyfM2oFKGUSH96B3o29M0050MSToA==
-X-Received: by 2002:a7b:c7d8:: with SMTP id z24mr70643530wmk.10.1563908544293;
-        Tue, 23 Jul 2019 12:02:24 -0700 (PDT)
-Received: from [192.168.1.19] (bgp75.neoplus.adsl.tpnet.pl. [83.28.79.75])
-        by smtp.gmail.com with ESMTPSA id d16sm36995631wrv.55.2019.07.23.12.02.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 12:02:23 -0700 (PDT)
-Subject: Re: [PATCH] leds: is31fl319x: simplify getting the adapter of a
- client
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190722181416.6743-1-wsa+renesas@sang-engineering.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
- 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
- aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
- hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
- T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
- R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
- 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
- eGGiEQ==
-Message-ID: <f3a05808-91c4-3641-3d1a-3de6e510b46f@gmail.com>
-Date:   Tue, 23 Jul 2019 21:02:21 +0200
+        Tue, 23 Jul 2019 15:03:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NJ3Dx2070436;
+        Tue, 23 Jul 2019 14:03:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563908593;
+        bh=dgAWQjxtCP5dIIzQPntXQvITimMe67GhUEu5H0ZWdpM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gy+LLjyXgC5A3RA4GVKO+AvXneYwLjeV590QU7snUStl1OHXMmPMMFs4oa6VVWkKT
+         Usl+KatzH41hPr3P8wNfK2+jp+JMAZTvuWL2o7/p6YdEx2g9v/Rf4dhMt1ok0lphYN
+         pTjZxeRTTKCd3pHlWqqQBM435Mv18Ab/i4zD0mRk=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NJ3DEf036172
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 14:03:13 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 14:03:12 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 14:03:12 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NJ3CFq033455;
+        Tue, 23 Jul 2019 14:03:12 -0500
+Subject: Re: [PATCH 2/8] ARM: OMAP2+: Remove unconfigured midlemode for am3
+ lcdc
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-3-tony@atomide.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <bcc130a5-f7e0-e182-9f4b-5a48fc3d6e17@ti.com>
+Date:   Tue, 23 Jul 2019 14:03:12 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190722181416.6743-1-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190723112811.44381-3-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
++ Jyri
 
-Thank you for the patch.
+On 7/23/19 6:28 AM, Tony Lindgren wrote:
+> We currently get a warning for lcdc because of a difference
+> with dts provided configuration compared to the legacy platform
+> data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
+> the platform data without configuring the modes.
 
-On 7/22/19 8:14 PM, Wolfram Sang wrote:
-> We have a dedicated pointer for that, so use it. Much easier to read and
-> less computation involved.
+Hi Tony,
+While I understand that you are trying to match the DT data with the
+existing legacy data, do you know if there was a reason why this was
+omitted in the first place? Should we be really adding the MSTANDBY_
+flags and fix up the DTS node accordingly? I tried looking through the
+git log, and the initial commit itself didn't add the MSTANDBY_ flags
+but used the SYSC_HAS_MIDLEMODE.
+
+Jyri,
+Do you know the history?
+
+regards
+Suman
+
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Let's fix the warning by removing SYSC_HAS_MIDLEMODE. Note that
+> the am335x TRM lists SYSC_HAS_MIDLEMODE, but it is unused.
+
+
+
+> 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->  drivers/leds/leds-is31fl319x.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/arm/mach-omap2/omap_hwmod_33xx_data.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
-> index 2d077b8edd0e..ca6634b8683c 100644
-> --- a/drivers/leds/leds-is31fl319x.c
-> +++ b/drivers/leds/leds-is31fl319x.c
-> @@ -333,12 +333,11 @@ static int is31fl319x_probe(struct i2c_client *client,
->  {
->  	struct is31fl319x_chip *is31;
->  	struct device *dev = &client->dev;
-> -	struct i2c_adapter *adapter = to_i2c_adapter(dev->parent);
->  	int err;
->  	int i = 0;
->  	u32 aggregated_led_microamp = IS31FL319X_CURRENT_MAX;
->  
-> -	if (!i2c_check_functionality(adapter, I2C_FUNC_I2C))
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
->  		return -EIO;
->  
->  	is31 = devm_kzalloc(&client->dev, sizeof(*is31), GFP_KERNEL);
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+> @@ -231,7 +231,7 @@ static struct omap_hwmod am33xx_control_hwmod = {
+>  static struct omap_hwmod_class_sysconfig lcdc_sysc = {
+>  	.rev_offs	= 0x0,
+>  	.sysc_offs	= 0x54,
+> -	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
+> +	.sysc_flags	= SYSC_HAS_SIDLEMODE,
+>  	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>  	.sysc_fields	= &omap_hwmod_sysc_type2,
+>  };
 > 
 
-Applied.
-
--- 
-Best regards,
-Jacek Anaszewski
