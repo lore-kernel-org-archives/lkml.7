@@ -2,101 +2,123 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5132C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9313EC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93038217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBE922543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:42:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWKLpCtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbfGWPld convert rfc822-to-8bit (ORCPT
+        id S2387887AbfGWPmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:41:33 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34687 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726410AbfGWPlc (ORCPT
+        Tue, 23 Jul 2019 11:42:15 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42737 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfGWPmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:41:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-187-32j5YcqrN5ShbLouelXgfQ-1; Tue, 23 Jul 2019 16:41:28 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 23 Jul 2019 16:41:27 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 23 Jul 2019 16:41:27 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Rasmus Villemoes' <linux@rasmusvillemoes.dk>,
-        Joe Perches <joe@perches.com>,
+        Tue, 23 Jul 2019 11:42:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so19332569pff.9;
+        Tue, 23 Jul 2019 08:42:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vz8JNCA4OobQyySEBzgksJpFgS03gb8qvM7PnvvkojA=;
+        b=MWKLpCtrmhGhopCnWcb2JpEpHsIvTkM+31gp8BTwUJSVNVWEggfWga2+LGywZMi/7a
+         GJCPj3k7SQxDgPQo+apcVVyyee5Zct1zjwaJEo+hrJEhhlzg434Yd79ETL7Mv3fqVB6M
+         bK5xB7lhlJRO9vEAyg8776avsXut1T+sLycDRaa9OWzAgR9A3RX+bV7Etbm+GbDCjBRE
+         9TP7KDR8z5K3NL35lTKfd2cxmWfgvGBnSY1c8msy3waaMWSkrt1OxtLp7DmI7U6V7qK3
+         i6pxVyuuqgBgcfeQ5a+V8+vtWYLgRmdRj9LLMQ4N98VgOVkrybdmRJE9hJCnrE2dv+pj
+         km5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vz8JNCA4OobQyySEBzgksJpFgS03gb8qvM7PnvvkojA=;
+        b=g1x6Wc2JU6irS1f9qQ2su1qKDgocCEWYBvrq8Fn558Ukp6FHl3YDOb2cTJ+WwPjy/4
+         YIWWgBbRXY8RotNc9h8tvoFKGgPi8/6nMq+5/r1ar4r67iXSBDCEQIDwbodRRB42qPkU
+         BYA3vwRlOgsEcs5L2MYM+n0BqeHtjlh22oum07q6u1q2HLlwXTfT9UiYUkYsL4X6nv/I
+         PPAvG0QMEM+3malhlW50z0dHLKX9FBn4iXkAr3kSyUExh3wt7H/H17o+0hMA7DhsINmF
+         6U8OL+z6UacAXkzQgm/4gl9xi7Ky6JyYRq7pwhiwZ8Td8ETm47UIyGSc5G4bGY09EOyP
+         vaUA==
+X-Gm-Message-State: APjAAAWy1sT0D3DxYUzK/VidjEHTCbGTyi6Giodf5TUFbnINKAZEZf/U
+        +A4DXeLpveKGvW1l9JZmV3g=
+X-Google-Smtp-Source: APXvYqzJoTAj4AaG8hABwwP3tl4mArRcqJY66B39tdgtYyTx/gTdpPsz9grGHnuwbZr3YRX8ca+zRw==
+X-Received: by 2002:aa7:9359:: with SMTP id 25mr6258135pfn.261.1563896534332;
+        Tue, 23 Jul 2019 08:42:14 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m4sm54198863pgs.71.2019.07.23.08.42.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 08:42:13 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 08:42:13 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: RE: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
-Thread-Topic: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
-Thread-Index: AQHVQSOiPIn99bSetkamp+/6YQTlwKbYVhaA
-Date:   Tue, 23 Jul 2019 15:41:27 +0000
-Message-ID: <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
-References: <cover.1563841972.git.joe@perches.com>
- <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
- <eec901c6-ca51-89e4-1887-1ccab0288bee@rasmusvillemoes.dk>
-In-Reply-To: <eec901c6-ca51-89e4-1887-1ccab0288bee@rasmusvillemoes.dk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Subject: Re: Linux 5.3-rc1
+Message-ID: <20190723154212.GC6198@roeck-us.net>
+References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
+ <20190722222126.GA27291@roeck-us.net>
+ <20190723054841.GA17148@lst.de>
+ <20190723145805.GA5809@roeck-us.net>
+ <1563894861.3609.6.camel@HansenPartnership.com>
 MIME-Version: 1.0
-X-MC-Unique: 32j5YcqrN5ShbLouelXgfQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563894861.3609.6.camel@HansenPartnership.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes
-> Sent: 23 July 2019 07:56
-...
-> > +/**
-> > + * stracpy - Copy a C-string into an array of char
-> > + * @to: Where to copy the string, must be an array of char and not a pointer
-> > + * @from: String to copy, may be a pointer or const char array
-> > + *
-> > + * Helper for strscpy.
-> > + * Copies a maximum of sizeof(@to) bytes of @from with %NUL termination.
-> > + *
-> > + * Returns:
-> > + * * The number of characters copied (not including the trailing %NUL)
-> > + * * -E2BIG if @to is a zero size array.
+On Tue, Jul 23, 2019 at 08:14:21AM -0700, James Bottomley wrote:
+> On Tue, 2019-07-23 at 07:58 -0700, Guenter Roeck wrote:
+> > On Tue, Jul 23, 2019 at 07:48:41AM +0200, Christoph Hellwig wrote:
+> > > The fix was sent last morning my time:
+> > > 
+> > > https://marc.info/?l=linux-scsi&m=156378725427719&w=2
+> > 
+> > Here is the updated bisect for the ppc scsi problem.
+> > 
+> > Guenter
+> > 
+> > ---
+> > # bad: [f65420df914a85e33b2c8b1cab310858b2abb7c0] Merge tag 'scsi-
+> > fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> > # good: [168c79971b4a7be7011e73bf488b740a8e1135c8] Merge tag 'kbuild-
+> > v5.3-2' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
+> > git bisect start 'f65420df914a' '168c79971b4a'
+> > # good: [106d45f350c7cac876844dc685845cba4ffdb70b] scsi: zfcp: fix
+> > request object use-after-free in send path causing wrong traces
+> > git bisect good 106d45f350c7cac876844dc685845cba4ffdb70b
+> > # bad: [bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1] scsi: core: take
+> > the DMA max mapping size into account
+> > git bisect bad bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1
+> > # good: [0cdc58580b37a160fac4b884266b8b7cb096f539] scsi: sd_zbc: Fix
+> > compilation warning
+> > git bisect good 0cdc58580b37a160fac4b884266b8b7cb096f539
+> > # bad: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi: core: add a
+> > host / host template field for the virt boundary
+> > git bisect bad 7ad388d8e4c703980b7018b938cdeec58832d78d
+> > # good: [f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc] scsi: core: Fix
+> > race on creating sense cache
+> > git bisect good f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc
+> > # first bad commit: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi:
+> > core: add a host / host template field for the virt boundary
 > 
-> Well, yes, but more importantly and generally: -E2BIG if the copy
-> including %NUL didn't fit. [The zero size array thing could be made into
-> a build bug for these stra* variants if one thinks that might actually
-> occur in real code.]
+> And reverting that commit fixes your problem?
+> 
+I didn't have time to try yet; I am still on my way to work.
+I'll get back later with more info. Give me a couple of hours.
 
-Probably better is to return the size of the destination if the copy didn't fit
-(zero if the buffer is zero length).
-This allows code to do repeated:
-	offset += str*cpy(buf + offset, src, sizeof buf - offset);
-and do a final check for overflow after all the copies.
-
-The same is true for a snprintf()like function
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Guenter
