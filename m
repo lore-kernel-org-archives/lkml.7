@@ -2,89 +2,110 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C66C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF57C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86F5205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CB7218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I9Ao+ylY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NlcOtrYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403771AbfGWSL0 (ORCPT
+        id S2388910AbfGWSQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:11:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35924 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfGWSLZ (ORCPT
+        Tue, 23 Jul 2019 14:16:22 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34924 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730565AbfGWSQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:11:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PtkDHY09nL+AaT/QB8borVWjMlOkOsCWyGNywWHu9dY=; b=I9Ao+ylYbfPsG82DBSU7ktLiX
-        4mFNsEoBkXYA6Zop7f+67r/JWnHsYBUo/JyWrJpbf9ac4U4ScV3Ke117Av1aZtxmu0TBOFmYcBkSX
-        K1fdaIEgelFroiIQKV+fqL+/kaCzKTC1C3gn8Z1aqPRDi1OHonx5IBVpedCDuyEyFG7E7SGavpPkm
-        9OoBLh58J+z9Rup71QNO/XnauElmstPsj8Cm6gJkP0AaC0xJ2RP6FDwsZexddr/2Q4apdT4HaCUsa
-        ntB+tu18mYpYM2/hWkot0ngAEKl7DEOkkWPcUWRKTBM1qirdtaNDVWRkdk9a7UQFD7m5po2KPKLV4
-        +pUcEueiQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpzG0-00019M-Np; Tue, 23 Jul 2019 18:11:24 +0000
-Date:   Tue, 23 Jul 2019 11:11:24 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        lhenriques@suse.com, cmaiolino@redhat.com,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] mm: check for sleepable context in kvfree
-Message-ID: <20190723181124.GM363@bombadil.infradead.org>
-References: <20190723131212.445-1-jlayton@kernel.org>
- <3622a5fe9f13ddfd15b262dbeda700a26c395c2a.camel@kernel.org>
- <20190723175543.GL363@bombadil.infradead.org>
- <f43c131d9b635994aafed15cb72308b32d2eef67.camel@kernel.org>
+        Tue, 23 Jul 2019 14:16:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NIGGou059594;
+        Tue, 23 Jul 2019 13:16:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563905776;
+        bh=KQPkYhTuJfhyS8PfO8QYjfDY+4JKdUSmCoRj+O/+9ag=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NlcOtrYY77ZUl0NocV0eWonHVSyGHb/YHl1135OyC/OY7ULW9OY2TRkxn7liAEDOb
+         07SxjV+Knmk8m6lvYfwWe6TP/UkCiZayuEz2XXJU+qU6q0iJttYTBeP76s6o5fv0/I
+         XG76G/rJprda4Xn39B1JhY+vIXJ37jzYQdXZ0BAk=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NIGGa5062230
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 13:16:16 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 13:16:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 13:16:15 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NIGFZZ100648;
+        Tue, 23 Jul 2019 13:16:15 -0500
+Subject: Re: [PATCH 1/8] ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for
+ dra7 epwmss
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-2-tony@atomide.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <212f2172-8612-86b6-83d7-0c70baaaf046@ti.com>
+Date:   Tue, 23 Jul 2019 13:16:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f43c131d9b635994aafed15cb72308b32d2eef67.camel@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190723112811.44381-2-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:05:11PM -0400, Jeff Layton wrote:
-> On Tue, 2019-07-23 at 10:55 -0700, Matthew Wilcox wrote:
-> > > HCH points out that xfs uses kvfree as a generic "free this no matter
-> > > what it is" sort of wrapper and expects the callers to work out whether
-> > > they might be freeing a vmalloc'ed address. If that sort of usage turns
-> > > out to be prevalent, then we may need another approach to clean this up.
-> > 
-> > I think it's a bit of a landmine, to be honest.  How about we have kvfree()
-> > call vfree_atomic() instead?
+On 7/23/19 6:28 AM, Tony Lindgren wrote:
+> TRM says PWMSS_SYSCONFIG bit for SOFTRESET changes to zero when
+> reset is completed. Let's configure it as otherwise we get warnings
+> on boot when we check the data against dts provided data. Eventually
+> the legacy platform data will be just dropped, but let's fix the
+> warning first.
 > 
-> Not a bad idea, though it means more overhead for the vfree case.
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Reviewed-by: Suman Anna <s-anna@ti.com>
+
+regards
+Suman
+
+> ---
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Since we're spitballing here...could we have kvfree figure out whether
-> it's running in a context where it would need to queue it instead and
-> only do it in that case?
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> @@ -379,7 +379,8 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
+>  static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
+>  	.rev_offs	= 0x0,
+>  	.sysc_offs	= 0x4,
+> -	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET,
+> +	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
+> +			  SYSC_HAS_RESET_STATUS,
+>  	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>  	.sysc_fields	= &omap_hwmod_sysc_type2,
+>  };
 > 
-> We currently have to figure that out for the might_sleep_if anyway. We
-> could just have it DTRT instead of printk'ing and dumping the stack in
-> that case.
 
-I don't think we have a generic way to determine if we're currently
-holding a spinlock.  ie this can fail:
-
-spin_lock(&my_lock);
-kvfree(p);
-spin_unlock(&my_lock);
-
-If we're preemptible, we can check the preempt count, but !CONFIG_PREEMPT
-doesn't record the number of spinlocks currently taken.
