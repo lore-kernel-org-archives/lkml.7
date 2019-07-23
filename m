@@ -2,270 +2,209 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAE1C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632D9C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744E620665
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFEA223A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XSyHigZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbfGWPSE (ORCPT
+        id S1733045AbfGWPSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:18:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20197 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfGWPSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:18:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 08:18:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
-   d="scan'208";a="368405049"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2019 08:18:01 -0700
-Received: from xiliu-mobl1.amr.corp.intel.com (unknown [10.252.200.163])
-        by linux.intel.com (Postfix) with ESMTP id 3C0A4580144;
-        Tue, 23 Jul 2019 08:18:00 -0700 (PDT)
-Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
- support
-To:     Daniel Baluta <daniel.baluta@nxp.com>, m.felsch@pengutronix.de,
-        shawnguo@kernel.org
-Cc:     mark.rutland@arm.com, aisheng.dong@nxp.com, peng.fan@nxp.com,
-        anson.huang@nxp.com, devicetree@vger.kernel.org,
-        shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org,
-        paul.olaru@nxp.com, robh+dt@kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        sound-open-firmware@alsa-project.org
-References: <20190723084104.12639-1-daniel.baluta@nxp.com>
- <20190723084104.12639-4-daniel.baluta@nxp.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
-Date:   Tue, 23 Jul 2019 10:11:56 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190723084104.12639-4-daniel.baluta@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 23 Jul 2019 11:18:32 -0400
+Received: from mail-eopbgr00061.outbound.protection.outlook.com ([40.107.0.61]:53765
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbfGWPSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:18:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lzi2XSKPCKfORjsb9fbpuWHNKISyCgXGSFaF0wxrWFLXxQ5Lca5iHR0lnihyB0eQiCmkChvh4g/YAONibmw/iMOYu6m42b0MLDJYX8TZCq1B5aRevNxF2ezPyorInBzjk79wU+SK6Tdr7WjlEfGpoZvALA0PH3mpSLAc1AZCavna9iWIJu5h87wGVWB3TrANqxRoHtgCZaJSZJwsajdj15++oDEWCsHrK089HORnCLz04RdHHKLfb7ZOEOB/a2OLTCjItjafPMpn7hEqwwF2FrSC+C717YWvpr4W/PcUcXATGku5OSP8jwb3G+FL7X61KC1TQNljgvkLysrAQPfrJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qupE79+S4pFt3NIw03qKjajQx0W37foPBww2k5QXFh4=;
+ b=J2HGDWctWiQD4MxK4w/E5A1n1cGef70O5gMb2biobaB3MWepGUEXhnXd+ryff0HYDWgLTJmxutq/Z6GAcMyy4TdWnWcj0En45LtsI6j1/J6766AZKv2usuT5OD0NC+rWPgv8ULeSix88aypI3mdvMaDXoN29YwdA7ELM7xIty4XWXvZiyLkYeH4KOrYaTYpVQuhNZ+WGkfhZo7JuhGVXbJpt/96Ut5EM/xW90xKGvm7IKtUYkT2NjD47+mwG+2HtuC5u0hX6Uhagq+xC/1hUf0R2IjkXLaSLN7dYPqBMOUcZAqmeVrWLxNDu2nUKiu+gtxU8AxMPFmQFmkgQWE0ZvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qupE79+S4pFt3NIw03qKjajQx0W37foPBww2k5QXFh4=;
+ b=XSyHigZaEDLMnvA81SUiitaYIfqnvj+DJlUy9D5KgViGOGjEqHM7DPdx+UqJwV+bzXuuM4OBCTgNp4U4F8raqq1wS92/8VJffPfYQVhMc6mXh8Z4/6aSJ99DRioCoz1rbn+YITV+zt7M8hvbRnuGv08O1w73LrlJNurrT/b5E6c=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.14; Tue, 23 Jul 2019 15:18:28 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
+ 15:18:28 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/6] nouveau: unlock mmap_sem on all errors from
+ nouveau_range_fault
+Thread-Topic: [PATCH 4/6] nouveau: unlock mmap_sem on all errors from
+ nouveau_range_fault
+Thread-Index: AQHVQHIXnahvVYvmJ0qDJVLVLXdOZabYUtkA
+Date:   Tue, 23 Jul 2019 15:18:28 +0000
+Message-ID: <20190723151824.GL15331@mellanox.com>
+References: <20190722094426.18563-1-hch@lst.de>
+ <20190722094426.18563-5-hch@lst.de>
+In-Reply-To: <20190722094426.18563-5-hch@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR10CA0030.namprd10.prod.outlook.com
+ (2603:10b6:208:120::43) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1eba60d3-5cbe-48a4-8560-08d70f810399
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3279;
+x-ms-traffictypediagnostic: VI1PR05MB3279:
+x-microsoft-antispam-prvs: <VI1PR05MB32792EDA5AB184B9309EA75FCFC70@VI1PR05MB3279.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(189003)(199004)(8936002)(5660300002)(11346002)(81166006)(476003)(316002)(66066001)(33656002)(478600001)(305945005)(76176011)(54906003)(68736007)(36756003)(8676002)(7736002)(81156014)(99286004)(102836004)(2616005)(86362001)(6506007)(25786009)(386003)(26005)(186003)(446003)(6436002)(52116002)(6486002)(229853002)(6116002)(3846002)(486006)(1076003)(6512007)(2906002)(256004)(66446008)(53936002)(6246003)(71200400001)(14444005)(14454004)(4326008)(64756008)(66556008)(66476007)(66946007)(6916009)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3279;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: s5E7ECNlhK2mr8Uxu41Us2POD4lN6Dl5hrcymzzumh5bUY9XScrftM244KymTbwCzxyAGy4LyNwaiOXmsj1Mwh+qwQB1EDUSv8AdFRpOkNRG4ejghxBpGArUw9aThHzllQ0mLNQAhuiwmIfAcjQTv3fJO+FZXT/0no9pl2kA5Af4egyWgYyTLgRsy4O0m1H+zg+ZsrfKBcOjOBj/Q20nT0H55ffVftliCBoKPVspOm8MkJBxhTsUQSZcThFje8HUDGEp2d/wGA2QMsYx3v4rlUzqsnWgiAG6GvIZpvz4gS69GSw91X7Zb5pvJt1Z7uofJC9f3OY/epYWkAhM8jgaBgWE+BFYZXQHUPUMjsGN57cWX4dlScwxeHwcWcfqs1QFOaHlvFo+bse6gf2mKu9YMTkAIexcEUbEQaK85uyILps=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <B925593E81AF184DBCA6A2F968BAEBF5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1eba60d3-5cbe-48a4-8560-08d70f810399
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 15:18:28.3594
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3279
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
-> index 61b97fc55bb2..2aa3a1cdf60c 100644
-> --- a/sound/soc/sof/Kconfig
-> +++ b/sound/soc/sof/Kconfig
-> @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
->   	  Say Y if you need this option
->   	  If unsure select "N".
->   
-> +config SND_SOC_SOF_DT
-> +	tristate "SOF DT enumeration support"
-> +	select SND_SOC_SOF
-> +	select SND_SOC_SOF_OPTIONS
-> +	help
-> +	  This adds support for Device Tree enumeration. This option is
-> +	  required to enable i.MX8 devices.
-> +	  Say Y if you need this option. If unsure select "N".
-> +
-
-[snip]
-
-> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-> index fff64a9970f0..fa35994a79c4 100644
-> --- a/sound/soc/sof/imx/Kconfig
-> +++ b/sound/soc/sof/imx/Kconfig
-> @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
->   
->   config SND_SOC_SOF_IMX8
->   	tristate "SOF support for i.MX8"
-> +	select SND_SOC_SOF_DT
-
-This looks upside down. You should select SOF_DT first then include the 
-NXP stuff.
-
->   	help
->             This adds support for Sound Open Firmware for NXP i.MX8 platforms
->             Say Y if you have such a device.
-> diff --git a/sound/soc/sof/sof-dt-dev.c b/sound/soc/sof/sof-dt-dev.c
-> new file mode 100644
-> index 000000000000..31429bbb5c7e
-> --- /dev/null
-> +++ b/sound/soc/sof/sof-dt-dev.c
-> @@ -0,0 +1,159 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +//
-> +// Copyright 2019 NXP
-> +//
-> +// Author: Daniel Baluta <daniel.baluta@nxp.com>
-> +//
-> +
-> +#include <linux/firmware.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <sound/sof.h>
-> +
-> +#include "ops.h"
-> +
-> +extern struct snd_sof_dsp_ops sof_imx8_ops;
-> +
-> +static char *fw_path;
-> +module_param(fw_path, charp, 0444);
-> +MODULE_PARM_DESC(fw_path, "alternate path for SOF firmware.");
-> +
-> +static char *tplg_path;
-> +module_param(tplg_path, charp, 0444);
-> +MODULE_PARM_DESC(tplg_path, "alternate path for SOF topology.");
-> +
-> +/* platform specific devices */
-> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-> +static struct sof_dev_desc sof_dt_imx8qxp_desc = {
-> +	.default_fw_path = "imx/sof",
-> +	.default_tplg_path = "imx/sof-tplg",
-> +	.nocodec_fw_filename = "sof-imx8.ri",
-> +	.nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
-> +	.ops = &sof_imx8_ops,
-> +};
-> +#endif
-> +
-> +static const struct dev_pm_ops sof_dt_pm = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(snd_sof_suspend, snd_sof_resume)
-> +	SET_RUNTIME_PM_OPS(snd_sof_runtime_suspend, snd_sof_runtime_resume,
-> +			   NULL)
-> +};
-> +
-> +static void sof_dt_probe_complete(struct device *dev)
-> +{
-> +	/* allow runtime_pm */
-> +	pm_runtime_set_autosuspend_delay(dev, SND_SOF_SUSPEND_DELAY_MS);
-> +	pm_runtime_use_autosuspend(dev);
-> +	pm_runtime_enable(dev);
-> +}
-> +
-> +static int sof_dt_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	const struct sof_dev_desc *desc;
-> +	/*TODO: create a generic snd_soc_xxx_mach */
-> +	struct snd_soc_acpi_mach *mach;
-
-I wonder if you really need to use the same structures. For Intel we get 
-absolutely zero info from the firmware so rely on an ACPI codec ID as a 
-key to find information on which firmware and topology to use, and which 
-machine driver to load. You could have all this information in a DT blob?
-
-> +	struct snd_sof_pdata *sof_pdata;
-> +	const struct snd_sof_dsp_ops *ops;
-> +	int ret;
-> +
-> +	dev_info(&pdev->dev, "DT DSP detected");
-> +
-> +	sof_pdata = devm_kzalloc(dev, sizeof(*sof_pdata), GFP_KERNEL);
-> +	if (!sof_pdata)
-> +		return -ENOMEM;
-> +
-> +	desc = device_get_match_data(dev);
-> +	if (!desc)
-> +		return -ENODEV;
-> +
-> +	/* get ops for platform */
-> +	ops = desc->ops;
-> +	if (!ops) {
-> +		dev_err(dev, "error: no matching DT descriptor ops\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_FORCE_NOCODEC_MODE)
-> +	/* force nocodec mode */
-> +	dev_warn(dev, "Force to use nocodec mode\n");
-> +	mach = devm_kzalloc(dev, sizeof(*mach), GFP_KERNEL);
-> +	if (!mach)
-> +		return -ENOMEM;
-> +	ret = sof_nocodec_setup(dev, sof_pdata, mach, desc, ops);
-> +	if (ret < 0)
-> +		return ret;
-> +#else
-> +	/* TODO: implement case where we actually have a codec */
-> +	return -ENODEV;
-> +#endif
-> +
-> +	if (mach)
-> +		mach->mach_params.platform = dev_name(dev);
-> +
-> +	sof_pdata->machine = mach;
-> +	sof_pdata->desc = desc;
-> +	sof_pdata->dev = &pdev->dev;
-> +	sof_pdata->platform = dev_name(dev);
-> +
-> +	/* alternate fw and tplg filenames */
-> +	if (fw_path)
-> +		sof_pdata->fw_filename_prefix = fw_path;
-> +	else
-> +		sof_pdata->fw_filename_prefix =
-> +			sof_pdata->desc->default_fw_path;
-> +	if (tplg_path)
-> +		sof_pdata->tplg_filename_prefix = tplg_path;
-> +	else
-> +		sof_pdata->tplg_filename_prefix =
-> +			sof_pdata->desc->default_tplg_path;
-> +
-> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
-> +	/* set callback to enable runtime_pm */
-> +	sof_pdata->sof_probe_complete = sof_dt_probe_complete;
-> +#endif
-> +	 /* call sof helper for DSP hardware probe */
-> +	ret = snd_sof_device_probe(dev, sof_pdata);
+On Mon, Jul 22, 2019 at 11:44:24AM +0200, Christoph Hellwig wrote:
+> Currently nouveau_svm_fault expects nouveau_range_fault to never unlock
+> mmap_sem, but the latter unlocks it for a random selection of error
+> codes. Fix this up by always unlocking mmap_sem for non-zero return
+> values in nouveau_range_fault, and only unlocking it in the caller
+> for successful returns.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>  drivers/gpu/drm/nouveau/nouveau_svm.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouv=
+eau/nouveau_svm.c
+> index 5dd83a46578f..5de2d54b9782 100644
+> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> @@ -494,8 +494,10 @@ nouveau_range_fault(struct hmm_mirror *mirror, struc=
+t hmm_range *range)
+>  	ret =3D hmm_range_register(range, mirror,
+>  				 range->start, range->end,
+>  				 PAGE_SHIFT);
+> -	if (ret)
 > +	if (ret) {
-> +		dev_err(dev, "error: failed to probe DSP hardware\n");
-> +		return ret;
+> +		up_read(&range->vma->vm_mm->mmap_sem);
+>  		return (int)ret;
 > +	}
-> +
-> +#if !IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
-> +	sof_dt_probe_complete(dev);
-> +#endif
-> +
-> +	return ret;
-> +}
-> +
-> +static int sof_dt_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	/* call sof helper for DSP hardware remove */
-> +	snd_sof_device_remove(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sof_dt_ids[] = {
-> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-> +	{ .compatible = "fsl,imx8qxp-dsp", .data = &sof_dt_imx8qxp_desc},
-> +#endif
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sof_dt_ids);
-> +
-> +/* DT driver definition */
-> +static struct platform_driver snd_sof_dt_driver = {
-> +	.probe = sof_dt_probe,
-> +	.remove = sof_dt_remove,
-> +	.driver = {
-> +		.name = "sof-audio-dt",
-> +		.pm = &sof_dt_pm,
-> +		.of_match_table = sof_dt_ids
-> +	},
-> +};
-> +module_platform_driver(snd_sof_dt_driver);
-> +
-> +MODULE_LICENSE("Dual BSD/GPL");
-> 
+> =20
+>  	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
+>  		up_read(&range->vma->vm_mm->mmap_sem);
+> @@ -504,11 +506,9 @@ nouveau_range_fault(struct hmm_mirror *mirror, struc=
+t hmm_range *range)
+> =20
+>  	ret =3D hmm_range_fault(range, true);
+>  	if (ret <=3D 0) {
+> -		if (ret =3D=3D -EBUSY || !ret) {
+> -			up_read(&range->vma->vm_mm->mmap_sem);
+> -			ret =3D -EBUSY;
+> -		} else if (ret =3D=3D -EAGAIN)
+> +		if (ret =3D=3D 0)
+>  			ret =3D -EBUSY;
+> +		up_read(&range->vma->vm_mm->mmap_sem);
+>  		hmm_range_unregister(range);
+>  		return ret;
 
+Hum..
+
+The caller does this:
+
+again:
+		ret =3D nouveau_range_fault(&svmm->mirror, &range);
+		if (ret =3D=3D 0) {
+			mutex_lock(&svmm->mutex);
+			if (!nouveau_range_done(&range)) {
+				mutex_unlock(&svmm->mutex);
+				goto again;
+
+And we can't call nouveau_range_fault() -> hmm_range_fault() without
+holding the mmap_sem, so we can't allow nouveau_range_fault to unlock
+it.
+
+Maybe this instead?=20
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
+u/nouveau_svm.c
+index a9c5c58d425b3d..92cf760a9bcc5d 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -494,21 +494,16 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct=
+ hmm_range *range)
+ 	ret =3D hmm_range_register(range, mirror,
+ 				 range->start, range->end,
+ 				 PAGE_SHIFT);
+-	if (ret) {
+-		up_read(&range->vma->vm_mm->mmap_sem);
++	if (ret)
+ 		return (int)ret;
+-	}
+=20
+-	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
+-		up_read(&range->vma->vm_mm->mmap_sem);
++	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT))
+ 		return -EBUSY;
+-	}
+=20
+ 	ret =3D hmm_range_fault(range, true);
+ 	if (ret <=3D 0) {
+ 		if (ret =3D=3D 0)
+ 			ret =3D -EBUSY;
+-		up_read(&range->vma->vm_mm->mmap_sem);
+ 		hmm_range_unregister(range);
+ 		return ret;
+ 	}
+@@ -706,8 +701,8 @@ nouveau_svm_fault(struct nvif_notify *notify)
+ 						NULL);
+ 			svmm->vmm->vmm.object.client->super =3D false;
+ 			mutex_unlock(&svmm->mutex);
+-			up_read(&svmm->mm->mmap_sem);
+ 		}
++		up_read(&svmm->mm->mmap_sem);
+=20
+ 		/* Cancel any faults in the window whose pages didn't manage
+ 		 * to keep their valid bit, or stay writeable when required.
