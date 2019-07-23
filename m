@@ -2,100 +2,118 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35589C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDD9C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0254F223BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5425520449
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZXnkLskS"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="M0CVenrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733110AbfGWIQg (ORCPT
+        id S1733139AbfGWIQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:16:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46901 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfGWIQg (ORCPT
+        Tue, 23 Jul 2019 04:16:56 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:59694 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730753AbfGWIQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:16:36 -0400
-Received: by mail-io1-f65.google.com with SMTP id i10so79913060iol.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 01:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ItgzODWjIbCfFoPhrAm7MqYgVwgajEGQG3krTes1pwk=;
-        b=ZXnkLskSMoSwZc5PzKd3b3dUGDE3gRBg3CiBhV2jjp1nxhOnmxN2yGuS8g4HWHu7NS
-         4AliFx4CXsSdhQLNSqGVYHNO4NCPBw5hauaKdIyNvHSzLNHtzzebVnnzBQr50GtUN1L8
-         C43tFKj8rS27WoAqFhPwMupnXt72xhwPhEyH0GJwuD5cAiqCwZz1d25YK12R92f6xuvG
-         RY8+W/xc8PFz4SbpIMhCWz45jecwtDfbPIKDgKdk5B3hCLmflb988hOhpxCXU3oqlIME
-         cyjc3x2MvG1N8SPNQVfHXHKj329fB2uBmGGwxx/QmbZ9p1mVdiVden7zNVPsSRDiHJbo
-         iMnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ItgzODWjIbCfFoPhrAm7MqYgVwgajEGQG3krTes1pwk=;
-        b=cWZsfM1iBCXZCSWYq/qzHPBhP+DrbCfALE6KUIFZr18m81xnoXG8AS5YnKZ+i+pKuo
-         f7hP95acOcEFWi7F6bFWn9YkmGoGHraslb9HgoMi4uwUT19qRSvedvgmv3QQBvz47u5B
-         JgONVvh1ybaYMpiR8tyPDJgJdSpLLs7X8maRMus0q2c57WVBlnqZomDu+aGOiV7dku8W
-         feRGb0ZfmDPU2V7Ag7srQ/7v8oKWOYhjJrt5OTGt+JHOww3Xx/sUmqv8IzkCKBIxfTJc
-         2tni8IZ/BxvH+S//6APJQqKeePT7/GQ6kLw2KJOth6OXudhi2hlVAsieknDYh3oVJ44q
-         pTFg==
-X-Gm-Message-State: APjAAAWbKaQTHltbj6J8mFxj6j3zshMWrg0y33KwbhlY676YecUmU+kH
-        rlUR/a9hlvUAlWvclzsp3gZ2BahxVPrCBVhqZ19+6w==
-X-Google-Smtp-Source: APXvYqzJNKMQpwXLGy1stVnHVldbWHpui5JgVFyimhte/10meEBELEs9ajvjEPGbTb6yeamB6oISV/VYaDUVEFAPGCI=
-X-Received: by 2002:a6b:b556:: with SMTP id e83mr67623901iof.94.1563869795505;
- Tue, 23 Jul 2019 01:16:35 -0700 (PDT)
+        Tue, 23 Jul 2019 04:16:55 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 94D392E1485;
+        Tue, 23 Jul 2019 11:16:52 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id zrWDbtFrST-GqNCGMan;
+        Tue, 23 Jul 2019 11:16:52 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1563869812; bh=OCdChmHdfM6D9uf2VkQAqf8PnxrZ5zOIH6aLjOH+qUU=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=M0CVenrM9AC4JpNV2SXPm4QsXi07w0FwQKWvlGVbaH2JKs/RvqeojUHoTdlkMrkb6
+         8CFoIYQtsn4RsPg8zd58p/Jtt/lPbqhJ2HhpLnLHI+NTKbR3m6d3bthLrDf6ZFMmun
+         vcG5SDSMKJo7nRP3Se9wk2sTAFGcYTucOwL1nvjM=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38b3:1cdf:ad1a:1fe1])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 7w6wmPdkO2-GpAejdNM;
+        Tue, 23 Jul 2019 11:16:52 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
+ no dirty pages
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>
+References: <156378816804.1087.8607636317907921438.stgit@buzz>
+ <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
+Date:   Tue, 23 Jul 2019 11:16:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <000000000000f19676058ab7adc4@google.com> <CACT4Y+ZZy5nqduErU8hjKrwThHiybGpwd3QzOviAWftZFZ4d2A@mail.gmail.com>
- <20190611185206.GG3341036@devbig004.ftw2.facebook.com>
-In-Reply-To: <20190611185206.GG3341036@devbig004.ftw2.facebook.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 23 Jul 2019 10:16:24 +0200
-Message-ID: <CACT4Y+ZNTh=t62oj_Y5XyQwjOJp3AWwWi8c-4DrX+jKNCVqzzg@mail.gmail.com>
-Subject: Re: linux-next boot error: WARNING: workqueue cpumask: online
- intersect > possible intersect
-To:     Tejun Heo <tj@kernel.org>
-Cc:     syzbot <syzbot+4d497898effeb1936245@syzkaller.appspotmail.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, mwb@linux.vnet.ibm.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Eric Biggers <ebiggers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 8:52 PM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Fri, Jun 07, 2019 at 10:45:45AM +0200, Dmitry Vyukov wrote:
-> > +workqueue maintainers and Michael who added this WARNING
-> >
-> > The WARNING was added in 2017, so I guess it's a change somewhere else
-> > that triggered it.
-> > The WARNING message does not seem to give enough info about the caller
-> > (should it be changed to WARN_ONCE to print a stack?). How can be root
-> > cause this and unbreak linux-next?
->
-> So, during boot, workqueue builds masks of possible cpus of each node
-> and stores them on wq_numa_possible_cpumask[] array.  The warning is
-> saying that somehow online cpumask of a node became a superset of the
-> possible mask, which should never happen.
->
-> Dumping all masks in wq_numa_possible_cpumasks[] and cpumask_of_node()
-> of each node should show what's going on.
 
-This has reached upstream and all subsystem subtrees, now all Linux
-trees are boot broken (except for few that still lack behind):
-https://syzkaller.appspot.com/upstream
 
-No new Linux code is tested by syzbot at this point.
+On 23.07.2019 3:52, Andrew Morton wrote:
+> 
+> (cc linux-fsdevel and Jan)
+> 
+> On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+> 
+>> Functions like filemap_write_and_wait_range() should do nothing if inode
+>> has no dirty pages or pages currently under writeback. But they anyway
+>> construct struct writeback_control and this does some atomic operations
+>> if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+>> updates state of writeback ownership, on slow path might be more work.
+>> Current this path is safely avoided only when inode mapping has no pages.
+>>
+>> For example generic_file_read_iter() calls filemap_write_and_wait_range()
+>> at each O_DIRECT read - pretty hot path.
+>>
+>> This patch skips starting new writeback if mapping has no dirty tags set.
+>> If writeback is already in progress filemap_write_and_wait_range() will
+>> wait for it.
+>>
+>> ...
+>>
+>> --- a/mm/filemap.c
+>> +++ b/mm/filemap.c
+>> @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
+>>   		.range_end = end,
+>>   	};
+>>   
+>> -	if (!mapping_cap_writeback_dirty(mapping))
+>> +	if (!mapping_cap_writeback_dirty(mapping) ||
+>> +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+>>   		return 0;
+>>   
+>>   	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+> 
+> How does this play with tagged_writepages?  We assume that no tagging
+> has been performed by any __filemap_fdatawrite_range() caller?
+>
+
+Checking also PAGECACHE_TAG_TOWRITE is cheap but seems redundant.
+
+To-write tags are supposed to be a subset of dirty tags:
+to-write is set only when dirty is set and cleared after starting writeback.
+
+Special case set_page_writeback_keepwrite() which does not clear to-write
+should be for dirty page thus dirty tag is not going to be cleared either.
+Ext4 calls it after redirty_page_for_writepage()
+XFS even without clear_page_dirty_for_io()
+
+Anyway to-write tag without dirty tag or at clear page is confusing.
