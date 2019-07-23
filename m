@@ -2,103 +2,142 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA4DC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2EDC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E175218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA62218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="Q5a8LDnL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DILV6jJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391842AbfGWUme (ORCPT
+        id S2389217AbfGWUq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:42:34 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:43110 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfGWUme (ORCPT
+        Tue, 23 Jul 2019 16:46:57 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60644 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731769AbfGWUq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:42:34 -0400
-Received: by mail-qk1-f182.google.com with SMTP id m14so6445941qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=HSqeERIVrrWNRJGBPRu/DavE1UKkc6TVYy1oqy1qzFk=;
-        b=Q5a8LDnLnxwPPp1uXvPjDmqYEATc1C0TF9Bnd9Qtmm/8/RjCNFVbH1WlKCtMhq9n5+
-         1HdHN0OakFy5sKHnxj1HbG+Ut+ztkWKC0wFIO3XP9Imfckix3FbpHfKTY2sAMAfj1LJz
-         fHGV6NWaSINJSyq4sJ28QRsi9rW/yltdVDkLk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=HSqeERIVrrWNRJGBPRu/DavE1UKkc6TVYy1oqy1qzFk=;
-        b=X9JTw53xYvZCpnkB0l1xUUQmzgD1yuhrVmMcbJnLUmESzJtIG2+5WNFWKX/ogcSSNA
-         GuV2asev/EJbRjiK/1IeVXqZmX0OTub9GfyzxL62Yy5TyZNuaMqj/43rvfV6csp6URTj
-         mMN34zwRHYjwC6ICpSZNxRwP+S054OP/YL/X/usD3bSXLZx9oLV/OFj/+okw8oMhptXv
-         xXEwehH4Gx3xxFIaycdhoJ5VtrVfJKTfRN1JExFjE5lYfboP23pId0EPeofMjXgRTzaA
-         Q2OzOZW28iu0koNYtdNuTnG75ZZC+Aws0uAOVTxa5UygFwvtn4wbw9QFITjFub1dYGGD
-         xXpw==
-X-Gm-Message-State: APjAAAWQWwm/Gs6ZKCCiVZBgatVOluzrOXD+ey2y5tuwbIs2VrxYsKlX
-        SWtLDWQ6c1vGTcQf1xnS1tqmcUbFMKY=
-X-Google-Smtp-Source: APXvYqzxJKpsuazAcglZO3ZdUKSXcLg2wj1Rt5vvrtCzbn/5MwA8/ZAgqKRXdcMv2+DknxpFIJJu5w==
-X-Received: by 2002:a05:620a:142e:: with SMTP id k14mr51238951qkj.336.1563914552595;
-        Tue, 23 Jul 2019 13:42:32 -0700 (PDT)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id f25sm23360508qta.81.2019.07.23.13.42.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 13:42:31 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Tue, 23 Jul 2019 16:42:30 -0400 (EDT)
-X-X-Sender: vince@macbook-air
-To:     linux-kernel@vger.kernel.org
-cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [patch] perf tool buffer overflow in perf_header__read_build_ids
-In-Reply-To: <alpine.DEB.2.21.1907231100440.14532@macbook-air>
-Message-ID: <alpine.DEB.2.21.1907231639120.14532@macbook-air>
-References: <alpine.DEB.2.21.1907231100440.14532@macbook-air>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 23 Jul 2019 16:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563914814; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eHCZ20CpjI6Z66bdYx7K2SWFrol5Ee4ySm5RZTiYqis=;
+        b=DILV6jJLyq/jptU0x6tkbW8Phqrnv3eh7dPeDEUtI7Id+APgHIM6PRzugl36z5U10ozOOa
+        lbwuW+cLX+cbXOiMMchaJiiTf2D1xAYHa5JTQ5GJKZFfynEgyppqDjUPqryxHM9+GxyfLC
+        R99iHbvt69sm+robuLb2ETjmtkongL8=
+Date:   Tue, 23 Jul 2019 16:46:40 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1563914800.1918.0@crapouillou.net>
+In-Reply-To: <20190722193456.h4hfte5cczucermd@pengutronix.de>
+References: <20190607154410.10633-1-paul@crapouillou.net>
+        <20190607154410.10633-4-paul@crapouillou.net>
+        <20190722193456.h4hfte5cczucermd@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Hi Uwe,
 
-my perf_tool_fuzzer has found another issue, this one a buffer overflow
-in perf_header__read_build_ids.  The build id filename is read in with a 
-filename length read from the perf.data file, but this can be longer than
-PATH_MAX which will smash the stack.
 
-This might not be the right fix, not sure if filename should be NUL
-terminated or not.
 
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+Le lun. 22 juil. 2019 =E0 15:34, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello Paul,
+>=20
+> On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
+>>  -static int jz4740_pwm_config(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm,
+>>  -			     int duty_ns, int period_ns)
+>>  +static int jz4740_pwm_apply(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm,
+>>  +			    struct pwm_state *state)
+>>   {
+>>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
+>>   	unsigned long long tmp;
+>>   	unsigned long period, duty;
+>>   	unsigned int prescaler =3D 0;
+>>   	uint16_t ctrl;
+>>  -	bool is_enabled;
+>>=20
+>>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
+>>  +	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
+>> state->period;
+>>   	do_div(tmp, 1000000000);
+>>   	period =3D tmp;
+>>=20
+>>  @@ -96,16 +95,14 @@ static int jz4740_pwm_config(struct pwm_chip=20
+>> *chip, struct pwm_device *pwm,
+>>   	if (prescaler =3D=3D 6)
+>>   		return -EINVAL;
+>>=20
+>>  -	tmp =3D (unsigned long long)period * duty_ns;
+>>  -	do_div(tmp, period_ns);
+>>  +	tmp =3D (unsigned long long)period * state->duty_cycle;
+>>  +	do_div(tmp, state->period);
+>>   	duty =3D period - tmp;
+>>=20
+>>   	if (duty >=3D period)
+>>   		duty =3D period - 1;
+>>=20
+>>  -	is_enabled =3D jz4740_timer_is_enabled(pwm->hwpwm);
+>>  -	if (is_enabled)
+>>  -		jz4740_pwm_disable(chip, pwm);
+>>  +	jz4740_pwm_disable(chip, pwm);
+>=20
+> I assume this stops the PWM. Does this complete the currently running
+> period? How does the PWM behave then? (Does it still drive the output?
+> If so, on which level?)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index c24db7f4909c..9a893a26e678 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2001,6 +2001,9 @@ static int perf_header__read_build_ids(struct perf_header *header,
- 			perf_event_header__bswap(&bev.header);
- 
- 		len = bev.header.size - sizeof(bev);
-+
-+		if (len>PATH_MAX) len=PATH_MAX;
-+
- 		if (readn(input, filename, len) != len)
- 			goto out;
- 		/*
+Some PWM channels work in one mode "TCU1" and others work in "TCU2". The
+mode in which channels work depends on the version of the SoC.
+
+When stopped, the pins of TCU1 channels will be driven to the inactive
+level (which depends on the polarity). It is unknown whether or not the
+currently running period is completed. We set a bit to configure for
+"abrupt shutdown", so I expect that it's not, but somebody would need
+to hook up a logic analyzer to see what's the exact behaviour with
+and without that bit.
+
+TCU2 channels on the other hand will stop in the middle of a period,
+leaving the pin hanging at whatever level it was before the stop.
+That's the rationale behind the trick in commit 6580fd173070 ("pwm:
+jz4740: Force TCU2 channels to return to their init level").
+
+Regards,
+-Paul
+
+
+>>=20
+>>   	jz4740_timer_set_count(pwm->hwpwm, 0);
+>>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+
+=
+
